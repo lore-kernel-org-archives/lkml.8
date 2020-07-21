@@ -2,201 +2,151 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EFFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03C0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04CBB20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEA920717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aplCMKmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbgGUUkv (ORCPT
+        id S1729607AbgGUUng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 16:40:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13746 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbgGUUkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 16:40:51 -0400
-IronPort-SDR: FrMs/AIO7eygbozn5RpJM4e4rBSiXPlF4F/VadYruA5EkPkAh2IAqsJLk1uVLXpps4dRpaVM6a
- +H8/8HbMiLww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="168372933"
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="168372933"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 13:40:50 -0700
-IronPort-SDR: di0B4dk+yo1aHOTRCBEp/aLGMvER7djLdRvLHXklogFG57nPazm/vCe8D12i59J9OPhryp0IPm
- Hqi8wyEf91Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="310372739"
-Received: from unknown (HELO nsgsw-wilsonpoint.lm.intel.com) ([10.232.116.124])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Jul 2020 13:40:50 -0700
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] irqdomain/treewide: Free firmware node after domain removal
-Date:   Tue, 21 Jul 2020 14:26:09 -0600
-Message-Id: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 21 Jul 2020 16:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbgGUUng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 16:43:36 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8CCC0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:43:35 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n5so14380pgf.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6b3oA4UL1L2pl7xC9XCpGfPbFXbX6ZR3mQ/aH6nN3aM=;
+        b=aplCMKmLtk1FND72f9eTw2pW0XV235w2d7abx0+nAqdK+5QHFUZUtqiXP3Y/5NfWwQ
+         OP0koBCszYM3OjbRoWGb9J2n5jEHmqZ6iZvMjrdhubqs08gi7J2ZJm0AvaheIAChdgVe
+         7MEKxT+pv82gNj/QbYrQIrC+ws3wQQ1yxdP7oGdDW+0Vgl/fKppwh3+V150QjFW7B0sR
+         pfuiSebY5wKyIuGmulwut1717V7STCbyNn4pXsUhj1rO3Uw2IJGLCqE9RK2xBIl74F49
+         isMNRqNjvPF38ITyYEMgKk4pMSMMY5Hw3R+VLWqG+e65UZgP/9R7FHaVotrNczHhVufX
+         vhew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6b3oA4UL1L2pl7xC9XCpGfPbFXbX6ZR3mQ/aH6nN3aM=;
+        b=Fmq0ZoxR2olCr0hcYrfz4QzBR7NHMoDFhHFIASF8nBXQrI8aX9tbzGSxQ95aakNv7B
+         0AngvccGr4Cjp1v3iE7kJ5rsN956rLKHnwyBiwIEwP4G6UZOem85D/SDJKTXIsdmfoYV
+         41HGZPHlTMoc0funzbSLLiuam77g87rfSFrFDG1IlxRE4IqM4oU6bz28WLcODAn/Ghjk
+         IJAMkR38Et2Zz0/XkA+d5OjX1ylmSldkabgR47IyY5rv2jSn3DtV44CFXQW7GtRN8HDq
+         NCvtRGOpqZKXf1wd/BG8pi4LqC2QqCRSWMgIN1NgBF4I0mMfkdaTIrmPIIKPT4gT9Q5b
+         cLQw==
+X-Gm-Message-State: AOAM532ct5RHzi3Zz70cNWOj4IifEHxvP72/2f9MOAH70Q1Q/ludqFoD
+        TLzqCwzXMq82C3wqpffLY/JMWw==
+X-Google-Smtp-Source: ABdhPJwuyrOyVT4KOawwJEajBAoNJgJsEKfBbYSabaXT83Sv4Y4Gqw+HTJiZ3dzR4rMofwR9hrMHZA==
+X-Received: by 2002:aa7:9906:: with SMTP id z6mr26338877pff.60.1595364215284;
+        Tue, 21 Jul 2020 13:43:35 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id z10sm21858949pfr.90.2020.07.21.13.43.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 13:43:34 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 14:43:32 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Alexandre Bailon <abailon@baylibre.com>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] remoteproc: mtk_apu: Don't try to use the APU local
+ RAM
+Message-ID: <20200721204332.GC1227776@xps15>
+References: <20200713132927.24925-1-abailon@baylibre.com>
+ <20200713132927.24925-6-abailon@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713132927.24925-6-abailon@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change 711419e504eb ("irqdomain: Add the missing assignment of
-domain->fwnode for named fwnode") unintentionally caused a dangling
-pointer page fault issue on firmware nodes that were freed after IRQ
-domain allocation. Change e3beca48a45b fixed that dangling pointer issue
-by only freeing the firmware node after an IRQ domain allocation
-failure. That fix no longer frees the firmware node immediately, but
-leaves the firmware node allocated after the domain is removed.
+On Mon, Jul 13, 2020 at 03:29:26PM +0200, Alexandre Bailon wrote:
+> Currently, this local RAM is not accessible from the CPU.
+> If the CPU tries to access it, then the CPU will hang.
+> 
+> Remoteproc may try to use it when it load a firmware
+> that has some sections in the local RAM.
+> This workarounds the issue by skiping this section.
+> 
+> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+> ---
+>  drivers/remoteproc/mtk_apu_rproc.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
+> index 565b3adca5de..e16d3258a785 100644
+> --- a/drivers/remoteproc/mtk_apu_rproc.c
+> +++ b/drivers/remoteproc/mtk_apu_rproc.c
+> @@ -57,6 +57,9 @@
+>  #define CORE_DEFAULT2_SPIDEN			BIT(0)
+>  #define CORE_XTENSA_ALTRESETVEC			(0x000001F8)
+>  
+> +#define DRAM0_START				(0x7ff00000)
+> +#define IRAM0_END				(0x7ff80000)
+> +
+>  struct mtk_vpu_rproc {
+>  	struct device *dev;
+>  	struct rproc *rproc;
+> @@ -139,6 +142,7 @@ static void mtk_vpu_rproc_kick(struct rproc *rproc, int vqid)
+>  
+>  int mtk_vpu_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
+>  {
+> +	struct mtk_vpu_rproc *vpu_rproc = rproc->priv;
+>  	const u8 *elf_data = fw->data;
+>  	struct elf32_hdr *ehdr;
+>  	struct elf32_phdr *phdr;
+> @@ -156,6 +160,16 @@ int mtk_vpu_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
+>  		/* Remove empty PT_LOAD section */
+>  		if (phdr->p_type == PT_LOAD && !phdr->p_paddr)
+>  			phdr->p_type = PT_NULL;
+> +		/*
+> +		 * Workaround: Currently, the CPU can't access to the APU
+> +		 * local RAM. This removes the local RAM section from the
+> +		 * firmware. Please note that may cause some issues.
+> +		 */
+> +		if (phdr->p_paddr >= DRAM0_START && phdr->p_paddr < IRAM0_END) {
+> +			dev_warn_once(vpu_rproc->dev,
+> +				      "Skipping the APU local RAM section\n");
+> +			phdr->p_type = PT_NULL;
 
-We need to keep the firmware node through irq_domain_remove, but should
-free it afterwards. This patch saves the handle and adds the freeing of
-firmware node after domain removal where appropriate.
+We can't selectively decide to not load sections of a program due to a platform
+driver shortcoming.  Either a real solution is found or booting the remote
+processor is interrupted, with a strong incline toward the former.
 
-Fixes: e3beca48a45b ("irqdomain/treewide: Keep firmware node unconditionally allocated")
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Cc: stable@vger.kernel.org
----
- arch/mips/pci/pci-xtalk-bridge.c    | 3 +++
- arch/x86/kernel/apic/io_apic.c      | 5 +++++
- drivers/iommu/intel/irq_remapping.c | 8 ++++++++
- drivers/mfd/ioc3.c                  | 6 ++++++
- drivers/pci/controller/vmd.c        | 3 +++
- 5 files changed, 25 insertions(+)
+I guess you're dealing with tightly coupled memory or on-chip RAM areas -
+both are accessed on other platform using ioremap_wc() or devm_ioremap_wc().
+You might want to try doing what Suman has done in this patchset [1], with
+specific attention to TCMs and SRAM.
 
-diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
-index 5958217..9b3cc77 100644
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -728,6 +728,7 @@ static int bridge_probe(struct platform_device *pdev)
- 	pci_free_resource_list(&host->windows);
- err_remove_domain:
- 	irq_domain_remove(domain);
-+	irq_domain_free_fwnode(fn);
- 	return err;
- }
- 
-@@ -735,8 +736,10 @@ static int bridge_remove(struct platform_device *pdev)
- {
- 	struct pci_bus *bus = platform_get_drvdata(pdev);
- 	struct bridge_controller *bc = BRIDGE_CONTROLLER(bus);
-+	struct fwnode_handle *fn = bc->domain->fwnode;
- 
- 	irq_domain_remove(bc->domain);
-+	irq_domain_free_fwnode(fn);
- 	pci_lock_rescan_remove();
- 	pci_stop_root_bus(bus);
- 	pci_remove_root_bus(bus);
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 81ffcfb..21325a4a 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2335,8 +2335,13 @@ static int mp_irqdomain_create(int ioapic)
- 
- static void ioapic_destroy_irqdomain(int idx)
- {
-+	struct ioapic_domain_cfg *cfg = &ioapics[idx].irqdomain_cfg;
-+	struct fwnode_handle *fn = ioapics[idx].irqdomain->fwnode;
-+
- 	if (ioapics[idx].irqdomain) {
- 		irq_domain_remove(ioapics[idx].irqdomain);
-+		if (!cfg->dev)
-+			irq_domain_free_fwnode(fn);
- 		ioapics[idx].irqdomain = NULL;
- 	}
- }
-diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-index 9564d23..aa096b3 100644
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -628,13 +628,21 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
- 
- static void intel_teardown_irq_remapping(struct intel_iommu *iommu)
- {
-+	struct fwnode_handle *fn;
-+
- 	if (iommu && iommu->ir_table) {
- 		if (iommu->ir_msi_domain) {
-+			fn = iommu->ir_msi_domain->fwnode;
-+
- 			irq_domain_remove(iommu->ir_msi_domain);
-+			irq_domain_free_fwnode(fn);
- 			iommu->ir_msi_domain = NULL;
- 		}
- 		if (iommu->ir_domain) {
-+			fn = iommu->ir_domain->fwnode;
-+
- 			irq_domain_remove(iommu->ir_domain);
-+			irq_domain_free_fwnode(fn);
- 			iommu->ir_domain = NULL;
- 		}
- 		free_pages((unsigned long)iommu->ir_table->base,
-diff --git a/drivers/mfd/ioc3.c b/drivers/mfd/ioc3.c
-index 74cee7c..d939ccc 100644
---- a/drivers/mfd/ioc3.c
-+++ b/drivers/mfd/ioc3.c
-@@ -616,7 +616,10 @@ static int ioc3_mfd_probe(struct pci_dev *pdev,
- 		/* Remove all already added MFD devices */
- 		mfd_remove_devices(&ipd->pdev->dev);
- 		if (ipd->domain) {
-+			struct fwnode_handle *fn = ipd->domain->fwnode;
-+
- 			irq_domain_remove(ipd->domain);
-+			irq_domain_free_fwnode(fn);
- 			free_irq(ipd->domain_irq, (void *)ipd);
- 		}
- 		pci_iounmap(pdev, regs);
-@@ -643,7 +646,10 @@ static void ioc3_mfd_remove(struct pci_dev *pdev)
- 	/* Release resources */
- 	mfd_remove_devices(&ipd->pdev->dev);
- 	if (ipd->domain) {
-+		struct fwnode_handle *fn = ipd->domain->fwnode;
-+
- 		irq_domain_remove(ipd->domain);
-+		irq_domain_free_fwnode(fn);
- 		free_irq(ipd->domain_irq, (void *)ipd);
- 	}
- 	pci_iounmap(pdev, ipd->regs);
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index f078114..91eb769 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -560,6 +560,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	if (!vmd->bus) {
- 		pci_free_resource_list(&resources);
- 		irq_domain_remove(vmd->irq_domain);
-+		irq_domain_free_fwnode(fn);
- 		return -ENODEV;
- 	}
- 
-@@ -673,6 +674,7 @@ static void vmd_cleanup_srcu(struct vmd_dev *vmd)
- static void vmd_remove(struct pci_dev *dev)
- {
- 	struct vmd_dev *vmd = pci_get_drvdata(dev);
-+	struct fwnode_handle *fn = vmd->irq_domain->fwnode;
- 
- 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
- 	pci_stop_root_bus(vmd->bus);
-@@ -680,6 +682,7 @@ static void vmd_remove(struct pci_dev *dev)
- 	vmd_cleanup_srcu(vmd);
- 	vmd_detach_resources(vmd);
- 	irq_domain_remove(vmd->irq_domain);
-+	irq_domain_free_fwnode(fn);
- }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-1.8.3.1
+Thanks,
+Mathieu
 
+[1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=310325
+
+> +		}
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.26.2
+> 
