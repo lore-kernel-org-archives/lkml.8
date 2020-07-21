@@ -2,115 +2,156 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD84C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B755DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9971D20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893F520717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="blBcqiTj"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="TbeYjfKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgGUNLn (ORCPT
+        id S1728475AbgGUNMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:11:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49222 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgGUNLn (ORCPT
+        Tue, 21 Jul 2020 09:12:00 -0400
+Received: from mail.efficios.com ([167.114.26.124]:53232 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgGUNMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:11:43 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LDBXMr098550;
-        Tue, 21 Jul 2020 08:11:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595337093;
-        bh=NELhrCg4CbssggoxMkMnomy3Bv2q7drp9uho36FblX4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=blBcqiTjOEfc0HHVJevjQ0kvujaObADmAnVnWU4R5XroSjuvCag9Edwi6aGg1QQ74
-         LxnfM+pX2qrlZp8x2Y+/5u2Ohz/76e/9axUhc4eTENIv2j5NHUPoDmN2JURqrXZhkk
-         SDwfk4AZw1G30ZaYwo0HslTZdsZxhOe+15Qgcin8=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LDBX34126462;
-        Tue, 21 Jul 2020 08:11:33 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 08:11:33 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 08:11:33 -0500
-Received: from [158.218.117.90] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LDBTQw063801;
-        Tue, 21 Jul 2020 08:11:32 -0500
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
- for am3 and am4
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200713162601.6829-1-tony@atomide.com>
- <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
-From:   Carlos Hernandez <ceh@ti.com>
-Message-ID: <6b5fc12c-4da3-fc67-b9dd-bfca2ae870f2@ti.com>
-Date:   Tue, 21 Jul 2020 09:11:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 21 Jul 2020 09:12:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 38C8F2CB608;
+        Tue, 21 Jul 2020 09:11:59 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id PPeQyMfgGubd; Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C150F2CB9E3;
+        Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C150F2CB9E3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1595337118;
+        bh=0FzZwzLd/Z/vpUIiWCr7Q1hJk/9TD3I9q2HN7VpjQsk=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=TbeYjfKfvZxAGqtB11GVb5XqOHAKg2eKsbOGMlSNpgsYi78GStsexknzpopA5gYjd
+         iHW5pJeBlD9K41JNcKHEhCXFtl6TXTOiuks37rMUgNNyxEtV1JiwhdJOZpmN5BwmOJ
+         C1qw7Nz+Z+aXC6F72ruRruWZUTMFaWY8gOg+CohD5g+7k6LkOV5AfuY4EuJgQphMvA
+         qyBDRD77CQ3RGF4P9bdqDFNR240kwOmkxFpNqfXOqyByvwnVDzBnBzJ4/JbyMVAlvx
+         tv+xyVSuXGIKtSIrbcsom5VY1p1AP5DiuSLr1KmKilBpD6G2v84tT/dYzF0TE8mX4p
+         XzC6ra9yQ52zQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ivaCxDrJH8Q5; Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id A6DDB2CB7D9;
+        Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
+Date:   Tue, 21 Jul 2020 09:11:58 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Anton Blanchard <anton@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>
+Message-ID: <470490605.22057.1595337118562.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1595324577.x3bf55tpgu.astroid@bobo.none>
+References: <1594868476.6k5kvx8684.astroid@bobo.none> <1594892300.mxnq3b9a77.astroid@bobo.none> <20200716110038.GA119549@hirez.programming.kicks-ass.net> <1594906688.ikv6r4gznx.astroid@bobo.none> <1314561373.18530.1594993363050.JavaMail.zimbra@efficios.com> <1595213677.kxru89dqy2.astroid@bobo.none> <2055788870.20749.1595263590675.JavaMail.zimbra@efficios.com> <1595324577.x3bf55tpgu.astroid@bobo.none>
+Subject: Re: [RFC PATCH 4/7] x86: use exit_lazy_tlb rather than
+ membarrier_mm_sync_core_before_usermode
 MIME-Version: 1.0
-In-Reply-To: <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF78 (Linux)/8.8.15_GA_3953)
+Thread-Topic: x86: use exit_lazy_tlb rather than membarrier_mm_sync_core_before_usermode
+Thread-Index: vi7IW503i62QJHH8I6RRgM2HetIWrA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+----- On Jul 21, 2020, at 6:04 AM, Nicholas Piggin npiggin@gmail.com wrote:
 
-On 7/17/20 6:29 AM, Daniel Lezcano wrote:
-> On 13/07/2020 18:26, Tony Lindgren wrote:
->> Carlos Hernandez <ceh@ti.com> reported that we now have a suspend and
->> resume regresssion on am3 and am4 compared to the earlier kernels. While
->> suspend and resume works with v5.8-rc3, we now get errors with rtcwake:
->>
->> pm33xx pm33xx: PM: Could not transition all powerdomains to target state
->> ...
->> rtcwake: write error
->>
->> This is because we now fail to idle the system timer clocks that the
->> idle code checks and the error gets propagated to the rtcwake.
->>
->> Turns out there are several issues that need to be fixed:
->>
->> 1. Ignore no-idle and no-reset configured timers for the ti-sysc
->>     interconnect target driver as otherwise it will keep the system timer
->>     clocks enabled
->>
->> 2. Toggle the system timer functional clock for suspend for am3 and am4
->>     (but not for clocksource on am3)
->>
->> 3. Only reconfigure type1 timers in dmtimer_systimer_disable()
->>
->> 4. Use of_machine_is_compatible() instead of of_device_is_compatible()
->>     for checking the SoC type
->>
->> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support")
->> Reported-by: Carlos Hernandez <ceh@ti.com>
->> Signed-off-by: Tony Lindgren <tony@atomide.com>
->> ---
+> Excerpts from Mathieu Desnoyers's message of July 21, 2020 2:46 am:
+[...]
+> 
+> Yeah you're probably right in this case I think. Quite likely most kernel
+> tasks that asynchronously write to user memory would at least have some
+> kind of producer-consumer barriers.
+> 
+> But is that restriction of all async modifications documented and enforced
+> anywhere?
+> 
+>>> How about other memory accesses via kthread_use_mm? Presumably there is
+>>> still ordering requirement there for membarrier,
+>> 
+>> Please provide an example case with memory accesses via kthread_use_mm where
+>> ordering matters to support your concern.
+> 
+> I think the concern Andy raised with io_uring was less a specific
+> problem he saw and more a general concern that we have these memory
+> accesses which are not synchronized with membarrier.
+> 
+>>> so I really think
+>>> it's a fragile interface with no real way for the user to know how
+>>> kernel threads may use its mm for any particular reason, so membarrier
+>>> should synchronize all possible kernel users as well.
+>> 
+>> I strongly doubt so, but perhaps something should be clarified in the
+>> documentation
+>> if you have that feeling.
+> 
+> I'd rather go the other way and say if you have reasoning or numbers for
+> why PF_KTHREAD is an important optimisation above rq->curr == rq->idle
+> then we could think about keeping this subtlety with appropriate
+> documentation added, otherwise we can just kill it and remove all doubt.
+> 
+> That being said, the x86 sync core gap that I imagined could be fixed
+> by changing to rq->curr == rq->idle test does not actually exist because
+> the global membarrier does not have a sync core option. So fixing the
+> exit_lazy_tlb points that this series does *should* fix that. So
+> PF_KTHREAD may be less problematic than I thought from implementation
+> point of view, only semantics.
 
-Tested-by: Carlos Hernandez <ceh@ti.com>
+Today, the membarrier global expedited command explicitly skips kernel threads,
+but it happens that membarrier private expedited considers those with the
+same mm as target for the IPI.
 
+So we already implement a semantic which differs between private and global
+expedited membarriers. This can be explained in part by the fact that
+kthread_use_mm was introduced after 4.16, where the most recent membarrier
+commands where introduced. It seems that the effect on membarrier was not
+considered when kthread_use_mm was introduced.
 
-> Carlos, were you able to test this patch ?
->
+Looking at membarrier(2) documentation, it states that IPIs are only sent to
+threads belonging to the same process as the calling thread. If my understanding
+of the notion of process is correct, this should rule out sending the IPI to
+kernel threads, given they are not "part" of the same process, only borrowing
+the mm. But I agree that the distinction is moot, and should be clarified.
+
+Without a clear use-case to justify adding a constraint on membarrier, I am
+tempted to simply clarify documentation of current membarrier commands,
+stating clearly that they are not guaranteed to affect kernel threads. Then,
+if we have a compelling use-case to implement a different behavior which covers
+kthreads, this could be added consistently across membarrier commands with a
+flag (or by adding new commands).
+
+Does this approach make sense ?
+
+Thanks,
+
+Mathieu
+
 -- 
-Carlos
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
