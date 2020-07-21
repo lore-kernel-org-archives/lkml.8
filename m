@@ -2,194 +2,94 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9EEC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2ED2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="eDsnM/ci"
+	by mail.kernel.org (Postfix) with ESMTP id 645A020773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595294987;
+	bh=RleFPPOuqx0c/rRkU7q5uVFxbzFj5p7ERSlLBGAKH30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fTnE2zvySClOBV5mtB0ghLz+VuT3ERUuS86AlkI7FsqUny42H7ect9apP0QzGkEx+
+	 DVSvWwN5sbzhs+c9coQxKUg6BLDLXmUKCgyRdnPesjogCaWx/NqL6l+Yx3Ggjl4aej
+	 d4Wd1Fkj0M1JICAwnc/ngYYMh5rNgJ+/DNli//HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgGUB3c (ORCPT
+        id S1726506AbgGUB3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:29:32 -0400
-Received: from mail-eopbgr750130.outbound.protection.outlook.com ([40.107.75.130]:17521
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726029AbgGUB3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:29:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vj541ktkdzHmGPEWU8guOsv7CfVHPyJaZ1vEZJ2yn63yvFL5tkK4PeJ/MfkgnKYemmJxMiA22XzuCVAc9awE0FxCa0kIZhbUdViApwz6AMTnkdmtvr4G823eKRe0ooH71YW4xOoTCIetdnI4aRodrb3EBDuf2IgREtLHaMBcK5t+oy/LvxEzcsKLbtw1M2tSt+RnTRbMe5zz6hPyGdaZ4xr+hUe7cckOOA1ymfkttoppeqB/8C5QMer6+S+83eZTcOpGu9iw5SBgZsIU0rJ/eSbXs/h89bEaYQ7gagAOB9sAWjcaH29GRPEjOw46mLv+qQpkf1Sw7wpLe/ST1ZNgpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LBvW30MycsHksVGJ/ydS7ds/MoYvY9jYhxsqEg/0DmU=;
- b=bylZ7iaj17f0beVcbMSJdt/+3UYshQeWZsdLCsTmPm3AGbAQe1IBHcxlJcF0nqVIJRjoyuozMyNkHh6YYmypOhnKa0B4t/iZg+bA7UnRxKd/j8yoVZ3Ef7nmVHuYHwEMct8X+YKVnbtuGcQwstn3xvNHMZlXfW6uXowzXxfVpFtbVsds3MCYwUWt3H514M7T2cPj/7Kd85vaW7Bv/v5d+6ZgoU3TShXKeyiR0bUUJ+HBYSsWG9vZBF+4dpFRo0dMQ5UwoJqdAxCz7315hFgKP9LwgLhnssjW1BZ1FUHqQ4aJvwoCo2c7Slrrc2LQLeI3k9ZdWCdJjsT7qZNdAzfjwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bayhubtech.com; dmarc=pass action=none
- header.from=bayhubtech.com; dkim=pass header.d=bayhubtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=towerbridgetechnology.onmicrosoft.com;
- s=selector2-towerbridgetechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LBvW30MycsHksVGJ/ydS7ds/MoYvY9jYhxsqEg/0DmU=;
- b=eDsnM/ciWTdjRXu4u0kmKr1xA/EZzzH6PuyFb8FCJdWj0br37psbcrv3HDRy5Bo0Dk5u9BfyvqXU1hxp/0HoF20pkpeOXRkL1Vyc62oWBgPr/SSk7CtIF1hR0VjL6GTeO/dpfDtAxsIKC7RMxkTQEu2ROkc1JcxnZOtS/JDds7k=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=bayhubtech.com;
-Received: from BY5PR16MB3319.namprd16.prod.outlook.com (2603:10b6:a03:186::25)
- by BYAPR16MB2998.namprd16.prod.outlook.com (2603:10b6:a03:e5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Tue, 21 Jul
- 2020 01:29:27 +0000
-Received: from BY5PR16MB3319.namprd16.prod.outlook.com
- ([fe80::fd57:47b2:eaeb:d004]) by BY5PR16MB3319.namprd16.prod.outlook.com
- ([fe80::fd57:47b2:eaeb:d004%5]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
- 01:29:27 +0000
-From:   shirley her <shirley.her@bayhubtech.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     shaper.liu@bayhubtech.com, chevron.li@bayhubtech.com,
-        xiaoguang.yu@bayhubtech.com, max.huang@bayhubtech.com,
-        shirley.her@bayhubtech.com
-Subject: [PATCH V1 2/2] mmc: sdhci-pci-o2micro: Add HW tuning for SDR104 mode
-Date:   Mon, 20 Jul 2020 18:27:00 -0700
-Message-Id: <20200721012700.8564-1-shirley.her@bayhubtech.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR02CA0054.namprd02.prod.outlook.com
- (2603:10b6:a03:54::31) To BY5PR16MB3319.namprd16.prod.outlook.com
- (2603:10b6:a03:186::25)
+        Mon, 20 Jul 2020 21:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgGUB3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 21:29:46 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3461B20714;
+        Tue, 21 Jul 2020 01:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595294985;
+        bh=RleFPPOuqx0c/rRkU7q5uVFxbzFj5p7ERSlLBGAKH30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZVV+ScaBB7lxUheq3NtRpNDUU85fyh4R59g4LheiH9UhpgEy8DUwjsYNg9j/F/tlL
+         6d2x8YgnTOAC/+vTIPOY0/dVjqqh14/F3n4It2lh53YqElNvgwU3r6TfWz13eu77e8
+         c2YffkQo9ryrIaX+npyTtZ8nRGVNWjfs5rr4vygg=
+Date:   Mon, 20 Jul 2020 21:29:43 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 041/133] Revert "usb/ohci-platform: Fix a warning
+ when hibernating"
+Message-ID: <20200721012943.GA406581@sasha-vm>
+References: <20200720152803.732195882@linuxfoundation.org>
+ <20200720152805.704517976@linuxfoundation.org>
+ <20200720210722.GA11552@amd>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (209.36.105.184) by BYAPR02CA0054.namprd02.prod.outlook.com (2603:10b6:a03:54::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Tue, 21 Jul 2020 01:27:44 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [209.36.105.184]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1ddaf357-9e4b-474b-9988-08d82d157d29
-X-MS-TrafficTypeDiagnostic: BYAPR16MB2998:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR16MB29988B241806AD076D1021388B780@BYAPR16MB2998.namprd16.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TgA4h07uue7AcsTZIedVKSvnNEHnT0GoNiaypBLBzap8s61fJ1Gh6JHDtM7Yb3mzVEcR1IjnRoC2wh9sxmsuENPIvD4E9drCcacHDBWNzNticSR5OqhCTVqBbJXkEE70JGKoHJen3LyutJHtOoZF5vhM8WBQ9pIJoULCfQBIvmO+vMRf8AoXmLGklIUaveKCbQT+owQ/tagDm8mhL0btokXGwjr+W1b5fLEzawwqKw+QxNcxbl0dOOdYI/tJEcpMETtpHNxCM4JXTyhz+hn7RlIbvLaO4W7+A6sUPNFeMtzHB8h41Hhr0nAp2d6p4yNGz6ySB97GvkFhZsv1NcF9dP0vpJ0gGNioV/ofWIwfebeHfAcqJgKPadK1AHV7evqT
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR16MB3319.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39830400003)(346002)(366004)(136003)(376002)(6666004)(6486002)(4326008)(6512007)(36756003)(1076003)(107886003)(52116002)(69590400007)(6506007)(956004)(2616005)(508600001)(16526019)(26005)(8936002)(186003)(316002)(83380400001)(2906002)(5660300002)(66556008)(66476007)(86362001)(8676002)(66946007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: Gy900oxOeBcjt0rOVHzyrWlQtcadCHqseJGeOpWH0gafK+jmDO0+NntxMeHaDE7OCBn8DCuLOLM2PfTQnDbfC0Xvhwk1QLTNKvjvJRuu+VkAyOlvQeWt1fuqcS8Gvnr6IFDKrieCq3I9CjXkFRKM6bPX3LDDUqA4D4G2ksSzFV0I/ulW0HxDVJfz34EezGz/A27THy1NFaW/3lQQPkXhAr3O7zPh69XEKZvuYGxqfz6V8wai36cS2ocj4PO25iJUi8LDGNdaHAnX9Nl4Un70JtayGUiHkI47tcu8ThTAGAugf8sOeSf1nniSCy/cqI2bpO1jeoawoORWoxf+TbShzv93YxZixM6qyk4WuvSfywVexzy5xjaI+fg1dYTEgwTbQUcH3bSUhkrnQjmAQyhR/tO/GoBOckAtbsAP7+oWv+brAJCvsqKl07jMRi+bv4Fk0fqHxQCehZvqZFpLv1YXt/aAAJ7ZwHswLFTxDTfEZdW3oF2tqfVBprVTaq38GSAG
-X-OriginatorOrg: bayhubtech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ddaf357-9e4b-474b-9988-08d82d157d29
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR16MB3319.namprd16.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2020 01:29:27.8377
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hm99ab7K8aQ6di6yRPhu4XGc+AmXXo2eB/sHfOvS/Nb+k/ATFP+36bYhj6AnL8QO2p59urnx0AusVizNAokwAwdA6Vrv/uqJZShBHAeuo/g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR16MB2998
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200720210722.GA11552@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HW tuning support for SD host controller in SDR104 mode
+On Mon, Jul 20, 2020 at 11:07:22PM +0200, Pavel Machek wrote:
+>Hi!
+>On Mon 2020-07-20 17:36:28, Greg Kroah-Hartman wrote:
+>> This reverts commit c83258a757687ffccce37ed73dba56cc6d4b8a1b.
+>>
+>> Eugeniu Rosca writes:
+>>
+>> On Thu, Jul 09, 2020 at 09:00:23AM +0200, Eugeniu Rosca wrote:
+>> >After integrating v4.14.186 commit 5410d158ca2a50 ("usb/ehci-platform:
+>> >Set PM runtime as active on resume") into downstream v4.14.x, we started
+>> >to consistently experience below panic [1] on every second s2ram of
+>> >R-Car H3 Salvator-X Renesas reference board.
+>> >
+>> >After some investigations, we concluded the following:
+>> > - the issue does not exist in vanilla v5.8-rc4+
+>> > - [bisecting shows that] the panic on v4.14.186 is caused by the lack
+>> >   of v5.6-rc1 commit 987351e1ea7772 ("phy: core: Add consumer device
+>> >   link support"). Getting evidence for that is easy. Reverting
+>> >   987351e1ea7772 in vanilla leads to a similar backtrace [2].
+>> >
+>> >Questions:
+>> > - Backporting 987351e1ea7772 ("phy: core: Add consumer device
+>> >   link support") to v4.14.187 looks challenging enough, so probably not
+>> >   worth it. Anybody to contradict this?
+>
+>I'm not sure about v4.14.187, but backport to v4.19 is quite simple
+>(just ignore single non-existing file) and passes basic testing.
+>
+>Would that be better solution for 4.19 and newer?
 
-Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
----
-Change in V1:
-1. Add HW tuning for SDR104 mode instead of SW tuning
-2. Change clock base to 208Mhz in SDR104 mode
-3. Add CMD and DATA line reset after HW tuning command
----
- drivers/mmc/host/sdhci-pci-o2micro.c | 33 ++++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 4 deletions(-)
+If Eugeniu could confirm that doing so on 4.19+ works for him, sure.
 
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-index ed3c605fcf0c..fa76748d8929 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -196,7 +196,7 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
- {
- 	int i;
- 
--	sdhci_send_tuning(host, MMC_SEND_TUNING_BLOCK_HS200);
-+	sdhci_send_tuning(host, opcode);
- 
- 	for (i = 0; i < 150; i++) {
- 		u16 ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-@@ -305,10 +305,12 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	 * This handler only implements the eMMC tuning that is specific to
- 	 * this controller.  Fall back to the standard method for other TIMING.
- 	 */
--	if (host->timing != MMC_TIMING_MMC_HS200)
-+	if ((host->timing != MMC_TIMING_MMC_HS200) &&
-+		(host->timing != MMC_TIMING_UHS_SDR104))
- 		return sdhci_execute_tuning(mmc, opcode);
- 
--	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
-+	if (WARN_ON((opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
-+			(opcode != MMC_SEND_TUNING_BLOCK)))
- 		return -EINVAL;
- 	/*
- 	 * Judge the tuning reason, whether caused by dll shift
-@@ -342,6 +344,9 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 		sdhci_set_bus_width(host, current_bus_width);
- 	}
- 
-+	sdhci_reset(host, SDHCI_RESET_CMD);
-+	sdhci_reset(host, SDHCI_RESET_DATA);
-+
- 	host->flags &= ~SDHCI_HS400_TUNING;
- 	return 0;
- }
-@@ -369,7 +374,6 @@ static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
- 	scratch_32 |= O2_SD_LED_ENABLE;
- 	pci_write_config_dword(chip->pdev,
- 			       O2_SD_TEST_REG, scratch_32);
--
- }
- 
- static void sdhci_pci_o2_fujin2_pci_init(struct sdhci_pci_chip *chip)
-@@ -497,6 +501,10 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
- static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
- {
- 	u16 clk;
-+	u8 scratch;
-+	u32 scratch_32;
-+	struct sdhci_pci_slot *slot = sdhci_priv(host);
-+	struct sdhci_pci_chip *chip = slot->chip;
- 
- 	host->mmc->actual_clock = 0;
- 
-@@ -505,6 +513,23 @@ static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
- 	if (clock == 0)
- 		return;
- 
-+	if ((host->timing == MMC_TIMING_UHS_SDR104) && (clock == 200000000)) {
-+		pci_read_config_byte(chip->pdev, O2_SD_LOCK_WP, &scratch);
-+
-+		scratch &= 0x7f;
-+		pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch);
-+
-+		pci_read_config_dword(chip->pdev, O2_SD_PLL_SETTING, &scratch_32);
-+
-+		if ((scratch_32 & 0xFFFF0000) != 0x2c280000)
-+			o2_pci_set_baseclk(chip, 0x2c280000);
-+
-+		pci_read_config_byte(chip->pdev, O2_SD_LOCK_WP, &scratch);
-+
-+		scratch |= 0x80;
-+		pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch);
-+	}
-+
- 	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
- 	sdhci_o2_enable_clk(host, clk);
- }
 -- 
-2.25.1
-
+Thanks,
+Sasha
