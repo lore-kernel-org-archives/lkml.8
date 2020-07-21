@@ -2,183 +2,186 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50331C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 174B9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2925A2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itQNcKcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgGUElX (ORCPT
+        id S1726891AbgGUElu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:41:23 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:54529 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgGUElW (ORCPT
+        Tue, 21 Jul 2020 00:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgGUElt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:41:22 -0400
-Received: by mail-il1-f198.google.com with SMTP id d18so12639998ill.21
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:41:21 -0700 (PDT)
+        Tue, 21 Jul 2020 00:41:49 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29058C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:41:49 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id t12so3666868ooc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 21:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/5pmXlWsJseKxXD6BxsrJbesRRq6vXEEnjoC2olkcJo=;
+        b=itQNcKcSj6tex9SlCrDZD4lhxnrGwDST2/8O+DVZaSQs564N9CMcNzyPpsTyA0jTkR
+         afIFXIwqpZI5bjcg4sfVJBAwY2yAjfVKmRFgKCLAt34WyqneB1Hot7yMOMsBxV+rYw6T
+         e9iFv+fiZGwd0/QhczASKtL2HyaZH78UZp3TjGV+STJBatTKCPwfbgNs2fhut8SeBqAF
+         7GSDw1noOaTnB1sdxtbYV7AJLlCvegEGMR5hCiuFBWUGTZb6rnFu+rhXaxsGmgpJtyqk
+         +eoikz7+lpaWVYk52prZ6CBH9tSnNvCqW58bBsooGfMrv17155Drm5X5Ay3pXZd7NiEw
+         nWug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=4NDObDvcYVvUxbnT7etgKM0Hz8xx5bu3Bc10MkSF2tQ=;
-        b=skPbRNNQDgoYFgIIec4lsmxSPhuUKXX674OE/K9kp0s+VtrKXeRtlu6EIMRyE2qECO
-         Q9KzU9XnfmKW/eYi4JAHt03s13QQDHh/CLWY8700MLOYhjV6Z82FCbFXxirgpSL4n6va
-         CEeCtXk37x7pskSVhZoeNYavv1xI8/21AD/S2I4DB+HfSBq+NSnhvCm1NIRjiiguaG6o
-         zWmoTJt4WEi5Ev/HsmeXLemSkHO3bvvncK4gqsnUagRzTwluJXrHjzm4RqUrganFMzgh
-         Uk1RYG42BmNBkC0xiaxtiqKx00unv+OWTpi3EbTTyS0E+P6wnmaN1InqqTTmIZ8kRihW
-         QI0w==
-X-Gm-Message-State: AOAM530ZFuzU41Pggl4Oem2ONZWCoq+KEm2sge31S4p2INVlgH9rtcMA
-        6i2si7PeWBvvLdG/cGy7lhrBuTmO+TWUUQHCwT3ejdbsy8pb
-X-Google-Smtp-Source: ABdhPJw0z0wKHOCOUiAiruRk2dSuGAkOO64ky9nsRZ3Iyw9UCkXXhKOyTVABvUAeIzY6Gzi5hsxFiq1/gmahTv9MK0DWN15tVwNJ
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/5pmXlWsJseKxXD6BxsrJbesRRq6vXEEnjoC2olkcJo=;
+        b=olkJmYX1SkJrOsodTzho8eEnFsQ4hjd3y9wvlb23f3uZFh+mfjXkG4IRCyOf5ev9Xq
+         pbahe04zhgyRdnc0xG/SCp7DCgmMJglzKGhKJT9AfHF6HTuGpTZZ6CaQPwcgyHi5UkVK
+         OdoRAgiEwaPX99p2xiMQxS/GkmOlpAovZoBJh+YMmvNJvYKcdPt7wZ6iOpzIBZCQdeo/
+         YZpeSTE7+AdvTuCG0Wyl4V/7dTVGQjEqEWHhRdKl4gCRlugzhE5BfH10c+rrGsATqWt6
+         2vXcZTg0VptzG33MhSMj3lLejnHYZebjR7UEp2leNfANM2MVA3ttzxV5JIqyylN11zi5
+         /6NQ==
+X-Gm-Message-State: AOAM533IU0BGlSj7qK6ucCrncC0eN2ft405b+ayY7j7J5bEBg1YrEQEG
+        P60vl6gDT1m1dtpW39RxJH9X+z38IlJ76QC17wM=
+X-Google-Smtp-Source: ABdhPJy8DDGlOWOc/9xhy6NZJHEyUsA6TY6rafZcdpXx0vcoakbBYRsfzyFHj+7MFSlWso0YwQPNqm6fpec3KGGmibI=
+X-Received: by 2002:a4a:ba8b:: with SMTP id d11mr22545884oop.80.1595306508490;
+ Mon, 20 Jul 2020 21:41:48 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6d07:: with SMTP id a7mr25915421iod.166.1595306480557;
- Mon, 20 Jul 2020 21:41:20 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 21:41:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000014e30705aaec3cc5@google.com>
-Subject: KASAN: use-after-free Read in sock_def_write_space (2)
-From:   syzbot <syzbot+6720d64f31c081c2f708@syzkaller.appspotmail.com>
-To:     christophe.jaillet@wanadoo.fr, davem@davemloft.net,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        navid.emamdoost@gmail.com, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
+ <20200717040958.70561-10-ravi.bangoria@linux.ibm.com> <CACzsE9r0acLUkV35mVxy1AEK_xObs0yz+fD6UdbNdc6uz=Buqw@mail.gmail.com>
+ <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
+In-Reply-To: <ccfcf488-0ec9-1737-8368-a848de1d72d1@linux.ibm.com>
+From:   Jordan Niethe <jniethe5@gmail.com>
+Date:   Tue, 21 Jul 2020 14:41:37 +1000
+Message-ID: <CACzsE9q5YtT_bXOpw9cri_UCxziW_FRbCpcViANaZwui0hjDqw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/10] powerpc/watchpoint: Return available watchpoints dynamically
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jul 21, 2020 at 1:57 PM Ravi Bangoria
+<ravi.bangoria@linux.ibm.com> wrote:
+>
+>
+>
+> On 7/20/20 9:12 AM, Jordan Niethe wrote:
+> > On Fri, Jul 17, 2020 at 2:11 PM Ravi Bangoria
+> > <ravi.bangoria@linux.ibm.com> wrote:
+> >>
+> >> So far Book3S Powerpc supported only one watchpoint. Power10 is
+> >> introducing 2nd DAWR. Enable 2nd DAWR support for Power10.
+> >> Availability of 2nd DAWR will depend on CPU_FTR_DAWR1.
+> >>
+> >> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> >> ---
+> >>   arch/powerpc/include/asm/cputable.h      | 4 +++-
+> >>   arch/powerpc/include/asm/hw_breakpoint.h | 5 +++--
+> >>   2 files changed, 6 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+> >> index 3445c86e1f6f..36a0851a7a9b 100644
+> >> --- a/arch/powerpc/include/asm/cputable.h
+> >> +++ b/arch/powerpc/include/asm/cputable.h
+> >> @@ -633,7 +633,9 @@ enum {
+> >>    * Maximum number of hw breakpoint supported on powerpc. Number of
+> >>    * breakpoints supported by actual hw might be less than this.
+> >>    */
+> >> -#define HBP_NUM_MAX    1
+> >> +#define HBP_NUM_MAX    2
+> >> +#define HBP_NUM_ONE    1
+> >> +#define HBP_NUM_TWO    2
+> > I wonder if these defines are necessary - has it any advantage over
+> > just using the literal?
+>
+> No, not really. Initially I had something like:
+>
+> #define HBP_NUM_MAX    2
+> #define HBP_NUM_P8_P9  1
+> #define HBP_NUM_P10    2
+>
+> But then I thought it's also not right. So I made it _ONE and _TWO.
+> Now the function that decides nr watchpoints dynamically (nr_wp_slots)
+> is in different file, I thought to keep it like this so it would be
+> easier to figure out why _MAX is 2.
+>
+> >>
+> >>   #endif /* !__ASSEMBLY__ */
+> >>
+> >> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+> >> index cb424799da0d..d4eab1694bcd 100644
+> >> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+> >> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+> >> @@ -5,10 +5,11 @@
+> >>    * Copyright 2010, IBM Corporation.
+> >>    * Author: K.Prasad <prasad@linux.vnet.ibm.com>
+> >>    */
+> >> -
+> > Was removing this line deliberate?
+>
+> Nah. Will remove that hunk.
+>
+> >>   #ifndef _PPC_BOOK3S_64_HW_BREAKPOINT_H
+> >>   #define _PPC_BOOK3S_64_HW_BREAKPOINT_H
+> >>
+> >> +#include <asm/cpu_has_feature.h>
+> >> +
+> >>   #ifdef __KERNEL__
+> >>   struct arch_hw_breakpoint {
+> >>          unsigned long   address;
+> >> @@ -46,7 +47,7 @@ struct arch_hw_breakpoint {
+> >>
+> >>   static inline int nr_wp_slots(void)
+> >>   {
+> >> -       return HBP_NUM_MAX;
+> >> +       return cpu_has_feature(CPU_FTR_DAWR1) ? HBP_NUM_TWO : HBP_NUM_ONE;
+> > So it'd be something like:
+> > +       return cpu_has_feature(CPU_FTR_DAWR1) ? HBP_NUM_MAX : 1;
+> > But thinking that there might be more slots added in the future, it
+> > may be better to make the number of slots a variable that is set
+> > during the init and then have this function return that.
+>
+> Not sure I follow. What do you mean by setting number of slots a
+> variable that is set during the init?
+Sorry I was unclear there.
+I was just looking and saw arm also has a variable number of hw breakpoints.
+If we did something like how they handle it, it might look something like:
 
-syzbot found the following issue on:
+static int num_wp_slots __ro_after_init;
 
-HEAD commit:    5714ee50 copy_xstate_to_kernel: Fix typo which caused GDB ..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13059e7f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
-dashboard link: https://syzkaller.appspot.com/bug?extid=6720d64f31c081c2f708
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1732cabb100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163ace5f100000
+int nr_wp_slots(void) {
+    return num_wp_slots;
+}
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6720d64f31c081c2f708@syzkaller.appspotmail.com
+static int __init arch_hw_breakpoint_init(void) {
+    num_wp_slots = work out how many wp_slots
+}
+arch_initcall(arch_hw_breakpoint_init);
 
-IPVS: ftp: loaded support on port[0] = 21
-==================================================================
-BUG: KASAN: use-after-free in list_empty include/linux/list.h:282 [inline]
-BUG: KASAN: use-after-free in waitqueue_active include/linux/wait.h:127 [inline]
-BUG: KASAN: use-after-free in wq_has_sleeper include/linux/wait.h:161 [inline]
-BUG: KASAN: use-after-free in skwq_has_sleeper include/net/sock.h:2143 [inline]
-BUG: KASAN: use-after-free in sock_def_write_space+0x609/0x630 net/core/sock.c:2926
-Read of size 8 at addr ffff88808a6d25c0 by task syz-executor863/6817
+Then we wouldn't have to calculate everytime nr_wp_slots() is called.
+In the future if more wp's are added nr_wp_slots() will get more complicated.
+But just an idea, feel free to ignore.
 
-CPU: 0 PID: 6817 Comm: syz-executor863 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- list_empty include/linux/list.h:282 [inline]
- waitqueue_active include/linux/wait.h:127 [inline]
- wq_has_sleeper include/linux/wait.h:161 [inline]
- skwq_has_sleeper include/net/sock.h:2143 [inline]
- sock_def_write_space+0x609/0x630 net/core/sock.c:2926
- sock_wfree+0x1cc/0x240 net/core/sock.c:2060
- skb_release_head_state+0x9f/0x250 net/core/skbuff.c:651
- skb_release_all net/core/skbuff.c:662 [inline]
- __kfree_skb net/core/skbuff.c:678 [inline]
- kfree_skb.part.0+0x89/0x350 net/core/skbuff.c:696
- kfree_skb+0x7d/0x100 include/linux/refcount.h:270
- skb_queue_purge+0x14/0x30 net/core/skbuff.c:3077
- qrtr_tun_release+0x40/0x60 net/qrtr/tun.c:118
- __fput+0x33c/0x880 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:239 [inline]
- __prepare_exit_to_usermode+0x1e9/0x1f0 arch/x86/entry/common.c:269
- __do_fast_syscall_32 arch/x86/entry/common.c:475 [inline]
- do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:503
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7fc2569
-Code: Bad RIP value.
-RSP: 002b:00000000ffd1de7c EFLAGS: 00000246 ORIG_RAX: 0000000000000006
-RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000020000180
-RDX: 0000000000000007 RSI: 00000000080bffdb RDI: 000000002000018e
-RBP: 00000000ffd1dee8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 6817:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x12c/0x3b0 mm/slab.c:3484
- sock_alloc_inode+0x18/0x1c0 net/socket.c:253
- alloc_inode+0x61/0x230 fs/inode.c:232
- new_inode_pseudo+0x14/0xe0 fs/inode.c:928
- sock_alloc+0x3c/0x260 net/socket.c:573
- __sock_create+0xb9/0x740 net/socket.c:1392
- sock_create net/socket.c:1479 [inline]
- __sys_socket+0xef/0x200 net/socket.c:1521
- __do_sys_socket net/socket.c:1530 [inline]
- __se_sys_socket net/socket.c:1528 [inline]
- __ia32_sys_socket+0x6f/0xb0 net/socket.c:1528
- do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:428
- __do_fast_syscall_32 arch/x86/entry/common.c:475 [inline]
- do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:503
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-
-Freed by task 16:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x7f/0x310 mm/slab.c:3694
- i_callback+0x3f/0x70 fs/inode.c:221
- rcu_do_batch kernel/rcu/tree.c:2414 [inline]
- rcu_core+0x5c7/0x1160 kernel/rcu/tree.c:2641
- __do_softirq+0x34c/0xa60 kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff88808a6d2540
- which belongs to the cache sock_inode_cache of size 1216
-The buggy address is located 128 bytes inside of
- 1216-byte region [ffff88808a6d2540, ffff88808a6d2a00)
-The buggy address belongs to the page:
-page:ffffea000229b480 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88808a6d2ffd
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002250f88 ffffea000229a608 ffff88821b77f700
-raw: ffff88808a6d2ffd ffff88808a6d2000 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808a6d2480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff88808a6d2500: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff88808a6d2580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                           ^
- ffff88808a6d2600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88808a6d2680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>
+> Thanks,
+> Ravi
