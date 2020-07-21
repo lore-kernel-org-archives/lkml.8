@@ -2,114 +2,278 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E05C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0371A22482
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5367920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:49:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xO/qrEaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgGUHs2 (ORCPT
+        id S1728469AbgGUHtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:48:28 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:48158 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgGUHs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:48:26 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7784320154A;
-        Tue, 21 Jul 2020 09:48:24 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 33B892003FA;
-        Tue, 21 Jul 2020 09:48:20 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C720040305;
-        Tue, 21 Jul 2020 15:29:38 +0800 (SGT)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, shawnguo@kernel.org,
-        festevam@gmail.com
-Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, Richard Zhu <hongxing.zhu@nxp.com>
-Subject: [PATCH 2/2] PCI: imx: add another regulator for imx pcie
-Date:   Tue, 21 Jul 2020 15:44:30 +0800
-Message-Id: <1595317470-9394-2-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595317470-9394-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1595317470-9394-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 21 Jul 2020 03:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbgGUHtQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:49:16 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763D3C0619D7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:49:16 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u12so11132176lff.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=UY1nsdPNSUSAf+7YLs436phqwdMpy28An6352a8KdMA=;
+        b=xO/qrEazEurCKMVx/z8pZNoA4cSkvoSezcPLfk7wG1+eXesSMkQ2ER0gWslYpa4DsV
+         6byH1lsaaeDBHyJ7BBzxnobi6QUsDFGYp5s4o5dHQNp5V9l+pseaorlHVQ+GRhakKHsY
+         1TKiJb8pbyZUtZshd4JoRD4wuL65HNqPL3PqgzXfD3rpU8lkh9l5P2axbnWkaPCs5Qlo
+         cRIPRAEmzfw4MyXkIqUhM7D8ajhYSZIrDciAq8QqjcXBkbG/6Rma4zX0da1nK11FF3Pw
+         jRmGw1cYmHcMYv62VoPWaRbNwnMstM3b6+V3eeit6MVCwkV9IbqxlXESmw+ZnWk0FRjJ
+         V9bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=UY1nsdPNSUSAf+7YLs436phqwdMpy28An6352a8KdMA=;
+        b=TnWo2brexyhqKaDkvtrLy0w6jSGntKH9vokjcQKBLRyYChtCVHjZwMLKjSMThrI0S2
+         s99MGfxVbDcEnzWlgMIw6deeFuBlG8WjVNlsHrTD2vk5THaUHxoL3BMsveBKJZ7uJMwr
+         XHUrjYncFA08uzXip8V8lP0OxGV3ehjGzFIrhYnxmstTemu+liPqyeRPH3Yq9JJar0Ms
+         pRPehSbKFroXin0co3rudbO9ImKG1zVjlfLVtMwRBgupTMF9sjZwCWmlX15e0nyYAYQt
+         zrnq4WQp0xutC50ojXcFTxBAxBoXF8f5Up6Ldt0HFEzYtqSlcuksi1e09QnazUUPEf7r
+         7+jg==
+X-Gm-Message-State: AOAM530q399f3EwR+lzmKTKgjZ9YfmL/8+FY9AG2UOTVfsDsZyEdJPA/
+        s8Y/O5+4P6S+PhM8SSCjWnzIhQ==
+X-Google-Smtp-Source: ABdhPJyOn29vQuyh40KEazMlyhGKWe5PZwPC4xaKKkMpds+iayhn9AQzaS02pBFfnbZgRktR3d8Xcw==
+X-Received: by 2002:a19:be87:: with SMTP id o129mr270351lff.180.1595317754868;
+        Tue, 21 Jul 2020 00:49:14 -0700 (PDT)
+Received: from localhost.localdomain ([195.24.90.54])
+        by smtp.gmail.com with ESMTPSA id d2sm4045334ljg.6.2020.07.21.00.49.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 00:49:14 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 2/6] venus: venc: Add support for constant quality control
+Date:   Tue, 21 Jul 2020 10:45:34 +0300
+Message-Id: <20200721074538.505-3-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200721074538.505-1-stanimir.varbanov@linaro.org>
+References: <20200721074538.505-1-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One more regulator is required to turn on the external oscillator
-populated on the iMX6QP SABRESD board.
-Add another regulator to enable PCIe on iMX6QP SABRESD board.
+Adds implementation of V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY v4l
+control when the bitrate mode is CQ.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/media/platform/qcom/venus/core.h      |  1 +
+ drivers/media/platform/qcom/venus/hfi_cmds.c  | 37 ++++++++++++++++++-
+ .../media/platform/qcom/venus/hfi_helper.h    | 10 ++++-
+ drivers/media/platform/qcom/venus/venc.c      | 14 ++++++-
+ .../media/platform/qcom/venus/venc_ctrls.c    |  8 +++-
+ 5 files changed, 66 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 8f08ae53f53e..9e1563601835 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -81,6 +81,7 @@ struct imx6_pcie {
- 	u32			tx_swing_low;
- 	int			link_gen;
- 	struct regulator	*vpcie;
-+	struct regulator	*vepdev;
- 	void __iomem		*phy_base;
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 7118612673c9..1bac30d4cf50 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -201,6 +201,7 @@ struct venc_controls {
+ 	u32 bitrate;
+ 	u32 bitrate_peak;
+ 	u32 rc_enable;
++	u32 const_quality;
  
- 	/* power domain for pcie */
-@@ -507,6 +508,14 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 			return;
- 		}
- 	}
-+	if (imx6_pcie->vepdev && !regulator_is_enabled(imx6_pcie->vepdev)) {
-+		ret = regulator_enable(imx6_pcie->vepdev);
-+		if (ret) {
-+			dev_err(dev, "failed to enable vepdev regulator: %d\n",
-+				ret);
-+			goto err_pcie_vepdev;
-+		}
+ 	u32 h264_i_period;
+ 	u32 h264_entropy_mode;
+diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
+index c67e412f8201..7022368c1e63 100644
+--- a/drivers/media/platform/qcom/venus/hfi_cmds.c
++++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
+@@ -640,6 +640,7 @@ static int pkt_session_set_property_1x(struct hfi_session_set_property_pkt *pkt,
+ 		case HFI_RATE_CONTROL_CBR_VFR:
+ 		case HFI_RATE_CONTROL_VBR_CFR:
+ 		case HFI_RATE_CONTROL_VBR_VFR:
++		case HFI_RATE_CONTROL_CQ:
+ 			break;
+ 		default:
+ 			ret = -EINVAL;
+@@ -1218,6 +1219,37 @@ pkt_session_set_property_4xx(struct hfi_session_set_property_pkt *pkt,
+ 	return 0;
+ }
+ 
++static int
++pkt_session_set_property_6xx(struct hfi_session_set_property_pkt *pkt,
++			     void *cookie, u32 ptype, void *pdata)
++{
++	void *prop_data;
++
++	if (!pkt || !cookie || !pdata)
++		return -EINVAL;
++
++	prop_data = &pkt->data[1];
++
++	pkt->shdr.hdr.size = sizeof(*pkt);
++	pkt->shdr.hdr.pkt_type = HFI_CMD_SESSION_SET_PROPERTY;
++	pkt->shdr.session_id = hash32_ptr(cookie);
++	pkt->num_properties = 1;
++	pkt->data[0] = ptype;
++
++	switch (ptype) {
++	case HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY: {
++		struct hfi_heic_frame_quality *in = pdata, *cq = prop_data;
++
++		cq->frame_quality = in->frame_quality;
++		pkt->shdr.hdr.size += sizeof(u32) + sizeof(*cq);
++		break;
++	} default:
++		return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
 +	}
++
++	return 0;
++}
++
+ int pkt_session_get_property(struct hfi_session_get_property_pkt *pkt,
+ 			     void *cookie, u32 ptype)
+ {
+@@ -1236,7 +1268,10 @@ int pkt_session_set_property(struct hfi_session_set_property_pkt *pkt,
+ 	if (hfi_ver == HFI_VERSION_3XX)
+ 		return pkt_session_set_property_3xx(pkt, cookie, ptype, pdata);
  
- 	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
- 	if (ret) {
-@@ -595,6 +604,13 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- err_pcie_bus:
- 	clk_disable_unprepare(imx6_pcie->pcie_phy);
- err_pcie_phy:
-+	if (imx6_pcie->vepdev && regulator_is_enabled(imx6_pcie->vepdev) > 0) {
-+		ret = regulator_disable(imx6_pcie->vepdev);
+-	return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
++	if (hfi_ver == HFI_VERSION_4XX)
++		return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
++
++	return pkt_session_set_property_6xx(pkt, cookie, ptype, pdata);
+ }
+ 
+ void pkt_set_version(enum hfi_version version)
+diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
+index f6613df1d16b..758c70ac26fd 100644
+--- a/drivers/media/platform/qcom/venus/hfi_helper.h
++++ b/drivers/media/platform/qcom/venus/hfi_helper.h
+@@ -231,6 +231,7 @@
+ #define HFI_RATE_CONTROL_VBR_CFR		0x1000003
+ #define HFI_RATE_CONTROL_CBR_VFR		0x1000004
+ #define HFI_RATE_CONTROL_CBR_CFR		0x1000005
++#define HFI_RATE_CONTROL_CQ			0x1000008
+ 
+ #define HFI_VIDEO_CODEC_H264			0x00000002
+ #define HFI_VIDEO_CODEC_H263			0x00000004
+@@ -504,6 +505,7 @@
+ #define HFI_PROPERTY_CONFIG_VENC_HIER_P_ENH_LAYER		0x200600b
+ #define HFI_PROPERTY_CONFIG_VENC_LTRPERIOD			0x200600c
+ #define HFI_PROPERTY_CONFIG_VENC_PERF_MODE			0x200600e
++#define HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY			0x2006014
+ 
+ /*
+  * HFI_PROPERTY_PARAM_VPE_COMMON_START
+@@ -520,7 +522,8 @@
+ enum hfi_version {
+ 	HFI_VERSION_1XX,
+ 	HFI_VERSION_3XX,
+-	HFI_VERSION_4XX
++	HFI_VERSION_4XX,
++	HFI_VERSION_6XX,
+ };
+ 
+ struct hfi_buffer_info {
+@@ -725,6 +728,11 @@ struct hfi_quality_vs_speed {
+ 	u32 quality_vs_speed;
+ };
+ 
++struct hfi_heic_frame_quality {
++	u32 frame_quality;
++	u32 reserved[3];
++};
++
+ struct hfi_quantization {
+ 	u32 qp_i;
+ 	u32 qp_p;
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index 513bbc07f7bc..4c30c3f3369e 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -740,14 +740,26 @@ static int venc_set_properties(struct venus_inst *inst)
+ 		rate_control = HFI_RATE_CONTROL_OFF;
+ 	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
+ 		rate_control = HFI_RATE_CONTROL_VBR_CFR;
+-	else
++	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_CBR)
+ 		rate_control = HFI_RATE_CONTROL_CBR_CFR;
++	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_CQ)
++		rate_control = HFI_RATE_CONTROL_CQ;
+ 
+ 	ptype = HFI_PROPERTY_PARAM_VENC_RATE_CONTROL;
+ 	ret = hfi_session_set_property(inst, ptype, &rate_control);
+ 	if (ret)
+ 		return ret;
+ 
++	if (rate_control == HFI_RATE_CONTROL_CQ && ctr->const_quality) {
++		struct hfi_heic_frame_quality quality = {};
++
++		ptype = HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY;
++		quality.frame_quality = ctr->const_quality;
++		ret = hfi_session_set_property(inst, ptype, &quality);
 +		if (ret)
-+			dev_err(dev, "failed to disable vepdev regulator: %d\n",
-+				ret);
++			return ret;
 +	}
-+err_pcie_vepdev:
- 	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
- 		ret = regulator_disable(imx6_pcie->vpcie);
- 		if (ret)
-@@ -1178,6 +1194,12 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 			return PTR_ERR(imx6_pcie->vpcie);
- 		imx6_pcie->vpcie = NULL;
++
+ 	if (!ctr->bitrate)
+ 		bitrate = 64000;
+ 	else
+diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
+index 8362dde7949e..97a1e821c07e 100644
+--- a/drivers/media/platform/qcom/venus/venc_ctrls.c
++++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
+@@ -202,6 +202,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
+ 		ctr->rc_enable = ctrl->val;
+ 		break;
++	case V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY:
++		ctr->const_quality = ctrl->val;
++		break;
+ 	default:
+ 		return -EINVAL;
  	}
-+	imx6_pcie->vepdev = devm_regulator_get_optional(&pdev->dev, "vepdev");
-+	if (IS_ERR(imx6_pcie->vepdev)) {
-+		if (PTR_ERR(imx6_pcie->vepdev) != -ENODEV)
-+			return PTR_ERR(imx6_pcie->vepdev);
-+		imx6_pcie->vepdev = NULL;
-+	}
+@@ -217,7 +220,7 @@ int venc_ctrl_init(struct venus_inst *inst)
+ {
+ 	int ret;
  
- 	platform_set_drvdata(pdev, imx6_pcie);
+-	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
++	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 32);
+ 	if (ret)
+ 		return ret;
  
+@@ -357,6 +360,9 @@ int venc_ctrl_init(struct venus_inst *inst)
+ 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
+ 			  V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
+ 
++	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
++			  V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY, 0, 100, 1, 0);
++
+ 	ret = inst->ctrl_handler.error;
+ 	if (ret)
+ 		goto err;
 -- 
 2.17.1
 
