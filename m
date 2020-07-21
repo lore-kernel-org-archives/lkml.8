@@ -2,156 +2,143 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A6AC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FD120792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EB220792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595338722;
+	bh=PPhPM53d2MTIxsJUXtD9BygOVv0SIF0J+lKGXm6IwUQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E2qzCz0hE+ACyLu7D6ItiQ+Y2cfFGCjvAacix3lnQ1LghJToEY8ybEybDG2wyOQST
+	 QoZReVmnDU15wNz+LNCsq6L8s9SOoRsHxGdc+pDf6si7p+Cpq8LK2drjNZzzhuK2wi
+	 2RDObIV0vbFMoUEXHXR06dlWjFwph8bfSydlL4sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgGUNiB (ORCPT
+        id S1728105AbgGUNil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:38:01 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:35670 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgGUNiB (ORCPT
+        Tue, 21 Jul 2020 09:38:41 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35023 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbgGUNik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:38:01 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jxsT1-0008VP-GH; Tue, 21 Jul 2020 07:37:59 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jxsSz-00010q-Fy; Tue, 21 Jul 2020 07:37:59 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     akpm@linux-foundation.org, mcgrof@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200721130449.5008-1-hch@lst.de>
-Date:   Tue, 21 Jul 2020 08:35:00 -0500
-In-Reply-To: <20200721130449.5008-1-hch@lst.de> (Christoph Hellwig's message
-        of "Tue, 21 Jul 2020 15:04:49 +0200")
-Message-ID: <87eep5ng8r.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 21 Jul 2020 09:38:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 184so2938578wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:38:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=kwZF580by+7OaTNh1bwviGHgBVh2cx54v1+9OBPyRe8=;
+        b=MlAt0ubt8vPtG6y3MgONsX3YjBHo6dKJ/QuQYusEoVMcVhWr5pBwDFSAIU7vkbxf91
+         3AcwHw6QjLhkQeBlFYCQ9uk9EHKWzMeQtrtoRqKB2nqHZr0COvuJyWR5tEB8HlyOxHUs
+         BsjchuGfEbWoy1u/w4SpSjdqMOrx1guYUa7mAWV+FzbDjsaYgG1cFeq03LhunXPyaTmG
+         kYk2u9hBJZNmkk1gXiAY3+r1S7YRWJMG6BrXx0QfS+MptL2C3wJZdVGCLUvYOpsCR7kf
+         SY1nIDdhaRpZAKVUii9J3puNdsciIKf4owXY9xcLKE83n2onv2r7OeTn0IBkQVVITwVP
+         KrJg==
+X-Gm-Message-State: AOAM530m4Xbu+7JkPqtp6bOL2E2Z8xWHRIhj4MupxoAz3XueyObQiztt
+        +X6BMqE+MSZQkmSf5X69Cgo=
+X-Google-Smtp-Source: ABdhPJwDNWr5Q7HHQC1AeGgQy/c1wYdU4H/JDpbXbuKx7zxXnuoB9K1Z+KAUXnO2TD8diyFqifofSw==
+X-Received: by 2002:a1c:96c5:: with SMTP id y188mr4229905wmd.71.1595338718332;
+        Tue, 21 Jul 2020 06:38:38 -0700 (PDT)
+Received: from localhost (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
+        by smtp.gmail.com with ESMTPSA id t3sm6298077wre.41.2020.07.21.06.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 06:38:37 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 15:38:35 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+Message-ID: <20200721133835.GL4061@dhcp22.suse.cz>
+References: <20200721112529.GJ4061@dhcp22.suse.cz>
+ <664A07B6-DBCD-4520-84F1-241A4E7A339F@lca.pw>
+ <20200721121752.GK4061@dhcp22.suse.cz>
+ <20200721132343.GA4261@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jxsSz-00010q-Fy;;;mid=<87eep5ng8r.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/2DM0dlThUoCuTHrfp3jCy5tEe/n0ohBk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] kernel: add a kernel_wait helper
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721132343.GA4261@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> writes:
+On Tue 21-07-20 09:23:44, Qian Cai wrote:
+> On Tue, Jul 21, 2020 at 02:17:52PM +0200, Michal Hocko wrote:
+> > On Tue 21-07-20 07:44:07, Qian Cai wrote:
+> > > 
+> > > 
+> > > > On Jul 21, 2020, at 7:25 AM, Michal Hocko <mhocko@kernel.org> wrote:
+> > > > 
+> > > > Are these really important? I believe I can dig that out from the bug
+> > > > report but I didn't really consider that important enough.
+> > > 
+> > > Please dig them out. We have also been running those things on
+> > > “large” powerpc as well and never saw such soft-lockups. Those
+> > > details may give us some clues about the actual problem.
+> > 
+> > I strongly suspect this is not really relevant but just FYI this is
+> > 16Node, 11.9TB with 1536CPUs system.
+> 
+> Okay, we are now talking about the HPC special case. Just brain-storming some
+> ideas here.
+> 
+> 
+> 1) What about increase the soft-lockup threshold early at boot and restore
+> afterwards? As far as I can tell, those soft-lockups are just a few bursts of
+> things and then cure itself after the booting.
 
-> Add a helper that waits for a pid and stores the status in the passed
-> in kernel pointer.  Use it to fix the usage of kernel_wait4 in
-> call_usermodehelper_exec_sync that only happens to work due to the
-> implicit set_fs(KERNEL_DS) for kernel threads.
+Is this really better option than silencing soft lockup from the code
+itself? What if the same access pattern happens later on?
 
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 2) Reading through the comments above page_waitqueue(), it said rare hash
+> collisions could happen, so sounds like in this HPC case, it is rather easy to
+> hit those hash collisons. Thus, need to deal with that instead?
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/sched/task.h |  1 +
->  kernel/exit.c              | 16 ++++++++++++++++
->  kernel/umh.c               | 29 ++++-------------------------
->  3 files changed, 21 insertions(+), 25 deletions(-)
->
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 38359071236ad7..a80007df396e95 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -102,6 +102,7 @@ struct task_struct *fork_idle(int);
->  struct mm_struct *copy_init_mm(void);
->  extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
->  extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
-> +int kernel_wait(pid_t pid, int *stat);
->  
->  extern void free_task(struct task_struct *tsk);
->  
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 727150f2810338..fd598846df0b17 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -1626,6 +1626,22 @@ long kernel_wait4(pid_t upid, int __user *stat_addr, int options,
->  	return ret;
->  }
->  
-> +int kernel_wait(pid_t pid, int *stat)
-> +{
-> +	struct wait_opts wo = {
-> +		.wo_type	= PIDTYPE_PID,
-> +		.wo_pid		= find_get_pid(pid),
-> +		.wo_flags	= WEXITED,
-> +	};
-> +	int ret;
-> +
-> +	ret = do_wait(&wo);
-> +	if (ret > 0 && wo.wo_stat)
-> +		*stat = wo.wo_stat;
-> +	put_pid(wo.wo_pid);
-> +	return ret;
-> +}
-> +
->  SYSCALL_DEFINE4(wait4, pid_t, upid, int __user *, stat_addr,
->  		int, options, struct rusage __user *, ru)
->  {
-> diff --git a/kernel/umh.c b/kernel/umh.c
-> index 79f139a7ca03c6..733430921f47d7 100644
-> --- a/kernel/umh.c
-> +++ b/kernel/umh.c
-> @@ -130,37 +130,16 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
->  {
->  	pid_t pid;
->  
-> -	/* If SIGCLD is ignored kernel_wait4 won't populate the status. */
-> +	/* If SIGCLD is ignored do_wait won't populate the status. */
->  	kernel_sigaction(SIGCHLD, SIG_DFL);
->  	pid = kernel_thread(call_usermodehelper_exec_async, sub_info, SIGCHLD);
-> -	if (pid < 0) {
-> +	if (pid < 0)
->  		sub_info->retval = pid;
-> -	} else {
-> -		int ret = -ECHILD;
-> -		/*
-> -		 * Normally it is bogus to call wait4() from in-kernel because
-> -		 * wait4() wants to write the exit code to a userspace address.
-> -		 * But call_usermodehelper_exec_sync() always runs as kernel
-> -		 * thread (workqueue) and put_user() to a kernel address works
-> -		 * OK for kernel threads, due to their having an mm_segment_t
-> -		 * which spans the entire address space.
-> -		 *
-> -		 * Thus the __user pointer cast is valid here.
-> -		 */
-> -		kernel_wait4(pid, (int __user *)&ret, 0, NULL);
-> -
-> -		/*
-> -		 * If ret is 0, either call_usermodehelper_exec_async failed and
-> -		 * the real error code is already in sub_info->retval or
-> -		 * sub_info->retval is 0 anyway, so don't mess with it then.
-> -		 */
-> -		if (ret)
-> -			sub_info->retval = ret;
-> -	}
-> +	else
-> +		kernel_wait(pid, &sub_info->retval);
->  
->  	/* Restore default kernel sig handler */
->  	kernel_sigaction(SIGCHLD, SIG_IGN);
-> -
->  	umh_complete(sub_info);
->  }
+As all of those seem to be the same class of process I suspect it is
+more likely that many processes are hitting the page fault on the same
+file page. E.g. a code/library.
+
+> 3) The commit 62906027091f ("mm: add PageWaiters indicating tasks are waiting
+> for a page bit") mentioned that,
+> 
+> "Putting two bits in the same word opens the opportunity to remove the memory
+> barrier between clearing the lock bit and testing the waiters bit, after some
+> work on the arch primitives (e.g., ensuring memory operand widths match and
+> cover both bits)."
+> 
+> Do you happen to know if this only happen on powerpc?
+
+I have only seen this single instance on that machine. I do not think
+this is very much HW specific but ppc platform is likely more prone to
+that. Just think of the memory itself. Each memory block is notified via
+udev and ppc has very small memblocks (16M to 256M). X86 will use 2G
+blocks on large machines.
+
+> Also, probably need to
+> dig out if those memory barrier is still there that could be removed to speed
+> up things.
+
+I would be really suprised if memory barriers matter much. It sounds
+much more likely that there is the same underlying problem as
+11a19c7b099f. There are just too many waiters on the page. The commit
+prevents just the hard lockup part of the problem by dropping the lock
+and continuing after the bookmark. But, as mentioned in the changelog,
+cond_resched is not really an option because this path is called from
+atomic context as well. So !PREEMPT kernels are still in the same boat.
+
+I might have misunderstood something, of course, and would like to hear
+where is my thinking wrong.
+-- 
+Michal Hocko
+SUSE Labs
