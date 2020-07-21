@@ -2,239 +2,169 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8CEC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41D5C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCB322482
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="w2KGdHlc"
+	by mail.kernel.org (Postfix) with ESMTP id BB05920792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgGULzK (ORCPT
+        id S1729537AbgGULzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:55:10 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37121 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726266AbgGULzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:55:09 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBqjc9003474;
-        Tue, 21 Jul 2020 13:54:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=xNrr1r61piExo9Kz7DbvrPtsnAcD5qX24XmH5JBqS0c=;
- b=w2KGdHlczl4xzw9NscNrOKGJxvV0PbaEjONM3oUdazggf33Xoh2UjI305YKL0i1JTdNB
- yFrc+nmM0xKmBKnh4ajALQZUGiJ0ysGLfoZri96As9+PnFYibbP+z3fYE9MPVrHNUQDr
- vefIJ94jPuIeGiTzsfyV4BjYHMLYs5eol2+pHbEFvKUua0vbRgYv13kf50/S3dBi8NW/
- p55Drejqhy9K3RjfYeDWZ4yF9W0epSBIUlq/opU5Xf83x1jX86iEsLXfVwik/QF3t2ri
- Bo8G+CmF9cpAKYbCAopLYaKRRxN20w/yH5orvP/oz3mB94o4QumIoFXRL7PHzlKMPHh6 3g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bs6uwpev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 13:54:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5F16010002A;
-        Tue, 21 Jul 2020 13:54:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3D2782B728A;
-        Tue, 21 Jul 2020 13:54:41 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 13:54:40 +0200
-Subject: Re: [PATCH v5 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
-To:     dillon min <dillon.minfei@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>, <p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-References: <broonie@kernel.org>
- <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
- <198ad79c-ab12-55f0-814f-afc454a7e8ef@st.com>
- <CAL9mu0L3ZF5+nh2ENzxnu0f6AAh1ygoWx1bEkS3WkJt8TN7C7Q@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <d7986a59-1337-ca33-fed0-0b6af458dbbb@st.com>
-Date:   Tue, 21 Jul 2020 13:54:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 07:55:05 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7810 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbgGULzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:55:04 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DE71D5C1C5211E8B8AC4;
+        Tue, 21 Jul 2020 19:55:01 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.211) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
+ 19:54:52 +0800
+Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jslaby@suse.com>, Hanjun Guo <guohanjun@huawei.com>,
+        "Libin (Huawei)" <huawei.libin@huawei.com>
+References: <20200721143852.4058352-1-yangyingliang@huawei.com>
+ <20200721104819.GA1678476@kroah.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <b0cbee3f-05cd-b15c-06db-68c223c9944c@huawei.com>
+Date:   Tue, 21 Jul 2020 19:54:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAL9mu0L3ZF5+nh2ENzxnu0f6AAh1ygoWx1bEkS3WkJt8TN7C7Q@mail.gmail.com>
+In-Reply-To: <20200721104819.GA1678476@kroah.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
+Content-Language: en-US
+X-Originating-IP: [10.174.176.211]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2020/7/21 18:48, Greg KH wrote:
+> On Tue, Jul 21, 2020 at 02:38:52PM +0000, Yang Yingliang wrote:
+>> I got null-ptr-deref in serial8250_start_tx():
+>>
+>> [   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+>> [   78.123778] Mem abort info:
+>> [   78.126560]   ESR = 0x86000007
+>> [   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
+>> [   78.134891]   SET = 0, FnV = 0
+>> [   78.137933]   EA = 0, S1PTW = 0
+>> [   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
+>> [   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
+>> [   78.160029] Internal error: Oops: 86000007 [#1] SMP
+>> [   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
+>> [   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
+>> [   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
+>> [   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
+>> [   78.228435] pc : 0x0
+>> [   78.230618] lr : serial8250_start_tx+0x160/0x260
+>> [   78.235215] sp : ffff800062eefb80
+>> [   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
+>> [   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
+>> [   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
+>> [   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
+>> [   78.259679] x21: 0000000000000001 x20: 0000000000000000
+>> [   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
+>> [   78.270259] x17: 0000000000000000 x16: 0000000000000000
+>> [   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
+>> [   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
+>> [   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
+>> [   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
+>> [   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
+>> [   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
+>> [   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
+>> [   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
+>> [   78.317873] Call trace:
+>> [   78.320312]  0x0
+>> [   78.322147]  __uart_start.isra.9+0x64/0x78
+>> [   78.326229]  uart_start+0xb8/0x1c8
+>> [   78.329620]  uart_flush_chars+0x24/0x30
+>> [   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
+>> [   78.338128]  n_tty_receive_buf+0x44/0x2c8
+>> [   78.342122]  tty_ioctl+0x348/0x11f8
+>> [   78.345599]  ksys_ioctl+0xd8/0xf8
+>> [   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
+>> [   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
+>> [   78.357583]  do_el0_svc+0x44/0xd0
+>> [   78.360887]  el0_sync_handler+0x14c/0x1d0
+>> [   78.364880]  el0_sync+0x140/0x180
+>> [   78.368185] Code: bad PC value
+>>
+>> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
+>> serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
+>> so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
+>> Fix this problem by calling serial8250_set_defaults() after init uart port.
+>>
+>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>> ---
+>>   drivers/tty/serial/8250/8250_core.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> Does this fix a specific commit, or has this issue always been present?
+> What has caused it to happen now that no one else has seen this?
 
-On 7/21/20 12:39 PM, dillon min wrote:
-> Hi Alexandre,
-> 
-> On Tue, Jul 21, 2020 at 5:19 PM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
->>
->> Hi Dillon
->>
->> On 5/25/20 5:40 AM, dillon.minfei@gmail.com wrote:
->>> From: dillon min <dillon.minfei@gmail.com>
->>>
->>> V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
->>> for SPI_SIMPLEX_RX mode on stm32 spi controller.
->>>
->>> V5:
->>> 1 instead of add send dummy data out under SIMPLEX_RX mode,
->>>      add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
->>> 2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
->>> 'SPI_3WIRE' mode
->>>
->>
->> Concerning DT patches, they look goods for me. However I'll merge them
->> when drivers parts will be merged.
->>
->> regards
->> Alex
-> This patchset status is :
-> dts:
->      ARM: dts: stm32: Add dma config for spi5
->      ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
->      ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
->        stm32429-disco board
-> 
-> panel-bindings: Reviewed-by: Rob Herring， need more reviewing to merge
->      dt-bindings: display: panel: Add ilitek ili9341 panel bindings
-> 
-> clk: Acked-by: Stephen Boyd , need more reviewing to merge
->      clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
->        fix duplicated ltdc clock register to 'clk_core' case ltdc's clock
->          turn off by clk_disable_unused()
-> 
-> drm-panel:  Reviewed-by: Linus Walleij . need more reviewing to merge
->      drm/panel: Add ilitek ili9341 panel driver
-> 
-> spi-driver: Acked-by: Mark Brown ，merged into mainline
->      spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
->      spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
->        becoexit with 'SPI_3WIRE' mode
-> 
-> For ili9341 drivers, it seems to need more time to review, or might be dropped.
-> since the drm maintainer might create a new interface to support
-> DPI,DBI,DSI in one driver.
-> Currently it's under discussion. I will rework the ili9341 driver after that.
-> 
-> But, we can use the existing "drivers/gpu/drm/tiny/ili9341.c" driver to support
-> ili9341 on stm32f429-disco board only using the spi bus. except the
-> display refresh performance is not as good as the ltdc interface.
-> 
-> I can submit a new patch just with dts changed this week for it, if you need.
+I think it's always been present on the arch that not defined 
+SERIAL_PORT_DFNS.
+
+I got this on arm64 and here is the C reproducer:
+
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
+
+#define _GNU_SOURCE
+
+#include <endian.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#ifndef __NR_ioctl
+#define __NR_ioctl 29
+#endif
+#ifndef __NR_mmap
+#define __NR_mmap 222
+#endif
+#ifndef __NR_openat
+#define __NR_openat 56
+#endif
+
+uint64_t r[1] = {0xffffffffffffffff};
+
+int main(void)
+{
+     syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 3ul, 0x32ul, -1, 0);
+     intptr_t res = 0;
+     memcpy((void*)0x20000040, "/dev/ttyS3\000", 11);
+     res = syscall(__NR_openat, 0xffffffffffffff9cul, 0x20000040ul, 
+0x401ul, 0ul);
+     if (res != -1)
+         r[0] = res;
+     syscall(__NR_ioctl, r[0], 0x5412ul, 0x20000080ul);
+     return 0;
+}
+
+
+Thanks,
+
+Yang
+
 >
+> thanks,
+>
+> greg k-h
+> .
 
-
-Thanks for this status. I'm close to send my PR for v5.9. There is no 
-needs to have an intermediate version (Except you absolutely want it).
-
-Thanks
-alex
-
-> Thanks,
-> Dillon.
->>
->>
->>
->>> V4:
->>> According to alexandre torgue's suggestion, combine ili9341 and
->>> l3gd20's modification on stm32f429-disco board to one patchset.
->>>
->>> Changes:
->>>
->>> ili9341:
->>>
->>> 1 update ili9341 panel driver according to Linus's suggestion
->>> 2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
->>> 3 merge l3gd20's change to this patchset
->>>
->>> V3:
->>> 1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
->>>     to support serial spi & parallel rgb interface in one driver.
->>> 2 update ilitek,ili9341.yaml dts binding documentation.
->>> 3 update stm32f429-disco dts binding
->>>
->>> V2:
->>> 1 verify ilitek,ili9341.yaml with make O=../linux-stm32
->>>     dt_binding_check
->>>     DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
->>>     ilitek,ili9341.yaml
->>>
->>> V1:
->>> 1 add ili9341 drm panel driver
->>> 2 add ltdc, spi5 controller for stm32f429-disco
->>> 3 add ltdc, spi5 pin map for stm32f429-disco
->>> 4 add docs about ili9341
->>> 5 fix ltdc driver loading hang in clk set rate bug
->>>
->>>
->>> L3gd20:
->>> V3:
->>> 1 merge stm32f429-disco dtbs binding with ili9341 part
->>>
->>> V2:
->>> 1 insert blank line at stm32f420-disco.dts line 143
->>> 2 add more description for l3gd20 in commit message
->>>
->>> V1:
->>> 1 enable spi5 controller on stm32f429-disco (dts)
->>> 2 add spi5 pinmap for stm32f429-disco  (dts)
->>> 3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
->>>
->>>
->>> dillon min (8):
->>>     ARM: dts: stm32: Add dma config for spi5
->>>     ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
->>>     ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
->>>       stm32429-disco board
->>>     dt-bindings: display: panel: Add ilitek ili9341 panel bindings
->>>     clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
->>>       fix duplicated ltdc clock register to 'clk_core' case ltdc's clock
->>>         turn off by clk_disable_unused()
->>>     drm/panel: Add ilitek ili9341 panel driver
->>>     spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
->>>     spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
->>>       be     coexit with 'SPI_3WIRE' mode
->>>
->>>    .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
->>>    arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
->>>    arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
->>>    arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
->>>    drivers/clk/clk-stm32f4.c                          |    7 +-
->>>    drivers/gpu/drm/panel/Kconfig                      |   12 +
->>>    drivers/gpu/drm/panel/Makefile                     |    1 +
->>>    drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1301 ++++++++++++++++++++
->>>    drivers/spi/spi-stm32.c                            |   19 +-
->>>    drivers/spi/spi.c                                  |    3 +-
->>>    10 files changed, 1521 insertions(+), 9 deletions(-)
->>>    create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
->>>    create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
->>>
