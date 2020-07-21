@@ -7,89 +7,93 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC6CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13388C433F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4A3206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE6FD206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595296961;
-	bh=u2L0m+AUIlmLRmlU3MO5jvgjqIHCFj6/78iHIm7hKf8=;
+	s=default; t=1595296997;
+	bh=fxhi3TaR7fdeXNdX+9DGO5TrZu3rxIGdGIpUgsboGK4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GAfGTmlxxrgOIbHatEbeXuDFjo737cJ24DHnmRIPUkLHsdPjk5se5bfyRWX/eTZHd
-	 FgvhS0MGJ6GFHSE8bJGf+Qs+gtAgRgruHVvr/WSfT0qBD6C3GJNXAfrX0diLqzNAp/
-	 wdzzy1aLdXLAVJ/PqQHUmik/7/Yodflr+HffTvj8=
+	b=eLc1jp59EGUfR2NNOoHxFrg/69dguh1k9b0k/1N58bkGorQvspiuX094tUpG1095e
+	 xsCfhyaCRPKtNwQcC5NwW2Jzo56NiZwobU4nACG8a4bYh0AgsjcG7KYAqjL+e8EpUF
+	 OqpC04Jqi8xGQkBU4Gm1TXr0oVmFYATC8Z6etmGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgGUCCk (ORCPT
+        id S1728356AbgGUCDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:02:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43048 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUCCj (ORCPT
+        Mon, 20 Jul 2020 22:03:15 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40308 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGUCDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:02:39 -0400
-Received: by mail-il1-f196.google.com with SMTP id i18so15074246ilk.10;
-        Mon, 20 Jul 2020 19:02:38 -0700 (PDT)
+        Mon, 20 Jul 2020 22:03:14 -0400
+Received: by mail-il1-f195.google.com with SMTP id e18so15070181ilr.7;
+        Mon, 20 Jul 2020 19:03:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=C6sxjz8cQBHBfpqcqYjPc2k4llIyWqyfVKlT/NeeUxk=;
-        b=fPktIKepHuSWTa9tasX5lfhH38n2d/0/pR5ciHLsogN01u6VkwysDx/Ky+/MKUmQq6
-         dG6v62AhW5Kh3ApNyVgYbtj15jVLFcRMEdwvXTCS4WMvUTQstyuDDRXfXzq7cZHzB1dJ
-         DUbvb6YuddchGoCJWB2fLh+M9VNnIPv68bcCsNQui3wpy8oRwen4PMcwnOn83hZnRYOP
-         r7HtmlXDVpuibs334xvR9jcF8axG4LHtEC+QzFexotLYlwXrYhbF8qeArknZtl0nErwZ
-         0NlnZ/bl2mqZkD9RxugVv/kXnbOxOYgqnGhgIim9a94cRaVkmd5TdWRsVrSkPP0rgy25
-         yTLA==
-X-Gm-Message-State: AOAM531V80G00lzGLKCrVAZo2v7Y4BFnVaJmwU3yoarxzRPIsDSXHHux
-        RbR6vGr+CM5Q+bZJg+9N2w==
-X-Google-Smtp-Source: ABdhPJxX74z9HXclwgDeBM2Q5ozxho0K5hV9uTK/097gQNaE+eInRy3aYrFpJlSzAA0aKm6RFiiX3A==
-X-Received: by 2002:a92:8947:: with SMTP id n68mr26670327ild.235.1595296958270;
-        Mon, 20 Jul 2020 19:02:38 -0700 (PDT)
+        bh=NI0Hxq+b23u61HCgb6cNvKoXwQP7jMZ4BvjN9EOpDkY=;
+        b=lr1YtpAgVkUMHWVBrWztp1yWPkXXJcTDFsiuzJyH3+D0yPid/7pqtAixu5dU+nAsBZ
+         BQZLG1pxLRcP90KBzQ8BZ8daiZkJ4qdZ0IDQKjpvfdSsCufg/4MW0hGJelwCrm/vGuWx
+         +HHoloWbOexcbvdGrfElFFGKXp49LUI1UQsWu08L3SELCoroGPAeISLJ+cssbbsbEYhC
+         A5nH3DLQYxrxKQDEIkNX8KgGvIFVFAjH0aJHUh8vpJeZoC359NlHVnOzkasYXt4a/cfl
+         J/quffiJKMWrit3n76YuGot8i1s1lXLuyQPIDoy9s1RixJyII5LJyh8ImS+ItcWaCJUs
+         elIg==
+X-Gm-Message-State: AOAM530h0Ict9s7GnspqruN893aUbGidMELdcvlNyD2y7Qb4dZ6FJRyd
+        tiYrqUD7GNcZviDtV3NfqA==
+X-Google-Smtp-Source: ABdhPJzmsRID8T/oluWCq8KPBMnZBgnmkwCQskK/tjvFgX/rIZQhMljjjrf1/cVgMwDrcoB6A8xwkg==
+X-Received: by 2002:a92:77d2:: with SMTP id s201mr26324309ilc.256.1595296993570;
+        Mon, 20 Jul 2020 19:03:13 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f2sm9869392ioc.52.2020.07.20.19.02.36
+        by smtp.gmail.com with ESMTPSA id h5sm9883666ilq.22.2020.07.20.19.03.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 19:02:37 -0700 (PDT)
-Received: (nullmailer pid 3375235 invoked by uid 1000);
-        Tue, 21 Jul 2020 02:02:36 -0000
-Date:   Mon, 20 Jul 2020 20:02:36 -0600
+        Mon, 20 Jul 2020 19:03:12 -0700 (PDT)
+Received: (nullmailer pid 3376169 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:03:09 -0000
+Date:   Mon, 20 Jul 2020 20:03:09 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
+Cc:     Magnus Damm <magnus.damm@gmail.com>, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Joerg Roedel <joro@8bytes.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        netdev@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/9] dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a774e1
- support
-Message-ID: <20200721020236.GA3374330@bogus>
+        linux-renesas-soc@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        iommu@lists.linux-foundation.org, Jakub Kicinski <kuba@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 8/9] dt-bindings: net: renesas,ravb: Add support for
+ r8a774e1 SoC
+Message-ID: <20200721020309.GA3376098@bogus>
 References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594676120-5862-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 10:35:12PM +0100, Lad Prabhakar wrote:
+On Mon, 13 Jul 2020 22:35:19 +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> 
 > Document RZ/G2H (R8A774E1) SoC bindings.
 > 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml | 1 +
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
 >  1 file changed, 1 insertion(+)
+> 
 
 Acked-by: Rob Herring <robh@kernel.org>
