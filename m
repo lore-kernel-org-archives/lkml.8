@@ -2,123 +2,137 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F96FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD58C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAAF720792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254BB2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TgrGhm+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgGULvy (ORCPT
+        id S1729777AbgGULwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:51:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59042 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726755AbgGULvy (ORCPT
+        Tue, 21 Jul 2020 07:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgGULwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:51:54 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LBaaC3170623;
-        Tue, 21 Jul 2020 07:51:53 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32bvqvhngv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:51:51 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LBnt8a011282;
-        Tue, 21 Jul 2020 11:50:08 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7ux0h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:50:08 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LBmpnP23855584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 11:48:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B93D4203F;
-        Tue, 21 Jul 2020 11:48:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1842A42045;
-        Tue, 21 Jul 2020 11:48:50 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.102.1.141])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 11:48:49 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     <linux-doc@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] docs: staging/kprobes.rst: Move references to a separate appendix
-Date:   Tue, 21 Jul 2020 17:18:21 +0530
-Message-Id: <2bba61cd60eec87fbcca3e4343b7f95afa1178cd.1595331824.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1595331824.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1595331824.git.naveen.n.rao@linux.vnet.ibm.com>
+        Tue, 21 Jul 2020 07:52:50 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD433C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:52:49 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so20813833wrj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YZopNL5/8ANY4qnCt9+wKywvq9+QBDbxQFIaGJPGSkU=;
+        b=TgrGhm+v1Mg3jVuL3BVaIhy8BL4lZKWs1CJ5bFyF8NCqc/f9wNyORftQhIAIS+awPP
+         lXfjUjWffFMBQ2bsP4cZY1Kvkw1IR7iTvP/AeVPsgUtQPuf/ew4WV66IVqGxg59czy1/
+         0hK9NHIXNYTuW0pWAP/TbkSXMR7X1C+GnBPEeK5VP1a06mrAejxwDn7uvoHrW5qMXraU
+         VM/Xx8uECxzqCY48+v4TYcTNadfgAyqfTTPPZXZpBR8Ty4ZeeetMqIq3iRLUZ1P/eT2i
+         +/YN/KGYQ+p6Cv2VDBkyV0d4+mhKQMWnvCkYPI75nGeG2dpPF3ImzwWb8hq4rZiOYjiN
+         etyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YZopNL5/8ANY4qnCt9+wKywvq9+QBDbxQFIaGJPGSkU=;
+        b=OGxPzWrZ4uX5srRhFxavN38jL8v5Mh/p4IaUzx7LlhUhe0OsQAfO4lpiUEeUzkpvyM
+         i95wh34orAiSkIOD18foXbmqcr4JYvbRCvFgEuJUt3dtd3rwiATnDzMSHFPzFvqlqQZM
+         +Bd59J/snh4N89vdfqs3Vbzlyqz4kHx26KMAkzYa2t++kPVrndyG1I8PUSzoP5br5xeq
+         4yytS06SELO4CGGsuuWNJXpoPlzUm/ieAawrBZo5gDI943v4YW7gVIn3O/6QXtH+OiSA
+         XXq4I43Q3sOId8rqpWkElz3+d7z93tM6GGhLmUep2xAdHIL3YzlXbPOnIg8b/Ag1HU1C
+         2v6Q==
+X-Gm-Message-State: AOAM531OI+K482yBq/XgaGPcclz3IlkRgdUXhfDHB4LeYbS1o4ot0C9K
+        uUGXTroNhQX79xN6L8qujm5Pww==
+X-Google-Smtp-Source: ABdhPJzkuMo6BVRg+eIcLsNrunYrL7MrNDfMCxb56XFQ8NXNkSdiOirXEPWIr6xsfVjqdIMtGKLThA==
+X-Received: by 2002:a5d:490c:: with SMTP id x12mr13034598wrq.238.1595332368446;
+        Tue, 21 Jul 2020 04:52:48 -0700 (PDT)
+Received: from dell ([2.27.167.94])
+        by smtp.gmail.com with ESMTPSA id s203sm3250315wms.32.2020.07.21.04.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 04:52:47 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 12:52:46 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Ben Dooks <ben@simtec.co.uk>
+Subject: Re: [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
+Message-ID: <20200721115246.GE621928@dell>
+References: <20200715093209.3165641-1-lee.jones@linaro.org>
+ <20200715093209.3165641-2-lee.jones@linaro.org>
+ <566f2d65-1b5a-ed2a-f33f-516b66be2624@synopsys.com>
+ <87blk9p5ia.fsf@kernel.org>
+ <5862f649-8058-7e39-cb43-2a4b09303333@synopsys.com>
+ <875zahp0i0.fsf@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_05:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210077
+In-Reply-To: <875zahp0i0.fsf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kprobes references are currently listed right after kretprobes example,
-and appears to be part of the same section. Move this out to a separate
-appendix for clarity.
+On Tue, 21 Jul 2020, Felipe Balbi wrote:
 
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- Documentation/staging/kprobes.rst | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+> Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+> 
+> > Hi Felipe,
+> >
+> > On 7/21/2020 1:43 PM, Felipe Balbi wrote:
+> >> Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+> >> 
+> >>> On 7/15/2020 1:32 PM, Lee Jones wrote:
+> >>>> The value obtained from GINTSTS2 should be masked with the GINTMSK2
+> >>>> value.  Looks like this has been broken since
+> >>>> dwc2_gadget_wkup_alert_handler() was added back in 2018.
+> >>>>
+> >>>> Also fixes the following W=1 warning:
+> >>>>
+> >>>>    drivers/usb/dwc2/gadget.c: In function ‘dwc2_gadget_wkup_alert_handler’:
+> >>>>    drivers/usb/dwc2/gadget.c:259:6: warning: variable ‘gintmsk2’ set but not used [-Wunused-but-set-variable]
+> >>>>    259 | u32 gintmsk2;
+> >>>>    | ^~~~~~~~
+> >>>>
+> >>>> Cc: Minas Harutyunyan <hminas@synopsys.com>
+> >>>> Cc: Ben Dooks <ben@simtec.co.uk>
+> >>>> Fixes: 187c5298a1229 ("usb: dwc2: gadget: Add handler for WkupAlert interrupt")
+> >>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> >>>
+> >>> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+> >> 
+> >> Should I apply the entire series or only 1/8?
+> >> 
+> > In this series only 2 patches are related to dwc2, which I'm already Acked:
+> >
+> > [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
+> > [PATCH v2 2/8] usb: dwc2: gadget: Avoid pointless read of EP control 
+> > register
+> >
+> > I can't acked other patches from this series, because they are not 
+> > related to dwc2.
+> 
+> heh, I saw that after sending the email, sorry :-)
 
-diff --git a/Documentation/staging/kprobes.rst b/Documentation/staging/kprobes.rst
-index 620699f5df22..b757b6dfd3d4 100644
---- a/Documentation/staging/kprobes.rst
-+++ b/Documentation/staging/kprobes.rst
-@@ -20,6 +20,7 @@ Kernel Probes (Kprobes)
-   10. Deprecated Features
-   Appendix A: The kprobes debugfs interface
-   Appendix B: The kprobes sysctl interface
-+  Appendix C: References
- 
- Concepts: Kprobes and Return Probes
- =========================================
-@@ -710,11 +711,6 @@ Kretprobes Example
- 
- See samples/kprobes/kretprobe_example.c
- 
--For additional information on Kprobes, refer to the following URLs:
--
--- https://www.ibm.com/developerworks/library/l-kprobes/index.html
--- https://www.kernel.org/doc/ols/2006/ols2006v2-pages-109-124.pdf
--
- Deprecated Features
- ===================
- 
-@@ -797,3 +793,11 @@ Note that this knob *changes* the optimized state. This means that optimized
- probes (marked [OPTIMIZED]) will be unoptimized ([OPTIMIZED] tag will be
- removed). If the knob is turned on, they will be optimized again.
- 
-+References
-+==========
-+
-+For additional information on Kprobes, refer to the following URLs:
-+
-+- https://www.ibm.com/developerworks/library/l-kprobes/index.html
-+- https://www.kernel.org/doc/ols/2006/ols2006v2-pages-109-124.pdf
-+
+Also, all patches are already in -next, courtesy of Greg.
+
 -- 
-2.25.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
