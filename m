@@ -2,106 +2,90 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D0C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9129DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FF620720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF6C20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="VsRIyxfZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JV31/m4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731398AbgGUXCJ (ORCPT
+        id S1731305AbgGUXFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgGUXCI (ORCPT
+        Tue, 21 Jul 2020 19:05:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58016 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726555AbgGUXE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:02:08 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C91DC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:02:07 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id l6so19109plt.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mcZTtXUZTypejTnIJ7xyZOrF3R3Meo9MjDufW96ubz8=;
-        b=VsRIyxfZipyELzOOGXyC7A/mMrs+UsFQWvACDHx3vXVYKIkhRxZ4HCXXsj+7S+fOWa
-         8anGBr/9l9CTXmpXhjjwZDPLxC3QwvXVFO4fexy9cxiQ9QGAOZubrWcoyJrYzkFEcKhg
-         DQfT87xX2ICUsY9dXTAkQomNrlYlkjw0bzglLl/Rt77B2gvyJFRTqmIpTrmQfZTNcyZU
-         J7QEyhCszj9q01oOxEerSe8+dH3gjgZVdfPLQDb9wAmSmlFaWx8tbS9p7hRlSXdx9CDn
-         BVQEX7q+Ojd/1VHPtj7SK7vB8A+BOP9YRPzy0d3WSkrnyHv2vHTqXdKuZg2qi+faBXnz
-         Io5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=mcZTtXUZTypejTnIJ7xyZOrF3R3Meo9MjDufW96ubz8=;
-        b=eZHsRl+6v+u+UOs8V7ckosomACblsYQfM1A9WlJ27tt5mS2cc9wrMdUsHnTL2gpEhv
-         W1iSeSSQ4ceyHp4SFW2BouaSA8MCGfYZ8VwSfzFTp5i6hYtc8Ks1vWwIiiiMhEFoVfVy
-         Lx2ZdXvwEOxP68ryvSZrQeIh29vhuDACWjFXl9ivTQHnnA4I2cj/0c77XTNbK652VQWP
-         h0gx/MQHA/CPAQbAeDY7TgxiYzieuL5emBqAuPDnora3kTvIETqGff98h0ihPCpARtPH
-         rNKg0dughqWM9/xtf+DqdG8RGK8W4D5QWbGrEyRcKVG7yHCLyyGJCY99QSwcn+7IDEEX
-         kcVg==
-X-Gm-Message-State: AOAM530nResY9WYkrOkXdaFclvLpANtAaqltELkN28ftw1knxn4ZeTTH
-        X6lQADv67rVepBmwI7LLPHOfHg==
-X-Google-Smtp-Source: ABdhPJxNB+8714jhZkFUMp5+W+T+nSUMhVdE5+kOrwpP1g7VL9v49row44RpOFy391TezGadZfINuw==
-X-Received: by 2002:a17:902:2:: with SMTP id 2mr24478726pla.288.1595372526421;
-        Tue, 21 Jul 2020 16:02:06 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id t19sm18386515pgg.19.2020.07.21.16.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 16:02:05 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 16:02:05 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Jul 2020 16:02:03 PDT (-0700)
-Subject:     Re: [PATCH 3/6] riscv: include <asm/pgtable.h> in <asm/uaccess.h>
-In-Reply-To: <20200710135706.537715-4-hch@lst.de>
-CC:     nickhu@andestech.com, green.hu@gmail.com, deanbo422@gmail.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        akpm@linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Christoph Hellwig <hch@lst.de>
-Message-ID: <mhng-2e6d1568-076d-40fc-988a-9d035d54af79@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Jul 2020 19:04:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595372698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Kx0Hqea23204+1Vxqe4zJbIPov8gmWienWErS47JZPw=;
+        b=JV31/m4udR6AcIfnthBj1CTr/8aQ1gWb3n1zRh6UcGpjms0CWgr9/2tLLH/lcKp4RCtCTQ
+        5e3+8tA4RVepSG7FU5+1Vv67kfq1V5pS6+ojx2y+jgEnqZeHnD8wqoxufLl6RbXv0/Q1tG
+        qV2LjxqjA3Lb5o4kWXBFgn6k0lv9KA8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-sUelSXFeOdqLma5mtRQ2jw-1; Tue, 21 Jul 2020 19:04:54 -0400
+X-MC-Unique: sUelSXFeOdqLma5mtRQ2jw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D3741005510;
+        Tue, 21 Jul 2020 23:04:53 +0000 (UTC)
+Received: from treble (ovpn-113-106.rdu2.redhat.com [10.10.113.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F279369316;
+        Tue, 21 Jul 2020 23:04:49 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 18:04:42 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] docs/livepatch: Add new compiler considerations doc
+Message-ID: <20200721230442.5v6ah7bpjx4puqva@treble>
+References: <20200721161407.26806-1-joe.lawrence@redhat.com>
+ <20200721161407.26806-2-joe.lawrence@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200721161407.26806-2-joe.lawrence@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jul 2020 06:57:03 PDT (-0700), Christoph Hellwig wrote:
-> To ensure TASK_SIZE is defined for USER_DS.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/include/asm/uaccess.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-> index 8ce9d607b53dce..22de922d6ecb2f 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -8,6 +8,8 @@
->  #ifndef _ASM_RISCV_UACCESS_H
->  #define _ASM_RISCV_UACCESS_H
->
-> +#include <asm/pgtable.h>		/* for TASK_SIZE */
-> +
->  /*
->   * User space memory access functions
->   */
+On Tue, Jul 21, 2020 at 12:14:06PM -0400, Joe Lawrence wrote:
+> Compiler optimizations can have serious implications on livepatching.
+> Create a document that outlines common optimization patterns and safe
+> ways to livepatch them.
+> 
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+There's a lot of good info here, but I wonder if it should be
+reorganized a bit and instead called "how to create a livepatch module",
+because that's really the point of it all.
 
-Thanks!
+I'm thinking a newcomer reading this might be lost.  It's not
+necessarily clear that there are currently two completely different
+approaches to creating a livepatch module, each with their own quirks
+and benefits/drawbacks.  There is one mention of a "source-based
+livepatch author" but no explanation of what that means.
+
+Maybe it could begin with an overview of the two approaches, and then
+delve more into the details of each approach, and then delve even more
+into the gory details about compiler optimizations.
+
+Also the kpatch-build section can reference the patch author guide which
+we have on github.
+
+-- 
+Josh
+
