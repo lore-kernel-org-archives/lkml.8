@@ -2,108 +2,92 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8810BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D222072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UN6Gnqvp"
+	by mail.kernel.org (Postfix) with ESMTP id F286620771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595324954;
+	bh=HBl3U/frwOt22N3pqrjLjSOH31yq1r1eFl3vgEFJ7KU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wjG28ZXqyMfRV3rjuSPe97CBRm9budMiD6yXC5ioo+Wixk4tjgowr/eo4CkEwdws9
+	 IWqvyqiY3T58CNpJjv+fRJ2+R4SrpvGPtuxOsrygJzme5gBq6d40bAykO0YoCELsb2
+	 YAYpx+UpXzl2DZjd3hTpFTCWIm7jo1Fdno1jZOjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgGUJrr (ORCPT
+        id S1728924AbgGUJtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:47:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46813 "EHLO ozlabs.org"
+        Tue, 21 Jul 2020 05:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUJrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:47:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726109AbgGUJtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:49:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9v0H0PkZz9sQt;
-        Tue, 21 Jul 2020 19:47:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595324864;
-        bh=ugY4o/TZYhklh1+/uO59si7dSoFL542+vS5fIOihoSw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UN6GnqvpHWu0JQIISvWXo7EigZbtVIkhyu/7+pOeJUXG7aRHer5pxEHFbzUi+nRFN
-         Aei4sL4Pg61DpCfLfzAMGp6A+fHRUaN4q86pclDHss4A4betb/uF+wqfhLh9nasV4u
-         ch+oPMhZVnqD4qfHeKv7Gi5VjtcDgR7+HYxcPe1PklrtUTwyZBqJ+wKybkx7pj/gNP
-         nK84I1saGtScToy6+2xqVLji/Fyc3mcPBbXITlCxiNvVBhzB77Z5pSoM5QUy5Iql4u
-         KYHLJOLt+3vQqCEvIpkVkr26K/wqGCuL6yPV3W8XZGTWDUkA+J5hJIsE1NHcsQ1oLT
-         bxoQ3hwSA58rw==
-Date:   Tue, 21 Jul 2020 19:47:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the akpm-current tree with the net-next
- tree
-Message-ID: <20200721194739.4cac3da4@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 416092072E;
+        Tue, 21 Jul 2020 09:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595324952;
+        bh=HBl3U/frwOt22N3pqrjLjSOH31yq1r1eFl3vgEFJ7KU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EgAhMgk3P2S9xtaT8KwyEsD8lQixAzJAQTEF8OrXQgw/MNtxENV+YlWrqW5EYzuUp
+         qQWasjc85rxrgpep4PmBIyYM6ycTEvZAMwm2NVzj3mQi/6U0griHMWn9qCTC6EE/UL
+         L74Cu6Pb5+vHL7pnSUv83VOEYTn8Huqaa/T3u1eQ=
+Date:   Tue, 21 Jul 2020 10:48:59 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Leilk Liu <leilk.liu@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
+Message-ID: <20200721094859.GB4845@sirena.org.uk>
+References: <20200721024819.7150-1-leilk.liu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/RVB4UNz+Uam9DImdewNfFT_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Content-Disposition: inline
+In-Reply-To: <20200721024819.7150-1-leilk.liu@mediatek.com>
+X-Cookie: I'm also against BODY-SURFING!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/RVB4UNz+Uam9DImdewNfFT_
-Content-Type: text/plain; charset=US-ASCII
+
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Tue, Jul 21, 2020 at 10:48:19AM +0800, Leilk Liu wrote:
+> From: "leilk.liu" <leilk.liu@mediatek.com>
+>=20
+> Add a DT binding documentation for the MT8192 soc.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+I'd expect to see a matching driver patch.
 
-  net/sctp/socket.c
-
-between commits:
-
-  89fae01eef8b ("sctp: switch sctp_setsockopt_auth_key to use memzero_expli=
-cit")
-  534d13d07e77 ("sctp: pass a kernel pointer to sctp_setsockopt_auth_key")
-
-from the net-next tree and commit:
-
-  f08cd4915bb1 ("mm, treewide: rename kzfree() to kfree_sensitive()")
-
-from the akpm-current tree.
-
-I fixed it up (I just used the net-next tree version) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/RVB4UNz+Uam9DImdewNfFT_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WubsACgkQAVBC80lX
-0GxwtQf8Cz8gQtOTJ7wQZDKywCfaD5gW6et5FPlqKA36rEZWcXr1FjqiQrbdywfR
-6OfbfvxTaORjclstKwAs3y7jRxdd/q5FoIVnj3xQ88ZU/M3aINZpThpr4AIJyTcB
-zO/8eR27/8nItHqnrpA6pEUSnz8qwZKS/XeYi99BtlPpQlv9lRqujBMRYvmtI7Wy
-6aN4bYho8Xk5DSOHIK1RfrZGWcoJHdFISEgW7imvQlzhrM/YJ8j3jHDbshT+txmA
-7jXYaA/QmPM6TJyYg4U3C+RYoY4bIT8BoqMOetxULPujQVBGCq1Z61Z7lOUgzMqJ
-mvCw9HniybLU1+t11uTew6cr5Vghsg==
-=tydt
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8WugsACgkQJNaLcl1U
+h9DNOAf/U7WSHzWn6QeIOU6cZmJEboD/Jpm+YlFFOmeZ09Tt588WYDWCW7cfjiTE
+JaFOMr53LA1OdW8WeKXklihwqEMP3dXcKdEpNbtVbU32PrCRAxj4XyrBxaBHEoKn
+LzcMAcpmLngZAI6/1o9qyQte2d9r2EMNtiJz8XkWO4N5ZlLf04x0tD1TUqgwz/4h
+lGTCCLPmVFbKZzU/V7QW2BgUKu/EEmVyhZx+EDQoUusWET66R92OHTMOJQil+aPC
+XwPhYt9Lynxv98qUDDhxjfaKpBQqEk2wLSBHJ2xNDKPQes9Ea+CabdvHp5Jn92An
+0sYM9AzJTTmbxHc4MBM51af5Ny5/jQ==
+=lcjN
 -----END PGP SIGNATURE-----
 
---Sig_/RVB4UNz+Uam9DImdewNfFT_--
+--uZ3hkaAS1mZxFaxD--
