@@ -2,103 +2,206 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0DC20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595319683;
-	bh=47k5aup1aXT1zMH3tH7/4fi4e3IvHVWxQa3HfzqrMDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vhLypxh4Jp5lsSsFa0p7fSUqiWk/Ys3XBJqLKvnYiLTTm/+TG0HKTG0+X5FFcEyiN
-	 Edii8fxbZP1I2lAjXocOoCHmUmWAYtQXdhB/+pN8Exi91vy5Gf9EFrUsJaWEV4OnBP
-	 b0HJyW/52ye+PfYw09U0bXav/CieKaNp6vlOuHhE=
+	by mail.kernel.org (Postfix) with ESMTP id 6E33F20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TvvwtPFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgGUIVW (ORCPT
+        id S1728792AbgGUIVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgGUIVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:21:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9205720720;
-        Tue, 21 Jul 2020 08:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595319680;
-        bh=47k5aup1aXT1zMH3tH7/4fi4e3IvHVWxQa3HfzqrMDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1uelKJLZv+vYgaCIPNvkbzC9Ll2XoFHXW+f8T1U7kZ+d9eYMT368ZQliT7osFSOOn
-         /v0COt4qkjjEv/+jcKYsVSabqPWva9tAEJb/2/WDP0K0I0ijDGSjWvKl9UvBq54lzu
-         mqOchN/MFgsvHMe8scpLVuHek/a6FR6SFL0f5gdY=
-Date:   Tue, 21 Jul 2020 10:21:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiwu Huang <yanziily@gmail.com>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v5 4/4] power: supply: core: property to control reverse
- charge
-Message-ID: <20200721082128.GE1655283@kroah.com>
-References: <cover.1595301250.git.huangqiwu@xiaomi.com>
- <f58e4cc6f5235d463d96c950f2af2b9a47920e9d.1595301250.git.huangqiwu@xiaomi.com>
+        Tue, 21 Jul 2020 04:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGUIVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 04:21:30 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F57C0619D7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:21:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so1975518wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 01:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=uMWFGyYaTk9SRaKtXrAbhRNUe/iVRjZ0CQr2Oah93dc=;
+        b=TvvwtPFHKZTUhwEr9W9AXtSlqbKNq06vH+t3GLZT2QS1OMIA96GNjTtRytz3C2Gi5w
+         u3Rq95KzXXgL8JGyaQyIVdaKNvOELpTtT6c5FqM6xl83SDIBSB2V++v9f6n16C2enp6R
+         lBDDJIoz2oPhubdn47BHyeCSgDAuag+Wqc7jmuXtuVAyQLWOok4RCScH49qQaTDkkiy2
+         phywHN1eA411+5AlQP/vD3klsOlgfMF87S5OVp1R2HUgNr2z20/rlg/tfH/4ezLsBEeu
+         mUIbMZHvJcUPCHVRvPYYBHK+3l+HaBkOfvZ5WI5y9syy1exLBUcoYhJUmfbUjOgVRZwm
+         ty+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=uMWFGyYaTk9SRaKtXrAbhRNUe/iVRjZ0CQr2Oah93dc=;
+        b=H0HbUuCq6FMbKoZx4cSLSz8De7L4TJJsEnFUmFAunjA0S4NHBnP6JmAGu0FProTqqf
+         0vynB+xLH7EYBk6bFUNonEu6aXUOSC4DYn6eWrv3Auw1xS9vJS+gJv3jDQ3nQkGfwHP2
+         L8URJKaPRuEg+u3e3a7TQ6Sotyh4X/7bHgT1LmQ+sTd6zZldf3HRWpS42wvwk3AcQTdV
+         PLGy+bOjCb0zVN440Ah3OsXDqbUCn8Crxzao9RcCXSVf+qO5KmG1aSu72+y5LDCQzBFh
+         olFuuS6WuZGu7mBF80AWz+M1Y3WXrcxaDYNi9JLuQ8G0bjnriSRggJy36vu731Rtoxs9
+         FMGg==
+X-Gm-Message-State: AOAM532t3rtSg1GenY1sTb/pGkIZ4QyaIPkv+m12/xY4CFpXS7KIp0Ry
+        vDtTAkok4Hj/3vO79Ll9e3NKvhwqj8g=
+X-Google-Smtp-Source: ABdhPJzRv+7pl9/WdCZxywp6d8aVxlktytPK5D5woF8AKJK9Czov2HPw0/JkawnYD0SQovjvrLrsKQ==
+X-Received: by 2002:a1c:750a:: with SMTP id o10mr3065841wmc.165.1595319689264;
+        Tue, 21 Jul 2020 01:21:29 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t202sm2519588wmt.20.2020.07.21.01.21.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 01:21:28 -0700 (PDT)
+References: <20200718065739.7802-1-christianshewitt@gmail.com> <20200718065739.7802-10-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/12] arm64: dts: meson: add audio playback to rbox-pro
+In-reply-to: <20200718065739.7802-10-christianshewitt@gmail.com>
+Date:   Tue, 21 Jul 2020 10:21:27 +0200
+Message-ID: <1jv9ih8eig.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f58e4cc6f5235d463d96c950f2af2b9a47920e9d.1595301250.git.huangqiwu@xiaomi.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 01:59:37PM +0800, Qiwu Huang wrote:
-> From: Qiwu Huang <huangqiwu@xiaomi.com>
-> 
-> Interface to control wireless reverse charge.
-> Supply reverse charge function when enabled.
-> 
-> Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
+
+On Sat 18 Jul 2020 at 08:57, Christian Hewitt <christianshewitt@gmail.com> wrote:
+
+> Add initial support limited to HDMI i2s and SPDIF (LPCM).
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  Documentation/ABI/testing/sysfs-class-power | 12 ++++++++++++
->  drivers/power/supply/power_supply_sysfs.c   |  1 +
->  include/linux/power_supply.h                |  1 +
->  3 files changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index 75ec7de2fe78..54647d6995d3 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -767,3 +767,15 @@ Description:
+>  .../boot/dts/amlogic/meson-gxm-rbox-pro.dts   | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+> index c89c9f846fb1..7b23b3da27ff 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+> @@ -14,6 +14,7 @@
+>  /dts-v1/;
 >  
->  		Access: Read-Only
->  		Valid values: 0 - 100
+>  #include "meson-gxm.dtsi"
+> +#include <dt-bindings/sound/meson-aiu.h>
+>  
+>  / {
+>  	compatible = "kingnovel,r-box-pro", "amlogic,s912", "amlogic,meson-gxm";
+> @@ -33,6 +34,13 @@
+>  		reg = <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
+>  	};
+>  
+> +	spdif_dit: audio-codec-0 {
+> +		#sound-dai-cells = <0>;
+> +		compatible = "linux,spdif-dit";
+> +		status = "okay";
+> +		sound-name-prefix = "DIT";
+> +	};
 > +
-> +What:		/sys/class/power_supply/<supply_name>/reverse_chg_mode
-> +Date:		Jul 2020
-> +Contact:	Fei Jiang <jiangfei1@xiaomi.com>
-> +Description:
-> +		Some phones support wireless reverse charge function which charge other phones.
+>  	leds {
+>  		compatible = "gpio-leds";
+>  
+> @@ -51,6 +59,25 @@
+>  		};
+>  	};
+>  
+> +	vddio_ao18: regulator-vddio_ao18 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_AO18";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	hdmi_5v: regulator-hdmi-5v {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "HDMI_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +
+> +		gpio = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
 
-Replace "phones" with "devices"?
+Same comment here ...
 
-And shouldn't these lines be wrapped properly at 72 colums or so?
+> +
+>  	vddio_boot: regulator-vddio-boot {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "VDDIO_BOOT";
+> @@ -90,6 +117,59 @@
+>  		clocks = <&wifi32k>;
+>  		clock-names = "ext_clock";
+>  	};
+> +
+> +	sound {
+> +		compatible = "amlogic,gx-sound-card";
+> +		model = "GXM-RBOX-PRO";
+> +		assigned-clocks = <&clkc CLKID_MPLL0>,
+> +				  <&clkc CLKID_MPLL1>,
+> +				  <&clkc CLKID_MPLL2>;
+> +		assigned-clock-parents = <0>, <0>, <0>;
+> +		assigned-clock-rates = <294912000>,
+> +				       <270950400>,
+> +				       <393216000>;
+> +		status = "okay";
+> +
+> +		dai-link-0 {
+> +			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
+> +		};
+> +
+> +		dai-link-1 {
+> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
+> +		};
+> +
+> +		dai-link-2 {
+> +			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
+> +			dai-format = "i2s";
+> +			mclk-fs = <256>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
+> +			};
+> +		};
+> +
+> +		dai-link-3 {
+> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&spdif_dit>;
+> +			};
+> +		};
+> +
+> +		dai-link-4 {
+> +			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&hdmi_tx>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&aiu {
+> +	status = "okay";
+> +	pinctrl-0 = <&spdif_out_h_pins>;
+> +	pinctrl-names = "default";
+>  };
+>  
+>  &ethmac {
 
-> +		The property supply interface to control wireless reverse charge.
-
-I can't understand this sentance.
-
-> +		If enabled, start TX mode and detect RX. Disabled when timeout or manual setting.
-
-Can this be set, or is it just something to be read?
-
-thanks,
-
-greg k-h
