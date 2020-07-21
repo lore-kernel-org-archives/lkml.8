@@ -2,111 +2,96 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ACC433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0065C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 113162065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC032065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ejmxlAvD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Diaf7Cyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgGUROm (ORCPT
+        id S1730620AbgGUROw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:14:42 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:64752 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729967AbgGUROl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:14:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595351681; x=1626887681;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fkusY/rZnoHUUkkCkx7on0e3uqJv5otXccNgfSdW2xg=;
-  b=ejmxlAvDm8Cz0FzZgb3N9g5RSwE/5t88WGc+dSihwDp88hpO8ucY+Uhf
-   lb4xA/M1BdH+voemaQxWLhvZgwL8mUAPBALgEkAaRWmRey3u47HzgSs8U
-   +mYLtlue1oySuflMVcJA/gHMhCRBGP1UKNU2SOqLwA6owEP3isvaNeQCo
-   LB8q2s4SDADZdS8KxASOUYf1r0ie6iTxkaFkwyncVSURcgjuzG24Z2cO/
-   A0UyMCX73EA+LIgoBjg8nWe1naat5QjdqpAzhNeAoRVQ2ZDFmvrUV/0Vy
-   Za+9yMtfGXowpSB/IWOtiYFFjkMnKaHyZkZbqkDTGdtFsnLcwaZ/z07RO
-   Q==;
-IronPort-SDR: W9KznHSrzhC9ttuaNSxXdfKqAcbuJXO89ByKoBbzXLX4fj4ZWbJ0it0/7IZUuoyvFnnhZBSiP0
- 5nhlppiN+uFiiwRGxU/wz1k4g39Iq3MqtDiM2hSkSu0HerguObUv3HmRXvQATqry/AGqTdwsR7
- tD+T8mGt7Ka+R7FRyE4btIZlnh/gUIyueVzfSuogCoSFvdgm1jEa3q12v/eUhhVnp3dWVzx4o3
- s+GPsc9p4/cFLv1kZhqpS1E63CIGfknbH7iZja6REiYs3URENjFCfTCr/uYBFZsWUOjnvh0wjr
- e34=
-X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
-   d="scan'208";a="84811168"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jul 2020 10:14:40 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 21 Jul 2020 10:14:40 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 21 Jul 2020 10:13:46 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
-Date:   Tue, 21 Jul 2020 20:13:09 +0300
-Message-ID: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Tue, 21 Jul 2020 13:14:52 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31410 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730015AbgGUROt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:14:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595351688; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=k+XAw9X2vHW5qNsF1IEl1DDQaBasaYhVfkIaTJygYog=; b=Diaf7CyijnAz3IOUT+U/1DMtsYVKq4DtsJkbvHXXKjwIdW+jA4147BGHQOf4F78R3//T3570
+ PjMwtHn2N4BntHJNckddE5X/mgGgHnAUR68Iq1tDPG5igF8A1o3HjKLF4uMuMJw7dZUy2Kgf
+ 42JFIExhsa/edJscC0FhoivurYM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f172287e32d449b31ed61e8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 17:14:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B7444C433A1; Tue, 21 Jul 2020 17:14:46 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 263A8C4339C;
+        Tue, 21 Jul 2020 17:14:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 263A8C4339C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvalo@codeaurora.org, johannes@sipsolutions.net,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [RFC 1/7] mac80211: Add check for napi handle before WARN_ON
+Date:   Tue, 21 Jul 2020 22:44:20 +0530
+Message-Id: <1595351666-28193-2-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding the PHY nodes directly under the Ethernet node became deprecated,
-so the aim of this patch series is to make MACB use an MDIO node as
-container for MDIO devices.
-This patch series starts with a small patch to use the device-managed
-devm_mdiobus_alloc(). In the next two patches we update the bindings and
-adapt macb driver to parse the device-tree PHY nodes from under an MDIO
-node. The last patches add the MDIO node in the device-trees of sama5d2,
-sama5d3, samad4 and sam9x60 boards.
+The function ieee80211_rx_napi can be now called
+from a thread context as well, with napi context
+being NULL.
 
-Changes in v2:
- - renamed patch 2/7 from "macb: bindings doc: use an MDIO node as a
-   container for PHY nodes" to "dt-bindings: net: macb: use an MDIO
-   node as a container for PHY nodes"
- - added back a newline removed by mistake in patch 3/7
+Hence add the napi context check before giving out
+a warning for softirq count being 0.
 
-Codrin Ciubotariu (7):
-  net: macb: use device-managed devm_mdiobus_alloc()
-  dt-bindings: net: macb: use an MDIO node as a container for PHY nodes
-  net: macb: parse PHY nodes found under an MDIO node
-  ARM: dts: at91: sama5d2: add an mdio sub-node to macb
-  ARM: dts: at91: sama5d3: add an mdio sub-node to macb
-  ARM: dts: at91: sama5d4: add an mdio sub-node to macb
-  ARM: dts: at91: sam9x60: add an mdio sub-node to macb
+Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
 
- Documentation/devicetree/bindings/net/macb.txt | 15 ++++++++++++---
- arch/arm/boot/dts/at91-sam9x60ek.dts           |  8 ++++++--
- arch/arm/boot/dts/at91-sama5d27_som1.dtsi      | 16 ++++++++++------
- arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi    | 17 ++++++++++-------
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts      | 13 ++++++++-----
- arch/arm/boot/dts/at91-sama5d2_xplained.dts    | 12 ++++++++----
- arch/arm/boot/dts/at91-sama5d3_xplained.dts    | 16 ++++++++++++----
- arch/arm/boot/dts/at91-sama5d4_xplained.dts    | 12 ++++++++----
- drivers/net/ethernet/cadence/macb_main.c       | 18 ++++++++++++------
- 9 files changed, 86 insertions(+), 41 deletions(-)
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+ net/mac80211/rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index a88ab6f..1e703f1 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -4652,7 +4652,7 @@ void ieee80211_rx_napi(struct ieee80211_hw *hw, struct ieee80211_sta *pubsta,
+ 	struct ieee80211_supported_band *sband;
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+ 
+-	WARN_ON_ONCE(softirq_count() == 0);
++	WARN_ON_ONCE(napi && softirq_count() == 0);
+ 
+ 	if (WARN_ON(status->band >= NUM_NL80211_BANDS))
+ 		goto drop;
 -- 
-2.25.1
+2.7.4
 
