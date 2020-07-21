@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1387BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E34C433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E756420792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F56220792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gRIBgAZp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyZFNzQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgGUQnb (ORCPT
+        id S1730873AbgGUQnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:43:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47028 "EHLO
+        Tue, 21 Jul 2020 12:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730767AbgGUQmp (ORCPT
+        with ESMTP id S1730734AbgGUQml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:42:45 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06381C0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so21871353wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:44 -0700 (PDT)
+        Tue, 21 Jul 2020 12:42:41 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053DFC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:41 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so6913713wrh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jALF4UglhPiR50fx9RAXVg2wft4bVyZm/g/kx8/tohE=;
-        b=gRIBgAZpckF5GdIJZ8nCRH7B943d8Kxu0QenVz+DMkfioH2Vcy3xZvMvTZgB7SnNL4
-         p1HjT2n/YXsGDjWvdBmBMMr4Q4d9U0F7CkY0w4CQOk07oeCiNUMKrjBmssgU2QY9fqz8
-         CIqOoOpiNSQDV5d1B3AM3RCRTKR33KNLXWaoNsll4814kXJWhbjwGYhLz/vpq3PHKBa0
-         CszBN3DJ5NeUBsaVi2rmKDXBy6E4nU+SzjByHBNk8kF2leZUCd+hDNc9VPEOCxawxTYq
-         hb6zoMKaW6z6BkW5qR+OGIW7qd0+DYB+Tj4D01Sz2YsgAAi7rc6frsSwqB5mwLmyHcCK
-         Vtog==
+        bh=vXJJF1W9k1z7Na3pvzHdBZG9DscScXGROr0HjsmWObQ=;
+        b=pyZFNzQ/Dc37saZNTqKBcYtVTa5rv+/RJruM7hWu+W2SyhAPzEswAFuxeBTIEnJ2Un
+         QZeKxXn43difmwUNS7tGyNRyg96K37+sAIugIRGi04o0g2F5UpugvSvGKFZgTcC6BmPo
+         symCKm9w5GtHl8WmFboCRwXyLznDVgh5M7DAnt1jUZSQIjq6mZF5CF3+PtTyDtsxBnaC
+         n2PybB1JUxe807lhhh4R9uGuLggdrSzx/TtOGlpC4DOrju9L6UgOsCnBoN0OycRwwX5e
+         RLkYJ6KLz3pBkoYDZHbHrb8m00dfl/2VWIf1xnIBxcWEjDLkb2W8ppoMSt2Qxs22X2XG
+         LGdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jALF4UglhPiR50fx9RAXVg2wft4bVyZm/g/kx8/tohE=;
-        b=f16h13YjBqJcNx5x9CLiuWCDSaWPpV9c8AeLT1lPnA7SQQ72NH2qUbYqZBndZSOy/0
-         RfEhofVJ0gdGpW65LJuGr1v4Twr2vxOyrVjlQscbb8LTi/NMJyY2JZf5iPTwOkK3TA0r
-         g530sAhkfb9lNeTnS8c4lJtUTokUW/nAGd2s+OslEyadFjmjuhpnErMNIb9f/u36/yRh
-         Xg9FJ05s8WUitqIahm00Ak9GJ61GubKpogwmfKlZVz8BfSeE2DYOWB41+q/enlqMxOew
-         eOK98hA8wl93fEDT1SDP4fvzMs2yVkkumZkEGm82HHIrF9K0hwNgCX8qfEgIbGyIQxNw
-         P/Fg==
-X-Gm-Message-State: AOAM532f3jM7yNeYANCDgb1fUly5MWxlvO+auiF75VD0KxmibtgfQpFx
-        fryOc9agLG986RJunKVE038LUTeUrgs=
-X-Google-Smtp-Source: ABdhPJzGnBb8avkbmKQI7yITYi5wbbZFWR8Uj+zO3XEMt4FR9iFPvrNLrymm6EE2us09Dca4TF+6oQ==
-X-Received: by 2002:adf:83c5:: with SMTP id 63mr1008654wre.321.1595349763722;
-        Tue, 21 Jul 2020 09:42:43 -0700 (PDT)
+        bh=vXJJF1W9k1z7Na3pvzHdBZG9DscScXGROr0HjsmWObQ=;
+        b=q07G+9oyyjxqmTrHEx6vySYbe3PCyHf+0naGvAzw6iRbE8m9G7OfDeG7mfqm17fYvQ
+         ouCZ7Vb4J7FVXIwcd/Pbw2Y8Y5p83zKAGmCaFsOSV9vWy6w2mloHWWldByPGCGgH4Ltc
+         hUo11oT5l2hn2Und7V0JfZDRvGQQuBeHF5EMqc3Y1nEqgYBn5sp8MfkK3aZNq3wlFY98
+         OR3G7wi7NApjPzQeOM2WmSoQeriyzWCQSJI7bAibkQ3AOBigYbqr2Ol3zd/OFbQfsIDc
+         pqE2H5oiUn3tL5KXZzjKkeG+VXimBB0hAxzlEMpCpnrZ5pbkDG4+AsJHHYN8thFIDsbD
+         NlfA==
+X-Gm-Message-State: AOAM5332i+PFmxG9S1t1CwRqftv6SgeCXhkiAnRXO83EPO19HJqXeFqx
+        ho06XNvhHETDGxkjILNh5u+jdw==
+X-Google-Smtp-Source: ABdhPJwIGFbiXIil3Vep+qPfyS242Z5ektcm5mpCelA5ULa/8ioavvgYS9xcq5sq4eD5XrvXvCqH1A==
+X-Received: by 2002:adf:e38b:: with SMTP id e11mr27053586wrm.65.1595349759735;
+        Tue, 21 Jul 2020 09:42:39 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.42
+        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:42:43 -0700 (PDT)
+        Tue, 21 Jul 2020 09:42:39 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        QLogic-Storage-Upstream@qlogic.com
-Subject: [PATCH 33/40] scsi: qla4xxx: ql4_nx: Supply description for 'code'
-Date:   Tue, 21 Jul 2020 17:41:41 +0100
-Message-Id: <20200721164148.2617584-34-lee.jones@linaro.org>
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Subject: [PATCH 30/40] scsi: lpfc: lpfc_ct: Fix-up formatting/docrot where appropriate
+Date:   Tue, 21 Jul 2020 17:41:38 +0100
+Message-Id: <20200721164148.2617584-31-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
 References: <20200721164148.2617584-1-lee.jones@linaro.org>
@@ -77,61 +78,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Demote other headers which are clearly not kerneldoc.
+Other headers have been demoted as they are too far out of sync and
+ideally require effort from the authors.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/qla4xxx/ql4_nx.c:983: warning: Function parameter or member 'ha' not described in 'qla4_82xx_pinit_from_rom'
- drivers/scsi/qla4xxx/ql4_nx.c:983: warning: Function parameter or member 'verbose' not described in 'qla4_82xx_pinit_from_rom'
- drivers/scsi/qla4xxx/ql4_nx.c:3225: warning: Function parameter or member 'code' not described in 'qla4_8xxx_uevent_emit'
- drivers/scsi/qla4xxx/ql4_nx.c:3697: warning: Function parameter or member 'ha' not described in 'qla4_82xx_read_optrom_data'
- drivers/scsi/qla4xxx/ql4_nx.c:3697: warning: Function parameter or member 'buf' not described in 'qla4_82xx_read_optrom_data'
- drivers/scsi/qla4xxx/ql4_nx.c:3697: warning: Function parameter or member 'offset' not described in 'qla4_82xx_read_optrom_data'
- drivers/scsi/qla4xxx/ql4_nx.c:3697: warning: Function parameter or member 'length' not described in 'qla4_82xx_read_optrom_data'
+ drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'usr_flg' not described in 'lpfc_gen_req'
+ drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'num_entry' not described in 'lpfc_gen_req'
+ drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'tmo' not described in 'lpfc_gen_req'
+ drivers/scsi/lpfc/lpfc_ct.c:321: warning: Function parameter or member 'retry' not described in 'lpfc_gen_req'
+ drivers/scsi/lpfc/lpfc_ct.c:413: warning: Function parameter or member 'rsp_size' not described in 'lpfc_ct_cmd'
+ drivers/scsi/lpfc/lpfc_ct.c:413: warning: Function parameter or member 'retry' not described in 'lpfc_ct_cmd'
+ drivers/scsi/lpfc/lpfc_ct.c:3030: warning: Function parameter or member 'cmdcode' not described in 'lpfc_fdmi_cmd'
+ drivers/scsi/lpfc/lpfc_ct.c:3030: warning: Function parameter or member 'new_mask' not described in 'lpfc_fdmi_cmd'
+ drivers/scsi/lpfc/lpfc_ct.c:3272: warning: Function parameter or member 't' not described in 'lpfc_delayed_disc_tmo'
 
-Cc: QLogic-Storage-Upstream@qlogic.com
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/qla4xxx/ql4_nx.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_ct.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_nx.c b/drivers/scsi/qla4xxx/ql4_nx.c
-index 85666fb5471b1..038e19b1e3c2d 100644
---- a/drivers/scsi/qla4xxx/ql4_nx.c
-+++ b/drivers/scsi/qla4xxx/ql4_nx.c
-@@ -974,10 +974,10 @@ qla4_82xx_rom_fast_read(struct scsi_qla_host *ha, int addr, int *valp)
- 	return ret;
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index 701f2405cf022..dd9f2bf54edd4 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -300,7 +300,7 @@ lpfc_ct_free_iocb(struct lpfc_hba *phba, struct lpfc_iocbq *ctiocb)
+ 	return 0;
  }
  
 -/**
 +/*
-  * This routine does CRB initialize sequence
-  * to put the ISP into operational state
-- **/
-+ */
- static int
- qla4_82xx_pinit_from_rom(struct scsi_qla_host *ha, int verbose)
- {
-@@ -3217,6 +3217,7 @@ static int qla4_8xxx_collect_md_data(struct scsi_qla_host *ha)
+  * lpfc_gen_req - Build and issue a GEN_REQUEST command  to the SLI Layer
+  * @vport: pointer to a host virtual N_Port data structure.
+  * @bmp: Pointer to BPL for SLI command
+@@ -394,7 +394,7 @@ lpfc_gen_req(struct lpfc_vport *vport, struct lpfc_dmabuf *bmp,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * lpfc_ct_cmd - Build and issue a CT command
+  * @vport: pointer to a host virtual N_Port data structure.
+  * @inmp: Pointer to data buffer for response data.
+@@ -3019,8 +3019,8 @@ int (*lpfc_fdmi_port_action[])
+  * lpfc_fdmi_cmd - Build and send a FDMI cmd to the specified NPort
+  * @vport: pointer to a host virtual N_Port data structure.
+  * @ndlp: ndlp to send FDMI cmd to (if NULL use FDMI_DID)
+- * cmdcode: FDMI command to send
+- * mask: Mask of HBA or PORT Attributes to send
++ * @cmdcode: FDMI command to send
++ * @new_mask: Mask of HBA or PORT Attributes to send
+  *
+  * Builds and sends a FDMI command using the CT subsystem.
+  */
+@@ -3262,7 +3262,7 @@ lpfc_fdmi_cmd(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 
  /**
-  * qla4_8xxx_uevent_emit - Send uevent when the firmware dump is ready.
-  * @ha: pointer to adapter structure
-+ * @code: uevent code to act upon
-  **/
- static void qla4_8xxx_uevent_emit(struct scsi_qla_host *ha, u32 code)
- {
-@@ -3685,9 +3686,9 @@ qla4_82xx_read_flash_data(struct scsi_qla_host *ha, uint32_t *dwptr,
- 	return dwptr;
- }
- 
--/**
-+/*
-  * Address and length are byte address
-- **/
-+ */
- static uint8_t *
- qla4_82xx_read_optrom_data(struct scsi_qla_host *ha, uint8_t *buf,
- 		uint32_t offset, uint32_t length)
+  * lpfc_delayed_disc_tmo - Timeout handler for delayed discovery timer.
+- * @ptr - Context object of the timer.
++ * @t: Context object of the timer.
+  *
+  * This function set the WORKER_DELAYED_DISC_TMO flag and wake up
+  * the worker thread.
 -- 
 2.25.1
 
