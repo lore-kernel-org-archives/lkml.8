@@ -2,152 +2,89 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2348C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880D220720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693D7206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCHfjNfY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5LmklQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgGUUVb (ORCPT
+        id S1730714AbgGUUTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 16:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52844 "EHLO
+        Tue, 21 Jul 2020 16:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729928AbgGUUVa (ORCPT
+        with ESMTP id S1726960AbgGUUTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 16:21:30 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816C2C0619DC
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:21:30 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so10751199pls.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:21:30 -0700 (PDT)
+        Tue, 21 Jul 2020 16:19:05 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4ADC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:19:05 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a24so11247352pfc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=yz8Pn1+0L8o3BW9wpfpvX9tjdPGaAfKllQBX5CrlbQA=;
-        b=tCHfjNfYorbKQEm370wu+jdtqr5TvIQgpuBB45Meg4+6fvhDoSy7tjjQ60WD2XSNa3
-         VAGHh2UdTa2UOJPsZ69yp3xCXwzso7pk7mtlf6iVxZwd0UkCe8sc1QItaFmzwclayQy4
-         /OP3wFrzmne7MneChKgBMj45sambaMnWKho/Tx3GUMzt2xp9UDVwYZIMR0bTlqDB/BhQ
-         4htZmZDIpFHd9nayV/wqx0K84Mm+EHMrjWGnwrMmW3Kl5KnSagx7zOeNzuG96jpcKRRg
-         gRcgYXztpjnImvOH+bttP99fbubzOEUGNg3OKwCh5wVDVwAE1TZyN3/TuzHsST3VtgdS
-         3nbw==
+        bh=hAWhLrwvbifHp2r44fJg0rzAvtxe0k3AOZjhAZLRh1c=;
+        b=L5LmklQjaL6F4zOLD9FizAG93/AhvEn+UIaST+HjlM4rNoQjhGUkFJntnwvm83k6mn
+         Jh0z7d9MvGUCthqxlx7exI6mW6NOWFVRY9iTf/VVFmqFOmroIW4LBoS5Ken3iuLl8+SR
+         XFiVmNUUvSJmWgMUpCEfIhCBBtdnBh7jUJQENsvn80e8+mc4IxeEsFMCCO7vUFvvNscl
+         EXI0wSscJEdRMmHYbanQWF05NkipwC32yis7j0HiPxKCImt5mH8s+PeoOlsh2Jef0sHI
+         EZwpqPI1pPYNoyKJfWAUmGuTM6P+sVohRNYsMAUgzvMgzUCHC729ZBrfFaNXgl4Rphf9
+         iGWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yz8Pn1+0L8o3BW9wpfpvX9tjdPGaAfKllQBX5CrlbQA=;
-        b=B2YDlMYTZujfFetYdWNotAw73Rlw0/myL6A3aPQA2yxaumjorCzvmRM2WkEhbqbQAM
-         uNyvIO7H66MAmW45GsRB/bdoXcwzGhQSVjlsXiNChlwMXU3dwJbO9apTtItLiB6YtY9n
-         OikgVxCdDQkvbQq2BRhkD6J4rRX4OcSGdXsm4c/9VZA3QWrBZK/CBdxd5FpGSESKfPPw
-         9TmgtmXmXDEbsMKREFkBOuKpnnFxVdI9x82Xf5lkKgUfjZbi6oIAeXWIs53ByaCW8LIv
-         y//XQ+IQoauEvBuwB3mFB0OZjrWWOvYB+eLkTa02OxT9i4GOmbZBiUwkn9zuXnJkiLSw
-         M9Jg==
-X-Gm-Message-State: AOAM533scfDl+BLKGpntiy0NboekuajfPsWs3X7LViN581fr0VJrnVwW
-        mQ5xA4j0iUQemAJjqilr/9WLFA==
-X-Google-Smtp-Source: ABdhPJytqLVViBfMVx0NR9p31f2ZvvL3YV4+D+msQxUeUSoE+b4kNfAIQ8/jDFn0Tw3ueffWJro/wA==
-X-Received: by 2002:a17:90a:290e:: with SMTP id g14mr6723735pjd.85.1595362889850;
-        Tue, 21 Jul 2020 13:21:29 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t1sm19324221pgq.66.2020.07.21.13.21.28
+        bh=hAWhLrwvbifHp2r44fJg0rzAvtxe0k3AOZjhAZLRh1c=;
+        b=gI8qm4jSAJgcRxA9XeVyxIPr89DVcnyIYu8P+wRLkufJpWRYJDUE1MN1Upm/DVRa1F
+         yIxQpLAm3J6e+fgl+Ek6cM8JsIfMk1eXbWMhI//zniY7topFQLNj5aWKUUw3oKfRj3di
+         lYM98xte2iCMSOkaYBmP9E1aeA8XrKcm+QPOY3bWsul7s+AAKem9TVJ2fBDdmxXFKdnw
+         PWYZNM6pGsqRt73nwAylzWNKWRNYqO4DM+tqrNBEHpODc6bHTAk4oBo5yhudI1Uzpim/
+         EhxN0lqUAesVAzWboCrOCTvcCA7zzLgSEO4Aca9t+o90OtHE6+7ebBRYYEs9l8BVjaL3
+         6/3g==
+X-Gm-Message-State: AOAM5335SMIwtTWSebYUSvNCRZ6jhNKQvo0sP8ZbSFhA6F6ddGRt/R1w
+        U3F66ziO0KJ083sJOLIHvnU=
+X-Google-Smtp-Source: ABdhPJziaxztSZAhHa+m0l5Ax/geN8yZuJfSvnIKlqjutJ1D7mapJPR156QkvV34H7mPW3cLucr1aw==
+X-Received: by 2002:aa7:988e:: with SMTP id r14mr26369722pfl.35.1595362744690;
+        Tue, 21 Jul 2020 13:19:04 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id b15sm3953746pje.52.2020.07.21.13.19.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 13:21:29 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 14:21:27 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Alexandre Bailon <abailon@baylibre.com>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] remoteproc: mtk_vpu_rproc: Don't try to load empty
- PT_LOAD segment
-Message-ID: <20200721202127.GB1227776@xps15>
-References: <20200713132927.24925-1-abailon@baylibre.com>
- <20200713132927.24925-5-abailon@baylibre.com>
+        Tue, 21 Jul 2020 13:19:04 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 13:19:02 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Nick Dyer <nick@shmanahar.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH] RMI: <linux/rmi.h>: drop a duplicated word
+Message-ID: <20200721201902.GJ1665100@dtor-ws>
+References: <20200719003131.21050-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713132927.24925-5-abailon@baylibre.com>
+In-Reply-To: <20200719003131.21050-1-rdunlap@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:29:25PM +0200, Alexandre Bailon wrote:
-> The firmware generated by our toolchain contains many empty PT_LOAD
-> segments. The elf loader don't manage it and will raise an error:
-> "bad phdr da 0x0 mem 0x0".
-> To workaround it, implement the sanity_check callback to detect the
-> empty PT_LOAD segment and change it to PT_NULL.
-> In that way, the elf load won't try to load the segment.
-
-This patch doesn't address the real problem, which are empty load segments.  In
-my opinion that should be dealt with rather than having to patch things up.  On
-the flip side I suspect that you don't control all the process and that systems
-are out there with faulty fw images.  As such:
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
+On Sat, Jul 18, 2020 at 05:31:31PM -0700, Randy Dunlap wrote:
+> Drop the repeated word "to" in a comment.
 > 
-> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
-> ---
->  drivers/remoteproc/mtk_apu_rproc.c | 35 +++++++++++++++++++++++++++---
->  1 file changed, 32 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
-> index f2342b747a35..565b3adca5de 100644
-> --- a/drivers/remoteproc/mtk_apu_rproc.c
-> +++ b/drivers/remoteproc/mtk_apu_rproc.c
-> @@ -137,10 +137,39 @@ static void mtk_vpu_rproc_kick(struct rproc *rproc, int vqid)
->  	vpu_write32(vpu_rproc, CORE_CTL_XTENSA_INT, 1 << vqid);
->  }
->  
-> +int mtk_vpu_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	const u8 *elf_data = fw->data;
-> +	struct elf32_hdr *ehdr;
-> +	struct elf32_phdr *phdr;
-> +	int ret;
-> +	int i;
-> +
-> +	ret = rproc_elf_sanity_check(rproc, fw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ehdr = (struct elf32_hdr *)elf_data;
-> +	phdr = (struct elf32_phdr *)(elf_data + ehdr->e_phoff);
-> +
-> +	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-> +		/* Remove empty PT_LOAD section */
-> +		if (phdr->p_type == PT_LOAD && !phdr->p_paddr)
-> +			phdr->p_type = PT_NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct rproc_ops mtk_vpu_rproc_ops = {
-> -	.start		= mtk_vpu_rproc_start,
-> -	.stop		= mtk_vpu_rproc_stop,
-> -	.kick		= mtk_vpu_rproc_kick,
-> +	.start			= mtk_vpu_rproc_start,
-> +	.stop			= mtk_vpu_rproc_stop,
-> +	.kick			= mtk_vpu_rproc_kick,
-> +	.load			= rproc_elf_load_segments,
-> +	.parse_fw		= rproc_elf_load_rsc_table,
-> +	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
-> +	.sanity_check		= mtk_vpu_elf_sanity_check,
-> +	.get_boot_addr		= rproc_elf_get_boot_addr,
->  };
->  
->  static irqreturn_t mtk_vpu_rproc_callback(int irq, void *data)
-> -- 
-> 2.26.2
-> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Nick Dyer <nick@shmanahar.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+
+Applied, thank you.
+
+-- 
+Dmitry
