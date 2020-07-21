@@ -2,145 +2,113 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A132EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A879C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F05C20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEF120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grSCYZ9y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h0SCUlSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgGUKet (ORCPT
+        id S1727986AbgGUKfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgGUKes (ORCPT
+        Tue, 21 Jul 2020 06:35:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50053 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726990AbgGUKfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:34:48 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61E48C061794;
-        Tue, 21 Jul 2020 03:34:48 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 184so2378607wmb.0;
-        Tue, 21 Jul 2020 03:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PR207KjqevVDyNeFnarAVrMh7guCycUdfg2gqQY0iTw=;
-        b=grSCYZ9yfxXj1LTfpzEem6QVQiZA7XwJ9qI6PT6eA79VKuD74Dl7sgOOj3TEvMJlWF
-         DucXWL/7R8sZjsaHBePjWD/IgJWTJemThanbNtKutbbEr9B/7LoMNYf0L8T8x6y1iZss
-         kApA0a3L/NJ6A7aqrONOSTsvUc0Ss0uCgVlh+b5/p/qb5NI4Q85kT/PM0sQbWY3rMtXi
-         SreisLyl9YadxHSXNDwvCMTUxgTfMBJUQyXEpLy68P5yoLlp7MPGIfn4CL+XcoWgnBCj
-         OKOKdHnPFtEFrhrwwNx0VIlRNMrdDwBKsOthirQSNzJLdICjBR5z5pb12E8bhpDVqPBS
-         XpGA==
+        Tue, 21 Jul 2020 06:35:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595327707;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+QcQANYSd60hPwsM1oi+9jY7lQaINgY8Mg9f0/qdPFw=;
+        b=h0SCUlSp0hhx0pYwooGWnz6/rYLP8gGgJ//aGHhgXuzr0cxCoE5Y3cxCimHZoNqe9Uxqnz
+        pkHO/IISmUC4PaY+2GS9+15GNjE2lS/sR/X3nyfZoXyp0sqkTofEqyDrpsYLBhG6z2+HzZ
+        2LXw9RzcFEAtqOrsL9gYiCLrmRqantA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-111-Gu5N-3TINUG4mSVx_V5fwQ-1; Tue, 21 Jul 2020 06:35:04 -0400
+X-MC-Unique: Gu5N-3TINUG4mSVx_V5fwQ-1
+Received: by mail-wr1-f70.google.com with SMTP id w4so12882726wrm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:35:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PR207KjqevVDyNeFnarAVrMh7guCycUdfg2gqQY0iTw=;
-        b=ZWDVpH1s9iMz5yX7Ewl/QBqvkzZm1ZcSZeoCm7YNE0QGW3+DkdteqPsSCzdqXUOiAy
-         Abj39xl+Fw96/QY4UccBjdLl9RdXT3Bv2BtBxrwkcN2uOuFtfiSj/YiH7dSgnm4ps8C5
-         4ZGf6EfzC9bWQFm+Kf+kCeG8jiss7/SzgfyGO0nAu+J3Baw+QfeWOsYqEN8DoUzL7peK
-         mqdSVUVYeOPmD8Gr9Mhsd1zj2eSeyW1Zp9sCkkMbk9AUxwuzf7m0ai70wsksyHNNKy1i
-         3XLyJR68pi7Aj5aqr4el7eV1V76EvSGU8d5Os0GpRPkbMNqbN0VCkEZ2hLbtqQXoy6Na
-         SYtw==
-X-Gm-Message-State: AOAM532/KgMrRF+oP0wc51SEVGwPLjGV/TIZNmqxkfGV855jVGZvYYGh
-        zmPfNj1sNFdbMiTMBhccKqQfabU4Znrh+1QeEIM=
-X-Google-Smtp-Source: ABdhPJweggcxhMTjACf7jDYE4AzuHJqzfg26Cc0HUXoyVp0PlF/AqxyLVMLd7ow8vNLRCP3yKxc9VZzEM3QTSj6i+uk=
-X-Received: by 2002:a7b:c921:: with SMTP id h1mr3210338wml.29.1595327687081;
- Tue, 21 Jul 2020 03:34:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+QcQANYSd60hPwsM1oi+9jY7lQaINgY8Mg9f0/qdPFw=;
+        b=gQD1W75X0W7neRZEA3D5V/j+Vhr0EU07NW0Te0vj8dAUnxhNnSAE2q+RQ5PkvBR/4F
+         XwqPpK53UXlfwfD9CtUYsoHsuAUYQAy7BwGBLosjRLAFGcX6wkqFer5MkRaiHEVSffwd
+         f72YfZ54rbY/bDweglGSdJyD3PtK3saV9KTsFeX2IG9gXAd1CGLVUxkoh2dJcDo3hcmK
+         gyBdLHreMW7OpPL2RO1wFs9XgRb0Jbm8/QohKzwXzTp4GABa6UZGvbTeueYS8xxm0MKF
+         zzWfx5zHRO1qWQTKk3w5Xe83aj2MUHIzvB7VDBrXfqsrQULlAtABRzlUw+OGYiZOyqd2
+         7xYg==
+X-Gm-Message-State: AOAM531LdGfRWTtfFrjL1iH62Zx6GMN6O6hX0aCUiqVuLQ5hO1oQv0FQ
+        gvDIg6mUzhKRWJifw1aGeBtwcF1yPHsbVjiM+8XwntUvUU/AFhF+WzFS21qeU4//4h1t9z0Dwhw
+        w9PNJCW7R9bz7uMJWYyKc+0UJ
+X-Received: by 2002:adf:ee05:: with SMTP id y5mr27007283wrn.185.1595327703546;
+        Tue, 21 Jul 2020 03:35:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwv0DP3FjlddJPF+5lYujXxuycYk0rvKz4/nKB/2vjz0RMXFM7kJkZtlYaitG1SsPgtRKexoA==
+X-Received: by 2002:adf:ee05:: with SMTP id y5mr27007267wrn.185.1595327703348;
+        Tue, 21 Jul 2020 03:35:03 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id g144sm2604256wme.2.2020.07.21.03.35.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 03:35:02 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 1/2] KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
+In-Reply-To: <1595323468-4380-1-git-send-email-wanpengli@tencent.com>
+References: <1595323468-4380-1-git-send-email-wanpengli@tencent.com>
+Date:   Tue, 21 Jul 2020 12:35:01 +0200
+Message-ID: <87o8o9p356.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <cover.1595301250.git.huangqiwu@xiaomi.com> <b383d79629d0afca00838fcbaad4458e383d7262.1595301250.git.huangqiwu@xiaomi.com>
- <20200721082000.GD1655283@kroah.com> <CAPtXDt2CXYJNoqnu3r7+vV2BZzT3fMR_G1yOyu1v0dgS8EkjNg@mail.gmail.com>
- <20200721103241.GA1675802@kroah.com>
-In-Reply-To: <20200721103241.GA1675802@kroah.com>
-From:   ivan <yanziily@gmail.com>
-Date:   Tue, 21 Jul 2020 18:34:35 +0800
-Message-ID: <CAPtXDt04J10+cnG-U9e=W2Uq8XJNi13J7nr3xZFAgxRmVd0VWQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] power: supply: core: add wireless signal strength property
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:32 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+Wanpeng Li <kernellwp@gmail.com> writes:
+
+> From: Wanpeng Li <wanpengli@tencent.com>
 >
-> On Tue, Jul 21, 2020 at 06:21:20PM +0800, ivan wrote:
-> > On Tue, Jul 21, 2020 at 4:19 PM Greg KH <gregkh@linuxfoundation.org> wr=
-ote:
-> > >
-> > > On Tue, Jul 21, 2020 at 01:59:36PM +0800, Qiwu Huang wrote:
-> > > > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > >
-> > > > reports wireless signal strength.
-> > > > The value show degree of coupling between tx and rx.
-> > > >
-> > > > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-class-power | 10 ++++++++++
-> > > >  drivers/power/supply/power_supply_sysfs.c   |  1 +
-> > > >  include/linux/power_supply.h                |  1 +
-> > > >  3 files changed, 12 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Document=
-ation/ABI/testing/sysfs-class-power
-> > > > index 03ab449fae8a..75ec7de2fe78 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-class-power
-> > > > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > > > @@ -757,3 +757,13 @@ Description:
-> > > >                       13: ADAPTER_VOICE_BOX,
-> > > >                       14: ADAPTER_PRIVATE_PD_50W.
-> > > >
-> > > > +What:                /sys/class/power_supply/<supply_name>/signal_=
-strength
-> > > > +Date:                Jul 2020
-> > > > +Contact:     Fei Jiang <jiangfei1@xiaomi.com>
-> > > > +Description:
-> > > > +             In PING phase, RX transmits a signal strength packet =
-as the first
-> > >
-> > > What does "PING phase" mean?
-> >
-> > The Qi Wireless Power Transfer System is published by the Wireless
-> > Power Consortium.
-> > The ping phase is the necessary stage for matching transmitter and
-> > receiver. In this phase,
-> > the Power Transmitter executes a Digital Ping, and listens for a
-> > response. If the
-> > Power Transmitter discovers a Power Receiver, the Power Transmitter
-> > may extend the Digital Ping,
-> > i.e. maintain the Power Signal at the level of the Digital Ping. This
-> > causes the system to proceed to the
-> > identification & configuration phase. If the Power Transmitter does
-> > not extend the Digital Ping, the
-> > system shall revert to the selection phase.
+> Prevent setting the tscdeadline timer if the lapic is hw disabled.
 >
-> Thanks for the description, so perhaps turning this response into the
-> text in the description would be good?
-
-OK=EF=BC=8C I will
-
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> thanks,
->
-> greg k-h
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 5bf72fc..4ce2ddd 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -2195,7 +2195,7 @@ void kvm_set_lapic_tscdeadline_msr(struct kvm_vcpu *vcpu, u64 data)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  
+> -	if (!lapic_in_kernel(vcpu) || apic_lvtt_oneshot(apic) ||
+> +	if (!kvm_apic_present(vcpu) || apic_lvtt_oneshot(apic) ||
+>  			apic_lvtt_period(apic))
+>  		return;
 
+Out of pure curiosity, what is the architectural behavior if I disable
+LAPIC, write to IA32_TSC_DEADLINE and then re-enable LAPIC before the
+timer was supposed to fire?
 
+-- 
+Vitaly
 
---=20
-Thanks
-
-Qiwu
