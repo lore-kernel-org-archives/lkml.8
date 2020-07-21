@@ -2,102 +2,119 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8012FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D01A22065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBAF2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:07:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ib1bZOSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgGUMGv (ORCPT
+        id S1729878AbgGUMHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:06:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:38418 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726919AbgGUMGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:06:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68636D6E;
-        Tue, 21 Jul 2020 05:06:50 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.3.181])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AF633F66E;
-        Tue, 21 Jul 2020 05:06:47 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 13:06:41 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Paul Gofman <gofmanp@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH v4 1/2] kernel: Implement selective syscall userspace
- redirection
-Message-ID: <20200721120516.GA84703@C02TD0UTHF1T.local>
-References: <20200716193141.4068476-1-krisman@collabora.com>
- <20200716193141.4068476-2-krisman@collabora.com>
- <CALCETrWdCN5KsRUkrb8VoYGRBhy71P-MAHGWhuJ5y4Z3vByyvg@mail.gmail.com>
- <87wo32j394.fsf@collabora.com>
- <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
+        Tue, 21 Jul 2020 08:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgGUMHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:07:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9FEC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:07:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a14so6100231wra.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=npznphlDVv95ehRrHa25K6/37D7lyoH9vNDTfyrHV8o=;
+        b=Ib1bZOSQY4liaBprcJTobQOsSM1ujiVEYXJWHQqVGnvE4yv0tHq72tpitVyrD3KM6D
+         ZrTcl+yJEVDMxpdpHRtRa5pIC4GvuWfR+2+4Kkfc7Pkq+2cd/islUOLAEKsAXWuHuEXi
+         qaf82L42Fbi1gMCgtsOZY7d1sw2NXVJRNaCK9TKvrHp4pwZcR0tGxl+AOqh8/7VKP2Z6
+         o0fR69XozX1GzaPPQFayryxG/6uFGvKUPT4eXMAZZkdAp6Ur2EIztAXnsrAUYK9BNS43
+         AiXaeHFqem370oI8xXpUlzQ+4KrVLNuwvbw+Cjw1QybNmoEp8QJ0LfyTqaihMQOcopU8
+         tmCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=npznphlDVv95ehRrHa25K6/37D7lyoH9vNDTfyrHV8o=;
+        b=mwMbjJV3421oZttkl+OCnJONL0QDjJhflt6I/b2/O0LhO4JdLKpG8hxb2fgW5MmTcs
+         ae5EFGCc6c5p5lx1LQk81LlajFgy16XsfAGDZAxm3WHffDIgCkveQbCGnM19GDrOfQil
+         VdkcP3OkdZ15tMHbC1KPEITrUsyxEjr+dmSfehjQ4Lgohdnv9XLLl3+RA8nvsoQKG/DW
+         3QHFobTp1fyV4t7MQ8QCUhfKpnf4eQg8qpufg0R/TI9n73HHltqLkwvZr+nkP1ccAmTK
+         2Stnr2zQOfp/svntwhk9MOdlEQCRVNr29qDRGM30XoA2AMmv1v219hns5vcvoEdfwoeY
+         6bzA==
+X-Gm-Message-State: AOAM531LQGCXFAUJMfeHHfkasIAk0XCzMTOUx9HoNf6pSLeIMKlAyWs8
+        DxdUUVNl9skVrrN3RbwtZ1Bp3w==
+X-Google-Smtp-Source: ABdhPJzxnd9kirmNWbPJEKL4Bfib1FwwANnT6N/xXtpyF1/9EyPJdf8YHG+4xM/09YW843CWbZiwSA==
+X-Received: by 2002:adf:f488:: with SMTP id l8mr11938771wro.123.1595333260721;
+        Tue, 21 Jul 2020 05:07:40 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b10sm3057151wmj.30.2020.07.21.05.07.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jul 2020 05:07:40 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     adhudase@codeaurora.org, okukatla@codeaurora.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH] interconnect: Do not skip aggregation for disabled paths
+Date:   Tue, 21 Jul 2020 15:07:40 +0300
+Message-Id: <20200721120740.3436-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUOe=a35rb-o44vLOSHmQ45EuommwoL2quowzw3h+J2gg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 09:48:50PM -0700, Andy Lutomirski wrote:
-> On Thu, Jul 16, 2020 at 7:15 PM Gabriel Krisman Bertazi
-> <krisman@collabora.com> wrote:
-> >
-> > Andy Lutomirski <luto@kernel.org> writes:
-> >
-> > > On Thu, Jul 16, 2020 at 12:31 PM Gabriel Krisman Bertazi
-> > > <krisman@collabora.com> wrote:
-> > >>
-> > >
-> > > This is quite nice.  I have a few comments, though:
-> > >
-> > > You mentioned rt_sigreturn().  Should this automatically exempt the
-> > > kernel-provided signal restorer on architectures (e.g. x86_32) that
-> > > provide one?
-> >
-> > That seems reasonable.  Not sure how easy it is to do it, though.
-> 
-> For better or for worse, it's currently straightforward because the code is:
-> 
-> __kernel_sigreturn:
-> .LSTART_sigreturn:
->         popl %eax               /* XXX does this mean it needs unwind info? */
->         movl $__NR_sigreturn, %eax
->         SYSCALL_ENTER_KERNEL
-> 
-> and SYSCALL_ENTER_KERNEL is hardwired as int $0x80.  (The latter is
-> probably my fault, for better or for worse.)  So this would change to:
-> 
-> __vdso32_sigreturn_syscall:
->   SYSCALL_ENTER_KERNEL
-> 
-> and vdso2c would wire up __vdso32_sigreturn_syscall.  Then there would
-> be something like:
-> 
-> bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
-> 
-> and that would be that.  Does anyone have an opinion as to whether
-> this is a good idea?  Modern glibc shouldn't be using this mechanism,
-> I think, but I won't swear to it.
+When an interconnect path is being disabled, currently we don't aggregate
+the requests for it afterwards. But the re-aggregation step shouldn't be
+skipped, as it may leave the nodes with outdated bandwidth data. This
+outdated data may actually keep the path still enabled and prevent the
+device from going into lower power states.
 
-On arm64 sigreturn is always through the vdso, so IIUC we'd certainly
-need something like this. Otherwise it'd be the user's responsibility to
-register the vdso sigtramp range when making the prctl, and flip the
-selector in each signal handler, which sounds both painful and fragile.
+Reported-by: Atul Dhudase <adhudase@codeaurora.org>
+Fixes: 7d374b209083 ("interconnect: Add helpers for enabling/disabling a path")
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Mark.
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 37d5ec970cc1..5174dcb31ab7 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -243,6 +243,7 @@ static int aggregate_requests(struct icc_node *node)
+ {
+ 	struct icc_provider *p = node->provider;
+ 	struct icc_req *r;
++	u32 avg_bw, peak_bw;
+ 
+ 	node->avg_bw = 0;
+ 	node->peak_bw = 0;
+@@ -251,9 +252,14 @@ static int aggregate_requests(struct icc_node *node)
+ 		p->pre_aggregate(node);
+ 
+ 	hlist_for_each_entry(r, &node->req_list, req_node) {
+-		if (!r->enabled)
+-			continue;
+-		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
++		if (r->enabled) {
++			avg_bw = r->avg_bw;
++			peak_bw = r->peak_bw;
++		} else {
++			avg_bw = 0;
++			peak_bw = 0;
++		}
++		p->aggregate(node, r->tag, avg_bw, peak_bw,
+ 			     &node->avg_bw, &node->peak_bw);
+ 	}
+ 
