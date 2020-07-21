@@ -2,78 +2,190 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFB7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ADAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957662065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249BD20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZraJZ4Ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbgGUSzy (ORCPT
+        id S1730428AbgGUS4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:55:54 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48108 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgGUSzx (ORCPT
+        Tue, 21 Jul 2020 14:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730383AbgGUSzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:55:53 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id DBA75290592
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     kernel@collabora.com, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, sashal@kernel.org,
-        krisman@collabora.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        Nikolaus Rath <Nikolaus@rath.org>,
-        Hugh Dickins <hughd@google.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.7 1/1] fuse: fix weird page warning
-Date:   Tue, 21 Jul 2020 15:54:59 -0300
-Message-Id: <20200721185459.103445-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 21 Jul 2020 14:55:54 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9AA6C0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:55:54 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k5so2118996pjg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=lpeIcRunQtO1GGzh3TnMCT3eJ1HuVXVaMnC4hvPTV4c=;
+        b=ZraJZ4OwJkwVmBY42CcXjaMSGWMq/bEwpXlTSwQGzBF9ZA0nVcvlHRAaAUTae7CEcJ
+         HRvrYykoG7LZQk21X2pu+3X9ko3Q2QQcYkEqwDeMFUMHzm0x8087W8Tob7xr2aF0EG7F
+         SnjxzWSKMqw16bMmbqJXylH4/GIyEVkaBWcUo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=lpeIcRunQtO1GGzh3TnMCT3eJ1HuVXVaMnC4hvPTV4c=;
+        b=gfcGzgTlW+IJC/D1ZVgUejr/EKtDA5IINDLwS7W2z8wklZSSwwya9rIGR37FsLt9/d
+         SZOOPdkUG1dSoVrfyibpZTBoB+rH8S3cwq7dB5t698PEdT61j9h9/q28E3wwYeRX3uzg
+         eIG//2CrWC8qofrPWHILWHXbrNsYmFXzr4ch+3Yl0COZkkaRzCIy+6gzANPbMQu1b4DB
+         chEo1yH2os+7GL6PPoeRBn/4xdQabQXfq+EpYR9NsQo2ym13meHZQoyS0GK4yFl5S6tG
+         1Kroh1PuY7kTxTtrvoqq9omBlYc6yJSXp4gaomuIYYDRy0VMF3DRSrwMtnIpWd9HRKkA
+         BD6w==
+X-Gm-Message-State: AOAM533HN3sUJjdp89/jp+7TQF4y+RRhw2mGMdECzxxLDuGcHh6wBWFm
+        WW3WxLJrxtDYgQOQLEw/Gg3Ffg==
+X-Google-Smtp-Source: ABdhPJx2s7en67gEWbb+sWP2Jr0NJevBxR5Urhrc0eYJJ/jKRPIBgjMxDqiQ1yQJRt75lnNByN9MpA==
+X-Received: by 2002:a17:90a:a887:: with SMTP id h7mr6323580pjq.0.1595357754027;
+        Tue, 21 Jul 2020 11:55:54 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id e191sm20976433pfh.42.2020.07.21.11.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 11:55:53 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=X=NDym3V31dQ8c341UwQm9pDybUCR8jFF1JR99XeVKVw@mail.gmail.com>
+References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid> <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com> <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com> <CAD=FV=X=NDym3V31dQ8c341UwQm9pDybUCR8jFF1JR99XeVKVw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Date:   Tue, 21 Jul 2020 11:55:52 -0700
+Message-ID: <159535775253.3847286.5195740102798837524@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+Quoting Doug Anderson (2020-07-21 09:18:35)
+> On Tue, Jul 21, 2020 at 12:08 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Stephen Boyd (2020-07-20 22:59:14)
+> > >
+> > > I worry that we also need a dmb() here to make sure the dma buffer is
+> > > properly mapped before this write to the device is attempted. But it =
+may
+> > > only matter to be before the I2C_READ.
+> > >
+> >
+> > I'm suggesting this patch instead where we make geni_se_setup_m_cmd()
+> > use a writel() so that it has the proper barrier semantics to wait for
+> > the other memory writes that happened in program order before this point
+> > to complete before the device is kicked to do a read or a write.
+>=20
+> Are you saying that dma_map_single() isn't guaranteed to have a
+> barrier or something?  I tried to do some searching and found a thread
+> [1] where someone tried to add a barrierless variant of them.  To me
+> that means that the current APIs have barriers.
+>=20
+> ...or is there something else you're worried about?
 
-commit a5005c3cda6eeb6b95645e6cc32f58dafeffc976 upstream.
+I'm not really thinking about dma_map_single() having a barrier or not.
+The patch you mention is from 2010. Many things have changed in the last
+decade. Does it have barrier semantics? The presence of a patch on the
+mailing list doesn't mean much.
 
-When PageWaiters was added, updating this check was missed.
+Specifically I'm looking at "KERNEL I/O BARRIER EFFECTS" of
+Documentation/memory-barriers.txt and noticing that this driver is using
+relaxed IO accessors meaning that the reads and writes aren't ordered
+with respect to other memory accesses. They're only ordered to
+themselves within the same device. I'm concerned that the CPU will issue
+the IO access to start the write DMA operation before the buffer is
+copied over due to out of order execution.
 
-Reported-by: Nikolaus Rath <Nikolaus@rath.org>
-Reported-by: Hugh Dickins <hughd@google.com>
-Fixes: 62906027091f ("mm: add PageWaiters indicating tasks are waiting for a page bit")
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
- fs/fuse/dev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I'm not an expert in this area, but this is why we ask driver authors to
+use the non-relaxed accessors because they have the appropriate
+semantics built in to make them easy to reason about. They do what they
+say when they say to do it.
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 5c155437a455..ec02c3240176 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -771,7 +771,8 @@ static int fuse_check_page(struct page *page)
- 	       1 << PG_uptodate |
- 	       1 << PG_lru |
- 	       1 << PG_active |
--	       1 << PG_reclaim))) {
-+	       1 << PG_reclaim |
-+	       1 << PG_waiters))) {
- 		pr_warn("trying to steal weird page\n");
- 		pr_warn("  page=%p index=%li flags=%08lx, count=%i, mapcount=%i, mapping=%p\n", page, page->index, page->flags, page_count(page), page_mapcount(page), page->mapping);
- 		return 1;
--- 
-2.27.0
+>=20
+>=20
+> > ----8<----
+> > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2=
+c-qcom-geni.c
+> > index 18d1e4fd4cf3..7f130829bf01 100644
+> > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > @@ -367,7 +367,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev =
+*gi2c, struct i2c_msg *msg,
+> >                 geni_se_select_mode(se, GENI_SE_FIFO);
+> >
+> >         writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
+> > -       geni_se_setup_m_cmd(se, I2C_READ, m_param);
+> >
+> >         if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
+> >                 geni_se_select_mode(se, GENI_SE_FIFO);
+> > @@ -375,6 +374,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev =
+*gi2c, struct i2c_msg *msg,
+> >                 dma_buf =3D NULL;
+> >         }
+> >
+> > +       geni_se_setup_m_cmd(se, I2C_READ, m_param);
+>=20
+> I guess it's true that we only need the setup_m_cmd moved.
 
+Alright cool. That makes more sense.
+
+>=20
+>=20
+> > +
+> >         time_left =3D wait_for_completion_timeout(&gi2c->done, XFER_TIM=
+EOUT);
+> >         if (!time_left)
+> >                 geni_i2c_abort_xfer(gi2c);
+> > @@ -408,7 +409,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev =
+*gi2c, struct i2c_msg *msg,
+> >                 geni_se_select_mode(se, GENI_SE_FIFO);
+> >
+> >         writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
+> > -       geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+> >
+> >         if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
+> >                 geni_se_select_mode(se, GENI_SE_FIFO);
+> > @@ -416,6 +416,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev =
+*gi2c, struct i2c_msg *msg,
+> >                 dma_buf =3D NULL;
+> >         }
+> >
+> > +       geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+> > +
+>=20
+> True, it's probably safer to do the TX too even if I'm not seeing
+> problems there.  Of course, I don't think I'm doing any large writes
+> so probably never triggering this path anyway.
+
+Right, this is just by inspection of the code to see that it's the same
+scenario, kicking off the DMA operation at the device before mapping the
+buffer.
+
+>=20
+>=20
+> >         if (!dma_buf) /* Get FIFO IRQ */
+> >                 writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
+> >
