@@ -2,148 +2,174 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB647C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA78206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61E1206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WUtLxzKE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uk4f9jfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgGUK6c (ORCPT
+        id S1729407AbgGUK7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:58:32 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:59825 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUK6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:58:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595329110; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=VU4DqtwT3aYjFZK+vCZ6Mf063e7LJok4TZ4IWKWCI9E=; b=WUtLxzKEh+ams80W1TeKdK5xsBY95hV5rD+ioWQ9hn1fePXA+2/acVTR+y/ChUrDy4NP2MZk
- l+0zw2LR92fKc3JU0tn84l4oFx9Vn3hWv2jjhCjXMjD8M9bI2HwMI+GpXMUY+wruoKGWIPIJ
- HbfGgxHoWYCh3yg9LBW9odm29/o=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f16ca501e603dbb4472bad2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 10:58:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E22AC43395; Tue, 21 Jul 2020 10:58:24 +0000 (UTC)
-Received: from [192.168.43.8] (unknown [106.213.150.157])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: msavaliy)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7271BC433C6;
-        Tue, 21 Jul 2020 10:58:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7271BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=msavaliy@codeaurora.org
-Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
- <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com>
- <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
-From:   "Mukesh, Savaliya" <msavaliy@codeaurora.org>
-Message-ID: <6d90f383-54d7-cee1-d064-dca51ce39e14@codeaurora.org>
-Date:   Tue, 21 Jul 2020 16:28:11 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 06:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbgGUK7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:59:34 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77C9C061794;
+        Tue, 21 Jul 2020 03:59:33 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id h13so14742116otr.0;
+        Tue, 21 Jul 2020 03:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=/EF7Qison7+OGXQXe8tCTGM4PP/e4Mdg4NPhl6XK730=;
+        b=Uk4f9jfGhs5DkBWkywVYSxv+RjvPtlBJKwNzxDQJRM4oyUlZeJHH9Ay0Dz9S3T+O86
+         I1k8wcSU5qjlnQbQS1Cc5u/Di5a8oxU0TqNANIeZ+urK3ruLtTD1rFzoDtPyUq0zyw1t
+         TKTa7dYj3q558MX8C2dCAhl0Kx3BnS6PKK14W3du9GA95iORa8+JZDbW/DQ6a9DT5Fmy
+         8za6hMaHY5YNv55f0k+a+Ti8u5YKEfdRVS6vRWc0m6bcU1eZA57gEbg14Y3/HWJqEceg
+         I6AApXJum8MPc7FIX+9Iv2OU5g/1PXoIJOC9VdOjehdpKQ5Gaotz84w3/VSWkS/6Omc3
+         Mlbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=/EF7Qison7+OGXQXe8tCTGM4PP/e4Mdg4NPhl6XK730=;
+        b=U0J4n6LqDPliXbop2taAxI2/hRXvE/q8gjt4Ao78OJkxKolEdR14ZuirKHtQyMl3at
+         bP/yU+GYiomDb4cmPeww1CRjhAnXky3ZwbdG8tQqvbBN3a0QWlvrwCPY6juaaSmLQjmk
+         QV1RQUuxwFvH9/kldYisCOcsQ3uuaN7TX2JD/5mrz3IKZJ67hnKLLKINOUJRIekWoTcl
+         BNg7y3p/h+lGtvjIHFQEM53emsLf4aAkihNZxBBsUqP1Lp4Gde5ek5aeYCDYrfPmEFV0
+         REUqhb+je2R3IaOMNhS2Yvp4uGIomIKeJXZQpwaR0aaFT01Kw2aXRzWbRxGjAa57cCwe
+         sXaQ==
+X-Gm-Message-State: AOAM533kpAbfiB3/fRn4/mWvD67UX4m1W5FVIfmww+T/1P1ukJnhvypA
+        T2XLuN9JypBewCTmF6PggNwoUvYX7fPtDPzKpeI=
+X-Google-Smtp-Source: ABdhPJwDn1K9lCXh3r6H2duEArkbw7P69YNYfj8OXMApUjXADa+z15C6AlqxraRlKJPBGg9bBd1HTcPmXTNgIEWHZIw=
+X-Received: by 2002:a05:6830:2081:: with SMTP id y1mr23521903otq.114.1595329173244;
+ Tue, 21 Jul 2020 03:59:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200720092435.17469-1-rppt@kernel.org> <20200720092435.17469-4-rppt@kernel.org>
+In-Reply-To: <20200720092435.17469-4-rppt@kernel.org>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Tue, 21 Jul 2020 12:59:22 +0200
+Message-ID: <CAKgNAkgdOZXsVVkYveqnjODOr_cHYWiRssw2Tu1dZEBd+GnOnA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] mm: introduce secretmemfd system call to create
+ "secret" memory areas
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mike,
 
-On 7/21/2020 12:37 PM, Stephen Boyd wrote:
-> Quoting Stephen Boyd (2020-07-20 22:59:14)
->> I worry that we also need a dmb() here to make sure the dma buffer is
->> properly mapped before this write to the device is attempted. But it may
->> only matter to be before the I2C_READ.
->>
-> I'm suggesting this patch instead where we make geni_se_setup_m_cmd()
-> use a writel() so that it has the proper barrier semantics to wait for
-> the other memory writes that happened in program order before this point
-> to complete before the device is kicked to do a read or a write.
+On Mon, 20 Jul 2020 at 11:26, Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> Introduce "secretmemfd" system call with the ability to create memory areas
+> visible only in the context of the owning process and not mapped not only
+> to other processes but in the kernel page tables as well.
+>
+> The user will create a file descriptor using the secretmemfd system call
 
-Not sure if the issue was because of the barrier, but fundamentally for 
-read operation, before FIFO data gets written by the DMA to memory,
+Without wanting to start a bikeshed discussion, the more common
+convention in recently added system calls is to use an underscore in
+names that consist of multiple clearly distinct words. See many
+examples in  https://man7.org/linux/man-pages/man2/syscalls.2.html.
 
-buffer should be present. Hence the previous change from Doug seem to be 
-fine as well.
+Thus, I'd suggest at least secret_memfd().
 
-> ----8<----
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index 18d1e4fd4cf3..7f130829bf01 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -367,7 +367,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->   		geni_se_select_mode(se, GENI_SE_FIFO);
->   
->   	writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
-> -	geni_se_setup_m_cmd(se, I2C_READ, m_param);
->   
->   	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
->   		geni_se_select_mode(se, GENI_SE_FIFO);
-> @@ -375,6 +374,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->   		dma_buf = NULL;
->   	}
->   
-> +	geni_se_setup_m_cmd(se, I2C_READ, m_param);
-> +
->   	time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
->   	if (!time_left)
->   		geni_i2c_abort_xfer(gi2c);
-> @@ -408,7 +409,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->   		geni_se_select_mode(se, GENI_SE_FIFO);
->   
->   	writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
-> -	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
->   
->   	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
->   		geni_se_select_mode(se, GENI_SE_FIFO);
-> @@ -416,6 +416,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->   		dma_buf = NULL;
->   	}
->   
-> +	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
-> +
->   	if (!dma_buf) /* Get FIFO IRQ */
->   		writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
->   
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd464943f717..1dc134e9eb36 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -262,7 +262,7 @@ static inline void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
->   	u32 m_cmd;
->   
->   	m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
-> -	writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
-> +	writel(m_cmd, se->base + SE_GENI_M_CMD0);
->   }
->   
->   /**
+Also, I wonder whether memfd_secret() might not be even better.
+There's plenty of precedent for the naming style where related APIs
+share a common prefix [1].
+
+Thanks,
+
+Michael
+
+[1] Some examples:
+
+       epoll_create(2)
+       epoll_create1(2)
+       epoll_ctl(2)
+       epoll_pwait(2)
+       epoll_wait(2)
+
+       mq_getsetattr(2)
+       mq_notify(2)
+       mq_open(2)
+       mq_timedreceive(2)
+       mq_timedsend(2)
+       mq_unlink(2)
+
+       sched_get_affinity(2)
+       sched_get_priority_max(2)
+       sched_get_priority_min(2)
+       sched_getaffinity(2)
+       sched_getattr(2)
+       sched_getparam(2)
+       sched_getscheduler(2)
+       sched_rr_get_interval(2)
+       sched_set_affinity(2)
+       sched_setaffinity(2)
+       sched_setattr(2)
+       sched_setparam(2)
+       sched_setscheduler(2)
+       sched_yield(2)
+
+       timer_create(2)
+       timer_delete(2)
+       timer_getoverrun(2)
+       timer_gettime(2)
+       timer_settime(2)
+
+       timerfd_create(2)
+       timerfd_gettime(2)
+       timerfd_settime(2)
+
+
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
