@@ -2,102 +2,106 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79675C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56330C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515CA206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595344475;
-	bh=EC70+klebLS+syijFaXMg0/XUwOgroRzpIFSyx0/eAk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WWhTOyMzjDJhp+mEKTM428VaPS9FKxJ7BsvfTdPC8MRS0YrXVBJx4hB1p/XOCbIE3
-	 oo10oe8Da+NG7kKmoiHYBRDQUoGKbA90cv79K4lvOBXyYmqqZebjq5qlqjOnc2SySi
-	 8TJoGyDt5kLYDGwPrfT9PE9kVof3PlinCHrQpBLA=
+	by mail.kernel.org (Postfix) with ESMTP id 35D3A20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgGUPOe (ORCPT
+        id S1729964AbgGUPOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgGUPOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:14:33 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13634C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:14:33 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f5so24468156ljj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UJ2oiatPJQaDkSAS79bD6RyNLxzOHISiSh/NEV751ag=;
-        b=NrTtagrMMk3FxqlaHdZNgbKdUc8Vh/avD14adDz7BB+LEJ2DXgeu7STJKNQgPO9iT+
-         vSjLYZPFhle+9JLlHdTV3Skc3JPIoW16dsZg/nAYIi5sPJWRptJVp8QKGoW5L8byXqHe
-         KmCEJht0AbHbpA8JTAsGOB5DlCkMZzJPxMHII=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UJ2oiatPJQaDkSAS79bD6RyNLxzOHISiSh/NEV751ag=;
-        b=Icoe0daVYc5yXWkQ4AEQ5esST4CoQbA3ibbs2aeWD5Mif6yy/mmdzW1ZeQfcrHuaxp
-         WFoblXuKZL08+SET188HhDGEBzn/a7spVbEetQQlK2KjW3/ZrZWmj3p9yLzJdqzqEKBd
-         XxtwCF6rC6q7gCH/V1dIWr6R2sq9rRYpveJf3g+AIZ+WF6hYJCFUaP3WNhQIRvGe9NR6
-         SyqNqhbr8f5Vku4sjkYNoOvasgvbDwdgMA/bQ6CGDpJn0YSXHzt6LM/D+Uc9uAeaCG+Q
-         UsLYxGzyNZA++aFHsN/cnhheiklS3Ml8RfWuILr2n+IuYCLMV8EWSKYiMH9BGSZpim+W
-         XheQ==
-X-Gm-Message-State: AOAM531lNXg2vh8a8M0WudHeAaNL7prBbm4GBYH1j6hkqzdizJbJogyi
-        k9c9XCJxX4twDIuSQ76FEeWEeWpLQAU=
-X-Google-Smtp-Source: ABdhPJySzstn5hqME2i2Ih9Ly4JjtlYnLEIYLSuNw9Od3JGrJ32RLDawgChAB4U3TWdV3+MDve5ODg==
-X-Received: by 2002:a2e:8216:: with SMTP id w22mr13436738ljg.2.1595344471264;
-        Tue, 21 Jul 2020 08:14:31 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id b18sm2390120lfp.36.2020.07.21.08.14.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 08:14:30 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id q6so3465395ljp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:14:30 -0700 (PDT)
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr12417087ljj.102.1595344469962;
- Tue, 21 Jul 2020 08:14:29 -0700 (PDT)
+        Tue, 21 Jul 2020 11:14:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:52627 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728089AbgGUPOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:14:40 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9AD7268B05; Tue, 21 Jul 2020 17:14:37 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 17:14:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Satya Tangirala <satyat@google.com>,
+        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
+        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Alex Dubov <oakad@yahoo.com>
+Subject: Re: [PATCH 02/10] block: virtio-blk: check logical block size
+Message-ID: <20200721151437.GB10620@lst.de>
+References: <20200721105239.8270-1-mlevitsk@redhat.com> <20200721105239.8270-3-mlevitsk@redhat.com>
 MIME-Version: 1.0
-References: <CA+icZUUGO0__SEZ7YvuQzfSdaWfTnCHW=73-3W4X=Vz51wHd+w@mail.gmail.com>
- <CAHk-=wiR+uHUyp3=Nf1aiNjmg0ZekaQJupLRguFNZ=MreuGhfg@mail.gmail.com> <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
-In-Reply-To: <CA+icZUXRjrX+1NAZy4As_ficD4aHRAZWHRj5hrE+D6E5zEKXHw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 21 Jul 2020 08:14:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgaTO-TNHimPtsBYWk7VMdL3rqdn=Uzom3f=Bs1CKw3kw@mail.gmail.com>
-Message-ID: <CAHk-=wgaTO-TNHimPtsBYWk7VMdL3rqdn=Uzom3f=Bs1CKw3kw@mail.gmail.com>
-Subject: Re: Linux 5.8-rc6
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721105239.8270-3-mlevitsk@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 1:17 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> You happen to know if I can configure in my ~/.gitconfig to pull
-> linux-git stuff from two repositories - check first git.kernel.org
-> then GitHub.
+On Tue, Jul 21, 2020 at 01:52:31PM +0300, Maxim Levitsky wrote:
+> Linux kernel only supports logical block sizes which are power of two,
+> at least 512 bytes and no more that PAGE_SIZE.
+> 
+> Check this instead of crashing later on.
+> 
+> Note that there is no need to check physical block size since it is
+> only a hint, and virtio-blk already only supports power of two values.
+> 
+> Bugzilla link: https://bugzilla.redhat.com/show_bug.cgi?id=1664619
+> 
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  drivers/block/virtio_blk.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 980df853ee497..b5ee87cba00ed 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -809,10 +809,18 @@ static int virtblk_probe(struct virtio_device *vdev)
+>  	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_BLK_SIZE,
+>  				   struct virtio_blk_config, blk_size,
+>  				   &blk_size);
+> -	if (!err)
+> +	if (!err) {
+> +		if (!blk_is_valid_logical_block_size(blk_size)) {
+> +			dev_err(&vdev->dev,
+> +				"%s failure: invalid logical block size %d\n",
+> +				__func__, blk_size);
+> +			err = -EINVAL;
+> +			goto out_cleanup_queue;
+> +		}
+>  		blk_queue_logical_block_size(q, blk_size);
 
-Just script it. IOW, do
-
-   git pull ..kernel.org..
-   git pull ...github..
-
-and if you _want_ to, you can just create an alias for that in your
-.gitconfig so that you can do it with one "git update" command or
-whatever.
-
-But normally, they are both updated at pretty much the same time.
-
-             Linus
+Hmm, I wonder if we should simply add the check and warning to
+blk_queue_logical_block_size and add an error in that case.  Then
+drivers only have to check the error return, which might add a lot
+less boiler plate code.
