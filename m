@@ -2,303 +2,103 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C85BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B72E520717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7ci4Ua/"
+	by mail.kernel.org (Postfix) with ESMTP id E6F3D20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgGUUfR (ORCPT
+        id S1729286AbgGUUkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 16:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728606AbgGUUfR (ORCPT
+        Tue, 21 Jul 2020 16:40:01 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:56042 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbgGUUkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 16:35:17 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D63C061794;
-        Tue, 21 Jul 2020 13:35:17 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so12456206pge.12;
-        Tue, 21 Jul 2020 13:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H2rlhi44PP/yGILmVfXDfaXGTcLk3tY2rxvlC2hr1ng=;
-        b=c7ci4Ua/7LOBYP/R/an9KQ0sHvxaJAXFrSsrT3yazooggq8gZDlgmLkGzoRwpYAxNj
-         C6F8TRui+arKmOUHwDPBrEFSrPapzUJObU/fwrDIv41D9Pm2Qc1FhugBx5k2Iz2L9bMM
-         QFBLvFUmJpfZttdCPAajbf+ZsU0k3e82CuNyAW52I9Zg8tcQcEArWRq2t0vI8JL1M9zp
-         eJG2HdwWAj1xd7WtOZwRcNnJlLQdCC+Hq8rFwBH14hiluT//5Gdl9KKH9/jFiOchshET
-         7ZImaWDYp+ktu3oM0dtrvCCG2fhoNkeFlVNYAYc3hO0467i0F86qMf/eHCg3XFCjAlwC
-         zuhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H2rlhi44PP/yGILmVfXDfaXGTcLk3tY2rxvlC2hr1ng=;
-        b=p3x4vPHeb72h1YR1w4ULL7TpM1ZtfU+5e+9nyvK6+t/lvtw302ttXylkQOFQJvwWjo
-         dbw7ccQhwd7As3ElUY1/MzJFDpPAtegOVk0Dt/OAkcBLqOLlGDUAFejzRa1QrkyKmPha
-         dFJldkNzA0Z05GXWe9MOCQuMnfe0pR2LJlZK1MFiKintYiaViVu8aoVXipinO6C8gJjW
-         0nod2qff8IxKaGItX/xQ81JJTtcUjFuQnmKqRAfMh7VKGYxQCezrhkgO7x4f4Nyf4FtU
-         7qXQ/ccoLcANr3jck53bJj3JSZdq2tuPgX8lVRVoHKA5CtFay6/qmyngP9p7eHFiQOWh
-         w8gA==
-X-Gm-Message-State: AOAM531RsFYf1yHckgLxg0UBn5PyVZaFkx95kb3O4ETF6kCQPc1qHTtW
-        WYn5WIbumbzZx/0s24Wf/EzqXrNK
-X-Google-Smtp-Source: ABdhPJyhqOcYNtd5vksn2vWZzTK+6YDHifO80UBVUzQovhdMF5nT3BelgrNB8ZAXNiqdNDc3PIVqww==
-X-Received: by 2002:a63:ab4f:: with SMTP id k15mr24489873pgp.247.1595363716278;
-        Tue, 21 Jul 2020 13:35:16 -0700 (PDT)
-Received: from ?IPv6:2409:4072:593:314e:d028:8959:a8a3:a7bc? ([2409:4072:593:314e:d028:8959:a8a3:a7bc])
-        by smtp.gmail.com with ESMTPSA id w64sm19528075pgd.67.2020.07.21.13.35.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 13:35:15 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] iio: gyro: Add driver support for ADXRS290
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-References: <20200721181926.27046-1-nish.malpani25@gmail.com>
- <CAHp75Vdr+Uo2uw3mzYP+LMRgp-eyi+YjG=O+wGVqyYx-+MRCaw@mail.gmail.com>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <7ba8469a-dd8c-1686-6d26-e2a4cbfedce9@gmail.com>
-Date:   Wed, 22 Jul 2020 02:05:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 21 Jul 2020 16:40:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 342028030867;
+        Tue, 21 Jul 2020 20:39:59 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Gn8VD52v5llM; Tue, 21 Jul 2020 23:39:58 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Feng Tang <feng.tang@intel.com>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] spi: dw-dma: Fix Tx DMA channel working too fast
+Date:   Tue, 21 Jul 2020 23:39:51 +0300
+Message-ID: <20200721203951.2159-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vdr+Uo2uw3mzYP+LMRgp-eyi+YjG=O+wGVqyYx-+MRCaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andy,
+It turns out having a Rx DMA channel serviced with higher priority than
+a Tx DMA channel is not enough to provide a well balanced DMA-based SPI
+transfer interface. There might still be moments when the Tx DMA channel
+is occasionally handled faster than the Rx DMA channel. That in its turn
+will eventually cause the SPI Rx FIFO overflow if SPI bus speed is high
+enough to fill the SPI Rx FIFO in before it's cleared by the Rx DMA
+channel. That's why having the DMA-based SPI Tx interface too optimized
+is the errors prone, so the commit 0b2b66514fc9 ("spi: dw: Use DMA max
+burst to set the request thresholds") though being perfectly normal from
+the standard functionality point of view implicitly introduced the problem
+described above. In order to fix that the Tx DMA activity is intentionally
+slowed down by limiting the SPI Tx FIFO depth with a value twice bigger
+than the Tx burst length calculated earlier by the
+dw_spi_dma_maxburst_init() method.
 
-Thanks for the review. Comments inline...
+Fixes: 0b2b66514fc9 ("spi: dw: Use DMA max burst to set the request thresholds")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+---
+ drivers/spi/spi-dw-dma.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-On 22/07/20 1:16 am, Andy Shevchenko wrote:
-> On Tue, Jul 21, 2020 at 9:20 PM Nishant Malpani
-> <nish.malpani25@gmail.com> wrote:
->>
->> ADXRS290 is a high performance MEMS pitch and roll (dual-axis in-plane)
->> angular rate sensor (gyroscope) designed for use in stabilization
->> applications. It also features an internal temperature sensor and
->> programmable high-pass and low-pass filters.
->>
->> Add support for ADXRS290 in direct-access mode for now.
-> 
->> Datasheet:
->> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
-> 
-> Drop that 'Link:' part and followed blank line, so get something like
-> 
-> Datasheet: https://...
-> Signed-off-by: ...
-> 
-Okay. Will fix in v3.
+diff --git a/drivers/spi/spi-dw-dma.c b/drivers/spi/spi-dw-dma.c
+index 5986c520b196..bb390ff67d1d 100644
+--- a/drivers/spi/spi-dw-dma.c
++++ b/drivers/spi/spi-dw-dma.c
+@@ -372,8 +372,20 @@ static int dw_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+ 	u16 imr = 0, dma_ctrl = 0;
+ 
++	/*
++	 * Having a Rx DMA channel serviced with higher priority than a Tx DMA
++	 * channel might not be enough to provide a well balanced DMA-based
++	 * SPI transfer interface. There might still be moments when the Tx DMA
++	 * channel is occasionally handled faster than the Rx DMA channel.
++	 * That in its turn will eventually cause the SPI Rx FIFO overflow if
++	 * SPI bus speed is high enough to fill the SPI Rx FIFO in before it's
++	 * cleared by the Rx DMA channel. In order to fix the problem the Tx
++	 * DMA activity is intentionally slowed down by limiting the SPI Tx
++	 * FIFO depth with a value twice bigger than the Tx burst length
++	 * calculated earlier by the dw_spi_dma_maxburst_init() method.
++	 */
+ 	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
+-	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
++	dw_writel(dws, DW_SPI_DMATDLR, dws->txburst);
+ 
+ 	if (xfer->tx_buf)
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+-- 
+2.26.2
 
->> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-> 
-> ...
-> 
->> +config ADXRS290
->> +       tristate "Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope SPI driver"
->> +       depends on SPI
->> +       help
->> +         Say yes here to build support for Analog Devices ADXRS290 programmable
->> +         digital output gyroscope.
->> +
->> +         This driver can also be built as a module. If so, the module will be
->> +         called adxrs290.
-> 
-> 
->> +enum adxrs290_mode {
->> +       STANDBY,
->> +       MEASUREMENT,
->> +};
-> 
->> +struct adxrs290_state {
->> +       struct spi_device       *spi;
->> +       /* Serialize reads and their subsequent processing */
->> +       struct mutex            lock;
->> +       enum adxrs290_mode      mode;
->> +       unsigned int            lpf_3db_freq_idx;
->> +       unsigned int            hpf_3db_freq_idx;
->> +};
-> 
-> ...
-> 
->> +/*
->> + * Available cut-off frequencies of the low pass filter in Hz.
->> + * The integer part and fractional part are represented separately.
->> + */
-> 
->> +static const int adxrs290_lpf_3db_freq_tbl[][2] = {
-> 
-> What about adxrs290_lpf_3db_freq_hz_table ?
-> 
-Sure, makes it very precise. Will address in v3.
-
->> +};
->> +
->> +/*
->> + * Available cut-off frequencies of the high pass filter in Hz.
->> + * The integer part and fractional part are represented separately.
->> + */
->> +static const int adxrs290_hpf_3db_freq_tbl[][2] = {
-> 
-> Ditto.
-> 
-Yes.
-
->> +};
-> 
-> ...
-> 
->> +static int adxrs290_get_rate_data(struct iio_dev *indio_dev, const u8 cmd,
->> +                                 unsigned int *val)
->> +{
->> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> 
->> +       int ret = 0;
-> 
-> Purpose of this?
->
-'ret' will not be initialized if a successful spi_w8r16() takes place 
-i.e if it doesn't go into the 'if' block. (Doesn't make sense to have it 
-now since the below block of code is erroneous, but will need this in v3).
-
->> +       u16 temp;
->> +
->> +       mutex_lock(&st->lock);
->> +       temp = spi_w8r16(st->spi, cmd);
-> 
->> +       if (temp < 0) {
-> 
-> How can this ever happen?
-> 
-Oops, you're right. Even though spi_w8r16() returns a negative error 
-code on failure, 'temp' is declared unsigned. Thanks for pointing out. 
-Will fix in v3.
-
->> +               ret = temp;
->> +               goto err_unlock;
->> +       }
->> +
->> +       *val = temp;
->> +
->> +err_unlock:
->> +       mutex_unlock(&st->lock);
->> +       return ret;
->> +}
-> 
-> Ditto for the rest of the similar cases.
->
-Sure.
-
-> ...
-> 
->> +       case IIO_CHAN_INFO_SCALE:
->> +               switch (chan->type) {
->> +               case IIO_ANGL_VEL:
->> +                       *val = 0;
-> 
-> 
->> +                       *val2 = 87266;
-> 
-> Magic!
-> 
-Haha, will add comments in v3!
-
->> +                       return IIO_VAL_INT_PLUS_NANO;
->> +               case IIO_TEMP:
-> 
->> +                       *val = 100;
-> 
-> Magic!
-> 
-Will add comments in v3.
-
->> +                       return IIO_VAL_INT;
->> +               default:
->> +                       return -EINVAL;
->> +               }
-> 
-> ...
-> 
->> +               *vals = (const int *)adxrs290_lpf_3db_freq_tbl;
-> 
-> Why casting?
-> 
-adxrs290_lpf_3db_freq_tbl is of type (int *)[2], right? Without the 
-casting, an incompatible-pointer-type error is thrown.
-
-> ...
-> 
->> +               *vals = (const int *)adxrs290_hpf_3db_freq_tbl;
-> 
-> Ditto.
-> 
-See above comment.
-
-> ...
-> 
-> 
->> +       struct iio_dev *indio_dev;
->> +       struct adxrs290_state *st;
-> 
->> +       int ret;
->> +       u8 val, val2;
-> 
-> Swap them to have in reversed spruce tree order.
-> 
-Okay, will do so in v3.
-
-> ...
-> 
->> +       indio_dev->dev.parent = &spi->dev;
-> 
-> Do you need this?
-Oh, right (I'm aware of Alexandru's recent patch on this). Will address 
-in v3.
-
-> 
->> +       /* max transition time to measurement mode */
->> +       msleep_interruptible(ADXRS290_MAX_TRANSITION_TIME_MS);
-> 
-> I'm not sure what the point of interruptible variant here?
-> 
-I referred Documentation/timers/timers-howto.rst for this.
-My reasoning was shaped to use the interruptible variant because the 
-transition settles in a time *less than* 100ms and since 100ms is quite 
-a huge time to sleep, it should be interrupted in case a signal arrives.
-
-> ...
-> 
->> +static const struct of_device_id adxrs290_of_match[] = {
->> +       { .compatible = "adi,adxrs290" },
-> 
->> +       { },
-> 
-> No comma here!
-> 
-Okay. Will remove in v3.
-
-With regards,
-Nishant Malpani
-
->> +};
-> 
