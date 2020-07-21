@@ -7,70 +7,71 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B55C43445
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F1AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0312C207BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50043207CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZwvzdBb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kOVThYqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbgGUQma (ORCPT
+        id S1730681AbgGUQm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46906 "EHLO
+        Tue, 21 Jul 2020 12:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730621AbgGUQmX (ORCPT
+        with ESMTP id S1730650AbgGUQmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:42:23 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E322C0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:23 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c80so3493431wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:23 -0700 (PDT)
+        Tue, 21 Jul 2020 12:42:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF1BC0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a15so6912975wrh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:42:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=s8AbQxq9r0ZdFRsalDWfW9DgMg5mPoOf6FNctnZmLIQ=;
-        b=RZwvzdBbdW5QHi1/paT/IBoA+Y3oHSI5BvtohjiKg6ncaMUaNQq7Ak/zwfKT5RS9YV
-         aIWj38Sq8eko6vbtBgPDU+oqHtusCtYqeaBHf72WMhULh1O2ZR9Bk0KLx9Vf6f+JI2x+
-         rjak/buhkfHMwKJxIlUXrVwTVBTmdztO18znyWZo3mE2hIuSJKt0lghQp/I49rfONzxh
-         Vvrd0G/dw/H2CVTkGDKhDpXL+IbTAHGS3E0gzmfBaZjqrkZh/4o4q8a9Eep5ZSs/apkh
-         ZqYRHVosDmTDF460D75yioHXLczNF35kf5zyBavHC1fjDeyEp3VEEgRpou6py81uK9+X
-         keJg==
+        bh=+BNT6pR3iXdTuvzrvWJoNW4LL9aAGyArixYAAs3SVfo=;
+        b=kOVThYqS4yrsztYfQMK4WkDJ+dRESJUdyY2fVVUcmFahGQBcT964S08WxQn1SNR/W5
+         MYuQrl4Z0rI+RPW4zyjR4kP1eXNO139CgGBwkhVgZqelTlSMaV3g2YJvxXgGswC8WSLC
+         9u1rpWJy0FpdAx7GHuHY0XeEv7K+wjNzLr7TaGUajXyluWH0K0yR0I9VXJZYfq/ON6k6
+         4PuxeOQrdHYcryiqB/UiHKXp5SI45Q41KKr8MxhyDaw1PmNGZncSLvJQrKvwklFBUN5j
+         RDv/JxwhSAvn/JComyExGNzqIkA/AHQbY3pQrVbC8Q4qn1EV7zR+ewi2FahcQ8acL5Qx
+         QqMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=s8AbQxq9r0ZdFRsalDWfW9DgMg5mPoOf6FNctnZmLIQ=;
-        b=Ibao+J9rf6ysGvDLj0nRLo9cjFqas6bZxJpjrKgVjE0MJJQolZQByuOQ+w6BzRywE8
-         aDAgjzVR7+rou/PJUd+0Ij4vPj/2tJzVOFoX21EC08ivDY2mMSjEWoJWYxuNOS9pNsN7
-         38GyEW2FyE2DBUorW90sZ2mNQ0Gv5exYrZHC8iZASlDVN/6Dy+VpOW8KTy0zo2CeeIcS
-         Z97AkrxycCcLNudkQAq2ItLezvSG437XoCfOyXb5+HgeYuHvtTPWrEtgrvPqXblClQcc
-         EJnksw5OvZh4+bWXOLLEUa/olXawC1kD0D6SSug/5RutBhjTfEk2xYa73q98nH/xF86f
-         sMtA==
-X-Gm-Message-State: AOAM531DjcVFTCxYtFQYhEnOx6ebsbhEAUp72o6lXZpwqQZbJjW7+6N3
-        zzsitaCMwA6PlXr/sRjmBQWQBg==
-X-Google-Smtp-Source: ABdhPJycricuOIiBnEAC/VX0ROrq2rRaZA/9GvXgB2BBlFdjg/5ZcMgT9Bsqm6WBQGXg06bkBGFmCA==
-X-Received: by 2002:a1c:3504:: with SMTP id c4mr4796690wma.177.1595349742030;
-        Tue, 21 Jul 2020 09:42:22 -0700 (PDT)
+        bh=+BNT6pR3iXdTuvzrvWJoNW4LL9aAGyArixYAAs3SVfo=;
+        b=lNeigpgMmGHL8bcucOZEmVjpNzuhQzgmD3Jvol8JUlagkGQDYwhNhV79IONKgglXcF
+         zuRr5tGOHRk3j5t49ewzhA/EP7garDe2ZpcWajNHR98UiPfc67o96JzL51yaSmU1UJPf
+         79R08jaaUtgqlDdsGCe/QXP84TlnbN2TTBRzkSSB9qzlkayauCk8qlRkTJ7Ms0ukKs4r
+         +3BEKzEX7efI3ItfSwFyl9ov/6NisazUytSpafUUnlepbVl+L2XgfEdCq8V4ZxZD4q1u
+         BeQk/0p/qhoJLtoPGY+C7CvpillhY4vWsRSwGsABEuKJewI5/g4fPnQ9wnyj1nnFqR1m
+         vzWg==
+X-Gm-Message-State: AOAM531MG1WZJl6LwrHF82Zw64/vm5f7Y3OOcx14sQrS0j6DH4n1fEJ3
+        sKcCz/gzwoPj1nBXm91dcwlCYuW7XQw=
+X-Google-Smtp-Source: ABdhPJxW4wIYZae30lJ/B/5lcB8ro2G9uBJInQe10hYgvhmCBO2KX138JkDYVQscjAh2tF3Ti7yx+g==
+X-Received: by 2002:adf:9e8b:: with SMTP id a11mr4950997wrf.309.1595349743028;
+        Tue, 21 Jul 2020 09:42:23 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.21
+        by smtp.gmail.com with ESMTPSA id m4sm3933524wmi.48.2020.07.21.09.42.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:42:21 -0700 (PDT)
+        Tue, 21 Jul 2020 09:42:22 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Jack Wang <jinpu.wang@cloud.ionos.com>
-Subject: [PATCH 17/40] scsi: pm8001: pm80xx_hwi: Fix some function documentation issues
-Date:   Tue, 21 Jul 2020 17:41:25 +0100
-Message-Id: <20200721164148.2617584-18-lee.jones@linaro.org>
+Subject: [PATCH 18/40] scsi: pm8001: pm8001_hwi: Remove a bunch of set but unused variables
+Date:   Tue, 21 Jul 2020 17:41:26 +0100
+Message-Id: <20200721164148.2617584-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200721164148.2617584-1-lee.jones@linaro.org>
 References: <20200721164148.2617584-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,112 +80,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/pm8001/pm80xx_hwi.c:918: warning: Function parameter or member 'number' not described in 'update_inbnd_queue_table'
- drivers/scsi/pm8001/pm80xx_hwi.c:954: warning: Function parameter or member 'number' not described in 'update_outbnd_queue_table'
- drivers/scsi/pm8001/pm80xx_hwi.c:1717: warning: Function parameter or member 'vec' not described in 'pm80xx_chip_interrupt_enable'
- drivers/scsi/pm8001/pm80xx_hwi.c:1735: warning: Function parameter or member 'vec' not described in 'pm80xx_chip_interrupt_disable'
- drivers/scsi/pm8001/pm80xx_hwi.c:4830: warning: Excess function parameter 'num' description in 'pm80xx_chip_phy_start_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4872: warning: Excess function parameter 'num' description in 'pm80xx_chip_phy_stop_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4892: warning: Function parameter or member 'pm8001_ha' not described in 'pm80xx_chip_reg_dev_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4892: warning: Function parameter or member 'pm8001_dev' not described in 'pm80xx_chip_reg_dev_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4892: warning: Function parameter or member 'flag' not described in 'pm80xx_chip_reg_dev_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4966: warning: Function parameter or member 'phyId' not described in 'pm80xx_chip_phy_ctl_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4966: warning: Function parameter or member 'phy_op' not described in 'pm80xx_chip_phy_ctl_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4966: warning: Excess function parameter 'num' description in 'pm80xx_chip_phy_ctl_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:4966: warning: Excess function parameter 'phy_id' description in 'pm80xx_chip_phy_ctl_req'
- drivers/scsi/pm8001/pm80xx_hwi.c:5006: warning: Function parameter or member 'vec' not described in 'pm80xx_chip_isr'
- drivers/scsi/pm8001/pm80xx_hwi.c:5006: warning: Excess function parameter 'irq' description in 'pm80xx_chip_isr'
- drivers/scsi/pm8001/pm80xx_hwi.c:5006: warning: Excess function parameter 'stat' description in 'pm80xx_chip_isr'
+ drivers/scsi/qla4xxx/ql4_os.c: In function ‘qla4xxx_eh_cmd_timed_out’:
+ drivers/scsi/qla4xxx/ql4_os.c:1865:24: warning: variable ‘sess’ set but not used [-Wunused-but-set-variable]
+ 1865 | struct iscsi_session *sess;
+ | ^~~~
+ drivers/scsi/qla4xxx/ql4_os.c: In function ‘qla4xxx_session_create’:
+ drivers/scsi/qla4xxx/ql4_os.c:3079:19: warning: variable ‘dst_addr’ set but not used [-Wunused-but-set-variable]
+ 3079 | struct sockaddr *dst_addr;
+ | ^~~~~~~~
+ drivers/scsi/qla4xxx/ql4_os.c: In function ‘qla4_8xxx_iospace_config’:
+ drivers/scsi/qla4xxx/ql4_os.c:5512:44: warning: variable ‘db_len’ set but not used [-Wunused-but-set-variable]
+ 5512 | unsigned long mem_base, mem_len, db_base, db_len;
+ | ^~~~~~
+ drivers/scsi/qla4xxx/ql4_os.c:5512:35: warning: variable ‘db_base’ set but not used [-Wunused-but-set-variable]
+ 5512 | unsigned long mem_base, mem_len, db_base, db_len;
+ | ^~~~~~~
+ drivers/scsi/qla4xxx/ql4_os.c: In function ‘qla4xxx_get_param_ddb’:
+ drivers/scsi/qla4xxx/ql4_os.c:6269:24: warning: variable ‘ha’ set but not used [-Wunused-but-set-variable]
+ 6269 | struct scsi_qla_host *ha;
+ | ^~
 
 Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/scsi/pm8001/pm8001_hwi.c |  6 +++---
+ drivers/scsi/qla4xxx/ql4_os.c    | 11 +----------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 05c944a3bdca0..abcbd47162d64 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -912,6 +912,7 @@ static void update_main_config_table(struct pm8001_hba_info *pm8001_ha)
+diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+index 6323016e1304e..e9a939230b152 100644
+--- a/drivers/scsi/pm8001/pm8001_hwi.c
++++ b/drivers/scsi/pm8001/pm8001_hwi.c
+@@ -4645,8 +4645,8 @@ int pm8001_chip_dereg_dev_req(struct pm8001_hba_info *pm8001_ha,
  /**
-  * update_inbnd_queue_table - update the inbound queue table to the HBA.
-  * @pm8001_ha: our hba card information
-+ * @number: entry in the queue
-  */
- static void update_inbnd_queue_table(struct pm8001_hba_info *pm8001_ha,
- 					 int number)
-@@ -948,6 +949,7 @@ static void update_inbnd_queue_table(struct pm8001_hba_info *pm8001_ha,
- /**
-  * update_outbnd_queue_table - update the outbound queue table to the HBA.
-  * @pm8001_ha: our hba card information
-+ * @number: entry in the queue
-  */
- static void update_outbnd_queue_table(struct pm8001_hba_info *pm8001_ha,
- 						 int number)
-@@ -1711,6 +1713,7 @@ pm80xx_chip_intx_interrupt_disable(struct pm8001_hba_info *pm8001_ha)
- /**
-  * pm8001_chip_interrupt_enable - enable PM8001 chip interrupt
-  * @pm8001_ha: our hba card information
-+ * @vec: interrupt number to enable
-  */
- static void
- pm80xx_chip_interrupt_enable(struct pm8001_hba_info *pm8001_ha, u8 vec)
-@@ -1729,6 +1732,7 @@ pm80xx_chip_interrupt_enable(struct pm8001_hba_info *pm8001_ha, u8 vec)
- /**
-  * pm8001_chip_interrupt_disable- disable PM8001 chip interrupt
-  * @pm8001_ha: our hba card information
-+ * @vec: interrupt number to disable
-  */
- static void
- pm80xx_chip_interrupt_disable(struct pm8001_hba_info *pm8001_ha, u8 vec)
-@@ -4822,7 +4826,6 @@ static int pm80xx_chip_sata_req(struct pm8001_hba_info *pm8001_ha,
- /**
-  * pm80xx_chip_phy_start_req - start phy via PHY_START COMMAND
+  * pm8001_chip_phy_ctl_req - support the local phy operation
   * @pm8001_ha: our hba card information.
-- * @num: the inbound queue number
-  * @phy_id: the phy id which we wanted to start up.
-  */
- static int
-@@ -4864,7 +4867,6 @@ pm80xx_chip_phy_start_req(struct pm8001_hba_info *pm8001_ha, u8 phy_id)
- /**
-  * pm8001_chip_phy_stop_req - start phy via PHY_STOP COMMAND
-  * @pm8001_ha: our hba card information.
-- * @num: the inbound queue number
-  * @phy_id: the phy id which we wanted to start up.
-  */
- static int pm80xx_chip_phy_stop_req(struct pm8001_hba_info *pm8001_ha,
-@@ -4884,7 +4886,7 @@ static int pm80xx_chip_phy_stop_req(struct pm8001_hba_info *pm8001_ha,
- 	return ret;
- }
- 
--/**
-+/*
-  * see comments on pm8001_mpi_reg_resp.
-  */
- static int pm80xx_chip_reg_dev_req(struct pm8001_hba_info *pm8001_ha,
-@@ -4957,9 +4959,8 @@ static int pm80xx_chip_reg_dev_req(struct pm8001_hba_info *pm8001_ha,
- /**
-  * pm80xx_chip_phy_ctl_req - support the local phy operation
-  * @pm8001_ha: our hba card information.
-- * @num: the inbound queue number
 - * @phy_id: the phy id which we wanted to operate
 - * @phy_op:
 + * @phyId: the phy id which we wanted to operate
-+ * @phy_op: phy operation to request
++ * @phy_op: the phy operation to request
   */
- static int pm80xx_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
+ static int pm8001_chip_phy_ctl_req(struct pm8001_hba_info *pm8001_ha,
  	u32 phyId, u32 phy_op)
-@@ -4998,8 +4999,7 @@ static u32 pm80xx_chip_is_our_interrupt(struct pm8001_hba_info *pm8001_ha)
+@@ -4682,7 +4682,7 @@ static u32 pm8001_chip_is_our_interrupt(struct pm8001_hba_info *pm8001_ha)
  /**
   * pm8001_chip_isr - PM8001 isr handler.
   * @pm8001_ha: our hba card information.
-- * @irq: irq number.
 - * @stat: stat.
-+ * @vec: irq number.
++ * @vec: IRQ number
   */
  static irqreturn_t
- pm80xx_chip_isr(struct pm8001_hba_info *pm8001_ha, u8 vec)
+ pm8001_chip_isr(struct pm8001_hba_info *pm8001_ha, u8 vec)
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 97fa290cf295f..27064c602dc70 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -1862,12 +1862,10 @@ static void qla4xxx_conn_get_stats(struct iscsi_cls_conn *cls_conn,
+ static enum blk_eh_timer_return qla4xxx_eh_cmd_timed_out(struct scsi_cmnd *sc)
+ {
+ 	struct iscsi_cls_session *session;
+-	struct iscsi_session *sess;
+ 	unsigned long flags;
+ 	enum blk_eh_timer_return ret = BLK_EH_DONE;
+ 
+ 	session = starget_to_session(scsi_target(sc->device));
+-	sess = session->dd_data;
+ 
+ 	spin_lock_irqsave(&session->lock, flags);
+ 	if (session->state == ISCSI_SESSION_FAILED)
+@@ -3076,7 +3074,6 @@ qla4xxx_session_create(struct iscsi_endpoint *ep,
+ 	struct ddb_entry *ddb_entry;
+ 	uint16_t ddb_index;
+ 	struct iscsi_session *sess;
+-	struct sockaddr *dst_addr;
+ 	int ret;
+ 
+ 	if (!ep) {
+@@ -3085,7 +3082,6 @@ qla4xxx_session_create(struct iscsi_endpoint *ep,
+ 	}
+ 
+ 	qla_ep = ep->dd_data;
+-	dst_addr = (struct sockaddr *)&qla_ep->dst_addr;
+ 	ha = to_qla_host(qla_ep->host);
+ 	DEBUG2(ql4_printk(KERN_INFO, ha, "%s: host: %ld\n", __func__,
+ 			  ha->host_no));
+@@ -5509,7 +5505,7 @@ static void qla4xxx_free_adapter(struct scsi_qla_host *ha)
+ int qla4_8xxx_iospace_config(struct scsi_qla_host *ha)
+ {
+ 	int status = 0;
+-	unsigned long mem_base, mem_len, db_base, db_len;
++	unsigned long mem_base, mem_len;
+ 	struct pci_dev *pdev = ha->pdev;
+ 
+ 	status = pci_request_regions(pdev, DRIVER_NAME);
+@@ -5553,9 +5549,6 @@ int qla4_8xxx_iospace_config(struct scsi_qla_host *ha)
+ 				    ((uint8_t *)ha->nx_pcibase);
+ 	}
+ 
+-	db_base = pci_resource_start(pdev, 4);  /* doorbell is on bar 4 */
+-	db_len = pci_resource_len(pdev, 4);
+-
+ 	return 0;
+ iospace_error_exit:
+ 	return -ENOMEM;
+@@ -6266,14 +6259,12 @@ static int qla4xxx_setup_boot_info(struct scsi_qla_host *ha)
+ static void qla4xxx_get_param_ddb(struct ddb_entry *ddb_entry,
+ 				  struct ql4_tuple_ddb *tddb)
+ {
+-	struct scsi_qla_host *ha;
+ 	struct iscsi_cls_session *cls_sess;
+ 	struct iscsi_cls_conn *cls_conn;
+ 	struct iscsi_session *sess;
+ 	struct iscsi_conn *conn;
+ 
+ 	DEBUG2(printk(KERN_INFO "Func: %s\n", __func__));
+-	ha = ddb_entry->ha;
+ 	cls_sess = ddb_entry->sess;
+ 	sess = cls_sess->dd_data;
+ 	cls_conn = ddb_entry->conn;
 -- 
 2.25.1
 
