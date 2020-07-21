@@ -2,113 +2,134 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65115C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE080C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C642073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3572073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qWkMe3M1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GOrnW/Tx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgGUMxh (ORCPT
+        id S1727073AbgGUM4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgGUMxg (ORCPT
+        Tue, 21 Jul 2020 08:56:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60894 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726737AbgGUM4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:53:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B5DC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:53:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so2744070wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AGWVlCbvUr0eIufY2rS/elykwxV4Zim+632lJgyVEn4=;
-        b=qWkMe3M18JlSQlCm+UcsVVDxBxDCG9VMdtRRUhKpUjMNsVQR54huS28ETPgdc3Fi+o
-         woL+tlVY9AXbU15V8K+A+TbiSlY06iDk++KE+lP4yG5RSJ7eueo1g/W4kHZEK86QF7aD
-         qf6bHzl3wUYi/FQiEHKvmL94TNcXOjcaRxKSqlnftHHG/jGSlH9zOnDGuV0/5pqHtEvK
-         Op3CBfk3zdabXmuxfhQ7E3rxR11rQ3FV7IIuZyQMQSSqEnZeGu69Su6XZo7otKsObpR0
-         z85d14lsshn7Bk81CA0OXWw9TTDoFcnxKQVVpP5b3BZnC2PNXwyH8t4EC12CKtWlCRY2
-         H83w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AGWVlCbvUr0eIufY2rS/elykwxV4Zim+632lJgyVEn4=;
-        b=WEL9znVW5r4FzrDD8i1OeEnP15JnZvJ6+TH2a2KEcwDW5ZC1gZgymoSMF6tpZEjRD1
-         SCF6DUpS0OwwDNN24UmJ0sZDMbzYCVs11LDlFMy5GjX/RqvsAZXyHwpevic/q8SBuoO+
-         LEiYosormCn7Xhbg8+EqSdsEVtjFBEGcUYgs3LZTMyEfyxXhoOIrJqXizeONVXNsMFrg
-         IM9jJ7RuyNjaNhx9sxTe4wIYCUsIwBttIo+h/sdrET8WouNrEFMABDDNwq7txTvHhSxI
-         G7NOodNdF2n9eDYoB4VlRMMWSe2ZS5XTmtZ6CNRswDPVqSdHU91OBV5VXRnj7ywXE0Zf
-         WCTg==
-X-Gm-Message-State: AOAM530O0ZZ/him+NEbD8j7WSWwNXHSXQjDQexXgUOl+4Hs5EAC8B3UP
-        3REyitJZ71lvXm4QgLUmjSF06w==
-X-Google-Smtp-Source: ABdhPJxZoAWaXIC1JED/HvUyGEMlDHNNaHojI1cqxB1Q8x2XxnfiBwmkwYtashw6bU69S8/aIqGnLQ==
-X-Received: by 2002:a1c:7d55:: with SMTP id y82mr3812152wmc.72.1595336014514;
-        Tue, 21 Jul 2020 05:53:34 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:c144:5385:c824:85ce? ([2a01:e34:ed2f:f020:c144:5385:c824:85ce])
-        by smtp.googlemail.com with ESMTPSA id c136sm3471685wmd.10.2020.07.21.05.53.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 05:53:33 -0700 (PDT)
-Subject: Re: [PATCH v10 0/2] Add support for the OST in Ingenic X1000.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200720173134.22826-1-zhouyanjie@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <6aca88ad-1e20-97da-effe-fa5a4cec789c@linaro.org>
-Date:   Tue, 21 Jul 2020 14:53:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 08:56:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595336158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gcyS8fcxtufsTHCFEHHMYCv8/G/j17I02uFKGiQeviM=;
+        b=GOrnW/TxaUuXMPXm4Bu/w3aW7jN/NJL7Z1RN7WRybzqiMibkGlQgLVY76BnidgESaGK4jW
+        8fPzWj7ppc2EUPBEQ1gjq+4G6G9LsWtvmcMVuTabhIFhLovWE7eipYzGPhM3NJyzrm9Vkt
+        NFNKLYXc31z5O3Ud/13nSQ7EPaJF6uU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-469-MY6qAbUXO7O16qVB19jUxQ-1; Tue, 21 Jul 2020 08:55:56 -0400
+X-MC-Unique: MY6qAbUXO7O16qVB19jUxQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACA018014D7;
+        Tue, 21 Jul 2020 12:55:53 +0000 (UTC)
+Received: from fedora-32-enviroment (unknown [10.35.206.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78F657B400;
+        Tue, 21 Jul 2020 12:55:38 +0000 (UTC)
+Message-ID: <155668af6420a6516ded0e9101e0a47401a928d9.camel@redhat.com>
+Subject: Re: [PATCH 09/10] block: scsi: sd: use
+ blk_is_valid_logical_block_size
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Satya Tangirala <satyat@google.com>,
+        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
+        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Alex Dubov <oakad@yahoo.com>
+Date:   Tue, 21 Jul 2020 15:55:37 +0300
+In-Reply-To: <CY4PR04MB375113B7D781BF2949FE5B33E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <20200721105239.8270-1-mlevitsk@redhat.com>
+         <20200721105239.8270-10-mlevitsk@redhat.com>
+         <CY4PR04MB375113B7D781BF2949FE5B33E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200720173134.22826-1-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/07/2020 19:31, 周琰杰 (Zhou Yanjie) wrote:
-> v9->v10:
-> Fix errors which case "make dt_binding_check" failed.
+On Tue, 2020-07-21 at 11:25 +0000, Damien Le Moal wrote:
+> On 2020/07/21 19:55, Maxim Levitsky wrote:
+> > Use blk_is_valid_logical_block_size instead of hardcoded list
 > 
-> 周琰杰 (Zhou Yanjie) (2):
->   dt-bindings: timer: Add Ingenic X1000 OST bindings.
->   clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+> s/hardcoded list/hardcoded checks./
+Done, thanks!
+
+Best regards,
+	Maxim Levitsky
 > 
->  .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
->  drivers/clocksource/Kconfig                        |  12 +-
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,sysost.h         |  12 +
->  5 files changed, 626 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->  create mode 100644 drivers/clocksource/ingenic-sysost.c
->  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  drivers/scsi/sd.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> > index d90fefffe31b7..f012e7397b058 100644
+> > --- a/drivers/scsi/sd.c
+> > +++ b/drivers/scsi/sd.c
+> > @@ -2520,10 +2520,7 @@ sd_read_capacity(struct scsi_disk *sdkp,
+> > unsigned char *buffer)
+> >  			  "assuming 512.\n");
+> >  	}
+> >  
+> > -	if (sector_size != 512 &&
+> > -	    sector_size != 1024 &&
+> > -	    sector_size != 2048 &&
+> > -	    sector_size != 4096) {
+> > +	if (!blk_is_valid_logical_block_size(sector_size)) {
+> >  		sd_printk(KERN_NOTICE, sdkp, "Unsupported sector size
+> > %d.\n",
+> >  			  sector_size);
+> >  		/*
+> > 
+> 
+> With the commit message fixed, looks OK.
+> 
+> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+> 
 
-Applied, thanks
-
-  -- Daniel
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
