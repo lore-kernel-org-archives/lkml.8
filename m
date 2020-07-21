@@ -2,70 +2,53 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3052C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923B7C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D28A20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:29:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHJfdxLC"
+	by mail.kernel.org (Postfix) with ESMTP id 603AD206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595338165;
+	bh=B0iI9iQyyno3YPahqo325GVLnU4ASXnyG0FoNKp0hgs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=07W0GZzX1Mjid6I70lpkprY4JvmcY8Y1bngIfA4NEzbB6HploWIUBuLdDbNu6V2L9
+	 oXnoIfwNhu9RI75iIaY1BmG0w0mi9nJ4AXhTOteJEVJOX3L9EQEejiiOSIt0TDK+e3
+	 IA/dyuDcPA/fTO0Iu0uSorclTIyTqzJxNUEkNrw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGUN3A (ORCPT
+        id S1728061AbgGUN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgGUN27 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:28:59 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73818C061794;
-        Tue, 21 Jul 2020 06:28:59 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m9so10739133pfh.0;
-        Tue, 21 Jul 2020 06:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zgqmIhx0YcKw4+C4bxLnSQpYZb5tzK0BJ+2edyxVkG4=;
-        b=BHJfdxLCSUra/VXuy/hCTVKZN4ot94rnRLHDvbl2EGc4gu/u4e4dIOUILTsKeE08bX
-         7afuY98QhuwWcR8U2qgd7u/47+HVMSL8YFAPsz8kOjh1f+5zxXKTVQOp1RPqrlHCw0yB
-         GDYS9BslZGaVzMMLoPkMXk5egpOCEzw3yWiT6Ovf+EmOTXQFxTDztLcECCsQLEU+hGkV
-         /vA/yuhMTPN/sXLJd9fI9zfkW9neQxs7fYeo8DFNkdlHgukmxTlLYdojrJsUudMw3+wN
-         p+6pmygSCGswYe+haw5odTz+0NCcmFhSc58g7to2pQyzKKBduoPRkIrNKZ/pf6y4D2wl
-         8maQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=zgqmIhx0YcKw4+C4bxLnSQpYZb5tzK0BJ+2edyxVkG4=;
-        b=GZ6r27+R12iwqMAHxi2ARV7OidhetyPyl5QmOATfQr2KJ/VUzuY/mCwx0pRAOpCHgZ
-         JwDXjrfaBEJfUVuTfmz97Ds0lyie+hYlVxyUXTHBduqVmr6B2mqmCy00E1eGEegyGcS/
-         mgglHdkKQZwXakicpoo2EET5tXRk/GDeFjFRAK23RZCTPt+O1LJ0Xwfe4d9/Ef/2dgvI
-         efeLy56CF6v1fyhoYx/9KyaJqLrOUq62jE2mz3bF7nf2TmD2NH8NqvhT3T/27xMBGCNc
-         qpwf/7KNg/BlFK6UBGuV81lK9wo7GW0ziMb8xXQwQBlqeYDV0D8cPZICu/lALiHYTqUg
-         knYw==
-X-Gm-Message-State: AOAM531Ypkep/NqXk6EPynULj58495yHEy1KVXHO6nim2kzrl7sVx5NB
-        Jzu2Rv8+o6rEQ+8Cwg3Gcro=
-X-Google-Smtp-Source: ABdhPJw1uZHI7Nkj6RkoZ1b4wY/jydz5WXahPIeTkp2KaKMclJwNu40cGa1ML0/q8saxHliAQ5L3YA==
-X-Received: by 2002:a62:1c8b:: with SMTP id c133mr25155694pfc.134.1595338138962;
-        Tue, 21 Jul 2020 06:28:58 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s6sm20671677pfd.20.2020.07.21.06.28.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jul 2020 06:28:58 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 06:28:56 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marius Zachmann <mail@mariuszachmann.de>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: corsair-cpro: add reading pwm values
-Message-ID: <20200721132856.GA162181@roeck-us.net>
+        Tue, 21 Jul 2020 09:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbgGUN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:29:23 -0400
+Received: from embeddedor (unknown [201.162.241.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4D8A206E9;
+        Tue, 21 Jul 2020 13:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595338161;
+        bh=B0iI9iQyyno3YPahqo325GVLnU4ASXnyG0FoNKp0hgs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fgUH2VZYppVbigZ0C+/LHEdKPvJjl6wmwtCHjappJwVUibosFW10N0NlKIIt67wT0
+         CAg4noP3gfCjzl+7bYvWMeWcJT57c+LulKPwJ10Ua4ia1lmfM1P8Qxk7nv0IiKlIzc
+         a4fijjFMu4mNX5wNIbLjBwaXyv0DKFwNe+YP8J9Q=
+Date:   Tue, 21 Jul 2020 08:34:55 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH v2][next] IB/hfi1: Use fallthrough pseudo-keyword
+Message-ID: <20200721133455.GA14363@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -75,247 +58,470 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:54:47AM +0200, Marius Zachmann wrote:
-> This adds the possibility for reading pwm values.
-> These can not be read if the device is controlled via
-> fan_target or a fan curve and will return an error in
-> this case. Since an error is expected, this adds some
-> rudimentary error handling.
-> 
-> Changes:
-> - add CTL_GET_FAN_PWM and use it via get_data
-> - pwm returns -ENODATA if the device returns error 0x12
-> - fan_target now returns -ENODATA when the driver is
->   started or a pwm value is set.
-> - add ccp_get_errno to determine errno from device error.
-> - get_data now has a parameter to determine whether
->   to read one or two bytes of data.
-> - update documentation
-> - fix missing surname in MAINTAINERS
-> 
-> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Applied.
+[1] https://www.kernel.org/doc/html/v5.7-rc7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Thanks,
-Guenter
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Address fall-through markings in drivers/infiniband/hw/hfi1/chip.c
+   in a separate patch[2].
 
-> ---
->  Documentation/hwmon/corsair-cpro.rst |  7 ++-
->  MAINTAINERS                          |  2 +-
->  drivers/hwmon/corsair-cpro.c         | 64 +++++++++++++++++++---------
->  3 files changed, 48 insertions(+), 25 deletions(-)
-> 
-> diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-> index 78820156f07d..751f95476b57 100644
-> --- a/Documentation/hwmon/corsair-cpro.rst
-> +++ b/Documentation/hwmon/corsair-cpro.rst
-> @@ -35,8 +35,7 @@ fan[1-6]_input		Connected fan rpm.
->  fan[1-6]_label		Shows fan type as detected by the device.
->  fan[1-6]_target		Sets fan speed target rpm.
->  			When reading, it reports the last value if it was set by the driver.
-> -			Otherwise returns 0.
-> -pwm[1-6]		Sets the fan speed. Values from 0-255.
-> -			When reading, it reports the last value if it was set by the driver.
-> -			Otherwise returns 0.
-> +			Otherwise returns an error.
-> +pwm[1-6]		Sets the fan speed. Values from 0-255. Can only be read if pwm
-> +			was set directly.
->  ======================= =====================================================================
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 06607125b793..a93aefab91f1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4402,7 +4402,7 @@ F:	Documentation/hwmon/coretemp.rst
->  F:	drivers/hwmon/coretemp.c
-> 
->  CORSAIR-CPRO HARDWARE MONITOR DRIVER
-> -M:	Marius  <mail@mariuszachmann.de>
-> +M:	Marius Zachmann <mail@mariuszachmann.de>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
->  F:	drivers/hwmon/corsair-cpro.c
-> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-> index e8504267d0e8..591929ec217a 100644
-> --- a/drivers/hwmon/corsair-cpro.c
-> +++ b/drivers/hwmon/corsair-cpro.c
-> @@ -36,11 +36,12 @@
->  					 * send: byte 1 is channel, rest zero
->  					 * rcv:  returns temp for channel in centi-degree celsius
->  					 * in bytes 1 and 2
-> -					 * returns 17 in byte 0 if no sensor is connected
-> +					 * returns 0x11 in byte 0 if no sensor is connected
->  					 */
->  #define CTL_GET_VOLT		0x12	/*
->  					 * send: byte 1 is rail number: 0 = 12v, 1 = 5v, 2 = 3.3v
->  					 * rcv:  returns millivolt in bytes 1,2
-> +					 * returns error 0x10 if request is invalid
->  					 */
->  #define CTL_GET_FAN_CNCT	0x20	/*
->  					 * returns in bytes 1-6 for each fan:
-> @@ -52,6 +53,12 @@
->  					 * send: byte 1 is channel, rest zero
->  					 * rcv:  returns rpm in bytes 1,2
->  					 */
-> +#define CTL_GET_FAN_PWM		0x22	/*
-> +					 * send: byte 1 is channel, rest zero
-> +					 * rcv:  returns pwm in byte 1 if it was set
-> +					 *	 returns error 0x12 if fan is controlled via
-> +					 *	 fan_target or fan curve
-> +					 */
->  #define CTL_SET_FAN_FPWM	0x23	/*
->  					 * set fixed pwm
->  					 * send: byte 1 is fan number
-> @@ -73,13 +80,31 @@ struct ccp_device {
->  	struct completion wait_input_report;
->  	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
->  	u8 *buffer;
-> -	int pwm[6];
->  	int target[6];
->  	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
->  	DECLARE_BITMAP(fan_cnct, NUM_FANS);
->  	char fan_label[6][LABEL_LENGTH];
->  };
-> 
-> +/* converts response error in buffer to errno */
-> +static int ccp_get_errno(struct ccp_device *ccp)
-> +{
-> +	switch (ccp->buffer[0]) {
-> +	case 0x00: /* success */
-> +		return 0;
-> +	case 0x01: /* called invalid command */
-> +		return -EOPNOTSUPP;
-> +	case 0x10: /* called GET_VOLT / GET_TMP with invalid arguments */
-> +		return -EINVAL;
-> +	case 0x11: /* requested temps of disconnected sensors */
-> +	case 0x12: /* requested pwm of not pwm controlled channels */
-> +		return -ENODATA;
-> +	default:
-> +		hid_dbg(ccp->hdev, "unknown device response error: %d", ccp->buffer[0]);
-> +		return -EIO;
-> +	}
-> +}
-> +
->  /* send command, check for error in response, response in ccp->buffer */
->  static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2, u8 byte3)
->  {
-> @@ -102,13 +127,7 @@ static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2,
->  	if (!t)
->  		return -ETIMEDOUT;
-> 
-> -	/* first byte of response is error code */
-> -	if (ccp->buffer[0] != 0x00) {
-> -		hid_dbg(ccp->hdev, "device response error: %d", ccp->buffer[0]);
-> -		return -EIO;
-> -	}
-> -
-> -	return 0;
-> +	return ccp_get_errno(ccp);
->  }
-> 
->  static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8 *data, int size)
-> @@ -126,7 +145,7 @@ static int ccp_raw_event(struct hid_device *hdev, struct hid_report *report, u8
->  }
-> 
->  /* requests and returns single data values depending on channel */
-> -static int get_data(struct ccp_device *ccp, int command, int channel)
-> +static int get_data(struct ccp_device *ccp, int command, int channel, bool two_byte_data)
->  {
->  	int ret;
-> 
-> @@ -136,7 +155,9 @@ static int get_data(struct ccp_device *ccp, int command, int channel)
->  	if (ret)
->  		goto out_unlock;
-> 
-> -	ret = (ccp->buffer[1] << 8) + ccp->buffer[2];
-> +	ret = ccp->buffer[1];
-> +	if (two_byte_data)
-> +		ret = (ret << 8) + ccp->buffer[2];
-> 
->  out_unlock:
->  	mutex_unlock(&ccp->mutex);
-> @@ -150,14 +171,14 @@ static int set_pwm(struct ccp_device *ccp, int channel, long val)
->  	if (val < 0 || val > 255)
->  		return -EINVAL;
-> 
-> -	ccp->pwm[channel] = val;
-> -
->  	/* The Corsair Commander Pro uses values from 0-100 */
->  	val = DIV_ROUND_CLOSEST(val * 100, 255);
-> 
->  	mutex_lock(&ccp->mutex);
-> 
->  	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val, 0);
-> +	if (!ret)
-> +		ccp->target[channel] = -ENODATA;
-> 
->  	mutex_unlock(&ccp->mutex);
->  	return ret;
-> @@ -171,7 +192,6 @@ static int set_target(struct ccp_device *ccp, int channel, long val)
->  	ccp->target[channel] = val;
-> 
->  	mutex_lock(&ccp->mutex);
-> -
->  	ret = send_usb_cmd(ccp, CTL_SET_FAN_TARGET, channel, val >> 8, val);
-> 
->  	mutex_unlock(&ccp->mutex);
-> @@ -210,7 +230,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
->  	case hwmon_temp:
->  		switch (attr) {
->  		case hwmon_temp_input:
-> -			ret = get_data(ccp, CTL_GET_TMP, channel);
-> +			ret = get_data(ccp, CTL_GET_TMP, channel, true);
->  			if (ret < 0)
->  				return ret;
->  			*val = ret * 10;
-> @@ -222,7 +242,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
->  	case hwmon_fan:
->  		switch (attr) {
->  		case hwmon_fan_input:
-> -			ret = get_data(ccp, CTL_GET_FAN_RPM, channel);
-> +			ret = get_data(ccp, CTL_GET_FAN_RPM, channel, true);
->  			if (ret < 0)
->  				return ret;
->  			*val = ret;
-> @@ -230,6 +250,8 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
->  		case hwmon_fan_target:
->  			/* how to read target values from the device is unknown */
->  			/* driver returns last set value or 0			*/
-> +			if (ccp->target[channel] < 0)
-> +				return -ENODATA;
->  			*val = ccp->target[channel];
->  			return 0;
->  		default:
-> @@ -239,9 +261,10 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
->  	case hwmon_pwm:
->  		switch (attr) {
->  		case hwmon_pwm_input:
-> -			/* how to read pwm values from the device is currently unknown */
-> -			/* driver returns last set value or 0		               */
-> -			*val = ccp->pwm[channel];
-> +			ret = get_data(ccp, CTL_GET_FAN_PWM, channel, false);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = DIV_ROUND_CLOSEST(ret * 255, 100);
->  			return 0;
->  		default:
->  			break;
-> @@ -250,7 +273,7 @@ static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
->  	case hwmon_in:
->  		switch (attr) {
->  		case hwmon_in_input:
-> -			ret = get_data(ccp, CTL_GET_VOLT, channel);
-> +			ret = get_data(ccp, CTL_GET_VOLT, channel, true);
->  			if (ret < 0)
->  				return ret;
->  			*val = ret;
-> @@ -416,6 +439,7 @@ static int get_fan_cnct(struct ccp_device *ccp)
->  			continue;
-> 
->  		set_bit(channel, ccp->fan_cnct);
-> +		ccp->target[channel] = -ENODATA;
-> 
->  		switch (mode) {
->  		case 1:
-> --
-> 2.27.0
+   [2] https://lore.kernel.org/lkml/20200709235250.GA26678@embeddedor/
+
+ drivers/infiniband/hw/hfi1/firmware.c | 16 ----------------
+ drivers/infiniband/hw/hfi1/mad.c      |  9 ++++-----
+ drivers/infiniband/hw/hfi1/pio.c      |  2 +-
+ drivers/infiniband/hw/hfi1/pio_copy.c | 12 ++++++------
+ drivers/infiniband/hw/hfi1/platform.c | 10 +++++-----
+ drivers/infiniband/hw/hfi1/qp.c       |  2 +-
+ drivers/infiniband/hw/hfi1/qsfp.c     |  4 ++--
+ drivers/infiniband/hw/hfi1/rc.c       | 25 ++++++++++++-------------
+ drivers/infiniband/hw/hfi1/sdma.c     |  9 ++++-----
+ drivers/infiniband/hw/hfi1/tid_rdma.c |  4 ++--
+ drivers/infiniband/hw/hfi1/uc.c       |  8 ++++----
+ 11 files changed, 41 insertions(+), 60 deletions(-)
+
+diff --git a/drivers/infiniband/hw/hfi1/firmware.c b/drivers/infiniband/hw/hfi1/firmware.c
+index 2b57ba70ddd6..0e83d4b61e46 100644
+--- a/drivers/infiniband/hw/hfi1/firmware.c
++++ b/drivers/infiniband/hw/hfi1/firmware.c
+@@ -1868,11 +1868,8 @@ int parse_platform_config(struct hfi1_devdata *dd)
+ 									2;
+ 				break;
+ 			case PLATFORM_CONFIG_RX_PRESET_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_TX_PRESET_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+ 				pcfgcache->config_tables[table_type].num_table =
+ 							table_length_dwords;
+@@ -1890,15 +1887,10 @@ int parse_platform_config(struct hfi1_devdata *dd)
+ 			/* metadata table */
+ 			switch (table_type) {
+ 			case PLATFORM_CONFIG_SYSTEM_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_PORT_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_RX_PRESET_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_TX_PRESET_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+-				/* fall through */
+ 			case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+ 				break;
+ 			default:
+@@ -2027,15 +2019,10 @@ static int get_platform_fw_field_metadata(struct hfi1_devdata *dd, int table,
+ 
+ 	switch (table) {
+ 	case PLATFORM_CONFIG_SYSTEM_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_PORT_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_RX_PRESET_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_TX_PRESET_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+ 		if (field && field < platform_config_table_limits[table])
+ 			src_ptr =
+@@ -2138,11 +2125,8 @@ int get_platform_config_field(struct hfi1_devdata *dd,
+ 			pcfgcache->config_tables[table_type].table;
+ 		break;
+ 	case PLATFORM_CONFIG_RX_PRESET_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_TX_PRESET_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_QSFP_ATTEN_TABLE:
+-		/* fall through */
+ 	case PLATFORM_CONFIG_VARIABLE_SETTINGS_TABLE:
+ 		src_ptr = pcfgcache->config_tables[table_type].table;
+ 
+diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+index 7073f237a949..3222e3acb79c 100644
+--- a/drivers/infiniband/hw/hfi1/mad.c
++++ b/drivers/infiniband/hw/hfi1/mad.c
+@@ -721,7 +721,7 @@ static int check_mkey(struct hfi1_ibport *ibp, struct ib_mad_hdr *mad,
+ 			/* Bad mkey not a violation below level 2 */
+ 			if (ibp->rvp.mkeyprot < 2)
+ 				break;
+-			/* fall through */
++			fallthrough;
+ 		case IB_MGMT_METHOD_SET:
+ 		case IB_MGMT_METHOD_TRAP_REPRESS:
+ 			if (ibp->rvp.mkey_violations != 0xFFFF)
+@@ -1272,7 +1272,7 @@ static int set_port_states(struct hfi1_pportdata *ppd, struct opa_smp *smp,
+ 	case IB_PORT_NOP:
+ 		if (phys_state == IB_PORTPHYSSTATE_NOP)
+ 			break;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case IB_PORT_DOWN:
+ 		if (phys_state == IB_PORTPHYSSTATE_NOP) {
+ 			link_state = HLS_DN_DOWNDEF;
+@@ -2300,7 +2300,6 @@ static int __subn_set_opa_vl_arb(struct opa_smp *smp, u32 am, u8 *data,
+ 	 * can be changed from the default values
+ 	 */
+ 	case OPA_VLARB_PREEMPT_ELEMENTS:
+-		/* FALLTHROUGH */
+ 	case OPA_VLARB_PREEMPT_MATRIX:
+ 		smp->status |= IB_SMP_UNSUP_METH_ATTR;
+ 		break;
+@@ -4170,7 +4169,7 @@ static int subn_get_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
+ 			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
+ 		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
+ 			return IB_MAD_RESULT_SUCCESS;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	default:
+ 		smp->status |= IB_SMP_UNSUP_METH_ATTR;
+ 		ret = reply((struct ib_mad_hdr *)smp);
+@@ -4240,7 +4239,7 @@ static int subn_set_opa_sma(__be16 attr_id, struct opa_smp *smp, u32 am,
+ 			return IB_MAD_RESULT_SUCCESS | IB_MAD_RESULT_CONSUMED;
+ 		if (ibp->rvp.port_cap_flags & IB_PORT_SM)
+ 			return IB_MAD_RESULT_SUCCESS;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	default:
+ 		smp->status |= IB_SMP_UNSUP_METH_ATTR;
+ 		ret = reply((struct ib_mad_hdr *)smp);
+diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
+index 79126b2b14ab..ff864f6f0266 100644
+--- a/drivers/infiniband/hw/hfi1/pio.c
++++ b/drivers/infiniband/hw/hfi1/pio.c
+@@ -86,7 +86,7 @@ void pio_send_control(struct hfi1_devdata *dd, int op)
+ 	switch (op) {
+ 	case PSC_GLOBAL_ENABLE:
+ 		reg |= SEND_CTRL_SEND_ENABLE_SMASK;
+-	/* Fall through */
++		fallthrough;
+ 	case PSC_DATA_VL_ENABLE:
+ 		mask = 0;
+ 		for (i = 0; i < ARRAY_SIZE(dd->vld); i++)
+diff --git a/drivers/infiniband/hw/hfi1/pio_copy.c b/drivers/infiniband/hw/hfi1/pio_copy.c
+index 03024cec78dd..b12e4665c9ab 100644
+--- a/drivers/infiniband/hw/hfi1/pio_copy.c
++++ b/drivers/infiniband/hw/hfi1/pio_copy.c
+@@ -191,22 +191,22 @@ static inline void jcopy(u8 *dest, const u8 *src, u32 n)
+ 	switch (n) {
+ 	case 7:
+ 		*dest++ = *src++;
+-		/* fall through */
++		fallthrough;
+ 	case 6:
+ 		*dest++ = *src++;
+-		/* fall through */
++		fallthrough;
+ 	case 5:
+ 		*dest++ = *src++;
+-		/* fall through */
++		fallthrough;
+ 	case 4:
+ 		*dest++ = *src++;
+-		/* fall through */
++		fallthrough;
+ 	case 3:
+ 		*dest++ = *src++;
+-		/* fall through */
++		fallthrough;
+ 	case 2:
+ 		*dest++ = *src++;
+-		/* fall through */
++		fallthrough;
+ 	case 1:
+ 		*dest++ = *src++;
+ 		/* fall through */
+diff --git a/drivers/infiniband/hw/hfi1/platform.c b/drivers/infiniband/hw/hfi1/platform.c
+index 36593f2efe26..4642d6ceb890 100644
+--- a/drivers/infiniband/hw/hfi1/platform.c
++++ b/drivers/infiniband/hw/hfi1/platform.c
+@@ -668,8 +668,8 @@ static u8 aoc_low_power_setting(struct hfi1_pportdata *ppd)
+ 
+ 	/* active optical cables only */
+ 	switch ((cache[QSFP_MOD_TECH_OFFS] & 0xF0) >> 4) {
+-	case 0x0 ... 0x9: /* fallthrough */
+-	case 0xC: /* fallthrough */
++	case 0x0 ... 0x9: fallthrough;
++	case 0xC: fallthrough;
+ 	case 0xE:
+ 		/* active AOC */
+ 		power_class = get_qsfp_power_class(cache[QSFP_MOD_PWR_OFFS]);
+@@ -899,8 +899,8 @@ static int tune_qsfp(struct hfi1_pportdata *ppd,
+ 
+ 		*ptr_tuning_method = OPA_PASSIVE_TUNING;
+ 		break;
+-	case 0x0 ... 0x9: /* fallthrough */
+-	case 0xC: /* fallthrough */
++	case 0x0 ... 0x9: fallthrough;
++	case 0xC: fallthrough;
+ 	case 0xE:
+ 		ret = tune_active_qsfp(ppd, ptr_tx_preset, ptr_rx_preset,
+ 				       ptr_total_atten);
+@@ -909,7 +909,7 @@ static int tune_qsfp(struct hfi1_pportdata *ppd,
+ 
+ 		*ptr_tuning_method = OPA_ACTIVE_TUNING;
+ 		break;
+-	case 0xD: /* fallthrough */
++	case 0xD: fallthrough;
+ 	case 0xF:
+ 	default:
+ 		dd_dev_warn(ppd->dd, "%s: Unknown/unsupported cable\n",
+diff --git a/drivers/infiniband/hw/hfi1/qp.c b/drivers/infiniband/hw/hfi1/qp.c
+index be62284e42d9..356518e17fa6 100644
+--- a/drivers/infiniband/hw/hfi1/qp.c
++++ b/drivers/infiniband/hw/hfi1/qp.c
+@@ -312,7 +312,7 @@ int hfi1_setup_wqe(struct rvt_qp *qp, struct rvt_swqe *wqe, bool *call_send)
+ 	switch (qp->ibqp.qp_type) {
+ 	case IB_QPT_RC:
+ 		hfi1_setup_tid_rdma_wqe(qp, wqe);
+-		/* fall through */
++		fallthrough;
+ 	case IB_QPT_UC:
+ 		if (wqe->length > 0x80000000U)
+ 			return -EINVAL;
+diff --git a/drivers/infiniband/hw/hfi1/qsfp.c b/drivers/infiniband/hw/hfi1/qsfp.c
+index b5966991d647..8386c84c2d92 100644
+--- a/drivers/infiniband/hw/hfi1/qsfp.c
++++ b/drivers/infiniband/hw/hfi1/qsfp.c
+@@ -231,7 +231,7 @@ static int i2c_bus_write(struct hfi1_devdata *dd, struct hfi1_i2c_bus *i2c,
+ 		break;
+ 	case 2:
+ 		offset_bytes[1] = (offset >> 8) & 0xff;
+-		/* fall through */
++		fallthrough;
+ 	case 1:
+ 		num_msgs = 2;
+ 		offset_bytes[0] = offset & 0xff;
+@@ -279,7 +279,7 @@ static int i2c_bus_read(struct hfi1_devdata *dd, struct hfi1_i2c_bus *bus,
+ 		break;
+ 	case 2:
+ 		offset_bytes[1] = (offset >> 8) & 0xff;
+-		/* fall through */
++		fallthrough;
+ 	case 1:
+ 		num_msgs = 2;
+ 		offset_bytes[0] = offset & 0xff;
+diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
+index f1734e5e9ac4..1bb5f57152d3 100644
+--- a/drivers/infiniband/hw/hfi1/rc.c
++++ b/drivers/infiniband/hw/hfi1/rc.c
+@@ -141,7 +141,7 @@ static int make_rc_ack(struct hfi1_ibdev *dev, struct rvt_qp *qp,
+ 	case OP(RDMA_READ_RESPONSE_ONLY):
+ 		e = &qp->s_ack_queue[qp->s_tail_ack_queue];
+ 		release_rdma_sge_mr(e);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(ATOMIC_ACKNOWLEDGE):
+ 		/*
+ 		 * We can increment the tail pointer now that the last
+@@ -160,7 +160,7 @@ static int make_rc_ack(struct hfi1_ibdev *dev, struct rvt_qp *qp,
+ 			qp->s_acked_ack_queue = next;
+ 		qp->s_tail_ack_queue = next;
+ 		trace_hfi1_rsp_make_rc_ack(qp, e->psn);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(SEND_ONLY):
+ 	case OP(ACKNOWLEDGE):
+ 		/* Check for no next entry in the queue. */
+@@ -267,7 +267,7 @@ static int make_rc_ack(struct hfi1_ibdev *dev, struct rvt_qp *qp,
+ 
+ 	case OP(RDMA_READ_RESPONSE_FIRST):
+ 		qp->s_ack_state = OP(RDMA_READ_RESPONSE_MIDDLE);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(RDMA_READ_RESPONSE_MIDDLE):
+ 		ps->s_txreq->ss = &qp->s_ack_rdma_sge;
+ 		ps->s_txreq->mr = qp->s_ack_rdma_sge.sge.mr;
+@@ -881,8 +881,7 @@ int hfi1_make_rc_req(struct rvt_qp *qp, struct hfi1_pkt_state *ps)
+ 				goto bail;
+ 			}
+ 			qp->s_num_rd_atomic++;
+-
+-			/* FALLTHROUGH */
++			fallthrough;
+ 		case IB_WR_OPFN:
+ 			if (newreq && !(qp->s_flags & RVT_S_UNLIMITED_CREDIT))
+ 				qp->s_lsn++;
+@@ -946,10 +945,10 @@ int hfi1_make_rc_req(struct rvt_qp *qp, struct hfi1_pkt_state *ps)
+ 		 * See restart_rc().
+ 		 */
+ 		qp->s_len = restart_sge(&qp->s_sge, wqe, qp->s_psn, pmtu);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(SEND_FIRST):
+ 		qp->s_state = OP(SEND_MIDDLE);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(SEND_MIDDLE):
+ 		bth2 = mask_psn(qp->s_psn++);
+ 		ss = &qp->s_sge;
+@@ -991,10 +990,10 @@ int hfi1_make_rc_req(struct rvt_qp *qp, struct hfi1_pkt_state *ps)
+ 		 * See restart_rc().
+ 		 */
+ 		qp->s_len = restart_sge(&qp->s_sge, wqe, qp->s_psn, pmtu);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(RDMA_WRITE_FIRST):
+ 		qp->s_state = OP(RDMA_WRITE_MIDDLE);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(RDMA_WRITE_MIDDLE):
+ 		bth2 = mask_psn(qp->s_psn++);
+ 		ss = &qp->s_sge;
+@@ -2901,7 +2900,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 		if (!ret)
+ 			goto rnr_nak;
+ 		qp->r_rcv_len = 0;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(SEND_MIDDLE):
+ 	case OP(RDMA_WRITE_MIDDLE):
+ send_middle:
+@@ -2941,7 +2940,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 			goto no_immediate_data;
+ 		if (opcode == OP(SEND_ONLY_WITH_INVALIDATE))
+ 			goto send_last_inv;
+-		/* FALLTHROUGH -- for SEND_ONLY_WITH_IMMEDIATE */
++		fallthrough;	/* for SEND_ONLY_WITH_IMMEDIATE */
+ 	case OP(SEND_LAST_WITH_IMMEDIATE):
+ send_last_imm:
+ 		wc.ex.imm_data = ohdr->u.imm_data;
+@@ -2957,7 +2956,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 		goto send_last;
+ 	case OP(RDMA_WRITE_LAST):
+ 		copy_last = rvt_is_user_qp(qp);
+-		/* fall through */
++		fallthrough;
+ 	case OP(SEND_LAST):
+ no_immediate_data:
+ 		wc.wc_flags = 0;
+@@ -3010,7 +3009,7 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
+ 
+ 	case OP(RDMA_WRITE_ONLY):
+ 		copy_last = rvt_is_user_qp(qp);
+-		/* fall through */
++		fallthrough;
+ 	case OP(RDMA_WRITE_FIRST):
+ 	case OP(RDMA_WRITE_ONLY_WITH_IMMEDIATE):
+ 		if (unlikely(!(qp->qp_access_flags & IB_ACCESS_REMOTE_WRITE)))
+diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
+index c93ea021cf49..04575c9afd61 100644
+--- a/drivers/infiniband/hw/hfi1/sdma.c
++++ b/drivers/infiniband/hw/hfi1/sdma.c
+@@ -2584,7 +2584,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
+ 			 * 7220, e.g.
+ 			 */
+ 			ss->go_s99_running = 1;
+-			/* fall through -- and start dma engine */
++			fallthrough;	/* and start dma engine */
+ 		case sdma_event_e10_go_hw_start:
+ 			/* This reference means the state machine is started */
+ 			sdma_get(&sde->state);
+@@ -2726,7 +2726,6 @@ static void __sdma_process_event(struct sdma_engine *sde,
+ 		case sdma_event_e70_go_idle:
+ 			break;
+ 		case sdma_event_e85_link_down:
+-			/* fall through */
+ 		case sdma_event_e80_hw_freeze:
+ 			sdma_set_state(sde, sdma_state_s80_hw_freeze);
+ 			atomic_dec(&sde->dd->sdma_unfreeze_count);
+@@ -3007,7 +3006,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
+ 		case sdma_event_e60_hw_halted:
+ 			need_progress = 1;
+ 			sdma_err_progress_check_schedule(sde);
+-			/* fall through */
++			fallthrough;
+ 		case sdma_event_e90_sw_halted:
+ 			/*
+ 			* SW initiated halt does not perform engines
+@@ -3021,7 +3020,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
+ 			break;
+ 		case sdma_event_e85_link_down:
+ 			ss->go_s99_running = 0;
+-			/* fall through */
++			fallthrough;
+ 		case sdma_event_e80_hw_freeze:
+ 			sdma_set_state(sde, sdma_state_s80_hw_freeze);
+ 			atomic_dec(&sde->dd->sdma_unfreeze_count);
+@@ -3252,7 +3251,7 @@ void _sdma_txreq_ahgadd(
+ 		tx->num_desc++;
+ 		tx->descs[2].qw[0] = 0;
+ 		tx->descs[2].qw[1] = 0;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case SDMA_AHG_APPLY_UPDATE2:
+ 		tx->num_desc++;
+ 		tx->descs[1].qw[0] = 0;
+diff --git a/drivers/infiniband/hw/hfi1/tid_rdma.c b/drivers/infiniband/hw/hfi1/tid_rdma.c
+index facff133139a..9af82ff933d7 100644
+--- a/drivers/infiniband/hw/hfi1/tid_rdma.c
++++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+@@ -3227,7 +3227,7 @@ bool hfi1_tid_rdma_wqe_interlock(struct rvt_qp *qp, struct rvt_swqe *wqe)
+ 	case IB_WR_RDMA_READ:
+ 		if (prev->wr.opcode != IB_WR_TID_RDMA_WRITE)
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	case IB_WR_TID_RDMA_READ:
+ 		switch (prev->wr.opcode) {
+ 		case IB_WR_RDMA_READ:
+@@ -5067,7 +5067,7 @@ int hfi1_make_tid_rdma_pkt(struct rvt_qp *qp, struct hfi1_pkt_state *ps)
+ 		if (priv->s_state == TID_OP(WRITE_REQ))
+ 			hfi1_tid_rdma_restart_req(qp, wqe, &bth2);
+ 		priv->s_state = TID_OP(WRITE_DATA);
+-		/* fall through */
++		fallthrough;
+ 
+ 	case TID_OP(WRITE_DATA):
+ 		/*
+diff --git a/drivers/infiniband/hw/hfi1/uc.c b/drivers/infiniband/hw/hfi1/uc.c
+index 0c77f18120ed..1fb918399da0 100644
+--- a/drivers/infiniband/hw/hfi1/uc.c
++++ b/drivers/infiniband/hw/hfi1/uc.c
+@@ -216,7 +216,7 @@ int hfi1_make_uc_req(struct rvt_qp *qp, struct hfi1_pkt_state *ps)
+ 
+ 	case OP(SEND_FIRST):
+ 		qp->s_state = OP(SEND_MIDDLE);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(SEND_MIDDLE):
+ 		len = qp->s_len;
+ 		if (len > pmtu) {
+@@ -241,7 +241,7 @@ int hfi1_make_uc_req(struct rvt_qp *qp, struct hfi1_pkt_state *ps)
+ 
+ 	case OP(RDMA_WRITE_FIRST):
+ 		qp->s_state = OP(RDMA_WRITE_MIDDLE);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(RDMA_WRITE_MIDDLE):
+ 		len = qp->s_len;
+ 		if (len > pmtu) {
+@@ -414,7 +414,7 @@ void hfi1_uc_rcv(struct hfi1_packet *packet)
+ 			goto no_immediate_data;
+ 		else if (opcode == OP(SEND_ONLY_WITH_IMMEDIATE))
+ 			goto send_last_imm;
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(SEND_MIDDLE):
+ 		/* Check for invalid length PMTU or posted rwqe len. */
+ 		/*
+@@ -515,7 +515,7 @@ void hfi1_uc_rcv(struct hfi1_packet *packet)
+ 			wc.ex.imm_data = ohdr->u.rc.imm_data;
+ 			goto rdma_last_imm;
+ 		}
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	case OP(RDMA_WRITE_MIDDLE):
+ 		/* Check for invalid length PMTU or posted rwqe len. */
+ 		if (unlikely(tlen != (hdrsize + pmtu + 4)))
+-- 
+2.27.0
+
