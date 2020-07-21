@@ -2,125 +2,119 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94E6C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE93C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B69312072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 01:59:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pB5hBti5"
+	by mail.kernel.org (Postfix) with ESMTP id 55C5E206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595296820;
+	bh=BRpyQPZFvbbBHNq2D/e4mCoV+nhk+KU95+UwO/efYUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dUzyahq/9KRz0CelrTdJMCfMK83RDor4spU6B5ufuEq0YpYINI9Tp6ZsVh6vlbxmm
+	 im0TfKG/WVhqC4itR/wwi+XfYfTXC3rTiGGqnUXQbA/peX90RnUlgUkrzqEFfRQFZj
+	 18719Gy/NMC0RqQNfcXtCtIC0fIA5vIaP6apNaRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgGUB75 (ORCPT
+        id S1728139AbgGUCAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUB74 (ORCPT
+        Mon, 20 Jul 2020 22:00:19 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34436 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgGUCAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 21:59:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E523EC061794;
-        Mon, 20 Jul 2020 18:59:55 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f18so19643024wrs.0;
-        Mon, 20 Jul 2020 18:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Re6La/qV3n1ukkxNTX/ju/OZLeqen/7aiCy5YNlMaBo=;
-        b=pB5hBti5DRoBjJS0TkkYddmaRA6YmLjbKVqgTjUx/cBp91jDcw7cN9/TagT1y9htZF
-         GVMeF5bbvlYerM1+LYKkstpzgn4gJq2EEveijDRFQ96zOyUh1PauLe9Oo2yIOxG3/dQB
-         UJNJ12yeYzV4dUIZTXYR47hR4xn6VNoHsRK5caBa+HrFxZwtyBOcz9voMxZ/beH0fb2f
-         TBDxkX7Dc1owqPdjtZfaowXJFZRP+SK5Uu9dTJ/HeMW4mSv5PffWY4HSQS9fnBaOyTw7
-         P9O5d2Ns7oGIqwoUQhEzqFG3Oj97Jmw+heq6u0rZHZhQ9zpHnqpi49MceoWTP+mfjTOD
-         PvMQ==
+        Mon, 20 Jul 2020 22:00:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id q74so19779270iod.1;
+        Mon, 20 Jul 2020 19:00:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Re6La/qV3n1ukkxNTX/ju/OZLeqen/7aiCy5YNlMaBo=;
-        b=XDook0cKrq5OIeeO2BpMMjaqvPCSDdCLn8wa99tFGjbcdJs2M1lD8h2dKyLJFtZ7/l
-         5k+cU6KKHghd31XHtZfrlIQXmVrRU2+lbncP1vpByF0APm+FodDIlhyIr4Ff7D27wX3b
-         fKSqfEmDQMdMjOBkdOeyu7kSPuE69OwNLgS8n1V6wp61GuumaxiRsVvEIMaJViVKULc/
-         FC9X/98+kFhZMLZSyUPlM50t+B5F3bsh79tVQ7BbIILOQGlpV5zKWlE3m+tqqtKN3TZ/
-         gCrzT+JYkMNYvHBH92R2IzR61BW24eqR0j82XaRM489yAwHtgv5w3lGRo1GrNpCDSSQo
-         dspA==
-X-Gm-Message-State: AOAM532xtUt0wywsLGdhMbSJnJ0dSEJGSM+D4DhHfojvgUZr+pH1n3Ap
-        h2AbfIE2NeoLKrqUL+jM5RU=
-X-Google-Smtp-Source: ABdhPJwdcC9jByWPNIZBOEA9DB5O7rqqiVArp+ZASBJj+ETWteWd4vVfPTsYntco232mpddtdCTd4g==
-X-Received: by 2002:a5d:550e:: with SMTP id b14mr16832282wrv.392.1595296794662;
-        Mon, 20 Jul 2020 18:59:54 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id e8sm34479069wrp.26.2020.07.20.18.59.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FmMcR7bFgAbPLpnDgBuNJ/QOdeTydhIGFIIKbAfYHLc=;
+        b=DBKMccO5vJXzEbb2SfBpJyCMnSRJ3gIUm6iCWr6aggiQMq7uvXjNyhQxtX23SKPRPf
+         f+L3OKv4ASweEUlghIMS96tKBkFYl+ygUPwPrENxSBw36kYc4HitysoZ4VoEX4ePh7jt
+         k2EOdfO02PCWxr6maacAMlMcupHq7WLN/fbfEPRevAymsmomHr6KiJWtE9femsG2dHoq
+         Huv71uYTxKwP0VGvznii8ML/p5gQe2t7h4pjpYm3aKxIfi23ev2UKjbxGvd4Bobl72oI
+         3e0IUHorK9tjPWesEyVmRAdlaNe7PGUDgbm2spnkYAudZymKvl0yehliXecabs+sYq5C
+         v3+w==
+X-Gm-Message-State: AOAM533ZxzJCpKmq0DditS3okVw2w7P5/XbTf7cxxRtgtlv9nWM/LrKJ
+        BHJz8p+0ZtrD/pvC1ReSMA==
+X-Google-Smtp-Source: ABdhPJwhnO6KFKqTJj7W0G2Pyf40GHKO0vAS3652npoyiOGFKvW5LYiU1O7APX+KBwy1giPuOOuwZQ==
+X-Received: by 2002:a05:6638:e93:: with SMTP id p19mr28858875jas.67.1595296817346;
+        Mon, 20 Jul 2020 19:00:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n10sm439007iom.21.2020.07.20.19.00.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 18:59:54 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
-Date:   Tue, 21 Jul 2020 01:59:50 +0000
-Message-Id: <20200721015950.11816-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 20 Jul 2020 19:00:16 -0700 (PDT)
+Received: (nullmailer pid 3371853 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:00:15 -0000
+Date:   Mon, 20 Jul 2020 20:00:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     devicetree@vger.kernel.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH] watchdog: Replace HTTP links with HTTPS ones
+Message-ID: <20200721020015.GA3371820@bogus>
+References: <20200713205821.38223-1-grandmaster@al2klimov.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713205821.38223-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
-tuning errors on VIM3 after a few hours uptime:
+On Mon, 13 Jul 2020 22:58:21 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  Documentation/devicetree/bindings/watchdog/davinci-wdt.txt | 4 ++--
+>  drivers/watchdog/Kconfig                                   | 2 +-
+>  drivers/watchdog/dw_wdt.c                                  | 2 +-
+>  drivers/watchdog/nv_tco.c                                  | 2 +-
+>  drivers/watchdog/nv_tco.h                                  | 2 +-
+>  drivers/watchdog/sp5100_tco.c                              | 2 +-
+>  6 files changed, 7 insertions(+), 7 deletions(-)
+> 
 
-[12483.917391] mmc0: tuning execution failed: -5
-[30535.551221] mmc0: tuning execution failed: -5
-[35359.953671] mmc0: tuning execution failed: -5
-[35561.875332] mmc0: tuning execution failed: -5
-[61733.348709] mmc0: tuning execution failed: -5
-
-I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
-to silence the error, then (re)add it to the VIM3L dts.
-
-Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
-Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
- arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 27408c10a811..ddfd52b88002 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -293,7 +293,6 @@
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
--	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
- 
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-index dbbf29a0dbf6..026b21708b07 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
-@@ -88,6 +88,10 @@
- 	status = "okay";
- };
- 
-+&sd_emmc_a {
-+	sd-uhs-sdr50;
-+};
-+
- &usb {
- 	phys = <&usb2_phy0>, <&usb2_phy1>;
- 	phy-names = "usb2-phy0", "usb2-phy1";
--- 
-2.17.1
-
+Acked-by: Rob Herring <robh@kernel.org>
