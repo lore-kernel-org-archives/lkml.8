@@ -2,70 +2,168 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FF6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4E9206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6382207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:17:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xw7uJzgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgGUGQf (ORCPT
+        id S1728056AbgGUGRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:16:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725294AbgGUGQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:16:35 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 60ACBE0D13EC4424A248;
-        Tue, 21 Jul 2020 14:16:32 +0800 (CST)
-Received: from [127.0.0.1] (10.174.178.16) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 14:16:28 +0800
-Subject: Re: [PATCH] net-sysfs: add a newline when printing 'tx_timeout' by
- sysfs
-To:     David Miller <davem@davemloft.net>
-CC:     <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1595243869-57100-1-git-send-email-wangxiongfeng2@huawei.com>
- <20200720.174432.702526374205425580.davem@davemloft.net>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <f9dd7249-3606-8ebe-8913-082953735817@huawei.com>
-Date:   Tue, 21 Jul 2020 14:16:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jul 2020 02:17:15 -0400
+Received: from ozlabs.org ([203.11.71.1]:33463 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgGUGRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:17:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9pKM2t9Kz9sPB;
+        Tue, 21 Jul 2020 16:17:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595312232;
+        bh=WZV4+iRfMoNQK9wg0RRfY4PHdeJb/n3hoO/d0GU546o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Xw7uJzgIArTiwFZ3/KtVCzAo4+8RWha7oFtD+JuM6HwS0APox65ODZhw9GwM20NT2
+         6noQKC+6Fw8fyCEsBktegcA51zIYk+HrtbTyNswEMKpQHDKkzvP+SNvSZcw3BsQPrc
+         1NLbiVN3LbV6qURnltHkUTyewCWqUy2WPcRwygduXLX6smi12qQdIGtmuUcNfYEoRw
+         +msUArYVxgTvyz8i+/X4xZuJw9AIA8ipyDZac4AGengfBEaH/Aolgb1knBgti6kaqU
+         n34GDSLpq0S3CRW3AGRerku01kIB3cMQZlaz/eq+8LxdVLV/BaMy94aMAhko2vEwXT
+         GnJLWgUk2aVmg==
+Date:   Tue, 21 Jul 2020 16:17:01 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: linux-next: manual merge of the dmaengine tree with the phy-next
+ tree
+Message-ID: <20200721161701.64b4245e@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200720.174432.702526374205425580.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.16]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/JiCKaOVGPzTJDq2Or+8rB07";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/JiCKaOVGPzTJDq2Or+8rB07
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/7/21 8:44, David Miller wrote:
-> From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Date: Mon, 20 Jul 2020 19:17:49 +0800
-> 
->> -	return sprintf(buf, "%lu", trans_timeout);
->> +	return sprintf(buf, "%lu\n", trans_timeout);
-> 
-> Better to replace it with 'fmt_ulong'.
+Hi all,
 
-Thanks for your advice. I will change it in the next version.
+Today's linux-next merge of the dmaengine tree got a conflict in:
 
-Thanks,
-Xiongfeng
+  MAINTAINERS
 
-> 
-> .
-> 
+between commit:
 
+  4a33bea00314 ("phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit =
+Transceiver")
+
+from the phy-next tree and commit:
+
+  ef9303fdf46f ("dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx D=
+PDMA")
+
+from the dmaengine tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index 495e4247cbb0,1ba09904354f..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -11432,20 -11364,14 +11434,13 @@@ L:	linux-arm-kernel@lists.infradead.or
+  S:	Supported
+  F:	drivers/usb/gadget/udc/atmel_usba_udc.*
+ =20
+ -MICROSEMI ETHERNET SWITCH DRIVER
+ -M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+ -M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+ -L:	netdev@vger.kernel.org
+ +MICROCHIP WILC1000 WIFI DRIVER
+ +M:	Ajay Singh <ajay.kathat@microchip.com>
+ +M:	Claudiu Beznea <claudiu.beznea@microchip.com>
+ +L:	linux-wireless@vger.kernel.org
+  S:	Supported
+ -F:	drivers/net/ethernet/mscc/
+ -F:	include/soc/mscc/ocelot*
+ +F:	drivers/net/wireless/microchip/wilc1000/
+ =20
+- MICROCHIP XDMA DRIVER
+- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
+- L:	linux-arm-kernel@lists.infradead.org
+- L:	dmaengine@vger.kernel.org
+- S:	Supported
+- F:	drivers/dma/at_xdmac.c
+-=20
+  MICROSEMI MIPS SOCS
+  M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+  M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+@@@ -18990,15 -18847,15 +18985,24 @@@ F:	Documentation/devicetree/bindings/=
+me
+  F:	drivers/media/platform/xilinx/
+  F:	include/uapi/linux/xilinx-v4l2-controls.h
+ =20
+ +XILINX ZYNQMP PSGTR PHY DRIVER
+ +M:	Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+ +M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+ +L:	linux-kernel@vger.kernel.org
+ +S:	Supported
+ +T:	git https://github.com/Xilinx/linux-xlnx.git
+ +F:	Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+ +F:	drivers/phy/xilinx/phy-zynqmp.c
+ +
++ XILINX ZYNQMP DPDMA DRIVER
++ M:	Hyun Kwon <hyun.kwon@xilinx.com>
++ M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++ L:	dmaengine@vger.kernel.org
++ S:	Supported
++ F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
++ F:	drivers/dma/xilinx/xilinx_dpdma.c
++ F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
++=20
+  XILLYBUS DRIVER
+  M:	Eli Billauer <eli.billauer@gmail.com>
+  L:	linux-kernel@vger.kernel.org
+
+--Sig_/JiCKaOVGPzTJDq2Or+8rB07
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WiF0ACgkQAVBC80lX
+0Gwj/Qf+MKcSU4OQfFBRgPufNkEFYoqsaXF7AuA6u8CqtM0rZHn7PNPg4l0ZctQk
+Ra0G76mVnHoPlog12gnGROwHn2dpjuyuknrYKg5fUJEH3J+o72emqexzhCrjm82I
+vDjrMBJ5M/ECwnmtj/2UY7dPSC1Dsw+YDzXuxSLlo4t7BJ0HzyglboByIwjgRfDw
+6cmqGUHQzdfxpGHmivInBgwa88eFHv7F6pdEKJoZjHmiWY7hlv0IfViH4qj6XuL1
+u2MdGKnkIVnkcDKLQvc0GuSlp74ZK6e8jQHFN5zqmEbzoHTYyP3hz0hGxbhjXBa+
+d7KV9iDAe6SX/QZ3Xhhrh2oRw/3t2g==
+=2GWy
+-----END PGP SIGNATURE-----
+
+--Sig_/JiCKaOVGPzTJDq2Or+8rB07--
