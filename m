@@ -2,85 +2,137 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7707C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB0020720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E60120720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 22:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQr8G7+k"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lj009JeV";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QPEDa6L4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgGUWvP (ORCPT
+        id S1731396AbgGUWwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 18:51:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgGUWvO (ORCPT
+        Tue, 21 Jul 2020 18:52:18 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36576 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbgGUWwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 18:51:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC27C061794;
-        Tue, 21 Jul 2020 15:51:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so61484wrs.11;
-        Tue, 21 Jul 2020 15:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zuRS0cBjdAk4JpMAixOi1X4SFouP+cA7vWat6cDR9Ps=;
-        b=XQr8G7+kCIdQ6L3ox63LTwpodFAJ/JpDdHcAF+y5jkD6vbDkqjKGdd3jsZM3dWjzeD
-         j/xKFUYJxR4aFxEkgTJnltrLx5DMRnhBqihdmlB9GxmWZVAiv7LoOBkm42wZ2tIY9yOp
-         LnXgbkZoYXHXdouYTMUq6qoWrhnpIYf6w19g4u4MyZb/X7fAx/T6aPyli41jRsEuh2RJ
-         RU8BpNvYhYmWx/UUpNb+XbJztBEFuTyc1dNJbnlwWCQ1b33u49pgfvcyh03+Z0qK2J9H
-         NEJlQpbG3WgXe2oUfNf8IWN6DVaLehtlOPYUzO7DksrvHWRqWsMa+a/QOQml/hYFBtb5
-         J2+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zuRS0cBjdAk4JpMAixOi1X4SFouP+cA7vWat6cDR9Ps=;
-        b=JiZ3nBZGCSuX/FiXXRSHny+0zqyk1ywzVjopqD/zyPur2ZZoGpIDtntLx0xlJvh48q
-         9VQdLbCHn1xxHWLvmvy99hALqHGHIECCL1O11LYQvvcVF9nq/wFCGUXbX+kBbyP+n/Un
-         BD8xm5e1rMkaocZMhvTyfaIkHxVlhvK6xZEo2nKiriAJXcD+rqKHUdL+jj5XgDdtnke9
-         /laL/48DbdywCc4nKN5gZLvUyJSC+KkeUf6PbXK41Lr6b0icilVAqaHGP35rfHgCzPkj
-         m/+JlMTpL1KGZXHehsKHyLEtBnZiW1uM5GHe9x8LWWdQz1s/CQDFsRjKqo49DkxOWIfC
-         hV+A==
-X-Gm-Message-State: AOAM533BcuW6/nX5dqoEfRAbAp25Ke7WmvXW7kh0HpSGfKKlEyuwy+lY
-        eywPb4p2xdRj+86asARFWmg=
-X-Google-Smtp-Source: ABdhPJzwsLBrMPa05EzVTT1R7JfYOeysZ/Vtgw5o8io8SILIabbjk2iE3h8LpsFepchZ40E0tAFAyQ==
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr12999296wrq.210.1595371872464;
-        Tue, 21 Jul 2020 15:51:12 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id g3sm44372329wrb.59.2020.07.21.15.51.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 15:51:11 -0700 (PDT)
-Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add pwrap driver for
- MT6873/8192 SoCs
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Argus Lin <argus.lin@mediatek.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
-References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1594720432-19586-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <e80b2e38-1324-a038-5647-6f595381ba47@gmail.com>
-Date:   Wed, 22 Jul 2020 00:51:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1594720432-19586-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 21 Jul 2020 18:52:17 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LMowJT022793;
+        Tue, 21 Jul 2020 15:51:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=WB4KQ7j37AuoU7UYpmKdi1pPbtiGnhuG61OpH45ZyR8=;
+ b=lj009JeVgnw8etvWi6msQ/RQ/kJqvkKDnky9dxcg6tMadftVuWIXtjBzrvgUIYalTv+x
+ vAAbN0dHLcCIOqAxQyd7HG7p9bzUX5y1oMxWKh0TgWEqCjXjJt6hHC19T8V+YXh8c6Vu
+ 6LRrNxwHKGPkCCchdlbtVwX4YuvpqUDKVJo= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32chbnuusk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 21 Jul 2020 15:51:59 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 21 Jul 2020 15:51:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KOpkdb43DgZ+M+pC6tYrfSvRk7BHTTt5Sau/icE/dU0i4YHhf3ufQfS0Jle9Jb1BR9MgzNXdYLne55k+tDIf8frHa18y4leXeNWviB7QWTlQ6BOU7wzqzYwIAODkvANzEFbf283Be3vV/HVkbjNpCJKofWU7/dILQ4f5i3cUIPqkRs1wJ9QpL35j/VOwpLvTxXpUiAHyHyz0884GB2Kis4NeiA3Actoe34HvD7e/wQk0kGz7olzcp76BWD2nNt1/Pt8loE4hlFNWPof7wk5jcDKlR6aXekpFVkgeNVE517WL4IyXxGu0v4fvE4M2RF0VBnmljQSf6O76PjHLJZUiDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WB4KQ7j37AuoU7UYpmKdi1pPbtiGnhuG61OpH45ZyR8=;
+ b=EPbW2Gqu5pZaQksOAkGjMs96QkZBfRJ8+pa5iVuHcOjQoFJG5fWEMrOp3D9UpfWsxIuuJDpKLeqmQakmCE+YUsnE787LLS+l34ygJtaP6DQrvA6oVCl1sH3lp0xGN4wC1UfkmlCf/A9IuAeljtwhRJeWYR22VvnOk2VsEgrZHSIJyaP1lkLPzh0OJxV1A4ayIWI2fEGw2fdPewvQMNTlt096rTP5uJG68CzAaRlYarQWQaCfTH2dWfDOH/GghST+UjLgnGDiRRP7WO5Fc7H7gronJHF6ydlNBiBFPPGxzOjJNLJZarxxKbP94Jxx5oTO7BdHz+NPH4cfYSK140lYjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WB4KQ7j37AuoU7UYpmKdi1pPbtiGnhuG61OpH45ZyR8=;
+ b=QPEDa6L4VtEUPIjCzik8f7MvD+wm56iXl6Yn50MfcuzKQtjUpU9U/HtghWlRc/SbeyF61aqPPGCuStrqy5UXIjuGlZ9+agiIzc1VyxZOLdJnA0i0UNPsQb+GxwYMWdRZTDPdtp6FgkgkKYULwFC2UaqolMd4OhH/4/Nd/HI5t2E=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB2776.namprd15.prod.outlook.com (2603:10b6:a03:154::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Tue, 21 Jul
+ 2020 22:51:54 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
+ 22:51:52 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>
+Subject: Re: [PATCH v3 bpf-next 1/2] bpf: separate bpf_get_[stack|stackid] for
+ perf events BPF
+Thread-Topic: [PATCH v3 bpf-next 1/2] bpf: separate bpf_get_[stack|stackid]
+ for perf events BPF
+Thread-Index: AQHWW8VAnRb4OqAgyEOVqqMnP7xn/akSbY+AgAA6uICAAADggIAAAlmA
+Date:   Tue, 21 Jul 2020 22:51:52 +0000
+Message-ID: <A11D2C64-DD12-4ECD-99E5-EE9558BB73A7@fb.com>
+References: <20200716225933.196342-1-songliubraving@fb.com>
+ <20200716225933.196342-2-songliubraving@fb.com>
+ <20200721191009.5khr7blivtuv3qfj@ast-mbp.dhcp.thefacebook.com>
+ <42DEE452-F411-4098-917B-11B23AC99F5F@fb.com>
+ <CAADnVQJPmo3He3cdUUbMm4DtTDNBeWRMRkNzPw8S3GdxxODemA@mail.gmail.com>
+In-Reply-To: <CAADnVQJPmo3He3cdUUbMm4DtTDNBeWRMRkNzPw8S3GdxxODemA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:bb45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 30b54855-933a-4417-a394-08d82dc8a90e
+x-ms-traffictypediagnostic: BYAPR15MB2776:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB2776F634A24898F992EF9332B3780@BYAPR15MB2776.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QrPQzQI5N3sTNjLTDaLcfgDDgPZE4tyenqctOBXWl3BxjjvtSUJB/UPo/vUcjRqhaQHKr8J5R/0YrpLjzErXLGeim0sUXNO/zVysZKvbPuyvlDShhZOh4r6Nlg8+v2yImVX8K2qUIvLccX1MZ/3V6f8aaunJ45+Hx6SJ8l4h1JwMW4apZqQu2mzUQo802Orv3j0HpDY3fD9xASzonrR2er2ErKiEveviAGPQzEfEifHOw3hdkNIlsJzv7OZNWuT5TggFSGB/xBjb4nVlxxHtW4ILJd52WOeNw5kgiJu2+gaL68Jk5R58t3QhTGnjCQHhhmucSRITu0ZWIfX42GGIAg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(136003)(39860400002)(396003)(376002)(86362001)(71200400001)(2906002)(478600001)(6506007)(2616005)(53546011)(6916009)(4326008)(186003)(66556008)(8936002)(66446008)(64756008)(7416002)(83380400001)(5660300002)(54906003)(6486002)(36756003)(8676002)(6512007)(66946007)(316002)(33656002)(4744005)(76116006)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: v6+OPe8KJJxehqUs1hW+lC1HCvg/Yt8NXV2epSlhsuFcBS9CimjijtLsKaB3pXYN7rceMk3TfSyPTX7ieY1qDYSWgY32eyDn+GaaHWlqVNZM0VXW7dTxMGRbI0dzpnXd+F2ID6UxrXIYij9ev+vlXY0iWN1eK2OxJ9306qTUa56qhrE0JFXGnsTvNq/MiSLf29zuQi+p8IPSzJS6ngbdL+2yQhOt6JiTGKYYB9vEL/5LhgqeqDZuVfZXacQ2GEKBbN7K/MJSVofyEPplZrguM24y5T1lPeNqbhNxY9pLq7Z7FVzwfMr4mPu5mrXxKxgEYt+rL0I83/jd46lnDQp2o9lBlTR+lctVfuCEPntpNf7VrGw8BN9/aSdO6sSGQdZcmejhKAnLxtKt3ck09kCXdszGZvhlqLIBBYWWLLk6IF4ECaupAV5gf61ypLxz3nLzw5jF+/Zxb/HzBfrDArmtjv0dtJ44SWK+PvqabC4WYv1iPdCw01a0busyYKTpLHNyxeZHIEGtP/Zat3f1l0GacA==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6660011528DDBD42AF77EAA8A020459E@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30b54855-933a-4417-a394-08d82dc8a90e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 22:51:52.4014
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: l5KjRVUP6fm650ytdAe/fnGuAeNioRlvW2DoJAOM6HELdwxmUoHNOn86UTO1/7sQZ9T0keBXJOMUzA14/Q3uHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2776
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_15:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ phishscore=0 malwarescore=0 suspectscore=0 clxscore=1015 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -88,243 +140,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 14/07/2020 11:53, Hsin-Hsiung Wang wrote:
-> MT6873/8192 are highly integrated SoCs and use PMIC_MT6359 for
-> power management. This patch adds pwrap master driver to
-> access PMIC_MT6359.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->   drivers/soc/mediatek/mtk-pmic-wrap.c | 98 ++++++++++++++++++++++++++++++++----
->   1 file changed, 87 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> index c897205..6e7f796f 100644
-> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> @@ -24,11 +24,13 @@
->   #define PWRAP_MT8135_BRIDGE_WDT_SRC_EN		0x54
->   
->   /* macro for wrapper status */
-> +#define PWRAP_GET_SWINF_2_FSM(x)	(((x) >> 1) & 0x00000007)
->   #define PWRAP_GET_WACS_RDATA(x)		(((x) >> 0) & 0x0000ffff)
->   #define PWRAP_GET_WACS_FSM(x)		(((x) >> 16) & 0x00000007)
->   #define PWRAP_GET_WACS_REQ(x)		(((x) >> 19) & 0x00000001)
->   #define PWRAP_STATE_SYNC_IDLE0		BIT(20)
->   #define PWRAP_STATE_INIT_DONE0		BIT(21)
-> +#define PWRAP_STATE_INIT_DONE1		BIT(15)
->   
->   /* macro for WACS FSM */
->   #define PWRAP_WACS_FSM_IDLE		0x00
-> @@ -74,6 +76,7 @@
->   #define PWRAP_CAP_DCM		BIT(2)
->   #define PWRAP_CAP_INT1_EN	BIT(3)
->   #define PWRAP_CAP_WDT_SRC1	BIT(4)
-> +#define PWRAP_CAP_ARB		BIT(5)
+> On Jul 21, 2020, at 3:43 PM, Alexei Starovoitov <alexei.starovoitov@gmail=
+.com> wrote:
+>=20
+> On Tue, Jul 21, 2020 at 3:40 PM Song Liu <songliubraving@fb.com> wrote:
+>>=20
+>> We only need to block precise_ip >=3D 2. precise_ip =3D=3D 1 is OK.
+>=20
+> Are you sure?
+> intel_pmu_hw_config() has:
+> if (event->attr.precise_ip) {
+>    if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
+>            event->attr.sample_type |=3D __PERF_SAMPLE_CALLCHAIN_EARLY;
+> }
 
-This commit should be two patches (at least). One adding PWRAP_CAP_ARB and then 
-another one adding MT6873 support.
+The bit that breaks the unwinder was in setup_pebs_fixed_sample_data():
 
-Regards,
-Matthias
+                if (x86_pmu.intel_cap.pebs_format >=3D 2) {
+                        set_linear_ip(regs, pebs->real_ip);
+                        regs->flags |=3D PERF_EFLAGS_EXACT;
+                }=20
 
->   
->   /* defines for slave device wrapper registers */
->   enum dew_regs {
-> @@ -348,6 +351,10 @@ enum pwrap_regs {
->   	PWRAP_ADC_RDATA_ADDR1,
->   	PWRAP_ADC_RDATA_ADDR2,
->   
-> +	/* MT6873 only regs */
-> +	PWRAP_SWINF_2_WDATA_31_0,
-> +	PWRAP_SWINF_2_RDATA_31_0,
-> +
->   	/* MT7622 only regs */
->   	PWRAP_STA,
->   	PWRAP_CLR,
-> @@ -627,6 +634,17 @@ static int mt6797_regs[] = {
->   	[PWRAP_DCM_DBC_PRD] =		0x1D4,
->   };
->   
-> +static int mt6873_regs[] = {
-> +	[PWRAP_INIT_DONE2] =		0x0,
-> +	[PWRAP_TIMER_EN] =		0x3E0,
-> +	[PWRAP_INT_EN] =		0x448,
-> +	[PWRAP_WACS2_CMD] =		0xC80,
-> +	[PWRAP_SWINF_2_WDATA_31_0] =	0xC84,
-> +	[PWRAP_SWINF_2_RDATA_31_0] =	0xC94,
-> +	[PWRAP_WACS2_VLDCLR] =		0xCA4,
-> +	[PWRAP_WACS2_RDATA] =		0xCA8,
-> +};
-> +
->   static int mt7622_regs[] = {
->   	[PWRAP_MUX_SEL] =		0x0,
->   	[PWRAP_WRAP_EN] =		0x4,
-> @@ -1045,6 +1063,7 @@ enum pwrap_type {
->   	PWRAP_MT6765,
->   	PWRAP_MT6779,
->   	PWRAP_MT6797,
-> +	PWRAP_MT6873,
->   	PWRAP_MT7622,
->   	PWRAP_MT8135,
->   	PWRAP_MT8173,
-> @@ -1108,16 +1127,30 @@ static void pwrap_writel(struct pmic_wrapper *wrp, u32 val, enum pwrap_regs reg)
->   
->   static bool pwrap_is_fsm_idle(struct pmic_wrapper *wrp)
->   {
-> -	u32 val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +	u32 val;
-> +	bool ret;
-> +
-> +	val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +		ret = (PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_IDLE);
-> +	else
-> +		ret = (PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE);
->   
-> -	return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE;
-> +	return ret;
->   }
->   
->   static bool pwrap_is_fsm_vldclr(struct pmic_wrapper *wrp)
->   {
-> -	u32 val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +	u32 val;
-> +	bool ret;
-> +
-> +	val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +		ret = (PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR);
-> +	else
-> +		ret = (PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR);
->   
-> -	return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR;
-> +	return ret;
->   }
->   
->   /*
-> @@ -1172,13 +1205,21 @@ static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
->   		return ret;
->   	}
->   
-> -	pwrap_writel(wrp, (adr >> 1) << 16, PWRAP_WACS2_CMD);
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +		pwrap_writel(wrp, adr, PWRAP_WACS2_CMD);
-> +	else
-> +		pwrap_writel(wrp, (adr >> 1) << 16, PWRAP_WACS2_CMD);
->   
->   	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_vldclr);
->   	if (ret)
->   		return ret;
->   
-> -	*rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp, PWRAP_WACS2_RDATA));
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +		*rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
-> +					      PWRAP_SWINF_2_RDATA_31_0));
-> +	else
-> +		*rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
-> +					      PWRAP_WACS2_RDATA));
->   
->   	pwrap_writel(wrp, 1, PWRAP_WACS2_VLDCLR);
->   
-> @@ -1228,8 +1269,13 @@ static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
->   		return ret;
->   	}
->   
-> -	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
-> -		     PWRAP_WACS2_CMD);
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB)) {
-> +		pwrap_writel(wrp, wdata, PWRAP_SWINF_2_WDATA_31_0);
-> +		pwrap_writel(wrp, BIT(29) | adr, PWRAP_WACS2_CMD);
-> +	} else {
-> +		pwrap_writel(wrp, BIT(31) | ((adr >> 1) << 16) | wdata,
-> +			     PWRAP_WACS2_CMD);
-> +	}
->   
->   	return 0;
->   }
-> @@ -1485,6 +1531,7 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
->   	case PWRAP_MT7622:
->   		pwrap_writel(wrp, 0, PWRAP_CIPHER_EN);
->   		break;
-> +	case PWRAP_MT6873:
->   	case PWRAP_MT8183:
->   		break;
->   	}
-> @@ -1921,6 +1968,19 @@ static const struct pmic_wrapper_type pwrap_mt6797 = {
->   	.init_soc_specific = NULL,
->   };
->   
-> +static struct pmic_wrapper_type pwrap_mt6873 = {
-> +	.regs = mt6873_regs,
-> +	.type = PWRAP_MT6873,
-> +	.arb_en_all = 0x777f,
-> +	.int_en_all = BIT(4) | BIT(5),
-> +	.int1_en_all = 0,
-> +	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
-> +	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
-> +	.caps = PWRAP_CAP_ARB,
-> +	.init_reg_clock = pwrap_common_init_reg_clock,
-> +	.init_soc_specific = NULL,
-> +};
-> +
->   static const struct pmic_wrapper_type pwrap_mt7622 = {
->   	.regs = mt7622_regs,
->   	.type = PWRAP_MT7622,
-> @@ -1999,6 +2059,9 @@ static const struct of_device_id of_pwrap_match_tbl[] = {
->   		.compatible = "mediatek,mt6797-pwrap",
->   		.data = &pwrap_mt6797,
->   	}, {
-> +		.compatible = "mediatek,mt6873-pwrap",
-> +		.data = &pwrap_mt6873,
-> +	}, {
->   		.compatible = "mediatek,mt7622-pwrap",
->   		.data = &pwrap_mt7622,
->   	}, {
-> @@ -2022,6 +2085,7 @@ MODULE_DEVICE_TABLE(of, of_pwrap_match_tbl);
->   static int pwrap_probe(struct platform_device *pdev)
->   {
->   	int ret, irq;
-> +	u32 rdata;
->   	struct pmic_wrapper *wrp;
->   	struct device_node *np = pdev->dev.of_node;
->   	const struct of_device_id *of_slave_id = NULL;
-> @@ -2116,14 +2180,22 @@ static int pwrap_probe(struct platform_device *pdev)
->   		}
->   	}
->   
-> -	if (!(pwrap_readl(wrp, PWRAP_WACS2_RDATA) & PWRAP_STATE_INIT_DONE0)) {
-> +	if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +		rdata = pwrap_readl(wrp, PWRAP_WACS2_RDATA) &
-> +				    PWRAP_STATE_INIT_DONE0;
-> +	else
-> +		rdata = pwrap_readl(wrp, PWRAP_WACS2_RDATA) &
-> +				    PWRAP_STATE_INIT_DONE1;
-> +	if (!rdata) {
->   		dev_dbg(wrp->dev, "initialization isn't finished\n");
->   		ret = -ENODEV;
->   		goto err_out2;
->   	}
->   
->   	/* Initialize watchdog, may not be done by the bootloader */
-> -	pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
-> +	if (!(HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB)))
-> +		pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
-> +
->   	/*
->   	 * Since STAUPD was not used on mt8173 platform,
->   	 * so STAUPD of WDT_SRC which should be turned off
-> @@ -2132,7 +2204,11 @@ static int pwrap_probe(struct platform_device *pdev)
->   	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_WDT_SRC1))
->   		pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN_1);
->   
-> -	pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
-> +	if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +		pwrap_writel(wrp, 0x3, PWRAP_TIMER_EN);
-> +	else
-> +		pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
-> +
->   	pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
->   	/*
->   	 * We add INT1 interrupt to handle starvation and request exception
-> 
+"real_ip" causes the issue.=20
+
+But on a second thought, it is probably better also blocks precise_ip =3D=
+=3D 1,=20
+to match the logic in intel_pmu_hw_config().=20
+
+Thanks,
+Song=
