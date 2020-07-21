@@ -2,121 +2,95 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EAAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FC7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16A220729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6633620709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nda5Gaqh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSi1poIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgGUPCC (ORCPT
+        id S1728934AbgGUPEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:02:02 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47680 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726710AbgGUPCB (ORCPT
+        Tue, 21 Jul 2020 11:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgGUPEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:02:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595343720;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mSIJqWa6gC/bRdgGTlEg6I1iiFHrJPO8X4/n8B0VJ9k=;
-        b=Nda5GaqhA26gAUvQOiiVuv5CLb1nMr/9We8VKvxj1kezCWbLFkwDKZkU6MVLH1Ldj4B43z
-        /exCwjMzKtEhIZmaArgCevLjTafzeTxg5W3i+ilaPGEjEiw7W+wjcphRDpAm6C2kq7L879
-        +b4lHQFzsVn9UBIOTUqeas+caVWWx/k=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-tte_76usOPCuExBWZxqXiA-1; Tue, 21 Jul 2020 11:01:58 -0400
-X-MC-Unique: tte_76usOPCuExBWZxqXiA-1
-Received: by mail-qk1-f200.google.com with SMTP id q3so5467869qkj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:01:58 -0700 (PDT)
+        Tue, 21 Jul 2020 11:04:08 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732E0C061794;
+        Tue, 21 Jul 2020 08:04:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s10so21480750wrw.12;
+        Tue, 21 Jul 2020 08:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bm7aGTjf92tJ8OWCzSg3iBTJ12cgcD8em8JxJYzvaT8=;
+        b=XSi1poIhxWMJAMst+GBhdNWiuBoXY8yLX9OLK33R8Z/fURwYpxWpwnx4X9ehyNg4sZ
+         TRa7QH3gk3RCeUBbQxEfU79P8dlymBNlzLjzolU5VGH+N6Jk8EVGzSdLEkbD1fBlDE+f
+         6hVcgEGMtQftNrWBHKg5x9gloCmPpFjx1GJwaAvJuryCLV1cRlr0nfzmZ+htyHPg3U2K
+         SimyQvgWN1lwTWZyDJDdDYlsCZ39fCoVuW9kE1kPdg3z3UeqewtKb2U0cZFeqGk+27kd
+         Lzh4Z16yEB33svlhj7MDJ9N7x2lDxO9ynG18slxOPvF43oK1MUBaJs7T9fwoOIgz7d8g
+         96kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=mSIJqWa6gC/bRdgGTlEg6I1iiFHrJPO8X4/n8B0VJ9k=;
-        b=byxMcoz2CqyKig2TbMXuS9/h74OpKaZoyXufsfnbbA7oldJYVh9WVplpbxVe5Fa3TT
-         GITCxaJ3hc5NzfVB6Nxf+ZICS7HJaZ6dF9ribNv8wVoOIiKJ3EPZUfaAi8AX03s4Z84g
-         au+W+7WKTdmRslr19QvSq0zcopy5aMH34DWYPRJM+BkSyt7jHvAZKUM0Ve0AIjt9ywt6
-         wdfODeBFvdGwTYLghhDAGZhz1zJHON/VUj+f15D6OlfGk/sLLdt2W5fHnnOdvUKdV0vD
-         UFJMOlDjHnkSaEG0lTbVdxbOTK+wMWo4wYUqrQCLobVIxBZzwuKeeVcAvl1diMwMntT2
-         oIDQ==
-X-Gm-Message-State: AOAM5307PbFa1dYR2dUsFSwTkEZ0/V0EWAN4m37eyZEifufmdk+6XI6n
-        avJxXc7dIEB+PiuZM6+P7AdZOg9+9q2DEhZhPp86H7FwbvgaIDygyTTqYRqjTSJ3PT+/P8TwePd
-        ilbhG1TvjzqJ7xjvRO2egxwe2
-X-Received: by 2002:a37:a51:: with SMTP id 78mr16530730qkk.121.1595343717897;
-        Tue, 21 Jul 2020 08:01:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxJH5IxpTv0tqc1DLQ+iSUR4KYz9tNO0jJWsz8BvtZ9Y/QpYN7MJ20Jq9ljgK+EQmQWXFPL4g==
-X-Received: by 2002:a37:a51:: with SMTP id 78mr16530715qkk.121.1595343717650;
-        Tue, 21 Jul 2020 08:01:57 -0700 (PDT)
-Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id f4sm22024521qtp.38.2020.07.21.08.01.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 08:01:57 -0700 (PDT)
-Message-ID: <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-From:   Lyude Paul <lyude@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Tue, 21 Jul 2020 11:01:55 -0400
-In-Reply-To: <20200721122247.GI5180@lahna.fi.intel.com>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
-         <20200716235440.GA675421@bjorn-Precision-5520>
-         <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
-         <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
-         <20200721122247.GI5180@lahna.fi.intel.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bm7aGTjf92tJ8OWCzSg3iBTJ12cgcD8em8JxJYzvaT8=;
+        b=abSch8MMkO/FTclXq8IsBEOLq7Lgyy76OseCEEPbobEHS+Y/zH8hrlqnMESr7DxgSB
+         o1AwwwQjufhERBnlbOhv1WPk5fb6Aqa6x/5Xr8CJZkLpxCUWDmDGbauNu8/hzin6mpRp
+         Y0K1rfZakRz09SWqsklU7R3Vcv4SJ+3M1/cFO/0ujoN5psTpSv6M8dhj1uongMoYsrmr
+         pxBhuuHMVaGWtfLIbDpRJtyIYfQbQs43F8sV7ouu8HteWmUskiVRS9oDwtQ7cit6ETuX
+         31KzyIx/55S3xjRl3b9reMJV2h/2QCrf7zwlYghbJ/EieYQ3b9uKcPBhZoSXfi2PjAZq
+         1jRA==
+X-Gm-Message-State: AOAM5339BKPuyftO1AgNxNwWbx11lkg7zrgcN+CkyqR/ViUcVprJDA8d
+        Me8H+ldPfbTFlv/gjN0JSkCCqR91JjzHXYXzce5gWBGG
+X-Google-Smtp-Source: ABdhPJzk4KDC3d8HohEKBxvMFgcJQnEMPvrUyHemUKAHXXR/CnoptPSfhMW4u6qYSvZAK0dKcj1F0ipwpkAGw9RTJbg=
+X-Received: by 2002:adf:f0ce:: with SMTP id x14mr25948565wro.137.1595343847088;
+ Tue, 21 Jul 2020 08:04:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CGME20200705193332epcas5p409173a9d12f203d3817305dd3250ca59@epcas5p4.samsung.com>
+ <1593977393-21446-1-git-send-email-joshi.k@samsung.com>
+In-Reply-To: <1593977393-21446-1-git-send-email-joshi.k@samsung.com>
+From:   Kanchan Joshi <joshiiitr@gmail.com>
+Date:   Tue, 21 Jul 2020 20:33:40 +0530
+Message-ID: <CA+1E3rKP8nXDQc+Gz999rdCKhhsxePowzg0J26q+N2QhMF+Q2Q@mail.gmail.com>
+Subject: Re: [PATCH v2] Fix zone-append error code
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Damien.LeMoal@wdc.com, Kanchan Joshi <joshi.k@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sure thing. Also, feel free to let me know if you'd like access to one of the
-systems we saw breaking with this patch - I'm fairly sure I've got one of them
-locally at my apartment and don't mind setting up AMT/KVM/SSH
+Hi Jens,
+Is this fine to be picked?
 
-On Tue, 2020-07-21 at 15:22 +0300, Mika Westerberg wrote:
-> Hi,
-> 
-> [Sorry for the delay, I was on vacation]
-> 
-> On Fri, Jul 17, 2020 at 01:32:10PM +0200, Karol Herbst wrote:
-> > Filed at https://bugzilla.kernel.org/show_bug.cgi?id=208597
-> 
-> Thanks for reporting.
-> 
-> I'll check your logs and try to figure if there is something we can do
-> to make both nouveau and TBT working at the same time.
-> 
-> > oddly enough I wasn't able to reproduce it on my XPS 9560, will ping
-> > once something breaks.
+On Mon, Jul 6, 2020 at 1:06 AM Kanchan Joshi <joshi.k@samsung.com> wrote:
+>
+> Changes since v1:
+> - updated commit description
+> - added reviewed-by
+>
+> Kanchan Joshi (1):
+>   block: fix error code for zone-append
+>
+>  block/bio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --
+> 2.7.4
+>
+
+
 -- 
-Cheers,
-	Lyude Paul (she/her)
-	Software Engineer at Red Hat
-
+Kanchan Joshi
