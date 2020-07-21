@@ -2,242 +2,118 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70392C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA65EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB7620720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E9D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kryo-se.20150623.gappssmtp.com header.i=@kryo-se.20150623.gappssmtp.com header.b="ntLBN0rv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgGUSFt (ORCPT
+        id S1728590AbgGUSPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgGUSFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:05:48 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 254D9206F5;
-        Tue, 21 Jul 2020 18:05:47 +0000 (UTC)
-Date:   Tue, 21 Jul 2020 14:05:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
-Message-ID: <20200721140545.445f0258@oasis.local.home>
-In-Reply-To: <20200719155033.24201-3-oscar.carter@gmx.com>
-References: <20200719155033.24201-1-oscar.carter@gmx.com>
-        <20200719155033.24201-3-oscar.carter@gmx.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Jul 2020 14:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGUSPQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 14:15:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8CBC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:15:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id z6so4937688iow.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kryo-se.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KVVjAkfV64YN+ezW1WM+0vgwvcTru6dPfbG6aGenKT0=;
+        b=ntLBN0rv0yoHIQrjDgVhIvFKkRwg+qM35RkR6fj4PRMEEJpltk9LVVY6yGguLoR0K9
+         2JOn5virYAQ8jtWOhvP2RJ7yXsZAzJJcnTrsi76cqMqIKle9CyAgzKrmJYhnl3W80Ofh
+         yTujC6GqoRvcPH9ZzX+O4EK/HMyYcBc0QW97+rL1HwLkqu05WgfyolB805OyY0zYTsJq
+         Wp499ujZ3q0VMxpwaHbNo9OrJrPqw/PG6abWAgdKIL/Ogscu5Or3BLU4z+UI58WkQSkd
+         twar/kG6hnVA9Bv3brUAEGqB9P2RC+AAC1Rs3gBwKuS7ps5TBRMdUoA3k5s82vjG4/cG
+         2stA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KVVjAkfV64YN+ezW1WM+0vgwvcTru6dPfbG6aGenKT0=;
+        b=TjVKkRZcmKZjwqOX24Rz/BzDWycL624fYLYn7+0r48rVHvMIfFd+1PSJxtlPxFgoCo
+         NRAjj5Jj1vEOFtyor252k9A55XRANY/8mLHJ6WLrmODpiMJoHq3kfy0yCsCXjJOnqbub
+         P0w2UGbZegI2vWxaJRkjGspTxh4DrueuCu682kTMIacY53+sd137Hn8D76HnCQ8uMRls
+         QRnsAglACIPc4gITp8yjfY+AejOFI6S5B16eDjT+PaTowO/wIzVkBdjGMn/R3QYeI4Gw
+         Mrv4KYE8iSZQP9W9FELXTrV/5SAZ03NE0XClCKkSdFOD88D5/o+d2NK8I34nyNm+in10
+         ZiSg==
+X-Gm-Message-State: AOAM533FdfBtWLCnIT08R3hMusK2eCWnYHkBq0tyoQc3vDfg34i+nr6F
+        hb1vXtILlCzbJoTXKEfJfNWYXw2aHaXCx2KFGFjnPg==
+X-Google-Smtp-Source: ABdhPJzGSU5xLvuoSn4Yd8vIZFCiJApcxv1zTfxLAkR3tvZgCVnsFrc4C6sc0qqNh4MJy2EEPxAQU7f2t+4VvayFU6A=
+X-Received: by 2002:a05:6602:148f:: with SMTP id a15mr29521465iow.26.1595355315409;
+ Tue, 21 Jul 2020 11:15:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200717185118.3640219-1-erik@kryo.se> <20200721072350.GC3634@localhost>
+In-Reply-To: <20200721072350.GC3634@localhost>
+From:   Erik Ekman <erik@kryo.se>
+Date:   Tue, 21 Jul 2020 20:15:04 +0200
+Message-ID: <CAGgu=sDBemKU4vzg5xWyWT-OoDuXrxXp2tkB5OOmNW6ncDjpow@mail.gmail.com>
+Subject: Re: [PATCH] USB: serial: qcserial: add EM7305 QDL product ID
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jul 2020 17:50:33 +0200
-Oscar Carter <oscar.carter@gmx.com> wrote:
+On Tue, 21 Jul 2020 at 09:23, Johan Hovold <johan@kernel.org> wrote:
+>
+> On Fri, Jul 17, 2020 at 08:51:18PM +0200, Erik Ekman wrote:
+> > When running qmi-firmware-update on the Sierra Wireless EM7305 in a Toshiba
+> > laptop, it changed product ID to 0x9062 when entering QDL mode:
+> >
+> > usb 2-4: new high-speed USB device number 78 using xhci_hcd
+> > usb 2-4: New USB device found, idVendor=1199, idProduct=9062, bcdDevice= 0.00
+> > usb 2-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+> > usb 2-4: Product: EM7305
+> > usb 2-4: Manufacturer: Sierra Wireless, Incorporated
+> >
+> > The upgrade could complete after running
+> >  # echo 1199 9062 > /sys/bus/usb-serial/drivers/qcserial/new_id
+> >
+> > qcserial 2-4:1.0: Qualcomm USB modem converter detected
+> > usb 2-4: Qualcomm USB modem converter now attached to ttyUSB0
+> >
+> > Signed-off-by: Erik Ekman <erik@kryo.se>
+>
+> Applied, thanks.
+>
+> Would you mind posting the output of "usb-devices" (or "lsusb -v") for
+> this device for completeness?
+>
+(resend as plain text)
 
-> In an effort to enable -Wcast-function-type in the top-level Makefile to
-> support Control Flow Integrity builds, there are the need to remove all
-> the function callback casts.
-> 
-> ftrace_ops_list_func() can no longer be defined as ftrace_ops_no_ops().
-> The reason for ftrace_ops_no_ops() is to use that when an architecture
-> calls ftrace_ops_list_func() with only two parameters (called from
-> assembly). And to make sure there's no C side-effects, those archs call
-> ftrace_ops_no_ops() which only has two parameters, as the function
-> ftrace_ops_list_func() has four parameters.
-> 
-> This patch removes the no longer needed function ftrace_ops_no_ops() and
-> all the function callback casts using the previous defined ftrace_func
-> union and the two function helpers called ftrace_set_ufunc() and
-> ftrace_same_address_ufunc().
+from usb-devices:
 
-Ug, I think I prefer the linker trick better.
+T:  Bus=02 Lev=01 Prnt=01 Port=03 Cnt=03 Dev#= 30 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1199 ProdID=9062 Rev=00.00
+S:  Manufacturer=Sierra Wireless, Incorporated
+S:  Product=EM7305
+C:  #Ifs= 1 Cfg#= 1 Atr=80 MxPwr=2mA
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
 
-> 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  kernel/trace/ftrace.c | 48 ++++++++++++++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 19 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index fd8fbb422860..124ccf914657 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -143,9 +143,7 @@ static inline bool ftrace_same_address_ufunc(union ftrace_func *ufunc,
->  	return (ufunc->ops == func);
->  }
->  #else
-> -/* See comment below, where ftrace_ops_list_func is defined */
-> -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip);
-> -#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)
-> +static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip);
-> 
->  static inline void ftrace_set_ufunc(union ftrace_func *ufunc,
->  				    ftrace_func_no_ops_t func)
-> @@ -198,22 +196,29 @@ static void ftrace_sync_ipi(void *data)
->  	smp_rmb();
->  }
-> 
-> -static ftrace_func_t ftrace_ops_get_list_func(struct ftrace_ops *ops)
-> +static union ftrace_func ftrace_ops_get_list_func(struct ftrace_ops *ops)
->  {
-> +	union ftrace_func list_func;
-> +
->  	/*
->  	 * If this is a dynamic, RCU, or per CPU ops, or we force list func,
->  	 * then it needs to call the list anyway.
->  	 */
->  	if (ops->flags & (FTRACE_OPS_FL_DYNAMIC | FTRACE_OPS_FL_RCU) ||
->  	    FTRACE_FORCE_LIST_FUNC)
-> -		return ftrace_ops_list_func;
-> +		ftrace_set_ufunc(&list_func, ftrace_ops_list_func);
-> +	else
-> +		list_func.ops = ftrace_ops_get_func(ops);
-> 
-> -	return ftrace_ops_get_func(ops);
-> +	return list_func;
+and with the driver it instead ends with:
+I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=qcserial
+as expected.
 
-Is this the same as returning a pointer? It makes me very nervous about
-returning a union. Can a compiler return something allocated on the stack?
+Cheers
+/Erik
 
-Also, don't use "ufunc" as that makes me think its a user space variable.
-
-
-
->  }
-> 
->  static void update_ftrace_function(void)
->  {
-> -	ftrace_func_t func;
-> +	union ftrace_func func;
-> +#ifndef CONFIG_DYNAMIC_FTRACE
-> +	union ftrace_func tmp;
-> +#endif
-> 
->  	/*
->  	 * Prepare the ftrace_ops that the arch callback will use.
-> @@ -225,7 +230,7 @@ static void update_ftrace_function(void)
-> 
->  	/* If there's no ftrace_ops registered, just call the stub function */
->  	if (set_function_trace_op == &ftrace_list_end) {
-> -		func = ftrace_stub;
-> +		func.ops = ftrace_stub;
-> 
->  	/*
->  	 * If we are at the end of the list and this ops is
-> @@ -239,21 +244,21 @@ static void update_ftrace_function(void)
->  	} else {
->  		/* Just use the default ftrace_ops */
->  		set_function_trace_op = &ftrace_list_end;
-> -		func = ftrace_ops_list_func;
-> +		ftrace_set_ufunc(&func, ftrace_ops_list_func);
->  	}
-> 
->  	update_function_graph_func();
-> 
->  	/* If there's no change, then do nothing more here */
-> -	if (ftrace_trace_function == func)
-> +	if (ftrace_trace_function == func.ops)
->  		return;
-> 
->  	/*
->  	 * If we are using the list function, it doesn't care
->  	 * about the function_trace_ops.
->  	 */
-> -	if (func == ftrace_ops_list_func) {
-> -		ftrace_trace_function = func;
-> +	if (ftrace_same_address_ufunc(&func, ftrace_ops_list_func)) {
-> +		ftrace_trace_function = func.ops;
->  		/*
->  		 * Don't even bother setting function_trace_ops,
->  		 * it would be racy to do so anyway.
-> @@ -272,7 +277,9 @@ static void update_ftrace_function(void)
->  	 * function we want, albeit indirectly, but it handles the
->  	 * ftrace_ops and doesn't depend on function_trace_op.
->  	 */
-> -	ftrace_trace_function = ftrace_ops_list_func;
-> +	ftrace_set_ufunc(&tmp, ftrace_ops_list_func);
-> +	ftrace_trace_function = tmp.ops;
-> +
->  	/*
->  	 * Make sure all CPUs see this. Yes this is slow, but static
->  	 * tracing is slow and nasty to have enabled.
-> @@ -287,7 +294,7 @@ static void update_ftrace_function(void)
->  	/* OK, we are all set to update the ftrace_trace_function now! */
->  #endif /* !CONFIG_DYNAMIC_FTRACE */
-> 
-> -	ftrace_trace_function = func;
-> +	ftrace_trace_function = func.ops;
->  }
-
-This looks really intrusive for what it's trying to accomplish.
-
-The linker trick is far less intrusive, and I believe less error prone.
-
--- Steve
-
-
-> 
->  static void add_ftrace_ops(struct ftrace_ops __rcu **list,
-> @@ -2680,6 +2687,7 @@ void ftrace_modify_all_code(int command)
->  	int update = command & FTRACE_UPDATE_TRACE_FUNC;
->  	int mod_flags = 0;
->  	int err = 0;
-> +	union ftrace_func func;
-> 
->  	if (command & FTRACE_MAY_SLEEP)
->  		mod_flags = FTRACE_MODIFY_MAY_SLEEP_FL;
-> @@ -2695,7 +2703,8 @@ void ftrace_modify_all_code(int command)
->  	 * traced.
->  	 */
->  	if (update) {
-> -		err = ftrace_update_ftrace_func(ftrace_ops_list_func);
-> +		ftrace_set_ufunc(&func, ftrace_ops_list_func);
-> +		err = ftrace_update_ftrace_func(func.ops);
->  		if (FTRACE_WARN_ON(err))
->  			return;
->  	}
-> @@ -2705,7 +2714,9 @@ void ftrace_modify_all_code(int command)
->  	else if (command & FTRACE_DISABLE_CALLS)
->  		ftrace_replace_code(mod_flags);
-> 
-> -	if (update && ftrace_trace_function != ftrace_ops_list_func) {
-> +	ftrace_set_ufunc(&func, ftrace_ops_list_func);
-> +
-> +	if (update && ftrace_trace_function != func.ops) {
->  		function_trace_op = set_function_trace_op;
->  		smp_wmb();
->  		/* If irqs are disabled, we are in stop machine */
-> @@ -6890,14 +6901,13 @@ static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
->  {
->  	__ftrace_ops_list_func(ip, parent_ip, NULL, regs);
->  }
-> -NOKPROBE_SYMBOL(ftrace_ops_list_func);
->  #else
-> -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip)
-> +static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip)
->  {
->  	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
->  }
-> -NOKPROBE_SYMBOL(ftrace_ops_no_ops);
->  #endif
-> +NOKPROBE_SYMBOL(ftrace_ops_list_func);
-> 
->  /*
->   * If there's only one function registered but it does not support
-> --
-> 2.20.1
-
+>
+> Johan
