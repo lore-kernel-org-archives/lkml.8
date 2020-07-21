@@ -2,78 +2,75 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C616C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2759C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349032073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E0E22BEF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595334897;
+	bh=vUe9hnCspzpvQ1bWYGN07vwyvC0xZtzQvZTo1mLVAIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O1uT8EtdyCHAPXUlqXrT5fWG8JKN+qZEYVgic+qp/UitsXCY4ZSZ91tE76ObPtBle
+	 UEgkl+Il3nr1vWWcCt20UgrRZ+QovGbt5CxB8K75kPBg4hT39ZYSygj8aPh75PTNQ1
+	 VKFxuXtp+uMqcZo7dzDHZQLc2xyvp0oOkhjJbTgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgGUMef (ORCPT
+        id S1729776AbgGUMe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:34:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49670 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728557AbgGUMee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:34:34 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E8E19B16BE2F347E0C0B;
-        Tue, 21 Jul 2020 20:34:30 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.238) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 20:34:22 +0800
-Subject: Re: [PATCH v2] net: neterion: vxge: reduce stack usage in
- VXGE_COMPLETE_VPATH_TX
-To:     David Miller <davem@davemloft.net>
-CC:     <stephen@networkplumber.org>, <kuba@kernel.org>,
-        <linux-next@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <jdmason@kudzu.us>,
-        <christophe.jaillet@wanadoo.fr>, <john.wanghui@huawei.com>
-References: <20200716173247.78912-1-cuibixuan@huawei.com>
- <20200719100522.220a6f5a@hermes.lan>
- <866b4a34-cd4e-0120-904f-13669257a765@huawei.com>
- <20200720.183849.626605331445628040.davem@davemloft.net>
-From:   Bixuan Cui <cuibixuan@huawei.com>
-Message-ID: <16aa9f4a-583e-2fd1-c14f-a3b2a6228436@huawei.com>
-Date:   Tue, 21 Jul 2020 20:34:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 21 Jul 2020 08:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728557AbgGUMe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:34:56 -0400
+Received: from localhost (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 974CF2073A;
+        Tue, 21 Jul 2020 12:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595334896;
+        bh=vUe9hnCspzpvQ1bWYGN07vwyvC0xZtzQvZTo1mLVAIc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ijCJhbR63KWX8tPErqmk1gCtsNWWuOkr8OwEYEYmyr8Kb6lHcuD1I7qPFWm2KIrFy
+         TBRxDpKcu8I5ZQFaLD8vdkDsK6J8+viX25vym8+l5hb8XFd992FphImLJr8DfXVm4k
+         NxK37gi0wK4rHF6nfdxvcKUCOlcDbHHUNoNKOQE4=
+Date:   Tue, 21 Jul 2020 14:34:53 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [patch V2 2/5] posix-cpu-timers: Convert the flags to a bitmap
+Message-ID: <20200721123452.GA9290@lenoir>
+References: <20200716201923.228696399@linutronix.de>
+ <20200716202044.625081169@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200720.183849.626605331445628040.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716202044.625081169@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 10:19:25PM +0200, Thomas Gleixner wrote:
+> --- a/kernel/time/posix-cpu-timers.c
+> +++ b/kernel/time/posix-cpu-timers.c
+> @@ -25,7 +25,7 @@ void posix_cputimers_group_init(struct p
+>  	posix_cputimers_init(pct);
+>  	if (cpu_limit != RLIM_INFINITY) {
+>  		pct->bases[CPUCLOCK_PROF].nextevt = cpu_limit * NSEC_PER_SEC;
+> -		pct->timers_active = true;
+> +		set_bit(CPUTIMERS_ACTIVE, &pct->flags);
 
+I guess this one could be __set_bit().
 
-On 2020/7/21 9:38, David Miller wrote:
-> From: Bixuan Cui <cuibixuan@huawei.com>
-> Date: Mon, 20 Jul 2020 09:58:39 +0800
-> 
->> Fix the warning: [-Werror=-Wframe-larger-than=]
->>
->> drivers/net/ethernet/neterion/vxge/vxge-main.c:
->> In function'VXGE_COMPLETE_VPATH_TX.isra.37':
->> drivers/net/ethernet/neterion/vxge/vxge-main.c:119:1:
->> warning: the frame size of 1056 bytes is larger than 1024 bytes
->>
->> Dropping the NR_SKB_COMPLETED to 16 is appropriate that won't
->> have much impact on performance and functionality.
->>
->> Signed-off-by: Bixuan Cui <cuibixuan@huawei.com>
->> Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
->> ---
->> v2: Dropping the NR_SKB_COMPLETED to 16.
-> Applied.
-thanks.
-
+>  	}
+>  }
