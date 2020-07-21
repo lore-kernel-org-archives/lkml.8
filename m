@@ -2,172 +2,150 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA95C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61603C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD65206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FjGoLNE3"
+	by mail.kernel.org (Postfix) with ESMTP id 33BD0206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595345635;
+	bh=O3qI2mXrdTflvfugVglnyd3tv2QJQZMDj+1webP82jg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GlPYNNetSVNDHa2oufhjwcxEIjLQgQv5rnEl2M/RIhROkZjXhMr9jpnFLazyUbWEN
+	 wzyRVkwaxYGtMulaZLumAWCJuPV2vJoA3LUwgZ9P+fLq4wQ/0fIb43y8aVrG16bLO6
+	 iKD/ygmVkNUBI3716kvEXLaZbaG9pfL2vnW7hUWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgGUPb7 (ORCPT
+        id S1728623AbgGUPdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35856 "EHLO
+        Tue, 21 Jul 2020 11:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgGUPb6 (ORCPT
+        with ESMTP id S1726919AbgGUPdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:31:58 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B65C0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:31:58 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t18so16757599ilh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:31:58 -0700 (PDT)
+        Tue, 21 Jul 2020 11:33:53 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07433C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:33:53 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id k13so2939264lfo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fHBXXvobeCMI6ndgKtMZ3erxdMcJPIdl8aMUBZkOTPQ=;
-        b=FjGoLNE3u7Lnj6Y4gzoT0kgYXHm5TPhi7odJEJ19IH/bXifIJkm9g9cRYI1n9gNuSu
-         q8PssjRLHeidmWFf4uLpcuAYGmRmaf89V572BB2JHkU1x19AUKNTC+k2xOn6qyRI9n0C
-         qmt5Am2rGnwheI/zqG93vJNWkUiYQqwIo0DFKcDPZrvGsrwwC0EEwGut5OC5+QkAoPOX
-         BI6Zfk31k5IlcnMFpxsqIjhd1aDaR8T90B0zI79dBIwKvQX13ndd1DCNVRjdlGQj0Vd+
-         vDdcbnaBPAIYK0k1jvm+zwdwTjBqn675UdeHBWGIZ+Ey9zJ+n2NfmxiGLL3ZMmSJdVeP
-         K3Gw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=njynPEuSAx3YutPUm1Ks7mASPVE5qpU/6FLY7l0S5aI=;
+        b=eQ7WI6xkilW9FmgBXW/xysDF/3IDtBx6ypESMtBihC1eSPJLn5eC8eHS5o6dVcno9s
+         vwH7lLb02YEl6fLuBANrEc7wsinozUQG/BuWIv3nBwdXFniYX41S1JKBigNvoypkkWDt
+         v7e3VdKkBjijF9BamxUZuXGlgb38adI4J9jRE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fHBXXvobeCMI6ndgKtMZ3erxdMcJPIdl8aMUBZkOTPQ=;
-        b=Tunt49qFUeZfC2U4dcblO/WfECH4OTDQijblOJgYtMpqVhM5NUokicsidVcmYwvhjD
-         zlK5j3s8c1Ov7lSudPXXVVic7e5M6EfCVHIC/g7W/xVAfDKoQRRIE9GswBr9EzQO4lJR
-         jq/zAeDGEyt5avvo9XKGhxC3i2v+9cLAFYCsJrXvkCks5kmD2E9+lK2PWvy/kgkp6JjI
-         x5fme0fM/1/0i4vrJu1jb7Lla5eirduvi1soiSoSRcBK62E7bB733/T++tZG0M+OYBGv
-         1sC78xP8YfTcBGQJ9/j9PB6AMonTyXLKA22AXiPSZOrDCklKUKw3Cn8Nxr45SzXfJoZA
-         kJTQ==
-X-Gm-Message-State: AOAM531y+jRAya1kM50HIyP/J08AfzAt6mn2yqo29LIJaVReLA0UwjTx
-        DtTs9BIRBRmlgCpMHhIzKe0tLA==
-X-Google-Smtp-Source: ABdhPJwAbVMoY1B6CkpkY+SnENst9lHtwiSu0YeTTONrlnZk8tl2yQygzkpN0KPaRXZ9cUJSYa4n6Q==
-X-Received: by 2002:a05:6e02:e05:: with SMTP id a5mr26782990ilk.92.1595345517510;
-        Tue, 21 Jul 2020 08:31:57 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c3sm10507002ilj.31.2020.07.21.08.31.55
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=njynPEuSAx3YutPUm1Ks7mASPVE5qpU/6FLY7l0S5aI=;
+        b=k9CfoI7Nak32nFGNz8gYBmPPB7TohseDbNyRLFIOPAV6cRq2ffh2YgOUOH2mLeON0o
+         3Oi9wsKdZnrHoF8ujypl3vA30YAYtwR4aH5P1NXKjtB/2ZOFs2c9efXUiVDaZy50fsKp
+         fJjSudsyWjcNaMmxS6C4/+YJPW5kOH+7sDALTV3XhTVy6nLPeuGTGEsikYinUwh02WMJ
+         spAz6tEOZvpwUBF5Q0pOQM9ANWE0SDRGstd4Yz3FH0KJE78HtqYhzo2qQT8Qqp41mGCV
+         XviE7LVkPbWTcNmqNZ2GDzVl71EDFUMLDUmhh37OSie4aY9776vbmyPxQqmR0bSHkuXQ
+         DCbg==
+X-Gm-Message-State: AOAM532YwyHpe5E0bIjT7h5O0U5a1Mx7yEib2rYjfkC5npV7R/ajerO1
+        UCy2KFUYJmE1jxuu9o4xUfVlSmulyZs=
+X-Google-Smtp-Source: ABdhPJzFllXxNGPXCKkzWRuXJUCMruSycsoI5XWRQ4LtxOFFeKeOox3Roha37ATij/VfbE92P09ZPQ==
+X-Received: by 2002:ac2:4241:: with SMTP id m1mr13966554lfl.20.1595345630949;
+        Tue, 21 Jul 2020 08:33:50 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id b16sm4600173ljp.124.2020.07.21.08.33.49
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 08:31:56 -0700 (PDT)
-Subject: Re: strace of io_uring events?
-To:     Andy Lutomirski <luto@kernel.org>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-References: <CAJfpegu3EwbBFTSJiPhm7eMyTK2MzijLUp1gcboOo3meMF_+Qg@mail.gmail.com>
- <D9FAB37B-D059-4137-A115-616237D78640@amacapital.net>
- <20200715171130.GG12769@casper.infradead.org>
- <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
- <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
- <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
- <202007151511.2AA7718@keescook> <20200716131404.bnzsaarooumrp3kx@steredhat>
- <202007160751.ED56C55@keescook>
- <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
- <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <39a3378a-f8f3-6706-98c8-be7017e64ddb@kernel.dk>
-Date:   Tue, 21 Jul 2020 09:31:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 08:33:50 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 140so1520652lfi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 08:33:49 -0700 (PDT)
+X-Received: by 2002:ac2:58d5:: with SMTP id u21mr3650183lfo.31.1595345629595;
+ Tue, 21 Jul 2020 08:33:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200721063258.17140-1-mhocko@kernel.org>
+In-Reply-To: <20200721063258.17140-1-mhocko@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 21 Jul 2020 08:33:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
+Message-ID: <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 9:27 AM, Andy Lutomirski wrote:
-> On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
->>
->> On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
->>> On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
-> 
->>> access (IIUC) is possible without actually calling any of the io_uring
->>> syscalls. Is that correct? A process would receive an fd (via SCM_RIGHTS,
->>> pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to gain
->>> access to the SQ and CQ, and off it goes? (The only glitch I see is
->>> waking up the worker thread?)
->>
->> It is true only if the io_uring istance is created with SQPOLL flag (not the
->> default behaviour and it requires CAP_SYS_ADMIN). In this case the
->> kthread is created and you can also set an higher idle time for it, so
->> also the waking up syscall can be avoided.
-> 
-> I stared at the io_uring code for a while, and I'm wondering if we're
-> approaching this the wrong way. It seems to me that most of the
-> complications here come from the fact that io_uring SQEs don't clearly
-> belong to any particular security principle.  (We have struct creds,
-> but we don't really have a task or mm.)  But I'm also not convinced
-> that io_uring actually supports cross-mm submission except by accident
-> -- as it stands, unless a user is very careful to only submit SQEs
-> that don't use user pointers, the results will be unpredictable.
+On Mon, Jul 20, 2020 at 11:33 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> The lockup is in page_unlock in do_read_fault and I suspect that this is
+> yet another effect of a very long waitqueue chain which has been
+> addresses by 11a19c7b099f ("sched/wait: Introduce wakeup boomark in
+> wake_up_page_bit") previously.
 
-How so? 
+Hmm.
 
-> Perhaps we can get away with this:
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 74bc4a04befa..92266f869174 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -7660,6 +7660,20 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int,
-> fd, u32, to_submit,
->      if (!percpu_ref_tryget(&ctx->refs))
->          goto out_fput;
-> 
-> +    if (unlikely(current->mm != ctx->sqo_mm)) {
-> +        /*
-> +         * The mm used to process SQEs will be current->mm or
-> +         * ctx->sqo_mm depending on which submission path is used.
-> +         * It's also unclear who is responsible for an SQE submitted
-> +         * out-of-process from a security and auditing perspective.
-> +         *
-> +         * Until a real usecase emerges and there are clear semantics
-> +         * for out-of-process submission, disallow it.
-> +         */
-> +        ret = -EACCES;
-> +        goto out;
-> +    }
-> +
->      /*
->       * For SQ polling, the thread will do all submissions and completions.
->       * Just return the requested submit count, and wake the thread if
+I do not believe that you can actually get to the point where you have
+a million waiters and it takes 20+ seconds to wake everybody up.
 
-That'll break postgres that already uses this, also see:
+More likely, it's actually *caused* by that commit 11a19c7b099f, and
+what might be happening is that other CPU's are just adding new
+waiters to the list *while* we're waking things up, because somebody
+else already got the page lock again.
 
-commit 73e08e711d9c1d79fae01daed4b0e1fee5f8a275
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Sun Jan 26 09:53:12 2020 -0700
+Humor me.. Does something like this work instead? It's
+whitespace-damaged because of just a cut-and-paste, but it's entirely
+untested, and I haven't really thought about any memory ordering
+issues, but I think it's ok.
 
-    Revert "io_uring: only allow submit from owning task"
+The logic is that anybody who called wake_up_page_bit() _must_ have
+cleared that bit before that. So if we ever see it set again (and
+memory ordering doesn't matter), then clearly somebody else got access
+to the page bit (whichever it was), and we should not
 
-So no, we can't do that.
+ (a) waste time waking up people who can't get the bit anyway
 
--- 
-Jens Axboe
+ (b) be in a  livelock where other CPU's continually add themselves to
+the wait queue because somebody else got the bit.
 
+and it's that (b) case that I think happens for you.
+
+NOTE! Totally UNTESTED patch follows. I think it's good, but maybe
+somebody sees some problem with this approach?
+
+I realize that people can wait for other bits than the unlocked, and
+if you're waiting for writeback to complete maybe you don't care if
+somebody else then started writeback *AGAIN* on the page and you'd
+actually want to be woken up regardless, but honestly, I don't think
+it really matters.
+
+                Linus
+
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1054,6 +1054,15 @@ static void wake_up_page_bit(struct page *page,
+int bit_nr)
+                 * from wait queue
+                 */
+                spin_unlock_irqrestore(&q->lock, flags);
++
++               /*
++                * If somebody else set the bit again, stop waking
++                * people up. It's now the responsibility of that
++                * other page bit owner to do so.
++                */
++               if (test_bit(bit_nr, &page->flags))
++                       return;
++
+                cpu_relax();
+                spin_lock_irqsave(&q->lock, flags);
+                __wake_up_locked_key_bookmark(q, TASK_NORMAL, &key, &bookmark);
