@@ -2,132 +2,95 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D809C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1393EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F124C20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB7820720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 08:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595321686;
-	bh=OuQaT8yvH8FY9F6rQRwTrDoughhUgKvd3p952kWOi+E=;
+	s=default; t=1595321674;
+	bh=7ZKypSwJ/TtKAkBF9OlVUVTJtOKIc8YaONrJQO64MCM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h8VJ920qeUoiJ+UgoWtlA4aOnkJHEsgX09WDTLtcxuqL//dHmiTJKPsx9cZuX25n+
-	 4nZfHVUk+mHnmx/1M0ZDQ7ql/92Fn4Xc4Wht2PjA8KAe4RvQjUFKngffE7MOl6TW0o
-	 2B8reI50jzk/dsh6Ku+t4c7fIpraqdhqQH/tCB38=
+	b=lfU4fWdy6NQ4a5zwJMwkrcU89ZrF1L92+FKd3YPDDTuFnpZj8my1b9PRkXoBOZVId
+	 Gr/rGqx8bFTo9ncPziUXizEeeW90sffeY/tlPAp0S/9Nk72J88EVrZlgRl+y4hL1FT
+	 plluiUnYEZWoMQnRdlt5YFyk1jQHZAE8LE9fup50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgGUIyo (ORCPT
+        id S1728839AbgGUIyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33362 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 04:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgGUIyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:54:44 -0400
-Received: from localhost (unknown [213.57.247.131])
+        id S1726521AbgGUIyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 04:54:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C954C20717;
-        Tue, 21 Jul 2020 08:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8239920717;
+        Tue, 21 Jul 2020 08:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595321683;
-        bh=OuQaT8yvH8FY9F6rQRwTrDoughhUgKvd3p952kWOi+E=;
+        s=default; t=1595321673;
+        bh=7ZKypSwJ/TtKAkBF9OlVUVTJtOKIc8YaONrJQO64MCM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h5bxBXnM7vZCEEbI2XSUUrLIT+zwG/ecLM1aQCwuRuxlVW2ZNG2oyeV69wHsA1xTR
-         dAryxbah4gn/HhEsxY+dGo5dK6BsRjeA9nCkp/Pql8x94bB9laKMvKICqjMWt7R8NH
-         jIoJyl1wE8hiWbSQscx/9t+t8czm4txDIrMj36YI=
-Date:   Tue, 21 Jul 2020 11:54:37 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>, santosh.shilimkar@oracle.com,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] RDS: Replace HTTP links with HTTPS ones
-Message-ID: <20200721085437.GL1080481@unreal>
-References: <20200719155845.59947-1-grandmaster@al2klimov.de>
- <20200720045626.GF127306@unreal>
- <20200720075848.26bc3dfe@lwn.net>
- <20200720140716.GB1080481@unreal>
- <20200720083635.3e7880ce@lwn.net>
- <20200720164827.GC1080481@unreal>
- <c78d0958-c4ef-9754-c189-ffc507ca1340@al2klimov.de>
- <20200721060529.GF1080481@unreal>
- <f1df7901-35ef-af8a-b852-e5e89ababf01@al2klimov.de>
+        b=JeD9u3nUzqhB6Y2tHOufy1aIPlPB3vURxvqzG4wqSzHSTZff1uYjctW7S8Fpdcvnp
+         MeEHbx8MecApmkYvkIFzZnUdRBmZmcNYyvFQa+P+oO7HD4+TZktgxX/LfF/TM9B17c
+         zFoI5m52zhb8rf1YJSZ5jYl2qLf9Tasyxz2BBWxE=
+Date:   Tue, 21 Jul 2020 10:54:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: applicom: remove set but not used variable
+ 'byte_reset_it'
+Message-ID: <20200721085441.GB1664942@kroah.com>
+References: <20200721084107.13472-1-zhengyongjun3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f1df7901-35ef-af8a-b852-e5e89ababf01@al2klimov.de>
+In-Reply-To: <20200721084107.13472-1-zhengyongjun3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 08:43:00AM +0200, Alexander A. Klimov wrote:
->
->
-> Am 21.07.20 um 08:05 schrieb Leon Romanovsky:
-> > On Mon, Jul 20, 2020 at 11:34:00PM +0200, Alexander A. Klimov wrote:
-> > >
-> > >
-> > > Am 20.07.20 um 18:48 schrieb Leon Romanovsky:
-> > > > On Mon, Jul 20, 2020 at 08:36:35AM -0600, Jonathan Corbet wrote:
-> > > > > On Mon, 20 Jul 2020 17:07:16 +0300
-> > > > > Leon Romanovsky <leon@kernel.org> wrote:
-> > > > >
-> > > > > > > Do *you* want to review that megapatch?  The number of issues that have
-> > > This question is... interesting.
-> > > And no, I would not.
-> >
-> > You are EXPECTED to review your work prior sending to the mailing list.
-> I meant I wouldn't review *one big* patch.
-> I didn't mean my actually sent smaller ones.
->
-> >
-> > >
-> > > > > > > come up make it clear that these patches do, indeed, need review...
-> > > > > >
-> > > > > > Can you point me to the issues?
-> > > > > > What can go wrong with such a simple replacement?
-> > > > >
-> > > > > Some bits of the conversation:
-> > > > >
-> > > > >     https://lore.kernel.org/lkml/20200626110219.7ae21265@lwn.net/
-> > > > >     https://lore.kernel.org/lkml/20200626110706.7b5d4a38@lwn.net/
-> > > > >     https://lore.kernel.org/lkml/20200705142506.1f26a7e0@lwn.net/
-> > > > >     https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
-> > > > >     https://lore.kernel.org/lkml/202007081531.085533FC5@keescook/
-> > > > >
-> > > > > etc.
-> > > >
-> > > > After reading your links and especially this one.
-> > > > https://lore.kernel.org/lkml/20200713114321.783f0ae6@lwn.net/
-> > > > I don't understand why are we still seeing these patches?
-> > > >
-> > > > I gave to the author comments too, which were ignored.
-> > > > https://patchwork.kernel.org/patch/11644683/#23466547
-> > > I've added SPDXing (the automated way of course ;) ) to my todo list.
-> >
-> > OMG, why don't you listen? We don't want your automatic patches.
-> Wrong.
-> *Some of you* don't want my automatic patches.
-> And *some others* already applied them and said thanks.
+On Tue, Jul 21, 2020 at 04:41:07PM +0800, Zheng Yongjun wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/char/applicom.c: In function 'ac_register_board':
+> drivers/char/applicom.c:543: warning:
+> variable 'byte_reset_it' set but not used [-Wunused-but-set-variable]
+> 
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/char/applicom.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/char/applicom.c b/drivers/char/applicom.c
+> index 14b2d8034c51..fd0b21607a7f 100644
+> --- a/drivers/char/applicom.c
+> +++ b/drivers/char/applicom.c
+> @@ -131,8 +131,6 @@ static int dummy;	/* dev_id for request_irq() */
+>  static int ac_register_board(unsigned long physloc, void __iomem *loc, 
+>  		      unsigned char boardno)
+>  {
+> -	volatile unsigned char byte_reset_it;
+> -
+>  	if((readb(loc + CONF_END_TEST)     != 0x00) ||
+>  	   (readb(loc + CONF_END_TEST + 1) != 0x55) ||
+>  	   (readb(loc + CONF_END_TEST + 2) != 0xAA) ||
+> @@ -160,7 +158,6 @@ static int ac_register_board(unsigned long physloc, void __iomem *loc,
+>  	apbs[boardno].RamIO = loc;
+>  	init_waitqueue_head(&apbs[boardno].FlagSleepSend);
+>  	spin_lock_init(&apbs[boardno].mutex);
+> -	byte_reset_it = readb(loc + RAM_IT_TO_PC);
 
-Sure, it is automatic.
+Are you sure you didn't just break the driver?  Lots of times reading
+from hardware is required in order to have previous things work, or even
+have other affects.
 
-Anyway, good luck, may the force be with you!.
+thanks,
 
-Thanks
-
->
-> >
-> > Thanks
-> >
-> > >
-> > > >
-> > > > Thanks
-> > > >
-> > > > >
-> > > > > jon
+greg k-h
