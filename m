@@ -4,141 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16680C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2D620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59DC208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGUGH5 (ORCPT
+        id S1726687AbgGUGPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:07:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35784 "EHLO mga03.intel.com"
+        Tue, 21 Jul 2020 02:15:00 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:35500 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgGUGH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:07:57 -0400
-IronPort-SDR: e2saD8L0YkKwEcQ0eCwASga0tTEnkyzrHRglS5+Sb1w1aClQdkFzy7a44dNN926EeiXZtr20n8
- iIF8cHnsYJkg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="150055683"
-X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
-   d="scan'208";a="150055683"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 23:07:56 -0700
-IronPort-SDR: ZBa2I9rHxxMN6wzwKYTfntR4kstZg/MXfkLRjQDaZ5XRO2OfLRedZSwEk9NzTbvotAwOZhlrvT
- A4IBfiZJIA5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
-   d="scan'208";a="431869766"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 20 Jul 2020 23:07:54 -0700
-Date:   Tue, 21 Jul 2020 14:04:46 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     "Wu, Hao" <hao.wu@intel.com>
-Cc:     Tom Rix <trix@redhat.com>, "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: Re: [PATCH 0/2] Modularization of DFL private feature drivers
-Message-ID: <20200721060446.GC17091@yilunxu-OptiPlex-7050>
-References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
- <0c7c63b8-5444-2deb-9fed-18956a5ad938@redhat.com>
- <DM6PR11MB38194C448ECCF1E6BF386D3F857C0@DM6PR11MB3819.namprd11.prod.outlook.com>
- <237c776b-8746-421d-26ad-eea7242a9172@redhat.com>
- <DM6PR11MB3819828C1C193087AC6A4629857B0@DM6PR11MB3819.namprd11.prod.outlook.com>
+        id S1725294AbgGUGO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:14:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 666AC20265;
+        Tue, 21 Jul 2020 08:14:56 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 94PZoZvLZkCG; Tue, 21 Jul 2020 08:14:55 +0200 (CEST)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id B8160201E2;
+        Tue, 21 Jul 2020 08:14:55 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ mail-essen-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Tue, 21 Jul 2020 08:14:55 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 21 Jul
+ 2020 08:14:55 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id E06AD31801E1;
+ Tue, 21 Jul 2020 08:14:54 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 08:14:54 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>, <broonie@kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-next@vger.kernel.org>,
+        <mhocko@suse.cz>, <mm-commits@vger.kernel.org>,
+        <sfr@canb.auug.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "David Miller" <davem@davemloft.net>
+Subject: Re: mmotm 2020-07-20-19-06 uploaded (net/ipv6/ip6_vti.o)
+Message-ID: <20200721061454.GK20687@gauss3.secunet.de>
+References: <20200721020722.6C7YAze1t%akpm@linux-foundation.org>
+ <536c2421-7ae2-5657-ff31-fbd80bd71784@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <DM6PR11MB3819828C1C193087AC6A4629857B0@DM6PR11MB3819.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <536c2421-7ae2-5657-ff31-fbd80bd71784@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 05:21:43PM +0800, Wu, Hao wrote:
-> > On 7/16/20 8:48 PM, Wu, Hao wrote:
-> > >> Subject: Re: [PATCH 0/2] Modularization of DFL private feature drivers
-> > >>
-> > >> Generally i think this is a good approach.
-> > >>
-> > >> However I do have concern.
-> > >>
-> > >> The feature_id in dfl is magic number, similar to pci id but without a
-> > vendor
-> > >> id.
-> > >>
-> > >> Is it possible to add something like a vendor id so different vendors would
-> > >> not have to be so careful to use a unique id ?
-> > > Hi Tom,
-> > >
-> > > Thanks for the comments.
-> > >
-> > > Here is only one field defined in spec, that is feature id to distinguish one
-> > > feature with another one. There is no vendor id here I think, and several
-> > > cards are using this for now and seems not possible to change DFH format
-> > > for these products. : (
-> >
-> > There looks like some unused bits in the first word, how about
-> >
-> > #define DFH_EOL            BIT_ULL(40)        /* End of list */
-> >
-> > +define DFH_VENDOR    GENMAKE_ULL(49,41) /* Vendor ID */
-> >
-> > #define DFH_TYPE        GENMASK_ULL(63, 60)    /* Feature type */
-> >
-> > And Intel gets id 0.
-> >
-> > >
-> > > I fully understand the concern is the feature id management, and potential
-> > > conflicts there from different vendors. One possible method to resolve this
-> > > is managing the ids in a public place (web? Or just the driver header file for
-> > > feature id definition), all vendors can request some feature ids, and other
-> > > people can see which feature ids have been used so that they can avoid
-> > > using conflict ones with other people.
-> >
-> > The conflict will come in development when two vendors use the same
-> > unpublished feature id.
-> >
-> > Also keeping the truth of id's in the kernel source isn't that great because the
-> > public kernel always lags development repositories.
+On Mon, Jul 20, 2020 at 11:09:34PM -0700, Randy Dunlap wrote:
+> On 7/20/20 7:07 PM, Andrew Morton wrote:
+> > The mm-of-the-moment snapshot 2020-07-20-19-06 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
 > 
-> I fully understand your point, and it's a good idea to me, but I am not sure if
-> we can update the spec for DFHv0 at this moment. Let me check with spec
-> owner about this. Actually I believe we don't want to add anything in driver
-> code which is not defined in the spec at all. : (
 > 
-> >
-> > >
-> > > And in the later version DFH, this feature id will be replaced with GUID
-> > > I think, so it can resolve the conflict problems from different vendors?
-> > > But now, we still need to handle the existing ones. : )
-> >
-> > This is why I proposed needing to generalize the matching.
+> on i386:
 > 
-> Personally I prefer that we can have standard matching functions per DFH
-> specs.
-> 
-> Yilun, how do you think about this?
+> ld: net/ipv6/ip6_vti.o: in function `vti6_rcv_tunnel':
+> ip6_vti.c:(.text+0x2d11): undefined reference to `xfrm6_tunnel_spi_lookup'
 
-I also prefer we don't add anything now before DFL spec is updated.
+Thanks for the report!
 
-The idea of extending the DFLv0 is good, but I'm not sure if it is necessary
-now. It depends on how the customer is using the card, are they
-developing more FME features themselves on current cards and want to make
-them public.
-
-I think we could discuss about the strategy. And we could add another
-patchset if we finally decide and update the DFLv0 spec.
-
-Thanks
-Yilun
-
-> 
-> Thanks
-> Hao
-> 
+I've applied a fix to ipsec-next just a minute ago.
