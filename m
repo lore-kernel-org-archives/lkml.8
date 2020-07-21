@@ -2,158 +2,131 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F298DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD74C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF2232080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595331136;
-	bh=wPDosbxIVdat8N0jUKxbUwItR0sOdNTyG9MjJP9QXVI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=O1m1FaGFwcjep4xOeEZE8LZeygGex8TYi5HUBr+sttykSHKfMydPwnJDAWQlfK8GE
-	 XluwYq/R8KmisAx2Rp6up2FmPv8qYZRTo0lehXgUOZZhiCyRCtwQtY42EsBLiI8+7V
-	 tSEVTNxEOq6TYnOp1OLZSxSNH/AXhSgu7fyhCwbs=
+	by mail.kernel.org (Postfix) with ESMTP id 9CDF7206F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:31:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBmDm2wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgGULcP (ORCPT
+        id S1729754AbgGULby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55046 "EHLO
+        Tue, 21 Jul 2020 07:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgGULcO (ORCPT
+        with ESMTP id S1726942AbgGULbx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:32:14 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D874C061794;
-        Tue, 21 Jul 2020 04:32:14 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so23659958lji.9;
-        Tue, 21 Jul 2020 04:32:14 -0700 (PDT)
+        Tue, 21 Jul 2020 07:31:53 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879E5C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:31:53 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 95so14791132otw.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=hvBHByfuN4VYEKY+y/yvJNCDmWONLf8OUqOSVrmh4Q4=;
-        b=MGipDunY1c1w9J7bbp++6aGSvcXbN4qzm1hj5wdbM4Tvy9BDJrzitpV/pEaNkPI5HO
-         p10+qclaXvCngz4o/38MfLlt76Ax7RgT63bL1H2BZAZp8pkZMQwoIFNidpQQ3p73hxlm
-         N5nPQorpjmUbnUHTAalkXukqbQ6qCUjW/Tr7ZUi5iuLN2k4EzHNClREOekUYyTJO2VQc
-         EA8E3RiwFi/h/5JRXm44re0gx8mt3OeAYscQ3PJIy7/GC4CEYmGufD5bHLEjPw5ta4/S
-         pTu3DMsEdgevR/1RdrEXq302P+yrV+krAee4eVb2D0SEzcnUPnycLfi8Jv59zIV4TXPC
-         IJDw==
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J8+ZzLQU1DKkGpd+nrEd6PrRxlNkrxHw8dBLLALGP/4=;
+        b=mBmDm2wxTdvMcm1uLvLz/S2MTRQoiNFHp26/ALu0Z15rkWakMIMMYBYSQ1m5BV8Vj7
+         zarNUBw1TKK0gu83LpYu8Rux5oPZ43QgrTmnPHlCs5iHAT3j5xyayvCa3FqLKLcaoLHg
+         T8pBl7caJAByaP7IoZCvlpanEY3WucjtCrhDfgntzaBmcC7vdU5koHWDy5aUroxF8S+J
+         4rOYfE9AjrH4/zOL9L1/8tbNLhM8jRLeutmg664m9Fc1lMVmcHkc32gzDUx1K729SmY+
+         EZH/mnYbet+kTjwjCZGHyD+W0cYwQoRkWi/F6qXnKXiNfIMC0ifJG0XpR+h/2f7Dlie5
+         SAtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=hvBHByfuN4VYEKY+y/yvJNCDmWONLf8OUqOSVrmh4Q4=;
-        b=IVlacHq1YDrOBPHy1tcOh7kXxgEzbiOmt+KcZk6/n8OmVMmDqN2goH4OPxrt477CLp
-         sayWAfJdMBQhXUbKOwtvjjGUljoyKnW11/xcpjyjXGC+ppc+zlr0lYdM5QapFBRjW2MK
-         9nIv+PQu20f3mTbZVvMraHpNaAZt7pp/YC0gmyc+2QKWBIZkRR9pyn6vSW71IzJ3Hrux
-         NL6JI1QGU6N/IIGgJa55ZHG3N7BLZ1bTcgCOiVNyIRMF9lcvVDeW4rHsNJSAA04nRkmN
-         DsnKCFYswJT+dcG7DB2+SXxRKAVemHY0jVthnqpZ5aeLky6af/RYwWEQuc2Lewcd4Ftk
-         j1Fw==
-X-Gm-Message-State: AOAM53305flbFvltkaQ25YGmzx55ssg7HKgXj2VFE8DZU9PCoO+uvxDe
-        aYiAV98dzeCy10y8j8d4odM=
-X-Google-Smtp-Source: ABdhPJyYSOylUhpvpY66H7g9H8of+i4dnEuzb6if/mlO0vzJWxnMDWB1Z1US6G3nS8tjTbkUTDZ5Cg==
-X-Received: by 2002:a2e:9003:: with SMTP id h3mr12861735ljg.191.1595331132934;
-        Tue, 21 Jul 2020 04:32:12 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id h21sm4321302ljk.31.2020.07.21.04.32.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jul 2020 04:32:11 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Ben Dooks <ben@simtec.co.uk>
-Subject: Re: [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
-In-Reply-To: <5862f649-8058-7e39-cb43-2a4b09303333@synopsys.com>
-References: <20200715093209.3165641-1-lee.jones@linaro.org> <20200715093209.3165641-2-lee.jones@linaro.org> <566f2d65-1b5a-ed2a-f33f-516b66be2624@synopsys.com> <87blk9p5ia.fsf@kernel.org> <5862f649-8058-7e39-cb43-2a4b09303333@synopsys.com>
-Date:   Tue, 21 Jul 2020 14:32:07 +0300
-Message-ID: <875zahp0i0.fsf@kernel.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=J8+ZzLQU1DKkGpd+nrEd6PrRxlNkrxHw8dBLLALGP/4=;
+        b=GGMejwFj17EctgepVfkpv3dF2rnU+JCCaC4b8RqMli9BXuLSaEAhuie+Apnb9wtXoj
+         3U09p3EKqkEdNrWlAwRcMLwlsIGZjl2GY+YNUKIr/dj4bvWbZ2ocY7VP9YGdzjYSq21d
+         P//IHwsIZEs9CW5j/9ttggah6MAz1HVjSyYn0ABmMa6LTB+rPEu6QGLdnPuHhJHuY2bl
+         T7AdHDDutyQp4gwpol9NJTzH/M8PsAO9uwDDs95sJuNzKh/tXT9Vkl/xLCfd9w/BJedY
+         b/j1GFuEW1LGmDM8mUVcm+OZfjChf2+w2q1jDyM4C4LwF75qoHn91PhQswxyJmvMaHYs
+         XWXg==
+X-Gm-Message-State: AOAM532C27e3fGapzZ7qvmBkmS6eL16SGUQqFYXHiS7WUhfaLhR3UNpT
+        Zyze0PnFAJFi8ptukNjz8Q==
+X-Google-Smtp-Source: ABdhPJy4fDNvNSAWBrkH6siHqvLvS4hIhyc98yEGNeHrZmkH8eBvKk3W0h8YSMqDMrD27KE6ulXf5w==
+X-Received: by 2002:a9d:4ef:: with SMTP id 102mr23456732otm.289.1595331112867;
+        Tue, 21 Jul 2020 04:31:52 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.146.204])
+        by smtp.gmail.com with ESMTPSA id x10sm5035671ooq.13.2020.07.21.04.31.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 04:31:51 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:70d6:b947:41f4:6e7e])
+        by serve.minyard.net (Postfix) with ESMTPSA id BDAFA18003B;
+        Tue, 21 Jul 2020 11:31:50 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 06:31:49 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, guohanjun@huawei.com, joe@perches.com
+Subject: Re: [PATCH v2] ipmi/watchdog: add missing newlines when printing
+ parameters by sysfs
+Message-ID: <20200721113149.GH2952@minyard.net>
+Reply-To: minyard@acm.org
+References: <1595313309-43881-1-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595313309-43881-1-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 21, 2020 at 02:35:09PM +0800, Xiongfeng Wang wrote:
+> When I cat some ipmi_watchdog parameters by sysfs, it displays as
+> follows. It's better to add a newline for easy reading.
+> 
+> root@(none):/# cat /sys/module/ipmi_watchdog/parameters/action
+> resetroot@(none):/# cat /sys/module/ipmi_watchdog/parameters/preaction
+> pre_noneroot@(none):/# cat /sys/module/ipmi_watchdog/parameters/preop
+> preop_noneroot@(none):/#
+> 
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+Thanks, included in my queue for next release.
 
-> Hi Felipe,
->
-> On 7/21/2020 1:43 PM, Felipe Balbi wrote:
->> Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
->>=20
->>> On 7/15/2020 1:32 PM, Lee Jones wrote:
->>>> The value obtained from GINTSTS2 should be masked with the GINTMSK2
->>>> value.  Looks like this has been broken since
->>>> dwc2_gadget_wkup_alert_handler() was added back in 2018.
->>>>
->>>> Also fixes the following W=3D1 warning:
->>>>
->>>>    drivers/usb/dwc2/gadget.c: In function =E2=80=98dwc2_gadget_wkup_al=
-ert_handler=E2=80=99:
->>>>    drivers/usb/dwc2/gadget.c:259:6: warning: variable =E2=80=98gintmsk=
-2=E2=80=99 set but not used [-Wunused-but-set-variable]
->>>>    259 | u32 gintmsk2;
->>>>    | ^~~~~~~~
->>>>
->>>> Cc: Minas Harutyunyan <hminas@synopsys.com>
->>>> Cc: Ben Dooks <ben@simtec.co.uk>
->>>> Fixes: 187c5298a1229 ("usb: dwc2: gadget: Add handler for WkupAlert in=
-terrupt")
->>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>>
->>> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
->>=20
->> Should I apply the entire series or only 1/8?
->>=20
-> In this series only 2 patches are related to dwc2, which I'm already Acke=
-d:
->
-> [PATCH v2 1/8] usb: dwc2: gadget: Make use of GINTMSK2
-> [PATCH v2 2/8] usb: dwc2: gadget: Avoid pointless read of EP control=20
-> register
->
-> I can't acked other patches from this series, because they are not=20
-> related to dwc2.
+-corey
 
-heh, I saw that after sending the email, sorry :-)
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8W0jcACgkQzL64meEa
-mQYkNA//SvFqXwJajGIbMxt0zxlYlwOUMXjMJAoVSgOROAwJX1x/7BU9NfjuPv1C
-Ndy4KfZIOKX/QZVpFbVSAtK23AE5nS3dtPLuP1xhpX6ZDu6vKkwfRuXHPlotTx16
-Na9Xq1u2sh9FGa1HeeCEwWVTad672OOsRuqA3ueS+K1bU3GjgbL/dyKcp435CQeP
-oLw45QRIWWnOhmc+I1cs0dON4Xl6mCQwX+j7T3ztGUSLXjs8L+DOjBdo/ACBAdTp
-yJuvTETyDU11uuckNRywwAxAIdw0AxypK2gLInoYGdyLhxrvE4STtMIF5MT4Ts8J
-jnzD2ddDKLRS4mw2vpn1iKqKLt65loqJg7flcSAfV+wmcDIDpLOjWq5iYWl2Wto+
-iTbAZO9PQnWVrPtIB7ghVfIG0d/QYxOphGHBnVhrNPq6g0F0ZmHG7KipWUMXBcbQ
-v8pHE5cSh+R6SiWt8Exif0CeApworGdYb7bm8Cwe1pNSGWnjzzwphK1Dz4CSqjVI
-PE30gykBihvQD+pR3I92HidcLDzDlMKKp8BHwYqzthdNg+TPQO3sWanucJJGCQno
-FeGpLOiOX/8/TmMWZxILr+MEBsq8DI7ByxkQwqlqjXaRuVCFvQKQ5KBhSCpKlgOQ
-ve/gQG2kHf2q35Kj3VhW0YYznwZv+zufDws7NJ2jvgLWSo9H7XM=
-=Tbrc
------END PGP SIGNATURE-----
---=-=-=--
+> ---
+>  drivers/char/ipmi/ipmi_watchdog.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_watchdog.c b/drivers/char/ipmi/ipmi_watchdog.c
+> index 55986e1..f78156d 100644
+> --- a/drivers/char/ipmi/ipmi_watchdog.c
+> +++ b/drivers/char/ipmi/ipmi_watchdog.c
+> @@ -232,12 +232,17 @@ static int set_param_str(const char *val, const struct kernel_param *kp)
+>  static int get_param_str(char *buffer, const struct kernel_param *kp)
+>  {
+>  	action_fn fn = (action_fn) kp->arg;
+> -	int       rv;
+> +	int rv, len;
+>  
+>  	rv = fn(NULL, buffer);
+>  	if (rv)
+>  		return rv;
+> -	return strlen(buffer);
+> +
+> +	len = strlen(buffer);
+> +	buffer[len++] = '\n';
+> +	buffer[len] = 0;
+> +
+> +	return len;
+>  }
+>  
+>  
+> -- 
+> 1.7.12.4
+> 
