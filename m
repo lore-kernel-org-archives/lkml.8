@@ -2,125 +2,146 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C41C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA18C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C6B20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE7920792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q6BNCCri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbgGUQ13 (ORCPT
+        id S1730276AbgGUQ21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:27:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39704 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbgGUQ12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:27:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CD59EAD79;
-        Tue, 21 Jul 2020 16:27:33 +0000 (UTC)
-Message-ID: <6db722947546221ed99d3f473f78e1a6de65d7d6.camel@suse.de>
-Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
-        iommu@lists.linux-foundation.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Tue, 21 Jul 2020 18:27:24 +0200
-In-Reply-To: <CAMi1Hd3C6kh5E49EgytBAQ_2AE_jvnp+eSNsxBYaux+exSvdbg@mail.gmail.com>
-References: <20200708164936.9340-1-nsaenzjulienne@suse.de>
-         <CAMi1Hd35tRM=cnmzwX=SDgu-OoXi1Xj+twFkoULaVZBbTpe6sw@mail.gmail.com>
-         <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de>
-         <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com>
-         <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de>
-         <CAMi1Hd0=ZsGhTkSy221EP9Vb3GMOcS0UMczX2u5X9qK37_ea1A@mail.gmail.com>
-         <01831596e4a2a6c9c066138b23bd30435f8e5569.camel@suse.de>
-         <CAMi1Hd3C6kh5E49EgytBAQ_2AE_jvnp+eSNsxBYaux+exSvdbg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Tue, 21 Jul 2020 12:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728432AbgGUQ2Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:28:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DD1C061794;
+        Tue, 21 Jul 2020 09:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=ePYrotlytJXvI0CdCW3tl0P3sQHCqpS3OjHeAMmpEaE=; b=q6BNCCri3pbzjRfUrPGciwqwqe
+        C8mHvZMLE04VHY1KjTJi2UGZfSkeYQx903DvmsKP4HBBWZEI9huLFQLpj3ucrW06qaobortT4h0Bi
+        5hE7gfPQRqQ7He3x7i/jdZ0FqYNqE1skEzHj+mlZexPrUXoCr1VJXaD1i6IaDGhCNFrYPG0+/cgOY
+        JlhZz+kSftKzAyiD0I8RPv7cqPn5BpRf1i/zKQwlDwjipapIOk1mwzb1jLIat1eHnXqso/E0YvbHw
+        HZXuMg/dY9ae54Sijv5VSWVqUnTm10t5BIwL4AcXWHfdKD0uXknayQP7C0DGdGxrjVfzxKJr34ScC
+        ioXdhHqQ==;
+Received: from [2001:4bb8:18c:2acc:5b1c:6483:bd6d:e406] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxv7u-0007RB-1J; Tue, 21 Jul 2020 16:28:22 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 02/24] fs: refactor ksys_umount
+Date:   Tue, 21 Jul 2020 18:27:56 +0200
+Message-Id: <20200721162818.197315-3-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721162818.197315-1-hch@lst.de>
+References: <20200721162818.197315-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 20:52 +0530, Amit Pundir wrote:
+Factor out a path_umount helper that takes a struct path * instead of the
+actual file name.  This will allow to convert the init and devtmpfs code
+to properly mount based on a kernel pointer instead of relying on the
+implicit set_fs(KERNEL_DS) during early init.
 
-[...]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/namespace.c | 40 ++++++++++++++++++----------------------
+ 1 file changed, 18 insertions(+), 22 deletions(-)
 
-> > > > Can you try booting *without* my patch and this in the kernel
-> > > > command
-> > > > line: "cma=16M@0x100000000-0x200000000".
-> > > 
-> > > It doesn't boot with this added kernel command line.
-> > 
-> > For the record, this placed the CMA in the [4GB, 8GB] address space
-> > instead of you setup's default: [3GB, 4GB]. All atomic pools fall
-> > in
-> > that memory area without my patch, which makes me think some of the
-> > devices on your board might not like higher addresses.
-> > 
-> 
-> Thank you Nicolas for the details. Though we don't set the CMA
-> alloc-ranges explicitly in upstream sdm845 dts, but I dug around and
-> found that CMA alloc-ranges in the downstream kernel are indeed in
-> lower address space.
-> https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/dipper-q-oss/arch/arm64/boot/dts/qcom/sdm845.dtsi#L662
-> 
-> /* global autoconfigured region for contiguous allocations */
-> linux,cma {
->         compatible = "shared-dma-pool";
->         alloc-ranges = <0 0x00000000 0 0xffffffff>;
->         reusable;
->         alignment = <0 0x400000>;
->         size = <0 0x2000000>;
->         linux,cma-default;
-> };
-
-Pretty standard, and similar to what it's being used upstream by
-default.
-
-> 
-> > What happens if you boot with my troublesome patch with this in
-> > your
-> > device tree? (insert it at the bottom of sdm845-beryllium.dts)
-> > 
-> > &soc {
-> >         dma-ranges = <0 0 0 0 0x1 0>;
-> > };
-> > 
-> 
-> Device still doesn't boot up to adb shell.
-
-Let's get a bigger hammer, I'm just looking for clues here. Can you
-apply this and provide the dmesg output.
-
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 6bc74a2d5127..2160676bf488 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -268,6 +268,8 @@ void *dma_alloc_from_pool(struct device *dev, size_t size,
-                        schedule_work(&atomic_pool_work);
-        }
- 
-+       dev_info(dev, "%s: size %lx, phys addr %llx, flags 0x%x\n", __func__, size, phys, flags);
-+
-        return ptr;
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 6f8234f74bed90..43834b59eff6c3 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1706,36 +1706,19 @@ static inline bool may_mandlock(void)
  }
-  
-
-Regards,
-Nicolas
+ #endif
+ 
+-/*
+- * Now umount can handle mount points as well as block devices.
+- * This is important for filesystems which use unnamed block devices.
+- *
+- * We now support a flag for forced unmount like the other 'big iron'
+- * unixes. Our API is identical to OSF/1 to avoid making a mess of AMD
+- */
+-
+-int ksys_umount(char __user *name, int flags)
++static int path_umount(struct path *path, int flags)
+ {
+-	struct path path;
+ 	struct mount *mnt;
+ 	int retval;
+-	int lookup_flags = LOOKUP_MOUNTPOINT;
+ 
+ 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+ 		return -EINVAL;
+-
+ 	if (!may_mount())
+ 		return -EPERM;
+ 
+-	if (!(flags & UMOUNT_NOFOLLOW))
+-		lookup_flags |= LOOKUP_FOLLOW;
+-
+-	retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
+-	if (retval)
+-		goto out;
+-	mnt = real_mount(path.mnt);
++	mnt = real_mount(path->mnt);
+ 	retval = -EINVAL;
+-	if (path.dentry != path.mnt->mnt_root)
++	if (path->dentry != path->mnt->mnt_root)
+ 		goto dput_and_out;
+ 	if (!check_mnt(mnt))
+ 		goto dput_and_out;
+@@ -1748,12 +1731,25 @@ int ksys_umount(char __user *name, int flags)
+ 	retval = do_umount(mnt, flags);
+ dput_and_out:
+ 	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
+-	dput(path.dentry);
++	dput(path->dentry);
+ 	mntput_no_expire(mnt);
+-out:
+ 	return retval;
+ }
+ 
++int ksys_umount(char __user *name, int flags)
++{
++	int lookup_flags = LOOKUP_MOUNTPOINT;
++	struct path path;
++	int ret;
++
++	if (!(flags & UMOUNT_NOFOLLOW))
++		lookup_flags |= LOOKUP_FOLLOW;
++	ret = user_path_at(AT_FDCWD, name, lookup_flags, &path);
++	if (ret)
++		return ret;
++	return path_umount(&path, flags);
++}
++
+ SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
+ {
+ 	return ksys_umount(name, flags);
+-- 
+2.27.0
 
