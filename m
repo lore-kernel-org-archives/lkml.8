@@ -2,216 +2,117 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CA3C433EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A86C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9CEC20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D23D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Ol35WKBB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEwbGGpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbgGUOmK (ORCPT
+        id S1729529AbgGUOmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:42:10 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:8466 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729353AbgGUOmI (ORCPT
+        Tue, 21 Jul 2020 10:42:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728683AbgGUOmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:42:08 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LEe4HJ002024;
-        Tue, 21 Jul 2020 07:42:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=soOISmrN6AihBedCSNqv6UBc+tUvnI41br1BaxY4uRY=;
- b=Ol35WKBBqI8tmRc8P89Tb0K3+NOVRWJLv8vQN1MdyB0PbmPyqPNOZSPeTf/dSSo513Tc
- Z5iHHHz9oOpccm1DOFfXgk5B0EXgzs/lOYDac5m9BNhC3hGuORVwcPR/b9fQb31SgKWM
- dJY4G5sbWwB3tCDYnJa29O/lxt0D0GTpqHD5WMK6KBWFBOQsZ25czfVvalIgSmCR/qfQ
- 3Nsp04e9kImTxF6WvDos/3LvKMva31ja2JW25tUyI/RptLNn8vyjGpqjE35D1hBpijnw
- GAVah6GriNeV9jynkzewSJ/Kn0mt3rGjVWVPn3G7TnX6x0Mzvjj87cazTOiMXuXnkh+f +g== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32bxenm0pd-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 07:42:06 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
- 2020 07:42:04 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
- 2020 07:42:03 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 21 Jul 2020 07:42:03 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 2318C3F703F;
-        Tue, 21 Jul 2020 07:41:59 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Tomer Tayar" <tomer.tayar@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 2/2] qed: suppress false-positives interrupt error messages on HW init
-Date:   Tue, 21 Jul 2020 17:41:43 +0300
-Message-ID: <20200721144143.379-3-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200721144143.379-1-alobakin@marvell.com>
-References: <20200721144143.379-1-alobakin@marvell.com>
+        Tue, 21 Jul 2020 10:42:24 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352BDC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:42:24 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t15so1772953pjq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 07:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AqB2Pes9HY0mfXIHZs55IOMGH+yvSYMllsLCvMYuJRQ=;
+        b=LEwbGGpOtTy5VKyQ0OqJ4oiaDaGivfOY6l4hZoQB0GKawziemHBCIKMNmYLINzSH5k
+         eUV7/weitMFK26xpGRwuKZ/wVpaSAkt0CndViCBBH/gX+IWna4mKclauXj0xardu/SsC
+         TUGmAo+CYWXRh938OHurnq696W8M5GXb/DrwcyOYZqmalrF8fJbPbE5EnLm/KZouvvXx
+         SpJUE8q5HIq7rL82JxObimEp58jY2CuxkDTxYZy/5DOrpFq+Wsnjnz4oFBk+qo5qEROV
+         ziy5GHDkbvr7Y75VXeqUOO35f6On6C5v+dpeEldL1IXuHKuDVgihgJMWAO6X01d7MECG
+         6CUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AqB2Pes9HY0mfXIHZs55IOMGH+yvSYMllsLCvMYuJRQ=;
+        b=Tc0u3uOhrDCZwDHWgD+fspxCjF7SQB9a38WcXxT3107kIjVNaBqh79T+OxLVjh0OWy
+         KjrusxqhvJvdT2yINDmcmqMr0phVG+fAdnjhOl2z2A/lJPSrh4AqT5TD2JAQQ+3nq9yq
+         GGdg75z7f1crH5VfPGHR2mGcdTTeioEbRt8q4Al0UZpQQYCbL88IBzmZJJRO1PBdzAWz
+         Kgpd+aVyC81wBuSfq4KLY5xtVrxn5cPxVHMevF4mF/5nZUsuyHBxOczqme4yl+fK/6h1
+         ipeJCtXHORcBvUXEVt33qt8J3aoONk7nbjs9cKz/gncACpx1YHylU93OXMfnXRF9qcn6
+         AMbg==
+X-Gm-Message-State: AOAM532teAW8n0bFxIgVucPwNfW5BNtkcCgrAotafaV20YIa/QkHNsrS
+        r6f5weG4y7beW3bx5tpkezE=
+X-Google-Smtp-Source: ABdhPJx/CLcsZovzNbUNs7PWDKE7qDleMl6cyddLrZdb/pAWw102IzYOfTyFA+8hlhKEPCMG8EbmiA==
+X-Received: by 2002:a17:90a:db8a:: with SMTP id h10mr5326502pjv.58.1595342543712;
+        Tue, 21 Jul 2020 07:42:23 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id p11sm3504148pjb.3.2020.07.21.07.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 07:42:22 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 23:42:20 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
+Message-ID: <20200721144220.GE44523@jagdpanzerIV.localdomain>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <20200717234818.8622-3-john.ogness@linutronix.de>
+ <20200719143527.GA566@jagdpanzerIV.localdomain>
+ <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
+ <20200720015057.GA463@jagdpanzerIV.localdomain>
+ <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_09:2020-07-21,2020-07-21 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was found that qed_pglueb_rbc_attn_handler() can produce a lot of
-false-positive error detections on driver load/reload (especially after
-crashes/recoveries) and spam the kernel log:
+On (20/07/20 11:30), Linus Torvalds wrote:
+> > Do I get it right, what you are saying is - when we process a PR_CONT
+> > message the cont buffer should already contain previous non-LOG_NEWLINE
+> > and non-PR_CONT message, otherwise it's a bug?
+> 
+> No.
+> 
+> I'm saying that the code that does PR_CONT should have done *some*
+> printing before, otherwise it's at the very least questionable.
+> 
+> IOW, you can't just randomly start printing with PR_CONT, without
+> having established _some_ context for it.
 
-[    4.958275] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d00ff0
-[ 2079.146764] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d80ff0
-[ 2116.374631] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d80ff0
-[ 2135.250564] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d80ff0
-[...]
+OK, I see. I sort of suspect that we may actually have code that does
+just pr_cont() (e.g. what Joe pointed out). It doesn't seem like that
+"establish a context" was ever enforced, doing a bunch of pr_cont()
+simply works.
 
-Reduce the logging level of two false-positive prone error messages from
-notice to verbose on initialization (only) to not mix it with real error
-attentions while debugging.
+[..]
+> That said, we have traditionally used not just "current process", but
+> also "last irq-level" as the context information, so I do think it
+> would be good to continue to do that.
 
-Fixes: 666db4862f2d ("qed: Revise load sequence to avoid PCI errors")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
----
- drivers/net/ethernet/qlogic/qed/qed_dev.c |  2 +-
- drivers/net/ethernet/qlogic/qed/qed_int.c | 50 +++++++++++++----------
- drivers/net/ethernet/qlogic/qed/qed_int.h |  4 +-
- 3 files changed, 32 insertions(+), 24 deletions(-)
+OK, so basically, extending printk_caller_id() so that for IRQ/NMI
+we will have more info than just "0x80000000 + raw_smp_processor_id()".
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 9c26fde663b3..dbdac983ccde 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -3102,7 +3102,7 @@ int qed_hw_init(struct qed_dev *cdev, struct qed_hw_init_params *p_params)
- 		}
- 
- 		/* Log and clear previous pglue_b errors if such exist */
--		qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_main_ptt);
-+		qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_main_ptt, true);
- 
- 		/* Enable the PF's internal FID_enable in the PXP */
- 		rc = qed_pglueb_set_pfid_enable(p_hwfn, p_hwfn->p_main_ptt,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index 7e13a9d9b89c..5eec1fc6229d 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -257,9 +257,10 @@ static int qed_grc_attn_cb(struct qed_hwfn *p_hwfn)
- #define PGLUE_ATTENTION_ZLR_VALID		(1 << 25)
- #define PGLUE_ATTENTION_ILT_VALID		(1 << 23)
- 
--int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
--				struct qed_ptt *p_ptt)
-+int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+				bool hw_init)
- {
-+	char msg[256];
- 	u32 tmp;
- 
- 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_TX_ERR_WR_DETAILS2);
-@@ -273,22 +274,23 @@ int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
- 		details = qed_rd(p_hwfn, p_ptt,
- 				 PGLUE_B_REG_TX_ERR_WR_DETAILS);
- 
--		DP_NOTICE(p_hwfn,
--			  "Illegal write by chip to [%08x:%08x] blocked.\n"
--			  "Details: %08x [PFID %02x, VFID %02x, VF_VALID %02x]\n"
--			  "Details2 %08x [Was_error %02x BME deassert %02x FID_enable deassert %02x]\n",
--			  addr_hi, addr_lo, details,
--			  (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_PFID),
--			  (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_VFID),
--			  GET_FIELD(details,
--				    PGLUE_ATTENTION_DETAILS_VF_VALID) ? 1 : 0,
--			  tmp,
--			  GET_FIELD(tmp,
--				    PGLUE_ATTENTION_DETAILS2_WAS_ERR) ? 1 : 0,
--			  GET_FIELD(tmp,
--				    PGLUE_ATTENTION_DETAILS2_BME) ? 1 : 0,
--			  GET_FIELD(tmp,
--				    PGLUE_ATTENTION_DETAILS2_FID_EN) ? 1 : 0);
-+		snprintf(msg, sizeof(msg),
-+			 "Illegal write by chip to [%08x:%08x] blocked.\n"
-+			 "Details: %08x [PFID %02x, VFID %02x, VF_VALID %02x]\n"
-+			 "Details2 %08x [Was_error %02x BME deassert %02x FID_enable deassert %02x]",
-+			 addr_hi, addr_lo, details,
-+			 (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_PFID),
-+			 (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_VFID),
-+			 !!GET_FIELD(details, PGLUE_ATTENTION_DETAILS_VF_VALID),
-+			 tmp,
-+			 !!GET_FIELD(tmp, PGLUE_ATTENTION_DETAILS2_WAS_ERR),
-+			 !!GET_FIELD(tmp, PGLUE_ATTENTION_DETAILS2_BME),
-+			 !!GET_FIELD(tmp, PGLUE_ATTENTION_DETAILS2_FID_EN));
-+
-+		if (hw_init)
-+			DP_VERBOSE(p_hwfn, NETIF_MSG_INTR, "%s\n", msg);
-+		else
-+			DP_NOTICE(p_hwfn, "%s\n", msg);
- 	}
- 
- 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_TX_ERR_RD_DETAILS2);
-@@ -321,8 +323,14 @@ int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
- 	}
- 
- 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_TX_ERR_WR_DETAILS_ICPL);
--	if (tmp & PGLUE_ATTENTION_ICPL_VALID)
--		DP_NOTICE(p_hwfn, "ICPL error - %08x\n", tmp);
-+	if (tmp & PGLUE_ATTENTION_ICPL_VALID) {
-+		snprintf(msg, sizeof(msg), "ICPL error - %08x", tmp);
-+
-+		if (hw_init)
-+			DP_VERBOSE(p_hwfn, NETIF_MSG_INTR, "%s\n", msg);
-+		else
-+			DP_NOTICE(p_hwfn, "%s\n", msg);
-+	}
- 
- 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_MASTER_ZLR_ERR_DETAILS);
- 	if (tmp & PGLUE_ATTENTION_ZLR_VALID) {
-@@ -361,7 +369,7 @@ int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
- 
- static int qed_pglueb_rbc_attn_cb(struct qed_hwfn *p_hwfn)
- {
--	return qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_dpc_ptt);
-+	return qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_dpc_ptt, false);
- }
- 
- static int qed_fw_assertion(struct qed_hwfn *p_hwfn)
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.h b/drivers/net/ethernet/qlogic/qed/qed_int.h
-index e09db3386367..110169e90121 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.h
-@@ -442,7 +442,7 @@ int qed_int_set_timer_res(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
- 
- #define QED_MAPPING_MEMORY_SIZE(dev)	(NUM_OF_SBS(dev))
- 
--int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
--				struct qed_ptt *p_ptt);
-+int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
-+				bool hw_init);
- 
- #endif
--- 
-2.25.1
-
+	-ss
