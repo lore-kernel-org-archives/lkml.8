@@ -2,128 +2,170 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A33C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38929C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E2220709
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192312073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5qIpgFp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q3PTt388"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgGULCe (ORCPT
+        id S1729432AbgGULCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:02:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39223 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726266AbgGULCd (ORCPT
+        Tue, 21 Jul 2020 07:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbgGULCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:02:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595329351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+Hd8mpjklFIL9BDw1lIZJpbTiG76n73CJj60X8HVXYI=;
-        b=a5qIpgFpG0In8MdPeKIxXfu5KEMnzytOx1gTEDjscY8etXwr+PbGzsfskSmD7NwxK+eYR0
-        q3YZ3F/iu7oYbGd5nAbHlzvn/vP6syP1ujxN/2SA8yMabihGmmEDDrJ+S89/k39WCCUnt0
-        VGBkdPdZ5ts00QfcuH2sT30HRMQv2/U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-HIHQZ2lqMGez3pIL7V5UNA-1; Tue, 21 Jul 2020 07:02:26 -0400
-X-MC-Unique: HIHQZ2lqMGez3pIL7V5UNA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CD4058;
-        Tue, 21 Jul 2020 11:02:23 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CC7D10021B3;
-        Tue, 21 Jul 2020 11:02:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CY4PR1101MB23267DC8D2B1232744A5D6DCE79B0@CY4PR1101MB2326.namprd11.prod.outlook.com>
-References: <CY4PR1101MB23267DC8D2B1232744A5D6DCE79B0@CY4PR1101MB2326.namprd11.prod.outlook.com> <20200612183450.4189588-1-keescook@chromium.org> <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com> <202006142054.C00B3E9C9@keescook> <CY4PR1101MB23261B27ACF9D7FBC3969318E79C0@CY4PR1101MB2326.namprd11.prod.outlook.com> <202006151108.5B25D5A31@keescook>
-To:     "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc:     dhowells@redhat.com, Kees Cook <keescook@chromium.org>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "shakeelb@google.com" <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        "alex.huangjianhui@huawei.com" <alex.huangjianhui@huawei.com>,
-        "dylix.dailei@huawei.com" <dylix.dailei@huawei.com>,
-        "chenzefeng2@huawei.com" <chenzefeng2@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
+        Tue, 21 Jul 2020 07:02:48 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79514C0619D8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:02:48 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so2438887wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 04:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CPqRjmeULxuLVoEjy9aA3UQhI9sTfnd10elbtAQrDro=;
+        b=q3PTt388dGTnzDpVwzvX6J60ZQKkYn/bYlCxdn54F6eINTC2t/AidA+9Em79HiEZRt
+         lavrMoQiz13W5VNdzEGkAZDZOy4WCxvC2LGYETtYQrLBrSesCPem+2KnQZNDvq9REXRL
+         oOrUs7OF4A3Yr9oKdXRBigpkeKEb46CLGy2q+phezgBG+EEhywNBZqsa1oFPDlVszg8e
+         iPeyiyu4ytWfy6HBiQU+IIjba9r0/2MaZ1ShQUSedgi+eIHyTVeXGn5Hc+bg+mM7MwYq
+         EWe02FiTsvsrcAgW9M2u4viKWhX+d0dp4COZjIhCwTvTxY++9dLalWkh0XmV95/70I/Q
+         b9fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CPqRjmeULxuLVoEjy9aA3UQhI9sTfnd10elbtAQrDro=;
+        b=nPOoA1BWHXIS50tIv2pXcUokmRVGrrn5j1xeJDBy+Rskstr95U/yqXectPjocu778L
+         JjE+1c1UZRi+vudvIHks+qfHB3LpDJgiNrXzjBJIRPhjW5FaXoQvw99VJbtlQ4eiSDY/
+         3sF0WGX+L7iKjmNSvYeaiPrIBAyNoPdhg6z6N4QUXjuyOt8MFvo4si2hJKDRQjxGk7Oo
+         g/28HJk34LKqi2CzxVysJzowZfvRXiKRuWFv/hU+WVG5yynuyPh+o8xNPkz7Gn79jlyS
+         agC869MAZFTD21e2GHZGP8t786edwIoxNWh/4kTHdNdbabMqGbghZUEd7POqUlbKCli4
+         tJeg==
+X-Gm-Message-State: AOAM530K5rI6QYgX/QJYyIhzGuOpmKhnlaAl2sO9KT+njG0pqFmnPy3r
+        E9MA3JsMILNcG52a6Zf66BL6AQ==
+X-Google-Smtp-Source: ABdhPJw4oqzUpsLRaO3E4F0cyKC6CtdtVtcGI3tpABklcSHKMh0/ZWva0LboU9nfH9I2yu3x4fbG/A==
+X-Received: by 2002:a7b:ce83:: with SMTP id q3mr3481693wmj.5.1595329366936;
+        Tue, 21 Jul 2020 04:02:46 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
+        by smtp.googlemail.com with ESMTPSA id d14sm4547519wre.44.2020.07.21.04.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 04:02:46 -0700 (PDT)
+Subject: Re: [PATCH v4 2/4] clocksource/drivers: Add CLINT timer driver
+To:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Emil Renner Berhing <kernel@esmil.dk>
+References: <20200717075101.263332-1-anup.patel@wdc.com>
+ <20200717075101.263332-3-anup.patel@wdc.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <63f65ddd-b7c4-b8fd-151c-a77e8c87efed@linaro.org>
+Date:   Tue, 21 Jul 2020 13:02:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <546056.1595329339.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 21 Jul 2020 12:02:19 +0100
-Message-ID: <546057.1595329339@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200717075101.263332-3-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> https://github.com/ereshetova/linux-stable/commits/refcount_t_fs
+On 17/07/2020 09:50, Anup Patel wrote:
+> We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
+> RISC-V NoMMU kernel).
+> 
+> The CLINT MMIO device provides three things:
+> 1. 64bit free running counter register
+> 2. 64bit per-CPU time compare registers
+> 3. 32bit per-CPU inter-processor interrupt registers
+> 
+> Unlike other timer devices, CLINT provides IPI registers along with
+> timer registers. To use CLINT IPI registers, the CLINT timer driver
+> provides IPI related callbacks to arch/riscv.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> ---
+>  drivers/clocksource/Kconfig       |   9 ++
+>  drivers/clocksource/Makefile      |   1 +
+>  drivers/clocksource/timer-clint.c | 231 ++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h        |   1 +
+>  4 files changed, 242 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-clint.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 91418381fcd4..e1ce0d510a03 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -658,6 +658,15 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
+>  
+> +config CLINT_TIMER
+> +	bool "Timer for the RISC-V platform"
+> +	depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
+> +	select TIMER_PROBE
+> +	select TIMER_OF
+> +	help
+> +	  This option enables the CLINT timer for RISC-V systems. The CLINT
+> +	  driver is usually used for NoMMU RISC-V systems.
 
-Looking at "fs, cachefiles: convert cachefiles_object.usage from atomic_t =
-to
-refcount_t", I see:
+V3 has a comment about fixing the Kconfig option.
 
--	u =3D atomic_inc_return(&object->usage);
-+	refcount_inc(&object->usage);
-	trace_cachefiles_ref(object, _object->cookie,
--			     (enum cachefiles_obj_ref_trace)why, u);
-+			     (enum cachefiles_obj_ref_trace)why, refcount_read(&object->usage)=
-);
-	return &object->fscache;
+[ ... ]
 
-This change is *not* equivalent.  There's a reason I'm using
-atomic_inc_return() and not atomic_inc(),atomic_read().  Yes, the small wi=
-ndow
-*does* occasionally produce incorrect tracing, and, yes, when that happens=
- it
-does make things confusing.
+> +{
+> +	bool *registered = per_cpu_ptr(&clint_clock_event_registered, cpu);
+> +	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
+> +
+> +	if (!(*registered)) {
+> +		ce->cpumask = cpumask_of(cpu);
+> +		clockevents_config_and_register(ce, clint_timer_freq, 200,
+> +						 ULONG_MAX);
+> +		*registered = true;
+> +	}
 
--	u =3D atomic_dec_return(&object->usage);
-	trace_cachefiles_ref(object, _object->cookie,
--			     (enum cachefiles_obj_ref_trace)why, u);
--	ASSERTCMP(u, !=3D, -1);
--	if (u =3D=3D 0) {
-+			     (enum cachefiles_obj_ref_trace)why, refcount_read(&object->usage)=
- - 1);
-+	if (refcount_dec_and_test(&object->usage)) {
 
-This is also not equivalent.  Again, there's a reason I'm using
-atomic_dec_return() and not atomic_read(),atomic_dec_and_test().
+I was unsure about the clockevents_config_and_register() multiple calls
+when doing the comment. It seems like it is fine to call it several
+times and that is done in several places like riscv or arch_arm_timer.
 
-So, please drop the cachefiles/fscache patches or use refcount_inc_return(=
-)
-and refcount_dec_return().
+It is probably safe to drop the 'registered' code here, sorry for the
+confusion.
 
-Another reason to please drop these patches is that they will cause my
-fscache-iter branch to bounce.  A lot of this code is deleted/heavily
-rewritten:
+> +	enable_percpu_irq(clint_timer_irq,
+> +			  irq_get_trigger_type(clint_timer_irq));
+> +	return 0;
+> +}
+> +
 
-https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/=
-?h=3Dfscache-iter
+[ ... ]
 
-Thanks,
-David
 
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
