@@ -2,131 +2,116 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C733AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379A1C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44A520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D3E22CA1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dAhgFPlV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e09jncM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgGUOTK (ORCPT
+        id S1729069AbgGUOTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52644 "EHLO
+        Tue, 21 Jul 2020 10:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgGUOTJ (ORCPT
+        with ESMTP id S1726412AbgGUOTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:19:09 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D9BC0619DA;
-        Tue, 21 Jul 2020 07:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eXpfk1ooDp9WmjVCuYrQskrwc9qrONU71/gOTT/8jIs=; b=dAhgFPlVD3G9z+H8gQSZ6CNDD4
-        a8tKY26rktKszNHdh/s+554HFR+4m5iwgWaKIE7O5QOte4l/YH+BVXk5K7QK8YI55DdmlEwLq+Z0e
-        19IADhFrEzHC6r96axPMo7w3lSfBms3Ol0hj0NleZYid91Wa7Gktc7027grlpWebsxytQJy0m+eSg
-        5WrUr1e1KSA/9BL70cf0m8zt1f4b9PiNG8XFazPjcxpErYTHJNO+8XnpMrK4SzbIHcZr3Qdeu7s08
-        YLTNxTxJdbQN7z1vfp+Xt6Cp+hl/D5voGSuDkCb3mrku4E+ihNkLPogOs575xSW/aBVN+Q7vogpt1
-        +7z3X0IA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxt6j-0000fh-HN; Tue, 21 Jul 2020 14:19:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2B0323060EF;
-        Tue, 21 Jul 2020 16:18:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 15E50203B8783; Tue, 21 Jul 2020 16:18:59 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 16:18:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, will@kernel.org, arnd@arndb.de,
-        mark.rutland@arm.com, dvyukov@google.com, glider@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 8/8] locking/atomics: Use read-write instrumentation for
- atomic RMWs
-Message-ID: <20200721141859.GC10769@hirez.programming.kicks-ass.net>
-References: <20200721103016.3287832-1-elver@google.com>
- <20200721103016.3287832-9-elver@google.com>
+        Tue, 21 Jul 2020 10:19:20 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C622C061794;
+        Tue, 21 Jul 2020 07:19:20 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s189so11995652pgc.13;
+        Tue, 21 Jul 2020 07:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ih/h2o3UHZ4rhf8zO59cCvqTeRPhJjIxWLpdIiq6qK8=;
+        b=e09jncM9gd0NX7UJOwQYjVD4n6sUaE4VqsDeSeiG9so9YtS4xkhQpxoF5Ld4l1V6qP
+         +T+ezzgEm/9mgAN/Eh780QQBoNqeCf/fYZwy0bNCXe/OLAeQ5HyaxZcS0QACIbjELLER
+         /OcAQbIxq2CBIYHD2xBBVHSevHWQm+Gd4P2hpnuzILTyrd9iTjRdsiRz0i+c9wtO2Bav
+         c2l8poZtSDG1GYlKxeXJwARxDQgnHQfpaugFIok4onF6Vc4O7uq/iZwDrRG/tKe3riEs
+         7/hAqp43TIMnTOfrI+7cAXvGBosokHU1UQjssidcIAAnmZp5d8smrMJCkxdzLHVqq1lJ
+         Q6Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ih/h2o3UHZ4rhf8zO59cCvqTeRPhJjIxWLpdIiq6qK8=;
+        b=MACsh6PhngGR7zRK3ahjQtq9rWEilRO9l9dE71NUXY/mGnPzIRT4x9QL9VJIZWbM5b
+         x9ffoEUILrEU9+6KRaaOjx8VBb0oASM1dFHrGDC9LrLV4ZG9/NsdFb7Z1Cid2fRKewR9
+         DNIG/2XNucVgE48AjdiVfNaX3xSw8DxJRnabs+d699jCun3rVOy4TNxy755VXoj7pudn
+         wlEss9GSwAgX6yAzTQvZmFasgWs/qgtHPOWeTWW57rY4Be3FirJ47pG1MVCnxHcSSE2K
+         ZO5LS5yvSkk/KZmcGu5r3kP0Kdq50z8LwQowevDLhbgColGQIvGLYqyqZkx9+SM74Ap8
+         l1oA==
+X-Gm-Message-State: AOAM533x9NXgar8RfBXTgBqheD/TbmxFg0WnVwdrV3ykHPfphvLp+AvF
+        wcRBkNrD9a5HCtN0CFntVfCcY2yX7DjUXGrw8Ak=
+X-Google-Smtp-Source: ABdhPJyJNLXqe4A/dY5MwPpJbBBaGpvNKi+9I6P9iMOtNtFxpav/4h9V1S8yiZJ36pzUs/9eNJOs0jwHINi1CYAC8/8=
+X-Received: by 2002:a62:8ccb:: with SMTP id m194mr24932948pfd.36.1595341160168;
+ Tue, 21 Jul 2020 07:19:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721103016.3287832-9-elver@google.com>
+References: <20200721140233.2063475-1-drew@beagleboard.org>
+ <20200721141034.GA2064533@x1> <CAHp75VdfjYuau0cPES7LUy-jN_RLX-L3kspVRMP+1OSZVocmFA@mail.gmail.com>
+In-Reply-To: <CAHp75VdfjYuau0cPES7LUy-jN_RLX-L3kspVRMP+1OSZVocmFA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Jul 2020 17:19:05 +0300
+Message-ID: <CAHp75Vfb-RJToJ8s=voPQ7tCutS9tTVpiLY6CwUgMAgcDQxbkQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: core: print gpio in pins debugfs file
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 12:30:16PM +0200, Marco Elver wrote:
+On Tue, Jul 21, 2020 at 5:17 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Jul 21, 2020 at 5:10 PM Drew Fustini <drew@beagleboard.org> wrote:
+> > On Tue, Jul 21, 2020 at 04:02:34PM +0200, Drew Fustini wrote:
+> > > If there is a gpio range mapping for the pin, then print out the gpio
+> > > chip and line index for the pin in the debugfs 'pins' file with the
+> > > format: "[gpiochip-label]:line-[index] "
 
-> diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
-> index 6afadf73da17..5cdcce703660 100755
-> --- a/scripts/atomic/gen-atomic-instrumented.sh
-> +++ b/scripts/atomic/gen-atomic-instrumented.sh
-> @@ -5,9 +5,10 @@ ATOMICDIR=$(dirname $0)
->  
->  . ${ATOMICDIR}/atomic-tbl.sh
->  
-> -#gen_param_check(arg)
-> +#gen_param_check(meta, arg)
->  gen_param_check()
->  {
-> +	local meta="$1"; shift
->  	local arg="$1"; shift
->  	local type="${arg%%:*}"
->  	local name="$(gen_param_name "${arg}")"
-> @@ -17,17 +18,24 @@ gen_param_check()
->  	i) return;;
->  	esac
->  
-> -	# We don't write to constant parameters
-> -	[ ${type#c} != ${type} ] && rw="read"
-> +	if [ ${type#c} != ${type} ]; then
-> +		# We don't write to constant parameters
-> +		rw="read"
-> +	elif [ "${meta}" != "s" ]; then
-> +		# Atomic RMW
-> +		rw="read_write"
-> +	fi
+...
 
-If we have meta, should we then not be consistent and use it for read
-too? Mark?
+> > > pin 25 (PIN25) gpio-32-63:line-25 44e10864 00000037 pinctrl-single
+> > > pin 26 (PIN26) gpio-32-63:line-26 44e10868 00000037 pinctrl-single
+> > > pin 27 (PIN27) gpio-32-63:line-27 44e1086c 00000037 pinctrl-single
+> > > pin 28 (PIN28) NA 44e10870 00000036 pinctrl-single
+> > > pin 29 (PIN29) NA 44e10874 00000006 pinctrl-single
 
->  
->  	printf "\tinstrument_atomic_${rw}(${name}, sizeof(*${name}));\n"
->  }
->  
-> -#gen_param_check(arg...)
-> +#gen_params_checks(meta, arg...)
->  gen_params_checks()
->  {
-> +	local meta="$1"; shift
-> +
->  	while [ "$#" -gt 0 ]; do
-> -		gen_param_check "$1"
-> +		gen_param_check "$meta" "$1"
->  		shift;
->  	done
->  }
-> @@ -77,7 +85,7 @@ gen_proto_order_variant()
->  
->  	local ret="$(gen_ret_type "${meta}" "${int}")"
->  	local params="$(gen_params "${int}" "${atomic}" "$@")"
-> -	local checks="$(gen_params_checks "$@")"
-> +	local checks="$(gen_params_checks "${meta}" "$@")"
->  	local args="$(gen_args "$@")"
->  	local retstmt="$(gen_ret_stmt "${meta}")"
->  
-> -- 
-> 2.28.0.rc0.105.gf9edc3c819-goog
-> 
+And would be also better to have
+
+0:N/A
+
+to keep both arguments in it.
+
+> Because line is integer and label is string it is better (from parsing
+> of view) to put it other way around, i.e.
+>
+> %u:%s, label, line
+>
+> ...
+>
+> > Apologies - I should not have put the change log in the commit message.
+> > Please let me know if I should resubmit.
+>
+> Since the above comment, I guess it would be good.
+> Thanks for doing this!
+
+-- 
+With Best Regards,
+Andy Shevchenko
