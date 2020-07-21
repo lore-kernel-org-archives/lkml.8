@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7373C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8C1C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C749120729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7854D20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgGUKAI (ORCPT
+        id S1729146AbgGUKAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:00:08 -0400
-Received: from 8bytes.org ([81.169.241.247]:58336 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727038AbgGUKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:00:08 -0400
+        Tue, 21 Jul 2020 06:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgGUKAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:00:11 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD869C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:00:10 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id CEA732C8;
-        Tue, 21 Jul 2020 12:00:06 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2282A33E;
+        Tue, 21 Jul 2020 12:00:07 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
@@ -34,9 +38,9 @@ Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
         Mike Rapoport <rppt@linux.ibm.com>,
         Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] x86/mm: Pre-allocate p4d/pud pages for vmalloc area
-Date:   Tue, 21 Jul 2020 11:59:51 +0200
-Message-Id: <20200721095953.6218-2-joro@8bytes.org>
+Subject: [PATCH v3 2/3] x86/mm/64: Do not sync vmalloc/ioremap mappings
+Date:   Tue, 21 Jul 2020 11:59:52 +0200
+Message-Id: <20200721095953.6218-3-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200721095953.6218-1-joro@8bytes.org>
 References: <20200721095953.6218-1-joro@8bytes.org>
@@ -49,90 +53,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Pre-allocate the page-table pages for the vmalloc area at the level
-which needs synchronization on x86-64, which is P4D for 5-level and
-PUD for 4-level paging.
-
-Doing this at boot makes sure all no synchronization of that area is
-necessary at runtime. The synchronization takes the pgd_lock and
-iterates over all page-tables in the system, so it can take quite long
-and is better avoided.
+Remove the code to sync the vmalloc and ioremap ranges for x86-64. The
+page-table pages are all pre-allocated now so that synchronization is
+no longer necessary.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/mm/init_64.c | 52 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ arch/x86/include/asm/pgtable_64_types.h | 2 --
+ arch/x86/mm/init_64.c                   | 5 -----
+ 2 files changed, 7 deletions(-)
 
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 8f63efb2a2cc..52e5f5f2240d 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -159,6 +159,4 @@ extern unsigned int ptrs_per_p4d;
+ 
+ #define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
+ 
+-#define ARCH_PAGE_TABLE_SYNC_MASK	(pgtable_l5_enabled() ?	PGTBL_PGD_MODIFIED : PGTBL_P4D_MODIFIED)
+-
+ #endif /* _ASM_X86_PGTABLE_64_DEFS_H */
 diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index dbae185511cd..e76bdb001460 100644
+index e76bdb001460..e0cd2dfd333d 100644
 --- a/arch/x86/mm/init_64.c
 +++ b/arch/x86/mm/init_64.c
-@@ -1238,6 +1238,56 @@ static void __init register_page_bootmem_info(void)
- #endif
+@@ -217,11 +217,6 @@ void sync_global_pgds(unsigned long start, unsigned long end)
+ 		sync_global_pgds_l4(start, end);
  }
  
-+/*
-+ * Pre-allocates page-table pages for the vmalloc area in the kernel page-table.
-+ * Only the level which needs to be synchronized between all page-tables is
-+ * allocated because the synchronization can be expensive.
-+ */
-+static void __init preallocate_vmalloc_pages(void)
-+{
-+	unsigned long addr;
-+	const char *lvl;
-+
-+	for (addr = VMALLOC_START; addr <= VMALLOC_END; addr = ALIGN(addr + 1, PGDIR_SIZE)) {
-+		pgd_t *pgd = pgd_offset_k(addr);
-+		p4d_t *p4d;
-+		pud_t *pud;
-+
-+		p4d = p4d_offset(pgd, addr);
-+		if (p4d_none(*p4d)) {
-+			/* Can only happen with 5-level paging */
-+			p4d = p4d_alloc(&init_mm, pgd, addr);
-+			if (!p4d) {
-+				lvl = "p4d";
-+				goto failed;
-+			}
-+		}
-+
-+		if (pgtable_l5_enabled())
-+			continue;
-+
-+		pud = pud_offset(p4d, addr);
-+		if (pud_none(*pud)) {
-+			/* Ends up here only with 4-level paging */
-+			pud = pud_alloc(&init_mm, p4d, addr);
-+			if (!pud) {
-+				lvl = "pud";
-+				goto failed;
-+			}
-+		}
-+	}
-+
-+	return;
-+
-+failed:
-+
-+	/*
-+	 * The pages have to be there now or they will be missing in
-+	 * process page-tables later.
-+	 */
-+	panic("Failed to pre-allocate %s pages for vmalloc area\n", lvl);
-+}
-+
- void __init mem_init(void)
- {
- 	pci_iommu_alloc();
-@@ -1261,6 +1311,8 @@ void __init mem_init(void)
- 	if (get_gate_vma(&init_mm))
- 		kclist_add(&kcore_vsyscall, (void *)VSYSCALL_ADDR, PAGE_SIZE, KCORE_USER);
- 
-+	preallocate_vmalloc_pages();
-+
- 	mem_init_print_info(NULL);
- }
- 
+-void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
+-{
+-	sync_global_pgds(start, end);
+-}
+-
+ /*
+  * NOTE: This function is marked __ref because it calls __init function
+  * (alloc_bootmem_pages). It's safe to do it ONLY when after_bootmem == 0.
 -- 
 2.27.0
 
