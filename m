@@ -2,87 +2,85 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7DB5206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KmcdvitI"
+	by mail.kernel.org (Postfix) with ESMTP id 603FB206E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 15:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgGUPJp (ORCPT
+        id S1729823AbgGUPKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbgGUPJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:09:45 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C192C061794;
-        Tue, 21 Jul 2020 08:09:45 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 8so1146173pjj.1;
-        Tue, 21 Jul 2020 08:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eoQ/LwxD/ih1GkSzZAuNDCG4MFgTBugN1T3/2DGPiZs=;
-        b=KmcdvitIPM0ZFS7BiZAORytFknRF/NJjqwGhXJbcpyxRU5OsqYeFLMZBj7ZTICExgy
-         QuzRkzTZlNMRcaqFb6yBkA1qKLOjKL3YvNFmeK+GiI2VI+UkKVbQDs+8D4oJSBPeUfio
-         O60k7atldaQEfVM/eKAL52AIZkGkqgIaka6IV6wYrVZJJxxYn6bKNLnPru+gph7D44zT
-         mFqXyyg7VLSctQnF0GY4kjhufYXEc3BmPiJuRbSM6mEfabaDcchfbcIN/W0G6vwyYVBb
-         0cPUwTWccn+x+bDjxlzEyCBodaTCUHGo4KJxMufcROGt9iy/ySVyvWZPurM2Utyxr6rV
-         FAOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eoQ/LwxD/ih1GkSzZAuNDCG4MFgTBugN1T3/2DGPiZs=;
-        b=F71wg+UihHvX0MdMzgQnAlhacghYS+rz1wqllPkPR2LfgI6ada6ZI8gDS/GaTVr/tF
-         X8/Yncp1YwQVmeZrG7QepCIr9aI8Nqsfw+T8R3li4idPemvqPPXp59Fw32hahiK0u1YR
-         6lnAcZF3XOo3+fKXHN4x9weQ65mRbowTWbeCLY1jkLjtuhRVmT3tpDCtLr8a/ULwskYd
-         XREilWmz7r0ETZom7mOu2+/Tdc0zEvUDMPbGxfskjNpxCmvRCUurHLMsID1YNdYKezkf
-         qeX5FS7/RmmRy5wn2oq9TZV4tO/2Ee+XHKRQGvQgQDqGZydLPXhG7JHVdtAuwMMXB2CZ
-         4kKg==
-X-Gm-Message-State: AOAM530CWP487WmM6B17nCXk+IlLRFfi1ATYoHF7lKuyyUtOJH85Zqaw
-        Ri6rJ4BzMiJv6ni0LG6TSgU=
-X-Google-Smtp-Source: ABdhPJz4/0wCZf0XMDAqiQz3adVwsAM+1tFiAJD4fUtW8v8r/Z0JnQYCFnNIOeXwwXGt/iVKX/DjuQ==
-X-Received: by 2002:a17:902:ac88:: with SMTP id h8mr20461966plr.220.1595344184727;
-        Tue, 21 Jul 2020 08:09:44 -0700 (PDT)
-Received: from gmail.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id 22sm20312399pfh.157.2020.07.21.08.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 08:09:43 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 20:38:18 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, Jouni Malinen <j@w1.fi>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1] hostap: use generic power management
-Message-ID: <20200721150818.GA371967@gmail.com>
-References: <20200721150547.371763-1-vaibhavgupta40@gmail.com>
+        Tue, 21 Jul 2020 11:10:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21379 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728306AbgGUPKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:10:39 -0400
+IronPort-SDR: ms318p0UH9Q7a6+aFDaYmOyOmHUtv3ScMXBz9A8w7f9zVq16kgyxb072RwRj3LacyTUD2cFB6w
+ LJpvxR7AmZmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="137638742"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="137638742"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 08:10:38 -0700
+IronPort-SDR: gqs9NAZaX6QyRmoHUJUMjXKZ9RxkBRWR5NLJDHpzkR3buOgZRYTTuV/761O6QGVOT3geQyROlP
+ 46CX+ipLXKcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="326398431"
+Received: from jacoraci-mobl.amr.corp.intel.com ([10.212.210.224])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Jul 2020 08:10:38 -0700
+Message-ID: <c76c51bfa78316caaf8201a63ac200fa373ae3ae.camel@linux.intel.com>
+Subject: Re: [PATCH] isst: isst_if.h: drop a duplicated word
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Date:   Tue, 21 Jul 2020 08:10:37 -0700
+In-Reply-To: <20200719002903.20469-1-rdunlap@infradead.org>
+References: <20200719002903.20469-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200721150547.371763-1-vaibhavgupta40@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is compile-tested only.
+On Sat, 2020-07-18 at 17:29 -0700, Randy Dunlap wrote:
+> Drop the repeated word "for" in a comment.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
---Vaibhav Gupta
+> ---
+> This description could still use some better wording.
+
+I will fix the wording in a follow up patch.
+
+>  include/uapi/linux/isst_if.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20200717.orig/include/uapi/linux/isst_if.h
+> +++ linux-next-20200717/include/uapi/linux/isst_if.h
+> @@ -69,7 +69,7 @@ struct isst_if_cpu_maps {
+>   * @logical_cpu:	Logical CPU number to get target PCI device.
+>   * @reg:		PUNIT register offset
+>   * @value:		For write operation value to write and for
+> - *			for read placeholder read value
+> + *			read placeholder read value
+>   *
+>   * Structure to specify read/write data to PUNIT registers.
+>   */
+
