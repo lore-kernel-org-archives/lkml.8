@@ -2,217 +2,98 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A179BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DC5C433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDBA20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F7C20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595302413;
-	bh=9HI1pUn9jONTwhdZhN5qt8fCBBfsHz1Gxdf3NregWQs=;
+	s=default; t=1595302439;
+	bh=/Ruyt31NFI5sI30fJDI/y8nmbFQsM/U3W9lruITyABE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0V8BdNlDincdMDCaFBRHLgzgV/PBTz0htj7Umf7uB9/4odE+6BWinNoWwEQJff9jv
-	 KYIrBZ83biU1OZ5QXEX0J6PXYq7yTB2I0dlSfHVhkkHTRwHR1zE76SHuNym/AodFIS
-	 sjYdOHIhxyGIPK6J3c0DzVxJD1ZgRRttYseTj2rs=
+	b=kNMBHBv53fK6TId5qN5dG6sj7YmCB1f9OPa3awvenXWyStlz8/1eLtkCI4DqdEy8X
+	 WFFefUdeMNm95xeQOixmEi97AHFuVAWPWcyG7usgdwABGRJCUHNWYxcr5gXww8vhwQ
+	 lFSEX7MF7cRyg8vpOUO2+OqZW8ZnEXG2DsIAkgtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgGUDdc (ORCPT
+        id S1728700AbgGUDd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:33:32 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39676 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgGUDdb (ORCPT
+        Mon, 20 Jul 2020 23:33:58 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36946 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbgGUDd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:33:31 -0400
-Received: by mail-io1-f67.google.com with SMTP id z6so2391892iow.6;
-        Mon, 20 Jul 2020 20:33:31 -0700 (PDT)
+        Mon, 20 Jul 2020 23:33:56 -0400
+Received: by mail-il1-f194.google.com with SMTP id r12so15215112ilh.4;
+        Mon, 20 Jul 2020 20:33:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FIsq5aS0lflR5eoGS5qg3+rJGrp+o2lfnvyRp1tDhhA=;
-        b=ELs0jonetSEQpe74Bb1hdst8HjmiOlsJkH9XNwtyZjshzN0cZjVgkiUpMYgaB2s+pS
-         SIzms5j9UmijKOB+b2jSYSNqM8Jwnvhx0O23tOmb0gtrEN8jqCsLrzH/k610M4OR0Rnt
-         I9YaWFLdkUtww9L9fM7HzUBJh6QHxM9QIR7EwTKqaq5lFN2Rhf6oHP0beoASMwUVUtxZ
-         k5WLe+QR0i8+Pu437zY6a3N3xjM2Q+VViCWw3mvoDZ4r1O/fiCFrw/iIWvT8u6onM4DZ
-         TK0Y6xil0SOvRhZTYro/mK+Gtik3Osjel2WFmQ9Pdli/iQsA1XWLyDaw94zi/V55i1K8
-         Bt+g==
-X-Gm-Message-State: AOAM531IY9DM0PEDeiszV+Hk8D+h0QCqGVRivM0pVzU947KudPPrM8Di
-        sDQhc9uJCt89+6xmqHo0IA==
-X-Google-Smtp-Source: ABdhPJxLzxwkSBFgFvKAURG7gHM0n9OP8gTt/FOr/k7nGl4P1U3thGEkKqvgI5H750H/QtxdXFHIqw==
-X-Received: by 2002:a05:6602:2d12:: with SMTP id c18mr25892320iow.13.1595302410706;
-        Mon, 20 Jul 2020 20:33:30 -0700 (PDT)
+        bh=SBcdY3HFaainNH7/Ra9c82Wh/rj6UMBKXbkEBttOuWA=;
+        b=JxM7Mc/7/1XHywFcTOS6vmpY7CJOVRYnGLrE5dMHbrVobFUoPlhn6xTWEruOeUKyFQ
+         99BBLU56lOrT0Ek3Z0sKF7YX1LpfSXuYysg0jWZzWy9lDhCxkO5fyFft9vWIJE12IFM6
+         M//Ufj027hcQpK8vQ9hOKri+4w24WkCN+LP0EKHm+9SlQUSY6YGUSa1kiurs4gFSKSV8
+         n9wpj+wyMX2K0ln00lIrhPSKbJ9D2fgFBIZ63R/4+Nu+0pIl0bSLYGi2BAAITlucU/Fc
+         h53oTmlhMxfPzy9bdBB8t9fIB8K0HCB8Usai1G+YmwoOq+ENQWsca5irnzGE2PpCNvqL
+         dtSA==
+X-Gm-Message-State: AOAM530tbsvQUQCyjLQK/eLydWZqtoELXMQxND6ZsnSA6RJVTk4e3ESA
+        DhDyEbHMhER9hJKdFd1nBg==
+X-Google-Smtp-Source: ABdhPJzQK7HIV/ZdYzlF04FRAnR2t2Iyb81D/LpbBVswH0ZpPuKlVzm71H/c6uxFmJxJiRvZiRiOvQ==
+X-Received: by 2002:a92:6a02:: with SMTP id f2mr23892378ilc.68.1595302434623;
+        Mon, 20 Jul 2020 20:33:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g1sm9885914ilk.51.2020.07.20.20.33.29
+        by smtp.gmail.com with ESMTPSA id v15sm9039035ili.28.2020.07.20.20.33.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 20:33:29 -0700 (PDT)
-Received: (nullmailer pid 3502407 invoked by uid 1000);
-        Tue, 21 Jul 2020 03:33:28 -0000
-Date:   Mon, 20 Jul 2020 21:33:28 -0600
+        Mon, 20 Jul 2020 20:33:53 -0700 (PDT)
+Received: (nullmailer pid 3503019 invoked by uid 1000);
+        Tue, 21 Jul 2020 03:33:52 -0000
+Date:   Mon, 20 Jul 2020 21:33:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add bindings for Tianma
- nt36672a panel
-Message-ID: <20200721033328.GA3492972@bogus>
-References: <20200716153858.526-1-sumit.semwal@linaro.org>
- <20200716153858.526-2-sumit.semwal@linaro.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     linux-i2c@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 01/20] dt-bindings: pci: rcar-pci: Add device tree
+ support for r8a774e1
+Message-ID: <20200721033352.GA3502973@bogus>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716153858.526-2-sumit.semwal@linaro.org>
+In-Reply-To: <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 09:08:57PM +0530, Sumit Semwal wrote:
-> The nt36672a panel from Tianma is a FHD+ panel with a resolution of 1080x2246
-> and 6.18 inches size. It is found in some of the Poco F1 phones.
+On Thu, 16 Jul 2020 18:18:16 +0100, Lad Prabhakar wrote:
+> Add PCIe support for the RZ/G2H (a.k.a. R8A774E1).
 > 
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > ---
->  .../display/panel/tianma,nt36672a.yaml        | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> new file mode 100644
-> index 000000000000..3c583ca926ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Tianma model NT36672A DSI Panel display driver
-> +
-> +maintainers:
-> +  - Sumit Semwal <sumit.semwal@linaro.org>
-> +
-> +description: |
-> +  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
-> +  of 1080x2246. It is a video mode DSI panel.
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: tianma,nt36672a
-> +
-> +  reg:
-> +    description: DSI virtual channel of the peripheral
-> +
-> +  reset-gpios:
-> +    description: phandle of gpio for reset line - This should be 8mA, gpio
-> +      can be configured using mux, pinctrl, pinctrl-names (active high)
-> +
-> +  vddio-supply:
-> +    description: phandle of the regulator that provides the supply voltage
-> +      Power IC supply
-> +
-> +  vddpos-supply:
-> +    description: phandle of the positive boost supply regulator
-> +
-> +  vddneg-supply:
-> +    description: phandle of the negative boost supply regulator
-> +
-> +  pinctrl-names:
-> +    description: Pinctrl for panel active and suspend
-> +
-> +  pinctrl-0:
-> +    description: Active pinctrls
-> +
-> +  pinctrl-1:
-> +    description: Suspend pinctrls
 
-I think the pinctrl should go in the DSI controller node, not the 
-display unless it is settings for 'reset-gpios'.
-
-> +
-> +  ports:
-> +    type: object
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: DSI input port driven by master DSI
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        required:
-> +          - reg
-
-For a single port, you can do just 'port' (without ports node).
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vddi0-supply
-> +  - vddpos-supply
-> +  - vddneg-supply
-> +  - reset-gpios
-> +  - pinctrl-names
-> +  - pinctrl-0
-> +  - pinctrl-1
-> +  - ports
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    dsi0 {
-
-dsi {
-
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      panel@0 {
-> +        compatible = "tianma,nt36672a";
-> +        reg = <0>;
-> +        vddi0-supply = <&vreg_l14a_1p88>;
-> +        vddpos-supply = <&lab>;
-> +        vddneg-supply = <&ibb>;
-> +
-> +        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
-> +
-> +        pinctrl-names = "panel_active", "panel_suspend";
-> +        pinctrl-0 = <&sde_dsi_active>;
-> +        pinctrl-1 = <&sde_dsi_suspend>;
-> +
-> +        ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          port@0 {
-> +            reg = <0>;
-> +            tianma_nt36672a_in_0: endpoint {
-> +              remote-endpoint = <&dsi0_out>;
-> +            };
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.27.0
-> 
+Acked-by: Rob Herring <robh@kernel.org>
