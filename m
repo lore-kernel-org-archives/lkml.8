@@ -2,127 +2,120 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5012073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595347860;
-	bh=hYhXVhno38aiu1U0lwSML5mb8dSzlyisG3+yEKk85qc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0hFCTfxrP3mjGOg5asqV2PfTYd/3eDhk214qoWTJyt/hr2QiTCK/FmdrbIlnNPn3C
-	 R1tAvPT8vztTRDF/QOoITO1hFG70UB0uhPvfEXvkJjviVVFPQU2BSpAvSARLwouUI7
-	 nKF6MImkgQVBwM//nLMkHM/up2GwKq1ZqpT7aY9Y=
+	by mail.kernel.org (Postfix) with ESMTP id 526DF2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:11:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XteG9C2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbgGUQK7 (ORCPT
+        id S1730220AbgGUQLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:10:59 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43777 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgGUQK7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:10:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id k23so21979109iom.10;
-        Tue, 21 Jul 2020 09:10:58 -0700 (PDT)
+        Tue, 21 Jul 2020 12:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgGUQLa (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 12:11:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE09C061794;
+        Tue, 21 Jul 2020 09:11:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l63so12145102pge.12;
+        Tue, 21 Jul 2020 09:11:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Zzbqiqwc31KqM2Et+XXVVCncSRbRlF1CE6a0KngbCr4=;
+        b=XteG9C2sTpsUs/HxH1Gl6SoUdO37jKoh41TMOEcyoRXZ7LxUfPeTVPqzg4HlkDV1t5
+         2QRD6kpEAxo/NN5IwXkhUxyVVO00h76W7xIMZbN7miYrIgPCzl6Y6/M0K6Ih5rFirEig
+         bLlXMauZ0g32g3L23MWHi04X5S54e4mkHwx/VidzbQPLrPWs4ckBcMHjoe2hPDDDsXKe
+         CE2Z1LCm9inpF+bonThIPDaM5HO7g5jiT3kONjI/1KmUIaXAEldB5k6ko23u8W1tIfv3
+         Ls9Vo6Khe/eH0SY4SoKPFjZghQSuXyrlkgVCA3zYAZqOQ0dRQ7eR1UM8CcNQ/7DVfb7y
+         AX4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ngN1dMUC5VJm2HydOcbj0IgJ128cHEC3MnMuoqkayZc=;
-        b=gb2Gaf0JcjqTBxTTaXC0OqIEjlta51TlajJxBCCicy2KJJvHypjbK/U8mqUm+Lu285
-         /GlZxDouJx4G5EmauUROHrxBN8qYP2twVvXrLS/rITkArSwLZVqNWPr2wVnNtbLp1S7E
-         3sdKEclnvWTuZC+DVOyTDdUQRLvTfPBAcclvTJ6oBHLIwCRb9dDkjwZB17NCWoDSrv65
-         AqmOORQhiUYiXmMrXsinBezU13FzY+C75OHqJDuVtNHQpQyS/EGPpL+68oRE7miVoYE4
-         /VM5BGiEnV4ycfAk0TTe1ouzepLzaurz6ddwiGqnPdKqZ7F/h7oSlerLnb8AvVxDfpjL
-         FPSA==
-X-Gm-Message-State: AOAM531rVgGLCnVWfOqmLsvuT1+PqlzkPtkGJbu+VIrIBkTAHmur7UrD
-        0mAtwrF5zqjGxZhLU6zYng==
-X-Google-Smtp-Source: ABdhPJzxyQ/gVV/yZGUV9h9yhscNnMTy2KhOl/TC488NOSifdRHB34C5x/aPgftVf02G70cnTJyGeg==
-X-Received: by 2002:a05:6638:14c1:: with SMTP id l1mr31432368jak.108.1595347858190;
-        Tue, 21 Jul 2020 09:10:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm10916679ilo.85.2020.07.21.09.10.55
+        bh=Zzbqiqwc31KqM2Et+XXVVCncSRbRlF1CE6a0KngbCr4=;
+        b=SNlrkMm2cU7osGC+LfmPokdVhQZ44YJHmH+ICXU0ql87vEnOPMlJ2kGHTy4cZkTMmf
+         WXEE+W0iyvpqb9XPcuGvNabiEfwLK1KcfGkUKKn9+2IQjehsWJEl8RVDxn4zcM/5rSs8
+         QECL5EKC2/5WKr6q5Lp8/I3UC1R06KkMrUk35w1xSNNMgTAE8mMaIssCqYo4iihso4Si
+         fmU77ukOBEh7plnaTCfKt8r555pRzEC9HbmW06a/nklHt7qZXAypNePRpdU3jfSsOB6a
+         r8QtEr0iXCGj5wB+eNfLVassoaNTtfHdWAwb//Ky434fKkQIXd7vw0Bt+HcsdaTZ8CZg
+         jjVw==
+X-Gm-Message-State: AOAM532g7Fc5GLeH3Vj0O5lvtyx49TYzZS8rCLqQZRzkuDOD4QDgHFV2
+        yRbSzpeyv/kEW2LsI6f4zfU=
+X-Google-Smtp-Source: ABdhPJzxE03akPm+IwBFiaKcJKj6zq/o38hm9NIkh217Fsr0Fz+tmHT7V4RilIvMM8XlR10uKVtc4w==
+X-Received: by 2002:a62:7bc9:: with SMTP id w192mr25188892pfc.255.1595347890006;
+        Tue, 21 Jul 2020 09:11:30 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id u8sm3680495pjn.24.2020.07.21.09.11.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:10:56 -0700 (PDT)
-Received: (nullmailer pid 389838 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:10:54 -0000
-Date:   Tue, 21 Jul 2020 10:10:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     devicetree@vger.kernel.org, lgirdwood@gmail.com, tony@atomide.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH for v5.9] regulator: Replace HTTP links with HTTPS ones
-Message-ID: <20200721161054.GA389740@bogus>
-References: <20200719200623.61524-1-grandmaster@al2klimov.de>
+        Tue, 21 Jul 2020 09:11:28 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+X-Google-Original-From: Dmitry Torokhov <Dmitry.torokhov@gmail.com>
+Date:   Tue, 21 Jul 2020 09:11:26 -0700
+To:     Dave Wang <dave.wang@emc.com.tw>
+Cc:     Linux-input@vger.kernel.org, Linux-kernel@vger.kernel.org,
+        phoenix@emc.com.tw, josh.chen@emc.com.tw, jingle.wu@emc.com.tw,
+        kai.heng.feng@canonical.com
+Subject: Re: [PATCH 3/3] Input: elan_i2c - Get the device information from
+ PS/2 interface
+Message-ID: <20200721161126.GH1665100@dtor-ws>
+References: <20191209111842.32390-1-dave.wang@emc.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719200623.61524-1-grandmaster@al2klimov.de>
+In-Reply-To: <20191209111842.32390-1-dave.wang@emc.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jul 2020 22:06:23 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  Documentation/devicetree/bindings/regulator/lp872x.txt | 4 ++--
->  drivers/regulator/hi6421-regulator.c                   | 2 +-
->  drivers/regulator/hi6421v530-regulator.c               | 2 +-
->  drivers/regulator/lp873x-regulator.c                   | 2 +-
->  drivers/regulator/lp87565-regulator.c                  | 2 +-
->  drivers/regulator/pbias-regulator.c                    | 2 +-
->  drivers/regulator/tps65023-regulator.c                 | 2 +-
->  drivers/regulator/tps6507x-regulator.c                 | 2 +-
->  drivers/regulator/tps65086-regulator.c                 | 2 +-
->  drivers/regulator/tps65217-regulator.c                 | 2 +-
->  drivers/regulator/tps65218-regulator.c                 | 2 +-
->  drivers/regulator/tps65912-regulator.c                 | 2 +-
->  12 files changed, 13 insertions(+), 13 deletions(-)
-> 
+Hi Dave,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Dec 09, 2019 at 06:18:42AM -0500, Dave Wang wrote:
+> Get the device information from PS/2 interface for PS/2+SMBus
+> protocol such as product_id, fw_version, ic_type...etc.
+> 
+> Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+> ---
+>  drivers/input/mouse/elan_i2c_smbus.c | 87 +++++++++++++++++-----------
+>  1 file changed, 54 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/input/mouse/elan_i2c_smbus.c b/drivers/input/mouse/elan_i2c_smbus.c
+> index 9ffb1f834507..35919035ec89 100644
+> --- a/drivers/input/mouse/elan_i2c_smbus.c
+> +++ b/drivers/input/mouse/elan_i2c_smbus.c
+> @@ -146,17 +146,22 @@ static int elan_smbus_get_version(struct i2c_client *client,
+>  	int error;
+>  	u8 val[I2C_SMBUS_BLOCK_MAX] = {0};
+>  
+> -	error = i2c_smbus_read_block_data(client,
+> -					  iap ? ETP_SMBUS_IAP_VERSION_CMD :
+> -						ETP_SMBUS_FW_VERSION_CMD,
+> -					  val);
+> -	if (error < 0) {
+> -		dev_err(&client->dev, "failed to get %s version: %d\n",
+> -			iap ? "IAP" : "FW", error);
+> -		return error;
+> +	if (device_property_read_u8(&client->dev,
+> +				iap ? "elan,iap_version" : "elan,fw_version",
+> +				version)) {
+
+Should this be moved into core? Or we only plan on using this on SMbus?
+What will happen after firmware update? How can userspace verify that
+the firmware update completed successfully if we always return static
+data? Can the device still be accessed via PS/2 while also using SMbus?
+
+Thanks.
+
+-- 
+Dmitry
