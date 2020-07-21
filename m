@@ -2,165 +2,101 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EFFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8659D207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D78207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dmW4bC8h"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LU+YNfvc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RUsOjoEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgGUFeu (ORCPT
+        id S1725984AbgGUFe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:34:50 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21263 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726010AbgGUFet (ORCPT
+        Tue, 21 Jul 2020 01:34:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34992 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgGUFe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:34:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595309687;
+        Tue, 21 Jul 2020 01:34:58 -0400
+Date:   Tue, 21 Jul 2020 07:34:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595309695;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=A9DeyT/Te+u96c5OpliRfzztbAI2QqHnWn+vnnjCPUw=;
-        b=dmW4bC8hzXY/0N+kTYSak7Gh5gnG+NEOOJjKvA3BxUMDwS7Eku6fBqGnY1rx+hFgjETTkI
-        VCWW/mrFhF4leuc/F/y3ww1vWkYJtJ/6AVXZtaiNncJuqlILSj5stgvHkMHDdepe+oHmEX
-        GhR1xV7960MD7tLFMYTl/F/HuA7epug=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-V-w9XEj9OJyWlwaYnSuNOg-1; Tue, 21 Jul 2020 01:34:45 -0400
-X-MC-Unique: V-w9XEj9OJyWlwaYnSuNOg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6A208017FB;
-        Tue, 21 Jul 2020 05:34:43 +0000 (UTC)
-Received: from [10.72.12.202] (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE86E5D9CA;
-        Tue, 21 Jul 2020 05:34:35 +0000 (UTC)
-Subject: Re: [PATCH V2 vhost next 06/10] vdpa: Modify get_vq_state() to return
- error code
-To:     Eli Cohen <eli@mellanox.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
-References: <20200720071416.32112-1-eli@mellanox.com>
- <20200720071416.32112-7-eli@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <2e4a764e-391a-6b4e-26e0-1ccdd5d5e7a3@redhat.com>
-Date:   Tue, 21 Jul 2020 13:34:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=Xh6JYaPWaIWplZOMrnqFpx02BFp6tLeAYyDq7VCSNy8=;
+        b=LU+YNfvcBeMNPH0PLwJ0qgIs+h+wwvZeWt+zW2ZTruQRUt3oshadWL8ke1wVqDH8bwS/iA
+        gVJfxjyeyhiTMU2DtYGgaL2DpsA5Sb/+rQgZcwD2YcRhe25HXr/SLMALSaR2W9AIqUqswT
+        om9AnGdNaYWNVisYJfo8s2KELwdI+S0lz2+Ed02bNPdzGIKfBqIv1Vd89TnxGUnAyCOPDO
+        IA1y2vCczxhNw1Tuw8HhPM8BlLub5dKteD+AVEs1usMCIf02I8+4HSwV7ETlUa79VWbjTY
+        gSjSgbbprSghcQ/r/v97o3PEumfu0Bhr3p5kLsudaatP5n5BTVGiMGKlgbY86Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595309695;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xh6JYaPWaIWplZOMrnqFpx02BFp6tLeAYyDq7VCSNy8=;
+        b=RUsOjoEYNoCJ55m5UQP6l/dq4CRmDI5u8R4q0i/5goIRa7YQ47EFPiFtUdaUDMrNeWxKEk
+        6lG7KJJfJLIF/MCA==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 01/24] Documentation: locking: Describe seqlock design
+ and usage
+Message-ID: <20200721053453.GA27648@lx-t490>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-2-a.darwish@linutronix.de>
+ <20200720213551.5ba9bc6d@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200720071416.32112-7-eli@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720213551.5ba9bc6d@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/7/20 下午3:14, Eli Cohen wrote:
-> Modify get_vq_state() so it returns an error code. In case of hardware
-> acceleration, the available index may be retrieved from the device, an
-> operation that can possibly fail.
+On Mon, Jul 20, 2020 at 09:35:51PM -0400, Steven Rostedt wrote:
+> On Mon, 20 Jul 2020 17:55:07 +0200
+> "Ahmed S. Darwish" <a.darwish@linutronix.de> wrote:
+> > +Read path, three categories:
+> > +
+> > +1. Normal Sequence readers which never block a writer but they must
+> > +   retry if a writer is in progress by detecting change in the sequence
+> > +   number.  Writers do not wait for a sequence reader::
+> > +
+> > +	do {
+> > +		seq = read_seqbegin(&foo_seqlock);
+> > +
+> > +		/* ... [[read-side critical section]] ... */
+> > +
+> > +	} while (read_seqretry(&foo_seqlock, seq));
+> > +
+> > +2. Locking readers which will wait if a writer or another locking reader
+> > +   is in progress. A locking reader in progress will also block a writer
+> > +   from entering its critical section. This read lock is
+> > +   exclusive. Unlike rwlock_t, only one locking reader can acquire it::
 >
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
-> Signed-off-by: Eli Cohen <eli@mellanox.com>
+> Nit, but I would mention that this acts similar to a normal spin_lock,
+> and even disables preeption (in the non-RT case).
 
+will do.
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+Thanks,
 
-
-> ---
->   drivers/vdpa/ifcvf/ifcvf_main.c  | 5 +++--
->   drivers/vdpa/vdpa_sim/vdpa_sim.c | 5 +++--
->   drivers/vhost/vdpa.c             | 5 ++++-
->   include/linux/vdpa.h             | 4 ++--
->   4 files changed, 12 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-> index 69032ee97824..d9b5f465ac81 100644
-> --- a/drivers/vdpa/ifcvf/ifcvf_main.c
-> +++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-> @@ -235,12 +235,13 @@ static u16 ifcvf_vdpa_get_vq_num_max(struct vdpa_device *vdpa_dev)
->   	return IFCVF_QUEUE_MAX;
->   }
->   
-> -static void ifcvf_vdpa_get_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
-> -				    struct vdpa_vq_state *state)
-> +static int ifcvf_vdpa_get_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
-> +				   struct vdpa_vq_state *state)
->   {
->   	struct ifcvf_hw *vf = vdpa_to_vf(vdpa_dev);
->   
->   	state->avail_index = ifcvf_get_vq_state(vf, qid);
-> +	return 0;
->   }
->   
->   static int ifcvf_vdpa_set_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
-> diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> index 599519039f8d..ddf6086d43c2 100644
-> --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> @@ -427,14 +427,15 @@ static int vdpasim_set_vq_state(struct vdpa_device *vdpa, u16 idx,
->   	return 0;
->   }
->   
-> -static void vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx,
-> -				 struct vdpa_vq_state *state)
-> +static int vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx,
-> +				struct vdpa_vq_state *state)
->   {
->   	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
->   	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
->   	struct vringh *vrh = &vq->vring;
->   
->   	state->avail_index = vrh->last_avail_idx;
-> +	return 0;
->   }
->   
->   static u32 vdpasim_get_vq_align(struct vdpa_device *vdpa)
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index af98c11c9d26..fadad74f882e 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -360,7 +360,10 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
->   	}
->   
->   	if (cmd == VHOST_GET_VRING_BASE) {
-> -		ops->get_vq_state(v->vdpa, idx, &vq_state);
-> +		r = ops->get_vq_state(v->vdpa, idx, &vq_state);
-> +		if (r)
-> +			return r;
-> +
->   		vq->last_avail_idx = vq_state.avail_index;
->   	}
->   
-> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-> index 7b088bebffe8..000d71a9f988 100644
-> --- a/include/linux/vdpa.h
-> +++ b/include/linux/vdpa.h
-> @@ -185,8 +185,8 @@ struct vdpa_config_ops {
->   	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
->   	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx,
->   			    const struct vdpa_vq_state *state);
-> -	void (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
-> -			     struct vdpa_vq_state *state);
-> +	int (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
-> +			    struct vdpa_vq_state *state);
->   	struct vdpa_notification_area
->   	(*get_vq_notification)(struct vdpa_device *vdev, u16 idx);
->   
-
+--
+Ahmed S. Darwish
+Linutronix GmbH
