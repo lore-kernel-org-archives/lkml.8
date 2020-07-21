@@ -2,193 +2,76 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9F8C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F112068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 20:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882E52068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHdARhUT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YwGNS76u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgGUU6d (ORCPT
+        id S1731032AbgGUVAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 16:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
+        Tue, 21 Jul 2020 17:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbgGUU6b (ORCPT
+        with ESMTP id S1726029AbgGUVAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 16:58:31 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F66AC0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:58:31 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d4so36815pgk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 13:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X52qI9IuX8ehsLxlnySnmok7XL1KtNCuLE+99FuZBeI=;
-        b=mHdARhUTuiPaFxjw12aZ6Wa9+kLghKQ0fq8ZJpwVAledPTAoh2U3VGDsfsyr4CtWiS
-         NXuH7AFqDcCmAepHllRQ4Wq6geSc5R3h6YB/TWlMfokX4+eEHRFZKFDVxGqrMiu2MRku
-         91nIm/w9OxN3qHJykIwzJ//I2SrZPpLlqSXMiGkKwGrq7deQxUUahBBRIdBCDYalvXeO
-         RXkwNN69nSl3vRbDjY12ItnzNxSn54y5LrsKUYN1XwkelXZrn2ofOPGVf1/ffcUuaa7h
-         a83DRCCTf2xgI5VIfkzGeDM08SV43UCY0a72ArB/oCDawwpiJKf3+5B7lUPaBFF2NcE8
-         0C2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X52qI9IuX8ehsLxlnySnmok7XL1KtNCuLE+99FuZBeI=;
-        b=DI2FgMQcZa60KsOnQ7oUXTet6vIFLbdNIVARYR+LFcoL9B6ZIBliv8t1bGrRkaWYGU
-         uPysZagP7ctZUzUOU9v0dt2SP4fPWWXdjTQmGUk/j+HHmkpdy82FQdx+/x1lPBw5iNtH
-         K3lYRxtlKcgK/l4kSP6Nd55CXPcDxXCaWYarKhEr1tHUxvixVeIGjksZxYUcSCJmalje
-         npKXYpjMvmbMQMBsQYHmQlge5kvTcvBcBErwbIFA8Ou50K2tSVCnWzF7feQjephkFmFn
-         mQ4lR/eOu/g4Nc+E+jCFU+M0VvPyg09vLb7MeXDzxt7xWPbasxTTIgTwHpT0R0UbWNBQ
-         6tEQ==
-X-Gm-Message-State: AOAM533vStv/S26bkrz5qRHjjA1GuvJO3F6X8C2txhYxztwhe5ARbU7K
-        tQKWaGlsx6kDO+KWCzhBFf86pA==
-X-Google-Smtp-Source: ABdhPJzipImp2FJDXR65FI4cQBfU1/ZWv6fskJvunQo3KeiwYFfoMSTrdro0BQYaNbHlwWG5ksZP1g==
-X-Received: by 2002:a63:c049:: with SMTP id z9mr19741380pgi.353.1595365110347;
-        Tue, 21 Jul 2020 13:58:30 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z25sm21277934pfg.140.2020.07.21.13.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 13:58:29 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 13:56:35 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>, agross@kernel.org,
-        ohad@wizery.com, corbet@lwn.net, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] remoteproc: Add remoteproc character device
- interface
-Message-ID: <20200721205635.GM2922385@builder.lan>
-References: <1594148870-27276-1-git-send-email-sidgup@codeaurora.org>
- <1594148870-27276-2-git-send-email-sidgup@codeaurora.org>
- <20200715201839.GA3204081@xps15>
- <20200715215149.GA3267350@xps15>
- <81d7514c-727e-b4dc-e4ac-74a25966ccaf@codeaurora.org>
+        Tue, 21 Jul 2020 17:00:21 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FC1C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=OwmmUSu+YwfeAN7y20o0JC90UT6XTQ3k5DrjwodZqbg=; b=YwGNS76usJRdbfvpxjWDQ1204I
+        dfyYcGSiXvyLKx5AwYgL6/Vu3uq6sDNav4PSUN3GCeOCLNRwgBXaxXHpc+WJVlpUWPFscJtP9lVEK
+        t4/ioxXmOtF4kGlekqsVpFLrm8/TFk6mtgHguhwoTbCNinx79DLSqojepSgwRlx8VqhSic2wJklQr
+        aPuryPP4eWU+YQixiEgizL+3BZBoQF7fubKAxw+42IHlh0AqZrjqQ6uRsUwVPKRR5Nq2cv99wNqXn
+        gAJwPrOjWUo/uRfi0r9QZMklOse/igh2j8fSjfmw1wILYqd9mIlcK9td283/bhgFZf+RyGEHqARB/
+        RGAfPEoA==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxzN2-0000aK-Cl; Tue, 21 Jul 2020 21:00:16 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        uclinux-h8-devel@lists.sourceforge.jp
+Subject: [PATCH] H8/300: flat.h: fix a duplicated word
+Date:   Tue, 21 Jul 2020 14:00:12 -0700
+Message-Id: <20200721210012.15304-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81d7514c-727e-b4dc-e4ac-74a25966ccaf@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21 Jul 12:16 PDT 2020, Siddharth Gupta wrote:
-> On 7/15/2020 2:51 PM, Mathieu Poirier wrote:
-> > On Wed, Jul 15, 2020 at 02:18:39PM -0600, Mathieu Poirier wrote:
-> > > On Tue, Jul 07, 2020 at 12:07:49PM -0700, Siddharth Gupta wrote:
-[..]
-> > > > diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
-[..]
-> > > > +int rproc_char_device_add(struct rproc *rproc)
-> > > > +{
-> > > > +	int ret;
-> > > > +	dev_t cdevt;
-> > > > +
-> > > > +	cdev_init(&rproc->char_dev, &rproc_fops);
-> > > > +	rproc->char_dev.owner = THIS_MODULE;
-> > > > +
-> > > > +	cdevt = MKDEV(rproc_major, rproc->index);
-> > > > +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
-> > Trying this patchset on my side gave me the following splat[1].  After finding
-> > the root case I can't understand how you haven't see it on your side when you
-> > tested the feature.
-> > 
-> > [1]. https://pastebin.com/aYTUUCdQ
+Change the phrase "is is" to "it is".
 
-Mathieu, I've looked at this back and forth. Afaict this implies that
-rproc_major is still 0. Could it be that either alloc_chrdev_region()
-failed or somehow has yet to be called when you hit this point?
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: uclinux-h8-devel@lists.sourceforge.jp
+---
+ arch/h8300/include/asm/flat.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Hey Mathieu,
-> 
-> We aren't able to reproduce the error that you are seeing, the splat is
-> coming
-> from the check for whiteout device[1] - which shouldn't happen because of
-> the
-> find_dynamic_major call[2], right?
-> 
-> We are successfully seeing all our character device files and able to
-> successfully boot remoteprocs. From what I read and understood about
-> whiteout
-> devices they will be hidden in the fs.
-> 
-> Could you provide more details about your configuration and testing?
-> 
-> [1]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486
-> <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123>
-> [2]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123
-> 
-> <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486>
-> > > > +	if (ret < 0)
-> > > > +		goto out;
-> > > > +
-> > > > +	rproc->dev.devt = cdevt;
-> > > > +out:
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +void rproc_char_device_remove(struct rproc *rproc)
-> > > > +{
-> > > > +	__unregister_chrdev(rproc_major, rproc->index, 1, "remoteproc");
-> > > > +}
-> > > > +
-> > > > +void __init rproc_init_cdev(void)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "remoteproc");
-> > > > +	if (ret < 0)
-> > > > +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
-> > > > +}
-> > > > +
-> > > > +void __exit rproc_exit_cdev(void)
-> > > > +{
-> > > > +	unregister_chrdev_region(MKDEV(rproc_major, 0), NUM_RPROC_DEVICES);
-> > > Please go back to the comment I made on this during my last review and respin.
-> > After digging in the code while debugging the above problem, I don't see how
-> > unregistering the chrdev region the way it is done here would have worked.
-> Since this is compiled statically and not built as a module, we will never
-> exercise the code path, so I will remove it in the next patchset.
-> 
-
-You're right Siddharth, since we changed CONFIG_REMOTEPROC to bool it's no longer
-possible to hit remoteproc_exit(), so you can omit this function
-entirely. (And we should clean up the rest of that as well)
-
-[..]
-> > > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-[..]
-> > > > @@ -488,6 +489,8 @@ struct rproc_dump_segment {
-> > > >    * @auto_boot: flag to indicate if remote processor should be auto-started
-> > > >    * @dump_segments: list of segments in the firmware
-> > > >    * @nb_vdev: number of vdev currently handled by rproc
-> > > > + * @char_dev: character device of the rproc
-> > > > + * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
-> > > >    */
-> > > >   struct rproc {
-> > > >   	struct list_head node;
-> > > > @@ -523,6 +526,8 @@ struct rproc {
-> > > >   	int nb_vdev;
-> > > >   	u8 elf_class;
-> > > >   	u16 elf_machine;
-> > > > +	struct cdev char_dev;
-
-As stated privately, I assumed based on this name that this is a struct
-device related to that character device. So please rename this cdev to
-save me from doing this mistake again.
-
-Thanks,
-Bjorn
+--- linux-next-20200720.orig/arch/h8300/include/asm/flat.h
++++ linux-next-20200720/arch/h8300/include/asm/flat.h
+@@ -12,7 +12,7 @@
+  * on the H8 a couple of the relocations have an instruction in the
+  * top byte.  As there can only be 24bits of address space,  we just
+  * always preserve that 8bits at the top,  when it isn't an instruction
+- * is is 0 (davidm@snapgear.com)
++ * it is 0 (davidm@snapgear.com)
+  */
+ 
+ #define	flat_get_relocate_addr(rel)		(rel & ~0x00000001)
