@@ -2,65 +2,115 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FBBC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD84C433EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D964E20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9971D20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:11:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="blBcqiTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgGUNLO (ORCPT
+        id S1728455AbgGUNLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:11:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56550 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727888AbgGUNLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:11:14 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 49D40BF5B11D494BE7B7;
-        Tue, 21 Jul 2020 21:11:11 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.103) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 21:11:01 +0800
-Subject: Re: [PATCH] ARM: at91: pm: add missing put_device() call in
- at91_pm_sram_init()
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     <linux@armlinux.org.uk>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
-References: <20200604123301.3905837-1-yukuai3@huawei.com>
- <20200702200915.GC6538@piout.net>
- <01fd6279-524e-3cee-4c16-5b748a49d0f0@huawei.com>
- <20200717225542.GZ3428@piout.net>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <0b50d5fe-44c7-1016-2d79-036001377c4f@huawei.com>
-Date:   Tue, 21 Jul 2020 21:11:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 21 Jul 2020 09:11:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49222 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgGUNLn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 09:11:43 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LDBXMr098550;
+        Tue, 21 Jul 2020 08:11:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595337093;
+        bh=NELhrCg4CbssggoxMkMnomy3Bv2q7drp9uho36FblX4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=blBcqiTjOEfc0HHVJevjQ0kvujaObADmAnVnWU4R5XroSjuvCag9Edwi6aGg1QQ74
+         LxnfM+pX2qrlZp8x2Y+/5u2Ohz/76e/9axUhc4eTENIv2j5NHUPoDmN2JURqrXZhkk
+         SDwfk4AZw1G30ZaYwo0HslTZdsZxhOe+15Qgcin8=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LDBX34126462;
+        Tue, 21 Jul 2020 08:11:33 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 08:11:33 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 08:11:33 -0500
+Received: from [158.218.117.90] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LDBTQw063801;
+        Tue, 21 Jul 2020 08:11:32 -0500
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
+ for am3 and am4
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200713162601.6829-1-tony@atomide.com>
+ <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
+From:   Carlos Hernandez <ceh@ti.com>
+Message-ID: <6b5fc12c-4da3-fc67-b9dd-bfca2ae870f2@ti.com>
+Date:   Tue, 21 Jul 2020 09:11:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200717225542.GZ3428@piout.net>
-Content-Type: text/plain; charset="gbk"; format=flowed
+In-Reply-To: <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.103]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/18 6:55, Alexandre Belloni wrote:
 
-> A better fix would have been to also factorize imx_suspend_alloc_ocram,
-> imx6q_suspend_init, socfpga_setup_ocram_self_refresh and
-> at91_pm_sram_init as they were all copied from pm-imx6.c
-> 
-imx_suspend_alloc_ocram and imx6q_suspend_init are done areadly,
-socfpga_setup_ocram_self_refresh and at91_pm_sram_init still need to
-fix. Thanks for pointing out!
+On 7/17/20 6:29 AM, Daniel Lezcano wrote:
+> On 13/07/2020 18:26, Tony Lindgren wrote:
+>> Carlos Hernandez <ceh@ti.com> reported that we now have a suspend and
+>> resume regresssion on am3 and am4 compared to the earlier kernels. While
+>> suspend and resume works with v5.8-rc3, we now get errors with rtcwake:
+>>
+>> pm33xx pm33xx: PM: Could not transition all powerdomains to target state
+>> ...
+>> rtcwake: write error
+>>
+>> This is because we now fail to idle the system timer clocks that the
+>> idle code checks and the error gets propagated to the rtcwake.
+>>
+>> Turns out there are several issues that need to be fixed:
+>>
+>> 1. Ignore no-idle and no-reset configured timers for the ti-sysc
+>>     interconnect target driver as otherwise it will keep the system timer
+>>     clocks enabled
+>>
+>> 2. Toggle the system timer functional clock for suspend for am3 and am4
+>>     (but not for clocksource on am3)
+>>
+>> 3. Only reconfigure type1 timers in dmtimer_systimer_disable()
+>>
+>> 4. Use of_machine_is_compatible() instead of of_device_is_compatible()
+>>     for checking the SoC type
+>>
+>> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent and clocksource support")
+>> Reported-by: Carlos Hernandez <ceh@ti.com>
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> ---
 
-Yu Kuai
+Tested-by: Carlos Hernandez <ceh@ti.com>
+
+
+> Carlos, were you able to test this patch ?
+>
+-- 
+Carlos
 
