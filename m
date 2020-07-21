@@ -2,49 +2,47 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AA8C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4D8206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB5120717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ik8J7tET"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Gwye8wk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730899AbgGURPa (ORCPT
+        id S1730593AbgGUROr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:15:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:51209 "EHLO m43-7.mailgun.net"
+        Tue, 21 Jul 2020 13:14:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31410 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbgGURPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:15:18 -0400
+        id S1730015AbgGUROp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:14:45 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595351718; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=PuxwKGt35tpiRMfDgkpJSCtxDJb7QR6bGP5l0QXwvfc=; b=Ik8J7tET8O55cc09LJc6txOcWHF8GMysuoUqSew4l81xBAPTJKzLll3c9QheET2dOAfCGza9
- Stu/Xlb9FxcZq7MqkcqgGPaubJkPOH1TGE4/ZuUtpV+2Rw8CCnSKFMcOmL7rnXOBtnTxo9F6
- SiBgv7fdG6vaENh+QWwInwdGYTY=
+ s=smtp; t=1595351684; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=wHZHpcJq6IQCRL0ELXQS25dwFzpXsMpPaN59eDhrOwE=; b=Gwye8wk0x5sURVZ6grSGM2O8brJ1Bd9bIg0990I6esY5OiyhDT9+C5E0xK5JJx0SgYvpdN6I
+ IBvrvhcObv69LzeiLCeqoGet9cahhu4DJLSL2vAwePq5Dvy/REPMFpLdqygfDAByrgzNsOTX
+ 5YX2LzOoTBrYW8fcI8phh4yEQUs=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5f17229b3dbcb593a96abfd9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 17:15:07
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f172283ed710aec6255b503 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 17:14:43
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5D4D7C433C9; Tue, 21 Jul 2020 17:15:07 +0000 (UTC)
+        id 2BCDCC433A1; Tue, 21 Jul 2020 17:14:43 +0000 (UTC)
 Received: from pillair-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 71AECC433CA;
-        Tue, 21 Jul 2020 17:15:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 71AECC433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8E2A5C433CB;
+        Tue, 21 Jul 2020 17:14:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8E2A5C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
 From:   Rakesh Pillai <pillair@codeaurora.org>
@@ -54,46 +52,57 @@ Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
         dianders@chromium.org, evgreen@chromium.org,
         Rakesh Pillai <pillair@codeaurora.org>
-Subject: [RFC 6/7] ath10k: Add deliver to stack from thread context
-Date:   Tue, 21 Jul 2020 22:44:25 +0530
-Message-Id: <1595351666-28193-7-git-send-email-pillair@codeaurora.org>
+Subject: [RFC 0/7] Add support to process rx packets in thread
+Date:   Tue, 21 Jul 2020 22:44:19 +0530
+Message-Id: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
-References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the receive packets are submitted to the stack
-from a thread context, the NAPI handle should be passed
-as NULL to the function ieee80211_rx_napi. This will
-make sure that the packets are submitted to stack via
-non-napi method
+NAPI gets scheduled on the CPU core which got the
+interrupt. The linux scheduler cannot move it to a
+different core, even if the CPU on which NAPI is running
+is heavily loaded. This can lead to degraded wifi
+performance when running traffic at peak data rates.
 
-Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+A thread on the other hand can be moved to different
+CPU cores, if the one on which its running is heavily
+loaded. During high incoming data traffic, this gives
+better performance, since the thread can be moved to a
+less loaded or sometimes even a more powerful CPU core
+to account for the required CPU performance in order
+to process the incoming packets.
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+This patch series adds the support to use a high priority
+thread to process the incoming packets, as opposed to
+everything being done in NAPI context.
+
+The rx thread can be enabled by using a module parameter
+when loading the ath10k_snoc module.
+
 ---
- drivers/net/wireless/ath/ath10k/htt_rx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+This patch series is dependent on the below patch series
+https://patchwork.kernel.org/project/ath10k/list/?series=315759
 
-diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
-index becbd56..85c169c 100644
---- a/drivers/net/wireless/ath/ath10k/htt_rx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
-@@ -1321,7 +1321,10 @@ static void ath10k_process_rx(struct ath10k *ar, struct sk_buff *skb)
- 	trace_ath10k_rx_hdr(ar, skb->data, skb->len);
- 	trace_ath10k_rx_payload(ar, skb->data, skb->len);
- 
--	ieee80211_rx_napi(ar->hw, NULL, skb, &ar->napi);
-+	if (in_serving_softirq())
-+		ieee80211_rx_napi(ar->hw, NULL, skb, &ar->napi);
-+	else
-+		ieee80211_rx_napi(ar->hw, NULL, skb, NULL);
- }
- 
- static int ath10k_htt_rx_nwifi_hdrlen(struct ath10k *ar,
+Rakesh Pillai (7):
+  mac80211: Add check for napi handle before WARN_ON
+  ath10k: Add support to process rx packet in thread
+  ath10k: Add module param to enable rx thread
+  ath10k: Do not exhaust budget on process tx completion
+  ath10k: Handle the rx packet processing in thread
+  ath10k: Add deliver to stack from thread context
+  ath10k: Handle rx thread suspend and resume
+
+ drivers/net/wireless/ath/ath10k/core.c   |  64 +++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/core.h   |  33 ++++++++++
+ drivers/net/wireless/ath/ath10k/htt.h    |   2 +
+ drivers/net/wireless/ath/ath10k/htt_rx.c |  66 ++++++++++++++-----
+ drivers/net/wireless/ath/ath10k/snoc.c   | 105 ++++++++++++++++++++++++++++++-
+ net/mac80211/rx.c                        |   2 +-
+ 6 files changed, 253 insertions(+), 19 deletions(-)
+
 -- 
 2.7.4
 
