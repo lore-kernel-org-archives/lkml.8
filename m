@@ -2,181 +2,260 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E557C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ED5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCE92073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8EE2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fr3YLS21"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EnkM8LhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGUM6M (ORCPT
+        id S1728214AbgGUM7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgGUM6J (ORCPT
+        Tue, 21 Jul 2020 08:59:24 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:5744 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727121AbgGUM7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:58:09 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE348C061794;
-        Tue, 21 Jul 2020 05:58:08 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so1628581pjc.4;
-        Tue, 21 Jul 2020 05:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t2vMm5MN6COcLP/AC1bsbI/E+zsl4wCZerr7TM2M9Bk=;
-        b=fr3YLS211Gmt5YGjeWiE/LFiFj6YG+zPEieeHXqHXdyDwVPBswzW476JH2GbekCA0R
-         33FjkoOaQp4eovrKc6t8q+SNSOXcarYBhQ2s4pjcBtcik7wavPC4bKVpTa1d7hfAG63z
-         tFn1Di3tXn1b4rJAGi6IhgCWb7RdDqAx6fGIeprwlcmTYkNlf0g1MsbZJ94oM1tXPGxW
-         Mx0WjzPy7O3iDsciWz+y6G2c+hKVMpa/8+9EjujtbBqjbZdMcXjNNlHcyZTxQAO0pmOd
-         0fghdSwtQzENvCQbBGW24iwpi4E5dQXaDbWla4QR6q8S5dAgw6WfMdetdCfIEF7vfICF
-         Q3sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t2vMm5MN6COcLP/AC1bsbI/E+zsl4wCZerr7TM2M9Bk=;
-        b=Uk3suFTfoLe4PpfuNuMzyOivoSsNgWdQx82eU8pzgLEXSXJLoqhU+JWuLECPl6ZLMK
-         njbT1ujsr72rEt1y9BZiysSzy/evIIXCDzJHyMzO8l4qDptcRzGQBuYj4iJqQ2EJyrQQ
-         J/1+yJW0ADKqbfRlybR4lHs/7SNQom4qVw2HXCs+L1KDhxDps4XvMmZaEGmwb81pbSh2
-         Cq05nXjYEMznNGK0+pHXjtfmZokeJt87thFGhIytEEeAKdGZFjdMPRYsLm9uwOASLblD
-         exsnTryEmfSDbmFazkNTfdrYIO1jmSUdK1TMlK3cJ1DOPIJlbtES0iSswUKM4jWH6mfZ
-         aBGA==
-X-Gm-Message-State: AOAM532/GmABetcIMKPP5T9vQ4DjGlpYO8rhbIZNjTkZhvGS7PqjcQzL
-        knj/D47NLcdVcHvs/EIp4hI=
-X-Google-Smtp-Source: ABdhPJzQEfoRb3UE4er+pdhXjNmen1E198JhpdeN0Yigv10qpv0/N5+ym6vRm0GCGdtjLMzAKyYNRA==
-X-Received: by 2002:a17:90b:3901:: with SMTP id ob1mr4531304pjb.168.1595336288282;
-        Tue, 21 Jul 2020 05:58:08 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id a2sm20573833pfg.120.2020.07.21.05.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 05:58:07 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: [PATCH v1] prism54: islpci_hotplug: use generic power management
-Date:   Tue, 21 Jul 2020 18:25:15 +0530
-Message-Id: <20200721125514.145607-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 21 Jul 2020 08:59:23 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LCv7SQ024874;
+        Tue, 21 Jul 2020 14:58:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=FG8Jpl88uMJR2Haodeqb+M02x+DZQPQlOWwZUmrVcUA=;
+ b=EnkM8LhL48Qm5Tc33FT+Mm9bbek5SiuCwmBudd95SfBBA3CMuo4EC1mHnE+nEZb5eibf
+ XrSHD1iOYavvex1XaflRy+33LRTvHIKC5TsKjmC7h0Z2j/7e4fg+cG3kBcDptsU/uBG0
+ U/BsrIjOPjcpVmAq+XNveXjyAq3vgACDJc5VdBmj/aVZyLflszg5DrGYcN/KcJmfc1X+
+ 0pWax5B1Pkqf9WMIjH3L5TCcC1p38SicwwsranTlt4dtYjGCvsf+QROOlvtfOLWEGhpU
+ YoyxN7GiYXeVYmstM/jxDHNa7Yu6F0/u649t99REgf9mJX7YwwnMLQUIK1ujWh0rMBUs dw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bs6uwy66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 14:58:50 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4FBBE100034;
+        Tue, 21 Jul 2020 14:58:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2F5D32BE25A;
+        Tue, 21 Jul 2020 14:58:50 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
+ 2020 14:58:49 +0200
+Subject: Re: [PATCH v5 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
+To:     dillon min <dillon.minfei@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <p.zabel@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+References: <broonie@kernel.org>
+ <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
+ <198ad79c-ab12-55f0-814f-afc454a7e8ef@st.com>
+ <CAL9mu0L3ZF5+nh2ENzxnu0f6AAh1ygoWx1bEkS3WkJt8TN7C7Q@mail.gmail.com>
+ <d7986a59-1337-ca33-fed0-0b6af458dbbb@st.com>
+ <CAL9mu0LyJ9RP4_m_43a-eCfEUp=1A2ZEQQLwZ2Xg4kzfsXruhA@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <112dd65b-2a3c-a776-8d31-f0d0b8f2c355@st.com>
+Date:   Tue, 21 Jul 2020 14:58:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAL9mu0LyJ9RP4_m_43a-eCfEUp=1A2ZEQQLwZ2Xg4kzfsXruhA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_08:2020-07-21,2020-07-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions as through
-the generic framework, PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- .../intersil/prism54/islpci_hotplug.c         | 34 ++++++-------------
- 1 file changed, 11 insertions(+), 23 deletions(-)
+On 7/21/20 2:55 PM, dillon min wrote:
+> Hi, Alexandre,
+> 
+> 
+> On Tue, Jul 21, 2020 at 7:54 PM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+>>
+>>
+>>
+>> On 7/21/20 12:39 PM, dillon min wrote:
+>>> Hi Alexandre,
+>>>
+>>> On Tue, Jul 21, 2020 at 5:19 PM Alexandre Torgue
+>>> <alexandre.torgue@st.com> wrote:
+>>>>
+>>>> Hi Dillon
+>>>>
+>>>> On 5/25/20 5:40 AM, dillon.minfei@gmail.com wrote:
+>>>>> From: dillon min <dillon.minfei@gmail.com>
+>>>>>
+>>>>> V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
+>>>>> for SPI_SIMPLEX_RX mode on stm32 spi controller.
+>>>>>
+>>>>> V5:
+>>>>> 1 instead of add send dummy data out under SIMPLEX_RX mode,
+>>>>>       add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+>>>>> 2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+>>>>> 'SPI_3WIRE' mode
+>>>>>
+>>>>
+>>>> Concerning DT patches, they look goods for me. However I'll merge them
+>>>> when drivers parts will be merged.
+>>>>
+>>>> regards
+>>>> Alex
+>>> This patchset status is :
+>>> dts:
+>>>       ARM: dts: stm32: Add dma config for spi5
+>>>       ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+>>>       ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
+>>>         stm32429-disco board
+>>>
+>>> panel-bindings: Reviewed-by: Rob Herring， need more reviewing to merge
+>>>       dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+>>>
+>>> clk: Acked-by: Stephen Boyd , need more reviewing to merge
+>>>       clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
+>>>         fix duplicated ltdc clock register to 'clk_core' case ltdc's clock
+>>>           turn off by clk_disable_unused()
+>>>
+>>> drm-panel:  Reviewed-by: Linus Walleij . need more reviewing to merge
+>>>       drm/panel: Add ilitek ili9341 panel driver
+>>>
+>>> spi-driver: Acked-by: Mark Brown ，merged into mainline
+>>>       spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+>>>       spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+>>>         becoexit with 'SPI_3WIRE' mode
+>>>
+>>> For ili9341 drivers, it seems to need more time to review, or might be dropped.
+>>> since the drm maintainer might create a new interface to support
+>>> DPI,DBI,DSI in one driver.
+>>> Currently it's under discussion. I will rework the ili9341 driver after that.
+>>>
+>>> But, we can use the existing "drivers/gpu/drm/tiny/ili9341.c" driver to support
+>>> ili9341 on stm32f429-disco board only using the spi bus. except the
+>>> display refresh performance is not as good as the ltdc interface.
+>>>
+>>> I can submit a new patch just with dts changed this week for it, if you need.
+>>>
+>>
+>>
+>> Thanks for this status. I'm close to send my PR for v5.9. There is no
+>> needs to have an intermediate version (Except you absolutely want it).
+>>
+>> Thanks
+>> alex
+> Ok, I prefer to use the ltdc interface to drive ili9341 either.
 
-diff --git a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-index 20291c0d962d..e8369befe100 100644
---- a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-+++ b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-@@ -63,16 +63,17 @@ MODULE_DEVICE_TABLE(pci, prism54_id_tbl);
- 
- static int prism54_probe(struct pci_dev *, const struct pci_device_id *);
- static void prism54_remove(struct pci_dev *);
--static int prism54_suspend(struct pci_dev *, pm_message_t state);
--static int prism54_resume(struct pci_dev *);
-+static int __maybe_unused prism54_suspend(struct device *);
-+static int __maybe_unused prism54_resume(struct device *);
-+
-+static SIMPLE_DEV_PM_OPS(prism54_pm_ops, prism54_suspend, prism54_resume);
- 
- static struct pci_driver prism54_driver = {
- 	.name = DRV_NAME,
- 	.id_table = prism54_id_tbl,
- 	.probe = prism54_probe,
- 	.remove = prism54_remove,
--	.suspend = prism54_suspend,
--	.resume = prism54_resume,
-+	.driver.pm = &prism54_pm_ops,
- };
- 
- /******************************************************************************
-@@ -243,16 +244,13 @@ prism54_remove(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
--static int
--prism54_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused
-+prism54_suspend(struct device *dev)
- {
--	struct net_device *ndev = pci_get_drvdata(pdev);
-+	struct net_device *ndev = dev_get_drvdata(dev);
- 	islpci_private *priv = ndev ? netdev_priv(ndev) : NULL;
- 	BUG_ON(!priv);
- 
--
--	pci_save_state(pdev);
--
- 	/* tell the device not to trigger interrupts for now... */
- 	isl38xx_disable_interrupts(priv->device_base);
- 
-@@ -266,26 +264,16 @@ prism54_suspend(struct pci_dev *pdev, pm_message_t state)
- 	return 0;
- }
- 
--static int
--prism54_resume(struct pci_dev *pdev)
-+static int __maybe_unused
-+prism54_resume(struct device *dev)
- {
--	struct net_device *ndev = pci_get_drvdata(pdev);
-+	struct net_device *ndev = dev_get_drvdata(dev);
- 	islpci_private *priv = ndev ? netdev_priv(ndev) : NULL;
--	int err;
- 
- 	BUG_ON(!priv);
- 
- 	printk(KERN_NOTICE "%s: got resume request\n", ndev->name);
- 
--	err = pci_enable_device(pdev);
--	if (err) {
--		printk(KERN_ERR "%s: pci_enable_device failed on resume\n",
--		       ndev->name);
--		return err;
--	}
--
--	pci_restore_state(pdev);
--
- 	/* alright let's go into the PREBOOT state */
- 	islpci_reset(priv, 1);
- 
--- 
-2.27.0
+Ok, so let's wait for the full review of this series.
 
+Cheers
+Alex
+
+> 
+> Thanks,
+> Dillon.
+>>
+>>> Thanks,
+>>> Dillon.
+>>>>
+>>>>
+>>>>
+>>>>> V4:
+>>>>> According to alexandre torgue's suggestion, combine ili9341 and
+>>>>> l3gd20's modification on stm32f429-disco board to one patchset.
+>>>>>
+>>>>> Changes:
+>>>>>
+>>>>> ili9341:
+>>>>>
+>>>>> 1 update ili9341 panel driver according to Linus's suggestion
+>>>>> 2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+>>>>> 3 merge l3gd20's change to this patchset
+>>>>>
+>>>>> V3:
+>>>>> 1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+>>>>>      to support serial spi & parallel rgb interface in one driver.
+>>>>> 2 update ilitek,ili9341.yaml dts binding documentation.
+>>>>> 3 update stm32f429-disco dts binding
+>>>>>
+>>>>> V2:
+>>>>> 1 verify ilitek,ili9341.yaml with make O=../linux-stm32
+>>>>>      dt_binding_check
+>>>>>      DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+>>>>>      ilitek,ili9341.yaml
+>>>>>
+>>>>> V1:
+>>>>> 1 add ili9341 drm panel driver
+>>>>> 2 add ltdc, spi5 controller for stm32f429-disco
+>>>>> 3 add ltdc, spi5 pin map for stm32f429-disco
+>>>>> 4 add docs about ili9341
+>>>>> 5 fix ltdc driver loading hang in clk set rate bug
+>>>>>
+>>>>>
+>>>>> L3gd20:
+>>>>> V3:
+>>>>> 1 merge stm32f429-disco dtbs binding with ili9341 part
+>>>>>
+>>>>> V2:
+>>>>> 1 insert blank line at stm32f420-disco.dts line 143
+>>>>> 2 add more description for l3gd20 in commit message
+>>>>>
+>>>>> V1:
+>>>>> 1 enable spi5 controller on stm32f429-disco (dts)
+>>>>> 2 add spi5 pinmap for stm32f429-disco  (dts)
+>>>>> 3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+>>>>>
+>>>>>
+>>>>> dillon min (8):
+>>>>>      ARM: dts: stm32: Add dma config for spi5
+>>>>>      ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+>>>>>      ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
+>>>>>        stm32429-disco board
+>>>>>      dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+>>>>>      clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
+>>>>>        fix duplicated ltdc clock register to 'clk_core' case ltdc's clock
+>>>>>          turn off by clk_disable_unused()
+>>>>>      drm/panel: Add ilitek ili9341 panel driver
+>>>>>      spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+>>>>>      spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+>>>>>        be     coexit with 'SPI_3WIRE' mode
+>>>>>
+>>>>>     .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+>>>>>     arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+>>>>>     arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+>>>>>     arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+>>>>>     drivers/clk/clk-stm32f4.c                          |    7 +-
+>>>>>     drivers/gpu/drm/panel/Kconfig                      |   12 +
+>>>>>     drivers/gpu/drm/panel/Makefile                     |    1 +
+>>>>>     drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1301 ++++++++++++++++++++
+>>>>>     drivers/spi/spi-stm32.c                            |   19 +-
+>>>>>     drivers/spi/spi.c                                  |    3 +-
+>>>>>     10 files changed, 1521 insertions(+), 9 deletions(-)
+>>>>>     create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+>>>>>     create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+>>>>>
