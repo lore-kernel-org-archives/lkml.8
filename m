@@ -2,455 +2,307 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C880C433F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EEBC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B912068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EF62068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SIwOJDNX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="icFK+j1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbgGUTIP (ORCPT
+        id S1730539AbgGUTJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41216 "EHLO
+        Tue, 21 Jul 2020 15:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730089AbgGUTGq (ORCPT
+        with ESMTP id S1730300AbgGUTJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:06:46 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97076C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c80so3880614wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:45 -0700 (PDT)
+        Tue, 21 Jul 2020 15:09:33 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA11C0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:09:33 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f16so2142882pjt.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MnhPl7EMiNnW/DM3jO2lmdKJhYgGzujeI8ueusX1ArE=;
-        b=SIwOJDNX3Ev+1+jXh73+3zz1Rs/jOkeqpRslIpc+yT59nN8RO75QqZrKUQi7EMByi5
-         2UFVA00PmpmdV3qmE8LWNQZ0xBGf8mzq85JQGv7dXK6m0NVAYsgrd5ZwDEsPMTZ5IQs8
-         a4O66CXwfyt7HTywPoPlQhXesMXRzeDD3pB/FggJu7dSoENf1GaY6WLP5dyfO4o3M19+
-         8YCMIPs5bslbSgjBjiKafIMGMIz4Pq0OeivWTB7+qrOLRkyYCKNFhpmilmnsXInWRkHs
-         1858tD0jo2VAgUeZfZS81WyICnQlMW6KaodF0d0XEhM7BnicAHdKGVPnyUyFY/x1+dyo
-         HTCw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NAFt6C2lnvpS45jVhw23Ap3Sp8296UwbtX9tobHLa1g=;
+        b=icFK+j1QmdrfPm1agUfJealBTpwFHPXzo+8S/+STX6KNUWATkXlIlCEWGl2IAB0Kaw
+         81hUL9l2hd6YXn1feWWISzSrw+hQRCIGKNVJbWKr7A8mt5ntyHbZ7HqDqAM0G+A1AosL
+         C4oIXZNzgs1qwn+vlMLHBWHD7jiCUNtg/I8HA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MnhPl7EMiNnW/DM3jO2lmdKJhYgGzujeI8ueusX1ArE=;
-        b=AGR+2+3FPsMv4vR+qHlFQHdmUMz1JobV+9VDBgQj5lghqf2cQ7gqytm9sTlUT9mAhv
-         Q8qGmB4zsTe3ZOROR/EGCZQG90qMGU7hcI+SYmz4PR/OlHSUlz/qN6CG26jtYb5uBtK9
-         2Gm06DXn4jnSNGRfNGqzrIbv8Qu3VO3fWuKae06c3lYF+LIIG2UVqIo/iZt4NAv2RHdK
-         jD1599JcJzumlG7fDvm3nNRThBKMIjtZDJHZtzjzMWDjsV/FDKxIZSvCuJ9FTdT5/hwS
-         zJ3SX9LcVK9c+FiCUAulTzxpy3k7cdn+6QCsIHcoKV44jUyL4Pv0ApWdmM6v729ROyPn
-         oXlA==
-X-Gm-Message-State: AOAM533ZDxnx35e4jkCJx1y7zaF/OgG0903S6URRTEDLuNRTBtHeELwO
-        R7hQeaxykQq3OqnWK2iCHgyJ+alJMCo=
-X-Google-Smtp-Source: ABdhPJy78PszjUdIChfb9GQP1nAGVhyJEnWqn5UGLynTzlvn5qxxvEtodbP4lvRE+l1YEwwZFnWk0w==
-X-Received: by 2002:a1c:5ac3:: with SMTP id o186mr5252273wmb.39.1595358404020;
-        Tue, 21 Jul 2020 12:06:44 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id s14sm25794848wrv.24.2020.07.21.12.06.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 12:06:43 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v4 02/17] crypto: sun8i-ss: Add support for the PRNG
-Date:   Tue, 21 Jul 2020 19:06:16 +0000
-Message-Id: <1595358391-34525-3-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
-References: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NAFt6C2lnvpS45jVhw23Ap3Sp8296UwbtX9tobHLa1g=;
+        b=ir3Pvek4+f9B41gWGV/eHzBc56mVaT8nuZvK3D9lL4TB1wvfP/WZGKmh70XaHzjD0A
+         fxtA6Q15l66R6DZHCtAcfbcZdMf+e8fO+xTDyDirKEWbfrTEohdNxY8UhlH1smL4F3Oh
+         Jy/oIpWF4UaXkWrds27zP+dMgKQT/1sdgr0m4ndO+nl14C91kq6EBir8q7ztHsvSyejk
+         L/lZD7v4oxneYnyhsdIAe3APlyQEdePYviIrav+ESgLwtbn3tLeKsyectNdZ47JeoOfA
+         I+7bBJK5UEfOhz1xvVT7akAPwju/1iJBUIlbdEfMhc8LNW+NkR2QJt64ByHQyvg8wOwo
+         s0Ng==
+X-Gm-Message-State: AOAM530kcSagiK59gLflJZdsycaMZa49bmJkOk0UlghlQDDXGa4RAtXh
+        SSLLxU6dwEkmANJ9lNdX0CGfYLvMUR0=
+X-Google-Smtp-Source: ABdhPJzWAwKHQkMx9PJ9EAZVnXplkjPUmWmAhBJFL+0Oc7tM+S4Ojo/uUW20rsqp3QBbghADINzeSA==
+X-Received: by 2002:a17:902:7612:: with SMTP id k18mr22356298pll.187.1595358572696;
+        Tue, 21 Jul 2020 12:09:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c139sm20745411pfb.65.2020.07.21.12.09.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 12:09:31 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 12:09:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        davidgow@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v3] lib: Convert test_user_copy to KUnit test
+Message-ID: <202007211207.5BAA9D8D@keescook>
+References: <20200721174654.72132-1-vitor@massaru.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721174654.72132-1-vitor@massaru.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch had support for the PRNG present in the SS.
-The output was tested with rngtest without any failure.
+On Tue, Jul 21, 2020 at 02:46:54PM -0300, Vitor Massaru Iha wrote:
+> This adds the conversion of the runtime tests of test_user_copy fuctions,
+> from `lib/test_user_copy.c`to KUnit tests.
+> 
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> ---
+> v2:
+>     * splitted patch in 3:
+>         - Allows to install and load modules in root filesystem;
+>         - Provides an userspace memory context when tests are compiled
+>           as module;
+>         - Convert test_user_copy to KUnit test;
+>     * removed entry for CONFIG_TEST_USER_COPY;
+>     * replaced pr_warn to KUNIT_EXPECT_FALSE_MSG in test macro to
+>       decrease the diff;
+> v3:
+>     * rebased with last kunit branch
+>     * Please apply this commit from kunit-fixes:
+>         3f37d14b8a3152441f36b6bc74000996679f0998
+>       And these from patchwork:
+>         https://patchwork.kernel.org/patch/11676331/
+>         https://patchwork.kernel.org/patch/11676335/
+> ---
+>  lib/Kconfig.debug                           | 28 ++++++++------
+>  lib/Makefile                                |  2 +-
+>  lib/{test_user_copy.c => user_copy_kunit.c} | 42 +++++++++------------
+>  3 files changed, 35 insertions(+), 37 deletions(-)
+>  rename lib/{test_user_copy.c => user_copy_kunit.c} (91%)
+> 
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 9ad9210d70a1..f699a3624ae7 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2078,18 +2078,6 @@ config TEST_VMALLOC
+> 
+>  	  If unsure, say N.
+> 
+> -config TEST_USER_COPY
+> -	tristate "Test user/kernel boundary protections"
+> -	depends on m
+> -	help
+> -	  This builds the "test_user_copy" module that runs sanity checks
+> -	  on the copy_to/from_user infrastructure, making sure basic
+> -	  user/kernel boundary testing is working. If it fails to load,
+> -	  a regression has been detected in the user/kernel memory boundary
+> -	  protections.
+> -
+> -	  If unsure, say N.
+> -
+>  config TEST_BPF
+>  	tristate "Test BPF filter functionality"
+>  	depends on m && NET
+> @@ -2154,6 +2142,22 @@ config SYSCTL_KUNIT_TEST
+> 
+>  	  If unsure, say N.
+> 
+> +config USER_COPY_KUNIT
+> +	tristate "KUnit Test for user/kernel boundary protections"
+> +	depends on KUNIT
+> +	depends on m
+> +	help
+> +	  This builds the "user_copy_kunit" module that runs sanity checks
+> +	  on the copy_to/from_user infrastructure, making sure basic
+> +	  user/kernel boundary testing is working. If it fails to load,
+> +	  a regression has been detected in the user/kernel memory boundary
+> +	  protections.
+> +
+> +	  For more information on KUnit and unit tests in general please refer
+> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+> +
+> +	  If unsure, say N.
+> +
+>  config LIST_KUNIT_TEST
+>  	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
+>  	depends on KUNIT
+> diff --git a/lib/Makefile b/lib/Makefile
+> index b1c42c10073b..8c145f85accc 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+>  obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+>  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+>  obj-$(CONFIG_TEST_SORT) += test_sort.o
+> -obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+>  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+>  obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+>  obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+> @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+>  # KUnit tests
+>  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+>  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+> +obj-$(CONFIG_USER_COPY_KUNIT) += user_copy_kunit.o
+> diff --git a/lib/test_user_copy.c b/lib/user_copy_kunit.c
+> similarity index 91%
+> rename from lib/test_user_copy.c
+> rename to lib/user_copy_kunit.c
+> index 5ff04d8fe971..a10ddd15b4cd 100644
+> --- a/lib/test_user_copy.c
+> +++ b/lib/user_copy_kunit.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/vmalloc.h>
+> +#include <kunit/test.h>
+> 
+>  /*
+>   * Several 32-bit architectures support 64-bit {get,put}_user() calls.
+> @@ -35,7 +36,7 @@
+>  ({									\
+>  	int cond = (condition);						\
+>  	if (cond)							\
+> -		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
+> +		KUNIT_EXPECT_FALSE_MSG(test, cond, msg, ##__VA_ARGS__);	\
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/crypto/allwinner/Kconfig              |   8 +
- drivers/crypto/allwinner/sun8i-ss/Makefile    |   1 +
- .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c |  39 ++++
- .../crypto/allwinner/sun8i-ss/sun8i-ss-prng.c | 170 ++++++++++++++++++
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  |  25 +++
- 5 files changed, 243 insertions(+)
- create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-prng.c
+I'm surprised any of this compiles with both a macro and arg named
+"test". :) Can you change the arg to something with more clarity?
+"context" or "kunit" seems better.
 
-diff --git a/drivers/crypto/allwinner/Kconfig b/drivers/crypto/allwinner/Kconfig
-index d315427ea1ba..a0bdb26d0fe4 100644
---- a/drivers/crypto/allwinner/Kconfig
-+++ b/drivers/crypto/allwinner/Kconfig
-@@ -95,3 +95,11 @@ config CRYPTO_DEV_SUN8I_SS_DEBUG
- 	  Say y to enable sun8i-ss debug stats.
- 	  This will create /sys/kernel/debug/sun8i-ss/stats for displaying
- 	  the number of requests per flow and per algorithm.
-+
-+config CRYPTO_DEV_SUN8I_SS_PRNG
-+	bool "Support for Allwinner Security System PRNG"
-+	depends on CRYPTO_DEV_SUN8I_SS
-+	select CRYPTO_RNG
-+	help
-+	  Select this option if you want to provide kernel-side support for
-+	  the Pseudo-Random Number Generator found in the Security System.
-diff --git a/drivers/crypto/allwinner/sun8i-ss/Makefile b/drivers/crypto/allwinner/sun8i-ss/Makefile
-index add7b0543fd5..49f2f912c816 100644
---- a/drivers/crypto/allwinner/sun8i-ss/Makefile
-+++ b/drivers/crypto/allwinner/sun8i-ss/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_CRYPTO_DEV_SUN8I_SS) += sun8i-ss.o
- sun8i-ss-y += sun8i-ss-core.o sun8i-ss-cipher.o
-+sun8i-ss-$(CONFIG_CRYPTO_DEV_SUN8I_SS_PRNG) += sun8i-ss-prng.o
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-index 3a9723441e46..48e073ef956e 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-@@ -22,6 +22,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
-+#include <crypto/internal/rng.h>
- #include <crypto/internal/skcipher.h>
- 
- #include "sun8i-ss.h"
-@@ -264,6 +265,25 @@ static struct sun8i_ss_alg_template ss_algs[] = {
- 		.decrypt	= sun8i_ss_skdecrypt,
- 	}
- },
-+#ifdef CONFIG_CRYPTO_DEV_SUN8I_SS_PRNG
-+{
-+	.type = CRYPTO_ALG_TYPE_RNG,
-+	.alg.rng = {
-+		.base = {
-+			.cra_name		= "stdrng",
-+			.cra_driver_name	= "sun8i-ss-prng",
-+			.cra_priority		= 300,
-+			.cra_ctxsize = sizeof(struct sun8i_ss_rng_tfm_ctx),
-+			.cra_module		= THIS_MODULE,
-+			.cra_init		= sun8i_ss_prng_init,
-+			.cra_exit		= sun8i_ss_prng_exit,
-+		},
-+		.generate               = sun8i_ss_prng_generate,
-+		.seed                   = sun8i_ss_prng_seed,
-+		.seedsize               = PRNG_SEED_SIZE,
-+	}
-+},
-+#endif
- };
- 
- #ifdef CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG
-@@ -285,6 +305,12 @@ static int sun8i_ss_dbgfs_read(struct seq_file *seq, void *v)
- 				   ss_algs[i].alg.skcipher.base.cra_name,
- 				   ss_algs[i].stat_req, ss_algs[i].stat_fb);
- 			break;
-+		case CRYPTO_ALG_TYPE_RNG:
-+			seq_printf(seq, "%s %s %lu %lu\n",
-+				   ss_algs[i].alg.rng.base.cra_driver_name,
-+				   ss_algs[i].alg.rng.base.cra_name,
-+				   ss_algs[i].stat_req, ss_algs[i].stat_bytes);
-+			break;
- 		}
- 	}
- 	return 0;
-@@ -448,6 +474,14 @@ static int sun8i_ss_register_algs(struct sun8i_ss_dev *ss)
- 				return err;
- 			}
- 			break;
-+		case CRYPTO_ALG_TYPE_RNG:
-+			err = crypto_register_rng(&ss_algs[i].alg.rng);
-+			if (err) {
-+				dev_err(ss->dev, "Fail to register %s\n",
-+					ss_algs[i].alg.rng.base.cra_name);
-+				ss_algs[i].ss = NULL;
-+			}
-+			break;
- 		default:
- 			ss_algs[i].ss = NULL;
- 			dev_err(ss->dev, "ERROR: tried to register an unknown algo\n");
-@@ -469,6 +503,11 @@ static void sun8i_ss_unregister_algs(struct sun8i_ss_dev *ss)
- 				 ss_algs[i].alg.skcipher.base.cra_name);
- 			crypto_unregister_skcipher(&ss_algs[i].alg.skcipher);
- 			break;
-+		case CRYPTO_ALG_TYPE_RNG:
-+			dev_info(ss->dev, "Unregister %d %s\n", i,
-+				 ss_algs[i].alg.rng.base.cra_name);
-+			crypto_unregister_rng(&ss_algs[i].alg.rng);
-+			break;
- 		}
- 	}
- }
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-prng.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-prng.c
-new file mode 100644
-index 000000000000..b5752692991e
---- /dev/null
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-prng.c
-@@ -0,0 +1,170 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * sun8i-ss-prng.c - hardware cryptographic offloader for
-+ * Allwinner A80/A83T SoC
-+ *
-+ * Copyright (C) 2015-2020 Corentin Labbe <clabbe@baylibre.com>
-+ *
-+ * This file handle the PRNG found in the SS
-+ *
-+ * You could find a link for the datasheet in Documentation/arm/sunxi.rst
-+ */
-+#include "sun8i-ss.h"
-+#include <linux/pm_runtime.h>
-+#include <crypto/internal/rng.h>
-+
-+int sun8i_ss_prng_seed(struct crypto_rng *tfm, const u8 *seed,
-+		       unsigned int slen)
-+{
-+	struct sun8i_ss_rng_tfm_ctx *ctx = crypto_rng_ctx(tfm);
-+
-+	if (ctx->seed && ctx->slen != slen) {
-+		memzero_explicit(ctx->seed, ctx->slen);
-+		kfree(ctx->seed);
-+		ctx->slen = 0;
-+		ctx->seed = NULL;
-+	}
-+	if (!ctx->seed)
-+		ctx->seed = kmalloc(slen, GFP_KERNEL | GFP_DMA);
-+	if (!ctx->seed)
-+		return -ENOMEM;
-+
-+	memcpy(ctx->seed, seed, slen);
-+	ctx->slen = slen;
-+
-+	return 0;
-+}
-+
-+int sun8i_ss_prng_init(struct crypto_tfm *tfm)
-+{
-+	struct sun8i_ss_rng_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
-+
-+	memset(ctx, 0, sizeof(struct sun8i_ss_rng_tfm_ctx));
-+	return 0;
-+}
-+
-+void sun8i_ss_prng_exit(struct crypto_tfm *tfm)
-+{
-+	struct sun8i_ss_rng_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
-+
-+	memzero_explicit(ctx->seed, ctx->slen);
-+	kfree(ctx->seed);
-+	ctx->seed = NULL;
-+	ctx->slen = 0;
-+}
-+
-+int sun8i_ss_prng_generate(struct crypto_rng *tfm, const u8 *src,
-+			   unsigned int slen, u8 *dst, unsigned int dlen)
-+{
-+	struct sun8i_ss_rng_tfm_ctx *ctx = crypto_rng_ctx(tfm);
-+	struct rng_alg *alg = crypto_rng_alg(tfm);
-+	struct sun8i_ss_alg_template *algt;
-+	struct sun8i_ss_dev *ss;
-+	dma_addr_t dma_iv, dma_dst;
-+	unsigned int todo;
-+	int err = 0;
-+	int flow;
-+	void *d;
-+	u32 v;
-+
-+	algt = container_of(alg, struct sun8i_ss_alg_template, alg.rng);
-+	ss = algt->ss;
-+
-+	if (ctx->slen == 0) {
-+		dev_err(ss->dev, "The PRNG is not seeded\n");
-+		return -EINVAL;
-+	}
-+
-+	/* The SS does not give an updated seed, so we need to get a new one.
-+	 * So we will ask for an extra PRNG_SEED_SIZE data.
-+	 * We want dlen + seedsize rounded up to a multiple of PRNG_DATA_SIZE
-+	 */
-+	todo = dlen + PRNG_SEED_SIZE + PRNG_DATA_SIZE;
-+	todo -= todo % PRNG_DATA_SIZE;
-+
-+	d = kzalloc(todo, GFP_KERNEL | GFP_DMA);
-+	if (!d)
-+		return -ENOMEM;
-+
-+	flow = sun8i_ss_get_engine_number(ss);
-+
-+#ifdef CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG
-+	algt->stat_req++;
-+	algt->stat_bytes += todo;
-+#endif
-+
-+	v = SS_ALG_PRNG | SS_PRNG_CONTINUE | SS_START;
-+	if (flow)
-+		v |= SS_FLOW1;
-+	else
-+		v |= SS_FLOW0;
-+
-+	dma_iv = dma_map_single(ss->dev, ctx->seed, ctx->slen, DMA_TO_DEVICE);
-+	if (dma_mapping_error(ss->dev, dma_iv)) {
-+		dev_err(ss->dev, "Cannot DMA MAP IV\n");
-+		return -EFAULT;
-+	}
-+
-+	dma_dst = dma_map_single(ss->dev, d, todo, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(ss->dev, dma_dst)) {
-+		dev_err(ss->dev, "Cannot DMA MAP DST\n");
-+		err = -EFAULT;
-+		goto err_iv;
-+	}
-+
-+	err = pm_runtime_get_sync(ss->dev);
-+	if (err < 0)
-+		goto err_pm;
-+	err = 0;
-+
-+	mutex_lock(&ss->mlock);
-+	writel(dma_iv, ss->base + SS_IV_ADR_REG);
-+	/* the PRNG act badly (failing rngtest) without SS_KEY_ADR_REG set */
-+	writel(dma_iv, ss->base + SS_KEY_ADR_REG);
-+	writel(dma_dst, ss->base + SS_DST_ADR_REG);
-+	writel(todo / 4, ss->base + SS_LEN_ADR_REG);
-+
-+	reinit_completion(&ss->flows[flow].complete);
-+	ss->flows[flow].status = 0;
-+	/* Be sure all data is written before enabling the task */
-+	wmb();
-+
-+	writel(v, ss->base + SS_CTL_REG);
-+
-+	wait_for_completion_interruptible_timeout(&ss->flows[flow].complete,
-+						  msecs_to_jiffies(todo));
-+	if (ss->flows[flow].status == 0) {
-+		dev_err(ss->dev, "DMA timeout for PRNG (size=%u)\n", todo);
-+		err = -EFAULT;
-+	}
-+	/* Since cipher and hash use the linux/cryptoengine and that we have
-+	 * a cryptoengine per flow, we are sure that they will issue only one
-+	 * request per flow.
-+	 * Since the cryptoengine wait for completion before submitting a new
-+	 * one, the mlock could be left just after the final writel.
-+	 * But cryptoengine cannot handle crypto_rng, so we need to be sure
-+	 * nothing will use our flow.
-+	 * The easiest way is to grab mlock until the hardware end our requests.
-+	 * We could have used a per flow lock, but this would increase
-+	 * complexity.
-+	 * The drawback is that no request could be handled for the other flow.
-+	 */
-+	mutex_unlock(&ss->mlock);
-+
-+	pm_runtime_put(ss->dev);
-+
-+err_pm:
-+	dma_unmap_single(ss->dev, dma_dst, todo, DMA_FROM_DEVICE);
-+err_iv:
-+	dma_unmap_single(ss->dev, dma_iv, ctx->slen, DMA_TO_DEVICE);
-+
-+	if (!err) {
-+		memcpy(dst, d, dlen);
-+		/* Update seed */
-+		memcpy(ctx->seed, d + dlen, ctx->slen);
-+	}
-+	memzero_explicit(d, todo);
-+	kfree(d);
-+
-+	return err;
-+}
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
-index f3ffaea3a59f..adf2ee2395c1 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
-@@ -8,6 +8,7 @@
- #include <crypto/aes.h>
- #include <crypto/des.h>
- #include <crypto/engine.h>
-+#include <crypto/rng.h>
- #include <crypto/skcipher.h>
- #include <linux/atomic.h>
- #include <linux/debugfs.h>
-@@ -21,6 +22,7 @@
- #define SS_ALG_AES		0
- #define SS_ALG_DES		(1 << 2)
- #define SS_ALG_3DES		(2 << 2)
-+#define SS_ALG_PRNG		(4 << 2)
- 
- #define SS_CTL_REG		0x00
- #define SS_INT_CTL_REG		0x04
-@@ -52,6 +54,8 @@
- #define SS_FLOW0	BIT(30)
- #define SS_FLOW1	BIT(31)
- 
-+#define SS_PRNG_CONTINUE	BIT(18)
-+
- #define MAX_SG 8
- 
- #define MAXFLOW 2
-@@ -61,6 +65,9 @@
- #define SS_DIE_ID_SHIFT	20
- #define SS_DIE_ID_MASK	0x07
- 
-+#define PRNG_DATA_SIZE (160 / 8)
-+#define PRNG_SEED_SIZE DIV_ROUND_UP(175, 8)
-+
- /*
-  * struct ss_clock - Describe clocks used by sun8i-ss
-  * @name:       Name of clock needed by this variant
-@@ -181,6 +188,16 @@ struct sun8i_cipher_tfm_ctx {
- 	struct crypto_skcipher *fallback_tfm;
- };
- 
-+/*
-+ * struct sun8i_ss_prng_ctx - context for PRNG TFM
-+ * @seed:	The seed to use
-+ * @slen:	The size of the seed
-+ */
-+struct sun8i_ss_rng_tfm_ctx {
-+	void *seed;
-+	unsigned int slen;
-+};
-+
- /*
-  * struct sun8i_ss_alg_template - crypto_alg template
-  * @type:		the CRYPTO_ALG_TYPE for this template
-@@ -191,6 +208,7 @@ struct sun8i_cipher_tfm_ctx {
-  * @alg:		one of sub struct must be used
-  * @stat_req:		number of request done on this template
-  * @stat_fb:		number of request which has fallbacked
-+ * @stat_bytes:		total data size done by this template
-  */
- struct sun8i_ss_alg_template {
- 	u32 type;
-@@ -199,10 +217,12 @@ struct sun8i_ss_alg_template {
- 	struct sun8i_ss_dev *ss;
- 	union {
- 		struct skcipher_alg skcipher;
-+		struct rng_alg rng;
- 	} alg;
- #ifdef CONFIG_CRYPTO_DEV_SUN8I_SS_DEBUG
- 	unsigned long stat_req;
- 	unsigned long stat_fb;
-+	unsigned long stat_bytes;
- #endif
- };
- 
-@@ -220,3 +240,8 @@ int sun8i_ss_skencrypt(struct skcipher_request *areq);
- int sun8i_ss_get_engine_number(struct sun8i_ss_dev *ss);
- 
- int sun8i_ss_run_task(struct sun8i_ss_dev *ss, struct sun8i_cipher_req_ctx *rctx, const char *name);
-+int sun8i_ss_prng_generate(struct crypto_rng *tfm, const u8 *src,
-+			   unsigned int slen, u8 *dst, unsigned int dlen);
-+int sun8i_ss_prng_seed(struct crypto_rng *tfm, const u8 *seed, unsigned int slen);
-+int sun8i_ss_prng_init(struct crypto_tfm *tfm);
-+void sun8i_ss_prng_exit(struct crypto_tfm *tfm);
+>  	cond;								\
+>  })
+> 
+> @@ -44,7 +45,7 @@ static bool is_zeroed(void *from, size_t size)
+>  	return memchr_inv(from, 0x0, size) == NULL;
+>  }
+> 
+> -static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+> +static int test_check_nonzero_user(struct kunit *test, char *kmem, char __user *umem, size_t size)
+>  {
+>  	int ret = 0;
+>  	size_t start, end, i, zero_start, zero_end;
+> @@ -102,7 +103,7 @@ static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+>  	return ret;
+>  }
+> 
+> -static int test_copy_struct_from_user(char *kmem, char __user *umem,
+> +static int test_copy_struct_from_user(struct kunit *test, char *kmem, char __user *umem,
+>  				      size_t size)
+>  {
+>  	int ret = 0;
+> @@ -177,7 +178,7 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+>  	return ret;
+>  }
+> 
+> -static int __init test_user_copy_init(void)
+> +static void user_copy_test(struct kunit *test)
+>  {
+>  	int ret = 0;
+>  	char *kmem;
+> @@ -192,16 +193,14 @@ static int __init test_user_copy_init(void)
+>  #endif
+> 
+>  	kmem = kmalloc(PAGE_SIZE * 2, GFP_KERNEL);
+> -	if (!kmem)
+> -		return -ENOMEM;
+> +	KUNIT_EXPECT_FALSE_MSG(test, kmem == NULL, "kmalloc failed");
+
+This would need to be an ASSERT, yes?
+
+> 
+>  	user_addr = vm_mmap(NULL, 0, PAGE_SIZE * 2,
+>  			    PROT_READ | PROT_WRITE | PROT_EXEC,
+>  			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+>  	if (user_addr >= (unsigned long)(TASK_SIZE)) {
+> -		pr_warn("Failed to allocate user memory\n");
+>  		kfree(kmem);
+> -		return -ENOMEM;
+> +		KUNIT_FAIL(test, "Failed to allocate user memory");
+>  	}
+
+Why FAIL instead of ASSERT?
+
+> 
+>  	usermem = (char __user *)user_addr;
+> @@ -245,9 +244,9 @@ static int __init test_user_copy_init(void)
+>  #undef test_legit
+> 
+>  	/* Test usage of check_nonzero_user(). */
+> -	ret |= test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
+> +	ret |= test_check_nonzero_user(test, kmem, usermem, 2 * PAGE_SIZE);
+>  	/* Test usage of copy_struct_from_user(). */
+> -	ret |= test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
+> +	ret |= test_copy_struct_from_user(test, kmem, usermem, 2 * PAGE_SIZE);
+> 
+>  	/*
+>  	 * Invalid usage: none of these copies should succeed.
+> @@ -309,23 +308,18 @@ static int __init test_user_copy_init(void)
+> 
+>  	vm_munmap(user_addr, PAGE_SIZE * 2);
+>  	kfree(kmem);
+> -
+> -	if (ret == 0) {
+> -		pr_info("tests passed.\n");
+> -		return 0;
+> -	}
+> -
+> -	return -EINVAL;
+
+Does KUnit provide a end-of-test summary now?
+
+>  }
+> 
+> -module_init(test_user_copy_init);
+> -
+> -static void __exit test_user_copy_exit(void)
+> -{
+> -	pr_info("unloaded.\n");
+> -}
+> +static struct kunit_case user_copy_test_cases[] = {
+> +	KUNIT_CASE(user_copy_test),
+> +	{}
+> +};
+> 
+> -module_exit(test_user_copy_exit);
+> +static struct kunit_suite user_copy_test_suite = {
+> +	.name = "user_copy",
+> +	.test_cases = user_copy_test_cases,
+> +};
+> 
+> +kunit_test_suites(&user_copy_test_suite);
+>  MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+>  MODULE_LICENSE("GPL");
+> 
+> base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
+> --
+> 2.26.2
+> 
+
+Otherwise, yes, looking good.
+
 -- 
-2.26.2
-
+Kees Cook
