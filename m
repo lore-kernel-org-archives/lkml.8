@@ -2,163 +2,125 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95813C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C7520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26012080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BuM3Qstq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgGUGi4 (ORCPT
+        id S1728311AbgGUGo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:38:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43924 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgGUGiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:38:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 46337ACDB;
-        Tue, 21 Jul 2020 06:39:00 +0000 (UTC)
-Subject: Re: [PATCH v2 24/24] scsi: aic7xxx: aic79xx_osm: Remove set but
- unused variabes 'saved_scsiid' and 'saved_modes'
-To:     jejb@linux.ibm.com, Lee Jones <lee.jones@linaro.org>
-Cc:     martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Hannes Reinecke <hare@suse.com>
-References: <20200713080001.128044-1-lee.jones@linaro.org>
- <20200713080001.128044-25-lee.jones@linaro.org>
- <559e47de-fa26-9ae5-a3c5-4adeae606309@suse.de>
- <1594741430.4545.15.camel@linux.ibm.com> <20200714213951.GL1398296@dell>
- <1594767794.14804.21.camel@linux.ibm.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <6cc1f2fe-ae61-2a54-89df-35d994dc388b@suse.de>
-Date:   Tue, 21 Jul 2020 08:38:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 21 Jul 2020 02:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgGUGo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:44:26 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D125C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:44:26 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so19912408wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 23:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XLBH/lbG1JbNPQLhLMpr3SrlFtcwyho8npoZGQi+xP8=;
+        b=BuM3Qstq98QzNt6F6557hx6512dd4iOZTH4thAXryG44zbI+lvZd5+QoVZbTSqDBMP
+         93zrlUiVHzVjzkZXnqixGeMLr8mYZbxkniN2HeI12MrVNA9hJlgFl08gS1UfZ/FUgxET
+         QackozUdZsBf0DC0Rnj9uBlkyblIgKnaHlpPc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=XLBH/lbG1JbNPQLhLMpr3SrlFtcwyho8npoZGQi+xP8=;
+        b=Pwm8ge8Kdx7DJ+NmRM5U08Vxte3LVDOM/FL/Bqg688tVjvqMTYfjU7Bp4B2ruIBtFr
+         ADI7+39h5fUp0VGu9X956KXO3yukqmvZskryCYNwT5nMW2l6p0/jl5Kh2ZQZZxhYtd4G
+         pP5iZo+J0BlgUj0oKG/BW/KvG87aKI7QPVduofQLRpryzAtD23xINRU/ZFp/h7zaw/JX
+         fZv+45z8HZa7qJGZn8RQl6uyYZzxiE3ZAlMSl2SStE6/r0XlW5/5UJ5bet3Y1FO+7H6E
+         Z349D8M1RjHQ4dcy7CtTA1zhd6k1Jz0VSHa9jNzXjiRY1tY+zQqDV5fMAWZlVHPlMDp/
+         r/Ww==
+X-Gm-Message-State: AOAM532UPkqMUawI9RrhoVSnVum38fepekdeZsyYIWpumqD1Qq8ymFzT
+        5i7wZ1i3k6zNuNGep9iR3EIbhQ==
+X-Google-Smtp-Source: ABdhPJx+1B27Md5ydM87FoadIhvwV71ppyIKT5LibLTn5acfdCI2eItikuk2Fwco1jPIYmE9L30yRw==
+X-Received: by 2002:adf:ab46:: with SMTP id r6mr25441574wrc.260.1595313865141;
+        Mon, 20 Jul 2020 23:44:25 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id w2sm35779083wrs.77.2020.07.20.23.44.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 23:44:24 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 08:44:22 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Sidong Yang <realwakka@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Melissa Wen <melissa.srw@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vkms: add wait_for_vblanks in atomic_commit_tail
+Message-ID: <20200721064422.GZ3278063@phenom.ffwll.local>
+Mail-Followup-To: Sidong Yang <realwakka@gmail.com>,
+        Melissa Wen <melissa.srw@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20200713160621.GQ3278063@phenom.ffwll.local>
+ <20200714102009.4qxgdq5bkpwhhhio@smtp.gmail.com>
+ <CAJeY4oF9k--dGOYaC9qAXiVbx6aX2a6isXpfOg+JV2s+UskKGA@mail.gmail.com>
+ <20200714140904.GF3278063@phenom.ffwll.local>
+ <20200714183513.6zah7wqlo2bpalum@smtp.gmail.com>
+ <CAKMK7uFF=CuuTQQJ+MSZD-7+gDzcN-jKB3Uojgps+hY0jdz1bg@mail.gmail.com>
+ <20200715124337.GA18441@realwakka>
+ <20200715155715.73zaveklxrakib37@smtp.gmail.com>
+ <CAKMK7uFLwyLgP3tAmw3s-PC0m_1CaNKR1aLvO3ES1PrTAdX-6A@mail.gmail.com>
+ <20200721053300.GA2338@realwakka>
 MIME-Version: 1.0
-In-Reply-To: <1594767794.14804.21.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721053300.GA2338@realwakka>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/20 1:03 AM, James Bottomley wrote:
-> On Tue, 2020-07-14 at 22:39 +0100, Lee Jones wrote:
->> On Tue, 14 Jul 2020, James Bottomley wrote:
->>
->>> On Tue, 2020-07-14 at 09:46 +0200, Hannes Reinecke wrote:
->>>> On 7/13/20 10:00 AM, Lee Jones wrote:
->>>>> Haven't been used since 2006.
->>>>>
->>>>> Fixes the following W=1 kernel build warning(s):
->>>>>
->>>>>   drivers/scsi/aic7xxx/aic79xx_osm.c: In function
->>>>> ‘ahd_linux_queue_abort_cmd’:
->>>>>   drivers/scsi/aic7xxx/aic79xx_osm.c:2155:17: warning: variable
->>>>> ‘saved_modes’ set but not used [-Wunused-but-set-variable]
->>>>>   drivers/scsi/aic7xxx/aic79xx_osm.c:2148:9: warning: variable
->>>>> ‘saved_scsiid’ set but not used [-Wunused-but-set-variable]
->>>>>
->>>>> Cc: Hannes Reinecke <hare@suse.com>
->>>>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>>>> ---
->>>>>   drivers/scsi/aic7xxx/aic79xx_osm.c | 4 ----
->>>>>   1 file changed, 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>>> b/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>>> index 3782a20d58885..140c4e74ddd7e 100644
->>>>> --- a/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>>> +++ b/drivers/scsi/aic7xxx/aic79xx_osm.c
->>>>> @@ -2141,14 +2141,12 @@ ahd_linux_queue_abort_cmd(struct
->>>>> scsi_cmnd
->>>>> *cmd)
->>>>>   	u_int  saved_scbptr;
->>>>>   	u_int  active_scbptr;
->>>>>   	u_int  last_phase;
->>>>> -	u_int  saved_scsiid;
->>>>>   	u_int  cdb_byte;
->>>>>   	int    retval;
->>>>>   	int    was_paused;
->>>>>   	int    paused;
->>>>>   	int    wait;
->>>>>   	int    disconnected;
->>>>> -	ahd_mode_state saved_modes;
->>>>>   	unsigned long flags;
->>>>>   
->>>>>   	pending_scb = NULL;
->>>>> @@ -2239,7 +2237,6 @@ ahd_linux_queue_abort_cmd(struct
->>>>> scsi_cmnd
->>>>> *cmd)
->>>>>   		goto done;
->>>>>   	}
->>>>>   
->>>>> -	saved_modes = ahd_save_modes(ahd);
->>>>>   	ahd_set_modes(ahd, AHD_MODE_SCSI, AHD_MODE_SCSI);
->>>>>   	last_phase = ahd_inb(ahd, LASTPHASE);
->>>>>   	saved_scbptr = ahd_get_scbptr(ahd);
->>>>> @@ -2257,7 +2254,6 @@ ahd_linux_queue_abort_cmd(struct
->>>>> scsi_cmnd
->>>>> *cmd)
->>>>>   	 * passed in command.  That command is currently
->>>>> active on
->>>>> the
->>>>>   	 * bus or is in the disconnected state.
->>>>>   	 */
->>>>> -	saved_scsiid = ahd_inb(ahd, SAVED_SCSIID);
->>>>>   	if (last_phase != P_BUSFREE
->>>>>   	    && SCB_GET_TAG(pending_scb) == active_scbptr) {
->>>>>   
->>>>>
->>>>
->>>> Reviewed-by: Hannes Reinecke <hare@suse.de>
->>>
->>> Hey, you don't get to do that ... I asked you to figure out why
->>> we're missing an ahd_restore_modes().  Removing the
->>> ahd_save_modes() is cosmetic: it gets rid of a warning but doesn't
->>> fix the problem.  I'd rather keep the warning until the problem is
->>> fixed and the problem is we need a mode save/restore around the
->>> ahd_set_modes() which is only partially implemented in this
->>> function.
->>
->> I had a look.  Traced it back to the dawn of time (time == Git), then
->> delved even further back by downloading and trawling through ~10-15
->> tarballs.  It looks as though drivers/scsi/aic7xxx/aic79xx_osm.c was
->> upstreamed in v2.5.60, nearly 20 years ago.  'saved_modes' has been
->> unused since at least then.  If no one has complained in 2 decades,
->> I'd say it probably isn't an issue worth perusing.
+On Tue, Jul 21, 2020 at 05:33:00AM +0000, Sidong Yang wrote:
+> Hi, Daniel and Melissa
 > 
-> Well, we have what looks like a fix now.  The reason it matters is that
->   if the bus is not in AHD_MODE_SCSI when the routine is called, it ends
-> up being in a wrong state when the routine exits, so you abort one
-> command and screw up another.  Ultimately I bet escalation to bus reset
-> fixes it, so everything appears to work, but it might have worked a lot
-> better if the original mode were restored.
+> I tested some code for this problem trying to find the code that make problem in igt test.
+> kms_cursor_crc test in igt test has 3 steps (preparation, test, cleanup). I check each steps
+> and I found that without cleanup step, the problem solved.
+> In cleanup step, igt test code seems like this.
 > 
-> This is error handling code, so most installations run just fine
-> without ever invoking it.
+> drmModeSetCrtc(display->drm_fd, crtc_id, 0 /* fb_id */, 0, 
+> 		0 /* x, y */, NULL /* connector */, 0, NULL /* mode */)
 > 
-And since you mention it, it might also explain why every time this 
-routine got invoked it failed to fixup anything and got escalated to bus 
-reset.
-(And yes, I _did_ have some customer issues with aic79xx EH escalations 
-over the years).
+> I commented out this function call and there is no problem in executing tests repeatedly.
+> I'm trying to find out what's happen in this call. but don't know until now
+> I hope this information help to solve the problem.
 
-Testing will be tricky, though, as you'd have to inject timeouts onto 
-the parallel bus or device.
+Ah yes that fits the evidence we have from Melissa pretty well: Not
+turning off the CRTC means the next test wont have to turn it back on
+again. And the vblank bug seems to be in the code which turns the crtc
+back on. At least inserting a vblank wait in there is enough to paper over
+all the issues, per Melissa's testing.
 
-Cheers,
-
-Hannes
+So at least we're now fairly confident where the bug is, that's some solid
+progress.
+-Daniel
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
