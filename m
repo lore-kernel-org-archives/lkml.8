@@ -2,105 +2,140 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4341C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99BA620720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8054820720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 23:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pds+v1Ag"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxDZjzBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731530AbgGUXzT (ORCPT
+        id S1731547AbgGUXzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57976 "EHLO
+        Tue, 21 Jul 2020 19:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbgGUXzS (ORCPT
+        with ESMTP id S1728403AbgGUXzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:55:18 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 787B1C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:55:18 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k1so204170pjt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 16:55:18 -0700 (PDT)
+        Tue, 21 Jul 2020 19:55:47 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8060FC061794;
+        Tue, 21 Jul 2020 16:55:47 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id j187so354952qke.11;
+        Tue, 21 Jul 2020 16:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UlYBxW7aN7ApC49X/dqnNQi/KmY2OEUg1dgouAJXg4o=;
-        b=pds+v1Ag+NBGhS3gHM0HxLrVLAZnOn5vH1eIwYT9d+b+iBDmReY+XBbXSi1a5XXSLy
-         uLJZIfLS7pI727nPYVCqJguQSFs3E9UCNZoOyn/tAlUNEf+pN6ynOIbJ1irzYv5/wL74
-         FtRsTnvy19EM0NtYIH76+922QsvhoLTzOkGs+Db9npYes2mMO7HK/Sjb1VMCwGAUIYej
-         KL7sMegGj+GAjQr5eRV+XPH3IupdHs8FKqReZ1MV/BBe0oU8f7/NU1Yqa+ha8Wal7y1P
-         tk6JhnttgB9VcOXBg1LToo6KKcIwBwz/7EO+jRE5oE5WeB83Z/x2zH/ruC5P190sRuMU
-         rYZA==
+        bh=I/TusodCOkVvaPIPRv3/TkFGT0iZF4+jcIUhNwbLLts=;
+        b=XxDZjzBQX/JypgQFpbGMt9JBp3QupSQRR2l2cqBFlIY126M0k9476dLpAHG1P7qEBZ
+         q1de1ebTx1al4LolnfC1S/b6auhINY2jVYQJjmSXu19eyyUp/5a9SQ+fgHyH+WiX3JuP
+         XqZcWQDVyfT0nK8Jpt4fLDN/LUuqRhGPaOK9hvK3WWqXMk42p0zGDgf5w8pU10OjnFQH
+         8w59ktLw/pEIg/UODZJcH4qQyZFsb2Hl7yNfcnlbd1ytqUEKFQo1IBOv1tOpjdr6kZui
+         gVJAnmlLvHBhuCETxutU5NF4b/WUSTBfsq04EvBwv8YkOe1kNT0Fn0KtPE/Rh9i1w4FW
+         hbTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UlYBxW7aN7ApC49X/dqnNQi/KmY2OEUg1dgouAJXg4o=;
-        b=FtRuSJfy9TmAZ+vgawh61RloApy9/s1M3oF6F5l68ZiqfQLCeOW3ImQqpCRUuy33g+
-         jc77GEFGYzuewqoq+HFz7Ec/HQIJYsXj6oS1la/Qtquk02saDSDRRig5RXHupjMDOaz9
-         KB51Txux5z7W9xTtgO8ZhfJEb2btleh2UOvxbYZ270kSPxta5L8oe9P7XgwQcTnOERiY
-         00j8SYSVt35bnSsJBPAa9vPPgZPXqG61dU+gvmO9s9WkYaKytNSOgtZ5GBmh1RzcrRyH
-         /batEk/Qdm+xwbmTh4Ysr6mDX06Uk+sskFSX6UUYbVlYYk5KmwVi+Jz6cBsBdA6w+RiP
-         ZjVg==
-X-Gm-Message-State: AOAM532jVJSxGZZqYHK9RbW2tDOajHtp6RROU55UwNLqaZ/ILQRqYqTf
-        GuY6J0cfaW/vDUP2Oo8cxYeLbEjIJpiR1OtFOnxbhA==
-X-Google-Smtp-Source: ABdhPJy641UDhbOqx3GLdk4RIzHJGrLZYkheLlWEit5N/FtCbqV8ZMqLpPt2Fq2A2yaleWOiUcoYr4rDKR63HAtJ2DQ=
-X-Received: by 2002:a17:90a:cc03:: with SMTP id b3mr6654686pju.80.1595375717756;
- Tue, 21 Jul 2020 16:55:17 -0700 (PDT)
+        bh=I/TusodCOkVvaPIPRv3/TkFGT0iZF4+jcIUhNwbLLts=;
+        b=HBSJVWYyHiuMyXYpjWZ7ky8y7XOoUW6SmbocI1cRU2zuAlPKEBleB7QB0XFzibbWp7
+         JJoqOdlSfguuab8qmXY9qR3gWOOUC4XFdqk3wT8Bw/oZYw79p80bqPOjD3EUpMyNv1v/
+         v2fMk8o6Z0jUV7M2JBhQjqxWxqMAZiYxRXiQDadq7v0fKsA+iy041hwtQuT/wivE89c2
+         XaUPTr/p3H7EGpzX6tgeWAY0140vrpA9UfiYIlEhokWs7EwLau7iHi+klXOT/Sh9UxIW
+         +lcf6A8eSUKcd3BNHSEvolDOSAgfsN1enWh6c85bsi11AhQEkwileWhDsMcCBsVv8pTc
+         +WRA==
+X-Gm-Message-State: AOAM532hQEiUq8Wuy7tc7uTJ9W/2nKffRiKt1KpoYI7xF8DzhN7kaC68
+        2gqM4BkBE435e5a4UqsbWpWXzHIe2XVi0ZfRAVBeXKeyLCE=
+X-Google-Smtp-Source: ABdhPJxwtExxUtytMeHyp1UWtmHIBO9JaJr6FDY7LSyCMpfDoQr3XDzM72FMj/39m8VxWHTo/XeVcK9/3lLCjqLH5J0=
+X-Received: by 2002:a37:9fcc:: with SMTP id i195mr30330309qke.415.1595375746474;
+ Tue, 21 Jul 2020 16:55:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721054528.2556267-1-davidgow@google.com>
-In-Reply-To: <20200721054528.2556267-1-davidgow@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 21 Jul 2020 16:55:06 -0700
-Message-ID: <CAFd5g46ughJzQCH_mh897NYovVuryvM1_Xi-9YfP6nsUHZsT4g@mail.gmail.com>
-Subject: Re: [RFC PATCH] platform: ioremap: Build iomap functions even without HAS_IOMEM
-To:     David Gow <davidgow@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Richard Weinberger <richard@nod.at>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CADLC3L20DuXw8WbS=SApmu2m49mkxxWKZrMJS_GBHDX7Vh0TvQ@mail.gmail.com>
+ <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
+In-Reply-To: <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
+From:   Robert Hancock <hancockrwd@gmail.com>
+Date:   Tue, 21 Jul 2020 17:55:35 -0600
+Message-ID: <CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com>
+Subject: Re: 5.7 regression: Lots of PCIe AER errors and suspend failure
+ without pcie=noaer
+To:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 10:45 PM David Gow <davidgow@google.com> wrote:
+On Fri, Jul 10, 2020 at 6:28 PM Robert Hancock <hancockrwd@gmail.com> wrote:
 >
-> A number of drivers use devm_platform_ioremap_resource(), but do not (or
-> did not) explicitly depend on IOMEM[1,2]. Given that the only platform
-> without HAS_IOMEM seems to be UML, and it has sufficient stubs for
-> devm_platform_ioremap_resource() and its dependencies to build, we can
-> remove the HAS_IOMEM requirement here, rather than playing whack-a-mole
-> with different drivers which don't try to build against ARCH=um.
+> On Fri, Jul 10, 2020 at 6:23 PM Robert Hancock <hancockrwd@gmail.com> wrote:
+> >
+> > Noticed a problem on my desktop with an Asus PRIME H270-PRO
+> > motherboard after Fedora 32 upgraded to the 5.7 kernel (now on 5.7.8):
+> > periodically there are PCIe AER errors getting spewed in dmesg that
+> > weren't happening before, and this also seems to causes suspend to
+> > fail - the system just wakes back up again right away, I am assuming
+> > due to some AER errors interrupting the process. 5.6 kernels didn't
+> > have this problem. Setting "pcie=noaer" on the kernel command line
+> > works around the issue, but I'm not sure what would have changed to
+> > trigger this to occur?
 >
-> The reason this works at the moment is that stub ioremap and iounmap
-> functions were added to UML to support this sort-of thing[3]. This
-> particular change doesn't require adding any additional stubs, but there
-> is possibly room in the future to stub out the remaining iomem functions
-> (or to provide mock implementations for testing), and get rid of
-> HAS_IOMEM entirely.
->
-> [1]: https://lkml.org/lkml/2020/6/30/176
-> [2]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1e7468bd9d30a21e059af477106dc5588ae52dff
-> [3]:
-> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1405627.html
->
-> Signed-off-by: David Gow <davidgow@google.com>
+> Correction: the workaround option is "pci=noaer".
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+As a follow-up, from some more experimentation, it appears that
+disabling PCIe ASPM with setpci on both the ASMedia PCIe-PCI bridge as
+well as the PCIe root port it is connected to seems to silence the AER
+errors and allow suspend/resume to work again:
+
+setpci -s 00:1c.0 0x50.B=0x00
+setpci -s 02:00.0 0x90.B=0x00
+
+It appears the behavior changed as a result of this patch (which went
+into the stable tree for 5.7.6 and so affects 5.7 kernels as well):
+
+commit 66ff14e59e8a30690755b08bc3042359703fb07a
+Author: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed May 6 01:34:21 2020 +0800
+
+    PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+
+    7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+    Linux to enable ASPM, but for some undocumented reason, it didn't enable
+    ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+
+    Remove this exclusion so we can enable ASPM on these links.
+
+    The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
+    PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
+    Intel SoC to enter deeper Package C-states, which is a significant power
+    savings.
+
+    [bhelgaas: commit log]
+    Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+    Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
+    Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Unfortunately it appears that this ASMedia PCIe-PCI bridge:
+
+02:00.0 PCI bridge [0604]: ASMedia Technology Inc. ASM1083/1085 PCIe
+to PCI Bridge [1b21:1080] (rev 04)
+
+doesn't cope with ASPM properly and causes a bunch of PCIe link
+errors. (This is in addition to some broken-ness known as far back as
+2012 with these ASM1083/1085 chips with regard to PCI interrupts
+getting stuck, but this ASPM problem causes issues even if no devices
+are connected to the PCI side of the bridge, as is the case on my
+system.)
+
+Might need a quirk to disable ASPM on this device?
