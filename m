@@ -2,79 +2,98 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0EEC20734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bsiAFEmu"
+	by mail.kernel.org (Postfix) with ESMTP id 771D320734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgGUCZg (ORCPT
+        id S1727898AbgGUC0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:25:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:50592 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725862AbgGUCZf (ORCPT
+        Mon, 20 Jul 2020 22:26:08 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51494 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbgGUC0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:25:35 -0400
-X-UUID: b82cacbb97414d5596c3337b478f1a9f-20200721
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=s/3wonDz1KdEZ8pSKDFcXqt6/o4RelDaDAIyV791UxU=;
-        b=bsiAFEmu0UVLwBjX86OHEYBnYX/qx3/03L1N3xQ/zdXjfoWXXiv5Pf3RsbaVJx5HD0LSuUJpaY9LgJdMzKMA3YpDsXXpAXgba3GXRyUas9GJcJAgMljUf5pgkx0oy1aHIc2Cl9LR1CIpK04+mwUqhGN6CnFdz2tNFcqV+GvmnRw=;
-X-UUID: b82cacbb97414d5596c3337b478f1a9f-20200721
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <fengping.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 706762059; Tue, 21 Jul 2020 10:25:31 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 21 Jul 2020 10:25:29 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 21 Jul 2020 10:25:28 +0800
-From:   Fengping yu <fengping.yu@mediatek.com>
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mattijs Korpershoek <mkorpershoek@baylibre.com>
-CC:     <linux-input@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v15] Add matrix keypad driver support Mediatek SoCs 
-Date:   Tue, 21 Jul 2020 10:23:21 +0800
-Message-ID: <20200721022324.21898-1-fengping.yu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 20 Jul 2020 22:26:08 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=chge@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U3MKo5._1595298289;
+Received: from chge-ali-mac.local(mailfrom:chge@linux.alibaba.com fp:SMTPD_---0U3MKo5._1595298289)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 21 Jul 2020 10:26:05 +0800
+Subject: Re: [Ocfs2-devel] [PATCH] dlmfs: add a newline when printing
+ 'capabilities' by sysfs
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, mark@fasheh.com,
+        jlbec@evilplan.org, joseph.qi@linux.alibaba.com
+Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com
+References: <20200720082433.164311-1-wangxiongfeng2@huawei.com>
+From:   Changwei Ge <chge@linux.alibaba.com>
+Message-ID: <5ee49484-1a8f-d4ed-c4b3-0d1d0cef4f52@linux.alibaba.com>
+Date:   Tue, 21 Jul 2020 10:24:49 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 791BD00D05F3F631098B4F917B8A164A3A32B05A5D575B4CFDFE6764A7BD256E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200720082433.164311-1-wangxiongfeng2@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpDaGFuZ2Ugc2luY2UgdjE0Og0KLSBhZGQgUFRSX0VSUiB0byByZXNvbHZlIGNvbXBpbGVyIHdh
-cm5pbmcNCi0gYWRkIElSUUZfT05FU0hPVCBmbGFnICB0byByZXF1ZXN0X2lycQ0KDQoNCmZlbmdw
-aW5nLnl1ICgzKToNCiAgZHQtYmluZGluZ3M6IEFkZCBrZXlwYWQgZGV2aWNldHJlZSBkb2N1bWVu
-dGF0aW9uDQogIGRyaXZlcnM6IGlucHV0OmtleWJvYXJkOiBBZGQgbXRrIGtleXBhZCBkcml2ZXIN
-CiAgY29uZmlnczogZGVmY29uZmlnOiBBZGQgQ09ORklHX0tFWUJPQVJEX01US19LUEQ9bQ0KDQog
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sICAgIHwgIDk2ICsrKysr
-KysrDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAx
-ICsNCiBkcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25maWcgICAgICAgICAgICAgICAgfCAgMTEg
-Kw0KIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMSAr
-DQogZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMgICAgICAgICAgICAgIHwgMjA5ICsr
-KysrKysrKysrKysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgMzE4IGluc2VydGlvbnMoKykNCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0
-L210ay1rcGQueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2lucHV0L2tleWJvYXJk
-L210ay1rcGQuYw0KDQotLQ0KMi4xOC4wDQoNCg==
+Hi，
 
+I am afraid that doing so might introduce a compatible risk into exited 
+systems which reply ocfs2/dlmfs.
+
+We can't guarantee that no system management tools is using the 
+information reported from this file.
+
+Basically, ocfs2-tools works of top of it. But after a quick glance at 
+the source, I didn't see side effect if this path applied. Better you 
+can do some test if this patch breaks ocfs2-tools.
+
+Still my suggestion is that we don't try to touch this file as what I 
+explained above.
+
+Thanks,
+Changwei
+
+
+On 7/20/20 4:24 PM, Xiongfeng Wang wrote:
+> When I cat module parameter 'capabilities' by sysfs, it displays as
+> follows. It's better to add a newline for easy reading.
+> 
+> root@syzkaller:~# cat /sys/module/ocfs2_dlmfs/parameters/capabilities
+> bast stackglueroot@syzkaller:~#
+> 
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>   fs/ocfs2/dlmfs/dlmfs.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+> index ea868c6f9800..1f9c864ec09b 100644
+> --- a/fs/ocfs2/dlmfs/dlmfs.c
+> +++ b/fs/ocfs2/dlmfs/dlmfs.c
+> @@ -82,8 +82,13 @@ static int param_set_dlmfs_capabilities(const char *val,
+>   static int param_get_dlmfs_capabilities(char *buffer,
+>   					const struct kernel_param *kp)
+>   {
+> -	return strlcpy(buffer, DLMFS_CAPABILITIES,
+> +	int cnt;
+> +
+> +	cnt = strlcpy(buffer, DLMFS_CAPABILITIES,
+>   		       strlen(DLMFS_CAPABILITIES) + 1);
+> +	cnt += sprintf(buffer + cnt, "\n");
+> +
+> +	return cnt;
+>   }
+>   module_param_call(capabilities, param_set_dlmfs_capabilities,
+>   		  param_get_dlmfs_capabilities, NULL, 0444);
+> 
