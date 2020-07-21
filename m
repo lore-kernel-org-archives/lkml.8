@@ -6,80 +6,74 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF20C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8968DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32F52072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AF5208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgGUFU0 (ORCPT
+        id S1727023AbgGUFXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:20:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:50550 "EHLO verein.lst.de"
+        Tue, 21 Jul 2020 01:23:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:50572 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgGUFU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:20:26 -0400
+        id S1725774AbgGUFXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 01:23:32 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 849376736F; Tue, 21 Jul 2020 07:20:22 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 07:20:22 +0200
+        id B86216736F; Tue, 21 Jul 2020 07:23:26 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 07:23:26 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Christoph Hellwig <hch@lst.de>, Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] syscalls: use uaccess_kernel in
- addr_limit_user_check
-Message-ID: <20200721052022.GA10011@lst.de>
-References: <20200714105505.935079-1-hch@lst.de> <20200714105505.935079-2-hch@lst.de> <20200718013849.GA157764@roeck-us.net> <20200718094846.GA8593@lst.de> <20200720221046.GA86726@roeck-us.net> <20200721045834.GA9613@lst.de> <eb470677-b569-a6f0-e63b-60149b54863a@roeck-us.net>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: Re: [PATCH 02/24] bpfilter: fix up a sparse annotation
+Message-ID: <20200721052326.GA10071@lst.de>
+References: <20200720124737.118617-1-hch@lst.de> <20200720124737.118617-3-hch@lst.de> <20200721024016.2talwdt5hjqvirr6@ltop.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb470677-b569-a6f0-e63b-60149b54863a@roeck-us.net>
+In-Reply-To: <20200721024016.2talwdt5hjqvirr6@ltop.local>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 10:15:37PM -0700, Guenter Roeck wrote:
-> >> -       if (CHECK_DATA_CORRUPTION(uaccess_kernel(),
-> >> +       if (CHECK_DATA_CORRUPTION(!uaccess_kernel(),
-> >>
-> >> How does this work anywhere ?
-> > 
-> > No, that is the wrong check - we want to make sure the address
-> > space override doesn't leak to userspace.  The problem is that
-> > armnommu (and m68knommu, but that doesn't call the offending
-> > function) pretends to not have a kernel address space, which doesn't
-> > really work.  Here is the fix I sent out yesterday, which I should
-> > have Cc'ed you on, sorry:
-> > 
+On Tue, Jul 21, 2020 at 04:40:16AM +0200, Luc Van Oostenryck wrote:
+> >  	req.pid = current->pid;
+> >  	req.cmd = optname;
+> > -	req.addr = (long __force __user)optval;
+> > +	req.addr = (__force long)optval;
 > 
-> The patch below makes sense, and it does work, but I still suspect
-> that something with your original patch is wrong, or at least suspicious.
-> Reason: My change above (Adding the "!") works for _all_ of my arm boot
-> tests. Or, in other words, it doesn't make a difference if true
-> or false is passed as first parameter of CHECK_DATA_CORRUPTION(), except
-> for nommu systems. Also, unless I am really missing something, your
-> original patch _does_ reverse the logic.
+> For casts to integers, even '__force' is not needed (since integers
+> can't be dereferenced, the concept of address-space is meaningless
+> for them, so it's never useful to warn when it's dropped and
+> '__force' is thus not needed).
 
-Well.  segment_eq is in current mainline used in two places:
+That's what I thought. but if I remove it here I actually do get a
+warning:
 
- 1) to implement uaccess_kernel
- 2) in addr_limit_user_check to implement uaccess_kernel-like
-    semantics using a strange reverse notation
+CHECK   net/bpfilter/bpfilter_kern.c
+net/bpfilter/bpfilter_kern.c:52:21: warning: cast removes address space '__user' of expression
 
-I think the explanation for your observation is how addr_limit_user_check
-is called on arm.  The addr_limit_check_failed wrapper for it is called
-from assembly code, but only after already checking the addr_limit,
-basically duplicating the segment_eq check.  So for mmu builds it won't
-get called unless we leak the kernel address space override, which
-is a pretty fatal error and won't show up in your boot tests.  The
-only good way to test it is by explicit injecting it using the
-lkdtm module.
+Using this recent sparse build:
+
+hch@brick:~/work/linux$ sparse --version
+v0.6.2-49-g707c5017
