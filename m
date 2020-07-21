@@ -2,204 +2,164 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E757FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB89C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF23020729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C6D20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="byMaJXbe"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IM0ImzkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgGURkn (ORCPT
+        id S1730848AbgGURmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729286AbgGURkm (ORCPT
+        Tue, 21 Jul 2020 13:42:17 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:21395 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730803AbgGURmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:40:42 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0904BC0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:40:41 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 11so10712347qkn.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ziXNDrsTUf/jO1e0o+ATLIms8b87+wdcIPJLc5MdA5I=;
-        b=byMaJXbew5T06Kk8bGXuwpnPtmHxBPAZo3GtrojHEEEajDRLMyzlzyOKZPuE5jASUi
-         CIZBmDtNOcoe6gTMoeNQmsJHcqjomo34rdGvJL+0UJr1A553/zgbVa5MHw9rpZVfK2Rp
-         CTCJyeTZ9S0VRsOmWA3rvpCM6l8KAsbEorM1lBf2idN+LOHB7jlDsWWRwoVzUxGgNsCU
-         cAMHrMrJIpEXwyImY/8ac1vfQxrfQ+utj1/tCkBrHNdvWnq94qXe/s0ONuZhZ+SYQpZP
-         51GQWHWJZGtJ1RK3xS39BcOh1xjLYIm8sOl/Jz+6x/yH8PJ5mothCrEZzXa3t61GMiPS
-         jdaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ziXNDrsTUf/jO1e0o+ATLIms8b87+wdcIPJLc5MdA5I=;
-        b=R9WquWAt8lUOMxfvufbpISg0FLPI9Dew0OOVa9kZIkRn+Yj35ZQT9fIHdmX7r7UG/n
-         0q/Fa0oGFAZIaIHFCazK+UxFt5AeyYMUrlMIlkSRvOBp+Aaz1+EmrCSCVHqG+4+3/g0c
-         x+BuIi5LEf0hhjnobnmheVcsZREY590Jo78m2PJhR9O0nccs8bu4GI/4KcM5ZTSpCRhb
-         6csL1g3os4UP0yesDS/zLmsoOq+UNkFAia6DfcDkufFiRP6NkmavH3Hjbrj2rpaA+T9I
-         dIr1tCJl/yCYXEeaEcQJSPHr0rp5LgICo+B7+aYHDKUvS25V062jFmq6vbytIZ6c/j0j
-         DNkA==
-X-Gm-Message-State: AOAM5331yBYIoJhOKdEbLUC3GZ3BTSMfQ9/hDryeHc95I/PgHDwjs38j
-        21dJxxIRg/wcU8S1XL/0EuSg5Q==
-X-Google-Smtp-Source: ABdhPJyEpCnDLIgKG+Qs1KVdSVn3ur/jfSm6Tjm8hv0giObFjbsZ4D3jJDKCisqzoCeGAUsB018GEg==
-X-Received: by 2002:a05:620a:2282:: with SMTP id o2mr26833386qkh.402.1595353241126;
-        Tue, 21 Jul 2020 10:40:41 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id w11sm23282781qtk.35.2020.07.21.10.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 10:40:40 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, keescook@chromium.org,
-        davidgow@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v3] lib: kunit: Provides a userspace memory context when tests are compiled as module
-Date:   Tue, 21 Jul 2020 14:40:36 -0300
-Message-Id: <20200721174036.71072-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 21 Jul 2020 13:42:07 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200721174204epoutp02f0f73a243c702ad4298cdcc519be7999~j1WVJWdmq0257002570epoutp02E
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:42:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200721174204epoutp02f0f73a243c702ad4298cdcc519be7999~j1WVJWdmq0257002570epoutp02E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595353324;
+        bh=jjP9Yogd6RPQu0KtJN58TDx/6/d93a8jjg+K17x3bAI=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=IM0ImzkInVStP3hSOG/Qk3XmMpXbqvws4PfzncHL1VFiirR2aSNifKdS2R8EWpiRf
+         NIH82hryfsTDaStjUmzFRwaet+LC5DFhPH1XL8qIRmzN6dq/fjoFQOeBJYrsxLJbea
+         dhDH2G0pGv8fwU9xdOxVVR9YhgH9X1KdaHxJAgHg=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200721174203epcas5p30337de22dce96877606a12f2feede272~j1WUPOFFE1008610086epcas5p3p;
+        Tue, 21 Jul 2020 17:42:03 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        62.9E.09475.AE8271F5; Wed, 22 Jul 2020 02:42:02 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200721174202epcas5p1cf62a9357c8c8fffa978946005ebf551~j1WTZqnTo0836208362epcas5p1S;
+        Tue, 21 Jul 2020 17:42:02 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200721174202epsmtrp2976177db6d3fdf6bad357ca2a8f31fd3~j1WTY6MIP1506815068epsmtrp2g;
+        Tue, 21 Jul 2020 17:42:02 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-50-5f1728ea0c91
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        35.77.08382.9E8271F5; Wed, 22 Jul 2020 02:42:01 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200721174159epsmtip2f651e157973aa10613138d5ff8901959~j1WRVSoUN2332023320epsmtip2C;
+        Tue, 21 Jul 2020 17:41:59 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Randy Dunlap'" <rdunlap@infradead.org>,
+        "'Stephen Rothwell'" <sfr@canb.auug.org.au>,
+        "'Linux Next Mailing List'" <linux-next@vger.kernel.org>
+Cc:     "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
+        "'linux-scsi'" <linux-scsi@vger.kernel.org>,
+        "'Santosh Yaraganavi'" <santosh.sy@samsung.com>,
+        "'Vinayak Holikatti'" <h.vinayak@samsung.com>,
+        "'Seungwon Jeon'" <essuuj@gmail.com>
+In-Reply-To: <e6112633-61c9-fa80-8479-fe90bb360868@infradead.org>
+Subject: RE: linux-next: Tree for Jul 20 (scsi/ufs/exynos)
+Date:   Tue, 21 Jul 2020 23:11:57 +0530
+Message-ID: <06a601d65f86$3d8aeee0$b8a0cca0$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIWmKFrqc6cTichonS6aOkZQnVssAH33GmqAhZA11+ocWkksA==
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKKsWRmVeSWpSXmKPExsWy7bCmpu4rDfF4g+nvLS2WX1jCZHF51xw2
+        i4ML2xgtuq/vYLN4e2c6i8XWvVfZHdg8Gm/cYPPYOesuu8fmFVoenzfJBbBEcdmkpOZklqUW
+        6dslcGWs7p/LVHCZq+Lo7bdsDYzPOboYOTkkBEwkpjSvYu9i5OIQEtjNKLH59V5WCOcTo8Tn
+        aS9ZIJxvjBLXP21ih2nZvHkFI0RiL6PE78Nv2CCcN4wSr5b0sYJUsQnoSuxY3AaWEBGYzijx
+        4WkXmMMs8JNR4uwtkBZODk4BR4mGztksILawgJXEnDO7wLpZBFQlvp05wAhi8wpYShx82A1l
+        C0qcnPkErJ5ZQFti2cLXzBA3KUj8fLoMrFdEwEmi798uJogacYmjP3ugalo5JD6ek4ewXSR+
+        zj7BCGELS7w6vgXqNymJz+/2At3GAWRnS/TsMoYI10gsnXeMBcK2lzhwZQ4LSAmzgKbE+l36
+        EJv4JHp/P2GC6OSV6GgTgqhWlWh+dxWqU1piYnc3K4TtIdG+fQHrBEbFWUj+moXkr1lI7p+F
+        sGwBI8sqRsnUguLc9NRi0wLjvNRyveLE3OLSvHS95PzcTYzglKPlvYPx0YMPeocYmTgYDzFK
+        cDArifDqMIrHC/GmJFZWpRblxxeV5qQWH2KU5mBREudV+nEmTkggPbEkNTs1tSC1CCbLxMEp
+        1cA021Vdo28F40TWWVn37Z9MmRCY4Barouy2817qJZUKl22bxMJ888yYdd7MrhaPU1q2tML+
+        U8AcYVW13y7ZXhuuPozftF9p+yZx93Xu+7yvb9QQe5EXeKiB/VXhR92s1+/ZPiUnHTsnrK4t
+        Wa267ZLfVJ7vm/lYG3qv+Mg6nBJTyuhkcK1kcSoTFj8t/yzI0PTmywMnbpxo/Bi9g9nt0Yf8
+        G2snsp3mKNZ5MM/bWrLssmiy23KdoN9bZ/21UJcSvhhk4bmF/+DFF937VfeqeS+N99FuKWFP
+        tjnFyu7xSt1JTD7z94fJWXria1P3zPvppKCxbMeEv24r9dccKWw+dbPpU+jWmqP9nFv2Ta9k
+        uKzEUpyRaKjFXFScCAAzuE6aqAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJLMWRmVeSWpSXmKPExsWy7bCSvO4rDfF4gxehFssvLGGyuLxrDpvF
+        wYVtjBbd13ewWby9M53FYuveq+wObB6NN26weeycdZfdY/MKLY/Pm+QCWKK4bFJSczLLUov0
+        7RK4MlbcsC/o4Ko49mYTcwPjIo4uRk4OCQETic2bVzB2MXJxCAnsZpR48WYZK0RCWuL6xgns
+        ELawxMp/z9khil4xSvy4eJ8ZJMEmoCuxY3EbG0hCRGA6o8T5vi/MIA6zwG9GiVNtG1ggWvYy
+        Shz4dBJsFqeAo0RD52wWEFtYwEpizpldYPtYBFQlvp05wAhi8wpYShx82A1lC0qcnPkErJ5Z
+        QFvi6c2ncPayha+ZIe5TkPj5FOJuEQEnib5/u5ggasQljv7sYZ7AKDwLyahZSEbNQjJqFpKW
+        BYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgmNHS3MH4/ZVH/QOMTJxMB5ilOBg
+        VhLh1WEUjxfiTUmsrEotyo8vKs1JLT7EKM3BoiTOe6NwYZyQQHpiSWp2ampBahFMlomDU6qB
+        Kb8mt6Pa8JLnnUfODx+GzFqzafcktbbE3+snyi35GT9n1THrnr8savLbFhz6sVxtBv8iT73L
+        h9/tLCle+HvTizBLE0fR14/KOK8FeW2+fcxQTsnC/4mm85fXO2KUjuv9F8/5ZHhQOVGR66bs
+        eYeX07fGeEkrFXneuNq+UnzC14fX5ZoePXrygneiMM/7pdqrdfu+cidaer/x071VfiK+NDr/
+        +7vWtY1/+ho7JpWlnP26/9kWrq+BbE887pkX+02ofX79nm5Dqf4etiU1ntd+B367bjSltMZy
+        wWq1ZR5pu7ZouIXc2Wi+V2rrkbCsb9ybly4OEb+TWre2omL18psdbwNEMiKrmB9bH4gyWfVT
+        Ll+JpTgj0VCLuag4EQA4T0MvDAMAAA==
+X-CMS-MailID: 20200721174202epcas5p1cf62a9357c8c8fffa978946005ebf551
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200720164116epcas5p2021c67d1778e737d7c695f6bdbc5b2d4
+References: <20200720194225.17de9962@canb.auug.org.au>
+        <CGME20200720164116epcas5p2021c67d1778e737d7c695f6bdbc5b2d4@epcas5p2.samsung.com>
+        <e6112633-61c9-fa80-8479-fe90bb360868@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KUnit test cases run on kthreads, and kthreads don't have an
-adddress space (current->mm is NULL), but processes have mm.
+Hi Randy,
 
-The purpose of this patch is to allow to borrow mm to KUnit kthread
-after userspace is brought up, because we know that there are processes
-running, at least the process that loaded the module to borrow mm.
-
-This allows, for example, tests such as user_copy_kunit, which uses
-vm_mmap, which needs current->mm.
-
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
----
-v2:
-    * splitted patch in 3:
-        - Allows to install and load modules in root filesystem;
-        - Provides an userspace memory context when tests are compiled
-          as module;
-        - Convert test_user_copy to KUnit test;
-    * added documentation;
-    * added more explanation;
-    * added a missed test pointer;
-    * released mm with mmput();
-v3:
-    * rebased with last kunit branch
-    * Please apply this commit from kunit-fixes:
-        3f37d14b8a3152441f36b6bc74000996679f0998
-
- Documentation/dev-tools/kunit/usage.rst | 14 ++++++++++++++
- include/kunit/test.h                    | 12 ++++++++++++
- lib/kunit/try-catch.c                   | 15 ++++++++++++++-
- 3 files changed, 40 insertions(+), 1 deletion(-)
----
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 3c3fe8b5fecc..9f909157be34 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -448,6 +448,20 @@ We can now use it to test ``struct eeprom_buffer``:
-
- .. _kunit-on-non-uml:
-
-+User-space context
-+------------------
-+
-+I case you need a user-space context, for now this is only possible through
-+tests compiled as a module. And it will be necessary to use a root filesystem
-+and uml_utilities.
-+
-+Example:
-+
-+.. code-block:: bash
-+
-+   ./tools/testing/kunit/kunit.py run --timeout=60 --uml_rootfs_dir=.uml_rootfs
-+
-+
- KUnit on non-UML architectures
- ==============================
-
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 59f3144f009a..ae3337139c65 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -222,6 +222,18 @@ struct kunit {
- 	 * protect it with some type of lock.
- 	 */
- 	struct list_head resources; /* Protected by lock. */
-+	/*
-+	 * KUnit test cases run on kthreads, and kthreads don't have an
-+	 * adddress space (current->mm is NULL), but processes have mm.
-+	 *
-+	 * The purpose of this mm_struct is to allow to borrow mm to KUnit kthread
-+	 * after userspace is brought up, because we know that there are processes
-+	 * running, at least the process that loaded the module to borrow mm.
-+	 *
-+	 * This allows, for example, tests such as user_copy_kunit, which uses
-+	 * vm_mmap, which needs current->mm.
-+	 */
-+	struct mm_struct *mm;
- };
-
- void kunit_init_test(struct kunit *test, const char *name, char *log);
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 0dd434e40487..d03e2093985b 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -11,7 +11,8 @@
- #include <linux/completion.h>
- #include <linux/kernel.h>
- #include <linux/kthread.h>
--
-+#include <linux/sched/mm.h>
-+#include <linux/sched/task.h>
- #include "try-catch-impl.h"
-
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
-@@ -24,8 +25,17 @@ EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
- static int kunit_generic_run_threadfn_adapter(void *data)
- {
- 	struct kunit_try_catch *try_catch = data;
-+	struct kunit *test = try_catch->test;
-+
-+	if (test != NULL && test->mm != NULL)
-+		kthread_use_mm(test->mm);
-
- 	try_catch->try(try_catch->context);
-+	if (test != NULL && test->mm != NULL) {
-+		kthread_unuse_mm(test->mm);
-+		mmput(test->mm);
-+		test->mm = NULL;
-+	}
-
- 	complete_and_exit(try_catch->try_completion, 0);
- }
-@@ -65,6 +75,9 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	try_catch->context = context;
- 	try_catch->try_completion = &try_completion;
- 	try_catch->try_result = 0;
-+
-+	test->mm = get_task_mm(current);
-+
- 	task_struct = kthread_run(kunit_generic_run_threadfn_adapter,
- 				  try_catch,
- 				  "kunit_try_catch_thread");
-
-base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
---
-2.26.2
+> -----Original Message-----
+> From: Randy Dunlap <rdunlap=40infradead.org>
+> Sent: 20 July 2020 22:11
+> To: Stephen Rothwell <sfr=40canb.auug.org.au>; Linux Next Mailing List <l=
+inux-
+> next=40vger.kernel.org>
+> Cc: Linux Kernel Mailing List <linux-kernel=40vger.kernel.org>; linux-scs=
+i <linux-
+> scsi=40vger.kernel.org>; Santosh Yaraganavi <santosh.sy=40samsung.com>;
+> Vinayak Holikatti <h.vinayak=40samsung.com>; Alim Akhtar
+> <alim.akhtar=40samsung.com>; Seungwon Jeon <essuuj=40gmail.com>
+> Subject: Re: linux-next: Tree for Jul 20 (scsi/ufs/exynos)
+>=20
+> On 7/20/20 2:42 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20200717:
+> >
+>=20
+> on x86_64:
+>=20
+> WARNING: unmet direct dependencies detected for PHY_SAMSUNG_UFS
+>   Depends on =5Bn=5D: OF =5B=3Dn=5D && (ARCH_EXYNOS =7C=7C COMPILE_TEST =
+=5B=3Dy=5D)
+>   Selected by =5By=5D:
+>   - SCSI_UFS_EXYNOS =5B=3Dy=5D && SCSI_LOWLEVEL =5B=3Dy=5D && SCSI =5B=3D=
+y=5D &&
+> SCSI_UFSHCD_PLATFORM =5B=3Dy=5D && (ARCH_EXYNOS =7C=7C COMPILE_TEST =5B=
+=3Dy=5D)
+>=20
+Thanks, will post a patch shortly.
+>=20
+> There are no build errors since <linux/of.h> provides stubs for functions=
+ when
+> CONFIG_OF is not enabled.
+>=20
+> But new warnings are not OK.
+>=20
+> thanks.
+> --
+> =7ERandy
+> Reported-by: Randy Dunlap <rdunlap=40infradead.org>
 
