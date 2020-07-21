@@ -2,301 +2,199 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF06C433FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0012C4345C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A991C207CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D68207BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEdaPyHd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zl7ftJpx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgGUQcX (ORCPT
+        id S1730530AbgGUQcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgGUQcV (ORCPT
+        Tue, 21 Jul 2020 12:32:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46632 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbgGUQcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:32:21 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834E1C061794;
-        Tue, 21 Jul 2020 09:32:21 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x8so10483427plm.10;
-        Tue, 21 Jul 2020 09:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LPmyjWx9tWsRH5uEf65QCL8YMbiStfFo3Vcfges55fU=;
-        b=PEdaPyHdq+UcCPdmaHqy3vwaLCO1d9UYBqTlisJxyeo6rvZZc+kQfrddkq1mcQ9JJS
-         +8GY0HhG389+xyMppz6eL5z+EZVW5DfiVIyCNKrJ/Swi0FVfOmWL7krNETayOc/6YpGc
-         ChrtydDlZgzZ1YdujTEnti0poOkSfXyNgrPMcFZMUupMnQuVZM6U19xoczR/lzsNeFJf
-         TPcDzbzlXzyCoDEoT1plvQMqj/bmBLEFYkA8iFI9FpKxvGBDLNtXxXn9Awk0TcQBjCGO
-         8tY5rHZk0bIBnILPtcmc8YeY//ZeOuMSohf1SSgby1BD3SsifmH78znFCQKh4/tJ3heq
-         BydA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LPmyjWx9tWsRH5uEf65QCL8YMbiStfFo3Vcfges55fU=;
-        b=e1C248iyLjf4v+h+pR+h1fGhI210RO+itLcPrISMIDWGFQeSBsFqXBf0pp/WXIVMYi
-         14MyGPrUatdP7+zQbXWsFZEJeJE9gwJjuAG6A+iuBTrwAG5Y5eetlOmb87F/D5D/9aUJ
-         /DOfHJUN3B2HaTdPtymjz866k+Ee16fOhDW5isJIkIGZD4tRXTFAqtYFoJ4KtCuaIinZ
-         wepH7JSWs80HITexMehqEX7LcRzYWM0iUTUmM5bJAHsLDXQZo6/2YO8LmTUt5fgSFNjR
-         PkoM4c69nZkGJTKGSXuBYfuWeRm/HC9+JDTdjaZkycHG6uTulnwvRDwkkytRCWRsbpaV
-         vWRg==
-X-Gm-Message-State: AOAM532KS1AvQfK28amHgURea20oSyeN5Js6fEMxFdKoTLK/sEG02cBm
-        szNy9m1XJ5rKTLAVW+0kZkg=
-X-Google-Smtp-Source: ABdhPJzsB/s5l4dhKrBmeIKLlNBrKUvw6CydMMAGmeMjeeEDEsO+/jmcu7RPRDDT4PxXd82Q8p9lww==
-X-Received: by 2002:a17:902:c086:: with SMTP id j6mr22107858pld.293.1595349140814;
-        Tue, 21 Jul 2020 09:32:20 -0700 (PDT)
-Received: from gmail.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id j13sm3219829pjf.28.2020.07.21.09.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:32:20 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 22:00:56 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v1] crypto: ccp: sp-pci: use generic power management
-Message-ID: <20200721163056.GA396078@gmail.com>
-References: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
- <7100976b-cf7c-c304-e2a6-660876e310af@amd.com>
+        Tue, 21 Jul 2020 12:32:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWSTl005114;
+        Tue, 21 Jul 2020 11:32:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595349148;
+        bh=XgJdQKDzmr7dacCgcldlDU/h9LNfFlX28YSFFph/Eqs=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Zl7ftJpxAhfXxwKbKX4k3qUiVnKbfrE3+lRR3H6rpAcxYz16O/UvmyGlr+MnMnYls
+         7sEOILfuhHh50EPtAdQ0pNxG7C9hzHrZTG5dwFIAcLiG4gPPApzzV2jbJ51ikrqb3O
+         dYwnAAmI00ZqJ7PIjbf6XaMQfBr5rpIbPl1NuTg8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWSMX036020;
+        Tue, 21 Jul 2020 11:32:28 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 11:32:28 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 11:32:28 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWSf0004980;
+        Tue, 21 Jul 2020 11:32:28 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh@kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 4/4] power: supply: bq27xxx_battery: Add the BQ28z610 Battery monitor
+Date:   Tue, 21 Jul 2020 11:32:06 -0500
+Message-ID: <20200721163206.25438-4-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721163206.25438-1-dmurphy@ti.com>
+References: <20200721163206.25438-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7100976b-cf7c-c304-e2a6-660876e310af@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:19:33AM -0500, Tom Lendacky wrote:
-> On 7/21/20 7:31 AM, Vaibhav Gupta wrote:
-> > Drivers using legacy power management .suspen()/.resume() callbacks
-> > have to manage PCI states and device's PM states themselves. They also
-> > need to take care of standard configuration registers.
-> > 
-> > Switch to generic power management framework using a single
-> > "struct dev_pm_ops" variable to take the unnecessary load from the driver.
-> > This also avoids the need for the driver to directly call most of the PCI
-> > helper functions and device power state control functions as through
-> > the generic framework, PCI Core takes care of the necessary operations,
-> > and drivers are required to do only device-specific jobs.
-> > 
-> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> > ---
-> >  drivers/crypto/ccp/ccp-dev.c     |  8 +++-----
-> >  drivers/crypto/ccp/sp-dev.c      |  6 ++----
-> >  drivers/crypto/ccp/sp-dev.h      |  6 +++---
-> >  drivers/crypto/ccp/sp-pci.c      | 17 ++++++-----------
-> >  drivers/crypto/ccp/sp-platform.c |  2 +-
-> >  5 files changed, 15 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/drivers/crypto/ccp/ccp-dev.c b/drivers/crypto/ccp/ccp-dev.c
-> > index 19ac509ed76e..8ae26d3cffff 100644
-> > --- a/drivers/crypto/ccp/ccp-dev.c
-> > +++ b/drivers/crypto/ccp/ccp-dev.c
-> > @@ -531,8 +531,7 @@ int ccp_trng_read(struct hwrng *rng, void *data, size_t max, bool wait)
-> >  	return len;
-> >  }
-> >  
-> > -#ifdef CONFIG_PM
-> > -bool ccp_queues_suspended(struct ccp_device *ccp)
-> > +bool __maybe_unused ccp_queues_suspended(struct ccp_device *ccp)
-> 
-> These aren't static functions, so is the __maybe_unused necessary?
->
-> (Same comment on the other non-static functions changed below)
-> 
-> >  {
-> >  	unsigned int suspended = 0;
-> >  	unsigned long flags;
-> > @@ -549,7 +548,7 @@ bool ccp_queues_suspended(struct ccp_device *ccp)
-> >  	return ccp->cmd_q_count == suspended;
-> >  }
-> >  
-> > -int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
-> > +int __maybe_unused ccp_dev_suspend(struct sp_device *sp)
-> >  {
-> >  	struct ccp_device *ccp = sp->ccp_data;
-> >  	unsigned long flags;
-> > @@ -577,7 +576,7 @@ int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
-> >  	return 0;
-> >  }
-> >  
-> > -int ccp_dev_resume(struct sp_device *sp)
-> > +int __maybe_unused ccp_dev_resume(struct sp_device *sp)
-> >  {
-> >  	struct ccp_device *ccp = sp->ccp_data;
-> >  	unsigned long flags;
-> > @@ -601,7 +600,6 @@ int ccp_dev_resume(struct sp_device *sp)
-> >  
-> >  	return 0;
-> >  }
-> > -#endif
-> >  
-> >  int ccp_dev_init(struct sp_device *sp)
-> >  {
-> > diff --git a/drivers/crypto/ccp/sp-dev.c b/drivers/crypto/ccp/sp-dev.c
-> > index ce42675d3274..6284a15e5047 100644
-> > --- a/drivers/crypto/ccp/sp-dev.c
-> > +++ b/drivers/crypto/ccp/sp-dev.c
-> > @@ -211,13 +211,12 @@ void sp_destroy(struct sp_device *sp)
-> >  	sp_del_device(sp);
-> >  }
-> >  
-> > -#ifdef CONFIG_PM
-> > -int sp_suspend(struct sp_device *sp, pm_message_t state)
-> > +int sp_suspend(struct sp_device *sp)
-> >  {
-> >  	int ret;
-> >  
-> >  	if (sp->dev_vdata->ccp_vdata) {
-> > -		ret = ccp_dev_suspend(sp, state);
-> > +		ret = ccp_dev_suspend(sp);
-> >  		if (ret)
-> >  			return ret;
-> >  	}
-> > @@ -237,7 +236,6 @@ int sp_resume(struct sp_device *sp)
-> >  
-> >  	return 0;
-> >  }
-> > -#endif
-> >  
-> >  struct sp_device *sp_get_psp_master_device(void)
-> >  {
-> > diff --git a/drivers/crypto/ccp/sp-dev.h b/drivers/crypto/ccp/sp-dev.h
-> > index f913f1494af9..0218d0670eee 100644
-> > --- a/drivers/crypto/ccp/sp-dev.h
-> > +++ b/drivers/crypto/ccp/sp-dev.h
-> > @@ -119,7 +119,7 @@ int sp_init(struct sp_device *sp);
-> >  void sp_destroy(struct sp_device *sp);
-> >  struct sp_device *sp_get_master(void);
-> >  
-> > -int sp_suspend(struct sp_device *sp, pm_message_t state);
-> > +int sp_suspend(struct sp_device *sp);
-> >  int sp_resume(struct sp_device *sp);
-> >  int sp_request_ccp_irq(struct sp_device *sp, irq_handler_t handler,
-> >  		       const char *name, void *data);
-> > @@ -134,7 +134,7 @@ struct sp_device *sp_get_psp_master_device(void);
-> >  int ccp_dev_init(struct sp_device *sp);
-> >  void ccp_dev_destroy(struct sp_device *sp);
-> >  
-> > -int ccp_dev_suspend(struct sp_device *sp, pm_message_t state);
-> > +int ccp_dev_suspend(struct sp_device *sp);
-> >  int ccp_dev_resume(struct sp_device *sp);
-> >  
-> >  #else	/* !CONFIG_CRYPTO_DEV_SP_CCP */
-> > @@ -145,7 +145,7 @@ static inline int ccp_dev_init(struct sp_device *sp)
-> >  }
-> >  static inline void ccp_dev_destroy(struct sp_device *sp) { }
-> >  
-> > -static inline int ccp_dev_suspend(struct sp_device *sp, pm_message_t state)
-> > +static inline int ccp_dev_suspend(struct sp_device *sp)
-> >  {
-> >  	return 0;
-> >  }
-> > diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
-> > index cb6cb47053f4..f471dbaef1fb 100644
-> > --- a/drivers/crypto/ccp/sp-pci.c
-> > +++ b/drivers/crypto/ccp/sp-pci.c
-> > @@ -252,23 +252,19 @@ static void sp_pci_remove(struct pci_dev *pdev)
-> >  	sp_free_irqs(sp);
-> >  }
-> >  
-> > -#ifdef CONFIG_PM
-> > -static int sp_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-> > +static int __maybe_unused sp_pci_suspend(struct device *dev)
-> >  {
-> > -	struct device *dev = &pdev->dev;
-> >  	struct sp_device *sp = dev_get_drvdata(dev);
-> >  
-> > -	return sp_suspend(sp, state);
-> > +	return sp_suspend(sp);
-> >  }
-> >  
-> > -static int sp_pci_resume(struct pci_dev *pdev)
-> > +static int __maybe_unused sp_pci_resume(struct device *dev)
-> >  {
-> > -	struct device *dev = &pdev->dev;
-> >  	struct sp_device *sp = dev_get_drvdata(dev);
-> >  
-> >  	return sp_resume(sp);
-> >  }
-> > -#endif
-> >  
-> >  #ifdef CONFIG_CRYPTO_DEV_SP_PSP
-> >  static const struct sev_vdata sevv1 = {
-> > @@ -365,15 +361,14 @@ static const struct pci_device_id sp_pci_table[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(pci, sp_pci_table);
-> >  
-> > +static SIMPLE_DEV_PM_OPS(sp_pci_pm_ops, sp_pci_suspend, sp_pci_resume);
-> > +
-> >  static struct pci_driver sp_pci_driver = {
-> >  	.name = "ccp",
-> >  	.id_table = sp_pci_table,
-> >  	.probe = sp_pci_probe,
-> >  	.remove = sp_pci_remove,
-> > -#ifdef CONFIG_PM
-> > -	.suspend = sp_pci_suspend,
-> > -	.resume = sp_pci_resume,
-> > -#endif
-> > +	.driver.pm = &sp_pci_pm_ops,
-> >  };
-> >  
-> >  int sp_pci_init(void)
-> > diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
-> > index 831aac1393a2..9dba52fbee99 100644
-> > --- a/drivers/crypto/ccp/sp-platform.c
-> > +++ b/drivers/crypto/ccp/sp-platform.c
-> 
-> This file use the same "#ifdef CONFIG_PM" to define the suspend and resume
-> functions (see sp_platform_driver variable). Doesn't that need to be
-> updated similar to sp-pci.c? Not sure how this compile tested successfully
-> unless your kernel config didn't have CONFIG_PM defined?
-I am not sure but my .config file has "CONFIG_PM=y"
+Add the Texas Instruments BQ28z610 battery monitor.
+The register address map is laid out the same as compared to other
+devices within the file.
 
-The motive is update PM of sp-pci. Months ago, we decided to remove
-"#ifdef CONFIG_PM" container and mark the callbacks as __maybe_unused.
-Hence, I did similar changes to all files on which sp-pci is dependent.
+The battery status register bits are similar to the BQ27561 but they
+are different compared to other fuel gauge devices within this file.
 
-This caused change in function defintion and declaration of sp_suspend().
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/power/supply/bq27xxx_battery.c     | 42 ++++++++++++++++++++++
+ drivers/power/supply/bq27xxx_battery_i2c.c |  2 ++
+ include/linux/power/bq27xxx_battery.h      |  1 +
+ 3 files changed, 45 insertions(+)
 
-sp-pci is not depended upon sp-platform. sp-platform was modified only because
-it also invoked sp_suspend() which got modified.
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index 466bbc549799..07b7d01a720d 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -44,6 +44,7 @@
+  * http://www.ti.com/product/bq27441-g1
+  * http://www.ti.com/product/bq27621-g1
+  * https://www.ti.com/lit/gpn/bq27z561
++ * https://www.ti.com/lit/gpn/bq28z610
+  */
+ 
+ #include <linux/device.h>
+@@ -462,6 +463,26 @@ static u8
+ 		[BQ27XXX_REG_DCAP] = 0x3c,
+ 		[BQ27XXX_REG_AP] = 0x22,
+ 		BQ27XXX_DM_REG_ROWS,
++	},
++	bq28z610_regs[BQ27XXX_REG_MAX] = {
++		[BQ27XXX_REG_CTRL] = 0x00,
++		[BQ27XXX_REG_TEMP] = 0x06,
++		[BQ27XXX_REG_INT_TEMP] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_VOLT] = 0x08,
++		[BQ27XXX_REG_AI] = 0x14,
++		[BQ27XXX_REG_FLAGS] = 0x0a,
++		[BQ27XXX_REG_TTE] = 0x16,
++		[BQ27XXX_REG_TTF] = 0x18,
++		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_NAC] = INVALID_REG_ADDR,
++		[BQ27XXX_REG_FCC] = 0x12,
++		[BQ27XXX_REG_CYCT] = 0x2a,
++		[BQ27XXX_REG_AE] = 0x22,
++		[BQ27XXX_REG_SOC] = 0x2c,
++		[BQ27XXX_REG_DCAP] = 0x3c,
++		[BQ27XXX_REG_AP] = 0x22,
++		BQ27XXX_DM_REG_ROWS,
+ 	};
+ 
+ static enum power_supply_property bq27000_props[] = {
+@@ -717,6 +738,25 @@ static enum power_supply_property bq27561_props[] = {
+ 	POWER_SUPPLY_PROP_MANUFACTURER,
+ };
+ 
++static enum power_supply_property bq28z610_props[] = {
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_CURRENT_NOW,
++	POWER_SUPPLY_PROP_CAPACITY,
++	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
++	POWER_SUPPLY_PROP_TEMP,
++	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
++	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
++	POWER_SUPPLY_PROP_TECHNOLOGY,
++	POWER_SUPPLY_PROP_CHARGE_FULL,
++	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
++	POWER_SUPPLY_PROP_CYCLE_COUNT,
++	POWER_SUPPLY_PROP_POWER_AVG,
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_MANUFACTURER,
++};
++
+ struct bq27xxx_dm_reg {
+ 	u8 subclass_id;
+ 	u8 offset;
+@@ -813,6 +853,7 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
+ #endif
+ 
+ #define bq27561_dm_regs 0
++#define bq28z610_dm_regs 0
+ 
+ #define BQ27XXX_O_ZERO	0x00000001
+ #define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
+@@ -865,6 +906,7 @@ static struct {
+ 	[BQ27441]   = BQ27XXX_DATA(bq27441,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
+ 	[BQ27621]   = BQ27XXX_DATA(bq27621,   0x80008000, BQ27XXX_O_UTOT | BQ27XXX_O_CFGUP | BQ27XXX_O_RAM),
+ 	[BQ27561]   = BQ27XXX_DATA(bq27561,   0         , BQ27561_O_BITS),
++	[BQ28Z610]  = BQ27XXX_DATA(bq28z610,  0         , BQ27561_O_BITS),
+ };
+ 
+ static DEFINE_MUTEX(bq27xxx_list_lock);
+diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
+index d0d55e0959d5..12cf0c619d6d 100644
+--- a/drivers/power/supply/bq27xxx_battery_i2c.c
++++ b/drivers/power/supply/bq27xxx_battery_i2c.c
+@@ -254,6 +254,7 @@ static const struct i2c_device_id bq27xxx_i2c_id_table[] = {
+ 	{ "bq27441", BQ27441 },
+ 	{ "bq27621", BQ27621 },
+ 	{ "bq27561", BQ27561 },
++	{ "bq28z610", BQ28Z610 },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
+@@ -288,6 +289,7 @@ static const struct of_device_id bq27xxx_battery_i2c_of_match_table[] = {
+ 	{ .compatible = "ti,bq27441" },
+ 	{ .compatible = "ti,bq27621" },
+ 	{ .compatible = "ti,bq27561" },
++	{ .compatible = "ti,bq28z610" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, bq27xxx_battery_i2c_of_match_table);
+diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/bq27xxx_battery.h
+index 4a319950ea22..50f6230f42c4 100644
+--- a/include/linux/power/bq27xxx_battery.h
++++ b/include/linux/power/bq27xxx_battery.h
+@@ -31,6 +31,7 @@ enum bq27xxx_chip {
+ 	BQ27441,
+ 	BQ27621,
+ 	BQ27561,
++	BQ28Z610,
+ };
+ 
+ struct bq27xxx_device_info;
+-- 
+2.27.0
 
-Thus, I didn't made any other changes to sp-platofrm.
-
-Thanks
-Vaibhav Gupta
-> 
-> Thanks,
-> Tom
-> 
-> > @@ -207,7 +207,7 @@ static int sp_platform_suspend(struct platform_device *pdev,
-> >  	struct device *dev = &pdev->dev;
-> >  	struct sp_device *sp = dev_get_drvdata(dev);
-> >  
-> > -	return sp_suspend(sp, state);
-> > +	return sp_suspend(sp);
-> >  }
-> >  
-> >  static int sp_platform_resume(struct platform_device *pdev)
-> > 
