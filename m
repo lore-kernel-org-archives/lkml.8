@@ -2,123 +2,145 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C0C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD5820729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E477720792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbgGUKqg (ORCPT
+        id S1729085AbgGUKsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:46:36 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:40782 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGUKqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:46:35 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 21 Jul 2020 03:46:35 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jul 2020 03:46:33 -0700
-Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 21 Jul 2020 16:16:28 +0530
-Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
-        id 33D9F3FFA; Tue, 21 Jul 2020 16:16:27 +0530 (IST)
-From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        rnayak@codeaurora.org, Pradeep P V K <ppvk@codeaurora.org>,
-        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-Subject: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for eMMC and SDcard
-Date:   Tue, 21 Jul 2020 16:16:21 +0530
-Message-Id: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Jul 2020 06:48:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:35834 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgGUKsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:48:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C364106F;
+        Tue, 21 Jul 2020 03:48:09 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D8533F66E;
+        Tue, 21 Jul 2020 03:48:08 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 11:48:02 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200721104802.GA2618@e121166-lin.cambridge.arm.com>
+References: <20200709113509.GB19638@e121166-lin.cambridge.arm.com>
+ <20200709122208.rmfeuu6zgbwh3fr5@pali>
+ <20200709144701.GA21760@e121166-lin.cambridge.arm.com>
+ <20200709150959.wq6zfkcy4m6hvvpl@pali>
+ <20200710091800.GA3419@e121166-lin.cambridge.arm.com>
+ <20200713082747.e3q3ml3wpbszn4j7@pali>
+ <20200713112325.GA25865@e121166-lin.cambridge.arm.com>
+ <20200715121726.eh4xglkdbcqkh7td@pali>
+ <20200715162108.GB3432@e121166-lin.cambridge.arm.com>
+ <20200721085713.p2rbmucpk5ra3quw@pali>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721085713.p2rbmucpk5ra3quw@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep P V K <ppvk@codeaurora.org>
+On Tue, Jul 21, 2020 at 10:57:13AM +0200, Pali Rohár wrote:
+> On Wednesday 15 July 2020 17:21:08 Lorenzo Pieralisi wrote:
+> > On Wed, Jul 15, 2020 at 02:17:26PM +0200, Pali Rohár wrote:
+> > > On Monday 13 July 2020 12:23:25 Lorenzo Pieralisi wrote:
+> > > > On Mon, Jul 13, 2020 at 10:27:47AM +0200, Pali Rohár wrote:
+> > > > > On Friday 10 July 2020 10:18:00 Lorenzo Pieralisi wrote:
+> > > > > > On Thu, Jul 09, 2020 at 05:09:59PM +0200, Pali Rohár wrote:
+> > > > > > > > I understand that but the bridge bus resource can be trimmed to just
+> > > > > > > > contain the root bus because that's the only one where there is a
+> > > > > > > > chance you can enumerate a device.
+> > > > > > > 
+> > > > > > > It is possible to register only root bridge without endpoint?
+> > > > > > 
+> > > > > > It is possible to register the root bridge with a trimmed IORESOURCE_BUS
+> > > > > > so that you don't enumerate anything other than the root port.
+> > > > > 
+> > > > > Hello Lorenzo! I really do not know how to achieve it. From code it
+> > > > > looks like that pci/probe.c scans child buses unconditionally.
+> > > > > 
+> > > > > pci-aardvark.c calls pci_host_probe() which calls functions
+> > > > > pci_scan_root_bus_bridge() which calls pci_scan_child_bus() which calls
+> > > > > pci_scan_child_bus_extend() which calls pci_scan_bridge_extend() (bridge
+> > > > > needs to be reconfigured) which then try to probe child bus via
+> > > > > pci_scan_child_bus_extend() because bridge is not card bus.
+> > > > > 
+> > > > > In function pci_scan_bridge_extend() I do not see a way how to skip
+> > > > > probing for child buses which would avoid enumerating aardvark root
+> > > > > bridge when PCIe device is not connected.
+> > > > > 
+> > > > > dmesg output contains:
+> > > > > 
+> > > > >   advk-pcie d0070000.pcie: link never came up
+> > > > >   advk-pcie d0070000.pcie: PCI host bridge to bus 0000:00
+> > > > >   pci_bus 0000:00: root bus resource [bus 00-ff]
+> > > > 
+> > > > This resource can be limited to the root bus number only before calling
+> > > > pci_host_probe() (ie see pci_parse_request_of_pci_ranges() and code in
+> > > > pci_scan_bridge_extend() that programs primary/secondary/subordinate
+> > > > busses) but I think that only papers over the issue, it does not fix it.
+> > > 
+> > > I looked at the code in pci/probe.c again and I do not think it is
+> > > possible to avoid scanning devices. pci_scan_child_bus_extend() is
+> > > unconditionally calling pci_scan_slot() for devfn=0 as the first thing.
+> > > And this function unconditionally calls pci_scan_device() which is
+> > > directly trying to read vendor id from config register.
+> > > 
+> > > So for me it looks like that kernel expects that can read vendor id and
+> > > device id from config register for device which is not connected.
+> > 
+> > Not if it is connected to a bus that the root port does not decode,
+> > that's what I am saying.
+> > 
+> > > And trying to read config register would cause those timeouts in
+> > > aardvark.
+> > 
+> > The root port (which effectively works as PCI bridge from this
+> > standpoint) does not issue config cycles for busses that aren't within
+> > its decoded bus range, which in turn is determined by the firmware
+> > IORESOURCE_BUS resource.
+> > 
+> > This issue is caused by devices that are connected downstream to
+> > the root port.
+> > 
+> > Anyway - patch merged
+> 
+> Could you send me a link to git commit? I have looked into
+> lpieralisi/pci.git repository, but I do not see it here.
 
-Add the bandwidth domain supporting performance state and
-the corresponding OPP tables for the sdhc device on sc7180.
+Apologies - I did not push it out, I have pushed it out on
+pci/aardvark now.
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
----
+> > but I would be happy to keep this discussion going, somehow.
+> 
+> Ok, no problem. As I said if anybody has any idea or would like to see
+> some tests from me, I can do it and provide results.
 
-Changes since V1:
-	- Incorporated review comments by Bjorn Andersson.
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Sounds good, I will let you know, thanks.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 68f9894..d78a066 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -684,6 +684,9 @@
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
- 					<&gcc GCC_SDCC1_AHB_CLK>;
- 			clock-names = "core", "iface";
-+			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
-+				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
-+			interconnect-names = "sdhc-ddr","cpu-sdhc";
- 			power-domains = <&rpmhpd SC7180_CX>;
- 			operating-points-v2 = <&sdhc1_opp_table>;
- 
-@@ -704,11 +707,15 @@
- 				opp-100000000 {
- 					opp-hz = /bits/ 64 <100000000>;
- 					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <100000 100000>;
-+					opp-avg-kBps = <100000 50000>;
- 				};
- 
- 				opp-384000000 {
- 					opp-hz = /bits/ 64 <384000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <600000 900000>;
-+					opp-avg-kBps = <261438 300000>;
- 				};
- 			};
- 		};
-@@ -2476,6 +2483,10 @@
- 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
- 					<&gcc GCC_SDCC2_AHB_CLK>;
- 			clock-names = "core", "iface";
-+
-+			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
-+				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
-+			interconnect-names = "sdhc-ddr","cpu-sdhc";
- 			power-domains = <&rpmhpd SC7180_CX>;
- 			operating-points-v2 = <&sdhc2_opp_table>;
- 
-@@ -2489,11 +2500,15 @@
- 				opp-100000000 {
- 					opp-hz = /bits/ 64 <100000000>;
- 					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <160000 100000>;
-+					opp-avg-kBps = <80000 50000>;
- 				};
- 
- 				opp-202000000 {
- 					opp-hz = /bits/ 64 <202000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <200000	120000>;
-+					opp-avg-kBps = <100000 60000>;
- 				};
- 			};
- 		};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+Lorenzo
 
+> > If the LPC20 VFIO/IOMMU/PCI microconference is approved it can be a
+> > good venue for this to happen.
+> > 
+> > Lorenzo
