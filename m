@@ -2,135 +2,112 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D11C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52AC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 456BF20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC01E20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVYAvDc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgGUVcY (ORCPT
+        id S1731206AbgGUVdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:32:24 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62112 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbgGUVcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:32:22 -0400
-IronPort-SDR: k65/b9l/Mk6bvJLPgRCvt3tSTJj8GpUEEwd1fNzk3XjLOa4swm71FMGgtaRPW9A8FtPKJTjheg
- B13q11vpJr1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="137737631"
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="137737631"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 14:32:21 -0700
-IronPort-SDR: ybNbB6Dp/FbRgWS2I2DqKRYKfFdSSNj7Qg2UfmHO8E9YpeoxpHhEBrXFDuOnGvyxQ6SYg2pGly
- lLywEmsGCTug==
-X-IronPort-AV: E=Sophos;i="5.75,380,1589266800"; 
-   d="scan'208";a="462222006"
-Received: from mtchavar-mobl.amr.corp.intel.com (HELO [10.254.78.149]) ([10.254.78.149])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 14:32:20 -0700
-Subject: Re: [PATCH v7] ASoC: Intel: kbl_rt5663_rt5514_max98927: Fix
- kabylake_ssp_fixup function
-To:     Harsha Priya <harshapriya.n@intel.com>,
-        alsa-devel@alsa-project.org, broonie@kernel.org
-Cc:     lma@semihalf.com, yang.jie@linux.intel.com,
-        liam.r.girdwood@linux.intel.com, rad@semihalf.com,
-        zwisler@google.com, linux-kernel@vger.kernel.org,
-        sathya.prakash.m.r@intel.com, brndt@google.com, mw@semihalf.com,
-        levinale@chromium.org,
-        Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
-References: <1595365649-8019-1-git-send-email-harshapriya.n@intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d72ea889-9820-880d-0207-6d2f0dc23bcc@linux.intel.com>
-Date:   Tue, 21 Jul 2020 16:32:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 17:33:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731054AbgGUVdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:33:21 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC85EC061794;
+        Tue, 21 Jul 2020 14:33:20 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d1so10827082plr.8;
+        Tue, 21 Jul 2020 14:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IPEybiNCuxG16IwnjZkyTnI2Sy+pMglvmwaDIAOCXDQ=;
+        b=gVYAvDc6+4klrU8P7Av0M6X7DVvVtxfywvP1ZsXCsYDfwpDx8DpLxCOWyni3xoqj+X
+         HvgoNr0vLS4kR7yz68TT49b3Ab/e8rXT4Gf0BEUYodAAfqlfwfoa4nTFFYNxGXC87IQx
+         2DNAwmKENj4JX3vjUlcYev0pO2xm0EEHnRP1w4gOREy0tgjQ2V5jPmSKouinOElTFzxQ
+         cDtWpCJOf7Mc0mbi56VQMoLYdEQ107Az9AY+Vtgu7YtVr5S8S1vJujvDrUagoh2UVu1l
+         RGtC2x3XIRXkZ3T+ZQxxjdjSUF5wQ/M/HL1uODPcUxLGJgZzZDWT3NgZGt24LEmXLXpf
+         weRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IPEybiNCuxG16IwnjZkyTnI2Sy+pMglvmwaDIAOCXDQ=;
+        b=MJPEMNbceShvB6WgPIutBMv09tH03xGq6xo909b6lRfZXYn/jg+vGQ+VfunA5dxa6V
+         3tUq4C07BI4LnLyWUQQxdiy6uP7qWCRUAXObsgyVum9RtYhKnYpgWmMN9dy7m5jhGNwk
+         7dl+Gu3wBLmnYIklaUq7L+tTF+BF8raeVBxNf0WPoQnamOZ8DKiEWy4+7WRE3XWCKz43
+         jCoUUQGvFp/WbisvN5wd68ParxHcXO+ki0ruwutRQ/BWDZ2V7hZzD7RtXY0DqLPpZAQ1
+         bSXZP6WD/NJt7+3kBtRYgEdcCHeaJV4NOD+XaYGJ/KD4Sq5ITl1w31ur3tY8sBFYmkt2
+         grEQ==
+X-Gm-Message-State: AOAM532bE5qnV3BtJduMMmdMQ3f5YSMJTW8s4VrxIE7LEbMU49AbT0kA
+        cxXYaqQjU9iaTJUvl+kHeCc=
+X-Google-Smtp-Source: ABdhPJwIXh9Yscbb9MZD7PeQLNXIVmQOtDemt/Dy5peJTGG6lp21zfwwdGniynlCs+ClwT5eXrH5Qw==
+X-Received: by 2002:a17:902:fe0d:: with SMTP id g13mr24548261plj.326.1595367200272;
+        Tue, 21 Jul 2020 14:33:20 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id q29sm21617224pfl.77.2020.07.21.14.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 14:33:19 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 14:33:17 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     nick@shmanahar.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
+        Andrew_Gabbasov@mentor.com, digetx@gmail.com
+Subject: Re: [PATCH 1/1] Input: atmel_mxt_ts - only read messages in
+ mxt_acquire_irq() when necessary
+Message-ID: <20200721213317.GK1665100@dtor-ws>
+References: <20200720073612.6252-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-In-Reply-To: <1595365649-8019-1-git-send-email-harshapriya.n@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720073612.6252-1-jiada_wang@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Harsha,
-this looks mostly good to me, only have a couple of nit-picks below.
-Thanks!
+Hi Jiada,
 
-> kabylake_ssp_fixup function uses snd_soc_dpcm to identify the codecs DAIs.
-> The hw parameters are changed based on the codec DAI,
-> the stream is intended for. The earlier approach to get
-> snd_soc_dpcm was using container_of() macro on snd_pcm_hw_params.
-> The structures have been modified over time and snd_soc_dpcm does
-> not have snd_pcm_hw_params as a reference but as a copy.
-> This causes the current driver to crash when used.
-> This patch changes the way snd_soc_dpcm is extracted.
-> The snd_soc_pcm_runtime holds 2 dpcm
-> instances (one for playback and one for capture).
-> The 2 codecs on this SSP are dmic and speakers.
-> One is for capture and one is for playback respectively.
-> Based on the direction of the stream,
-> the snd_soc_dpcm is extracted from the snd_soc_pcm_runtime structure.
-> Tested for all use cases of the driver.
-
-Maybe reformat a bit and add newlines, this is difficult to read.
-
-> Signed-off-by: Harsha Priya <harshapriya.n@intel.com>
-> Signed-off-by: Vamshi Krishna Gopal <vamshi.krishna.gopal@intel.com>
-> Tested-by: Lukasz Majczak <lma@semihalf.com>
-
-> diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> index 584e4f9cedc2..9f4b949cc39c 100644
-> --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> @@ -379,22 +379,42 @@ static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
->   	struct snd_interval *chan = hw_param_interval(params,
->   			SNDRV_PCM_HW_PARAM_CHANNELS);
->   	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
-> -	struct snd_soc_dpcm *dpcm = container_of(
-> -			params, struct snd_soc_dpcm, hw_params);
-> -	struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
-> -	struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
-> +	struct snd_soc_dpcm *dpcm, *rtd_dpcm = NULL;
-
-The idea of initializing was also to test before dereferencing this 
-pointer. Without the test, this is somewhat useless, tools may still 
-complain about dereferencing a NULL pointer?
-
+On Mon, Jul 20, 2020 at 04:36:12PM +0900, Jiada Wang wrote:
+> +static int mxt_check_retrigen(struct mxt_data *data)
+> +{
+> +	struct i2c_client *client = data->client;
+> +	int error;
+> +	int val;
 > +
-> +	/*
-> +	 * The following loop will be called only for playback stream
-> +	 * In this platform, there is only one playback device on every SSP
-> +	 */
-> +	for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_PLAYBACK, dpcm) {
-> +		rtd_dpcm = dpcm;
-> +		break;
-> +	}
+> +	data->use_retrigen_workaround = false;
 > +
-> +	/*
-> +	 * This following loop will be called only for capture stream
-> +	 * In this platform, there is only one capture device on every SSP
-> +	 */
-> +	for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_CAPTURE, dpcm) {
-> +		rtd_dpcm = dpcm;
-> +		break;
-> +	}
+> +	if (irq_get_trigger_type(data->irq) & IRQF_TRIGGER_LOW)
+> +		return 0;
 
-add if (!rtd_dpcm) return -EINVAL here?
+Do you think we could change this to:
 
-> +	/*
-> +	 * The above 2 loops are mutually exclusive based on the strem direction,
+	irq_data = irq_get_irq_data(data->irq);
+	if (!irq_data) {
+		... invalid IRQ
+		retrun -EINVAL;
+	}
 
-typo: stream
+	if (irqd_is_level_type(irq_data))
+		return 0;
 
-> +	 * thus rtd_dpcm variable will never be overwritten
-> +	 */
+as we should not really be concerned about polarity (there could be an
+inverter between the controller and AP), but rather whether it is level
+or edge interrupt.
 
+Thanks.
+
+-- 
+Dmitry
