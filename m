@@ -2,160 +2,124 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65430C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A7FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F0B207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 05:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56090207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 06:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rxv84i0Q"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WrzwzFfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgGUF7R (ORCPT
+        id S1728151AbgGUGAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgGUF7Q (ORCPT
+        Tue, 21 Jul 2020 02:00:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5339 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725294AbgGUGAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 01:59:16 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44A5C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 22:59:16 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id md7so1117710pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jul 2020 22:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=KMmzvRDJd+7JQh3nAfR3C392m0BpTUJ+3ePAUF20ipM=;
-        b=Rxv84i0QAHjDtaiOwh/2J3sKXar2+ERm+ATC8Q8Xfyc6nMJXbwVIhxRyXUP7SVjfjn
-         eQwUEXhTG6oJTATxSLbFZDVKCQZ8LHhZvaqcBbUlVl2wUb8bRcMtUal/mqZnQfb0LhnE
-         RFJNs7S2GBbfDx2RAk/LtKpF31pDh4oP37amc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=KMmzvRDJd+7JQh3nAfR3C392m0BpTUJ+3ePAUF20ipM=;
-        b=j6tMErg19EVRvumMjQ9JcpHkgbEWOfFP1B5JD+hu+wI8YdZ3fAoTPeNZRe3y4A6JTZ
-         Oo6KyMr5T6ILL0ErCSkwEaUhUQfn3rcjDuowFTBrXxQH2y7BaQNAT1Zl916DisQoQWoD
-         E08f/gddsXlHfOB2i3mAz20PCm6kwfFudO7usYwn0UXsmPH3KMiaWIxJV8dsk/iz1nbY
-         u8x+/UeAsxkTrFQ4DQwY/tlmUpsOBuOFYsP59Aj9ZaexYpRWt7slnuu5WpkRnm+F44BP
-         uxF2jxU02PaIQGTl+IdvMok6xRZgzf6dRAms6SQprjhcz0Ke5N2IryjJuKPotJdynSuv
-         Hdgw==
-X-Gm-Message-State: AOAM5300rNkxoUlyLhviw7DOXX9/RBAwNOYLlrSCky1RcvfCix3QYRO+
-        rv53P4rAft584zOtPjF/BN8O5A==
-X-Google-Smtp-Source: ABdhPJyPsf7kVDCbzPver/0zOXuRkOwd1jKCYu5DVQc3foP0eJly1X6oGmB7HiIREep2HWy6KWn53A==
-X-Received: by 2002:a17:90b:46d0:: with SMTP id jx16mr2894431pjb.222.1595311156227;
-        Mon, 20 Jul 2020 22:59:16 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id nh14sm1594205pjb.4.2020.07.20.22.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 22:59:15 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Jul 2020 02:00:50 -0400
+X-UUID: 7ab65104b14a4a6ab6d29dfb2bde717d-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=U8PX+F+mnKbPbXqn4UjkWg26k/aBzCM1RQhtMnlz4g8=;
+        b=WrzwzFfIVY7/0UEwUhttN1gyFZ8Pd2vOHdMOD1GRhZ857dctw43hTGHPLJlMTWdrhMc6JNYdgwgPxjNYHe/Er2M1xYVGrmRSDTbED992XTtsDoXReL7wgbHB2yt+IYaLnE917b6DBhX9FYyBnmkaobadO1OWvLdaBFXMqpoP3PM=;
+X-UUID: 7ab65104b14a4a6ab6d29dfb2bde717d-20200721
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 633919522; Tue, 21 Jul 2020 14:00:44 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 21 Jul 2020 14:00:41 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 14:00:41 +0800
+Message-ID: <1595311242.5599.3.camel@mtkswgap22>
+Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Tue, 21 Jul 2020 14:00:42 +0800
+In-Reply-To: <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+         <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+         <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
+         <1594872242.11090.8.camel@mtkswgap22>
+         <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
-References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
-Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        Wolfram Sang <wsa@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Date:   Mon, 20 Jul 2020 22:59:14 -0700
-Message-ID: <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-07-20 17:24:53)
-> When I have KASAN enabled on my kernel and I start stressing the
-> touchscreen my system tends to hang.  The touchscreen is one of the
-> only things that does a lot of big i2c transfers and ends up hitting
-> the DMA paths in the geni i2c driver.  It appears that KASAN adds
-> enough delay in my system to tickle a race condition in the DMA setup
-> code.
->=20
-> When the system hangs, I found that it was running the geni_i2c_irq()
-> over and over again.  It had these:
->=20
-> m_stat   =3D 0x04000080
-> rx_st    =3D 0x30000011
-> dm_tx_st =3D 0x00000000
-> dm_rx_st =3D 0x00000000
-> dma      =3D 0x00000001
->=20
-> Notably we're in DMA mode but are getting M_RX_IRQ_EN and
-> M_RX_FIFO_WATERMARK_EN over and over again.
->=20
-> Putting some traces in geni_i2c_rx_one_msg() showed that when we
-> failed we were getting to the start of geni_i2c_rx_one_msg() but were
-> never executing geni_se_rx_dma_prep().
->=20
-> I believe that the problem here is that we are writing the transfer
-> length and setting up the geni command before we run
-> geni_se_rx_dma_prep().  If a transfer makes it far enough before we do
-> that then we get into the state I have observed.  Let's change the
-> order, which seems to work fine.
+T24gTW9uLCAyMDIwLTA3LTIwIGF0IDE4OjEzICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMTYvMDcvMjAyMCAwNjowNCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiBPbiBU
+dWUsIDIwMjAtMDctMTQgYXQgMjA6MTQgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+
+ID4+DQo+ID4+IE9uIDE0LzA3LzIwMjAgMTE6MjAsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4+PiB0
+aGlzIGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0K
+PiA+Pj4gaW5jbHVkaW5nIGNwdSwgZ2ljLCB0aW1lciwgY2NmLCBwaW5jdHJsLCB1YXJ0LCBzeXNp
+cnEuLi5ldGMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3Mu
+Y2hlbkBtZWRpYXRlay5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgIGFyY2gvYXJtNjQvYm9vdC9k
+dHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgfCAgIDEgKw0KPiA+Pj4gICAgYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cyB8ICAzMSArKysNCj4gPj4+ICAgIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kgICAgfCAyNzEgKysrKysrKysrKysr
+KysrKysrKysNCj4gPj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgMzAzIGluc2VydGlvbnMoKykNCj4g
+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210
+Njc3OS1ldmIuZHRzDQo+ID4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290
+L2R0cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KPiA+Pj4NCj4gPj4gWy4uLl0NCj4gPj4+ICsNCj4g
+Pj4+ICsJCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KPiA+Pj4gKwkJCWNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ2Nzc5LXVhcnQiLA0KPiA+Pj4gKwkJCQkgICAgICJtZWRpYXRlayxtdDY1Nzct
+dWFydCI7DQo+ID4+PiArCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4NDAwPjsNCj4gPj4+ICsJ
+CQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTE1IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ID4+PiAr
+CQkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmluZnJhY2ZnX2FvIENMS19JTkZSQV9VQVJUMD47DQo+
+ID4+PiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+Pj4gKwkJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7DQo+ID4+PiArCQl9Ow0KPiA+Pj4gKw0KPiA+Pj4gKwkJdWFydDE6IHNlcmlh
+bEAxMTAwMzAwMCB7DQo+ID4+PiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktdWFy
+dCIsDQo+ID4+PiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPj4+ICsJCQly
+ZWcgPSA8MCAweDExMDAzMDAwIDAgMHg0MDA+Ow0KPiA+Pj4gKwkJCWludGVycnVwdHMgPSA8R0lD
+X1NQSSAxMTYgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPj4+ICsJCQljbG9ja3MgPSA8JmNsazI2
+bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQxPjsNCj4gPj4+ICsJCQljbG9jay1uYW1l
+cyA9ICJiYXVkIiwgImJ1cyI7DQo+ID4+PiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPj4+
+ICsJCX07DQo+ID4+PiArDQo+ID4+PiArCQl1YXJ0Mjogc2VyaWFsQDExMDA0MDAwIHsNCj4gPj4+
+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPj4+ICsJCQkJICAg
+ICAibWVkaWF0ZWssbXQ2NTc3LXVhcnQiOw0KPiA+Pj4gKwkJCXJlZyA9IDwwIDB4MTEwMDQwMDAg
+MCAweDQwMD47DQo+ID4+PiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNyBJUlFfVFlQRV9M
+RVZFTF9MT1c+Ow0KPiA+Pj4gKwkJCWNsb2NrcyA9IDwmY2xrMjZtPiwgPCZpbmZyYWNmZ19hbyBD
+TEtfSU5GUkFfVUFSVDI+Ow0KPiA+Pj4gKwkJCWNsb2NrLW5hbWVzID0gImJhdWQiLCAiYnVzIjsN
+Cj4gPj4+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+Pj4gKwkJfTsNCj4gPj4NCj4gPj4g
+RGV2aWNldHJlZSBkZXNjcmliZXMgdGhlIEhXIHdlIGhhdmUuIEFzIGZhciBhcyBJIGtub3csIHdl
+IGhhdmUgNCBVQVJUcyBvbg0KPiA+PiBNVDY3NzkuIFNvIHdlIHNob3VsZCBsaXN0IHRoZW0gYWxs
+IGhlcmUuDQo+ID4+DQo+ID4gDQo+ID4gQWN0dWFsbHksIFdlIGhhdmUgb25seSAzIFVBUlRzIEhX
+IG9uIE1UNjc3OSwgYnV0IGhhdmUgNCBVQVJUIGNsayBpbg0KPiA+IGhlYWRlciBmaWxlIG9mIGNs
+ay4NCj4gDQo+IENvcnJlY3QsIEkgZ290IGNvbmZ1c2VkIGJ5IHRoZSBmb3VyIGNsb2Nrcy4NCj4g
+V2l0aCB0aGF0IGNsYXJpZmllZCBJJ20gZmluZSB3aXRoIHRoZSBwYXRjaCBhbmQgd2lsbCB0YWtl
+IGl0IGFzIHNvb24gYXMgdGhlIA0KPiBjbG9jayBkcml2ZXIgcGF0Y2ggaXMgYWNjZXB0ZWQuDQo+
+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCkdvdCBpdCwgSSBzZW5kIGEgbmV3IHNlcmlh
+bCB0byBmaXggdGhlIHJlZHVuZGFudCBVQVJUIGNsaw0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIw
+MjAvNy8yMS80NQ0KDQpUaGFua3MNCg0KSGFua3MgQ2hlbg0KDQo+ID4gQ0xLX0lORlJBX1VBUlQz
+IGlzIGEgZHVtbXkgY2xrIGludGVyZmFjZSwgaXQgaGFzIG5vIGVmZmVjdCBvbiB0aGUNCj4gPiBv
+cGVyYXRpb24gb2YgdGhlIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ID4gDQo+ID4gSWYgeW91
+IHRoaW5rIGl0IGlzIG5vdCBnb29kLCBJIGNhbiByZW1vdmUgaXQgaW4gdGhlIGhlYWRlciBmaWxl
+IG9mIGNsay4NCj4gPiANCj4gPiBUaGFua3MNCj4gPiANCj4gPj4gUmVnYXJkcywNCj4gPj4gTWF0
+dGhpYXMNCj4gPiANCg0K
 
-Does the length matter or the I2C_READ m_cmd matter? Or somehow both?
-Otherwise it sounds correct to me that we're configuring it to start the
-read before mapping the buffer.
-
->=20
-> Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm=
- GENI I2C controller")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->=20
->  drivers/i2c/busses/i2c-qcom-geni.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
-qcom-geni.c
-> index 18d1e4fd4cf3..21e27f10510a 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -366,15 +366,15 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev =
-*gi2c, struct i2c_msg *msg,
->         else
->                 geni_se_select_mode(se, GENI_SE_FIFO);
-> =20
-> -       writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
-> -       geni_se_setup_m_cmd(se, I2C_READ, m_param);
-> -
->         if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
->                 geni_se_select_mode(se, GENI_SE_FIFO);
->                 i2c_put_dma_safe_msg_buf(dma_buf, msg, false);
->                 dma_buf =3D NULL;
->         }
-> =20
-
-I worry that we also need a dmb() here to make sure the dma buffer is
-properly mapped before this write to the device is attempted. But it may
-only matter to be before the I2C_READ.
-
-> +       writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
-> +       geni_se_setup_m_cmd(se, I2C_READ, m_param);
-> +
->         time_left =3D wait_for_completion_timeout(&gi2c->done, XFER_TIMEO=
-UT);
->         if (!time_left)
->                 geni_i2c_abort_xfer(gi2c);
