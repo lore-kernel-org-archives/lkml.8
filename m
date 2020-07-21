@@ -2,155 +2,103 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8E7C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69014C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6AE20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5029220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgGUKYp (ORCPT
+        id S1729136AbgGUKYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:24:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45756 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727907AbgGUKYo (ORCPT
+        Tue, 21 Jul 2020 06:24:24 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:51376 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727907AbgGUKYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:24:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LA22Zb003546;
+        Tue, 21 Jul 2020 06:24:23 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LAF6q8004345;
         Tue, 21 Jul 2020 06:24:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5k0uev4-1
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32cv13yhn8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 21 Jul 2020 06:24:21 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LA2Lpp005577;
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06LAOJWs039876
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
         Tue, 21 Jul 2020 06:24:20 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d5k0ueun-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 06:24:20 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LAJvdk027292;
-        Tue, 21 Jul 2020 10:24:18 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 32brq81wj3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 10:24:18 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LAOGwo30081470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jul 2020 10:24:16 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6AA7B4204F;
-        Tue, 21 Jul 2020 10:24:16 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCAB04203F;
-        Tue, 21 Jul 2020 10:24:14 +0000 (GMT)
-Received: from [9.79.210.59] (unknown [9.79.210.59])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jul 2020 10:24:14 +0000 (GMT)
-Subject: Re: [PATCH v3 1/3] powerpc/powernv/idle: Replace CPU features checks
- with PVR checks
-To:     Nicholas Piggin <npiggin@gmail.com>, benh@kernel.crashing.org,
-        ego@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mikey@neuling.org,
-        mpe@ellerman.id.au, paulus@samba.org, pratik.r.sampat@gmail.com,
-        svaidy@linux.ibm.com
-References: <20200717185306.60607-1-psampat@linux.ibm.com>
- <20200717185306.60607-2-psampat@linux.ibm.com>
- <1595203067.oropk0x5c8.astroid@bobo.none>
-From:   Pratik Sampat <psampat@linux.ibm.com>
-Message-ID: <8f3485a0-6c5a-91bd-dee7-2075b3392fa5@linux.ibm.com>
-Date:   Tue, 21 Jul 2020 15:54:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 21 Jul 2020 03:24:18 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 21 Jul 2020 03:24:18 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 21 Jul 2020 03:24:18 -0700
+Received: from saturn.ad.analog.com ([10.48.65.113])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06LAOGww012784;
+        Tue, 21 Jul 2020 06:24:16 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <dbaryshkov@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: core: fix/re-introduce back parent assignment
+Date:   Tue, 21 Jul 2020 13:24:07 +0300
+Message-ID: <20200721102407.134402-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1595203067.oropk0x5c8.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007210066
+ definitions=2020-07-21_03:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ clxscore=1011 adultscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This was introduced initially via commit 78289b4a58b58 ("iio: core: pass
+parent device as parameter during allocation"), but was accidentally
+removed via commit 6d4ebd565d15f ("iio: core: wrap IIO device into an
+iio_dev_opaque object").
 
+This looks like a rebase gone wrong, and ends up breaking devicetree
+bindings of IIO clients.
 
-On 20/07/20 5:30 am, Nicholas Piggin wrote:
-> Excerpts from Pratik Rajesh Sampat's message of July 18, 2020 4:53 am:
->> As the idle framework's architecture is incomplete, hence instead of
->> checking for just the processor type advertised in the device tree CPU
->> features; check for the Processor Version Register (PVR) so that finer
->> granularity can be leveraged while making processor checks.
->>
->> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
->> ---
->>   arch/powerpc/platforms/powernv/idle.c | 14 +++++++-------
->>   1 file changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
->> index 2dd467383a88..f62904f70fc6 100644
->> --- a/arch/powerpc/platforms/powernv/idle.c
->> +++ b/arch/powerpc/platforms/powernv/idle.c
->> @@ -92,7 +92,7 @@ static int pnv_save_sprs_for_deep_states(void)
->>   		if (rc != 0)
->>   			return rc;
->>   
->> -		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
->> +		if (pvr_version_is(PVR_POWER9)) {
->>   			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, msr_val);
->>   			if (rc)
->>   				return rc;
->> @@ -116,7 +116,7 @@ static int pnv_save_sprs_for_deep_states(void)
->>   				return rc;
->>   
->>   			/* Only p8 needs to set extra HID regiters */
->> -			if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
->> +			if (!pvr_version_is(PVR_POWER9)) {
->>   
->>   				rc = opal_slw_set_reg(pir, SPRN_HID1, hid1_val);
->>   				if (rc != 0)
-> What I think you should do is keep using CPU_FTR_ARCH_300 for this stuff
-> which is written for power9 and we know is running on power9, because
-> that's a faster test (static branch and does not have to read PVR. And
-> then...
->
->> @@ -1205,7 +1205,7 @@ static void __init pnv_probe_idle_states(void)
->>   		return;
->>   	}
->>   
->> -	if (cpu_has_feature(CPU_FTR_ARCH_300))
->> +	if (pvr_version_is(PVR_POWER9))
->>   		pnv_power9_idle_init();
->>   
->>   	for (i = 0; i < nr_pnv_idle_states; i++)
-> Here is where you would put the version check. Once we have code that
-> can also handle P10 (either by testing CPU_FTR_ARCH_31, or by adding
-> an entirely new power10 idle function), then you can add the P10 version
-> check here.
+This change adds back the parent assignment.
 
-Sure, it makes sense to make this check on the top level function and
-retain CPU_FTR_ARCH_300 lower in the calls for speed.
-I'll make that change.
+Fixes 6d4ebd565d15f: ("iio: core: wrap IIO device into an iio_dev_opaque object")
+Reported-by: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/industrialio-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks
-Pratik
-
-> Thanks,
-> Nick
->
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 30fc96952681..59003dc44e60 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1546,6 +1546,7 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+ 	dev->priv = (char *)iio_dev_opaque +
+ 		ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
+ 
++	dev->dev.parent = parent;
+ 	dev->dev.groups = dev->groups;
+ 	dev->dev.type = &iio_device_type;
+ 	dev->dev.bus = &iio_bus_type;
+-- 
+2.25.1
 
