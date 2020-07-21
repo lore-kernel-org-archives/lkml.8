@@ -2,77 +2,160 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1333FC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5F0206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45F220792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bsxsVR7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgGURF1 (ORCPT
+        id S1730533AbgGURFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgGURF0 (ORCPT
+        Tue, 21 Jul 2020 13:05:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36932 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730120AbgGURFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:05:26 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CC1C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:05:26 -0700 (PDT)
-Received: from [2a02:fe0:c700:2:8ac:86d7:cb55:d6b9] (port=50400)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Ywe-C4rlyn@I-T-Shed-Studio.eu>)
-        id 1jxvhk-0006cz-Ro
-        for linux-kernel@vger.kernel.org; Tue, 21 Jul 2020 19:05:24 +0200
-Subject: Re: SDX -Optimal sellingpoints for a Nix mahcine.
-References: <378fb24a-aa75-be9f-0a6c-2821fc56bf06@I-T-Shed-Studio.eu>
-To:     linux-kernel@vger.kernel.org
-From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe-C4rlyn@I-T-Shed-Studio.eu>
-Message-ID: <932e16df-d191-81cb-9d02-33a69258635c@I-T-Shed-Studio.eu>
-Date:   Tue, 21 Jul 2020 19:05:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 13:05:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06LGlQAi131749;
+        Tue, 21 Jul 2020 17:05:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=U8rsu8OEcOF6ZyhEIv1vKXBX17S62Qnhb7hHFJSUhuo=;
+ b=bsxsVR7l1RDpCsrDB7Jj19d/QM2y4YQZOwOkemAh+qYE4eQ7ZBhtNoqTQVMnt88459cL
+ t7JjMg9G7uxgMt620eCRkNh9SKuWyi8PgayDQoqRVq1/z+e3WAPOQT7wGHeGsPHoQZhq
+ z02DqTIdyvYXhL5fsLR12aOTr5gin2dHzfiWLqrcJtjvh4HKZYvmVeiqh0EYqJOIx/nX
+ cQYanUxfadgM35I2A2PGdpsBpY9V9kGacLprllG98vfxhuYq2HxV3hQOBIcgCRWYsFDs
+ h5grdeahCkxej6oE92wvYqhglnIeZoxsCETgGmJ/+HzxSPFebmBqXWGNpUK864kw6Ylb Lg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32bs1megjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Jul 2020 17:05:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06LGm3b9125264;
+        Tue, 21 Jul 2020 17:05:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 32e3vehune-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 17:05:26 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06LH5Nlj013809;
+        Tue, 21 Jul 2020 17:05:23 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Jul 2020 17:05:23 +0000
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+References: <20200721205716.6dbaa56b@canb.auug.org.au>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <e921bf90-d1f5-3795-478b-4cfae9086749@oracle.com>
+Date:   Tue, 21 Jul 2020 10:05:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <378fb24a-aa75-be9f-0a6c-2821fc56bf06@I-T-Shed-Studio.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721205716.6dbaa56b@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9689 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ adultscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9689 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007210115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So what we are looking at, at salepoints for an optimal nix machine is:
-
-- 48bit Graphics
-- LCPU - Library Accelerated CPU, for low latency and jitter.
-- 4K / 8K subpixels resolution.
-
-- name sdX, as supply and demand is a monotheistic principle of a 
-perfected nix name.
-
-With realtime audio being a real and valid option here, with fast 
-reponse <0.5ms, like Amiga once was for the Trance genre. And Amiga was 
-nix inspired.
-And really the available source nix is a similar crowd now.
-
-Serenity,
-Ywe Cærlyn
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
-
-
-
-Den 21.07.2020 18:07, skrev Ywe Cærlyn:
-> I had an idea more on this project, what about 48bit Graphics? It seems 
-> to summarize the gaming scene, in a bitdepth concept. And also fixes 
-> GNU, which could have been about this!
+On 7/21/20 3:57 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Then this also falls in harmony with the fair pay movement at large.
+> After merging the akpm-current tree, today's linux-next build
+> (sparc64 defconfig) failed like this:
 > 
-> Serenity,
-> Ywe Cærlyn.
+> mm/hugetlb.c: In function 'free_gigantic_page':
+> mm/hugetlb.c:1233:18: error: 'hugetlb_cma' undeclared (first use in this function); did you mean 'hugetlb_lock'?
+>       cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
+>                   ^~~~~~~~~~~
+>                   hugetlb_lock
+> 
+> Caused by commits
+> 
+>   ee0889218f26 ("mm/hugetlb: avoid hardcoding while checking if cma is enabled")
+>   8729fda59982 ("mm-hugetlb-avoid-hardcoding-while-checking-if-cma-is-enabled-fix")
+> 
+> I have added this patch for today:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 21 Jul 2020 20:44:57 +1000
+> Subject: [PATCH] mm/hugetlb: better checks before using hugetlb_cma
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
+Thanks Stephen, sorry for missing that in review.
+
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+-- 
+Mike Kravetz
+
+> ---
+>  mm/hugetlb.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 4b560c7555e7..4645f1441d32 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1229,9 +1229,10 @@ static void free_gigantic_page(struct page *page, unsigned int order)
+>  	 * If the page isn't allocated using the cma allocator,
+>  	 * cma_release() returns false.
+>  	 */
+> -	if (IS_ENABLED(CONFIG_CMA) &&
+> -	    cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
+> +#ifdef CONFIG_CMA
+> +	if (cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
+>  		return;
+> +#endif
+>  
+>  	free_contig_range(page_to_pfn(page), 1 << order);
+>  }
+> @@ -1242,7 +1243,8 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+>  {
+>  	unsigned long nr_pages = 1UL << huge_page_order(h);
+>  
+> -	if (IS_ENABLED(CONFIG_CMA)) {
+> +#ifdef CONFIG_CMA
+> +	{
+>  		struct page *page;
+>  		int node;
+>  
+> @@ -1256,6 +1258,7 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+>  				return page;
+>  		}
+>  	}
+> +#endif
+>  
+>  	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
+>  }
+> 
