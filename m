@@ -2,98 +2,91 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD757C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771D320734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BB620734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 02:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595298731;
+	bh=tC7ehp08MOMj9TaRP1dvH3JDyvqSByFgcMTWuzYC18w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yMBkmlVhtxOepVkRn1u3u8RcY/EOOL49DSrqvhI63cXsM9nf/+rRGE5lsqDiYCt8l
+	 xQ3LH8MK4H8eHaFUOP92BCQaWP99TOKpNOL8aRCI5HBRnurFUVgC4E6FXohEHF3yO4
+	 90LNQ/YOVzHLvBapbM4OOAVKdF1CSQLK2U/Y1dsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGUC0I (ORCPT
+        id S1728317AbgGUCcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:26:08 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51494 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbgGUC0I (ORCPT
+        Mon, 20 Jul 2020 22:32:10 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40619 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgGUCcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:26:08 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=chge@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U3MKo5._1595298289;
-Received: from chge-ali-mac.local(mailfrom:chge@linux.alibaba.com fp:SMTPD_---0U3MKo5._1595298289)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jul 2020 10:26:05 +0800
-Subject: Re: [Ocfs2-devel] [PATCH] dlmfs: add a newline when printing
- 'capabilities' by sysfs
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, mark@fasheh.com,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com
-Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com
-References: <20200720082433.164311-1-wangxiongfeng2@huawei.com>
-From:   Changwei Ge <chge@linux.alibaba.com>
-Message-ID: <5ee49484-1a8f-d4ed-c4b3-0d1d0cef4f52@linux.alibaba.com>
-Date:   Tue, 21 Jul 2020 10:24:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Mon, 20 Jul 2020 22:32:10 -0400
+Received: by mail-io1-f68.google.com with SMTP id l17so19739030iok.7;
+        Mon, 20 Jul 2020 19:32:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qrdcjj2nHxAqxaq8zMEhvLyNPJU48e0pDNvgfCYM2C0=;
+        b=t0shBt1KQFUdUfrYVnHmcl8nysld07EWt3sAOlsus9NKz+B25eO/OzFbvAk0B9h66L
+         I97fy+xLCH1m/3jUQvCx6ARZTTjC+1J2u/vDx1z6tnHfCrRZ7hPRdF1eY2EYGDxpvA5E
+         0G3MIdOjXzIyWyOSlRz/o0GwKaFJz6AiQJ0XX4YCvAIU5MxqZLVlBcOIvb7QciR87PXv
+         x2hHVW4Jcdli5v/mOtOrVbvwaQNlh17gOSRGl77XDaX0tpVJM1dkx9jKikpbYrFbG0Kl
+         6y2SfK/ZHd7+egGEgDYwVbAd0aKHshRTEeWtFdsC56tXPp0ZmlyjOp4CLuFWuPbzBhRo
+         vOTg==
+X-Gm-Message-State: AOAM532gQ95WliqSOYPbdJuXOFxnSXbBADRT1uB8/Ldb8Nx0tI2u7OpS
+        y5WyC1SqdeIfCuKgSC9c2A==
+X-Google-Smtp-Source: ABdhPJzd57MjAeiAqZutfR+baotVYeTni73NBMMTPgbv4b8i/902OmUHR6Giu4dozlXXNTJ2jlKWkw==
+X-Received: by 2002:a02:c88c:: with SMTP id m12mr15372105jao.2.1595298729038;
+        Mon, 20 Jul 2020 19:32:09 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u65sm9676595iod.45.2020.07.20.19.32.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 19:32:08 -0700 (PDT)
+Received: (nullmailer pid 3418991 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:32:07 -0000
+Date:   Mon, 20 Jul 2020 20:32:07 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
+ bindings
+Message-ID: <20200721023207.GA3418873@bogus>
+References: <20200717234800.9423-1-s-anna@ti.com>
+ <20200717234800.9423-4-s-anna@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200720082433.164311-1-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717234800.9423-4-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi，
-
-I am afraid that doing so might introduce a compatible risk into exited 
-systems which reply ocfs2/dlmfs.
-
-We can't guarantee that no system management tools is using the 
-information reported from this file.
-
-Basically, ocfs2-tools works of top of it. But after a quick glance at 
-the source, I didn't see side effect if this path applied. Better you 
-can do some test if this patch breaks ocfs2-tools.
-
-Still my suggestion is that we don't try to touch this file as what I 
-explained above.
-
-Thanks,
-Changwei
-
-
-On 7/20/20 4:24 PM, Xiongfeng Wang wrote:
-> When I cat module parameter 'capabilities' by sysfs, it displays as
-> follows. It's better to add a newline for easy reading.
+On Fri, 17 Jul 2020 18:47:57 -0500, Suman Anna wrote:
+> Add a bindings document that lists the common TI SCI properties
+> used by the K3 R5F and DSP remoteproc devices.
 > 
-> root@syzkaller:~# cat /sys/module/ocfs2_dlmfs/parameters/capabilities
-> bast stackglueroot@syzkaller:~#
-> 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
->   fs/ocfs2/dlmfs/dlmfs.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
+> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+> v3: https://patchwork.kernel.org/patch/11602317/
 > 
-> diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
-> index ea868c6f9800..1f9c864ec09b 100644
-> --- a/fs/ocfs2/dlmfs/dlmfs.c
-> +++ b/fs/ocfs2/dlmfs/dlmfs.c
-> @@ -82,8 +82,13 @@ static int param_set_dlmfs_capabilities(const char *val,
->   static int param_get_dlmfs_capabilities(char *buffer,
->   					const struct kernel_param *kp)
->   {
-> -	return strlcpy(buffer, DLMFS_CAPABILITIES,
-> +	int cnt;
-> +
-> +	cnt = strlcpy(buffer, DLMFS_CAPABILITIES,
->   		       strlen(DLMFS_CAPABILITIES) + 1);
-> +	cnt += sprintf(buffer + cnt, "\n");
-> +
-> +	return cnt;
->   }
->   module_param_call(capabilities, param_set_dlmfs_capabilities,
->   		  param_get_dlmfs_capabilities, NULL, 0444);
+>  .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
