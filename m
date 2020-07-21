@@ -4,77 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EAFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A1621702
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2287922482
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595333969;
-	bh=f47xYJVDLjuHwsEsuV6hymuSt9wQDZBA5/k8Bfez7h4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=chD4YAFFKbiVy1JxZuzqQAR1lTvuxjofzk41sVeyTzaa9MX57q4pjueFruH8+o9b1
-	 GVOYNVyB359hqocO1NUoQaEB1xrW5CBmNXnTVepv2De+ozAdylxL8rl/rQr4avJg89
-	 XXskyu7pl8/RFnfnQ/YP3Zd7yUbhBZDnDFdVJJZU=
+	s=default; t=1595333984;
+	bh=tYiFt9K0KgLaJqfcIjAbyvfdUGbdTgTCD4rZc3DjcYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UDDGNgrTP7qaKorY3QQGmSNvoRajGjZjmzZMK8nhn+ZV/i2Knl7rRYY7ssL4okSlU
+	 4R/LfT7G8ojL3ytp1K9wcmP/x4yr58fE3mdmuwPS6jTbEMTp/x39Cw71awnfJ4LH80
+	 CSPwJiWcXldAxymW8JXW1lN+ydOG9x5w0hnzuwZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgGUMT2 (ORCPT
+        id S1729793AbgGUMTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49214 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 08:19:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgGUMT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:19:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726715AbgGUMTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:19:42 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D15221702;
-        Tue, 21 Jul 2020 12:19:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4270921702;
+        Tue, 21 Jul 2020 12:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595333967;
-        bh=f47xYJVDLjuHwsEsuV6hymuSt9wQDZBA5/k8Bfez7h4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VRsBW+Qb8OEazZU4kNCmVnUBHpsee+fj7yzI5ateGNItk3nQLnfRKx3gBE4Zw/FNF
-         qk8muiFtMQSicKhQHO0fYvSMmWN/fK+egz1l8Y0SczmRUjBKlVSnhd3NivSHOdw37b
-         IuTNm0sHcYlH6bbsn2tVZl7Vaex5UWuY1UOr7qas=
-Date:   Tue, 21 Jul 2020 13:19:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dmitry Baryshkov <dbaryshkov@gmail.com>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: core: fix/re-introduce back parent assignment
-Message-ID: <20200721131923.4885d87f@archlinux>
-In-Reply-To: <CALT56yO842Kt56Dtsd-+YE04-HbH7cQnEQpn6dp+7YhYJ=-hYQ@mail.gmail.com>
-References: <20200721102407.134402-1-alexandru.ardelean@analog.com>
-        <CALT56yO842Kt56Dtsd-+YE04-HbH7cQnEQpn6dp+7YhYJ=-hYQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1595333981;
+        bh=tYiFt9K0KgLaJqfcIjAbyvfdUGbdTgTCD4rZc3DjcYA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0gBks7Fved2h4ynjBOKZV1EWo/pc3D5lNhYOqvqEF1cdh67WnU3bXnN5ZCzEsyuBL
+         U/0Q0BFevG1Y211wv1SiNjrSbtpaEv7ZQAuHM8sxXEII5xkLdZYJQNf4+DZfBA/GKK
+         beed3Mjc3l7zNlDp/h6AeG8lcAbxhFXop8+DcKUU=
+Date:   Tue, 21 Jul 2020 13:19:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v3 4/4] regulator: core: Add voltage support for
+ sync_state() callbacks
+Message-ID: <20200721121928.GC4845@sirena.org.uk>
+References: <20200716042053.1927676-1-saravanak@google.com>
+ <20200716042053.1927676-5-saravanak@google.com>
+ <20200720143533.GG4601@sirena.org.uk>
+ <CAGETcx89xBoLiqe2392_vFuoMytKMxbeM5n0vdL9dJvAF25+Qg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
+Content-Disposition: inline
+In-Reply-To: <CAGETcx89xBoLiqe2392_vFuoMytKMxbeM5n0vdL9dJvAF25+Qg@mail.gmail.com>
+X-Cookie: I'm also against BODY-SURFING!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 13:34:19 +0300
-Dmitry Baryshkov <dbaryshkov@gmail.com> wrote:
 
-> =D0=B2=D1=82, 21 =D0=B8=D1=8E=D0=BB. 2020 =D0=B3. =D0=B2 13:24, Alexandru=
- Ardelean <alexandru.ardelean@analog.com>:
->  [...] =20
->=20
-> Tested-by: Dmitry Baryshkov <dbaryshkov@gmail.com>
->=20
-Applied to the togreg branch of iio.git and pushed out as testing.
-Current plan is to do a pull request tomorrow so should make it in time
-for the merge window.  If it gets delayed for some reason we can send
-it as a fix after the merge window.
+--GZVR6ND4mMseVXL/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
+On Mon, Jul 20, 2020 at 08:24:59PM -0700, Saravana Kannan wrote:
 
-Jonathan
+> Btw, going a tangent, why is regulator_set_voltage() not dependent on
+> a consumer's regulator enable request? If they don't care if the
+> regulator goes off, do they really care if the voltage goes lower?
+> What's the reason behind not tying voltage request with the enable
+> request?
 
+The most important thing is being able to control the conditions at
+power on and power off, the period while the power is off is not so
+important.
 
+--GZVR6ND4mMseVXL/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8W3U8ACgkQJNaLcl1U
+h9CAhQf/ftgm8KcIBAgxoW/cPvbNxLl6Nz+pM5nmTnjmmY47Ll9Dj1e3pTDg9tst
+C0B/DBN2tFM/u0ltuKWG15BF2TSU3axy05nTUDLvEvnEZkW0TuWtlyU4cizAabcV
+mMTWaBazJDTRctAAVfRE8yLb0f4quQoOty8Dds5c9QR8Qp5Vr/0UtonJunN/s0JY
+gkbisQzTcrwxsmpM1NVSLHGjsmRxD3Nbrw+Pq9muqD8Vu4zxwX0ERqdWTuaYRW/S
+4HlGb+2AWPGyGHfwaoubV2PxDEkcihErWgToX7WPqCAF7IErBVKb9SYwN9pb8JRL
+/AD4UaLcKWcHdjl1MGMMjjY4dUckEg==
+=6YfP
+-----END PGP SIGNATURE-----
+
+--GZVR6ND4mMseVXL/--
