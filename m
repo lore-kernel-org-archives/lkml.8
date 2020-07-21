@@ -2,156 +2,150 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E876CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C602E22482
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595315710;
-	bh=M9u0UwvQ1U8jy95haXD8j/US5/GshtxZT8EktVlMBMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IY65/OOGKsV0fIFYwEYi6+Z4cxSeUrAjgCWn8TXFFviU0TC116LM2fP5hvtfRev5r
-	 RCM3EdW8zfjo3swUqWzlnkFPX0IyIlj5a6APL/4/qewiw4FxSMXLqMEfrUHTBBJNAo
-	 GG/9N7KnzQND4e1B78j/BzKjir9UFQMJspkyOXko=
+	by mail.kernel.org (Postfix) with ESMTP id 1278C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:15:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tuWETmIT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZwumFlYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgGUHPJ (ORCPT
+        id S1728609AbgGUHPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726933AbgGUHPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:15:09 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FED621702;
-        Tue, 21 Jul 2020 07:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595315708;
-        bh=M9u0UwvQ1U8jy95haXD8j/US5/GshtxZT8EktVlMBMA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/Mqcqyp/W3piPJQiCG2iuw/TsYI/zq+KO/gmcZ4rcO1LQHlyQW1AfD+AWdnM9P03
-         qglwBmoGXXcBl9bzH7s37dVStFcoLQjGIxKI/MrRzyUT+Ns4NjkTmH4BFRoDQgmsuT
-         7MNULnOF/REu4Ax05iFt1nvIyL2ihM2WcsMWXIdY=
-Date:   Tue, 21 Jul 2020 12:45:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: Re: linux-next: manual merge of the dmaengine tree with the phy-next
- tree
-Message-ID: <20200721071504.GK12965@vkoul-mobl>
-References: <20200721161701.64b4245e@canb.auug.org.au>
+        Tue, 21 Jul 2020 03:15:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35572 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgGUHPQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:15:16 -0400
+Date:   Tue, 21 Jul 2020 09:15:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595315712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WiErJQ3/pvdDczbHfP7geDKER1phc+abHIAv/TX3dPo=;
+        b=tuWETmITBNcudRlx7rC5BIgTv+Fx4FzTDnt8NCBKzevVpaDPowcv+/5er4R84GVMcUf+Pc
+        i3sVaD3xsRlNaEvCkwlx9lr/w7GREynhrlsbw8HaJP5itSyiU89M2r2s9hVslcNOMhPycO
+        gl00axSsKy6DI9d1+hW0M1uomRHW188gCmZLDuMcB5/7s5Unx8/J1MuyavhQGGr2GdfQ27
+        7G9BF0UyAZe1d9PTs08qY1x8ggVwFe5yyLM59JTnifE1QY5g1lM0Z3dAMuJXI/lIVK5+8d
+        y5r9ItPVTgMy91lXVlXlI9q3njQqrg+COL3l5dnRNhX3mN2uIKlhbxNlIUO6bA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595315712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WiErJQ3/pvdDczbHfP7geDKER1phc+abHIAv/TX3dPo=;
+        b=ZwumFlYaLZltOUD/a6CEqLjmblCs/2U42ruGzV/qYbNKuA7pCxl7oCJbVaboxQpvtl71WK
+        mKzhLC9TkKaED9DA==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 01/24] Documentation: locking: Describe seqlock design
+ and usage
+Message-ID: <20200721071510.GA1175122@debian-buster-darwi.lab.linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-1-a.darwish@linutronix.de>
+ <20200720155530.1173732-2-a.darwish@linutronix.de>
+ <20200720214400.5ec6a028@oasis.local.home>
+ <20200720215115.4c5276db@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721161701.64b4245e@canb.auug.org.au>
+In-Reply-To: <20200720215115.4c5276db@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Mon, Jul 20, 2020 at 09:51:15PM -0400, Steven Rostedt wrote:
+> On Mon, 20 Jul 2020 21:44:00 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > > - * This is not as cache friendly as brlock. Also, this may not work well
+> > > - * for data that contains pointers, because any writer could
+> > > - * invalidate a pointer that a reader was following.
+> > > + * See Documentation/locking/seqlock.rst
+> >
+> > I absolutely hate it when I see this.
+> >
+> > I much rather have the documentation next to the code. Because
+> > honestly, I trust that comments next to the code will get updated if
+> > the code changes much more likely than comments buried in the
+> > Documentation directory.
+> >
+> > It's also more likely that I wont even bother looking at the doc
+> > (because I wont trust it to be up to date) and just read the code and
+> > try to figure it out. Or look at how others have used it.
+>
+> Never mind,
+>
+> I see that kerneldoc is added in patch 5, which helps.
+>
 
-On 21-07-20, 16:17, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the dmaengine tree got a conflict in:
-> 
->   MAINTAINERS
-> 
-> between commit:
-> 
->   4a33bea00314 ("phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit Transceiver")
-> 
-> from the phy-next tree and commit:
-> 
->   ef9303fdf46f ("dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA")
-> 
-> from the dmaengine tree.
+Even looking at the current patch #1 *in isolation*, no relevant
+comments were removed from seqlock.h at all. They were just moved closer
+to the seqcount_t and seqlock_t structure definitions.
 
-Thanks the fix looks okay.
+The original comments were horrible. They intermingled seqcount_t and
+seqlock_t descriptions in a *very* ambiguous, sometimes even in the same
+sentence. It was misleading, as the usage constrains for each data type
+(especially on the write side) are vastly different.
 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc MAINTAINERS
-> index 495e4247cbb0,1ba09904354f..000000000000
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@@ -11432,20 -11364,14 +11434,13 @@@ L:	linux-arm-kernel@lists.infradead.or
->   S:	Supported
->   F:	drivers/usb/gadget/udc/atmel_usba_udc.*
->   
->  -MICROSEMI ETHERNET SWITCH DRIVER
->  -M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
->  -M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
->  -L:	netdev@vger.kernel.org
->  +MICROCHIP WILC1000 WIFI DRIVER
->  +M:	Ajay Singh <ajay.kathat@microchip.com>
->  +M:	Claudiu Beznea <claudiu.beznea@microchip.com>
->  +L:	linux-wireless@vger.kernel.org
->   S:	Supported
->  -F:	drivers/net/ethernet/mscc/
->  -F:	include/soc/mscc/ocelot*
->  +F:	drivers/net/wireless/microchip/wilc1000/
->   
-> - MICROCHIP XDMA DRIVER
-> - M:	Ludovic Desroches <ludovic.desroches@microchip.com>
-> - L:	linux-arm-kernel@lists.infradead.org
-> - L:	dmaengine@vger.kernel.org
-> - S:	Supported
-> - F:	drivers/dma/at_xdmac.c
-> - 
->   MICROSEMI MIPS SOCS
->   M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
->   M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-> @@@ -18990,15 -18847,15 +18985,24 @@@ F:	Documentation/devicetree/bindings/me
->   F:	drivers/media/platform/xilinx/
->   F:	include/uapi/linux/xilinx-v4l2-controls.h
->   
->  +XILINX ZYNQMP PSGTR PHY DRIVER
->  +M:	Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->  +M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->  +L:	linux-kernel@vger.kernel.org
->  +S:	Supported
->  +T:	git https://github.com/Xilinx/linux-xlnx.git
->  +F:	Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
->  +F:	drivers/phy/xilinx/phy-zynqmp.c
->  +
-> + XILINX ZYNQMP DPDMA DRIVER
-> + M:	Hyun Kwon <hyun.kwon@xilinx.com>
-> + M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> + L:	dmaengine@vger.kernel.org
-> + S:	Supported
-> + F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
-> + F:	drivers/dma/xilinx/xilinx_dpdma.c
-> + F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-> + 
->   XILLYBUS DRIVER
->   M:	Eli Billauer <eli.billauer@gmail.com>
->   L:	linux-kernel@vger.kernel.org
+Even the new KCSAN comment, which was freshly merged this release cycle,
+got tainted by such already-existing incoherence. It kept talking about
+the "seqlock interface" while it actually meant the seqcount_t
+interface.  Then at the end, it realized the semantical ambiguity and
+noted how the "seqlock interface" does *not* cover seqlock_t.
 
+Moreover, this seqcount_t/seqlock_t documentation intermingling led to
+the critical usage constraint of disabling preemption before entering a
+seqcount_t write side critical section never getting explicitly
+mentioned. This has (naturally) led to a considerable number of buggy
+call sites, and the fixes are now merged.
 
+I've tried to fix the problem at the roots, and basically identified
+three major problems:
 
--- 
-~Vinod
+  1. The seqcount_t/seqlock_t intermingling is confusing everyone. That
+     is, both of call-site developers *and* core kernel engineers.
+
+  2. The big picture of seqlock.h was never expressed in a sufficient
+     detail.
+
+  3. The usage constraints for the exported seqlock.h APIs were never
+     explicitly mentioned.. leading to buggy call sites.
+
+To fix #1, I've changed the all of the existing seqlock.h comments to
+explicitly mention either "seqcount_t" or "seqlock_t". Then, divided the
+the top seqlock.h comment into a seqcount_t part and a seqlock_t one.
+Afterwards, the whole seqlock.h header file code was grouped into
+"sections", as seen in patch #4.
+
+To fix #2, Documentation/locking/seqlock.rst was introduced and boldly
+referenced at the header-file top comment.
+
+To fix #3, kernel-doc was added for all of the seqlock.h exported APIs.
+
+@Peter, kindly note that all of the above *is exactly why* I've resisted
+hiding the new seqcount_LOCKTYPE_t APIs introduced by this patch series
+inside generative macros. All the parts that will be referenced by
+call-site developers are kept both explicit and kernel-doc commented.
+
+Thanks!
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
