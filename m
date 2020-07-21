@@ -2,143 +2,109 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A95C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DFC2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817ED2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="D+WP0ntT"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="h3Yuu03b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgGUKRk (ORCPT
+        id S1729130AbgGUKTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:17:40 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:21974 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGUKRf (ORCPT
+        Tue, 21 Jul 2020 06:19:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727907AbgGUKTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:17:35 -0400
+        Tue, 21 Jul 2020 06:19:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B48C0619D9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:19:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so20613597wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:19:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1595326654; x=1626862654;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=/xLOkM2JYhUnLrEu5qMRjWL8+VI4XlSHNdQQX9qcfLU=;
-  b=D+WP0ntTMQ2m+VZxOuLYtYhaJZhW39kycdQt65letnpFLWmdmkvGNnCD
-   111HZMN+VPuSN9azzteb+0VfCX8jp0AH5CDQ+0VtkDuyvpfTuXyH3oElT
-   BtBcOfoKQQVYhxst1Mxy0mTD47KOXJL/1wYda9kuLZiXGzBjiKgzJDCuy
-   k=;
-IronPort-SDR: +bTGDocgGFhqFJ2NyJdStaKUP0hPLzbGvbFh2wXWM73ksqIUl1QDz4KpRby1Sr7bRT5W588z1Q
- moud+KP/mfMw==
-X-IronPort-AV: E=Sophos;i="5.75,378,1589241600"; 
-   d="scan'208";a="43267821"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 21 Jul 2020 10:17:33 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id 70B31A1FA6;
-        Tue, 21 Jul 2020 10:17:32 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Jul 2020 10:17:32 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.73) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 21 Jul 2020 10:17:26 +0000
-Subject: Re: [PATCH v5 05/18] nitro_enclaves: Handle PCI device command
- requests
-To:     Andra Paraschiv <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>, kbuild test robot <lkp@intel.com>
-References: <20200715194540.45532-1-andraprs@amazon.com>
- <20200715194540.45532-6-andraprs@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <87d25260-24e7-319a-f94f-d1eb77c3da00@amazon.de>
-Date:   Tue, 21 Jul 2020 12:17:24 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=VeNDrBhjoWE2FDcc+COejQI4vRtmFQlWWQalpBKe3iw=;
+        b=h3Yuu03b3a+RZR0aykxkNb/7eIfBNJUZoZW2pX1A85kBFF9CW7XRjjeF4AH1dVeZJ4
+         3rsWArPRHxCbYsywDBhxyIFWIzEYzfbhbrSJoeM5PlkfFalv4FQi3zb8aCN8sYR4Xtb3
+         GObl/tPMIT7qLt+unX3at5nOgs4GFIBOmVO58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=VeNDrBhjoWE2FDcc+COejQI4vRtmFQlWWQalpBKe3iw=;
+        b=hRNVo6XNKUMKLy1lkwEEFQHavtu/mXY2j1kVXFrgxuH9nv5exD4dCbuBaAk5ePTc4K
+         uP9WY4xpSqdgW5w/qGwvhUREJ5Ei9amMrbkTox6C3c06aVidiBqFYTPHr9c4KPkw+/i3
+         JpPPnIU2Eg04oGkxou/pDvNKVKjlo9lXf27gHFc5lEHC0BVqKYp/r+ycbyAMt/xmZ+6+
+         xhDK63/GIh9YUGqAOudlnYRNwwTsRiyL1ImuES2frF1pSs2cdw1tFjjUPoWy4QdLzL7I
+         DVrJDMhGJubkD5zzB/zAtBneaNQnAiSQYPVQbWsLGImjuCsXCsuKtBa8S43Y8QZC7aVZ
+         ed0w==
+X-Gm-Message-State: AOAM533aVyNv3GSwwepZaJpkvJbqDB23r44buaQ+D3DnU/NLUMzzkZhe
+        2r9bER4ASwqeUvCaa/mAxdIgQA==
+X-Google-Smtp-Source: ABdhPJzlj89CEZ/64j2VOxVbnlm6i5eCK/ix8hoOBzMTwL7fXedScdH/sqvkJfL+/2XPB6GssoKIZw==
+X-Received: by 2002:adf:8562:: with SMTP id 89mr28112987wrh.57.1595326779538;
+        Tue, 21 Jul 2020 03:19:39 -0700 (PDT)
+Received: from cloudflare.com ([2a02:a310:c262:aa00:b35e:8938:2c2a:ba8b])
+        by smtp.gmail.com with ESMTPSA id 33sm40552267wri.16.2020.07.21.03.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 03:19:39 -0700 (PDT)
+References: <20200720194225.17de9962@canb.auug.org.au> <a97220b2-9864-eb49-6e27-0ec5b7e5b977@infradead.org> <20200721044902.24ebe681@canb.auug.org.au> <CAADnVQJNU+tm3WT+JuPoY8TTHWXxQ8OJ0sGCLQGq2Avf+Ri7Yw@mail.gmail.com>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: linux-next: Tree for Jul 20 (kernel/bpf/net_namespace)
+In-reply-to: <CAADnVQJNU+tm3WT+JuPoY8TTHWXxQ8OJ0sGCLQGq2Avf+Ri7Yw@mail.gmail.com>
+Date:   Tue, 21 Jul 2020 12:19:38 +0200
+Message-ID: <87365lxj9h.fsf@cloudflare.com>
 MIME-Version: 1.0
-In-Reply-To: <20200715194540.45532-6-andraprs@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.73]
-X-ClientProxiedBy: EX13D16UWB003.ant.amazon.com (10.43.161.194) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 20, 2020 at 09:37 PM CEST, Alexei Starovoitov wrote:
+> On Mon, Jul 20, 2020 at 11:49 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> Hi all,
+>>
+>> On Mon, 20 Jul 2020 08:51:54 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+>> >
+>> > on i386 or x86_64:
+>> >
+>> > # CONFIG_INET is not set
+>> > # CONFIG_NET_NS is not set
+>> >
+>> > ld: kernel/bpf/net_namespace.o: in function `bpf_netns_link_release':
+>> > net_namespace.c:(.text+0x32c): undefined reference to `bpf_sk_lookup_enabled'
+>> > ld: kernel/bpf/net_namespace.o: in function `netns_bpf_link_create':
+>> > net_namespace.c:(.text+0x8b7): undefined reference to `bpf_sk_lookup_enabled'
+>> > ld: kernel/bpf/net_namespace.o: in function `netns_bpf_pernet_pre_exit':
+>> > net_namespace.c:(.ref.text+0xa3): undefined reference to `bpf_sk_lookup_enabled'
+>>
+>> Caused by commit
+>>
+>>   1559b4aa1db4 ("inet: Run SK_LOOKUP BPF program on socket lookup")
+>>
+>> from the bpf-next tree.
+>
+> Jakub, please take a look.
 
+Sorry about that. Proposed fix:
 
-On 15.07.20 21:45, Andra Paraschiv wrote:
-> The Nitro Enclaves PCI device exposes a MMIO space that this driver
-> uses to submit command requests and to receive command replies e.g. for
-> enclave creation / termination or setting enclave resources.
-> =
-
-> Add logic for handling PCI device command requests based on the given
-> command type.
-> =
-
-> Register an MSI-X interrupt vector for command reply notifications to
-> handle this type of communication events.
-> =
-
-> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> =
-
-> Fix issue reported in:
-> https://lore.kernel.org/lkml/202004231644.xTmN4Z1z%25lkp@intel.com/
-> =
-
-> Reported-by: kbuild test robot <lkp@intel.com>
-
-This means that the overall patch is a fix that was reported by the test =
-
-rebot. I doubt that's what you mean. Just remove the line.
-
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-
-Reviewed-by: Alexander Graf <graf@amazon.com>
-
-
-Alex
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+  https://lore.kernel.org/bpf/20200721100716.720477-1-jakub@cloudflare.com/  
