@@ -2,235 +2,174 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28750C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0147D20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25342068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYdxs+SP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZuGGwj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgGUKju (ORCPT
+        id S1728951AbgGUKk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgGUKjs (ORCPT
+        Tue, 21 Jul 2020 06:40:26 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22416 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726484AbgGUKkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:39:48 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF01DC0619D8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:39:48 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id d11so10129460vsq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ae35Tla40gXKHZjTtmHTfp8nZLfz9N4dIm/F0WXzT/w=;
-        b=IYdxs+SPmNfXhZFEpEij367uN7D3kbB7UbHK+MWWom5Ik+GD7exLfkqZii16E3nTVQ
-         VVtR55n1FrNqBWymuCHGxFT4S/wfhlEXrUKzGo5JIoWlsCfe6R4YhxHkaQXUGzf9pEph
-         6LY0Btw8zPZV8Ho2tSPIlj1XzM8/ytip4f8ysR0xWhaaqVtZg9XS8T7MoeT0EIeCXRNc
-         1DqdIaZkIKcMFVLgw57iLLhRb4kIHh/BTxZXPVDI3ldtFwXuYi0OjTed0/Xlpio3JSUV
-         eszYL5QFVA0+o1tyccpuRGKfdKVWjKtIg/TIYUWbigmaeL9GtzCQ03dRrEOr+FLfqAW8
-         1IKA==
+        Tue, 21 Jul 2020 06:40:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595328020;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JJxds48R6O9rnMt3T/vIXqCudN9Py5s51DW/o643deI=;
+        b=WZuGGwj2g3Kt9yMePdsoYa6DtHHV9ylL0lHlDI0smcdVj/boXziyqwjZ9XbvD/77FZOG2B
+        d5y5xD+5ixNYJrKgMotFIC5suMpuJi7MAAmaSzQ/0rJ3r482u1wmwfm14gsXykl48gZw+x
+        /9KVroMrqoNxw4j2quQa4irmjVWw4Do=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-PYjX0qJrPwqn5cIT-Z0SBg-1; Tue, 21 Jul 2020 06:40:16 -0400
+X-MC-Unique: PYjX0qJrPwqn5cIT-Z0SBg-1
+Received: by mail-wm1-f71.google.com with SMTP id z11so1088223wmg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 03:40:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ae35Tla40gXKHZjTtmHTfp8nZLfz9N4dIm/F0WXzT/w=;
-        b=ngqb0NuFk+X0mTjoO1dnRC4W7NNP+lbNSUxfPVlWP73h3ktpeoYChYsX7611zCT//x
-         4Gm3czwDSOPc8/3dfpxzYzPZIUK3yzxOmMyjnVbYDDmmcRTUR384EAuoZhb7EBRGZhsf
-         oACB3mXiOheJ9Hbn52QuN6JLDMFOSBqAdQKX6JzIxsLEcYdiDI9sgiVguwd4oVWpWxxQ
-         wH/5PO032Mf+8O3l+WMb55PkOLyOp6NLpsKxO1Yz/xTnXCPKocw3lJDk9QW6kwQzAMGD
-         aFnBpY+HF6TEB5rtWkbBzV6t1PiKuwhtdt3ZxUT4Sx76wcAxBmfPLhuzoeM0IFPfk5T5
-         S6tg==
-X-Gm-Message-State: AOAM533b+qlbt/xqXMI8QgXBupjzvmCuO6/1RgeUwr1ZOpmYIEo0LUqO
-        MQJP2mrbFpKTLjqYTnhLyGkvydljSS5PHDlCAGITbA==
-X-Google-Smtp-Source: ABdhPJwzajFOu6faBxm/CsPowOjhtM0yGbBDebrKk3YoiwfyHkzF+dmbuCnMJrYtxuE+PljJsHRf1xGBsSBZ18stYWA=
-X-Received: by 2002:a67:fbcd:: with SMTP id o13mr19411078vsr.41.1595327987494;
- Tue, 21 Jul 2020 03:39:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JJxds48R6O9rnMt3T/vIXqCudN9Py5s51DW/o643deI=;
+        b=CiRFkkp/jMcED3ZUE//RmcrIFLKcDo5BgTJ5c5OIFD1aeTS/3JsWPfy3m/s3lollMF
+         maDbRKjSOlKwlNaJZtHGcgeRBw+KwGCs88FCj4LAUBxa8TXgQpeHzJwE6IuuYDmxjrE3
+         7qTn6hoDrKuAu0CfTtTSYu/qR0zcpJ7rBzWHoXezpTtpqtee2Hg4vaE4d20rd4yAWtjB
+         B7hOex8BELs0oPFY1NUYzWp6SguhMuRqgh5Xv42IFUfRGJEwg+fpjsEQLN9WknqhYsD8
+         ZzJ2zLW3sNQPrlEMCKyoRQ9lhOQTK4mnmHJCaUrsur7GZO6BWY1q5YX7f8dosJ8Z4ZXS
+         Y0GA==
+X-Gm-Message-State: AOAM530SKVs9G/+DsW4Zknc/c8xXoSy9fK/DmFeQQz02U6ZHu/bq/KRS
+        k8sYayvL/ngRKxUkllZ6FNakUNqPZItsWZwHzx6om5WXrfX0O5MDEdWh0h06Mi9594KnoEnWNV0
+        ybmZNku/BsrQV0mym5X2Uao4x
+X-Received: by 2002:adf:db86:: with SMTP id u6mr27108019wri.27.1595328015238;
+        Tue, 21 Jul 2020 03:40:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzBo3RCatz2sWoHwy1o+Mv1N6KLRKOUoDm7SJGud2x81ODcAOg8M1F10bzf/K0KK5XuzJcSCQ==
+X-Received: by 2002:adf:db86:: with SMTP id u6mr27107996wri.27.1595328014996;
+        Tue, 21 Jul 2020 03:40:14 -0700 (PDT)
+Received: from steredhat ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id b62sm2829754wmh.38.2020.07.21.03.40.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 03:40:14 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 12:40:09 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS
+ opcode
+Message-ID: <20200721104009.lg626hmls5y6ihdr@steredhat>
+References: <20200716124833.93667-1-sgarzare@redhat.com>
+ <20200716124833.93667-3-sgarzare@redhat.com>
+ <0fbb0393-c14f-3576-26b1-8bb22d2e0615@kernel.dk>
 MIME-Version: 1.0
-References: <20200720152747.127988571@linuxfoundation.org>
-In-Reply-To: <20200720152747.127988571@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 21 Jul 2020 16:09:36 +0530
-Message-ID: <CA+G9fYvFVdh1w0kkLDknyut8sk3Kx0=yQLtKqZK9mTKHNtF=GQ@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/58] 4.4.231-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0fbb0393-c14f-3576-26b1-8bb22d2e0615@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 at 21:07, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.231 release.
-> There are 58 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 22 Jul 2020 15:27:31 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.231-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, Jul 16, 2020 at 03:26:51PM -0600, Jens Axboe wrote:
+> On 7/16/20 6:48 AM, Stefano Garzarella wrote:
+> > diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> > index efc50bd0af34..0774d5382c65 100644
+> > --- a/include/uapi/linux/io_uring.h
+> > +++ b/include/uapi/linux/io_uring.h
+> > @@ -265,6 +265,7 @@ enum {
+> >  	IORING_REGISTER_PROBE,
+> >  	IORING_REGISTER_PERSONALITY,
+> >  	IORING_UNREGISTER_PERSONALITY,
+> > +	IORING_REGISTER_RESTRICTIONS,
+> >  
+> >  	/* this goes last */
+> >  	IORING_REGISTER_LAST
+> > @@ -293,4 +294,30 @@ struct io_uring_probe {
+> >  	struct io_uring_probe_op ops[0];
+> >  };
+> >  
+> > +struct io_uring_restriction {
+> > +	__u16 opcode;
+> > +	union {
+> > +		__u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
+> > +		__u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
+> > +	};
+> > +	__u8 resv;
+> > +	__u32 resv2[3];
+> > +};
+> > +
+> > +/*
+> > + * io_uring_restriction->opcode values
+> > + */
+> > +enum {
+> > +	/* Allow an io_uring_register(2) opcode */
+> > +	IORING_RESTRICTION_REGISTER_OP,
+> > +
+> > +	/* Allow an sqe opcode */
+> > +	IORING_RESTRICTION_SQE_OP,
+> > +
+> > +	/* Only allow fixed files */
+> > +	IORING_RESTRICTION_FIXED_FILES_ONLY,
+> > +
+> > +	IORING_RESTRICTION_LAST
+> > +};
+> > +
+> 
+> Not sure I totally love this API. Maybe it'd be cleaner to have separate
+> ops for this, instead of muxing it like this. One for registering op
+> code restrictions, and one for disallowing other parts (like fixed
+> files, etc).
+> 
+> I think that would look a lot cleaner than the above.
+> 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Talking with Stefan, an alternative, maybe more near to your suggestion,
+would be to remove the 'struct io_uring_restriction' and add the
+following register ops:
 
-Summary
-------------------------------------------------------------------------
+    /* Allow an sqe opcode */
+    IORING_REGISTER_RESTRICTION_SQE_OP
 
-kernel: 4.4.231-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: ecea46f8864653c4a4fa6c4f0b690500ba217149
-git describe: v4.4.230-59-gecea46f88646
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.230-59-gecea46f88646
+    /* Allow an io_uring_register(2) opcode */
+    IORING_REGISTER_RESTRICTION_REG_OP
 
-No regressions (compared to build v4.4.230)
-
-
-No fixes (compared to build v4.4.230)
-
-
-Ran 17639 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* install-android-platform-tools-r2800
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.231-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.231-rc1-hikey-20200720-772
-git commit: 89cea942179d0a31521a87d7de038e694b36a952
-git describe: 4.4.231-rc1-hikey-20200720-772
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.231-rc1-hikey-20200720-772
+    /* Register IORING_RESTRICTION_*  */
+    IORING_REGISTER_RESTRICTION_OP
 
 
-No regressions (compared to build 4.4.231-rc1-hikey-20200717-769)
+    enum {
+        /* Only allow fixed files */
+        IORING_RESTRICTION_FIXED_FILES_ONLY,
+
+        IORING_RESTRICTION_LAST
+    }
 
 
-No fixes (compared to build 4.4.231-rc1-hikey-20200717-769)
+We can also enable restriction only when the rings started, to avoid to
+register IORING_REGISTER_ENABLE_RINGS opcode. Once rings are started,
+the restrictions cannot be changed or disabled.
 
-Ran 1840 total tests in the following environments and test suites.
+If you agree, I'll send a v3 following this.
 
-Environments
---------------
-- hi6220-hikey - arm64
+Thanks,
+Stefano
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
