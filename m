@@ -2,145 +2,242 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983B0C433EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73128C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA4F20729
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE3420729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BWxofx8h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Is3ZO80E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgGUJ45 (ORCPT
+        id S1729040AbgGUJ6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:56:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54810 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729076AbgGUJ4z (ORCPT
+        Tue, 21 Jul 2020 05:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgGUJ6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:56:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595325413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=UlZ0obEhywUvne7Ad/PP0MGoYfHa9qVntY3uC2KsWGc=;
-        b=BWxofx8hIyhaWRwRroRxj7dsa0wM/rY37wPURoCLOD/u/gyyPODzPZvcfCxDpGmlgkjsZV
-        4ktoY4Epc0EEb9a0+vSAbUG8XSLsF5ZzhZNmerl6pFEeb7cd4PPez6WYyoYtd/VniJ28m+
-        Y3+AVqBvvdqd7Cv7wCdiBXzc4b6k4xM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-BavmUp_oNhyF-uuBTjNaww-1; Tue, 21 Jul 2020 05:56:52 -0400
-X-MC-Unique: BavmUp_oNhyF-uuBTjNaww-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F39946A2BC;
-        Tue, 21 Jul 2020 09:56:50 +0000 (UTC)
-Received: from [10.36.113.158] (ovpn-113-158.ams2.redhat.com [10.36.113.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CFE825D9CA;
-        Tue, 21 Jul 2020 09:56:49 +0000 (UTC)
-Subject: Re: [PATCH 4/5] doc/vm: fix typo in in the hugetlb admin
- documentation
-To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com,
-        akpm@linux-foundation.org
-References: <20200720062623.13135-1-bhe@redhat.com>
- <20200720062623.13135-5-bhe@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <c5b9e4b6-30ec-0ae0-d21e-fbe2731af30b@redhat.com>
-Date:   Tue, 21 Jul 2020 11:56:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200720062623.13135-5-bhe@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Tue, 21 Jul 2020 05:58:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D9FC061794;
+        Tue, 21 Jul 2020 02:58:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so20564573wru.6;
+        Tue, 21 Jul 2020 02:58:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=uQnhIuf4xfOnC38xqH6WdF/IwObbq5YHuPCxVqakQOQ=;
+        b=Is3ZO80EuUuGJQl50+Q3Q28jYd7EBEJflzDKoC9uUMKwkdHBva83bhxF7Mh2bHAC04
+         1ELE4/iZTPMU3KzPCQsede9BSVUYwZHJsT1jGwyf7ifSL4yTvn1OrxcbtkfwhCuaj6rC
+         K0eJNkt4S255E6kb4wzy5JpDQNv3wS4luBxrnTZjsFlBv/I3lzUbHHL5lZPt5m0PuMHv
+         dnd7Rqf7m4JAJnP5LOYlrpcVMUEb0/0uwEQs8c4HBQxA4TyaaV7bGFLaRcvjIuRwL+tu
+         R1vzIci92T1aVyQMToT4xAEJQmOlk9KS96dhmx0vxeXiSq8ErrtFJrfXRtbWQBn/WHIl
+         eylg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=uQnhIuf4xfOnC38xqH6WdF/IwObbq5YHuPCxVqakQOQ=;
+        b=KBqKlYmeKLgjyjG4JGXGnpHeqPq+vK1u2S99pATwWDczlpX1/FoQ6GMyOEQ9dkD45T
+         eowZ1G/sjTVSxOx65kpgsbHOZ9dTltDJGVrm435IH/V0UxmisyrY7OtkgNr3Isi6bdob
+         sbYasCLAhHj4deRcRb+wFOHQ45Kx2i65uRQx+CNwi1z6LXrx4NFiNSII56bPoY1ar58C
+         hbnus4/SZfOT+hnI7X00nzhi25y6P/nE493ry+uf7EJ36OX7bkn6JtBmS94CK/oVBPz/
+         Si4OZNjs7k2iW8B4gW5uTdC8VGvSC4ctkyhr9B5cxL1UotluzodtKFYoEcO9EvCVqJqA
+         OoPw==
+X-Gm-Message-State: AOAM532ug3B6pO1XHn9thRq1LB9xsHQENbzQyPH6Mu7+PDPg9GU+4bAw
+        36XffLJ9HHmyRMSrPrphL9s=
+X-Google-Smtp-Source: ABdhPJyfdvD/kATKHtgQiw1J5nkCvpWkT+B1WdiQKjZHwXlEbW+rjhyO2ucEqZVbpcMZIJo+AeMQcg==
+X-Received: by 2002:a5d:4b4f:: with SMTP id w15mr25338306wrs.84.1595325501024;
+        Tue, 21 Jul 2020 02:58:21 -0700 (PDT)
+Received: from [10.182.202.153] ([87.201.30.26])
+        by smtp.gmail.com with ESMTPSA id u20sm2612045wmc.42.2020.07.21.02.58.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jul 2020 02:58:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH 3/3] arm64: dts: meson: add support for the ODROID-N2+
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <fc679db1-be92-c384-0fe2-3b06c920ea75@baylibre.com>
+Date:   Tue, 21 Jul 2020 13:58:17 +0400
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dongjin Kim <tobetter@hardkernel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3A598AB3-635D-4110-AC1C-94379E036586@gmail.com>
+References: <20200719141034.8403-1-christianshewitt@gmail.com>
+ <20200719141034.8403-4-christianshewitt@gmail.com>
+ <90da2697-9dcc-1d75-eded-bf4bdc4b594b@baylibre.com>
+ <fc679db1-be92-c384-0fe2-3b06c920ea75@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.07.20 08:26, Baoquan He wrote:
-> Change 'pecify' to 'Specify'.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  Documentation/admin-guide/mm/hugetlbpage.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
-> index 015a5f7d7854..f7b1c7462991 100644
-> --- a/Documentation/admin-guide/mm/hugetlbpage.rst
-> +++ b/Documentation/admin-guide/mm/hugetlbpage.rst
-> @@ -131,7 +131,7 @@ hugepages
->  	parameter is preceded by an invalid hugepagesz parameter, it will
->  	be ignored.
->  default_hugepagesz
-> -	pecify the default huge page size.  This parameter can
-> +	Specify the default huge page size.  This parameter can
->  	only be specified once on the command line.  default_hugepagesz can
->  	optionally be followed by the hugepages parameter to preallocate a
->  	specific number of huge pages of default size.  The number of default
-> 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+> On 21 Jul 2020, at 12:19 pm, Neil Armstrong <narmstrong@baylibre.com> =
+wrote:
+>=20
+> On 21/07/2020 10:10, Neil Armstrong wrote:
+>> On 19/07/2020 16:10, Christian Hewitt wrote:
+>>> HardKernel ODROID-N2+ uses an Amlogic S922X rev. C chip capable of =
+higher
+>>> clock speeds than the original ODROID-N2. Hardkernel supports the =
+big cpu
+>>> cluster at 2.4GHz and the little cpu cluster at 2.0GHz. Opp points =
+and
+>>> regulator changess are from the HardKernel Linux kernel sources.
+>>>=20
+>>> Suggested-by: Dongjin Kim <tobetter@hardkernel.com>
+>>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>>> ---
+>>> arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+>>> .../dts/amlogic/meson-g12b-odroid-n2-plus.dts | 53 =
++++++++++++++++++++
+>>> 2 files changed, 54 insertions(+)
+>>> create mode 100644 =
+arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+>>>=20
+>>> diff --git a/arch/arm64/boot/dts/amlogic/Makefile =
+b/arch/arm64/boot/dts/amlogic/Makefile
+>>> index 5cac4d1d487d..6dc508b80133 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/Makefile
+>>> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+>>> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MESON) +=3D =
+meson-g12b-gtking-pro.dtb
+>>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-g12b-a311d-khadas-vim3.dtb
+>>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-g12b-s922x-khadas-vim3.dtb
+>>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-g12b-odroid-n2.dtb
+>>> +dtb-$(CONFIG_ARCH_MESON) +=3D meson-g12b-odroid-n2-plus.dtb
+>>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-g12b-ugoos-am6.dtb
+>>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxbb-kii-pro.dtb
+>>> dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxbb-nanopi-k2.dtb
+>>> diff --git =
+a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts =
+b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+>>> new file mode 100644
+>>> index 000000000000..99e96be509f8
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+>>> @@ -0,0 +1,53 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>>> +/*
+>>> + * Copyright (c) 2019 BayLibre, SAS
+>>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include "meson-g12b-odroid-n2.dtsi"
+>>> +
+>>> +/ {
+>>> +	compatible =3D "hardkernel,odroid-n2-plus", "amlogic,s922x", =
+"amlogic,g12b";
+>>> +	model =3D "Hardkernel ODROID-N2+";
+>>> +
+>>> +	vddcpu_a: regulator-vddcpu-a {
+>>> +		regulator-min-microvolt =3D <680000>;
+>>> +		regulator-max-microvolt =3D <1040000>;
+>>> +
+>>> +		pwms =3D <&pwm_ab 0 1500 0>;
+>>> +	};
+>>> +
+>>> +	vddcpu_b: regulator-vddcpu-b {
+>>> +		regulator-min-microvolt =3D <680000>;
+>>> +		regulator-max-microvolt =3D <1040000>;
+>>> +
+>>> +		pwms =3D <&pwm_AO_cd 1 1500 0>;
+>>> +	};
+>>> +
+>>> +	cpu_opp_table_0: opp-table-0 {
+>>> +		opp-1908000000 {
+>>> +			opp-hz =3D /bits/ 64 <1908000000>;
+>>> +			opp-microvolt =3D <1030000>;
+>>> +		};
+>>> +
+>>> +		opp-2016000000 {
+>>> +			opp-hz =3D /bits/ 64 <2016000000>;
+>>> +			opp-microvolt =3D <1040000>;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	cpub_opp_table_1: opp-table-1 {
+>>> +		opp-2304000000 {
+>>> +			opp-hz =3D /bits/ 64 <2304000000>;
+>>> +			opp-microvolt =3D <1030000>;
+>>> +		};
+>>> +
+>>> +		opp-2400000000 {
+>>> +			opp-hz =3D /bits/ 64 <2400000000>;
+>>> +			opp-microvolt =3D <1040000>;
+>>> +		};
+>>> +	};
+>>> +};
+>>> +
+>>>=20
+>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>>=20
+>=20
+> Wait no, it should be:
+>=20
+> / {
+> 	compatible =3D "hardkernel,odroid-n2-plus", "amlogic,s922x", =
+"amlogic,g12b";
+> 	model =3D "Hardkernel ODROID-N2+";
+> };
+>=20
+> &vddcpu_a {
+> 	regulator-min-microvolt =3D <680000>;
+> 	regulator-max-microvolt =3D <1040000>;
+>=20
+> 	pwms =3D <&pwm_ab 0 1500 0>;
+> };
+>=20
+> &vddcpu_b {
+> 	regulator-min-microvolt =3D <680000>;
+> 	regulator-max-microvolt =3D <1040000>;
+>=20
+> 	pwms =3D <&pwm_AO_cd 1 1500 0>;
+> };
+>=20
+> &cpu_opp_table_0 {
+> 		opp-1908000000 {
+> 		opp-hz =3D /bits/ 64 <1908000000>;
+> 		opp-microvolt =3D <1030000>;
+> 	};
+>=20
+> 	opp-2016000000 {
+> 		opp-hz =3D /bits/ 64 <2016000000>;
+> 		opp-microvolt =3D <1040000>;
+> 	};
+> };
+>=20
+> &cpub_opp_table_1 {
+> 	opp-2304000000 {
+> 		opp-hz =3D /bits/ 64 <2304000000>;
+> 		opp-microvolt =3D <1030000>;
+> 	};
+>=20
+> 	opp-2400000000 {
+> 		opp-hz =3D /bits/ 64 <2400000000>;
+> 		opp-microvolt =3D <1040000>;
+> 	};
+> };
+>=20
+> Neil
 
--- 
-Thanks,
+Okay, I will send corrected v2 and with model name changed.
 
-David / dhildenb
-
+Christian=
