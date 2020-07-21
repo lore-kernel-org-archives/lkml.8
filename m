@@ -2,114 +2,183 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01B20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aNZscceQ"
+	by mail.kernel.org (Postfix) with ESMTP id E9C982072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 07:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGUHj2 (ORCPT
+        id S1727065AbgGUHng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGUHj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:39:27 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8377FC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:39:27 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id q15so1788599wmj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 00:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cJUflLSxHtf/sa8csoJgmFcN71WVeF/7yJM+R1zANs4=;
-        b=aNZscceQn1Dl45cuBWyWTUy4PJD9d6KTGqmPfZ+4chPoR4Dl6+IMEpbgutX90tTDCc
-         mYqm3dJZd9xCJyxoJoxg5iduHcWbg1nRZeRTkz9BQ1UE9HaSElwDMcKE0VImX+gSk+VS
-         vSBnvljYJV7ZTwM6AZK4VCDxCZsECTxSXV19qEfiW4lrKi5/l0z2egPui2rS7FKf11Vp
-         qx1SZBu4DpSYMnU+8tjOFzSp3GUzE7hjMnY1iZ3FUzp35hGe+UJqmvnx9pR2kauU2KoT
-         U9zlJHrAt4LtfWmnsPtkuFq7jea/Q4E6zhR1ZS0owhTslgy0AZM2+CUsjA7beEUURO4i
-         l1JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cJUflLSxHtf/sa8csoJgmFcN71WVeF/7yJM+R1zANs4=;
-        b=AulcHpemXKInr72lqqfT0KjFHhzBb2ABuf/vN+5B5YThVamRrd5jBW7JyIItUjZBsT
-         6Qdqx56ub9wgBThiCPpUH4wRsrRvECX/npP9Dc7KinBkrpWzp3KkpOFeE87Ffgh78Q6n
-         K1EKwZ9s4tJtVGHkC7Z21UePriSaAY1+RAEwse7ajE6pmAVtRWHxXQBkG+dhs/4Q+twn
-         8+XM/xByYKXXSOS4zkQtju5inHoSntEzRTcCQ3e3+No4qDwhD1a31Dep3EZYDEfLeta9
-         sBgjRaquCz6ba7qwwuJD4nexZznhMIa1CxihFNHMXUHGJAY4nIdaHQmNvzRmMF++SsRZ
-         RHlw==
-X-Gm-Message-State: AOAM530EZ1KrZQIOS9Qfi43xmKc9PzWjlbg52EGsrLiifa/5fhOHwbw2
-        2zGNbQu87mbW9+utCjpcixsPiA==
-X-Google-Smtp-Source: ABdhPJzbYVjXuGfCryUzJsjd1CTsxTUcEGzi8mFH5cZrwPDVBk6/y6QpO5ShaXYOJYxZo542tq2TKg==
-X-Received: by 2002:a1c:dd86:: with SMTP id u128mr2752246wmg.123.1595317166220;
-        Tue, 21 Jul 2020 00:39:26 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id a123sm2484009wmd.28.2020.07.21.00.39.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 00:39:25 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 1/1] video: backlight: cr_bllcd: Remove unused variable 'intensity'
-Date:   Tue, 21 Jul 2020 08:39:19 +0100
-Message-Id: <20200721073919.925935-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 21 Jul 2020 03:43:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:33980 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbgGUHng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:43:36 -0400
+IronPort-SDR: UpWHygMqV8zhPtp0k06S7xf+7hsyfy3VEtZ5pisOt+m7XdgZF2cymyvxgZyDuUN6Cxovj7ZMUa
+ c4A7t5K1Ap5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="149236145"
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="149236145"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 00:43:35 -0700
+IronPort-SDR: iqbMeA+6tWKmX7+r07yBRC38+nVMDfTOrAw7ZGC1dsuLBwLN4eSTIAQbhKAEOhH3HDzntBS8dm
+ Ja4IymKAbj1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,378,1589266800"; 
+   d="scan'208";a="431893396"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga004.jf.intel.com with ESMTP; 21 Jul 2020 00:43:33 -0700
+Date:   Tue, 21 Jul 2020 15:40:25 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH 1/2] fpga: dfl: map feature mmio resources in their own
+  feature drivers
+Message-ID: <20200721074025.GF17091@yilunxu-OptiPlex-7050>
+References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
+ <1594791498-14495-2-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB381928806B8E65BEEF66D07F857B0@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB381928806B8E65BEEF66D07F857B0@DM6PR11MB3819.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following kernel build warning:
+On Mon, Jul 20, 2020 at 05:09:35PM +0800, Wu, Hao wrote:
+> > Subject: [PATCH 1/2] fpga: dfl: map feature mmio resources in their own
+> > feature drivers
+> >
+> > This patch makes preparation for modularization of DFL sub feature
+> > drivers.
+> >
+> > Currently, if we need to support a new DFL sub feature, an entry should
+> > be added to fme/port_feature_drvs[] in dfl-fme/port-main.c. And we need
+> > to re-compile the whole DFL modules. That make the DFL drivers hard to be
+> > extended.
+> >
+> > Another consideration is that DFL may contain some IP blocks which are
+> > already supported by kernel, most of them are supported by platform
+> > device drivers. We could create platform devices for these IP blocks and
+> > get them supported by these drivers.
+> >
+> > An important issue is that platform device drivers usually requests mmio
+> > resources on probe. But now dfl mmio is mapped in dfl bus driver (e.g.
+> > dfl-pci) as a whole region. Then platform device drivers for sub features
+> > can't request their own mmio resources again. This is what the patch
+> > trying to resolve.
+> >
+> > This patch changes the DFL enumeration. DFL bus driver will unmap mmio
+> > resources after first step enumeration and pass enumeration info to DFL
+> > framework. Then DFL framework will map the mmio resources again, do 2nd
+> > step enumeration, and also unmap the mmio resources. In this way, sub
+> > feature drivers could then request their own mmio resources as needed.
+> >
+> > An exception is that mmio resource of FIU headers are still mapped in dfl
+> > bus driver. The FIU headers have some fundamental functions (sriov set,
+> > port enable/disable) needed for dfl bus devices and other sub features.
+> > They should not be unmapped as long as dfl bus device is alive.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > ---
+> >  drivers/fpga/dfl-pci.c |  21 ++++--
+> >  drivers/fpga/dfl.c     | 187 +++++++++++++++++++++++++++++++++++-----------
+> > ---
+> >  drivers/fpga/dfl.h     |   6 +-
+> >  3 files changed, 152 insertions(+), 62 deletions(-)
+> >
+> > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > index e220bec..22dc025 100644
+> > --- a/drivers/fpga/dfl-pci.c
+> > +++ b/drivers/fpga/dfl-pci.c
+> > @@ -39,6 +39,11 @@ static void __iomem *cci_pci_ioremap_bar(struct
+> > pci_dev *pcidev, int bar)
+> >  return pcim_iomap_table(pcidev)[bar];
+> >  }
+> >
+> > +static void cci_pci_iounmap_bars(struct pci_dev *pcidev, int mapped_bars)
+> > +{
+> > +pcim_iounmap_regions(pcidev, mapped_bars);
+> > +}
+> > +
+> >  static int cci_pci_alloc_irq(struct pci_dev *pcidev)
+> >  {
+> >  int ret, nvec = pci_msix_vec_count(pcidev);
+> > @@ -123,7 +128,7 @@ static int *cci_pci_create_irq_table(struct pci_dev
+> > *pcidev, unsigned int nvec)
+> >  static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> >  {
+> >  struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> > -int port_num, bar, i, nvec, ret = 0;
+> > +int port_num, bar, i, nvec, mapped_bars, ret = 0;
+> >  struct dfl_fpga_enum_info *info;
+> >  struct dfl_fpga_cdev *cdev;
+> >  resource_size_t start, len;
+> > @@ -163,6 +168,8 @@ static int cci_enumerate_feature_devs(struct pci_dev
+> > *pcidev)
+> >  goto irq_free_exit;
+> >  }
+> >
+> > +mapped_bars = BIT(0);
+> > +
+> >  /*
+> >   * PF device has FME and Ports/AFUs, and VF device only has one
+> >   * Port/AFU. Check them and add related "Device Feature List" info
+> > @@ -172,7 +179,7 @@ static int cci_enumerate_feature_devs(struct pci_dev
+> > *pcidev)
+> >  start = pci_resource_start(pcidev, 0);
+> >  len = pci_resource_len(pcidev, 0);
+> >
+> > -dfl_fpga_enum_info_add_dfl(info, start, len, base);
+> > +dfl_fpga_enum_info_add_dfl(info, start, len);
+> >
+> >  /*
+> >   * find more Device Feature Lists (e.g. Ports) per information
+> > @@ -200,22 +207,26 @@ static int cci_enumerate_feature_devs(struct
+> > pci_dev *pcidev)
+> >  if (!base)
+> >  continue;
+> >
+> > +mapped_bars |= BIT(bar);
+> > +
+> 
+> One more place,
+> 
+> As you removed base addr usage below, so ideally we don't need to map
+> more bars for port here? is my understanding correct?
 
- drivers/video/backlight/cr_bllcd.c: In function ‘cr_backlight_set_intensity’:
- drivers/video/backlight/cr_bllcd.c:62:6: warning: unused variable ‘intensity’ [-Wunused-variable]
- 62 | int intensity = bd->props.brightness;
- | ^~~~~~~~~
+Exactly, thanks for the catching. This makes the code much simpler.
 
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
-Fixes: 24d34617c24f ("backlight: cr_bllcd: Introduce gpio-backlight semantics")
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/video/backlight/cr_bllcd.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks,
+Yilun
 
-diff --git a/drivers/video/backlight/cr_bllcd.c b/drivers/video/backlight/cr_bllcd.c
-index a24d42e1ea3cd..4ad0a72531fe2 100644
---- a/drivers/video/backlight/cr_bllcd.c
-+++ b/drivers/video/backlight/cr_bllcd.c
-@@ -59,7 +59,6 @@ struct cr_panel {
- 
- static int cr_backlight_set_intensity(struct backlight_device *bd)
- {
--	int intensity = bd->props.brightness;
- 	u32 addr = gpio_bar + CRVML_PANEL_PORT;
- 	u32 cur = inl(addr);
- 
--- 
-2.25.1
-
+> 
+> >  start = pci_resource_start(pcidev, bar) + offset;
+> >  len = pci_resource_len(pcidev, bar) - offset;
+> >
+> > -dfl_fpga_enum_info_add_dfl(info, start, len,
+> > -   base + offset);
+> > +dfl_fpga_enum_info_add_dfl(info, start, len);
+> 
+> Thanks
+> Hao
