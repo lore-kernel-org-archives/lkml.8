@@ -2,228 +2,115 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2500CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AEBC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F371D20792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550982080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMwP+1/U"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HbebthKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgGUD3I (ORCPT
+        id S1728608AbgGUD3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgGUD3H (ORCPT
+        Mon, 20 Jul 2020 23:29:16 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:11938 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727849AbgGUD3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 23:29:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33BD0C061794;
-        Mon, 20 Jul 2020 20:29:07 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z3so10063711pfn.12;
-        Mon, 20 Jul 2020 20:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Lftddrr2ndqaCSw6+JuZ67UH5Mr9RMbh9K6Kp5xBmZs=;
-        b=UMwP+1/UcbKmoU3Og2Ub2kRC/HefOOZGmb22cvmxgEAxHiWDpP3+qrvkblHR75Y7/E
-         TEn+J0S2D01EJFNE+9mWkizGrFBukRnHcRubETwoJ0fWo3jQ8wlkqna9N7sA37TVZjrb
-         13DZRjBuPQCI6oNDPfBQD7Nl9KNnDFAxNlqmqIb2PavVbqWpvIh1B2vGk0EG5Li5WKa+
-         dQIdQ+3+GFo1SBB787lmldiA0seIjDQyKg/0IPSoRj4nSJUV6c81/EbwgB1k1/6ufbge
-         WWeqeQ58YB5CDAxhubVxFH8JBCc0v8WYHVjkebi6iJGbY5DDYazBVFjs055PKW+4yRFr
-         y2Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Lftddrr2ndqaCSw6+JuZ67UH5Mr9RMbh9K6Kp5xBmZs=;
-        b=LXScpgXtHFVN0ZMW2aFxG6+9wO2Ek6PSXGlhSsAUW+sIGsHdr10MrVUGDysQmO0vcZ
-         3DSGL/oOEV2Rb1exkO9f1Q6yV7TRZ81b+Vcg1Faq9rlfFAj7voti64abvDWxbJxVJdHW
-         Sp3fXOT6bHqgEG1V9LiAyeaYl39wt6Im3J11v/xye0kn53hoNP6P9teyD0WIFIZXo/kB
-         j8FCDzLaKT58D6Z2IzmaJ3Mg7hZMvR7ZH0BHHlBHNs8J5grOPuHENbcOElgtiS7yeGQQ
-         +KiQQzvBN+P0X6QfxNj59M/3zrbMeAnUSBOjvQ0XIrYt2bc6JXDr9lJ3Lw93wuNUNZWa
-         Y3IQ==
-X-Gm-Message-State: AOAM533AxAbmR8fIpn5U6V4XL+wt8LPaUAMY/P4nVNcQA0XVWHIaiYD/
-        Njf6eHNaGAwpNf18imcA8QO4x7D6
-X-Google-Smtp-Source: ABdhPJyIPEj/6fm9E8LnvezALUunjTl0xDnG/Km7DTAf7a0QK/V0iGr57tfjhYhhJqVG4HXe2/BoEA==
-X-Received: by 2002:a62:3587:: with SMTP id c129mr22520092pfa.212.1595302146594;
-        Mon, 20 Jul 2020 20:29:06 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id z13sm17748747pfq.220.2020.07.20.20.29.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jul 2020 20:29:06 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
-Subject: [PATCH] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
-Date:   Tue, 21 Jul 2020 12:28:49 +0900
-Message-Id: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 Jul 2020 23:29:15 -0400
+X-UUID: 0efb29e786b24d63a65f5cad76c89a81-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=p5edfquzkRU6ceVF49k8bWT2pebXpZwumAzJ3c92oME=;
+        b=HbebthKhqHugyLTk15GvvmaBqFjYhFtClpzYngY/SmiLNBq/GO0AdNBaIn6OJ4ukjfPqo5PAxuKOZ/tIYTUrEMmUPoqvdfZmVZszdBAke37RjKmcJRXjtL9ocfe1pBuCoK2wxM3Dt6x65LkKHdSdOy8ABs8E5i066/qJw25bsTo=;
+X-UUID: 0efb29e786b24d63a65f5cad76c89a81-20200721
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 574409423; Tue, 21 Jul 2020 11:29:02 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
+ 2020 11:28:59 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 11:28:58 +0800
+Message-ID: <1595302076.16172.49.camel@mhfsdcap03>
+Subject: Re: Re: [PATCH 04/21] dt-binding: mediatek: Add binding for mt8192
+ IOMMU and SMI
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <youlin.pei@mediatek.com>, <devicetree@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
+        <chao.hao@mediatek.com>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        "Tomasz Figa" <tfiga@google.com>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <ming-fan.chen@mediatek.com>, <anan.sun@mediatek.com>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 21 Jul 2020 11:27:56 +0800
+In-Reply-To: <20200720231621.GA3106350@bogus>
+References: <20200711064846.16007-1-yong.wu@mediatek.com>
+         <20200711064846.16007-5-yong.wu@mediatek.com>
+         <20200720231621.GA3106350@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: D49D8E756E183EDB1F2B9E9AB572BFF9AED4A4D42C576D30129F7E826088FE652000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-Currently, memalloc_nocma_{save/restore} API that prevents CMA area
-in page allocation is implemented by using current_gfp_context(). However,
-there are two problems of this implementation.
-
-First, this doesn't work for allocation fastpath. In the fastpath,
-original gfp_mask is used since current_gfp_context() is introduced in
-order to control reclaim and it is on slowpath. So, CMA area can be
-allocated through the allocation fastpath even if
-memalloc_nocma_{save/restore} APIs are used. Currently, there is just
-one user for these APIs and it has a fallback method to prevent actual
-problem.
-Second, clearing __GFP_MOVABLE in current_gfp_context() has a side effect
-to exclude the memory on the ZONE_MOVABLE for allocation target.
-
-To fix these problems, this patch changes the implementation to exclude
-CMA area in page allocation. Main point of this change is using the
-alloc_flags. alloc_flags is mainly used to control allocation so it fits
-for excluding CMA area in allocation.
-
-Fixes: d7fefcc8de91 (mm/cma: add PF flag to force non cma alloc)
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/sched/mm.h |  8 +-------
- mm/page_alloc.c          | 33 +++++++++++++++++++++++----------
- 2 files changed, 24 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 480a4d1..17e0c31 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -177,12 +177,10 @@ static inline bool in_vfork(struct task_struct *tsk)
-  * Applies per-task gfp context to the given allocation flags.
-  * PF_MEMALLOC_NOIO implies GFP_NOIO
-  * PF_MEMALLOC_NOFS implies GFP_NOFS
-- * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
-  */
- static inline gfp_t current_gfp_context(gfp_t flags)
- {
--	if (unlikely(current->flags &
--		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
-+	if (unlikely(current->flags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS))) {
- 		/*
- 		 * NOIO implies both NOIO and NOFS and it is a weaker context
- 		 * so always make sure it makes precedence
-@@ -191,10 +189,6 @@ static inline gfp_t current_gfp_context(gfp_t flags)
- 			flags &= ~(__GFP_IO | __GFP_FS);
- 		else if (current->flags & PF_MEMALLOC_NOFS)
- 			flags &= ~__GFP_FS;
--#ifdef CONFIG_CMA
--		if (current->flags & PF_MEMALLOC_NOCMA)
--			flags &= ~__GFP_MOVABLE;
--#endif
- 	}
- 	return flags;
- }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e028b87c..08cb35c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2790,7 +2790,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
- 	 * allocating from CMA when over half of the zone's free memory
- 	 * is in the CMA area.
- 	 */
--	if (migratetype == MIGRATE_MOVABLE &&
-+	if (alloc_flags & ALLOC_CMA &&
- 	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
- 	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
- 		page = __rmqueue_cma_fallback(zone, order);
-@@ -2801,7 +2801,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
- retry:
- 	page = __rmqueue_smallest(zone, order, migratetype);
- 	if (unlikely(!page)) {
--		if (migratetype == MIGRATE_MOVABLE)
-+		if (alloc_flags & ALLOC_CMA)
- 			page = __rmqueue_cma_fallback(zone, order);
- 
- 		if (!page && __rmqueue_fallback(zone, order, migratetype,
-@@ -3671,6 +3671,20 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
- 	return alloc_flags;
- }
- 
-+static inline unsigned int current_alloc_flags(gfp_t gfp_mask,
-+					unsigned int alloc_flags)
-+{
-+#ifdef CONFIG_CMA
-+	unsigned int pflags = current->flags;
-+
-+	if (!(pflags & PF_MEMALLOC_NOCMA) &&
-+		gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
-+		alloc_flags |= ALLOC_CMA;
-+
-+#endif
-+	return alloc_flags;
-+}
-+
- /*
-  * get_page_from_freelist goes through the zonelist trying to allocate
-  * a page.
-@@ -4316,10 +4330,8 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
- 	} else if (unlikely(rt_task(current)) && !in_interrupt())
- 		alloc_flags |= ALLOC_HARDER;
- 
--#ifdef CONFIG_CMA
--	if (gfp_migratetype(gfp_mask) == MIGRATE_MOVABLE)
--		alloc_flags |= ALLOC_CMA;
--#endif
-+	alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
-+
- 	return alloc_flags;
- }
- 
-@@ -4619,8 +4631,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- 		wake_all_kswapds(order, gfp_mask, ac);
- 
- 	reserve_flags = __gfp_pfmemalloc_flags(gfp_mask);
--	if (reserve_flags)
-+	if (reserve_flags) {
- 		alloc_flags = reserve_flags;
-+		alloc_flags = current_alloc_flags(gfp_mask, alloc_flags);
-+	}
- 
- 	/*
- 	 * Reset the nodemask and zonelist iterators if memory policies can be
-@@ -4697,7 +4711,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- 
- 	/* Avoid allocations with no watermarks from looping endlessly */
- 	if (tsk_is_oom_victim(current) &&
--	    (alloc_flags == ALLOC_OOM ||
-+	    (alloc_flags & ALLOC_OOM ||
- 	     (gfp_mask & __GFP_NOMEMALLOC)))
- 		goto nopage;
- 
-@@ -4785,8 +4799,7 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
- 	if (should_fail_alloc_page(gfp_mask, order))
- 		return false;
- 
--	if (IS_ENABLED(CONFIG_CMA) && ac->migratetype == MIGRATE_MOVABLE)
--		*alloc_flags |= ALLOC_CMA;
-+	*alloc_flags = current_alloc_flags(gfp_mask, *alloc_flags);
- 
- 	return true;
- }
--- 
-2.7.4
+T24gTW9uLCAyMDIwLTA3LTIwIGF0IDE3OjE2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU2F0LCBKdWwgMTEsIDIwMjAgYXQgMDI6NDg6MjlQTSArMDgwMCwgWW9uZyBXdSB3cm90ZToN
+Cj4gPiBUaGlzIHBhdGNoIGFkZHMgZGVjcmlwdGlvbnMgZm9yIG10ODE5MiBJT01NVSBhbmQgU01J
+Lg0KPiA+IA0KPiA+IG10ODE5MiBhbHNvIGlzIE1USyBJT01NVSBnZW4yIHdoaWNoIHVzZXMgQVJN
+IFNob3J0LURlc2NyaXB0b3IgdHJhbnNsYXRpb24NCj4gPiB0YWJsZSBmb3JtYXQuIFRoZSBNNFUt
+U01JIEhXIGRpYWdyYW0gaXMgYXMgYmVsb3c6DQo+ID4gDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICBFTUkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICBNNFUNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLQ0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgU01JIENvbW1vbg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAtLS0tLS0t
+LS0tLS0NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICArLS0tLS0tLSst
+LS0tLS0rLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLSsNCj4gPiAgIHwgICAg
+ICAgfCAgICAgIHwgICAgICB8ICAgICAgIC4uLi4uLiAgICAgICAgIHwgICAgICAgfA0KPiA+ICAg
+fCAgICAgICB8ICAgICAgfCAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICB8DQo+
+ID4gbGFyYjAgICBsYXJiMSAgbGFyYjIgIGxhcmI0ICAgICAuLi4uLi4gICAgICBsYXJiMTkgICBs
+YXJiMjANCj4gPiBkaXNwMCAgIGRpc3AxICAgbWRwICAgIHZkZWMgICAgICAgICAgICAgICAgICAg
+SVBFICAgICAgSVBFDQo+ID4gDQo+ID4gQWxsIHRoZSBjb25uZWN0aW9ucyBhcmUgSFcgZml4ZWQs
+IFNXIGNhbiBOT1QgYWRqdXN0IGl0Lg0KPiA+IA0KPiA+IG10ODE5MiBNNFUgc3VwcG9ydCAwfjE2
+R0IgaW92YSByYW5nZS4gd2UgcHJlYXNzaWduIGRpZmZlcmVudCBlbmdpbmVzDQo+ID4gaW50byBk
+aWZmZXJlbnQgaW92YSByYW5nZXM6DQo+ID4gDQo+ID4gZG9tYWluLWlkICBtb2R1bGUgICAgIGlv
+dmEtcmFuZ2UgICAgICAgICAgICAgICAgICBsYXJicw0KPiA+ICAgIDAgICAgICAgZGlzcCAgICAg
+ICAgMCB+IDRHICAgICAgICAgICAgICAgICAgICAgIGxhcmIwLzENCj4gPiAgICAxICAgICAgIHZj
+b2RlYyAgICAgIDRHIH4gOEcgICAgICAgICAgICAgICAgICAgICBsYXJiNC81LzcNCj4gPiAgICAy
+ICAgICAgIGNhbS9tZHAgICAgIDhHIH4gMTJHICAgICAgICAgICAgIGxhcmIyLzkvMTEvMTMvMTQv
+MTYvMTcvMTgvMTkvMjANCj4gPiAgICAzICAgICAgIENDVTAgICAgMHg0MDAwXzAwMDAgfiAweDQz
+ZmZfZmZmZiAgICAgbGFyYjEzOiBwb3J0IDkvMTANCj4gPiAgICA0ICAgICAgIENDVTEgICAgMHg0
+NDAwXzAwMDAgfiAweDQ3ZmZfZmZmZiAgICAgbGFyYjE0OiBwb3J0IDQvNQ0KPiANCj4gWW91IHBy
+b2JhYmx5IHdhbnQgdG8gdXNlIGRtYS1yYW5nZXMgZm9yIGRlZmluaW5nIHRoZXNlIA0KPiBhZGRy
+ZXNzIHJlc3RyaWN0aW9ucy4gDQoNClllcy4gUGxlYXNlIHNlZSB0aGUgY29tbWl0IG1lc3NhZ2Ug
+b2YgWzE4LzIxXSBpbiB0aGlzIHBhdGNoc2V0Lg0KDQo+IA0KPiBIb3cgaXMgdGhlIGRvbWFpbi1p
+ZCB1c2VkIG9yIG5lZWRlZD8NCg0KSGVyZSB3ZSBhc3NpZ24gZGlmZmVyZW50IGxhcmIvcG9ydHMg
+aW4gZGlmZmVyZW50IGlvdmEgcmFuZ2VzLg0KSW4gdGhlIGlvbW11IGRyaXZlciwgd2Ugd2lsbCBs
+aXN0IHRoZSBpb3ZhIHJhbmdlcyBhcyBhYm92ZSBhbmQgdXNlIHRoZQ0KZG9tYWluLWlkIHRvIGdl
+dCB0aGUgZGV0YWlsZWQgaW92YSByYW5nZSwgdGhlbiBjcmVhdGUgYSBpb21tdSBkb21haW4gZm9y
+DQplYWNoIGEgaW92YSByYW5nZS4NCg0KRm9yIHRoZSBpb21tdSBtYXN0ZXJzLCBpdCBvbmx5IG5l
+ZWQgdXNlIGl0cyBzcGVjaWFsIHBvcnQgaW4gaXRzIGR0c2kNCm5vZGUsIHRoZW4gdGhlIGlvdmEg
+Z290IGZyb20gZG1hX2FsbG9jX2F0dHJzIGZvciB0aGF0IGRldmljZSB3aWxsIGxvY2F0ZQ0KaW4g
+dGhlIHNwZWNpYWwgaW92YSByYW5nZXMuDQoNCj4gDQo+IFJvYiANCj4gDQo+IF9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1lZGlhdGVrIG1h
+aWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0K
 
