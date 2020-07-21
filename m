@@ -2,167 +2,132 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38D2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8275D2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBBE2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 18:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBBl1cIQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5gUTrSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgGUSTp (ORCPT
+        id S1728306AbgGUSY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGUSTn (ORCPT
+        Tue, 21 Jul 2020 14:24:27 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58366 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726029AbgGUSYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:19:43 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AE5C061794;
-        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d7so1842390plq.13;
-        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wr3/k+1ex6fptAAVFMs6oDFrFt7DqcfgHz1IZTNoliM=;
-        b=gBBl1cIQ2RaGy6mgApwpDBftoKfmP/is4EdoquHSFl7/kBk9I+aupEmuq/QMNerRj/
-         rVYgORnZWckQUFGzNobePsGUuMkfsdXZNpVEDAdaZqmMpMW0E8Kk1zoQSqqtZP/P9Usj
-         nxpByUvfLQftyEslbPq2N7ZFDnQJloM5CMa5yxxjgvhLux8LnSAit6HYPxBHjV8NBTFU
-         SxAitVjZN0bMSBUPnTPyGCuwrTvDECweKvqKvFGoDmbiv3rhy8oNwWIaZkpgsI+YP1LV
-         bQ85fWyp6hyaJyTs5l0nQ6B5sipgLH/qHkeZXEwtLqfM49DrenGacjozgpvnMCNlBIH6
-         iaAw==
+        Tue, 21 Jul 2020 14:24:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595355864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ealMEOrHFYO0kZ1pKFx9efUp2/FF6Eq+swSNcBoDaSA=;
+        b=Y5gUTrSb7ROYKIDqYBCitJ3ygTc4RhrNj/HU9qtGrfpR4n4/PNehZq560WlD/7xPaGuM1K
+        DLyo60JjxtFlqbJHlEW610cDeCUgWMc0OhS7BpzAkPDRSAeTzN1kbhUl0Ls+Yup1WfFbdb
+        8DFAdLP9Rj4ukA0z1Pq/uLySqxdCEkY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-aDYkg16tNCSsFs4GRW3Bbw-1; Tue, 21 Jul 2020 14:24:22 -0400
+X-MC-Unique: aDYkg16tNCSsFs4GRW3Bbw-1
+Received: by mail-qt1-f198.google.com with SMTP id u93so14888418qtd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 11:24:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
          :content-transfer-encoding;
-        bh=Wr3/k+1ex6fptAAVFMs6oDFrFt7DqcfgHz1IZTNoliM=;
-        b=TOxUz7oqWA3h73/keLLN4J69gQjShG+iSKU+pFM46p1k/yIL/f9IU8vFRo1tYtTtOY
-         p+YbultjSI39KSWdy2eYtOpHr/LhNL6Eb6nBBpWzQeKE6SMC9yuF8v6aHCwejTS5VRq9
-         TV0IzPWwbIAW1dQOn/T8jcGKZDibp5pY+11OejEhQwxZvMAGsYVkqPomK5zUCXHwgG2X
-         x3W1c9gMqvEp9Zn/7ZLPBx1hV6p/Ey3bizks/sxvts8vaTR07Yi/sdHkpZ6lwi+YG/Dj
-         wAnDGTB00G0MxW6AhFzd0w5WuysFnTzCnnNHzL7UjR7rWmaHdieTYq+0vbB/KWiGHsbG
-         x6rA==
-X-Gm-Message-State: AOAM5332pZwyTOJHspabL6X/0dq8JLw8lrVjcVtYZcmVmw0YxlLlP4M/
-        fGkhoy0BaM3J1rS9KulnOoMEsRTi3oQ=
-X-Google-Smtp-Source: ABdhPJw9ba4fbeXIwYrqUneCu5yvlWJc9CNkBFnQGg5lLtiNaY4tWxFusGuxYmwInBZh74p/3Yg8xw==
-X-Received: by 2002:a17:902:8f8b:: with SMTP id z11mr8794167plo.49.1595355583486;
-        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:593:314e:d028:8959:a8a3:a7bc])
-        by smtp.gmail.com with ESMTPSA id c134sm21054948pfc.115.2020.07.21.11.19.42
+        bh=ealMEOrHFYO0kZ1pKFx9efUp2/FF6Eq+swSNcBoDaSA=;
+        b=SbmEDEfw0Gw9y4dBb7UJANt1slGDKYbP2urtrh+RLZhqBjh/lkyw7MadRxi7tUPFzm
+         fnvPKfgReRxMcE5XdKCtjx/iYr7PG5sRCU0tws2aM+c/s+HiH3Yqb/ESpyYDKZ+mXSnq
+         rAOWWnbgd37NKqNFd6ebKV7qDna7sYpBwQEiHd3fgDLQV+NpV3cN/D8XZa9enjZ6NtWk
+         5BSmd9w1vAqHUhbkooOqSXsAvUWLdQkdMLyh5F9Dl0jkbaZ6Ee82RPwpfC7pJZ2Mp0l5
+         w5gIIB8911lx0ImNQ1tSzEPYH85mi3R6NmUA6Uk1uwNuLTNZ0DeJw3WbuNMY1fPlKUOn
+         o13w==
+X-Gm-Message-State: AOAM5314MO+S7budJomNoT5pAqtDWRy+67Madf2Cr+lzWi4c0wC+pYF6
+        lPNhfr4tk2tcp2NcGWmgdxY/4I4MOWCOiF8xEUs/WpMu7cuiSLKDQTWJ3s8PoYwyEDOW0ETZFV4
+        n2sVgT18sD9Z9EPPJ3zQkWLGc
+X-Received: by 2002:ac8:c7:: with SMTP id d7mr30400205qtg.235.1595355861662;
+        Tue, 21 Jul 2020 11:24:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw5OPDtOL+vQse+EIZ+qb5SVhRfGv2p/Vv3U6BZWjtbTj7sJmsbB+3Na09bYDi+UjZ28Uz31A==
+X-Received: by 2002:ac8:c7:: with SMTP id d7mr30400169qtg.235.1595355861423;
+        Tue, 21 Jul 2020 11:24:21 -0700 (PDT)
+Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id x12sm510481qta.67.2020.07.21.11.24.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 11:19:42 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: iio: gyro: Add DT binding doc for ADXRS290
-Date:   Tue, 21 Jul 2020 23:49:37 +0530
-Message-Id: <20200721181937.27101-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 21 Jul 2020 11:24:20 -0700 (PDT)
+Message-ID: <a80a591ce61b632503c9ed52adc7c40faad8b068.camel@redhat.com>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+From:   Lyude Paul <lyude@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Patrick Volkerding <volkerdi@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Tue, 21 Jul 2020 14:24:19 -0400
+In-Reply-To: <dc7a592219f58f9a5df7fa7135fa3fc87d9450f0.camel@redhat.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+         <20200716235440.GA675421@bjorn-Precision-5520>
+         <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+         <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+         <20200721122247.GI5180@lahna.fi.intel.com>
+         <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+         <20200721152737.GS5180@lahna.fi.intel.com>
+         <dc7a592219f58f9a5df7fa7135fa3fc87d9450f0.camel@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
+On Tue, 2020-07-21 at 12:00 -0400, Lyude Paul wrote:
+> On Tue, 2020-07-21 at 18:27 +0300, Mika Westerberg wrote:
+> > On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
+> > > Sure thing. Also, feel free to let me know if you'd like access to one
+> > > of
+> > > the
+> > > systems we saw breaking with this patch - I'm fairly sure I've got one
+> > > of
+> > > them
+> > > locally at my apartment and don't mind setting up AMT/KVM/SSH
+> > 
+> > Probably no need for remote access (thanks for the offer, though). I
+> > attached a test patch to the bug report:
+> > 
+> >   https://bugzilla.kernel.org/show_bug.cgi?id=208597
+> > 
+> > that tries to work it around (based on the ->pm_cap == 0). I wonder if
+> > anyone would have time to try it out.
+> 
+> Will give it a shot today and let you know the result
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+Ahh-actually, I thought the laptop I had locally could reproduce this bug but
+that doesn't appear to be the case whoops. Karol Herbst still has access to a
+machine that can test this though, so they'll likely get to trying the patch
+today or tommorrow
 
-Changes in v2:
-  - use 'const' instead of 'enum' while setting the compatible string
-    since only a single item is expected
-  - add 'additionalProperties: false'
----
- .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 53 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-new file mode 100644
-index 000000000000..61adb2c2454b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2020 Analog Devices Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
-+
-+maintainers:
-+  - Nishant Malpani <nish.malpani25@gmail.com>
-+
-+description: |
-+  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
-+
-+properties:
-+  compatible:
-+    const: adi,adxrs290
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 5000000
-+
-+  spi-cpol: true
-+
-+  spi-cpha: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-max-frequency
-+  - spi-cpol
-+  - spi-cpha
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        gyro@0 {
-+                   compatible = "adi,adxrs290";
-+                   reg = <0>;
-+                   spi-max-frequency = <5000000>;
-+                   spi-cpol;
-+                   spi-cpha;
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dd02cfc410e8..0bb8ac90fba1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
- L:	linux-iio@vger.kernel.org
- S:	Supported
- F:	drivers/iio/gyro/adxrs290.c
-+F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
- 
- ANALOG DEVICES INC ASOC CODEC DRIVERS
- M:	Lars-Peter Clausen <lars@metafoo.de>
+> 
 -- 
-2.20.1
+Cheers,
+	Lyude Paul (she/her)
+	Software Engineer at Red Hat
 
