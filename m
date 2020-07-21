@@ -2,167 +2,176 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1F6C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A0DC433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26758207FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595290925;
-	bh=Da6qbEX+o6uaMHJDmFF0770XklkhAChY4ArFWsyOmmA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kzdLo9jJNuF/ubHYL6DcXzcAlclLnX+OyS6AlIuSxwWXJJeLd9/M2JambVEWuU5vA
-	 MkqxJ8EBM3YSJKpZ0tx+inplxyFGjf3NkbffX+UNB6Ljl/zkeIKR+KM7nB3PBnmMAa
-	 U/p8/i2b1xMHxkkCxmlEbnxDNSxmFU2ObeGaAu3E=
+	by mail.kernel.org (Postfix) with ESMTP id B74BF207FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 00:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgGUAWD (ORCPT
+        id S1728249AbgGUAWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:22:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51688 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 20:22:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58182 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbgGUAWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:22:00 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05CB2080D;
-        Tue, 21 Jul 2020 00:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595290919;
-        bh=Da6qbEX+o6uaMHJDmFF0770XklkhAChY4ArFWsyOmmA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1piYj1C1iwDOdLUDzd1rpVvo9vemkWJsXS8URCuVmBS46JfALaTtF4CFjYAEuenRx
-         +jMlCMyHpvZDdEsGvJ0CoPXR8b32rY/c1OXxwFthmAOfQxQUS1g7q7jovgKBJmLiqa
-         /VmUOqCuAFq6Ad4vUGlG3bwxJWvcFC5mEinDh5Sk=
-Received: by mail-ot1-f47.google.com with SMTP id e90so13752181ote.1;
-        Mon, 20 Jul 2020 17:21:58 -0700 (PDT)
-X-Gm-Message-State: AOAM531mxw6kpiBRe6xAK/ysT9gbXsjp7ak6UMiyQulUgoTufzuQRdlL
-        L71u1+Gtl+MyPb0EgsCIDOraPBcST6XfuSQK+w==
-X-Google-Smtp-Source: ABdhPJwGHRLkI27jNoNgF7ILMZHHY4pXlB5JpjB75m22H4vcQUfZq0NMhHBlUVhvdM2QlsP4dOjhti/AnlshASjzvYo=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr20938572otb.107.1595290918250;
- Mon, 20 Jul 2020 17:21:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-2-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200720074249.596364-2-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 20 Jul 2020 18:21:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKhs=m=q9YcdxFz8XPcn4KUOum3U_XwcLoxMs4FqjptXQ@mail.gmail.com>
-Message-ID: <CAL_JsqKhs=m=q9YcdxFz8XPcn4KUOum3U_XwcLoxMs4FqjptXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] of_address: Add bus type match for pci ranges parser
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728063AbgGUAWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:22:14 -0400
+IronPort-SDR: 8EZptw854+pJpmabfyAMqzghLBO1csS1ijMDXI9FEOvux/mjiVs34XYgxy1m9VzA17D2CnHtfk
+ ernyh7X8oqjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="151377917"
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="151377917"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 17:22:13 -0700
+IronPort-SDR: YGNVZvEBQgpxioGzgLfEJ1vMMoK3rFYQVgVrEurwjX/NBTcMcM2yxNpd1v8UQp1hlu5tqECHgp
+ 38rTGIhJAlvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,375,1589266800"; 
+   d="scan'208";a="392189693"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Jul 2020 17:22:11 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Koba Ko <koba.ko@canonical.com>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org
+Subject: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx dedicated iommu
+Date:   Tue, 21 Jul 2020 08:17:13 +0800
+Message-Id: <20200721001713.24282-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 1:49 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> So the parser can be used to parse range property of different bus
-> types, such as ISA bus.
+The VT-d spec requires (10.4.4 Global Command Register, TE field) that:
 
-Regular MMIO buses are actually already supported, but not ISA.
+Hardware implementations supporting DMA draining must drain any in-flight
+DMA read/write requests queued within the Root-Complex before completing
+the translation enable command and reflecting the status of the command
+through the TES field in the Global Status register.
 
->
-> As they're all using PCI-like method of range property, there is no need
-> start a new parser.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/of/address.c       | 15 +++++++++++----
->  include/linux/of_address.h |  3 +++
->  2 files changed, 14 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 8eea3f6e29a4..250c91767648 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -702,6 +702,10 @@ static int parser_init(struct of_pci_range_parser *parser,
->         parser->ns = of_bus_n_size_cells(node);
->         parser->dma = !strcmp(name, "dma-ranges");
->
-> +       parser->bus = of_match_bus(node);
-> +       if (!parser->bus)
-> +               return -ENOENT;
+Unfortunately, some integrated graphic devices fail to do so after some
+kind of power state transition. As the result, the system might stuck in
+iommu_disable_translation(), waiting for the completion of TE transition.
 
-You'll hit BUG() before you get here, so you can assume success.
+This provides a quirk list for those devices and skips TE disabling if
+the qurik hits.
 
-> +
->         parser->range = of_get_property(node, name, &rlen);
->         if (parser->range == NULL)
->                 return -ENOENT;
-> @@ -732,6 +736,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->         int na = parser->na;
->         int ns = parser->ns;
->         int np = parser->pna + na + ns;
-> +       int bus_na = 0;
->
->         if (!range)
->                 return NULL;
-> @@ -739,8 +744,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->         if (!parser->range || parser->range + np > parser->end)
->                 return NULL;
->
-> -       if (parser->na == 3)
-> -               range->flags = of_bus_pci_get_flags(parser->range);
-> +       parser->bus->count_cells(parser->node, &bus_na, NULL);
-> +
-> +       if (parser->na == bus_na)
-> +               range->flags = parser->bus->get_flags(parser->range);
+Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=208363
+Tested-by: Koba Ko <koba.ko@canonical.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel/dmar.c  |  1 +
+ drivers/iommu/intel/iommu.c | 27 +++++++++++++++++++++++++++
+ include/linux/dmar.h        |  1 +
+ include/linux/intel-iommu.h |  2 ++
+ 4 files changed, 31 insertions(+)
 
-I think you can just unconditionally call this and drop the else. For
-plain MMIO bus, we'd just return IORESOURCE_MEM, but I think the flags
-are ignored in that case.
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 683b812c5c47..16f47041f1bf 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1102,6 +1102,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
+ 	}
+ 
+ 	drhd->iommu = iommu;
++	iommu->drhd = drhd;
+ 
+ 	return 0;
+ 
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 98390a6d8113..11418b14cc3f 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -356,6 +356,7 @@ static int intel_iommu_strict;
+ static int intel_iommu_superpage = 1;
+ static int iommu_identity_mapping;
+ static int intel_no_bounce;
++static int iommu_skip_te_disable;
+ 
+ #define IDENTMAP_GFX		2
+ #define IDENTMAP_AZALIA		4
+@@ -1633,6 +1634,10 @@ static void iommu_disable_translation(struct intel_iommu *iommu)
+ 	u32 sts;
+ 	unsigned long flag;
+ 
++	if (iommu_skip_te_disable && iommu->drhd->gfx_dedicated &&
++	    (cap_read_drain(iommu->cap) || cap_write_drain(iommu->cap)))
++		return;
++
+ 	raw_spin_lock_irqsave(&iommu->register_lock, flag);
+ 	iommu->gcmd &= ~DMA_GCMD_TE;
+ 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
+@@ -4043,6 +4048,7 @@ static void __init init_no_remapping_devices(void)
+ 
+ 		/* This IOMMU has *only* gfx devices. Either bypass it or
+ 		   set the gfx_mapped flag, as appropriate */
++		drhd->gfx_dedicated = 1;
+ 		if (!dmar_map_gfx) {
+ 			drhd->ignored = 1;
+ 			for_each_active_dev_scope(drhd->devices,
+@@ -6160,6 +6166,27 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0044, quirk_calpella_no_shadow_g
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0062, quirk_calpella_no_shadow_gtt);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x006a, quirk_calpella_no_shadow_gtt);
+ 
++static void quirk_igfx_skip_te_disable(struct pci_dev *dev)
++{
++	unsigned short ver;
++
++	if (!IS_GFX_DEVICE(dev))
++		return;
++
++	ver = (dev->device >> 8) & 0xff;
++	if (ver != 0x45 && ver != 0x46 && ver != 0x4c &&
++	    ver != 0x4e && ver != 0x8a && ver != 0x98 &&
++	    ver != 0x9a)
++		return;
++
++	if (risky_device(dev))
++		return;
++
++	pci_info(dev, "Skip IOMMU disabling for graphics\n");
++	iommu_skip_te_disable = 1;
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_ANY_ID, quirk_igfx_skip_te_disable);
++
+ /* On Tylersburg chipsets, some BIOSes have been known to enable the
+    ISOCH DMAR unit for the Azalia sound device, but not give it any
+    TLB entries, which causes it to deadlock. Check for that.  We do
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index d7bf029df737..65565820328a 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -48,6 +48,7 @@ struct dmar_drhd_unit {
+ 	u16	segment;		/* PCI domain		*/
+ 	u8	ignored:1; 		/* ignore drhd		*/
+ 	u8	include_all:1;
++	u8	gfx_dedicated:1;	/* graphic dedicated	*/
+ 	struct intel_iommu *iommu;
+ };
+ 
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index bf6009a344f5..329629e1e9de 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -600,6 +600,8 @@ struct intel_iommu {
+ 	struct iommu_device iommu;  /* IOMMU core code handle */
+ 	int		node;
+ 	u32		flags;      /* Software defined flags */
++
++	struct dmar_drhd_unit *drhd;
+ };
+ 
+ /* PCI domain-device relationship */
+-- 
+2.17.1
 
->         else
->                 range->flags = 0;
->
-> @@ -761,8 +768,8 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->                 u32 flags = 0;
->                 u64 pci_addr, cpu_addr, size;
->
-> -               if (parser->na == 3)
-> -                       flags = of_bus_pci_get_flags(parser->range);
-> +               if (parser->na == bus_na)
-
-This too can be unconditional.
-
-> +                       flags = parser->bus->get_flags(parser->range);
->                 pci_addr = of_read_number(parser->range, na);
-
-Perhaps rename pci_addr to child_addr and cpu_addr to parent_addr.
-
->                 if (parser->dma)
->                         cpu_addr = of_translate_dma_address(parser->node,
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 763022ed3456..3929b4637033 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -6,8 +6,11 @@
->  #include <linux/of.h>
->  #include <linux/io.h>
->
-> +struct of_bus;
-> +
->  struct of_pci_range_parser {
->         struct device_node *node;
-> +       struct of_bus *bus;
->         const __be32 *range;
->         const __be32 *end;
->         int na;
-> --
-> 2.28.0.rc1
->
