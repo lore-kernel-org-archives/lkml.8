@@ -2,110 +2,91 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C12FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DE0C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A31420672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5033F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjJmOnjS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GiVqDkxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgGUTRv (ORCPT
+        id S1730576AbgGUTSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42980 "EHLO
+        Tue, 21 Jul 2020 15:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgGUTRu (ORCPT
+        with ESMTP id S1726602AbgGUTSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:17:50 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF084C061794;
-        Tue, 21 Jul 2020 12:17:49 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 140so1900536lfi.5;
-        Tue, 21 Jul 2020 12:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZWBDSpvSID9isJQH7VhMl+fYpyhlV/5rIWPv6OTFX7k=;
-        b=bjJmOnjSvHymIbPjtRqJcq5iUmACuMPlpNYY6EiWRnwQ+sFauRHkIDHR5ii1tNFodT
-         ZnGD/2GgQCh8NnD4rf8Ac3y7LP2ZzOXhMhd4+1PTsXLxT1J6FVdqFTZl9/8paiZu46F+
-         11ZygeKCLBq/O9uFsto9he37C6pu1uCRIFRFhS+mH2Fx+r/+W8yMbhqzmFUsWNxY2dVJ
-         oFKNi1baFIPVyTgn3OmUXQr+TVKR8DWDca0+usbBxY573rfj5PrAwdT/AviH+Bnnqzh7
-         rBH51dIX87TxnklidM+nyuPcde5wMeX/OKWTGFOpS9tuuruGLaHLaQjhwVMbJGhs9QN9
-         g+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZWBDSpvSID9isJQH7VhMl+fYpyhlV/5rIWPv6OTFX7k=;
-        b=AqaVCx4dmf0CXrkFgizjSdrMNXq1tiW3GbiKWWSS6i1b5l25oLIKJEbAu5Z23SAKhv
-         we2eO1gpnmZ1itRuk+79LC7oipIy/366k26PsifiC73+6khysTu9APkjhgk5jy4VPDl6
-         agy1ateTmz1U8pr6Q/HAeMyqEMqecEk3jU1j9d6R8eEGC9KPrHSWaeaJlLEhdGG5XSsn
-         /lh9UbfRNqFl9S+aS6/O/7kSi8C+NKlV4+F6RRyOw67HDxofh6DQikahdz2+/SH4y809
-         xeltIrGOszq7R60Enus0i81EQ/HtMRTXLqQvwwFeQJNF07x0wxXFQQcBJj7UmaU7lHi+
-         B1tA==
-X-Gm-Message-State: AOAM533Cy1GKErFDLZle7T6sZC/JUdZZyn00xY+5lEkpXyKGsAZ8LPUf
-        BHUcm2W2tpuF81Sz4a0PTwaW9tk+7dStOuGj90Q=
-X-Google-Smtp-Source: ABdhPJzrrRmzoMl0l7Jzq9SQZQf3um1JlMaVowRRAM+BxYECxE+izAQMM7qYNVXZ6dnQZDkCxLqs2b1d7HmQF0qklRk=
-X-Received: by 2002:a05:6512:3610:: with SMTP id f16mr6898040lfs.8.1595359068359;
- Tue, 21 Jul 2020 12:17:48 -0700 (PDT)
+        Tue, 21 Jul 2020 15:18:21 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABD0C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=o9oymOdRtXGBWxhCuRCIUyVAr5ZVv5Qq2LLyDa4+QxA=; b=GiVqDkxP6Uc0PwgRFkbJanO9TX
+        LHUfjIHSZ7nEBg/C+vhAMIZrworBNIQRb5do4Zx7aWPg+DH4lXB+Q5uXtcFhI9WvsEM5thl3GG2Yq
+        GgMsG9JdTv5wFhWO7vfiCO3bzsznrgURte4gnUdYb1EQ3YcyXraT8PQaP2GBvWbB3tZSMEg+Su0fr
+        vKti10E+rWIimxGOvMRdbNuV4Co82qm4vB9YmqS9N+kd+G7V4ObTD58ayCnR+tty8FkGP8WvEzgK9
+        +hunYHcStEWms+HwxFFQMcLaTQQNNsCET/2CLSBG0n35faYXs2KRIqDBBWtke1snFCGqI5fezUXsd
+        WIG7qYgQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxxmJ-0000Xy-5U; Tue, 21 Jul 2020 19:18:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3D3F9304D28;
+        Tue, 21 Jul 2020 21:18:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2579B20140AC3; Tue, 21 Jul 2020 21:18:11 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 21:18:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V6 11/14] perf/x86/intel: Disable sample-read the slots
+ and metrics events
+Message-ID: <20200721191811.GH10769@hirez.programming.kicks-ass.net>
+References: <20200717140554.22863-1-kan.liang@linux.intel.com>
+ <20200717140554.22863-12-kan.liang@linux.intel.com>
+ <20200721131011.GY10769@hirez.programming.kicks-ass.net>
+ <b24b9bd3-bbfb-98d4-4df3-c263e002dcf5@linux.intel.com>
 MIME-Version: 1.0
-References: <20200717020842.GA29747@vm_111_229_centos>
-In-Reply-To: <20200717020842.GA29747@vm_111_229_centos>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 21 Jul 2020 12:17:36 -0700
-Message-ID: <CAADnVQJvW7hto4E740Hi9b22wszYLxVwUCDS5jMdQ_2E3==GRQ@mail.gmail.com>
-Subject: Re: [PATCH] ebpf: fix parameter naming confusing
-To:     YangYuxi <yx.atom1@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b24b9bd3-bbfb-98d4-4df3-c263e002dcf5@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:08 PM YangYuxi <yx.atom1@gmail.com> wrote:
->
-> Signed-off-by: YangYuxi <yx.atom1@gmail.com>
-> ---
->  kernel/bpf/syscall.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 0fd80ac81f70..300ae16baffc 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -1881,13 +1881,13 @@ struct bpf_prog *bpf_prog_inc_not_zero(struct bpf_prog *prog)
->  EXPORT_SYMBOL_GPL(bpf_prog_inc_not_zero);
->
->  bool bpf_prog_get_ok(struct bpf_prog *prog,
-> -                           enum bpf_prog_type *attach_type, bool attach_drv)
-> +                           enum bpf_prog_type *prog_type, bool attach_drv)
->  {
->         /* not an attachment, just a refcount inc, always allow */
-> -       if (!attach_type)
-> +       if (!prog_type)
->                 return true;
+On Tue, Jul 21, 2020 at 12:07:29PM -0400, Liang, Kan wrote:
 
-I think it makes it worse.
-Now the comment doesn't match the code.
-And attach_drv name also looks out of place.
-Technically program type is also an attach type to some degree.
-The name could be a bit confusing, but in combination with type:
-'enum bpf_prog_type *attach_type'
-I think it's pretty clear what these functions are doing.
-So I prefer to keep the code as-is.
+> I'm trying to produce the bug mentioned above, but I'm not sure under what
+> situation, the core code will 'promote' the sibling metric events?
+
+Create an event group:
+
+	fd = sys_perf_event_open();
+	fd1 = sys_perf_event_open(.group_fd = fd);
+	...
+
+then kill the group leader:
+
+	close(fd);
+
+Then the sibling events: fdN, should get promoted. Ideally try and use
+fd1 in a read or so after this.
+
+> I tried the suggested code below. It works well for the sample-read case.
+> Perf tool errors out as expected.
+
+I'm not sure you can create that case with perf-tool, it's a bit of a
+daft thing to do, so you'll have to write a custom program.
