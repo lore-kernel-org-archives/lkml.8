@@ -2,136 +2,200 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66206C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D2BC4345C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA6120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F9120720
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KIm+nGNT"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Xaiud0Qh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbgGUVPs (ORCPT
+        id S1731469AbgGUVQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:15:48 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40759 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731102AbgGUVPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:15:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595366146; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=QIFHHn9Bz6CS1awEQLVI1+5x4m0PpVAHkNs3N45sppE=;
- b=KIm+nGNTKcxf4xWvJiDsY79FRqRF0Gg/CDlnQh9N5UzXhwmkjKvN2Elz+DUqLTyznXuadlRz
- 7motFNG+4aa25dvI+e/6zDgQdDwrxO5dPTPYX9PfRJ+U+QqVRDKXhmH3CL0lP3B2AEJ4j7Ps
- o9uRSCVzjfHk8VK1HRYPiIVg5/Y=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f175af98423214e13d2f123 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 21:15:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4F19DC43391; Tue, 21 Jul 2020 21:15:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: khsieh)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FDE8C433C6;
-        Tue, 21 Jul 2020 21:15:35 +0000 (UTC)
+        Tue, 21 Jul 2020 17:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731446AbgGUVQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:16:37 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAE3C0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:16:36 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id y10so23067465eje.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PpobAsBikcZzGgFnqaofvkVdzW58Lh6D10Z7oCD2icY=;
+        b=Xaiud0QhSy/r6srFLC9er7wlzLNhJ+x9jBLOQzxfK7m29SgnF630tbPQWUQseBSCju
+         KrbRcGXupe16toOUy2OYa4QUFGQX9PiooUt6HS9DnozThiOUAlqPGXju+FatS0zW4ftE
+         ELnozaxPZcpw/WmxLFM9jhJByCd8ghT6F+37Xs1g5xjC3gc0h0ONPmGdii3xfZU520ie
+         h+Ir66N4019gG+oX+irJky59fod5on6Qp0/XyMB/bWu45E6qpB2OLdNJoB7Qr3hTbwlV
+         rNbBzuyU4ySKTnijMgsB8IYVo7aEAPYKOxBQp1Hq8havf/ISvWUYaT69UdGjqFYs+4PK
+         90FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PpobAsBikcZzGgFnqaofvkVdzW58Lh6D10Z7oCD2icY=;
+        b=R14T22ZUEdjZSt+jSHGgWKSbgv4wZJ19wBXPKPgsAC2Cnoqs8orUyeeH7eqfORW9lS
+         hajEzHzPb7YMdFV00Hd2w6lOKMYKHmWXmCfLY3ehLgP1IymXegmZAlMFWJs1xHCyzc9h
+         64hJzgnFfGBFYLwmdJd98KFTixhh2XTLk0YbeK0DUEjOcZeHDENZni9D56HAHvRZ8eum
+         Wb1qcbVUpryp+xm0CHcVvXa4GqjyQy2qq7unaRbm0vHR/5nuAk+9Cg+R1WDE2oE/GmlB
+         hZAG9uqHdsoiYTSRksjZQkRLj8c2XHNr5l/cM/BRHF2pZBtPdzcxS1A4RQtGaXnQ0oxN
+         FATw==
+X-Gm-Message-State: AOAM531sj147vZpV4LNDNZCfm2UQmRlRIKyytqs29TSNEqsXHXd4dzpy
+        3lYzWFVGlkulPhgTcj4GX7JaWXb56gas0sQL0l/sbMY=
+X-Google-Smtp-Source: ABdhPJyY2Ce5NqMGMBhWAGWwnzWTH0+myvH3o2aHnpLX7WPIWCXYWZRi2c+CytjWBqS3on7CikdMRT1S93rvuO3HPGc=
+X-Received: by 2002:a17:906:1a59:: with SMTP id j25mr25594636ejf.398.1595366195416;
+ Tue, 21 Jul 2020 14:16:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Jul 2020 14:15:35 -0700
-From:   khsieh@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Sean Paul <sean@poorly.run>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        aravindh@codeaurora.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm/dp: Add DP compliance tests on Snapdragon
- Chipsets
-In-Reply-To: <CAF6AEGs0+=tpOWtY0kUc=Vt7EdEEwQjEffMXxFtDo142gRYRhQ@mail.gmail.com>
-References: <20200707184125.15114-1-khsieh@codeaurora.org>
- <159527632812.1987609.6364896740387949838@swboyd.mtv.corp.google.com>
- <91a8eef836c1939cb57942c6fdcf2772@codeaurora.org>
- <159528794676.3847286.1584696687662833591@swboyd.mtv.corp.google.com>
- <CAF6AEGs0+=tpOWtY0kUc=Vt7EdEEwQjEffMXxFtDo142gRYRhQ@mail.gmail.com>
-Message-ID: <9fa6328419fa5ddcca856d3c505394f8@codeaurora.org>
-X-Sender: khsieh@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <6effbbd4574407d6af21162e57d9102d5f8b02ed.1594664015.git.rgb@redhat.com>
+ <CAHC9VhSyq7yKQqwvHL5syU9+TFki6-__WfCrvqewbnU3xpND4Q@mail.gmail.com>
+ <20200714174353.ds7lj3iisy67t2zu@madcap2.tricolour.ca> <CAHC9VhQusQsdQc7EfdjdH5mp6qqqYVPHnG9nNhUhf3DS_cdWwA@mail.gmail.com>
+ <20200714210027.me2ieywjfcsf4v5r@madcap2.tricolour.ca> <CAHC9VhQgDGPutYxQawMPmezm1a+i1nXO5KSn9_7KPDZsRBJ4pw@mail.gmail.com>
+ <e6eb37d5-ec6b-852a-74df-bbf453607fbe@canonical.com>
+In-Reply-To: <e6eb37d5-ec6b-852a-74df-bbf453607fbe@canonical.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 21 Jul 2020 17:16:24 -0400
+Message-ID: <CAHC9VhSoUBqXh7ikVdpr9-e2+3Wx-A05g5EBjD3ka1i1xF2vMg@mail.gmail.com>
+Subject: Re: [PATCH ghak84 v4] audit: purge audit_log_string from the
+ intra-kernel audit API
+To:     John Johansen <john.johansen@canonical.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-20 19:57, Rob Clark wrote:
-> On Mon, Jul 20, 2020 at 4:32 PM Stephen Boyd <swboyd@chromium.org> 
-> wrote:
->> 
->> Quoting khsieh@codeaurora.org (2020-07-20 15:48:13)
->> > On 2020-07-20 13:18, Stephen Boyd wrote:
->> > > Quoting Kuogee Hsieh (2020-07-07 11:41:25)
->> > >>  drivers/gpu/drm/msm/dp/dp_power.c           |  32 +-
->> > >>  drivers/gpu/drm/msm/dp/dp_power.h           |   1 +
->> > >>  drivers/gpu/drm/msm/dp/dp_reg.h             |   1 +
->> > >>  17 files changed, 861 insertions(+), 424 deletions(-)
->> > >
->> > > It seems to spread various changes throughout the DP bits and only has
->> > > a
->> > > short description about what's changing. Given that the series above
->> > > isn't merged it would be better to get rid of this change and make the
->> > > changes in the patches that introduce these files.
->> > >
->> >
->> > Yes, the base DP driver is not yet merged as its still in reviews and
->> > has been for a while.
->> > While it is being reviewed, different developers are working on
->> > different aspects of DP such as base DP driver, DP compliance, audio etc
->> > to keep things going in parallel.
->> > To maintain the authorship of the different developers, we prefer having
->> > them as separate changes and not merge them.
->> > We can make all these changes as part of the same series if that shall
->> > help to keep things together but would prefer the changes themselves to
->> > be separate.
->> > Please consider this and let us know if that works.
->> >
->> 
->> I'm not the maintainer here so it's not really up to me, but this is 
->> why
->> we have the Co-developed-by tag, to show that multiple people worked 
->> on
->> some patch. The patch is supposed to logically stand on its own
->> regardless of how many people worked on it. Authorship is a single
->> person but the Co-developed-by tag helps express that more than one
->> person is the actual author of the patch. Can you use that tag instead
->> and then squash this into the other DP patches?
-> 
-> The dpu mega-patches are hard enough to review already.. I'd really
-> appreciated it if the dpu dev's sort out some way to squash later
-> fixups into earlier patches
-> 
-> BR,
-> -R
-as per discussion on IRC, I have separated the parts of this change 
-which are
-unrelated to compliance and we have merged it to the base DP driver and 
-added
-the Co-developed-by tag there. Since this change adds supports for DP 
-compliance
-on MSM chipsets which is a new feature and not fixes to the base driver, 
-we will
-prefer to have this as a separate change as it will make it easier for 
-you to
-review it instead of continuing to expand the base DP driver
+On Tue, Jul 21, 2020 at 3:31 PM John Johansen
+<john.johansen@canonical.com> wrote:
+> On 7/21/20 8:19 AM, Paul Moore wrote:
+> > On Tue, Jul 14, 2020 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >> On 2020-07-14 16:29, Paul Moore wrote:
+> >>> On Tue, Jul 14, 2020 at 1:44 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >>>> On 2020-07-14 12:21, Paul Moore wrote:
+> >>>>> On Mon, Jul 13, 2020 at 3:52 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >>>>>>
+> >>>>>> audit_log_string() was inteded to be an internal audit function and
+> >>>>>> since there are only two internal uses, remove them.  Purge all external
+> >>>>>> uses of it by restructuring code to use an existing audit_log_format()
+> >>>>>> or using audit_log_format().
+> >>>>>>
+> >>>>>> Please see the upstream issue
+> >>>>>> https://github.com/linux-audit/audit-kernel/issues/84
+> >>>>>>
+> >>>>>> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> >>>>>> ---
+> >>>>>> Passes audit-testsuite.
+> >>>>>>
+> >>>>>> Changelog:
+> >>>>>> v4
+> >>>>>> - use double quotes in all replaced audit_log_string() calls
+> >>>>>>
+> >>>>>> v3
+> >>>>>> - fix two warning: non-void function does not return a value in all control paths
+> >>>>>>         Reported-by: kernel test robot <lkp@intel.com>
+> >>>>>>
+> >>>>>> v2
+> >>>>>> - restructure to piggyback on existing audit_log_format() calls, checking quoting needs for each.
+> >>>>>>
+> >>>>>> v1 Vlad Dronov
+> >>>>>> - https://github.com/nefigtut/audit-kernel/commit/dbbcba46335a002f44b05874153a85b9cc18aebf
+> >>>>>>
+> >>>>>>  include/linux/audit.h     |  5 -----
+> >>>>>>  kernel/audit.c            |  4 ++--
+> >>>>>>  security/apparmor/audit.c | 10 ++++------
+> >>>>>>  security/apparmor/file.c  | 25 +++++++------------------
+> >>>>>>  security/apparmor/ipc.c   | 46 +++++++++++++++++++++++-----------------------
+> >>>>>>  security/apparmor/net.c   | 14 ++++++++------
+> >>>>>>  security/lsm_audit.c      |  4 ++--
+> >>>>>>  7 files changed, 46 insertions(+), 62 deletions(-)
+> >>>>>
+> >>>>> Thanks for restoring the quotes, just one question below ...
+> >>>>>
+> >>>>>> diff --git a/security/apparmor/ipc.c b/security/apparmor/ipc.c
+> >>>>>> index 4ecedffbdd33..fe36d112aad9 100644
+> >>>>>> --- a/security/apparmor/ipc.c
+> >>>>>> +++ b/security/apparmor/ipc.c
+> >>>>>> @@ -20,25 +20,23 @@
+> >>>>>>
+> >>>>>>  /**
+> >>>>>>   * audit_ptrace_mask - convert mask to permission string
+> >>>>>> - * @buffer: buffer to write string to (NOT NULL)
+> >>>>>>   * @mask: permission mask to convert
+> >>>>>> + *
+> >>>>>> + * Returns: pointer to static string
+> >>>>>>   */
+> >>>>>> -static void audit_ptrace_mask(struct audit_buffer *ab, u32 mask)
+> >>>>>> +static const char *audit_ptrace_mask(u32 mask)
+> >>>>>>  {
+> >>>>>>         switch (mask) {
+> >>>>>>         case MAY_READ:
+> >>>>>> -               audit_log_string(ab, "read");
+> >>>>>> -               break;
+> >>>>>> +               return "read";
+> >>>>>>         case MAY_WRITE:
+> >>>>>> -               audit_log_string(ab, "trace");
+> >>>>>> -               break;
+> >>>>>> +               return "trace";
+> >>>>>>         case AA_MAY_BE_READ:
+> >>>>>> -               audit_log_string(ab, "readby");
+> >>>>>> -               break;
+> >>>>>> +               return "readby";
+> >>>>>>         case AA_MAY_BE_TRACED:
+> >>>>>> -               audit_log_string(ab, "tracedby");
+> >>>>>> -               break;
+> >>>>>> +               return "tracedby";
+> >>>>>>         }
+> >>>>>> +       return "";
+> >>>>>
+> >>>>> Are we okay with this returning an empty string ("") in this case?
+> >>>>> Should it be a question mark ("?")?
+> >>>>>
+> >>>>> My guess is that userspace parsing should be okay since it still has
+> >>>>> quotes, I'm just not sure if we wanted to use a question mark as we do
+> >>>>> in other cases where the field value is empty/unknown.
+> >>>>
+> >>>> Previously, it would have been an empty value, not even double quotes.
+> >>>> "?" might be an improvement.
+> >>>
+> >>> Did you want to fix that now in this patch, or leave it to later?  As
+> >>> I said above, I'm not too bothered by it with the quotes so either way
+> >>> is fine by me.
+> >>
+> >> I'd defer to Steve, otherwise I'd say leave it, since there wasn't
+> >> anything there before and this makes that more evident.
+> >>
+> >>> John, I'm assuming you are okay with this patch?
+> >
+> > With no comments from John or Steve in the past week, I've gone ahead
+> > and merged the patch into audit/next.
+>
+> sorry, for some reason I thought a new iteration of this was coming.
+>
+> the patch is fine, the empty unknown value should be possible here
+> so changing it to "?" won't affect anything.
+
+Yeah, I was kind of on the fence about requiring a new version from
+Richard.  I think "?" is arguably the right approach, but I don't
+think it matters enough to force the issue.  If it proves to be
+problematic we can fix it later.
+
+Regardless, it's in audit/next now.
+
+-- 
+paul moore
+www.paul-moore.com
