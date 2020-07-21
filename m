@@ -2,118 +2,182 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA8C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC74C433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0397206E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kpS0ODIM"
+	by mail.kernel.org (Postfix) with ESMTP id 40101206F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 19:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgGUTHb (ORCPT
+        id S1730674AbgGUTH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41290 "EHLO
+        Tue, 21 Jul 2020 15:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbgGUTG7 (ORCPT
+        with ESMTP id S1730564AbgGUTHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 15:06:59 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E9EC08C5C0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:57 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so3854938wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IClHRVpfuk7pyuQdBbEm+ADLfyWf25fRbOn1BdIIJx4=;
-        b=kpS0ODIMjq+Rex/AWKOaWVHiTIYVRyqA1p81k5RhhxTrsSUm7oxY721P7m25ai52mn
-         eGD8THFhFyBroaNH9gyg+kYiZ9oGqSKMVpbk53qlf6NwbxbOhFms34PilOy8uPXuUuel
-         f9PB5MJXN+GBiDm4pvJxEmHJhFGprO45X0Q472aewv9nmxqZyCULD6DE/Z3Bd6abmVtg
-         WstaO+kbfW3SBQiNKlHaRuy8vPEuwSbX8QUKa9+vTDc5hYcwXDbwcdv80x3kNCq2K83m
-         R9WY6i/ZHcgXp2l3a84yuAKXcywUtpUG9V9MYieWweqaEbnv2H/5pHYn4hHd50oVXCOP
-         1Vng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IClHRVpfuk7pyuQdBbEm+ADLfyWf25fRbOn1BdIIJx4=;
-        b=ey8nJf9/lJiYxZT3HXycReDBPbZoZQcLtmuldxk01HS9J8hmoN8mtrb4AaGywATu+e
-         I2cN94pNlMEAkUbWlLZPnHCNgayUAFXy2cdGUpvp1mr4HFhLFwwjfnzkLGQTPJMk/Sgn
-         F4IykXvIIsYOAEmvvp9JVgt5IfTD85P02AZnw287whipuQU6x/WsJ4BDB5tOlfvy92J2
-         a0EMPw3c00s1bCZJyQw6h34pubkGOJgW/ndvl+7yrVfmfm/LgFhPVl0HWnori0FvIuwN
-         JyVMowCzjp4Km2m+j4+o5jPIGiEnwltTLOFoP16c026SuLtdRKBKiSXOsxwp41xzncJ8
-         7DlA==
-X-Gm-Message-State: AOAM531NFpY9vpiC1QU8ldSjK32Sodd8geT4sTxW5WbBADH9sTy0Cp3/
-        q+0cH4MtpdNBydw3DxmiRGwBkQ==
-X-Google-Smtp-Source: ABdhPJxkKsBBqSYMLl2ItrQoeHhFa7/eJVIPmedqJIvSOSX/Y34StYaam6LPLJv4WsxLjn/RcUwp0g==
-X-Received: by 2002:a1c:de07:: with SMTP id v7mr5348230wmg.56.1595358416326;
-        Tue, 21 Jul 2020 12:06:56 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id s14sm25794848wrv.24.2020.07.21.12.06.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 12:06:55 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v4 16/17] crypto: sun8i-ce: fix comparison of integer expressions of different signedness
-Date:   Tue, 21 Jul 2020 19:06:30 +0000
-Message-Id: <1595358391-34525-17-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
-References: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
+        Tue, 21 Jul 2020 15:07:03 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F879C0619DF
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 12:07:03 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id A26DFBC1B9;
+        Tue, 21 Jul 2020 19:06:59 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, mh12gx2825@gmail.com,
+        zhengbin13@huawei.com, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] staging: comedi: dt: Replace HTTP links with HTTPS ones
+Date:   Tue, 21 Jul 2020 21:06:53 +0200
+Message-Id: <20200721190653.67751-1-grandmaster@al2klimov.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the warning:
-warning: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Wsign-compare]
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 3901e3401c6b..7b2a142c9b8d 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -566,7 +566,7 @@ static struct sun8i_ce_alg_template ce_algs[] = {
- static int sun8i_ce_dbgfs_read(struct seq_file *seq, void *v)
- {
- 	struct sun8i_ce_dev *ce = seq->private;
--	int i;
-+	unsigned int i;
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/staging/comedi/drivers/dt2801.c | 2 +-
+ drivers/staging/comedi/drivers/dt2811.c | 2 +-
+ drivers/staging/comedi/drivers/dt2814.c | 2 +-
+ drivers/staging/comedi/drivers/dt2815.c | 2 +-
+ drivers/staging/comedi/drivers/dt2817.c | 2 +-
+ drivers/staging/comedi/drivers/dt282x.c | 2 +-
+ drivers/staging/comedi/drivers/dt3000.c | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/staging/comedi/drivers/dt2801.c b/drivers/staging/comedi/drivers/dt2801.c
+index a29880981d81..0d571d817b4e 100644
+--- a/drivers/staging/comedi/drivers/dt2801.c
++++ b/drivers/staging/comedi/drivers/dt2801.c
+@@ -640,6 +640,6 @@ static struct comedi_driver dt2801_driver = {
+ };
+ module_comedi_driver(dt2801_driver);
  
- 	for (i = 0; i < MAXFLOW; i++)
- 		seq_printf(seq, "Channel %d: nreq %lu\n", i, ce->chanlist[i].stat_req);
-@@ -778,7 +778,8 @@ static int sun8i_ce_get_clks(struct sun8i_ce_dev *ce)
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/dt2811.c b/drivers/staging/comedi/drivers/dt2811.c
+index 8a1f9efe7d4e..0eb5e6ba6916 100644
+--- a/drivers/staging/comedi/drivers/dt2811.c
++++ b/drivers/staging/comedi/drivers/dt2811.c
+@@ -640,6 +640,6 @@ static struct comedi_driver dt2811_driver = {
+ };
+ module_comedi_driver(dt2811_driver);
  
- static int sun8i_ce_register_algs(struct sun8i_ce_dev *ce)
- {
--	int ce_method, err, id, i;
-+	int ce_method, err, id;
-+	unsigned int i;
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Data Translation DT2811 series boards");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/dt2814.c b/drivers/staging/comedi/drivers/dt2814.c
+index d2c715737361..bcf4d5444faf 100644
+--- a/drivers/staging/comedi/drivers/dt2814.c
++++ b/drivers/staging/comedi/drivers/dt2814.c
+@@ -285,6 +285,6 @@ static struct comedi_driver dt2814_driver = {
+ };
+ module_comedi_driver(dt2814_driver);
  
- 	for (i = 0; i < ARRAY_SIZE(ce_algs); i++) {
- 		ce_algs[i].ce = ce;
-@@ -858,7 +859,7 @@ static int sun8i_ce_register_algs(struct sun8i_ce_dev *ce)
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/dt2815.c b/drivers/staging/comedi/drivers/dt2815.c
+index 78a7c1b3448a..5906f32aa01f 100644
+--- a/drivers/staging/comedi/drivers/dt2815.c
++++ b/drivers/staging/comedi/drivers/dt2815.c
+@@ -212,6 +212,6 @@ static struct comedi_driver dt2815_driver = {
+ };
+ module_comedi_driver(dt2815_driver);
  
- static void sun8i_ce_unregister_algs(struct sun8i_ce_dev *ce)
- {
--	int i;
-+	unsigned int i;
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/dt2817.c b/drivers/staging/comedi/drivers/dt2817.c
+index 9babb2a5196a..7c1463e835d3 100644
+--- a/drivers/staging/comedi/drivers/dt2817.c
++++ b/drivers/staging/comedi/drivers/dt2817.c
+@@ -135,6 +135,6 @@ static struct comedi_driver dt2817_driver = {
+ };
+ module_comedi_driver(dt2817_driver);
  
- 	for (i = 0; i < ARRAY_SIZE(ce_algs); i++) {
- 		if (!ce_algs[i].ce)
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/dt282x.c b/drivers/staging/comedi/drivers/dt282x.c
+index 89dc84d3c803..2656b4b0e3d0 100644
+--- a/drivers/staging/comedi/drivers/dt282x.c
++++ b/drivers/staging/comedi/drivers/dt282x.c
+@@ -1167,6 +1167,6 @@ static struct comedi_driver dt282x_driver = {
+ };
+ module_comedi_driver(dt282x_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Data Translation DT2821 series");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/dt3000.c b/drivers/staging/comedi/drivers/dt3000.c
+index 011e19161b78..ec27aa4730d4 100644
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -735,6 +735,6 @@ static struct pci_driver dt3000_pci_driver = {
+ };
+ module_comedi_pci_driver(dt3000_driver, dt3000_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Data Translation DT3000 series boards");
+ MODULE_LICENSE("GPL");
 -- 
-2.26.2
+2.27.0
 
