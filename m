@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B680FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB89CC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9008520792
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4BD20792
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tXrgBqGA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RCKVwb23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgGUQ2e (ORCPT
+        id S1730379AbgGUQ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        Tue, 21 Jul 2020 12:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbgGUQ23 (ORCPT
+        with ESMTP id S1730281AbgGUQ23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jul 2020 12:28:29 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE07C0619DA;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8140C061794;
         Tue, 21 Jul 2020 09:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=XAvmv1Dl0w8Zpf/KQARmzzrtRh2ODKzOSAZO8WVKkSg=; b=tXrgBqGAHo4E0VBkb2nw9VyfvD
-        9IRTxUlxuz0ouJ6VjOfWwo5xwX2jtGUDhnB/PPyj7ye4XdZrTgxnlTESz22JKRwwhAXils98CWURu
-        SVkOjms0QSposrqfehUAagszD2Wq0rNdV2j6QFCF5nvY/esvkPMKRxnz+G3f1g5F9w9zi2lX+9yev
-        tdyWnCvLfKNrh4yNIp/FAMCvdLF29u62EWzp+xkxnT0bV062m7zdtpO6inhVrCahfFwsu0jqko3Eb
-        5LpKmCWQ6XjxyLCboyCWs5ZTMhA6cCQIVUY27cvgnXaLjpIiVDMDvIKLalAhh5+ncsG5jLa8z+FGh
-        aiHc6a/A==;
+        bh=OcSSjx97fwoZC4nhn07d+eqA+7PeJMhHbLVmJrKte/4=; b=RCKVwb23G5tMsdVaSYXYEn8cRi
+        gapiaPvQDrM0STAn+lc5PvvrmQfo/UKf+CMmkO37ePt8WB+q6btgK3J4pyOBBWXS1KQbJFWu6ddFh
+        RoEQm1SRh1ul6mOB7vW4KESKzhKb+GqoGcCXTDBPIxrEC3Kq9qFSuJjlBXAmP+xGPbhGdCuLdVUvB
+        R8FKGYYLzL1+pFy2VXA0UOSSHN65PkM52yhfOzuL+U8uhIDYoHGyRnkM87hJcfI4nglMlHN4kd432
+        VUOf1TbMNf8zz87QyOYcBcZe3v0d7RHqB4hNJFr9zOtluBuLHp19FyTAlHcQPm/Gq53oZw/xECTAa
+        3GTIrdbw==;
 Received: from [2001:4bb8:18c:2acc:5b1c:6483:bd6d:e406] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jxv7w-0007Ru-OJ; Tue, 21 Jul 2020 16:28:25 +0000
+        id 1jxv7y-0007S1-0t; Tue, 21 Jul 2020 16:28:26 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 04/24] devtmpfs: open code do_mount
-Date:   Tue, 21 Jul 2020 18:27:58 +0200
-Message-Id: <20200721162818.197315-5-hch@lst.de>
+Subject: [PATCH 05/24] devtmpfs: open code ksys_chdir and ksys_chroot
+Date:   Tue, 21 Jul 2020 18:27:59 +0200
+Message-Id: <20200721162818.197315-6-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200721162818.197315-1-hch@lst.de>
 References: <20200721162818.197315-1-hch@lst.de>
@@ -60,84 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace do_umount with an open coded version that takes the proper
-kernel pointer instead of relying on the implicit set_fs(KERNEL_DS)
-during early init.
+devtmpfs is the only non-early init caller of ksys_chdir and ksys_chroot
+with kernel pointers.  Just open code the two operations which only
+really need a single path lookup anyway in devtmpfs_setup instead.
+The open coded verson doesn't need any of the stale dentry revalidation
+logic from the full blown version as those can't happen on tmpfs and
+ramfs.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/base/devtmpfs.c | 17 +++++++++++++++--
- fs/namespace.c          |  2 +-
- include/linux/mount.h   |  3 +++
- 3 files changed, 19 insertions(+), 3 deletions(-)
+ drivers/base/devtmpfs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index c9017e0584c003..5e8d677ee783bc 100644
+index 5e8d677ee783bc..f798d3976b4052 100644
 --- a/drivers/base/devtmpfs.c
 +++ b/drivers/base/devtmpfs.c
-@@ -345,6 +345,19 @@ static int handle_remove(const char *nodename, struct device *dev)
- 	return err;
- }
+@@ -25,6 +25,7 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
++#include <linux/fs_struct.h>
+ #include <uapi/linux/mount.h>
+ #include "base.h"
  
-+static int devtmpfs_do_mount(const char __user *dir_name)
-+{
-+	struct path p;
-+	int ret;
-+
-+	ret = kern_path(dir_name, LOOKUP_FOLLOW, &p);
-+	if (ret)
-+		return ret;
-+	ret = path_mount("devtmpfs", &p, "devtmpfs", MS_SILENT, NULL);
-+	path_put(&p);
-+	return ret;
-+}
-+
- /*
-  * If configured, or requested by the commandline, devtmpfs will be
-  * auto-mounted after the kernel mounted the root filesystem.
-@@ -359,7 +372,7 @@ int __init devtmpfs_mount(void)
- 	if (!thread)
- 		return 0;
+@@ -393,6 +394,7 @@ static int handle(const char *name, umode_t mode, kuid_t uid, kgid_t gid,
  
--	err = do_mount("devtmpfs", "dev", "devtmpfs", MS_SILENT, NULL);
-+	err = devtmpfs_do_mount("dev");
- 	if (err)
- 		printk(KERN_INFO "devtmpfs: error mounting %i\n", err);
- 	else
-@@ -385,7 +398,7 @@ static int devtmpfs_setup(void *p)
- 	err = ksys_unshare(CLONE_NEWNS);
- 	if (err)
- 		goto out;
--	err = do_mount("devtmpfs", "/", "devtmpfs", MS_SILENT, NULL);
-+	err = devtmpfs_do_mount("/");
- 	if (err)
- 		goto out;
- 	ksys_chdir("/.."); /* will traverse into overmounted root */
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 43834b59eff6c3..2c4d7592097485 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3111,7 +3111,7 @@ char *copy_mount_string(const void __user *data)
-  * Therefore, if this magic number is present, it carries no information
-  * and must be discarded.
-  */
--static int path_mount(const char *dev_name, struct path *path,
-+int path_mount(const char *dev_name, struct path *path,
- 		const char *type_page, unsigned long flags, void *data_page)
+ static int devtmpfs_setup(void *p)
  {
- 	unsigned int mnt_flags = 0, sb_flags;
-diff --git a/include/linux/mount.h b/include/linux/mount.h
-index de657bd211fa64..bf9896f86a48f4 100644
---- a/include/linux/mount.h
-+++ b/include/linux/mount.h
-@@ -113,4 +113,7 @@ extern bool path_is_mountpoint(const struct path *path);
++	struct path path;
+ 	int err;
  
- extern void kern_unmount_array(struct vfsmount *mnt[], unsigned int num);
- 
-+int path_mount(const char *dev_name, struct path *path, const char *type_page,
-+		unsigned long flags, void *data_page);
+ 	err = ksys_unshare(CLONE_NEWNS);
+@@ -401,8 +403,16 @@ static int devtmpfs_setup(void *p)
+ 	err = devtmpfs_do_mount("/");
+ 	if (err)
+ 		goto out;
+-	ksys_chdir("/.."); /* will traverse into overmounted root */
+-	ksys_chroot(".");
 +
- #endif /* _LINUX_MOUNT_H */
++	/* traverse into overmounted root and then chroot to it */
++	if (!kern_path("/..", LOOKUP_FOLLOW | LOOKUP_DIRECTORY, &path) &&
++	    !inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR) &&
++	    ns_capable(current_user_ns(), CAP_SYS_CHROOT) &&
++	    !security_path_chroot(&path)) {
++		set_fs_pwd(current->fs, &path);
++		set_fs_root(current->fs, &path);
++	}
++	path_put(&path);
+ out:
+ 	*(int *)p = err;
+ 	complete(&setup_done);
 -- 
 2.27.0
 
