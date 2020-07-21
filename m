@@ -1,102 +1,155 @@
 Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.0 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55682C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C17C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF79206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0AE92065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:57:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gNYVKog2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgGUK6B (ORCPT
+        id S1729008AbgGUK5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:58:01 -0400
-Received: from mag000.melma-kun.biz ([219.117.245.65]:56261 "EHLO
-        mag000.melma-kun.biz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGUK6B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:58:01 -0400
-X-Greylist: delayed 326 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 06:58:00 EDT
-To:     <linux-kernel@vger.kernel.org>
-Subject: =?iso-2022-jp?B?GyRCOWI5OzY1MHckLDhsJGshIiUzJW0lSiROOWI5O0A4PSI/JiRYJE4xRjZBISEhQSUqJXMlaSUkJXM6QkNMMnEhQRsoQg==?=
-From:   =?ISO-2022-JP?B?GyRCJTglZyVWJUklaSVVJUglOyVfJUohPDE/MUQ8PBsoQg==?= 
-        <info@hr-saiyo.work>
-Date:   Tue, 21 Jul 2020 19:58:01 +0900
-Reply-To: info@hr-saiyo.work
-Message-Id: <20200621195801.19915@hr-saiyo.work>
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+        Tue, 21 Jul 2020 06:57:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:49365 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgGUK5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:57:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9wXY6qsFz9sRR;
+        Tue, 21 Jul 2020 20:57:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595329039;
+        bh=J+9zp2Z8DFT/0OYfTcuALdCOFIbrhWRfmGxBbTJkzp0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gNYVKog2/PX2As5kgfmR9zlqyYmdGETbyxnMXbZp59G2wTyzutuD/JvDfHKh9zugz
+         f6XP3WnpHqd8dKmmceD3gKP2fZYRnP72Xc/YODUU+UUP3zVLeBInZ4Z3uGq+iCPJj6
+         Ty6g65pz08BOSulX6eHCVFFi1dYd1Il6NOgSYUZAqz1/268S2qhIWBdzG6zQP8lxyp
+         cSc+M+lToPIb1miRmIfmd6oI0dNBudVD5aXqhHLLSNYGtLUK2D38jNlzQSGnjyHZiE
+         KKLskb9UdCuRc/X/ohL+kc3riAaY6WuKk716tWaCy3E9Fd+Ji4HrXEYrb2yzZc3meQ
+         ORF+detWijXjA==
+Date:   Tue, 21 Jul 2020 20:57:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200721205716.6dbaa56b@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/g2JfB=U//Fv2CxlRkdYiFBA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ジョブドラフトセミナー運営室より
-高校新卒採用の最前線セミナーのご案内です。
+--Sig_/g2JfB=U//Fv2CxlRkdYiFBA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-――――――――――――――――――――――――――――
+Hi all,
 
-　　　　　　 〜オンライン座談会〜
-　　　　　就職担当の先生へ直撃質問!!
-　　　コロナで変わった、高校現場の“リアル”
+After merging the akpm-current tree, today's linux-next build
+(sparc64 defconfig) failed like this:
 
-　　　　　　　　▼　詳細　▼
-　　　　 https://hr-saiyo.work/200727/
+mm/hugetlb.c: In function 'free_gigantic_page':
+mm/hugetlb.c:1233:18: error: 'hugetlb_cma' undeclared (first use in this fu=
+nction); did you mean 'hugetlb_lock'?
+      cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
+                  ^~~~~~~~~~~
+                  hugetlb_lock
 
-――――――――――――――――――――――――――――
+Caused by commits
 
-コロナウイルスにより、高校生の就職活動の現場では
-企業・生徒・教員それぞれにかつて無いほどの混乱が起きています。
+  ee0889218f26 ("mm/hugetlb: avoid hardcoding while checking if cma is enab=
+led")
+  8729fda59982 ("mm-hugetlb-avoid-hardcoding-while-checking-if-cma-is-enabl=
+ed-fix")
 
+I have added this patch for today:
 
-そこでこの度、お互いの認識のズレを解消すべく
-現役の就職担当の高校教諭をゲストに招き、
-オンライン座談会を開催いたします。
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 21 Jul 2020 20:44:57 +1000
+Subject: [PATCH] mm/hugetlb: better checks before using hugetlb_cma
 
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/hugetlb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-選考スケジュール変更の影響は？
-就職人数はどう変わる？
-高校訪問の対応は可能か？
-生徒に求人を紹介するタイミングは？
-生徒に勧めたい企業と勧めたくない企業の差は？
-ネットの企業情報などは実際見ているのか？etc…
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 4b560c7555e7..4645f1441d32 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1229,9 +1229,10 @@ static void free_gigantic_page(struct page *page, un=
+signed int order)
+ 	 * If the page isn't allocated using the cma allocator,
+ 	 * cma_release() returns false.
+ 	 */
+-	if (IS_ENABLED(CONFIG_CMA) &&
+-	    cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
++#ifdef CONFIG_CMA
++	if (cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
+ 		return;
++#endif
+=20
+ 	free_contig_range(page_to_pfn(page), 1 << order);
+ }
+@@ -1242,7 +1243,8 @@ static struct page *alloc_gigantic_page(struct hstate=
+ *h, gfp_t gfp_mask,
+ {
+ 	unsigned long nr_pages =3D 1UL << huge_page_order(h);
+=20
+-	if (IS_ENABLED(CONFIG_CMA)) {
++#ifdef CONFIG_CMA
++	{
+ 		struct page *page;
+ 		int node;
+=20
+@@ -1256,6 +1258,7 @@ static struct page *alloc_gigantic_page(struct hstate=
+ *h, gfp_t gfp_mask,
+ 				return page;
+ 		}
+ 	}
++#endif
+=20
+ 	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
+ }
+--=20
+2.27.0
 
+--=20
+Cheers,
+Stephen Rothwell
 
-視聴者様が直接ご質問できる時間も設けています。
+--Sig_/g2JfB=U//Fv2CxlRkdYiFBA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-高校側のリアルな本音をお聞きしたい方は是非ともご参加ください。
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8WygwACgkQAVBC80lX
+0GxK/wf+KlMYKrTpUnvzB6DZ4MLfZ/xNSWMW4ZlUM9olUIzPCnyHPqerCQ+QLjzV
+j01ATlqQ17209hRcHgPdiQC8lZnI6fvpRCdvz6GXGTuHfPK1AOwvRAP5dIRzAINU
+M6naCe1xNkYEknqtrTDflPB1Lg6srqR7e55MGB/GJ+rpckorrrO1ES2tOIbs2TrZ
+/9rY+8GGfiEIlEZVAEQ0XiXJsuN23xJllyxf4LwoqyRT8nChjrs/gq4fjnKDwZ4S
+hT3Yo5jLdyw0Vpcrbb+rVLSX5BM5jVBwRH9RwVPGwYsXIbGc5+SvbbPxdKf1pw+c
+Jc6tXP1YTExX6npbNMmnpMQS1Nwn7A==
+=oTU0
+-----END PGP SIGNATURE-----
 
-　 ▼　詳細・申込　▼
-　 　　https://hr-saiyo.work/200727/
-
-
-――――――――――――――――――――――――――――
-
-　　　　　　 〜オンライン座談会〜
-　　　　　就職担当の先生へ直撃質問!!
-　　　コロナで変わった、高校現場の“リアル”
-
-　 日程：7月27日
-　 時間：13:00〜14:00
-　 会場：オンライン開催(ご自宅や職場で視聴可能)
-　
-　 ■　https://hr-saiyo.work/200727/　■
-
-――――――――――――――――――――――――――――
-　本メールのご不要な方には大変ご迷惑をおかけいたしました。
-　配信停止ご希望の方は、お手数ですが「配信不要」とご返信いただくか、
-　下記アドレスより、お手続きをお願いいたします。
-　 https://form9dm.site/kaijo/
-――――――――――――――――――――――――――――
-   ジョブドラフトセミナー運営室(株式会社ジンジブ)
-　 住所：東京都港区浜松町2丁目7-19　KDX浜松町ビル5階    
- 　TEL：03-5777-2679
-　 Mail：info@hr-service.work
-――――――――――――――――――――――――――――
+--Sig_/g2JfB=U//Fv2CxlRkdYiFBA--
