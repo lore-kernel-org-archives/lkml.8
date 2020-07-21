@@ -2,88 +2,135 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A913CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A2720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7E620702
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mu8Irwtk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgGULUD (ORCPT
+        id S1729690AbgGULUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:20:03 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2985 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727043AbgGULUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:20:03 -0400
-Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 9162C21CE0AE9FFC4EDC;
-        Tue, 21 Jul 2020 19:20:01 +0800 (CST)
-Received: from DGGEML424-HUB.china.huawei.com (10.1.199.41) by
- DGGEML404-HUB.china.huawei.com (10.3.17.39) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 21 Jul 2020 19:20:01 +0800
-Received: from DGGEML528-MBX.china.huawei.com ([169.254.7.143]) by
- dggeml424-hub.china.huawei.com ([10.1.199.41]) with mapi id 14.03.0487.000;
- Tue, 21 Jul 2020 19:19:52 +0800
-From:   jingrui <jingrui@huawei.com>
-To:     "tj@kernel.org" <tj@kernel.org>, Lizefan <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        caihaomin <caihaomin@huawei.com>,
-        "Weiwei (N)" <wick.wei@huawei.com>
-Subject: PROBLEM: cgroup cost too much memory when transfer small files to
- tmpfs
-Thread-Topic: PROBLEM: cgroup cost too much memory when transfer small files
- to tmpfs
-Thread-Index: AdZfPbaDbBlN0uuzRT+WBs1zGYD4fAAETDVg
-Date:   Tue, 21 Jul 2020 11:19:52 +0000
-Message-ID: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.179.43]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 21 Jul 2020 07:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729514AbgGULUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 07:20:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977AEC061794;
+        Tue, 21 Jul 2020 04:20:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r12so20722571wrj.13;
+        Tue, 21 Jul 2020 04:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=cgE7yCvC2TsM3N9RxN0ivNvrTATSLMzpTj/dTB9AGDk=;
+        b=mu8Irwtky5HM+EiEeEeJR5ujsfvK+4dRAQRaaVcc7HsqkvVK5OdZ66y3jHwGTwX8Cu
+         zczEMY4FPKkfMJPyqoq/zEQTDqVrWHiKq35CWL+NseYxjRUXqM17lsfcA3S2fUbacz4F
+         paoMeJ2RbHu5MMFCr9bSA1dbKVqhP5CQFlBIRXxKK2DBfodI5dmWrdix02VwYwBLvq7Y
+         TftEIFzy6Oqpsf3KxqPjswQGUu4zx2fkccY9iW9azevcnJDENK3yYmxXnT8KmtHnkU+O
+         QAlb9uxvjbo6Lx3o/O/kQVN+N4n65xMKivLjHruWEFxL5BOP2ogapw3UZF/MG5dgU8Tv
+         2Uxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=cgE7yCvC2TsM3N9RxN0ivNvrTATSLMzpTj/dTB9AGDk=;
+        b=qL82uYsPowA7MbjQOkjHd/3xRt/ye2bs5oF/qyJR1VGSv+NZrp0GsFynCGZCTmEfYV
+         tBkR/Z66Ju6yDnmt7m5vGhVJMTey/jxOvUrL9fujW5KHDfdTAJL9siniwcedgkqW2LUO
+         VcjJpG49NPPhNgqUwNA1lTCeV/J9Cts0Eftbd0p3WgIBD/WGSfpmNV2vKGQqr/Evd3Cd
+         ehtgrtNsKOYTcYKKvb0fhzJ8P0lvhbp6f9l8aNSlTqUQW74KzrRTfAm9A/VIpVnhF2b6
+         iZXA8W1QcGZNwrhnDBe+5itNG1OfSX+WSdnVcmcb/cZNHtm80YFfWw58m4cijYCD5VHj
+         En4g==
+X-Gm-Message-State: AOAM530aL0Xqk/xXVDL0Go1fUOljWH9Yz54I+oQMMWMW9u8rj46/lMJL
+        Fs95b8hF/Foph1VO01Vx6cY=
+X-Google-Smtp-Source: ABdhPJwmCaJOo8AdzQqS2eChCE+7XLE3Au1lXisG7/a/kYL/4vC9x9VNW5OotawEVy00sIUB49kphA==
+X-Received: by 2002:adf:de12:: with SMTP id b18mr28232045wrm.390.1595330417294;
+        Tue, 21 Jul 2020 04:20:17 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id c188sm3106579wma.22.2020.07.21.04.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 04:20:16 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 21:20:09 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+        <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+        <1594101082.hfq9x5yact.astroid@bobo.none>
+        <20200708084106.GE597537@hirez.programming.kicks-ass.net>
+        <a9834278-25bf-90e9-10f2-cd10e5407ff6@redhat.com>
+        <20200709083113.GI597537@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200709083113.GI597537@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Message-Id: <1595329799.y24rka8cv4.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2M6IEpvaGFubmVzIFdlaW5lciA8aGFubmVzQGNtcHhjaGcub3JnPiA7IE1pY2hhbCBIb2NrbyA8
-bWhvY2tvQGtlcm5lbC5vcmc+OyBWbGFkaW1pciBEYXZ5ZG92IDx2ZGF2eWRvdi5kZXZAZ21haWwu
-Y29tPg0KDQpUaGFua3MuDQoNCi0tLQ0KUFJPQkxFTTogY2dyb3VwIGNvc3QgdG9vIG11Y2ggbWVt
-b3J5IHdoZW4gdHJhbnNmZXIgc21hbGwgZmlsZXMgdG8gdG1wZnMuDQoNCmtleXdvcmRzOiBjZ3Jv
-dXAgUEVSQ1BVL21lbW9yeSBjb3N0IHRvbyBtdWNoLg0KDQpkZXNjcmlwdGlvbjoNCg0KV2Ugc2Vu
-ZCBzbWFsbCBmaWxlcyBmcm9tIG5vZGUtQSB0byBub2RlLUIgdG1wZnMgL3RtcCBkaXJlY3Rvcnkg
-dXNpbmcgc2Z0cC4gT24NCm5vZGUtQiB0aGUgc3lzdGVtZCBjb25maWd1cmVkIHdpdGggcGFtIG9u
-IGxpa2UgYmVsb3cuDQoNCmNhdCAvZXRjL3BhbS5kL3Bhc3N3b3JkLWF1dGggfCBncmVwIHN5c3Rl
-bWQNCi1zZXNzaW9uwqDCoMKgwqAgb3B0aW9uYWzCoMKgwqDCoMKgIHBhbV9zeXN0ZW1kLnNvDQoN
-ClNvIHdoZW4gdHJhbnNmZXIgYSBmaWxlLCBhIHN5c3RlbWQgc2Vzc2lvbiBpcyBjcmVhdGVkLCB0
-aGF0IG1lYW5zIGEgY2dyb3VwIGlzDQpjcmVhdGVkLCB0aGVuIGZpbGUgc2F2ZWQgYXQgL3RtcCB3
-aWxsIGFzc29jaWF0ZWQgd2l0aCBhIGNncm91cCBvYmplY3QuIEFmdGVyDQpmaWxlIHRyYW5zZmVy
-cmVkLCBzZXNzaW9uIGFuZCBjZ3JvdXAtZGlyIHdpbGwgYmUgcmVtb3ZlZCwgYnV0IHRoZSBmaWxl
-IGluIC90bXANCnN0aWxsIGFzc29jaWF0ZWQgd2l0aCB0aGUgY2dyb3VwIG9iamVjdC4gVGhlIFBF
-UkNQVSBtZW1vcnkgaW4gY2dyb3VwL2NzcyBvYmplY3QNCmNvc3QgYSBsb3QoYWJvdXQgMC41TUIv
-cGVyLWNncm91cC1vYmplY3QpIG9uIDIwMC9jcHVzIG1hY2hpbmUuDQoNCldoZW4gbG90IG9mIHNt
-YWxsIGZpbGVzIHRyYW5zZmVycmVkIHRvIHRtcGZzLCB0aGUgY2dyb3VwL2NzcyBvYmplY3QgbWVt
-b3J5DQpjb3N0IGJlY29tZSBodWdlIGluIHRoaXMgc2NlbmVzIHRvIGJlIHVzZWQuDQoNCnN5c3Rl
-bWQgcmVsYXRlZCBpc3N1ZTogaHR0cHM6Ly9naXRodWIuY29tL3N5c3RlbWQvc3lzdGVtZC9pc3N1
-ZXMvMTY0OTkNCg0Ka2VybmVsIHZlcnNpb246IDQuMTkrDQoNClByb2JsZW06DQoNCjEuIERvIHdl
-IGhhdmUgYW55IGlkZWEgdG8gZGVzY3JlYXNlIGNncm91cCBtZW1vcnkgY29zdCBpbiB0aGlzIGNh
-c2U/DQoyLiBXaGVuIHVzZXIgcmVtb3ZlIGNncm91cCBkaXJlY3RvcnksIGRvZXMgaXQgcG9zc2li
-bGUgYXNzb2NpYXRlZCBmaWxlIG1lbW9yeSB0byByb290IGNncm91cD8NCjMuIENhbiB3ZSBwcm92
-aWRlIGFuIG9wdGlvbiB0aGF0IGRvIG5vdCBhc3NvY2lhdGUgbWVtb3J5IHdpdGggY2dyb3VwIGlu
-IHRtcGZzPw0K
+Excerpts from Peter Zijlstra's message of July 9, 2020 6:31 pm:
+> On Wed, Jul 08, 2020 at 07:54:34PM -0400, Waiman Long wrote:
+>> On 7/8/20 4:41 AM, Peter Zijlstra wrote:
+>> > On Tue, Jul 07, 2020 at 03:57:06PM +1000, Nicholas Piggin wrote:
+>> > > Yes, powerpc could certainly get more performance out of the slow
+>> > > paths, and then there are a few parameters to tune.
+>> > Can you clarify? The slow path is already in use on ARM64 which is wea=
+k,
+>> > so I doubt there's superfluous serialization present. And Will spend a
+>> > fair amount of time on making that thing guarantee forward progressm, =
+so
+>> > there just isn't too much room to play.
+>> >=20
+>> > > We don't have a good alternate patching for function calls yet, but
+>> > > that would be something to do for native vs pv.
+>> > Going by your jump_label implementation, support for static_call shoul=
+d
+>> > be fairly straight forward too, no?
+>> >=20
+>> >    https://lkml.kernel.org/r/20200624153024.794671356@infradead.org
+>> >=20
+>> Speaking of static_call, I am also looking forward to it. Do you have an
+>> idea when that will be merged?
+>=20
+> 0day had one crash on the last round, I think Steve send a fix for that
+> last night and I'll go look at it.
+>=20
+> That said, the last posting got 0 feedback, so either everybody is
+> really happy with it, or not interested. So let us know in the thread,
+> with some review feedback.
+>=20
+> Once I get through enough of the inbox to actually find the fix and test
+> it, I'll also update the thread, and maybe threaten to merge it if
+> everybody stays silent :-)
+
+I'd like to use it in powerpc. We have code now for example that patches=20
+a branch immediately at the top of memcpy which branches to a different=20
+version of the function. pv queued spinlock selection obviously, and
+there's a bunch of platform ops struct things that get filled in at boot=20
+time, etc.
+
+So +1 here if you can get them through. I'm not 100% sure we can do
+it with existing toolchain and no ugly hacks, but there's no way to
+structure things that can get around that AFAIKS. We'd eventually
+use it though, I'd say.
+
+Thanks,
+Nick
