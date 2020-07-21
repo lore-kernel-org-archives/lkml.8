@@ -2,121 +2,86 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B391BC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F84FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9288D20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595350180;
-	bh=cNxlSKmjygBarBhg16tpRebArXf2XdV2e7RUdeUHPj8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xtj2zGuzyWRjMAgJmAKamPvAjChjKStsb/Y4qLr3uAv5fetPyz3CZ3FdzfGJSDmGW
-	 e1ZWnL7iN2I82no7QP9c5FX25c4TXr5soyEYa6THFWbW1U6qbzp2QonXaOlwEiDZtO
-	 8Vzfj3ruR/SnxUSJLg+TtoOI1/jN28LPT3WvT9iI=
+	by mail.kernel.org (Postfix) with ESMTP id EF71A2065E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 16:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgGUQtj (ORCPT
+        id S1730612AbgGUQrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730141AbgGUQth (ORCPT
+        Tue, 21 Jul 2020 12:47:08 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:41450 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727873AbgGUQrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:49:37 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AE3C0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:49:37 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f5so24810792ljj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:49:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cfw0I9KLEinugvOkAIz5pYOKJ30/9U2i4w2l/E0VlLI=;
-        b=PjZtpMWcBcYWc/PE2aBDgylpCarGxoRxa+Aq0zab6N7GaIbKRzPu2GNf3RxtSC05dA
-         0K7/GHfK0uf/8tRqEMTILPd7F3g3dNdNNYY6ahsv+8BW0iD5iZnwvyqTPsbIeqjdBP3p
-         khN1GHy7kDI63rJCnCaLHtNH6mG1r6HGYxAjk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cfw0I9KLEinugvOkAIz5pYOKJ30/9U2i4w2l/E0VlLI=;
-        b=Kdd8/8rCNYEtzvKyHlI61SMaYGHupFLDHCbOj5DwsxNdcsYST2LpTW88MRn1CRsCvO
-         yfJzOKjRJUjQN+RtB5VDGGMitBS9JVKbzGd6yCN48oRE8HlRZoYmvCej8wq1e9TXlYUR
-         sl2K8BZXvxqSZhWK1nUtKB5jyy6Zo5F2S++eYq2/gxn6rRopwR6bIEGSvAy/EP6iM6Yr
-         5G1KFHPkCn44qgGX6nFQgiH1C7jSId0772ue+mfwLJnbe30Tf6XYmgMP26P3M0WrhM2O
-         gNwHPnw2OVmUnMf8e7JTlHMe4uCsprvgvPkzHxKUvjduUc1/siYn2wnGvMJmbNRjwEBy
-         YmRQ==
-X-Gm-Message-State: AOAM532wl+NRQf18I6L5yYmwikx2b3se2u+UjlFzanIWlBT0B5Ea6Jvm
-        UPCo3A0F7bzNxbAnuaMPVwMOoeNrhQ8=
-X-Google-Smtp-Source: ABdhPJxPT7KTUYiHp45AIYlbtPKO9rQbN6WZcPD8oBTvnIUAxehDl18Kc/gCIuXzJqPHyC1i4o5kYA==
-X-Received: by 2002:a2e:97d7:: with SMTP id m23mr13750564ljj.103.1595350175319;
-        Tue, 21 Jul 2020 09:49:35 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id z1sm4705110ljn.88.2020.07.21.09.49.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 09:49:34 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id q7so24863988ljm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 09:49:33 -0700 (PDT)
-X-Received: by 2002:a2e:760b:: with SMTP id r11mr13904367ljc.285.1595350173585;
- Tue, 21 Jul 2020 09:49:33 -0700 (PDT)
+        Tue, 21 Jul 2020 12:47:05 -0400
+Received: from [78.134.114.177] (port=54080 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jxvPx-0009Zq-RO; Tue, 21 Jul 2020 18:47:02 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-clk@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Adam Ford <aford173@gmail.com>
+Subject: [PATCH v3 2/4] MAINTAINERS: take over IDT VersaClock 5 clock driver
+Date:   Tue, 21 Jul 2020 18:46:53 +0200
+Message-Id: <20200721164655.422-2-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721164655.422-1-luca@lucaceresoli.net>
+References: <20200721164655.422-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-References: <20200721162818.197315-1-hch@lst.de> <20200721162818.197315-6-hch@lst.de>
-In-Reply-To: <20200721162818.197315-6-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 21 Jul 2020 09:49:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi0GQqAq6VSY=O2iWnPuuS54TkyRBH5B9Ca0Kg5A9d2aA@mail.gmail.com>
-Message-ID: <CAHk-=wi0GQqAq6VSY=O2iWnPuuS54TkyRBH5B9Ca0Kg5A9d2aA@mail.gmail.com>
-Subject: Re: [PATCH 05/24] devtmpfs: open code ksys_chdir and ksys_chroot
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-raid@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 9:28 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> +
-> +       /* traverse into overmounted root and then chroot to it */
-> +       if (!kern_path("/..", LOOKUP_FOLLOW | LOOKUP_DIRECTORY, &path) &&
-> +           !inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR) &&
-> +           ns_capable(current_user_ns(), CAP_SYS_CHROOT) &&
-> +           !security_path_chroot(&path)) {
-> +               set_fs_pwd(current->fs, &path);
-> +               set_fs_root(current->fs, &path);
-> +       }
-> +       path_put(&path);
+Marek has been the primary developer of this driver (thanks!). Now as
+he is not working on it anymore he suggested I take over maintainership.
 
-This looks wrong.
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-You're doing "path_put()" even if kern_path() didn't succeed.
+---
 
-As far as I can tell, that will either put some uninitialized garbage
-and cause an oops, or put something that has already been released by
-the failure path.
+Changes in v3: none
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe that doesn't happen in practice in this case, but it's still
-very very wrong.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 931c78a5e035..8e323ffddea0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8325,7 +8325,7 @@ W:	https://github.com/o2genum/ideapad-slidebar
+ F:	drivers/input/misc/ideapad_slidebar.c
+ 
+ IDT VersaClock 5 CLOCK DRIVER
+-M:	Marek Vasut <marek.vasut@gmail.com>
++M:	Luca Ceresoli <luca@lucaceresoli.net>
+ S:	Maintained
+ F:	drivers/clk/clk-versaclock5.c
+ 
+-- 
+2.27.0
 
-Plus you shouldn't have those kinds of insanely complex if-statements
-in the first place. That was what caused the bug - trying to be
-clever, instead of writing clear code.
-
-I'm not liking how I'm finding fundamental mistakes in patches that
-_should_ be trivial conversions with no semantic changes.
-
-               Linus
