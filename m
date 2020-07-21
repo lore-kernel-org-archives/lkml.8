@@ -2,131 +2,102 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C440C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E821FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7892020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOftbt2B"
+	by mail.kernel.org (Postfix) with ESMTP id B3CC02077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 10:22:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595326974;
+	bh=fCuI9NDUWG+qJeWp5bvO7Fmt7ukBWKJvsnGX7Kb/OD8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=WgKyG/ltT0yl+EvVID5e0m7A50ljJsbiaLPTsOCR2XI94z4lzAFrBQEI1bkfXtkpG
+	 xJHb+7wvQSjbf1GMr/OynC/gL9FLKIrvFaCD4SV94Z+9bcInS91nAmZ728jpqzsrpe
+	 zcw+4yMfds4Wi8SOGH6dcAJaIFf7gRKM9/Y6etOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgGUKVe (ORCPT
+        id S1728655AbgGUKWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:21:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGUKVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 06:21:33 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876E8C061794;
-        Tue, 21 Jul 2020 03:21:33 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q5so20637092wru.6;
-        Tue, 21 Jul 2020 03:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tg7ZtznRb+b+yekzNeH8rbjkvPZT0rO0PfuB04Vn+lE=;
-        b=fOftbt2BlRb6Sdks3/IcQAdA5xeuHcFYKe+fcVO4MR3zvlKV0j2v8FojJ7NP4bgjCm
-         7kMxyrn2slElFlU2ueveJ8SB+z7sSw5RAzPAGCc2BpOVRJod8w74BWiJw/Q2SO25vw6f
-         WxWtfcOW3lWYk6jjq6qIRCy7hIY+LR6Yso+KJp3GnoI+Vaig9wMGwX5+DWY5N5tcUyKW
-         VwNRAyWBKJLEY4nNED0dtTojZFRnVOjXFCD1qgsFDdQG56VZNs4PKM/DqHn6OT2PD4h7
-         4Itp3AG66CA1RVLOUMqAXpCYcfD9LkzoGXdyTkrM/l6fQZ+Oc7dNEDK9wOszhKNLXILX
-         haZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tg7ZtznRb+b+yekzNeH8rbjkvPZT0rO0PfuB04Vn+lE=;
-        b=JYPMaFThCez7Ua3qyyNkvG17JnlF650STsXPo1OlBWTZLOCgnPRhGh0TJanwsDRa+L
-         hjOInRsuP30EyAJmnPwpi6440mQDiTMLF06iM9VSNRAdYqHVWJv9dXH+ZDd6DLrWKg9a
-         hOdJ0ueai0TenJOnRW4Jby/+ev8sXMGbYjc5mOMWva84nPL4hVEFelqtRbH1u5EHpgNB
-         mxAq+4YjC01jzSf+S/gPduuyiFAqh41kcCANbTp1vBnFSp/8LsQ9P/tWwl31U2RKh5k6
-         5iGCammbuvqZoWnGHEgiXn9tdwH3pwH3gKO8EkXbLsJK6KYxkZDWtr23Dl+NJACDpFTk
-         NpdA==
-X-Gm-Message-State: AOAM5318nEwFGa+U6aN8hE5NmhuKK6WfGILgUQAOtra2a1/HL/TrsR84
-        EEX/O9XjIeZwwqzcwdm+oWYwEA+CWUVHRztmqdI=
-X-Google-Smtp-Source: ABdhPJy/mfKYuTq2/E8DzFaP+q62IINJNJXkBqAMMUm3eKnVccRT6EEgv2aBQUj1kf0++jJNo/hcxHDPPg1g5kTKxNI=
-X-Received: by 2002:a5d:6683:: with SMTP id l3mr27206827wru.288.1595326892226;
- Tue, 21 Jul 2020 03:21:32 -0700 (PDT)
+        Tue, 21 Jul 2020 06:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726147AbgGUKWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 06:22:53 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F91620714;
+        Tue, 21 Jul 2020 10:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595326972;
+        bh=fCuI9NDUWG+qJeWp5bvO7Fmt7ukBWKJvsnGX7Kb/OD8=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=fs5sSoyXdpl204j+Fkj/bOQ8AYB7bO6PymhUBJOVFlr8njC4ske+iggdXJUvuqcFk
+         HGLPWJoivVcGqlmurlJLZJF+8GfElAtNJqq7cyRD44DBXHOQUfQEoQrSv9bCKvyNw4
+         O/OIz9p4z9CnssDbAT9Yeob79fTDk/ftQ4V5v4xw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.1595301250.git.huangqiwu@xiaomi.com> <b383d79629d0afca00838fcbaad4458e383d7262.1595301250.git.huangqiwu@xiaomi.com>
- <20200721082000.GD1655283@kroah.com>
-In-Reply-To: <20200721082000.GD1655283@kroah.com>
-From:   ivan <yanziily@gmail.com>
-Date:   Tue, 21 Jul 2020 18:21:20 +0800
-Message-ID: <CAPtXDt2CXYJNoqnu3r7+vV2BZzT3fMR_G1yOyu1v0dgS8EkjNg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] power: supply: core: add wireless signal strength property
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiangfei1@xiaomi.com,
-        Qiwu Huang <huangqiwu@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <202007101225.ZBGNUOHo%lkp@intel.com>
+References: <202007101225.ZBGNUOHo%lkp@intel.com>
+Subject: Re: drivers/clk/clk-hsdk-pll.c:407:24: sparse: expected void
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+To:     kernel test robot <lkp@intel.com>
+Date:   Tue, 21 Jul 2020 03:22:51 -0700
+Message-ID: <159532697180.3847286.18120516358909570318@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 4:19 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jul 21, 2020 at 01:59:36PM +0800, Qiwu Huang wrote:
-> > From: Qiwu Huang <huangqiwu@xiaomi.com>
-> >
-> > reports wireless signal strength.
-> > The value show degree of coupling between tx and rx.
-> >
-> > Signed-off-by: Qiwu Huang <huangqiwu@xiaomi.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-class-power | 10 ++++++++++
-> >  drivers/power/supply/power_supply_sysfs.c   |  1 +
-> >  include/linux/power_supply.h                |  1 +
-> >  3 files changed, 12 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> > index 03ab449fae8a..75ec7de2fe78 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-power
-> > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > @@ -757,3 +757,13 @@ Description:
-> >                       13: ADAPTER_VOICE_BOX,
-> >                       14: ADAPTER_PRIVATE_PD_50W.
-> >
-> > +What:                /sys/class/power_supply/<supply_name>/signal_strength
-> > +Date:                Jul 2020
-> > +Contact:     Fei Jiang <jiangfei1@xiaomi.com>
-> > +Description:
-> > +             In PING phase, RX transmits a signal strength packet as the first
->
-> What does "PING phase" mean?
+Quoting kernel test robot (2020-07-09 21:12:29)
+> Hi Stephen,
+>=20
+> First bad commit (maybe !=3D root cause):
+>=20
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
+> head:   0bddd227f3dc55975e2b8dfa7fc6f959b062a2c7
+> commit: bbd7ffdbef6888459f301c5889f3b14ada38b913 clk: Allow the common cl=
+k framework to be selectable
+> date:   9 weeks ago
+> config: openrisc-randconfig-s031-20200710 (attached as .config)
+> compiler: or1k-linux-gcc (GCC) 9.3.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
+n/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # apt-get install sparse
+>         # sparse version: v0.6.2-37-gc9676a3b-dirty
+>         git checkout bbd7ffdbef6888459f301c5889f3b14ada38b913
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-9.3.0 make.cros=
+s C=3D1 CF=3D'-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=3Dopenrisc=20
+>=20
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>=20
+>=20
+> sparse warnings: (new ones prefixed by >>)
+>=20
+>    drivers/clk/clk-hsdk-pll.c:407:24: sparse: sparse: incorrect type in a=
+rgument 1 (different address spaces) @@     expected void *addr @@     got =
+void [noderef] <asn:2> *spec_regs @@
+> >> drivers/clk/clk-hsdk-pll.c:407:24: sparse:     expected void *addr
+>    drivers/clk/clk-hsdk-pll.c:407:24: sparse:     got void [noderef] <asn=
+:2> *spec_regs
+>    drivers/clk/clk-hsdk-pll.c:409:24: sparse: sparse: incorrect type in a=
+rgument 1 (different address spaces) @@     expected void *addr @@     got =
+void [noderef] <asn:2> *regs @@
+>    drivers/clk/clk-hsdk-pll.c:409:24: sparse:     expected void *addr
+>    drivers/clk/clk-hsdk-pll.c:409:24: sparse:     got void [noderef] <asn=
+:2> *regs
 
-The Qi Wireless Power Transfer System is published by the Wireless
-Power Consortium.
-The ping phase is the necessary stage for matching transmitter and
-receiver. In this phase,
-the Power Transmitter executes a Digital Ping, and listens for a
-response. If the
-Power Transmitter discovers a Power Receiver, the Power Transmitter
-may extend the Digital Ping,
-i.e. maintain the Power Signal at the level of the Digital Ping. This
-causes the system to proceed to the
-identification & configuration phase. If the Power Transmitter does
-not extend the Digital Ping, the
-system shall revert to the selection phase.
-
->
-> Other than that, seems sane to me, thanks for the changes.
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
-
--- 
-Thanks
-
-Qiwu
+Looks like openrisc arch has an improper annotated version of iounmap().
