@@ -2,132 +2,94 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD6CC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8503F20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:47:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vWqVu2XR"
+	by mail.kernel.org (Postfix) with ESMTP id A2D7320717
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgGUOrD (ORCPT
+        id S1729513AbgGUOr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:47:03 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60848 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgGUOrC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:47:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LEkkHL029060;
-        Tue, 21 Jul 2020 09:46:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595342806;
-        bh=zXcjraNdieCat5ZM86lkn+6Gv+qgiFtvCPdxqpheW60=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=vWqVu2XR7OHXKWU2VjCmuyD6LeJezdVgH93He3QzJaYmwqaOTV6rHkemi8luf4oTQ
-         LXJ4fPMSi3+9E1x0RE6WyJ1R0RJgOeTqeFLkyhBa7vr1f2m6IocNNvu3+sg1cfSLgA
-         bfdGRZJca5VUUHzp0sP238KQyrm3foeSEnIqHgoA=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LEkjRx113908
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 09:46:45 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 09:46:45 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 09:46:45 -0500
-Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LEkg6d006260;
-        Tue, 21 Jul 2020 09:46:43 -0500
-Subject: Re: [PATCH for v5.9] ARM: mach-davinci: Replace HTTP links with HTTPS
- ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        <bgolaszewski@baylibre.com>, <robh+dt@kernel.org>,
-        <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200719102020.57779-1-grandmaster@al2klimov.de>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <10638fa7-6150-0960-9153-fd3a51debac3@ti.com>
-Date:   Tue, 21 Jul 2020 20:16:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 21 Jul 2020 10:47:29 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37886 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728127AbgGUOr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 10:47:29 -0400
+IronPort-SDR: 9BldvPQxq57KSF+skxN+kC54eJEEI2HaXBpnDDHyUxo6LUqPapQlC4bGTLHSAw5+cqi33MfLr+
+ y5pJU2//IvNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="168280953"
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="168280953"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 07:47:28 -0700
+IronPort-SDR: pWmaYveV8KvB8cq60hhk0yGw368u8+zLJcY6PnYssU4wGHGqDmTCHxaQRIrSoqNGap99B5n1jN
+ 9aEjKMCnXtCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,379,1589266800"; 
+   d="scan'208";a="462097992"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga005.jf.intel.com with ESMTP; 21 Jul 2020 07:47:26 -0700
+Date:   Tue, 21 Jul 2020 22:44:18 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH 2/2] fpga: dfl: create a dfl bus type to support DFL
+   devices
+Message-ID: <20200721144418.GB20733@yilunxu-OptiPlex-7050>
+References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
+ <1594791498-14495-3-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB38195AA712F8089090695CE5857C0@DM6PR11MB3819.namprd11.prod.outlook.com>
+ <20200721083030.GG17091@yilunxu-OptiPlex-7050>
+ <DM6PR11MB381958D370FD3BF0173BBD5685780@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200719102020.57779-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB381958D370FD3BF0173BBD5685780@DM6PR11MB3819.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/19/20 3:50 PM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Tue, Jul 21, 2020 at 07:41:27PM +0800, Wu, Hao wrote:
+> > > > +}
+> > > > +
+> > > > +dfl_dev->type = feature_dev_id_type(pdev);
+> > > > +dfl_dev->feature_id = (unsigned long long)feature->id;
+> > > > +
+> > > > +dfl_dev->dev.parent  = &pdev->dev;
+> > > > +dfl_dev->dev.bus     = &dfl_bus_type;
+> > > > +dfl_dev->dev.release = release_dfl_dev;
+> > > > +dev_set_name(&dfl_dev->dev, "%s.%d", dev_name(&pdev->dev),
+> > > > +     feature->index);
+> > >
+> > > Or it's better to have a generic name for the device on the bus.
+> >
+> > mm.. It is good suggestion, we should have a unified name for dfl
+> > devices.
+> >
+> > How about ("dfl.%d.%d", pdev->id, feature->index)
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> It's quite difficult for people to use related information from these magic
+> numbers. They are not ids defined in the spec, so just dfl_dev.x with one
+> unique id seems to be better. If you really need to expose some id
+> information, maybe you can consider adding some standard sysfs entry
+> to all dfl_dev, I think that will be easier for users. How do you think?
+
+I'm fine with the dfl_dev.x solution.
+
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index f2e7609e5346..87c517d65f62 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -2,7 +2,7 @@
->  /*
->   * Device Tree for DA850 EVM board
->   *
-> - * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-> + * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
->   */
->  /dts-v1/;
->  #include "da850.dtsi"
-> diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-> index d028d38a44bf..5b0125f1265c 100644
-> --- a/arch/arm/mach-davinci/Kconfig
-> +++ b/arch/arm/mach-davinci/Kconfig
-> @@ -201,7 +201,7 @@ config MACH_MITYOMAPL138
->  	help
->  	  Say Y here to select the Critical Link MityDSP-L138/MityARM-1808
->  	  System on Module.  Information on this SoM may be found at
-> -	  http://www.mitydsp.com
-> +	  https://www.mitydsp.com
->  
->  config MACH_OMAPL138_HAWKBOARD
->  	bool "TI AM1808 / OMAPL-138 Hawkboard platform"
-> @@ -209,7 +209,7 @@ config MACH_OMAPL138_HAWKBOARD
->  	help
->  	  Say Y here to select the TI AM1808 / OMAPL-138 Hawkboard platform .
->  	  Information of this board may be found at
-> -	  http://www.hawkboard.org/
-> +	  https://www.hawkboard.org/
-
-This now redirects to something irrelevant. So, dropped the URL
-altogether. Also, we use prefix "ARM: davinci: " in subject line.
-
-I made those changes locally and committed the patch. Will try to send
-for v5.9, but its getting quite late.
-
-Thanks,
-Sekhar
+> Thanks
+> Hao
