@@ -2,583 +2,379 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865A0C433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DF1206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uf70pNth"
+	by mail.kernel.org (Postfix) with ESMTP id BDDF22080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 12:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595333539;
+	bh=MBuiHfWLWvvIHYt36QzsZpvSgTgNgKI/65Ii4lKvtb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O3EcPN3y5BCjuFzXE+WnMf+xvBOpGgVdnb2yR1y8ZgDa3PJ/9g4zb6WIX16CGxid9
+	 ZypHCme/AEzoQgEYNBOX9PTqGJTimJgVSLzU+5j0P18H0Piq5+cjIg4TDOyUzW5Uyo
+	 qLU5diW59pu1UT81B2oZQeVIQQYbZr9Noxg7aukk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgGUMLS (ORCPT
+        id S1729924AbgGUMMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729911AbgGUMLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:11:17 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C175BC0619D9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:11:17 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j20so10641819pfe.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 05:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N4Vrr3RPHrWaZucTwZmFhL/vg7dtTdfGT3O+wG1Ixzw=;
-        b=uf70pNthNkaG3TDajmNXQMzUZC357fX+gxRyGvjVoSt7QCQD+VlLfXEpUgB7chSAz6
-         FuBv3g5/v5cCY5sSHmWYxMWVGAcX/6yDmSmrb+oKCinGzeScKnAwpUZ1P+tEKAnRYfs7
-         Ja0AJZGiOm2s51IyFYTYMx8IDbE4GLdwb3civ6b5D0rKMcUzzulkbxVSEtYE6V95wGUm
-         7ha67V/Mww5u18Pk2tOxvaKnnyy6RxjLgpmbLlXCXHSMQpfu7ZV1qj97i1Nw1Xg1LfkO
-         aay91kXJy6qnhoNRyr53om2Qs7jjUp+jzFAonpY8FVRxVINqOMymAN9HH4l0ENsgeQf6
-         mQbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N4Vrr3RPHrWaZucTwZmFhL/vg7dtTdfGT3O+wG1Ixzw=;
-        b=fF4C56g7NB2OVkWJCZci9aDczkoPr2Doq/5kcvykTFjx//XKS2iPozisRX5LIAJER+
-         PiRMwQCy1o/4q4pw/NKZh6CcNZbD4TB5fmHkwha31wkmhNlLCMbiHT27svjmf+sT+P67
-         6jfC3AMeKsMSLzezXqa+S75o7XJVbD2j7ITofzt0g+MjPJNriIjYKmWxaHF2ZFvW7xbT
-         FoYsx5xmyAu8Ol4XCbLV7VYnxPyqLC74uXWJDbEaSssNPjyT0KTHinf0XKKllTO5Hioi
-         sHGX73F5WN7OwwnEIOi+1DVHHFSFbu+rB36H6EfwHNweOwuWhMh+4h5k+wpV17HwupRF
-         F/5g==
-X-Gm-Message-State: AOAM5300ogDYLyZEyQDDor9G61CFGmN0K//EH4dcm9XlUjHq4yI5CHNc
-        +iCi7NtUubkw58IETqzkUYuyVA==
-X-Google-Smtp-Source: ABdhPJzUr3AOufOgS8kYacmYw2lEJYaoNCrAwivO0iMkoijWQgmxOSdj3Ydl+zm0ckA2gH2pdb+CWA==
-X-Received: by 2002:a65:63c8:: with SMTP id n8mr22380565pgv.232.1595333477168;
-        Tue, 21 Jul 2020 05:11:17 -0700 (PDT)
-Received: from localhost.localdomain ([117.210.211.74])
-        by smtp.gmail.com with ESMTPSA id w9sm20601992pfq.178.2020.07.21.05.11.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 05:11:16 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     gregkh@linuxfoundation.org, daniel.thompson@linaro.org,
-        dianders@chromium.org, linux-serial@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net
-Cc:     jslaby@suse.com, linux@armlinux.org.uk, jason.wessel@windriver.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC 5/5] serial: Remove KGDB NMI serial driver
-Date:   Tue, 21 Jul 2020 17:40:13 +0530
-Message-Id: <1595333413-30052-6-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
-References: <1595333413-30052-1-git-send-email-sumit.garg@linaro.org>
+        Tue, 21 Jul 2020 08:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbgGUMMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 08:12:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5BDC206E9;
+        Tue, 21 Jul 2020 12:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595333537;
+        bh=MBuiHfWLWvvIHYt36QzsZpvSgTgNgKI/65Ii4lKvtb0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JiQo8OHxrhYRd6I2OLRvUTEDVosVyLoUv/kBqeEDyAD2uZpmEsAVNZbM+giPvJNN2
+         oRUkCXK5J1Cjk0b+wCslAjtwVEnKzUXQNdJc4BenTwYx7uSCVmJoVCrQZGCbdzE1Dy
+         H7jRl9yMlR843BF48nyKgIHeqAgO/idHFXY5QOCI=
+Date:   Tue, 21 Jul 2020 14:12:25 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andra Paraschiv <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        David Duncan <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>, Karen Noel <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com, Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH v5 01/18] nitro_enclaves: Add ioctl interface definition
+Message-ID: <20200721121225.GA1855212@kroah.com>
+References: <20200715194540.45532-1-andraprs@amazon.com>
+ <20200715194540.45532-2-andraprs@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715194540.45532-2-andraprs@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver provided a special ttyNMI0 port to enable NMI debugging
-capabilities for kgdb but it remained in silos with the serial
-core/drivers which made it a bit odd to enable using serial device
-interrupt and hence remained unused.
+On Wed, Jul 15, 2020 at 10:45:23PM +0300, Andra Paraschiv wrote:
+> The Nitro Enclaves driver handles the enclave lifetime management. This
+> includes enclave creation, termination and setting up its resources such
+> as memory and CPU.
+> 
+> An enclave runs alongside the VM that spawned it. It is abstracted as a
+> process running in the VM that launched it. The process interacts with
+> the NE driver, that exposes an ioctl interface for creating an enclave
+> and setting up its resources.
+> 
+> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
+> ---
+> Changelog
+> 
+> v4 -> v5
+> 
+> * Add more details about the ioctl calls usage e.g. error codes, file
+>   descriptors used.
+> * Update the ioctl to set an enclave vCPU to not return a file
+>   descriptor.
+> * Add specific NE error codes.
+> 
+> v3 -> v4
+> 
+> * Decouple NE ioctl interface from KVM API.
+> * Add NE API version and the corresponding ioctl call.
+> * Add enclave / image load flags options.
+> 
+> v2 -> v3
+> 
+> * Remove the GPL additional wording as SPDX-License-Identifier is
+>   already in place.
+> 
+> v1 -> v2
+> 
+> * Add ioctl for getting enclave image load metadata.
+> * Update NE_ENCLAVE_START ioctl name to NE_START_ENCLAVE.
+> * Add entry in Documentation/userspace-api/ioctl/ioctl-number.rst for NE
+>   ioctls.
+> * Update NE ioctls definition based on the updated ioctl range for major
+>   and minor.
+> ---
+>  .../userspace-api/ioctl/ioctl-number.rst      |   5 +-
+>  include/linux/nitro_enclaves.h                |  11 +
+>  include/uapi/linux/nitro_enclaves.h           | 244 ++++++++++++++++++
+>  3 files changed, 259 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/nitro_enclaves.h
+>  create mode 100644 include/uapi/linux/nitro_enclaves.h
+> 
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index 59472cd6a11d..783440c6719b 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -328,8 +328,11 @@ Code  Seq#    Include File                                           Comments
+>  0xAC  00-1F  linux/raw.h
+>  0xAD  00                                                             Netfilter device in development:
+>                                                                       <mailto:rusty@rustcorp.com.au>
+> -0xAE  all    linux/kvm.h                                             Kernel-based Virtual Machine
+> +0xAE  00-1F  linux/kvm.h                                             Kernel-based Virtual Machine
+>                                                                       <mailto:kvm@vger.kernel.org>
+> +0xAE  40-FF  linux/kvm.h                                             Kernel-based Virtual Machine
+> +                                                                     <mailto:kvm@vger.kernel.org>
+> +0xAE  20-3F  linux/nitro_enclaves.h                                  Nitro Enclaves
+>  0xAF  00-1F  linux/fsl_hypervisor.h                                  Freescale hypervisor
+>  0xB0  all                                                            RATIO devices in development:
+>                                                                       <mailto:vgo@ratio.de>
+> diff --git a/include/linux/nitro_enclaves.h b/include/linux/nitro_enclaves.h
+> new file mode 100644
+> index 000000000000..d91ef2bfdf47
+> --- /dev/null
+> +++ b/include/linux/nitro_enclaves.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + */
+> +
+> +#ifndef _LINUX_NITRO_ENCLAVES_H_
+> +#define _LINUX_NITRO_ENCLAVES_H_
+> +
+> +#include <uapi/linux/nitro_enclaves.h>
+> +
+> +#endif /* _LINUX_NITRO_ENCLAVES_H_ */
+> diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nitro_enclaves.h
+> new file mode 100644
+> index 000000000000..cf1192f6e923
+> --- /dev/null
+> +++ b/include/uapi/linux/nitro_enclaves.h
+> @@ -0,0 +1,244 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + */
+> +
+> +#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
+> +#define _UAPI_LINUX_NITRO_ENCLAVES_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/* Nitro Enclaves (NE) Kernel Driver Interface */
+> +
+> +#define NE_API_VERSION (1)
 
-But now with the serial core/drivers becoming NMI aware which in turn
-provides NMI debugging capabilities via magic sysrq, there is no specific
-reason to keep this special driver. So remove it instead.
+Why do you need this version?  It shouldn't be needed, right?
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- drivers/tty/serial/Kconfig    |  19 ---
- drivers/tty/serial/Makefile   |   1 -
- drivers/tty/serial/kgdb_nmi.c | 383 ------------------------------------------
- drivers/tty/serial/kgdboc.c   |   8 -
- include/linux/kgdb.h          |  10 --
- 5 files changed, 421 deletions(-)
- delete mode 100644 drivers/tty/serial/kgdb_nmi.c
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 780908d..625d283 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -176,25 +176,6 @@ config SERIAL_ATMEL_TTYAT
- 
- 	  Say Y if you have an external 8250/16C550 UART.  If unsure, say N.
- 
--config SERIAL_KGDB_NMI
--	bool "Serial console over KGDB NMI debugger port"
--	depends on KGDB_SERIAL_CONSOLE
--	help
--	  This special driver allows you to temporary use NMI debugger port
--	  as a normal console (assuming that the port is attached to KGDB).
--
--	  Unlike KDB's disable_nmi command, with this driver you are always
--	  able to go back to the debugger using KGDB escape sequence ($3#33).
--	  This is because this console driver processes the input in NMI
--	  context, and thus is able to intercept the magic sequence.
--
--	  Note that since the console interprets input and uses polling
--	  communication methods, for things like PPP you still must fully
--	  detach debugger port from the KGDB NMI (i.e. disable_nmi), and
--	  use raw console.
--
--	  If unsure, say N.
--
- config SERIAL_MESON
- 	tristate "Meson serial port support"
- 	depends on ARCH_MESON
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index d056ee6..9ea6263 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -93,5 +93,4 @@ obj-$(CONFIG_SERIAL_SIFIVE)	+= sifive.o
- # GPIOLIB helpers for modem control lines
- obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
- 
--obj-$(CONFIG_SERIAL_KGDB_NMI) += kgdb_nmi.o
- obj-$(CONFIG_KGDB_SERIAL_CONSOLE) += kgdboc.o
-diff --git a/drivers/tty/serial/kgdb_nmi.c b/drivers/tty/serial/kgdb_nmi.c
-deleted file mode 100644
-index 6004c0c..0000000
---- a/drivers/tty/serial/kgdb_nmi.c
-+++ /dev/null
-@@ -1,383 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * KGDB NMI serial console
-- *
-- * Copyright 2010 Google, Inc.
-- *		  Arve Hjønnevåg <arve@android.com>
-- *		  Colin Cross <ccross@android.com>
-- * Copyright 2012 Linaro Ltd.
-- *		  Anton Vorontsov <anton.vorontsov@linaro.org>
-- */
--
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/compiler.h>
--#include <linux/slab.h>
--#include <linux/errno.h>
--#include <linux/atomic.h>
--#include <linux/console.h>
--#include <linux/tty.h>
--#include <linux/tty_driver.h>
--#include <linux/tty_flip.h>
--#include <linux/serial_core.h>
--#include <linux/interrupt.h>
--#include <linux/hrtimer.h>
--#include <linux/tick.h>
--#include <linux/kfifo.h>
--#include <linux/kgdb.h>
--#include <linux/kdb.h>
--
--static int kgdb_nmi_knock = 1;
--module_param_named(knock, kgdb_nmi_knock, int, 0600);
--MODULE_PARM_DESC(knock, "if set to 1 (default), the special '$3#33' command " \
--			"must be used to enter the debugger; when set to 0, " \
--			"hitting return key is enough to enter the debugger; " \
--			"when set to -1, the debugger is entered immediately " \
--			"upon NMI");
--
--static char *kgdb_nmi_magic = "$3#33";
--module_param_named(magic, kgdb_nmi_magic, charp, 0600);
--MODULE_PARM_DESC(magic, "magic sequence to enter NMI debugger (default $3#33)");
--
--static atomic_t kgdb_nmi_num_readers = ATOMIC_INIT(0);
--
--static int kgdb_nmi_console_setup(struct console *co, char *options)
--{
--	arch_kgdb_ops.enable_nmi(1);
--
--	/* The NMI console uses the dbg_io_ops to issue console messages. To
--	 * avoid duplicate messages during kdb sessions we must inform kdb's
--	 * I/O utilities that messages sent to the console will automatically
--	 * be displayed on the dbg_io.
--	 */
--	dbg_io_ops->cons = co;
--
--	return 0;
--}
--
--static void kgdb_nmi_console_write(struct console *co, const char *s, uint c)
--{
--	int i;
--
--	for (i = 0; i < c; i++)
--		dbg_io_ops->write_char(s[i]);
--}
--
--static struct tty_driver *kgdb_nmi_tty_driver;
--
--static struct tty_driver *kgdb_nmi_console_device(struct console *co, int *idx)
--{
--	*idx = co->index;
--	return kgdb_nmi_tty_driver;
--}
--
--static struct console kgdb_nmi_console = {
--	.name	= "ttyNMI",
--	.setup  = kgdb_nmi_console_setup,
--	.write	= kgdb_nmi_console_write,
--	.device	= kgdb_nmi_console_device,
--	.flags	= CON_PRINTBUFFER | CON_ANYTIME,
--	.index	= -1,
--};
--
--/*
-- * This is usually the maximum rate on debug ports. We make fifo large enough
-- * to make copy-pasting to the terminal usable.
-- */
--#define KGDB_NMI_BAUD		115200
--#define KGDB_NMI_FIFO_SIZE	roundup_pow_of_two(KGDB_NMI_BAUD / 8 / HZ)
--
--struct kgdb_nmi_tty_priv {
--	struct tty_port port;
--	struct timer_list timer;
--	STRUCT_KFIFO(char, KGDB_NMI_FIFO_SIZE) fifo;
--};
--
--static struct tty_port *kgdb_nmi_port;
--
--static void kgdb_tty_recv(int ch)
--{
--	struct kgdb_nmi_tty_priv *priv;
--	char c = ch;
--
--	if (!kgdb_nmi_port || ch < 0)
--		return;
--	/*
--	 * Can't use port->tty->driver_data as tty might be not there. Timer
--	 * will check for tty and will get the ref, but here we don't have to
--	 * do that, and actually, we can't: we're in NMI context, no locks are
--	 * possible.
--	 */
--	priv = container_of(kgdb_nmi_port, struct kgdb_nmi_tty_priv, port);
--	kfifo_in(&priv->fifo, &c, 1);
--}
--
--static int kgdb_nmi_poll_one_knock(void)
--{
--	static int n;
--	int c = -1;
--	const char *magic = kgdb_nmi_magic;
--	size_t m = strlen(magic);
--	bool printch = false;
--
--	c = dbg_io_ops->read_char();
--	if (c == NO_POLL_CHAR)
--		return c;
--
--	if (!kgdb_nmi_knock && (c == '\r' || c == '\n')) {
--		return 1;
--	} else if (c == magic[n]) {
--		n = (n + 1) % m;
--		if (!n)
--			return 1;
--		printch = true;
--	} else {
--		n = 0;
--	}
--
--	if (atomic_read(&kgdb_nmi_num_readers)) {
--		kgdb_tty_recv(c);
--		return 0;
--	}
--
--	if (printch) {
--		kdb_printf("%c", c);
--		return 0;
--	}
--
--	kdb_printf("\r%s %s to enter the debugger> %*s",
--		   kgdb_nmi_knock ? "Type" : "Hit",
--		   kgdb_nmi_knock ? magic  : "<return>", (int)m, "");
--	while (m--)
--		kdb_printf("\b");
--	return 0;
--}
--
--/**
-- * kgdb_nmi_poll_knock - Check if it is time to enter the debugger
-- *
-- * "Serial ports are often noisy, especially when muxed over another port (we
-- * often use serial over the headset connector). Noise on the async command
-- * line just causes characters that are ignored, on a command line that blocked
-- * execution noise would be catastrophic." -- Colin Cross
-- *
-- * So, this function implements KGDB/KDB knocking on the serial line: we won't
-- * enter the debugger until we receive a known magic phrase (which is actually
-- * "$3#33", known as "escape to KDB" command. There is also a relaxed variant
-- * of knocking, i.e. just pressing the return key is enough to enter the
-- * debugger. And if knocking is disabled, the function always returns 1.
-- */
--bool kgdb_nmi_poll_knock(void)
--{
--	if (kgdb_nmi_knock < 0)
--		return true;
--
--	while (1) {
--		int ret;
--
--		ret = kgdb_nmi_poll_one_knock();
--		if (ret == NO_POLL_CHAR)
--			return false;
--		else if (ret == 1)
--			break;
--	}
--	return true;
--}
--
--/*
-- * The tasklet is cheap, it does not cause wakeups when reschedules itself,
-- * instead it waits for the next tick.
-- */
--static void kgdb_nmi_tty_receiver(struct timer_list *t)
--{
--	struct kgdb_nmi_tty_priv *priv = from_timer(priv, t, timer);
--	char ch;
--
--	priv->timer.expires = jiffies + (HZ/100);
--	add_timer(&priv->timer);
--
--	if (likely(!atomic_read(&kgdb_nmi_num_readers) ||
--		   !kfifo_len(&priv->fifo)))
--		return;
--
--	while (kfifo_out(&priv->fifo, &ch, 1))
--		tty_insert_flip_char(&priv->port, ch, TTY_NORMAL);
--	tty_flip_buffer_push(&priv->port);
--}
--
--static int kgdb_nmi_tty_activate(struct tty_port *port, struct tty_struct *tty)
--{
--	struct kgdb_nmi_tty_priv *priv =
--	    container_of(port, struct kgdb_nmi_tty_priv, port);
--
--	kgdb_nmi_port = port;
--	priv->timer.expires = jiffies + (HZ/100);
--	add_timer(&priv->timer);
--
--	return 0;
--}
--
--static void kgdb_nmi_tty_shutdown(struct tty_port *port)
--{
--	struct kgdb_nmi_tty_priv *priv =
--	    container_of(port, struct kgdb_nmi_tty_priv, port);
--
--	del_timer(&priv->timer);
--	kgdb_nmi_port = NULL;
--}
--
--static const struct tty_port_operations kgdb_nmi_tty_port_ops = {
--	.activate	= kgdb_nmi_tty_activate,
--	.shutdown	= kgdb_nmi_tty_shutdown,
--};
--
--static int kgdb_nmi_tty_install(struct tty_driver *drv, struct tty_struct *tty)
--{
--	struct kgdb_nmi_tty_priv *priv;
--	int ret;
--
--	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
--	if (!priv)
--		return -ENOMEM;
--
--	INIT_KFIFO(priv->fifo);
--	timer_setup(&priv->timer, kgdb_nmi_tty_receiver, 0);
--	tty_port_init(&priv->port);
--	priv->port.ops = &kgdb_nmi_tty_port_ops;
--	tty->driver_data = priv;
--
--	ret = tty_port_install(&priv->port, drv, tty);
--	if (ret) {
--		pr_err("%s: can't install tty port: %d\n", __func__, ret);
--		goto err;
--	}
--	return 0;
--err:
--	tty_port_destroy(&priv->port);
--	kfree(priv);
--	return ret;
--}
--
--static void kgdb_nmi_tty_cleanup(struct tty_struct *tty)
--{
--	struct kgdb_nmi_tty_priv *priv = tty->driver_data;
--
--	tty->driver_data = NULL;
--	tty_port_destroy(&priv->port);
--	kfree(priv);
--}
--
--static int kgdb_nmi_tty_open(struct tty_struct *tty, struct file *file)
--{
--	struct kgdb_nmi_tty_priv *priv = tty->driver_data;
--	unsigned int mode = file->f_flags & O_ACCMODE;
--	int ret;
--
--	ret = tty_port_open(&priv->port, tty, file);
--	if (!ret && (mode == O_RDONLY || mode == O_RDWR))
--		atomic_inc(&kgdb_nmi_num_readers);
--
--	return ret;
--}
--
--static void kgdb_nmi_tty_close(struct tty_struct *tty, struct file *file)
--{
--	struct kgdb_nmi_tty_priv *priv = tty->driver_data;
--	unsigned int mode = file->f_flags & O_ACCMODE;
--
--	if (mode == O_RDONLY || mode == O_RDWR)
--		atomic_dec(&kgdb_nmi_num_readers);
--
--	tty_port_close(&priv->port, tty, file);
--}
--
--static void kgdb_nmi_tty_hangup(struct tty_struct *tty)
--{
--	struct kgdb_nmi_tty_priv *priv = tty->driver_data;
--
--	tty_port_hangup(&priv->port);
--}
--
--static int kgdb_nmi_tty_write_room(struct tty_struct *tty)
--{
--	/* Actually, we can handle any amount as we use polled writes. */
--	return 2048;
--}
--
--static int kgdb_nmi_tty_write(struct tty_struct *tty, const unchar *buf, int c)
--{
--	int i;
--
--	for (i = 0; i < c; i++)
--		dbg_io_ops->write_char(buf[i]);
--	return c;
--}
--
--static const struct tty_operations kgdb_nmi_tty_ops = {
--	.open		= kgdb_nmi_tty_open,
--	.close		= kgdb_nmi_tty_close,
--	.install	= kgdb_nmi_tty_install,
--	.cleanup	= kgdb_nmi_tty_cleanup,
--	.hangup		= kgdb_nmi_tty_hangup,
--	.write_room	= kgdb_nmi_tty_write_room,
--	.write		= kgdb_nmi_tty_write,
--};
--
--int kgdb_register_nmi_console(void)
--{
--	int ret;
--
--	if (!arch_kgdb_ops.enable_nmi)
--		return 0;
--
--	kgdb_nmi_tty_driver = alloc_tty_driver(1);
--	if (!kgdb_nmi_tty_driver) {
--		pr_err("%s: cannot allocate tty\n", __func__);
--		return -ENOMEM;
--	}
--	kgdb_nmi_tty_driver->driver_name	= "ttyNMI";
--	kgdb_nmi_tty_driver->name		= "ttyNMI";
--	kgdb_nmi_tty_driver->num		= 1;
--	kgdb_nmi_tty_driver->type		= TTY_DRIVER_TYPE_SERIAL;
--	kgdb_nmi_tty_driver->subtype		= SERIAL_TYPE_NORMAL;
--	kgdb_nmi_tty_driver->flags		= TTY_DRIVER_REAL_RAW;
--	kgdb_nmi_tty_driver->init_termios	= tty_std_termios;
--	tty_termios_encode_baud_rate(&kgdb_nmi_tty_driver->init_termios,
--				     KGDB_NMI_BAUD, KGDB_NMI_BAUD);
--	tty_set_operations(kgdb_nmi_tty_driver, &kgdb_nmi_tty_ops);
--
--	ret = tty_register_driver(kgdb_nmi_tty_driver);
--	if (ret) {
--		pr_err("%s: can't register tty driver: %d\n", __func__, ret);
--		goto err_drv_reg;
--	}
--
--	register_console(&kgdb_nmi_console);
--
--	return 0;
--err_drv_reg:
--	put_tty_driver(kgdb_nmi_tty_driver);
--	return ret;
--}
--EXPORT_SYMBOL_GPL(kgdb_register_nmi_console);
--
--int kgdb_unregister_nmi_console(void)
--{
--	int ret;
--
--	if (!arch_kgdb_ops.enable_nmi)
--		return 0;
--	arch_kgdb_ops.enable_nmi(0);
--
--	ret = unregister_console(&kgdb_nmi_console);
--	if (ret)
--		return ret;
--
--	ret = tty_unregister_driver(kgdb_nmi_tty_driver);
--	if (ret)
--		return ret;
--	put_tty_driver(kgdb_nmi_tty_driver);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(kgdb_unregister_nmi_console);
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 84ffede..e959e72 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -158,8 +158,6 @@ static void cleanup_kgdboc(void)
- 	if (configured != 1)
- 		return;
- 
--	if (kgdb_unregister_nmi_console())
--		return;
- 	kgdboc_unregister_kbd();
- 	kgdb_unregister_io_module(&kgdboc_io_ops);
- }
-@@ -210,16 +208,10 @@ static int configure_kgdboc(void)
- 	if (err)
- 		goto noconfig;
- 
--	err = kgdb_register_nmi_console();
--	if (err)
--		goto nmi_con_failed;
--
- 	configured = 1;
- 
- 	return 0;
- 
--nmi_con_failed:
--	kgdb_unregister_io_module(&kgdboc_io_ops);
- noconfig:
- 	kgdboc_unregister_kbd();
- 	configured = 0;
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index 529116b..2e8c5de 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -294,16 +294,6 @@ extern const struct kgdb_arch		arch_kgdb_ops;
- 
- extern unsigned long kgdb_arch_pc(int exception, struct pt_regs *regs);
- 
--#ifdef CONFIG_SERIAL_KGDB_NMI
--extern int kgdb_register_nmi_console(void);
--extern int kgdb_unregister_nmi_console(void);
--extern bool kgdb_nmi_poll_knock(void);
--#else
--static inline int kgdb_register_nmi_console(void) { return 0; }
--static inline int kgdb_unregister_nmi_console(void) { return 0; }
--static inline bool kgdb_nmi_poll_knock(void) { return true; }
--#endif
--
- extern int kgdb_register_io_module(struct kgdb_io *local_kgdb_io_ops);
- extern void kgdb_unregister_io_module(struct kgdb_io *local_kgdb_io_ops);
- extern struct kgdb_io *dbg_io_ops;
--- 
-2.7.4
 
+> +
+> +/**
+> + * The command is used to get the version of the NE API. This way the user space
+> + * processes can be aware of the feature sets provided by the NE kernel driver.
+> + *
+> + * The NE API version is returned as result of this ioctl call.
+> + *
+> + * The ioctl can be invoked on the /dev/nitro_enclaves fd, independent of
+> + * enclaves already created / started or not.
+> + *
+> + * No errors are returned.
+> + */
+> +#define NE_GET_API_VERSION _IO(0xAE, 0x20)
+> +
+> +/**
+> + * The command is used to create a slot that is associated with an enclave VM.
+> + * Memory and vCPUs are then set for the slot mapped to an enclave.
+> + *
+> + * The generated unique slot id is an output parameter. An enclave file
+> + * descriptor is returned as result of this ioctl call. The enclave fd can be
+> + * further used with ioctl calls to set vCPUs and memory regions, then start
+> + * the enclave.
+> + *
+> + * The ioctl can be invoked on the /dev/nitro_enclaves fd, before setting any
+> + * resources, such as memory and vCPUs, for an enclave.
+> + *
+> + * A NE CPU pool has be set before calling this function. The pool can be set
+> + * after the NE driver load, using /sys/module/nitro_enclaves/parameters/ne_cpus.
+> + * Its format is the following:
+> + * https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html#cpu-lists
+> + *
+> + * CPU 0 and its siblings have to remain available for the primary / parent VM,
+> + * so they cannot be set for enclaves. Full CPU core(s), from the same NUMA
+> + * node, need(s) be included in the CPU pool.
+> + *
+> + * The returned errors are:
+> + * * -EFAULT - copy_to_user() failure.
+> + * * -ENOMEM - memory allocation failure for internal bookkeeping variables.
+> + * * -NE_ERR_NO_CPUS_AVAIL_IN_POOL - no NE CPU pool set / no CPUs available in the pool.
+> + * * Error codes from get_unused_fd_flags() and anon_inode_getfile().
+> + * * Error codes from the NE PCI device request.
+> + */
+> +#define NE_CREATE_VM _IOR(0xAE, 0x21, __u64)
+> +
+> +/**
+> + * The command is used to set a vCPU for an enclave. The vCPU can be auto-chosen
+> + * from the NE CPU pool or it can be set by the caller, with the note that it
+> + * needs to be available in the NE CPU pool. Full CPU core(s), from the same
+> + * NUMA node, need(s) to be associated with an enclave.
+> + *
+> + * The vCPU id is an input / output parameter. If its value is 0, then a CPU is
+> + * chosen from the enclave CPU pool and returned via this parameter.
+> + *
+> + * The ioctl can be invoked on the enclave fd, before an enclave is started.
+> + *
+> + * The returned errors are:
+> + * * -EFAULT - copy_from_user() / copy_to_user() failure.
+> + * * -ENOMEM - memory allocation failure for internal bookkeeping variables.
+> + * * -EIO - current task mm is not the same as the one that created the enclave.
+> + * * -NE_ERR_NO_CPUS_AVAIL_IN_POOL - no CPUs available in the NE CPU pool.
+> + * * -NE_ERR_VCPU_ALREADY_USED - the provided vCPU is already used.
+> + * * -NE_ERR_VCPU_NOT_IN_POOL - the provided vCPU is not available in the NE CPU pool.
+> + * * -NE_ERR_INVALID_CPU_CORE - the core id of the provided vCPU is invalid / out of range.
+> + * * -NE_ERR_NOT_IN_INIT_STATE - the enclave is not in init state (init = before being started).
+> + * * -NE_ERR_INVALID_VCPU - the provided vCPU is out the available CPUs range.
+> + * * Error codes from the NE PCI device request.
+> + */
+> +#define NE_ADD_VCPU _IOWR(0xAE, 0x22, __u32)
+> +
+> +/**
+> + * The command is used to get information needed for in-memory enclave image
+> + * loading e.g. offset in enclave memory to start placing the enclave image.
+> + *
+> + * The image load info is an input / output parameter. It includes info provided
+> + * by the caller - flags - and returns the offset in enclave memory where to
+> + * start placing the enclave image.
+> + *
+> + * The ioctl can be invoked on the enclave fd, before an enclave is started.
+> + *
+> + * The returned errors are:
+> + * * -EFAULT - copy_from_user() / copy_to_user() failure.
+> + * * -NE_ERR_NOT_IN_INIT_STATE - the enclave is not in init state (init = before being started).
+> + */
+> +#define NE_GET_IMAGE_LOAD_INFO _IOWR(0xAE, 0x23, struct ne_image_load_info)
+> +
+> +/**
+> + * The command is used to set a memory region for an enclave, given the
+> + * allocated memory from the userspace. Enclave memory needs to be from the
+> + * same NUMA node as the enclave CPUs.
+> + *
+> + * The user memory region is an input parameter. It includes info provided
+> + * by the caller - flags, memory size and userspace address.
+> + *
+> + * The ioctl can be invoked on the enclave fd, before an enclave is started.
+> + *
+> + * The returned errors are:
+> + * * -EFAULT - copy_from_user() failure.
+> + * * -ENOMEM - memory allocation failure for internal bookkeeping variables.
+> + * * -EIO - current task mm is not the same as the one that created the enclave.
+> + * * -NE_ERR_NOT_IN_INIT_STATE - the enclave is not in init state (init = before being started).
+> + * * -NE_ERR_INVALID_MEM_REGION_SIZE - the memory size of the region is not multiple of 2 MiB.
+> + * * -NE_ERR_INVALID_MEM_REGION_ADDR - invalid user space address given.
+> + * * -NE_ERR_UNALIGNED_MEM_REGION_ADDR - unaligned user space address given.
+> + * * -NE_ERR_MEM_NOT_HUGE_PAGE - the memory regions is not backed by huge pages.
+> + * * -NE_ERR_MEM_DIFF_NUMA_NODE - the memory region is not from the same NUMA node as the CPUs.
+> + * * -NE_ERR_MEM_MAX_REGIONS - the number of memory regions set for the enclave reached maximum.
+> + * * Error codes from get_user_pages().
+> + * * Error codes from the NE PCI device request.
+> + */
+> +#define NE_SET_USER_MEMORY_REGION _IOW(0xAE, 0x24, struct ne_user_memory_region)
+> +
+> +/**
+> + * The command is used to trigger enclave start after the enclave resources,
+> + * such as memory and CPU, have been set.
+> + *
+> + * The enclave start info is an input / output parameter. It includes info
+> + * provided by the caller - enclave cid and flags - and returns the cid (if
+> + * input cid is 0).
+> + *
+> + * The ioctl can be invoked on the enclave fd, after an enclave slot is created
+> + * and resources, such as memory and vCPUs are set for an enclave.
+> + *
+> + * The returned errors are:
+> + * * -EFAULT - copy_from_user() / copy_to_user() failure.
+> + * * -NE_ERR_NOT_IN_INIT_STATE - the enclave is not in init state (init = before being started).
+> + * * -NE_ERR_NO_MEM_REGIONS_ADDED / -NE_ERR_NO_VCPUS_ADDED - no CPUs / memory regions are set.
+> + * * -NE_ERR_FULL_CORES_NOT_USED - full core(s) not set for the enclave.
+> + * * -NE_ERR_ENCLAVE_MEM_MIN_SIZE - enclave memory is less than minimum memory size (64 MiB).
+> + * * Error codes from the NE PCI device request.
+> + */
+> +#define NE_START_ENCLAVE _IOWR(0xAE, 0x25, struct ne_enclave_start_info)
+> +
+> +/* NE specific error codes */
+> +
+> +/* The provided vCPU is already used. */
+> +#define NE_ERR_VCPU_ALREADY_USED (512)
+> +/* The provided vCPU is not available in the NE CPU pool. */
+> +#define NE_ERR_VCPU_NOT_IN_POOL (513)
+> +/* The core id of the provided vCPU is invalid / out of range of the NE CPU pool. */
+> +#define NE_ERR_INVALID_CPU_CORE (514)
+> +/* The user space memory region size is not multiple of 2 MiB. */
+> +#define NE_ERR_INVALID_MEM_REGION_SIZE (515)
+> +/* The user space memory region address range is invalid. */
+> +#define NE_ERR_INVALID_MEM_REGION_ADDR (516)
+> +/* The user space memory region address is not aligned. */
+> +#define NE_ERR_UNALIGNED_MEM_REGION_ADDR (517)
+> +/* The user space memory region is not backed by contiguous physical huge page(s). */
+> +#define NE_ERR_MEM_NOT_HUGE_PAGE (518)
+> +/* The user space memory region is backed by pages from different NUMA nodes than the CPUs. */
+> +#define NE_ERR_MEM_DIFF_NUMA_NODE (519)
+> +/* The supported max memory regions per enclaves has been reached. */
+> +#define NE_ERR_MEM_MAX_REGIONS (520)
+> +/* The command to start an enclave is triggered and no memory regions are added. */
+> +#define NE_ERR_NO_MEM_REGIONS_ADDED (521)
+> +/* The command to start an enclave is triggered and no vcpus are added. */
+> +#define NE_ERR_NO_VCPUS_ADDED (522)
+> +/* The enclave memory size is lower than the minimum supported. */
+> +#define NE_ERR_ENCLAVE_MEM_MIN_SIZE (523)
+> +/* The command to start an enclave is triggered and full CPU cores are not set. */
+> +#define NE_ERR_FULL_CORES_NOT_USED (524)
+> +/* The enclave is not in init state when setting resources or triggering start. */
+> +#define NE_ERR_NOT_IN_INIT_STATE (525)
+> +/* The provided vCPU is out of range of the available CPUs. */
+> +#define NE_ERR_INVALID_VCPU (526)
+> +/* The command to create an enclave is triggered and no CPUs are available in the pool. */
+> +#define NE_ERR_NO_CPUS_AVAIL_IN_POOL (527)
+
+Tabs are nice to use to align things :)
+
+> +
+> +/* Image load info flags */
+> +
+> +/* Enclave Image Format (EIF) */
+> +#define NE_EIF_IMAGE (0x01)
+> +
+> +/* Info necessary for in-memory enclave image loading (in / out). */
+> +struct ne_image_load_info {
+> +	/**
+> +	 * Flags to determine the enclave image type (e.g. Enclave Image Format
+> +	 * - EIF) (in).
+> +	 */
+> +	__u64 flags;
+> +
+> +	/**
+> +	 * Offset in enclave memory where to start placing the enclave image
+> +	 * (out).
+> +	 */
+
+
+Why not use kerneldoc format to describe this structure instead of this
+"custom" one?  Same for other structures in this file.
+
+thanks,
+
+greg k-h
