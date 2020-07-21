@@ -2,140 +2,135 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55540C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F072070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328112070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 09:35:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="yY/akW2D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8AuH6Mf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbgGUJa4 (ORCPT
+        id S1728083AbgGUJfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:30:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36232 "EHLO
+        Tue, 21 Jul 2020 05:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUJa4 (ORCPT
+        with ESMTP id S1725984AbgGUJfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:30:56 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23B9C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:30:55 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so3135258wrl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 02:30:55 -0700 (PDT)
+        Tue, 21 Jul 2020 05:35:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B62FC061794;
+        Tue, 21 Jul 2020 02:35:42 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so2122468wmh.4;
+        Tue, 21 Jul 2020 02:35:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R+EF85aNDdODINrCfjjd0Lfuv95jSgpJvxBVPXo7UEI=;
-        b=yY/akW2D9+GrY1oKN3c5+dEliD4OkQM7F6PBHq+jxAt2+MgNVNgHxD8r/+H4hPWZp7
-         C6QNv/0wFMcXxVoU3TCemQtIbqkOS+zrtNK1Y3W9/SUy1XdL4jbRdKft5mJ77z/BPakH
-         TRk7m1nXqDlBfEq2paJClFRCVqFNLQp9Q5w6FvRmxQfD/BsJ8NskgIwBqJSC5msTA4Xp
-         /dPdMrboPhqh06qZbYrGbe/LnpvGSNTJlrfRctFCk5uVc/hp7RpbjH7DcmtUpXQaiP6I
-         Zghs3hCBJZfGnwUBK0nuRl6+I9AoSqXtCQRveCQ8KX9MH8VTc+oRbDCFJBxzrXW1ETJW
-         qg9g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4yhgkqbsnYfJYCERold44+/ri3htU91RXGcg84HkdV8=;
+        b=W8AuH6MfBCWy9CRyCRe8DjaCBTNVbpzRZShjzBRD0aveb7WQsKbttnHKMqqBMrIaNd
+         EUKSZe4lHPWnwhIGxptNRnmN2vFLqsp26KUgIlptGPHjdo0W/ctYBuwgyHIjk16PwSUK
+         4agWLrG6qodi4oiizNeJOyIQqn9nb7Jyk7SzmfOUtN+FU6xfxSGy7jLnhYbBdu6hZ7ey
+         GbzzufQPwraL6nXi5tQkcxokq85dRdEMnG82goMp3rVIuuM/dxcp1A+CSaTbek5T3BWN
+         johE6DLm+kazgiP2ny4YoptYGh44D49xXj26R34boIUPb95prwl3elVIZ+goILShUNDL
+         yGuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R+EF85aNDdODINrCfjjd0Lfuv95jSgpJvxBVPXo7UEI=;
-        b=NCHRErp0IZh840Dk/pMBZ+KLU2+xBWJfjFafyK+HBAHRUMjetT8KVrbw/pQJpWLlea
-         DDYnkqZU1wMcEppaVXm+iloLaQNpS2jPDL3NXk/GepBk9uOARz5/3616olZg9PkvI84W
-         89/Zi6aIyAr7yqe0BUND1EGaPmghuaN7YipdhtWv4yRsUDRZwCltBqXlwBHYJMOP2WGr
-         16b8Ad0wQ16pMWapBMM/H4Hk+yYJrU0ON9+2P04+DKIm2irJUikch4bfCdD6d5EE4xuy
-         PR5TfcUXXIawAV2ejo1dw8M5G1wxX4KLjDQaYs/Y9jCETHkgExA9XDAklxCldM6vV7Zv
-         bWxQ==
-X-Gm-Message-State: AOAM531L9slzqJszHqzZhVOO1bDmXyCWZ6ZK8W5LFJo0rXB4SXwLQOLn
-        9wsMx7Dj26WsndTROpYx6nJiPgfkBmtnGW6lz7s73A==
-X-Google-Smtp-Source: ABdhPJyEHJcpxpIsrSRwyhLOvolFk/1JMt5qF29yZtthuuwIDXna9yG5CaRZAoAVzWcNKbHQE3jBtSCRybazpe/ZsxU=
-X-Received: by 2002:adf:de12:: with SMTP id b18mr27796440wrm.390.1595323854198;
- Tue, 21 Jul 2020 02:30:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4yhgkqbsnYfJYCERold44+/ri3htU91RXGcg84HkdV8=;
+        b=sNbsiN7Fj7mGIHHQDDcwxaQ8r2hL/rPGnWGURCaSbKafNTjFOK4/U6ifj2xQoOmsuh
+         HSQhQD1H/P2mEiAIugElAFb1GLXC5vUCPBatMPXW2gKnrqBChSgvmxZUf2aWuNLADZA5
+         y09L/BdxV/H2a3rqzwTI3Q5PFIsRQkXL4A61naxG8ifNEOorAAl4etg707Lq17xr07PB
+         3hVY/eoYY19n4OQgrv8DtTEjworSZwSt11jy3DOmYbUKCQGA7rPUY7LNIqyHjlhLLOGq
+         Uu8wWskUr12/+VoB3zukPEbTrTRgCRPvzsGBsBrojs9n08dNmK/qTiyD1nzmk/9xJeH0
+         iBZA==
+X-Gm-Message-State: AOAM530/spaX43fszaO9Joq1NHeN7Phw61HScUnaiZHCFicIWxRFFuR7
+        5fPE8Uezxr8kV64deu2RuwU=
+X-Google-Smtp-Source: ABdhPJysqlKEkciHKD8bwfKwYCSK2N14ryXtdaDYN/HKPF/sQDxNcYdDCGU/iY3QqOwYpuxwscCJ4A==
+X-Received: by 2002:a1c:bc54:: with SMTP id m81mr3192451wmf.22.1595324141171;
+        Tue, 21 Jul 2020 02:35:41 -0700 (PDT)
+Received: from localhost ([41.37.22.226])
+        by smtp.gmail.com with ESMTPSA id z10sm36909296wrm.21.2020.07.21.02.35.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 02:35:40 -0700 (PDT)
+From:   Abanoub Sameh <abanoubsameh8@gmail.com>
+X-Google-Original-From: Abanoub Sameh <abanoubsameh@protonmail.com>
+To:     andy.shevchenko@gmail.com
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Abanoub Sameh <abanoubsameh@protonmail.com>
+Subject: [PATCH 1/7] gpio: fixed coding style issues in gpio-crystalcove.c
+Date:   Tue, 21 Jul 2020 11:35:16 +0200
+Message-Id: <20200721093522.2309530-1-abanoubsameh@protonmail.com>
+X-Mailer: git-send-email 2.28.0.rc0
 MIME-Version: 1.0
-References: <20200716234104.29049-1-atish.patra@wdc.com> <20200716234104.29049-2-atish.patra@wdc.com>
- <CAK8P3a2EesjQAs-YGrCO=cYfUVWFQ3CbJfVXJx3qZjCS_XW+wA@mail.gmail.com>
- <CAOnJCUKF-tfN-fHyRcjyAMnYVzQqp=_CLa2F4TQNO7jA4infoQ@mail.gmail.com>
- <CAK8P3a3iUdoOZrORz+aeXYiO35Lp8snrCkxSUPAY6Fh2EinaOw@mail.gmail.com>
- <CAOnJCUL2X9mK41iHLCg1_rtj7JS4p41hqXfmd=hyxK=2t5QQog@mail.gmail.com>
- <CAK8P3a3e3SBtTocpkCybKRjkBJG26G-8YdiroJbZLZYq9f0yfw@mail.gmail.com> <CAMj1kXH53V3Vu8Lq4yzSCn5ZSxn65KiVbt91PUPhkBRO6vuRSQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXH53V3Vu8Lq4yzSCn5ZSxn65KiVbt91PUPhkBRO6vuRSQ@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 21 Jul 2020 15:00:41 +0530
-Message-ID: <CAAhSdy3XYYaDTC293C9pQRHMz99XGoXr1HDcGv8Zi=9Mto0BHg@mail.gmail.com>
-Subject: Re: [RFT PATCH v3 1/9] RISC-V: Move DT mapping outof fixmap
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Atish Patra <atishp@atishpatra.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Will Deacon <will@kernel.org>, Zong Li <zong.li@sifive.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 2:32 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Tue, 21 Jul 2020 at 11:57, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, Jul 21, 2020 at 6:18 AM Atish Patra <atishp@atishpatra.org> wrote:
-> > > On Sat, Jul 18, 2020 at 2:24 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > On Sat, Jul 18, 2020 at 3:05 AM Atish Patra <atishp@atishpatra.org> wrote:
-> > > > > That's what the original code was doing. A fixmap entry was added to
-> > > > > map the original fdt
-> > > > > location to a virtual so that parse_dtb can be operated on a virtual
-> > > > > address. But we can't map
-> > > > > both FDT & early ioremap within a single PMD region( 2MB ). That's why
-> > > > > we removed the DT
-> > > > > mapping from the fixmap to .bss section. The other alternate option is
-> > > > > to increase the fixmap space to 4MB which seems more fragile.
-> > > >
-> > > > Could the original location just be part of the regular linear mapping of all
-> > > > RAM?
-> > >
-> > > No. Because we don't map the entire RAM until setup_vm_final().
-> > > We need to parse DT before setup_vm_final() to get the memblocks and
-> > > reserved memory regions.
-> >
-> > Ok, I see how you create a direct mapping for the kernel image, plus
-> > the fixmap for the dtb in setup_vm(), and how moving the dtb into the
-> > kernel image simplifies that.
-> >
-> > I'm still wondering why you can't do the same kind of PGD mapping
-> > for the dtb that you do for the vmlinux, creating linear page table
-> > entries exactly for the location that holds the dtb, from dtb_pa to
-> > dtb_pa+((struct fdt_header*)dtb_pa)->totalsize.
-> >
->
-> On arm64, we limit the size of the DT to 2MB, and reserve a pair of
-> PMD entries adjacent to the fixmap so we can map it r/o statically
-> using huge pages without using fixmap/early_ioremap slots. (Using a
-> pair of PMD entries allows the DT to appear at any alignment in
-> memory, given that PMD entries cover 2 MB each on 4k pages kernels)
+Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
+---
+ drivers/gpio/gpio-crystalcove.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-The arch/riscv is common for both RV32 and RV64. On RV32, we don't
-have PMD due to only two-levels in the page table.
+diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
+index 14d1f4c933b6..9391722ec107 100644
+--- a/drivers/gpio/gpio-crystalcove.c
++++ b/drivers/gpio/gpio-crystalcove.c
+@@ -129,7 +129,7 @@ static void crystalcove_update_irq_ctrl(struct crystalcove_gpio *cg, int gpio)
+ 	regmap_update_bits(cg->regmap, reg, CTLI_INTCNT_BE, cg->intcnt_value);
+ }
+ 
+-static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned gpio)
++static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned int gpio)
+ {
+ 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
+ 	int reg = to_reg(gpio, CTRL_OUT);
+@@ -140,7 +140,7 @@ static int crystalcove_gpio_dir_in(struct gpio_chip *chip, unsigned gpio)
+ 	return regmap_write(cg->regmap, reg, CTLO_INPUT_SET);
+ }
+ 
+-static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned gpio,
++static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned int gpio,
+ 				    int value)
+ {
+ 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
+@@ -152,7 +152,7 @@ static int crystalcove_gpio_dir_out(struct gpio_chip *chip, unsigned gpio,
+ 	return regmap_write(cg->regmap, reg, CTLO_OUTPUT_SET | value);
+ }
+ 
+-static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned gpio)
++static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+ {
+ 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
+ 	unsigned int val;
+@@ -169,7 +169,7 @@ static int crystalcove_gpio_get(struct gpio_chip *chip, unsigned gpio)
+ }
+ 
+ static void crystalcove_gpio_set(struct gpio_chip *chip,
+-				 unsigned gpio, int value)
++				 unsigned int gpio, int value)
+ {
+ 	struct crystalcove_gpio *cg = gpiochip_get_data(chip);
+ 	int reg = to_reg(gpio, CTRL_OUT);
+@@ -183,7 +183,7 @@ static void crystalcove_gpio_set(struct gpio_chip *chip,
+ 		regmap_update_bits(cg->regmap, reg, 1, 0);
+ }
+ 
+-static int crystalcove_irq_type(struct irq_data *data, unsigned type)
++static int crystalcove_irq_type(struct irq_data *data, unsigned int type)
+ {
+ 	struct crystalcove_gpio *cg =
+ 		gpiochip_get_data(irq_data_get_irq_chip_data(data));
+-- 
+2.28.0.rc0
 
-Although, I like the idea of two consecutive PMD mappings which are not
-part of FIXMAP. The RISC-V early page table is totally different from the
-final init_mm page table. I think we can do two consecutive PGD mappings
-in the early page table at lower addresses (quite below PAGE_OFFSET). I
-will play-around with this idea.
-
-Regards,
-Anup
