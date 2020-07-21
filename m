@@ -2,223 +2,449 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4A8C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E421C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A32120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YWYlnOiU";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="AC1u95oC"
+	by mail.kernel.org (Postfix) with ESMTP id E28F420658
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 11:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgGUL3z (ORCPT
+        id S1729839AbgGULaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:29:55 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:30658 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgGUL3w (ORCPT
+        Tue, 21 Jul 2020 07:30:06 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:35689 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgGULaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 07:29:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595330991; x=1626866991;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=C6I4GoH0FruEuw/0Xp3DSehLlb0iXRVsA+YOZPnoxBY=;
-  b=YWYlnOiUXYzk2HYiPRb5q28FkW9uZrqGwDEUhWaH35NbspIMqrH39TC0
-   v32ZUJDxR/jZmdCvIP4rr8GBTaD7OmXFLUDNxzeC2Pt+70WkKOpk96X/n
-   KlNVwHPgR5cJjQSWlKe65PzNZJCBohqb7127l+8xzqYZEg6aKJ8WVZsru
-   UWRmvlI9TtSRwag2tIKzxLPTh85NCrYyZ6X1/0o0fjRukRPmAdGVNXj5N
-   S1m2FLnQ5NoZ/KxrAwaB7UJw799+9k5SMXuTGeDJNCvwe5450WLopxWRg
-   VNFX6TVmT3UVDqP7b0u9nhgzlLk9627CB6UGjlxrFDsFWKHpRxQsrvaIL
-   w==;
-IronPort-SDR: ku4Iy5afuPNUIj5oO5yNgwUUGYHGMiWnjYeItw3gGUyKXFKv2CEvurlhaWAtMdJUEyGFd3FrUu
- na7HaKvkqDeiaoKs256xfbZQTB1oa05VCRdRcdkAKr0c7txDmZwsGZRnUTajXncWLvKI1N6woq
- y79QiAAdCG4RkVrkv3joCerL5aqt6g56eGEfIMOsyTZK8dvmWASmhvljLuMxEEAN0xhhAJpdNp
- 1TupQe2a7sCqve8mQ5ASmasp9e2AZiCXoI5cJWLhB0seXwmKbL0AP8U0FFPVZKOCygU6IbFvb4
- qds=
-X-IronPort-AV: E=Sophos;i="5.75,378,1589212800"; 
-   d="scan'208";a="143011381"
-Received: from mail-co1nam04lp2057.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.57])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jul 2020 19:29:49 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lTbj4pEFoMfT6c9wyarApKYZsbdmxu20wYdC9F7uQ+5Wj4tHCfrFZrksbUrT8Yv2snrbsD5FxLabDzpR2qpHHzZPbtHXonmqdehzgKdLj1PifkpIuvX1sonzy1P8TuJOiTK6a66DXvVibve1j5kZRDuZ9b1fFgbcPwRXud+n16prRe/2OGJu72GpUVeLyww1gGySQarVBqBHDt71hgqN4CSqAMM96GhNERzdkjIo7tNTmeDotGY0mIVcO1oWM/j9Sv6iMj+UmZu0vFaT4LkQ12O1ZdRMkIlh03ixfhVo7r+hIF26LojYiF83sBDtTUv9YnDtITLvWV/QGWVK1g90uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3RpkeK6dM77XgKav28mgxPLcyy6f22K2rkbeawzNJRo=;
- b=LmULh250u6l8cMO9T7FZHdYfZUsH889+0DjU3lWnQXJNsS2CRX+z3Il/Xf9jXGUHsrF/EaefNrGvmujvd1cMx2IP3yb17bTTJ9wPmTD9uasMAl6Wo5Th7/5IloSUBKOtBUA9vzADpGWq9mAAgIK9y0xs0fAkCSPimZoIDSj931l/Z/HWkE39sBpT3M3A296mPWnrBmpfEcZgfuD+ZySc14xEufptVVbN2vEiwI+LgvO25z6btOi3HBo9Fb/uzFT4LJPZ9t2WCsHe8X56ivNPmaNelB4TOCw3yr70OYBknJAKQat+Rz3ud3Nf43ZMgex6snwkvy75IPawWufKyjmT1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3RpkeK6dM77XgKav28mgxPLcyy6f22K2rkbeawzNJRo=;
- b=AC1u95oCiWrje/QiwD+tMYL3ynDlclsGgDlU3PVS+IHwAuzolIutGbRgKyXU/QG3i2DR7LvwEOijF/PPRvh0nScVXYNBNieWrnPC88lyvntffJ6kCdZWzLczNuDPcUnUbaceyKxehcgcMIUPKcsX0avZz0QfoyWlcGBbQ5VPUKs=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB1176.namprd04.prod.outlook.com (2603:10b6:903:ba::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Tue, 21 Jul
- 2020 11:29:48 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0%7]) with mapi id 15.20.3195.025; Tue, 21 Jul 2020
- 11:29:48 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Keith Busch <kbusch@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Satya Tangirala <satyat@google.com>,
-        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
-        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
-        "open list:VIRTIO CORE AND NET DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Alex Dubov <oakad@yahoo.com>
-Subject: Re: [PATCH 10/10] block: scsi: sr: use
- blk_is_valid_logical_block_size
-Thread-Topic: [PATCH 10/10] block: scsi: sr: use
- blk_is_valid_logical_block_size
-Thread-Index: AQHWX019CvZXuI6pdEKIdYQL4AgTSA==
-Date:   Tue, 21 Jul 2020 11:29:48 +0000
-Message-ID: <CY4PR04MB37517861074A4A448180E136E7780@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200721105239.8270-1-mlevitsk@redhat.com>
- <20200721105239.8270-11-mlevitsk@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0e8bc580-4ae2-44df-5ee3-08d82d696040
-x-ms-traffictypediagnostic: CY4PR04MB1176:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR04MB1176A9EA9BE5383CE2FF7CECE7780@CY4PR04MB1176.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CD++Hfi5jeC49fNUP35OwONqlDfKzav/Wk5XdIiByJ2ms4czIAhw081HoNq8Bk34JVeJXrP3kjIl1aaAmJ8af7A8xwksJmjJvq3uGoBW7nyvNgvhqRcz5a5w3JHOhs3szZURW1Berz0gWn5Ggnxn4RQsYAgGQRvJh1bC6E1tXpV0Zk3Jr3+pWJAfZXOB/PyeY1qsr/jvuWmSFp47wMAAK48bW0yttTWcmH8I7kSv1jz1B6iUQ9vAKReffaw64d1+qv9TJ/AcJ7eWsVT4qS52XsHIU535kPmvHBavrmOGr+B9W2ArLIn2yVkD7WdWlEyu/SQJLAAJsFPHH5WRv07IxA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(76116006)(91956017)(7416002)(86362001)(83380400001)(71200400001)(26005)(66556008)(66446008)(5660300002)(52536014)(55016002)(7696005)(478600001)(8936002)(6506007)(110136005)(2906002)(54906003)(53546011)(66476007)(9686003)(33656002)(316002)(64756008)(186003)(8676002)(66946007)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: nW+kQ2nX5CP1VxOHSGLruICPvUP48Q3yKjhqF213DFSU2leAqfROtjU6D1YhHIxxvq/RLE0IBA9KKRAWSyJA9z0n7o0yRkS/RZ8uFr8EXjZNw8w12PkojvS7c9fog9Wvo7Plh5pmXaVRpPPe1QIwzewx4JQ8shVQo1dCNWv6I0Kkppi2JmBsGJUjUvGpDb3syWhRgETeJhxN+Bx+fqCq0bkjLtLo3wBSE6qYAZqTPmQFAaOzfBYyMa93KBrRi2NR5K0yLV7Ne0BBrk6jXpBK5rTPX+QqY2geop8zey+ve3maZSKYgg4AA80eUV2Iul8HyxV3nzq8pg2fK3Q227ZTLg2ksu+SmgeT+I90v7YZiijS6N4P1RZ73/PaQ4xBKt5FmHcHjimt969UAuLQVT3LTK1pED+CxoqKty3j/gTS3gA2wVCpDis0aXJ0s01pmfq7chvzYTIynzr9YEHIkYDMNv5xh+FPbIX+hRIS+Fax7hNAEjZW+EAwUT7JkBEIw7L2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jul 2020 07:30:03 -0400
+Received: from localhost (unknown [106.76.68.110])
+        (Authenticated sender: me@yadavpratyush.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id B83E924000E;
+        Tue, 21 Jul 2020 11:29:54 +0000 (UTC)
+Date:   Tue, 21 Jul 2020 16:59:51 +0530
+From:   Pratyush Yadav <me@yadavpratyush.com>
+To:     Tudor.Ambarus@microchip.com
+Cc:     p.yadav@ti.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, broonie@kernel.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        matthias.bgg@gmail.com, michal.simek@xilinx.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, boris.brezillon@collabora.com,
+        nsekhar@ti.com
+Subject: Re: [PATCH v10 05/17] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200721112951.rngfk7njubcsahzp@yadavpratyush.com>
+References: <20200623183030.26591-1-p.yadav@ti.com>
+ <20200623183030.26591-6-p.yadav@ti.com>
+ <fbb3d7e7-75ed-dbf6-a975-2ae871bc9fbf@microchip.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e8bc580-4ae2-44df-5ee3-08d82d696040
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 11:29:48.0203
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gLY8pDDRMak6fdLiSqc0WgUr6sksn8NLB+shZ9kjcrQnUw+7YG+THc36s4RUmGX+QKRZ0h91ZSsBzn5Gs2UaZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1176
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbb3d7e7-75ed-dbf6-a975-2ae871bc9fbf@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/21 19:55, Maxim Levitsky wrote:=0A=
-> Plus some tiny refactoring.=0A=
-> =0A=
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>=0A=
-> ---=0A=
->  drivers/scsi/sr.c | 31 +++++++++++++------------------=0A=
->  1 file changed, 13 insertions(+), 18 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c=0A=
-> index 0c4aa4665a2f9..0e96338029310 100644=0A=
-> --- a/drivers/scsi/sr.c=0A=
-> +++ b/drivers/scsi/sr.c=0A=
-> @@ -866,31 +866,26 @@ static void get_sectorsize(struct scsi_cd *cd)=0A=
->  			cd->capacity =3D max_t(long, cd->capacity, last_written);=0A=
->  =0A=
->  		sector_size =3D get_unaligned_be32(&buffer[4]);=0A=
-> -		switch (sector_size) {=0A=
-> -			/*=0A=
-> -			 * HP 4020i CD-Recorder reports 2340 byte sectors=0A=
-> -			 * Philips CD-Writers report 2352 byte sectors=0A=
-> -			 *=0A=
-> -			 * Use 2k sectors for them..=0A=
-> -			 */=0A=
-> -		case 0:=0A=
-> -		case 2340:=0A=
-> -		case 2352:=0A=
-> +=0A=
-> +		/*=0A=
-> +		 * HP 4020i CD-Recorder reports 2340 byte sectors=0A=
-> +		 * Philips CD-Writers report 2352 byte sectors=0A=
-> +		 *=0A=
-> +		 * Use 2k sectors for them..=0A=
-> +		 */=0A=
-> +=0A=
-=0A=
-No need for the blank line here.=0A=
-=0A=
-> +		if (!sector_size || sector_size =3D=3D 2340 || sector_size =3D=3D 2352=
-)=0A=
->  			sector_size =3D 2048;=0A=
-> -			/* fall through */=0A=
-> -		case 2048:=0A=
-> -			cd->capacity *=3D 4;=0A=
-> -			/* fall through */=0A=
-> -		case 512:=0A=
-> -			break;=0A=
-> -		default:=0A=
-> +=0A=
-> +		cd->capacity *=3D (sector_size >> SECTOR_SHIFT);=0A=
-=0A=
-Where does this come from ? There is no such code in sr get_sectorsize()...=
-=0A=
-=0A=
-> +=0A=
-> +		if (!blk_is_valid_logical_block_size(sector_size)) {=0A=
->  			sr_printk(KERN_INFO, cd,=0A=
->  				  "unsupported sector size %d.", sector_size);=0A=
->  			cd->capacity =3D 0;=0A=
->  		}=0A=
->  =0A=
->  		cd->device->sector_size =3D sector_size;=0A=
-> -=0A=
-=0A=
-White line change.=0A=
-=0A=
->  		/*=0A=
->  		 * Add this so that we have the ability to correctly gauge=0A=
->  		 * what the device is capable of.=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Hi Tudor,
+
+On 07/07/20 05:37PM, Tudor.Ambarus@microchip.com wrote:
+> Hi, Pratyush,
+> 
+> On 6/23/20 9:30 PM, Pratyush Yadav wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > Double Transfer Rate (DTR) is SPI protocol in which data is transferred
+> > on each clock edge as opposed to on each clock cycle. Make
+> > framework-level changes to allow supporting flashes in DTR mode.
+> > 
+> > Right now, mixed DTR modes are not supported. So, for example a mode
+> > like 4S-4D-4D will not work. All phases need to be either DTR or STR.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >  drivers/mtd/spi-nor/core.c  | 305 ++++++++++++++++++++++++++++-------- 
+> >  drivers/mtd/spi-nor/core.h  |   6 +
+> >  drivers/mtd/spi-nor/sfdp.c  |   9 +-
+> >  include/linux/mtd/spi-nor.h |  51 ++++--
+> >  4 files changed, 295 insertions(+), 76 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+> > index 0369d98b2d12..22a3832b83a6 100644
+> > --- a/drivers/mtd/spi-nor/core.c
+> > +++ b/drivers/mtd/spi-nor/core.c
+> > @@ -40,6 +40,76 @@
+> > 
+> >  #define SPI_NOR_MAX_ADDR_WIDTH 4
+> > 
+> > +/**
+> > + * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
+> > + *                        extension type.
+> > + * @nor:               pointer to a 'struct spi_nor'
+> > + * @op:                        pointer to the 'struct spi_mem_op' whose properties
+> > + *                     need to be initialized.
+> > + *
+> > + * Right now, only "repeat" and "invert" are supported.
+> > + *
+> > + * Return: The opcode extension.
+> > + */
+> > +static u8 spi_nor_get_cmd_ext(const struct spi_nor *nor,
+> > +                             const struct spi_mem_op *op)
+> > +{
+> > +       switch (nor->cmd_ext_type) {
+> > +       case SPI_NOR_EXT_INVERT:
+> > +               return ~op->cmd.opcode;
+> > +
+> > +       case SPI_NOR_EXT_REPEAT:
+> > +               return op->cmd.opcode;
+> > +
+> > +       default:
+> > +               dev_err(nor->dev, "Unknown command extension type\n");
+> > +               return 0;
+> > +       }
+> > +}
+> > +
+> > +/**
+> > + * spi_nor_spimem_setup_op() - Set up common properties of a spi-mem op.
+> > + * @nor:               pointer to a 'struct spi_nor'
+> > + * @op:                        pointer to the 'struct spi_mem_op' whose properties
+> > + *                     need to be initialized.
+> > + * @proto:             the protocol from which the properties need to be set.
+> > + */
+> > +void spi_nor_spimem_setup_op(const struct spi_nor *nor,
+> > +                            struct spi_mem_op *op,
+> > +                            const enum spi_nor_protocol proto)
+> 
+> There's not much to set for the REG operations.
+> 
+> > +{
+> > +       u8 ext;
+> > +
+> > +       op->cmd.buswidth = spi_nor_get_protocol_inst_nbits(proto);
+> > +
+> > +       if (op->addr.nbytes)
+> > +               op->addr.buswidth = spi_nor_get_protocol_addr_nbits(proto);
+> > +
+> > +       if (op->dummy.nbytes)
+> > +               op->dummy.buswidth = spi_nor_get_protocol_addr_nbits(proto);
+> > +
+> > +       if (op->data.nbytes)
+> > +               op->data.buswidth = spi_nor_get_protocol_data_nbits(proto);
+> 
+> How about getting rid of the above and
+> 
+> > +
+> > +       if (spi_nor_protocol_is_dtr(proto)) {
+> 
+> introduce a spi_nor_spimem_setup_dtr_op() just for the body of this if?
+
+What benefit do we get with that other than skipping a couple of if() 
+checks? The downside is that we would have to then replicate all this 
+code to assign buswidth everywhere, including in spi_nor_read_sr() and 
+spi_nor_read_fsr() adding to more boilerplate.
+
+If we change anything about spi-mem ops in the future we would then 
+again have to hunt and peck all places where we create spi-mem ops and 
+update them.
+
+For example, I was recently experimenting with a mechanism to tell 
+controllers the maximum supported frequency for an op (xSPI says read 
+SFDP should support at least 50MHz operation so we want to make sure 
+controllers don't exceed that speed). A max speed of 0 would mean 
+controllers can go as fast as they wish (how it is done currently). 
+Having a central function to set up ops made it a 1 line change to set 
+the speed to 0 for all ops, and then we can set it to 50MHz for read 
+SFDP. The same thing without it would have me copying that line in 10-15 
+places.
+
+So unless there are any significant reasons to avoid having this, I 
+think it is a good idea to keep it.
+
+> > +               /*
+> > +                * spi-mem supports mixed DTR modes, but right now we can only
+> > +                * have all phases either DTR or STR. IOW, spi-mem can have
+> nit: SPIMEM
+> > +                * something like 4S-4D-4D, but spi-nor can't. So, set all 4
+> nit: SPI NOR
+> > +                * phases to either DTR or STR.
+> > +                */
+> > +               op->cmd.dtr = op->addr.dtr = op->dummy.dtr
+> > +                              = op->data.dtr = true;
+> > +
+> > +               /* 2 bytes per clock cycle in DTR mode. */
+> > +               op->dummy.nbytes *= 2;
+> > +
+> > +               ext = spi_nor_get_cmd_ext(nor, op);
+> > +               op->cmd.opcode = (op->cmd.opcode << 8) | ext;
+> > +               op->cmd.nbytes = 2;
+> > +       }
+> > +}
+> > +
+> >  /**
+> >   * spi_nor_spimem_bounce() - check if a bounce buffer is needed for the data
+> >   *                           transfer
+> > @@ -104,14 +174,12 @@ static ssize_t spi_nor_spimem_read_data(struct spi_nor *nor, loff_t from,
+> >         ssize_t nbytes;
+> >         int error;
+> > 
+> > -       /* get transfer protocols. */
+> > -       op.cmd.buswidth = spi_nor_get_protocol_inst_nbits(nor->read_proto);
+> > -       op.addr.buswidth = spi_nor_get_protocol_addr_nbits(nor->read_proto);
+> > -       op.dummy.buswidth = op.addr.buswidth;
+> > -       op.data.buswidth = spi_nor_get_protocol_data_nbits(nor->read_proto);
+> > +       spi_nor_spimem_setup_op(nor, &op, nor->read_proto);
+> 
+> Here we would keep the code as it were.
+> > 
+> >         /* convert the dummy cycles to the number of bytes */
+> >         op.dummy.nbytes = (nor->read_dummy * op.dummy.buswidth) / 8;
+> > +       if (spi_nor_protocol_is_dtr(nor->read_proto))
+> > +               op.dummy.nbytes *= 2;
+> 
+> And replace these 2 lines with:
+> 	if (spi_nor_protocol_is_dtr(nor->read_proto))
+> 		spi_nor_spimem_setup_dtr_op(nor, &op, nor->read_proto)
+> > 
+> >         usebouncebuf = spi_nor_spimem_bounce(nor, &op);
+> > 
+> > @@ -169,13 +237,11 @@ static ssize_t spi_nor_spimem_write_data(struct spi_nor *nor, loff_t to,
+> >         ssize_t nbytes;
+> >         int error;
+> > 
+> > -       op.cmd.buswidth = spi_nor_get_protocol_inst_nbits(nor->write_proto);
+> > -       op.addr.buswidth = spi_nor_get_protocol_addr_nbits(nor->write_proto);
+> > -       op.data.buswidth = spi_nor_get_protocol_data_nbits(nor->write_proto);
+> > -
+> >         if (nor->program_opcode == SPINOR_OP_AAI_WP && nor->sst_write_second)
+> >                 op.addr.nbytes = 0;
+> > 
+> > +       spi_nor_spimem_setup_op(nor, &op, nor->write_proto);
+> > +
+> >         if (spi_nor_spimem_bounce(nor, &op))
+> >                 memcpy(nor->bouncebuf, buf, op.data.nbytes);
+> > 
+> > @@ -227,10 +293,16 @@ int spi_nor_write_enable(struct spi_nor *nor)
+> >                                    SPI_MEM_OP_NO_DUMMY,
+> >                                    SPI_MEM_OP_NO_DATA);
+> > 
+> > +               spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
+> 
+> For the reg operation we can get rid of the extra checks that were in
+> spi_nor_spimem_setup_op and simply do:
+> 
+> 		if (spi_nor_protocol_is_dtr(proto))
+> 			spi_nor_spimem_setup_dtr_op()
+> 
+> > +
+> >                 ret = spi_mem_exec_op(nor->spimem, &op);
+> >         } else {
+> > -               ret = nor->controller_ops->write_reg(nor, SPINOR_OP_WREN,
+> > -                                                    NULL, 0);
+> > +               if (spi_nor_protocol_is_dtr(nor->reg_proto))
+> > +                       ret = -ENOTSUPP;
+> > +               else
+> > +                       ret = nor->controller_ops->write_reg(nor,
+> > +                                                            SPINOR_OP_WREN,
+> > +                                                            NULL, 0);
+> 
+> Would you introduce helpers for the controller ops, like Boris
+> did in the following patch?
+> https://patchwork.ozlabs.org/project/linux-mtd/patch/20181012084825.23697-10-boris.brezillon@bootlin.com/
+> 
+> How about spi_nor_controller_ops_read_reg()
+> and spi_nor_controller_ops_write_reg() instead?
+
+It would get rid of the boilerplate so I think it is a good idea.
+
+> cut
+> 
+> > @@ -1144,7 +1291,11 @@ static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+> >                                    SPI_MEM_OP_NO_DUMMY,
+> >                                    SPI_MEM_OP_NO_DATA);
+> > 
+> > +               spi_nor_spimem_setup_op(nor, &op, nor->write_proto);
+> > +
+> >                 return spi_mem_exec_op(nor->spimem, &op);
+> > +       } else if (spi_nor_protocol_is_dtr(nor->write_proto)) {
+> > +               return -ENOTSUPP;
+> >         } else if (nor->controller_ops->erase) {
+> >                 return nor->controller_ops->erase(nor, addr);
+> >         }
+> 
+> here you would need a helper: spi_nor_controller_ops_erase()
+
+Ok.
+ 
+> cut
+> 
+> > @@ -2368,12 +2517,16 @@ spi_nor_spimem_adjust_hwcaps(struct spi_nor *nor, u32 *hwcaps)
+> >         struct spi_nor_flash_parameter *params = nor->params;
+> >         unsigned int cap;
+> > 
+> > -       /* DTR modes are not supported yet, mask them all. */
+> > -       *hwcaps &= ~SNOR_HWCAPS_DTR;
+> > -
+> >         /* X-X-X modes are not supported yet, mask them all. */
+> >         *hwcaps &= ~SNOR_HWCAPS_X_X_X;
+> > 
+> > +       /*
+> > +        * If the reset line is broken, we do not want to enter a stateful
+> > +        * mode.
+> > +        */
+> > +       if (nor->flags & SNOR_F_BROKEN_RESET)
+> > +               *hwcaps &= ~(SNOR_HWCAPS_X_X_X | SNOR_HWCAPS_X_X_X_DTR);
+> 
+> A dedicated reset line is not enough for flashes that keep their state
+> in non-volatile bits. Since we can't protect from unexpected crashes in
+> the non volatile state case, we should enter these modes only with an
+> explicit request, i.e. an optional DT property: "update-nonvolatile-state",
+> or something similar.
+
+I wrote this patch with the assumption that we won't be supporting 
+non-volatile configuration as of now. In the previous discussions we 
+came to the conclusion that it is not easy to detect the flash if it 
+boots in any mode other than 1S-1S-1S [0]. So if we update non-volatile 
+state, the flash would be useless after a reboot because we won't be 
+able to detect it in 8D mode. It doesn't matter if the reset line is 
+connected or not because it will reset the flash to the non-volatile 
+state, and we can't detect it from the non-volatile state.
+
+> For the volatile state case, we can parse the SFDP SCCR map, save if we
+> can enter stateful modes in a volatile way, and if yes allow the entering.
+
+If we are not support volatile configurations, the reset line is enough 
+to take care of unexpected resets, no? I don't see any need to parse 
+SCCR map just for this.
+
+> Do the flashes that you played with define the SFDP SCCR map?
+
+FWIW, the Cypress S28HS512T flash does but the Micron MT35XU512ABA does 
+not.
+ 
+> > +
+> >         for (cap = 0; cap < sizeof(*hwcaps) * BITS_PER_BYTE; cap++) {
+> >                 int rdidx, ppidx;
+> > 
+> > @@ -2628,7 +2781,7 @@ static int spi_nor_default_setup(struct spi_nor *nor,
+> >                  * controller directly implements the spi_nor interface.
+> >                  * Yet another reason to switch to spi-mem.
+> >                  */
+> > -               ignored_mask = SNOR_HWCAPS_X_X_X;
+> > +               ignored_mask = SNOR_HWCAPS_X_X_X | SNOR_HWCAPS_X_X_X_DTR;
+> >                 if (shared_mask & ignored_mask) {
+> >                         dev_dbg(nor->dev,
+> >                                 "SPI n-n-n protocols are not supported.\n");
+> > @@ -2774,11 +2927,25 @@ static void spi_nor_info_init_params(struct spi_nor *nor)
+> >                                           SNOR_PROTO_1_1_8);
+> >         }
+> > 
+> > +       if (info->flags & SPI_NOR_OCTAL_DTR_READ) {
+> 
+> Why do we need this flag? Can't we determine if the flash supports
+> octal DTR by parsing SFDP?
+
+For Cypress S28HS512T, we can since it is xSPI compliant. We can't do 
+that for Micron MT35XU512ABA since it is not xSPI compliant.
+
+> > +               params->hwcaps.mask |= SNOR_HWCAPS_READ_8_8_8_DTR;
+> > +               spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8_DTR],
+> > +                                         0, 20, SPINOR_OP_READ_FAST,
+> > +                                         SNOR_PROTO_8_8_8_DTR);
+> > +       }
+> > +
+> >         /* Page Program settings. */
+> >         params->hwcaps.mask |= SNOR_HWCAPS_PP;
+> >         spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP],
+> >                                 SPINOR_OP_PP, SNOR_PROTO_1_1_1);
+> > 
+> > +       /*
+> > +        * Since xSPI Page Program opcode is backward compatible with
+> > +        * Legacy SPI, use Legacy SPI opcode there as well.
+> > +        */
+> > +       spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8_8_8_DTR],
+> > +                               SPINOR_OP_PP, SNOR_PROTO_8_8_8_DTR);
+> > +
+> 
+> This looks fishy. You haven't updated the hwcaps.mask, these pp settings never
+> get selected?
+
+The problem here is that I don't see any field/table in SFDP that can 
+tell us {if,which} 8D-8D-8D program commands are supported. The xSPI 
+spec says that "The program commands provide SPI backward compatible 
+commands for programming data...".
+
+So we populate the 8D page program opcodes here (and in 4bait parsing) 
+using the 1S opcodes. The flashes have to enable the hwcap in fixup 
+hooks.
+
+As an alternative, maybe we can introduce the SPI_NOR_OCTAL_DTR_PP flag 
+that can enable the hwcap here? Thoughts?
+
+> >         /*
+> >          * Sector Erase settings. Sort Erase Types in ascending order, with the
+> >          * smallest erase size starting at BIT(0).
+> > @@ -2886,7 +3053,8 @@ static int spi_nor_init_params(struct spi_nor *nor)
+> > 
+> >         spi_nor_manufacturer_init_params(nor);
+> > 
+> > -       if ((nor->info->flags & (SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)) &&
+> > +       if ((nor->info->flags & (SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> > +                                SPI_NOR_OCTAL_READ | SPI_NOR_OCTAL_DTR_READ)) &&
+> >             !(nor->info->flags & SPI_NOR_SKIP_SFDP))
+> >                 spi_nor_sfdp_init_params(nor);
+> > 
+> > @@ -2948,7 +3116,9 @@ static int spi_nor_init(struct spi_nor *nor)
+> >                 return err;
+> >         }
+> > 
+> > -       if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES)) {
+> > +       if (nor->addr_width == 4 &&
+> > +           !(nor->info->flags & SPI_NOR_OCTAL_DTR_READ) &&
+> 
+> Why is the Octal DTR read exempted?
+
+It is based on the assumption explained below that 8D mode will always 
+use 4-byte addresses so we don't need to explicitly enable 8D mode. 
+Although I think maybe we should exempt all flashes that support DTR 
+mode?
+
+> > +           !(nor->flags & SNOR_F_4B_OPCODES)) {
+> >                 /*
+> >                  * If the RESET# pin isn't hooked up properly, or the system
+> >                  * otherwise doesn't perform a reset command in the boot
+> > @@ -3007,6 +3177,9 @@ static int spi_nor_set_addr_width(struct spi_nor *nor)
+> >  {
+> >         if (nor->addr_width) {
+> >                 /* already configured from SFDP */
+> > +       } else if (spi_nor_protocol_is_dtr(nor->read_proto)) {
+> > +                /* Always use 4-byte addresses in DTR mode. */
+> > +               nor->addr_width = 4;
+> 
+> Why? DTR with 3 byte addr width should be possible too.
+
+Should it be? What would happen to the half cycle left over? Do we then 
+start the dummy phase in the middle of the cycle? We would also have to 
+start the data phase in the middle of a cycle as well and end the 
+transaction with half a cycle left over.
+
+AFAIK, the controller I tested with (Cadence QSPI) does not support 
+this. Similarly, the two flashes this series adds support for, Cypress 
+S28HS512T and Micron MT35XU512ABA, don't support 3-byte address in 8D 
+mode. I'm not sure if there are any flashes or controllers that do.
+ 
+> >         } else if (nor->info->addr_width) {
+> >                 nor->addr_width = nor->info->addr_width;
+> >         } else if (nor->mtd.size > 0x1000000) {
+> 
+> Cheers,
+> ta
+
+[0] https://lore.kernel.org/linux-mtd/20200228093658.zc3uifqg4zruokq3@ti.com/
+
+-- 
+Regards,
+Pratyush Yadav
