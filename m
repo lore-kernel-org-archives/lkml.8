@@ -2,176 +2,288 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4064EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF4DC433EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1246E2065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91424206C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 17:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5r6rqWh"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="zEwJmhVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgGURpo (ORCPT
+        id S1730455AbgGURrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56878 "EHLO
+        Tue, 21 Jul 2020 13:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgGURpn (ORCPT
+        with ESMTP id S1725267AbgGURrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:45:43 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A82AC061794;
-        Tue, 21 Jul 2020 10:45:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o13so12282097pgf.0;
-        Tue, 21 Jul 2020 10:45:43 -0700 (PDT)
+        Tue, 21 Jul 2020 13:47:00 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1AFC0619DA
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:47:00 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id h17so9709398qvr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 10:47:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kMWXOlhE34MA+0PIvAVKS1uhdD3FiDsb7PHPebuEoZY=;
-        b=e5r6rqWhkz1D+xEyJQ+A/wRC9svCFYIA/poy4ke6itdgG7CpS0i+mv2bzRmmpcwrKn
-         nt/o9IDu1lmc6TLvfdcgza3WVESfyQUimp6ZF/cND1ap8+9U7GNORYDzKz8aRCUatR17
-         mg/Q7qLa9lBeRaFlWykxJztwMpt2vbuWfT71ct9zgWfAUaHgsw7ySyZ0Kgn6R4yhfLCv
-         0GTg6QEjekW3YoD9W701yGgD9OQNwd+DRASQWzJKF1LODJ/KDMkplElD5z3SLm5ulEtg
-         Ey4Z8PvxOHZyyOIXLm5iZi2zVIKj2pCfMIoKiq6lXRKL3goC1d8wD1S5oT6SL8UnyHiL
-         O5Cg==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RSgwIt6Xmnq65csieZBPIE7le00gy1RleefALsLtM4I=;
+        b=zEwJmhVqE2bAhuFmQJlX3mCSLHWVovSFHx0Q4fLD0PEk5EDpGO0VUCO2JXg95YDfp9
+         xL8t/2JnEFJsbT98iDtYg49ZZYEMQNsNfbVKw9rNRRiN8ySRDXEfcdv+tAuBAoGu2rVh
+         yDVa3XfV2l5MByer36m6uZZsnz8UMqkDLgKnwCcM7dQ7QyVIuAc2kXjuo9bOtewV+Nk+
+         krhNkHqjmR+JZe6uEkZ1s3umNGGhLOFAUSvPMYC7UxwiisQqtJbDP6Czq+wrKKSEp0wH
+         2OgGbvK3vrUiwJZFJWzZJWqpFJM56HxxSCZCuRMCL/ox8PK0g+GmpUghSEM0iqcO0ttD
+         wIBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kMWXOlhE34MA+0PIvAVKS1uhdD3FiDsb7PHPebuEoZY=;
-        b=GoJETSRVvW7NjxrIzmo/BqI5dGc/e4FB9Myldj3B1GkI509SnzkbwkjreLqF3GHGWD
-         WwSRGxPRqYq8J5nFyj35AvuPiT4rf+6eMENtCX2YjsVJ8pZUbAv1niDyUmN9tVu42QVC
-         M9ZI56GnxVOvlTc++J5nv8ISMKCt9SvboEHARnRsq95xbGSYt81BqNAdSCepSKzeRgWL
-         zkk+CgGrmBCdcBolbDuBprYytuHnnR7Ki94tTayPocgTqlaSkGkvCt+gpM9pUrzamhWs
-         PpxTR0tfcKgcMLgJ/2kaqh/yFv0y0BibSgXDanxxRkzoBB8YYq+rpFYOQd6T9iiUY8Ua
-         nZaw==
-X-Gm-Message-State: AOAM533aUrQZNVLxBzt6awVPgR8gYLHhmYULKT549ze4CzvcdYT2SLUh
-        IDzMkPijO5KxQCIb39nKMZg=
-X-Google-Smtp-Source: ABdhPJwz2bMFIRQptPzYyQJia13UKDt6ya0pa9DA7+/aArwfYhQqDG6+ZoqEvGe/O/cJZRst6Gm8Fw==
-X-Received: by 2002:a63:504a:: with SMTP id q10mr22964237pgl.377.1595353542619;
-        Tue, 21 Jul 2020 10:45:42 -0700 (PDT)
-Received: from gmail.com ([103.105.153.67])
-        by smtp.gmail.com with ESMTPSA id t188sm21859891pfc.198.2020.07.21.10.45.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RSgwIt6Xmnq65csieZBPIE7le00gy1RleefALsLtM4I=;
+        b=eeo9VwEY7Tp/6rQ+eIZNXsG0auOOWtXqWI+YWs6DBwD2GuJx0a4+BJKNkCjq5yFJKo
+         cB/Zyv/hQ5XWeEv4rLLfrP/I5WPCzb7cwCPSTePXMHOlFGR3yIXjlPlRcG36HNRoAXVr
+         kOFkRW6qQedMhM396jrVWlp1ZFLq8iIo529mW/hJLxr7f57G/eGO7pmjtg2AuUs5V4hm
+         xGHiahdiRjmem/4TcspxzJBQQlZEsYfsIP4F2HLhySV3tZKhM01RCeBvQqTZHsUjxnV7
+         HfPy58Mbb88RP9gdvKRg8YEHRcOaGRMNBrSjPndA531jyBlglZiR8TaDsqeX+qBlunOf
+         iYUA==
+X-Gm-Message-State: AOAM532nfc833L4QDNAJ5tMbLanL2Yz25wjg1PNr4Ef3EBVcJE5i2QuQ
+        r+8CnA1tgZL7Vn7BGCMw8eUYzAeWUb1oXCUU
+X-Google-Smtp-Source: ABdhPJwypcJw5kfuZyhj7RMU5LynsnJ4EioBDJ25IoR9AN6RQ1S4FWzLQSOCrt9/2nH4CdHVjConrg==
+X-Received: by 2002:a05:6214:942:: with SMTP id dn2mr27879858qvb.161.1595353619482;
+        Tue, 21 Jul 2020 10:46:59 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id n81sm2898255qke.11.2020.07.21.10.46.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 10:45:41 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 23:13:53 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v1] crypto: ccp: sp-pci: use generic power management
-Message-ID: <20200721174353.GA398461@gmail.com>
-References: <20200721123146.81710-1-vaibhavgupta40@gmail.com>
- <7100976b-cf7c-c304-e2a6-660876e310af@amd.com>
- <20200721163056.GA396078@gmail.com>
- <95db9ba2-ffbb-ca92-6a70-1ee401920eed@amd.com>
+        Tue, 21 Jul 2020 10:46:58 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, keescook@chromium.org,
+        davidgow@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v3] lib: Convert test_user_copy to KUnit test
+Date:   Tue, 21 Jul 2020 14:46:54 -0300
+Message-Id: <20200721174654.72132-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <95db9ba2-ffbb-ca92-6a70-1ee401920eed@amd.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 12:15:13PM -0500, Tom Lendacky wrote:
-> On 7/21/20 11:30 AM, Vaibhav Gupta wrote:
-> > On Tue, Jul 21, 2020 at 10:19:33AM -0500, Tom Lendacky wrote:
-> >> On 7/21/20 7:31 AM, Vaibhav Gupta wrote:
-> >>> +bool __maybe_unused ccp_queues_suspended(struct ccp_device *ccp)
-> >>
-> >> These aren't static functions, so is the __maybe_unused necessary?
-> >>
-> >> (Same comment on the other non-static functions changed below)
-> >>
-> >>>  {
-> >>> +	.driver.pm = &sp_pci_pm_ops,
-> >>>  };
-> >>>  
-> >>>  int sp_pci_init(void)
-> >>> diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
-> >>> index 831aac1393a2..9dba52fbee99 100644
-> >>> --- a/drivers/crypto/ccp/sp-platform.c
-> >>> +++ b/drivers/crypto/ccp/sp-platform.c
-> >>
-> >> This file use the same "#ifdef CONFIG_PM" to define the suspend and resume
-> >> functions (see sp_platform_driver variable). Doesn't that need to be
-> >> updated similar to sp-pci.c? Not sure how this compile tested successfully
-> >> unless your kernel config didn't have CONFIG_PM defined?
-> > I am not sure but my .config file has "CONFIG_PM=y"
-> 
-> Ok, my miss on that, you didn't update the sp_platform_suspend signature,
-> so no issue there.
-> 
-> > 
-> > The motive is update PM of sp-pci. Months ago, we decided to remove
-> > "#ifdef CONFIG_PM" container and mark the callbacks as __maybe_unused.
-> 
-> Is this being done only for struct pci_driver structures then? Or will
-> there be a follow on effort for struct platform_driver structures?
->
-For now, I am updating all the PCI drivers supporting legacy callbacks for
-power management. It is part of my Linux Kernel Mentorsship Program project.
-I will talk to Bjorn about this for sure.
-> I can see the need for the __maybe_unused on the sp_pci_suspend() and
-> sp_pci_resume() functions since those are static functions that may cause
-> warnings depending on whether CONFIG_PM_SLEEP is defined or not.
-> 
-> The ccp_dev_suspend() and ccp_dev_resume() functions, though, are external
-> functions that I would think shouldn't require the __may_unused attribute
-> because the compiler wouldn't know if they are invoked or not within that
-> file (similar to how the sp_suspend() and sp_resume() weren't modified to
-> include the __maybe_unused attribute).
-Yes you are right. External functions should not require __maybe_unused. I got
-confused by the kbuild error in one of my previous patches.
-But those functions must have been static. I will have to dig out the mail to
-check it.
-> Can you try a compile test without
-> changing those functions and without CONFIG_PM=y and see if you run into
-> issues?
-Sure, I will run this and check if it throws any warning/error.
+This adds the conversion of the runtime tests of test_user_copy fuctions,
+from `lib/test_user_copy.c`to KUnit tests.
 
-Thanks a lot!
---Vaibhav Gupta
-> 
-> Thanks,
-> Tom
-> 
-> > Hence, I did similar changes to all files on which sp-pci is dependent.
-> > 
-> > This caused change in function defintion and declaration of sp_suspend().
-> > 
-> > sp-pci is not depended upon sp-platform. sp-platform was modified only because
-> > it also invoked sp_suspend() which got modified.
-> > 
-> > Thus, I didn't made any other changes to sp-platofrm.
-> > 
-> > Thanks
-> > Vaibhav Gupta
-> >>
-> >> Thanks,
-> >> Tom
-> >>
-> >>> @@ -207,7 +207,7 @@ static int sp_platform_suspend(struct platform_device *pdev,
-> >>>  	struct device *dev = &pdev->dev;
-> >>>  	struct sp_device *sp = dev_get_drvdata(dev);
-> >>>  
-> >>> -	return sp_suspend(sp, state);
-> >>> +	return sp_suspend(sp);
-> >>>  }
-> >>>  
-> >>>  static int sp_platform_resume(struct platform_device *pdev)
-> >>>
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+v2:
+    * splitted patch in 3:
+        - Allows to install and load modules in root filesystem;
+        - Provides an userspace memory context when tests are compiled
+          as module;
+        - Convert test_user_copy to KUnit test;
+    * removed entry for CONFIG_TEST_USER_COPY;
+    * replaced pr_warn to KUNIT_EXPECT_FALSE_MSG in test macro to
+      decrease the diff;
+v3:
+    * rebased with last kunit branch
+    * Please apply this commit from kunit-fixes:
+        3f37d14b8a3152441f36b6bc74000996679f0998
+      And these from patchwork:
+        https://patchwork.kernel.org/patch/11676331/
+        https://patchwork.kernel.org/patch/11676335/
+---
+ lib/Kconfig.debug                           | 28 ++++++++------
+ lib/Makefile                                |  2 +-
+ lib/{test_user_copy.c => user_copy_kunit.c} | 42 +++++++++------------
+ 3 files changed, 35 insertions(+), 37 deletions(-)
+ rename lib/{test_user_copy.c => user_copy_kunit.c} (91%)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..f699a3624ae7 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2078,18 +2078,6 @@ config TEST_VMALLOC
+
+ 	  If unsure, say N.
+
+-config TEST_USER_COPY
+-	tristate "Test user/kernel boundary protections"
+-	depends on m
+-	help
+-	  This builds the "test_user_copy" module that runs sanity checks
+-	  on the copy_to/from_user infrastructure, making sure basic
+-	  user/kernel boundary testing is working. If it fails to load,
+-	  a regression has been detected in the user/kernel memory boundary
+-	  protections.
+-
+-	  If unsure, say N.
+-
+ config TEST_BPF
+ 	tristate "Test BPF filter functionality"
+ 	depends on m && NET
+@@ -2154,6 +2142,22 @@ config SYSCTL_KUNIT_TEST
+
+ 	  If unsure, say N.
+
++config USER_COPY_KUNIT
++	tristate "KUnit Test for user/kernel boundary protections"
++	depends on KUNIT
++	depends on m
++	help
++	  This builds the "user_copy_kunit" module that runs sanity checks
++	  on the copy_to/from_user infrastructure, making sure basic
++	  user/kernel boundary testing is working. If it fails to load,
++	  a regression has been detected in the user/kernel memory boundary
++	  protections.
++
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config LIST_KUNIT_TEST
+ 	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/lib/Makefile b/lib/Makefile
+index b1c42c10073b..8c145f85accc 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+ obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+ obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+ obj-$(CONFIG_TEST_SORT) += test_sort.o
+-obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+@@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+ # KUnit tests
+ obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+ obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
++obj-$(CONFIG_USER_COPY_KUNIT) += user_copy_kunit.o
+diff --git a/lib/test_user_copy.c b/lib/user_copy_kunit.c
+similarity index 91%
+rename from lib/test_user_copy.c
+rename to lib/user_copy_kunit.c
+index 5ff04d8fe971..a10ddd15b4cd 100644
+--- a/lib/test_user_copy.c
++++ b/lib/user_copy_kunit.c
+@@ -16,6 +16,7 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ #include <linux/vmalloc.h>
++#include <kunit/test.h>
+
+ /*
+  * Several 32-bit architectures support 64-bit {get,put}_user() calls.
+@@ -35,7 +36,7 @@
+ ({									\
+ 	int cond = (condition);						\
+ 	if (cond)							\
+-		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
++		KUNIT_EXPECT_FALSE_MSG(test, cond, msg, ##__VA_ARGS__);	\
+ 	cond;								\
+ })
+
+@@ -44,7 +45,7 @@ static bool is_zeroed(void *from, size_t size)
+ 	return memchr_inv(from, 0x0, size) == NULL;
+ }
+
+-static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
++static int test_check_nonzero_user(struct kunit *test, char *kmem, char __user *umem, size_t size)
+ {
+ 	int ret = 0;
+ 	size_t start, end, i, zero_start, zero_end;
+@@ -102,7 +103,7 @@ static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+ 	return ret;
+ }
+
+-static int test_copy_struct_from_user(char *kmem, char __user *umem,
++static int test_copy_struct_from_user(struct kunit *test, char *kmem, char __user *umem,
+ 				      size_t size)
+ {
+ 	int ret = 0;
+@@ -177,7 +178,7 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	return ret;
+ }
+
+-static int __init test_user_copy_init(void)
++static void user_copy_test(struct kunit *test)
+ {
+ 	int ret = 0;
+ 	char *kmem;
+@@ -192,16 +193,14 @@ static int __init test_user_copy_init(void)
+ #endif
+
+ 	kmem = kmalloc(PAGE_SIZE * 2, GFP_KERNEL);
+-	if (!kmem)
+-		return -ENOMEM;
++	KUNIT_EXPECT_FALSE_MSG(test, kmem == NULL, "kmalloc failed");
+
+ 	user_addr = vm_mmap(NULL, 0, PAGE_SIZE * 2,
+ 			    PROT_READ | PROT_WRITE | PROT_EXEC,
+ 			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+ 	if (user_addr >= (unsigned long)(TASK_SIZE)) {
+-		pr_warn("Failed to allocate user memory\n");
+ 		kfree(kmem);
+-		return -ENOMEM;
++		KUNIT_FAIL(test, "Failed to allocate user memory");
+ 	}
+
+ 	usermem = (char __user *)user_addr;
+@@ -245,9 +244,9 @@ static int __init test_user_copy_init(void)
+ #undef test_legit
+
+ 	/* Test usage of check_nonzero_user(). */
+-	ret |= test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
++	ret |= test_check_nonzero_user(test, kmem, usermem, 2 * PAGE_SIZE);
+ 	/* Test usage of copy_struct_from_user(). */
+-	ret |= test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
++	ret |= test_copy_struct_from_user(test, kmem, usermem, 2 * PAGE_SIZE);
+
+ 	/*
+ 	 * Invalid usage: none of these copies should succeed.
+@@ -309,23 +308,18 @@ static int __init test_user_copy_init(void)
+
+ 	vm_munmap(user_addr, PAGE_SIZE * 2);
+ 	kfree(kmem);
+-
+-	if (ret == 0) {
+-		pr_info("tests passed.\n");
+-		return 0;
+-	}
+-
+-	return -EINVAL;
+ }
+
+-module_init(test_user_copy_init);
+-
+-static void __exit test_user_copy_exit(void)
+-{
+-	pr_info("unloaded.\n");
+-}
++static struct kunit_case user_copy_test_cases[] = {
++	KUNIT_CASE(user_copy_test),
++	{}
++};
+
+-module_exit(test_user_copy_exit);
++static struct kunit_suite user_copy_test_suite = {
++	.name = "user_copy",
++	.test_cases = user_copy_test_cases,
++};
+
++kunit_test_suites(&user_copy_test_suite);
+ MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+ MODULE_LICENSE("GPL");
+
+base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
+--
+2.26.2
+
