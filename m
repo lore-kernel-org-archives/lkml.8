@@ -2,139 +2,87 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79188C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5403E2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X/TV8w6M"
+	by mail.kernel.org (Postfix) with ESMTP id AB7C52176B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 04:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGUEcm (ORCPT
+        id S1726108AbgGUEhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgGUEcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:32:41 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4484C061794;
-        Mon, 20 Jul 2020 21:32:41 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4B9m0f3SVBz9sRR;
-        Tue, 21 Jul 2020 14:32:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595305959;
-        bh=w4Xy1OgH4XG7gHLmS4cliPvXoO5Wdfn568mqok1NPAY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X/TV8w6MxL0/pdF660WExLs8QnY78mVX37uAVGP8YwhJmpVc/cd2ONOi2Eqb6xpqN
-         8tR+HCEEfKsyIDxQm6kgelL0AWd4IgISGHxncpZEa5u6u5LdL2iIP7HceBmK6Ftife
-         aU+CnFPjx4DrzopWsIvXKh2T06M2tXo4Xd8IOuyo3wE3EDkoJ9wPN8EFNyEJLJRR+n
-         Bxs0dH05MsfQaOLpj12TgdsobhkNKMKtnC9rYmrvCnGesLxVrk2kUC6mcGhyVJP96O
-         SyuJ071yfB/ROvr8C9HSkQiq6MvwUfg6uZMtQynnRpBd7ed7ELBqVAuwIw9rwaRx3I
-         ZkpE8y1ckMpkw==
-Date:   Tue, 21 Jul 2020 14:32:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Qian Cai <cai@lca.pw>
-Cc:     syzbot <syzbot+75867c44841cb6373570@syzkaller.appspotmail.com>,
-        Markus.Elfring@web.de, casey@schaufler-ca.com, dancol@google.com,
-        hdanton@sina.com, jmorris@namei.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stephen.smalley.work@gmail.com,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        yanfei.xu@windriver.com, linux-next@vger.kernel.org
-Subject: Re: KASAN: use-after-free Read in userfaultfd_release (2)
-Message-ID: <20200721143233.23c89f2a@canb.auug.org.au>
-In-Reply-To: <20200720155024.GC7354@lca.pw>
-References: <0000000000001bbb6705aa49635a@google.com>
-        <000000000000cfc8ff05aa546b84@google.com>
-        <20200717150540.GB31206@lca.pw>
-        <20200720155024.GC7354@lca.pw>
+        Tue, 21 Jul 2020 00:37:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2715 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbgGUEhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 00:37:50 -0400
+IronPort-SDR: +/4h1hhuCdc8DZRaJXuLlAAlxUFDjtzN8jf5E7V3Uwk/uvb1Rqv6q2qcAuijwWbbH4FCjksgzD
+ vLVhHufWV0dg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9688"; a="214724510"
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="214724510"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 21:37:49 -0700
+IronPort-SDR: 6aJP3lGvzKKW1Tez1KCaohuaZWy3R+sWUgYhN6mY4rVnyHpH7ZfZbFQQD4Gy+8G3copSU/qlHS
+ xJPpbfqmCXTw==
+X-IronPort-AV: E=Sophos;i="5.75,377,1589266800"; 
+   d="scan'208";a="287782877"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2020 21:37:49 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     x86@kernel.org
+Cc:     Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/cpu: Add Lakefield, Alder Lake and Rocket Lake to Intel family
+Date:   Mon, 20 Jul 2020 21:37:49 -0700
+Message-Id: <20200721043749.31567-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200709192353.21151-1-tony.luck@intel.com>
+References: <20200709192353.21151-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/toEnhpP1bjnOrholb_30qUQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/toEnhpP1bjnOrholb_30qUQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Three new CPU models.
 
-Hi all,
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
 
-On Mon, 20 Jul 2020 11:50:25 -0400 Qian Cai <cai@lca.pw> wrote:
->
-> On Fri, Jul 17, 2020 at 11:05:41AM -0400, Qian Cai wrote:
-> > On Mon, Jul 13, 2020 at 08:34:06AM -0700, syzbot wrote: =20
-> > > syzbot has bisected this bug to:
-> > >=20
-> > > commit d08ac70b1e0dc71ac2315007bcc3efb283b2eae4
-> > > Author: Daniel Colascione <dancol@google.com>
-> > > Date:   Wed Apr 1 21:39:03 2020 +0000
-> > >=20
-> > >     Wire UFFD up to SELinux
-> > >=20
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D14a79d=
-13100000
-> > > start commit:   89032636 Add linux-next specific files for 20200708
-> > > git tree:       linux-next
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D16a79d=
-13100000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D12a79d131=
-00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D64a250eba=
-bc6c320
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D75867c44841=
-cb6373570
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D13c4c8d=
-b100000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D12cbb68f1=
-00000
-> > >=20
-> > > Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-> > > Fixes: d08ac70b1e0d ("Wire UFFD up to SELinux")
-> > >=20
-> > > For information about bisection process see: https://goo.gl/tpsmEJ#bi=
-section =20
-> >=20
-> > This is rather easy to reproduce here, =20
->=20
-> James, Stephen, can you drop this patch? Daniel's email was bounced, and =
-Viro
-> mentioned the patch could be quite bad,
->=20
-> https://lore.kernel.org/lkml/20200719165746.GJ2786714@ZenIV.linux.org.uk/
+This patch supercedes
+  https://lore.kernel.org/lkml/20200709192353.21151-1-tony.luck@intel.com/
+That one just added Rocket Lake
 
-I have reverted that commit in linux-next today.
+ arch/x86/include/asm/intel-family.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index a338a6deb950..5e658ba2654a 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -89,8 +89,15 @@
+ #define INTEL_FAM6_COMETLAKE		0xA5
+ #define INTEL_FAM6_COMETLAKE_L		0xA6
+ 
++#define INTEL_FAM6_ROCKETLAKE		0xA7
++
+ #define INTEL_FAM6_SAPPHIRERAPIDS_X	0x8F
+ 
++/* Hybrid Core/Atom Processors */
++
++#define	INTEL_FAM6_LAKEFIELD		0x8A
++#define INTEL_FAM6_ALDERLAKE		0x97
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+-- 
+2.21.1
 
---Sig_/toEnhpP1bjnOrholb_30qUQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Wb+EACgkQAVBC80lX
-0Gy4hQgAiOpVA7CVmdcLFC4iyaKl2GvE7+P5ZLPCSOXHu8si0xdVJwvtuOZiuGbT
-bSaV/lX5SM1e75PovM+I474GF8kxEPHDtvOA1tN6SUNgtuDTuIPtPbYD/a7anhSt
-0FCmj2qQrEEAPgoO2o5Ccuq1RYkBA5P+stEYPzjWg/64OSNSP68R0vfjJfQYOUYU
-U9JyXx3psiVlS118+srxeLjjohVjjd3jN09cS+Xwp3AR6ltbdKFIz3uS2VO11pZZ
-4lBgRFlqvLX6UE/aY8ky3+2zjSJbAJbZer6unQtoNvEOXNfVK8dDy0V/thZigMkH
-+ljiwrUO/tALZNF4ykpcS0Gt0626eA==
-=H813
------END PGP SIGNATURE-----
-
---Sig_/toEnhpP1bjnOrholb_30qUQ--
