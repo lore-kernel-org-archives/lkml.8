@@ -3,146 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB655C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65221C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950F120717
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="io6q2W3O"
+	by mail.kernel.org (Postfix) with ESMTP id 3924B20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 21:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595366631;
+	bh=d91pGLQB2CXvVCmM9xXj6Dvn3IH9iEgDu/DKvgJpBFo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qM21HrryzpeJmXl6eL4HD7B6aeGpPNyrNdErwIMWs2N5l0Z8FjF+esP1HVgm04h0Z
+	 +KHUaQcbQYNx49HfNqh65h8TyTgQ7v7tuxM1dgkhJ1LRoOllQ2afT+4HFSGnhpGR01
+	 anQ/pgMgSXPwktEahPkM2WntegYBpfauBJmFP7Zo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbgGUVWY (ORCPT
+        id S1731162AbgGUVXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:22:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730930AbgGUVWX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 17:22:23 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC25C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:22:23 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id n4so6704969uae.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ti/LYNMV4Io9WHvJwi/sVnT0KR0RLJ+cynlnt8AzAKs=;
-        b=io6q2W3OR7PHrPE78QkYmRtAy6IqueGeMnDtZTV/5G/M+ILV9XZoF02ypfJE/FonaG
-         sxLZ4bhJlH+ObUJiUko5OSW9ebedFdRmmuMWKmJ2LkGkmz96A7Nievs/m4oaYkCW6gmQ
-         KfNqnVzaDRtPVMd7GBdcBuskQOYb/xXc40byA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ti/LYNMV4Io9WHvJwi/sVnT0KR0RLJ+cynlnt8AzAKs=;
-        b=rIr+MjQgZyi0tGERMAGV7f2s8Z+AZ2z3Ti7PaCGPWCi58l1y1eSSDiQvriqu7kf1hG
-         teIZm9zSwS9hcZrIrBdG7uoYWiKnxWZI8qF5JsnZBXoHaqxcrNnvQGVc2YTra2K0ujcB
-         phObUTX6mck0eQFqSh60AQQ7JdKbB6LSJFhdXOu3uxlG2nz3txtfWT8y1TJDEFRaZN+U
-         qUgaX1taVJSkBBqxTIGsFfXMYdklVdOWt8DS452jyHbKpJ3+TYf6Z3APhRFvje1v+S2P
-         lKZ+m6vFcFd8mOc0pfKvmptxKJ7T8FE3S65SZwpIgiSPmeEQR8j2glXQQOryzjSdaH6g
-         EELg==
-X-Gm-Message-State: AOAM532JwmMpOws6ju5ZTKJuB1U5yGU38UyEX71F8rjrqZ5Yhdna8eWJ
-        fHrlxQwvCEOwzmuROWfpjwfpXsUPF/A=
-X-Google-Smtp-Source: ABdhPJzQ21o6neskmlBTC614RzGbubEagmjEcdnmcYz2HL6ln9Kiam7qZymBirWHF2dMTw4fmmG81A==
-X-Received: by 2002:ab0:4a86:: with SMTP id s6mr20032350uae.92.1595366542284;
-        Tue, 21 Jul 2020 14:22:22 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id q134sm3560097vkb.18.2020.07.21.14.22.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 14:22:21 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id h18so6700574uao.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 14:22:20 -0700 (PDT)
-X-Received: by 2002:ab0:150c:: with SMTP id o12mr21597172uae.90.1595366540167;
- Tue, 21 Jul 2020 14:22:20 -0700 (PDT)
+        Tue, 21 Jul 2020 17:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728944AbgGUVXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 17:23:49 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9D5A20717;
+        Tue, 21 Jul 2020 21:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595366629;
+        bh=d91pGLQB2CXvVCmM9xXj6Dvn3IH9iEgDu/DKvgJpBFo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gU7VcWswDJWCFO/BstoE0v0SsBBgsPXGW5TuTJYa05QbTT1YJul2qIbgwrJC2NBa7
+         GKyHuL8ld516La4SR2fSJ3OoxLIN9Dz8RNPrji92JCssxfqP9izFcoZdOdn6Lhgdp9
+         SVURcFK9+Nmg5SrHmuEIEceQbt7vxVmS4AiUKbnE=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ricky Wu <ricky_wu@realtek.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rui Feng <rui_feng@realsil.com.cn>, Klaus Doth <kdlnx@doth.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/5] minor rtsx cleanups
+Date:   Tue, 21 Jul 2020 16:23:31 -0500
+Message-Id: <20200721212336.1159079-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200716151943.2167652-1-daniel.thompson@linaro.org>
- <20200716151943.2167652-4-daniel.thompson@linaro.org> <CAD=FV=UBMa4pt7Xg2sKXHdjo6tVaQWBQFtT_aoDJ+Xt1HrPD+Q@mail.gmail.com>
- <20200720081323.5f3xojhu6v23jgqi@holly.lan>
-In-Reply-To: <20200720081323.5f3xojhu6v23jgqi@holly.lan>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 21 Jul 2020 14:22:08 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VipxFspgHJZ0uKURyfE4e3GB-w3gyJZdRn5CF9aLT8fg@mail.gmail.com>
-Message-ID: <CAD=FV=VipxFspgHJZ0uKURyfE4e3GB-w3gyJZdRn5CF9aLT8fg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] kgdb: Add NOKPROBE labels on the trap handler functions
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-On Mon, Jul 20, 2020 at 1:13 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Fri, Jul 17, 2020 at 03:39:58PM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Jul 16, 2020 at 8:20 AM Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > >
-> > > Currently kgdb honours the kprobe blocklist but doesn't place its own
-> > > trap handling code on the list. Add labels to discourage attempting to
-> > > use kgdb to debug itself.
-> > >
-> > > These changes do not make it impossible to provoke recursive trapping
-> > > since they do not cover all the calls that can be made on kgdb's entry
-> > > logic. However going much further whilst we are sharing the kprobe
-> > > blocklist risks reducing the capabilities of kprobe and this would be a
-> > > bad trade off (especially so given kgdb's users are currently conditioned
-> > > to avoid recursive traps).
-> > >
-> > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > ---
-> > >  kernel/debug/debug_core.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> >
-> > I could just be missing something, but...
-> >
-> > I understand not adding "NOKPROBE_SYMBOL" to generic kernel functions
-> > that kgdb happens to call, but I'm not quite sure I understand why all
-> > of the kdb / kgdb code itself shouldn't be in the blocklist.  I
-> > certainly don't object to the functions you added to the blocklist, I
-> > guess I'm must trying to understand why it's a bad idea to add more or
-> > how you came up with the list of functions that you did.
->
-> Relatively early in the trap handler execution (just after we bring the
-> other CPUs to a halt) all breakpoints are replaced with the original
-> opcodes. Therefore I only marked up functions that run between the trap
-> firing and the breakpoints being removed (and also between the
-> breakpoints being reinstated and trap exit).
+Clean up some needlessly device-specific stuff in the Realtek card reader
+drivers.
 
-Ah, OK!  Could that be added to the commit message?
+This implements some of my suggestions from
+https://lore.kernel.org/r/20200720220651.GA1035857@bjorn-Precision-5520
 
-Also, shouldn't you mark kgdb_arch_set_breakpoint()?  What about
-dbg_activate_sw_breakpoints()?  I haven't gone and extensively
-searched, but those two jump out to me as ones that were missed.
+This will conflict with Ricky's post here:
+https://lore.kernel.org/r/20200706070259.32565-1-ricky_wu@realtek.com
 
-I suppose that means that if someone tried to set a breakpoint on a
-kgdb function that wasn't one of the ones that you listed then the
-system would happily report that the breakpoint has been set (no error
-given) but that the breakpoint would just have no effect?  It wouldn't
-crash (which is good), it just wouldn't detect that the breakpoint was
-useless.  However, if these were in the NOKPROBE_SYMBOL then you'd get
-a nice error message.  Is there no way we could use a linker script to
-just mark everything using a linker script or somesuch?
+I'll be happy to update this on top of Ricky's patch after it's applied, or
+Ricky could pick up these patches and base his on top.
 
--Doug
+Bjorn Helgaas (5):
+  misc: rtsx: Use pcie_capability_clear_and_set_word() for
+    PCI_EXP_LNKCTL
+  misc: rtsx: Remove unused pcie_cap
+  misc: rtsx: Remove rtsx_pci_read/write_config() wrappers
+  misc: rtsx: Find L1 PM Substates capability instead of hard-coding
+  misc: rtsx: Use standard PCI definitions
+
+ drivers/misc/cardreader/rtl8411.c  |  8 +++++---
+ drivers/misc/cardreader/rts5209.c  |  5 +++--
+ drivers/misc/cardreader/rts5227.c  |  5 +++--
+ drivers/misc/cardreader/rts5229.c  |  5 +++--
+ drivers/misc/cardreader/rts5249.c  | 28 ++++++++++++++------------
+ drivers/misc/cardreader/rts5260.c  | 23 +++++++++++++--------
+ drivers/misc/cardreader/rts5261.c  | 32 +++++++++++++++++++-----------
+ drivers/misc/cardreader/rtsx_pcr.c |  7 ++++---
+ include/linux/rtsx_pci.h           | 22 --------------------
+ 9 files changed, 68 insertions(+), 67 deletions(-)
+
+-- 
+2.25.1
+
