@@ -2,135 +2,173 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12CC62064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FcI07BgD"
+	by mail.kernel.org (Postfix) with ESMTP id 20AF320709
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 13:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgGUNtF (ORCPT
+        id S1728466AbgGUNoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 09:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgGUNtF (ORCPT
+        Tue, 21 Jul 2020 09:44:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726109AbgGUNoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 09:49:05 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E763BC0619DA
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:49:04 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so2933875wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 06:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eqcpjEIrcsVSFBgsxPpIE2wbXMnlhFiLHo79g30IYmY=;
-        b=FcI07BgDIsQZnkKoQ7ZcelTbxx0IA3ghFJ3Jg7OvrTSEL0HsT3x+ya+4TvM3rxzq9S
-         hKDrIRS7FLmiJJlrm2pw4emkaM4YwW+5lNnfH2p4H9zbIkt3/rmGr37tE3X+I2Bhw9DP
-         EhlJg7hwSeMEL1lgIp7CE9zMkvVgqPhp8ybhtTo7ImQb3ugD/RmY9q00cvjAxoL2UJbR
-         7WV3925u7CnPpMJ+eWmdN8bTzR/8FrZhnjEONC8SaaJTwdJHixMAQG5zTZ7ChqVpmm7R
-         UJxo6ac0ASf+//JmKtM3O3gdyceW3Dc+eyGAzJTP12A/Q5o4lPKHjDsHBJffLtK+KnUG
-         mRdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eqcpjEIrcsVSFBgsxPpIE2wbXMnlhFiLHo79g30IYmY=;
-        b=tykJyFPtKhf8D+HWE1UJ5Scv3O/evmoIM85iVZD1COINLQxWULpSbnN50Er0rv0w58
-         QM8k5uQKOON0MEm0EtQfH6xumJS6gkGv2winYC/pMoLWTWF9MVvH3XvWBt4rOQzot3WU
-         ote8MMnSE/SCpQsmUwoGRqkH3SsvEytzFNY8cmY0BHRrcD/14qkNdcKwFpxkk9LyqQcM
-         bfoDkkOOj2+O8kOrFPwa3dk5KIoJGR/e2FTPOYJVMmPMoA5rL6fcjLUqdEVQhQ3DWRyt
-         4DyiUIBpLTbMkKq3vfxWp/rmJu/1XXEpoHw7QJLLou8VL9BFe3z5Zveojs34emKjtjkC
-         ROmg==
-X-Gm-Message-State: AOAM5308ZuAsNcAosd+SkrVugaD5mxi+3v/U5SuDynYxAnCPY2Sjkh+C
-        M3+O8yhOCK3CPEmydIIDiu28iA==
-X-Google-Smtp-Source: ABdhPJy3d+hLbGrGf/sSsPOwfCC1/TSYzvAB67Rw+TgT/X9vHSPS3HJvfRFbLW/K+8t5eo0f5yKlsw==
-X-Received: by 2002:a1c:31c6:: with SMTP id x189mr3917750wmx.182.1595339343428;
-        Tue, 21 Jul 2020 06:49:03 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:c144:5385:c824:85ce? ([2a01:e34:ed2f:f020:c144:5385:c824:85ce])
-        by smtp.googlemail.com with ESMTPSA id d18sm40156733wrj.8.2020.07.21.06.49.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 06:49:02 -0700 (PDT)
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Fix suspend and resume
- for am3 and am4
-To:     Carlos Hernandez <ceh@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200713162601.6829-1-tony@atomide.com>
- <1ac1ac81-1335-8ba2-590c-8f57c2df1910@linaro.org>
- <6b5fc12c-4da3-fc67-b9dd-bfca2ae870f2@ti.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <2081a11d-8678-03ec-cde4-b4eaae10e82d@linaro.org>
-Date:   Tue, 21 Jul 2020 15:49:01 +0200
+        Tue, 21 Jul 2020 09:44:24 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06LDXB6g058954;
+        Tue, 21 Jul 2020 09:43:48 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dvps9tkv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 09:43:48 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06LDe5Pg084748;
+        Tue, 21 Jul 2020 09:43:47 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32dvps9tjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 09:43:47 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06LDa5Y5012208;
+        Tue, 21 Jul 2020 13:43:45 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 32brq7v1jw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 13:43:45 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06LDgSv918415902
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jul 2020 13:42:28 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0AE4AE05A;
+        Tue, 21 Jul 2020 13:42:27 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71306AE051;
+        Tue, 21 Jul 2020 13:42:24 +0000 (GMT)
+Received: from [9.199.35.129] (unknown [9.199.35.129])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Jul 2020 13:42:24 +0000 (GMT)
+Subject: Re: [PATCH v4 05/10] powerpc/dt_cpu_ftrs: Add feature for 2nd DAWR
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Jordan Niethe <jniethe5@gmail.com>
+Cc:     mikey@neuling.org, apopple@linux.ibm.com,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, pedromfc@br.ibm.com, miltonm@us.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200717040958.70561-1-ravi.bangoria@linux.ibm.com>
+ <20200717040958.70561-6-ravi.bangoria@linux.ibm.com>
+ <CACzsE9oE+OMnWEXvbZZbq35YzpSzCbBHWEJcjtCgkcq-YrABng@mail.gmail.com>
+ <c34b1a66-2db6-c97a-1782-0d473c758502@linux.ibm.com>
+ <87mu3trtri.fsf@mpe.ellerman.id.au>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Message-ID: <62daa2d1-4e11-dcc1-cb1d-805ee4a156e0@linux.ibm.com>
+Date:   Tue, 21 Jul 2020 19:12:23 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <6b5fc12c-4da3-fc67-b9dd-bfca2ae870f2@ti.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <87mu3trtri.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_08:2020-07-21,2020-07-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ phishscore=0 priorityscore=1501 adultscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007210094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/07/2020 15:11, Carlos Hernandez wrote:
-> 
-> On 7/17/20 6:29 AM, Daniel Lezcano wrote:
->> On 13/07/2020 18:26, Tony Lindgren wrote:
->>> Carlos Hernandez <ceh@ti.com> reported that we now have a suspend and
->>> resume regresssion on am3 and am4 compared to the earlier kernels. While
->>> suspend and resume works with v5.8-rc3, we now get errors with rtcwake:
->>>
->>> pm33xx pm33xx: PM: Could not transition all powerdomains to target state
->>> ...
->>> rtcwake: write error
->>>
->>> This is because we now fail to idle the system timer clocks that the
->>> idle code checks and the error gets propagated to the rtcwake.
->>>
->>> Turns out there are several issues that need to be fixed:
->>>
->>> 1. Ignore no-idle and no-reset configured timers for the ti-sysc
->>>     interconnect target driver as otherwise it will keep the system
->>> timer
->>>     clocks enabled
->>>
->>> 2. Toggle the system timer functional clock for suspend for am3 and am4
->>>     (but not for clocksource on am3)
->>>
->>> 3. Only reconfigure type1 timers in dmtimer_systimer_disable()
->>>
->>> 4. Use of_machine_is_compatible() instead of of_device_is_compatible()
->>>     for checking the SoC type
->>>
->>> Fixes: 52762fbd1c47 ("clocksource/drivers/timer-ti-dm: Add clockevent
->>> and clocksource support")
->>> Reported-by: Carlos Hernandez <ceh@ti.com>
->>> Signed-off-by: Tony Lindgren <tony@atomide.com>
->>> ---
-> 
-> Tested-by: Carlos Hernandez <ceh@ti.com>
 
-Thanks
 
->> Carlos, were you able to test this patch ?
+On 7/21/20 4:59 PM, Michael Ellerman wrote:
+> Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
+>> On 7/17/20 11:14 AM, Jordan Niethe wrote:
+>>> On Fri, Jul 17, 2020 at 2:10 PM Ravi Bangoria
+>>> <ravi.bangoria@linux.ibm.com> wrote:
+>>>>
+>>>> Add new device-tree feature for 2nd DAWR. If this feature is present,
+>>>> 2nd DAWR is supported, otherwise not.
+>>>>
+>>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>>>> ---
+>>>>    arch/powerpc/include/asm/cputable.h | 7 +++++--
+>>>>    arch/powerpc/kernel/dt_cpu_ftrs.c   | 7 +++++++
+>>>>    2 files changed, 12 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+>>>> index e506d429b1af..3445c86e1f6f 100644
+>>>> --- a/arch/powerpc/include/asm/cputable.h
+>>>> +++ b/arch/powerpc/include/asm/cputable.h
+>>>> @@ -214,6 +214,7 @@ static inline void cpu_feature_keys_init(void) { }
+>>>>    #define CPU_FTR_P9_TLBIE_ERAT_BUG      LONG_ASM_CONST(0x0001000000000000)
+>>>>    #define CPU_FTR_P9_RADIX_PREFETCH_BUG  LONG_ASM_CONST(0x0002000000000000)
+>>>>    #define CPU_FTR_ARCH_31                        LONG_ASM_CONST(0x0004000000000000)
+>>>> +#define CPU_FTR_DAWR1                  LONG_ASM_CONST(0x0008000000000000)
+>>>>
+>>>>    #ifndef __ASSEMBLY__
+>>>>
+>>>> @@ -497,14 +498,16 @@ static inline void cpu_feature_keys_init(void) { }
+>>>>    #define CPU_FTRS_POSSIBLE      \
+>>>>               (CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | CPU_FTRS_POWER8 | \
+>>>>                CPU_FTR_ALTIVEC_COMP | CPU_FTR_VSX_COMP | CPU_FTRS_POWER9 | \
+>>>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
+>>>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
+>>>> +            CPU_FTR_DAWR1)
+>>>>    #else
+>>>>    #define CPU_FTRS_POSSIBLE      \
+>>>>               (CPU_FTRS_PPC970 | CPU_FTRS_POWER5 | \
+>>>>                CPU_FTRS_POWER6 | CPU_FTRS_POWER7 | CPU_FTRS_POWER8E | \
+>>>>                CPU_FTRS_POWER8 | CPU_FTRS_CELL | CPU_FTRS_PA6T | \
+>>>>                CPU_FTR_VSX_COMP | CPU_FTR_ALTIVEC_COMP | CPU_FTRS_POWER9 | \
+>>>> -            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10)
+>>>> +            CPU_FTRS_POWER9_DD2_1 | CPU_FTRS_POWER9_DD2_2 | CPU_FTRS_POWER10 | \
+>>>> +            CPU_FTR_DAWR1)
+> 
+>>> Instead of putting CPU_FTR_DAWR1 into CPU_FTRS_POSSIBLE should it go
+>>> into CPU_FTRS_POWER10?
+>>> Then it will be picked up by CPU_FTRS_POSSIBLE.
 >>
+>> I remember a discussion about this with Mikey and we decided to do it
+>> this way. Obviously, the purpose is to make CPU_FTR_DAWR1 independent of
+>> CPU_FTRS_POWER10 because DAWR1 is an optional feature in p10. I fear
+>> including CPU_FTR_DAWR1 in CPU_FTRS_POWER10 can make it forcefully enabled
+>> even when device-tree property is not present or pa-feature bit it not set,
+>> because we do:
+>>
+>>         {       /* 3.1-compliant processor, i.e. Power10 "architected" mode */
+>>                 .pvr_mask               = 0xffffffff,
+>>                 .pvr_value              = 0x0f000006,
+>>                 .cpu_name               = "POWER10 (architected)",
+>>                 .cpu_features           = CPU_FTRS_POWER10,
+> 
+> The pa-features logic will turn it off if the feature bit is not set.
+> 
+> So you should be able to put it in CPU_FTRS_POWER10.
+> 
+> See for example CPU_FTR_NOEXECUTE.
 
+Ah ok. scan_features() clears the feature if the bit is not set in
+pa-features. So it should work find for powervm. I'll verify the same
+thing happens in case of baremetal where we use cpu-features not
+pa-features. If it works in baremetal as well, will put it in
+CPU_FTRS_POWER10.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks for the clarification,
+Ravi
