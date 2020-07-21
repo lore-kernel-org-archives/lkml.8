@@ -2,209 +2,147 @@ Return-Path: <SRS0=jpuI=BA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DC3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FF12068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A829422C9D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jul 2020 14:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0WITuCz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DG5AbKr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgGUOLc (ORCPT
+        id S1728189AbgGUOJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 10:11:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51478 "EHLO
+        Tue, 21 Jul 2020 10:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgGUOLb (ORCPT
+        with ESMTP id S1726120AbgGUOJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 10:11:31 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A5AC0619DA;
-        Tue, 21 Jul 2020 07:11:31 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a9so1636800pjd.3;
-        Tue, 21 Jul 2020 07:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HegLuYZPFFSazhaMow4ETM/dSjExzGWrhJw29Et5Fac=;
-        b=X0WITuCz3faYxv4JwbjHKtqa6l7jbD2qmRJ6fnNjKSupg9b/oScWl4yxyp62ZGd44q
-         RK5uoB3zIxFdVX1FJfnwrUyikoPSHKw6DP0hfCO1DPuOuQdy4Scm7NoJjnb+HrrKBOAQ
-         o8x2s8WzJSWG8OMq5sjeIdH1jB6MEJ50Ykl3w3EVJxXaQ2F9lTFtHNawyB7X5k13WGzZ
-         3RwhizhBaKw5fbPruu1wso+4slrJ5W5Fligt5zNVWTVdNg6Eb7kYZqZaUPkkED00lmX6
-         gydbG+ASbqDRQ+E91Lrq50CGq4NDFjSUmCSy0dCNazwWDLGmkRtFXoHVBa1it5wcZGNy
-         EURw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HegLuYZPFFSazhaMow4ETM/dSjExzGWrhJw29Et5Fac=;
-        b=tz+cqJW9FRkvdkPcW+R2ZYE9rz6aXx/unGtwtQM8Ox4keCT/pdyI0kQTbJypK0Q/do
-         L9Dlfyv2xDEtl+Jxjm5fN8Zf9EjEpHIeKHt+4UxAC23Q1EN0cP46FBIwrlFebZsgXMLE
-         f2KfrPpWmEwvUFi/udLDpweN7NjgIkAqGfK5x+yHM/h3+ddYZNMe5MqwX15MQgbDQ70B
-         /LufQC/ophFjQ8tJBzqGv36ZgsevgQEjW+08ueICMcY6aD5GqguhCLHLcii/Vx33WPRZ
-         w9JagbFcHd/zBjIi07JFQ9J2l+lj6FpRPeQEi1YOdfsOpxfRjsbkRechAQWIvay6fbkV
-         RB1A==
-X-Gm-Message-State: AOAM533GKUS8GfIQ2m90pNLU145pxEQv0dkudnwMa2lpOheTd5VXlzi0
-        rY28b1o/lIMjN0VOUWhSzmwfIuuv
-X-Google-Smtp-Source: ABdhPJwL/KFf3AtboRoDEc1lXf4RRc7fnqSVpItq3LVQX7y7KS7tVvRE2eHjkwxDBiZikN9NkOjXhg==
-X-Received: by 2002:a17:90a:6983:: with SMTP id s3mr4980465pjj.55.1595340690522;
-        Tue, 21 Jul 2020 07:11:30 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n22sm3285232pjq.25.2020.07.21.07.11.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jul 2020 07:11:29 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 07:11:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH v2 4/4] platform/chrome: cros_ec_proto: Convert EC error
- codes to Linux error codes
-Message-ID: <20200721141128.GA130724@roeck-us.net>
-References: <20200720202243.180230-1-linux@roeck-us.net>
- <20200720202243.180230-5-linux@roeck-us.net>
- <401aec54-ff21-7e0f-85dc-e32435df2672@collabora.com>
+        Tue, 21 Jul 2020 10:09:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6FBC061794;
+        Tue, 21 Jul 2020 07:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bck5iFe0qNEfND6yPrfltx4XHg11WKlZZGgqWSXEbeM=; b=DG5AbKr2hMKTJx8kECWtW35DUW
+        d8nrcG8IEz6EezQuspJJvlr01E63u5FpZUYe/E8yH3amhIvoHVrXSCnuILKCJ4tShC/KtnhPERuPc
+        hICPqgwPI8AkE5moy4RkF72cTtMe0n58XkH1qrTN96udzHXopziPnDJUEM8SpsakWuR+sSlGl0caS
+        NBCU3AoyxrLsrH2vkA7HsMEcMekkwiS5Rp/Y+hYOWT4gsUYljRhZAyRvV1w3fgr/fAfuiuDECwBJz
+        b74PjsC52zjnJdTEDVGQW8UoUBiY/wTtfXYLsxXBr42SVrjiK/RIB716f0BH7GLUumYtmxCE83TxG
+        kJ25CU4g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jxsxW-0007Zu-U5; Tue, 21 Jul 2020 14:09:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 18E353011C6;
+        Tue, 21 Jul 2020 16:09:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 03D43203C0597; Tue, 21 Jul 2020 16:09:29 +0200 (CEST)
+Date:   Tue, 21 Jul 2020 16:09:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, will@kernel.org, arnd@arndb.de,
+        mark.rutland@arm.com, dvyukov@google.com, glider@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 4/8] kcsan: Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks
+Message-ID: <20200721140929.GB10769@hirez.programming.kicks-ass.net>
+References: <20200721103016.3287832-1-elver@google.com>
+ <20200721103016.3287832-5-elver@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <401aec54-ff21-7e0f-85dc-e32435df2672@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200721103016.3287832-5-elver@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+On Tue, Jul 21, 2020 at 12:30:12PM +0200, Marco Elver wrote:
+> Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks for the builtin atomics
+> instrumentation.
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> Added to this series, as it would otherwise cause patch conflicts.
+> ---
+>  kernel/kcsan/core.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+> index 4633baebf84e..f53524ea0292 100644
+> --- a/kernel/kcsan/core.c
+> +++ b/kernel/kcsan/core.c
+> @@ -892,14 +892,17 @@ EXPORT_SYMBOL(__tsan_init);
+>  	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder);                      \
+>  	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder)                       \
+>  	{                                                                                          \
+> -		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);                      \
+> +		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS))                                      \
+> +			check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);              \
+>  		return __atomic_load_n(ptr, memorder);                                             \
+>  	}                                                                                          \
+>  	EXPORT_SYMBOL(__tsan_atomic##bits##_load);                                                 \
+>  	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder);                   \
+>  	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder)                    \
+>  	{                                                                                          \
+> -		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
+> +		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS))                                      \
+> +			check_access(ptr, bits / BITS_PER_BYTE,                                    \
+> +				     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);                    \
+>  		__atomic_store_n(ptr, v, memorder);                                                \
+>  	}                                                                                          \
+>  	EXPORT_SYMBOL(__tsan_atomic##bits##_store)
+> @@ -908,8 +911,10 @@ EXPORT_SYMBOL(__tsan_init);
+>  	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder);                 \
+>  	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder)                  \
+>  	{                                                                                          \
+> -		check_access(ptr, bits / BITS_PER_BYTE,                                            \
+> -			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
+> +		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS))                                      \
+> +			check_access(ptr, bits / BITS_PER_BYTE,                                    \
+> +				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
+> +					     KCSAN_ACCESS_ATOMIC);                                 \
+>  		return __atomic_##op##suffix(ptr, v, memorder);                                    \
+>  	}                                                                                          \
+>  	EXPORT_SYMBOL(__tsan_atomic##bits##_##op)
+> @@ -937,8 +942,10 @@ EXPORT_SYMBOL(__tsan_init);
+>  	int __tsan_atomic##bits##_compare_exchange_##strength(u##bits *ptr, u##bits *exp,          \
+>  							      u##bits val, int mo, int fail_mo)    \
+>  	{                                                                                          \
+> -		check_access(ptr, bits / BITS_PER_BYTE,                                            \
+> -			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
+> +		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS))                                      \
+> +			check_access(ptr, bits / BITS_PER_BYTE,                                    \
+> +				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
+> +					     KCSAN_ACCESS_ATOMIC);                                 \
+>  		return __atomic_compare_exchange_n(ptr, exp, val, weak, mo, fail_mo);              \
+>  	}                                                                                          \
+>  	EXPORT_SYMBOL(__tsan_atomic##bits##_compare_exchange_##strength)
+> @@ -949,8 +956,10 @@ EXPORT_SYMBOL(__tsan_init);
+>  	u##bits __tsan_atomic##bits##_compare_exchange_val(u##bits *ptr, u##bits exp, u##bits val, \
+>  							   int mo, int fail_mo)                    \
+>  	{                                                                                          \
+> -		check_access(ptr, bits / BITS_PER_BYTE,                                            \
+> -			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
+> +		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS))                                      \
+> +			check_access(ptr, bits / BITS_PER_BYTE,                                    \
+> +				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
+> +					     KCSAN_ACCESS_ATOMIC);                                 \
+>  		__atomic_compare_exchange_n(ptr, &exp, val, 0, mo, fail_mo);                       \
+>  		return exp;                                                                        \
+>  	}                                                                                          \
 
-On Tue, Jul 21, 2020 at 01:29:01PM +0200, Enric Balletbo i Serra wrote:
-> Hi Guenter,
-> 
-> Thank you for work on this. Cc'ing Gwendal as he has a deep knowledge of the EC
-> and their errors.
 
-The series is now also available in Gerrit at
-	https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2306731/3
-for integration/testing into ChromeOS.
-
-Thanks,
-Guenter
-
-> 
-> On 20/7/20 22:22, Guenter Roeck wrote:
-> > The EC reports a variety of error codes. Most of those, with the exception
-> > of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-> > error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
-> > to Linux error codes to report a more meaningful error to the caller to aid
-> > debugging.
-> > 
-> > Cc: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-> > Cc: Prashant Malani <pmalani@chromium.org>
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> > v2: No change
-> > 
-> > Notes:
-> >     I would welcome feedback on the error code translations.
-> >     Can we do better ?
-> > 
-> >     -ENOTSUPP is not a recommended error code, and checkpatch complains
-> >     about it. It is used in existing code, so I did not change it, but it
-> >     might be worthwhile exploring if we can find a better error code to
-> >     report "version not supported". Possible candidates might be EPROTOTYPE,
-> >     ENOPROTOOPT, EPROTONOSUPPORT, EPFNOSUPPORT, or EAFNOSUPPORT. I don't
-> >     see a direct match, but NFS reports -EPROTONOSUPPORT for unsupported
-> >     protocol versions.
-> > 
-> >  drivers/platform/chrome/cros_ec_proto.c | 37 +++++++++++++++++++------
-> >  1 file changed, 29 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> > index 3e745e0fe092..10aa9e483d35 100644
-> > --- a/drivers/platform/chrome/cros_ec_proto.c
-> > +++ b/drivers/platform/chrome/cros_ec_proto.c
-> > @@ -543,6 +543,29 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
-> >  }
-> >  EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> >  
-> > +static const int cros_ec_error_map[] = {
-> > +	[EC_RES_INVALID_COMMAND] = -EOPNOTSUPP,
-> > +	[EC_RES_ERROR] = -EIO,
-> 
-> nit -EREMOTEIO? To make explicit that the error is "remote" from the host.
-> Although -EIO seems to be more generic.
-> 
-> > +	[EC_RES_INVALID_PARAM] = -EINVAL,
-> > +	[EC_RES_ACCESS_DENIED] = -EACCES,
-> > +	[EC_RES_INVALID_RESPONSE] = -EPROTO,
-> > +	[EC_RES_INVALID_VERSION] = -ENOTSUPP,
-> 
-> +1 for EPROTONOSUPPORT to match with EC_RES_INVALID_VERSION
-> 
-> > +	[EC_RES_INVALID_CHECKSUM] = -EBADMSG,
-> > +	[EC_RES_IN_PROGRESS] = -EINPROGRESS,
-> > +	[EC_RES_UNAVAILABLE] = -ENODATA,
-> > +	[EC_RES_TIMEOUT] = -ETIMEDOUT,
-> > +	[EC_RES_OVERFLOW] = -EOVERFLOW,
-> > +	[EC_RES_INVALID_HEADER] = -EBADR,
-> > +	[EC_RES_REQUEST_TRUNCATED] = -EBADR,
-> > +	[EC_RES_RESPONSE_TOO_BIG] = -EFBIG,
-> > +	[EC_RES_BUS_ERROR] = -EFAULT,
-> > +	[EC_RES_BUSY] = -EBUSY,
-> 
-> Although the name matches, I'm wondering if we should use -EAGAIN instead as per
-> EC documentation:
-> 
->   EC_RES_BUSY - Up but too busy. Should retry.
-> 
-> hmm, however, for the audio codec, for example, this seems to have a slightly
-> different meaning and retry is not what we want, so let's do direct translation
-> and stay with -EBUSY.
-> 
-> > +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
-> > +	[EC_RES_INVALID_HEADER_CRC] = -EBADMSG,
-> > +	[EC_RES_INVALID_DATA_CRC] = -EBADMSG,
-> > +	[EC_RES_DUP_UNAVAILABLE] = -ENODATA,
-> > +};
-> > +
-> >  /**
-> >   * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
-> >   * @ec_dev: EC device.
-> > @@ -555,8 +578,7 @@ EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> >   *
-> >   * Return:
-> >   * >=0 - The number of bytes transferred
-> > - * -ENOTSUPP - Operation not supported
-> > - * -EPROTO - Protocol error
-> > + * <0 - Linux error code
-> >   */
-> >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >  			    struct cros_ec_command *msg)
-> > @@ -566,13 +588,12 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >  	ret = cros_ec_cmd_xfer(ec_dev, msg);
-> >  	if (ret < 0) {
-> >  		dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", ret);
-> > -	} else if (msg->result == EC_RES_INVALID_VERSION) {
-> > -		dev_dbg(ec_dev->dev, "Command invalid version (err:%d)\n",
-> > -			msg->result);
-> > -		return -ENOTSUPP;
-> >  	} else if (msg->result != EC_RES_SUCCESS) {
-> > -		dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg->result);
-> > -		return -EPROTO;
-> > +		if (msg->result < ARRAY_SIZE(cros_ec_error_map) && cros_ec_error_map[msg->result])
-> > +			ret = cros_ec_error_map[msg->result];
-> > +		else
-> > +			ret = -EPROTO;
-> > +		dev_dbg(ec_dev->dev, "Command result (err: %d [%d])\n", msg->result, ret);
-> >  	}
-> >  
-> >  	return ret;
-> > 
+*groan*, that could really do with a bucket of '{', '}'. Also, it is
+inconsistent in style with the existing use in
+DEFINE_TSAN_VOLATILE_READ_WRITE() where the define causes an early
+return.
