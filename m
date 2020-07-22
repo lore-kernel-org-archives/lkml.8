@@ -2,162 +2,139 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A1C43459
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0510C4345A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCE24207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD60207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSEyjz5F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WHkUNeeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732175AbgGVRIc (ORCPT
+        id S1732195AbgGVRIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48428 "EHLO
+        Wed, 22 Jul 2020 13:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731727AbgGVRIH (ORCPT
+        with ESMTP id S1731670AbgGVRI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:08:07 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052ECC0619DC;
-        Wed, 22 Jul 2020 10:08:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f2so2611241wrp.7;
-        Wed, 22 Jul 2020 10:08:06 -0700 (PDT)
+        Wed, 22 Jul 2020 13:08:29 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EFBC0619E0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:08:29 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id gc15so3145192pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g18P77ClrSoGOpqfcLBFSJDl+A/gIGkG8Ir+N9NqqJw=;
-        b=nSEyjz5FP/U+3rmYDhvNeGv7oE2TAUFPpMYKEBEmYFv7YvpZbB96/2oYZSWpZzbgmF
-         a9sBl3Az7/+kF4q2OFNcc8CTry/kHR+qUuyfXqQBesRCoX1Rh9Q/jYTWwZ9ZGzF1Y2rx
-         /OD6+6sx1nKOw3+/SgwIaSqRH99k80P7c4OPlMLyvEPpbFvKTRiGi7l7sovLAsgPnOXF
-         k+vqIObCRrVtgW6ZUc0EmnPo8oU9OXOHlS1Kvs813azo5FFDKphSGjn8vpQixKahbS6m
-         JKvoCaqwnfGy4O1n4qM9/f5+fuGF/zYBMbHcNqe9RM2SidMy4QmKpVGiRA8fJhM/Va+G
-         ZFxg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VaLaF6yamBawSm5kIKdzTcEbjjs1t/WxcQSgHm9Kq7Y=;
+        b=WHkUNeeu1Xlha2UJQ+Co9e4kZ1SOTALKH9eWds9DKQGx50y3sG6OauogygOiPW92NE
+         nM5+GllcvmAfs+EUR2FptgZX2Kvgfs0fAKmSVtx1ZhQzDx9Zy3zhriJ63Cl4JqrgPyV0
+         3GmMRas7mmFdhqa8CHG6gazr4HI3vlNoVeVwjHEuSG9ZVykZ/xw3uAEpOZwgun5tdjvj
+         AlYFgj2emHebrm+zey6aalEHZ8MuHf4yjmyhv6BxnI4zUIB70Xj80mFDMeP2yt2ZKvK7
+         9zjWWpePmZBAjXGlFMhQyHz70iTz/JIneP9+fEm8K9Vyn6dzYr+B68yb0aEAJYFX1pxb
+         CB2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=g18P77ClrSoGOpqfcLBFSJDl+A/gIGkG8Ir+N9NqqJw=;
-        b=aP0zCj65/4+2kBVZW/oLdlqMsGSoMJAnC5yp2TW1c6C+ubdyuJCAU+CM8zpftZjvWh
-         txAOQ+74C4yOt7gJnJpzNj8JL2Zg/aIGAAgsofB+FX2hLdYWKHvxyYlCedthryqQQtUP
-         MQl+Deb5na3RwQCiHyustjNgaeSLWSTPwtVtQHgDBY9N/KrjmetyFgDxyGKd87xASB/E
-         zpV/39xCZFwMRlMBQ1DSygmRcu+vgt2/3nLlHkl+PAZ8SpfgHKODQQ6kBa4B8tPvmXRO
-         KRSIEloi9bxRqrI/5lc8Ic6UU4gUclEQFmEDd65uGW4pnCPyvrvMmnpwUHaqTMuMQoQ6
-         P8Ig==
-X-Gm-Message-State: AOAM532yJV7BcGc1vZnApxH8GGFQQNlYS5w/OiP86I4k9dJsKoN6X7ao
-        OOCXeJbu3qLTrhsIh1Hwafo3X51M
-X-Google-Smtp-Source: ABdhPJwNOnt5j+JGoemLnlgVcofZEpLjrNQT62U75VZfBKcwSQq7gfmYEVyi/AGpDhE1zGszalESmQ==
-X-Received: by 2002:a5d:4144:: with SMTP id c4mr492145wrq.200.1595437685393;
-        Wed, 22 Jul 2020 10:08:05 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id 133sm392960wme.5.2020.07.22.10.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 10:08:04 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Sasi Kumar <sasi.kumar@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 3/7] bdc: Fix bug causing crash after multiple disconnects
-Date:   Wed, 22 Jul 2020 13:07:42 -0400
-Message-Id: <20200722170746.5222-4-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200722170746.5222-1-alcooperx@gmail.com>
-References: <20200722170746.5222-1-alcooperx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VaLaF6yamBawSm5kIKdzTcEbjjs1t/WxcQSgHm9Kq7Y=;
+        b=iCi6gF4ZEFS/c1dyqZshcQtTZ7N6OcxhaLRyMv4npyBIv1BN5AGThObExDiNRgIp86
+         ycfBOGNoZwcQVtKvHrfgjqxFfbZrlfQ3V7PE6BG30o1vLqCMyCtR5hIzgSzzG1GEC8Im
+         WduSlbN1PaI69sk7vQ/3q/0xVrbs9ekjoELB7dvRA3rG7U/Oi8GArshkTh3Ake1xf1hn
+         pJkx56UfYlDKbO24BCXX/qBJIKcPOl4FXpU0Q82FCVXxWBP3KcbIKd96kZViErPYa3jd
+         UuTHopVBYUDAkV0+CVk0R0Fm+DmbjLhySM0keoKh1IVlboZhehV0kNZXpSH/jv4Ujoqq
+         AxHw==
+X-Gm-Message-State: AOAM532aWh13nb66o5sEJ32kXSKgA6slsxrXRXyBSo/FG4VnTSNGvOHJ
+        +Ra4hsy8I+eMZa/nUsthzRq3S3/MD/E7tjK5vsJ3XQ==
+X-Google-Smtp-Source: ABdhPJzKYQ6DmTiW/2UpPTlu6aqslRhBhWcjTOPR2Y/sZJ6l7sf695aW7sWrvk5too3R6PH4NWNrIZcS2i/48uFJeGw=
+X-Received: by 2002:a17:90a:784b:: with SMTP id y11mr363849pjl.51.1595437708705;
+ Wed, 22 Jul 2020 10:08:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200722110139.24778-1-georgi.djakov@linaro.org> <20200722110139.24778-2-georgi.djakov@linaro.org>
+In-Reply-To: <20200722110139.24778-2-georgi.djakov@linaro.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 22 Jul 2020 10:07:52 -0700
+Message-ID: <CAGETcx-QM8P2nVxcQJZz+m5Zwi==2qLfinb0FkDXJ7dNVP5bEA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] interconnect: Add sync state support
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Mike Tipton <mdtipton@codeaurora.org>, okukatla@codeaurora.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasi Kumar <sasi.kumar@broadcom.com>
+On Wed, Jul 22, 2020 at 4:01 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> The bootloaders often do some initial configuration of the interconnects
+> in the system and we want to keep this configuration until all consumers
+> have probed and expressed their bandwidth needs. This is because we don't
+> want to change the configuration by starting to disable unused paths until
+> every user had a chance to request the amount of bandwidth it needs.
+>
+> To accomplish this we will implement an interconnect specific sync_state
+> callback which will synchronize (aggregate and set) the current bandwidth
+> settings when all consumers have been probed.
+>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
+>  include/linux/interconnect-provider.h |  5 +++
+>  2 files changed, 66 insertions(+)
+>
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index e5f998744501..0c4e38d9f1fa 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -26,6 +26,8 @@
+>
+>  static DEFINE_IDR(icc_idr);
+>  static LIST_HEAD(icc_providers);
+> +static int providers_count;
+> +static bool synced_state;
+>  static DEFINE_MUTEX(icc_lock);
+>  static struct dentry *icc_debugfs_dir;
+>
+> @@ -255,6 +257,12 @@ static int aggregate_requests(struct icc_node *node)
+>                         continue;
+>                 p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+>                              &node->avg_bw, &node->peak_bw);
+> +
+> +               /* during boot use the initial bandwidth as a floor value */
+> +               if (!synced_state) {
+> +                       node->avg_bw = max(node->avg_bw, node->init_avg);
+> +                       node->peak_bw = max(node->peak_bw, node->init_peak);
+> +               }
 
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
+Sorry I didn't reply earlier.
 
-Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+I liked your previous approach with the get_bw ops. The v2 approach
+forces every interconnect provider driver to set up these values even
+if they are okay with just maxing out the bandwidth. Also, if they can
+actually query their hardware, this adds additional steps for them.
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index 18d510fc02fb..b70b438efff4 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -282,6 +282,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -291,6 +292,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
- 	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index d49c6dc1082d..9ddc0b4e92c9 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
- 	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
- 		return ret;
- 
-@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
- 	}
- 	spin_lock_irqsave(&bdc->lock, flags);
--- 
-2.17.1
+I think the default should be:
+1. Query the current bandwidth at boot and use that.
+2. If that's not available, max out the bandwidth.
 
+The interconnect providers that don't like maxing out and don't have
+real get_bw() capability can just cache and return the last set_bw()
+values. And they start off with those cached values matching whatever
+init_bw they need.
+
+That way, the default case (can get bw or don't care about maxing out)
+would be easy and the extra work would be limited to drivers that want
+neither.
+
+-Saravana
