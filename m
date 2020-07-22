@@ -6,51 +6,52 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41A3C433EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE506C433F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F772065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9382820771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732912AbgGVPjY (ORCPT
+        id S1732925AbgGVPj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:39:24 -0400
+        Wed, 22 Jul 2020 11:39:26 -0400
 Received: from mga12.intel.com ([192.55.52.136]:8030 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbgGVPjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:39:24 -0400
-IronPort-SDR: KNR6T1adjXyaJ6aOV2EgKtOsS/OISF3vfEr7vAhRKCy+XAk/J1PMdgaAiuNn6yzm+JMpDmJ18C
- AavDTXt+ffAw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="129920849"
+        id S1727985AbgGVPjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 11:39:25 -0400
+IronPort-SDR: E2bSXsD2uJlgqNYxTTHKdz2Jb4jG8tc6iurTJ6oPmBw5rHv5EzaDyBDgTEfB4sDtloUwttJvOS
+ GmanwoWmdWWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="129920855"
 X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="129920849"
+   d="scan'208";a="129920855"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 08:39:23 -0700
-IronPort-SDR: MsNqFHz8q1bHKMvZOTP2vEUpscZSheDN/J+yc70nwRaOKUgxioD6xzDP091iR7B1Lx0PSL6GGL
- RlIS4wosbJoQ==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 08:39:25 -0700
+IronPort-SDR: C2b6oH9BHmaHESFEJSQjOO1ebe0W9GOq0rwBYNyMB/IOzJs5StxBRs5w1vBDVlUaxH7SQzY3BD
+ qF7lrsn0wNUg==
 X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="272042508"
+   d="scan'208";a="272042516"
 Received: from asinghi-mobl2.amr.corp.intel.com (HELO [10.255.231.54]) ([10.255.231.54])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 08:39:22 -0700
-Subject: Re: [PATCH v2 8/9] ASoC: qdsp6-dai: add gapless support
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 08:39:24 -0700
+Subject: Re: [RFC PATCH v2 2/6] ALSA: compress: add new ioctl for setting
+ codec parameters
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         broonie@kernel.org
 Cc:     alsa-devel@alsa-project.org, ckeepax@opensource.cirrus.com,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org, tiwai@suse.com,
         vkoul@kernel.org
-References: <20200721165306.29082-1-srinivas.kandagatla@linaro.org>
- <20200721165306.29082-9-srinivas.kandagatla@linaro.org>
- <868d9768-a4c4-71c1-28fd-ca0e2f6564bf@linux.intel.com>
- <eadfd218-be93-0dc9-df94-a64ea494c6bf@linaro.org>
+References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org>
+ <20200721170007.4554-3-srinivas.kandagatla@linaro.org>
+ <ee2dc239-c1a7-f48f-c6f0-ec6e61ccdda6@linux.intel.com>
+ <9bbfebf9-9a70-46e3-1808-413d04aa6b2c@linaro.org>
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d572887f-8550-89dd-02f0-986ef081bf40@linux.intel.com>
-Date:   Wed, 22 Jul 2020 10:31:54 -0500
+Message-ID: <19cfe3fe-4b99-0976-679d-28523d7b9990@linux.intel.com>
+Date:   Wed, 22 Jul 2020 10:36:02 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <eadfd218-be93-0dc9-df94-a64ea494c6bf@linaro.org>
+In-Reply-To: <9bbfebf9-9a70-46e3-1808-413d04aa6b2c@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -62,21 +63,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
->>> @@ -917,6 +1018,14 @@ static int q6asm_dai_compr_trigger(struct 
->>> snd_soc_component *component,
->>>           ret = q6asm_cmd_nowait(prtd->audio_client, prtd->stream_id,
->>>                          CMD_PAUSE);
->>>           break;
->>> +    case SND_COMPR_TRIGGER_NEXT_TRACK:
->>> +        prtd->next_track = true;
->>> +        prtd->next_track_stream_id = (prtd->stream_id == 1 ? 2 : 1);
+>>>    * and the stream properties
+>>> + * @set_codec_params: Sets the compressed stream codec parameters, 
+>>> Optional
+>>> + * This can be called in during gapless next track codec change only 
+>>> to set
+>>> + * codec params
 >>
->> it's rather odd, the initialization above uses next_track_stream_id = 0?
+>> Would it be clearer if this was called set_next_codec_params()? or 
+>> set_next_track_codec_params()?
+>>
+>> Having set_params() and set_codec_params() is a bit confusing since 
+>> the semantic difference is not captured in the callback name.
 > 
-> Vaild stream ids start from 1, So we are toggling this between 1 and 2.
-> So when we set next_track_stream_id to 0, that means we have opened the 
-> new next stream id and is set to prtd->stream_id. This logic is to 
-> ensure that we are not going to open next stream id twice!
+> set_next_track_codec_params seems more sensible as its next track params.
+> Will change this in next version!
 
-ok, adding a comment would be good to show this was intentional and not 
-a mistake.
+maybe set_params() and set_next_track_params() are enough, not sure if 
+the codec reference helps?
