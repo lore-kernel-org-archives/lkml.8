@@ -2,109 +2,73 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8969DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E0C433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 552CD2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595447987;
-	bh=BV3a5aekYRte5/BllvL1km1l0MspmW13pUEjE0GxoBo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=rQqpdo9uRikJ1HeqNpwzt38quo4FZ5gKCmKFzPVx3mrLzeAGIjNFSGwg6LK8WHPla
-	 zuJMEhXFohL54UjXhyTyhMZNt8/YphMsK0jzFLZ/I90gbkw1ED+LXBBT0E/1m8vvWe
-	 u5Cybp46TTOKxh5ihlKPwjBmINb95gW7EpsMksd0=
+	by mail.kernel.org (Postfix) with ESMTP id 6A22B22B42
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbgGVT7q (ORCPT
+        id S1732797AbgGVT7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:59:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbgGVT7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:59:44 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC9C520771;
-        Wed, 22 Jul 2020 19:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595447983;
-        bh=BV3a5aekYRte5/BllvL1km1l0MspmW13pUEjE0GxoBo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=zOwCUzk4rt+lOZb+uHwUMzY+ucHL/PaI9xg4aadH2nri5nocqxgj/ZtlOghcfP8UL
-         HpY6HgpgQ+bRPVDX+9f6Ya71oMFOkjT0H1GrbQPRw6nJztaXFiA6VzKKLFPkZZy7ls
-         tFSvizUMAd/V+TKvrHFCw/qLqisFsnsW4pU918+8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C152A3522AB9; Wed, 22 Jul 2020 12:59:43 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 12:59:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, will@kernel.org, hch@lst.de,
-        axboe@kernel.dk, chris@chris-wilson.co.uk, davem@davemloft.net,
-        kuba@kernel.org, fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [RFC][PATCH 5/9] irq_work: Provide irq_work_queue_remote()
-Message-ID: <20200722195943.GA23360@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200722150149.525408253@infradead.org>
- <20200722153017.311972826@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722153017.311972826@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 22 Jul 2020 15:59:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726888AbgGVT7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:59:54 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42592C0619DC;
+        Wed, 22 Jul 2020 12:59:54 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF56611FFC80E;
+        Wed, 22 Jul 2020 12:43:07 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 12:59:52 -0700 (PDT)
+Message-Id: <20200722.125952.2002253965644109632.davem@davemloft.net>
+To:     hongbo.wang@nxp.com
+Cc:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
+        po.liu@nxp.com, claudiu.manoil@nxp.com,
+        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
+        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com, jiri@resnulli.us,
+        idosch@idosch.org, kuba@kernel.org, vinicius.gomes@intel.com,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
+Subject: Re: [PATCH] net: dsa: ocelot: Add support for QinQ Operation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200722055048.6129-1-hongbo.wang@nxp.com>
+References: <20200722055048.6129-1-hongbo.wang@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jul 2020 12:43:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 05:01:54PM +0200, Peter Zijlstra wrote:
-> While the traditional irq_work relies on the ability to self-IPI, it
-> makes sense to provide an unconditional irq_work_queue_remote()
-> interface.
-> 
-> This can be used to replace the plagued smp_call_function_single_async().
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/irq_work.h |   17 ++++--
->  kernel/irq_work.c        |  129 ++++++++++++++++++++++++++++-------------------
->  kernel/rcu/tree.c        |    6 +-
->  3 files changed, 95 insertions(+), 57 deletions(-)
+From: hongbo.wang@nxp.com
+Date: Wed, 22 Jul 2020 13:50:48 +0800
 
-[ . . . ]
+> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+> index c69d9592a2b7..12b46cb6549c 100644
+> --- a/drivers/net/dsa/ocelot/felix.c
+> +++ b/drivers/net/dsa/ocelot/felix.c
+> @@ -132,9 +132,13 @@ static void felix_vlan_add(struct dsa_switch *ds, int port,
+>  {
+>  	struct ocelot *ocelot = ds->priv;
+>  	u16 flags = vlan->flags;
+> +	struct ocelot_port *ocelot_port = ocelot->ports[port];
+>  	u16 vid;
+>  	int err;
 
-> --- a/kernel/irq_work.c
-> +++ b/kernel/irq_work.c
-
-[ . . . ]
-
-> @@ -196,17 +237,5 @@ void irq_work_tick(void)
->  	irq_work_run_list(this_cpu_ptr(&lazy_list));
->  }
->  
-> -/*
-> - * Synchronize against the irq_work @entry, ensures the entry is not
-> - * currently in use.
-> - */
-> -void irq_work_sync(struct irq_work *work)
-> -{
-> -	lockdep_assert_irqs_enabled();
-> -
-> -	while (irq_work_is_busy(work))
-> -		cpu_relax();
-> -}
-> -EXPORT_SYMBOL_GPL(irq_work_sync);
-> -
->  #endif /* CONFIG_IRQ_WORK */
-> +
-
-FYI, "git am" complains about this blank line.
-
-						Thanx, Paul
+Please use reverse christmas tree ordering for local variables.
