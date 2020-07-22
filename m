@@ -2,259 +2,125 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B37CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CADCF20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904FB206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rBfa1OHr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yj123Sok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgGVAO3 (ORCPT
+        id S1728726AbgGVAPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgGVAO2 (ORCPT
+        Tue, 21 Jul 2020 20:15:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55470 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728333AbgGVAPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:14:28 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A268C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:14:28 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x72so247274pfc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9qebLmGY/4gEoVD5iagvEbtSEoeLp/rn7yyW5dBLp+g=;
-        b=rBfa1OHrzErPK/ONQUP8CbcQunwM1IE/O/X+DkvbhC97maUcc0QhXPg5KgY+bBd34B
-         sy/oZcUVUqcOHqnl9FneUGu20jN9QMtGanI+3VN5mQiWq+W+mobBvlTyVg+BHvrwH7kX
-         tKVX7UN7C5neEmOdS4GJMCCb2lbDLmMmRAXKmKh3aoXW95u71P4piCNW2zMqfE94VFtI
-         2iGkwPflJzEP6DqNiyXyYM+a0tvtiXY+8xbFpQStdrNJwBcknEwv4sqQdYYUEWiUtwao
-         4Wcbn11+Dqsh+6i6symRbuK0KuDMFPGcS5hXwS6ISaKxcGKCqPhGaTmkikHFJe+yXfkn
-         MjQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9qebLmGY/4gEoVD5iagvEbtSEoeLp/rn7yyW5dBLp+g=;
-        b=ONEAh3qTWVEnvnsd0BIQoMhLwMgBDHtRCkmYDbCLVvk9epgmqOc7Flc7dbef+Y2uCV
-         AM8kZkTR7SReL83DT0U0sdky7dT7k1NJBgujR7spRcNjtMqNemcFPG2oQqM2HZPufcw3
-         J1V1dZmVTPICOEQZ2A33VC0R1692rdGQKCsiomqlaWE/dWMaXC+MuuSgvRX3m/BGaAgj
-         HYXyBvh4xFURMxHZWHKw2+T2g41iwgIeC05Qznv/e1r4HPLlIQruXtttbeXAywRzy2HE
-         mw1RcCtDGuWGB/60J96+CSu2pzviSgse6CHLSY+H60rUKB+BgSZQmA+waRu0oqL9f2z4
-         WdUA==
-X-Gm-Message-State: AOAM532sHkHMu5IrKN5bQ5RZkeQOvbV5qqaFDSjGi3jqm1StOEGXou8R
-        GK0AdYH78iNL0A4MWW/4wQXrSw==
-X-Google-Smtp-Source: ABdhPJxpClug0jSxEuFfQ647WlLMd6xqykRwn3bkE3najs66S1jKCsrsPBbTOOKCoN3nuLlYWQrRsQ==
-X-Received: by 2002:a62:f241:: with SMTP id y1mr26305365pfl.136.1595376867468;
-        Tue, 21 Jul 2020 17:14:27 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
-        by smtp.gmail.com with ESMTPSA id t1sm4438981pje.55.2020.07.21.17.14.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 17:14:26 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 17:14:24 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jian Cai <jiancai@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        stable <stable@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang
- cross compilation
-Message-ID: <20200722001424.qor3up6357jjsbia@google.com>
-References: <20200721173125.1273884-1-maskray@google.com>
- <CAK7LNARjOjr2wSD_iM6yNSZpSGEWrkZZuWKCgCqOrYcA29+LBA@mail.gmail.com>
+        Tue, 21 Jul 2020 20:15:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595376929;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yb1tjJbEhpJuclMtgMyLcW78ZZjdWCXvTbVarsTz3+0=;
+        b=Yj123Sok+610q2ebT/Z1KFW3ydRsbRn7LGW0+Nap333hBq/ZcVGzqnvZK2uR7xp679s9Ib
+        TM/m/qd4HApYBl0Bimfck2tYpQKjCm75Ku4juXKW+oJ6j75c0BmnVQ6ic+4sAJV5il7EmP
+        WtzOQaF9vfmx5DWyocXIwgR2oInNVQw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-WQwzR4y3OA-26v9M2oWiOw-1; Tue, 21 Jul 2020 20:15:26 -0400
+X-MC-Unique: WQwzR4y3OA-26v9M2oWiOw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 881FC1902EA2;
+        Wed, 22 Jul 2020 00:15:25 +0000 (UTC)
+Received: from pc-72.home.com (unknown [10.40.192.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CB606FECD;
+        Wed, 22 Jul 2020 00:15:16 +0000 (UTC)
+From:   Julia Suvorova <jusual@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Julia Suvorova <jusual@redhat.com>
+Subject: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+Date:   Wed, 22 Jul 2020 02:15:13 +0200
+Message-Id: <20200722001513.298315-1-jusual@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARjOjr2wSD_iM6yNSZpSGEWrkZZuWKCgCqOrYcA29+LBA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-22, Masahiro Yamada wrote:
->On Wed, Jul 22, 2020 at 2:31 AM 'Fangrui Song' via Clang Built Linux
-><clang-built-linux@googlegroups.com> wrote:
->>
->> When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
->> $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
->> GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
->> /usr/bin/ and Clang as of 11 will search for both
->> $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
->>
->> GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
->> $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
->> $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
->>
->> To better model how GCC's -B/--prefix takes in effect in practice, newer
->> Clang (since
->> https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
->> only searches for $(prefix)$needle. Currently it will find /usr/bin/as
->> instead of /usr/bin/aarch64-linux-gnu-as.
->>
->> Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
->> (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
->> appropriate cross compiling GNU as (when -no-integrated-as is in
->> effect).
->>
->> Cc: stable@vger.kernel.org
->> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
->> Signed-off-by: Fangrui Song <maskray@google.com>
->> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
->> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
->> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
->> Link: https://github.com/ClangBuiltLinux/linux/issues/1099
->> ---
->> Changes in v2:
->> * Updated description to add tags and the llvm-project commit link.
->> * Fixed a typo.
->>
->> Changes in v3:
->> * Add Cc: stable@vger.kernel.org
->> ---
->>  Makefile | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Makefile b/Makefile
->> index 0b5f8538bde5..3ac83e375b61 100644
->> --- a/Makefile
->> +++ b/Makefile
->> @@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
->>  ifneq ($(CROSS_COMPILE),)
->>  CLANG_FLAGS    += --target=$(notdir $(CROSS_COMPILE:%-=%))
->>  GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
->> -CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)
->> +CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
->
->
->
->CROSS_COMPILE may contain the directory path
->to the cross toolchains.
->
->
->For example, I use aarch64-linux-gnu-*
->installed in
->/home/masahiro/tools/aarch64-linaro-7.5/bin
->
->
->
->Basically, there are two ways to use it.
->
->[1]
->PATH=$PATH:/home/masahiro/tools/aarch64-linaro-7.5/bin
->CROSS_COMPILE=aarch64-linux-gnu-
->
->
->[2]
->Without setting PATH,
->CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
->
->
->
->I usually do [2] (and so does intel's 0day bot).
->
->
->
->This patch works for the use-case [1]
->but if I do [2], --prefix is set to a strange path:
->
->--prefix=/home/masahiro/tools/aarch64-linaro-7.5/bin//home/masahiro/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+Scanning for PCI devices at boot takes a long time for KVM guests. It
+can be reduced if KVM will handle all configuration space accesses for
+non-existent devices without going to userspace [1]. But for this to
+work, all accesses must go through MMCONFIG.
+This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+guests making MMCONFIG the default access method.
 
-Thanks. I did not know the use-case [2].
-This explains why there is a `$(notdir ...)` in
-`CLANG_FLAGS     += --target=$(notdir $(CROSS_COMPILE:%-=%))`
+[1] https://lkml.org/lkml/2020/5/14/936
 
+Signed-off-by: Julia Suvorova <jusual@redhat.com>
+---
+ arch/x86/pci/direct.c      | 5 +++++
+ arch/x86/pci/mmconfig_64.c | 3 +++
+ 2 files changed, 8 insertions(+)
 
->
->
->Interestingly, the build is still successful.
->Presumably Clang searches for more paths
->when $(prefix)$needle is not found ?
+diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
+index a51074c55982..8ff6b65d8f48 100644
+--- a/arch/x86/pci/direct.c
++++ b/arch/x86/pci/direct.c
+@@ -6,6 +6,7 @@
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/dmi.h>
++#include <linux/kvm_para.h>
+ #include <asm/pci_x86.h>
+ 
+ /*
+@@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
+ {
+ 	if (type == 0)
+ 		return;
++
++	if (raw_pci_ext_ops && kvm_para_available())
++		return;
++
+ 	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+ 		 type);
+ 	if (type == 1) {
+diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
+index 0c7b6e66c644..9eb772821766 100644
+--- a/arch/x86/pci/mmconfig_64.c
++++ b/arch/x86/pci/mmconfig_64.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/acpi.h>
+ #include <linux/bitmap.h>
++#include <linux/kvm_para.h>
+ #include <linux/rcupdate.h>
+ #include <asm/e820/api.h>
+ #include <asm/pci_x86.h>
+@@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
+ 		}
+ 
+ 	raw_pci_ext_ops = &pci_mmcfg;
++	if (kvm_para_available())
++		raw_pci_ops = &pci_mmcfg;
+ 
+ 	return 1;
+ }
+-- 
+2.25.4
 
-The priority order is:
-
--B(--prefix), COMPILER_PATH, detected gcc-cross paths
-
-(In GCC, -B paths get prepended to the COMPILER_PATH list. Clang<=11 incorrectly
-adds -B to the COMPILER_PATH list. I have fixed it for 12.0.0)
-
-If -B fails, the detected gcc-cross paths may still be able to find 
-/usr/bin/aarch64-linux-gnu-
-
-For example, on my machine (a variant of Debian testing), Clang finds
-$(realpath
-/usr/lib/gcc-cross/aarch64-linux-gnu/9/../../../../aarch64-linux-gnu/bin/as),
-which is /usr/bin/aarch64-linux-gnu-as
-
->
->I applied your patch and added -v option
->to see which assembler was internally invoked:
->
-> "/home/masahiro/tools/aarch64-linaro-7.5/lib/gcc/aarch64-linux-gnu/7.5.0/../../../../aarch64-linux-gnu/bin/as"
->-EL -I ./arch/arm64/include -I ./arch/arm64/include/generated -I
->./include -I ./arch/arm64/include/uapi -I
->./arch/arm64/include/generated/uapi -I ./include/uapi -I
->./include/generated/uapi -o kernel/smp.o /tmp/smp-2ec2c7.s
->
->
->Ok, it looks like Clang found an alternative path
->to the correct 'as'.
->
->
->
->
->But, to keep the original behavior for both [1] and [2],
->how about this?
->
->CLANG_FLAGS += --prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
->
->
->
->Then, I can get this:
->
-> "/home/masahiro/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-as"
->-EL -I ./arch/arm64/include -I ./arch/arm64/include/generated -I
->./include -I ./arch/arm64/include/uapi -I
->./arch/arm64/include/generated/uapi -I ./include/uapi -I
->./include/generated/uapi -o kernel/smp.o /tmp/smp-16d76f.s
-
-This looks good.
-
-Agreed that `--prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))` should work for both [1] and [2].
-
-Shall I send a v4? Or you are kind enough that you'll just add your Signed-off-by: tag
-and fix that for me? :)
-
->
->
->>  GCC_TOOLCHAIN  := $(realpath $(GCC_TOOLCHAIN_DIR)/..)
->>  endif
->>  ifneq ($(GCC_TOOLCHAIN),)
->> --
->> 2.28.0.rc0.105.gf9edc3c819-goog
->>
->> --
->> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
->> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200721173125.1273884-1-maskray%40google.com.
->
->
->
->--
->Best Regards
->Masahiro Yamada
