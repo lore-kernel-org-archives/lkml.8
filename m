@@ -6,129 +6,114 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9603C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC21EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15D920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D102320771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733246AbgGVXuS (ORCPT
+        id S1733227AbgGVXuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 22 Jul 2020 19:50:18 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:45140 "EHLO
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:45130 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733213AbgGVXuR (ORCPT
+        with ESMTP id S1728607AbgGVXuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 19:50:17 -0400
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 7C5572A2A0; Wed, 22 Jul 2020 19:50:16 -0400 (EDT)
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "Paul Mackerras" <paulus@ozlabs.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <3952bc691e150a7128b29120999b6092071b039a.1595460351.git.fthain@telegraphics.com.au>
+        id 613BF2A2A8; Wed, 22 Jul 2020 19:50:16 -0400 (EDT)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Message-Id: <f54e99e9bd1e25ad70a6a1d7a7ec9ab2b4e50d68.1595460351.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH] scsi/mesh: Fix panic after host or bus reset
+Subject: [PATCH] m68k: Correct some typos in comments
 Date:   Thu, 23 Jul 2020 09:25:51 +1000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Booting Linux with a Conner CP3200 drive attached to the MESH SCSI bus
-results in EH measures and a panic:
-
-[   25.499838] mesh: configured for synchronous 5 MB/s
-[   25.787154] mesh: performing initial bus reset...
-[   29.867115] scsi host0: MESH
-[   29.929527] mesh: target 0 synchronous at 3.6 MB/s
-[   29.998763] scsi 0:0:0:0: Direct-Access     CONNER   CP3200-200mb-3.5 4040 PQ: 0 ANSI: 1 CCS
-[   31.989975] sd 0:0:0:0: [sda] 415872 512-byte logical blocks: (213 MB/203 MiB)
-[   32.070975] sd 0:0:0:0: [sda] Write Protect is off
-[   32.137197] sd 0:0:0:0: [sda] Mode Sense: 5b 00 00 08
-[   32.209661] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[   32.332708]  sda: [mac] sda1 sda2 sda3
-[   32.417733] sd 0:0:0:0: [sda] Attached SCSI disk
-... snip ...
-[   76.687067] mesh_abort((ptrval))
-[   76.743606] mesh: state at (ptrval), regs at (ptrval), dma at (ptrval)
-[   76.810798]     ct=6000 seq=86 bs=4017 fc= 0 exc= 0 err= 0 im= 7 int= 0 sp=85
-[   76.880720]     dma stat=84e0 cmdptr=1f73d000
-[   76.941387]     phase=4 msgphase=0 conn_tgt=0 data_ptr=24576
-[   77.005567]     dma_st=1 dma_ct=0 n_msgout=0
-[   77.065456]     target 0: req=(ptrval) goes_out=0 saved_ptr=0
-[   77.130512] mesh_abort((ptrval))
-[   77.187670] mesh: state at (ptrval), regs at (ptrval), dma at (ptrval)
-[   77.255594]     ct=6000 seq=86 bs=4017 fc= 0 exc= 0 err= 0 im= 7 int= 0 sp=85
-[   77.325778]     dma stat=84e0 cmdptr=1f73d000
-[   77.387239]     phase=4 msgphase=0 conn_tgt=0 data_ptr=24576
-[   77.453665]     dma_st=1 dma_ct=0 n_msgout=0
-[   77.515900]     target 0: req=(ptrval) goes_out=0 saved_ptr=0
-[   77.582902] mesh_host_reset
-[   88.187083] Kernel panic - not syncing: mesh: double DMA start !
-[   88.254510] CPU: 0 PID: 358 Comm: scsi_eh_0 Not tainted 5.6.13-pmac #1
-[   88.323302] Call Trace:
-[   88.378854] [e16ddc58] [c0027080] panic+0x13c/0x308 (unreliable)
-[   88.446221] [e16ddcb8] [c02b2478] mesh_start.part.12+0x130/0x414
-[   88.513298] [e16ddcf8] [c02b2fc8] mesh_queue+0x54/0x70
-[   88.577097] [e16ddd18] [c02a1848] scsi_send_eh_cmnd+0x374/0x384
-[   88.643476] [e16dddc8] [c02a1938] scsi_eh_tur+0x5c/0xb8
-[   88.707878] [e16dddf8] [c02a1ab8] scsi_eh_test_devices+0x124/0x178
-[   88.775663] [e16dde28] [c02a2094] scsi_eh_ready_devs+0x588/0x8a8
-[   88.843124] [e16dde98] [c02a31d8] scsi_error_handler+0x344/0x520
-[   88.910697] [e16ddf08] [c00409c8] kthread+0xe4/0xe8
-[   88.975166] [e16ddf38] [c000f234] ret_from_kernel_thread+0x14/0x1c
-[   89.044112] Rebooting in 180 seconds..
-
-In theory, a panic can happen after a bus or host reset with dma_started
-flag set. Fix this by halting the DMA before reinitializing the host.
-Don't assume that ms->current_req is set when halt_dma() is invoked as
-it may not hold for bus or host reset.
-
-BTW, this particular Conner drive can be made to work by inhibiting
-disconnect/reselect with 'mesh.resel_targets=0'.
-
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Fixes: 1da177e4c3f41 ("Linux-2.6.12-rc2")
-Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/scsi/mesh.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/m68k/kernel/head.S | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/mesh.c b/drivers/scsi/mesh.c
-index 74fb50644678d..4dd50db906779 100644
---- a/drivers/scsi/mesh.c
-+++ b/drivers/scsi/mesh.c
-@@ -1045,6 +1045,8 @@ static void handle_error(struct mesh_state *ms)
- 		while ((in_8(&mr->bus_status1) & BS1_RST) != 0)
- 			udelay(1);
- 		printk("done\n");
-+		if (ms->dma_started)
-+			halt_dma(ms);
- 		handle_reset(ms);
- 		/* request_q is empty, no point in mesh_start() */
- 		return;
-@@ -1357,7 +1359,8 @@ static void halt_dma(struct mesh_state *ms)
- 		       ms->conn_tgt, ms->data_ptr, scsi_bufflen(cmd),
- 		       ms->tgts[ms->conn_tgt].data_goes_out);
- 	}
--	scsi_dma_unmap(cmd);
-+	if (cmd)
-+		scsi_dma_unmap(cmd);
- 	ms->dma_started = 0;
- }
+diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
+index a54788458ca36..08eff92875144 100644
+--- a/arch/m68k/kernel/head.S
++++ b/arch/m68k/kernel/head.S
+@@ -57,7 +57,7 @@
+  * Of course, readability is a subjective issue, so it will never be
+  * argued that that goal was accomplished.  It was merely a goal.
+  * A key way to help make code more readable is to give good
+- * documentation.  So, the first thing you will find is exaustive
++ * documentation.  So, the first thing you will find is exhaustive
+  * write-ups on the structure of the file, and the features of the
+  * functional subroutines.
+  *
+@@ -1304,7 +1304,7 @@ L(mmu_fixup_done):
+  * mmu_engage
+  *
+  * This chunk of code performs the gruesome task of engaging the MMU.
+- * The reason its gruesome is because when the MMU becomes engaged it
++ * The reason it's gruesome is because when the MMU becomes engaged it
+  * maps logical addresses to physical addresses.  The Program Counter
+  * register is then passed through the MMU before the next instruction
+  * is fetched (the instruction following the engage MMU instruction).
+@@ -1369,7 +1369,7 @@ L(mmu_fixup_done):
+ /*
+  * After this point no new memory is allocated and
+  * the start of available memory is stored in availmem.
+- * (The bootmem allocator requires now the physicall address.)
++ * (The bootmem allocator requires now the physical address.)
+  */
  
-@@ -1712,6 +1715,9 @@ static int mesh_host_reset(struct scsi_cmnd *cmd)
+ 	movel	L(memory_start),availmem
+@@ -1547,7 +1547,7 @@ func_return	get_bi_record
+  *	seven bits of the logical address (LA) are used as an
+  *	index into the "root table."  Each entry in the root
+  *	table has a bit which specifies if it's a valid pointer to a
+- *	pointer table.  Each entry defines a 32KMeg range of memory.
++ *	pointer table.  Each entry defines a 32Meg range of memory.
+  *	If an entry is invalid then that logical range of 32M is
+  *	invalid and references to that range of memory (when the MMU
+  *	is enabled) will fault.  If the entry is valid, then it does
+@@ -1584,7 +1584,7 @@ func_return	get_bi_record
+  *		bits 17..12 - index into the Page Table
+  *		bits 11..0  - offset into a particular 4K page
+  *
+- *	The algorithms which follows do one thing: they abstract
++ *	The algorithms which follow do one thing: they abstract
+  *	the MMU hardware.  For example, there are three kinds of
+  *	cache settings that are relevant.  Either, memory is
+  *	being mapped in which case it is either Kernel Code (or
+@@ -2082,7 +2082,7 @@ func_return	mmu_map_tt
+  *	mmu_map
+  *
+  *	This routine will map a range of memory using a pointer
+- *	table and allocating the pages on the fly from the kernel.
++ *	table and allocate the pages on the fly from the kernel.
+  *	The pointer table does not have to be already linked into
+  *	the root table, this routine will do that if necessary.
+  *
+@@ -2528,7 +2528,7 @@ func_start	mmu_get_root_table_entry,%d0/%a1
  
- 	spin_lock_irqsave(ms->host->host_lock, flags);
+ 	/* Find the start of free memory, get_bi_record does this for us,
+ 	 * as the bootinfo structure is located directly behind the kernel
+-	 * and and we simply search for the last entry.
++	 * we simply search for the last entry.
+ 	 */
+ 	get_bi_record	BI_LAST
+ 	addw	#PAGESIZE-1,%a0
+@@ -2654,7 +2654,7 @@ func_start	mmu_get_page_table_entry,%d0/%a1
+ 	jne	2f
  
-+	if (ms->dma_started)
-+		halt_dma(ms);
-+
- 	/* Reset the controller & dbdma channel */
- 	out_le32(&md->control, (RUN|PAUSE|FLUSH|WAKE) << 16);	/* stop dma */
- 	out_8(&mr->exception, 0xff);	/* clear all exception bits */
+ 	/* If the page table entry doesn't exist, we allocate a complete new
+-	 * page and use it as one continues big page table which can cover
++	 * page and use it as one continuous big page table which can cover
+ 	 * 4MB of memory, nearly almost all mappings have that alignment.
+ 	 */
+ 	get_new_page
 -- 
 2.26.2
 
