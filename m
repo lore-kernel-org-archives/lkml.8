@@ -2,102 +2,122 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5748FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1CB20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339F72065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UR57oAWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731489AbgGVKhF (ORCPT
+        id S1726546AbgGVKiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:37:05 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:40910 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726153AbgGVKhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:37:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 161552018D;
-        Wed, 22 Jul 2020 12:37:02 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AZz90R83hv-J; Wed, 22 Jul 2020 12:37:01 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Wed, 22 Jul 2020 06:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgGVKiR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:38:17 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BAEC0619DC;
+        Wed, 22 Jul 2020 03:38:17 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 9E18C20185;
-        Wed, 22 Jul 2020 12:37:01 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- mail-essen-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Wed, 22 Jul 2020 12:37:01 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
- (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 22 Jul
- 2020 12:37:01 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id D2240318471A;
- Wed, 22 Jul 2020 12:37:00 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 12:37:00 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Mark Salyzyn <salyzyn@android.com>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-team@android.com>,
-        <netdev@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: af_key: pfkey_dump needs parameter validation
-Message-ID: <20200722103700.GP20687@gauss3.secunet.de>
-References: <20200721132358.966099-1-salyzyn@android.com>
- <20200722093318.GO20687@gauss3.secunet.de>
- <2ae16588-2972-a797-9310-4f9d56b7348b@android.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBX462F1dz9sRN;
+        Wed, 22 Jul 2020 20:38:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595414295;
+        bh=G2OKpMJf7TXN0BgliBx+hmCERlwb78Kx6qogY3MuDZg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UR57oAWlbpnGN2Ld2CpEvv6NySO8xFLdNykZqwa8kCFqJsfYRvi4QH9krVs0FmM+5
+         tvQ7I76bAKrNFAPzBW90g5xLm5kUNt9ghYkXtppSnyQjh6QnvHtuorpF+EQ56Zuqfz
+         Zft+IEmBecw0oWkgtXBPnCIaFN0VYGvMGIA9Qv8WEtlNl3sUccn2K9+9vRcwHjppSF
+         jtxTN+3gwV45HHAXF/of/n3SPKADUGYGwpsrmBwk3ni4C4G3ncOF5CfB/BmexnAD8i
+         lxkwMNmH6ZnOrCUNHr3PXHSK3NG+F4TeVKcz0ePhee8pXBOE6C2u2xPBj9HLTcrnyt
+         rqYSOhEL15Jeg==
+Date:   Wed, 22 Jul 2020 20:38:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>,
+        Rich Felker <dalias@libc.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the pidfd tree with the sh tree
+Message-ID: <20200722203812.6ca23e0d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2ae16588-2972-a797-9310-4f9d56b7348b@android.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
- mbx-essen-01.secunet.de (10.53.40.197)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Content-Type: multipart/signed; boundary="Sig_/x+W3LsrrrKSHka0rbOzRN/w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:20:59AM -0700, Mark Salyzyn wrote:
-> On 7/22/20 2:33 AM, Steffen Klassert wrote:
-> > On Tue, Jul 21, 2020 at 06:23:54AM -0700, Mark Salyzyn wrote:
-> > > In pfkey_dump() dplen and splen can both be specified to access the
-> > > xfrm_address_t structure out of bounds in__xfrm_state_filter_match()
-> > > when it calls addr_match() with the indexes.  Return EINVAL if either
-> > > are out of range.
-> > > 
-> > > Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> > > Cc: netdev@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: kernel-team@android.com
-> > > ---
-> > > Should be back ported to the stable queues because this is a out of
-> > > bounds access.
-> > Please do a v2 and add a proper 'Fixes' tag if this is a fix that
-> > needs to be backported.
-> > 
-> > Thanks!
-> 
-> Confused because this code was never right? From 2008 there was a rewrite
-> that instantiated this fragment of code so that it could handle
-> continuations for overloaded receive queues, but it was not right before the
-> adjustment.
-> 
-> Fixes: 83321d6b9872b94604e481a79dc2c8acbe4ece31 ("[AF_KEY]: Dump SA/SP
-> entries non-atomically")
-> 
-> that is reaching back more than 12 years and the blame is poorly aimed
-> AFAIK.
+--Sig_/x+W3LsrrrKSHka0rbOzRN/w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is just that the stable team knows how far they need to backport
-it. If this was never right, then the initial git commit is the right
-one for the fixes tag e.g. 'Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")'
+Hi all,
 
+Today's linux-next merge of the pidfd tree got a conflict in:
+
+  arch/um/Kconfig
+
+between commit:
+
+  5c77ba8aa183 ("dma-mapping: consolidate the NO_DMA definition in kernel/d=
+ma/Kconfig")
+
+from the sh tree and commit:
+
+  140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
+
+from the pidfd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/um/Kconfig
+index 32c1d1945033,ef69be17ff70..000000000000
+--- a/arch/um/Kconfig
++++ b/arch/um/Kconfig
+@@@ -14,8 -14,6 +14,7 @@@ config UM
+  	select HAVE_FUTEX_CMPXCHG if FUTEX
+  	select HAVE_DEBUG_KMEMLEAK
+  	select HAVE_DEBUG_BUGVERBOSE
+- 	select HAVE_COPY_THREAD_TLS
+ +	select NO_DMA
+  	select GENERIC_IRQ_SHOW
+  	select GENERIC_CPU_DEVICES
+  	select GENERIC_CLOCKEVENTS
+
+--Sig_/x+W3LsrrrKSHka0rbOzRN/w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8YFxQACgkQAVBC80lX
+0Gx5dAf8C7VOAxe/6DdQQs2IEa25H7OLYt2wqVyWmPLTOPq5qXMDvfw/gN7jAJAj
+B4579sHxl5za29HNp8fdDz3o07jB638irPa8LpmAM0xn+MqbZPA2lQHyEViuq6TX
+bzu4M+Yj3NjstAG2iGMcK/PdG3pyVEtdpDBaFFsKChbmGTqTbRBh9ykuQ8NixSEn
+OK+HSuYlNoajCo8EP8DfcY+YJFeKuQ+pMCRfutNQxOluGqLqGcMBK1c8pqW0zisN
+tLch/vy+kh6HA23JiVBY1hPQyQEa01Q+uTTyjhxKskBeJ0JpBax2PKaZQM6oWZ92
+zRaSXKlruT9B8U/FMLWchbiMXz6WSQ==
+=BfZj
+-----END PGP SIGNATURE-----
+
+--Sig_/x+W3LsrrrKSHka0rbOzRN/w--
