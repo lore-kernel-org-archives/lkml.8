@@ -2,81 +2,96 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D459C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A375C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E28F620684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0259C20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgGVU3F (ORCPT
+        id S1732696AbgGVUfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:29:05 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54301 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgGVU3F (ORCPT
+        Wed, 22 Jul 2020 16:35:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50072 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgGVUfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:29:05 -0400
-Received: by mail-il1-f199.google.com with SMTP id d18so1903695ill.21
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:29:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=J+35V1GhRYpImLMMK2GI/sO17Jyt3p/2anYHKeEsSGE=;
-        b=iDgbHqsVQmvFUt7no3gfCkMcXXvOfpqFVYf6eTHIc2BazWBmJGKQ2hCMplZk9zuWnk
-         4sWTofZ63T17PEfOOqNWOg8Sc1P1W59RUvbfycwCTSpzKxxEcOVNaCwLdUdrSBgMyz2+
-         +2GjxIwygkUIh92PY1rdfi9iiGyPqgdkqdxrmJhT3YUA1ykS62i+gajRSNUG5LO1ejYe
-         m3en+4Y2KqDdm3IcC2RK6wI5Qs1fuKxAupa0ZLoyVhKApu4QRvGNfMm10RkgTy2n6Cbh
-         9zVWTKigHKcaBnvmIq3B0FY6jLVnKie8gFAYFXlK8sczI1FuzxmlMP5idJFhEaJ/M72U
-         uIAA==
-X-Gm-Message-State: AOAM531pbxCyczRezBVQIT4T6Fp/rYU7kt6DAmML2zg8dVTEqOyPFTXb
-        F5elsMu/gW+Dh4Qa4nbWz0pS3g4MU2Xsf9M60AHv8suGHfWd
-X-Google-Smtp-Source: ABdhPJxHK6WbX/I4a7/yMyShEPLIR0Q9QECWtZRgxeRHjQAiPmIUBL9QFevmt3eA7WbXHH2iZgv3Tq89tpWot0N8y5MnqAgDQh6w
+        Wed, 22 Jul 2020 16:35:20 -0400
+Received: from 2.general.sarnold.us.vpn ([10.172.64.71] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <seth.arnold@canonical.com>)
+        id 1jyLSP-0006Dv-4C; Wed, 22 Jul 2020 20:35:17 +0000
+Date:   Wed, 22 Jul 2020 20:35:14 +0000
+From:   Seth Arnold <seth.arnold@canonical.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [apparmor] [PATCH] security: apparmor: file.h: delete duplicated
+ word
+Message-ID: <20200722203514.GB84486@millbarge>
+References: <20200719180835.24658-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:8b45:: with SMTP id i66mr1708429ild.19.1595449744109;
- Wed, 22 Jul 2020 13:29:04 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 13:29:04 -0700
-In-Reply-To: <0000000000005b9fca05aa0af1b9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000041388e05ab0d97aa@google.com>
-Subject: Re: KASAN: use-after-free Read in netdevice_event_work_handler
-From:   syzbot <syzbot+20b90969babe05609947@syzkaller.appspotmail.com>
-To:     andrew@lunn.ch, davem@davemloft.net, dledford@redhat.com,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, jgg@ziepe.ca,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, rkovhaev@gmail.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="U+BazGySraz5kW0T"
+Content-Disposition: inline
+In-Reply-To: <20200719180835.24658-1-rdunlap@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
 
-commit d70c47c8dc6902db19555b7ff7e6eeb264d4ac06
-Author: Heiner Kallweit <hkallweit1@gmail.com>
-Date:   Thu Apr 23 19:34:33 2020 +0000
+--U+BazGySraz5kW0T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    net: phy: make phy_suspend a no-op if PHY is suspended already
+On Sun, Jul 19, 2020 at 11:08:35AM -0700, Randy Dunlap wrote:
+> Delete the doubled word "then" in a comment.
+>=20
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: John Johansen <john.johansen@canonical.com>
+> Cc: apparmor@lists.ubuntu.com
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b2aad8900000
-start commit:   0bddd227 Documentation: update for gcc 4.9 requirement
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=15b2aad8900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b2aad8900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=66ad203c2bb6d8b
-dashboard link: https://syzkaller.appspot.com/bug?extid=20b90969babe05609947
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a8edff100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=167d3bb7100000
+Reviewed-by: Seth Arnold <seth.arnold@canonical.com>
 
-Reported-by: syzbot+20b90969babe05609947@syzkaller.appspotmail.com
-Fixes: d70c47c8dc69 ("net: phy: make phy_suspend a no-op if PHY is suspended already")
+Thanks
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> ---
+>  security/apparmor/include/file.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> --- linux-next-20200717.orig/security/apparmor/include/file.h
+> +++ linux-next-20200717/security/apparmor/include/file.h
+> @@ -167,7 +167,7 @@ int aa_audit_file(struct aa_profile *pro
+>   * @perms: permission table indexed by the matched state accept entry of=
+ @dfa
+>   * @trans: transition table for indexed by named x transitions
+>   *
+> - * File permission are determined by matching a path against @dfa and th=
+en
+> + * File permission are determined by matching a path against @dfa and
+>   * then using the value of the accept entry for the matching state as
+>   * an index into @perms.  If a named exec transition is required it is
+>   * looked up in the transition table.
+>=20
+
+--U+BazGySraz5kW0T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEQVAQ8bojyMcg37H18yFyWZ2NLpcFAl8Yov4ACgkQ8yFyWZ2N
+Lped0wf7BOUDobQFJ75lulsDDZ+njuj+aWldahIGtNOsBSkxOxo8jU/yFQ3CcvOV
+K1VxjYqkhxU5QhWceVFsQ8DN8ILghdb6yofJ9vfnuSgdqcifzwoHbku3Ul99hZyo
+sN5MkQKlLdMsksQCWEvHvB7ofMguuHjHbsYlqPOspdMMLPOEetFzte+irh0cNUyg
+T+oIcWtW9ZUZLSOzmMCM8siFK9lZ2f72zzUpiG1jHxWq9RqVivcKDXGIsvuJtBvZ
+oPALNws2CAWFpwwHj217PkTwVifdPhdvT80ujs27vIim0I2bmSYBF21pYZ5K9pOW
+iAA3GhT6OVL5aXhhQIA6btoyPWbsnw==
+=GKRw
+-----END PGP SIGNATURE-----
+
+--U+BazGySraz5kW0T--
