@@ -2,192 +2,125 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F103AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A3922B47
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504D72071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:37:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="uKnp0/oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbgGVVdc (ORCPT
+        id S1728832AbgGVVh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:33:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37475 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732992AbgGVVd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:33:29 -0400
-IronPort-SDR: eljUyjkynkZ1BFiyII3nOh37zLyPu5YKDR+FPEVWkAGU0qWAaRY1uDTjSLXMiDeD+qyZBeYsof
- EgMPTgYLDQpw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="168565581"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="168565581"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 14:33:28 -0700
-IronPort-SDR: JXs4dF7/ZGYQKYyOeMWcrtFpVi9h+gNIz7ONrilMuy7q41aQRAbNeeqQ6Xm1JAkovawy9v3HFv
- 2f956f7Cr9VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="488599266"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Jul 2020 14:33:28 -0700
-Date:   Wed, 22 Jul 2020 14:33:28 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [RESEND v13 11/11] KVM: x86: Enable CET virtualization and
- advertise CET to userspace
-Message-ID: <20200722213328.GL9114@linux.intel.com>
-References: <20200716031627.11492-1-weijiang.yang@intel.com>
- <20200716031627.11492-12-weijiang.yang@intel.com>
+        Wed, 22 Jul 2020 17:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgGVVh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:37:57 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36A7C0619E2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:37:56 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a1so3925707ejg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mWgYgasEBFnUWZrjUIWCT1ojhoXmHViVids8XouBfF0=;
+        b=uKnp0/oMCDGRjqyDy2WeNxgylKXxzNzln91iOTWtrAY0VYBVVVUWR1a2EfiAWWtVI8
+         v1OTjF2EtY//278Z3fijbZK10+VYbawKLLic1Tmqqx4KjxoOOVVxqRVCATg3fSsUwyIb
+         t7ofZ237jokeyQS0kvVe8ttokaX/ENSuFdaBLzoFq0ffHLbb1Qt50lRhVoVuQTy/RAfw
+         gCstJ/1HvSf9HXfW2bRdIF9IdfjCNoOIysvFfD+ErbnSJBQsyzBiiqspHylw1B902uUn
+         kP/G0c5UmM8v3kwz48wUIXJOFO84/LWDmMOkdm81g5MlCllVjOUoJ0nt+189Woji0qUu
+         ZbOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mWgYgasEBFnUWZrjUIWCT1ojhoXmHViVids8XouBfF0=;
+        b=NvaL1rsmvjfFgPPRGL/QKwFhbTPpJYaGiapj6H407yteCrgccoBo/MltZsLr1+fgOX
+         8Top7nl6KQr0G9mLRcBlsTFDZvpQBm/QbHk0jLr1ZGuhStYGh/i0YYCTKZzbp7bQAbs4
+         ZOsYVvtlcSZm4A5xBu6QcW0z0FYCi5mfePMuJc+0OCFDE/mXNViu8tEejXL6OjgxY1aQ
+         3e7W+an79dj5CsqjMHKvfrxbmGmgUhy1chVcdbpUlxRIgePc+OTbRtrU0Z0kvy1eW5gk
+         Q1oCbqOoLb6Xj1RGn+NiBmEU8+jbpVdqLPel8E9Czs/z6aORQuaEX9zC9z79QMBJCpdp
+         idRA==
+X-Gm-Message-State: AOAM533dPyuHivGHsIf6lzW6XQaPSQJotc2K6ExM8lMaY2eC60ASxB9a
+        41WFWGOWMrZJ0/nYhepshemJ0ExvtdBd/xM8c7zaVQ==
+X-Google-Smtp-Source: ABdhPJwkLqIgPTCoHB5608wXZ6psHWtmwseZ6NAUWiauk9X2myp5Pu+p9JJt2O56dimXRhUyOo/xKJKH0O+d6MEgH78=
+X-Received: by 2002:a17:907:10d4:: with SMTP id rv20mr1497544ejb.413.1595453875110;
+ Wed, 22 Jul 2020 14:37:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716031627.11492-12-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200713060842.471356-1-acourbot@chromium.org> <20200713060842.471356-3-acourbot@chromium.org>
+In-Reply-To: <20200713060842.471356-3-acourbot@chromium.org>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Wed, 22 Jul 2020 18:37:43 -0300
+Message-ID: <CAAEAJfD8yfdTptkmXoPzrw6S=6eKr=K4yL9-5aq2JtWF7M3=7w@mail.gmail.com>
+Subject: Re: [PATCH v3 02/16] dt-bindings: media: mtk-vcodec: document SCP node
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:16:27AM +0800, Yang Weijiang wrote:
-> Set the feature bits so that CET capabilities can be seen in guest via
-> CPUID enumeration. Add CR4.CET bit support in order to allow guest set CET
-> master control bit(CR4.CET).
-> 
-> Disable KVM CET feature once unrestricted_guest is turned off because
-> KVM cannot emulate guest CET behavior well in this case.
-> 
-> Don't expose CET feature if dependent CET bits are cleared in host XSS.
-> 
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+On Mon, 13 Jul 2020 at 03:09, Alexandre Courbot <acourbot@chromium.org> wrote:
+>
+> The mediatek codecs can use either the VPU or the SCP as their interface
+> to firmware. Reflect this in the DT bindings.
+>
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 > ---
->  arch/x86/include/asm/kvm_host.h |  3 ++-
->  arch/x86/kvm/cpuid.c            |  5 +++--
->  arch/x86/kvm/vmx/vmx.c          |  5 +++++
->  arch/x86/kvm/x86.c              | 11 +++++++++++
->  4 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index e8c749596ba2..c4c82db68b6a 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -99,7 +99,8 @@
->  			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
->  			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
->  			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
-> -			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
-> +			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
-> +			  | X86_CR4_CET))
->  
->  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
->  
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index d97b2a6e8a8c..a085b8c57f34 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -340,7 +340,8 @@ void kvm_set_cpu_caps(void)
->  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
->  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
->  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-> -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/
-> +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/ |
-> +		F(SHSTK)
->  	);
->  	/* Set LA57 based on hardware capability. */
->  	if (cpuid_ecx(7) & F(LA57))
-> @@ -356,7 +357,7 @@ void kvm_set_cpu_caps(void)
->  	kvm_cpu_cap_mask(CPUID_7_EDX,
->  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
->  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
-> -		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
-> +		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) | F(IBT)
->  	);
->  
->  	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 5d4250b9dec8..31593339b6fe 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7542,6 +7542,11 @@ static __init void vmx_set_cpu_caps(void)
->  
->  	if (vmx_waitpkg_supported())
->  		kvm_cpu_cap_check_and_set(X86_FEATURE_WAITPKG);
-> +
-> +	if (!enable_unrestricted_guest) {
+>  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> index b6b5dde6abd8..7aef0a4fe207 100644
+> --- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> @@ -19,7 +19,9 @@ Required properties:
+>  - iommus : should point to the respective IOMMU block with master port as
+>    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+>    for details.
+> -- mediatek,vpu : the node of video processor unit
+> +One of the two following nodes:
+> +- mediatek,vpu : the node of the video processor unit, if using VPU.
+> +- mediatek,scp : the noode of the SCP unit, if using SCP.
+>
 
-This also needs to check cpu_has_load_cet_ctrl().
+This interface doesn't enforce the fact only one of the two
+should be present, but not both (which is the case, right?).
 
-> +		kvm_cpu_cap_clear(X86_FEATURE_SHSTK);
-> +		kvm_cpu_cap_clear(X86_FEATURE_IBT);
-> +	}
->  }
->  
->  static void vmx_request_immediate_exit(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 76892fb0b0a0..c7393d62ad72 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9808,10 +9808,21 @@ int kvm_arch_hardware_setup(void *opaque)
->  	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
->  		supported_xss = host_xss & KVM_SUPPORTED_XSS;
->  
-> +	if (!(supported_xss & (XFEATURE_MASK_CET_USER |
-> +	    XFEATURE_MASK_CET_KERNEL))) {
-> +		kvm_cpu_cap_clear(X86_FEATURE_SHSTK);
-> +		kvm_cpu_cap_clear(X86_FEATURE_IBT);
+I hope I'm not bikeshedding here, but from an interface POV,
+would it be cleaner to just have a single mediatek,coprocessor
+property, and then use of_device_is_compatible
+to distinguish VPU from SCP type?
 
-I played around with a variety of options, and ended up with:
+Moreover, I'd argue you don't need a dt-binding change
+and should just keep the current mediatek-vpu property,
+and then rely on of_device_is_compatible.
 
-	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-		supported_xss = 0;
-	else
-		supported_xss &= host_xss;
+Regards,
+Ezequiel
 
-	/* Update CET features now that supported_xss is finalized. */
-	if (!kvm_cet_supported()) {
-		kvm_cpu_cap_clear(X86_FEATURE_SHSTK);
-		kvm_cpu_cap_clear(X86_FEATURE_IBT);
-	}
-
-in x86.c / kvm_arch_hardware_setup(), and 
-
-	if (!cpu_has_load_cet_ctrl() || !enable_unrestricted_guest) {
-		kvm_cpu_cap_clear(X86_FEATURE_SHSTK);
-		kvm_cpu_cap_clear(X86_FEATURE_IBT);
-	} else if (kvm_cpu_cap_has(X86_FEATURE_SHSTK) ||
-		   kvm_cpu_cap_has(X86_FEATURE_IBT)) {
-		supported_xss |= XFEATURE_MASK_CET_USER |
-				 XFEATURE_MASK_CET_KERNEL;
-	}
-
-in vmx.c / vmx_set_cpu_caps.
-
-That avoids KVM_SUPPORTED_XSS, and was the least ugly option I could devise
-for avoiding the cyclical dependency between XSS and SHSTK/IBT without
-potentially exploding SVM in the future.
-
-> +	}
-> +
->  #define __kvm_cpu_cap_has(UNUSED_, f) kvm_cpu_cap_has(f)
->  	cr4_reserved_bits = __cr4_reserved_bits(__kvm_cpu_cap_has, UNUSED_);
->  #undef __kvm_cpu_cap_has
->  
-> +	if (!kvm_cpu_cap_has(X86_FEATURE_SHSTK) &&
-> +	    !kvm_cpu_cap_has(X86_FEATURE_IBT))
-> +		supported_xss &= ~(XFEATURE_MASK_CET_USER |
-> +				   XFEATURE_MASK_CET_KERNEL);
-> +
->  	if (kvm_has_tsc_control) {
->  		/*
->  		 * Make sure the user can only configure tsc_khz values that
-> -- 
-> 2.17.2
-> 
+>
+>  Example:
+> --
+> 2.27.0.383.g050319c2ae-goog
+>
