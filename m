@@ -2,114 +2,158 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F06C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB6DC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D3520709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ks1r01r8"
+	by mail.kernel.org (Postfix) with ESMTP id E6F0320709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgGVOEo (ORCPT
+        id S1726425AbgGVOEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGVOEn (ORCPT
+        Wed, 22 Jul 2020 10:04:48 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36216 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGVOEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:04:43 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407D1C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:04:43 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x5so1491314wmi.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Rs2Y2EqzdkKrOA6XoS+7IQYSW7ep9XsRJtfJ1V00SI=;
-        b=ks1r01r8IlR17EoE2Q5OyQVSs4AV9IGOQE1iaO69O1yAzO7nIEE0kbTXCSNW+hmHbm
-         RQrHbYI35gsDOVPSFAwtW3J4PPwkOS4OH+pPX3HHOsGNsYhn7f1duuxwYJfCFIWVm9/U
-         BZTcbtEpjVEhMLOKSLcMrbEthdks1UCP5rHk+XiUNwf+TywwR8swnUdxnPoTbPd1vPrJ
-         JxN9ltz1Mcj6AnzOz7E2oHmT7N0zeSKY1jA+Jac99v/4rO3AFrWeKME/L6wx4Iw/IZ2H
-         vl0S02Yj4RUPqrcuYA08ibKKeHPFOkX1ATDQsXqDk/uWWPA8Pz75m758Je0/bUkAJWMC
-         Mkbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Rs2Y2EqzdkKrOA6XoS+7IQYSW7ep9XsRJtfJ1V00SI=;
-        b=sKll4rc76gZOp54htGQ8W2rEvqDfjHLPkHH/MEbvKWfuVXuWC/oqTR0YGctb6wSVei
-         xNoR+1Hnrljrrs2Vxm62n47JT1ycEMwR+puIuEiN1qQdIa+DgXJ9IjzwaiVraB8DKV6y
-         zFLMMBMDjYjplNYrESIkCmwu6Onuv+sz8trZRKKXK8+UhkY3AmgUfG7ZcBjucrYff0K4
-         mPXu9WNgABOFL5AJE//zsAWPNZt4xHwbxiCS+q/l4JQAvHWaeHdHroPQwv22HboLPt3A
-         7FPYl06DppVMEEfObOpZeAnn9p/4i0XYk57htl/6B3GxayoVWGjsCee+JA9W+KhytHGW
-         dMWg==
-X-Gm-Message-State: AOAM530e5hXx0NTFFXui/2fRu4zzW8p1Xk/hgLzrNBxnBJpwk519weuT
-        u1eW8aZKSJRZCpRcAP9reENVXL1gfBILGlMoHBY=
-X-Google-Smtp-Source: ABdhPJzbBZpmvKOmpiAE1M0Qdqb/UFYsFJDbC0RenHJ5MR1TbtbU/Hqntla9nhteJ8Rfgxb5Lvy5BMZJ2KDmAy9jXz4=
-X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr2173888wmk.153.1595426682017;
- Wed, 22 Jul 2020 07:04:42 -0700 (PDT)
+        Wed, 22 Jul 2020 10:04:47 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8680F1C0BD8; Wed, 22 Jul 2020 16:04:43 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 16:04:43 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Denis Osterland-Heim <denis.osterland@diehl.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v6 1/2] leds: pwm: add support for default-state device
+ property
+Message-ID: <20200722140443.6cagitx3dozgjazh@duo.ucw.cz>
+References: <20200713054259.7608-1-Denis.Osterland@diehl.com>
+ <20200713054259.7608-2-Denis.Osterland@diehl.com>
 MIME-Version: 1.0
-References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org> <20200721170007.4554-7-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20200721170007.4554-7-srinivas.kandagatla@linaro.org>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 22 Jul 2020 17:04:30 +0300
-Message-ID: <CAEnQRZA6Y99znD3ZtpuGhc+i-WVDtUW-jP1sF3MTg289S_Mr_g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 6/6] ASoC: q6asm-dai: add support to set_codec_params
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        ckeepax@opensource.cirrus.com, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="v2ovlewz76qvmngn"
+Content-Disposition: inline
+In-Reply-To: <20200713054259.7608-2-Denis.Osterland@diehl.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 8:03 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> Make use of new set_codec_params callback to allow decoder switching
-> during gapless playback.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/qcom/qdsp6/q6asm-dai.c | 33 ++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
-> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> index b5c719682919..a8cfb1996614 100644
-> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> @@ -876,6 +876,37 @@ static int __q6asm_dai_compr_set_codec_params(struct snd_soc_component *componen
->         return 0;
->  }
->
-> +static int q6asm_dai_compr_set_codec_params(struct snd_soc_component *component,
-> +                                           struct snd_compr_stream *stream,
-> +                                           struct snd_codec *codec)
-> +{
-> +       struct snd_compr_runtime *runtime = stream->runtime;
-> +       struct q6asm_dai_rtd *prtd = runtime->private_data;
-> +       int ret;
+
+--v2ovlewz76qvmngn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> This patch adds support for "default-state" devicetree property, which
+> allows to defer pwm init to first use of led.
+>=20
+> This allows to configure the PWM early in bootloader to let the LED
+> blink until an application in Linux userspace sets something different.
+>=20
+> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+
+> +#define LEDS_PWM_DEFSTATE_OFF	0
+> +#define LEDS_PWM_DEFSTATE_ON	1
+> +#define LEDS_PWM_DEFSTATE_KEEP	2
+
+Turn this into enum; no need for prefix as this is private to the driver.
+
+>  struct led_pwm {
+>  	const char	*name;
+>  	const char	*default_trigger;
+>  	u8		active_low;
+> +	u8		default_state;
+>  	unsigned int	max_brightness;
+>  };
+> =20
+> @@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
+pwm_priv *priv,
+> =20
+>  	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
+> =20
+> -	pwm_init_state(led_data->pwm, &led_data->pwmstate);
+> +	/* init PWM state */
+> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
+> +		pwm_get_state(led_data->pwm, &led_data->pwmstate);
+> +		if (!led_data->pwmstate.period) {
+> +			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
+> +			dev_warn(dev,
+> +				"failed to read period for %s, default to off",
+> +				led->name);
+> +		}
+> +	}
+> +	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
+> +		pwm_init_state(led_data->pwm, &led_data->pwmstate);
 > +
-> +       ret = q6asm_open_write(prtd->audio_client, prtd->next_track_stream_id,
-> +                              codec->id, codec->profile, prtd->bits_per_sample,
-> +                              true);
-> +       if (ret < 0) {
-> +               pr_err("q6asm_open_write failed\n");
+> +	/* set brightness */
+> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
+> +		led_data->cdev.brightness =3D led->max_brightness;
+> +	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
+> +		uint64_t brightness;
+> +
+> +		brightness =3D led->max_brightness;
+> +		brightness *=3D led_data->pwmstate.duty_cycle;
+> +		do_div(brightness, led_data->pwmstate.period);
+> +		led_data->cdev.brightness =3D brightness;
+> +	}
 
-Since you have component->dev here I think it is worth it to use
-dev_err instead of pr_err.
+Try to clean this up... switch() might help. Maybe two of them.
 
-Same for the rest of the code.
+> @@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
+ struct led_pwm_priv *priv)
+>  		fwnode_property_read_u32(fwnode, "max-brightness",
+>  					 &led.max_brightness);
+> =20
+> +		if (!fwnode_property_read_string(fwnode, "default-state",
+> +						 &state)) {
+> +			if (!strcmp(state, "keep"))
+> +				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
+> +			else if (!strcmp(state, "on"))
+> +				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
+> +			else
+> +				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
+> +		}
+
+Actually... Move the enum to core, and add helper for this. We don't
+want to see this duplicated.
+
+> The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please in=
+form us if you have received this e-mail by
+> mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is stri=
+ctly prohibited.=20
+> - For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-obl=
+igations/
+
+Get rid of this.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--v2ovlewz76qvmngn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxhHewAKCRAw5/Bqldv6
+8rmuAJ4rvbdm8hCC5wda9/NyXq6BFCfuYQCglCBcKWz5JOVJkDmRIX+8DtvNYdc=
+=Hxhr
+-----END PGP SIGNATURE-----
+
+--v2ovlewz76qvmngn--
