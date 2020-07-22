@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB379C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38586C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBDAA20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1218C20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgGVFxf (ORCPT
+        id S1728500AbgGVFxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:53:35 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:40156 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgGVFxU (ORCPT
+        Wed, 22 Jul 2020 01:53:30 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:46687 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgGVFxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:53:20 -0400
-Received: by mail-io1-f70.google.com with SMTP id f25so1128346ioh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:53:19 -0700 (PDT)
+        Wed, 22 Jul 2020 01:53:21 -0400
+Received: by mail-il1-f200.google.com with SMTP id o4so300727ilo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:53:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vMI+b0QwNKlbP0/ucj1u+tlneVHkQXvpxz2P0D6PK8s=;
-        b=BJuc6sS1eA0M/X2gWSQ84Q1Lf8EhcfHpaezUGOcOOkeLM5UOSY2tO0tUwRNbhMNg8+
-         5YP8deMet5W38fPaG4BvxVD8SQ8o3VtFP5Cx5YN/OQJiirO3YJldtQdq5heDMLcrh0/d
-         2SOP3MjDyAhjmb5tguKKF9PLmdCIAejVZ8dPp0GDuPE5mUSAY3VWVddrqQgVpAWdWz+i
-         7Fpo8BLgSihVfdSz2Sn4uFGwvh3vw7urozybewXtmV6HrbaZwqkwXHO8hpVV645I7k9+
-         5zgTxCSfDDsX6y0BZ70UYGEaGfntQxj3k48+fC402VT3s1f7NPJ3EzgGJca1RZpdNCcc
-         WxKA==
-X-Gm-Message-State: AOAM5303X6zq7x8ugusssiAPV7u8TXkoM1yUEA/NOrzCH51BByuUhrf/
-        98iG/eUQIE/wHe54lj6f3gbjlv80EF4Ts83LC8/isgZ+Ng0N
-X-Google-Smtp-Source: ABdhPJw35bTKefxEro2HR8zMrQL+kwCYSOF3wnVLtRlBV7cZn8JvkcKXN8Tk+aXwpnMZnpwBNCMdMKNProUSNTiikyw1qYRmmEsG
+        bh=ceHAZ8fGtIOXmoQZi1GN0tX61tjs26U0Fk+wKnXOpRo=;
+        b=iPGnfbf3SqejOvAAAHzuouOlREcU/cu0t+V9s9z9SiejnjyCzSFHK7LrftMc6wMAuJ
+         uDD7ckMnjxE6QiSmbVyEnPob0LML8ii41RXNk2miyiK2hF0Xmwvu4qYv0SNKILA1dA6X
+         ugOQquHUAR81lpOYutYLxyPg/7tZkXBAw0HqDiCWM9dd1Kp2qImVO+kNNSvTrT15nCvh
+         RTV/qFY2rxMPHjTKwALqku9wPJUhSvRq1YkaPkM9T43aNcxqDhYQJhYs0RaYHtjtDgUZ
+         ee66hckfAxbAC0p4CxSQB4sUe9JgDQG9M1rnkrznD9reAaQrLqYaFbFHQTRPGIkSv7MV
+         Fzag==
+X-Gm-Message-State: AOAM531DU9kG0VyahNJfp65ZXhl+4GrZNeN5I2COGLpvT4ai4YfwbS5Y
+        hpthAwWTLjS7vhcH3AjdolgxtgaIAmiYpeDSpjx++DWdnhFv
+X-Google-Smtp-Source: ABdhPJw1gZlt3PeSpaXF6147x/nyTTUyGOCs5tXCi+GZ/KY+fW2xTNTIYZrrOBKXhPtNLGkYsoFW4Cck1xqNM3erTWni5t2rf7uZ
 MIME-Version: 1.0
-X-Received: by 2002:a02:95ca:: with SMTP id b68mr36860918jai.0.1595397199619;
- Tue, 21 Jul 2020 22:53:19 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 22:53:19 -0700
+X-Received: by 2002:a92:58d6:: with SMTP id z83mr31177380ilf.186.1595397200184;
+ Tue, 21 Jul 2020 22:53:20 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 22:53:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005be99c05ab015bd0@google.com>
-Subject: KMSAN: uninit-value in xa_load
-From:   syzbot <syzbot+086ab5ca9eafd2379aa6@syzkaller.appspotmail.com>
+Message-ID: <000000000000648aca05ab015bd3@google.com>
+Subject: KMSAN: uninit-value in ucma_connect
+From:   syzbot <syzbot+7446526858b83c8828b2@syzkaller.appspotmail.com>
 To:     dledford@redhat.com, glider@google.com, jgg@ziepe.ca,
         leon@kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
@@ -59,34 +59,26 @@ syzbot found the following issue on:
 
 HEAD commit:    14525656 compiler.h: reinstate missing KMSAN_INIT
 git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=105d7320900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=124a0817100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=c534a9fad6323722
-dashboard link: https://syzkaller.appspot.com/bug?extid=086ab5ca9eafd2379aa6
+dashboard link: https://syzkaller.appspot.com/bug?extid=7446526858b83c8828b2
 compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1303736f100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12096087100000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13db936f100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c18d7d100000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+086ab5ca9eafd2379aa6@syzkaller.appspotmail.com
+Reported-by: syzbot+7446526858b83c8828b2@syzkaller.appspotmail.com
 
 =====================================================
-BUG: KMSAN: uninit-value in xas_start lib/xarray.c:190 [inline]
-BUG: KMSAN: uninit-value in xas_load lib/xarray.c:233 [inline]
-BUG: KMSAN: uninit-value in xa_load+0x83b/0x8a0 lib/xarray.c:1305
-CPU: 0 PID: 8440 Comm: syz-executor560 Not tainted 5.8.0-rc5-syzkaller #0
+BUG: KMSAN: uninit-value in ucma_connect+0x2aa/0xab0 drivers/infiniband/core/ucma.c:1091
+CPU: 0 PID: 8457 Comm: syz-executor069 Not tainted 5.8.0-rc5-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x1df/0x240 lib/dump_stack.c:118
  kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
  __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- xas_start lib/xarray.c:190 [inline]
- xas_load lib/xarray.c:233 [inline]
- xa_load+0x83b/0x8a0 lib/xarray.c:1305
- _ucma_find_context drivers/infiniband/core/ucma.c:139 [inline]
- ucma_get_ctx+0x7f/0x310 drivers/infiniband/core/ucma.c:152
- ucma_get_ctx_dev drivers/infiniband/core/ucma.c:175 [inline]
- ucma_accept+0x259/0xc90 drivers/infiniband/core/ucma.c:1148
+ ucma_connect+0x2aa/0xab0 drivers/infiniband/core/ucma.c:1091
  ucma_write+0x5c5/0x630 drivers/infiniband/core/ucma.c:1764
  do_loop_readv_writev fs/read_write.c:737 [inline]
  do_iter_write+0x710/0xdc0 fs/read_write.c:1020
@@ -97,18 +89,18 @@ Call Trace:
  __x64_sys_writev+0x4a/0x70 fs/read_write.c:1204
  do_syscall_64+0xb0/0x150 arch/x86/entry/common.c:386
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4402e9
+RIP: 0033:0x4402a9
 Code: Bad RIP value.
-RSP: 002b:00007fffa058a4f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402e9
-RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401af0
-R13: 0000000000401b80 R14: 0000000000000000 R15: 0000000000000000
+RSP: 002b:00007ffd6e4541e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402a9
+RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000005
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401ab0
+R13: 0000000000401b40 R14: 0000000000000000 R15: 0000000000000000
 
-Local variable ----cmd@ucma_accept created at:
- ucma_accept+0x95/0xc90 drivers/infiniband/core/ucma.c:1137
- ucma_accept+0x95/0xc90 drivers/infiniband/core/ucma.c:1137
+Local variable ----cmd@ucma_connect created at:
+ ucma_connect+0xe1/0xab0 drivers/infiniband/core/ucma.c:1082
+ ucma_connect+0xe1/0xab0 drivers/infiniband/core/ucma.c:1082
 =====================================================
 
 
