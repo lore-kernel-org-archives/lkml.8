@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF33C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24463C433FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85763207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01476207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731751AbgGVBSU (ORCPT
+        id S1731779AbgGVBSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 21:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 21:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731667AbgGVBR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 21:17:57 -0400
+        id S1731657AbgGVBR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 21:17:56 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5F3F22CF7;
-        Wed, 22 Jul 2020 01:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA84022CA1;
+        Wed, 22 Jul 2020 01:17:55 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jy3ON-005sJC-Qz; Tue, 21 Jul 2020 21:17:55 -0400
-Message-ID: <20200722011755.720803193@goodmis.org>
+        id 1jy3OM-005sG6-W6; Tue, 21 Jul 2020 21:17:55 -0400
+Message-ID: <20200722011754.869289038@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 21 Jul 2020 21:16:51 -0400
+Date:   Tue, 21 Jul 2020 21:16:45 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -37,8 +37,7 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Subject: [PATCH 23/23 v3] tools lib traceevent: Handle possible strdup() error in
- tep_add_plugin_path() API
+Subject: [PATCH 17/23 v3] tools lib traceevent: Handle strdup() error in parse_option_name()
 References: <20200722011628.925541477@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -49,36 +48,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
 
-Free allocated resources and return -1 in case strdup() fails in
-tep_add_plugin_path() API.
+Modified internal function parse_option_name() to return error and handle
+that error in function callers in case strdup() fails.
 
-Link: https://lore.kernel.org/r/CAM9d7chfvJwodpVrHGc5E2J80peRojmYV_fD8x3cpn9HFRUw2g@mail.gmail.com
-Link: https://lore.kernel.org/linux-trace-devel/20200714103027.2477584-9-tz.stoyanov@gmail.com
-Link: https://lore.kernel.org/linux-trace-devel/20200716092014.2613403-9-tz.stoyanov@gmail.com
+Link: https://lore.kernel.org/r/CAM9d7cizjF+fbK7YzmsBDgrx__4YAOsmEq67D3sWET8FF+YdFA@mail.gmail.com
+Link: https://lore.kernel.org/linux-trace-devel/20200714103027.2477584-3-tz.stoyanov@gmail.com
+Link: https://lore.kernel.org/linux-trace-devel/20200716092014.2613403-3-tz.stoyanov@gmail.com
 
 Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/lib/traceevent/event-plugin.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/lib/traceevent/event-plugin.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index f0877a7e3e8d..e7c2acb8680f 100644
+index aa6f43290cd3..a39eeb6ef1f2 100644
 --- a/tools/lib/traceevent/event-plugin.c
 +++ b/tools/lib/traceevent/event-plugin.c
-@@ -665,6 +665,10 @@ int tep_add_plugin_path(struct tep_handle *tep, char *path,
- 		return -1;
+@@ -254,7 +254,7 @@ void tep_plugin_remove_options(struct tep_plugin_option *options)
+ 	}
+ }
  
- 	dir->path = strdup(path);
-+	if (!dir->path) {
-+		free(dir);
-+		return -1;
-+	}
- 	dir->prio = prio;
- 	dir->next = tep->plugins_dir;
- 	tep->plugins_dir = dir;
+-static void parse_option_name(char **option, char **plugin)
++static int parse_option_name(char **option, char **plugin)
+ {
+ 	char *p;
+ 
+@@ -265,8 +265,9 @@ static void parse_option_name(char **option, char **plugin)
+ 		*p = '\0';
+ 		*option = strdup(p + 1);
+ 		if (!*option)
+-			return;
++			return -1;
+ 	}
++	return 0;
+ }
+ 
+ static struct tep_plugin_option *
+@@ -325,7 +326,8 @@ int tep_plugin_add_option(const char *name, const char *val)
+ 	if (!option_str)
+ 		return -ENOMEM;
+ 
+-	parse_option_name(&option_str, &plugin);
++	if (parse_option_name(&option_str, &plugin) < 0)
++		return -ENOMEM;
+ 
+ 	/* If the option exists, update the val */
+ 	for (op = trace_plugin_options; op; op = op->next) {
 -- 
 2.26.2
 
