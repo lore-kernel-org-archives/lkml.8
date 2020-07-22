@@ -2,190 +2,153 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B11C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671F2C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703F220729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3667420729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErPraso6"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="ODOAX3Vf";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="d9L+C/MS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732764AbgGVOwp (ORCPT
+        id S1732465AbgGVOwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:52:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45445 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732699AbgGVOwo (ORCPT
+        Wed, 22 Jul 2020 10:52:37 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:60146 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729642AbgGVOwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:52:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595429562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0s28z06jG0fWNYzLWpKidzlLlRizuZvY9LgUiS8V65o=;
-        b=ErPraso6Ga0YX5oEANT77iOcfyLOzTBDbxRKfa8cJmQExi8avULVYVunxerXtLYDFyzl3H
-        mth3+G8k3BBZXrlOE5ILPbWLEkZ+7fcl6i9pnq9nqGoNdtOPC/MYlUEGfi/sA923HnH8n+
-        6H2nJ/rLouuDA7CTxc/epr6uMySZr7E=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-8Tfs_p2cNNiRVBS3TnlzkQ-1; Wed, 22 Jul 2020 10:52:38 -0400
-X-MC-Unique: 8Tfs_p2cNNiRVBS3TnlzkQ-1
-Received: by mail-io1-f72.google.com with SMTP id l18so1970804ion.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:52:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0s28z06jG0fWNYzLWpKidzlLlRizuZvY9LgUiS8V65o=;
-        b=ZSBku+7EI/b/yL1eorT6MpXggY+IMLmP/06RhCE1QFVgI7oNnTbCDGsW5vh7HZK1bw
-         Eg3+LgoI1BGZdTTwKTRPr94xHwy5KnjMbB8xbMztgbq3QA0dP9iKwr7EPyKuVa3XjEKh
-         sVPTbW8jI+krHqtuSneWIYWDJ2B2NQzIvUByj6rDqn7j/l9Rmutaup1j+2sNEuiwBUW3
-         hKiKFWaHplwJsJ19ZU8RqGvAfc42AJrVYI1KBFcURCQ8FtpZMh2hpOoz/lMzjFaF27r3
-         wIQaA3XFz3oBSXqMpFMyAdn3vIEHp72Ey+OjEcdYsA21zCoHc4Fl2Nop3YHB0SzJRXyv
-         v3vw==
-X-Gm-Message-State: AOAM533zCOdn6rL/I+3dr8Q2BunTnsfoML/iQP1PeQ0SCLVf0Jrr+LXv
-        ewWmheVR2N84nYphGtVjnae7T6KdrkCs05XRcdGbmL08fLkcEbCyAfk7+aEOmgIF4t6WvGhwkLz
-        T/UDcTQvjSf56REacGx0FKMJPkPnCZL1sNPUWUgGW
-X-Received: by 2002:a05:6638:519:: with SMTP id i25mr36391247jar.99.1595429557975;
-        Wed, 22 Jul 2020 07:52:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx/mkKoHrVRoTH0p1AXihXM+dsrCmS/FbLb9LnEV8KCoL7fZKn7E5Nmh+KoAwY75TVuAxoFW1zvneFYLkM550w=
-X-Received: by 2002:a05:6638:519:: with SMTP id i25mr36391213jar.99.1595429557600;
- Wed, 22 Jul 2020 07:52:37 -0700 (PDT)
+        Wed, 22 Jul 2020 10:52:36 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MEkbTw016104;
+        Wed, 22 Jul 2020 07:51:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=RsbROyy9o5twnlyyPcyoUc615/SMC3uVIbiyIp12Dyc=;
+ b=ODOAX3Vf1hr7wktTTss7qEjiVKy0WNTdLe80l5AgSOy3GetviRocF0VLf3bp30jEwfJ6
+ OQIX10zNQCpMf5iUkP0UiNHhE4hPv/39pqX4CJDYRuTsYAQly2N6BHYwVjIipp/zidcg
+ E/5yEwf53gjPcV9Aqw5wnRzQoEz79oC9T8uITAk4nvj4gkHDN3l+nqLGfhp1TECwVyuM
+ gfZ1fqRySuI0vI0+/d/Yy5+pRev480zX40+ul+UjPJaQ65FU+NCjyNfsgGL4FjsNvYr0
+ uY+Hrf4PHuvvY7/iPfXQbQIg2ZMsN/MurgNsB9afQKE0ziTSnA4jGr/3YyG8cmuN7IY4 ZA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32bxens71g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 07:51:58 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 07:51:57 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 07:51:57 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.171)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 07:51:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aq9JmuIBHScospIPRBNsAdbx/ABv+xy2J7mOXttr8IFOnsEYJDk5cUnigXbwE6sHEgSZbpOjHijyXTrchxx9B0jKSPzncM/0msOpDs0+Aikn8d490Vxv1eqcXGjRgUbwgqUoKd/SW+zLQ2K2b3SBr+ZGQ74M/jyZJ6H4AGYSO1uYlxOGsctQB/jg4ApGReFKE6KX/uSvxWeAp+PP/Np+k28NVfEPH3HoWqhroyIJkyyiLxZ6TJgBSScQW1rhyNmET7zjmOxkXLio9BDRFw6shd6+OWy2wOQ7Odk9EV26xdkQs+33CSbbBChPMcEpwIYew80SyI0JVH1O5fK7viO1rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RsbROyy9o5twnlyyPcyoUc615/SMC3uVIbiyIp12Dyc=;
+ b=OsA52B3ve9YJO1ybKQB/LELddTeCXQh6fzu50dDJPI5u3t1ajr7KCTLVtNFvvzJnogfu/eRti3FIwp5RsQS6scZa8D10aO7oELhpBtOPcmt3cjlG6IRhxw5f0PNxVxVyTISs/e4u1395T8eecg/ilLUuRPbYECn/hKIxCe0w6BH1lk2ZPYo0SCnc8TzS66RnRiZN7QPlyxNMC6LCaxZUOKEbS5ML6aeMZWSB45z7XrGBW08aN+PBwAFpyo/YDNbeW9RHK4HSjAyCyLKnLCsqSTL0hGzONKHkwetIQXrZmQ4/YBF0/n4Vdf0VHmuo4Ln+qE1CoST7BwKD8k0APvynvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RsbROyy9o5twnlyyPcyoUc615/SMC3uVIbiyIp12Dyc=;
+ b=d9L+C/MSALNOF5jGgBwBWR3vJi3vXnGR/bQ13sjza16iIiOw3tCLGEoy7cE02TlRwD+uPwUwXNW9/XjX7GgwDHs8CYVKhqDSvIUx/cX6Dbxj9MLAw0poNwKwGk+K1fFgl6Wx6hZaccreImkeV9xdDhgxG52P3KKL+kvQK1CJnyM=
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com (2603:10b6:907:3::11)
+ by MW2PR18MB2156.namprd18.prod.outlook.com (2603:10b6:907:a::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Wed, 22 Jul
+ 2020 14:51:56 +0000
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32]) by MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32%4]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 14:51:55 +0000
+From:   Alex Belits <abelits@marvell.com>
+To:     "frederic@kernel.org" <frederic@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+CC:     Prasun Kapoor <pkapoor@marvell.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: [PATCH v4 05/13] task_isolation: Add xen-specific hook
+Thread-Topic: [PATCH v4 05/13] task_isolation: Add xen-specific hook
+Thread-Index: AQHWYDekSLC//sodZEC38w51R9lIxg==
+Date:   Wed, 22 Jul 2020 14:51:55 +0000
+Message-ID: <f1de0a5f9b0ad9305030b452e9fdc5b39c7e54b4.camel@marvell.com>
+References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+In-Reply-To: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [173.228.7.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7271793c-7189-4ede-83f1-08d82e4ec748
+x-ms-traffictypediagnostic: MW2PR18MB2156:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR18MB215664BE19746B5DE47A31EBBC790@MW2PR18MB2156.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:275;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: y0w6Wl33ySdDSmee1UhUmOqHM979ESxiJ+iWU3tE9IIgmXFKGeKV4pAn8vz/EuD5+QQnOLMALv8LGwRxSkBmLoOP58r3FWZ0zN3gQ8O64hXF2hkCw94uBTeah/Js5JuZJiq/YlfwdUdI8hON2sBzu6b7U70w2uDrNb5ggr30PL3dxlnEavTfJ/4w8yEzc6q2goF/omjnfyjVxi9jMg0fBOLfC+OJodEg9/81gFzAfvvvIJ/nQ7qUT3qEqGuEEYuTUUYMvwDZlTo8Mk4g7EEFu2Pdzq8cecfC57/9WITVtPhGblliLhX+BBFzwV8AMWthszq03UEiGo+/2uTwK9hW7A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2267.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(396003)(136003)(346002)(4744005)(110136005)(6486002)(2906002)(6506007)(54906003)(66476007)(478600001)(6512007)(8936002)(2616005)(8676002)(316002)(4326008)(66946007)(186003)(64756008)(86362001)(76116006)(91956017)(5660300002)(66446008)(36756003)(66556008)(26005)(71200400001)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: CtpYorwSaZrU3TLkn73oTe3fDxZ45Ucq3YfaVU2Uc6tu9ckjle7Gg6dqOuo61R6gCmxCxRsK1DXfyRoCu4+napVFKDrbQBTPljsVlpOQzaU3f103Z+EcupvWWAcQG54+HW2WMgCPZKSBF35ktZgRsC2Zx9D1UZqT7QyR2+COcF8+yyQtNQrO8mub1rzISHWjvtzhF4iDRfrSmC8hsrJCLLmhTYObWtBa9MnLpQi+dAvWWCRgMAIwveAZ37CVPP0ORColSZRbhsQwI1DVzkDfZw3qB02dakQ0VxwNyjNVoJizEcvJcTePgxMHdqs7UcJpMjU6wBa/cg0OYFcw5fS+AzsSzU6HW4AsX+zqni8jAAebnz+o1RMFOka2C582P3jMSrDR9XUUPQKuOlcrHMhdRI28Z6A8sWUhMjb30lvzJwJL163is2NewxEWydhCrIzpqEbp1FmJ+2JAqEBwYnBhHpNoSFmM1hd4yyqjU00tIw8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B5764F27D073494DB2469C0D85F3B1A2@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
- <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
- <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
- <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
- <20200305035329.GD4433@MiWiFi-R3L-srv> <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
- <20200306093829.GA27711@MiWiFi-R3L-srv>
-In-Reply-To: <20200306093829.GA27711@MiWiFi-R3L-srv>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Wed, 22 Jul 2020 22:52:26 +0800
-Message-ID: <CACPcB9cpEX-uYeTp7DVEXtwDRWBCTVoPCB4dxPbyq1sDeixP_w@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>, jroedel@suse.de,
-        Myron Stowe <myron.stowe@redhat.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Wright <rwright@hpe.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dave Young <dyoung@redhat.com>,
-        Khalid Aziz <khalid@gonehiking.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2267.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7271793c-7189-4ede-83f1-08d82e4ec748
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 14:51:55.7800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8hnLOmDlqnd6vx3ULhpH1iGzMTkgonTFak3z5UTgLEF4lxASWkDtshf8ISoDfnzh+O9jWKG7tAcv6DRC/210zQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR18MB2156
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_09:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 5:38 PM Baoquan He <bhe@redhat.com> wrote:
->
-> On 03/04/20 at 08:53pm, Deepa Dinamani wrote:
-> > On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
-> > >
-> > > +Joerg to CC.
-> > >
-> > > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
-> > > > I looked at this some more. Looks like we do not clear irqs when we do
-> > > > a kexec reboot. And, the bootup code maintains the same table for the
-> > > > kexec-ed kernel. I'm looking at the following code in
-> > >
-> > > I guess you are talking about kdump reboot here, right? Kexec and kdump
-> > > boot take the similar mechanism, but differ a little.
-> >
-> > Right I meant kdump kernel here. And, clearly the is_kdump_kernel() case below.
-> >
-> > >
-> > > > intel_irq_remapping.c:
-> > > >
-> > > >         if (ir_pre_enabled(iommu)) {
-> > > >                 if (!is_kdump_kernel()) {
-> > > >                         pr_warn("IRQ remapping was enabled on %s but
-> > > > we are not in kdump mode\n",
-> > > >                                 iommu->name);
-> > > >                         clear_ir_pre_enabled(iommu);
-> > > >                         iommu_disable_irq_remapping(iommu);
-> > > >                 } else if (iommu_load_old_irte(iommu))
-> > >
-> > > Here, it's for kdump kernel to copy old ir table from 1st kernel.
-> >
-> > Correct.
-> >
-> > > >                         pr_err("Failed to copy IR table for %s from
-> > > > previous kernel\n",
-> > > >                                iommu->name);
-> > > >                 else
-> > > >                         pr_info("Copied IR table for %s from previous kernel\n",
-> > > >                                 iommu->name);
-> > > >         }
-> > > >
-> > > > Would cleaning the interrupts(like in the non kdump path above) just
-> > > > before shutdown help here? This should clear the interrupts enabled
-> > > > for all the devices in the current kernel. So when kdump kernel
-> > > > starts, it starts clean. This should probably help block out the
-> > > > interrupts from a device that does not have a driver.
-> > >
-> > > I think stopping those devices out of control from continue sending
-> > > interrupts is a good idea. While not sure if only clearing the interrupt
-> > > will be enough. Those devices which will be initialized by their driver
-> > > will brake, but devices which drivers are not loaded into kdump kernel
-> > > may continue acting. Even though interrupts are cleaning at this time,
-> > > the on-flight DMA could continue triggerring interrupt since the ir
-> > > table and iopage table are rebuilt.
-> >
-> > This should be handled by the IOMMU, right? And, hence you are getting
-> > UR. This seems like the correct execution flow to me.
->
-> Sorry for late reply.
-> Yes, this is initializing IOMMU device.
->
-> >
-> > Anyway, you could just test this theory by removing the
-> > is_kdump_kernel() check above and see if it solves your problem.
-> > Obviously, check the VT-d spec to figure out the exact sequence to
-> > turn off the IR.
->
-> OK, I will talk to Kairui and get a machine to test it. Thanks for your
-> nice idea, if you have a draft patch, we are happy to test it.
->
-> >
-> > Note that the device that is causing the problem here is a legit
-> > device. We want to have interrupts from devices we don't know about
-> > blocked anyway because we can have compromised firmware/ devices that
-> > could cause a DoS attack. So blocking the unwanted interrupts seems
-> > like the right thing to do here.
->
-> Kairui said it's a device which driver is not loaded in kdump kernel
-> because it's not needed by kdump. We try to only load kernel modules
-> which are needed, e.g one device is the dump target, its driver has to
-> be loaded in. In this case, the device is more like a out of control
-> device to kdump kernel.
->
-
-Hi Bao, Deepa, sorry for this very late response. The test machine was
-not available for sometime, and I restarted to work on this problem.
-
-For the workaround mention by Deepa (by remote the is_kdump_kernel()
-check), it didn't work, the machine still hangs upon shutdown.
-The devices that were left in an unknown state and sending interrupt
-could be a problem, but it's irrelevant to this hanging problem.
-
-I think I didn't make one thing clear, The PCI UR error never arrives
-in kernel, it's the iLo BMC on that HPE machine caught the error, and
-send kernel an NMI. kernel is panicked by NMI, I'm still trying to
-figure out why the NMI hanged kernel, even with panic=-1,
-panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
-NMI by shutdown the devices in right order, that's also a solution.
-
---
-Best Regards,
-Kairui Song
-
+eGVuX2V2dGNobl9kb191cGNhbGwoKSBzaG91bGQgY2FsbCB0YXNrX2lzb2xhdGlvbl9rZXJuZWxf
+ZW50ZXIoKQ0KdG8gaW5kaWNhdGUgdGhhdCBpc29sYXRpb24gaXMgYnJva2VuIGFuZCBwZXJmb3Jt
+IHN5bmNocm9uaXphdGlvbi4NCg0KU2lnbmVkLW9mZi1ieTogQWxleCBCZWxpdHMgPGFiZWxpdHNA
+bWFydmVsbC5jb20+DQotLS0NCiBkcml2ZXJzL3hlbi9ldmVudHMvZXZlbnRzX2Jhc2UuYyB8IDMg
+KysrDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy94ZW4vZXZlbnRzL2V2ZW50c19iYXNlLmMgYi9kcml2ZXJzL3hlbi9ldmVudHMvZXZlbnRz
+X2Jhc2UuYw0KaW5kZXggMTQwYzdiZjMzYTk4Li40YzE2Y2Q1OGYzNmIgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL3hlbi9ldmVudHMvZXZlbnRzX2Jhc2UuYw0KKysrIGIvZHJpdmVycy94ZW4vZXZlbnRz
+L2V2ZW50c19iYXNlLmMNCkBAIC0zMyw2ICszMyw3IEBADQogI2luY2x1ZGUgPGxpbnV4L3NsYWIu
+aD4NCiAjaW5jbHVkZSA8bGludXgvaXJxbnIuaD4NCiAjaW5jbHVkZSA8bGludXgvcGNpLmg+DQor
+I2luY2x1ZGUgPGxpbnV4L2lzb2xhdGlvbi5oPg0KIA0KICNpZmRlZiBDT05GSUdfWDg2DQogI2lu
+Y2x1ZGUgPGFzbS9kZXNjLmg+DQpAQCAtMTIzNiw2ICsxMjM3LDggQEAgdm9pZCB4ZW5fZXZ0Y2hu
+X2RvX3VwY2FsbChzdHJ1Y3QgcHRfcmVncyAqcmVncykNCiB7DQogCXN0cnVjdCBwdF9yZWdzICpv
+bGRfcmVncyA9IHNldF9pcnFfcmVncyhyZWdzKTsNCiANCisJdGFza19pc29sYXRpb25fa2VybmVs
+X2VudGVyKCk7DQorDQogCWlycV9lbnRlcigpOw0KIA0KIAlfX3hlbl9ldnRjaG5fZG9fdXBjYWxs
+KCk7DQotLSANCjIuMjYuMg0KDQo=
