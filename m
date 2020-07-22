@@ -2,139 +2,169 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE31C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8B7206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B314B207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LMrqXZVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgGVEGL (ORCPT
+        id S1726405AbgGVESG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 00:06:11 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:49914 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgGVEGK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 00:06:10 -0400
-Received: by mail-io1-f69.google.com with SMTP id l7so972899ioq.16
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 21:06:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Owb9IwFQyEhlVcf9dWP5KUWd0T8KeX4hhSQrT09WLVM=;
-        b=CP81L087Bc4iKfWzTxZyMbI+tGM9Xd0Ypk7EYlCn0nlj2CAaLnuru79te8u2g0vPh+
-         EJW4rOV0Km4sM7IXokH/w5locy7ocMbvVtIddc2QoybGjWeN/Wi5nvcudF/URX+hmhCP
-         LGxf0jk6wx4HyUKiI5rsjehIvj4LZtvA1tYXPZh//3YKHWJW6Xau8Pwp0kBjpy26tdxh
-         bAqmyV1hwknMbjGTqgLW4iczZUoz8bduBKeoaChUIt+J4cr+mdoocViXj5Ldazqahd/W
-         IndvcLioU4Ex8lARBbjWs5ol/RSaYxOGmAdCpE0sej8GBzzrregKimTvYLvbMO9uUbTs
-         caCA==
-X-Gm-Message-State: AOAM5309fdsMwU6TLrDmcySVn0M10J7PwbYpe59tBcfriGDywG4CH/K2
-        1E3DnHwLuq6EV44T88zZu07fa5jc20fe+evYaxe7hkRyUq34
-X-Google-Smtp-Source: ABdhPJxKpX5QgCSXASidAUn4JI3ECIT+TNoa9CsBVnxXzDo3xE1LrhnckTuw5OGA3oXZjUbSGH9HOco+uX28Ij1pPBz+qD8v0bh9
+        Wed, 22 Jul 2020 00:18:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31197 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgGVESG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 00:18:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595391485; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=HflwZjnZ8ak7CEDTpPjoblMd8cEwbvkkZamXydjOQKM=;
+ b=LMrqXZVLzYapDNUg+L3SRdVMpufHTxvWBwgQO3xxSrHyqr1GqjQSnzr9t/2QzD8W2SGh/Rxk
+ wU1y+BJ23Ga4gbGTUKd9gUcImxaFYvUDc0KrvfR+OI29FolbTQclT8tujGRKdOIsjjabt3pR
+ mFtvESnd5FlhPc8lKSBoZD8rr5M=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f17bdfd3dbcb593a9707218 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 22 Jul 2020 04:18:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8E05EC433C6; Wed, 22 Jul 2020 04:18:04 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF0E4C433C9;
+        Wed, 22 Jul 2020 04:18:03 +0000 (UTC)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1a:: with SMTP id z26mr9254802jao.15.1595390770006;
- Tue, 21 Jul 2020 21:06:10 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 21:06:10 -0700
-In-Reply-To: <20200722031640.nobv2bfgex46sngo@pesu.pes.edu>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001fd19405aaffdc0a@google.com>
-Subject: Re: WARNING in pvr2_i2c_core_done
-From:   syzbot <syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com>
-To:     Markus.Elfring@web.de, andreyknvl@google.com,
-        bkkarthik@pesu.pes.edu, dan.carpenter@oracle.com,
-        gregkh@linuxfoundation.org, hdanton@sina.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 22 Jul 2020 09:48:03 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, ohad@wizery.com,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: Add modem debug policy
+ support
+In-Reply-To: <20200722035427.GQ388985@builder.lan>
+References: <20200721112935.25716-1-sibis@codeaurora.org>
+ <20200721112935.25716-2-sibis@codeaurora.org>
+ <20200722035427.GQ388985@builder.lan>
+Message-ID: <bc9af3437b823d9acbfebdeeffdad04c@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 2020-07-22 09:24, Bjorn Andersson wrote:
+> On Tue 21 Jul 04:29 PDT 2020, Sibi Sankar wrote:
+> 
+>> Add modem debug policy support which will enable coredumps and live
+>> debug support when the msadp firmware is present on secure devices.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>> 
+>> v2:
+>>  * Use request_firmware_direct [Bjorn]
+>>  * Use Bjorn's template to show if debug policy is present
+>>  * Add size check to prevent memcpy out of bounds [Bjorn]
+>> 
+>>  drivers/remoteproc/qcom_q6v5_mss.c | 16 +++++++++++++++-
+>>  1 file changed, 15 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
+>> b/drivers/remoteproc/qcom_q6v5_mss.c
+>> index 0b6f260eb5349..49cd16e050533 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+>> @@ -189,6 +189,7 @@ struct q6v5 {
+>>  	phys_addr_t mba_phys;
+>>  	void *mba_region;
+>>  	size_t mba_size;
+>> +	size_t dp_size;
+>> 
+>>  	phys_addr_t mpss_phys;
+>>  	phys_addr_t mpss_reloc;
+>> @@ -408,6 +409,14 @@ static int q6v5_xfer_mem_ownership(struct q6v5 
+>> *qproc, int *current_perm,
+>>  static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
+>>  {
+>>  	struct q6v5 *qproc = rproc->priv;
+>> +	const struct firmware *dp_fw;
+>> +
+>> +	if (!request_firmware_direct(&dp_fw, "msadp", qproc->dev) && 
+>> fw->size <= SZ_1M &&
+>> +	    (SZ_1M + dp_fw->size) <= qproc->mba_size) {
+>> +		memcpy(qproc->mba_region + SZ_1M, dp_fw->data, dp_fw->size);
+>> +		qproc->dp_size = dp_fw->size;
+>> +		release_firmware(dp_fw);
+> 
+> If request_firmware_direct() succeeds, but return a firmware blob 
+> bigger
+> than mba_size - SZ_1M you won't get here and will end up leaking dp_fw.
+> 
+> Additionally, there really isn't a need for requesting the firmware in
+> the first place if fw->size > SZ_1M.
+> 
+> So I think it's better if you break this out in it's own function where
+> you don't need to squeeze everything into one or two conditionals.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-general protection fault in kernfs_find_ns
+I'll fix dp_fw leak and move it
+to a new func. Thanks for the
+review.
 
-pvrusb2: Invalid write control endpoint
-pvrusb2: Invalid write control endpoint
-pvrusb2: Invalid write control endpoint
-pvrusb2: Invalid write control endpoint
-general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
-CPU: 0 PID: 78 Comm: pvrusb2-context Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
-Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
-RSP: 0018:ffff8881d419f938 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
-RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
-R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f3a7e248000 CR3: 00000001d2224000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- kernfs_find_and_get_ns+0x2f/0x60 fs/kernfs/dir.c:906
- kernfs_find_and_get include/linux/kernfs.h:548 [inline]
- sysfs_unmerge_group+0x5d/0x160 fs/sysfs/group.c:366
- dpm_sysfs_remove+0x62/0xb0 drivers/base/power/sysfs.c:790
- device_del+0x18b/0xd20 drivers/base/core.c:2834
- device_unregister+0x22/0xc0 drivers/base/core.c:2889
- i2c_unregister_device include/linux/err.h:41 [inline]
- i2c_client_dev_release+0x39/0x50 drivers/i2c/i2c-core-base.c:465
- device_release+0x71/0x200 drivers/base/core.c:1559
- kobject_cleanup lib/kobject.c:693 [inline]
- kobject_release lib/kobject.c:722 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x245/0x540 lib/kobject.c:739
- put_device drivers/base/core.c:2779 [inline]
- device_unregister+0x34/0xc0 drivers/base/core.c:2890
- i2c_unregister_device+0x38/0x40 include/linux/err.h:41
- v4l2_i2c_new_subdev_board+0x159/0x2c0 drivers/media/v4l2-core/v4l2-i2c.c:114
- v4l2_i2c_new_subdev+0xb8/0xf0 drivers/media/v4l2-core/v4l2-i2c.c:135
- pvr2_hdw_load_subdev drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2023 [inline]
- pvr2_hdw_load_modules drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2075 [inline]
- pvr2_hdw_setup_low drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2156 [inline]
- pvr2_hdw_setup drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2262 [inline]
- pvr2_hdw_initialize+0xc8d/0x3600 drivers/media/usb/pvrusb2/pvrusb2-hdw.c:2339
- pvr2_context_check drivers/media/usb/pvrusb2/pvrusb2-context.c:109 [inline]
- pvr2_context_thread_func+0x250/0x850 drivers/media/usb/pvrusb2/pvrusb2-context.c:158
- kthread+0x392/0x470 kernel/kthread.c:291
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
-Modules linked in:
----[ end trace a2576a16aa8e791c ]---
-RIP: 0010:kernfs_find_ns+0x31/0x370 fs/kernfs/dir.c:829
-Code: 49 89 d6 41 55 41 54 55 48 89 fd 53 48 83 ec 08 e8 f4 61 af ff 48 8d 7d 70 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 1e 03 00 00 48 8d bd 98 00 00 00 48 8b 5d 70 48
-RSP: 0018:ffff8881d419f938 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff863789c0 RCX: ffffffff85a79ba7
-RDX: 000000000000000e RSI: ffffffff81901d1c RDI: 0000000000000070
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff873ed1e7
-R10: fffffbfff0e7da3c R11: 0000000000000001 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff863790e0
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f3a7e248000 CR3: 00000001d2224000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> Regards,
+> Bjorn
+> 
+>> +	}
+>> 
+>>  	memcpy(qproc->mba_region, fw->data, fw->size);
+>> 
+>> @@ -896,6 +905,10 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>>  	}
+>> 
+>>  	writel(qproc->mba_phys, qproc->rmb_base + RMB_MBA_IMAGE_REG);
+>> +	if (qproc->dp_size) {
+>> +		writel(qproc->mba_phys + SZ_1M, qproc->rmb_base + 
+>> RMB_PMI_CODE_START_REG);
+>> +		writel(qproc->dp_size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+>> +	}
+>> 
+>>  	ret = q6v5proc_reset(qproc);
+>>  	if (ret)
+>> @@ -1257,7 +1270,8 @@ static int q6v5_start(struct rproc *rproc)
+>>  	if (ret)
+>>  		return ret;
+>> 
+>> -	dev_info(qproc->dev, "MBA booted, loading mpss\n");
+>> +	dev_info(qproc->dev, "MBA booted with%s debug policy, loading 
+>> mpss\n",
+>> +		 qproc->dp_size ? "" : "out");
+>> 
+>>  	ret = q6v5_mpss_load(qproc);
+>>  	if (ret)
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
 
-
-Tested on:
-
-commit:         b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1208f437100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccf1899337a6e343
-dashboard link: https://syzkaller.appspot.com/bug?extid=e74a998ca8f1df9cc332
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14d56430900000
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
