@@ -2,99 +2,184 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30841C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66266C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5CF207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="EovH3Vlz"
+	by mail.kernel.org (Postfix) with ESMTP id 44A2B207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732884AbgGVP1v (ORCPT
+        id S1732785AbgGVP2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:27:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
+        Wed, 22 Jul 2020 11:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730600AbgGVP1u (ORCPT
+        with ESMTP id S1727778AbgGVP2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:27:50 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC095C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:27:50 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t11so1450015pfq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BU5kao+UrN6qaCFLRvgX1CCWwHi4WqVglmjspXYq5Sk=;
-        b=EovH3VlzCQtsuc+av4WNCxJUcxJwP7B12FigkxGwdbpkWBJSa3nFzmdyDHewZBUgf9
-         n9XAAbimkyD6gzI4ZP5yddnLgDay1H3s8JWoHuKzSxSnwrCDbkxcwIVY/juKY/c9O6eu
-         /OJSCysVhxcaeiqedSqEFceKVfg/12GZLPjr8pz1XHtNHTXpeFGbtjZFu3+roMJb796i
-         BBnMW3Am+YU+1yDNm3kWRfcRFBtPlDgDBFvjGBggj1IU6U2AeUKKCFIvvGVB0VJDmGAM
-         OReaUOEwz/0BPPxzQZFG4OMdZ6z6W9/XcwI4LsFf0nnHHUL9iPyaLIxuLhiXMi9xOuXE
-         S9fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BU5kao+UrN6qaCFLRvgX1CCWwHi4WqVglmjspXYq5Sk=;
-        b=AOnauNt4oTdYkaeO7F3BdKBZ/411rhuaYQjA7H9Ho4V0Pu2pKlQcSaj6Oh8REgFfKm
-         f3x03capdz0tVytwOr6N5DSOf1dTagiegL96x1iujXNrp2+IFk1enEWYPbds0KwT90jk
-         4L9R4V5HPrO5QW1BJs3dqElwPqSC1yc7FddWjbYfuXWZcWhRHau11BpIPcViOXLpBqlf
-         9hl50HrYkzUr0Ldc3KfPytb6nCFszyhDiq6B6pMUURAUpo4US/qpVYsspbYkHTWBM1mR
-         2d5PECqhxrfrgE661Yw8vcthw/6qAk2e9aGlWupJ45C35Z52JjSX+cGRlxDFoKDmNZro
-         VTFw==
-X-Gm-Message-State: AOAM530bf7Q95k0gYBKHbcnzzlFYWnMtbupilQE6swmfNeufNfg3kXcf
-        5V3bPfciCUUWhGYr/ksOCvlI6+lo2o16PA==
-X-Google-Smtp-Source: ABdhPJz7gxZddqXP9qDdhZYE/mLuRzLNI5tYgqcLfKtMO+PIAiD+BS9SLWN/x3TbHpXr660AUHbyWg==
-X-Received: by 2002:a63:8c4f:: with SMTP id q15mr317114pgn.373.1595431670305;
-        Wed, 22 Jul 2020 08:27:50 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id h23sm173554pfo.166.2020.07.22.08.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 08:27:49 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 08:27:41 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     wangxiongfeng2@huawei.com, kuba@kernel.org, netdev@vger.kernel.org,
+        Wed, 22 Jul 2020 11:28:20 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EEE3C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:28:20 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 81B4C2982CB
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Unregister partner on
+ error
+To:     Prashant Malani <pmalani@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net-sysfs: add a newline when printing 'tx_timeout'
- by sysfs
-Message-ID: <20200722082741.1675d611@hermes.lan>
-In-Reply-To: <20200721.153632.1416164807029507588.davem@davemloft.net>
-References: <1595314977-57991-1-git-send-email-wangxiongfeng2@huawei.com>
-        <20200721.153632.1416164807029507588.davem@davemloft.net>
+Cc:     heikki.krogerus@linux.intel.com,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200715234928.3090367-1-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <bfe33351-fc64-81a8-4cc5-e8122a2a44e1@collabora.com>
+Date:   Wed, 22 Jul 2020 17:28:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200715234928.3090367-1-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 15:36:32 -0700 (PDT)
-David Miller <davem@davemloft.net> wrote:
+Hi Prashant,
 
-> From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Date: Tue, 21 Jul 2020 15:02:57 +0800
+Thank you for your patch.
+
+On 16/7/20 1:49, Prashant Malani wrote:
+> When port update is called during probe(), any error with setting the
+> Type C muxes results in an errno being returned to probe(), which promptly
+> returns that itself. Ensure that we unregister any registered partners
+> when doing so, to prevent orphaned partners on the Type C connector
+> class framework.
 > 
-> > When I cat 'tx_timeout' by sysfs, it displays as follows. It's better to
-> > add a newline for easy reading.
-> > 
-> > root@syzkaller:~# cat /sys/devices/virtual/net/lo/queues/tx-0/tx_timeout
-> > 0root@syzkaller:~#
-> > 
-> > Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>  
+> Move the cros_typec_add_partner() and cros_typec_remove_partner() code
+> together to higher up in the file, so that they are together, and we can
+> call cros_typec_remove_partner() from cros_unregister_ports().
 > 
-> Applied, thank you.
+> Fixes: 7e7def15fa4b ("platform/chrome: cros_ec_typec: Add USB mux control")
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
-Could you add
+Queued for 5.9
 
-
-Fixes: ccf5ff69fbbd ("net: new counter for tx_timeout errors in sysfs")
-Cc: david.decotigny@google.com
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 83 +++++++++++++------------
+>  1 file changed, 42 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 0c041b79cbba..43e7cf367a07 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -140,6 +140,47 @@ static int cros_typec_get_switch_handles(struct cros_typec_port *port,
+>  	return -ENODEV;
+>  }
+>  
+> +static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
+> +				  bool pd_en)
+> +{
+> +	struct cros_typec_port *port = typec->ports[port_num];
+> +	struct typec_partner_desc p_desc = {
+> +		.usb_pd = pd_en,
+> +	};
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * Fill an initial PD identity, which will then be updated with info
+> +	 * from the EC.
+> +	 */
+> +	p_desc.identity = &port->p_identity;
+> +
+> +	port->partner = typec_register_partner(port->port, &p_desc);
+> +	if (IS_ERR(port->partner)) {
+> +		ret = PTR_ERR(port->partner);
+> +		port->partner = NULL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void cros_typec_remove_partner(struct cros_typec_data *typec,
+> +				     int port_num)
+> +{
+> +	struct cros_typec_port *port = typec->ports[port_num];
+> +
+> +	port->state.alt = NULL;
+> +	port->state.mode = TYPEC_STATE_USB;
+> +	port->state.data = NULL;
+> +
+> +	usb_role_switch_set_role(port->role_sw, USB_ROLE_NONE);
+> +	typec_switch_set(port->ori_sw, TYPEC_ORIENTATION_NONE);
+> +	typec_mux_set(port->mux, &port->state);
+> +
+> +	typec_unregister_partner(port->partner);
+> +	port->partner = NULL;
+> +}
+> +
+>  static void cros_unregister_ports(struct cros_typec_data *typec)
+>  {
+>  	int i;
+> @@ -147,6 +188,7 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
+>  	for (i = 0; i < typec->num_ports; i++) {
+>  		if (!typec->ports[i])
+>  			continue;
+> +		cros_typec_remove_partner(typec, i);
+>  		usb_role_switch_put(typec->ports[i]->role_sw);
+>  		typec_switch_put(typec->ports[i]->ori_sw);
+>  		typec_mux_put(typec->ports[i]->mux);
+> @@ -285,47 +327,6 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
+>  	return ret;
+>  }
+>  
+> -static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
+> -				  bool pd_en)
+> -{
+> -	struct cros_typec_port *port = typec->ports[port_num];
+> -	struct typec_partner_desc p_desc = {
+> -		.usb_pd = pd_en,
+> -	};
+> -	int ret = 0;
+> -
+> -	/*
+> -	 * Fill an initial PD identity, which will then be updated with info
+> -	 * from the EC.
+> -	 */
+> -	p_desc.identity = &port->p_identity;
+> -
+> -	port->partner = typec_register_partner(port->port, &p_desc);
+> -	if (IS_ERR(port->partner)) {
+> -		ret = PTR_ERR(port->partner);
+> -		port->partner = NULL;
+> -	}
+> -
+> -	return ret;
+> -}
+> -
+> -static void cros_typec_remove_partner(struct cros_typec_data *typec,
+> -				     int port_num)
+> -{
+> -	struct cros_typec_port *port = typec->ports[port_num];
+> -
+> -	port->state.alt = NULL;
+> -	port->state.mode = TYPEC_STATE_USB;
+> -	port->state.data = NULL;
+> -
+> -	usb_role_switch_set_role(port->role_sw, USB_ROLE_NONE);
+> -	typec_switch_set(port->ori_sw, TYPEC_ORIENTATION_NONE);
+> -	typec_mux_set(port->mux, &port->state);
+> -
+> -	typec_unregister_partner(port->partner);
+> -	port->partner = NULL;
+> -}
+> -
+>  static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
+>  		int port_num, struct ec_response_usb_pd_control *resp)
+>  {
+> 
