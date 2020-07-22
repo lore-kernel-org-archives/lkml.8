@@ -2,78 +2,77 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561ACC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C7FC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE6820729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595422150;
-	bh=y3/4VJCTRdIlYtphkAE/Gn/RBkNRjFdO0z0AevSXdDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qv0rqMc65/t1GcVNgMitC0Bw9+R48EMlAO8sIOLNzaz5pXfqJwoHiSOaAuQ9TyWxH
-	 NX4Hq1F2fCa2GntrKQYl//JGShB4ucI3PPq7gZatod2esOcWG01Cw4vABOgfIiTA9Q
-	 lcdNVn9YZ22lliOrJaxjcN7qaN71wW62t2s7VIt8=
+	by mail.kernel.org (Postfix) with ESMTP id 4DE8820771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732355AbgGVMtJ (ORCPT
+        id S1732364AbgGVMtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45614 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 08:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVMtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:49:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1732253AbgGVMtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:49:15 -0400
+Received: from gaia (unknown [95.146.230.158])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE9E206C1;
-        Wed, 22 Jul 2020 12:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595422148;
-        bh=y3/4VJCTRdIlYtphkAE/Gn/RBkNRjFdO0z0AevSXdDQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R95PcF3fQb8RRElBysX344SHutjTptnkFKl5DK4fDoo+4qOVSdceuYQAA/W5HpTPN
-         Io/MI+EDIlmspZ+jT13cgU9jOELZz6N0p9ruzumMfbEO+UQjrr+Ewwh4lpuHOSxUJH
-         CTMyBJx7isU9/8GjSJPz8+j88gu5g9/aVqKHhdgU=
-Date:   Wed, 22 Jul 2020 14:49:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/243] 5.7.10-rc2 review
-Message-ID: <20200722124914.GD3155653@kroah.com>
-References: <20200720191523.845282610@linuxfoundation.org>
- <20200721163829.GF239562@roeck-us.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 471B520729;
+        Wed, 22 Jul 2020 12:49:13 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 13:49:10 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     "liwei (CM)" <liwei213@huawei.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        fengbaopeng <fengbaopeng2@hisilicon.com>,
+        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        sujunfei <sujunfei2@hisilicon.com>,
+        zhaojiapeng <zhaojiapeng@huawei.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGFybTY0?=
+ =?utf-8?B?OiBtbTogZnJl?= =?utf-8?Q?e?= unused memmap for sparse memory model
+ that define VMEMMAP
+Message-ID: <20200722124910.GE27540@gaia>
+References: <20200721073203.107862-1-liwei213@huawei.com>
+ <20200722060705.GK802087@linux.ibm.com>
+ <1699CE87DE933F49876AD744B5DC140F2312E948@dggemm526-mbx.china.huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721163829.GF239562@roeck-us.net>
+In-Reply-To: <1699CE87DE933F49876AD744B5DC140F2312E948@dggemm526-mbx.china.huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 09:38:29AM -0700, Guenter Roeck wrote:
-> On Mon, Jul 20, 2020 at 09:16:26PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.10 release.
-> > There are 243 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Wed, Jul 22, 2020 at 08:41:17AM +0000, liwei (CM) wrote:
+> Mike Rapoport wrote:
+> > On Tue, Jul 21, 2020 at 03:32:03PM +0800, Wei Li wrote:
+> > > For the memory hole, sparse memory model that define SPARSEMEM_VMEMMAP 
+> > > do not free the reserved memory for the page map, this patch do it.
 > > 
-> > Responses should be made by Wed, 22 Jul 2020 19:14:36 +0000.
-> > Anything received after that time might be too late.
+> > Are there numbers showing how much memory is actually freed?
 > > 
+> > The freeing of empty memmap would become rather complex with these
+> > changes, do the memory savings justify it?
 > 
-> Build results:
-> 	total: 155 pass: 155 fail: 0
-> Qemu test results:
-> 	total: 431 pass: 431 fail: 0
+> In the sparse memory model, the size of a section is 1 GB
+> (SECTION_SIZE_BITS 30) by default.
 
-Thanks for testing all of these and letting me know.
+Can we reduce SECTION_SIZE_BITS instead? Say 26?
 
-greg k-h
+-- 
+Catalin
