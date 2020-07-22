@@ -2,117 +2,131 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C2EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF65E20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595443235;
-	bh=ua56k+QiDl3hEXvZulxthJk83c5vFSZv1asxciZo+f0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x8wSMag7AvDNnj37KZD/BQ/XJzH9flB59H9o4LAelwYNTQpujkTm4NGS/wF0Gp5uv
-	 RwO5TzYKwbUhq6nWfMSrdfc8eMvOYIB/VqbkaWT/lCpzXF6UCR0+sqmhmbvukXBZjJ
-	 j72L2L6OTdlRxmBTehnzQg7GlxsGAijPLGUd1K7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 14A8C20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="MQp8z9MQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732366AbgGVSkd (ORCPT
+        id S1732405AbgGVSko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34532 "EHLO
+        Wed, 22 Jul 2020 14:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVSkd (ORCPT
+        with ESMTP id S1726535AbgGVSko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:40:33 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E511CC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h22so3574705lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:32 -0700 (PDT)
+        Wed, 22 Jul 2020 14:40:44 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317D0C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:44 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id w2so1749948pgg.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h2gq7xP9nhpEthRDphO7jteDWvEaRR5+QWoFW/1s9IY=;
-        b=P3Mq/fGGM16uFmgmYT7T+DUItes5Vbbx04PzkAb/JajUxo10z8ES2tgLzNzyUcggI+
-         MP2RNiH/2M3b4Fie+pe5wXh+J340PnGLndIkO7gmfPQB8RYb0dI13jydAh9qX3QM9l2l
-         XOniGgQjwC0RLkURggsbtizs5IfBWhyM4oH08=
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=B9NmDFLAg+S5lUz7K2pvf1RhE94Cz0luh7cCv2JHKXA=;
+        b=MQp8z9MQbjNzSSgYFwXVflDMZXY4DvuxHtdAXlCmLFxx0hOtegVLhCBZUQ9TLduLz5
+         ahZ3TrUoGAUsC1cMno4k0/T8sWa/5T9W9ohDh5NvhVKcAtDnl1MQ/kJKKgKgorwYvdMH
+         IgJukohrmjsI1i8pALKgQ2CCs+bl75yZzQseWKIAQ2u0itey7ajZ2NsPdWB528iAEyNN
+         9i9gQ+MK49i5GAVGKtTrWlcFURx/zBexDaIR5Bkow+ASqjSS1QvNtQsT0PewqGa4UHoC
+         KUWrDiFfrrigWke+quMV9W7DkPWApb7WxckAiF9APlR49Q9UnuT4d01yBiFAknTR8HC6
+         yX/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h2gq7xP9nhpEthRDphO7jteDWvEaRR5+QWoFW/1s9IY=;
-        b=DCVSPHMxXXtHrFxazwU188Gsrq+C9BkVfIIRMPN2XW+Wykn9h/euqa2YEcKCtznpAw
-         WUEtyPqFIWIxzqU96GEZNlccFfRKCpi1L4iFMLo94pvEBoWqGbHRg/yPFvIkSg9T2wwL
-         Ueuhl2urVEyNP4Q8BcL4RgGwuidi6cmSAGkrRwVJ05gRUYqD9mA0pHTeWTq2RGnbzkBE
-         x+beR1G9R/CJ2ZkpR+5VPwE4EP7BJ/COTEKOv/DiroVLhEZvdrWvf8jqhPU/kM78VkCH
-         519do9sh25fRpvCoL4+EWPySC518C0TeXNRezRdjGJHiPe+w6GBLGL1QblHkcfvE58tG
-         VpzQ==
-X-Gm-Message-State: AOAM533PTuDKzwdtORuSkW/EgOhIIs99sMg/4zKPO/9jphhk04H7oVSD
-        xySgJLUuKQ6vPk028J1gRlGs5jyi2o4=
-X-Google-Smtp-Source: ABdhPJyF6WzIauHc67aTBaCFPa89Dj95PHx8j4YJry0RXvEeCVQFfjW+8nEd2hNEuLJQSRnQaxzalA==
-X-Received: by 2002:a05:651c:1105:: with SMTP id d5mr276256ljo.62.1595443231096;
-        Wed, 22 Jul 2020 11:40:31 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id w7sm437307lfe.41.2020.07.22.11.40.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 11:40:30 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id q4so3616025lji.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:29 -0700 (PDT)
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr247885ljj.102.1595443229558;
- Wed, 22 Jul 2020 11:40:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B9NmDFLAg+S5lUz7K2pvf1RhE94Cz0luh7cCv2JHKXA=;
+        b=fUiuVLif+eUcs0/k89a6s2T/3mDGDYN+OKVFXC4v5HB67bAZzSI6FbVQ676ZWMQD+B
+         OkNZmdDcMI5V33+FEWNq/9aoZWdHb2FnN7TpX9ecSooI+6HcBY4ojJWJ/gcqriEd+ZKR
+         l6CHbSDWrEDq/Dq3jSAs7yfYQZ1aBL15KGgG6YX+ep6ptUWEJYGCWgQNstPYpG2O4nix
+         E7xAd36ANyfgQbTVZDL1Z7UMPgQBmI9JmDCteo4ednRIKMs3/kAK3T3RAiQP4TuhXR1D
+         e7RQSAe9A/lO589VG3r6aR01CnM2TsBHT1W9UTllFa72Z+uQ/jhov+2uEP0OnXy5HmMy
+         fGZg==
+X-Gm-Message-State: AOAM532Ugb1Kz7TOBsY+jNt+ZAo/xmw3U1GwzZkBPjZGC+rXyhacRins
+        czjrLw8Eyf2D2q1mXHfO673jrg==
+X-Google-Smtp-Source: ABdhPJxio2fC0vpPrfbEyyEzIA8d296ammbTqFH+Pc8D13bMlX4ePTOLEEh2mfXOOZ3yAf9ENDEjwA==
+X-Received: by 2002:a63:c58:: with SMTP id 24mr963125pgm.343.1595443243660;
+        Wed, 22 Jul 2020 11:40:43 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id r70sm324144pfc.109.2020.07.22.11.40.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 11:40:43 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 11:40:34 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     "Andres Beltran" <lkmlabelt@gmail.com>
+Cc:     "Andres Beltran" <t-mabelt@microsoft.com>,
+        "KY Srinivasan" <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
+        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Michael Kelley" <mikelley@microsoft.com>,
+        <parri.andrea@gmail.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 0/3] Drivers: hv: vmbus: vmbus_requestor data
+ structure for VMBus hardening
+Message-ID: <20200722114034.443f5af2@hermes.lan>
+In-Reply-To: <20200722181051.2688-1-lkmlabelt@gmail.com>
+References: <20200722181051.2688-1-lkmlabelt@gmail.com>
 MIME-Version: 1.0
-References: <20200722141151.GO15516@casper.infradead.org>
-In-Reply-To: <20200722141151.GO15516@casper.infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 22 Jul 2020 11:40:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whC-GKFoBGRSnTnD6VxL_J+5xs4BzEhEfyhGMcT8Mga7g@mail.gmail.com>
-Message-ID: <CAHk-=whC-GKFoBGRSnTnD6VxL_J+5xs4BzEhEfyhGMcT8Mga7g@mail.gmail.com>
-Subject: Re: [GIT PULL] XArray for 5.8
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 7:11 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> XArray updates for 5.8
->
->  - Fix the test suite after introduction of the local_lock
+On Wed, 22 Jul 2020 11:10:48 -0700
+"Andres Beltran" <lkmlabelt@gmail.com> wrote:
 
-What? No.
+> Currently, VMbus drivers use pointers into guest memory as request IDs
+> for interactions with Hyper-V. To be more robust in the face of errors
+> or malicious behavior from a compromised Hyper-V, avoid exposing
+> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> bad request ID that is then treated as the address of a guest data
+> structure with no validation. Instead, encapsulate these memory
+> addresses and provide small integers as request IDs.
+> 
+> The first patch creates the definitions for the data structure, provides
+> helper methods to generate new IDs and retrieve data, and
+> allocates/frees the memory needed for vmbus_requestor.
+> 
+> The second and third patches make use of vmbus_requestor to send request
+> IDs to Hyper-V in storvsc and netvsc respectively.
+> 
+> Thanks.
+> Andres Beltran
+> 
+> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> 
+> Andres Beltran (3):
+>   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
+>     hardening
+>   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
+>     VMBus hardening
+>   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
+>     hardening
+> 
+>  drivers/hv/channel.c              | 175 ++++++++++++++++++++++++++++++
+>  drivers/net/hyperv/hyperv_net.h   |  13 +++
+>  drivers/net/hyperv/netvsc.c       |  79 +++++++++++---
+>  drivers/net/hyperv/rndis_filter.c |   1 +
+>  drivers/scsi/storvsc_drv.c        |  85 +++++++++++++--
+>  include/linux/hyperv.h            |  22 ++++
+>  6 files changed, 350 insertions(+), 25 deletions(-)
+> 
 
-Now you broke the actual kernel build:
 
-  In file included from ./include/linux/local_lock.h:5,
-                   from ./include/linux/radix-tree.h:14,
-                   from ./include/linux/idr.h:15,
-                   from lib/idr.c:5:
-  ./include/linux/local_lock_internal.h: In function =E2=80=98local_lock_ac=
-quire=E2=80=99:
-  ./include/linux/local_lock_internal.h:41:13: error: =E2=80=98current=E2=
-=80=99
-undeclared (first use in this function)
-     41 |  l->owner =3D current;
-        |             ^~~~~~~
-  ./include/linux/local_lock_internal.h:41:13: note: each undeclared
-identifier is reported only once for each function it appears in
-
-How the hell did you not see this, and why did you think it was a good
-idea to mess with kernel headers and make them alphabetically ordered?
-
-Headers need to be ordered by _contents_, not by some "sort alphabetically"=
-.
-
-Do you sort your bookcases by color and size of the book too?
-
-                  Linus
+What is the performance impact of this?
+It means keeping a global (bookkeeping) structure which should have
+noticeable impact on mult-queue performance.
