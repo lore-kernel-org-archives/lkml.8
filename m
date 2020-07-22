@@ -2,98 +2,104 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE315C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99EE720684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="WxmbK4zL"
+	by mail.kernel.org (Postfix) with ESMTP id 6644B20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732753AbgGVUWK (ORCPT
+        id S1732566AbgGVUWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:22:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVUWK (ORCPT
+        Wed, 22 Jul 2020 16:22:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:42915 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgGVUWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:22:10 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2450C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:22:09 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id v9so1664592ybe.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5QkphWxYyazumKClniN3MUn39GFFNV/nqPhj6OvEhnM=;
-        b=WxmbK4zLKLPTSwQ1E7baf6yDcVLqwcJsyAhxGJR3HqQXrPyLqw80Ilsz4CmV98R3E3
-         ykXnZbm22OEkV71kwSuxesfswDStT/W7VQsHh5BYN3mqSpnl92ADXaYVTEkA50YlrJBx
-         eX27OG4A5GtogpwQqq9cNK6uhUCwa7ltuuXg6YBp1Vn8HrJAevfa13SL064Y8IjVi2AV
-         x4VlSbu6eFUXR0wtXKPl6ISo7KiWovLNe00yv6GKSB754nY64cFgkTIhKunjaXspBlgE
-         zkMsHCKN1X0eajnW2LMh7Mq03QC9Tr/Quph6S4ULRkZF54a6Ug93P8sOt9asK5HNUTkX
-         /9Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5QkphWxYyazumKClniN3MUn39GFFNV/nqPhj6OvEhnM=;
-        b=S5k5vS3sDBS023Qa1VtsPCgKlkmObIAqev5Qg30Sa5cW5Q8cQp1C6d8WPPiURkpZLa
-         1jw3YbkCycyTTenpFUyAiiq9Mlo50A8lJoPn4G5l5Nu1+6YfcHOppICAxRMdGyscyoeE
-         gg4AR5CzQlkwaW84VNMFfETQozcbTjzUCEKWgBIicP14gd7D1r+fMKeYOlAiljia/5Ht
-         FXIPiHBXw2xkhZtUqJAo250LdUuBo8+AZj6NW9dm7vhKu5xT7k3/yPqozZTwS3DDvGDL
-         Sy8764+FAiUv3IlZFVrnF1v04cylcV+mSYk5GBhGA2v9IkwHD3GCHwXGfXw2BH8oLEtN
-         9aUw==
-X-Gm-Message-State: AOAM5319G/3FonNvQW/9bSHrJsZMqNHJQz5srzv7wSD5TKY/XH0zUw6G
-        8RCdU0I68pzFIa3XkzwUitr/+7LLP2g7eTkZ45WDYnAQ6RYPu8iV
-X-Google-Smtp-Source: ABdhPJwzOAVu8VbvSYiVCfE5fyc/hdk3WFhsSAt26VME4J8FZBKqRr512J8/MfvNYYd0oO8b8AzGIYGc9Pk1gR6M8+c=
-X-Received: by 2002:a25:bb0d:: with SMTP id z13mr1566548ybg.488.1595449329066;
- Wed, 22 Jul 2020 13:22:09 -0700 (PDT)
+        Wed, 22 Jul 2020 16:22:44 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N7zNt-1kuHVR43Kl-0155Dj for <linux-kernel@vger.kernel.org>; Wed, 22 Jul
+ 2020 22:22:43 +0200
+Received: by mail-qt1-f181.google.com with SMTP id 6so2863990qtt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:22:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530fNPwjI9AXsKOAxR+2uVFb/GvVoTmCYJXVEyxb4ebysTSew3Lp
+        ejnmMiMCvQt9Cnc8dL6vDGjqXZgafUTH3F9aqYo=
+X-Google-Smtp-Source: ABdhPJzomOuvyv87HLrmnRqLMg+xagc+vFRLOHIlCjUhIO6Ps1D+MblDa1Ac6NHH61/GfVpqpoR58oXKvv+qOpTZNZk=
+X-Received: by 2002:ac8:6743:: with SMTP id n3mr1132159qtp.7.1595449361849;
+ Wed, 22 Jul 2020 13:22:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721174654.72132-1-vitor@massaru.org> <202007211207.5BAA9D8D@keescook>
- <CADQ6JjU8rX2F_iBqth3u0EiA+CBgz4H+YL_-nbQ_cojYeLFXKQ@mail.gmail.com>
- <202007211911.666E080@keescook> <CADQ6JjUgVXBfHfb=V2ajwm=rHi12rxiqEtpivjY03xZbp6k7wg@mail.gmail.com>
- <202007221244.4E3C9E45@keescook>
-In-Reply-To: <202007221244.4E3C9E45@keescook>
-From:   Vitor Massaru Iha <vitor@massaru.org>
-Date:   Wed, 22 Jul 2020 17:21:33 -0300
-Message-ID: <CADQ6JjXmXnHr9O1q3h5smVosvffFByJTtr49P7H0eT9A7+0pxg@mail.gmail.com>
-Subject: Re: [PATCH v3] lib: Convert test_user_copy to KUnit test
-To:     Kees Cook <keescook@chromium.org>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
+References: <CAK8P3a34sT2bQbkZUjaxaShzCkn+s35pXxS0UNhqGFu+t2hZYw@mail.gmail.com>
+ <mhng-820ebe55-b4a3-4ab3-b848-6d3551b43091@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-820ebe55-b4a3-4ab3-b848-6d3551b43091@palmerdabbelt-glaptop1>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Jul 2020 22:22:25 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2VHXDLK6iba=NxSQ-t=9P7LSwzwx3XrK=N=M+qoX_oeQ@mail.gmail.com>
+Message-ID: <CAK8P3a2VHXDLK6iba=NxSQ-t=9P7LSwzwx3XrK=N=M+qoX_oeQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Alexandre Ghiti <alex@ghiti.fr>, Albert Ou <aou@eecs.berkeley.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9vkYCDJmvYwb5URpXaDM+la+4kepzavYjlt9hqPnJqKRPI6eKW4
+ 6sOsFIFn47uxY38ztrWUjk+xfOcR6ptqSoEXhVkEUQ95MTZSyMYjog/VrxLAss+sy+xZAJu
+ OKVnQnjmtC2vXaYoPglA5FmuqqaxXSM0ZG1gD/DWvFpv4sAcMnEPhR/6dfk6ZNqTACYr754
+ kubdmpCEKhXU1sID7DJHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BeYHuheCQD0=:GD9dn33K3tWuL2rvUuTamS
+ DPkvmv3u8jAJtJPpBDP+bjHIJVmx3B6N4Kx2Iy9paj9y82diPWi4pKEVCofWY4oT/OMq22sf3
+ Qq0BmjyRe6SdpDwH2oBDGoK/XlwN6hoKuZNihDYjUwFz0Tkz5q9eW124hjEVcifytBL4wOgWh
+ Y0ui8xsROECASvu0nlaJq47SqC3w3/ZcwAV5jV44m1OPK2u2UO3lksgYM/U7mTdSlyZ/76Kua
+ rsjtrZ3292bW5ZR8cwIzblbwZzHFT0BFx6/ymiDkdNCQr7OEqG+CHUwd4OeJEGKMRymBhnS2x
+ qz1RtRIHDHXWRwBwJGkN/eefVo3mZp2L2Jz66anFFP/lXy/OCV5B/1OUGwY5qBNry23dM3/eI
+ RvOEMgjmEjpYtDM0dVhIQ/U8uIc/OD1MZdto6TtrSQuOeGcVKU+yEJ4JdX/xmobCUii8t45ys
+ NIkFaMhbnk5rKv/ERiuHszJfvGvKiBlBqSppadT1kmAxE+20SUY8S+mUwodcVFsYhata31Eg1
+ 1pTD3JNXXMO4cxyqSdxk5BDndXbsbWqiKt8tek6CSJIViO05fJsnkZVIkOAwoIloT1h3F4FdS
+ Z5Lee1BNuWnFkAwLoDLn91fggX8olfJHRK4gkBUQydR4BjBrfzxmh7u9Ov2a8R1v/EjYYxakJ
+ piv5LrybbJi8odnVryKx3MA8tByKE1FCd6eZfRyzsr22EAglXSGQmIg4FQKbz/d+UhlQDUj5z
+ ukwmSK2NrcYeJFnfu/4SnL2LP4Ar9EIfNFQsrdewCr1GnrtiU21JS2PeWP2h9PXdunZQnKe6i
+ ob4gJ6G8w4V4mqFV/ljF0rXzcgQdujBVGsirFEcer2WeuSwTI/SFC9KW+psS/vYfJlRkImj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 4:45 PM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Jul 22, 2020 at 9:52 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> On Wed, 22 Jul 2020 02:43:50 PDT (-0700), Arnd Bergmann wrote:
+> > On Tue, Jul 21, 2020 at 9:06 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> > The eventual goal is to have a split of 3840MB for either user or linear map
+> > plus and 256MB for vmalloc, including the kernel. Switching between linear
+> > and user has a noticeable runtime overhead, but it relaxes both the limits
+> > for user memory and lowmem, and it provides a somewhat stronger
+> > address space isolation.
 >
-> On Wed, Jul 22, 2020 at 03:29:27PM -0300, Vitor Massaru Iha wrote:
-> > On Tue, Jul 21, 2020 at 11:12 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Tue, Jul 21, 2020 at 07:19:12PM -0300, Vitor Massaru Iha wrote:
-> > > > When you talk about end-of-test summary, is it what is written in
-> > > > dmesg and not the kunit-tool?
-> > >
-> > > Right, if I build this as a module and do "modprobe user_copy_kunit",
-> > > what will show up in dmesg?
-> >
-> > No, It doesn't. I'll put the messages again.
->
-> Would it be possible to add that behavior to the core KUnit output? Then
-> all module-based tests would include a summary line?
+> Ya, I think we decided not to do that, at least for now.  I guess the right
+> answer there will depend on what 32-bit systems look like, and since we don't
+> have any I'm inclined to just stick to the fast option.
 
-I will check what can be done.
+Makes sense. Actually on 32-bit Arm we see fewer large-memory
+configurations in new machines than we had in the past before 64-bit
+machines were widely available at low cost, so I expect not to see a
+lot new hardware with more than 1GB of DDR3 (two 256Mbit x16 chips)
+for cost reasons, and rv32 is likely going to be similar, so you may never
+really see a need for highmem or the above hack to increase the
+size of the linear mapping.
+
+I just noticed that rv32 allows 2GB of lowmem rather than just the usual
+768MB or 1GB, at the expense of addressable user memory. This seems
+like an unusual choice, but I also don't see any reason to change this
+or make it more flexible unless actual users appear.
+
+       Arnd
