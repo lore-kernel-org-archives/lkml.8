@@ -2,121 +2,117 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F80C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7666920781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="gamC+AK0"
+	by mail.kernel.org (Postfix) with ESMTP id EF65E20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595443235;
+	bh=ua56k+QiDl3hEXvZulxthJk83c5vFSZv1asxciZo+f0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x8wSMag7AvDNnj37KZD/BQ/XJzH9flB59H9o4LAelwYNTQpujkTm4NGS/wF0Gp5uv
+	 RwO5TzYKwbUhq6nWfMSrdfc8eMvOYIB/VqbkaWT/lCpzXF6UCR0+sqmhmbvukXBZjJ
+	 j72L2L6OTdlRxmBTehnzQg7GlxsGAijPLGUd1K7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732343AbgGVSkU (ORCPT
+        id S1732366AbgGVSkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:40:20 -0400
-Received: from mail-mw2nam10on2076.outbound.protection.outlook.com ([40.107.94.76]:6337
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726535AbgGVSkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:40:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tp8DQotAgsoFBw+tQnQubo2EQXSYTq84pAIq/QYhkYWu2fiNYEP9diNu1aB+aidBe5/NgeBsdoD2wCzsDlDh9TxhxGSvnI+/JAYoqulAwMElJ6Xi8irpjOc84U/F1bGCXbEiGQyJQfhZq1KGFuhi6DhwdYJTPXxrqZMS0BSqBcjFGvVoqNicypqcV8NBPJcO1uVPw3V39ljnxC2gaXpVaw+U1MbZLkFhJcWbNfxkvPNjz4gywIou/tPyOQ3GbJ7wOZfyeztiPFZlGKynwn5yM/IUx0tHSm+mwV7WTtkvVeHWLGR0wsDjRCJHI/bBnDpnOAktokm9Fhh61/fzUxitOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QAMV4IQ2N8MFoBjq1fxTdiRbZ9pX5hBYulo3izQvEEs=;
- b=NfRrSQNX4KV+b0sPqwLJyOZkYlTnK3cct4xK7jmMY9B9hdwdG8h7/MUhnNmGQkm26TPOsnFwEhdvi5MDbPceTdDQwy85eTkcIfzjxuwL1B/neGjW6synan71BWGuHYDQrV31UVX8S51yVDQ+/O1gX7YIPapLHDigAULWhTO5sSu5GIB8q5DEz8GzQKNsrcUtQmAcDolzbbKfAGLsg+tv4XHlJAxIUKfPxlkXe5dM+6LiE/Jf8DqS9xa1KmLXdQuMgFn96dEp9gyGCe5OT7yDkWFvkbvRvQCRFegLyMveahapWCA+dVd9OQBoFLuvzrpuckmw94s09N6mZF4c+B9CKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 22 Jul 2020 14:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgGVSkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:40:33 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E511CC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:32 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h22so3574705lji.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QAMV4IQ2N8MFoBjq1fxTdiRbZ9pX5hBYulo3izQvEEs=;
- b=gamC+AK0JMQBDmJSdzO7on0FUmlGBy1zhlTMkBiLIQ32/vv3xq+KRby8pquL91O0zoSyofvMZlCl4pJpxJtnrE5izaPBZqkl+lCxzhVKxcdQfK8GzyvXHHayY7beij6r+Sqz1LVXNyZtnYd/lvaZeHqCeob3zzIvsWM+YcK/XPs=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2590.namprd12.prod.outlook.com (2603:10b6:802:2e::17)
- by SN1PR12MB2592.namprd12.prod.outlook.com (2603:10b6:802:24::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Wed, 22 Jul
- 2020 18:40:16 +0000
-Received: from SN1PR12MB2590.namprd12.prod.outlook.com
- ([fe80::c179:ec27:4476:8e05]) by SN1PR12MB2590.namprd12.prod.outlook.com
- ([fe80::c179:ec27:4476:8e05%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
- 18:40:16 +0000
-Date:   Wed, 22 Jul 2020 13:40:06 -0500
-From:   John Allen <john.allen@amd.com>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v2] crypto: ccp: sp-pci: use generic power management
-Message-ID: <20200722184006.GA976732@mojo.amd.com>
-References: <95db9ba2-ffbb-ca92-6a70-1ee401920eed@amd.com>
- <20200722093057.98551-1-vaibhavgupta40@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722093057.98551-1-vaibhavgupta40@gmail.com>
-X-ClientProxiedBy: SA9PR11CA0002.namprd11.prod.outlook.com
- (2603:10b6:806:6e::7) To SN1PR12MB2590.namprd12.prod.outlook.com
- (2603:10b6:802:2e::17)
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h2gq7xP9nhpEthRDphO7jteDWvEaRR5+QWoFW/1s9IY=;
+        b=P3Mq/fGGM16uFmgmYT7T+DUItes5Vbbx04PzkAb/JajUxo10z8ES2tgLzNzyUcggI+
+         MP2RNiH/2M3b4Fie+pe5wXh+J340PnGLndIkO7gmfPQB8RYb0dI13jydAh9qX3QM9l2l
+         XOniGgQjwC0RLkURggsbtizs5IfBWhyM4oH08=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h2gq7xP9nhpEthRDphO7jteDWvEaRR5+QWoFW/1s9IY=;
+        b=DCVSPHMxXXtHrFxazwU188Gsrq+C9BkVfIIRMPN2XW+Wykn9h/euqa2YEcKCtznpAw
+         WUEtyPqFIWIxzqU96GEZNlccFfRKCpi1L4iFMLo94pvEBoWqGbHRg/yPFvIkSg9T2wwL
+         Ueuhl2urVEyNP4Q8BcL4RgGwuidi6cmSAGkrRwVJ05gRUYqD9mA0pHTeWTq2RGnbzkBE
+         x+beR1G9R/CJ2ZkpR+5VPwE4EP7BJ/COTEKOv/DiroVLhEZvdrWvf8jqhPU/kM78VkCH
+         519do9sh25fRpvCoL4+EWPySC518C0TeXNRezRdjGJHiPe+w6GBLGL1QblHkcfvE58tG
+         VpzQ==
+X-Gm-Message-State: AOAM533PTuDKzwdtORuSkW/EgOhIIs99sMg/4zKPO/9jphhk04H7oVSD
+        xySgJLUuKQ6vPk028J1gRlGs5jyi2o4=
+X-Google-Smtp-Source: ABdhPJyF6WzIauHc67aTBaCFPa89Dj95PHx8j4YJry0RXvEeCVQFfjW+8nEd2hNEuLJQSRnQaxzalA==
+X-Received: by 2002:a05:651c:1105:: with SMTP id d5mr276256ljo.62.1595443231096;
+        Wed, 22 Jul 2020 11:40:31 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id w7sm437307lfe.41.2020.07.22.11.40.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 11:40:30 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id q4so3616025lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:29 -0700 (PDT)
+X-Received: by 2002:a2e:9b42:: with SMTP id o2mr247885ljj.102.1595443229558;
+ Wed, 22 Jul 2020 11:40:29 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mojo.amd.com (165.204.77.1) by SA9PR11CA0002.namprd11.prod.outlook.com (2603:10b6:806:6e::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Wed, 22 Jul 2020 18:40:15 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1439e25b-6e23-4b0a-7ec6-08d82e6ead42
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2592:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2592225EE6CA41E67952CDBC9A790@SN1PR12MB2592.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ShKx+JT1Qz6fGEY+/BQaT6PAC7yJ+VhjRIUr0yitcnkNUfL2PZvg6VLFOMuc+aG+UgkfG/UO+RKX8FV+0bD3F154+/y2gUvwAbn/JEmKOh318/nxI+g3LfuPntQ8AgpTX1D9CHi1TYToHLk6C+srWCvY3gnoliEqgNtZ3jqySYGWbhcZoUUPFniaDqwAVeersZf0x7huHJk89ge/lUfJ+3XhJiWZrizj1Ve9YbVm5qxSlXzz0pH4zZLzxRjcaUwk+z3cnT2IcYpSGSrOn4UME5snxrnWC+/9i2nGQUcobgtBUaXqOROOwlbez48m19A5Yb/g0tJGLFJJRj0mawQTJ9nI7F/m1FegWBWvKSq0qEjp4qau0z3c9LIAVs3Nh04B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2590.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(956004)(1076003)(54906003)(316002)(4326008)(2906002)(6916009)(16526019)(478600001)(86362001)(186003)(8676002)(33656002)(4744005)(66476007)(66556008)(55016002)(66946007)(5660300002)(8936002)(7416002)(44832011)(26005)(6666004)(7696005)(52116002)(41533002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: bomdCZ1g5XptjciVFkNeY8Qckkt6Om3xhBDfqGUccJTYrfCi2mJg1IzlrS0Q4hOIuHTRwYLQJZQLlQQ9EPeAAe+SwPqA2z7OGrQxQu5QfZEB3i2C65HxwbRxw4SPV57wSB/xgkndGXkaRTqnp+y366BC/S/KN10r9BtApSr4b+W9F0Fh/d1Jgvi2bqzohyqAiljhhxPdbR/ZMw+YA0KoBFfpWKfs1EQBh+hZbHM2iFTjI3tb4iP7a0fhCMb86wVIi9J8ovIu0SB2Zk/ORHOq+Y6WrDltWmzGNVANWnJQG3BhV9mJYU7Qaz2g49ZRXXMK40r77ll6gm2NVccmWX734UXeey6zxfLT2cty5RS12mbeQyjzbFAJ5yCM0embbD9dwZA5kgHvIcJ16SEvTk6wKM596bHnlX8wxlOooQLV/jDUHJjfj6qGOkmU0EHFHmHMV8r90ZKmN2xSsk1fU9AvSLr8Y/CsrV4nd1jE8dj0wNQ=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1439e25b-6e23-4b0a-7ec6-08d82e6ead42
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2590.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 18:40:16.3360
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gStoGkqsQFoq0bC3jMwZgBK30OMeJaNml+7bZ8JPX5sBUAnXp4peA2fAeFYGp9AeWojszcnI0ujRtuIOg9uYng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2592
+References: <20200722141151.GO15516@casper.infradead.org>
+In-Reply-To: <20200722141151.GO15516@casper.infradead.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 22 Jul 2020 11:40:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whC-GKFoBGRSnTnD6VxL_J+5xs4BzEhEfyhGMcT8Mga7g@mail.gmail.com>
+Message-ID: <CAHk-=whC-GKFoBGRSnTnD6VxL_J+5xs4BzEhEfyhGMcT8Mga7g@mail.gmail.com>
+Subject: Re: [GIT PULL] XArray for 5.8
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:00:58PM +0530, Vaibhav Gupta wrote:
-> Drivers using legacy power management .suspen()/.resume() callbacks
-> have to manage PCI states and device's PM states themselves. They also
-> need to take care of standard configuration registers.
-> 
-> Switch to generic power management framework using a single
-> "struct dev_pm_ops" variable to take the unnecessary load from the driver.
-> This also avoids the need for the driver to directly call most of the PCI
-> helper functions and device power state control functions as through
-> the generic framework, PCI Core takes care of the necessary operations,
-> and drivers are required to do only device-specific jobs.
-> 
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+On Wed, Jul 22, 2020 at 7:11 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> XArray updates for 5.8
+>
+>  - Fix the test suite after introduction of the local_lock
 
-Acked-by: John Allen <john.allen@amd.com>
+What? No.
+
+Now you broke the actual kernel build:
+
+  In file included from ./include/linux/local_lock.h:5,
+                   from ./include/linux/radix-tree.h:14,
+                   from ./include/linux/idr.h:15,
+                   from lib/idr.c:5:
+  ./include/linux/local_lock_internal.h: In function =E2=80=98local_lock_ac=
+quire=E2=80=99:
+  ./include/linux/local_lock_internal.h:41:13: error: =E2=80=98current=E2=
+=80=99
+undeclared (first use in this function)
+     41 |  l->owner =3D current;
+        |             ^~~~~~~
+  ./include/linux/local_lock_internal.h:41:13: note: each undeclared
+identifier is reported only once for each function it appears in
+
+How the hell did you not see this, and why did you think it was a good
+idea to mess with kernel headers and make them alphabetically ordered?
+
+Headers need to be ordered by _contents_, not by some "sort alphabetically"=
+.
+
+Do you sort your bookcases by color and size of the book too?
+
+                  Linus
