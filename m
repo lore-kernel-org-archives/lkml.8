@@ -2,112 +2,142 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08373C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D08FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA6E20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595441401;
-	bh=NmBDYRLXE7yLQ1W+FnfOFlvtKPX0dfdhfwoZ8FHxDT8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=i6sGbhQQRUuYy17Ltl1HAXJTBYfD4bmoEAO26ORUeLxDSljW1vYLUKjtjp5Sr/K3r
-	 59LHV3FwXDNoaR/jEBh8Hfel38nbrvt7mEI6SLmN6VGPcqXpquQWXafcM3pngwanzR
-	 s54yDswiKPw4L4kUJhxnrzfr9nqXtV6KKX5NYOJo=
+	by mail.kernel.org (Postfix) with ESMTP id 3E18E20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yr0A25+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbgGVSKA (ORCPT
+        id S1732272AbgGVSOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgGVSKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:10:00 -0400
-Received: from embeddedor (unknown [201.162.161.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5556820787;
-        Wed, 22 Jul 2020 18:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595441399;
-        bh=NmBDYRLXE7yLQ1W+FnfOFlvtKPX0dfdhfwoZ8FHxDT8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iYVbcMsE8a7W1Haau6s6tTXgFjXgPMpVvTDvGoDTQ/dz8fhA6nyAWpXmz7iDBWBqw
-         GxmT9dleWu7/T82+SNsyX4P3Ijv+Tn3KL0VDu3vX9o6zKApBdYkdhO7OTaxzhPE71r
-         qZoWTJ1H9pXPj9bYXH6AaJke5ycpJ77sRlRUixmw=
-Date:   Wed, 22 Jul 2020 13:15:34 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] mei: hdcp: Replace one-element array with
- flexible-array member
-Message-ID: <20200722181534.GA31357@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 22 Jul 2020 14:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgGVSOh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:14:37 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39FBC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:14:36 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id h28so2381299edz.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NUkQtv3OJHBzboi9ru1HyxK6os+k6GP868ADn16gFFU=;
+        b=Yr0A25+8HZhtQNRtUXpWrihE5hC09s6PB8Ecc61nnw5jJrjAHYEaAZFsC4OeW1QdKk
+         uoZp5lL7mWGagAVynN3amwJeNlbHpj4Z/FETX9Iu/837eiy7dcyuCEz4CFZL/rRzqpOe
+         uinUfsZ9dlvU0P37gCridlrLSYBV16dzMZ8nX1JVYBxyMrQ2jcqv4ooxYjV7mRzUtBgV
+         6dB87LJQjMUwdF88P/oixIA1jQ0NcQa48DuNh86HCl1+4VkhSRYPJTCkrGiCnsNsE6Pb
+         ijZ2Jx3aaiRyjI2Ner8PI6Rc8klmEmfDcVeHQDjClW6B6HkBoO/EJmV+MPEyEVUL8ssr
+         Lc9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NUkQtv3OJHBzboi9ru1HyxK6os+k6GP868ADn16gFFU=;
+        b=eiPDYqtSQQqBxpz9fJC7jsms1VSLQ+ZLgsqkS0t6dL/3EjFABc5UtyHw6oBRMPOAQR
+         smASFHxdjAFZQfLOMBzxmcltsAQgBsGGaldBf9STaLucC7AnDb0WmrNuxIjVXutveVlo
+         /iMdy1VgKb72bSG7AJcUPmkVgbma2CLY4KOy4WndNy3W//bBC2rasmK+a01Qli/iZjxJ
+         k42ktQa/1TcVjyQ+lw5cew0tMXRdM9asOlpRH3td/jfi/qgdXFijxdJXDCQPx3l1fwZx
+         OWf64MPlqpKettzpHqOZbTOwybavhgPTbNt8cY0jQqezEf4DAXXO+IM7g64LLuvzUp8t
+         LWtw==
+X-Gm-Message-State: AOAM533N4WojDe7TSW16+5hrk3y9TLpegSuc9OOlE5RfduKd20F8Iebi
+        7zYj2Wyh0Mji1Dx8fgroSQ==
+X-Google-Smtp-Source: ABdhPJxHHQnxfYsacvYxK8fphmFU5Y2/bDjz1g0ykQdB6aaEDAKTVi+GC+doGqCwIerSb2ZyUtCjkQ==
+X-Received: by 2002:aa7:d802:: with SMTP id v2mr689281edq.77.1595441675574;
+        Wed, 22 Jul 2020 11:14:35 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:810b:f40:e00:922b:34ff:fe38:6455])
+        by smtp.googlemail.com with ESMTPSA id x64sm372954edc.95.2020.07.22.11.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 11:14:35 -0700 (PDT)
+From:   Alex Bee <knaerzche@gmail.com>
+To:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner=20?= <heiko@sntech.de>
+Cc:     Alex Bee <knaerzche@gmail.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/5] drm: rockchip: use overlay windows as such
+Date:   Wed, 22 Jul 2020 20:13:32 +0200
+Message-Id: <20200722181332.26995-6-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200722181332.26995-1-knaerzche@gmail.com>
+References: <20200722181332.26995-1-knaerzche@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare
-having a dynamically sized set of trailing elements in a structure.
-Kernel code should always use “flexible array members”[1] for these
-cases. The older style of one-element or zero-length arrays should
-no longer be used[2].
+As stated in the comment for rk3288_vop_win_data windows that are
+supposed to be an overlay window are missused as HWC windows due to the
+missing implementation of that window type in the VOP driver.
 
-Also, make use of the array_size() helper instead of the open-coded
-version in memcpy(). These sorts of multiplication factors need to
-be wrapped in array_size().
+This also applies to VOPs RK3036, RK3126, RK3188 and RK3228, which all
+have at least one (1) dedicated HWC window (which are not currently
+defined in the driver).
+Since all the VOPs mentioned have only one (1) overlay window and all
+now support alpha blending , it should also be used as such, as this
+offers a much broader usage perspective for them.
 
-And while there, use the preferred form for passing a size of a struct.
-The alternative form where struct name is spelled out hurts readability
-and introduces an opportunity for a bug when the pointer variable type is
-changed but the corresponding sizeof that is passed as argument is not.
-
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://github.com/KSPP/linux/issues/79
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
 ---
- drivers/misc/mei/hdcp/mei_hdcp.c | 2 +-
- drivers/misc/mei/hdcp/mei_hdcp.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
-index e6c3dc595617..d1d3e025ca0e 100644
---- a/drivers/misc/mei/hdcp/mei_hdcp.c
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.c
-@@ -572,7 +572,7 @@ static int mei_hdcp_verify_mprime(struct device *dev,
- 	       HDCP_2_2_MPRIME_LEN);
- 	drm_hdcp_cpu_to_be24(verify_mprime_in.seq_num_m, data->seq_num_m);
- 	memcpy(verify_mprime_in.streams, data->streams,
--	       (data->k * sizeof(struct hdcp2_streamid_type)));
-+	       array_size(data->k, sizeof(*data->streams)));
+Changes in v2:
+- rephrase commit message
+
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+index 5a13b4ab77e1..b4a00f13b559 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
++++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+@@ -131,7 +131,7 @@ static const struct vop_win_data rk3036_vop_win_data[] = {
+ 	{ .base = 0x00, .phy = &rk3036_win0_data,
+ 	  .type = DRM_PLANE_TYPE_PRIMARY },
+ 	{ .base = 0x00, .phy = &rk3036_win1_data,
+-	  .type = DRM_PLANE_TYPE_CURSOR },
++	  .type = DRM_PLANE_TYPE_OVERLAY },
+ };
  
- 	verify_mprime_in.k = cpu_to_be16(data->k);
+ static const int rk3036_vop_intrs[] = {
+@@ -200,7 +200,7 @@ static const struct vop_win_data rk3126_vop_win_data[] = {
+ 	{ .base = 0x00, .phy = &rk3036_win0_data,
+ 	  .type = DRM_PLANE_TYPE_PRIMARY },
+ 	{ .base = 0x00, .phy = &rk3126_win1_data,
+-	  .type = DRM_PLANE_TYPE_CURSOR },
++	  .type = DRM_PLANE_TYPE_OVERLAY },
+ };
  
-diff --git a/drivers/misc/mei/hdcp/mei_hdcp.h b/drivers/misc/mei/hdcp/mei_hdcp.h
-index 18ffc773fa18..834757f5e072 100644
---- a/drivers/misc/mei/hdcp/mei_hdcp.h
-+++ b/drivers/misc/mei/hdcp/mei_hdcp.h
-@@ -358,7 +358,7 @@ struct wired_cmd_repeater_auth_stream_req_in {
- 	u8				seq_num_m[HDCP_2_2_SEQ_NUM_LEN];
- 	u8				m_prime[HDCP_2_2_MPRIME_LEN];
- 	__be16				k;
--	struct hdcp2_streamid_type	streams[1];
-+	struct hdcp2_streamid_type	streams[];
- } __packed;
+ static const struct vop_data rk3126_vop = {
+@@ -542,7 +542,7 @@ static const struct vop_win_data rk3188_vop_win_data[] = {
+ 	{ .base = 0x00, .phy = &rk3188_win0_data,
+ 	  .type = DRM_PLANE_TYPE_PRIMARY },
+ 	{ .base = 0x00, .phy = &rk3188_win1_data,
+-	  .type = DRM_PLANE_TYPE_CURSOR },
++	  .type = DRM_PLANE_TYPE_OVERLAY },
+ };
  
- struct wired_cmd_repeater_auth_stream_req_out {
+ static const int rk3188_vop_intrs[] = {
+@@ -979,7 +979,7 @@ static const struct vop_win_data rk3228_vop_win_data[] = {
+ 	{ .base = 0x00, .phy = &rk3288_win01_data,
+ 	  .type = DRM_PLANE_TYPE_PRIMARY },
+ 	{ .base = 0x40, .phy = &rk3288_win01_data,
+-	  .type = DRM_PLANE_TYPE_CURSOR },
++	  .type = DRM_PLANE_TYPE_OVERLAY },
+ };
+ 
+ static const struct vop_data rk3228_vop = {
 -- 
-2.27.0
+2.17.1
 
