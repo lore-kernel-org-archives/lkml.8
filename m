@@ -2,180 +2,385 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE6AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2D120771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9096220771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="P+8QncJz";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="GzUxDF9E"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="smNSSkTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGVKow (ORCPT
+        id S1728080AbgGVKpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:44:52 -0400
-Received: from alln-iport-7.cisco.com ([173.37.142.94]:24841 "EHLO
-        alln-iport-7.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgGVKow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:44:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1770; q=dns/txt; s=iport;
-  t=1595414690; x=1596624290;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=LKDrqtfwUTHpIBR94aPVSUerveVFDwvkMWzvLKF4cSo=;
-  b=P+8QncJzw4mxghjIjMY/EOtTSDXq0AHVFGdL6mIhH2BXySXzjV/ptYNJ
-   29gStbYCb5CMX7pm40pWOds32PXpHSTcOGXkr6K25YMHunNDweHMCjvts
-   Zf+7RU4jIb8BhUV9IRJi5GwHSA+Mtufx7xpTgXFFUdrqaZ1RaxLkH2W/2
-   4=;
-IronPort-PHdr: =?us-ascii?q?9a23=3Ao6kszB0j3z82wxuOsmDT+zVfbzU7u7jyIg8e44?=
- =?us-ascii?q?YmjLQLaKm44pD+JxWFv6dojVTTWp7c5e4CgO3T4OjsWm0FtJCGtn1KMJlBTA?=
- =?us-ascii?q?QMhshemQs8SNWEBkv2IL+PDWQ6Ec1OWUUj8yS9Nk5YS8P/bEfVuXq88XgZHR?=
- =?us-ascii?q?CsfQZwL/7+T4jVicn/3uuu+prVNgNPgjf1Yb57IBis6wvLscxDiop5IaF3wR?=
- =?us-ascii?q?zM8XY=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0DwAQBtFxhf/4gNJK1gHQEBAQEJARI?=
- =?us-ascii?q?BBQUBQIE5BQELAYFRUQeBRy8sCoQpg0YDjUiYXoJTA1ULAQEBDAEBLQIEAQG?=
- =?us-ascii?q?ETAIXgXUCJDcGDgIDAQELAQEFAQEBAgEGBG2FXAyFcQEBAQMBEhEEDQwBATc?=
- =?us-ascii?q?BDwIBCBgCAiYCAgIwFRACBAENBSKDBIJMAw4fAQGhdgKBOYhhdn8zgwEBAQW?=
- =?us-ascii?q?FEBiCDgkUeioBgmmDVYIvhASCGoE4HIJNPoFJgnSDFjOCLYFHAZBVPKJ2BgS?=
- =?us-ascii?q?CXZlmAx6fUZIFnwQCBAIEBQIOAQEFgWkkgVdwegFzgUtQFwINjh4JAxeDTop?=
- =?us-ascii?q?WdDcCBggBAQMJfI5DAYEQAQE?=
-X-IronPort-AV: E=Sophos;i="5.75,381,1589241600"; 
-   d="scan'208";a="515951491"
-Received: from alln-core-3.cisco.com ([173.36.13.136])
-  by alln-iport-7.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 22 Jul 2020 10:44:49 +0000
-Received: from XCH-ALN-002.cisco.com (xch-aln-002.cisco.com [173.36.7.12])
-        by alln-core-3.cisco.com (8.15.2/8.15.2) with ESMTPS id 06MAin9O028692
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 10:44:49 GMT
-Received: from xhs-rtp-003.cisco.com (64.101.210.230) by XCH-ALN-002.cisco.com
- (173.36.7.12) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 05:44:49 -0500
-Received: from xhs-aln-003.cisco.com (173.37.135.120) by xhs-rtp-003.cisco.com
- (64.101.210.230) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 06:44:48 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (173.37.151.57)
- by xhs-aln-003.cisco.com (173.37.135.120) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 05:44:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PDKnhUgjK7jCfiygxgmUtvxpSKoCJPXNVZDU2jdroXgTULFc28plNMc/uHp3p5wFNKA0oqOZjw3Ccl7YV5HP54+/ELTVk8DdT5DBpgZwKGqTESGctgYAE5jqC3kZtwUyQcXufWPB34YzP97OVizqZO1a9lQ89HpVyv/snKUJricGfDvcTzeIuakEQeZUuekE/U+OAKhgPqf/dRTCHPZ6AKcM2VqmCRIFge82fRGg13c35qg8EJlEN8H/zBCupstd44s0CMJKkA2HLxuOQiADcsR1zZq3lBxn0F9dRNe48B4b1hRHxiRbW2tWiRJBVa4ZcrSZFDRfEy0QwA4tHAsl3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LKDrqtfwUTHpIBR94aPVSUerveVFDwvkMWzvLKF4cSo=;
- b=TadX0gulHoPBJoXk57Om4hkBvIvOPc9p1oECwm2BVJ4N4JbFgO1d2gWSAHds3FAACLHOreJ0ecZPd4/tWJKTsVUZM7nWGquFThlvaLI3oBEvzU4YICjQANkyWkKXaP7jeZTqI0FG+bs000vyinEM+EWPD4M7mHwlF/8V9R3MbZWZaZKydFm/HiVV/lNVhsf1QHqCAzfkVahvhRXrv18yyes1fxyxa5xhRvLJSUR4F8RfDGj3no0EptyFLDlsWFxoe7i7G7INC+xavWW/xPxYbzTbZkrUe4M7vfbuUegMkPwTWfEp40zQUA8BjAXpgHuzdF7/gO3tT8OaiyLBM57sjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector2-cisco-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LKDrqtfwUTHpIBR94aPVSUerveVFDwvkMWzvLKF4cSo=;
- b=GzUxDF9Ekli9AqqqC7G15dpDTWBqIKwJQgIEbvehfgZonHc1YIYCXSe/cGgCqmIRLiTAOsbpYjAiAx0oaI7pmMC6hqi1dGzQrsKVfvyqM2BvjNqdbf7bn/UQt4lXbbegzO9M/gcQs731xwLZDnp1HEbX180F+ZDaMY/pa8lJqW8=
-Received: from CY4PR1101MB2101.namprd11.prod.outlook.com
- (2603:10b6:910:24::18) by CY4PR1101MB2150.namprd11.prod.outlook.com
- (2603:10b6:910:18::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Wed, 22 Jul
- 2020 10:44:44 +0000
-Received: from CY4PR1101MB2101.namprd11.prod.outlook.com
- ([fe80::6c4e:645e:fcf9:f766]) by CY4PR1101MB2101.namprd11.prod.outlook.com
- ([fe80::6c4e:645e:fcf9:f766%11]) with mapi id 15.20.3195.025; Wed, 22 Jul
- 2020 10:44:44 +0000
-From:   "Sriram Krishnan (srirakr2)" <srirakr2@cisco.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        David Miller <davem@davemloft.net>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "Malcolm Bumgardner (mbumgard)" <mbumgard@cisco.com>,
-        "Umesha G M (ugm)" <ugm@cisco.com>,
-        "Niranjan M M (nimm)" <nimm@cisco.com>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Thread-Topic: [PATCH v3] net: hyperv: add support for vlans in netvsc driver
-Thread-Index: AQHWXu1TxveMQ7VN0USTIMVfIXoTpqkR+jQAgAChnoCAASy7gA==
-Date:   Wed, 22 Jul 2020 10:44:43 +0000
-Message-ID: <D02BAA42-7BBB-4A65-AA1A-08A770219B8E@cisco.com>
-References: <20200720164551.14153-1-srirakr2@cisco.com>
- <20200720.162726.1756372964350832473.davem@davemloft.net>
- <292C3F77-60F5-4D24-8541-BCAE88C836AF@cisco.com>
- <BL0PR2101MB0930B942CE2E4EB875EC38C2CA780@BL0PR2101MB0930.namprd21.prod.outlook.com>
-In-Reply-To: <BL0PR2101MB0930B942CE2E4EB875EC38C2CA780@BL0PR2101MB0930.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/16.39.20071300
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none header.from=cisco.com;
-x-originating-ip: [106.51.23.252]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 880b876c-b599-47b4-9428-08d82e2c3ef8
-x-ms-traffictypediagnostic: CY4PR1101MB2150:
-x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1101MB21502470075396E222F515A990790@CY4PR1101MB2150.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7SCBkQ+5OxA696oOSLxsrz0sqlWZ/hM2UzidEu+jqC01GpWZQJX6cNf9ZDBC/YK23hZ8xq09WSrm/Cq6dKkyLqiS+c6fbWyKrIz7084tOSZrv6hXU4lk4WX2zRIeK5An7hehjrF0+vwvk3mqIAcOiBRTTBjx+4pi6KuDPdh+ui8Zgq8mfpAbCBo9P3dnDePqlYEEWy5ZQtZxWw5gToqpQNE52npwsw4WYVD4QF4d0xCfUmEdzW5FYp808E7LkYzZzVsH5bJwuMiLzDYPJE8y3wssbmK5Cj2yV6OoB4PxZyUNVx4dZFVoM6KACxMaJ29SLSd/k/F3CfoYTPshDBifgQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1101MB2101.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(54906003)(33656002)(110136005)(86362001)(71200400001)(478600001)(5660300002)(55236004)(8676002)(316002)(6486002)(2906002)(4326008)(8936002)(6506007)(53546011)(36756003)(6512007)(66946007)(66446008)(66476007)(64756008)(66556008)(2616005)(26005)(186003)(91956017)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: DY607qfLpkQ+7oSJWnMmhCF3ByIYhcvLKKdE1H849rjr6y2AIu9AlA0Wv1x1n8zsHChzCP0bGEvPc4pIB60zQNHpEsVgm0xRsxzFRUqnz7aFbSrCRBo7zenkWlPAF6S+pNfEomIuBaVkpA3iwUlooIY9z5RMFXBI+uijC4+NaGcFb+xOq4bXYYyAta1aOEVG3mLOq6eJ1aXZu1bzrA6HYqe3RDhBukV1vLe44mDHGU8WkZ8/dKxidaMbtHSPBE8i/jANCLfXwPUP/LAuw1lIMLquMQKlKry0Ruw+yJQCps8/BKdSIjsVL2CMFhf/3tJ3GxYU+bRSWYMa3YWRTcyWLZNW8BSAsoX2khZL26isJZxAhYZFsTv+RocRGyVWffJa1cD71KhjXvtkdNB4VCHqTGqUe35MJb5hu7D1slTj01MgtuYinoAPdGJi923QMrwkzR03FdWLFSJS4aogJbStQM5+tn9hkGFK/4s6zjPtyeI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C342C4C4FC03F942BE846750414500B9@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 Jul 2020 06:45:12 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34692 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgGVKpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:45:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595414710; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=L/nok2zwYApKKFOOLAMzwlNRkNWlD/HVZfZXAgUTZSw=; b=smNSSkTOeaqQEgGEVzNFdti2ftVRXzPciCkOSy6Judm8Ki6FxdRsnd++Y4bI300Xrg1FHy8O
+ MGGsYH5RbafPzj5jNZXRICeGhw6VFwrbDyFrJpnMvZlgxcqrHpMlIGBlGU58U7LAAaLHMDYp
+ EPPwpTJLc4v7qux2L5xUvIxG6z4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f1818b55912b3a4056cabde (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 22 Jul 2020 10:45:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9623FC43395; Wed, 22 Jul 2020 10:45:08 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6553C433C9;
+        Wed, 22 Jul 2020 10:44:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B6553C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v3 8/8] dt-bindings: sound: lpass-cpu: Move to yaml format
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ajit Pandey <ajitp@codeaurora.org>
+References: <1594184896-10629-1-git-send-email-rohitkr@codeaurora.org>
+ <1594184896-10629-9-git-send-email-rohitkr@codeaurora.org>
+ <20200713225328.GA778183@bogus>
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+Message-ID: <9a72a266-d861-a4a5-bf9c-4f1437c4b50e@codeaurora.org>
+Date:   Wed, 22 Jul 2020 16:14:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR1101MB2101.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 880b876c-b599-47b4-9428-08d82e2c3ef8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 10:44:44.1043
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /V6PKruLtM6YOx5OEqV+KN86+qsGfaVE5pL5zyj5xS/0Y1bt5JRr0ooSFAbERyua2auqGcRtjLVFoHKOdzGLXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1101MB2150
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.36.7.12, xch-aln-002.cisco.com
-X-Outbound-Node: alln-core-3.cisco.com
+In-Reply-To: <20200713225328.GA778183@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ICAgIE9uIDIyLzA3LzIwLCAzOjQ4IEFNLCAiSGFpeWFuZyBaaGFuZyIgPGhhaXlhbmd6QG1pY3Jv
-c29mdC5jb20+IHdyb3RlOg0KICAgID4gSWYgeW91IG1ha2UgdGhpcyBjaGFuZ2UsIGRpZCB5b3Ug
-c2VlIGFueSBkcm9wIGluIGEgbGl2ZSB0ZXN0PyBUaGUNCiAgICA+ICJwYWNrZXQtPnRvdGFsX2J5
-dGVzIiBpbiBzdHJ1Y3QgaHZfbmV0dnNjX3BhY2tldCAgaXMgZm9yIGJvb2sga2VlcGluZw0KICAg
-ID4gb25seSwgd2hpY2ggaXMgdXNlZCBmb3Igc3RhdHMgaW5mbywgYW5kIG5vdCB2aXNpYmxlIGJ5
-IHRoZSBob3N0IGF0IGFsbC4NCg0KICAgID4gSSBtYWRlIHRoaXMgc3VnZ2VzdGlvbiBiZWNhdXNl
-IHRoZSAicmVndWxhciIgdmxhbiBwYWNrZXQgbGVuZ3RoIHdhcw0KICAgID4gY291bnRlZCBieSBi
-eXRlcyB3aXRob3V0IHRoZSBWTEFOX0hMRU4oNCkgLS0gdGhlIHZsYW4gdGFnIGlzDQogICAgPiBp
-biB0aGUgc2tiIG1ldGFkYXRhLCBzZXBhcmF0ZWx5IGZyb20gdGhlIGV0aGVybmV0IGhlYWRlci4g
-SSB3YW50IHRoZQ0KICAgID4gc3RhdGlzdGljYWwgZGF0YSBmb3IgQUZfUEFDS0VUIG1vZGUgY29u
-c2lzdGVudCB3aXRoIHRoZSByZWd1bGFyIGNhc2UuDQoNCiAgICA+IHN0cnVjdCBodl9uZXR2c2Nf
-cGFja2V0IHsNCiAgICA+ICAgICAgICAgLyogQm9va2tlZXBpbmcgc3R1ZmYgKi8NCiAgICA+ICAg
-ICAgICAgdTggY3BfcGFydGlhbDsgLyogcGFydGlhbCBjb3B5IGludG8gc2VuZCBidWZmZXIgKi8N
-Cg0KICAgID4gICAgICAgICB1OCBybXNnX3NpemU7IC8qIFJORElTIGhlYWRlciBhbmQgUFBJIHNp
-emUgKi8NCiAgICA+ICAgICAgICAgdTggcm1zZ19wZ2NudDsgLyogcGFnZSBjb3VudCBvZiBSTkRJ
-UyBoZWFkZXIgYW5kIFBQSSAqLw0KICAgID4gICAgICAgICB1OCBwYWdlX2J1Zl9jbnQ7DQoNCiAg
-ICA+ICAgICAgICAgdTE2IHFfaWR4Ow0KICAgID4gICAgICAgICB1MTYgdG90YWxfcGFja2V0czsN
-Cg0KICAgID4gICAgICAgICB1MzIgdG90YWxfYnl0ZXM7DQogICAgPiAgICAgICAgIHUzMiBzZW5k
-X2J1Zl9pbmRleDsNCiAgICA+ICAgICAgICAgdTMyIHRvdGFsX2RhdGFfYnVmbGVuOw0KICAgID4g
-fTsNCiAgICAgICAgDQogICAgPiBUaGFua3MNCiAgICA+IC0gSGFpeWFuZw0KDQogICAgU29ycnkg
-bXkgYmFkLCBmb3VuZCBvdXQgdGhhdCB0aGUgZHJvcCB3YXMgYSB0ZXN0YmVkIGlzc3VlIGFuZCBu
-b3QgcmVsYXRlZCB0byB0aGUgY2hhbmdlLiBQYXRjaCB2NSBjb250YWlucyB0aGUgcmVjb21tZW5k
-YXRpb24uDQoNCiAgICBUaGFua3MsDQogICAgU3JpcmFtDQoNCg==
+Thanks Rob for the review. Posted v4 with fixes.
+
+On 7/14/2020 4:23 AM, Rob Herring wrote:
+> On Wed, Jul 08, 2020 at 10:38:16AM +0530, Rohit kumar wrote:
+>> From: Ajit Pandey <ajitp@codeaurora.org>
+>>
+>> Update lpass-cpu binding with yaml formats.
+>>
+>> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  80 -----------
+>>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 154 +++++++++++++++++++++
+>>   2 files changed, 154 insertions(+), 80 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> deleted file mode 100644
+>> index 04e34cc..00000000
+>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>> +++ /dev/null
+>> @@ -1,80 +0,0 @@
+>> -* Qualcomm Technologies LPASS CPU DAI
+>> -
+>> -This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
+>> -
+>> -Required properties:
+>> -
+>> -- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
+>> -			  "qcom,lpass-cpu-sc7180"
+>> -- clocks		: Must contain an entry for each entry in clock-names.
+>> -- clock-names		: A list which must include the following entries:
+>> -				* "ahbix-clk"
+>> -				* "mi2s-osr-clk"
+>> -				* "mi2s-bit-clk"
+>> -			: required clocks for "qcom,lpass-cpu-apq8016"
+>> -				* "ahbix-clk"
+>> -				* "mi2s-bit-clk0"
+>> -				* "mi2s-bit-clk1"
+>> -				* "mi2s-bit-clk2"
+>> -				* "mi2s-bit-clk3"
+>> -				* "pcnoc-mport-clk"
+>> -				* "pcnoc-sway-clk"
+>> -
+>> -- interrupts		: Must contain an entry for each entry in
+>> -			  interrupt-names.
+>> -- interrupt-names	: A list which must include the following entries:
+>> -				* "lpass-irq-lpaif"
+>> -- pinctrl-N		: One property must exist for each entry in
+>> -			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
+>> -			  for details of the property values.
+>> -- pinctrl-names		: Must contain a "default" entry.
+>> -- reg			: Must contain an address for each entry in reg-names.
+>> -- reg-names		: A list which must include the following entries:
+>> -				* "lpass-lpaif"
+>> -- #address-cells	: Must be 1
+>> -- #size-cells		: Must be 0
+>> -
+>> -
+>> -
+>> -Optional properties:
+>> -
+>> -- qcom,adsp		: Phandle for the audio DSP node
+>> -
+>> -By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
+>> -The SD lines to use can be configured by adding subnodes for each of the DAIs.
+>> -
+>> -Required properties for each DAI (represented by a subnode):
+>> -- reg			: Must be one of the DAI IDs
+>> -			  (usually part of dt-bindings header)
+>> -- qcom,playback-sd-lines: List of serial data lines to use for playback
+>> -			  Each SD line should be represented by a number from 0-3.
+>> -- qcom,capture-sd-lines	: List of serial data lines to use for capture
+>> -			  Each SD line should be represented by a number from 0-3.
+>> -
+>> -Note that adding a subnode changes the default to "no lines configured",
+>> -so both playback and capture lines should be configured when a subnode is added.
+>> -
+>> -Example:
+>> -
+>> -lpass@28100000 {
+>> -	compatible = "qcom,lpass-cpu";
+>> -	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
+>> -	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
+>> -	interrupts = <0 85 1>;
+>> -	interrupt-names = "lpass-irq-lpaif";
+>> -	pinctrl-names = "default", "idle";
+>> -	pinctrl-0 = <&mi2s_default>;
+>> -	pinctrl-1 = <&mi2s_idle>;
+>> -	reg = <0x28100000 0x10000>;
+>> -	reg-names = "lpass-lpaif";
+>> -	qcom,adsp = <&adsp>;
+>> -
+>> -	#address-cells = <1>;
+>> -	#size-cells = <0>;
+>> -
+>> -	/* Optional to set different MI2S SD lines */
+>> -	dai@3 {
+>> -		reg = <MI2S_QUATERNARY>;
+>> -		qcom,playback-sd-lines = <0 1>;
+>> -	};
+>> -};
+>> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>> new file mode 100644
+>> index 00000000..9c350bc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>> @@ -0,0 +1,154 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm LPASS CPU dai driver bindings
+>> +
+>> +maintainers:
+>> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> +  - Rohit kumar <rohitkr@codeaurora.org>
+>> +
+>> +description:
+>> +  Qualcomm SOC Low-Power Audio SubSystem (LPASS) that consist of MI2S interface
+>> +  for audio data transfer on external codecs. LPASS cpu driver is a module to
+>> +  configure Low-Power Audio Interface(LPAIF) core registers across different
+>> +  IP versions.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,lpass-cpu
+>> +      - qcom,apq8016-lpass-cpu
+>> +      - qcom,lpass-cpu-sc7180
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: LPAIF core registers
+> Just: 'maxItems: 1' for a single entry.
+pl
+>
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: lpass-lpaif
+> Not all that useful with only 1.
+ok .. Removed in v4.
+>
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: AHBIX core clock
+>> +      - description: oscillator clock for MI2S external interfaces
+>> +      - description: Bit clock for single MI2S dai
+>> +      - description: Bit clock for MI2S_PRIMARY dai interface
+>> +      - description: Bit clock for MI2S_SECONDARY dai interface
+>> +      - description: Bit clock for MI2S_TERTIARY dai interface
+>> +      - description: Bit clock for MI2S_QUATERNARY dai interface
+>> +      - description: NOC MPORT clock of LPASS core
+>> +      - description: NOC SWAY clock of LPASS core
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ahbix-clk
+>> +      - const: mi2s-osr-clk
+>> +      - const: mi2s-bit-clk
+>> +      - const: mi2s-bit-clk0
+>> +      - const: mi2s-bit-clk1
+>> +      - const: mi2s-bit-clk2
+>> +      - const: mi2s-bit-clk3
+>> +      - const: pcnoc-mport-clk
+>> +      - const: pcnoc-sway-clk
+>> +
+>> +  interrupts:
+>> +    items:
+>> +      - description: LPAIF DMA buffer interrupt
+> maxItems: 1
+ok
+>
+>> +
+>> +  interrupt-names:
+>> +    items:
+>> +      - const: lpass-irq-lpaif
+>> +
+>> +  qcom,adsp:
+>> +    maxItems: 1
+>> +    description: Phandle for the audio DSP node
+> Needs a type $ref. And if just a phandle, 'maxItems: 1' is not
+> appropriate.
+>
+>> +
+>> +  iommus:
+>> +    maxItems: 1
+>> +    description: Phandle to apps_smmu node with sid mask
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +    description: Phandle for power domain node
+> Drop. That's every 'power-domains' property.
+ok
+>> +
+>> +  '#sound-dai-cells':
+>> +    const: 1
+>> +
+>> +  child-node:
+> I'm sure I said this on some review recently, but you are defining a
+> child node named 'child-node'. You need this under patternProperties
+> with the actual child node name.
+Done in v4.
+>
+>> +    description: Required properties for each DAI
+>> +    type: object
+>> +    properties:
+>> +      reg:
+>> +        description: Must be one of the DAI ID
+>> +                     (Usually part of dtbindings header)
+> Ideally, you'd define the range of values here.
+>
+>> +      qcom,playback-sd-lines:
+>> +        description: List of serial data lines to use for playback
+>> +                     Each SD line should be represented by a number from 0-3.
+> Needs a type $ref and 0-3 should be expressed as a schema.
+>
+> 'make dt_binding_check' should complain about this. You did run that,
+> right?
+Actually I reposted the Ajit's patch. Fixed all issues in v4.
+>> +      qcom,capture-sd-lines :
+>> +        description: List of serial data lines to use for capture
+>> +                     Each SD line should be represented by a number from 0-3.
+> ditto
+>
+>> +    required:
+>> +      -reg
+> space     ^
+>
+>> +    # Note that adding a subnode changes the default to "no lines configured",
+>> +    # so both playback and capture lines should be configured when a subnode
+>> +    # is added.
+>> +
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - clocks
+>> +  - clock-names
+>> +  - interrupts
+>> +  - interrupt-names
+>> +  - sound-dai-cells
+> Not a valid property.
+>
+>> +
+>> +optional:
+>> +  - qcom,adsp
+>> +
+>> +if:
+>> +  properties:
+>> +    compatible:
+>> +      contains:
+>> +        const: qcom,lpass-cpu-sc7180
+>> +
+>> +then:
+>> +  required:
+>> +    - iommus
+>> +    - power-domains
+>> +
+>> +examples:
+>> +  lpass@28100000 {
+> This is not valid. 'examples' should be a list.
+>
+>> +	compatible = "qcom,lpass-cpu";
+>> +	clocks = <&lcc AHBIX_CLK>,
+>> +		 <&lcc MI2S_OSR_CLK>,
+>> +		 <&lcc MI2S_BIT_CLK>;
+> The example will not build because the includes are missing.
+>
+>> +
+>> +	clock-names = "ahbix-clk",
+>> +		      "mi2s-osr-clk",
+>> +		      "mi2s-bit-clk";
+>> +
+>> +	interrupts = <0 85 1>;
+>> +        interrupt-names = "lpass-irq-lpaif";
+>> +
+>> +	iommus = <&apps_smmu 0x1020 0>;
+>> +	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+>> +
+>> +	reg = <0x28100000 0x10000>;
+>> +	reg-names = "lpass-lpaif";
+>> +	#sound-dai-cells = <1>;
+>> +	qcom,adsp = <&adsp>;
+>> +
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +
+>> +	/* Optional to set different MI2S SD lines */
+>> +	mi2s-quaternary@3 {
+>> +		reg = <MI2S_QUATERNARY>;
+>> +		qcom,playback-sd-lines = <0 1>;
+>> +  };
+>> -- 
+>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+>> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
+Thanks,
+
+Rohit
+
+-- 
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
+
