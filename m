@@ -2,176 +2,120 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A644BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6582206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA29206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHZY67fF"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="aN4DaK5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgGVK7m (ORCPT
+        id S1730046AbgGVLBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:59:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54218 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726161AbgGVK7k (ORCPT
+        Wed, 22 Jul 2020 07:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgGVLBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:59:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595415578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+wVWS16Js3jNxs8fWvzPR0bJin1jJLMhqNvzBKpigTI=;
-        b=dHZY67fFc74Kim10davzuwBatNSKlFMm/7nJ/Ogv6Ck0R3y6ahwtHk2hkoSAl3i6fjVIki
-        Nbk73+zggPhUhrMfbUbzO5mZ3+rXMGzecoZh0Y4Gc+mgXxWAyGeY/5mikhsKXZa8r7HyA8
-        lOSdLMc1COQU6J2ULuEgaizEepLlILo=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-Y_hqJt8IP868xE2IdigitQ-1; Wed, 22 Jul 2020 06:59:35 -0400
-X-MC-Unique: Y_hqJt8IP868xE2IdigitQ-1
-Received: by mail-wr1-f72.google.com with SMTP id s23so307290wrb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:59:35 -0700 (PDT)
+        Wed, 22 Jul 2020 07:01:14 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA029C0619DE
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:13 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b92so1098585pjc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t/lw3L2a4O6r9+8ujRDSrWE8Z9WKk+Ix5MhB5UaF3Ks=;
+        b=aN4DaK5g7tWRGugpRFhlfT++AV0FJ8hMycQ9kLmkaj60XmSafduW25uhNXH0KnV51F
+         WX3ihi0uM/2v2OF2mQHwStLtfEVWDQvHpPNsCqPD06MeNEEi6+NW/MhFXp2fwac1p2DM
+         b0o497LMfLuWrsNP00dg2El5fpfYEP3vCfrm7QrvyXqOxd2ve4KIohTc6w8zRLluvEDA
+         xicNg/Eiv7fYfUHR9pymJTPTgZeHpV34XaOVFDHrRZSDyGwgUz9+nFdnLDI2woKug1F8
+         6JY+KXSoAjjyJ6ZKy6MK6QmQEb6ashgCZP9qSSmRxAmAmNvckfOtkuzZVw3LKU9ti2K6
+         GdIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+wVWS16Js3jNxs8fWvzPR0bJin1jJLMhqNvzBKpigTI=;
-        b=ocpeS03jjzBLOGWwa+Qkb2KONqZc35F1WN84YStT/5LqtFM2oM+yHW8ww1WM6vnpyG
-         ++o1t8wkmkI9zQXlO1jFky0l9yKeqxYrNnE6oC1BiUtlOG6nZauabNxMCZdfV0EUvIgQ
-         6J+AIlsqqbPVoOl7MJotobzXLyXfzsAjbhMD4X3EmCBp6IL3lNTwJV0Rqc/QYJk9md0w
-         Qu7myAcv2sv+6j4dn2w/k45UYLzzA6pEz2LbGCUZVfG8zo8MfepSoEXJiNdgXDneDW4w
-         G+N3DLNCG4E7cXjQCTGwJlAIVgR9rfvlTd/PU4bOEX3OWww0ZbfAcYfqkK+9ztnz2rTN
-         hXTw==
-X-Gm-Message-State: AOAM531fa4M1hO6fDHgY6s1g2837HAZybkgbt2iMrHkoEoHj7jjCgkv/
-        Bxfq/7zLv8uPRde2NtKxYR70I0MY75xm4Q0oR7qBGyFuTUBLJ+zOXWGe7TAFVU4bd57UYuu2SyT
-        Dij1WNMvwsIRA1ySbdEwQSXwB
-X-Received: by 2002:a1c:9914:: with SMTP id b20mr7993420wme.15.1595415574373;
-        Wed, 22 Jul 2020 03:59:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy9QZoRxSWvVHYtlSvEF7S2m18o1nfqujK/Ho3Q48PC8wDk+ZICYWfCoWyUKVT38ewRFkGEVA==
-X-Received: by 2002:a1c:9914:: with SMTP id b20mr7993399wme.15.1595415574103;
-        Wed, 22 Jul 2020 03:59:34 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id 65sm48376335wre.6.2020.07.22.03.59.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t/lw3L2a4O6r9+8ujRDSrWE8Z9WKk+Ix5MhB5UaF3Ks=;
+        b=TTdkWj+IUrIfvkVv+EoJoNZid5YGfO7z9vlvDKG4MIn64lNywJREZBgp8RNAcBixNC
+         KGGeDxDT0YZw67VCf1U49H6chHWGEM4Q44/tE37C2JK8EENw/gF+z4LhYvDe/RYfAI99
+         cuUw4FCfhyxANGbjcPHDtUo8QrarRg2UKQW4iK98mJnjySZtFRlJXErPqGVCN84qxSv6
+         xrGTI49x9I+m0aDikx56NiO1CbwQpkNldxunmnXdF5peamwzOe5bWzMuNf1/nf9OPKNa
+         sTThDnoSeXejCeCN34YJ4XN6gkDNzZtma1rZoEa4JxG3lfsClC1JEtTR1quTP2ES1mOM
+         92og==
+X-Gm-Message-State: AOAM532d/XvCAiyl0qhYkpa1/D3J9tH7OCxxMNFf0CuQ46UAxPLHlXXg
+        fVYBeHSaCqupC/a1GnvoBGIKnUTPblI=
+X-Google-Smtp-Source: ABdhPJxRpXIIC0VKbI6quRIEHj6Nui9ulEJ5hOugSp6d9DYf8+st0/Z1rRVcorJnkX/hgDOcMLEe1A==
+X-Received: by 2002:a17:90a:f206:: with SMTP id bs6mr9533822pjb.48.1595415673141;
+        Wed, 22 Jul 2020 04:01:13 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:0:4a0f:cfff:fe35:d61b])
+        by smtp.gmail.com with ESMTPSA id d190sm23074673pfd.199.2020.07.22.04.01.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:59:33 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 06:59:29 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-Message-ID: <20200722052600-mutt-send-email-mst@kernel.org>
-References: <20200722001513.298315-1-jusual@redhat.com>
+        Wed, 22 Jul 2020 04:01:12 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+        netdev@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH v2] af_key: pfkey_dump needs parameter validation
+Date:   Wed, 22 Jul 2020 04:00:53 -0700
+Message-Id: <20200722110059.1264115-1-salyzyn@android.com>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 02:15:13AM +0200, Julia Suvorova wrote:
-> Scanning for PCI devices at boot takes a long time for KVM guests. It
-> can be reduced if KVM will handle all configuration space accesses for
-> non-existent devices without going to userspace [1]. But for this to
-> work, all accesses must go through MMCONFIG.
-> This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-> guests making MMCONFIG the default access method.
-> 
-> [1] https://lkml.org/lkml/2020/5/14/936
-> 
-> Signed-off-by: Julia Suvorova <jusual@redhat.com>
+In pfkey_dump() dplen and splen can both be specified to access the
+xfrm_address_t structure out of bounds in__xfrm_state_filter_match()
+when it calls addr_match() with the indexes.  Return EINVAL if either
+are out of range.
 
-Thanks for the patch!
-Some comments:
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+---
+v2: Added Fixes tag
 
+ net/key/af_key.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I guess the point is that on KVM, MMIO accesses of mmcfg are
-faster than two accesses needed for classic access - is that right?
-Worth mentioning in the commit log.
-
-> ---
->  arch/x86/pci/direct.c      | 5 +++++
->  arch/x86/pci/mmconfig_64.c | 3 +++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
-> index a51074c55982..8ff6b65d8f48 100644
-> --- a/arch/x86/pci/direct.c
-> +++ b/arch/x86/pci/direct.c
-> @@ -6,6 +6,7 @@
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/dmi.h>
-> +#include <linux/kvm_para.h>
->  #include <asm/pci_x86.h>
->  
->  /*
-> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
->  {
->  	if (type == 0)
->  		return;
-> +
-> +	if (raw_pci_ext_ops && kvm_para_available())
-> +		return;
-> +
->  	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
->  		 type);
->  	if (type == 1) {
-> diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
-> index 0c7b6e66c644..9eb772821766 100644
-> --- a/arch/x86/pci/mmconfig_64.c
-> +++ b/arch/x86/pci/mmconfig_64.c
-> @@ -10,6 +10,7 @@
->  #include <linux/init.h>
->  #include <linux/acpi.h>
->  #include <linux/bitmap.h>
-> +#include <linux/kvm_para.h>
->  #include <linux/rcupdate.h>
->  #include <asm/e820/api.h>
->  #include <asm/pci_x86.h>
-> @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
->  		}
->  
->  	raw_pci_ext_ops = &pci_mmcfg;
-> +	if (kvm_para_available())
-> +		raw_pci_ops = &pci_mmcfg;
->  
->  	return 1;
->  }
-
-The issue with anything like this is that it breaks if we ever do
-some config accesses that affect mmconfig, e.g. to move it, or if
-disabling or sizing BARs on some device (e.g. the PCI bridge)
-also disables MMCFG.
-
-I guess the explanation for why this works with QEMU is basically
-that at least on QEMU right now disabling memory on the root
-device does not disable MMCFG, and linux does not bother
-tweaking MMCFG range set up by the bios.
-
-Some suggestions:
-
-1.  It's worth mentioning all this in the commit log.
-
-2.  How do we know the above will always be correct?
-    Something like checking the ID of the root might be a good idea.
-    And given we know the ID, we can also make sure we don't
-    disable MMCFG. Does this make sense?
-
-3. Another idea: how about preferring pcbios on kvm instead? That can do
-   what's appropriate for the platform ...
-
-> -- 
-> 2.25.4
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index b67ed3a8486c..dd2a684879de 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -1849,6 +1849,13 @@ static int pfkey_dump(struct sock *sk, struct sk_buff *skb, const struct sadb_ms
+ 	if (ext_hdrs[SADB_X_EXT_FILTER - 1]) {
+ 		struct sadb_x_filter *xfilter = ext_hdrs[SADB_X_EXT_FILTER - 1];
+ 
++		if ((xfilter->sadb_x_filter_splen >=
++			(sizeof(xfrm_address_t) << 3)) ||
++		    (xfilter->sadb_x_filter_dplen >=
++			(sizeof(xfrm_address_t) << 3))) {
++			mutex_unlock(&pfk->dump_lock);
++			return -EINVAL;
++		}
+ 		filter = kmalloc(sizeof(*filter), GFP_KERNEL);
+ 		if (filter == NULL) {
+ 			mutex_unlock(&pfk->dump_lock);
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
