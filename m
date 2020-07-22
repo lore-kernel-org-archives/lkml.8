@@ -7,77 +7,77 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD559C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01220672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8BB120672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731757AbgGVBuQ (ORCPT
+        id S1731728AbgGVBwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 21:50:16 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55180 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731737AbgGVBuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 21:50:13 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CDFE7200779;
-        Wed, 22 Jul 2020 03:50:11 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 28E94200768;
-        Wed, 22 Jul 2020 03:49:59 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D8DF3402FC;
-        Wed, 22 Jul 2020 09:31:09 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, peter.chen@nxp.com,
-        oleksandr.suvorov@toradex.com, andreas@kemnade.info,
-        peng.fan@nxp.com, hverkuil-cisco@xs4all.nl, olof@lixom.net,
-        krzk@kernel.org, alexandre.torgue@st.com, patrice.chotard@st.com,
-        arnd@arndb.de, m.szyprowski@samsung.com, joel@jms.id.au,
-        lkundrak@v3.sk, christian.gmeiner@gmail.com,
-        bjorn.andersson@linaro.org, leoyang.li@nxp.com,
-        geert+renesas@glider.be, michael@walle.cc,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/4] ARM: imx_v6_v7_defconfig: Build in CONFIG_GPIO_MXC by default
-Date:   Wed, 22 Jul 2020 09:45:52 +0800
-Message-Id: <1595382353-17486-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
-References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 21 Jul 2020 21:52:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41922 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731632AbgGVBwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 21:52:32 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 46135F10C8CAD54FD757;
+        Wed, 22 Jul 2020 09:52:30 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
+ 09:52:22 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>, <Jack.Zhang1@amd.com>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/amdgpu/vcn3.0: Remove set but not used variable 'direct_poll'
+Date:   Wed, 22 Jul 2020 09:52:10 +0800
+Message-ID: <20200722015210.29488-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC
-as built-in manually.
+drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c: In function vcn_v3_0_start_sriov:
+drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c:1235:3:
+ warning: variable direct_poll set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+It is never used, so can remove it.
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 82d3ffb..02f83c8 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -226,6 +226,7 @@ CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCF857X=y
- CONFIG_GPIO_STMPE=y
- CONFIG_GPIO_74X164=y
-+CONFIG_GPIO_MXC=y
- CONFIG_POWER_RESET=y
- CONFIG_POWER_RESET_SYSCON=y
- CONFIG_POWER_RESET_SYSCON_POWEROFF=y
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c b/drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c
+index 910a4a32ff78..53f680134c40 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/vcn_v3_0.c
+@@ -1231,8 +1231,6 @@ static int vcn_v3_0_start_sriov(struct amdgpu_device *adev)
+ 		direct_wt = { {0} };
+ 	struct mmsch_v3_0_cmd_direct_read_modify_write
+ 		direct_rd_mod_wt = { {0} };
+-	struct mmsch_v3_0_cmd_direct_polling
+-		direct_poll = { {0} };
+ 	struct mmsch_v3_0_cmd_end end = { {0} };
+ 	struct mmsch_v3_0_init_header header;
+ 
+@@ -1240,8 +1238,6 @@ static int vcn_v3_0_start_sriov(struct amdgpu_device *adev)
+ 		MMSCH_COMMAND__DIRECT_REG_WRITE;
+ 	direct_rd_mod_wt.cmd_header.command_type =
+ 		MMSCH_COMMAND__DIRECT_REG_READ_MODIFY_WRITE;
+-	direct_poll.cmd_header.command_type =
+-		MMSCH_COMMAND__DIRECT_REG_POLLING;
+ 	end.cmd_header.command_type =
+ 		MMSCH_COMMAND__END;
+ 
 -- 
-2.7.4
+2.17.1
+
 
