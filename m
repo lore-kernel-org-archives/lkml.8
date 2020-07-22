@@ -2,82 +2,46 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEA22071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2fwuh96"
+	by mail.kernel.org (Postfix) with ESMTP id 43BD3207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbgGVP0q (ORCPT
+        id S1732793AbgGVP1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbgGVP0p (ORCPT
+        Wed, 22 Jul 2020 11:27:38 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35002 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730600AbgGVP1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:26:45 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A234C0619DC;
-        Wed, 22 Jul 2020 08:26:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so2283177wrj.13;
-        Wed, 22 Jul 2020 08:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=akcO108wudl5eEgjnEkCunNDPWVs+eb32qFL3qxkaXw=;
-        b=F2fwuh965Lrcv6Mm0JcItJPFlBbuhKsYu3vNEmQZNerCWr81bNRRX4fkIVyJXvACp/
-         FzkQT599/MCpybVn4aCNU0QzU7QZezbKdNmmG5k3Ql7hCsVAxG4C5dbO9YEGmRttgenP
-         liuwWy5QPuG6HDkDs5BqyLFpFZNcWp0hdtxeAyu9ns4TCRrzghh3vhyJE924/t0noFSa
-         UQl1YxYVdqdMd6yUm8UHewWEeLnoJyCtbHcvc+cjn2UNXhX1ON4DFLH5UfF02vc8PGvB
-         cSRU1ppxJM1pWIgRnSkXtsctrfgA97KJyOEAA4iScx23/65MFX73gSPVqy5te4OQiKAG
-         QFHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=akcO108wudl5eEgjnEkCunNDPWVs+eb32qFL3qxkaXw=;
-        b=ZCXm4s/Z5ZewrMnEZtagShCUIfpO89sHnWMGv8W9GDZMxiuqtR0Z89YkS5btg1PgQW
-         BBgBmqpFPCJiRNbgEE8bu3YQcDjGgMSYJlWUM5xgkWEBTylMEldeZsvf0QWs84s6Tou5
-         VrOGwJRBoQexfWHlF71U17uOtETUQgwjvX8YG5o4mp4GR/DLX8pCTDp/bIi/Fph9vEI7
-         cjw6SmUOzgLO2DiD9xBUuf5p+NHCFOWIHT/lSsr2d4PSiiFw8XHGP9H+EB+nyQwLNxoB
-         k9Nlzvl7pgYlxbTfNoYTTYb0IIWDg6fywFPIyix6HwFSn5l38Rhrb2nR0YmWt6dyaMyI
-         44GQ==
-X-Gm-Message-State: AOAM533n+wMHw8TXJ7VqIL8Mcsz5Qn28vsR6kL/R3IybeqxIPDz5PSPV
-        1myOH6IGzW9+vn24keltiRs=
-X-Google-Smtp-Source: ABdhPJzNhFaLsOgasoKvuzKRv3v1C9BYgx4EPcERrylzUFA6ZeQ9um13EegybBW95xbv9HkDiglmnw==
-X-Received: by 2002:adf:e701:: with SMTP id c1mr112470wrm.350.1595431604326;
-        Wed, 22 Jul 2020 08:26:44 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id u2sm54779wml.16.2020.07.22.08.26.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 08:26:43 -0700 (PDT)
-Subject: Re: [PATCH 1/4] i2c: mediatek: Add apdma sync in i2c driver
-To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
-Cc:     qiangming.xia@mediatek.com, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
- <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <58e23057-d84c-7fc2-e912-6569cbbf1b25@gmail.com>
-Date:   Wed, 22 Jul 2020 17:26:42 +0200
+        Wed, 22 Jul 2020 11:27:37 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6F6F22982CB
+Subject: Re: [PATCH v2] platform/chrome: cros_ec_typec: USB4 support
+To:     Prashant Malani <pmalani@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Rajmohan Mani <rajmohan.mani@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200710194017.1126000-1-pmalani@chromium.org>
+ <CACeCKadwsH2yhqegZubgJnLy+p0CM3H1DzXiA-72Gagy2aYB-A@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d09324a9-0a3e-3dd5-5521-dcd2d04a9d3f@collabora.com>
+Date:   Wed, 22 Jul 2020 17:27:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CACeCKadwsH2yhqegZubgJnLy+p0CM3H1DzXiA-72Gagy2aYB-A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,132 +49,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prashant,
 
-
-On 22/07/2020 14:31, Qii Wang wrote:
-> With the apdma remove hand-shake signal, it need to keep i2c and
-> apdma in sync manually.
+On 21/7/20 21:55, Prashant Malani wrote:
+> Hey Enric, Benson,
 > 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->   drivers/i2c/busses/i2c-mt65xx.c | 23 ++++++++++++++++++++---
->   1 file changed, 20 insertions(+), 3 deletions(-)
+> Just wondering if you've had a chance to review this patch.
 > 
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index deef69e..e6b984a 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -48,6 +48,9 @@
->   
->   #define I2C_DMA_CON_TX			0x0000
->   #define I2C_DMA_CON_RX			0x0001
-> +#define I2C_DMA_ASYNC_MODE		0x0004
-> +#define I2C_DMA_SKIP_CONFIG		0x0010
-> +#define I2C_DMA_DIR_CHANGE		0x0200
->   #define I2C_DMA_START_EN		0x0001
->   #define I2C_DMA_INT_FLAG_NONE		0x0000
->   #define I2C_DMA_CLR_FLAG		0x0000
-> @@ -205,6 +208,7 @@ struct mtk_i2c_compatible {
->   	unsigned char timing_adjust: 1;
->   	unsigned char dma_sync: 1;
->   	unsigned char ltiming_adjust: 1;
-> +	unsigned char apdma_sync: 1;
->   };
->   
->   struct mtk_i2c_ac_timing {
-> @@ -311,6 +315,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 1,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt6577_compat = {
-> @@ -324,6 +329,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt6589_compat = {
-> @@ -337,6 +343,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt7622_compat = {
-> @@ -350,6 +357,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt8173_compat = {
-> @@ -362,6 +370,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt8183_compat = {
-> @@ -375,6 +384,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 1,
->   	.dma_sync = 1,
->   	.ltiming_adjust = 1,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct of_device_id mtk_i2c_of_match[] = {
-> @@ -798,6 +808,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   	u16 start_reg;
->   	u16 control_reg;
->   	u16 restart_flag = 0;
-> +	u16 dma_sync = 0;
->   	u32 reg_4g_mode;
->   	u8 *dma_rd_buf = NULL;
->   	u8 *dma_wr_buf = NULL;
-> @@ -851,10 +862,16 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   		mtk_i2c_writew(i2c, num, OFFSET_TRANSAC_LEN);
->   	}
->   
-> +	if (i2c->dev_comp->apdma_sync) {
-> +		dma_sync = I2C_DMA_SKIP_CONFIG | I2C_DMA_ASYNC_MODE;
-> +		if (i2c->op == I2C_MASTER_WRRD)
-> +			dma_sync |= I2C_DMA_DIR_CHANGE;
-> +	}
-> +
->   	/* Prepare buffer data to start transfer */
->   	if (i2c->op == I2C_MASTER_RD) {
->   		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
-> -		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
-> +		writel(I2C_DMA_CON_RX | dma_sync, i2c->pdmabase + OFFSET_CON);
->   
->   		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
->   		if (!dma_rd_buf)
-> @@ -877,7 +894,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   		writel(msgs->len, i2c->pdmabase + OFFSET_RX_LEN);
->   	} else if (i2c->op == I2C_MASTER_WR) {
->   		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
-> -		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
-> +		writel(I2C_DMA_CON_TX | dma_sync, i2c->pdmabase + OFFSET_CON);
->   
->   		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
->   		if (!dma_wr_buf)
-> @@ -900,7 +917,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   		writel(msgs->len, i2c->pdmabase + OFFSET_TX_LEN);
->   	} else {
->   		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
-> -		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
-> +		writel(I2C_DMA_CLR_FLAG | dma_sync, i2c->pdmabase + OFFSET_CON);
->   
->   		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
->   		if (!dma_wr_buf)
+
+It's on my radar but I'm waiting for the dependencies to be merged.
+
+
+> Best regards,
 > 
+> -Prashant
+> 
+> On Fri, Jul 10, 2020 at 12:40 PM Prashant Malani <pmalani@chromium.org> wrote:
+>>
+>> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>>
+>> With USB4 mode the mux driver needs the Enter_USB Data
+>> Object (EUDO) that was used when the USB mode was entered.
+>> Though the object is not available in the driver, it is
+>> possible to construct it from the information we have.
+>>
+>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+
+For my own reference:
+
+Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+>> ---
+>>
+>> This patch depends on latest usb-next from Greg KH, this commit in
+>> particular:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=ad8db94d6813dc659bd4de0531a8a1150559eafb
+>>
+>> Changes in v2:
+>> - Removed EUDO bits for cable current and tunneling support.
+>>
+>>  drivers/platform/chrome/cros_ec_typec.c | 33 ++++++++++++++++++++++++-
+>>  1 file changed, 32 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+>> index 0c041b79cbba..a9700275a851 100644
+>> --- a/drivers/platform/chrome/cros_ec_typec.c
+>> +++ b/drivers/platform/chrome/cros_ec_typec.c
+>> @@ -13,6 +13,7 @@
+>>  #include <linux/platform_data/cros_ec_proto.h>
+>>  #include <linux/platform_data/cros_usbpd_notify.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/usb/pd.h>
+>>  #include <linux/usb/typec.h>
+>>  #include <linux/usb/typec_altmode.h>
+>>  #include <linux/usb/typec_dp.h>
+>> @@ -494,6 +495,34 @@ static int cros_typec_enable_dp(struct cros_typec_data *typec,
+>>         return typec_mux_set(port->mux, &port->state);
+>>  }
+>>
+>> +static int cros_typec_enable_usb4(struct cros_typec_data *typec,
+>> +                                 int port_num,
+>> +                                 struct ec_response_usb_pd_control_v2 *pd_ctrl)
+>> +{
+>> +       struct cros_typec_port *port = typec->ports[port_num];
+>> +       struct enter_usb_data data;
+>> +
+>> +       data.eudo = EUDO_USB_MODE_USB4 << EUDO_USB_MODE_SHIFT;
+>> +
+>> +       /* Cable Speed */
+>> +       data.eudo |= pd_ctrl->cable_speed << EUDO_CABLE_SPEED_SHIFT;
+>> +
+>> +       /* Cable Type */
+>> +       if (pd_ctrl->control_flags & USB_PD_CTRL_OPTICAL_CABLE)
+>> +               data.eudo |= EUDO_CABLE_TYPE_OPTICAL << EUDO_CABLE_TYPE_SHIFT;
+>> +       else if (pd_ctrl->control_flags & USB_PD_CTRL_ACTIVE_CABLE)
+>> +               data.eudo |= EUDO_CABLE_TYPE_RE_TIMER << EUDO_CABLE_TYPE_SHIFT;
+>> +
+>> +       data.active_link_training = !!(pd_ctrl->control_flags &
+>> +                                      USB_PD_CTRL_ACTIVE_LINK_UNIDIR);
+>> +
+>> +       port->state.alt = NULL;
+>> +       port->state.data = &data;
+>> +       port->state.mode = TYPEC_MODE_USB4;
+>> +
+>> +       return typec_mux_set(port->mux, &port->state);
+>> +}
+>> +
+>>  static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+>>                                 uint8_t mux_flags,
+>>                                 struct ec_response_usb_pd_control_v2 *pd_ctrl)
+>> @@ -514,7 +543,9 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+>>         if (ret)
+>>                 return ret;
+>>
+>> -       if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
+>> +       if (mux_flags & USB_PD_MUX_USB4_ENABLED) {
+>> +               ret = cros_typec_enable_usb4(typec, port_num, pd_ctrl);
+>> +       } else if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
+>>                 ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
+>>         } else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
+>>                 ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
+>> --
+>> 2.27.0.383.g050319c2ae-goog
+>>
