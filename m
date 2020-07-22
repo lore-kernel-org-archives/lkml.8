@@ -2,96 +2,120 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F72C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D24C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3DA20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501DF207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DbWp2jXc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qAxVGgyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbgGVJBl (ORCPT
+        id S1730979AbgGVJEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:01:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40054 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728100AbgGVJBk (ORCPT
+        Wed, 22 Jul 2020 05:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGVJED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:01:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595408499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MODKfj6PEnGdaynq2BuHvt1PqpJxgvTxzRg0/ny+Tz4=;
-        b=DbWp2jXcZgo+H89WwX+dcSUD7E8fPmvI8JaYJ5Q7wPkfpfYuOGlOC5yXUfUCs3HjZZqWee
-        7YlGaUzOT8FCsdMftcCHO+27YMBuhf1yrVclgXQUgcB3otYnuFp5V7eNt5Az2vUqLxz3eQ
-        LFmOW5TOBDO1YtELgPOYvxHZHKJz9+0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-z3pTMdV8Mhit8do0HU6sDQ-1; Wed, 22 Jul 2020 05:01:37 -0400
-X-MC-Unique: z3pTMdV8Mhit8do0HU6sDQ-1
-Received: by mail-wm1-f71.google.com with SMTP id l5so852033wml.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:01:36 -0700 (PDT)
+        Wed, 22 Jul 2020 05:04:03 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907F8C0619DC;
+        Wed, 22 Jul 2020 02:04:03 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id y9so270321oot.9;
+        Wed, 22 Jul 2020 02:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zxpuzEB9KMj0t9s7OpDkA/XsxcLlP2L79Bj3H31wGQg=;
+        b=qAxVGgydjt7gac3OWXNzknnBRu/Ayp4cFle9nv2nEPqB5M5+vdb0v3MDGbQ06e+7ay
+         b0TzDGT/L02h91uiZTDfpT+t8IGImRvqqRI6REKGm2NO2yM8pg5bu2/WMEPANPwESafj
+         NsfMyrZBjDtNsro5JfsYKKqZTaqDSpaj89xS8AHgBem4i5Ui7goYOUnYHn6X9Bxglawa
+         u3sQ0Cm74g2yY2Ik9zKg5Xz5etuPnsqFdCkdhqatBU+DL04f3Ui0HP96+t4hi5KGx9PQ
+         dGUTetX4hzJgJdDQBbmcRkvGE/hY25XhaSTujaxIV3M7KqqZDEP9L7DCYm2/ihxJjhq5
+         l1cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MODKfj6PEnGdaynq2BuHvt1PqpJxgvTxzRg0/ny+Tz4=;
-        b=pCidq6LYd+LhidWfj9W5tQZKfpkd6lv+lTP0XjxxIlrv/qZmBwHqHOlPZmxL/HoyxW
-         hsb+irFCnBv1VKMDnytkjtTGCfMxk6jMNqjlcngm/RLLufG+8b1NkTr4bJr7sbHAcTSz
-         Ch+EENxi+qVtzDVlTQWphwNGUd40Y2FB+8DXvF/YR2KkvlNgm0MWEyU8W8e1DbrCZrfl
-         kAJIPwO9DsAEyOMPn5KaCVXBBqovoLiTU0nxtISwfUG4f52Po07W5k1vbzK01JyhR8el
-         7d6hZySRwwHx9yWm1bRVSqI+cz6nO30Ba1y2WWRXRl+CtLq5GWuRjY6ZrbhJqi6wM7fR
-         t48A==
-X-Gm-Message-State: AOAM531VHzUaO+xBQo/56XEYfTLbrbtolOghpenyRXjvcq/M12PDWzsH
-        ohaLcTSDVhOcdfOR9cY65H2GJ3Erbyod9CJcWEr8dfgX9ITQnkqn4OQcGWP512Ci1IRPrbDsSyp
-        FmAUmeuL0kRKF+Qwx9e5n3Arn
-X-Received: by 2002:a5d:40ca:: with SMTP id b10mr32620168wrq.56.1595408495913;
-        Wed, 22 Jul 2020 02:01:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwIN3tzPA5jdW0eMoFjUkNdVR9b4YY5dHx3s7a3dm4qYN4GPi73083gER3O1dnqvdtozPBvjQ==
-X-Received: by 2002:a5d:40ca:: with SMTP id b10mr32620152wrq.56.1595408495715;
-        Wed, 22 Jul 2020 02:01:35 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.94.4])
-        by smtp.gmail.com with ESMTPSA id v12sm29607001wrs.2.2020.07.22.02.01.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 02:01:34 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 11:01:32 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     viro@zeniv.linux.org.uk, axboe@kernel.dk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] eventfd: Enlarge recursion limit to allow vhost to work
-Message-ID: <20200722090132.GB14912@localhost.localdomain>
-References: <20200410114720.24838-1-zhe.he@windriver.com>
- <20200703081209.GN9670@localhost.localdomain>
- <cbecaad6-48fc-3c52-d764-747ea91dc3fa@windriver.com>
- <20200706064557.GA26135@localhost.localdomain>
- <20200713132211.GB5564@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zxpuzEB9KMj0t9s7OpDkA/XsxcLlP2L79Bj3H31wGQg=;
+        b=nqMUjMEwwG3dP4pAofXgB0PP/z1wLsoga6I9UHooDg1004GGZij/7/Ji7Q/zUE2FfC
+         VZMNEMw75F9S2q6Xcd4jvuqm7MAX4qDp9Ftq391zw54hTtv+T+pu16iy4wpY0rrU2liG
+         k3gFA6iawigs0bZweXf25eyXkSIWz1qSSACJWyMx+gwICNkXWipTDxKM/P6yEQQICLNG
+         y6lgj7Ix9hEPJlkUEHxZPtUx6e2vzqUZTqcF0xESwjLHtlYyU4ZJhG0n8VjdMOUk7J5v
+         gH7ys/56yRTL1NFG5OybAz2ixhf0a8oAjn0Hb+wDAz0Vde64V9i0HsBbP5zYdFIWDyEO
+         SHmA==
+X-Gm-Message-State: AOAM532w5mY3n9xgwia5WJ/8Kk8B+vkXCkoztY+VmKkqUEW2QxQNqX8D
+        mmOgXHIInoRWzb3/082ECAxGVhCzvjNstGQsWW4=
+X-Google-Smtp-Source: ABdhPJyvkWCP9ZAp2wHyowUwbZiqTpOrvwaJyTM71SEZs7Fadah0GjZv4QqaCe1IG4/I4xEhqsLD0r+pvHu/A3NxZFs=
+X-Received: by 2002:a4a:4cc1:: with SMTP id a184mr27367539oob.62.1595408642769;
+ Wed, 22 Jul 2020 02:04:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713132211.GB5564@localhost.localdomain>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200722085849.GF1030@ninjato> <20200722090017.GG1030@ninjato>
+In-Reply-To: <20200722090017.GG1030@ninjato>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 22 Jul 2020 10:03:36 +0100
+Message-ID: <CA+V-a8vtCBYsDE2Tw4f-FgvfuZ3RUUNwEvfrbq-sv2+4H6VxNw@mail.gmail.com>
+Subject: Re: [PATCH 02/20] arm64: dts: renesas: r8a774e1: Add PCIe device nodes
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/07/20 15:22, Juri Lelli wrote:
+Hi Wolfram,
 
-[...]
+On Wed, Jul 22, 2020 at 10:00 AM Wolfram Sang <wsa@kernel.org> wrote:
+>
+> On Wed, Jul 22, 2020 at 10:58:49AM +0200, Wolfram Sang wrote:
+> > On Thu, Jul 16, 2020 at 06:18:17PM +0100, Lad Prabhakar wrote:
+> > > Add PCIe{0,1} device nodes for R8A774E1 SoC.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Hmm, doesn't apply on top of 5.8-rc6 for me. Is there a branch to pull
+> > for easier review?
+>
+> My fault, I missed the first series. Please note such dependencies in
+> the cover letter.
+>
+I didn't mention as they were already applied to Geert's tree [1]
 
-> Gentle ping about this issue (mainly addressing relevant maintainers and
-> potential reviewers). It's easily reproducible with PREEMPT_RT.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git/log/?h=renesas-arm-dt-for-v5.9
 
-Ping. Any comment at all? :-)
-
-Thanks,
-
-Juri
-
+Cheers,
+--Prabhakar
