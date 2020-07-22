@@ -2,89 +2,119 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
+	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E93AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5043AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8BB20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2B520717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJY1XYN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgGVTCI (ORCPT
+        id S1732073AbgGVTC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:02:08 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:47508 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgGVTCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:02:07 -0400
-Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jyK06-0005NH-5R; Wed, 22 Jul 2020 21:01:58 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, huangtao@rock-chips.com,
-        andy.yan@rock-chips.com, linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, kever.yang@rock-chips.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/of: Consider the state in which the ep is disabled
-Date:   Wed, 22 Jul 2020 21:01:56 +0200
-Message-ID: <3361390.LkKjKlf5PX@phil>
-In-Reply-To: <20200707112526.18438-1-hjc@rock-chips.com>
-References: <20200707112526.18438-1-hjc@rock-chips.com>
+        Wed, 22 Jul 2020 15:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgGVTCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:02:55 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16634C0619DC;
+        Wed, 22 Jul 2020 12:02:55 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id u8so1495828qvj.12;
+        Wed, 22 Jul 2020 12:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=12epvX/YDdXmyKZnFd07mtt1bamPJ0DstDN5iDweXtM=;
+        b=eJY1XYN/eqs5gaHFISnW7MlvUpIZZE2Z09LhmguAZfDAHOJKHDQbn78ZCY/zlVjj3C
+         Z13p2TUXhKnae2+0mdX/NAmZ9Qp1V7evVd8HoxqvX62G1J6Mn136JYEKh1uc7awz1DRt
+         LtQA1FxjizDXcBmbIU2r6rLUO24XTCKl0U07H/xZEicBsvGALeoqanhb3UnMAKlhDKG1
+         TYhm3AvNUwFhC5IdcO7iIZs/RzZ6paxh3cRZv/WKmRiRCWRaM+MyriAi8oSAurfdKv9q
+         O7CiBKINzBbckaL0dW2CJfwN3LruYeYrThQxOsyE+F0vMVXCzX87qxtC9ngvm/1acMuP
+         Ag8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=12epvX/YDdXmyKZnFd07mtt1bamPJ0DstDN5iDweXtM=;
+        b=S7VhFVTGRjqbQlXiRy10PYEtTQxu0a+e1eCcf18ctQ2SVb2Xw+utq6ttOPwtdaeMqP
+         604N1igv0SNyTDm7+026hDr7dnZJV+SPXIq6m/vHCtl2Ivd3pncdx/UB+u6jQwi+b4fM
+         FX1/VLtR/YtIovsBdQMWBxaNlQy/BZhIBvvUT9vKFEm37WC/mLH54uDEpcSkj6ENQ0Sb
+         h5lcQpwR5WON1EHivScHkvzsz4TYGGaUqog3cZ+8FHI3eO0deINf4VtweXD3MA0HMf56
+         aPJn49oL7WquEKvAlMTRk2MGXOsYKGku8+OcVipvbWU0p14JDyZZvTLTl0ix8ERaOc8E
+         npjA==
+X-Gm-Message-State: AOAM532yeAg/p5a0oxFA+UsURj/B870Y8Kqzt4dmyJx2/yKPjpqzrJNw
+        RqGJL37Ud6hd7Ojxwvap2AU=
+X-Google-Smtp-Source: ABdhPJxKfqgjc+tpXcSxtpjEKWq7KBS8lT1TQN2pdqTb1eZ3k2Gd79q4iBAfLZBK9y4qMJWZiuB7og==
+X-Received: by 2002:a0c:ec04:: with SMTP id y4mr1448669qvo.148.1595444574218;
+        Wed, 22 Jul 2020 12:02:54 -0700 (PDT)
+Received: from localhost.localdomain ([138.204.24.96])
+        by smtp.gmail.com with ESMTPSA id y12sm430437qto.87.2020.07.22.12.02.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 12:02:53 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id EAF9CC18B3; Wed, 22 Jul 2020 16:02:50 -0300 (-03)
+Date:   Wed, 22 Jul 2020 16:02:50 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     syzbot <syzbot+0e4699d000d8b874d8dc@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
+        vyasevich@gmail.com, hch@lst.de
+Subject: Re: KASAN: slab-out-of-bounds Write in sctp_setsockopt
+Message-ID: <20200722190250.GE3307@localhost.localdomain>
+References: <0000000000003b813605ab0bd243@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000003b813605ab0bd243@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 7. Juli 2020, 13:25:26 CEST schrieb Sandy Huang:
-> don't mask possible_crtcs if remote-point is disabled.
+On Wed, Jul 22, 2020 at 11:22:23AM -0700, syzbot wrote:
+> Hello,
 > 
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-changes in v2:
-- drop additional of_node_put, as ep will be put with the next
-  iteration of for_each_endpoint_of_node()
-
-
-As this touches a pretty central function is there something
-to keep in mind in regards to other DRM drivers?
-[question for the broader audience ;-) ]
-
-Heiko
-
-> ---
->  drivers/gpu/drm/drm_of.c | 3 +++
->  1 file changed, 3 insertions(+)
+> syzbot found the following issue on:
 > 
-> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-> index fdb05fbf72a0..565f05f5f11b 100644
-> --- a/drivers/gpu/drm/drm_of.c
-> +++ b/drivers/gpu/drm/drm_of.c
-> @@ -66,6 +66,9 @@ uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
->  	uint32_t possible_crtcs = 0;
->  
->  	for_each_endpoint_of_node(port, ep) {
-> +		if (!of_device_is_available(ep))
-> +			continue;
-> +
->  		remote_port = of_graph_get_remote_port(ep);
->  		if (!remote_port) {
->  			of_node_put(ep);
-> 
+> HEAD commit:    4f1b4da5 Merge branch 'net-atlantic-various-features'
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14b3a040900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2b7b67c0c1819c87
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0e4699d000d8b874d8dc
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c93358900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ab61f0900000
+
+The syz repo has:
+setsockopt$inet_sctp6_SCTP_MAX_BURST(r0, 0x84, 0x10, &(0x7f0000000100)=@assoc_value, 0x8)
+                      ^^^^^^^^^^^^^^           ^^^^
+
+#define SCTP_DELAYED_ACK_TIME   16
+#define SCTP_DELAYED_ACK SCTP_DELAYED_ACK_TIME
+#define SCTP_DELAYED_SACK SCTP_DELAYED_ACK_TIME
+#define SCTP_MAX_BURST  20              /* Set/Get max burst */
+
+C repro has:
+  syscall(__NR_setsockopt, r[0], 0x84, 0x10, 0x20000100ul, 8ul);
+                                       ^^^^
+
+So I'm wondering, what was the real intention of the call?
 
 
+Anyhow, the issue is real, introduced by ebb25defdc17 ("sctp: pass a
+kernel pointer to sctp_setsockopt_delayed_ack"). It used to use a
+local storage bigger than the data provided by the user and used
+one struct to read another's content on top of it. Quite masked.
+I'll cook a fix.
 
-
+  Marcelo
