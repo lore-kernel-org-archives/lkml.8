@@ -2,86 +2,91 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA04D20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD2820729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CEqxqaNL"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LkDOlyLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgGVHqd (ORCPT
+        id S1726697AbgGVHwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:46:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVHqd (ORCPT
+        Wed, 22 Jul 2020 03:52:43 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:22530 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726147AbgGVHwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:46:33 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45B6C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 00:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UtSNhIf2wpJr1Xu6wPJnrBrzTE5gyQVve7CwYw8dNtc=; b=CEqxqaNLXFqUG0/lq8sCbUl+px
-        +zsCBZ4wSYjVTZHgYdhKLg3OX0lReiMHBKKpiKdNHddVDCRuFcaH09IDFHyDMEnoZJD0F35A1VWjM
-        zgQ517U0gTMd5TwWkv0RPleM/CJ67f7CaDg6F6HaVzN7MuEE4ookPkJSTqF4ysA25IKDXIn+2M8S1
-        gDBI70R+Z46A7RgPkPCQtzv1JQnEpRIepHSHWDfQksWAPaJoEU6US7/V7+yeAa9CrDm22fppWKgty
-        Y8eOau7gL12wqclb70XhVVWF6gDTvm3EcdveQr/IojyxQtnWhI0l+U5htoxoZAlxpB7fhRHrCP5nv
-        1nxbSJnw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jy9SN-0003eB-MZ; Wed, 22 Jul 2020 07:46:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C57B303A02;
-        Wed, 22 Jul 2020 09:46:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DE71B29A6A87E; Wed, 22 Jul 2020 09:46:24 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 09:46:24 +0200
-From:   peterz@infradead.org
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <michaele@au1.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v2 06/10] powerpc/smp: Generalize 2nd sched domain
-Message-ID: <20200722074624.GP119549@hirez.programming.kicks-ass.net>
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
- <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
+        Wed, 22 Jul 2020 03:52:43 -0400
+X-UUID: 9e51686874a141e4bd91569b9cc8aec6-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=bsR4oIGCIYaOleiklZSpqTGoJRJab0JcJpe1Y+wzSDc=;
+        b=LkDOlyLSWi+7ZU9UhdFQ9j8xni92/9uUfhAfXtTT2PfPS/fuoVUuX/e6rKPibFmya0scX5n3gWkNZgvG78qpAzdGsuYw36a+Yf/TFSayU6PBpQ2CZwiXA/N/aQx2/rNK1/Av2FUis8V+pfqUuZjEtV6ni7XXk6tpv9ljw49u9qs=;
+X-UUID: 9e51686874a141e4bd91569b9cc8aec6-20200722
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 3796830; Wed, 22 Jul 2020 15:52:38 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 15:52:35 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 15:52:35 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 2/7] usb: phy: am335x: convert to devm_platform_ioremap_resource_byname
+Date:   Wed, 22 Jul 2020 15:51:10 +0800
+Message-ID: <1595404275-8449-2-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1595404275-8449-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1595404275-8449-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 9DB988DD4C58F5E8BA918A198B50C04108DA7A734B2DAD79509251980A3C6FA22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 05:08:10PM +0530, Srikar Dronamraju wrote:
-> Currently "CACHE" domain happens to be the 2nd sched domain as per
-> powerpc_topology. This domain will collapse if cpumask of l2-cache is
-> same as SMT domain. However we could generalize this domain such that it
-> could mean either be a "CACHE" domain or a "BIGCORE" domain.
+VXNlIGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZV9ieW5hbWUoKSB0byBzaW1wbGlmeSBj
+b2RlDQoNClNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVr
+LmNvbT4NCi0tLQ0KIGRyaXZlcnMvdXNiL3BoeS9waHktYW0zMzV4LWNvbnRyb2wuYyB8IDcgKyst
+LS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQoN
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9waHkvcGh5LWFtMzM1eC1jb250cm9sLmMgYi9kcml2
+ZXJzL3VzYi9waHkvcGh5LWFtMzM1eC1jb250cm9sLmMNCmluZGV4IGQxNmRmYzMuLjk3ZTY2MDMg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9waHkvcGh5LWFtMzM1eC1jb250cm9sLmMNCisrKyBi
+L2RyaXZlcnMvdXNiL3BoeS9waHktYW0zMzV4LWNvbnRyb2wuYw0KQEAgLTE0OSw3ICsxNDksNiBA
+QCBzdHJ1Y3QgcGh5X2NvbnRyb2wgKmFtMzM1eF9nZXRfcGh5X2NvbnRyb2woc3RydWN0IGRldmlj
+ZSAqZGV2KQ0KIA0KIHN0YXRpYyBpbnQgYW0zMzV4X2NvbnRyb2xfdXNiX3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogew0KLQlzdHJ1Y3QgcmVzb3VyY2UJKnJlczsNCiAJc3Ry
+dWN0IGFtMzM1eF9jb250cm9sX3VzYiAqY3RybF91c2I7DQogCWNvbnN0IHN0cnVjdCBvZl9kZXZp
+Y2VfaWQgKm9mX2lkOw0KIAljb25zdCBzdHJ1Y3QgcGh5X2NvbnRyb2wgKnBoeV9jdHJsOw0KQEAg
+LTE2NiwxMyArMTY1LDExIEBAIHN0YXRpYyBpbnQgYW0zMzV4X2NvbnRyb2xfdXNiX3Byb2JlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogDQogCWN0cmxfdXNiLT5kZXYgPSAmcGRldi0+
+ZGV2Ow0KIA0KLQlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsIElPUkVT
+T1VSQ0VfTUVNLCAicGh5X2N0cmwiKTsNCi0JY3RybF91c2ItPnBoeV9yZWcgPSBkZXZtX2lvcmVt
+YXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcmVzKTsNCisJY3RybF91c2ItPnBoeV9yZWcgPSBkZXZt
+X3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1lKHBkZXYsICJwaHlfY3RybCIpOw0KIAlp
+ZiAoSVNfRVJSKGN0cmxfdXNiLT5waHlfcmVnKSkNCiAJCXJldHVybiBQVFJfRVJSKGN0cmxfdXNi
+LT5waHlfcmVnKTsNCiANCi0JcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2
+LCBJT1JFU09VUkNFX01FTSwgIndha2V1cCIpOw0KLQljdHJsX3VzYi0+d2t1cCA9IGRldm1faW9y
+ZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0KKwljdHJsX3VzYi0+d2t1cCA9IGRldm1f
+cGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZV9ieW5hbWUocGRldiwgIndha2V1cCIpOw0KIAlpZiAo
+SVNfRVJSKGN0cmxfdXNiLT53a3VwKSkNCiAJCXJldHVybiBQVFJfRVJSKGN0cmxfdXNiLT53a3Vw
+KTsNCiANCi0tIA0KMS45LjENCg==
 
-What's the whole smallcore vs bigcore thing?
-
-Would it make sense to have an actual overview of the various topology
-layers somewhere? Because I'm getting lost and can't really make sense
-of the code due to that.
