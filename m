@@ -2,102 +2,80 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C50C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB5BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40CA20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595415331;
-	bh=M2x96i5KaNWg2BOe51Db2AB9asUsaUmui/319W5e/u8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xZ2jLARdRlyeX/967hhv+Vu9X9RmhTQjWKeUKlXPl72j0wH5mkoyxWwcy9VShPVK4
-	 jozWLTFUEYr/HOU2nGFGPLKzKB37yqR5JWZQjxmq6/ECnjvAC2jtliUxDUGZItKqkV
-	 egt671fhAA6+j5jIWoYdGQyFjrr341mNm0rLfKAk=
+	by mail.kernel.org (Postfix) with ESMTP id 98CCD206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgGVKza (ORCPT
+        id S1728163AbgGVK7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgGVKz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:55:28 -0400
-Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F15206F5;
-        Wed, 22 Jul 2020 10:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595415327;
-        bh=M2x96i5KaNWg2BOe51Db2AB9asUsaUmui/319W5e/u8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dELiU8CPE9hqRVfSPybQBVNB884h/qxqQJlJuvlEf7JHtUl1yPoVMaW3MnyuyN0Nm
-         XvX1KTLSrKxItM8phvuUWdj077x0beca7IZbfZ39z9fH/Q2ALVNxkQv76HrXC5A4Tb
-         Lybr6y38aUQnXP1oTHZeYYcMUCPXXHN/lnOU9+Nc=
-Date:   Wed, 22 Jul 2020 12:55:24 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     gregory.clement@bootlin.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 13/16] dt-bindings: i2c: mv64xxx: Add compatible for
- the A100 i2c node.
-Message-ID: <20200722105524.GO1030@ninjato>
-References: <cover.1594708863.git.frank@allwinnertech.com>
- <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
+        Wed, 22 Jul 2020 06:59:08 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:45278 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGVK7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:59:08 -0400
+Received: by mail-il1-f198.google.com with SMTP id c1so779336ilk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:59:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=+MTYhbpSCITOUxjmPnhjda3q0hd+gL2rgezFk7qJWaU=;
+        b=fM05A2EGkYQC548sKNU9ZPhN3AQx0CChu1Vk1u343bF+e4c/4pfJ5K9P6E/3i7eP7H
+         zotUvykZWEfldYzZHPhmYipabAy0i3eBq2KiROKMmv1+Y5VJlIY1L9SztW6snmkFA2nH
+         CM8IsL/VjQRxH+a+OxO8SmitfzE5c+Ulx9SCwsQ8EQdrTgf3Xj0jDg41NLWS6gn+cfNN
+         3hktStJZjRUkaMj9UZLgeuQ8y554rdXnnHwqZL5TWM8mWLuCUGtvsiXOa2OmD46XCV8T
+         14qyJvYdxZClUwilPL87QCBN/NeWDEri9Umi12ddRgwpID3Kx5mK0EAi/t/C1JkvUqje
+         Xt/g==
+X-Gm-Message-State: AOAM533s36wu3H0ViTSIgVbfnJWHu9HVukgdw1Kz9WYKE7VH6bq00+v8
+        G2TlaKIUYKIWa56UYuH6wVHFWF8NG+0UuFISo2zASBRJH/04
+X-Google-Smtp-Source: ABdhPJyKtjS5xuKw6MuALvst1m+b7QzvnWngYNvV6LqBHReEEtIkwFNADfCr8JbKjNbF2Bke/lig7Wv1Cfl+GLPkBzoFx6WWGl4H
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HFD/Dq8JdnjNvyuv"
-Content-Disposition: inline
-In-Reply-To: <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:d652:: with SMTP id x18mr31350270ilp.248.1595415547083;
+ Wed, 22 Jul 2020 03:59:07 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 03:59:07 -0700
+In-Reply-To: <000000000000cbef4a05a8ffc4ef@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f4040e05ab05a0dc@google.com>
+Subject: Re: BUG: using smp_processor_id() in preemptible code in tipc_crypto_xmit
+From:   syzbot <syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jmaloy@redhat.com, jon.maloy@ericsson.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, tuong.t.lien@dektech.com.au,
+        ying.xue@windreiver.com, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this issue to:
 
---HFD/Dq8JdnjNvyuv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit e1f32190cf7ddd55778b460e7d44af3f76529698
+Author: Tuong Lien <tuong.t.lien@dektech.com.au>
+Date:   Fri Nov 8 05:05:12 2019 +0000
 
-On Tue, Jul 14, 2020 at 03:18:39PM +0800, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
->=20
-> Allwinner A100 have a mv64xxx i2c interface available to be used.
->=20
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+    tipc: add support for AEAD key setting via netlink
 
-Applied to for-next, thanks!
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b738a0900000
+start commit:   11ba4688 Linux 5.8-rc5
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13b738a0900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b738a0900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
+dashboard link: https://syzkaller.appspot.com/bug?extid=263f8c0d007dc09b2dda
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14000957100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d30d67100000
 
+Reported-by: syzbot+263f8c0d007dc09b2dda@syzkaller.appspotmail.com
+Fixes: e1f32190cf7d ("tipc: add support for AEAD key setting via netlink")
 
---HFD/Dq8JdnjNvyuv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YGxwACgkQFA3kzBSg
-KbZ5QRAAi3zqkJXhL6j4BS1FZDrdNLKvyyxGd80R/X2rplKFshFPBu2dnjdSolJG
-efmbYtvEQN53OHkeBWxj9/TuNP6Pkok5yODeqKGZvTIVUHNjNP/d36cJry3P1uaC
-hmtlYJlzXDybuKvGoN8Zt78ERnA5KkPBf12p9sg4mJ3llaZwm/TWJDGfiGDYWZOz
-DWzb16NLy4W0QgHXXODd4GXLfq5uGf+kwosyHU8dlc6iMS1zTOEO2UPnb7nVAFKx
-qCbh4Kp+Yg5TXEJsCIhbWpmZ4/j/eIU8A9+N5Gtx8kEERfLoNg8yLcdP1M1Kh510
-WV4ngYtpiKaoD1rm4K+wVKA7K3Cg0KeCj1qxc0zFzEmpFHhfpPBg/4YbgYpYM7D1
-gTltn2d3TDGPMRSgELE+fzt7ir1YGCeHMZIsbyq/OaBHhLh9Y8dFAqcJfMIiLm11
-nSwCLXsEcCvrClyNwMF5JyblG8cjfdnAMXcVKd+lWoUEdadONK4yaC/39wUZCOdp
-Dw6U5/X/LqBAn0BIv7i237b5jNNnNRxLz5Jixgvw8hYPymhUjsMZXzlDB5ZwRxPD
-Q1CC2QP56n7h3oeXa5yvc6aYhrqwQuErxhWsBqFOeZ6L0lnB+lsrfkccyh/Jh+Zn
-VobysQnU0Hkznp2B7Ylcgcj8a96KBowvhcDnTFM90mo3y19jB14=
-=ZObD
------END PGP SIGNATURE-----
-
---HFD/Dq8JdnjNvyuv--
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
