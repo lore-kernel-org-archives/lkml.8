@@ -2,111 +2,201 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2012065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA1C20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgGVNO0 convert rfc822-to-8bit (ORCPT
+        id S1732179AbgGVNWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:14:26 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53483 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726003AbgGVNO0 (ORCPT
+        Wed, 22 Jul 2020 09:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgGVNWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:14:26 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-116-sW_rWl1MOCeWFYsGvVYncg-1; Wed, 22 Jul 2020 14:14:22 +0100
-X-MC-Unique: sW_rWl1MOCeWFYsGvVYncg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 14:14:22 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 22 Jul 2020 14:14:22 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Catalin Marinas' <catalin.marinas@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC] raw_copy_from_user() semantics
-Thread-Topic: [RFC] raw_copy_from_user() semantics
-Thread-Index: AQHWYBxygAO6HUS840aFW/LsMa1rTakTksjw
-Date:   Wed, 22 Jul 2020 13:14:21 +0000
-Message-ID: <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
-References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
- <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
- <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
- <20200722113707.GC27540@gaia>
-In-Reply-To: <20200722113707.GC27540@gaia>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 22 Jul 2020 09:22:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2331BC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 06:22:39 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jyEhd-0001tq-EI; Wed, 22 Jul 2020 15:22:33 +0200
+Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jyEhc-00057o-72; Wed, 22 Jul 2020 15:22:32 +0200
+Date:   Wed, 22 Jul 2020 15:22:32 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@codeaurora.org, sboyd@kernel.org,
+        michal.simek@xilinx.com, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org, rajanv@xilinx.com, jollys@xilinx.com,
+        tejasp@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>
+Subject: Re: [PATCH v2 1/3] clk: zynqmp: Use firmware specific common clock
+ flags
+Message-ID: <20200722132232.GC21264@pengutronix.de>
+References: <1595400932-303612-1-git-send-email-amit.sunil.dhamne@xilinx.com>
+ <1595400932-303612-2-git-send-email-amit.sunil.dhamne@xilinx.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1595400932-303612-2-git-send-email-amit.sunil.dhamne@xilinx.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:06:47 up 153 days, 20:37, 130 users,  load average: 0.14, 0.29,
+ 0.20
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas
-> Sent: 22 July 2020 12:37
+On Tue, 21 Jul 2020 23:55:30 -0700, Amit Sunil Dhamne wrote:
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
 > 
-> On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
-> > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > > I think we should try to get rid of the exact semantics.
-> >
-> > Side note: I think one of the historical reasons for the exact
-> > semantics was that we used to do things like the mount option copying
-> > with a "copy_from_user()" iirc.
-> >
-> > And that could take a fault at the end of the stack etc, because
-> > "copy_mount_options()" is nasty and doesn't get a size, and just
-> > copies "up to 4kB" of data.
-> >
-> > It's a mistake in the interface, but it is what it is. But we've
-> > always handled the inexact count there anyway by originally doing byte
-> > accesses, and at some point you optimized it to just look at where
-> > page boundaries might be..
+> Currently firmware passes CCF specific flags to ZynqMP clock driver.
+> So firmware needs to be updated if CCF flags are changed. The firmware
+> should have its own 'flag number space' that is distinct from the
+> common clk framework's 'flag number space'. So define and use ZynqMP
+> specific common clock flags instead of using CCF flags.
 > 
-> And we may have to change this again since, with arm64 MTE, the page
-> boundary check is insufficient:
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
+> Signed-off-by: Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+> ---
+>  drivers/clk/zynqmp/clk-gate-zynqmp.c |  4 +++-
+>  drivers/clk/zynqmp/clk-mux-zynqmp.c  |  4 +++-
+>  drivers/clk/zynqmp/clk-zynqmp.h      | 25 +++++++++++++++++++++++++
+>  drivers/clk/zynqmp/clkc.c            | 31 ++++++++++++++++++++++++++++++-
+>  drivers/clk/zynqmp/divider.c         |  5 +++--
+>  drivers/clk/zynqmp/pll.c             |  4 +++-
+>  6 files changed, 67 insertions(+), 6 deletions(-)
 > 
-> https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+[snip]
+> diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
+> index db8d0d7..11351f6 100644
+> --- a/drivers/clk/zynqmp/clkc.c
+> +++ b/drivers/clk/zynqmp/clkc.c
+> @@ -271,6 +271,32 @@ static int zynqmp_pm_clock_get_topology(u32 clock_id, u32 index,
+>         return ret;
+>  }
 > 
-> While currently the fault path is unlikely to trigger, with MTE in user
-> space it's a lot more likely since the buffer (e.g. a string) is
-> normally less than 4K and the adjacent addresses would have a different
-> colour.
-> 
-> I looked (though briefly) into passing the copy_from_user() problem to
-> filesystems that would presumably know better how much to copy. In most
-> cases the options are string, so something like strncpy_from_user()
-> would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
-> has a better way to figure out how much to copy.
+> +void zynqmp_clk_map_common_ccf_flags(const u32 zynqmp_flag,
+> +                                    unsigned long *ccf_flag)
+> +{
+> +       *ccf_flag = 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_SET_RATE_GATE) ?
+> +                     CLK_SET_RATE_GATE : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_SET_PARENT_GATE) ?
+> +                     CLK_SET_PARENT_GATE : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_SET_RATE_PARENT) ?
+> +                     CLK_SET_RATE_PARENT : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_IGNORE_UNUSED) ?
+> +                     CLK_IGNORE_UNUSED : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_GET_RATE_NOCACHE) ?
+> +                     CLK_GET_RATE_NOCACHE : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_SET_RATE_NO_REPARENT) ?
+> +                     CLK_SET_RATE_NO_REPARENT : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_GET_ACCURACY_NOCACHE) ?
+> +                     CLK_GET_ACCURACY_NOCACHE : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_RECALC_NEW_RATES) ?
+> +                     CLK_RECALC_NEW_RATES : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_SET_RATE_UNGATE) ?
+> +                     CLK_SET_RATE_UNGATE : 0;
+> +       *ccf_flag |= (zynqmp_flag & ZYNQMP_CLK_IS_CRITICAL) ?
+> +                     CLK_IS_CRITICAL : 0;
+> +}
 
-What about changing the mount code to loop calling get_user()
-to read aligned words until failure?
-Mount is fairly uncommon and the extra cost is probably small compared
-to the rest of doing a mount.
+What is the reason for returning the resulting flags via pointer? I would have
+expected something like the following function:
 
-	David
+unsigned long zynqmp_clk_flags_to_clk_flags(const u32 zyqnmp_flags)
+{
+	unsigned long flags = 0;
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+	if (zynqmp_flag & ZYNQMP_CLK_SET_RATE_GATE)
+		flags |= CLK_SET_RATE_GATE;
+	/* ... */
 
+	return flags;
+}
+
+Michael
+
+> +
+>  /**
+>   * zynqmp_clk_register_fixed_factor() - Register fixed factor with the
+>   *                                     clock framework
+> @@ -292,6 +318,7 @@ struct clk_hw *zynqmp_clk_register_fixed_factor(const char *name, u32 clk_id,
+>         struct zynqmp_pm_query_data qdata = {0};
+>         u32 ret_payload[PAYLOAD_ARG_CNT];
+>         int ret;
+> +       unsigned long flag;
+> 
+>         qdata.qid = PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS;
+>         qdata.arg1 = clk_id;
+> @@ -303,9 +330,11 @@ struct clk_hw *zynqmp_clk_register_fixed_factor(const char *name, u32 clk_id,
+>         mult = ret_payload[1];
+>         div = ret_payload[2];
+> 
+> +       zynqmp_clk_map_common_ccf_flags(nodes->flag, &flag);
+> +
+>         hw = clk_hw_register_fixed_factor(NULL, name,
+>                                           parents[0],
+> -                                         nodes->flag, mult,
+> +                                         flag, mult,
+>                                           div);
+> 
+>         return hw;
+> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+> index 66da02b..3ab57d9 100644
+> --- a/drivers/clk/zynqmp/divider.c
+> +++ b/drivers/clk/zynqmp/divider.c
+> @@ -311,8 +311,9 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
+> 
+>         init.name = name;
+>         init.ops = &zynqmp_clk_divider_ops;
+> -       /* CLK_FRAC is not defined in the common clk framework */
+> -       init.flags = nodes->flag & ~CLK_FRAC;
+> +
+> +       zynqmp_clk_map_common_ccf_flags(nodes->flag, &init.flags);
+> +
+>         init.parent_names = parents;
+>         init.num_parents = 1;
+> 
+> diff --git a/drivers/clk/zynqmp/pll.c b/drivers/clk/zynqmp/pll.c
+> index 92f449e..1b7e231 100644
+> --- a/drivers/clk/zynqmp/pll.c
+> +++ b/drivers/clk/zynqmp/pll.c
+> @@ -302,7 +302,9 @@ struct clk_hw *zynqmp_clk_register_pll(const char *name, u32 clk_id,
+> 
+>         init.name = name;
+>         init.ops = &zynqmp_pll_ops;
+> -       init.flags = nodes->flag;
+> +
+> +       zynqmp_clk_map_common_ccf_flags(nodes->flag, &init.flags);
+> +
+>         init.parent_names = parents;
+>         init.num_parents = 1;
+> 
+> --
+> 2.7.4
+> 
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+> 
