@@ -2,132 +2,130 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9632C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FA02086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:06:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="DtMjrfPK"
+	by mail.kernel.org (Postfix) with ESMTP id B721F2071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGVVGJ (ORCPT
+        id S1732729AbgGVVG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgGVVGI (ORCPT
+        Wed, 22 Jul 2020 17:06:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726447AbgGVVGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:06:08 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82317C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:06:08 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so3284623wml.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:06:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pUykGa+mtQ5qLEJzpM6lTm4DyeH44yHQyhTxXONta+M=;
-        b=DtMjrfPK33UpsHV7ieVtBoXhLIYg/jlJtL/BwT+t06XPoZuxolm3MZwCr//MnlAhv7
-         olpqshFL30eLQy1W2/XqwGp6TQ4RerXlU6stdyUroQWPo3+FNPAxh8fnNdtX7F+nvEDT
-         VJ2MTsTfnTkK/RixP0LCc4xF2mzNoGq5Ig8To=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pUykGa+mtQ5qLEJzpM6lTm4DyeH44yHQyhTxXONta+M=;
-        b=j59DKc/z7gACmBPZG2UjZXD9dUzbF/kMEA+lox5T8Va8P6RqrP27XzoxFi0lneWaFC
-         19rA2V/7ARIHO9QyPjxQm2/7AoPgI7XzVtEp/xknCo+ri/MPWdgj7s6qZznWsIJOIZ+g
-         hUGIgBsM6BUKFRng5KwNmDd9Sng+rWmtaOBzqLPqwxXcpAQJOXseXhkaQSUvFBiVxE+3
-         97Ovqi4bvcoCg6PhcttveHGZXDeOmgM2paGR8Un8JcyZ68HOJn2YUlXKd/dyUb1BOKU8
-         5lBG0h40rnLhu6TXQOpHDcpiBm/oQgiiSzeZoTNlCCsCW1yfWpV/SGhnAxo/srdIxMBy
-         zYGw==
-X-Gm-Message-State: AOAM533NIwrOb3DIgaoyY7I1+rJSX7ImRs6Rh+wIdSzhlmMeI/Pc6xVD
-        PUJXIjUBQEWbw6NTgNqvIUc2hzQAm3j/m6ERWxJe
-X-Google-Smtp-Source: ABdhPJwhNpZUdU/OnWtik2XTzTS4UMH8jcwWO9Hxmgqgvl3smhQmAYatCRp4hQfaVCyVsPrlT6KIYfciVm1lrAWgeu4=
-X-Received: by 2002:a1c:dc02:: with SMTP id t2mr1223465wmg.55.1595451967050;
- Wed, 22 Jul 2020 14:06:07 -0700 (PDT)
+        Wed, 22 Jul 2020 17:06:25 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ML49ow107103;
+        Wed, 22 Jul 2020 17:06:23 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ecpaxggc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 17:06:23 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06ML0rto032441;
+        Wed, 22 Jul 2020 21:01:20 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32brq85eh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 21:01:20 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ML1HuS59703400
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 21:01:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFABEA4054;
+        Wed, 22 Jul 2020 21:01:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7360DA4060;
+        Wed, 22 Jul 2020 21:01:17 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 22 Jul 2020 21:01:17 +0000 (GMT)
+From:   Schnelle <svens@linux.ibm.com>
+To:     seth.forshee@canonical.com
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: test_bpf regressions on s390 since 5.4
+References: <20200716152306.GH3644@ubuntu-x1>
+Date:   Wed, 22 Jul 2020 23:01:17 +0200
+In-Reply-To: <20200716152306.GH3644@ubuntu-x1> (seth forshee's message of
+        "Thu, 16 Jul 2020 10:23:06 -0500")
+Message-ID: <yt9dtuxzs1r6.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <CAK8P3a34sT2bQbkZUjaxaShzCkn+s35pXxS0UNhqGFu+t2hZYw@mail.gmail.com>
- <mhng-820ebe55-b4a3-4ab3-b848-6d3551b43091@palmerdabbelt-glaptop1> <CAK8P3a2VHXDLK6iba=NxSQ-t=9P7LSwzwx3XrK=N=M+qoX_oeQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a2VHXDLK6iba=NxSQ-t=9P7LSwzwx3XrK=N=M+qoX_oeQ@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 22 Jul 2020 14:05:55 -0700
-Message-ID: <CAOnJCULmX+vUcpEmBd5w7xjtZSFk=Ju2V=wBJCOXHQ8m9yG9-Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux-MM <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        Zong Li <zong.li@sifive.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_13:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=9 bulkscore=0 spamscore=9
+ impostorscore=0 clxscore=1011 suspectscore=3 phishscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=101 mlxscore=9
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 1:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Seth,
+
+seth.forshee@canonical.com writes:
+
+> The tests in lib/test_bpf.c were all passing in 5.4 when using the JIT,
+> but some are failing in 5.7/5.8. Some of the failures are due to the
+> removal of BPF_SIZE_MAX causing some expected failures to pass, which I
+> have already send a patch for [1]. The remaining failures appear to be
+> regressions. I haven't tried 5.5 or 5.6, so I'm not sure exactly when
+> they first appeared.
 >
-> On Wed, Jul 22, 2020 at 9:52 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> > On Wed, 22 Jul 2020 02:43:50 PDT (-0700), Arnd Bergmann wrote:
-> > > On Tue, Jul 21, 2020 at 9:06 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> > > The eventual goal is to have a split of 3840MB for either user or linear map
-> > > plus and 256MB for vmalloc, including the kernel. Switching between linear
-> > > and user has a noticeable runtime overhead, but it relaxes both the limits
-> > > for user memory and lowmem, and it provides a somewhat stronger
-> > > address space isolation.
-> >
-> > Ya, I think we decided not to do that, at least for now.  I guess the right
-> > answer there will depend on what 32-bit systems look like, and since we don't
-> > have any I'm inclined to just stick to the fast option.
+> These are the tests which currently fail:
 >
-> Makes sense. Actually on 32-bit Arm we see fewer large-memory
-> configurations in new machines than we had in the past before 64-bit
-> machines were widely available at low cost, so I expect not to see a
-> lot new hardware with more than 1GB of DDR3 (two 256Mbit x16 chips)
-> for cost reasons, and rv32 is likely going to be similar, so you may never
-> really see a need for highmem or the above hack to increase the
-> size of the linear mapping.
->
-> I just noticed that rv32 allows 2GB of lowmem rather than just the usual
-> 768MB or 1GB, at the expense of addressable user memory. This seems
-> like an unusual choice, but I also don't see any reason to change this
-> or make it more flexible unless actual users appear.
->
+>  test_bpf: #37 INT: MUL_X jited:1 ret -1 != 1 FAIL (1 times)
+>  test_bpf: #42 INT: SUB jited:1 ret -55 != 11 FAIL (1 times)
+>  test_bpf: #44 INT: MUL jited:1 ret 439084800 != 903446258 FAIL (1 times)
+>  test_bpf: #49 INT: shifts by register jited:1 ret -617 != -1 FAIL (1 times)
+>  test_bpf: #371 JNE signed compare, test 1 jited:1 ret 2 != 1 FAIL (1 times)
+>  test_bpf: #372 JNE signed compare, test 2 jited:1 ret 2 != 1 FAIL (1 times)
+>  test_bpf: #374 JNE signed compare, test 4 jited:1 ret 1 != 2 FAIL (1 times)
+>  test_bpf: #375 JNE signed compare, test 5 jited:1 ret 2 != 1 FAIL (1 times)
 
-I am a bit confused here. As per my understanding, RV32 supports 1GB
-of lowmem only
-as the page offset is set to 0xC0000000. The config option
-MAXPHYSMEM_2GB is misleading
-as RV32 actually allows 1GB of physical memory only. Any memory blocks beyond
-DRAM + 1GB are removed in setup_bootmem. IMHO, The current config
-should clarify that.
+The problem seems to be that the s390 JIT code generates a clgfi (compare
+logical 64 - 32 Bit) for JNE:
 
-Moreover, we should add 2G split under a separate configuration if we
-want to support that.
+kernel: test_bpf: #37 INT: MUL_X 
+bpf_jit: flen=8 proglen=66 pass=4 image=0000000035b17790 from=insmod pid=574
+kernel: JIT code: 00000000: a7 f4 00 03 07 e0 eb bf f0 70 00 24 c0 e1 ff ff
+kernel: JIT code: 00000010: ff ff c0 21 ff ff ff ff c0 31 00 00 00 03 b9 0c
+kernel: JIT code: 00000020: 00 23 c2 2e ff ff ff fd a7 84 00 04 a7 f4 00 05
+kernel: JIT code: 00000030: c0 e1 00 00 00 01 b9 04 00 2e eb bf f0 70 00 04
+kernel: JIT code: 00000040: 07 fe
+kernel: 000003ff800a0a48: a7f40003            brc        15,000003ff800a0a4e
+kernel: 000003ff800a0a4c: 07e0                bcr        14,%r0
+kernel: 000003ff800a0a4e: ebbff0700024        stmg       %r11,%r15,112(%r15)
+kernel: 000003ff800a0a54: c0e1ffffffff        lgfi       %r14,-1
+kernel: 000003ff800a0a5a: c021ffffffff        lgfi       %r2,-1
+kernel: 000003ff800a0a60: c03100000003        lgfi       %r3,3
+kernel: 000003ff800a0a66: b90c0023            msgr       %r2,%r3
+kernel: 000003ff800a0a6a: c22efffffffd        clgfi      %r2,4294967293
+kernel: 000003ff800a0a70: a7840004            brc        8,000003ff800a0a78
+kernel: 000003ff800a0a74: a7f40005            brc        15,000003ff800a0a7e
+kernel: 000003ff800a0a78: c0e100000001        lgfi       %r14,1
+kernel: 000003ff800a0a7e: b904002e            lgr        %r2,%r14
+kernel: 000003ff800a0a82: ebbff0700004        lmg        %r11,%r15,112(%r15)
+kernel: 000003ff800a0a88: 07fe                bcr        15,%r14
+kernel: jited:1 ret -1 != 1 FAIL (1 times)
 
->        Arnd
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+which in the MUL_X case compares than 0xfffffffffffffffd with
+0xfffffffd, which is wrong. Changing this to a proper compare fixes all
+the test cases for me. Thanks for reporting!
 
-
-
--- 
-Regards,
-Atish
+Regards
+Sven
