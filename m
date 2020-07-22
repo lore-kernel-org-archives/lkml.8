@@ -2,70 +2,73 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E218AC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71062206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BE820729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xg9RGuW9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p9PDOYZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbgGVKIP (ORCPT
+        id S1731922AbgGVKIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39378 "EHLO
+        Wed, 22 Jul 2020 06:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGVKIN (ORCPT
+        with ESMTP id S1726153AbgGVKIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:08:13 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5AD0C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:12 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a14so1316053wra.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:12 -0700 (PDT)
+        Wed, 22 Jul 2020 06:08:16 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB57C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:16 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so1288581wrw.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0pfIx0Qut2dD6gNBwCzcD0XIuQfHiiY0nxSbNEpbg8o=;
-        b=xg9RGuW9966NcN+bBp/hoNZJTbzJ/itBLyXaNSEAdkrJiSmzd2sj2/ZagGQWkY36WW
-         r0a03TYRxIj8DKxHKKGgpS+VUtYSmB08pM6e2i9G4+WyRCb+E0GSmJNFHRUMrf7tV9gk
-         qo9IbI8YLINwrZGuA88aFdszQaWLc0tp6G7c7GjzC80z0a0ekYnMi+ATLvmcahvKScx+
-         sLLAuJxTyTzkdbD+0/luozgBELcRRFTTc7WG6yBy7+0jihn338gb6ZMQUPB1cln7zQPl
-         u+0vFU2h5bE+Jmvxe7smAlP4u0EWj0s+4UDIC52TUsVUUCnT7lC778KC5N+PfLsIX7/b
-         ckJQ==
+        bh=tqJGHcqnXllhT3i9mtu0Lc+0SV7sbcx3SOZYG1XkKfA=;
+        b=p9PDOYZQBZFwInhDslg9WZYyix7m2mpmo8VPUoS4fP+oZL443IxmyIIyf8xSpK5H8K
+         goHRonE5J8yxyVzO2gJ5BXCGOSYZYPhnUhlqcZHkZLBJkDzXceAur9kOUe2NFkSLNAGR
+         soVnih22Rn8gbnCSRorLphgewQqtnwJZwEfBckmuzS/XL3/qoyBPk2yA0s0nOUxrHTPW
+         4uX82uZ1mzbXMn1GPjgh8Py8RyV3jE2ucb2932Yl2DkQCwD/pW7WHBKugp8ZM3yuWw/o
+         8fJhuK6k2W6jEHbuxTfpgLWhqItKYIk7qrX3FMlePfyKNdQ4cvRXfQsKvm57WN+NOokG
+         rh0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0pfIx0Qut2dD6gNBwCzcD0XIuQfHiiY0nxSbNEpbg8o=;
-        b=MFRLYx1ciyDCZO5uN8hKDhEF3hwF3inhntpvG+DIEpkoJcptRPGVAubqvB1TCA0mrA
-         +y2U2VtMgKL1SBJSflp5mTY+zfK0csNjikeMcbC561XS6QSJQW3anrfoCPuztRDdvob5
-         nZIH3J7IIBdiBCwGblU0H+bj4q6xYOMGdhTKUVU8BMe27Gb2+pgH/rW3JC61MKwSPLQi
-         6bWwGafRDQclORUbcy5mU/ytIIgX5NPSPwfybtp8wbYnScBfCeWyv4yTsD4gGG94Xq32
-         8euaIVRjS94CpJe7J7AM11goFhpWO2dK1UYfjYVJB+C+N5bsY7nDhNx1yegMxPLXcy1D
-         +WXA==
-X-Gm-Message-State: AOAM530znF2KOg/HKn4QmhR0RNSVmuqLZI6SAqdanIYHXIlF4U725gEF
-        3axZax84zG0h5QcT4Z46/39j6xtP6Ik=
-X-Google-Smtp-Source: ABdhPJyllcN8dagYVE1zQLerS6DIphs7nsBOylKTcRTvivNH8KYSmMPi/qMMioB2JB2gXZAoIHD4nw==
-X-Received: by 2002:adf:a299:: with SMTP id s25mr16235528wra.106.1595412491542;
-        Wed, 22 Jul 2020 03:08:11 -0700 (PDT)
+        bh=tqJGHcqnXllhT3i9mtu0Lc+0SV7sbcx3SOZYG1XkKfA=;
+        b=onnfd+Avn1ilRp1FcfZrqJ/Y4ve7yW9vcHsZ0zxBLXHKX2CRpgkYKVOLTHG3lLD1Fh
+         gGejlXa8MnRgpAFpn4d+/rCiJH9mw4AXGFhrTmRfsWl6IEwg8jwMOZU+sJAfkY+y7v7U
+         /rCGc8xZLhUmbwER4J4MChrbaCw368GTVEsLnGutxWhi+kruHSWjus8alUbDejAASZs+
+         s647n/XreItkFhFqu9WPx4fUVTR6IPC96u3j64/8E3ZDVY/oW5E5cFrCEtZMYj5TKP/X
+         AJ+crD1jcawe5wTD+/p4z8mNrVKAqLzBjpeVh32At2yBysUWbYHdenOR5h7r3yU4WdXN
+         HinA==
+X-Gm-Message-State: AOAM532PD9aR59GFIo43bZzqRp3yeaidrAuLXH3JD6UJiJLsHcbKr4dn
+        t7s8LmA9e+VwaHabB3rJRcnuRw==
+X-Google-Smtp-Source: ABdhPJyJF+IsSOwm01NqNnxjh+zl+l/Teu3+D5MO9+5TOTJgwB4WUDz6RUA3GHhCZeDUMWX9Wget5A==
+X-Received: by 2002:adf:9bdd:: with SMTP id e29mr17170709wrc.394.1595412495100;
+        Wed, 22 Jul 2020 03:08:15 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.10
+        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:08:10 -0700 (PDT)
+        Wed, 22 Jul 2020 03:08:14 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+Cc:     linux-kernel@vger.kernel.org, Freeman Liu <freeman.liu@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 01/14] nvmem: sprd: Fix return value of sprd_efuse_probe()
-Date:   Wed, 22 Jul 2020 11:06:52 +0100
-Message-Id: <20200722100705.7772-2-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 04/14] nvmem: sc27xx: add sc2730 efuse support
+Date:   Wed, 22 Jul 2020 11:06:55 +0100
+Message-Id: <20200722100705.7772-5-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
 References: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
@@ -76,33 +79,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Freeman Liu <freeman.liu@unisoc.com>
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+Add support to the new efuse IP which is integrated in the SC2730
+which includes multiple blocks in a single chip.
 
-Fixes: 096030e7f449 ("nvmem: sprd: Add Spreadtrum SoCs eFuse support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/sprd-efuse.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvmem/sc27xx-efuse.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvmem/sprd-efuse.c b/drivers/nvmem/sprd-efuse.c
-index 925feb21d5ad..59523245db8a 100644
---- a/drivers/nvmem/sprd-efuse.c
-+++ b/drivers/nvmem/sprd-efuse.c
-@@ -378,8 +378,8 @@ static int sprd_efuse_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/nvmem/sc27xx-efuse.c b/drivers/nvmem/sc27xx-efuse.c
+index ab5e7e0bc3d8..c825fc902d10 100644
+--- a/drivers/nvmem/sc27xx-efuse.c
++++ b/drivers/nvmem/sc27xx-efuse.c
+@@ -4,12 +4,14 @@
+ #include <linux/hwspinlock.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/nvmem-provider.h>
  
- 	efuse->base = devm_platform_ioremap_resource(pdev, 0);
--	if (!efuse->base)
--		return -ENOMEM;
-+	if (IS_ERR(efuse->base))
-+		return PTR_ERR(efuse->base);
+ /* PMIC global registers definition */
+ #define SC27XX_MODULE_EN		0xc08
++#define SC2730_MODULE_EN		0x1808
+ #define SC27XX_EFUSE_EN			BIT(6)
  
- 	ret = of_hwspin_lock_get_id(np, 0);
- 	if (ret < 0) {
+ /* Efuse controller registers definition */
+@@ -49,12 +51,29 @@
+ #define SC27XX_EFUSE_POLL_TIMEOUT	3000000
+ #define SC27XX_EFUSE_POLL_DELAY_US	10000
+ 
++/*
++ * Since different PMICs of SC27xx series can have different
++ * address , we should save address in the device data structure.
++ */
++struct sc27xx_efuse_variant_data {
++	u32 module_en;
++};
++
+ struct sc27xx_efuse {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct hwspinlock *hwlock;
+ 	struct mutex mutex;
+ 	u32 base;
++	const struct sc27xx_efuse_variant_data *var_data;
++};
++
++static const struct sc27xx_efuse_variant_data sc2731_edata = {
++	.module_en = SC27XX_MODULE_EN,
++};
++
++static const struct sc27xx_efuse_variant_data sc2730_edata = {
++	.module_en = SC2730_MODULE_EN,
+ };
+ 
+ /*
+@@ -119,7 +138,7 @@ static int sc27xx_efuse_read(void *context, u32 offset, void *val, size_t bytes)
+ 		return ret;
+ 
+ 	/* Enable the efuse controller. */
+-	ret = regmap_update_bits(efuse->regmap, SC27XX_MODULE_EN,
++	ret = regmap_update_bits(efuse->regmap, efuse->var_data->module_en,
+ 				 SC27XX_EFUSE_EN, SC27XX_EFUSE_EN);
+ 	if (ret)
+ 		goto unlock_efuse;
+@@ -169,7 +188,7 @@ static int sc27xx_efuse_read(void *context, u32 offset, void *val, size_t bytes)
+ 
+ disable_efuse:
+ 	/* Disable the efuse controller after reading. */
+-	regmap_update_bits(efuse->regmap, SC27XX_MODULE_EN, SC27XX_EFUSE_EN, 0);
++	regmap_update_bits(efuse->regmap, efuse->var_data->module_en, SC27XX_EFUSE_EN, 0);
+ unlock_efuse:
+ 	sc27xx_efuse_unlock(efuse);
+ 
+@@ -219,6 +238,7 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&efuse->mutex);
+ 	efuse->dev = &pdev->dev;
++	efuse->var_data = of_device_get_match_data(&pdev->dev);
+ 
+ 	econfig.stride = 1;
+ 	econfig.word_size = 1;
+@@ -238,7 +258,8 @@ static int sc27xx_efuse_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id sc27xx_efuse_of_match[] = {
+-	{ .compatible = "sprd,sc2731-efuse" },
++	{ .compatible = "sprd,sc2731-efuse", .data = &sc2731_edata},
++	{ .compatible = "sprd,sc2730-efuse", .data = &sc2730_edata},
+ 	{ }
+ };
+ 
 -- 
 2.21.0
 
