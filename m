@@ -2,328 +2,238 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48489C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 181E22065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E846D2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X9dpHaEa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZPMChI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgGVQax (ORCPT
+        id S1729604AbgGVQbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:30:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42570 "EHLO
+        Wed, 22 Jul 2020 12:31:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgGVQaw (ORCPT
+        with ESMTP id S1726349AbgGVQbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:30:52 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81ADC0619DC;
-        Wed, 22 Jul 2020 09:30:52 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0C4C6329;
-        Wed, 22 Jul 2020 18:30:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595435451;
-        bh=SITDhkOUbdrsc3Cb5i0KMNM/DMSYjYSzQlhrR3y07Ic=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X9dpHaEau0dcSQ2G1DygH0eDyDWc+YlxKOKfyDlwChbHiIqU2E40MSQg8c4E/5tJp
-         8lpW9uelTT22K5ASQjMpLn0xQD+jCK6iUTHplv9R86GZoAkeTKbOSEDkhM5OIwswDs
-         lUKkEQIB4GJT2eqf/ygO6zgAU08C9ExdgKs7R4Fc=
-Date:   Wed, 22 Jul 2020 19:30:45 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
-        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
-        hans.verkuil@cisco.com, sakari.ailus@linux.intel.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zhengsq@rock-chips.com, Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-Message-ID: <20200722163045.GN29813@pendragon.ideasonboard.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <20190816001323.GF5011@pendragon.ideasonboard.com>
- <30b6367d-9088-d755-d041-904ff2a48130@collabora.com>
- <20200722152459.GC1828171@chromium.org>
+        Wed, 22 Jul 2020 12:31:22 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1625C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:31:22 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so2494076wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5cFIfC+OivX43Sjf9f32csmhS5DY7aIU9Z07O3VWtcw=;
+        b=AZPMChI05cqAi6MJH6FVsLhvicI1WK5HMQXitvcHrozb28mVXKt4mHBw6hzbJPUYLA
+         v7sMwj9K/z22GFtHh1UrRmWzFq/JXOnUOT8zDfi0uGYCLcqfv8+dZK6H6q/W6PxdxnCv
+         +icjOafsjpwgElCSVU3kO0+CjlonJHB85haRUlOsJGyu8Odgw2ojecbyVBKcghVWQddz
+         EBxpq7dQDvAXRIlAWpGXWezcIDVrQ+yUMh48LqJ/RKoKy8ckwdlgWPcf/ajcnRaNaeWv
+         tzeMEyLA+l64z3PI4LBns2eunEX2DWYSGHqSoctyEPwdwtYTuyiJzzU2/jDS2608Mpxf
+         dy2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5cFIfC+OivX43Sjf9f32csmhS5DY7aIU9Z07O3VWtcw=;
+        b=DxFW1BYK027CnKjYTv6vpMozEyq/45pkBbN3aqKun8L3nWRmGnybqTdxQRgN7L9CvL
+         W6iXLcn7culeBA3FwPKTzPioh++nM5Lko+3/AWFx2WXfHA47y+8tEhN9QP5Y4UtRBQ0f
+         C2sofSsp2qCYyJPaZinNvGu1s5AkLvI/WifuYjBsJsOR3TmaTW9ncWzhcSyfkLFuapz4
+         j3hGpNjtFo7wicTRzkpLx1A76DhbeW2iqvqDqJSvAQxc0Y21+NrBw+Rfx3snvWaMfRbl
+         7q0Jfn23mjLwvi46EqTrX+bEXIEQbPZuiO93SgG2csP0AoduvfxfvI8ABCyb9CX2haQw
+         hA6A==
+X-Gm-Message-State: AOAM530Knq8sRnnwRifIcGMYDUCscBY9vR9CulaCWgW8Mpg0YgxP1zP4
+        kLts3JwnI0XFFIrGXz5TciQbOX8vS/rXimBT8HtOKQ==
+X-Google-Smtp-Source: ABdhPJxnhPXbDtp9CA6zjIv2f43C+u9uDm6Tg7C1qadvZWr0iaGfPx3K9UBHkwQyt8cpTtsIC08MagZzuwT8voXNtUo=
+X-Received: by 2002:adf:e68f:: with SMTP id r15mr358501wrm.196.1595435481117;
+ Wed, 22 Jul 2020 09:31:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200722152459.GC1828171@chromium.org>
+References: <0000000000009a764805ab04b5e1@google.com>
+In-Reply-To: <0000000000009a764805ab04b5e1@google.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Wed, 22 Jul 2020 18:31:09 +0200
+Message-ID: <CAG_fn=XwF9gHLsWYEvrS65gcvSR1T=cabByizGh6B=tFhLsp8w@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in __skb_flow_dissect (3)
+To:     syzbot <syzbot+051a531e8f1f59cf6dc9@syzkaller.appspotmail.com>
+Cc:     andriin@fb.com, Alexei Starovoitov <ast@kernel.org>,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>, jakub@cloudflare.com,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        mcroce@redhat.com, Networking <netdev@vger.kernel.org>,
+        ppenkov@google.com, sdf@google.com, songliubraving@fb.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dafna and Tomasz,
-
-On Wed, Jul 22, 2020 at 03:24:59PM +0000, Tomasz Figa wrote:
-> On Sat, Jul 11, 2020 at 01:04:31PM +0200, Dafna Hirschfeld wrote:
-> > On 16.08.19 02:13, Laurent Pinchart wrote:
-> > > On Tue, Jul 30, 2019 at 03:42:47PM -0300, Helen Koike wrote:
+On Wed, Jul 22, 2020 at 11:53 AM syzbot
+<syzbot+051a531e8f1f59cf6dc9@syzkaller.appspotmail.com> wrote:
 >
-> [snip]
+> Hello,
 >
-> > > > +static void rkisp1_isp_queue_event_sof(struct rkisp1_isp_subdev *isp)
-> > > > +{
-> > > > +	struct v4l2_event event = {
-> > > > +		.type = V4L2_EVENT_FRAME_SYNC,
-> > > > +		.u.frame_sync.frame_sequence =
-> > > > +			atomic_inc_return(&isp->frm_sync_seq) - 1,
-> > > 
-> > > I would move the increment to the caller, hiding it in this function is
-> > > error-prone (and if you look at the caller I'm pointing out one possible
-> > > error :-)).
-> > > 
-> > > In general usage of frm_sync_seq through the driver seems to be very
-> > > race-prone. It's read in various IRQ handling functions, all coming from
-> > > the same IRQ, so that part is fine (and wouldn't require an atomic
-> > > variable), but when read from the buffer queue handlers I really get a
-> > > red light flashing in my head. I'll try to investigate more when
-> > > reviewing the next patches.
-> > 
-> > I see that the only place were 'frame_sequence' is read outside of the irq
-> > handlers is in the capture in 'rkisp1_vb2_buf_queue':
-> > 
-> > 	/*
-> >          * If there's no next buffer assigned, queue this buffer directly
-> >          * as the next buffer, and update the memory interface.
-> >          */
-> >         if (cap->is_streaming && !cap->buf.next &&
-> >             atomic_read(&cap->rkisp1->isp.frame_sequence) == -1) {
-> >                 cap->buf.next = ispbuf;
-> >                 rkisp1_set_next_buf(cap);
-> >         } else {
-> >                 list_add_tail(&ispbuf->queue, &cap->buf.queue);
-> >         }
-> >
-> > This "if" condition seems very specific, a case where we already stream but v-start was not yet received.
-> > I think it is possible to remove the test 'atomic_read(&cap->rkisp1->isp.frame_sequence) == -1'
-> > from the above condition so that the next buffer is updated in case it is null not just before the first
-> > v-start signal.
-> 
-> We don't have this special case in the Chrome OS code.
-> 
-> I suppose it would make it possible to resume the capture 1 frame
-> earlier after a queue underrun, as otherwise the new buffer would be
-> only programmed after the next frame start interrupt and used for the
-> next-next frame.  However, it's racy, because programming of the buffer
-> addresses is not atomic and could end up with the hardware using few
-> plane addresses from the new buffer and few from the dummy buffer.
-> 
-> Given that and also the fact that a queue underrun is a very special
-> case, where the system was already having problems catching up, I'd just
-> remove this special case.
-> 
-> [snip]
+> syzbot found the following issue on:
+
+Sorry for the noise. This is a false report caused by incorrect
+copy_to_user() instrumentation after KMSAN rebase.
+Should be fixed now.
+
+#syz invalid
+
+
+> HEAD commit:    14525656 compiler.h: reinstate missing KMSAN_INIT
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D154bb20f10000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc534a9fad6323=
+722
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D051a531e8f1f59c=
+f6dc9
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-projec=
+t/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D13946658900=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D17adcb6f10000=
+0
 >
-> > > > +void rkisp1_isp_isr(unsigned int isp_mis, struct rkisp1_device *dev)
-> > > > +{
-> > > > +	void __iomem *base = dev->base_addr;
-> > > > +	unsigned int isp_mis_tmp = 0;
-> > > 
-> > > _tmp are never good names :-S
-> > > 
-> > > > +	unsigned int isp_err = 0;
-> > > 
-> > > Neither of these variable need to be initialised to 0.
-> > > 
-> > > > +
-> > > > +	/* start edge of v_sync */
-> > > > +	if (isp_mis & CIF_ISP_V_START) {
-> > > > +		rkisp1_isp_queue_event_sof(&dev->isp_sdev);
-> > > 
-> > > This will increment the frame sequence number. What if the interrupt is
-> > > slightly delayed and the next frame starts before we get a change to
-> > > copy the sequence number to the buffers (before they will complete
-> > > below) ?
-> > 
-> > Do you mean that we get two sequental v-start signals and then the next
-> > frame-end signal in MI_MIS belongs to the first v-start signal of the two?
-> > How can this be solved? I wonder if any v-start signal has a later signal
-> > that correspond to the same frame so that we can follow it?
-> > 
-> > Maybe we should have one counter that is incremented on v-start signal,
-> > and another counter that is incremented uppon some other signal?
-> 
-> We're talking about a hard IRQ. I can't imagine the interrupt handler
-> being delayed for a time close to a full frame interval (~16ms for 60
-> fps) to trigger such scenario.
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+051a531e8f1f59cf6dc9@syzkaller.appspotmail.com
+>
+> batman_adv: batadv0: Interface activated: batadv_slave_1
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> BUG: KMSAN: uninit-value in __skb_flow_dissect+0x30f0/0x8440 net/core/flo=
+w_dissector.c:1163
+> CPU: 0 PID: 8524 Comm: syz-executor152 Not tainted 5.8.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1df/0x240 lib/dump_stack.c:118
+>  kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+>  __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+>  __skb_flow_dissect+0x30f0/0x8440 net/core/flow_dissector.c:1163
+>  skb_flow_dissect_flow_keys include/linux/skbuff.h:1310 [inline]
+>  ___skb_get_hash net/core/flow_dissector.c:1520 [inline]
+>  __skb_get_hash+0x131/0x480 net/core/flow_dissector.c:1586
+>  skb_get_hash include/linux/skbuff.h:1348 [inline]
+>  udp_flow_src_port+0xa5/0x690 include/net/udp.h:220
+>  geneve_xmit_skb drivers/net/geneve.c:895 [inline]
+>  geneve_xmit+0xdf1/0x2bf0 drivers/net/geneve.c:1005
+>  __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
+>  netdev_start_xmit include/linux/netdevice.h:4625 [inline]
+>  xmit_one net/core/dev.c:3556 [inline]
+>  dev_hard_start_xmit+0x50e/0xa70 net/core/dev.c:3572
+>  __dev_queue_xmit+0x2f8d/0x3b20 net/core/dev.c:4131
+>  dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
+>  pppoe_sendmsg+0xb43/0xb90 drivers/net/ppp/pppoe.c:900
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg net/socket.c:672 [inline]
+>  kernel_sendmsg+0x433/0x440 net/socket.c:692
+>  sock_no_sendpage+0x235/0x300 net/core/sock.c:2853
+>  kernel_sendpage net/socket.c:3644 [inline]
+>  sock_sendpage+0x25b/0x2c0 net/socket.c:945
+>  pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:448
+>  splice_from_pipe_feed fs/splice.c:502 [inline]
+>  __splice_from_pipe+0x565/0xf00 fs/splice.c:626
+>  splice_from_pipe fs/splice.c:661 [inline]
+>  generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:834
+>  do_splice_from fs/splice.c:846 [inline]
+>  direct_splice_actor+0x1fd/0x580 fs/splice.c:1016
+>  splice_direct_to_actor+0x6b2/0xf50 fs/splice.c:971
+>  do_splice_direct+0x342/0x580 fs/splice.c:1059
+>  do_sendfile+0x101b/0x1d40 fs/read_write.c:1540
+>  __do_compat_sys_sendfile fs/read_write.c:1622 [inline]
+>  __se_compat_sys_sendfile+0x301/0x3c0 fs/read_write.c:1605
+>  __ia32_compat_sys_sendfile+0x56/0x70 fs/read_write.c:1605
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+>  __do_fast_syscall_32+0x2aa/0x400 arch/x86/entry/common.c:477
+>  do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+>  do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+>  entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+> RIP: 0023:0xf7f13549
+> Code: Bad RIP value.
+> RSP: 002b:00000000ffd520cc EFLAGS: 00000217 ORIG_RAX: 00000000000000bb
+> RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000000005
+> RDX: 0000000000000000 RSI: 000000007fffffff RDI: 0000000000000006
+> RBP: 0000000020000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>
+> Uninit was stored to memory at:
+>  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+>  kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+>  kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+>  kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+>  __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+>  pppoe_sendmsg+0xaed/0xb90 drivers/net/ppp/pppoe.c:896
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg net/socket.c:672 [inline]
+>  kernel_sendmsg+0x433/0x440 net/socket.c:692
+>  sock_no_sendpage+0x235/0x300 net/core/sock.c:2853
+>  kernel_sendpage net/socket.c:3644 [inline]
+>  sock_sendpage+0x25b/0x2c0 net/socket.c:945
+>  pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:448
+>  splice_from_pipe_feed fs/splice.c:502 [inline]
+>  __splice_from_pipe+0x565/0xf00 fs/splice.c:626
+>  splice_from_pipe fs/splice.c:661 [inline]
+>  generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:834
+>  do_splice_from fs/splice.c:846 [inline]
+>  direct_splice_actor+0x1fd/0x580 fs/splice.c:1016
+>  splice_direct_to_actor+0x6b2/0xf50 fs/splice.c:971
+>  do_splice_direct+0x342/0x580 fs/splice.c:1059
+>  do_sendfile+0x101b/0x1d40 fs/read_write.c:1540
+>  __do_compat_sys_sendfile fs/read_write.c:1622 [inline]
+>  __se_compat_sys_sendfile+0x301/0x3c0 fs/read_write.c:1605
+>  __ia32_compat_sys_sendfile+0x56/0x70 fs/read_write.c:1605
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+>  __do_fast_syscall_32+0x2aa/0x400 arch/x86/entry/common.c:477
+>  do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+>  do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+>  entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+>
+> Local variable ----hdr@pppoe_sendmsg created at:
+>  pppoe_sendmsg+0xa6/0xb90 drivers/net/ppp/pppoe.c:843
+>  pppoe_sendmsg+0xa6/0xb90 drivers/net/ppp/pppoe.c:843
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-I've been burnt too many times by making such statements and then seeing
-a wifi driver disablign interrupts for 40ms... :-S We can only perform
-as well as the system and the hardware allow us to, I understand we
-can't solve all issues related to long interrupt delays as that would
-require more hardware support. I'm not sure what an appropriate best
-effort level is though.
 
-> > > > +
-> > > > +		writel(CIF_ISP_V_START, base + CIF_ISP_ICR);
-> > > 
-> > > Do you need to clear all interrupt bits individually, can't you write
-> > > isp_mis to CIF_ISP_ICR at the beginning of the function to clear them
-> > > all in one go ?
-> > > 
-> > > > +		isp_mis_tmp = readl(base + CIF_ISP_MIS);
-> > > > +		if (isp_mis_tmp & CIF_ISP_V_START)
-> > > > +			v4l2_err(&dev->v4l2_dev, "isp icr v_statr err: 0x%x\n",
-> > > > +				 isp_mis_tmp);
-> > > 
-> > > This require some explanation. It looks like a naive way to protect
-> > > against something, but I think it could trigger under normal
-> > > circumstances if IRQ handling is delayed, and wouldn't do much anyway.
-> > > Same for the similar constructs below.
-> > > 
-> > > > +	}
-> > > > +
-> > > > +	if ((isp_mis & CIF_ISP_PIC_SIZE_ERROR)) {
-> > > > +		/* Clear pic_size_error */
-> > > > +		writel(CIF_ISP_PIC_SIZE_ERROR, base + CIF_ISP_ICR);
-> > > > +		isp_err = readl(base + CIF_ISP_ERR);
-> > > > +		v4l2_err(&dev->v4l2_dev,
-> > > > +			 "CIF_ISP_PIC_SIZE_ERROR (0x%08x)", isp_err);
-> > > 
-> > > What does this mean ?
-> > > 
-> > > > +		writel(isp_err, base + CIF_ISP_ERR_CLR);
-> > > > +	} else if ((isp_mis & CIF_ISP_DATA_LOSS)) {
-> > > 
-> > > Are CIF_ISP_PIC_SIZE_ERROR and CIF_ISP_DATA_LOSS mutually exclusive ?
-> > > 
-> > > > +		/* Clear data_loss */
-> > > > +		writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
-> > > > +		v4l2_err(&dev->v4l2_dev, "CIF_ISP_DATA_LOSS\n");
-> > > > +		writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
-> > > > +	}
-> > > > +
-> > > > +	/* sampled input frame is complete */
-> > > > +	if (isp_mis & CIF_ISP_FRAME_IN) {
-> > > > +		writel(CIF_ISP_FRAME_IN, base + CIF_ISP_ICR);
-> > > > +		isp_mis_tmp = readl(base + CIF_ISP_MIS);
-> > > > +		if (isp_mis_tmp & CIF_ISP_FRAME_IN)
-> > > > +			v4l2_err(&dev->v4l2_dev, "isp icr frame_in err: 0x%x\n",
-> > > > +				 isp_mis_tmp);
-> > > > +	}
-> > > > +
-> > > > +	/* frame was completely put out */
-> > > 
-> > > "put out" ? :-) What's the difference between ISP_FRAME_IN and ISP_FRAME
-> > > ? The two comments could do with a bit of brush up, and I think the
-> > > ISP_FRAME_IN interrupt could be disabled as it doesn't perform any
-> > > action.
-> > 
-> > Those two oneline comments are just copy-paste from the datasheet.
-> > 
-> > ""
-> > 5 MIS_FRAME_IN sampled input frame is complete
-> > 1 MIS_FRAME frame was completely put out
-> > ""
-> > 
-> > Unfrotunately, the datasheet does not add any further explanation about those signals.
-> 
-> My loose recollection is that the former is signaled when then frame
-> is fully input to the ISP and the latter when the ISP completes
-> outputting the frame to the next block in the pipeline, but someone
-> would need to verify this, for example by printing timestamps for all
-> the various interrupts.
-> 
-> > > 
-> > > > +	if (isp_mis & CIF_ISP_FRAME) {
-> > > > +		u32 isp_ris = 0;
-> > > 
-> > > No need to initialise this to 0.
-> > > 
-> > > > +		/* Clear Frame In (ISP) */
-> > > > +		writel(CIF_ISP_FRAME, base + CIF_ISP_ICR);
-> > > > +		isp_mis_tmp = readl(base + CIF_ISP_MIS);
-> > > > +		if (isp_mis_tmp & CIF_ISP_FRAME)
-> > > > +			v4l2_err(&dev->v4l2_dev,
-> > > > +				 "isp icr frame end err: 0x%x\n", isp_mis_tmp);
-> > > > +
-> > > > +		isp_ris = readl(base + CIF_ISP_RIS);
-> > > > +		if (isp_ris & (CIF_ISP_AWB_DONE | CIF_ISP_AFM_FIN |
-> > > > +			       CIF_ISP_EXP_END | CIF_ISP_HIST_MEASURE_RDY))
-> > > > +			rkisp1_stats_isr(&dev->stats_vdev, isp_ris);
-> > > 
-> > > Is there a guarantee that the statistics will be fully written out
-> > > before the video frame itself ? And doesn't this test if any of the
-> > > statistics is complete, not all of them ? I think the logic is wrong, it
-> > 
-> > The datasheet does not add any explanation of what is expected to come first.
-> > Should we wait until all statistics measurements are done? In the struct
-> > sent to userspace there is a bitmaks for which of the statistics are read.
-> > I think that if only part of the statistics are ready, we can already send the once
-> > that are ready to userspace.
-> 
-> If we look further into the code, rkisp1_stats_isr() checks the
-> interrupt status mask passed to it and reads out only the parameters
-> with indicated completion. The statistics metadata buffer format
-> includes a bit mask which tells the userspace which measurements are
-> available.
-> 
-> However, I think I've spotted a bug there. At the beginning of
-> rkisp1_stats_isr(), all the 4 interrupt status bits are cleared,
-> regardless of the mask used later to decide which readouts need to be
-> done. This could mean that with an unfortunate timing, some measurements
-> would be lost. So at least the code should be fixed to only clear the
-> interrupts bits really handled.
-> 
-> As for whether to send separate buffers for each measurement, I guess
-> it's not a bad thing to let the userspace access the ones available
-> earlier. Now I only don't recall why we decided to put all the
-> measurements into one metadata structure, rather than splitting the 4
-> into their own structures and buffer queues...
-> 
-> > > seems it should be moved out of the CIF_ISP_FRAME test, to a test of its
-> > > own. It's hard to tell for sure without extra information though (for
-> > > instance why are the stats-related bits read from CIF_ISP_RIS, when
-> > > they seem to be documented as valid in CIF_ISP_ISR), but this should be
-> > > validated, and most probably fixed. Care should be taken to keep
-> > > synchronisation of sequence number between the different queues.
-> > 
-> > I see that the capture buffers are done before incrementing the frame_sequence with
-> > the following explanation:
-> > 
-> > 	/*
-> >          * Call rkisp1_capture_isr() first to handle the frame that
-> >          * potentially completed using the current frame_sequence number before
-> >          * it is potentially incremented by rkisp1_isp_isr() in the vertical
-> >          * sync.
-> >          */
-> > 
-> > I think reading the stats/params should also be done before calling rkisp1_capture_isr
-> > for the same reason. (so to match the correct frame_sequence)
-> 
-> My recollection of the sequence of interrupts in this hardware is like
-> this:
-> 
-> CIF_ISP_V_START (frame 0)
->   CIF_ISP_FRAME_IN (frame 0)
->     CIF_ISP_FRAME (frame 0)
->       CIF_ISP_AWB_DONE
->       CIF_ISP_AFM_FIN
->       CIF_ISP_EXP_END
->       CIF_ISP_HIST_MEASURE_RDY
->       CIF_MI_FRAME*
->       CIF_ISP_V_START (frame 1)
->         CIF_ISP_FRAME_IN (frame 1)
->           CIF_ISP_FRAME (frame 1)
->             ...
-> 
-> where the interrupts at the same indentation level can happen
-> independently of each other. Again, someone would have to verify this.
 
--- 
-Regards,
+--=20
+Alexander Potapenko
+Software Engineer
 
-Laurent Pinchart
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
