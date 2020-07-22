@@ -6,63 +6,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA321C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2509FC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E0422482
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8F3206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595379450;
-	bh=7iBO9qAzu3W4vqYwTj8OAZVdpjSA840j43rS3hv9c30=;
+	s=default; t=1595379455;
+	bh=YFc1Ge3NE0T3bXCC5Gf3GooNVqwqCIBxiYL/YiH8W8o=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=obGKG+MQKKTiEyfHtmXIQfxfjPdyrqjGEooXO2wvAjOyVjyHunkXckeU6AWGtjrIU
-	 TL8BsHvn+aeZBhN8h7ISDuuMDCA1JNEteZECCQ8YUNEHbVrzr2j0jITBkXGvbETXYp
-	 oao3rWVysBc3UWM904lzQrO6fXScbBj/PmwbGaZ0=
+	b=nKe0on78ADBgXpGRxUF9jkq5gaTx2TKkmpxSrUCqEB6YjVfeIO/pnlE8fS6/Rs4cJ
+	 YFy9qAl7RllyAOJF5fOxwAsvwpvuI5O6lv9htDRNpgxeGOqukuXXoqWSksCQ2k5A6n
+	 Bni26B9CZIL9DK/eDYMw0GaaUfpQdkZfJBH3C4HE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbgGVA53 (ORCPT
+        id S1731618AbgGVA5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59702 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 20:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbgGVA52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:57:28 -0400
+        id S1731474AbgGVA5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 20:57:33 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B723B208E4;
-        Wed, 22 Jul 2020 00:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A85FC208E4;
+        Wed, 22 Jul 2020 00:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595379448;
-        bh=7iBO9qAzu3W4vqYwTj8OAZVdpjSA840j43rS3hv9c30=;
+        s=default; t=1595379453;
+        bh=YFc1Ge3NE0T3bXCC5Gf3GooNVqwqCIBxiYL/YiH8W8o=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=yTDpiXat221JvH0s1ZIbnHZugIYl8yvvTN9C9/WUTUWO0Y11KHNSe0fQeQKZZwPp+
-         KNwexfPqW2jV+yQBXvBqKXSD6/GUxm5lsGbazPIrh5QHb1Q6F25pwwDezmgejQnZeW
-         5jwE/cQVbzpWytI1M+fYolijFv2wXknw/kqjk/Rk=
-Date:   Wed, 22 Jul 2020 01:57:15 +0100
+        b=BtVqH/lPGZbQNQGutQe2W2b5gVSMnKSuKUu9razqy0V/4QB6v0uzos6diTaXDgi5Y
+         ojvuOZHz6MlAuRhVLl2NN5Czj87Es2jqzCWEImv5i0aRinMrbQcR7ZypStWJNtVL76
+         HT51hxX9SEkI6yDGv0E9euRMGQ7tmvgzumvwblow=
+Date:   Wed, 22 Jul 2020 01:57:20 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-In-Reply-To: <20200716042053.1927676-1-saravanak@google.com>
-References: <20200716042053.1927676-1-saravanak@google.com>
-Subject: Re: [PATCH v3 0/4] regulator_sync_state() support
-Message-Id: <159537943520.49645.15927719980916646550.b4-ty@kernel.org>
+To:     robh+dt@kernel.org, Kathiravan T <kathirav@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        agross@kernel.org, devicetree@vger.kernel.org,
+        bjorn.andersson@linaro.org, lgirdwood@gmail.com
+Cc:     sricharan@codeaurora.org, sivaprak@codeaurora.org
+In-Reply-To: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
+References: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
+Subject: Re: [PATCH V3 0/4] Add frequency / voltage scaling support for IPQ6018 SoC
+Message-Id: <159537943520.49645.2118659765116943270.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 21:20:49 -0700, Saravana Kannan wrote:
-> Consider the following example:
-> - regulator-X is provided by device-X.
-> - regulator-X is a supplier to device-A, device-B and device-C.
-> - device-A is off/inactive from boot.
-> - device-B and device-C are left on/active by the bootloader
-> - regulator-X is left on boot by the bootloader at 2000 mV to supply
->   device-B and device-C.
+On Mon, 20 Jul 2020 11:42:19 +0530, Kathiravan T wrote:
+> IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator of MP5496
+> controls the APSS and SDCC voltage scaling respectively. Add support
+> for the same.
+> 
+> changes since V2:
+> 	- Rebased on top of linux-next 20200717 tag
+> 	- Addressed Rob's comment to drop the 'syscon' node in qcom,smd-rpm.yaml
+> 	- Picked up the Reviewed-by tag for qcom,smd-rpm-regulator.yaml
+> 	- Regulator patches part of V2 was picked up by Mark and it's available in linux-next tree
 > 
 > [...]
 
@@ -72,8 +73,8 @@ Applied to
 
 Thanks!
 
-[1/1] regulator: core: Add destroy_regulator()
-      commit: e1794aa43f17bf2512c10370c6be6ea24a6f29d0
+[1/1] regulator: convert QCOM SMD-RPM regulator document to YAML schema
+      commit: 175a1d84154d4077da437b873319bd094b266ab8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
