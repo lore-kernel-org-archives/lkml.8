@@ -2,139 +2,112 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0510C4345A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17D9C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD60207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F94207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WHkUNeeu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbFOpYWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732195AbgGVRIi (ORCPT
+        id S1732088AbgGVRJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
+        Wed, 22 Jul 2020 13:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731670AbgGVRI3 (ORCPT
+        with ESMTP id S1726462AbgGVRJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:08:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EFBC0619E0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:08:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gc15so3145192pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:08:29 -0700 (PDT)
+        Wed, 22 Jul 2020 13:09:55 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCACC0619DC;
+        Wed, 22 Jul 2020 10:09:54 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so3257561ljg.13;
+        Wed, 22 Jul 2020 10:09:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VaLaF6yamBawSm5kIKdzTcEbjjs1t/WxcQSgHm9Kq7Y=;
-        b=WHkUNeeu1Xlha2UJQ+Co9e4kZ1SOTALKH9eWds9DKQGx50y3sG6OauogygOiPW92NE
-         nM5+GllcvmAfs+EUR2FptgZX2Kvgfs0fAKmSVtx1ZhQzDx9Zy3zhriJ63Cl4JqrgPyV0
-         3GmMRas7mmFdhqa8CHG6gazr4HI3vlNoVeVwjHEuSG9ZVykZ/xw3uAEpOZwgun5tdjvj
-         AlYFgj2emHebrm+zey6aalEHZ8MuHf4yjmyhv6BxnI4zUIB70Xj80mFDMeP2yt2ZKvK7
-         9zjWWpePmZBAjXGlFMhQyHz70iTz/JIneP9+fEm8K9Vyn6dzYr+B68yb0aEAJYFX1pxb
-         CB2A==
+        bh=nqelWpCqH7nOe0oSyngzrBNpGRC3PyDyz91JHpls3Xk=;
+        b=QbFOpYWq197fvdaI4E7hogiJ5z6DhlnMwFbSAyObyOYxQk/ojAWvAxU5xeCwIzRoyp
+         bGpv6okHRbaDCk3F5IJgGXS3Wesi1t0HKLxD0rWbntKFa+o4FEuZ/aNqddB2gT9rJhFi
+         ekTLt46VwAAqYYSOS+Ti6gpiM2sULyDbPlDxrV2EC1wYfvYmkCiCMfUA2sia4+eUOZSm
+         DpKqJKTrsnJtuquGnG9/42hXesw1S5DhQmqbpijEy6OLbaHF8RyBbV+paN+wC914K+DB
+         Om2JyFGEZL8bVoXG7xFZFOn3b/hxnJAALpQKOVax/+9YzLSzmIzDLinAT6/sMjMDDXxC
+         pBiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VaLaF6yamBawSm5kIKdzTcEbjjs1t/WxcQSgHm9Kq7Y=;
-        b=iCi6gF4ZEFS/c1dyqZshcQtTZ7N6OcxhaLRyMv4npyBIv1BN5AGThObExDiNRgIp86
-         ycfBOGNoZwcQVtKvHrfgjqxFfbZrlfQ3V7PE6BG30o1vLqCMyCtR5hIzgSzzG1GEC8Im
-         WduSlbN1PaI69sk7vQ/3q/0xVrbs9ekjoELB7dvRA3rG7U/Oi8GArshkTh3Ake1xf1hn
-         pJkx56UfYlDKbO24BCXX/qBJIKcPOl4FXpU0Q82FCVXxWBP3KcbIKd96kZViErPYa3jd
-         UuTHopVBYUDAkV0+CVk0R0Fm+DmbjLhySM0keoKh1IVlboZhehV0kNZXpSH/jv4Ujoqq
-         AxHw==
-X-Gm-Message-State: AOAM532aWh13nb66o5sEJ32kXSKgA6slsxrXRXyBSo/FG4VnTSNGvOHJ
-        +Ra4hsy8I+eMZa/nUsthzRq3S3/MD/E7tjK5vsJ3XQ==
-X-Google-Smtp-Source: ABdhPJzKYQ6DmTiW/2UpPTlu6aqslRhBhWcjTOPR2Y/sZJ6l7sf695aW7sWrvk5too3R6PH4NWNrIZcS2i/48uFJeGw=
-X-Received: by 2002:a17:90a:784b:: with SMTP id y11mr363849pjl.51.1595437708705;
- Wed, 22 Jul 2020 10:08:28 -0700 (PDT)
+        bh=nqelWpCqH7nOe0oSyngzrBNpGRC3PyDyz91JHpls3Xk=;
+        b=k3wIByikShOaLkMc1Od1tLGwmab7hG9iKbyDULD2uOU+twM7jxZwJn7IWxMKu4MHdb
+         2Um8GRz1pnUx6Or1zrBKsXK1VsWCVoqGK+g00uoLdXwN0ZIjQs2SY1NcE1kAF8LDVTbU
+         yec/VCQcloskNDtE/ZzYq3LleNJ4xRU3nJ3wI0s/geljdUP2TUb94FrsAN6b/v2V85qz
+         Jc8CdA/0064dg3bpth9PgXEMbwg5daPhBpS5N9zJpR/T9aF3Yn/Utf8++olez5sBFyLk
+         PhS8JcXdC8vjOKTUaUQOoc6YRUqpWtVVYj0gjyhYOFPmkN984ejeamHM/Bn02+cBPon8
+         gMPw==
+X-Gm-Message-State: AOAM531Eo1Acr/3nE2b3iA/QDxbQGbfSLq/pJjtA4rrQ+YuHqM+38kBs
+        PxMKDcJqZcbVcOCj/Ts6eT4QBe1XJMs+YgpX9dqBNA==
+X-Google-Smtp-Source: ABdhPJzXtI3YBeORsJYQmEu28fVJCUtGV7rd5sI5b8tsC3G9617tl0t2hP5zU+hEdegWolMtC+F/64n4emjrett5jt8=
+X-Received: by 2002:a2e:90da:: with SMTP id o26mr95292ljg.91.1595437793253;
+ Wed, 22 Jul 2020 10:09:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200722110139.24778-1-georgi.djakov@linaro.org> <20200722110139.24778-2-georgi.djakov@linaro.org>
-In-Reply-To: <20200722110139.24778-2-georgi.djakov@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 22 Jul 2020 10:07:52 -0700
-Message-ID: <CAGETcx-QM8P2nVxcQJZz+m5Zwi==2qLfinb0FkDXJ7dNVP5bEA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] interconnect: Add sync state support
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Mike Tipton <mdtipton@codeaurora.org>, okukatla@codeaurora.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200720124737.118617-1-hch@lst.de> <20200720204756.iengwcguikj2yrxt@ast-mbp.dhcp.thefacebook.com>
+ <20200722075657.GB26554@lst.de>
+In-Reply-To: <20200722075657.GB26554@lst.de>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 22 Jul 2020 10:09:41 -0700
+Message-ID: <CAADnVQKy0+rsRftEzp4PvxQtj7uOwybz0Nd4_h0FR37p2Q=X4w@mail.gmail.com>
+Subject: Re: get rid of the address_space override in setsockopt
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        netfilter-devel <netfilter-devel@vger.kernel.org>,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        "moderated list:ETHERNET BRIDGE" <bridge@lists.linux-foundation.org>,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>, mptcp@lists.01.org,
+        lvs-devel@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 4:01 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On Wed, Jul 22, 2020 at 12:56 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> The bootloaders often do some initial configuration of the interconnects
-> in the system and we want to keep this configuration until all consumers
-> have probed and expressed their bandwidth needs. This is because we don't
-> want to change the configuration by starting to disable unused paths until
-> every user had a chance to request the amount of bandwidth it needs.
+> On Mon, Jul 20, 2020 at 01:47:56PM -0700, Alexei Starovoitov wrote:
+> > > a kernel pointer.  This is something that works for most common sockopts
+> > > (and is something that the ePBF support relies on), but unfortunately
+> > > in various corner cases we either don't use the passed in length, or in
+> > > one case actually copy data back from setsockopt, so we unfortunately
+> > > can't just always do the copy in the highlevel code, which would have
+> > > been much nicer.
+> >
+> > could you rebase on bpf-next tree and we can route it this way then?
+> > we'll also test the whole thing before applying.
 >
-> To accomplish this we will implement an interconnect specific sync_state
-> callback which will synchronize (aggregate and set) the current bandwidth
-> settings when all consumers have been probed.
->
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
->  include/linux/interconnect-provider.h |  5 +++
->  2 files changed, 66 insertions(+)
->
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index e5f998744501..0c4e38d9f1fa 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -26,6 +26,8 @@
->
->  static DEFINE_IDR(icc_idr);
->  static LIST_HEAD(icc_providers);
-> +static int providers_count;
-> +static bool synced_state;
->  static DEFINE_MUTEX(icc_lock);
->  static struct dentry *icc_debugfs_dir;
->
-> @@ -255,6 +257,12 @@ static int aggregate_requests(struct icc_node *node)
->                         continue;
->                 p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
->                              &node->avg_bw, &node->peak_bw);
-> +
-> +               /* during boot use the initial bandwidth as a floor value */
-> +               if (!synced_state) {
-> +                       node->avg_bw = max(node->avg_bw, node->init_avg);
-> +                       node->peak_bw = max(node->peak_bw, node->init_peak);
-> +               }
+> The bpf-next tree is missing all my previous setsockopt cleanups, so
+> there series won't apply.
 
-Sorry I didn't reply earlier.
-
-I liked your previous approach with the get_bw ops. The v2 approach
-forces every interconnect provider driver to set up these values even
-if they are okay with just maxing out the bandwidth. Also, if they can
-actually query their hardware, this adds additional steps for them.
-
-I think the default should be:
-1. Query the current bandwidth at boot and use that.
-2. If that's not available, max out the bandwidth.
-
-The interconnect providers that don't like maxing out and don't have
-real get_bw() capability can just cache and return the last set_bw()
-values. And they start off with those cached values matching whatever
-init_bw they need.
-
-That way, the default case (can get bw or don't care about maxing out)
-would be easy and the extra work would be limited to drivers that want
-neither.
-
--Saravana
+Right. I've realized that after sending that email two days ago.
+Now bpf-next->net-next PR is pending and as soon as it's merged
+bpf-next will have all the recent bits.
