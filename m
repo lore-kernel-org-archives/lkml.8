@@ -2,117 +2,138 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BBDC433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D3622B43
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F3F22B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QBvO8ncC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="nwLk46lX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbgGVWLN (ORCPT
+        id S1733082AbgGVWL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:11:13 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44603 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgGVWLM (ORCPT
+        Wed, 22 Jul 2020 18:11:27 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:27186 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726642AbgGVWLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:12 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A086D8066C;
-        Thu, 23 Jul 2020 10:11:08 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1595455868;
-        bh=uGLP8GFd1sLG0iTQ4kS9Znwic8dX4tEl85GOUOGN9+Q=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=QBvO8ncCMdrm6GJJfnE5nhz6ijI12eMF4aZVclDKnYVsXx4vAhPd5I8trfpG68qpz
-         seKMzh9+Jxi+B8TTrW6st31UYImkTn5uLP/sQ/yAPB74/91W9jCRYYBylFlR69KK7r
-         vKOuoj+/nhZDpjS5vp8qhz1hL4j5z7DwP82nWh582Uk3DAsRTQRicZ6TMBXKXRaAcB
-         OrttJpU6AxU5SuNLjOhjrghxHauvN/YcT4J3HJ3uSFDvkuNYdHe0sPj176zdV9uTyd
-         l8Ohc1lugq91257RAbO8W3lgcorGU+4waRr97E6QNGpYg6OeOckHq+9MVkKxLpELpx
-         42mVZg4kQuvyg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f18b97c0001>; Thu, 23 Jul 2020 10:11:08 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul 2020 10:11:08 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Thu, 23 Jul 2020 10:11:08 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "frowand.list@gmail.com" <frowand.list@gmail.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: OF: Can't handle multiple dma-ranges with different offsets
-Thread-Topic: OF: Can't handle multiple dma-ranges with different offsets
-Thread-Index: AQHWX99COSKGYTheAUmvWcrnzVaQa6kTYRWA
-Date:   Wed, 22 Jul 2020 22:11:07 +0000
-Message-ID: <961bc990-c815-1a19-c349-8b03065d5aab@alliedtelesis.co.nz>
-References: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
-In-Reply-To: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FA203FADBCA2084AAC80BAE92F8EA873@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 22 Jul 2020 18:11:24 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6v1c019879;
+        Wed, 22 Jul 2020 15:11:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=pfpt0818; bh=Il19awlAmG29fp9AVrUyzNFznr1q+S/tbnyiY1K3Rwk=;
+ b=nwLk46lXISSnTe9yw+UAqUc7uD/CJThoXOo/FChbbniLP1icXDoqKgs6fZIKJDFdze+P
+ j3CMQbdS49rJVh+9g5unHPQ8JwzNzX9/sCGs4SFx73jHQFQPuvSWDRLF1/Uh9xzf87z2
+ vO7aJqIc1eauq9sCU7guCsRICMRwI91YjfScFiQiLyROjN9TU/4RWanxBDANjLQfcnl5
+ pXFgZlUdhZ5qXTtfka1YyYebvVrS+31q6lipv0Y0Bb854eDFCj9Bfd3qNXmybzVCIVbt
+ oUz7vACq81+r8Ih+TtlmQUIpYhFoR/JYqRBLY/jopgSZOKwKbQy5yPwUTs1FjQ8W56Tj tA== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkt0hw-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 15:11:08 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 15:11:05 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 15:11:05 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id C997E3F703F;
+        Wed, 22 Jul 2020 15:10:57 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "Doug Ledford" <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Jesper Dangaard Brouer" <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 net-next 00/15] qed, qede: improve chain API and add XDP_REDIRECT support
+Date:   Thu, 23 Jul 2020 01:10:30 +0300
+Message-ID: <20200722221045.5436-1-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAyMi8wNy8yMCA0OjE5IHBtLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiBIaSwNCj4NCj4g
-SSd2ZSBqdXN0IGZpcmVkIHVwIGxpbnV4IGtlcm5lbCB2NS43IG9uIGEgcDIwNDAgYmFzZWQgc3lz
-dGVtIGFuZCBJJ20gDQo+IGdldHRpbmcgdGhlIGZvbGxvd2luZyBuZXcgd2FybmluZw0KPg0KPiBP
-RjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxlIGRtYS1yYW5nZXMgd2l0aCBkaWZmZXJlbnQgb2Zmc2V0
-cyBvbiANCj4gbm9kZSgvcGNpZUBmZmUyMDIwMDApDQo+IE9GOiBDYW4ndCBoYW5kbGUgbXVsdGlw
-bGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZzZXRzIG9uIA0KPiBub2RlKC9wY2llQGZm
-ZTIwMjAwMCkNCj4NCj4gVGhlIHdhcm5pbmcgaXRzZWxmIHdhcyBhZGRlZCBpbiBjb21taXQgOWQ1
-NWJlYmQ5ODE2ICgib2YvYWRkcmVzczogDQo+IFN1cHBvcnQgbXVsdGlwbGUgJ2RtYS1yYW5nZXMn
-IGVudHJpZXMiKSBidXQgSSBnYXRoZXIgaXQncyBwb2ludGluZyBvdXQgDQo+IHNvbWV0aGluZyBh
-Ym91dCB0aGUgZHRzLiBNeSBib2FyZHMgZHRzIGlzIGJhc2VkIGhlYXZpbHkgb24gDQo+IHAyMDQx
-cmRiLmR0cyBhbmQgdGhlIHJlbGV2YW50IHBjaTIgc2VjdGlvbiBpcyBpZGVudGljYWwgKHJlcHJv
-ZHVjZWQgDQo+IGJlbG93IGZvciByZWZlcmVuY2UpLg0KPg0KPiDCoMKgwqAgcGNpMjogcGNpZUBm
-ZmUyMDIwMDAgew0KPiDCoMKgwqAgwqDCoMKgIHJlZyA9IDwweGYgMHhmZTIwMjAwMCAwIDB4MTAw
-MD47DQo+IMKgwqDCoCDCoMKgwqAgcmFuZ2VzID0gPDB4MDIwMDAwMDAgMCAweGUwMDAwMDAwIDB4
-YyAweDQwMDAwMDAwIDAgMHgyMDAwMDAwMA0KPiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAweDAx
-MDAwMDAwIDAgMHgwMDAwMDAwMCAweGYgMHhmODAyMDAwMCAwIDB4MDAwMTAwMDA+Ow0KPiDCoMKg
-wqAgwqDCoMKgIHBjaWVAMCB7DQo+IMKgwqDCoCDCoMKgwqAgwqDCoMKgIHJhbmdlcyA9IDwweDAy
-MDAwMDAwIDAgMHhlMDAwMDAwMA0KPiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqAgMHgw
-MjAwMDAwMCAwIDB4ZTAwMDAwMDANCj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDAg
-MHgyMDAwMDAwMA0KPg0KPiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqAgMHgwMTAwMDAw
-MCAwIDB4MDAwMDAwMDANCj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDB4MDEwMDAw
-MDAgMCAweDAwMDAwMDAwDQo+IMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MDAw
-MTAwMDA+Ow0KPiDCoMKgwqAgwqDCoMKgIH07DQo+IMKgwqDCoCB9Ow0KPg0KPiBJIGhhdmVuJ3Qg
-bm90aWNlZCBhbnkgaWxsIGVmZmVjdCAoYXNpZGUgZnJvbSB0aGUgc2NhcnkgbWVzc2FnZSkuIEkn
-bSANCj4gbm90IHN1cmUgaWYgdGhlcmUncyBzb21ldGhpbmcgbWlzc2luZyBpbiB0aGUgZHRzIG9y
-IGluIHRoZSBjb2RlIHRoYXQgDQo+IGNoZWNrcyB0aGUgcmFuZ2VzLiBBbnkgZ3VpZGFuY2Ugd291
-bGQgYmUgYXBwcmVjaWF0ZWQuDQoNCkkndmUgYWxzbyBqdXN0IGNoZWNrZWQgdGhlIFQyMDgwUkRC
-IG9uIHY1LjcuOSB3aGljaCBzaG93cyBhIHNpbWlsYXIgaXNzdWUNCg0KT0Y6IENhbid0IGhhbmRs
-ZSBtdWx0aXBsZSBkbWEtcmFuZ2VzIHdpdGggZGlmZmVyZW50IG9mZnNldHMgb24gDQpub2RlKC9w
-Y2llQGZmZTI1MDAwMCkNCk9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRo
-IGRpZmZlcmVudCBvZmZzZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyNTAwMDApDQpwY2llcG9ydCAw
-MDAwOjAwOjAwLjA6IEludmFsaWQgc2l6ZSAweGZmZmZmOSBmb3IgZG1hLXJhbmdlDQpwY2llcG9y
-dCAwMDAwOjAwOjAwLjA6IEFFUjogZW5hYmxlZCB3aXRoIElSUSAyMQ0KT0Y6IENhbid0IGhhbmRs
-ZSBtdWx0aXBsZSBkbWEtcmFuZ2VzIHdpdGggZGlmZmVyZW50IG9mZnNldHMgb24gDQpub2RlKC9w
-Y2llQGZmZTI3MDAwMCkNCk9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRo
-IGRpZmZlcmVudCBvZmZzZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyNzAwMDApDQpwY2llcG9ydCAw
-MDAxOjAwOjAwLjA6IEludmFsaWQgc2l6ZSAweGZmZmZmOSBmb3IgZG1hLXJhbmdlDQpwY2llcG9y
-dCAwMDAxOjAwOjAwLjA6IEFFUjogZW5hYmxlZCB3aXRoIElSUSAyMw0KDQoNCg==
+This series adds missing XDP_REDIRECT case handling in QLogic Everest
+Ethernet driver with all necessary prerequisites and ops.
+QEDE Tx relies heavily on chain API, so make sure it is in its best
+at first.
+
+v2 (from [1]):
+ - add missing includes to #003 to pass the build on Alpha;
+ - no functional changes.
+
+[1] https://lore.kernel.org/netdev/20200722155349.747-1-alobakin@marvell.com/
+
+Alexander Lobakin (15):
+  qed: reformat "qed_chain.h" a bit
+  qed: reformat Makefile
+  qed: move chain methods to a separate file
+  qed: prevent possible double-frees of the chains
+  qed: sanitize PBL chains allocation
+  qed: move chain initialization inlines next to allocation functions
+  qed: simplify initialization of the chains with an external PBL
+  qed: simplify chain allocation with init params struct
+  qed: add support for different page sizes for chains
+  qed: optimize common chain accessors
+  qed: introduce qed_chain_get_elem_used{,u32}()
+  qede: reformat several structures in "qede.h"
+  qede: reformat net_device_ops declarations
+  qede: refactor XDP Tx processing
+  qede: add .ndo_xdp_xmit() and XDP_REDIRECT support
+
+ drivers/infiniband/hw/qedr/main.c             |  20 +-
+ drivers/infiniband/hw/qedr/verbs.c            |  97 ++---
+ drivers/net/ethernet/qlogic/qed/Makefile      |  37 +-
+ drivers/net/ethernet/qlogic/qed/qed_chain.c   | 369 ++++++++++++++++++
+ drivers/net/ethernet/qlogic/qed/qed_dev.c     | 273 -------------
+ drivers/net/ethernet/qlogic/qed/qed_dev_api.h |  32 +-
+ drivers/net/ethernet/qlogic/qed/qed_iscsi.c   |  39 +-
+ drivers/net/ethernet/qlogic/qed/qed_ll2.c     |  44 ++-
+ .../net/ethernet/qlogic/qed/qed_sp_commands.c |   4 +-
+ drivers/net/ethernet/qlogic/qed/qed_spq.c     |  90 +++--
+ drivers/net/ethernet/qlogic/qede/qede.h       | 175 +++++----
+ drivers/net/ethernet/qlogic/qede/qede_fp.c    | 174 ++++++---
+ drivers/net/ethernet/qlogic/qede/qede_main.c  | 185 +++++----
+ include/linux/qed/qed_chain.h                 | 328 ++++++----------
+ include/linux/qed/qed_if.h                    |   9 +-
+ 15 files changed, 1018 insertions(+), 858 deletions(-)
+ create mode 100644 drivers/net/ethernet/qlogic/qed/qed_chain.c
+
+--
+
+Netdev folks, could you please take the entire series through your tree
+after the necessary acks and reviews? Patches 8-9 also touch qedr driver
+under rdma tree, but these changes can't be separated as it would break
+incremental buildability and bisecting.
+
+-- 
+2.25.1
+
