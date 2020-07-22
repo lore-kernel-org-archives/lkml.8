@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF0DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912E022B43
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A62A22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbgGVXTx (ORCPT
+        id S1733106AbgGVXUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:19:53 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:49889 "EHLO
+        Wed, 22 Jul 2020 19:20:07 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:53717 "EHLO
         outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726447AbgGVXTw (ORCPT
+        by vger.kernel.org with ESMTP id S1726447AbgGVXUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:19:52 -0400
+        Wed, 22 Jul 2020 19:20:06 -0400
 Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
           by outpost.zedat.fu-berlin.de (Exim 4.93)
           with esmtps (TLS1.2)
           tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
           (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jyO1b-000cjW-K8; Thu, 23 Jul 2020 01:19:47 +0200
+          id 1jyO1p-000ckM-4f; Thu, 23 Jul 2020 01:20:01 +0200
 Received: from p57bd9e19.dip0.t-ipconnect.de ([87.189.158.25] helo=[192.168.178.139])
           by inpost2.zedat.fu-berlin.de (Exim 4.93)
           with esmtpsa (TLS1.2)
           tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
           (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jyO1b-002XXS-DT; Thu, 23 Jul 2020 01:19:47 +0200
-Subject: Re: [PATCH 1/4] sh: Fix validation of system call number
+          id 1jyO1o-002XYF-UE; Thu, 23 Jul 2020 01:20:01 +0200
+Subject: Re: [PATCH 2/4] sh: Rearrange blocks in entry-common.S
 To:     Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
         linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
 References: <20200722231322.419642-1-kernel@mkarcher.dialup.fu-berlin.de>
+ <20200722231322.419642-2-kernel@mkarcher.dialup.fu-berlin.de>
 From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
  mQINBE3JE9wBEADMrYGNfz3oz6XLw9XcWvuIxIlPWoTyw9BxTicfGAv0d87wngs9U+d52t/R
@@ -84,12 +85,12 @@ Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
  jEF9ImTPcYZpw5vhdyPwBdXW2lSjV3EAqknWujRgcsm84nycuJnImwJptR481EWmtuH6ysj5
  YhRVGbQPfdsjVUQfZdRdkEv4CZ90pdscBi1nRqcqANtzC+WQFwekDzk2lGqNRDg56s+q0KtY
  scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <75601e2c-6631-8a98-36a0-ef58f28e50a9@physik.fu-berlin.de>
-Date:   Thu, 23 Jul 2020 01:19:46 +0200
+Message-ID: <f9484f1b-3aee-ca1e-ce10-f3f22f636fd7@physik.fu-berlin.de>
+Date:   Thu, 23 Jul 2020 01:20:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200722231322.419642-1-kernel@mkarcher.dialup.fu-berlin.de>
+In-Reply-To: <20200722231322.419642-2-kernel@mkarcher.dialup.fu-berlin.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -101,47 +102,89 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/23/20 1:13 AM, Michael Karcher wrote:
-> The slow path for traced system call entries accessed a wrong memory
-> location to get the number of the maximum allowed system call number.
-> Renumber the numbered "local" label for the correct location to avoid
-> collisions with actual local labels.
+> This avoids out-of-range jumps that get auto-replaced by the assembler
+> and prepares for the changes needed to implement SECCOMP_FILTER cleanly.
 > 
 > Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
 > ---
->  arch/sh/kernel/entry-common.S | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  arch/sh/kernel/entry-common.S | 57 ++++++++++++++++++-----------------
+>  1 file changed, 29 insertions(+), 28 deletions(-)
 > 
 > diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-> index 956a7a03b0c8..9bac5bbb67f3 100644
+> index 9bac5bbb67f3..c4d88d61890d 100644
 > --- a/arch/sh/kernel/entry-common.S
 > +++ b/arch/sh/kernel/entry-common.S
-> @@ -199,7 +199,7 @@ syscall_trace_entry:
->  	mov.l	@(OFF_R7,r15), r7   ! arg3
->  	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
->  	!
-> -	mov.l	2f, r10			! Number of syscalls
+> @@ -178,34 +178,6 @@ syscall_exit_work:
+>  	bra	resume_userspace
+>  	 nop
+>  
+> -	.align	2
+> -syscall_trace_entry:
+> -	!                     	Yes it is traced.
+> -	mov     r15, r4
+> -	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
+> -	jsr	@r11	    	! superior (will chomp R[0-7])
+> -	 nop
+> -	mov.l	r0, @(OFF_R0,r15)	! Save return value
+> -	!			Reload R0-R4 from kernel stack, where the
+> -	!   	    	    	parent may have modified them using
+> -	!   	    	    	ptrace(POKEUSR).  (Note that R0-R2 are
+> -	!   	    	    	reloaded from the kernel stack by syscall_call
+> -	!   	    	    	below, so don't need to be reloaded here.)
+> -	!   	    	    	This allows the parent to rewrite system calls
+> -	!   	    	    	and args on the fly.
+> -	mov.l	@(OFF_R4,r15), r4   ! arg0
+> -	mov.l	@(OFF_R5,r15), r5
+> -	mov.l	@(OFF_R6,r15), r6
+> -	mov.l	@(OFF_R7,r15), r7   ! arg3
+> -	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
+> -	!
+> -	mov.l	6f, r10			! Number of syscalls
+> -	cmp/hs	r10, r3
+> -	bf	syscall_call
+> -	mov	#-ENOSYS, r0
+> -	bra	syscall_exit
+> -	 mov.l	r0, @(OFF_R0,r15)	! Return value
+> -
+>  __restore_all:
+>  	mov	#OFF_SR, r0
+>  	mov.l	@(r0,r15), r0	! get status register
+> @@ -388,6 +360,35 @@ syscall_exit:
+>  	bf	syscall_exit_work
+>  	bra	__restore_all
+>  	 nop
+> +
+> +	.align	2
+> +syscall_trace_entry:
+> +	!                     	Yes it is traced.
+> +	mov     r15, r4
+> +	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
+> +	jsr	@r11	    	! superior (will chomp R[0-7])
+> +	 nop
+> +	mov.l	r0, @(OFF_R0,r15)	! Save return value
+> +	!			Reload R0-R4 from kernel stack, where the
+> +	!   	    	    	parent may have modified them using
+> +	!   	    	    	ptrace(POKEUSR).  (Note that R0-R2 are
+> +	!   	    	    	reloaded from the kernel stack by syscall_call
+> +	!   	    	    	below, so don't need to be reloaded here.)
+> +	!   	    	    	This allows the parent to rewrite system calls
+> +	!   	    	    	and args on the fly.
+> +	mov.l	@(OFF_R4,r15), r4   ! arg0
+> +	mov.l	@(OFF_R5,r15), r5
+> +	mov.l	@(OFF_R6,r15), r6
+> +	mov.l	@(OFF_R7,r15), r7   ! arg3
+> +	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
+> +	!
 > +	mov.l	6f, r10			! Number of syscalls
->  	cmp/hs	r10, r3
->  	bf	syscall_call
->  	mov	#-ENOSYS, r0
-> @@ -353,7 +353,7 @@ ENTRY(system_call)
->  	tst	r9, r8
->  	bf	syscall_trace_entry
->  	!
-> -	mov.l	2f, r8			! Number of syscalls
-> +	mov.l	6f, r8			! Number of syscalls
->  	cmp/hs	r8, r3
->  	bt	syscall_badsys
->  	!
-> @@ -392,7 +392,7 @@ syscall_exit:
+> +	cmp/hs	r10, r3
+> +	bf	syscall_call
+> +	mov	#-ENOSYS, r0
+> +	bra	syscall_exit
+> +	 mov.l	r0, @(OFF_R0,r15)	! Return value
+> +
+>  	.align	2
 >  #if !defined(CONFIG_CPU_SH2)
 >  1:	.long	TRA
->  #endif
-> -2:	.long	NR_syscalls
-> +6:	.long	NR_syscalls
->  3:	.long	sys_call_table
->  7:	.long	do_syscall_trace_enter
->  8:	.long	do_syscall_trace_leave
 > 
 
 Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
