@@ -2,208 +2,319 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF4DC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8345920825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:08:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kqsyj1xN"
+	by mail.kernel.org (Postfix) with ESMTP id 1FECE22B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595455787;
+	bh=Ia353sLPOcP2dsD+d2MRKC/6UosDFuQpSkniVtNRaKo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=OBqOZoZKWXAOkRX0xZKXum3WT+rpqYU7OoSsrK/cf219Wx7wQzu6G1dj0bY9rSd6x
+	 I18XnlCrayW0v1au/arx9MGRXTniUETMrjTpbn7tapuVJDOjDNfB5f1Qf01wZXirbE
+	 U8rbzTc/q3bzniyfJS0I78lpBbo2tqtQvoLBnVkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732555AbgGVWIa (ORCPT
+        id S1732973AbgGVWJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVWI3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:08:29 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDE9C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:08:29 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id g22so930734vke.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wUNWDv0pMvOxp3f1lq5ubWVgLTQ75vGUx1UyIToohCs=;
-        b=kqsyj1xN2xk8GBmQL+ZMGDx/S5h87V9fnQpibUyeZjaONvTDcRgLHjE8PqbBx7DGFp
-         Ahbis0yqSTcab9Ul9KNZ7DuQFFmo5+Xvc9Gf6pZeeZTMcywy8m10G6WwlwxkSaH/M+cM
-         R4EjCh92aMjx/SlIcpDp8HZuUkRo4KKJkUJKk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wUNWDv0pMvOxp3f1lq5ubWVgLTQ75vGUx1UyIToohCs=;
-        b=ElZLJSI1abekP4en64bei6TAJS5r+mitZpe9fm5McBy/m8ExndWR5BvEbzBNZTrwoa
-         WPwL0rfgvt7dN1WSc6guJ79fwZ4+md1GZxvBLsbz1XhZj7hCW327pJSaED1UVXlADIvV
-         qYSvwaeQrUu3JUdaqPk9oVexBk9mYvATB1A6eSaT/PjRaxEgqGlUsXpnhwdMzPQGpSRx
-         rJnihBBNUMVIvYtoAktgR8HKLvWzIAeSYzuCOLhGSxyo88ukivrSUTnv1cFd5gtFhGPR
-         tXb1r1SURe++8X/bm3Cfgqfe5CffxvIPXZ+fuqN8ze4of8si6ZgGQ1+kgi8JRHmWUxTa
-         vaEg==
-X-Gm-Message-State: AOAM532e2GEre5PW5eWFzz58Jxjun9pnds8/PjZHonL+jUwQmOmZ1Bq+
-        P+odQVgTtn9RkQ+Ppb95iubmL8GQw4E=
-X-Google-Smtp-Source: ABdhPJwY/WlKEq4MROumPqNqmQ28ySxgYZByZ6po7cti6cEp5hZ5MvHpVo4f6hLf44jauWL3hLoPNQ==
-X-Received: by 2002:a1f:16c3:: with SMTP id 186mr1650345vkw.16.1595455708293;
-        Wed, 22 Jul 2020 15:08:28 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id f15sm152745vsa.28.2020.07.22.15.08.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 15:08:26 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id r63so1156524uar.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:08:26 -0700 (PDT)
-X-Received: by 2002:ab0:150c:: with SMTP id o12mr1758711uae.90.1595455706030;
- Wed, 22 Jul 2020 15:08:26 -0700 (PDT)
+        Wed, 22 Jul 2020 18:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730153AbgGVWJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 18:09:45 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61C820825;
+        Wed, 22 Jul 2020 22:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595455783;
+        bh=Ia353sLPOcP2dsD+d2MRKC/6UosDFuQpSkniVtNRaKo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=RI0SVps7P+HsuINuxwZ7Rs9Y5ECg7vg8+T6cpzB81CpkNBBiuExQBqnm9aOx3X9L3
+         JhzSMb67yzyXSuPCramL3X4fkc7Vu/YpK7OPHgtUo9TsqGcz8us3fKOLf72lhnDvH7
+         Wz58n4c0U+jsNG+4ffOkkPSJWWhfuHjYYAmItTdo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 853833522AB9; Wed, 22 Jul 2020 15:09:43 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 15:09:43 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, will@kernel.org, hch@lst.de,
+        axboe@kernel.dk, chris@chris-wilson.co.uk, davem@davemloft.net,
+        kuba@kernel.org, fweisbec@gmail.com, oleg@redhat.com
+Subject: Re: [RFC][PATCH 7/9] smp,irq_work: Use the new irq_work API
+Message-ID: <20200722220943.GC23360@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200722150149.525408253@infradead.org>
+ <20200722153017.445914025@infradead.org>
 MIME-Version: 1.0
-References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
- <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com>
- <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
- <CAD=FV=X=NDym3V31dQ8c341UwQm9pDybUCR8jFF1JR99XeVKVw@mail.gmail.com>
- <159535775253.3847286.5195740102798837524@swboyd.mtv.corp.google.com> <CAD=FV=WhsPkaB_cLNzGuuBrAEHiyrM9TGGvhUY4+0C=SzWwsHA@mail.gmail.com>
-In-Reply-To: <CAD=FV=WhsPkaB_cLNzGuuBrAEHiyrM9TGGvhUY4+0C=SzWwsHA@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 22 Jul 2020 15:08:14 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vt+0xQ6wpyF2y1TqS8d04nq4x1b_TcLwy2aNO4dn9x4g@mail.gmail.com>
-Message-ID: <CAD=FV=Vt+0xQ6wpyF2y1TqS8d04nq4x1b_TcLwy2aNO4dn9x4g@mail.gmail.com>
-Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722153017.445914025@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 22, 2020 at 05:01:56PM +0200, Peter Zijlstra wrote:
+> Convert the performance sensitive users of
+> smp_call_single_function_async() over to the new
+> irq_work_queue_remote_static().
+> 
+> The new API is marginally less crap but taking these users away allows
+> fixing up smp_call_single_function_async() without risk of performance
+> regressions.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-On Tue, Jul 21, 2020 at 1:26 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Tue, Jul 21, 2020 at 11:55 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Doug Anderson (2020-07-21 09:18:35)
-> > > On Tue, Jul 21, 2020 at 12:08 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > >
-> > > > Quoting Stephen Boyd (2020-07-20 22:59:14)
-> > > > >
-> > > > > I worry that we also need a dmb() here to make sure the dma buffer is
-> > > > > properly mapped before this write to the device is attempted. But it may
-> > > > > only matter to be before the I2C_READ.
-> > > > >
-> > > >
-> > > > I'm suggesting this patch instead where we make geni_se_setup_m_cmd()
-> > > > use a writel() so that it has the proper barrier semantics to wait for
-> > > > the other memory writes that happened in program order before this point
-> > > > to complete before the device is kicked to do a read or a write.
-> > >
-> > > Are you saying that dma_map_single() isn't guaranteed to have a
-> > > barrier or something?  I tried to do some searching and found a thread
-> > > [1] where someone tried to add a barrierless variant of them.  To me
-> > > that means that the current APIs have barriers.
-> > >
-> > > ...or is there something else you're worried about?
-> >
-> > I'm not really thinking about dma_map_single() having a barrier or not.
-> > The patch you mention is from 2010. Many things have changed in the last
-> > decade. Does it have barrier semantics? The presence of a patch on the
-> > mailing list doesn't mean much.
->
-> Yes, it's pretty old, but if you follow the thread and look at the
-> patch I'm fairly certain it's still relevant.  Specifically, following
-> one thread of dma_map_single() on arm64:
->
-> dma_map_single()
-> -> dma_map_single_attrs()
-> --> dma_map_page_attrs()
-> ---> dma_direct_map_page()
-> ----> arch_sync_dma_for_device()
-> -----> __dma_map_area()
-> ------> __dma_inv_area() which has a "dsb"
->
-> I'm sure there are lots of other possible paths, but one thing pointed
-> out by following that path is 'DMA_ATTR_SKIP_CPU_SYNC'.  The
-> documentation of that option talks about the normal flow.  It says
-> that in the normal flow that dma_map_{single,page,sg} will
-> synchronize.  We are in the normal flow here.
->
-> As far as I understand, the whole point of dma_map_single() is to take
-> a given buffer and get it all ready so that if a device does DMA on it
-> right after the function exits that it's all set.
->
->
-> > Specifically I'm looking at "KERNEL I/O BARRIER EFFECTS" of
-> > Documentation/memory-barriers.txt and noticing that this driver is using
-> > relaxed IO accessors meaning that the reads and writes aren't ordered
-> > with respect to other memory accesses. They're only ordered to
-> > themselves within the same device. I'm concerned that the CPU will issue
-> > the IO access to start the write DMA operation before the buffer is
-> > copied over due to out of order execution.
->
-> I'm not an expert either, but it really looks like dma_map_single()
-> does all that we need it to.
->
->
-> > I'm not an expert in this area, but this is why we ask driver authors to
-> > use the non-relaxed accessors because they have the appropriate
-> > semantics built in to make them easy to reason about. They do what they
-> > say when they say to do it.
->
-> I'm all for avoiding using the relaxed variants too except if it's
-> been shown to be a performance problem.  The one hesitation I have,
-> though, is that I've spent time poking a bunch at the geni SPI driver.
-> We do _a lot_ of very small SPI transfers on our system.  For each of
-> these it's gotta setup a lot of commands.  When I was poking I
-> definitely noticed the difference between writel() and
-> writel_relaxed().  If we can save a few microseconds on each one of
-> these transfers it's probably worth it since it's effectively in the
-> inner loop of some transfers.
->
-> One option I thought of was to track the mode (DMA vs. FIFO) and only
-> do writel() for DMA mode.  If you're not convinced by my arguments
-> about dma_map_single(), would you be good with just doing the
-> non-relaxed version if we're in DMA mode?
+But given that kvm.sh gives a return status like "git bisect run",
+why not bisect?
 
-OK, so I did some quick benchmarking and I couldn't find any
-performance regression with just always using writel() here.  Even if
-dma_map_single() does guarantee that things are synced:
+And bisection converged on this patch with a similar splat.
 
-* There's no guarantee that all geni users will use dma_map_{xxx}.
+Decoding the assembly makes it appear that nohz_work_func() got a bogus
+pointer having a rather odd value of 0x200000001.
 
-* As Stephen says, the writel() is easier to reason about.
+							Thanx, Paul
 
-The change to a writel() is a bit orthogonal to the issue being
-discussed here, though and it wouldn't make sense to have one patch
-touch both the geni headers and also the i2c code.  Thus, I have sent
-v2 without it (just with the other fixes that Stephen requested) and
-also sent out a separate patch to change from writel_relaxed() to
-writel().
+------------------------------------------------------------------------
 
-Breadcrumbs:
+0:  e8 35 52 ff ff          call   0xffffffffffff523a
+5:  48 89 c3                mov    rbx,rax
+8:  eb 93                   jmp    0xffffffffffffff9d
+a:  8b 43 70                mov    eax,DWORD PTR [rbx+0x70]
+d:  89 44 24 04             mov    DWORD PTR [rsp+0x4],eax
+11: eb c2                   jmp    0xffffffffffffffd5
+13: 48 c7 c0 ea ff ff ff    mov    rax,0xffffffffffffffea
+1a: eb 94                   jmp    0xffffffffffffffb0
+1c: e8 c9 02 a7 00          call   0xa702ea
+21: 66 0f 1f 84 00 00 00    nop    WORD PTR [rax+rax*1+0x0]
+28: 00 00
+2a: 4c 63 8f f0 09 00 00    movsxd r9,DWORD PTR [rdi+0x9f0]  <-------
+31: 48 c7 c1 00 91 02 00    mov    rcx,0x29100
+38: 48 89 ca                mov    rdx,rcx
 
-[PATCH v2] i2c: i2c-qcom-geni: Fix DMA transfer race
-https://lore.kernel.org/r/20200722145948.v2.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid/
-
-[PATCH] soc: qcom-geni-se: Don't use relaxed writes when writing commands
-https://lore.kernel.org/r/20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid/
-
-As mentioned after the cut in the i2c change, I have kept people's
-tested/reviewed tags for v2.
-
--Doug
+> ---
+>  block/blk-mq.c            |    8 ++++----
+>  include/linux/blkdev.h    |    4 ++--
+>  include/linux/netdevice.h |    3 ++-
+>  kernel/sched/core.c       |   16 ++++++++--------
+>  kernel/sched/fair.c       |    6 +++---
+>  kernel/sched/sched.h      |    4 ++--
+>  net/core/dev.c            |   15 ++++++++++-----
+>  7 files changed, 31 insertions(+), 25 deletions(-)
+> 
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -623,9 +623,9 @@ static int blk_softirq_cpu_dead(unsigned
+>  }
+>  
+>  
+> -static void __blk_mq_complete_request_remote(void *data)
+> +static void __blk_mq_complete_request_remote(struct irq_work *work)
+>  {
+> -	struct request *rq = data;
+> +	struct request *rq = container_of(work, struct request, work);
+>  
+>  	/*
+>  	 * For most of single queue controllers, there is only one irq vector
+> @@ -672,8 +672,8 @@ bool blk_mq_complete_request_remote(stru
+>  		return false;
+>  
+>  	if (blk_mq_complete_need_ipi(rq)) {
+> -		INIT_CSD(&rq->csd, __blk_mq_complete_request_remote, rq);
+> -		smp_call_function_single_async(rq->mq_ctx->cpu, &rq->csd);
+> +		rq->work = IRQ_WORK_INIT_HARD(__blk_mq_complete_request_remote);
+> +		irq_work_queue_remote_static(rq->mq_ctx->cpu, &rq->work);
+>  	} else {
+>  		if (rq->q->nr_hw_queues > 1)
+>  			return false;
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -19,7 +19,7 @@
+>  #include <linux/stringify.h>
+>  #include <linux/gfp.h>
+>  #include <linux/bsg.h>
+> -#include <linux/smp.h>
+> +#include <linux/irq_work.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/percpu-refcount.h>
+>  #include <linux/scatterlist.h>
+> @@ -234,7 +234,7 @@ struct request {
+>  	unsigned long deadline;
+>  
+>  	union {
+> -		struct __call_single_data csd;
+> +		struct irq_work work;
+>  		u64 fifo_time;
+>  	};
+>  
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -26,6 +26,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/atomic.h>
+>  #include <linux/prefetch.h>
+> +#include <linux/irq_work.h>
+>  #include <asm/cache.h>
+>  #include <asm/byteorder.h>
+>  
+> @@ -3126,7 +3127,7 @@ struct softnet_data {
+>  	unsigned int		input_queue_head ____cacheline_aligned_in_smp;
+>  
+>  	/* Elements below can be accessed between CPUs for RPS/RFS */
+> -	call_single_data_t	csd ____cacheline_aligned_in_smp;
+> +	struct irq_work		work ____cacheline_aligned_in_smp;
+>  	struct softnet_data	*rps_ipi_next;
+>  	unsigned int		cpu;
+>  	unsigned int		input_queue_tail;
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -265,9 +265,9 @@ static void __hrtick_restart(struct rq *
+>  /*
+>   * called from hardirq (IPI) context
+>   */
+> -static void __hrtick_start(void *arg)
+> +static void __hrtick_start(struct irq_work *work)
+>  {
+> -	struct rq *rq = arg;
+> +	struct rq *rq = container_of(work, struct rq, hrtick_work);
+>  	struct rq_flags rf;
+>  
+>  	rq_lock(rq, &rf);
+> @@ -298,7 +298,7 @@ void hrtick_start(struct rq *rq, u64 del
+>  	if (rq == this_rq())
+>  		__hrtick_restart(rq);
+>  	else
+> -		smp_call_function_single_async(cpu_of(rq), &rq->hrtick_csd);
+> +		irq_work_queue_remote_static(cpu_of(rq), &rq->hrtick_work);
+>  }
+>  
+>  #else
+> @@ -323,7 +323,7 @@ void hrtick_start(struct rq *rq, u64 del
+>  static void hrtick_rq_init(struct rq *rq)
+>  {
+>  #ifdef CONFIG_SMP
+> -	INIT_CSD(&rq->hrtick_csd, __hrtick_start, rq);
+> +	rq->hrtick_work = IRQ_WORK_INIT_HARD(__hrtick_start);
+>  #endif
+>  	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+>  	rq->hrtick_timer.function = hrtick;
+> @@ -633,14 +633,14 @@ void wake_up_nohz_cpu(int cpu)
+>  		wake_up_idle_cpu(cpu);
+>  }
+>  
+> -static void nohz_csd_func(void *info)
+> +static void nohz_work_func(struct irq_work *work)
+>  {
+> -	struct rq *rq = info;
+> +	struct rq *rq = container_of(work, struct rq, nohz_work);
+>  	int cpu = cpu_of(rq);
+>  	unsigned int flags;
+>  
+>  	/*
+> -	 * Release the rq::nohz_csd.
+> +	 * Release rq::nohz_work.
+>  	 */
+>  	flags = atomic_fetch_andnot(NOHZ_KICK_MASK, nohz_flags(cpu));
+>  	WARN_ON(!(flags & NOHZ_KICK_MASK));
+> @@ -6827,7 +6827,7 @@ void __init sched_init(void)
+>  		rq->last_blocked_load_update_tick = jiffies;
+>  		atomic_set(&rq->nohz_flags, 0);
+>  
+> -		INIT_CSD(&rq->nohz_csd, nohz_csd_func, rq);
+> +		rq->nohz_work = IRQ_WORK_INIT_HARD(nohz_work_func);
+>  #endif
+>  #endif /* CONFIG_SMP */
+>  		hrtick_rq_init(rq);
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10039,8 +10039,8 @@ static void kick_ilb(unsigned int flags)
+>  		return;
+>  
+>  	/*
+> -	 * Access to rq::nohz_csd is serialized by NOHZ_KICK_MASK; he who sets
+> -	 * the first flag owns it; cleared by nohz_csd_func().
+> +	 * Access to rq::nohz_work is serialized by NOHZ_KICK_MASK; he who sets
+> +	 * the first flag owns it; cleared by nohz_work_func().
+>  	 */
+>  	flags = atomic_fetch_or(flags, nohz_flags(ilb_cpu));
+>  	if (flags & NOHZ_KICK_MASK)
+> @@ -10051,7 +10051,7 @@ static void kick_ilb(unsigned int flags)
+>  	 * is idle. And the softirq performing nohz idle load balance
+>  	 * will be run before returning from the IPI.
+>  	 */
+> -	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
+> +	irq_work_queue_remote_static(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_work);
+>  }
+>  
+>  /*
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -904,7 +904,7 @@ struct rq {
+>  #ifdef CONFIG_SMP
+>  	unsigned long		last_blocked_load_update_tick;
+>  	unsigned int		has_blocked_load;
+> -	call_single_data_t	nohz_csd;
+> +	struct irq_work		nohz_work;
+>  #endif /* CONFIG_SMP */
+>  	unsigned int		nohz_tick_stopped;
+>  	atomic_t		nohz_flags;
+> @@ -1015,7 +1015,7 @@ struct rq {
+>  
+>  #ifdef CONFIG_SCHED_HRTICK
+>  #ifdef CONFIG_SMP
+> -	call_single_data_t	hrtick_csd;
+> +	struct irq_work		hrtick_work;
+>  #endif
+>  	struct hrtimer		hrtick_timer;
+>  #endif
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -4444,9 +4444,9 @@ EXPORT_SYMBOL(rps_may_expire_flow);
+>  #endif /* CONFIG_RFS_ACCEL */
+>  
+>  /* Called from hardirq (IPI) context */
+> -static void rps_trigger_softirq(void *data)
+> +static void rps_trigger_softirq(struct irq_work *work)
+>  {
+> -	struct softnet_data *sd = data;
+> +	struct softnet_data *sd = container_of(work, struct softnet_data, work);
+>  
+>  	____napi_schedule(sd, &sd->backlog);
+>  	sd->received_rps++;
+> @@ -6185,8 +6185,13 @@ static void net_rps_send_ipi(struct soft
+>  	while (remsd) {
+>  		struct softnet_data *next = remsd->rps_ipi_next;
+>  
+> -		if (cpu_online(remsd->cpu))
+> -			smp_call_function_single_async(remsd->cpu, &remsd->csd);
+> +		if (cpu_online(remsd->cpu)) {
+> +			/*
+> +			 * XXX can there be two CPUs calling into the same remsd?
+> +			 * XXX serialized by NAPI_STATE_SCHED ??
+> +			 */
+> +			irq_work_queue_remote_static(remsd->cpu, &remsd->work);
+> +		}
+>  		remsd = next;
+>  	}
+>  #endif
+> @@ -10661,7 +10666,7 @@ static int __init net_dev_init(void)
+>  		INIT_LIST_HEAD(&sd->poll_list);
+>  		sd->output_queue_tailp = &sd->output_queue;
+>  #ifdef CONFIG_RPS
+> -		INIT_CSD(&sd->csd, rps_trigger_softirq, sd);
+> +		init_irq_work(&sd->work, rps_trigger_softirq);
+>  		sd->cpu = i;
+>  #endif
+>  
+> 
+> 
