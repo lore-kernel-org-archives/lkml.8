@@ -2,106 +2,104 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C560EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5684207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NgRWNg2c"
+	by mail.kernel.org (Postfix) with ESMTP id EE74D2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595378880;
+	bh=7nehNatIeXo6wDfbXzcQlxlT6RiQ+9yCJb050rgKUFc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yjZrHMYdKrezT5dKSGMpN+PgvqCwbZ2SeqREmtIm1jhNtx6gaqXSF5t/lBYGLoIUS
+	 F5Bt//bQhteeVjC8iRK1fjZEvTzsAXftzIKEFMoPFk/lvgIafymclopRRfLNq5blWN
+	 SUyrg1oxhJrEnVdxkNgMmpxWIJcpiSxsU0PzHxj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbgGVAs6 (ORCPT
+        id S1731207AbgGVAr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:48:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58237 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726468AbgGVAs5 (ORCPT
+        Tue, 21 Jul 2020 20:47:59 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:36963 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbgGVAr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:48:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595378936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RWGSZm0mD0Hsn964zAHjsyYpgFxMJEkHeUi58lCG8KY=;
-        b=NgRWNg2cY954VBDR5yx7sHw7ouqzSp4Q8n5V3t9nrvaNd519pR3n5afL6ER6RmAMJBgmn3
-        Ef2BenjuYL9WKA+5vJzWdxjY/7/dgIwEA9lWgpcLybMzfBpnq9s8pyfO1YbvMqmTSv17Z7
-        m600azGlfjMHyuZ2uE+T+zEv9YCkg00=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-166Hben3O0er4xj42NmneA-1; Tue, 21 Jul 2020 20:48:55 -0400
-X-MC-Unique: 166Hben3O0er4xj42NmneA-1
-Received: by mail-qt1-f198.google.com with SMTP id 71so280549qte.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RWGSZm0mD0Hsn964zAHjsyYpgFxMJEkHeUi58lCG8KY=;
-        b=fDPUhSHF0QuJrzSD4MybEPzYrncIZw9ktiMT0GSHaTCGb53XKxZKcdjBc8MZ8mmJtH
-         eXkccuF6hV06OF6S3HWtbnXWQ548fZ7ysS5BSH7hAVAv0yLvLy9lQ9cMPwGC2Onw3T2C
-         4nydSil3RplqBPAfkj2h9tgSyEEuVF7Nm6nKLfkKm1/bjSlKyRZHBJUMEowzRxQnCSS3
-         WpLrirzQBZQIvD7+4GOpYVtPmPogkIsg1g4Q83CW8jLgZ38TsNNedzuvnqhkiYYcuhdk
-         T65EFNcYikeIbrIKLS90jZs1lbdlW7e7+jMFFyDkD88UwXvZZicvediIMZodVr5wgX+9
-         CI1w==
-X-Gm-Message-State: AOAM531BrBRrM2x9DrtqvNGAI16BIsgY/1yoUNVBPmhrZvlPwfWTh6oz
-        UVbx8dIwEMcaaI6IzGQFRhDwiK733PzuSWz0OSltXY3+kR4kM/kqGkx2TV8h+rO+sREptfqbGB2
-        fQJhdat72z4pYJ5qppgjPFzCH
-X-Received: by 2002:a37:4711:: with SMTP id u17mr23575349qka.54.1595378934445;
-        Tue, 21 Jul 2020 17:48:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxWo0UiizA03wUsCSxpLxCUuVi6CjaeEv2A/IRRJwpXQsph164b5zXlWqHCZZwzWoCTBmIt5g==
-X-Received: by 2002:a37:4711:: with SMTP id u17mr23575333qka.54.1595378934196;
-        Tue, 21 Jul 2020 17:48:54 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c8:6f::1f4f])
-        by smtp.gmail.com with ESMTPSA id q126sm3509556qke.34.2020.07.21.17.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 17:48:53 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 20:48:51 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jay Zhou <jianjay.zhou@huawei.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, cohuck@redhat.com, maoming.maoming@huawei.com,
-        weidong.huang@huawei.com, Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
-Message-ID: <20200722004851.GV535743@xz-x1>
-References: <20200720082947.1770-1-jianjay.zhou@huawei.com>
- <20200720164603.3a622548@x1.home>
+        Tue, 21 Jul 2020 20:47:58 -0400
+Received: from oscar.flets-west.jp (softbank126025067101.bbtec.net [126.25.67.101]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 06M0lCmA017008;
+        Wed, 22 Jul 2020 09:47:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 06M0lCmA017008
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595378833;
+        bh=eG+ayNnFCXKOBzxmUjHFFQOzueXyYgjhP95zI9sGS9o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=U/oZ8DycR+wdfRU3577VbpGliWLjPEp+xCgcXj4QnkJDTHtMBdfxtDgPHZnNnHJKG
+         TDbqE3F2T8wGtDwIFDV0qIpRraRdzKX7VrNuLubw/+NB6nMtpvqa74i8rllr57Txlr
+         pzDQPyR94wJVSYqco/b56hyR15eV0Y+xEAwlRWN9XuEi+QY79yMV221IAE58u3lopc
+         OAbDglRecAa0EYtowdZzpQur6X6RRq6ZGj3XQqtQa3guLwsFxzCXEBzp3f6vaH0GZ9
+         t11G/4zR1fuLv+hatEOOPKF4yU9qtN2PEwv8uHM1dI2x4Jzncp6POYpl2w1NnxIQM7
+         VGRmfykr26B0w==
+X-Nifty-SrcIP: [126.25.67.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] xtensa: add boot subdirectories build artifacts to 'targets'
+Date:   Wed, 22 Jul 2020 09:47:07 +0900
+Message-Id: <20200722004707.779601-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200720164603.3a622548@x1.home>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 04:46:03PM -0600, Alex Williamson wrote:
-> > +		/*
-> > +		 * We got a hugetlbfs page using vaddr_get_pfn alreadly.
-> > +		 * In this case,we do not need to alloc pages and we can finish all
-> > +		 * work by a single operation to the head page.
-> > +		 */
-> > +		lock_acct += contiguous_npage;
-> > +		head = compound_head(pfn_to_page(*pfn_base));
-> > +		atomic_add(contiguous_npage, compound_pincount_ptr(head));
-> > +		page_ref_add(head, contiguous_npage);
-> > +		mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED, contiguous_npage);
-> > +		pinned += contiguous_npage;
-> > +		goto out;
-> 
-> I'm hoping Peter or Andrea understand this, but I think we still have
-> pfn_base pinned separately and I don't see that we've done an unpin
-> anywhere, so are we leaking the pin of the first page??
+Xtensa always rebuilds the following even if nothing in the source code
+has been changed. Passing V=2 shows the reason.
 
-I'm not very familiar with that either, however it seems to me most of above
-chunk was already done in the gup core.  For hugetlbfs, imho it should be where
-follow_hugetlb_page() calls try_grab_page().  Thanks,
+  AS      arch/xtensa/boot/boot-elf/bootstrap.o - due to bootstrap.o not in $(targets)
+  LDS     arch/xtensa/boot/boot-elf/boot.lds - due to boot.lds not in $(targets)
 
+They are built by if_changed(_dep). Add them to 'targets' so .*.cmd files
+are included.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ arch/xtensa/boot/boot-elf/Makefile     | 1 +
+ arch/xtensa/boot/boot-redboot/Makefile | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
+index 12ae1e91cb75..badee63dae27 100644
+--- a/arch/xtensa/boot/boot-elf/Makefile
++++ b/arch/xtensa/boot/boot-elf/Makefile
+@@ -15,6 +15,7 @@ export CPPFLAGS_boot.lds += -P -C
+ export KBUILD_AFLAGS += -mtext-section-literals
+ 
+ boot-y		:= bootstrap.o
++targets		+= $(boot-y) boot.lds
+ 
+ OBJS		:= $(addprefix $(obj)/,$(boot-y))
+ 
+diff --git a/arch/xtensa/boot/boot-redboot/Makefile b/arch/xtensa/boot/boot-redboot/Makefile
+index 8632473ad319..1a277dd57b2a 100644
+--- a/arch/xtensa/boot/boot-redboot/Makefile
++++ b/arch/xtensa/boot/boot-redboot/Makefile
+@@ -13,6 +13,7 @@ endif
+ LD_ARGS	= -T $(srctree)/$(obj)/boot.ld
+ 
+ boot-y	:= bootstrap.o
++targets	+= $(boot-y)
+ 
+ OBJS	:= $(addprefix $(obj)/,$(boot-y))
+ LIBS	:= arch/xtensa/boot/lib/lib.a arch/xtensa/lib/lib.a
 -- 
-Peter Xu
+2.25.1
 
