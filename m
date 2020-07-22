@@ -2,142 +2,155 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA5CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F18BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A5F2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90A720658
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="WqpK1vVG"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PV0tCjcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgGVGpA (ORCPT
+        id S1729742AbgGVGuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:45:00 -0400
-Received: from mail-db8eur05on2125.outbound.protection.outlook.com ([40.107.20.125]:32737
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726736AbgGVGpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:45:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d+00AhyJ7ZaEysAUia7mSsNot3x1dwu2ea8+bYHzm8vLOegJOe7rQ+BLpVsOTfmCrV8m6qal3qv3FkomiEJGRKnJHlmwic9vnoiQW4aaUt3ORSJq0WCoJDIcPaXX6oCRiisAcGOuomtLyvni9G6XCt5gl/qRgbmHpUGIqRJ8rbQaUN2sKI/MGK3EF9IGIYLU0e/5xBww6TPKhIpr/Rki8eAwJQ/u8jFALhV9arP/QGP5+YlEQLx9hHLAqG7kOXdv0rDAuG8o6AHwBaCWEm+NA6YSfxheSyKqPZk3U3pgML94R6UK9PhKEr6bmYVpng4ooHDZdhpqwt89uXjp2jym1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AgsElpI9rEBedex7fkJCobJrw9uGtd2u3cWCnLUycPo=;
- b=h3GMmN8O4MkDG4JKkmMDFEVKbqLNZG0vOmKVr7cnRxO+/8MXcnftbMzFxisbRhsxQRab3JIUdE4WW8mlra9WVk6iKO+51/H+FRodSkhWO+1Y1fjRqE93NetG9i4ro/xYkNdLSc/VNoUAI2HpjBLLkPStjHFTaXD2sc9GgjFu9YHPVKCAMvAqg6kT5kBwDI/m5KHwve4rP5F8FHPXa7wr/MamwPSrPXqOgHy9A+9am3twSciJkTuG4Y5sU6erA6mrdeAdLAr9aA667MGOkmp2rCPxdyjh0crlcPY5aY1mDxgUdGYhf1+kGA8NMPcWfSBxurdNtKdKDxO6HSZKc9jMeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 131.228.2.17) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=nokia-sbell.com; dmarc=pass (p=none sp=none pct=100)
- action=none header.from=nokia-sbell.com; dkim=none (message not signed);
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AgsElpI9rEBedex7fkJCobJrw9uGtd2u3cWCnLUycPo=;
- b=WqpK1vVG8L3cmbCnU5h6roodDd9LRTK4LsojHkTrpnipN7dYgCgJ8CIks9kQrCdSsiEOXoqYbokBFDiqDGTwUAamEUF4sB3ps5VCIPoOiFlV8UfVsLOp1Yl+L23vIVMMqXMaMOQhn0LnaOX9n8QHVzxmo5yi32/O8y6fRXYlWWc=
-Received: from MR2P264CA0106.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:33::22)
- by DB7PR07MB5916.eurprd07.prod.outlook.com (2603:10a6:10:7b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.14; Wed, 22 Jul
- 2020 06:44:57 +0000
-Received: from VE1EUR03FT007.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:33:cafe::ee) by MR2P264CA0106.outlook.office365.com
- (2603:10a6:500:33::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend
- Transport; Wed, 22 Jul 2020 06:44:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 131.228.2.17)
- smtp.mailfrom=nokia-sbell.com; vger.kernel.org; dkim=none (message not
- signed) header.d=none;vger.kernel.org; dmarc=pass action=none
- header.from=nokia-sbell.com;
-Received-SPF: Pass (protection.outlook.com: domain of nokia-sbell.com
- designates 131.228.2.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=131.228.2.17; helo=fihe3nok0735.emea.nsn-net.net;
-Received: from fihe3nok0735.emea.nsn-net.net (131.228.2.17) by
- VE1EUR03FT007.mail.protection.outlook.com (10.152.18.114) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.10 via Frontend Transport; Wed, 22 Jul 2020 06:44:55 +0000
-Received: from hzling02.china.nsn-net.net (hzling02.china.nsn-net.net [10.159.215.126])
-        by fihe3nok0735.emea.nsn-net.net (GMO) with ESMTP id 06M6irj4025323;
-        Wed, 22 Jul 2020 06:44:54 GMT
-Received: by hzling02.china.nsn-net.net (Postfix, from userid 61462992)
-        id 2EA464849; Wed, 22 Jul 2020 14:44:50 +0800 (CST)
-Date:   Wed, 22 Jul 2020 14:44:50 +0800
-From:   Libing Zhou <libing.zhou@nokia-sbell.com>
-To:     joro@8bytes.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] drv: iommu: amd: Remove double zero check
-Message-ID: <20200722064450.GA63618@hzling02.china.nsn-net.net>
+        Wed, 22 Jul 2020 02:50:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:43035 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728063AbgGVGuK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 02:50:10 -0400
+X-UUID: 1bffc80f5520479f90316bc62bff59b2-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=fG7DIePecIW+cwodnHQEQ2JNbYq/qFq9wVah4koGVsE=;
+        b=PV0tCjcuiZBMSU8oD6glfPMW8Dm98eTrsN3d/FJAAIagjqoUQkkCK1rfXsFlSdApVm1QkfoxSuvMPbvGLXHu8mnGZUtHJEVw1YVn/+o9/T/IZ88q1S/VXH8EObkMgNy/flb4c0jHYFNuE9XYTft2p0IeIJFgSkSSaLhycOA9JA8=;
+X-UUID: 1bffc80f5520479f90316bc62bff59b2-20200722
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1222609477; Wed, 22 Jul 2020 14:50:04 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 14:50:02 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 14:50:02 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>
+Subject: [PATCH 0/4] Mediatek MT8192 clock and scpsys support 
+Date:   Wed, 22 Jul 2020 14:49:57 +0800
+Message-ID: <1595400601-26220-1-git-send-email-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:131.228.2.17;CTRY:FI;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:fihe3nok0735.emea.nsn-net.net;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(376002)(396003)(46966005)(83380400001)(26005)(356005)(47076004)(82740400003)(6266002)(81166007)(82310400002)(5660300002)(44832011)(33656002)(8676002)(70586007)(70206006)(2906002)(186003)(1076003)(9686003)(4326008)(86362001)(478600001)(336012)(8936002)(316002)(42186006)(6916009);DIR:OUT;SFP:1102;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cb0b24d1-85a2-4851-a29e-08d82e0abeed
-X-MS-TrafficTypeDiagnostic: DB7PR07MB5916:
-X-Microsoft-Antispam-PRVS: <DB7PR07MB591601B18D533CF44285900AAF790@DB7PR07MB5916.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:431;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KqBVL/syC6fbYNUv9mPc6lnPfGoJzX2rTRo6UigTRDIzFCnbQ4+Eh1But837UU24b7c0cPk3X/bPv1fmvOvsiKNCRmPAlYZW+OULnhyqAqSi/Erek4yQN8FTk7QoLX4nNbiHzVhp+9B6lPjsdiSPLETFarNqG7kcRpo4+kxTzO7g01qwVXr9KiHYoS+ciJ02/vqxNQ0DkVeRm9XQIziehHXWPyBfe0JUSdLBLIu2xbyvkn7J7dIRZ80fmIqzXJd0m9yQh4ClW2lbmuy8YJm7W61t0os2L9A00q0foBWa5S7ZOx++14x8+qFh2Q9tlheo7gaC/X99uC2L+Doxc42Lo3TM0Cn6HhdH1EIHnmo10t6HUVK2+R5q9Ksr8zRb6lzlrWpl5WYlCveF4jUWxvw8Ig==
-X-OriginatorOrg: nokia-sbell.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 06:44:55.9820
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb0b24d1-85a2-4851-a29e-08d82e0abeed
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5d471751-9675-428d-917b-70f44f9630b0;Ip=[131.228.2.17];Helo=[fihe3nok0735.emea.nsn-net.net]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR03FT007.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR07MB5916
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The free_pages() does zero check, therefore remove double zero
-check here.
-
-Signed-off-by: Libing Zhou <libing.zhou@nokia-sbell.com>
----
- drivers/iommu/amd/init.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 6ebd4825e320..60a8a70b0d4f 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -720,21 +720,14 @@ static void iommu_enable_ppr_log(struct amd_iommu *iommu)
- 
- static void __init free_ppr_log(struct amd_iommu *iommu)
- {
--	if (iommu->ppr_log == NULL)
--		return;
--
- 	free_pages((unsigned long)iommu->ppr_log, get_order(PPR_LOG_SIZE));
- }
- 
- static void free_ga_log(struct amd_iommu *iommu)
- {
- #ifdef CONFIG_IRQ_REMAP
--	if (iommu->ga_log)
--		free_pages((unsigned long)iommu->ga_log,
--			    get_order(GA_LOG_SIZE));
--	if (iommu->ga_log_tail)
--		free_pages((unsigned long)iommu->ga_log_tail,
--			    get_order(8));
-+	free_pages((unsigned long)iommu->ga_log, get_order(GA_LOG_SIZE));
-+	free_pages((unsigned long)iommu->ga_log_tail, get_order(8));
- #endif
- }
- 
--- 
-2.22.0
+VGhpcyBzZXJpZXMgaXMgYmFzZWQgb24gdjUuOC1yYzENCg0KV2VpeWkgTHUgKDQpOg0KICBkdC1i
+aW5kaW5nczogQVJNOiBNZWRpYXRlazogRG9jdW1lbnQgYmluZGluZ3MgZm9yIE1UODE5Mg0KICBj
+bGs6IG1lZGlhdGVrOiBBZGQgZHQtYmluZGluZ3MgZm9yIE1UODE5MiBjbG9ja3MNCiAgY2xrOiBt
+ZWRpYXRlazogQWRkIGNvbmZpZ3VyYWJsZSBlbmFibGUgY29udHJvbCB0byBtdGtfcGxsX2RhdGEN
+CiAgY2xrOiBtZWRpYXRlazogQWRkIE1UODE5MiBjbG9jayBzdXBwb3J0DQoNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLGFwbWl4ZWRzeXMudHh0ICAgICAgfCAgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGF1ZHN5cy50eHQgfCAgICAxICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLGNhbXN5cy1yYXcueWFtbCAgICAgfCAgIDQwICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGNhbXN5cy50eHQgfCAgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGltZ3N5cy50eHQgfCAgICAyICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLGltcF9paWNfd3JhcC55YW1sICAgfCAgIDQzICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLGluZnJhY2ZnLnR4dCAgICAgICAgfCAgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGlwZXN5cy50eHQgfCAgICAxICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLG1kcHN5cy55YW1sICAgICAgICAgfCAgIDM4ICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1mZ2NmZy50eHQgfCAgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1tc3lzLnR4dCAgfCAgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1zZGMueWFtbCAgfCAgIDM5ICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLHBlcmljZmcueWFtbCAgICAgICAgfCAgICAxICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLHNjcC1hZHNwLnlhbWwgICAgICAgfCAgIDM4ICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLHRvcGNrZ2VuLnR4dCAgICAgICAgfCAgICAxICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLHZkZWNzeXMtc29jLnlhbWwgICAgfCAgIDM4ICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLHZkZWNzeXMudHh0ICAgICAgICAgfCAgICAxICsNCiAuLi4vYXJtL21l
+ZGlhdGVrL21lZGlhdGVrLHZlbmNzeXMudHh0ICAgICAgICAgfCAgICAxICsNCiBkcml2ZXJzL2Ns
+ay9tZWRpYXRlay9LY29uZmlnICAgICAgICAgICAgICAgICAgfCAgMTQ2ICsrDQogZHJpdmVycy9j
+bGsvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICAgICAgICAgIHwgICAyNCArDQogZHJpdmVycy9j
+bGsvbWVkaWF0ZWsvY2xrLW10ODE5Mi1hdWQuYyAgICAgICAgIHwgIDE1MCArKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItY2FtLmMgICAgICAgICB8ICAgNjkgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItY2FtX3Jhd2EuYyAgICB8ICAgNTYgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItY2FtX3Jhd2IuYyAgICB8ICAgNTYgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItY2FtX3Jhd2MuYyAgICB8ICAgNTYgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItaW1nLmMgICAgICAgICB8ICAgNTcgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItaW1nMi5jICAgICAgICB8ICAgNTkgKw0KIC4uLi9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfYy5jICB8ICAgNjEgKw0KIC4uLi9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfZS5jICB8ICAgNTUgKw0KIC4uLi9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfbi5jICB8ICAgNTcgKw0KIC4uLi9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfcy5jICB8ICAgNTkgKw0KIC4uLi9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfdy5jICB8ICAgNTUgKw0KIC4uLi9jbGsv
+bWVkaWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfd3MuYyB8ICAgNTkgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItaXBlLmMgICAgICAgICB8ICAgNjEgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItbWRwLmMgICAgICAgICB8ICAgODkgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItbWZnLmMgICAgICAgICB8ICAgNTQgKw0KIGRyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDgxOTItbW0uYyAgICAgICAgICB8ICAxMDggKysNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1zZGMuYyAgICAgICAgfCAgIDU0ICsNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1zZGNfdG9wLmMgICAgfCAgIDgzICsNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLXNjcF9hZHNwLmMgICAgfCAgIDU1ICsNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLXZkZWMuYyAgICAgICAgfCAgIDgxICsNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLXZkZWNfc29jLmMgICAgfCAgIDg2ICsNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLXZlbmMuYyAgICAgICAgfCAgIDU3ICsNCiBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLmMgICAgICAgICAgICAgfCAxNTQ5ICsrKysrKysrKysr
+KysrKysrDQogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ay5oICAgICAgICAgICAgICAgIHwg
+ICAgMiArDQogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW11eC5oICAgICAgICAgICAgICAgIHwg
+ICAxNSArDQogZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLXBsbC5jICAgICAgICAgICAgICAgIHwg
+ICAyNiArLQ0KIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ4MTkyLWNsay5oICAgICAgICB8
+ICA1OTMgKysrKysrKw0KIDQ4IGZpbGVzIGNoYW5nZWQsIDQxNzcgaW5zZXJ0aW9ucygrKSwgNCBk
+ZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxjYW1zeXMtcmF3LnlhbWwNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRl
+ay9tZWRpYXRlayxpbXBfaWljX3dyYXAueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1kcHN5cy55
+YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssbXNkYy55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssc2Nw
+LWFkc3AueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLHZkZWNzeXMtc29jLnlhbWwNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE5Mi1hdWQuYw0KIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLWNhbS5jDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxOTItY2FtX3Jhd2Eu
+Yw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLWNh
+bV9yYXdiLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10
+ODE5Mi1jYW1fcmF3Yy5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVr
+L2Nsay1tdDgxOTItaW1nLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10ODE5Mi1pbWcyLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVk
+aWF0ZWsvY2xrLW10ODE5Mi1pbXBfaWljX3dyYXBfYy5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxOTItaW1wX2lpY193cmFwX2UuYw0KIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLWltcF9paWNfd3JhcF9u
+LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE5Mi1p
+bXBfaWljX3dyYXBfcy5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVr
+L2Nsay1tdDgxOTItaW1wX2lpY193cmFwX3cuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLWltcF9paWNfd3JhcF93cy5jDQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxOTItaXBlLmMNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE5Mi1tZHAuYw0KIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1mZy5jDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxOTItbW0uYw0KIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1zZGMuYw0KIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTkyLW1zZGNfdG9w
+LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE5Mi1z
+Y3BfYWRzcC5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1t
+dDgxOTItdmRlYy5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Ns
+ay1tdDgxOTItdmRlY19zb2MuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRp
+YXRlay9jbGstbXQ4MTkyLXZlbmMuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9t
+ZWRpYXRlay9jbGstbXQ4MTkyLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5k
+aW5ncy9jbG9jay9tdDgxOTItY2xrLmgNCg==
 
