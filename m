@@ -2,89 +2,104 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A50BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2824FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C61320781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE36120781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AKN3YODj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC+kH/cB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgGVS4G (ORCPT
+        id S1732440AbgGVS5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36944 "EHLO
+        Wed, 22 Jul 2020 14:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgGVS4F (ORCPT
+        with ESMTP id S1726685AbgGVS5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:56:05 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36959C0619E0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:56:04 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id q2so3020103qkc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:56:04 -0700 (PDT)
+        Wed, 22 Jul 2020 14:57:32 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D40ACC0619DC;
+        Wed, 22 Jul 2020 11:57:31 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k23so3633403iom.10;
+        Wed, 22 Jul 2020 11:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8WNY2CxXZhFyfG36mcsmoWBP8jQf9E5iWxL+7JoT3QM=;
-        b=AKN3YODj3oyzXTuDCkjFiRx0ubFOmPCQyRU7fSCndkoxtuG4njAUVt86VxdbEmeZWH
-         nQUV6h5cPqeK7nkdDMlMAjFK6gbzsIvnHpks8GHXexeutGJsMkxN9hgnekcV3UpiFHUV
-         qHlGyLUtb7QLXv1Fhih+NZHslV0yIvhUjuh24=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cyYqWjxKnaJnkrSinErf/w6JPEbLN4zqCCxlbnmFQcU=;
+        b=AC+kH/cBHN2vxvPbFT/Fgh402oNBuH353UPFNnCxHWEKrs/jGKQ60beooblVSxtdeZ
+         YkDqtRUWvzeHgv8OpqaSOb4kZJSxLzgT+u/luWaHIAXgvr/dOypo1t6OygyOfKEsCNJ2
+         7bzgXavlIboo6/4aTKak+orDkA3RHv2Y+AgaPDBLPBv2USv3p7XVRxR6nfztiR/p0mIL
+         3L5m40vDAnr/Et3RRG53e+vVAQCqbs8wx94As5GNARAhIoc8YqXEd2yr8DptSp+4O20j
+         0S9R+NPQ4bSueZ0gyIWGp82KADBwMJ6bdhxLp65/KBfEzFOhGUqdw1eI8g9yBmq5fEha
+         WIyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8WNY2CxXZhFyfG36mcsmoWBP8jQf9E5iWxL+7JoT3QM=;
-        b=Pwvj1GPLpe+0Y0sFr8nDdKWvMxKZfGHk5ZqPXp0PIf2NGfyq1mwUEqDiqFjBMDYNeH
-         RG5NfAh4Dsb1ueBWsJx0yIIMxopJTp2/GmAiMzBVCv76HgWLidlPeeyhUePcWUn0IL3l
-         S5vGhOSE3vGlsoNJwSBhXUV25/SQQCEZ2im/KdEBPrdrKETwj61P/5fXBsiqbOCx2CHN
-         ma8TQsAf5meqYl6OgICPwcX2ixT+qP4JlU/LEM+JQh3f11zfPGKJSXIQ5JDyt6eK/0qS
-         DGONrIoEoiBwIV9BUYa8lLMCQgHE7uCg3L9x8CudifHbfbMV3GP+PW/pqAmZ0OkqgfHj
-         5FgQ==
-X-Gm-Message-State: AOAM5320P7iLNQCqilF8JcCtBU4inkHsuTn1yi22kpLZJdQwpqbLjUWl
-        wLUiy+JtjqXCHCkDiyBfKwrCdl/xD5nYLSNyHXRQ6g==
-X-Google-Smtp-Source: ABdhPJwb65YS/eaVNn6Kf/wrD2aPtRHefUwDZ/rAHS4qc8uKXBuMDd+ibHTV4AgX/xTWLNRhJrW7AUkQcQer7DxWZ6g=
-X-Received: by 2002:ae9:e641:: with SMTP id x1mr1422408qkl.424.1595444163106;
- Wed, 22 Jul 2020 11:56:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200722184358.GA15694@embeddedor>
-In-Reply-To: <20200722184358.GA15694@embeddedor>
-From:   Michael Chan <michael.chan@broadcom.com>
-Date:   Wed, 22 Jul 2020 11:55:51 -0700
-Message-ID: <CACKFLik4j4w-EHfJQt0-PA6O0FUp_Np8W4KaDwosQGL2niNP2A@mail.gmail.com>
-Subject: Re: [PATCH][next] tg3: Avoid the use of one-element array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cyYqWjxKnaJnkrSinErf/w6JPEbLN4zqCCxlbnmFQcU=;
+        b=NRcLkJ32SCrFvUZ0/w6UwIoFdC2Z87CBkCZKaPbU8HzWU80PlmpHnKKhjSlwBrQSh1
+         VjgulnjhtLBmDvX++zmIehYRhHP14iKZj/co0jAwyKRRJZpxXw7yf0M85LocJZThyE9+
+         IUI2Ib/vM+i63jQPG3Lv/OXEMv36Vel6Fap6kwZVd6QCCTYV+OIjt6Idk8RJxB2m2s0s
+         bobjObBipX2FhnhgqbY3poD19ymx1EwiHE11EXXEn5Ey4MJd/LpOUSqNMZVZpT7W03vC
+         05nIgnXE69pOxhYh5wxtmkT1jn19WS8FU8IsDVKc5wVpaawga9OyjcLbSR6CMb5BgFjh
+         8JMQ==
+X-Gm-Message-State: AOAM532u8ImBa31mNRh36QnF1f+SHRnasdNqFNabyqPKHPjvrGcICYXI
+        xNWJ0Pc5rV+JZMgWymZZphI=
+X-Google-Smtp-Source: ABdhPJypONaIA/NiGC5LcYqRsCE4RKA/YxWVwdlOmJalO2tHjKIEyDOyWaxWvPS2dea9RO9jlWjROw==
+X-Received: by 2002:a02:a408:: with SMTP id c8mr684723jal.59.1595444251225;
+        Wed, 22 Jul 2020 11:57:31 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
+        by smtp.googlemail.com with ESMTPSA id a5sm186256iol.39.2020.07.22.11.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 11:57:30 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Vishal Kulkarni <vishal@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH v2] cxgb4: add missing release on skb in uld_send()
+Date:   Wed, 22 Jul 2020 13:57:21 -0500
+Message-Id: <20200722185722.3580-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200720.183113.2100585349998522874.davem@davemloft.net>
+References: <20200720.183113.2100585349998522874.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:38 AM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> One-element arrays are being deprecated[1]. Replace the one-element
-> array with a simple value type 'u32 reserved2'[2], once it seems
-> this is just a placeholder for alignment.
->
-> [1] https://github.com/KSPP/linux/issues/79
-> [2] https://github.com/KSPP/linux/issues/86
->
-> Tested-by: kernel test robot <lkp@intel.com>
-> Link: https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/0-day/tg3-20200718.md
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+In the implementation of uld_send(), the skb is consumed on all
+execution paths except one. Release skb when returning NET_XMIT_DROP.
 
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+changes in v2:
+	- using kfree_skb() based on David Miller suggestion.
+---
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index d8c37fd4b808..92eee66cbc84 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2938,7 +2938,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
+ 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
+ 	if (unlikely(!txq_info)) {
+ 		WARN_ON(true);
+-		consume_skb(skb);
++		kfree_skb(skb);
+ 		return NET_XMIT_DROP;
+ 	}
+ 
+-- 
+2.17.1
+
