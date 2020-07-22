@@ -2,101 +2,102 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E34AC433FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA2F20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="2mNk1t3x"
+	by mail.kernel.org (Postfix) with ESMTP id 1BED42064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595425518;
+	bh=3R/MABaRAiiOnMqmudmTDoOS3PJRYlSkFbhNILhNoBo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=Fcm2FDNuG9ypKdBHB8Ocyb1cyTYMrGV5myOwte0S5NBPbqm1DDHvfS6iXN5jLqevR
+	 9HI3QXetDz/WKIMOdxk4WQqxYkhUW0UZmg34RtzDCOMq7PINR52tBSAUpZqL71bEFE
+	 wSdpGHcst1ApyAuYHl8xnXE32DTEMpEJ/XMxIVhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732581AbgGVNpE (ORCPT
+        id S1732590AbgGVNpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:45:04 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:56885 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732510AbgGVNok (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:44:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595425480; x=1626961480;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JFzmp3IpT2/vSAdFB2tkC7kXSDjHPZkrYg58Jnu3Ns4=;
-  b=2mNk1t3xt2H4Av1TvZ44c3zedYzUEYvkphKPu6JwjL4wydpystUY/3aW
-   MS+LbxErt0b8aqJoGpIjvByiJDZNsK8Pu5bGBagZg54qxAc6k+vApRB4B
-   wl8jXIzms54IllJVmcB3qZubLAEuH83d7VbTABYVKT9u3ySYXgZ1yQJEr
-   ohKpBbzGvvrAUOZJAN9ke8k59t3KRdO7vF7B7l5l910yTMuVLn03D3DtI
-   /P7Hu5QP/vlxuvpUxDr1Gf406wsaGOAokX1NarvXU/T6VmP97I+OYBJWJ
-   SrmBLal6KQjrk5g9WMRcmswPEICHFXvH4ziu8mC1UucNufEsN87HaBYN0
-   A==;
-IronPort-SDR: GXI+AelBLfDF4k+vg4jPexQSY4dmsVzVsrIyDtwSkCHaEO9CNQK90IdR5elR1COg+J1keBMh3W
- skM/d1jPPOLqTTn2lUYjFABaaB+eRdeWPZ5sMB+OjsQWB6LkYCGDFzOok/V8Vs982cNp45Sp7Y
- 9EfKFLFkx+m40AsUVZ6JyWT1KIlbdLJYVyKBs3XKoaGigFSUVLYSyV845BBbLQv6ath3ow8PD0
- yOl87UkwswFC4KTXLDkFkx2bjb/Uyt04gnEK903G+/Ba0ULMvjHpSpCe7tg5FKAr3PUSOkydMG
- lsk=
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="82819489"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 06:44:32 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 22 Jul 2020 06:44:31 -0700
-Received: from cristi-P53.amer.actel.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 22 Jul 2020 06:43:50 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Cristian Birsan <cristian.birsan@microchip.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 2/6] dt-bindings: usb: atmel: Update DT bindings documentation for sam9x60
-Date:   Wed, 22 Jul 2020 16:44:17 +0300
-Message-ID: <20200722134421.190741-3-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722134421.190741-1-cristian.birsan@microchip.com>
-References: <20200722134421.190741-1-cristian.birsan@microchip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Wed, 22 Jul 2020 09:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbgGVNpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:45:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC89120717;
+        Wed, 22 Jul 2020 13:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595425515;
+        bh=3R/MABaRAiiOnMqmudmTDoOS3PJRYlSkFbhNILhNoBo=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=mXjKWxDI22gMpTj2CDCmbvxZB36C5f9iJkAfwAweqM4V4lGQ5K+MmkQxxPctqAp8h
+         ICA5mCADFFoGJo4ghofLB0r2p5LsK/7IZtYt9wA8emeBFmHZ350NRFgARjAJdpEMrp
+         OOS6vB0rJBEe/hZFqaXsawkPeF3V2dXPZ3HnpBGI=
+Date:   Wed, 22 Jul 2020 14:45:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>,
+        linux-spi@vger.kernel.org, robh@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        andriy.shevchenko@intel.com, chuanhua.lei@linux.intel.com,
+        daniel.schwierzeck@gmail.com, hauke@hauke-m.de,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
+References: <efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com>
+Subject: Re: [PATCH v2 1/8] spi: lantiq: fix: Rx overflow error in full duplex mode
+Message-Id: <159542550175.19884.3888166163609861581.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+On Fri, 17 Jul 2020 14:27:50 +0800, Dilip Kota wrote:
+> In full duplex mode, rx overflow error is observed. To overcome the error,
+> wait until the complete data got received and proceed further.
 
-Add sam9x60 binding.
+Applied to
 
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/usb/atmel-usb.txt | 1 +
- 1 file changed, 1 insertion(+)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-index 423b99a8fd97..a4002624ba14 100644
---- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-@@ -82,6 +82,7 @@ Required properties:
- 	       "atmel,at91sam9rl-udc"
- 	       "atmel,at91sam9g45-udc"
- 	       "atmel,sama5d3-udc"
-+	       "microchip,sam9x60-udc"
-  - reg: Address and length of the register set for the device
-  - interrupts: Should contain usba interrupt
-  - clocks: Should reference the peripheral and host clocks
--- 
-2.25.1
+Thanks!
 
+[1/8] spi: lantiq: fix: Rx overflow error in full duplex mode
+      commit: 661ccf2b3f1360be50242726f7c26ced6a9e7d52
+[2/8] spi: lantiq: Add SMP support
+      commit: ddf41bf782d2fb1df605407c7fff1160f488c949
+[3/8] spi: lantiq: Move interrupt control register offesets to SoC specific data structure
+      commit: 8d19d665e0aca28c4bd8a024241b05f74841a315
+[4/8] spi: lantiq: Add support to acknowledge interrupt
+      commit: 94eca904cb97f9cfa90e3e558fb73c49d2e42f91
+[5/8] spi: lantiq: Add fifo size bit mask in SoC specific data structure
+      commit: 8743d2155aed9236202294e293ab13d33b3a7682
+[6/8] spi: lantiq: Move interrupt configuration to SoC specific data structure
+      commit: 744cd0f212d72758fb094c1d13ec61b27ab6de3f
+[7/8] spi: Add bindings for Lightning Mountain SoC
+      commit: 956284a304dd7d100730b85d90eac3f472b7d2a0
+[8/8] spi: lantiq: Add support to Lightning Mountain SoC
+      commit: 040f7f9729785363eb062a36f76467c7b7c9b7c1
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
