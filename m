@@ -2,171 +2,90 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94316C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE018C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F8A20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA57207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595428949;
-	bh=wk9uc9EFeU1U4bZjuLI5oT7Ft4gFDxjC68gV7uHyIQU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rA7yy9A3YTpq2z5/f6tUG7rqzahs0O4mUSj/c/uOKFYZ8lg85f64I+ui4U+Yeav1N
-	 vAUxlXeVBQ5lHc17yJJruOjDGYYDK5HJudT/rEYN3A5zKQUU9bjvDBdsh2AYpmsqz9
-	 5Et3pJn2SQvGDgW+BZ0yRfe02jlDqifEck4eqqnE=
+	s=default; t=1595428992;
+	bh=G/0+PS1ME2vNfMTZZAKnHzJi7Fk3q+kRCbaGcdc8iMA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w6yNPewOwIFer6YMbivKL4ZyWh1+t6eVt3Md1BCfWW/boE489ZKjXMfn/toouur2u
+	 EboSPlX2NwyPVKErGw8bbFuSP4KvS9P0Id/0prGw1VLKTjUOqq1cn13547CSZrBtN/
+	 BeIHPA4NTK4sdnAk4rziihCrW+gnr6C4DZG6y6+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732769AbgGVOm2 (ORCPT
+        id S1732592AbgGVOnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 10:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730973AbgGVOm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:42:27 -0400
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731000AbgGVOnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:43:11 -0400
+Received: from embeddedor (unknown [201.166.157.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98ABD20787;
-        Wed, 22 Jul 2020 14:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE39020771;
+        Wed, 22 Jul 2020 14:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595428946;
-        bh=wk9uc9EFeU1U4bZjuLI5oT7Ft4gFDxjC68gV7uHyIQU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R1rLrUiJOsu7Jts6Z0NU9U/t9UkTln7Iy+U9KrDK4pWNWUGAJ3q+e/6imP0mGETbl
-         KFjcPQUz+kR+c2XAyWPDQZrrACYdPKJSvD481tqUPAxzo8O59XknINk5F662atu6LQ
-         fnV85N6Mm7FSf8goxWEiQoE62PMEWGgIyV5Bky2U=
-Received: by mail-oo1-f41.google.com with SMTP id t6so461467ooh.4;
-        Wed, 22 Jul 2020 07:42:26 -0700 (PDT)
-X-Gm-Message-State: AOAM532K0Qx8WkH6nCpjDJvsoK4lUjZ5KzLGdhkgtiPX7NefUMPfauT0
-        /u/ht0drKVN6n2Ow0ipQftk93ZwuwX+EcVXkyA==
-X-Google-Smtp-Source: ABdhPJyQP1ZRMVJKJdH4QnM2k+ib1BqJI5c0CwiJkic3VdGrn99f7M/qMgn52dXNwA8FzcQBsfsiYcZtAdhuSLxTl7A=
-X-Received: by 2002:a4a:9c0f:: with SMTP id y15mr254900ooj.81.1595428945904;
- Wed, 22 Jul 2020 07:42:25 -0700 (PDT)
+        s=default; t=1595428991;
+        bh=G/0+PS1ME2vNfMTZZAKnHzJi7Fk3q+kRCbaGcdc8iMA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q1yPpCsLEiExymVzLhCSxCNnNPDoatndMjyK2USKmQFDU5QOFTGzn5mjZeF1A+4/l
+         YMb1p3/tmFV9TtV5SJsa+LzWn1iPGYBljEli8aZKcKBEuf3kEB/gN30a54hUwJ5qZW
+         E484Erm8Xe2kHzsqNFsxeaUlt3juKo72XnogzK7o=
+Date:   Wed, 22 Jul 2020 09:48:48 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
+Message-ID: <20200722144848.GC22267@embeddedor>
+References: <20200721233814.GA3058@embeddedor>
+ <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
+ <20200722143713.GB22267@embeddedor>
+ <20200722143814.GS1030@ninjato>
 MIME-Version: 1.0
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-2-bjorn.andersson@linaro.org> <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
- <20200722044615.GR388985@builder.lan>
-In-Reply-To: <20200722044615.GR388985@builder.lan>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Jul 2020 08:42:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLa9GBtbgN6aL7AQ=A6V-YRtPgYqh6XgM2kpx532+r4Gg@mail.gmail.com>
-Message-ID: <CAL_JsqLa9GBtbgN6aL7AQ=A6V-YRtPgYqh6XgM2kpx532+r4Gg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722143814.GS1030@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:48 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 21 Jul 08:13 PDT 2020, Rob Herring wrote:
->
-> > On Mon, Jun 22, 2020 at 1:59 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
-> > >
-> > > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >
-> > > Changes since v1:
-> > > - Actually remove the old binding doc
-> > >
-> > >  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
-> > >  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
-> > >  2 files changed, 51 insertions(+), 39 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> >
-> > [...]
-> >
-> > > diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> > > new file mode 100644
-> > > index 000000000000..71e63b52edd5
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> > > @@ -0,0 +1,51 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm Hardware Mutex Block
-> > > +
-> > > +maintainers:
-> > > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > +
-> > > +description:
-> > > +  The hardware block provides mutexes utilized between different processors on
-> > > +  the SoC as part of the communication protocol used by these processors.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - qcom,sfpb-mutex
-> > > +      - qcom,tcsr-mutex
-> > > +
-> > > +  '#hwlock-cells':
-> > > +    const: 1
-> > > +
-> > > +  syscon:
-> > > +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> > > +    description:
-> > > +      Should be a triple of phandle referencing the TCSR mutex syscon, offset
-> > > +      of first mutex within the syscon and stride between each mutex.
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - '#hwlock-cells'
-> > > +  - syscon
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +        tcsr_mutex_block: syscon@fd484000 {
-> > > +                compatible = "syscon";
-> >
-> > 'syscon' alone now generates warnings. Can you drop this node or add a
-> > specific compatible.
-> >
->
-> In the binding examples or in the dts files as well?
+Hi Wolfram,
 
-Both, but only the examples need to be warning free at this point. So
-just dropping the node in the example is enough and you can solve this
-for dts files later if you wish.
+On Wed, Jul 22, 2020 at 04:38:14PM +0200, Wolfram Sang wrote:
+> 
+> > > > [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> > > 
+> > > Perhaps you may do it as Link: tag?
+> > > 
+> > 
+> > mmh... that's a good suggestion; thanks, Andy.
+> 
+> If you want to resend, please only one patch for all I2C drivers. The
+> change is "cosmetic" enough to do that IMO.
+> 
 
-> The hardware block here is named "TCSR_MUTEX", so the natural compatible
-> to add here would be "qcom,tcsr-mutex", but that already has a meaning -
-> and the syscon node here doesn't carry all required properties...
+The reason why I'm sending separate patches for this is because
+the drivers have different maintainers.
 
-So you have 2 nodes pointing to the same h/w? Also a no-no...
+Also, I think theses patches are fine as is; and I will consider
+using a link tag for new patches.
 
-> Should we perhaps just remove the split model (syscon and
-> qcom,tcsr-mutex as different nodes) from the example and dts files?
-> (While maintaining backwards compatibility in the binding and driver)
->
-> For the platforms where we have other drivers that needs to poke in this
-> syscon it seems to work fine to say:
->         compatible = "qcom,tcsr-mutex", "syscon";
+Thanks
+--
+Gustavo
 
-Yes. 'syscon' just means automagically create a regmap.
-
-Rob
