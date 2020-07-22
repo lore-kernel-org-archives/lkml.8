@@ -2,89 +2,103 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005C3C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9395C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7AB220709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8572B20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595401895;
+	bh=Qq1JCrzfULqcOMGKug19xkzcyJpWj4fO4NHT0pDzsvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n9QSi6beJtnSgmsXkCUz5D3KEoNEvhO4Ca3O8hSnt/x/GHxA/MpRMy1RNbaRlMLMm
+	 8+WymroYsXuFk/K6bDcXFN2EI2bdMTOuvtLsazTkEHqWAyDlOP1pcMltX0ow2SrmH6
+	 kPJnKrr6p8bgEgtgAAOmgUangY8qRPEpKcSLA3j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbgGVHLI (ORCPT
+        id S1731829AbgGVHLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:11:08 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51584 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbgGVHLI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:11:08 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2B3751C0BF1; Wed, 22 Jul 2020 09:11:05 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 09:10:55 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org, marek.behun@nic.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v31 03/12] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-Message-ID: <20200722071055.GA8984@amd>
-References: <20200716182007.18389-1-dmurphy@ti.com>
- <20200716182007.18389-4-dmurphy@ti.com>
- <20200721210554.GC5966@amd>
- <c774fab9-124b-da2e-6f7c-614f34322942@ti.com>
+        Wed, 22 Jul 2020 03:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727096AbgGVHLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 03:11:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B309206F5;
+        Wed, 22 Jul 2020 07:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595401893;
+        bh=Qq1JCrzfULqcOMGKug19xkzcyJpWj4fO4NHT0pDzsvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jrqJnq6bYanfGKt2tciRbAai+wfqcrokv6kyAQU9ceTOOBGjSqSLjbkN1U1yp45FC
+         3QbZUnQ4dUbycZDigjqcEQci7LNfUSJ+3z3kkiEf7FhNumfaVSqYsPVHWXcd3CZ0p+
+         A4EAiFrfUXObJZD8YjAX0AWTBvAg1Zqhs3nRt8nk=
+Date:   Wed, 22 Jul 2020 09:11:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
+        <JohnsonCH.Chen@moxa.com>
+Cc:     Jiri Slaby <jirislaby@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Victor Yu =?utf-8?B?KOa4uOWLnee+qSk=?= <victor.yu@moxa.com>,
+        Danny Lin =?utf-8?B?KOael+aUv+aYkyk=?= <danny.lin@moxa.com>
+Subject: Re: [PATCH] tty: Add MOXA NPort Real TTY Driver
+Message-ID: <20200722071140.GA2769446@kroah.com>
+References: <HK2PR01MB328134FB2EF5F9D1E381BDA3FA610@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <20200714073609.GA688099@kroah.com>
+ <HK2PR01MB32815CE2F455B909EA32F406FA7F0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <20200716072305.GA970724@kroah.com>
+ <HK2PR01MB32817A21FEDDC410F2822640FA790@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c774fab9-124b-da2e-6f7c-614f34322942@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <HK2PR01MB32817A21FEDDC410F2822640FA790@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 22, 2020 at 07:04:00AM +0000, Johnson CH Chen (陳昭勳) wrote:
+> Hi Greg,
+> 
+> Thanks for your response!
+> 
+> > > > > +	unsigned long flag;
+> > > > > +	unsigned char cmd_buffer[84];
+> > > > > +	unsigned char rsp_buffer[84];
+> > > >
+> > > > You seem to have two "static" buffers here, for your device, that 
+> > > > you semi-randomly write to all over the place, but I can't find 
+> > > > any locking or coordination between things that prevents multiple 
+> > > > commands from not just overwritting each other.
+> > > >
+> > > For cmd_buffer[], we use npreal_wait_and_set_command() to make sure 
+> > > cmd_buffer[] is safe to be written by checking "cmd_buffer[0] == 0".
+> > 
+> > And what locks are protecting you there?
+> > 
+> > > For rsp_buffer[], we use npreal_wait_command_completed() to make 
+> > > sure rsp_buffer[] is desired by checking rsp_buffer[0] and rsp_buffer[1].
+> > > Command_set and command should be checked. Besides, rsp_buffer[] is 
+> > > got from user space by "NPREAL_NET_CMD_RESPONSE" in 
+> > > npreal_net_ioctl().
+> > 
+> > Again, what locking is really handling this?
+> > 
+> 
+> It's better to protect cmd_buffer[84] and rsp_buffer[84] by locking completely. They are safe because NPort driver should be worked with NPort daemon before, and NPort daemon is designed to be simple.
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm sorry, but I do not understand this answer at all.  Something can be
+"simple" and still be totally wrong :)
 
-Hi!
+Without locking, this code is broken.
 
-> >>+			ret =3D fwnode_property_read_u32_array(child,
-> >>+							     "reg",
-> >>+							     led_banks,
-> >>+							     ret);
-> >Move this to subfunction to reduce the indentation? (Or, just refactor
-> >it somehow).
->=20
-> Actually I can just put it all on the same line since the 80 character
-> requirement is relaxed.
+thanks,
 
-No.
-
-You have too long and too complex function, with too many blocks
-inside each other. Please fix it.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8X5n8ACgkQMOfwapXb+vIx7QCeJ+80yzhE3zdJ33JsSBF1CbS9
-i0EAn1cgjVdwOdcgTvETrwYx8ha/r9B5
-=x2Vm
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
+greg k-h
