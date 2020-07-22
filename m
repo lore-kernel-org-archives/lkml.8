@@ -2,126 +2,113 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBA9C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33C5520729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BA02077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T+Tn1IXd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VDCYwlWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbgGVJNo (ORCPT
+        id S1731495AbgGVJNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:13:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbgGVJNn (ORCPT
+        Wed, 22 Jul 2020 05:13:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23517 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731472AbgGVJNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:13:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3021DC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:13:43 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s26so859566pfm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VSSYQnDcAEo6XODOg0weBZ1js78HVuMbUH/1YUmj6qE=;
-        b=T+Tn1IXdYkqpqQCs0GCtVcpQo/ltUqYpf13AFLjIAwdH1oAXZ/3yJu0ycOJbd2aE9v
-         4v/rBr9OXxul+D2kr+iPEZkqZrM0+0UFTQkRc6Dit3vxdw7GvNEcsXqIoE8asCCg19XF
-         CdUiX0E29iqPrxpxcGteGSYitGaZ3k1lT6mRoFsCtmeO+RzOCGdHZf8bRudQmkGCEJiQ
-         oxJkOl9olO/fiVr0GUEOPzU/N2ELnH306UDLnyeFPlgP6O5ElMD4JWgiKyOjtaD/KF2F
-         U3q+VbDKiSngEvKGhfUPsWGuKWQ/lnHZobi3yTUWaekS4ydNi2CdbnlLDxnrRO7mDGrG
-         0qMA==
+        Wed, 22 Jul 2020 05:13:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595409231;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=ZYZjRH/Es7S7krkOLC+4d8dzWEgBPyCz/UYU6pFdugw=;
+        b=VDCYwlWwd1sQKkmH6BZH7BUJkdxHBfbKx90iQo8uXa+iSRkjZe64G6gsY7w9dRvPTXxwxe
+        iO0PHPBPYB9/x/fUxSkEy4J7gGkgCLzs/5siVUTJoluAmQmIOPM8Edt5m3qmqf0WCMjGi3
+        0aVzrUOXv9mgI6Nah+KKcYUSmCBa3qU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-Rgndl27MMOOnrt70oyruQw-1; Wed, 22 Jul 2020 05:13:50 -0400
+X-MC-Unique: Rgndl27MMOOnrt70oyruQw-1
+Received: by mail-wm1-f69.google.com with SMTP id e15so860150wme.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:13:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VSSYQnDcAEo6XODOg0weBZ1js78HVuMbUH/1YUmj6qE=;
-        b=URomX1zoo41QkkDOlvGAr9n5BacDoKgsdWYUIfpfMp5ZbMRa/Il/zBO8UOl4erL0Zf
-         hsDwRwNNBS2tUE7SpPvGsgLx2d2a/rQWEUD2EWTa5N64EHzmNVsFuqLwt2T6Kj0dOlfc
-         eQYY6hRTjk2dvhpxCTSuoUKxlKaCdw++EuQ6A47stI4szFPQfZgPAF6j9Npw/W6f+kor
-         /gMpZeDX6/5kZHkia2WzLanc9sOKNiFXLd78BYMpgXbncsFQcaVF+JOfLp43NN1Y+NJe
-         edqpMO9Wf7aK9KbPUJ8PNDFFtDc2fcNy9RSpcOVx3IwNHBCo7Efujx/WYsQlsdqpdKlf
-         60UA==
-X-Gm-Message-State: AOAM533nlaH4WcjG+yxokk4QcvBz1wUB9G/XIXvHEdur2/EHmQ8k5LCF
-        0/Vh7Ncewxz3G0+W0A+79qiD4Q==
-X-Google-Smtp-Source: ABdhPJz339nnnOnrsTS8ufVI4oWdieVsnoOIzIxcaYOFG9esYsmXqGZpy37dcy7CdcxUrrXCVPClRQ==
-X-Received: by 2002:aa7:9f8f:: with SMTP id z15mr27355816pfr.73.1595409222708;
-        Wed, 22 Jul 2020 02:13:42 -0700 (PDT)
-Received: from localhost ([182.77.116.224])
-        by smtp.gmail.com with ESMTPSA id y1sm5024878pfg.86.2020.07.22.02.13.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jul 2020 02:13:41 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 14:43:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-kernel@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/2] thermal: cpufreq_cooling: Reuse effective_cpu_util()
-Message-ID: <20200722091338.syymxwgk6znnasvt@vireshk-mac-ubuntu>
-References: <cover.1594707424.git.viresh.kumar@linaro.org>
- <b051b42f0c4f36d7177978e090c6a85df17922c6.1594707424.git.viresh.kumar@linaro.org>
- <20200717101438.GA2366103@google.com>
- <20200717103305.GA2385870@google.com>
- <20200717104314.GB2385870@google.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ZYZjRH/Es7S7krkOLC+4d8dzWEgBPyCz/UYU6pFdugw=;
+        b=KrSotvl25Kq6CctAx98fLeaHRmIBH3ZnHz7P5K/PPxaWiwqLfw417IpkV+Jyw8TlSC
+         kJE02AJyP7URE50X2hMVT2Xk1gLM8jXGlYLS1DRsXYV3snr/+r6JDRJJ7YP5+X9vAyEz
+         vYCXKCpnNNv4way0XbHACUGdz3qy8IOhIpUgog4NZoOjxEi8f9IjQt0x9my0fME1HeKI
+         MSdWKmoGailrKguZVV0b+DlvgrNWjod8BbrcQlg5SuWZOUeAgril9J9h3PiQMfcRLG6t
+         QPgaODhrsW4npmDf5Dw9EAWTlB1vW2swanT5ieY31oUZIj1u5hadTXFJbIppubfCw8iS
+         IztQ==
+X-Gm-Message-State: AOAM531CdKdWOKGoNrqykYYYPZSRcZl+9G+deuvv1xm1lnkWkh88opqF
+        K5PgvxulileLUHSJ1521/wLG/99a1CpICLpnrF890NVgn05JAJ/JIVyYpFN8YfnBlbpDWePtYBJ
+        QOuRI6ruhuug22p41zeeWQqI7
+X-Received: by 2002:a5d:4a0b:: with SMTP id m11mr10008445wrq.407.1595409229017;
+        Wed, 22 Jul 2020 02:13:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzyS5CUHzdzlW96rSCvkGGQDHMhWSHDh6017O1YZEfSgcuNfZ7jly9ctkINJZnYd0lJKeegaQ==
+X-Received: by 2002:a5d:4a0b:: with SMTP id m11mr10008430wrq.407.1595409228738;
+        Wed, 22 Jul 2020 02:13:48 -0700 (PDT)
+Received: from steredhat ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id j24sm11173841wrb.49.2020.07.22.02.13.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 02:13:48 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 11:13:42 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: scripts/gdb: received an error when invoking lx-symbols
+Message-ID: <20200722091342.c3iss32caiuuizja@steredhat>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717104314.GB2385870@google.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-07-20, 11:43, Quentin Perret wrote:
-> On Friday 17 Jul 2020 at 11:33:05 (+0100), Quentin Perret wrote:
-> > On Friday 17 Jul 2020 at 11:14:38 (+0100), Quentin Perret wrote:
-> > > On Tuesday 14 Jul 2020 at 12:06:53 (+0530), Viresh Kumar wrote:
-> > > >  /**
-> > > > - * get_load() - get load for a cpu since last updated
-> > > > + * get_load() - get current load for a cpu
-> > > >   * @cpufreq_cdev:	&struct cpufreq_cooling_device for this cpu
-> > > >   * @cpu:	cpu number
-> > > > - * @cpu_idx:	index of the cpu in time_in_idle*
-> > > > + * @cpu_idx:	index of the cpu
-> > > >   *
-> > > > - * Return: The average load of cpu @cpu in percentage since this
-> > > > - * function was last called.
-> > > > + * Return: The current load of cpu @cpu in percentage.
-> > > >   */
-> > > >  static u32 get_load(struct cpufreq_cooling_device *cpufreq_cdev, int cpu,
-> > > >  		    int cpu_idx)
-> > > >  {
-> > > > -	u32 load;
-> > > > -	u64 now, now_idle, delta_time, delta_idle;
-> > > > -	struct time_in_idle *idle_time = &cpufreq_cdev->idle_time[cpu_idx];
-> > > > -
-> > > > -	now_idle = get_cpu_idle_time(cpu, &now, 0);
-> > > > -	delta_idle = now_idle - idle_time->time;
-> > > > -	delta_time = now - idle_time->timestamp;
-> > > > +	unsigned long util = cpu_util_cfs(cpu_rq(cpu));
-> > > > +	unsigned long max = arch_scale_cpu_capacity(cpu);
-> > > 
-> > > Should we subtract the thermal PELT signal from max?
+Hi Jan, Kieran,
+with the last Linux 5.8-rc6 I have some problems with gdb scripts.
+Everything is fine with Linux 5.7.
 
-Makes sense to me, but I am not really good with this util and load
-stuff and so would leave that to you guys to decide :)
+When I call lx-symbols, I received this error while loading modules
+symbols:
 
--- 
-viresh
+    (gdb) set python print-stack full
+    (gdb) target remote :1234
+    Remote debugging using :1234
+    arch_atomic_read (v=<optimized out>) at ../arch/x86/kernel/process.c:687
+    687		trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+    (gdb) lx-symbols 
+    loading vmlinux
+    scanning for modules in /home/stefano/repos/linux_vsock/build-tiny-config
+    loading @0xffffffffc0169000: /home/stefano/repos/linux_vsock/build-tiny-config/drivers/net/tun.ko
+    Traceback (most recent call last):
+      File "/home/stefano/repos/linux_vsock/build-tiny-config/scripts/gdb/linux/symbols.py", line 174, in invoke
+        self.load_all_symbols()
+      File "/home/stefano/repos/linux_vsock/build-tiny-config/scripts/gdb/linux/symbols.py", line 161, in load_all_symbols
+        [self.load_module_symbols(module) for module in module_list]
+      File "/home/stefano/repos/linux_vsock/build-tiny-config/scripts/gdb/linux/symbols.py", line 161, in <listcomp>
+        [self.load_module_symbols(module) for module in module_list]
+      File "/home/stefano/repos/linux_vsock/build-tiny-config/scripts/gdb/linux/symbols.py", line 131, in load_module_symbols
+        sections=self._section_arguments(module))
+      File "/home/stefano/repos/linux_vsock/build-tiny-config/scripts/gdb/linux/symbols.py", line 98, in _section_arguments
+        section_name_to_address = {
+      File "/home/stefano/repos/linux_vsock/build-tiny-config/scripts/gdb/linux/symbols.py", line 99, in <dictcomp>
+        attrs[n]['name'].string(): attrs[n]['address']
+    gdb.error: There is no member named name.
+    Error occurred in Python: There is no member named name.
+
+I'll try to bisect.
+
+Thanks,
+Stefano
+
