@@ -2,366 +2,102 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459E5C433F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F2220825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62F722B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IHrK7hSf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rHr4tg1y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJvZq4zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbgGVWOg (ORCPT
+        id S1729835AbgGVWTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:14:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
+        Wed, 22 Jul 2020 18:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733052AbgGVWL1 (ORCPT
+        with ESMTP id S1726447AbgGVWTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:27 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B41FFC0619E2;
-        Wed, 22 Jul 2020 15:11:26 -0700 (PDT)
-Message-Id: <20200722220519.513463269@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595455885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=KzFJCEOxkUKMe3WAiApHCiXYZIRbFFBL9yDUMKxUIJ8=;
-        b=IHrK7hSfpsr4I1U+Bj0TNaZ7LQrDTtVY24q5ZzxOaTQbybg4C3pWsFI8ozCpqHhg9lshpN
-        5IF8FLBQlbugNugwsdyxMb74JMvs9mj8xKyKHzJbJnmla5ep6NQLfEhbmdvF269Wuga6Qk
-        eTR8VIrVqzLxPb/pd/RwcrIAcaX2G7mGigQf4B5VqnwZQtIiqdYR1UmsdsK1u6344LPxzy
-        B/kisrfbTo+zG7NUkWb3RusJWZZMIpawI1e9Fy67hD4ExQjWfXCB/0jiwSSzboeweQ9Sto
-        ERkB0Ncx4dwTVJzi01J2LdMFn43CI3dD4gbYUIZa0YgjZK6sHa0811lWfF9LMw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595455885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=KzFJCEOxkUKMe3WAiApHCiXYZIRbFFBL9yDUMKxUIJ8=;
-        b=rHr4tg1yt1LSySpW3fQm6dVtr2kXgBKZPp58bfdNMQvAiDyUfRlV0LXVsAI+kqxcSKby0o
-        PqKoKV9oVk4sdRDw==
-Date:   Wed, 22 Jul 2020 23:59:56 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V5 02/15] entry: Provide generic syscall entry functionality
-References: <20200722215954.464281930@linutronix.de>
+        Wed, 22 Jul 2020 18:19:46 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC751C0619DC;
+        Wed, 22 Jul 2020 15:19:45 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id u64so3575038qka.12;
+        Wed, 22 Jul 2020 15:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XrjykOZMjEbhEG4xYzx5TkMq0JyZVdIE71GzGgj+ZAw=;
+        b=oJvZq4zw920vtMakxOmhTZnFBQN2QldafEhIEKKnkn/XAOGY11njc1951eCgO6f4bV
+         z4cGbIKqik2Gd+h9vZhGV9waHFi5xqOXsZH4ASEiBcuM8fe29vlHHiELI6S/1fXtWLUy
+         ARKWNBRzYAOqoYmQMkV8FbAZ+VH2QxYLXUH6lHsi3dQB3KtWgl9YLkLjQDKVm3RLtamy
+         fC7kQYIM1ncSGPZ/FgLL0x8gbQnk/UiqwSdIdCt7aTFWyvBkUJ9WJWlRh701xUZk/bno
+         danH0cSZJ6tXCbsjp9TYbwWa5AZRdSYyXcnsyIrdoqMUogmA0SMgeHtwtGDT8B/9TQ1c
+         bxGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XrjykOZMjEbhEG4xYzx5TkMq0JyZVdIE71GzGgj+ZAw=;
+        b=IgOzcWimWNS6+UECl1hekp/dIPded6PPWe4nlrwcdtKI1wcvJkTVqqB5+34G1BJqNE
+         zdDKJWjvc3N+CIwqe0IS6KkAAsMStFEAeZWkCkMDRhzdtCmSexrVvIkih97R4bal18jT
+         0Y4J0any5A2Qco06DFkUcDgz4TVKtpyBzO7T6O9OfYxT5G6zBImkO1Fldfm0hDOexQrJ
+         263UCjCp+F/EMwhKjFGAzzsj79Uhv6Ghz8N6sZ8TjOVmwS5+iY8w+P5aDnTYVqcraAv4
+         b7IvHWXvHAwf3aUhrAZDAxMZHox+p8NzR/O+E0tVpDfaJz6Z4Z09CHx5MVw5kiQ7w+g3
+         haCg==
+X-Gm-Message-State: AOAM531Hw5ESh31ILO6suWFu6gyylEcxgCnChk1NjVs8TMmnrH6Fu8yK
+        kgxj9HL+RPwKGjRyyXYr02o=
+X-Google-Smtp-Source: ABdhPJzo4PZ4wOpwK4EPfptH0lcP6RkPlh6aS2taiOlx30gGCDmG92nQZzwYQf8t1jtnWjXdKTZgCQ==
+X-Received: by 2002:a37:d83:: with SMTP id 125mr2292115qkn.430.1595456385011;
+        Wed, 22 Jul 2020 15:19:45 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:5c10:aafb:1d38:5735? ([2601:282:803:7700:5c10:aafb:1d38:5735])
+        by smtp.googlemail.com with ESMTPSA id n127sm1079195qke.29.2020.07.22.15.19.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 15:19:44 -0700 (PDT)
+Subject: Re: linux-next: Tree for Jul 22 (drivers/net/vrf)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Ahern <dsahern@kernel.org>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        David Miller <davem@davemloft.net>
+References: <20200722231640.3dae04cd@canb.auug.org.au>
+ <e1fc4765-db64-2876-2f3c-857c45d4fb45@infradead.org>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <76e94256-ccd6-2ba5-fa85-24e643dddb84@gmail.com>
+Date:   Wed, 22 Jul 2020 16:19:42 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+In-Reply-To: <e1fc4765-db64-2876-2f3c-857c45d4fb45@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On 7/22/20 10:35 AM, Randy Dunlap wrote:
+> On 7/22/20 6:16 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200721:
+>>
+> 
+> on i386:
+> when CONFIG_SYSCTL is not set/enabled:
+> 
+> ERROR: modpost: "sysctl_vals" [drivers/net/vrf.ko] undefined!
+> 
+> 
 
-On syscall entry certain work needs to be done:
-
-   - Establish state (lockdep, context tracking, tracing)
-   - Conditional work (ptrace, seccomp, audit...)
-
-This code is needlessly duplicated and  different in all
-architectures.
-
-Provide a generic version based on the x86 implementation which has all the
-RCU and instrumentation bits right.
-
-As interrupt/exception entry from user space needs parts of the same
-functionality, provide a function for this as well.
-
-syscall_enter_from_user_mode() and irqentry_enter_from_user_mode() must be
-called right after the low level ASM entry. The calling code must be
-non-instrumentable. After the functions returns state is correct and the
-subsequent functions can be instrumented.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Kees Cook <keescook@chromium.org>
----
-V5: Add the missing protections against sanitizers and other goodies
-
-V4: Remove the architecture wrappers for seccomp and audit and use
-    the generic code (Kees)
-
-    Fix TIF_SYSCALL_AUDIT dummy define and remove TIF_SYSCALL_TRACE as it's
-    defined in all architectures.
-
-V3: Adapt to noinstr changes. Add interrupt/exception entry function.
-
-V2: Fix function documentation (Mike)
-    Add comment about return value (Andy)
----
- arch/Kconfig                 |    3 +
- include/linux/entry-common.h |  121 +++++++++++++++++++++++++++++++++++++++++++
- kernel/Makefile              |    1 
- kernel/entry/Makefile        |   12 ++++
- kernel/entry/common.c        |   88 +++++++++++++++++++++++++++++++
- 5 files changed, 225 insertions(+)
-
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -27,6 +27,9 @@ config HAVE_IMA_KEXEC
- config HOTPLUG_SMT
- 	bool
- 
-+config GENERIC_ENTRY
-+       bool
-+
- config OPROFILE
- 	tristate "OProfile system profiling"
- 	depends on PROFILING
---- /dev/null
-+++ b/include/linux/entry-common.h
-@@ -0,0 +1,121 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_ENTRYCOMMON_H
-+#define __LINUX_ENTRYCOMMON_H
-+
-+#include <linux/tracehook.h>
-+#include <linux/syscalls.h>
-+#include <linux/seccomp.h>
-+#include <linux/sched.h>
-+
-+#include <asm/entry-common.h>
-+
-+/*
-+ * Define dummy _TIF work flags if not defined by the architecture or for
-+ * disabled functionality.
-+ */
-+#ifndef _TIF_SYSCALL_EMU
-+# define _TIF_SYSCALL_EMU		(0)
-+#endif
-+
-+#ifndef _TIF_SYSCALL_TRACEPOINT
-+# define _TIF_SYSCALL_TRACEPOINT	(0)
-+#endif
-+
-+#ifndef _TIF_SECCOMP
-+# define _TIF_SECCOMP			(0)
-+#endif
-+
-+#ifndef _TIF_SYSCALL_AUDIT
-+# define _TIF_SYSCALL_AUDIT		(0)
-+#endif
-+
-+/*
-+ * TIF flags handled in syscall_enter_from_usermode()
-+ */
-+#ifndef ARCH_SYSCALL_ENTER_WORK
-+# define ARCH_SYSCALL_ENTER_WORK	(0)
-+#endif
-+
-+#define SYSCALL_ENTER_WORK						\
-+	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | TIF_SECCOMP |	\
-+	 _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_EMU |			\
-+	 ARCH_SYSCALL_ENTER_WORK)
-+
-+/**
-+ * arch_check_user_regs - Architecture specific sanity check for user mode regs
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Defaults to an empty implementation. Can be replaced by architecture
-+ * specific code.
-+ *
-+ * Invoked from syscall_enter_from_user_mode() in the non-instrumentable
-+ * section. Use __always_inline so the compiler cannot push it out of line
-+ * and make it instrumentable.
-+ */
-+static __always_inline void arch_check_user_regs(struct pt_regs *regs);
-+
-+#ifndef arch_check_user_regs
-+static __always_inline void arch_check_user_regs(struct pt_regs *regs) {}
-+#endif
-+
-+/**
-+ * arch_syscall_enter_tracehook - Wrapper around tracehook_report_syscall_entry()
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Returns: 0 on success or an error code to skip the syscall.
-+ *
-+ * Defaults to tracehook_report_syscall_entry(). Can be replaced by
-+ * architecture specific code.
-+ *
-+ * Invoked from syscall_enter_from_user_mode()
-+ */
-+static inline __must_check int arch_syscall_enter_tracehook(struct pt_regs *regs);
-+
-+#ifndef arch_syscall_enter_tracehook
-+static inline __must_check int arch_syscall_enter_tracehook(struct pt_regs *regs)
-+{
-+	return tracehook_report_syscall_entry(regs);
-+}
-+#endif
-+
-+/**
-+ * syscall_enter_from_user_mode - Check and handle work before invoking
-+ *				 a syscall
-+ * @regs:	Pointer to currents pt_regs
-+ * @syscall:	The syscall number
-+ *
-+ * Invoked from architecture specific syscall entry code with interrupts
-+ * disabled. The calling code has to be non-instrumentable. When the
-+ * function returns all state is correct and the subsequent functions can be
-+ * instrumented.
-+ *
-+ * Returns: The original or a modified syscall number
-+ *
-+ * If the returned syscall number is -1 then the syscall should be
-+ * skipped. In this case the caller may invoke syscall_set_error() or
-+ * syscall_set_return_value() first.  If neither of those are called and -1
-+ * is returned, then the syscall will fail with ENOSYS.
-+ *
-+ * The following functionality is handled here:
-+ *
-+ *  1) Establish state (lockdep, RCU (context tracking), tracing)
-+ *  2) TIF flag dependent invocations of arch_syscall_enter_tracehook(),
-+ *     __secure_computing(), trace_sys_enter()
-+ *  3) Invocation of audit_syscall_entry()
-+ */
-+long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall);
-+
-+/**
-+ * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Invoked from architecture specific entry code with interrupts disabled.
-+ * Can only be called when the interrupt entry came from user mode. The
-+ * calling code must be non-instrumentable.  When the function returns all
-+ * state is correct and the subsequent functions can be instrumented.
-+ *
-+ * The function establishes state (lockdep, RCU (context tracking), tracing)
-+ */
-+void irqentry_enter_from_user_mode(struct pt_regs *regs);
-+
-+#endif
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -48,6 +48,7 @@ obj-y += irq/
- obj-y += rcu/
- obj-y += livepatch/
- obj-y += dma/
-+obj-y += entry/
- 
- obj-$(CONFIG_CHECKPOINT_RESTORE) += kcmp.o
- obj-$(CONFIG_FREEZER) += freezer.o
---- /dev/null
-+++ b/kernel/entry/Makefile
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# Prevent the noinstr section from being pestered by sanitizer and other goodies
-+# as long as these things cannot be disabled per function.
-+KASAN_SANITIZE := n
-+UBSAN_SANITIZE := n
-+KCOV_INSTRUMENT := n
-+
-+CFLAGS_REMOVE_common.o	 = -fstack-protector -fstack-protector-strong
-+CFLAGS_common.o		+= -fno-stack-protector
-+
-+obj-$(CONFIG_GENERIC_ENTRY) += common.o
---- /dev/null
-+++ b/kernel/entry/common.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/context_tracking.h>
-+#include <linux/entry-common.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/syscalls.h>
-+
-+/**
-+ * enter_from_user_mode - Establish state when coming from user mode
-+ *
-+ * Syscall/interrupt entry disables interrupts, but user mode is traced as
-+ * interrupts enabled. Also with NO_HZ_FULL RCU might be idle.
-+ *
-+ * 1) Tell lockdep that interrupts are disabled
-+ * 2) Invoke context tracking if enabled to reactivate RCU
-+ * 3) Trace interrupts off state
-+ */
-+static __always_inline void enter_from_user_mode(struct pt_regs *regs)
-+{
-+	arch_check_user_regs(regs);
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+
-+	CT_WARN_ON(ct_state() != CONTEXT_USER);
-+	user_exit_irqoff();
-+
-+	instrumentation_begin();
-+	trace_hardirqs_off_finish();
-+	instrumentation_end();
-+}
-+
-+static inline void syscall_enter_audit(struct pt_regs *regs, long syscall)
-+{
-+	if (unlikely(audit_context())) {
-+		unsigned long args[6];
-+
-+		syscall_get_arguments(current, regs, args);
-+		audit_syscall_entry(syscall, args[0], args[1], args[2], args[3]);
-+	}
-+}
-+
-+static long syscall_trace_enter(struct pt_regs *regs, long syscall,
-+				unsigned long ti_work)
-+{
-+	long ret = 0;
-+
-+	/* Handle ptrace */
-+	if (ti_work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
-+		ret = arch_syscall_enter_tracehook(regs);
-+		if (ret || (ti_work & _TIF_SYSCALL_EMU))
-+			return -1L;
-+	}
-+
-+	/* Do seccomp after ptrace, to catch any tracer changes. */
-+	if (ti_work & _TIF_SECCOMP) {
-+		ret = __secure_computing(NULL);
-+		if (ret == -1L)
-+			return ret;
-+	}
-+
-+	if (unlikely(ti_work & _TIF_SYSCALL_TRACEPOINT))
-+		trace_sys_enter(regs, syscall);
-+
-+	syscall_enter_audit(regs, syscall);
-+
-+	return ret ? : syscall;
-+}
-+
-+noinstr long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall)
-+{
-+	unsigned long ti_work;
-+
-+	enter_from_user_mode(regs);
-+	instrumentation_begin();
-+
-+	local_irq_enable();
-+	ti_work = READ_ONCE(current_thread_info()->flags);
-+	if (ti_work & SYSCALL_ENTER_WORK)
-+		syscall = syscall_trace_enter(regs, syscall, ti_work);
-+	instrumentation_end();
-+
-+	return syscall;
-+}
-+
-+noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
-+{
-+	enter_from_user_mode(regs);
-+}
-
+thanks for the report; I'll send a patch when I get a few minutes.
