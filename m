@@ -2,113 +2,109 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C8CC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D124CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4503F2065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZ8x8EX7"
+	by mail.kernel.org (Postfix) with ESMTP id AE0DF20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595414493;
+	bh=ALDy45uCdZe3Ayi9GNp5dgiErhBW4lkKC52BVf5tDXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pyZcGtWjIx1Nmnsxm+5NnyYb0A4DuIGCmUs/zSjOIRrvyP+VH49oXcsDwpHUqJDfj
+	 zEwok4nmTKLwfdHz00EI8rDWoPllMZouhztAWLWap9l4aWC2P0BWu5rdSsoZx7TZXb
+	 H9cHTveL3Z2GGDuCgiLI4Bv9/ESOC3pwNzvhPfho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGVKjh (ORCPT
+        id S1726455AbgGVKlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgGVKjh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:39:37 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC204C0619DC;
-        Wed, 22 Jul 2020 03:39:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a14so1406724wra.5;
-        Wed, 22 Jul 2020 03:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TV4ergjkftjaZomx8AqjCOlT/l5mho+qoW7fAiO7DwA=;
-        b=MZ8x8EX7EI5Gki/n02pEYgl/ub5LEHKa8Kws1JGFicYu6gEKCb48xFnQso4xw5WDi0
-         4vZ/2dgM4g907i/tzKZ0xo0hx8P5UsH46ib2vUDwpXBrO49OiKoBjlSvt6AzLFeDst3c
-         CTMARSgJMmxdrMkBfdL3GKnO/UZ3MLqyu2rF55tJ1+8eJgfd3uI1cAKoAM7+lcc8CBHQ
-         qPN2Plu/Hf89BTllLBuF9IS/Mw6g2oscSLlAymf8C2NFheG9oLneYJdoHD9yytjJbVGz
-         LPLXxDft/uf7v4H05+THcmyNsAwohkImDEntoRi7PVAhKdk95Xj4xBV53WHhiRWFQcfr
-         lkUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TV4ergjkftjaZomx8AqjCOlT/l5mho+qoW7fAiO7DwA=;
-        b=eczrUHlZOGpQw8q0gR0m8ZuLRgnoytmJ5NQILdTt8IutADYGDGR2Ii4ydg+La44Hn4
-         K1ISBbR7Kt3iF3ZfCXTXKcz45XmU1U9mdwh+LL6Hj5RD0GhML/H0naOanQxH+XFm/PiI
-         fc3RPGYI2bUvx0ReuAIgjBhdp3cn4vQPoXI32ET3WF0YUCYWvPR6nJxNujG7m+IAMCiB
-         e7kCfyyhkfgX9iUkvs89KIFw2/loSSaJIInpXPguRuU9RPgeOaegGWtxBn2RAkCaLcFk
-         iRCCf9SdXYZdzhoYkvyHLbxw607tiBTGSGD+zfxbRuLkVbSFni2CIiUTaqdlNQFFP7d9
-         LB4w==
-X-Gm-Message-State: AOAM533Cj9UqStd0Pj8EHDCWRWDMKdeoKCyIZnpp3KbOeVG3Ix9FUXEv
-        rQZMIZMi8rEyhKdUofR2ipU=
-X-Google-Smtp-Source: ABdhPJzccNJ8vHlvkA5XruDkm8csHTXrgtgDkPe3q+BBmvVK0PQT9d6D36+7jU8Cpg/rLDybhlBmjg==
-X-Received: by 2002:adf:ded0:: with SMTP id i16mr15608967wrn.389.1595414375595;
-        Wed, 22 Jul 2020 03:39:35 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id p8sm29564205wrq.9.2020.07.22.03.39.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 03:39:35 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: update bindings for MT8192 SoC
-To:     Leilk Liu <leilk.liu@mediatek.com>, Mark Brown <broonie@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-References: <20200721122436.31544-1-leilk.liu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <97bcb048-81f2-0147-4c62-9172c27fff71@gmail.com>
-Date:   Wed, 22 Jul 2020 12:39:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 22 Jul 2020 06:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgGVKlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:41:31 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C8B2065E;
+        Wed, 22 Jul 2020 10:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595414490;
+        bh=ALDy45uCdZe3Ayi9GNp5dgiErhBW4lkKC52BVf5tDXY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cQ4AmN8uaWfnEgeWwL2absr7V4VQ2TdebuVBocFbptouvLILfg+7HIN1IR6AA9t1B
+         yDRUcNmKpM3vP9KQkui6NnL3rhZ0s+FmnQMz/zxHw/Hc1PqDUCs6EtYhNU2hVpVx6L
+         qtCWLbkSZ1J4S+N7EhvE8AJQ1XFPZFkMl5SFez9U=
+Date:   Wed, 22 Jul 2020 12:41:28 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+Message-ID: <20200722104128.GK1030@ninjato>
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721122436.31544-1-leilk.liu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LHvWgpbS7VDUdu2f"
+Content-Disposition: inline
+In-Reply-To: <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--LHvWgpbS7VDUdu2f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 21/07/2020 14:24, Leilk Liu wrote:
-> From: "leilk.liu" <leilk.liu@mediatek.com>
-> 
-> Add a DT binding documentation for the MT8192 soc.
-> 
-> Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > +	synchronize_irq(iproc_i2c->irq);
+>=20
+> If one takes a look at the I2C slave ISR routine, there are places where
+> IRQ can be re-enabled in the ISR itself. What happens after we mask all
+> slave interrupt and when 'synchronize_irq' is called, which I suppose is
+> meant to wait for inflight interrupt to finish where there's a chance
+> the interrupt can be re-enable again? How is one supposed to deal with th=
+at?
 
-> ---
->   Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-> index 3a8079eb18c8..9e43721fa7d6 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-> @@ -11,6 +11,7 @@ Required properties:
->       - mediatek,mt8135-spi: for mt8135 platforms
->       - mediatek,mt8173-spi: for mt8173 platforms
->       - mediatek,mt8183-spi: for mt8183 platforms
-> +    - "mediatek,mt8192-spi", "mediatek,mt6765-spi": for mt8192 platforms
->       - "mediatek,mt8516-spi", "mediatek,mt2712-spi": for mt8516 platforms
->   
->   - #address-cells: should be 1.
-> 
+I encountered the same problem with the i2c-rcar driver before I left
+for my holidays.
+
+> > +	iproc_i2c->slave =3D NULL;
+> > +
+> >  	/* Erase the slave address programmed */
+> >  	tmp =3D iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
+> >  	tmp &=3D ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+> >=20
+
+--LHvWgpbS7VDUdu2f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YF9cACgkQFA3kzBSg
+Kba6cQ//fw45mvFWfHa/AsTWYtBZPnPvi5JJhzzrCqP+3q3bs6ewwzjoCrqGZXyI
+KhIJKqbPFhwQOA2mjEbbioPcCJ4Z71mtq0s1IblmUlSL6NzMb0hgMBgdVYKmuEBE
+27AwTz6oUzulBfejYPPo9LxVsmY+ZiNA6m6uOhhqkp/SKNbye9Tdy1ZnxwTLmwFV
+dXGqEyQoxQK+LBtuzpSCsg/Z1/PYJAM41Ya+F+PZhy616Hkn8f3iW2rYez+oejpc
+HjLRER6TLNRewsytxMKGae4AsjA04JQ6PtHfMMrfGdq5WNPY12otZKDx1w6jYC3e
+WljQUBdNiD7G3EquvDGyG4KOWub1NhNXMk/RrMsgAqOhH6ErbqwJJYRZpy/7UCao
+MYI9cXa93Qfq1LHNGZcrRFaw5pIja8VAD0MKhJG+vtooi5ZTiFdcsUqece2CzoMZ
+Dz3WzvDlJOi7CLQEBDng5YmrHO+GrAZNbkcf6SApjss8FGy+qhjx9vasHXkKG6ca
+blgY9qHThn5vWYwJ/xe1n6lJywKnSek7EkhkjGqWf8tmww766gQ2fcowSmoGJcdD
+gQhq2EZYqhNKeLnL0U2D3t+szaunbbOISNHeyw/E2XI5BtC+knliWe6kaOu3tBKG
+xYypzgHmeNzQisBDx3nQV7tnMGkQKrGt0hBAdAGM21lHJmgDtb4=
+=5q5r
+-----END PGP SIGNATURE-----
+
+--LHvWgpbS7VDUdu2f--
