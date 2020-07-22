@@ -2,130 +2,110 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086E3C433F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D59BC433F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB95B20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595445025;
-	bh=+t3jY0IpTJCIfsWEdsuY3x3kM796R1C8EohXWaLiw9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AkTSXTzJU3F0muACgGHJeoR1Wrwg1NEMOZJPsUZ7lcNVQdRJyPHaFH+TbniR7wH/+
-	 7dSs3BefMQDfkDXP/e342V8zJDjQpEyKzCAwSmlh8K2YJ1UcMpyhmUDMJKjwzVCIHm
-	 i278WL/TbFkppaNnIaPjAxYgYXk+i+b+w3xemgyk=
+	by mail.kernel.org (Postfix) with ESMTP id 38BA32065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="PDTBmh/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732628AbgGVTKY (ORCPT
+        id S1732609AbgGVTKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 22 Jul 2020 15:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732575AbgGVTKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:10:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A34E204EA;
-        Wed, 22 Jul 2020 19:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595445021;
-        bh=+t3jY0IpTJCIfsWEdsuY3x3kM796R1C8EohXWaLiw9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ebBukWMp5zxK6NJqb9nkijuy9EKOVU5lqYjUPomAlvOI+/ju8xrtyp6vOWZjcZpDT
-         c3Qz1bSqDg5ljLRcS6+tBZHWGkz/PHcnaOAakmgFGT0PzLBBNPrFLqsBY6kA45UDdL
-         0yg53bLhy0ZvdZ5lnTPO56hUnUzhVcNbGyDroYiA=
-Date:   Wed, 22 Jul 2020 21:10:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [PATCH 1/2] f2fs: add sysfs symbolic link to kobject with volume
- name
-Message-ID: <20200722191026.GA583549@kroah.com>
-References: <20200719054409.3050516-1-daeho43@gmail.com>
- <20200719151640.GA301791@kroah.com>
- <20200722164356.GA3912099@google.com>
- <20200722170602.GA440171@kroah.com>
- <20200722172437.GH3912099@google.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732552AbgGVTKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:10:20 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B07C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:10:19 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g67so1793785pgc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=A9R0zBQZNkWUaNZ8knUV7ykpWNGLCPzZJT92AJTWbRM=;
+        b=PDTBmh/KaH9xKwF325iZ9WPo/AQp+h19N7VfEHao+92WaTz1oW6s2LYiKVGr/ROIuf
+         mMJ9UOycup+TSjb7NtRu1p9cqPfDMafKlpxxWrwS382VwydXQDv2R50Y9ngDU5/zsFJc
+         07UzBgQioEKmfR0v7jVsz7kcYdwrp7fANyPY4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=A9R0zBQZNkWUaNZ8knUV7ykpWNGLCPzZJT92AJTWbRM=;
+        b=XmvbbCHC221UTPhMwu100VNKmWkLILCQYARuGvH7oxIz5smBE0XWKRLa63W8RYLvYM
+         UpA64sWwi2EXEVGiSyoGxJnxjzA+rzMGWDNLQZ5jhsxujTjQtaHX8VQjW5i4y8i/QT1w
+         4jU2a508+RdICPDrrYCu7MxfR8UCZ+6S83N04/1APhYv2CT04C4z+dbk7XguRwZZb5vj
+         a/oZ56kI+53/Jvo/Ot4YBo+nZHrOMKcm0TjE4svlmaLN7GK3UOInqHRz3MwiqRb+ma5w
+         RAu88ndaQHMS5YKfMEiW54rmnZDaN52LWHmfOhH2k2HL5hLuFByEdEz7NUh9sU6TMG83
+         fOKg==
+X-Gm-Message-State: AOAM532vwr4aCJJZlObdhOdNnygsDQ938zaI3gEZg2ImjmzzxmUAsijk
+        hO2Wze1kmpcadNd87Z/jCnJLUA==
+X-Google-Smtp-Source: ABdhPJx/pkpGCVF7ZJrH5L3zHr8u0P4E0FO+NstQq1Sv7MuBOlPkf5ejOUlbnfPCpatWluNziGAVlg==
+X-Received: by 2002:a63:1406:: with SMTP id u6mr1100583pgl.108.1595445018595;
+        Wed, 22 Jul 2020 12:10:18 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:fda7:aaf8:9d1a:6749])
+        by smtp.gmail.com with ESMTPSA id n137sm342398pfd.194.2020.07.22.12.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 12:10:17 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 5/6] dt-bindings: arm: rockchip: Add ROCKPi 4C binding
+Date:   Thu, 23 Jul 2020 00:39:48 +0530
+Message-Id: <20200722190949.215656-5-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200722190949.215656-1-jagan@amarulasolutions.com>
+References: <20200722190949.215656-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200722172437.GH3912099@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:24:37AM -0700, Jaegeuk Kim wrote:
-> On 07/22, Greg KH wrote:
-> > On Wed, Jul 22, 2020 at 09:43:56AM -0700, Jaegeuk Kim wrote:
-> > > On 07/19, Greg KH wrote:
-> > > > On Sun, Jul 19, 2020 at 02:44:08PM +0900, Daeho Jeong wrote:
-> > > > > From: Daeho Jeong <daehojeong@google.com>
-> > > > > 
-> > > > > Added a symbolic link directory pointing to its device name
-> > > > > directory using the volume name of the partition in sysfs.
-> > > > > (i.e., /sys/fs/f2fs/vol_#x -> /sys/fs/f2fs/sda1)
-> > > > 
-> > > > No, please no.
-> > > > 
-> > > > That is already created today for you in /dev/disk/  The kernel does not
-> > > > need to do this again.
-> > > > 
-> > > > If your distro/system/whatever does not provide you with /dev/disk/ and
-> > > > all of the symlinks in there, then work with your distro/system/whatever
-> > > > to do so.
-> > > 
-> > > I don't get the point, since /dev/disk points device node, not any sysfs entry.
-> > > Do you mean we need to create symlink to /sys/fs/f2fs/dm-X in /dev/disk?
-> > 
-> > Huh, no!  It's all done for you today automagically by userspace:
-> > 
-> > $ tree /dev/disk/by-label/
-> > /dev/disk/by-label/
-> > ├── boot -> ../../sda1
-> > ├── fast_disk -> ../../md0
-> > ├── root -> ../../sda2
-> > └── stuff -> ../../dm-0
-> > 
-> > Look on your laptop/desktop/server today for those, there's lots of
-> > symlinks in /dev/disk/
-> 
-> What I mean is "creating symlink from *userspace*", but the concern is
-> "/dev/" looks like being used for device nodes only, not sysfs.
+Add dt-bindings for ROCKPi 4C which is similar to 4B with
+additional mDP and HDMI port replaced with Micro HDMI port.
 
-That is correct, that is what /dev/ is for, not sysfs.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- new patch
 
-> > > > Again, no need to do this on a per-filesystem-basis when we already have
-> > > > this around for all filesystems, and have had it for 15+ years now.
-> > > 
-> > > Could you point out where we can get this? And, the label support depends
-> > > on per-filesystem design. I'm not sure how this can be generic enough.
-> > 
-> > Userspace knows how to read labels on a per-filesystem-basis and does so
-> > just fine.  That's how it creates those symlinks, no kernel support is
-> > needed.
-> > 
-> > This has been implemented for 15+ years now, it's not a new thing...
-> > 
-> > Now if your embedded system doesn't support it, that's the userspace of
-> > that system's fault, it's not the kernel's fault at all.  Go fix your
-> > userspace if you want those things.
-> 
-> I'm not talking about whose fault tho. :) By any chance, could you please
-> suggest a good location to create a symlink for this sysfs entry?
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-There is no need for such a sysfs entry, that's what I am trying to say.
-Userspace already has all of the needed information here, do not try to
-add filesystem-specific stuff like this, unless you somehow are going to
-do it for all filesystems :)
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 7250adb43d24..1faf1ce92dba 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -454,6 +454,12 @@ properties:
+           - const: radxa,rockpi4b
+           - const: rockchip,rk3399
+ 
++      - description: Radxa ROCK Pi 4C
++        items:
++          - const: radxa,rockpi4
++          - const: radxa,rockpi4c
++          - const: rockchip,rk3399
++
+       - description: Radxa ROCK Pi N8
+         items:
+           - const: radxa,rockpi-n8
+-- 
+2.25.1
 
-thanks,
-
-gregt k-h
