@@ -2,94 +2,249 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB48C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F734C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29801207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12EBB20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bU8EdgRf"
+	dkim=pass (1024-bit key) header.d=amazon.co.jp header.i=@amazon.co.jp header.b="HsfQOyNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbgGVOvm (ORCPT
+        id S1732689AbgGVOw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:51:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49671 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729642AbgGVOvl (ORCPT
+        Wed, 22 Jul 2020 10:52:27 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:65359 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730346AbgGVOw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:51:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595429499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T+UMFueXPyO+OYg0tEXFd38585DEj4VDz/fSAnWATcs=;
-        b=bU8EdgRfAVZ38ZOIJfFIEIIebHB+/cFgS7bdmPBAfnpJ9bdA9kxB84ge7FiPw6Xs8gK1db
-        DIUEvWTgt+N+HBSQ5uynDVP0S7qXTzJlAp8qRLCY73YbedmNQJ1QAbbeu0vXreV1TuopFA
-        Rb9On0JZSSInfKZiotLz2m4vamjrXa8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-k2Ojwp5FNQqfZxCKnHF9nQ-1; Wed, 22 Jul 2020 10:51:37 -0400
-X-MC-Unique: k2Ojwp5FNQqfZxCKnHF9nQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27E79107ACCA;
-        Wed, 22 Jul 2020 14:51:35 +0000 (UTC)
-Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 281CB17514;
-        Wed, 22 Jul 2020 14:51:33 +0000 (UTC)
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-To:     Kees Cook <keescook@chromium.org>, Miroslav Benes <mbenes@suse.cz>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org
-References: <20200717170008.5949-1-kristen@linux.intel.com>
- <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
- <202007220738.72F26D2480@keescook>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <aa51eb26-e2a9-c448-a3b8-e9e68deeb468@redhat.com>
-Date:   Wed, 22 Jul 2020 10:51:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 22 Jul 2020 10:52:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.jp; i=@amazon.co.jp; q=dns/txt;
+  s=amazon201209; t=1595429547; x=1626965547;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=+omhnPDjGYNd4Aearh2KyiqpdHXwk+4wB4wi06Z0vyc=;
+  b=HsfQOyNJwjNhekCIKrBeZBldJ06xUeeLGNEzX/q5jwZ5XRfQVelRlZle
+   tQ23TunSwxuuj6LJrd7gz9jD4fmpnpEVPaXmgZ9olZVXcHYscFCmZ/yC9
+   QNm2hSIJnNSzjom9qFwycbinC8ChThk7/ZE9hWCc4/4Hmo7qv4v2hMuBF
+   I=;
+IronPort-SDR: je7CCMBZRTnBiWsrQdDcOiwQ4IcE7geaSNzeudp/9vT99k5lvGkQPOBXGXhXdJqU9L8uD6l3ot
+ AlU8QQnmv5GA==
+X-IronPort-AV: E=Sophos;i="5.75,383,1589241600"; 
+   d="scan'208";a="53764065"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Jul 2020 14:42:24 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 0F8EEA411A;
+        Wed, 22 Jul 2020 14:42:23 +0000 (UTC)
+Received: from EX13D04ANC001.ant.amazon.com (10.43.157.89) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 22 Jul 2020 14:42:22 +0000
+Received: from 38f9d3582de7.ant.amazon.com (10.43.161.34) by
+ EX13D04ANC001.ant.amazon.com (10.43.157.89) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 22 Jul 2020 14:42:17 +0000
+From:   Kuniyuki Iwashima <kuniyu@amazon.co.jp>
+To:     <jakub@cloudflare.com>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <davem@davemloft.net>,
+        <kernel-team@cloudflare.com>, <kuniyu@amazon.co.jp>,
+        <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <sfr@canb.auug.org.au>,
+        <willemb@google.com>
+Subject: Re: linux-next: manual merge of the bpf-next tree with the net tree
+Date:   Wed, 22 Jul 2020 23:42:12 +0900
+Message-ID: <20200722144212.27106-1-kuniyu@amazon.co.jp>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+In-Reply-To: <87wo2vwxq6.fsf@cloudflare.com>
+References: <87wo2vwxq6.fsf@cloudflare.com>
 MIME-Version: 1.0
-In-Reply-To: <202007220738.72F26D2480@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D05UWC004.ant.amazon.com (10.43.162.223) To
+ EX13D04ANC001.ant.amazon.com (10.43.157.89)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/20 10:39 AM, Kees Cook wrote:
-> On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes wrote:
->> Let me CC live-patching ML, because from a quick glance this is something
->> which could impact live patching code. At least it invalidates assumptions
->> which "sympos" is based on.
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+Date:   Wed, 22 Jul 2020 14:17:05 +0200
+> On Wed, Jul 22, 2020 at 05:21 AM CEST, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Today's linux-next merge of the bpf-next tree got conflicts in:
+> >
+> >   net/ipv4/udp.c
+> >   net/ipv6/udp.c
+> >
+> > between commit:
+> >
+> >   efc6b6f6c311 ("udp: Improve load balancing for SO_REUSEPORT.")
+> >
+> > from the net tree and commits:
+> >
+> >   7629c73a1466 ("udp: Extract helper for selecting socket from reuseport group")
+> >   2a08748cd384 ("udp6: Extract helper for selecting socket from reuseport group")
+> >
+> > from the bpf-next tree.
+> >
+> > I fixed it up (I wasn't sure how to proceed, so I used the latter
+> > version) and can carry the fix as necessary. This is now fixed as far
+> > as linux-next is concerned, but any non trivial conflicts should be
+> > mentioned to your upstream maintainer when your tree is submitted for
+> > merging.  You may also want to consider cooperating with the maintainer
+> > of the conflicting tree to minimise any particularly complex conflicts.
 > 
-> In a quick skim, it looks like the symbol resolution is using
-> kallsyms_on_each_symbol(), so I think this is safe? What's a good
-> selftest for live-patching?
+> This one is a bit tricky.
 > 
+> Looking at how code in udp[46]_lib_lookup2 evolved, first:
+> 
+>   acdcecc61285 ("udp: correct reuseport selection with connected sockets")
+> 
+> 1) exluded connected UDP sockets from reuseport group during lookup, and
+> 2) limited fast reuseport return to groups with no connected sockets,
+> 
+> The second change had an uninteded side-effect of discarding reuseport
+> socket selection when reuseport group contained connected sockets.
+> 
+> Then, recent
+> 
+>   efc6b6f6c311 ("udp: Improve load balancing for SO_REUSEPORT.")
+> 
+> rectified it by recording reuseport socket selection as lookup result
+> candidate, in case fast reuseport return did not happen because
+> reuseport group had connected sockets.
+> 
+> I belive that changes in commit efc6b6f6c311 can be rewritten as below
+> to the same effect, by realizing that we are always setting the 'result'
+> if 'score > badness'. Either to what reuseport_select_sock() returned or
+> to 'sk' that scored higher than current 'badness' threshold.
 
-Hi Kees,
+Good point!
+It looks good to me.
 
-I don't think any of the in-tree tests currently exercise the 
-kallsyms/sympos end of livepatching.
 
-I do have a local branch that does facilitate creating klp-relocations 
-that do rely upon this feature -- I'll try to see if I can get those 
-working with this patchset and report back later this week.
+> ---8<---
+> static struct sock *udp4_lib_lookup2(struct net *net,
+> 				     __be32 saddr, __be16 sport,
+> 				     __be32 daddr, unsigned int hnum,
+> 				     int dif, int sdif,
+> 				     struct udp_hslot *hslot2,
+> 				     struct sk_buff *skb)
+> {
+> 	struct sock *sk, *result;
+> 	int score, badness;
+> 	u32 hash = 0;
+> 
+> 	result = NULL;
+> 	badness = 0;
+> 	udp_portaddr_for_each_entry_rcu(sk, &hslot2->head) {
+> 		score = compute_score(sk, net, saddr, sport,
+> 				      daddr, hnum, dif, sdif);
+> 		if (score > badness) {
+> 			result = NULL;
+> 			if (sk->sk_reuseport &&
+> 			    sk->sk_state != TCP_ESTABLISHED) {
+> 				hash = udp_ehashfn(net, daddr, hnum,
+> 						   saddr, sport);
+> 				result = reuseport_select_sock(sk, hash, skb,
+> 							       sizeof(struct udphdr));
+> 				if (result && !reuseport_has_conns(sk, false))
+> 					return result;
+> 			}
+> 			if (!result)
+> 				result = sk;
+> 			badness = score;
+> 		}
+> 	}
+> 	return result;
+> }
+> ---8<---
+> 
+> From there, it is now easier to resolve the conflict with
+> 
+>   7629c73a1466 ("udp: Extract helper for selecting socket from reuseport group")
+>   2a08748cd384 ("udp6: Extract helper for selecting socket from reuseport group")
+> 
+> which extract the 'if (sk->sk_reuseport && sk->sk_state !=
+> TCP_ESTABLISHED)' block into a helper called lookup_reuseport().
+> 
+> To merge the two, we need to pull the reuseport_has_conns() check up
+> from lookup_reuseport() and back into udp[46]_lib_lookup2(), because now
+> we want to record reuseport socket selection even if reuseport group has
+> connections.
+> 
+> The only other call site of lookup_reuseport() is in
+> udp[46]_lookup_run_bpf(). We don't want to discard the reuseport
+> selected socket if group has connections there either, so no changes are
+> needed. And, now that I think about it, the current behavior in
+> udp[46]_lookup_run_bpf() is not right.
+> 
+> The end result for udp4 will look like:
+> 
+> ---8<---
+> static inline struct sock *lookup_reuseport(struct net *net, struct sock *sk,
+> 					    struct sk_buff *skb,
+> 					    __be32 saddr, __be16 sport,
+> 					    __be32 daddr, unsigned short hnum)
+> {
+> 	struct sock *reuse_sk = NULL;
+> 	u32 hash;
+> 
+> 	if (sk->sk_reuseport && sk->sk_state != TCP_ESTABLISHED) {
+> 		hash = udp_ehashfn(net, daddr, hnum, saddr, sport);
+> 		reuse_sk = reuseport_select_sock(sk, hash, skb,
+> 						 sizeof(struct udphdr));
+> 	}
+> 	return reuse_sk;
+> }
+> 
+> /* called with rcu_read_lock() */
+> static struct sock *udp4_lib_lookup2(struct net *net,
+> 				     __be32 saddr, __be16 sport,
+> 				     __be32 daddr, unsigned int hnum,
+> 				     int dif, int sdif,
+> 				     struct udp_hslot *hslot2,
+> 				     struct sk_buff *skb)
+> {
+> 	struct sock *sk, *result;
+> 	int score, badness;
+> 
+> 	result = NULL;
+> 	badness = 0;
+> 	udp_portaddr_for_each_entry_rcu(sk, &hslot2->head) {
+> 		score = compute_score(sk, net, saddr, sport,
+> 				      daddr, hnum, dif, sdif);
+> 		if (score > badness) {
+> 			result = lookup_reuseport(net, sk, skb,
+> 						  saddr, sport, daddr, hnum);
+> 			if (result && !reuseport_has_conns(sk, false))
+> 				return result;
+> 			if (!result)
+> 				result = sk;
+> 			badness = score;
+> 		}
+> 	}
+> 	return result;
+> }
+> ---8<---
+> 
+> I will submit a patch that pulls the reuseport_has_conns() check from
+> lookup_reuseport() to bpf-next. That should bring the two sides of the
+> merge closer. Please let me know if I can help in any other way.
+> 
+> Also, please take a look at the 3-way diff below from my attempt to
+> merge net tree into bpf-next tree taking the described approach.
+> 
+> Thanks,
+> -jkbs
 
--- Joe
+Can I submit a patch to net tree that rewrites udp[46]_lib_lookup2() to
+use only 'result' ?
 
+Best Regards,
+Kuniyuki
