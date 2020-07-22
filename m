@@ -2,63 +2,96 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBAFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DD420709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C0620729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbgGVORC (ORCPT
+        id S1732432AbgGVORm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:17:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:56504 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728351AbgGVORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:17:02 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 96A4168B05; Wed, 22 Jul 2020 16:16:58 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 16:16:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-Cc:     hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        will@kernel.org, ganapatrao.kulkarni@cavium.com,
-        catalin.marinas@arm.com, iommu@lists.linux-foundation.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v3 1/2] dma-direct: provide the ability to reserve
- per-numa CMA
-Message-ID: <20200722141658.GA17658@lst.de>
-References: <20200628111251.19108-1-song.bao.hua@hisilicon.com> <20200628111251.19108-2-song.bao.hua@hisilicon.com>
+        Wed, 22 Jul 2020 10:17:42 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:54667 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726003AbgGVORm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:17:42 -0400
+Received: (qmail 1312491 invoked by uid 1000); 22 Jul 2020 10:17:41 -0400
+Date:   Wed, 22 Jul 2020 10:17:41 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Evgeny Novikov <novikov@ispras.ru>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ldv-project@linuxtesting.org
+Subject: Re: [PATCH] usb: gadget: net2280: fix memory leak on probe error
+ handling paths
+Message-ID: <20200722141741.GA1310843@rowland.harvard.edu>
+References: <20200721201558.20069-1-novikov@ispras.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200628111251.19108-2-song.bao.hua@hisilicon.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200721201558.20069-1-novikov@ispras.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 11:12:50PM +1200, Barry Song wrote:
-> This is useful for at least two scenarios:
-> 1. ARM64 smmu will get memory from local numa node, it can save its
-> command queues and page tables locally. Tests show it can decrease
-> dma_unmap latency at lot. For example, without this patch, smmu on
-> node2 will get memory from node0 by calling dma_alloc_coherent(),
-> typically, it has to wait for more than 560ns for the completion of
-> CMD_SYNC in an empty command queue; with this patch, it needs 240ns
-> only.
-> 2. when we set iommu passthrough, drivers will get memory from CMA,
-> local memory means much less latency.
+On Tue, Jul 21, 2020 at 11:15:58PM +0300, Evgeny Novikov wrote:
+> Driver does not release memory for device on error handling paths in
+> net2280_probe() when gadget_release() is not registered yet.
+> 
+> The patch fixes the bug like in other similar drivers.
+> 
+> Found by Linux Driver Verification project (linuxtesting.org).
+> 
+> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+> ---
+>  drivers/usb/gadget/udc/net2280.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+> index 5eff85eeaa5a..d5fe071b2db2 100644
+> --- a/drivers/usb/gadget/udc/net2280.c
+> +++ b/drivers/usb/gadget/udc/net2280.c
+> @@ -3781,8 +3781,10 @@ static int net2280_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	return 0;
+>  
+>  done:
+> -	if (dev)
+> +	if (dev) {
+>  		net2280_remove(pdev);
+> +		kfree(dev);
+> +	}
+>  	return retval;
+>  }
 
-I really don't like the config options.  With the boot parameters
-you can always hardcode that in CONFIG_CMDLINE anyway.
+This patch seems to be the tip of an iceberg.  Following through its 
+implications led to a couple of discoveries.
+
+usb_del_gadget_udc() calls device_unregister(&gadget->dev).  Once this 
+call returns, gadget has to be regarded as a stale pointer.  But the 
+very next line of code does:
+
+	memset(&gadget->dev, 0x00, sizeof(gadget->dev));
+
+for no apparent reason.  I'm amazed this hasn't caused problems already.  
+Is there any justification for keeping this memset?  It's hard to 
+imagine that it does any good.
+
+Similarly, net2280_remove() calls usb_del_gadget_udc(&dev->gadget) at 
+its start, and so dev must be a stale pointer for the entire remainder 
+of the routine.  But it gets used repeatedly.  Surely we ought to have 
+a device_get() and device_put() in there.
+
+Alan Stern
