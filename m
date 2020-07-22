@@ -2,165 +2,215 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61B7C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C45612071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEA22071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NOZ6Uetu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2fwuh96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732828AbgGVP0L (ORCPT
+        id S1732880AbgGVP0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60632 "EHLO
+        Wed, 22 Jul 2020 11:26:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732648AbgGVP0J (ORCPT
+        with ESMTP id S1728812AbgGVP0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:26:09 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73272C0619DF
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:26:09 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t15so1559925pjq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:26:09 -0700 (PDT)
+        Wed, 22 Jul 2020 11:26:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A234C0619DC;
+        Wed, 22 Jul 2020 08:26:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r12so2283177wrj.13;
+        Wed, 22 Jul 2020 08:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CzLOOS//hUD8q9wPH1hxqf0po1Wm9sGqsog9+/iTqAI=;
-        b=NOZ6UetuWCJDo0hzkrmh3VMWWV8D9oRUMNZ4pDO/kd+xEWZ3QyxKqGDHqUhauU42FT
-         lJzbINvNQ1ipDKEiN6giuu5cmLuuCZzH9aWilbHEM/+yYaK0n5KkbpzB3e+7nRY92qp9
-         BJfGq3Hc4KULpAJlLg0z7bJ8+wchj3TY7lAYpqgPBp9T0FMfvwvM8UI7gAqZ1aQNc05l
-         /COONQpsGm7VOPJuN4srq76cyOU5+y1lnlFGsR46MxI863bKkBEhKiPHnLRRwjqGRU3D
-         lk1WvdlrwxYRZussgyknvro6EMDvVT5va4jpcOh16Ex9YhZvZ2xr5u2kMB/OOB5Mx7Ap
-         kmwg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=akcO108wudl5eEgjnEkCunNDPWVs+eb32qFL3qxkaXw=;
+        b=F2fwuh965Lrcv6Mm0JcItJPFlBbuhKsYu3vNEmQZNerCWr81bNRRX4fkIVyJXvACp/
+         FzkQT599/MCpybVn4aCNU0QzU7QZezbKdNmmG5k3Ql7hCsVAxG4C5dbO9YEGmRttgenP
+         liuwWy5QPuG6HDkDs5BqyLFpFZNcWp0hdtxeAyu9ns4TCRrzghh3vhyJE924/t0noFSa
+         UQl1YxYVdqdMd6yUm8UHewWEeLnoJyCtbHcvc+cjn2UNXhX1ON4DFLH5UfF02vc8PGvB
+         cSRU1ppxJM1pWIgRnSkXtsctrfgA97KJyOEAA4iScx23/65MFX73gSPVqy5te4OQiKAG
+         QFHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CzLOOS//hUD8q9wPH1hxqf0po1Wm9sGqsog9+/iTqAI=;
-        b=WaXdMODUFcyJIF0FsjmYmIHE3Ak7KvxSoOiAPaRlqdBi4/7YJyXZimZ+hDcUO3o47V
-         W1PrcY2IasXiriYBi7vre0OAG79He6Z+nEBQPTJFkdNFJyZ0o75UGMZDmco47IwOGkPG
-         qnak0roXcF2YrNVIo5Z8YSlbJV+FesRg2NG5PdkQrPA+hDWW5oCqGJ8ofoQJhg9qNb9v
-         YFR0cXj/VEWBgnLxwFC5BYXsYt2V9tEdhmAi8zh9F3YYuvE0hoXa9xYwTyjNgBKXf+7p
-         3/ODxpOxj+NddpMJ/Rpoxe8aeTQRnSBXHLxmZpCJNS4T8U74p8AoLitEB5BJGa4ndMtz
-         yVNg==
-X-Gm-Message-State: AOAM533at+oRKJQmSaiwFp4b3/92g+ULMH5+N/8R9QA/S2ICwI95vMZA
-        3gkttEzACrzyDzoRScMKQ9PsKeegMtzjpoHvN7MnH1kd
-X-Google-Smtp-Source: ABdhPJxwGbDkiUfVo298yjBOWU/WqwCHTeJkyyPq+H7SlytcoTd3ErvS9165gVdX0ddyHf3f1m9/coLUoxNHm/YzU3c=
-X-Received: by 2002:a17:90b:3683:: with SMTP id mj3mr10501433pjb.91.1595431568642;
- Wed, 22 Jul 2020 08:26:08 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=akcO108wudl5eEgjnEkCunNDPWVs+eb32qFL3qxkaXw=;
+        b=ZCXm4s/Z5ZewrMnEZtagShCUIfpO89sHnWMGv8W9GDZMxiuqtR0Z89YkS5btg1PgQW
+         BBgBmqpFPCJiRNbgEE8bu3YQcDjGgMSYJlWUM5xgkWEBTylMEldeZsvf0QWs84s6Tou5
+         VrOGwJRBoQexfWHlF71U17uOtETUQgwjvX8YG5o4mp4GR/DLX8pCTDp/bIi/Fph9vEI7
+         cjw6SmUOzgLO2DiD9xBUuf5p+NHCFOWIHT/lSsr2d4PSiiFw8XHGP9H+EB+nyQwLNxoB
+         k9Nlzvl7pgYlxbTfNoYTTYb0IIWDg6fywFPIyix6HwFSn5l38Rhrb2nR0YmWt6dyaMyI
+         44GQ==
+X-Gm-Message-State: AOAM533n+wMHw8TXJ7VqIL8Mcsz5Qn28vsR6kL/R3IybeqxIPDz5PSPV
+        1myOH6IGzW9+vn24keltiRs=
+X-Google-Smtp-Source: ABdhPJzNhFaLsOgasoKvuzKRv3v1C9BYgx4EPcERrylzUFA6ZeQ9um13EegybBW95xbv9HkDiglmnw==
+X-Received: by 2002:adf:e701:: with SMTP id c1mr112470wrm.350.1595431604326;
+        Wed, 22 Jul 2020 08:26:44 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id u2sm54779wml.16.2020.07.22.08.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 08:26:43 -0700 (PDT)
+Subject: Re: [PATCH 1/4] i2c: mediatek: Add apdma sync in i2c driver
+To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
+Cc:     qiangming.xia@mediatek.com, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
+ <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <58e23057-d84c-7fc2-e912-6569cbbf1b25@gmail.com>
+Date:   Wed, 22 Jul 2020 17:26:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CA+G9fYvHH7nDRYE6-tZL6+QmyX21D4OOQ4YU+v+okE6FEqqkhg@mail.gmail.com>
- <CAK8P3a01smLHy0vyPX0WxDRWWPxDCbZhRCBB5qGFvMCnsghwjg@mail.gmail.com> <20200722130109.GO9247@paulmck-ThinkPad-P72>
-In-Reply-To: <20200722130109.GO9247@paulmck-ThinkPad-P72>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 22 Jul 2020 08:25:32 -0700
-Message-ID: <CAGETcx9xjyPw01gmhtu9XShmkmXriTPgoc8UfSQgHhkQg5S=VQ@mail.gmail.com>
-Subject: Re: BUG: sleeping function called from invalid context at
- kernel/locking/mutex.c db410c
-To:     paulmck@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        walter-zh.wu@mediatek.com, neeraju@codeaurora.org,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 6:01 AM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Wed, Jul 22, 2020 at 10:04:21AM +0200, Arnd Bergmann wrote:
-> > On Wed, Jul 22, 2020 at 9:44 AM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > Kernel BUG noticed on arm64 db410c device while booting linux next 20200721 tag.
-> > > Continually popping up these BUG messages on the boot console and kernel warning
-> > > also noticed.
-> > >
-> > > metadata:
-> > >   git branch: master
-> > >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > >   git commit: de2e69cfe54a8f2ed4b75f09d3110c514f45d38e
-> > >   git describe: next-20200721
-> > >   kernel-config:
-> > > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/818/config
-> > >   build-location:
-> > > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/818
-> > >
-> > > Crash log:
-> > > [    0.444349] BUG: sleeping function called from invalid context at
-> > > /usr/src/kernel/kernel/locking/mutex.c:935
-> > > [    0.444422] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid:
-> > > 30, name: kworker/0:1
-> > > [    0.444458] 2 locks held by kworker/0:1/30:
-> > > [    0.444489]  #0: ffff00000eb15138
-> > > ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x208/0x768
-> > > [    0.444627]  #1: ffff800013713df0
-> > > ((work_completion)(&sdp->work)){+.+.}-{0:0}, at:
-> > > process_one_work+0x208/0x768
-> > > [    0.444761] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted
-> > > 5.8.0-rc6-next-20200721 #1
-> > > [    0.444787] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> > > [    0.444817] Workqueue: rcu_gp srcu_invoke_callbacks
-> > > [    0.444856] Call trace:
-> > > [    0.444883]  dump_backtrace+0x0/0x1f8
-> > > [    0.444910]  show_stack+0x2c/0x38
-> > > [    0.444939]  dump_stack+0xf0/0x16c
-> > > [    0.444969]  ___might_sleep+0x144/0x208
-> > > [    0.444996]  __might_sleep+0x54/0x90
-> > > [    0.445027]  __mutex_lock+0x64/0x970
-> > > [    0.445055]  mutex_lock_nested+0x54/0x70
-> > > [    0.445084]  device_del+0x44/0x3c0
-> > > [    0.445110]  device_unregister+0x24/0x78
-> > > [    0.445138]  __device_link_free_srcu+0x64/0x70
-> > > [    0.445164]  srcu_invoke_callbacks+0x10c/0x1a0
-> >
-> > The device_unregister() was added to __device_link_free_srcu() as part
-> > of commit 287905e68dd2 ("driver core: Expose device link details in sysfs")
-> >
-> > I'm fairly sure this is what introduced the console output, though the
-> > code before it is already suspicious:
-> >
-> > call_srcu(&device_links_srcu, &link->rcu_head, __device_link_free_srcu);
-> >
-> > According to the documentation, call_srcu() must not call any sleeping
-> > functions, which is what the 'in_atomic(): 1' above is about.
->
-> Yes, the callback function, in this case __device_link_free_srcu(),
-> will execute from softirq context.
->
-> > However, from what I can tell, the put_device() and pm_runtime_put()
-> > calls in device_link_free() can also potentially sleep even if they normally
-> > don't warn about that.
->
-> The usual workaround is to have __device_link_free_srcu() schedule a
-> workqueue that invokes the potentially sleeping functions.
->
->                                                         Thanx, Paul
-
-Thanks for reporting. It was already reported and fixed last week.
-Waiting on Greg to pull it in.
-https://lore.kernel.org/lkml/CAGETcx9quqtV9TeD8WEcLLijGeV+7hXqnyiMv7F8xo+vyF_7iw@mail.gmail.com/#t
 
 
--Saravana
+On 22/07/2020 14:31, Qii Wang wrote:
+> With the apdma remove hand-shake signal, it need to keep i2c and
+> apdma in sync manually.
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>   drivers/i2c/busses/i2c-mt65xx.c | 23 ++++++++++++++++++++---
+>   1 file changed, 20 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index deef69e..e6b984a 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -48,6 +48,9 @@
+>   
+>   #define I2C_DMA_CON_TX			0x0000
+>   #define I2C_DMA_CON_RX			0x0001
+> +#define I2C_DMA_ASYNC_MODE		0x0004
+> +#define I2C_DMA_SKIP_CONFIG		0x0010
+> +#define I2C_DMA_DIR_CHANGE		0x0200
+>   #define I2C_DMA_START_EN		0x0001
+>   #define I2C_DMA_INT_FLAG_NONE		0x0000
+>   #define I2C_DMA_CLR_FLAG		0x0000
+> @@ -205,6 +208,7 @@ struct mtk_i2c_compatible {
+>   	unsigned char timing_adjust: 1;
+>   	unsigned char dma_sync: 1;
+>   	unsigned char ltiming_adjust: 1;
+> +	unsigned char apdma_sync: 1;
+>   };
+>   
+>   struct mtk_i2c_ac_timing {
+> @@ -311,6 +315,7 @@ struct i2c_spec_values {
+>   	.timing_adjust = 1,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+> +	.apdma_sync = 0,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt6577_compat = {
+> @@ -324,6 +329,7 @@ struct i2c_spec_values {
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+> +	.apdma_sync = 0,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt6589_compat = {
+> @@ -337,6 +343,7 @@ struct i2c_spec_values {
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+> +	.apdma_sync = 0,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt7622_compat = {
+> @@ -350,6 +357,7 @@ struct i2c_spec_values {
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+> +	.apdma_sync = 0,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt8173_compat = {
+> @@ -362,6 +370,7 @@ struct i2c_spec_values {
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+> +	.apdma_sync = 0,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt8183_compat = {
+> @@ -375,6 +384,7 @@ struct i2c_spec_values {
+>   	.timing_adjust = 1,
+>   	.dma_sync = 1,
+>   	.ltiming_adjust = 1,
+> +	.apdma_sync = 0,
+>   };
+>   
+>   static const struct of_device_id mtk_i2c_of_match[] = {
+> @@ -798,6 +808,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   	u16 start_reg;
+>   	u16 control_reg;
+>   	u16 restart_flag = 0;
+> +	u16 dma_sync = 0;
+>   	u32 reg_4g_mode;
+>   	u8 *dma_rd_buf = NULL;
+>   	u8 *dma_wr_buf = NULL;
+> @@ -851,10 +862,16 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   		mtk_i2c_writew(i2c, num, OFFSET_TRANSAC_LEN);
+>   	}
+>   
+> +	if (i2c->dev_comp->apdma_sync) {
+> +		dma_sync = I2C_DMA_SKIP_CONFIG | I2C_DMA_ASYNC_MODE;
+> +		if (i2c->op == I2C_MASTER_WRRD)
+> +			dma_sync |= I2C_DMA_DIR_CHANGE;
+> +	}
+> +
+>   	/* Prepare buffer data to start transfer */
+>   	if (i2c->op == I2C_MASTER_RD) {
+>   		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
+> -		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
+> +		writel(I2C_DMA_CON_RX | dma_sync, i2c->pdmabase + OFFSET_CON);
+>   
+>   		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
+>   		if (!dma_rd_buf)
+> @@ -877,7 +894,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   		writel(msgs->len, i2c->pdmabase + OFFSET_RX_LEN);
+>   	} else if (i2c->op == I2C_MASTER_WR) {
+>   		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
+> -		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
+> +		writel(I2C_DMA_CON_TX | dma_sync, i2c->pdmabase + OFFSET_CON);
+>   
+>   		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
+>   		if (!dma_wr_buf)
+> @@ -900,7 +917,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   		writel(msgs->len, i2c->pdmabase + OFFSET_TX_LEN);
+>   	} else {
+>   		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
+> -		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
+> +		writel(I2C_DMA_CLR_FLAG | dma_sync, i2c->pdmabase + OFFSET_CON);
+>   
+>   		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
+>   		if (!dma_wr_buf)
+> 
