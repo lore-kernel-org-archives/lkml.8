@@ -2,182 +2,82 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5696C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A171E22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:44:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wyajGkXn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xgKFFSG6"
+	by mail.kernel.org (Postfix) with ESMTP id E3712206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbgGVUo4 (ORCPT
+        id S1732939AbgGVUqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:44:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVUoz (ORCPT
+        Wed, 22 Jul 2020 16:46:36 -0400
+Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:55562 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726452AbgGVUqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:44:55 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BDCC0619DC;
-        Wed, 22 Jul 2020 13:44:55 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595450693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wXmzNCf+SuxkNEeA2BGq+ls7ErUJp1r23WIHfZ6ytY8=;
-        b=wyajGkXnsNJNOy+GEr2xcZ7WbqirfqC0K6s21soI7YoKiIB/oTL8lqbKiapU9N/5ohnvku
-        D3d1K/LUt/HgfKgbGveYYjFG4S5Bbr61Udj8uCDDoq+B+pyjD4jgMs4OAMnAhKv+b4F9AL
-        xqM2zl08ylbrd0wK5RkmFEjouB8bmOF/1auaFPOop6yG+LS9aLhzqU/DoYMsCf3R3jYBJR
-        Gc6LB/4Te2ahHOIN3yOeBweEVBRa+9/1w7s/zqRYdz52xhOmBkI1IBDqBzjz4d3UUqUlHa
-        ot6lQapK1TZPQLBiqI++zY71ic1K+dJbvu4RcMJMzYMejR35bRW5NcdS5vY46w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595450693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wXmzNCf+SuxkNEeA2BGq+ls7ErUJp1r23WIHfZ6ytY8=;
-        b=xgKFFSG6c+aqvhtZbhIloJilsTGyEpYIJbC+QLyW5QnyNvEzVpja7KeGWisf5hs+2VAK2k
-        FXupTA7ESov48+AQ==
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        jgg@mellanox.com, rafael@kernel.org, dave.hansen@intel.com,
-        netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC v2 03/18] irq/dev-msi: Create IR-DEV-MSI irq domain
-In-Reply-To: <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
-Date:   Wed, 22 Jul 2020 22:44:51 +0200
-Message-ID: <87lfjbz3cs.fsf@nanos.tec.linutronix.de>
+        Wed, 22 Jul 2020 16:46:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 2D8AB1D6A0374;
+        Wed, 22 Jul 2020 20:46:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: vase54_4e01a1326f39
+X-Filterd-Recvd-Size: 1999
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 Jul 2020 20:46:33 +0000 (UTC)
+Message-ID: <8721f64a3150e1e5c4813738f470443297ef1cdd.camel@perches.com>
+Subject: Re: [PATCH v2] net-sysfs: add a newline when printing 'tx_timeout'
+ by sysfs
+From:   Joe Perches <joe@perches.com>
+To:     David Miller <davem@davemloft.net>, stephen@networkplumber.org
+Cc:     wangxiongfeng2@huawei.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 22 Jul 2020 13:46:32 -0700
+In-Reply-To: <20200722.132311.31388808811810422.davem@davemloft.net>
+References: <1595314977-57991-1-git-send-email-wangxiongfeng2@huawei.com>
+         <20200721.153632.1416164807029507588.davem@davemloft.net>
+         <20200722082741.1675d611@hermes.lan>
+         <20200722.132311.31388808811810422.davem@davemloft.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Jiang <dave.jiang@intel.com> writes:
-> From: Megha Dey <megha.dey@intel.com>
->
-> When DEV_MSI is enabled, the dev_msi_default_domain is updated to the
-> base DEV-MSI irq  domain. If interrupt remapping is enabled, we create
+On Wed, 2020-07-22 at 13:23 -0700, David Miller wrote:
+> From: Stephen Hemminger <stephen@networkplumber.org>
+> Date: Wed, 22 Jul 2020 08:27:41 -0700
+> 
+> > On Tue, 21 Jul 2020 15:36:32 -0700 (PDT)
+> > David Miller <davem@davemloft.net> wrote:
+> > 
+> >> From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> >> Date: Tue, 21 Jul 2020 15:02:57 +0800
+> >> 
+> >> > When I cat 'tx_timeout' by sysfs, it displays as follows. It's better to
+> >> > add a newline for easy reading.
+> >> > 
+> >> > root@syzkaller:~# cat /sys/devices/virtual/net/lo/queues/tx-0/tx_timeout
+> >> > 0root@syzkaller:~#
+> >> > 
+> >> > Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>  
+> >> 
+> >> Applied, thank you.
+> > 
+> > Could you add
+> 
+> Stephen, of all people you should know by now that all of my commits
+> are %100 immutable.  So commit log changes cannot be made after I've
+> applied the patch, ever.
 
-s/we//
-
-> a new IR-DEV-MSI irq domain and update the dev_msi_default domain to
-> the same.
->
-> For X86, introduce a new irq_alloc_type which will be used by the
-> interrupt remapping driver.
->
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Megha Dey <megha.dey@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  arch/x86/include/asm/hw_irq.h       |    1 +
->  arch/x86/kernel/apic/msi.c          |   12 ++++++
->  drivers/base/dev-msi.c              |   66 +++++++++++++++++++++++++++++++----
->  drivers/iommu/intel/irq_remapping.c |   11 +++++-
->  include/linux/intel-iommu.h         |    1 +
->  include/linux/irqdomain.h           |   11 ++++++
->  include/linux/msi.h                 |    3 ++
-
-Why is this mixing generic code, x86 core code and intel specific driver
-code? This is new functionality so:
-
-      1) Provide the infrastructure
-      2) Add support to architecture specific parts
-      3) Enable it
-
-> +
-> +#ifdef CONFIG_DEV_MSI
-> +int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
-> +			   int nvec, msi_alloc_info_t *arg)
-> +{
-> +	memset(arg, 0, sizeof(*arg));
-> +
-> +	arg->type = X86_IRQ_ALLOC_TYPE_DEV_MSI;
-> +
-> +	return 0;
-> +}
-> +#endif
-
-What is this? Tons of new lines for taking up more space and not a
-single comment.
-
-> -static int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
-> +int __weak dev_msi_prepare(struct irq_domain *domain, struct device *dev,
->  			   int nvec, msi_alloc_info_t *arg)
->  {
->  	memset(arg, 0, sizeof(*arg));
-
-Oh well. So every architecure which needs to override this and I assume
-all which are eventually going to support it need to do the memset() in
-their override.
-
-       memset(arg,,,);
-       arch_dev_msi_prepare();
+Maybe it's time to use git notes?
 
 
-> -	dev_msi_default_domain = msi_create_irq_domain(fn, &dev_msi_domain_info, parent);
-> +	/*
-> +	 * This initcall may come after remap code is initialized. Ensure that
-> +	 * dev_msi_default domain is updated correctly.
-
-What? No, this is a disgusting hack. Get your ordering straight, that's
-not rocket science.
-
-> +#ifdef CONFIG_IRQ_REMAP
-
-IRQ_REMAP is x86 specific. Is this file x86 only or intended to be for
-general use? If it's x86 only, then this should be clearly
-documented. If not, then these x86'isms have no place here.
-
-> +struct irq_domain *create_remap_dev_msi_irq_domain(struct irq_domain *parent,
-> +						   const char *name)
-
-So we have msi_create_irq_domain() and this is about dev_msi, right? So
-can you please stick with a consistent naming scheme?
-
-> +{
-> +	struct fwnode_handle *fn;
-> +	struct irq_domain *domain;
-> +
-> +	fn = irq_domain_alloc_named_fwnode(name);
-> +	if (!fn)
-> +		return NULL;
-> +
-> +	domain = msi_create_irq_domain(fn, &dev_msi_ir_domain_info, parent);
-> +	if (!domain) {
-> +		pr_warn("failed to initialize irqdomain for IR-DEV-MSI.\n");
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
-> +
-> +	if (!dev_msi_default_domain)
-> +		dev_msi_default_domain = domain;
-
-Can this be called several times? If so, then this lacks a comment. If
-not, then this condition is useless.
-
-Thanks,
-
-        tglx
