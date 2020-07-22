@@ -2,180 +2,243 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC57C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE69C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A78220787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96882077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C21JPhyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbgGVIzf (ORCPT
+        id S1731046AbgGVI4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:55:35 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:37877 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGVIze (ORCPT
+        Wed, 22 Jul 2020 04:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgGVI4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:55:34 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MuDoR-1kpZTK3Be9-00uVwW; Wed, 22 Jul 2020 10:55:31 +0200
-Received: by mail-qv1-f49.google.com with SMTP id e3so675423qvo.10;
-        Wed, 22 Jul 2020 01:55:31 -0700 (PDT)
-X-Gm-Message-State: AOAM530Kvn8KM2lnGCSzM7NnNGghfg6aDrbjyfs8BGyLvptUbHIGQGe8
-        /QEImm2NsQxKJsSfXC0Bmm5i4gXXIzzvGYu/vN0=
-X-Google-Smtp-Source: ABdhPJz2CG97fM8LdsudY8wGM5BPLCychAwsj3wuHCiRR3jjOOOqtO5R0Nb6oNtKoi0uAlHHaYCrqBDaqZZMZF06Gbo=
-X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr28822296qvb.210.1595408130368;
- Wed, 22 Jul 2020 01:55:30 -0700 (PDT)
+        Wed, 22 Jul 2020 04:56:14 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4902AC0619DC;
+        Wed, 22 Jul 2020 01:56:14 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id a12so1712668ion.13;
+        Wed, 22 Jul 2020 01:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ln57g9kGaw+MdOcgZwEqa5A1Z1hG/VwmmjB0ZBbadOM=;
+        b=C21JPhyOHrIydO6NKi2q8Pphvs5J6wYTWsjI/WilYhnPzBRUEUfbi3sZvNyRqe31sV
+         fgkeFWZBGgS9jnNWkNnjcMWavgqiICtwVoD7e1HaBn6rV1E5ZAJXfVf+PB+5TOt8av9G
+         kOGFqXG5tHd2MT64x2UE0la5J9oRsm2cKm0DDw5yOiEpM9SHQgMGa1ZOSIwOQvwP4bll
+         HS8dQfM9mlpIzy3H9cGIcb21dhsDiYruiQ2Zkgy58Y1bS/0Oz+zcXQU1CfdPToqMKCOT
+         ME2/FGgge3o5FdgljJmUPBe8WzJ8M21UjM2IWJrvpE6GLkYt64B6M8uUAsdFlsm2dB2t
+         pkvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ln57g9kGaw+MdOcgZwEqa5A1Z1hG/VwmmjB0ZBbadOM=;
+        b=p+O6pCPgUC7jzosDs8AAMCwyzCzeNRq/G6dix2QBVwNmzSyl+SA1y6Av3owjDcZk+0
+         5uOCW/DXuEGDd2NmMRbLoEZ9iapDtWm+36OkzBZiZxwo8HNa10bTtC40UYAt7caOc6TC
+         ShfQBKfeuOwBMyALSm6jkHZTnN2fSNtZSxRJReLRYqCj/Qb8SnwzBjs8emDdZgz6x1dm
+         hz+xauC202pSOd9aljctv2aVz3DbvuTrdyW5TmteITaH4PGNVXydiCX5daso4dRMQRT5
+         siiDXblLQyGZEV3gcPKQBStv5yon/dGZzcgaYEVKSC3M9Q8RMjX+4HCfiQ8rmj7LAZjM
+         /A5A==
+X-Gm-Message-State: AOAM532W38kwfyXTKZwziGr/zW39WgcC+okL1ztCjj6/2P8mbeSV1GKj
+        QXR/zM+vWqFxpyNMcZrdJNu38k53tvYyx7r4SJYSKRQm6Z8=
+X-Google-Smtp-Source: ABdhPJzBn3F4eF5x3FCOg62em2mFuXAaZLS2uGn9dAJTbouuZ36/w0i6SG+5OMOsXp3zAFeZBBv2MzyHd/bLklA870c=
+X-Received: by 2002:a5e:8805:: with SMTP id l5mr652782ioj.124.1595408173330;
+ Wed, 22 Jul 2020 01:56:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYuj3bHUMz8XQztbmTgF0c5+rZ5-FkUjFyvEftej2jLT+Q@mail.gmail.com>
-In-Reply-To: <CA+G9fYuj3bHUMz8XQztbmTgF0c5+rZ5-FkUjFyvEftej2jLT+Q@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 22 Jul 2020 10:55:14 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3br1bDc8C6UjRWzdmwzVV26YYe3ixHV7LH5Z0-OiqPQQ@mail.gmail.com>
-Message-ID: <CAK8P3a3br1bDc8C6UjRWzdmwzVV26YYe3ixHV7LH5Z0-OiqPQQ@mail.gmail.com>
-Subject: Re: BUG at mm/vmalloc.c:3089! - invalid opcode: 0000 [#1] SMP KASAN PTI
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
-        LTP List <ltp@lists.linux.it>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Roman Gushchin <guro@fb.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>
+References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-2-peron.clem@gmail.com>
+ <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+In-Reply-To: <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 22 Jul 2020 10:56:02 +0200
+Message-ID: <CAJiuCcej5Drwz_jfF=uHNRG+w_c_SfbyJt7jyck5d_phVh-oLw@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 01/16] ASoC: sun4i-i2s: Add support for H6 I2S
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:crnOLwS+41d8HyGZU9Rdycw07Z/sTpkPO77WcPg7qhCzPAY4BFA
- JLmzroaKFY17VPr1EqhrRwTLHCO+1BzUYA5h1wDfbdMHy1BwqS8qI4ylmwp2F8rc//lfl+q
- VIkOfNRYuAJtyVysOhDeDuZlWo12j591zT14ATo7wHJN2zQeeouRV2GLW+fs8Nzf645SFYr
- Ciizc5G/6iNvpSBKBkYHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KShUyS/OgMY=:66bM5qt8wZIMCWq7VF5TDA
- 9abv+b7UqeAhSFgSc/1x2d8p+1LMkingX+Xpk4VNv6Kn3PCo6IPbRreYlkGsfT2CHGL7L/UGb
- 0Q2hOqQdEUJlM7QPbkc3OCx/7rGnxGzvbEy7lYQsjfhJLRo9ImMJ+1y7t4bQVaJ9FA1i9Dp8I
- tQjAdeQB+yGQ4Dhwngi1lU+wgcuvBL4I0chX9esv9uvvAFBQNQhv0jIeYlxwA4Y8LjvFqaLeC
- wGlki2mOBQ/uGRhw+XVzeF2OnZCz0vXglr9eNqvPd3LGNrt6JrOn1HooMJEk3qA6wa7pNU8Gg
- 5/3joHitVOMKThWRewNYZwGv3xFWoijJL2jeu7YmpfH+RLG028jafJf0R4/nKPMUFIGVADm3E
- +pPpeuzUgdc7LL1qeldnwTVwrcbwMk3msEjoodSrwpTOXjKXvGQJQBFtNdg3JxdEY4jQTRHaU
- PPbD+cveRkD9VqfYh++1RLtq3VUJdOzGJ/czVEfH9HJw44fIK1gNWbECwRRNoFIURonWpNspv
- EpSMmvbG0WScA7lIyMsfFmnLWIFS56cSboB2JIBGicDzNUkZx+8cINLQeNUyJI1eyFoppoNC1
- Fm+KBMjmzQsxsckfyITbfPJbF01st15Y+Hl+bR5QlsO3XTp/uXYBS7nt9w/J+OM1DMJE28AFe
- DCP1JgpPpppjV+nI6lZkV/STYLgkIP03a0CSVDjzsFnj1/Kpmag4kVmwWP2PjflvM4zvbMl2/
- Agpx5LlZmHy4Iw+ZRdzvjqiJzP8V00s0/LXY4Wpce4wZjwOusOQlflS5gxSBNjBu4fMIqnU2j
- KCSl47ZFiFQUVx9ktlM4Ik91coBAc3bOPDx3TutZTTB6Zi8JrmNNWnNXwaRK0AH4e7ulkjIuX
- RGiUrawqrMrI+AZTrZ6vlxDK+0Unhbb84a72k2RSBuZZ2MWS/b2n/RwgyL9F53fX1llLsMSfo
- ZLCdGlxQeb0bk8ss3EfgNqGyf1kycJjs9hnuj8m5dVf19lWqJd0KH
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Roman Gushchin to Cc, he touched that code recently.
+Hi Samuel,
 
-Naresh, if nobody has any immediate ideas, you could double-check by
-reverting these commits:
+On Fri, 10 Jul 2020 at 07:44, Samuel Holland <samuel@sholland.org> wrote:
+>
+> On 7/4/20 6:38 AM, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 I2S is very similar to that in H3, except it supports up to 16
+> > channels.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  sound/soc/sunxi/sun4i-i2s.c | 227 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 227 insertions(+)
+> >
+> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > index d0a8d5810c0a..9690389cb68e 100644
+> > --- a/sound/soc/sunxi/sun4i-i2s.c
+> > +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > @@ -124,6 +124,21 @@
+> >  #define SUN8I_I2S_RX_CHAN_SEL_REG    0x54
+> >  #define SUN8I_I2S_RX_CHAN_MAP_REG    0x58
+> >
+> > +/* Defines required for sun50i-h6 support */
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK        GENMASK(21, 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)     ((offset) << 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK               GENMASK(19, 16)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)              ((chan - 1) << 16=
+)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN_MASK                GENMASK(15, 0)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)   (((1 << num_chan) - 1))
+> > +
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG       0x44
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG       0x48
+> > +
+> > +#define SUN50I_H6_I2S_RX_CHAN_SEL_REG        0x64
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG       0x68
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG       0x6C
+> > +
+> >  struct sun4i_i2s;
+> >
+> >  /**
+> > @@ -466,6 +481,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun=
+4i_i2s *i2s,
+> >       return 0;
+> >  }
+> >
+> > +static int sun50i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+> > +                                const struct snd_pcm_hw_params *params=
+)
+> > +{
+> > +     unsigned int channels =3D params_channels(params);
+> > +     unsigned int slots =3D channels;
+> > +     unsigned int lrck_period;
+> > +
+> > +     if (i2s->slots)
+> > +             slots =3D i2s->slots;
+> > +
+> > +     /* Map the channels for playback and capture */
+> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543=
+210);
+> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543=
+210);
+> > +
+> > +     /* Configure the channels */
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +     regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
+> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
+> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
+> > +
+> > +     switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
+> > +     case SND_SOC_DAIFMT_DSP_A:
+> > +     case SND_SOC_DAIFMT_DSP_B:
+> > +     case SND_SOC_DAIFMT_LEFT_J:
+> > +     case SND_SOC_DAIFMT_RIGHT_J:
+>
+> According to the manual, LEFT_J and RIGHT_J should use the same calculati=
+on as
+> I2S, not the one for PCM/DSP.
+>
+> > +             lrck_period =3D params_physical_width(params) * slots;
+> > +             break;
+> > +
+> > +     case SND_SOC_DAIFMT_I2S:
+> > +             lrck_period =3D params_physical_width(params);
+> > +             break;
+> > +
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (i2s->slot_width)
+> > +             lrck_period =3D i2s->slot_width;
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
+>
+> From the description in the manual, this looks off by one. The number of =
+BCLKs
+> per LRCK is LRCK_PERIOD + 1.
+>
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_EN_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_EN(channels));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+> >                              struct snd_pcm_hw_params *params,
+> >                              struct snd_soc_dai *dai)
+> > @@ -691,6 +765,108 @@ static int sun8i_i2s_set_soc_fmt(const struct sun=
+4i_i2s *i2s,
+> >       return 0;
+> >  }
+> >
+> > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> > +                               unsigned int fmt)
+> > +{
+> > +     u32 mode, val;
+> > +     u8 offset;
+> > +
+> > +     /*
+> > +      * DAI clock polarity
+> > +      *
+> > +      * The setup for LRCK contradicts the datasheet, but under a
+> > +      * scope it's clear that the LRCK polarity is reversed
+> > +      * compared to the expected polarity on the bus.
+> > +      */
+>
+> This comment makes us sound a lot more confident than I think we actually=
+ are.
 
-e0b8d00b7561 mm: memcg/percpu: per-memcg percpu memory statistics
-99411af13595 mm/percpu: fix 'defined but not used' warning
-9398ce6306b6 mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix-fix
-54116d471779 mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix
-ec518e090843 mm: memcg/percpu: account percpu memory to memory cgroups
-9bc897d18dc3 percpu: return number of released bytes from pcpu_free_area()
+That's a comment that needs to be checked using a Logic analyzer (that
+I don't have).
+It's a copy paste from the previous generation.
+But this seems wrong as we need to specify
+"simple-audio-card,frame-inversion;" in the device-tree.
 
-       Arnd
+Regards,
+Clement
 
-On Wed, Jul 22, 2020 at 10:12 AM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
 >
-> Kernel BUG at mm/vmalloc.c:3089! on x86_64 Kasan configured kernel reported
-> this while testing LTP cgroup_fj_stress_memory_4_4_none test cases.
->
-> Also found on arm64 and i386 devices and qemu.
->
-> metadata:
->   git branch: master
->   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->   git commit: de2e69cfe54a8f2ed4b75f09d3110c514f45d38e
->   git describe: next-20200721
->   make_kernelversion: 5.8.0-rc6
->   kernel-config:
-> https://builds.tuxbuild.com/zU-I3LEfC1AaKQ59Er60ZQ/kernel.config
->
-> crash log,
-> [ 1421.080221] ------------[ cut here ]------------
-> [ 1421.084874] kernel BUG at mm/vmalloc.c:3089!
-> [ 1421.090356] invalid opcode: 0000 [#1] SMP KASAN PTI
-> [ 1421.096009] CPU: 1 PID: 19100 Comm: kworker/1:1 Not tainted
-> 5.8.0-rc6-next-20200721 #1
-> [ 1421.103933] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> 2.0b 07/27/2017
-> [ 1421.111418] Workqueue: events pcpu_balance_workfn
-> [ 1421.116138] RIP: 0010:free_vm_area+0x2d/0x30
-> [ 1421.120413] Code: e5 41 54 49 89 fc 48 83 c7 08 e8 9e 5e 04 00 49
-> 8b 7c 24 08 e8 74 f8 ff ff 49 39 c4 75 0c 4c 89 e7 e8 97 d2 03 00 41
-> 5c 5d c3 <0f> 0b 90 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49
-> 89 fe
-> [ 1421.139154] RSP: 0018:ffff88840142fc80 EFLAGS: 00010282
-> [ 1421.144381] RAX: 0000000000000000 RBX: ffff88841b843738 RCX: ffffffff86ca1d78
-> [ 1421.151515] RDX: dffffc0000000000 RSI: 0000000000000004 RDI: ffff8883bfacd630
-> [ 1421.158647] RBP: ffff88840142fc88 R08: 0000000000000001 R09: ffffed1080285f7e
-> [ 1421.165780] R10: 0000000000000003 R11: ffffed1080285f7d R12: ffff888409e89880
-> [ 1421.172913] R13: ffff88841b843730 R14: 0000000000000080 R15: 0000000000000080
-> [ 1421.180045] FS:  0000000000000000(0000) GS:ffff88841fa80000(0000)
-> knlGS:0000000000000000
-> [ 1421.188132] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1421.193876] CR2: 00007f1230b41080 CR3: 000000025d40e002 CR4: 00000000003706e0
-> [ 1421.201008] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [ 1421.208132] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [ 1421.215255] Call Trace:
-> [ 1421.217703]  pcpu_free_vm_areas+0x30/0x44
-> [ 1421.221714]  pcpu_balance_workfn+0x7bd/0x8f0
-> [ 1421.225987]  ? pcpu_create_chunk+0x2f0/0x2f0
-> [ 1421.230261]  ? read_word_at_a_time+0x12/0x20
-> [ 1421.234531]  ? strscpy+0xc1/0x190
-> [ 1421.237842]  process_one_work+0x474/0x7b0
-> [ 1421.241856]  worker_thread+0x7b/0x6a0
-> [ 1421.245521]  ? wake_up_process+0x10/0x20
-> [ 1421.249448]  ? process_one_work+0x7b0/0x7b0
-> [ 1421.253635]  kthread+0x1aa/0x200
-> [ 1421.256867]  ? kthread_create_on_node+0xd0/0xd0
-> [ 1421.261400]  ret_from_fork+0x22/0x30
-> [ 1421.264978] Modules linked in: x86_pkg_temp_thermal
-> [ 1421.269869] ---[ end trace 6352cf97284f07da ]---
-> [ 1421.274955] RIP: 0010:free_vm_area+0x2d/0x30
-> [ 1421.281026] Code: e5 41 54 49 89 fc 48 83 c7 08 e8 9e 5e 04 00 49
-> 8b 7c 24 08 e8 74 f8 ff ff 49 39 c4 75 0c 4c 89 e7 e8 97 d2 03 00 41
-> 5c 5d c3 <0f> 0b 90 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49
-> 89 fe
-> [ 1421.300553] RSP: 0018:ffff88840142fc80 EFLAGS: 00010282
-> [ 1421.307051] RAX: 0000000000000000 RBX: ffff88841b843738 RCX: ffffffff86ca1d78
-> [ 1421.314184] RDX: dffffc0000000000 RSI: 0000000000000004 RDI: ffff8883bfacd630
-> [ 1421.321317] RBP: ffff88840142fc88 R08: 0000000000000001 R09: ffffed1080285f7e
-> [ 1421.328477] R10: 0000000000000003 R11: ffffed1080285f7d R12: ffff888409e89880
-> [ 1421.335639] R13: ffff88841b843730 R14: 0000000000000080 R15: 0000000000000080
-> [ 1421.342777] FS:  0000000000000000(0000) GS:ffff88841fa80000(0000)
-> knlGS:0000000000000000
-> [ 1421.350870] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 1421.356643] CR2: 00007f1230b41080 CR3: 000000025d40e002 CR4: 00000000003706e0
-> [ 1421.363811] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [ 1421.370951] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
-> Full test log,
-> https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200721/testrun/2972982/suite/linux-log-parser/test/check-kernel-bug-1594684/log
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+> Regards,
+> Samuel
