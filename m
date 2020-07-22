@@ -2,144 +2,380 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC94C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66439C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE1A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3135F20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="xFRbFe5e"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCxONF1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgGVI0v (ORCPT
+        id S1729685AbgGVI1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51910 "EHLO
+        Wed, 22 Jul 2020 04:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgGVI0s (ORCPT
+        with ESMTP id S1727034AbgGVI1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:26:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CBBFC0619E5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:26:46 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id a1so981333edt.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:26:46 -0700 (PDT)
+        Wed, 22 Jul 2020 04:27:32 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79DDC0619DF
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:27:31 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e8so1598846ljb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:27:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ijnpSqTzlWs7OuuIHaz94zTqsgZ4TkbrlxGL7rF8SvM=;
-        b=xFRbFe5eYCppxJ62qFkLFv33fQa9ER4RHEl34g5WwIC4xdcR+4tivo7mnn1S+rNlbS
-         cMN8QwQ1eW0avv9rFxBRIQMUktSGW06zNgKrNWQvq5F25hq8QLzdYCQ1hmqL4iSIvq09
-         Szc8YdqC97qHUqKRHbhQr8/oguhWktZDZtVMGTavTEfzVAENBpjq7LQbsQSFC/Qb56AS
-         G/7MNxNktsXQmENPoH9ousqNoZVBW0eyiSYtxkhGP/mapdbBWtSCpZCTmHbB+1rtyqO0
-         wY2Oxf7ffMMplrOPj5lpx8Ya/rpegVFUOFLBmwqnjZVN6pLS4eW+iRKkCxAtMw4/FDqK
-         d09g==
+        bh=61HrId0S+vKH9AhKqEPMXDXVBKVaiTCAQAIzcmrLOI0=;
+        b=jCxONF1IsQDXBqv8BxRXic4Pjgw2vzzOVx9liKokTZcewYEcAbNngi4mqvDcFFK8zO
+         ofjOTGjcgj8KDtcVVyqX4YhVWrRCAZeX5KbT+V4Tnlr3Zb3rPH3vQZmDSRm8nJzVsgM7
+         CUAfNcoluKyD2Oe5s7eV2iComiQfpxMxePTECGEaU3x7HiR4mYhLo+Vr21eTMVql12jz
+         aMXDWzN4gQa+Ic635Vu4MA3a5vp9IKHZB1YO1j5qirUNH6LSwHW+qDdmbRiGjRzv/ngD
+         Md4w9Y9zlo9ODhGk25MeZ/EYqMQwfahDzJuyIuTJs45yVy1pjdzU9gbsX3SbTzK6wtmn
+         Y/4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ijnpSqTzlWs7OuuIHaz94zTqsgZ4TkbrlxGL7rF8SvM=;
-        b=FEuDMMym2Ewws54+HVlG88Q+TVOuxpdht6dIv1EnvN2txx5qzMOVAxZF5LvcRwcrCQ
-         4cML1rUuFfwUFbwp5kaiIFct4B1Bc+Gbqf+ho7sbLVlw8ci249QHMclOPAhnQvmk5yY8
-         m7LTaRIKgxX4ITi8ti8U9Kqbm9HPXhDIq4EzmLCY0I7gyQ41m6dFqun35rTnAKTf3T12
-         NbtO8wM6UlUxLkEPamUKnbr7rvUWAGoHKE/04mrWN0j+0Y6XTg/6s4dxaK5kNMReGv2e
-         PNI4Htgr7siJkdQWTBSqo2fDPRmzGbgUlGi6aA8x/mRznG+O8J7QESssfCyBQ1CoyIth
-         VPag==
-X-Gm-Message-State: AOAM531gX8+p4f6/aPFDu5rrZPB7dGmXHkipp16b32lY8uD/p9Mq9hjy
-        SMyervvN38M/HI/tF1pu10FXdA==
-X-Google-Smtp-Source: ABdhPJxnWSvai+9iaNos8sJtXdeBHraQbZUkyduEvMUxv8nKJJQfjOWUUSDiYYhu744BzkT/PRbBSQ==
-X-Received: by 2002:aa7:d341:: with SMTP id m1mr28525320edr.50.1595406404862;
-        Wed, 22 Jul 2020 01:26:44 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
-        by smtp.gmail.com with ESMTPSA id x16sm19025267edr.52.2020.07.22.01.26.42
+        bh=61HrId0S+vKH9AhKqEPMXDXVBKVaiTCAQAIzcmrLOI0=;
+        b=MTZkWryPpdSZkQTf8IeTiZjxKUgV0OcdkOJdpBhy5rWYFC4qdRFVpo5vxmHPvPQpAi
+         sds8O1TscmRfZeEsdpaYejbF9YJ+aWVuDjkSYLvvTeNilqSvsiAzziI0t6yVagtD1bTO
+         aWztZtpPlXx31nOAmAf4cM8tUSSkDf4V1nL1L6s3rBO9trSWitHR8fMAcrcW4J17OFj8
+         93SXpZwQU2ikMMTpNp0udNYAHMTbiAUrBkx/3UolcGlBNkEm7Zkd1pQn7zxRqrlrVLe8
+         esqv7/fias/3FJ1CDZK22MHcNew/BqBHEJI6DbgftmPNwfOm4B7fEp97jUYWvagd+aPO
+         4Pcw==
+X-Gm-Message-State: AOAM531I8lu4iOO+AIeGpDHetUnYqw4oNOSBKT79mzc53P8c7eNpADFE
+        i2ffw/FUQPv+uFpT50NiebXuWg==
+X-Google-Smtp-Source: ABdhPJzfBLgpxr27VEStYDLmMcDtT0e/7WIXHkIptcv6wN9LXv3efvOn/xbweWarVr/ok8RF6BHerQ==
+X-Received: by 2002:a2e:760f:: with SMTP id r15mr13902715ljc.275.1595406450160;
+        Wed, 22 Jul 2020 01:27:30 -0700 (PDT)
+Received: from [192.168.1.12] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id d22sm6717050lfs.26.2020.07.22.01.27.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 01:26:44 -0700 (PDT)
-Subject: Re: [MPTCP] [PATCH 24/24] net: pass a sockptr_t into ->setsockopt
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-References: <20200720124737.118617-1-hch@lst.de>
- <20200720124737.118617-25-hch@lst.de>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <b3665200-2476-9d35-8dea-d5da141c6b70@tessares.net>
-Date:   Wed, 22 Jul 2020 10:26:42 +0200
+        Wed, 22 Jul 2020 01:27:29 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] media: venus: core: Add support for opp
+ tables/perf voting
+To:     Rajendra Nayak <rnayak@codeaurora.org>, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org
+References: <1595228842-9826-1-git-send-email-rnayak@codeaurora.org>
+ <1595228842-9826-3-git-send-email-rnayak@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <840e20b6-186f-14c2-b0f0-fac7b61f1c50@linaro.org>
+Date:   Wed, 22 Jul 2020 11:27:25 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200720124737.118617-25-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <1595228842-9826-3-git-send-email-rnayak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hi Rajendra,
 
-On 20/07/2020 14:47, Christoph Hellwig wrote:
-> Rework the remaining setsockopt code to pass a sockptr_t instead of a
-> plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
-> outside of architecture specific code.
+Thanks for the patch!
+
+Sorry for last minute comments.
+
+On 7/20/20 10:07 AM, Rajendra Nayak wrote:
+> Add support to add OPP tables and perf voting on the OPP powerdomain.
+> This is needed so venus votes on the corresponding performance state
+> for the OPP powerdomain along with setting the core clock rate.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
+>  drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
+>  drivers/media/platform/qcom/venus/core.h       |  5 +++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
+>  3 files changed, 92 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 203c653..b9f61a6 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <media/videobuf2-v4l2.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -216,21 +217,37 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (!core->pm_ops)
+>  		return -ENODEV;
+>  
+> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
+> +	if (IS_ERR(core->opp_table))
+> +		return PTR_ERR(core->opp_table);
+> +
+> +	if (core->res->opp_pmdomain) {
+> +		ret = dev_pm_opp_of_add_table(dev);
+> +		if (!ret) {
+> +			core->has_opp_table = true;
+> +		} else if (ret != -ENODEV) {
+> +			dev_err(dev, "invalid OPP table in device tree\n");
+> +			return ret;
+> +		}
+> +	}
+> +
 
-...
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 27b6f250b87dfd..30a8e697b9db9c 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1627,7 +1627,7 @@ static void mptcp_destroy(struct sock *sk)
->   }
->   
->   static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
-> -				       char __user *optval, unsigned int optlen)
-> +				       sockptr_t optval, unsigned int optlen)
->   {
->   	struct sock *sk = (struct sock *)msk;
->   	struct socket *ssock;
-> @@ -1643,8 +1643,8 @@ static int mptcp_setsockopt_sol_socket(struct mptcp_sock *msk, int optname,
->   			return -EINVAL;
->   		}
->   
-> -		ret = sock_setsockopt(ssock, SOL_SOCKET, optname,
-> -				      USER_SOCKPTR(optval), optlen);
-> +		ret = sock_setsockopt(ssock, SOL_SOCKET, optname, optval,
-> +				      optlen);
+Can we move those dev_pm_opp_xxx invocations into pm_ops->core_get where
+the other pmdomains are? The pm_ops abstarction is created exactly for
+such pm and clks manipulations.
 
-A very small detail related to the modifications in MPTCP code, only if 
-you have to send a v2 and if you don't mind: may you move "optlen" to 
-the previous line like it was before your patch 7/24. Same below at the 
-end of the function.
+>  	if (core->pm_ops->core_get) {
+>  		ret = core->pm_ops->core_get(dev);
+>  		if (ret)
+> -			return ret;
+> +			goto err_opp_cleanup;
+>  	}
+>  
+>  	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
+>  	if (ret)
+> -		return ret;
+> +		goto err_opp_cleanup;
+>  
+>  	if (!dev->dma_parms) {
+>  		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
+>  					      GFP_KERNEL);
+> -		if (!dev->dma_parms)
+> -			return -ENOMEM;
+> +		if (!dev->dma_parms) {
+> +			ret = -ENOMEM;
+> +			goto err_opp_cleanup;
+> +		}
+>  	}
+>  	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+>  
+> @@ -242,11 +259,11 @@ static int venus_probe(struct platform_device *pdev)
+>  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>  					"venus", core);
+>  	if (ret)
+> -		return ret;
+> +		goto err_opp_cleanup;
+>  
+>  	ret = hfi_create(core, &venus_core_ops);
+>  	if (ret)
+> -		return ret;
+> +		goto err_opp_cleanup;
+>  
+>  	pm_runtime_enable(dev);
+>  
+> @@ -302,6 +319,10 @@ static int venus_probe(struct platform_device *pdev)
+>  	pm_runtime_set_suspended(dev);
+>  	pm_runtime_disable(dev);
+>  	hfi_destroy(core);
+> +err_opp_cleanup:
+> +	if (core->has_opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(core->opp_table);
 
-That would reduce the global diff in MPTCP files to function signatures 
-only.
+this also belongs to pm_ops->core_put but it is missing in the .probe
+error path.
 
-Cheers,
-Matt
++	if (core->pm_ops->core_put)
++		core->pm_ops->core_put(dev);
+
+above addition should be separate patch I guess.
+
+>  	return ret;
+>  }
+>  
+> @@ -326,6 +347,10 @@ static int venus_remove(struct platform_device *pdev)
+>  	pm_runtime_put_sync(dev);
+>  	pm_runtime_disable(dev);
+>  
+> +	if (core->has_opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(core->opp_table);
+> +
+
+those also should be moved to core_put
+
+>  	if (pm_ops->core_put)
+>  		pm_ops->core_put(dev);
+>  
+> @@ -355,6 +380,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* Drop the performance state vote */
+> +	if (core->opp_pmdomain)
+> +		dev_pm_opp_set_rate(dev, 0);
+> +
+
+move this in core_power(OFF)
+
+>  	if (pm_ops->core_power)
+>  		ret = pm_ops->core_power(dev, POWER_OFF);
+>  
+> @@ -520,6 +549,7 @@ static const struct venus_resources sdm845_res_v2 = {
+>  	.vcodec_clks_num = 2,
+>  	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
+>  	.vcodec_pmdomains_num = 3,
+> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
+>  	.vcodec_num = 2,
+>  	.max_load = 3110400,	/* 4096x2160@90 */
+>  	.hfi_version = HFI_VERSION_4XX,
+> @@ -565,6 +595,7 @@ static const struct venus_resources sc7180_res = {
+>  	.vcodec_clks_num = 2,
+>  	.vcodec_pmdomains = { "venus", "vcodec0" },
+>  	.vcodec_pmdomains_num = 2,
+> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
+>  	.vcodec_num = 1,
+>  	.hfi_version = HFI_VERSION_4XX,
+>  	.vmem_id = VIDC_RESOURCE_NONE,
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 7118612..b0cc544 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -62,6 +62,7 @@ struct venus_resources {
+>  	unsigned int vcodec_clks_num;
+>  	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+>  	unsigned int vcodec_pmdomains_num;
+> +	const char **opp_pmdomain;
+>  	unsigned int vcodec_num;
+>  	enum hfi_version hfi_version;
+>  	u32 max_load;
+> @@ -145,8 +146,12 @@ struct venus_core {
+>  	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+>  	struct icc_path *video_path;
+>  	struct icc_path *cpucfg_path;
+> +	struct opp_table *opp_table;
+> +	bool has_opp_table;
+>  	struct device_link *pd_dl_venus;
+>  	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+> +	struct device_link *opp_dl_venus;
+> +	struct device *opp_pmdomain;
+>  	struct video_device *vdev_dec;
+>  	struct video_device *vdev_enc;
+>  	struct v4l2_device v4l2_dev;
+> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> index abf9315..4149ab8 100644
+> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/types.h>
+>  #include <media/v4l2-mem2mem.h>
+> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
+>  
+>  static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
+>  {
+> -	struct clk *clk = core->clks[0];
+>  	int ret;
+>  
+> -	ret = clk_set_rate(clk, freq);
+> +	ret = dev_pm_opp_set_rate(core->dev, freq);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
+>  
+>  static int vcodec_domains_get(struct device *dev)
+>  {
+> +	int ret;
+> +	struct opp_table *opp_table;
+> +	struct device **opp_virt_dev;
+>  	struct venus_core *core = dev_get_drvdata(dev);
+>  	const struct venus_resources *res = core->res;
+>  	struct device *pd;
+>  	unsigned int i;
+>  
+>  	if (!res->vcodec_pmdomains_num)
+> -		return -ENODEV;
+> +		goto skip_pmdomains;
+>  
+>  	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>  		pd = dev_pm_domain_attach_by_name(dev,
+> @@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
+>  	if (!core->pd_dl_venus)
+>  		return -ENODEV;
+>  
+> +skip_pmdomains:
+> +	if (!core->has_opp_table)
+> +		return 0;
+> +
+> +	/* Attach the power domain for setting performance state */
+> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
+> +	if (IS_ERR(opp_table)) {
+> +		ret = PTR_ERR(opp_table);
+> +		goto opp_attach_err;
+> +	}
+> +
+> +	core->opp_pmdomain = *opp_virt_dev;
+> +	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
+> +					     DL_FLAG_RPM_ACTIVE |
+> +					     DL_FLAG_PM_RUNTIME |
+> +					     DL_FLAG_STATELESS);
+> +	if (!core->opp_dl_venus) {
+> +		ret = -ENODEV;
+> +		goto opp_dl_add_err;
+> +	}
+> +
+>  	return 0;
+> +
+> +opp_dl_add_err:
+> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+> +opp_attach_err:
+> +	if (core->pd_dl_venus) {
+> +		device_link_del(core->pd_dl_venus);
+> +		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+> +			if (IS_ERR_OR_NULL(core->pmdomains[i]))
+> +				continue;
+> +			dev_pm_domain_detach(core->pmdomains[i], true);
+> +		}
+> +	}
+> +	return ret;
+>  }
+>  
+>  static void vcodec_domains_put(struct device *dev)
+> @@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
+>  	unsigned int i;
+>  
+>  	if (!res->vcodec_pmdomains_num)
+> -		return;
+> +		goto skip_pmdomains;
+>  
+>  	if (core->pd_dl_venus)
+>  		device_link_del(core->pd_dl_venus);
+> @@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
+>  			continue;
+>  		dev_pm_domain_detach(core->pmdomains[i], true);
+>  	}
+> +
+> +skip_pmdomains:
+> +	if (!core->has_opp_table)
+> +		return;
+> +
+> +	if (core->opp_dl_venus)
+> +		device_link_del(core->opp_dl_venus);
+> +
+> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+>  }
+>  
+>  static int core_get_v4(struct device *dev)
+> 
+
 -- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+regards,
+Stan
