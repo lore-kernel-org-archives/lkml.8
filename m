@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420A6C433F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF33C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16832207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85763207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731744AbgGVBSS (ORCPT
+        id S1731751AbgGVBSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 21:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37132 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 21:18:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731651AbgGVBR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731667AbgGVBR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jul 2020 21:17:57 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9544C22D2B;
-        Wed, 22 Jul 2020 01:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F3F22CF7;
+        Wed, 22 Jul 2020 01:17:56 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jy3OM-005sEY-HG; Tue, 21 Jul 2020 21:17:54 -0400
-Message-ID: <20200722011754.419543520@goodmis.org>
+        id 1jy3ON-005sJC-Qz; Tue, 21 Jul 2020 21:17:55 -0400
+Message-ID: <20200722011755.720803193@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 21 Jul 2020 21:16:42 -0400
+Date:   Tue, 21 Jul 2020 21:16:51 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -37,7 +37,8 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Subject: [PATCH 14/23 v3] tools lib traceevent: Change to SPDX License format
+Subject: [PATCH 23/23 v3] tools lib traceevent: Handle possible strdup() error in
+ tep_add_plugin_path() API
 References: <20200722011628.925541477@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -46,334 +47,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
 
-Replaced COPYING with a description of how the SPDX identifiers are used.
-Added a GPL-2.0 and LGPL-2.1 license file in the new LICENSES directory.
-Then removed all the license templates from the source files and replaced
-them with the corresponding SPDX identifier.
+Free allocated resources and return -1 in case strdup() fails in
+tep_add_plugin_path() API.
 
-Link: http://lore.kernel.org/linux-trace-devel/20200702174950.123454-6-tz.stoyanov@gmail.com
+Link: https://lore.kernel.org/r/CAM9d7chfvJwodpVrHGc5E2J80peRojmYV_fD8x3cpn9HFRUw2g@mail.gmail.com
+Link: https://lore.kernel.org/linux-trace-devel/20200714103027.2477584-9-tz.stoyanov@gmail.com
+Link: https://lore.kernel.org/linux-trace-devel/20200716092014.2613403-9-tz.stoyanov@gmail.com
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-[ Ported from trace-cmd.git ]
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/lib/traceevent/event-parse.h              | 16 +---------------
- tools/lib/traceevent/kbuffer.h                  | 17 +----------------
- tools/lib/traceevent/plugins/plugin_function.c  | 17 +----------------
- tools/lib/traceevent/plugins/plugin_futex.c     | 16 +---------------
- tools/lib/traceevent/plugins/plugin_hrtimer.c   | 17 +----------------
- tools/lib/traceevent/plugins/plugin_jbd2.c      | 17 +----------------
- tools/lib/traceevent/plugins/plugin_kmem.c      | 17 +----------------
- tools/lib/traceevent/plugins/plugin_kvm.c       | 17 +----------------
- tools/lib/traceevent/plugins/plugin_mac80211.c  | 17 +----------------
- .../traceevent/plugins/plugin_sched_switch.c    | 17 +----------------
- tools/lib/traceevent/plugins/plugin_tlb.c       | 17 +----------------
- 11 files changed, 11 insertions(+), 174 deletions(-)
+ tools/lib/traceevent/event-plugin.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index ac162472268b..acd6791480a4 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -1,21 +1,7 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
- /*
-  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #ifndef _PARSE_EVENTS_H
- #define _PARSE_EVENTS_H
-diff --git a/tools/lib/traceevent/kbuffer.h b/tools/lib/traceevent/kbuffer.h
-index 5fa8292e341b..a2b522093cfd 100644
---- a/tools/lib/traceevent/kbuffer.h
-+++ b/tools/lib/traceevent/kbuffer.h
-@@ -1,22 +1,7 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
- /*
-  * Copyright (C) 2012 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #ifndef _KBUFFER_H
- #define _KBUFFER_H
-diff --git a/tools/lib/traceevent/plugins/plugin_function.c b/tools/lib/traceevent/plugins/plugin_function.c
-index 7e8e29b43d1c..807b16e1bf0f 100644
---- a/tools/lib/traceevent/plugins/plugin_function.c
-+++ b/tools/lib/traceevent/plugins/plugin_function.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_futex.c b/tools/lib/traceevent/plugins/plugin_futex.c
-index 5d76df141401..eb7c9f8a850a 100644
---- a/tools/lib/traceevent/plugins/plugin_futex.c
-+++ b/tools/lib/traceevent/plugins/plugin_futex.c
-@@ -1,23 +1,9 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2017 National Instruments Corp.
-  *
-  * Author: Julia Cartwright <julia@ni.com>
-  *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_hrtimer.c b/tools/lib/traceevent/plugins/plugin_hrtimer.c
-index bb434e0ed03a..d98466788f14 100644
---- a/tools/lib/traceevent/plugins/plugin_hrtimer.c
-+++ b/tools/lib/traceevent/plugins/plugin_hrtimer.c
-@@ -1,22 +1,7 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  * Copyright (C) 2009 Johannes Berg <johannes@sipsolutions.net>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_jbd2.c b/tools/lib/traceevent/plugins/plugin_jbd2.c
-index 04fc125f38cb..69111a68d3cf 100644
---- a/tools/lib/traceevent/plugins/plugin_jbd2.c
-+++ b/tools/lib/traceevent/plugins/plugin_jbd2.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_kmem.c b/tools/lib/traceevent/plugins/plugin_kmem.c
-index edaec5d962c3..4b4f7f9616e3 100644
---- a/tools/lib/traceevent/plugins/plugin_kmem.c
-+++ b/tools/lib/traceevent/plugins/plugin_kmem.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_kvm.c b/tools/lib/traceevent/plugins/plugin_kvm.c
-index 768c658f5904..de76a1e79d9e 100644
---- a/tools/lib/traceevent/plugins/plugin_kvm.c
-+++ b/tools/lib/traceevent/plugins/plugin_kvm.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_mac80211.c b/tools/lib/traceevent/plugins/plugin_mac80211.c
-index 884303c26b5c..f48071e3cfb8 100644
---- a/tools/lib/traceevent/plugins/plugin_mac80211.c
-+++ b/tools/lib/traceevent/plugins/plugin_mac80211.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009 Johannes Berg <johannes@sipsolutions.net>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_sched_switch.c b/tools/lib/traceevent/plugins/plugin_sched_switch.c
-index 957389a0ff7a..e12fa103820a 100644
---- a/tools/lib/traceevent/plugins/plugin_sched_switch.c
-+++ b/tools/lib/traceevent/plugins/plugin_sched_switch.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2009, 2010 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/lib/traceevent/plugins/plugin_tlb.c b/tools/lib/traceevent/plugins/plugin_tlb.c
-index 1adade776306..43657fb60504 100644
---- a/tools/lib/traceevent/plugins/plugin_tlb.c
-+++ b/tools/lib/traceevent/plugins/plugin_tlb.c
-@@ -1,21 +1,6 @@
-+// SPDX-License-Identifier: LGPL-2.1
- /*
-  * Copyright (C) 2015 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU Lesser General Public
-- * License as published by the Free Software Foundation;
-- * version 2.1 of the License (not later!)
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU Lesser General Public License for more details.
-- *
-- * You should have received a copy of the GNU Lesser General Public
-- * License along with this program; if not,  see <http://www.gnu.org/licenses>
-- *
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
- #include <stdio.h>
- #include <stdlib.h>
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index f0877a7e3e8d..e7c2acb8680f 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -665,6 +665,10 @@ int tep_add_plugin_path(struct tep_handle *tep, char *path,
+ 		return -1;
+ 
+ 	dir->path = strdup(path);
++	if (!dir->path) {
++		free(dir);
++		return -1;
++	}
+ 	dir->prio = prio;
+ 	dir->next = tep->plugins_dir;
+ 	tep->plugins_dir = dir;
 -- 
 2.26.2
 
