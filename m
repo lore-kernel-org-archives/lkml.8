@@ -2,138 +2,677 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA51AC4346B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABD5C43470
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A0120792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4B8207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blnhOXIR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OSjIfHJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732256AbgGVLEZ (ORCPT
+        id S1732268AbgGVLEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgGVLEX (ORCPT
+        Wed, 22 Jul 2020 07:04:31 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56310 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732253AbgGVLE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:04:23 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0664DC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:04:23 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a15so1460740wrh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=OCy4M+IerAUwrGq+R10RYFBywYGUc8/udZhkNLn8gcA=;
-        b=blnhOXIRlgBIHslJnR+DyX3qRw0egROpKwj7Y0Zkk0MMdUtpreXtgx75Kq1wPrfpcw
-         YT0xqBP0X9bvfkLrjDAjTmnTxzFZrZQIvAqUg6rrrRMpE1+2Am8fg/BMXJTPLpUCrRHG
-         WG4KDPcO+AnnCn+WJph8oQSDcEQOtFVBnYkClbRvOg2bqXfvK2yeOn1d/J2s59wzpd0b
-         VTw1CPE1C6poESLQsUVR+9mx8lbuqnKWymfrOoz608Ea4C1gFhgHQ1OA0EBcrOP2hpnE
-         2Z07LwLiO83BYhupbyWqS0g8hcUHHqXlNFYa0FOnBXmju5sMmeNIWSPap5YxzMnH1UeX
-         n0Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=OCy4M+IerAUwrGq+R10RYFBywYGUc8/udZhkNLn8gcA=;
-        b=Mc9dCG7d+wS0lzUm7bVrMVmSvoordyyrxIn+slHaG6921MIcSvpgYcEbaoHpKK3DEO
-         wdGWducVgsFi3a3QsrWPBrs16bkRtQdHyIhA8r7MVKGCuCcrv6YGKyy5iHHF4ymcBLrl
-         MdtGzwz7zjTOKkDPnMHdBj5DwIsvctTk6brwszWBkKyCRoSSnyfm+umPpRv25jCyvdFv
-         0zkz5OGqhaP30I5n4P+VaeIqPmN/6gdZCx7n2mKxudoKkibT/6O2ioVeE0Nnjtwc5DOR
-         3bIhxJE/3X7jwnf+BdjIaFFJCU6cDfcmpBomBf11c8Jz/2CxkfkWWp68KuAXpKvpsTPO
-         mV/g==
-X-Gm-Message-State: AOAM530FgtPxffUNg0y9gVUWOKkjPYjOuxuSnaocyCrG7Np8s7xGolEe
-        HpgUV2Lh/z7lPx2SQAMDrcTFTS1ybIQ=
-X-Google-Smtp-Source: ABdhPJyen9XQxbMOmxYyIRo9xkcOiFhcP/BsUcVILGQr7xM0UXW3SkKzFeItTtT4WGFXCvo6Y3Wceg==
-X-Received: by 2002:adf:ea06:: with SMTP id q6mr29366083wrm.69.1595415861662;
-        Wed, 22 Jul 2020 04:04:21 -0700 (PDT)
-Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
-        by smtp.gmail.com with ESMTPSA id t2sm6735027wma.43.2020.07.22.04.04.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 04:04:21 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 08:04:11 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, twoerner@gmail.com
-Subject: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
- pair on flush
-Message-ID: <20200722110411.ebkv6knvc6mzw5uf@smtp.gmail.com>
+        Wed, 22 Jul 2020 07:04:26 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB4Dm6072677;
+        Wed, 22 Jul 2020 06:04:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595415853;
+        bh=pz2ZkZnfHSOAwUkyzFhUQlueXJ8vgNHb79RVBMXMd3Q=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=OSjIfHJARHfSdnsqO/jaFdpDC4rXDM1xdmpoL17Uu1qMzCbVYNoOZljFGRwkVu6E2
+         JOhjdGoFO3joUMNzWQxdioDWSsr5Uk237FXVSn2SGvOBOAG1tOXty4XywAx/se7x5J
+         goI5FeKARQZfc7vWSyXEhrQYMS6PU9JbJ/cMzKt4=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MB4DYo007038
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 06:04:13 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
+ Jul 2020 06:04:12 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 22 Jul 2020 06:04:12 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFl078616;
+        Wed, 22 Jul 2020 06:04:09 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v8 13/15] PCI: j721e: Add TI J721E PCIe driver
+Date:   Wed, 22 Jul 2020 16:33:15 +0530
+Message-ID: <20200722110317.4744-14-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200722110317.4744-1-kishon@ti.com>
+References: <20200722110317.4744-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a missing drm_crtc_vblank_put op to the pair
-drm_crtc_vblank_get/put (inc/decrement counter to guarantee vblanks).
+Add support for PCIe controller in J721E SoC. The controller uses the
+Cadence PCIe core programmed by pcie-cadence*.c. The PCIe controller
+will work in both host mode and device mode.
+Some of the features of the controller are:
+  *) Supports both RC mode and EP mode
+  *) Supports MSI and MSI-X support
+  *) Supports upto GEN3 speed mode
+  *) Supports SR-IOV capability
+  *) Ability to route all transactions via SMMU (support will be added
+     in a later patch).
 
-It clears the execution of the following kms_cursor_crc subtests:
-1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
-   random, fast-moving])] - successful when running individually.
-2. pipe-A-cursor-dpms passes again
-3. pipe-A-cursor-suspend also passes
-
-The issue was initially tracked in the sequential execution of IGT
-kms_cursor_crc subtest: when running the test sequence or one of its
-subtests twice, the odd execs complete and the pairs get stuck in an
-endless wait. In the IGT code, calling a wait_for_vblank before the start
-of CRC capture prevented the busy-wait. But the problem persisted in the
-pipe-A-cursor-dpms and -suspend subtests.
-
-Checking the history, the pipe-A-cursor-dpms subtest was successful when,
-in vkms_atomic_commit_tail, instead of using the flip_done op, it used
-wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
-enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
-blocking in the 2nd start of CRC capture, which may indicate that
-something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
-the crc setup was able to sync things and free all kms_cursor_crc
-subtests.
-
-Tracing and comparing a clean run with a blocked one:
-- in a clean one, vkms_crtc_atomic_flush enables vblanks;
-- when blocked, only in next op, vkms_crtc_atomic_enable, the vblanks
-started. Moreover, a series of vkms_vblank_simulate flow out until
-disabling vblanks.
-Also watching the steps of vkms_crtc_atomic_flush, when the very first
-drm_crtc_vblank_get returned an error, the subtest crashed. On the other
-hand, when vblank_get succeeded, the subtest completed. Finally, checking
-the flush steps: it increases counter to hold a vblank reference (get),
-but there isn't a op to decreased it and release vblanks (put).
-
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/cadence/Kconfig        |  23 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pci-j721e.c    | 493 ++++++++++++++++++
+ .../controller/cadence/pcie-cadence-host.c    |   4 +-
+ drivers/pci/controller/cadence/pcie-cadence.h |   8 +
+ 5 files changed, 527 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index ac85e17428f8..a99d6b4a92dd 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -246,6 +246,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
+diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+index b76b3cf55ce5..5d30564190e1 100644
+--- a/drivers/pci/controller/cadence/Kconfig
++++ b/drivers/pci/controller/cadence/Kconfig
+@@ -42,4 +42,27 @@ config PCIE_CADENCE_PLAT_EP
+ 	  endpoint mode. This PCIe controller may be embedded into many
+ 	  different vendors SoCs.
  
- 		spin_unlock(&crtc->dev->event_lock);
++config PCI_J721E
++	bool
++
++config PCI_J721E_HOST
++	bool "TI J721E PCIe platform host controller"
++	depends on OF
++	select PCIE_CADENCE_HOST
++	select PCI_J721E
++	help
++	  Say Y here if you want to support the TI J721E PCIe platform
++	  controller in host mode. TI J721E PCIe controller uses Cadence PCIe
++	  core.
++
++config PCI_J721E_EP
++	bool "TI J721E PCIe platform endpoint controller"
++	depends on OF
++	depends on PCI_ENDPOINT
++	select PCIE_CADENCE_EP
++	select PCI_J721E
++	help
++	  Say Y here if you want to support the TI J721E PCIe platform
++	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
++	  core.
+ endmenu
+diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+index 232a3f20876a..9bac5fb2f13d 100644
+--- a/drivers/pci/controller/cadence/Makefile
++++ b/drivers/pci/controller/cadence/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+ obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+ obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
++obj-$(CONFIG_PCI_J721E) += pci-j721e.o
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+new file mode 100644
+index 000000000000..23ad8fa699c4
+--- /dev/null
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -0,0 +1,493 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * pci-j721e - PCIe controller driver for TI's J721E SoCs
++ *
++ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
++ */
++
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/io.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/pci.h>
++#include <linux/pm_runtime.h>
++#include <linux/regmap.h>
++
++#include "../../pci.h"
++#include "pcie-cadence.h"
++
++#define ENABLE_REG_SYS_2	0x108
++#define STATUS_REG_SYS_2	0x508
++#define STATUS_CLR_REG_SYS_2	0x708
++#define LINK_DOWN		BIT(1)
++
++#define J721E_PCIE_USER_CMD_STATUS	0x4
++#define LINK_TRAINING_ENABLE		BIT(0)
++
++#define J721E_PCIE_USER_LINKSTATUS	0x14
++#define LINK_STATUS			GENMASK(1, 0)
++
++enum link_status {
++	NO_RECEIVERS_DETECTED,
++	LINK_TRAINING_IN_PROGRESS,
++	LINK_UP_DL_IN_PROGRESS,
++	LINK_UP_DL_COMPLETED,
++};
++
++#define J721E_MODE_RC			BIT(7)
++#define LANE_COUNT_MASK			BIT(8)
++#define LANE_COUNT(n)			((n) << 8)
++
++#define GENERATION_SEL_MASK		GENMASK(1, 0)
++
++#define MAX_LANES			2
++
++struct j721e_pcie {
++	struct device		*dev;
++	u32			mode;
++	u32			num_lanes;
++	struct cdns_pcie	*cdns_pcie;
++	void __iomem		*user_cfg_base;
++	void __iomem		*intd_cfg_base;
++};
++
++enum j721e_pcie_mode {
++	PCI_MODE_RC,
++	PCI_MODE_EP,
++};
++
++struct j721e_pcie_data {
++	enum j721e_pcie_mode	mode;
++};
++
++static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
++{
++	return readl(pcie->user_cfg_base + offset);
++}
++
++static inline void j721e_pcie_user_writel(struct j721e_pcie *pcie, u32 offset,
++					  u32 value)
++{
++	writel(value, pcie->user_cfg_base + offset);
++}
++
++static inline u32 j721e_pcie_intd_readl(struct j721e_pcie *pcie, u32 offset)
++{
++	return readl(pcie->intd_cfg_base + offset);
++}
++
++static inline void j721e_pcie_intd_writel(struct j721e_pcie *pcie, u32 offset,
++					  u32 value)
++{
++	writel(value, pcie->intd_cfg_base + offset);
++}
++
++static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
++{
++	struct j721e_pcie *pcie = priv;
++	struct device *dev = pcie->dev;
++	u32 reg;
++
++	reg = j721e_pcie_intd_readl(pcie, STATUS_REG_SYS_2);
++	if (!(reg & LINK_DOWN))
++		return IRQ_NONE;
++
++	dev_err(dev, "LINK DOWN!\n");
++
++	j721e_pcie_intd_writel(pcie, STATUS_CLR_REG_SYS_2, LINK_DOWN);
++	return IRQ_HANDLED;
++}
++
++static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
++{
++	u32 reg;
++
++	reg = j721e_pcie_intd_readl(pcie, ENABLE_REG_SYS_2);
++	reg |= LINK_DOWN;
++	j721e_pcie_intd_writel(pcie, ENABLE_REG_SYS_2, reg);
++}
++
++static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie)
++{
++	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
++	u32 reg;
++
++	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_CMD_STATUS);
++	reg |= LINK_TRAINING_ENABLE;
++	j721e_pcie_user_writel(pcie, J721E_PCIE_USER_CMD_STATUS, reg);
++
++	return 0;
++}
++
++static void j721e_pcie_stop_link(struct cdns_pcie *cdns_pcie)
++{
++	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
++	u32 reg;
++
++	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_CMD_STATUS);
++	reg &= ~LINK_TRAINING_ENABLE;
++	j721e_pcie_user_writel(pcie, J721E_PCIE_USER_CMD_STATUS, reg);
++}
++
++static bool j721e_pcie_link_up(struct cdns_pcie *cdns_pcie)
++{
++	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
++	u32 reg;
++
++	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_LINKSTATUS);
++	reg &= LINK_STATUS;
++	if (reg == LINK_UP_DL_COMPLETED)
++		return true;
++
++	return false;
++}
++
++static const struct cdns_pcie_ops j721e_pcie_ops = {
++	.start_link = j721e_pcie_start_link,
++	.stop_link = j721e_pcie_stop_link,
++	.link_up = j721e_pcie_link_up,
++};
++
++static int j721e_pcie_set_mode(struct j721e_pcie *pcie, struct regmap *syscon)
++{
++	struct device *dev = pcie->dev;
++	u32 mask = J721E_MODE_RC;
++	u32 mode = pcie->mode;
++	u32 val = 0;
++	int ret = 0;
++
++	if (mode == PCI_MODE_RC)
++		val = J721E_MODE_RC;
++
++	ret = regmap_update_bits(syscon, 0, mask, val);
++	if (ret)
++		dev_err(dev, "failed to set pcie mode\n");
++
++	return ret;
++}
++
++static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
++				     struct regmap *syscon)
++{
++	struct device *dev = pcie->dev;
++	struct device_node *np = dev->of_node;
++	int link_speed;
++	u32 val = 0;
++	int ret;
++
++	link_speed = of_pci_get_max_link_speed(np);
++	if (link_speed < 2)
++		link_speed = 2;
++
++	val = link_speed - 1;
++	ret = regmap_update_bits(syscon, 0, GENERATION_SEL_MASK, val);
++	if (ret)
++		dev_err(dev, "failed to set link speed\n");
++
++	return ret;
++}
++
++static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
++				     struct regmap *syscon)
++{
++	struct device *dev = pcie->dev;
++	u32 lanes = pcie->num_lanes;
++	u32 val = 0;
++	int ret;
++
++	val = LANE_COUNT(lanes - 1);
++	ret = regmap_update_bits(syscon, 0, LANE_COUNT_MASK, val);
++	if (ret)
++		dev_err(dev, "failed to set link count\n");
++
++	return ret;
++}
++
++static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	struct device_node *node = dev->of_node;
++	struct regmap *syscon;
++	int ret;
++
++	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
++	if (IS_ERR(syscon)) {
++		dev_err(dev, "Unable to get ti,syscon-pcie-ctrl regmap\n");
++		return PTR_ERR(syscon);
++	}
++
++	ret = j721e_pcie_set_mode(pcie, syscon);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set pci mode\n");
++		return ret;
++	}
++
++	ret = j721e_pcie_set_link_speed(pcie, syscon);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set link speed\n");
++		return ret;
++	}
++
++	ret = j721e_pcie_set_lane_count(pcie, syscon);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set num-lanes\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
++				    int where, int size, u32 *value)
++{
++	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
++	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
++	unsigned int busn = bus->number;
++
++	if (busn == rc->bus_range->start)
++		return pci_generic_config_read32(bus, devfn, where, size,
++						 value);
++
++	return pci_generic_config_read(bus, devfn, where, size, value);
++}
++
++static int cdns_ti_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
++				     int where, int size, u32 value)
++{
++	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
++	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
++	unsigned int busn = bus->number;
++
++	if (busn == rc->bus_range->start)
++		return pci_generic_config_write32(bus, devfn, where, size,
++						  value);
++
++	return pci_generic_config_write(bus, devfn, where, size, value);
++}
++
++static struct pci_ops cdns_ti_pcie_host_ops = {
++	.map_bus	= cdns_pci_map_bus,
++	.read		= cdns_ti_pcie_config_read,
++	.write		= cdns_ti_pcie_config_write,
++};
++
++static const struct j721e_pcie_data j721e_pcie_rc_data = {
++	.mode = PCI_MODE_RC,
++};
++
++static const struct j721e_pcie_data j721e_pcie_ep_data = {
++	.mode = PCI_MODE_EP,
++};
++
++static const struct of_device_id of_j721e_pcie_match[] = {
++	{
++		.compatible = "ti,j721e-pcie-host",
++		.data = &j721e_pcie_rc_data,
++	},
++	{
++		.compatible = "ti,j721e-pcie-ep",
++		.data = &j721e_pcie_ep_data,
++	},
++	{},
++};
++
++static int j721e_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++	struct pci_host_bridge *bridge;
++	struct j721e_pcie_data *data;
++	struct cdns_pcie *cdns_pcie;
++	struct j721e_pcie *pcie;
++	struct cdns_pcie_rc *rc;
++	struct cdns_pcie_ep *ep;
++	struct gpio_desc *gpiod;
++	void __iomem *base;
++	u32 num_lanes;
++	u32 mode;
++	int ret;
++	int irq;
++
++	data = (struct j721e_pcie_data *)of_device_get_match_data(dev);
++	if (!data)
++		return -EINVAL;
++
++	mode = (u32)data->mode;
++
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
++
++	pcie->dev = dev;
++	pcie->mode = mode;
++
++	base = devm_platform_ioremap_resource_byname(pdev, "intd_cfg");
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++	pcie->intd_cfg_base = base;
++
++	base = devm_platform_ioremap_resource_byname(pdev, "user_cfg");
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++	pcie->user_cfg_base = base;
++
++	ret = of_property_read_u32(node, "num-lanes", &num_lanes);
++	if (ret || num_lanes > MAX_LANES)
++		num_lanes = 1;
++	pcie->num_lanes = num_lanes;
++
++	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48)))
++		return -EINVAL;
++
++	irq = platform_get_irq_byname(pdev, "link_state");
++	if (irq < 0)
++		return irq;
++
++	dev_set_drvdata(dev, pcie);
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0) {
++		dev_err(dev, "pm_runtime_get_sync failed\n");
++		goto err_get_sync;
++	}
++
++	ret = j721e_pcie_ctrl_init(pcie);
++	if (ret < 0) {
++		dev_err(dev, "pm_runtime_get_sync failed\n");
++		goto err_get_sync;
++	}
++
++	ret = devm_request_irq(dev, irq, j721e_pcie_link_irq_handler, 0,
++			       "j721e-pcie-link-down-irq", pcie);
++	if (ret < 0) {
++		dev_err(dev, "failed to request link state IRQ %d\n", irq);
++		goto err_get_sync;
++	}
++
++	j721e_pcie_config_link_irq(pcie);
++
++	switch (mode) {
++	case PCI_MODE_RC:
++		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST)) {
++			ret = -ENODEV;
++			goto err_get_sync;
++		}
++
++		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
++		if (!bridge) {
++			ret = -ENOMEM;
++			goto err_get_sync;
++		}
++
++		bridge->ops = &cdns_ti_pcie_host_ops;
++		rc = pci_host_bridge_priv(bridge);
++
++		cdns_pcie = &rc->pcie;
++		cdns_pcie->dev = dev;
++		cdns_pcie->ops = &j721e_pcie_ops;
++		pcie->cdns_pcie = cdns_pcie;
++
++		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++		if (IS_ERR(gpiod)) {
++			ret = PTR_ERR(gpiod);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "Failed to get reset GPIO\n");
++			goto err_get_sync;
++		}
++
++		ret = cdns_pcie_init_phy(dev, cdns_pcie);
++		if (ret) {
++			dev_err(dev, "Failed to init phy\n");
++			goto err_get_sync;
++		}
++
++		/*
++		 * "Power Sequencing and Reset Signal Timings" table in
++		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
++		 * indicates PERST# should be deasserted after minimum of 100us
++		 * once REFCLK is stable. The REFCLK to the connector in RC
++		 * mode is selected while enabling the PHY. So deassert PERST#
++		 * after 100 us.
++		 */
++		if (gpiod) {
++			usleep_range(100, 200);
++			gpiod_set_value_cansleep(gpiod, 1);
++		}
++
++		ret = cdns_pcie_host_setup(rc);
++		if (ret < 0)
++			goto err_pcie_setup;
++
++		break;
++	case PCI_MODE_EP:
++		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP)) {
++			ret = -ENODEV;
++			goto err_get_sync;
++		}
++
++		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
++		if (!ep) {
++			ret = -ENOMEM;
++			goto err_get_sync;
++		}
++
++		cdns_pcie = &ep->pcie;
++		cdns_pcie->dev = dev;
++		cdns_pcie->ops = &j721e_pcie_ops;
++		pcie->cdns_pcie = cdns_pcie;
++
++		ret = cdns_pcie_init_phy(dev, cdns_pcie);
++		if (ret) {
++			dev_err(dev, "Failed to init phy\n");
++			goto err_get_sync;
++		}
++
++		ret = cdns_pcie_ep_setup(ep);
++		if (ret < 0)
++			goto err_pcie_setup;
++
++		break;
++	default:
++		dev_err(dev, "INVALID device type %d\n", mode);
++	}
++
++	return 0;
++
++err_pcie_setup:
++	cdns_pcie_disable_phy(cdns_pcie);
++
++err_get_sync:
++	pm_runtime_put(dev);
++	pm_runtime_disable(dev);
++
++	return ret;
++}
++
++static int j721e_pcie_remove(struct platform_device *pdev)
++{
++	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
++	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
++	struct device *dev = &pdev->dev;
++
++	cdns_pcie_disable_phy(cdns_pcie);
++	pm_runtime_put(dev);
++	pm_runtime_disable(dev);
++
++	return 0;
++}
++
++static struct platform_driver j721e_pcie_driver = {
++	.probe  = j721e_pcie_probe,
++	.remove = j721e_pcie_remove,
++	.driver = {
++		.name	= "j721e-pcie",
++		.of_match_table = of_j721e_pcie_match,
++		.suppress_bind_attrs = true,
++	},
++};
++builtin_platform_driver(j721e_pcie_driver);
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 8935f7a37e5a..ba157278fb0f 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -23,8 +23,8 @@ static u8 bar_aperture_mask[] = {
+ 	[RP_BAR1] = 0xF,
+ };
  
-+		drm_crtc_vblank_put(crtc);
- 		crtc->state->event = NULL;
- 	}
+-static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+-				      int where)
++void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++			       int where)
+ {
+ 	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+ 	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index dd910a1c30fb..655a6b4d4964 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -475,11 +475,19 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
  
+ #ifdef CONFIG_PCIE_CADENCE_HOST
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
++void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++			       int where);
+ #else
+ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	return 0;
+ }
++
++static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++				      int where)
++{
++	return NULL;
++}
+ #endif
+ 
+ #ifdef CONFIG_PCIE_CADENCE_EP
 -- 
-2.27.0
+2.17.1
 
