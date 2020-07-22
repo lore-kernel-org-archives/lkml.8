@@ -2,364 +2,185 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76CB620684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61A520787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+sfsjMC"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="dCow/A8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbgGVDPp (ORCPT
+        id S1731929AbgGVDQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
+        Tue, 21 Jul 2020 23:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731837AbgGVDPo (ORCPT
+        with ESMTP id S1731837AbgGVDQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:15:44 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFDEC0619DC
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:15:44 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q74so1048878iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:15:44 -0700 (PDT)
+        Tue, 21 Jul 2020 23:16:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85834C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:16:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g67so445082pgc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=45JomO1d9wejy1HPoYxaCzisM7wW+NcLf1i+9Sigraw=;
-        b=o+sfsjMCDuKPzbe/qIeYMbzrEqO1c3cG6lOfmpnyTEQm+sA/yJ7z+qHiKEtgfUSGpV
-         wMHw163AiILZEL7mx9dOU1WNE5kixKXY7q5NnrEUACGAFtwWFsWKdiRNJUyepwilvgnY
-         iUn0p2++v3ZaNkQioAz7VGloQD2D6dHBNUGz5/vSQwvYkSesZoiwJQ8HnhyMZ6enhZKr
-         DkV6zb9TmsuIxgw003JvA4UaCJ2+HAtqFGqwIpq6Yo3VADMSwQfMzOgQnC2bjgrGkQvB
-         i3j1u9ZQZnzkMYpllOWdDbcDqymwGviqmmwK2tUcfutCvtQpZAb2xrrWvd8ElWMbZGO0
-         7aTw==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=73iDvHgZEqxDKHnf/uCOIPrIaeopvlWxbBWmtJPTAqY=;
+        b=dCow/A8po4LX8y5ym1eyTRdPQpuQSddIgifUo78KscgUBsEBgoD9Z6ZK5W0bwOsFy7
+         R0ppkmcieeG5mkVldNDrgzSVyINZx3PSfv3WJil21IvA+4WblxApO5zcq/jQsi0KTjvF
+         RnBctvIv6B6iECXK8c8KmTHKyM+6H2OCAaiuMxb+T1Oev5zZvGWTm9ms+tezBJz5+hJd
+         4Pya96n6/Oq4RjHq/STntxi/04/LNCyeUotdgtu6Mduaw/u4gFMM3SfPlIfc/cGgEYgv
+         YgPROtEmfxuMJsJ44vSKebVEw9O0cwzZz2nDemUPp27Y1KYOqe74V5uoonwlAGchN/Uv
+         YDGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=45JomO1d9wejy1HPoYxaCzisM7wW+NcLf1i+9Sigraw=;
-        b=g53oVQTf1JM09KDWf9VhzeXBYpSWtPlPOFlg5JLO6/Ek/n1+ae2hsSXq4deBFfaMyf
-         YXADTtEWrOE+Ap1TDq2VLlpI7zXxVww0yAa62wKsMZ0tEVVZ622z9kMn2R7aVJwriswT
-         qSucL4SZFUPdTv1TTK1VvMC8hhRMRaXkCq5s46xIzE02FRiBKBd5wtRk+Lm5G0PsWbAa
-         P7bcesKtXFyffBjiYrdSgPYj+Z/aQrWqdhDk9eLzVwIMTCl6BDysXBx4xzCGmRq2Sxqj
-         bz4+51O8ZUoqJI6vXoP6w8S/AT1OAgiFNF7ZjxLKCXO4sD0Cd15PjUNZG4KKNoqjS/Nn
-         M1Bw==
-X-Gm-Message-State: AOAM533gsTja1fQ0f4rKuFvTbQDg7Ge+O33vfSsyKFoW/iFOwgU+wsIf
-        o0xF5ChYuAyYX1Ju27g4xYjaE2f4skMjtW5dCXY7gg==
-X-Google-Smtp-Source: ABdhPJytvgzhX6bIeTKuXIhQ8Ogfb1O2KxTd1ZdvSE0ibGG3xWtYgYMUBBjc4eOOaKb7vSbZzLHEhfw0MosrRiQSayg=
-X-Received: by 2002:a6b:d301:: with SMTP id s1mr30475980iob.146.1595387743234;
- Tue, 21 Jul 2020 20:15:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=73iDvHgZEqxDKHnf/uCOIPrIaeopvlWxbBWmtJPTAqY=;
+        b=LmQoGOZajRV4058rJIcp+ot4tvoJpUEB6IWDbRve+sIBKgI35gmK3UxV/pkscu5SH1
+         DSRO4gSNdc9lUvdpHIIcbBLRag3M6U0HOoqs7bB6w4zSd92LZmcj0pduSPbF5I1rYk63
+         ZRrwcqTB3YY9X9GLp1lO2UYT55TPRqm1tlTtHNOttsVT40rlTTElbcF3rA+j5mbXX+v3
+         HAjGqMbJtjRgB2O+pIClq4wUPXxiXYwBd5IZHjx8ZSr9ObNuOjfl/yqPYnWzppraO5+w
+         lE+sKbD8Ig1SkrJri0CWmdwscO8R+fwo7Q2bJsg9bTwGmHMq+3iea3Q6w2E52ukEPlKK
+         EWOA==
+X-Gm-Message-State: AOAM530CAshqmV0iaILtqpk6n6k6X713Uphpmcgyfyd1+0DWaDBHPl7A
+        8hiityRCBHX8BuOl+kvurATmsg==
+X-Google-Smtp-Source: ABdhPJxiYyKd4Ja+8DRUmZ6C26jpNvrnFt6CdOBi26vP34+ZKUHChtrHDj7JHF2j1PyrHm0xNcZ3Kg==
+X-Received: by 2002:a63:5b05:: with SMTP id p5mr24595098pgb.143.1595387807008;
+        Tue, 21 Jul 2020 20:16:47 -0700 (PDT)
+Received: from localhost ([2406:7400:73:c50a:d055:3e56:d1e4:ce99])
+        by smtp.gmail.com with ESMTPSA id c1sm4766225pje.9.2020.07.21.20.16.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 20:16:45 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 08:46:40 +0530
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+To:     syzbot <syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Hillf Danton <hdanton@sina.com>
+Subject: [PATCH v2] i2c: fix WARNING in pvr2_i2c_core_done
+Message-ID: <20200722031640.nobv2bfgex46sngo@pesu.pes.edu>
 MIME-Version: 1.0
-References: <20200721104422.369368-1-cychiang@chromium.org> <20200721104422.369368-3-cychiang@chromium.org>
-In-Reply-To: <20200721104422.369368-3-cychiang@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Wed, 22 Jul 2020 11:15:32 +0800
-Message-ID: <CA+Px+wUEQqe0dOeHBFxOEFG5QctTipj6egu94OD+LvYmSunaTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Douglas Anderson <dianders@chromium.org>, dgreid@chromium.org,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Ajit Pandey <ajitp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y22zpqil25qtpkyo"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:44 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
-> new file mode 100644
-> index 000000000000..3beb2b129d01
-> --- /dev/null
-> +++ b/sound/soc/qcom/sc7180.c
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +//Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> +//
-> +//sc7180.c -- ALSA SoC Machine driver for SC7180
-Insert an extra space between // and text to make it look better.
 
-> +static int sc7180_headset_init(struct snd_soc_component *component);
-> +
-> +static struct snd_soc_aux_dev sc7180_headset_dev = {
-> +       .dlc = COMP_EMPTY(),
-> +       .init = sc7180_headset_init,
-> +};
-Move definition of sc7180_headset_dev after sc7180_headset_init( ) so
-that you don't need forward declaration of sc7180_headset_init( ).
+--y22zpqil25qtpkyo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +static unsigned int primary_dai_fmt = SND_SOC_DAIFMT_CBS_CFS |
-> +                                     SND_SOC_DAIFMT_NB_NF |
-> +                                     SND_SOC_DAIFMT_I2S;
-> +
-> +static int sc7180_snd_startup(struct snd_pcm_substream *substream)
-> +{
-> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +       struct snd_soc_card *card = rtd->card;
-> +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-> +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> +       int ret;
-> +
-> +       switch (cpu_dai->id) {
-> +       case MI2S_PRIMARY:
-> +               if (++data->pri_mi2s_clk_count == 1) {
-> +                       snd_soc_dai_set_sysclk(cpu_dai,
-> +                                              LPASS_MCLK0,
-> +                                              DEFAULT_MCLK_RATE,
-> +                                              SNDRV_PCM_STREAM_PLAYBACK);
-> +               }
-> +               snd_soc_dai_set_fmt(codec_dai, primary_dai_fmt);
-My comment on the previous thread may mislead.  My original intent:
-move the DAIFMT setting to DAI link->dai_fmt in sc7180_parse_of( ).
+#syz test: https://github.com/google/kasan.git usb-fuzzer
 
-If you need to keep it as is: inline the SND_SOC_DAIFMT_* into
-snd_soc_dai_set_fmt( ) (i.e. eliminate primary_dai_fmt).
+fix WARNING in pvr2_i2c_core_done by
+unregistering device in the release handler
+instead of the disconnect handler, setting the
+linked flag after adding adapter to i2c,
+and removing a call to acpi_ut_delete_generic_state()
 
-> +static int sc7180_parse_of(struct snd_soc_card *card)
-> +{
-> +       struct device_node *np;
-> +       struct device_node *codec = NULL;
-> +       struct device_node *platform = NULL;
-The function doesn't use platform.
+Reported-by: syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com
+Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
+---
+v1 -> v2:
+	remove a call to acpi_ut_delete_generic state
+	and set linked flag after adding adapter to
+	i2c as suggested by Hillf Danton <hdanton@sina.com>
 
-> +       struct device_node *cpu = NULL;
-> +       struct device *dev = card->dev;
-> +       struct snd_soc_dai_link *link;
-> +       struct of_phandle_args args;
-> +       struct snd_soc_dai_link_component *dlc;
-> +       int ret, num_links;
-> +
-> +       ret = snd_soc_of_parse_card_name(card, "model");
-> +       if (ret) {
-> +               dev_err(dev, "Error parsing card name: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       /* DAPM routes */
-> +       if (of_property_read_bool(dev->of_node, "audio-routing")) {
-> +               ret = snd_soc_of_parse_audio_routing(card,
-> +                                                    "audio-routing");
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       /* headset aux dev. */
-> +       sc7180_headset_dev.dlc.of_node = of_parse_phandle(
-> +                       dev->of_node, "aux-dev", 0);
-> +       if (!sc7180_headset_dev.dlc.of_node) {
-> +               dev_err(dev,
-> +                       "Property 'aux-dev' missing/invalid\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Populate links */
-> +       num_links = of_get_child_count(dev->of_node);
-Eliminate num_links but use card->num_links directly.
+ drivers/acpi/acpica/utdelete.c               | 5 -----
+ drivers/i2c/i2c-core-base.c                  | 2 +-
+ drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c | 4 ++--
+ 3 files changed, 3 insertions(+), 8 deletions(-)
 
-> +
-> +       /* Allocate the DAI link array */
-> +       card->dai_link = devm_kcalloc(dev, num_links, sizeof(*link),
-> +                                     GFP_KERNEL);
-> +       if (!card->dai_link)
-> +               return -ENOMEM;
-> +
-> +       card->num_links = num_links;
-Ditto, eliminate it.
-
-> +       link = card->dai_link;
-> +
-Eliminate the blank line to make "link = card->dai_link" and the
-following for-loop "a whole thing".
-
-> +       for_each_child_of_node(dev->of_node, np) {
-> +               dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
-> +               if (!dlc)
-> +                       return -ENOMEM;
-> +
-> +               link->cpus      = &dlc[0];
-> +               link->platforms = &dlc[1];
-> +
-> +               link->num_cpus          = 1;
-> +               link->num_platforms     = 1;
-> +
-> +               ret = of_property_read_string(np, "link-name", &link->name);
-> +               if (ret) {
-> +                       dev_err(card->dev,
-> +                               "error getting codec dai_link name\n");
-> +                       goto err;
-> +               }
-> +
-> +               link->playback_only = of_property_read_bool(np,
-> +                                                           "playback_only");
-> +               link->capture_only = of_property_read_bool(np,
-> +                                                          "capture_only");
-> +
-> +               if (link->playback_only && link->capture_only) {
-> +                       dev_err(card->dev,
-> +                               "getting both playback and capture only\n");
-ret = -EINVAL;
-
-> +                       goto err;
-> +               }
-> +
-> +               cpu = of_get_child_by_name(np, "cpu");
-> +               codec = of_get_child_by_name(np, "codec");
-Move to below.
-
-> +
-> +               if (!cpu) {
-> +                       dev_err(dev, "%s: Can't find cpu DT node\n",
-> +                               link->name);
-> +                       ret = -EINVAL;
-> +                       goto err;
-> +               }
-> +
-> +               ret = of_parse_phandle_with_args(cpu, "sound-dai",
-> +                                                "#sound-dai-cells", 0, &args);
-I may overlook it but I failed to find "#sound-dai-cells" in the
-dt-binding example.  I think it should be in DTS?
-
-> +               if (ret) {
-> +                       dev_err(card->dev, "%s: error getting cpu phandle\n",
-> +                               link->name);
-> +                       goto err;
-> +               }
-> +               link->cpus->of_node = args.np;
-> +               link->id = args.args[0];
-I am not quite sure what it will be.  I guess one of the following
-comes from DTS node name.
-#define MI2S_PRIMARY 0
-#define MI2S_SECONDARY 1
-
-> +
-> +               ret = snd_soc_of_get_dai_name(cpu, &link->cpus->dai_name);
-> +               if (ret) {
-> +                       dev_err(card->dev, "%s: error getting cpu dai name\n",
-> +                               link->name);
-> +                       goto err;
-> +               }
-> +
-
-Move "codec = of_get_child_by_name(np, "codec");" to here.
-> +               if (codec) {
-> +                       ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
-> +                       if (ret < 0) {
-> +                               dev_err(card->dev, "%s: codec dai not found\n",
-> +                                       link->name);
-> +                               goto err;
-> +                       }
-> +               } else {
-> +                       dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
-> +                       if (!dlc)
-> +                               return -ENOMEM;
-> +
-> +                       link->codecs     = dlc;
-> +                       link->num_codecs = 1;
-> +
-> +                       link->codecs->dai_name = "snd-soc-dummy-dai";
-> +                       link->codecs->name = "snd-soc-dummy";
-> +               }
-> +
-> +               link->platforms->of_node = link->cpus->of_node;
-> +               link->stream_name = link->name;
-> +               link->ops = &sc7180_ops;
-> +               link++;
-> +
-> +               of_node_put(cpu);
-> +               of_node_put(codec);
-cpu = NULL;
-codec = NULL;
-In case of double of_node_put( ).
-
-> +       }
-> +
-> +       return 0;
-> +err:
-> +       of_node_put(np);
-I guess you don't need this.
-
-> +       of_node_put(cpu);
-> +       of_node_put(codec);
-> +       of_node_put(platform);
-Eliminate it, not used.
-
-> +static int sc7180_snd_platform_probe(struct platform_device *pdev)
-> +{
-> +       struct snd_soc_card *card;
-> +       struct sc7180_snd_data *data;
-> +       struct device *dev = &pdev->dev;
-> +       int ret;
-> +
-> +       card = &sc7180_card;
-In this case, inline the initialization while declaration.
-
-> +
-> +       /* Allocate the private data */
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       card->dapm_widgets = sc7180_snd_widgets;
-> +       card->num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets);
-Remove them.
-
-> +       card->dev = dev;
-> +       dev_set_drvdata(dev, card);
-I guess you don't need this if using devm_snd_soc_register_card(...).
-
-Insert a blank line.
-> +       ret = sc7180_parse_of(card);
-> +       if (ret) {
-> +               dev_err(dev, "Error parsing OF data\n");
-> +               return ret;
-> +       }
-> +
-> +       data->card = card;
-Looks like data->card is not used.
-
-> +       snd_soc_card_set_drvdata(card, data);
-> +
-> +       ret = snd_soc_register_card(card);
-> +       if (ret) {
-> +               dev_err(dev, "Sound card registration failed\n");
-> +               return ret;
-> +       }
-> +       return ret;
-Just return devm_snd_soc_register_card(...);
-
-> +static int sc7180_snd_platform_remove(struct platform_device *pdev)
-> +{
-> +       struct snd_soc_card *card = dev_get_drvdata(&pdev->dev);
-> +
-> +       snd_soc_unregister_card(card);
-> +       return 0;
-> +}
-Can be removed if using devm_snd_soc_register_card( ).
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index c365faf4e6cd..e36f51725854 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -648,11 +648,6 @@ acpi_ut_update_object_reference(union acpi_operand_obj=
+ect *object, u16 action)
+=20
+ 	/* Free any stacked Update State objects */
+=20
+-	while (state_list) {
+-		state =3D acpi_ut_pop_generic_state(&state_list);
+-		acpi_ut_delete_generic_state(state);
+-	}
+-
+ 	return (status);
+ }
+=20
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 26f03a14a478..2d377d2e89f1 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -462,6 +462,7 @@ static void i2c_device_shutdown(struct device *dev)
+=20
+ static void i2c_client_dev_release(struct device *dev)
+ {
++	i2c_unregister_device(to_i2c_client(dev));
+ 	kfree(to_i2c_client(dev));
+ }
+=20
+@@ -1527,7 +1528,6 @@ void i2c_del_adapter(struct i2c_adapter *adap)
+ 		dev_dbg(&adap->dev, "Removing %s at 0x%x\n", client->name,
+ 			client->addr);
+ 		list_del(&client->detected);
+-		i2c_unregister_device(client);
+ 	}
+ 	mutex_unlock(&adap->userspace_clients_lock);
+=20
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c b/drivers/media/u=
+sb/pvrusb2/pvrusb2-i2c-core.c
+index 63db04fe12d3..09b2c878f459 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-i2c-core.c
+@@ -623,9 +623,9 @@ void pvr2_i2c_core_init(struct pvr2_hdw *hdw)
+ 	hdw->i2c_adap.dev.parent =3D &hdw->usb_dev->dev;
+ 	hdw->i2c_adap.algo =3D &hdw->i2c_algo;
+ 	hdw->i2c_adap.algo_data =3D hdw;
+-	hdw->i2c_linked =3D !0;
+ 	i2c_set_adapdata(&hdw->i2c_adap, &hdw->v4l2_dev);
+-	i2c_add_adapter(&hdw->i2c_adap);
++	if (!i2c_add_adapter(&hdw->i2c_adap))
++		hdw->i2c_linked =3D!0;
+ 	if (hdw->i2c_func[0x18] =3D=3D i2c_24xxx_ir) {
+ 		/* Probe for a different type of IR receiver on this
+ 		   device.  This is really the only way to differentiate
+--=20
+2.20.1
 
 
-I didn't go through all the cases.  But it would be better if all "if
-(ret < 0)" can be replaced to "if (ret)".
+--y22zpqil25qtpkyo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEIF+jd5Z5uS7xKTfpQZdt+T1HgiEFAl8Xr5gACgkQQZdt+T1H
+giF1vQv+P5FnsTUChLkkI/kfULIr4EuocSn7JwwbJacBalZeiu3qmmOY0gzPjq2b
+qlJEtiuehaZIGdCB0wp/kKum0umcluCO1nWgd2tNVmOKJv++xx2l/O4Rd4SXv2TD
+r72OfvdV72XYLdsnawwDnXqi/2dgQIN4ZozpDv2PqsB9Mi/rkp+pu/i9CxrpMDpM
+HukAL9uOn8BpTdubmeU2XZc1cmJcCQzOn5+VdBM8zC3tjy8JEzoNTRlzzBqzDw0P
+xITIeW9NYXcujFJeBCr3CHKDxNsmXkCxaIxkZtBuvISMP7hggRaOADUVnKTTbj/4
+F+0VhEHxcgevJhiJBZeX2ylYSZhzitG8gHfi23ex0b8rFqccNDE7kHXP6HC2KwyZ
+DaIxZ9APw2URMjEHDVVRaH4Pwr+1y14CIV5ae1AsnRrRTGzRjm7kbAPXR8FaF+QG
+eyGHv50p/xMjR685SWIfGp4HfXub5c6ok5XZZwmsMrITt8XVtJ3k/qS0+givqsSv
+/QNBs8Ti
+=z8sj
+-----END PGP SIGNATURE-----
+
+--y22zpqil25qtpkyo--
