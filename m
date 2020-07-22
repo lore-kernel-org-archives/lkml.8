@@ -2,98 +2,93 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E60420729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TEujInQm"
+	by mail.kernel.org (Postfix) with ESMTP id 3182C20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595420859;
+	bh=Fa5CofAQhSoiPsbbQ+uJaJinSOhOGsOMU5AMeRircfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0S4UBakC+xJ3+2UzPtchvD7WraYSCF/H3qHOstBccHfZF56ER9KggmDeLnjrXHHwy
+	 ZaMQK2er48l0qrgnJ9GHNBDthR6AUQn53cILa08DHcSvhtn967k+crtmGclfBL654X
+	 AUnXwoE/568WCWW2jGwCEFuUzBZF66RORS95gPVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732170AbgGVM04 (ORCPT
+        id S1732202AbgGVM1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:26:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36506 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGVM0z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:26:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MCQbwV092506;
-        Wed, 22 Jul 2020 07:26:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595420797;
-        bh=1wP4G7MooADMavVojqi6pALDQyDsRy6rEAIKe4yjHOw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TEujInQmBuVFM2RzBDMoO3xqsQ9niVglkU6w2kUPo/V5RYpECbEiiAB7uCa4ruUHw
-         QLFsl9wxfGBFwdur+f44FOPPN+WFbWIf6gnZQQpOUyaiZmiNIXgkUHBjZkjIlp/Ohr
-         JAqPwpvRt5FXNMsVKzxB50IeGKd9c690yoQyHhaA=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MCQbW4120900
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 07:26:37 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 07:26:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 07:26:37 -0500
-Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MCQbcQ024135;
-        Wed, 22 Jul 2020 07:26:37 -0500
-Subject: Re: [PATCH v31 03/12] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200716182007.18389-1-dmurphy@ti.com>
- <20200716182007.18389-4-dmurphy@ti.com> <20200721210554.GC5966@amd>
- <c774fab9-124b-da2e-6f7c-614f34322942@ti.com> <20200722071055.GA8984@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c4e2b2db-483f-27ef-9869-3b0c56d0d8ba@ti.com>
-Date:   Wed, 22 Jul 2020 07:26:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 08:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726161AbgGVM1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:27:37 -0400
+Received: from quaco.ghostprotocols.net (unknown [177.17.3.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B928920729;
+        Wed, 22 Jul 2020 12:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595420857;
+        bh=Fa5CofAQhSoiPsbbQ+uJaJinSOhOGsOMU5AMeRircfE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h66NaUtR3LUv8B6qfuqaJ/9n4sL3iQJDtu8sXbZ2wbnZozp7wDA1NIw2c4TOK5zoM
+         r5uuRdtVkzfVIGVJPKnsMpacaD1Ixa0YiA1bM1YFlPAkDenz893d7cFpL9y5dOR4ms
+         C+cpXmA9eDxek492K7ED/xmqxuOwKTpM2tk4lH8A=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A8246404B1; Wed, 22 Jul 2020 09:27:34 -0300 (-03)
+Date:   Wed, 22 Jul 2020 09:27:34 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 05/15] perf evlist: implement control command
+ handling functions
+Message-ID: <20200722122734.GJ77866@kernel.org>
+References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
+ <62518ceb-1cc9-2aba-593b-55408d07c1bf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200722071055.GA8984@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62518ceb-1cc9-2aba-593b-55408d07c1bf@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+Em Fri, Jul 17, 2020 at 10:01:33AM +0300, Alexey Budankov escreveu:
+> 
+> Implement functions of initialization, finalization and processing
+> of control command messages coming from control file descriptors.
+> Allocate control file descriptor as descriptor at struct pollfd
+> object of evsel_list for atomic poll() operation.
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-On 7/22/20 2:10 AM, Pavel Machek wrote:
-> Hi!
->
->>>> +			ret = fwnode_property_read_u32_array(child,
->>>> +							     "reg",
->>>> +							     led_banks,
->>>> +							     ret);
->>> Move this to subfunction to reduce the indentation? (Or, just refactor
->>> it somehow).
->> Actually I can just put it all on the same line since the 80 character
->> requirement is relaxed.
-> No.
->
-> You have too long and too complex function, with too many blocks
-> inside each other. Please fix it.
+I'm applying locally for testing, but can you answer what is the reason
+for that newline in the CMD_ACK_TAG? I tried looking at previous
+discussion but couldn't quickly find any reasoning for that
 
-I will refactor
+- Arnaldo
 
-Dan
+> +++ b/tools/perf/util/evlist.h
+> @@ -359,4 +359,22 @@ void perf_evlist__force_leader(struct evlist *evlist);
+>  struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
+>  						 struct evsel *evsel,
+>  						bool close);
+> +#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
+> +#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
+> +#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
 
+What for? That '\n'?
 
