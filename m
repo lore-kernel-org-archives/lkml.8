@@ -2,355 +2,175 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752F1C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F24C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51BCA20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902CF20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="ogUc7Sea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732047AbgGVK1Q (ORCPT
+        id S1732080AbgGVK1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:27:16 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:54401 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgGVK1P (ORCPT
+        Wed, 22 Jul 2020 06:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731717AbgGVK1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:27:15 -0400
-Received: from localhost.localdomain ([93.23.199.134])
-        by mwinf5d52 with ME
-        id 6AT9230072uUVcV03AT9GJ; Wed, 22 Jul 2020 12:27:11 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 22 Jul 2020 12:27:11 +0200
-X-ME-IP: 93.23.199.134
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     chunkeey@googlemail.com, kvalo@codeaurora.org, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] p54: switch from 'pci_' to 'dma_' API
-Date:   Wed, 22 Jul 2020 12:27:07 +0200
-Message-Id: <20200722102707.27486-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Wed, 22 Jul 2020 06:27:31 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9614AC0619DF
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:27:30 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q7so1935364ljm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=VPm22LOYeZ54yE0JFsNtMPSHO2Ay7Su9W8bmkwt26Hs=;
+        b=ogUc7SeaE1rAZkufGirXFyyBtKme0j9yLEpwlBGAchRT1H/Y21p0SuaaFUFFdQLSzU
+         dY3GtumCHpZi0bombwJiAXtR7gEgE7EjEnqUm6YuYz5qME9Cqrn+2jpF4pUeO5LveylR
+         Ax0X8Crr2SUgogVopy4PBMHci69Ot7JQhUTFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=VPm22LOYeZ54yE0JFsNtMPSHO2Ay7Su9W8bmkwt26Hs=;
+        b=G8f3G6B/3RANzg/6oYJdaRbASH5F+SVR+5aaKdNeNri5B9D9yJ/loUAcpG77KcPl9E
+         JKCcC4or+OhfJQ87GcjNUNqtUDGyWXqeRXiGQ+SVeYTu5/qEwbTHYkO6CgHJaS6qNx4q
+         dH4zqGmbH4pIeF24JehW8r+JfyFHVYR3j7FE0H5/nOPMAQfRJVtnlVrzXjPEwRfdlyId
+         /oULZXDpsTz7lgpsfiDZqbAdqTcZfA7cpbIatf2Xm1Bgw5P2WBogO3+9d1fWIX3FLAQf
+         wb8kLB2AquDSYTtsexr+UadURYu3/+HXBWKXMPJP2CntwPhqLxE0B0STH1C1FQ4LcF66
+         D22w==
+X-Gm-Message-State: AOAM533rcwdnUcgC4oVxJzfSOcvNoANjwGpSOtVnKkVtcmVFV5kua/30
+        nKB4MDIRpmUyw1NG7HoSbe95eA==
+X-Google-Smtp-Source: ABdhPJztz3YC0z08uqZCfX8O3PtxgNuSMnR2KAngE5gKIgL0V4oOMc1BqEep74wkuMP7v5jQiyifFg==
+X-Received: by 2002:a2e:7a07:: with SMTP id v7mr15018202ljc.159.1595413648841;
+        Wed, 22 Jul 2020 03:27:28 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id f26sm6400345ljj.4.2020.07.22.03.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 03:27:28 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 12:27:21 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: [PATCH v9 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200722122704.1153221-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
-When memory is allocated in 'p54p_probe()', GFP_KERNEL can be used because
-it is the probe function and no spin_lock is taken in the between.
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
 
+Changes in v9:
+    - fixed the `reg` node notation in the DT example
+    - added exporting of the `litex_set_reg`/`litex_get_reg` symbols
 
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
+Changes in v8:
+    - fixed help messages in LiteUART's KConfig
+    - removed dependency between LiteUART and LiteX SoC drivers
+    - removed `litex_check_accessors()` helper function
+    - added crashing (BUG) on the failed LiteX CSR access test
 
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
+Changes in v7:
+    - added missing include directive in UART's driver
 
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
+Changes in v6:
+    - changed accessors in SoC Controller's driver
+    - reworked UART driver
 
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
 
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
 
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
 
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
 
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
 
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
 
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  15 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 194 +++++++++
+ drivers/tty/serial/Kconfig                    |  32 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 402 ++++++++++++++++++
+ include/linux/litex.h                         |  24 ++
+ 13 files changed, 761 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
 
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/wireless/intersil/p54/p54pci.c | 65 ++++++++++++----------
- 1 file changed, 35 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/net/wireless/intersil/p54/p54pci.c b/drivers/net/wireless/intersil/p54/p54pci.c
-index 80ad0b7eaef4..9d96c8b8409d 100644
---- a/drivers/net/wireless/intersil/p54/p54pci.c
-+++ b/drivers/net/wireless/intersil/p54/p54pci.c
-@@ -153,12 +153,12 @@ static void p54p_refill_rx_ring(struct ieee80211_hw *dev,
- 			if (!skb)
- 				break;
- 
--			mapping = pci_map_single(priv->pdev,
-+			mapping = dma_map_single(&priv->pdev->dev,
- 						 skb_tail_pointer(skb),
- 						 priv->common.rx_mtu + 32,
--						 PCI_DMA_FROMDEVICE);
-+						 DMA_FROM_DEVICE);
- 
--			if (pci_dma_mapping_error(priv->pdev, mapping)) {
-+			if (dma_mapping_error(&priv->pdev->dev, mapping)) {
- 				dev_kfree_skb_any(skb);
- 				dev_err(&priv->pdev->dev,
- 					"RX DMA Mapping error\n");
-@@ -215,19 +215,22 @@ static void p54p_check_rx_ring(struct ieee80211_hw *dev, u32 *index,
- 			len = priv->common.rx_mtu;
- 		}
- 		dma_addr = le32_to_cpu(desc->host_addr);
--		pci_dma_sync_single_for_cpu(priv->pdev, dma_addr,
--			priv->common.rx_mtu + 32, PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_cpu(&priv->pdev->dev, dma_addr,
-+					priv->common.rx_mtu + 32,
-+					DMA_FROM_DEVICE);
- 		skb_put(skb, len);
- 
- 		if (p54_rx(dev, skb)) {
--			pci_unmap_single(priv->pdev, dma_addr,
--				priv->common.rx_mtu + 32, PCI_DMA_FROMDEVICE);
-+			dma_unmap_single(&priv->pdev->dev, dma_addr,
-+					 priv->common.rx_mtu + 32,
-+					 DMA_FROM_DEVICE);
- 			rx_buf[i] = NULL;
- 			desc->host_addr = cpu_to_le32(0);
- 		} else {
- 			skb_trim(skb, 0);
--			pci_dma_sync_single_for_device(priv->pdev, dma_addr,
--				priv->common.rx_mtu + 32, PCI_DMA_FROMDEVICE);
-+			dma_sync_single_for_device(&priv->pdev->dev, dma_addr,
-+						   priv->common.rx_mtu + 32,
-+						   DMA_FROM_DEVICE);
- 			desc->len = cpu_to_le16(priv->common.rx_mtu + 32);
- 		}
- 
-@@ -258,8 +261,9 @@ static void p54p_check_tx_ring(struct ieee80211_hw *dev, u32 *index,
- 		skb = tx_buf[i];
- 		tx_buf[i] = NULL;
- 
--		pci_unmap_single(priv->pdev, le32_to_cpu(desc->host_addr),
--				 le16_to_cpu(desc->len), PCI_DMA_TODEVICE);
-+		dma_unmap_single(&priv->pdev->dev,
-+				 le32_to_cpu(desc->host_addr),
-+				 le16_to_cpu(desc->len), DMA_TO_DEVICE);
- 
- 		desc->host_addr = 0;
- 		desc->device_addr = 0;
-@@ -334,9 +338,9 @@ static void p54p_tx(struct ieee80211_hw *dev, struct sk_buff *skb)
- 	idx = le32_to_cpu(ring_control->host_idx[1]);
- 	i = idx % ARRAY_SIZE(ring_control->tx_data);
- 
--	mapping = pci_map_single(priv->pdev, skb->data, skb->len,
--				 PCI_DMA_TODEVICE);
--	if (pci_dma_mapping_error(priv->pdev, mapping)) {
-+	mapping = dma_map_single(&priv->pdev->dev, skb->data, skb->len,
-+				 DMA_TO_DEVICE);
-+	if (dma_mapping_error(&priv->pdev->dev, mapping)) {
- 		spin_unlock_irqrestore(&priv->lock, flags);
- 		p54_free_skb(dev, skb);
- 		dev_err(&priv->pdev->dev, "TX DMA mapping error\n");
-@@ -378,10 +382,10 @@ static void p54p_stop(struct ieee80211_hw *dev)
- 	for (i = 0; i < ARRAY_SIZE(priv->rx_buf_data); i++) {
- 		desc = &ring_control->rx_data[i];
- 		if (desc->host_addr)
--			pci_unmap_single(priv->pdev,
-+			dma_unmap_single(&priv->pdev->dev,
- 					 le32_to_cpu(desc->host_addr),
- 					 priv->common.rx_mtu + 32,
--					 PCI_DMA_FROMDEVICE);
-+					 DMA_FROM_DEVICE);
- 		kfree_skb(priv->rx_buf_data[i]);
- 		priv->rx_buf_data[i] = NULL;
- 	}
-@@ -389,10 +393,10 @@ static void p54p_stop(struct ieee80211_hw *dev)
- 	for (i = 0; i < ARRAY_SIZE(priv->rx_buf_mgmt); i++) {
- 		desc = &ring_control->rx_mgmt[i];
- 		if (desc->host_addr)
--			pci_unmap_single(priv->pdev,
-+			dma_unmap_single(&priv->pdev->dev,
- 					 le32_to_cpu(desc->host_addr),
- 					 priv->common.rx_mtu + 32,
--					 PCI_DMA_FROMDEVICE);
-+					 DMA_FROM_DEVICE);
- 		kfree_skb(priv->rx_buf_mgmt[i]);
- 		priv->rx_buf_mgmt[i] = NULL;
- 	}
-@@ -400,10 +404,10 @@ static void p54p_stop(struct ieee80211_hw *dev)
- 	for (i = 0; i < ARRAY_SIZE(priv->tx_buf_data); i++) {
- 		desc = &ring_control->tx_data[i];
- 		if (desc->host_addr)
--			pci_unmap_single(priv->pdev,
-+			dma_unmap_single(&priv->pdev->dev,
- 					 le32_to_cpu(desc->host_addr),
- 					 le16_to_cpu(desc->len),
--					 PCI_DMA_TODEVICE);
-+					 DMA_TO_DEVICE);
- 
- 		p54_free_skb(dev, priv->tx_buf_data[i]);
- 		priv->tx_buf_data[i] = NULL;
-@@ -412,10 +416,10 @@ static void p54p_stop(struct ieee80211_hw *dev)
- 	for (i = 0; i < ARRAY_SIZE(priv->tx_buf_mgmt); i++) {
- 		desc = &ring_control->tx_mgmt[i];
- 		if (desc->host_addr)
--			pci_unmap_single(priv->pdev,
-+			dma_unmap_single(&priv->pdev->dev,
- 					 le32_to_cpu(desc->host_addr),
- 					 le16_to_cpu(desc->len),
--					 PCI_DMA_TODEVICE);
-+					 DMA_TO_DEVICE);
- 
- 		p54_free_skb(dev, priv->tx_buf_mgmt[i]);
- 		priv->tx_buf_mgmt[i] = NULL;
-@@ -568,9 +572,9 @@ static int p54p_probe(struct pci_dev *pdev,
- 		goto err_disable_dev;
- 	}
- 
--	err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+	err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 	if (!err)
--		err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-+		err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
- 	if (err) {
- 		dev_err(&pdev->dev, "No suitable DMA available\n");
- 		goto err_free_reg;
-@@ -603,8 +607,9 @@ static int p54p_probe(struct pci_dev *pdev,
- 		goto err_free_dev;
- 	}
- 
--	priv->ring_control = pci_alloc_consistent(pdev, sizeof(*priv->ring_control),
--						  &priv->ring_control_dma);
-+	priv->ring_control = dma_alloc_coherent(&pdev->dev,
-+						sizeof(*priv->ring_control),
-+						&priv->ring_control_dma, GFP_KERNEL);
- 	if (!priv->ring_control) {
- 		dev_err(&pdev->dev, "Cannot allocate rings\n");
- 		err = -ENOMEM;
-@@ -623,8 +628,8 @@ static int p54p_probe(struct pci_dev *pdev,
- 	if (!err)
- 		return 0;
- 
--	pci_free_consistent(pdev, sizeof(*priv->ring_control),
--			    priv->ring_control, priv->ring_control_dma);
-+	dma_free_coherent(&pdev->dev, sizeof(*priv->ring_control),
-+			  priv->ring_control, priv->ring_control_dma);
- 
-  err_iounmap:
- 	iounmap(priv->map);
-@@ -653,8 +658,8 @@ static void p54p_remove(struct pci_dev *pdev)
- 	wait_for_completion(&priv->fw_loaded);
- 	p54_unregister_common(dev);
- 	release_firmware(priv->firmware);
--	pci_free_consistent(pdev, sizeof(*priv->ring_control),
--			    priv->ring_control, priv->ring_control_dma);
-+	dma_free_coherent(&pdev->dev, sizeof(*priv->ring_control),
-+			  priv->ring_control, priv->ring_control_dma);
- 	iounmap(priv->map);
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
 -- 
 2.25.1
 
