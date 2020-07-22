@@ -2,64 +2,121 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF21C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C2822B42
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7AE2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:51:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iebOv938"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbgGVUvn (ORCPT
+        id S1732980AbgGVUvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVUvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:51:42 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 22 Jul 2020 16:51:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34576 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726452AbgGVUvt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 16:51:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595451107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gREK6qCLK9pb41d3z9gQfGNfBTwDTOZTLCxEbymSjNM=;
+        b=iebOv9384Yn+sjvJ0EZrhe1VNmhZU6fzaK1gqSoR91WO5/0AX0r9QpIKhOm+6sAA4Gx/T8
+        qP298sDUwtMjiCV19dyacjUFCl1bW1CgfcB9jE5rJrFzGySXxqMPz1yeM0219RoD+Cb8MA
+        /SoEVIvW5iCBgfrwOONW2ktT+awrFBA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-Oa6C2FLtPZe93I8etDCh2Q-1; Wed, 22 Jul 2020 16:51:45 -0400
+X-MC-Unique: Oa6C2FLtPZe93I8etDCh2Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC0232086A;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C29CC1030C2A;
+        Wed, 22 Jul 2020 20:51:44 +0000 (UTC)
+Received: from treble (ovpn-116-168.rdu2.redhat.com [10.10.116.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 46FBC8BECC;
         Wed, 22 Jul 2020 20:51:41 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 16:51:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joerg Vehlow <lkml@jv-coder.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Huang Ying <ying.huang@intel.com>
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in
- interrupt context
-Message-ID: <20200722165140.45b58fed@oasis.local.home>
-In-Reply-To: <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
-References: <2c243f59-6d10-7abb-bab4-e7b1796cd54f@jv-coder.de>
-        <20200528084614.0c949e8d@gandalf.local.home>
-        <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Date:   Wed, 22 Jul 2020 15:51:39 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] docs/livepatch: Add new compiler considerations doc
+Message-ID: <20200722205139.hwbej2atk2ejq27n@treble>
+References: <20200721161407.26806-1-joe.lawrence@redhat.com>
+ <20200721161407.26806-2-joe.lawrence@redhat.com>
+ <20200721230442.5v6ah7bpjx4puqva@treble>
+ <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 06:30:53 +0200
-Joerg Vehlow <lkml@jv-coder.de> wrote:
-
-> Hi Andrew,
+On Wed, Jul 22, 2020 at 01:03:03PM -0400, Joe Lawrence wrote:
+> On 7/21/20 7:04 PM, Josh Poimboeuf wrote:
+> > On Tue, Jul 21, 2020 at 12:14:06PM -0400, Joe Lawrence wrote:
+> > > Compiler optimizations can have serious implications on livepatching.
+> > > Create a document that outlines common optimization patterns and safe
+> > > ways to livepatch them.
+> > > 
+> > > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> > 
+> > There's a lot of good info here, but I wonder if it should be
+> > reorganized a bit and instead called "how to create a livepatch module",
+> > because that's really the point of it all.
+> > 
 > 
-> it's been two month now and no reaction from you. Maybe you did not see 
-> this mail from Steven.
-> Please look at this issue.
+> That would be nice.  Would you consider a stand-alone compiler-optimizations
+> doc an incremental step towards that end?  Note that the other files
+> (callbacks, shadow-vars, system-state) in their current form might be as
+> confusing to the newbie.
+
+It's an incremental step towards _something_.  Whether that's a cohesive
+patch creation guide, or just a growing hodgepodge of random documents,
+it may be too early to say :-)
+
+> > I'm thinking a newcomer reading this might be lost.  It's not
+> > necessarily clear that there are currently two completely different
+> > approaches to creating a livepatch module, each with their own quirks
+> > and benefits/drawbacks.  There is one mention of a "source-based
+> > livepatch author" but no explanation of what that means.
+> > 
 > 
+> Yes, the initial draft was light on source-based patching since I only
+> really tinker with it for samples/kselftests.  The doc was the result of an
+> experienced livepatch developer and Sunday afternoon w/the compiler. I'm
+> sure it reads as such. :)
 
-Perhaps you need to send the report again without the RT (just [BUG])
-to get Andrew's attention ;-)
+Are experienced livepatch developers the intended audience?  If so I
+question what value this document has in its current form.  Presumably
+experienced livepatch developers would already know this stuff.
 
--- Steve
+> > Maybe it could begin with an overview of the two approaches, and then
+> > delve more into the details of each approach, and then delve even more
+> > into the gory details about compiler optimizations.
+> > 
+> 
+> Up until now, the livepatch documentation has danced around the particular
+> creation method and only described the API in abstract.  If a compiler
+> considerations doc needs to have that complete context then I'd suggest we
+> reorganize the entire lot as a prerequisite.
+
+I wouldn't say it *needs* to have that context.  But it would be a lot
+more useful with it.  As you pointed out, the existing documents do need
+to be reorganized into a more cohesive whole.
+
+-- 
+Josh
+
