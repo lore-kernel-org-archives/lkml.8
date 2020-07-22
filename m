@@ -2,142 +2,144 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F13BC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42179C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8D320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595426734;
-	bh=iloCKMSR9b1tfTvy/7rJoAq1rMiDVjg+2iSq3QdT19U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=glQhc0NfhTjMXSJsbj+x7sEps+FEVAZmqV1fvlpOm5AgXplwynq/0Uw8CHFCw2jMY
-	 12/8pa/EkKNnNu5ZsZO48W98qBw6m/ByEHjzuq24i9+oTb93porwpBszN3Ze8A8els
-	 mTWzkqSeWvO6VABbcMuDK10+gf5LYHOPNlETCpHM=
+	by mail.kernel.org (Postfix) with ESMTP id 1ECB620729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWpqtCRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732519AbgGVOFc (ORCPT
+        id S1732536AbgGVOFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgGVOFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:05:31 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A985205CB;
-        Wed, 22 Jul 2020 14:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595426730;
-        bh=iloCKMSR9b1tfTvy/7rJoAq1rMiDVjg+2iSq3QdT19U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iNeeTwj3TjCoEzSr90MvRIkmt/LcCd92oxk5dJb0VzqASUTyQLM+pe7WqjMEeJNMG
-         Y4VfbbE9YN4YiWrBOJmYU55zvAncU0xsd8XHsQdaRBOUwEprSWaR/7ldZncgeYLoXu
-         op/ZtUkB8cyVJE6ry2C54BdykodXWFHClDXjQw8w=
-Date:   Wed, 22 Jul 2020 16:05:26 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Rahul Gottipati <rahul.blr97@gmail.com>
-Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] media: atomisp: Fix coding style issue - correct
- multiline comments
-Message-ID: <20200722160526.5b83341e@coco.lan>
-In-Reply-To: <c73ee9bced34777cea5b1a3a97f57c723b0a97b1.1595416585.git.rahul.blr97@gmail.com>
-References: <cover.1595416585.git.rahul.blr97@gmail.com>
-        <c73ee9bced34777cea5b1a3a97f57c723b0a97b1.1595416585.git.rahul.blr97@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 22 Jul 2020 10:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbgGVOFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:05:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A748C0619DC;
+        Wed, 22 Jul 2020 07:05:35 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a24so1326697pfc.10;
+        Wed, 22 Jul 2020 07:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Vm4eI7tU1mxf2xSFDL8ig5nx8spemFwAvSMXbd7TsHg=;
+        b=AWpqtCRSTs88mdbPs/KqJ9vAc3YDGmAU8mGbg7ubz4rOFoXVGQdlmQAtDABGgD9crL
+         aoAOFcdnKjomzLggFX6hzTo6tpuzwLVGFbGy9/La7QdGbx4z1o0XiSR21eWKXTlk7q0g
+         TuZVAHz6BQrtxw8+X6iiD9zSSVyitj/xnTjSJE1APEySu6IHNXlr77jf8SH0I8k9M/qt
+         d5l2gmWp4/v0kC+gggSfTcsb060DZ6KzqxDJf1CaEwGTKg693NW0Qh37P0qLvco9knq4
+         a27FyNVK7PhL3XyvRAXfI2O70zsjOnXPCCi5DedcKEZDolGL6jObNZ9i3PBwEO/hmN+S
+         PLtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Vm4eI7tU1mxf2xSFDL8ig5nx8spemFwAvSMXbd7TsHg=;
+        b=pP3bYcHMXq2SNrc/VB45+sL84GPLPBjBR+qNZc9xQ7MovPY1B1QmTOcv0cvp+rTPse
+         omyHmgA6PKoa6KoFfyxO9UZMPfunfjy/DbMJYjY5WO/7Z5eBP3J3UsVqqT2TkuVmSJDG
+         np5pqNSNlXm2GXnQrHYXUuxcFMy/myXPGDl3UxbbxhR1YRVNQ/+PHhvkHN3tADUmfflK
+         Sz+G8dsrripsb/kU1hn26nEm6g4VOapEWsFS2bzeecCsx5quL3vQxMS3dwigPxfqfu8l
+         jRgeo6g17dyhN6Zy+hTHI0+FZkOdnm8LujBIUmTiH1115LeOD1/y+8qJp+PP1Sr/6e9H
+         PFeQ==
+X-Gm-Message-State: AOAM533cWB5l0tMnnLdy3FIKi4LCyZxRFC5rH7hH8oVpI5aSyjrapkXR
+        yDOBWl32vxeHu9W5Myl+kdg=
+X-Google-Smtp-Source: ABdhPJwyW5quQqQ+hM6dR6g2x849FsTMXORApoSb8wSfZRCEOy011L9/Af7GHfVKxCk+tl7K/pDaHw==
+X-Received: by 2002:a62:e30f:: with SMTP id g15mr27934506pfh.203.1595426735032;
+        Wed, 22 Jul 2020 07:05:35 -0700 (PDT)
+Received: from localhost ([89.208.244.139])
+        by smtp.gmail.com with ESMTPSA id m16sm24726566pfd.101.2020.07.22.07.05.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jul 2020 07:05:34 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 22:05:27 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc:     corbet@lwn.net, gregkh@linuxfoundation.org, rafael@kernel.org,
+        f.fainelli@gmail.com, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 2/2] i2c: busses: convert to
+ devm_platform_request_irq()
+Message-ID: <20200722140527.GB8725@nuc8i5>
+References: <20200717161158.11516-1-zhengdejin5@gmail.com>
+ <3228833.Xz71LAOI96@diego>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3228833.Xz71LAOI96@diego>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 22 Jul 2020 17:00:52 +0530
-Rahul Gottipati <rahul.blr97@gmail.com> escreveu:
-
-> This fixes some coding style issues of multiline comments to
-> correct a few checkpatch.pl warnings.
+On Fri, Jul 17, 2020 at 09:11:52PM +0200, Heiko Stübner wrote:
+> Am Freitag, 17. Juli 2020, 18:11:58 CEST schrieb Dejin Zheng:
+> > Use devm_platform_request_irq() to simplify code, and it contains
+> > platform_get_irq() and devm_request_irq().
+> > 
+> > Cc: Michal Simek <michal.simek@xilinx.com>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > Acked-by: Michal Simek <michal.simek@xilinx.com>
 > 
-> Signed-off-by: Rahul Gottipati <rahul.blr97@gmail.com>
-> ---
-> Changes in v2:
-> 	Distributed changes across 2 patches instead of the previous 1.
->  drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-> index 9cdcbe774229..5bf3a86f98f8 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-> @@ -1281,7 +1281,8 @@ static int atomisp_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
->  	 * But the capture number cannot be determined by HAL.
->  	 * So HAL only sets the capture number to be 1 and queue multiple
->  	 * buffers. Atomisp driver needs to check this case and re-trigger
-> -	 * CSS to do capture when new buffer is queued. */
-> +	 * CSS to do capture when new buffer is queued.
-> +	 */
->  	if (asd->continuous_mode->val &&
->  	    atomisp_subdev_source_pad(vdev)
->  	    == ATOMISP_SUBDEV_PAD_SOURCE_CAPTURE &&
-> @@ -1806,7 +1807,7 @@ static int atomisp_streamon(struct file *file, void *fh,
->  		/*
->  		 * set freq to max when streaming count > 1 which indicate
->  		 * dual camera would run
-> -		*/
-> +		 */
->  		if (atomisp_streaming_count(isp) > 1) {
->  			if (atomisp_freq_scaling(isp,
->  						 ATOMISP_DFS_MODE_MAX, false) < 0)
-> @@ -2438,7 +2439,8 @@ static int atomisp_g_ext_ctrls(struct file *file, void *fh,
->  	int i, ret = 0;
->  
->  	/* input_lock is not need for the Camera related IOCTLs
-> -	 * The input_lock downgrade the FPS of 3A*/
-> +	 * The input_lock downgrade the FPS of 3A
-> +	 */
+> Rockchip part (i2c-rk3x):
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>
+Heiko, Thanks a lot.
 
-
-On media (and on several subsystems), we keep the first line in blank,
-on multi-line comments:
-
- 	/* 
-	 * input_lock is not need for the Camera related IOCTLs
-	 * The input_lock downgrade the FPS of 3A
-	 */
-	
->  	ret = atomisp_camera_g_ext_ctrls(file, fh, c);
->  	if (ret != -EINVAL)
->  		return ret;
-> @@ -2521,7 +2523,8 @@ static int atomisp_camera_s_ext_ctrls(struct file *file, void *fh,
->  				    v4l2_s_ctrl(NULL, isp->flash->ctrl_handler,
->  						&ctrl);
->  				/* When flash mode is changed we need to reset
-> -				 * flash state */
-> +				 * flash state
-> +				 */
->  				if (ctrl.id == V4L2_CID_FLASH_MODE) {
->  					asd->params.flash_state =
->  					    ATOMISP_FLASH_IDLE;
-> @@ -2560,7 +2563,8 @@ static int atomisp_s_ext_ctrls(struct file *file, void *fh,
->  	int i, ret = 0;
->  
->  	/* input_lock is not need for the Camera related IOCTLs
-> -	 * The input_lock downgrade the FPS of 3A*/
-> +	 * The input_lock downgrade the FPS of 3A
-> +	 */
->  	ret = atomisp_camera_s_ext_ctrls(file, fh, c);
->  	if (ret != -EINVAL)
->  		return ret;
-
-
-
-Thanks,
-Mauro
+BR,
+Dejin
+> > diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+> > index 8e3cc85d1921..1f0ac69c5774 100644
+> > --- a/drivers/i2c/busses/i2c-rk3x.c
+> > +++ b/drivers/i2c/busses/i2c-rk3x.c
+> > @@ -1227,7 +1227,6 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+> >  	int ret = 0;
+> >  	int bus_nr;
+> >  	u32 value;
+> > -	int irq;
+> >  	unsigned long clk_rate;
+> >  
+> >  	i2c = devm_kzalloc(&pdev->dev, sizeof(struct rk3x_i2c), GFP_KERNEL);
+> > @@ -1289,17 +1288,10 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+> >  		}
+> >  	}
+> >  
+> > -	/* IRQ setup */
+> > -	irq = platform_get_irq(pdev, 0);
+> > -	if (irq < 0)
+> > -		return irq;
+> > -
+> > -	ret = devm_request_irq(&pdev->dev, irq, rk3x_i2c_irq,
+> > -			       0, dev_name(&pdev->dev), i2c);
+> > -	if (ret < 0) {
+> > -		dev_err(&pdev->dev, "cannot request IRQ\n");
+> > +	ret = devm_platform_request_irq(pdev, 0, NULL, rk3x_i2c_irq,
+> > +					0, dev_name(&pdev->dev), i2c);
+> > +	if (ret < 0)
+> >  		return ret;
+> > -	}
+> >  
+> >  	platform_set_drvdata(pdev, i2c);
+> >  
+> 
+> 
+> 
+> 
