@@ -2,124 +2,112 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4439DC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098A9C43446
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9BE22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D548D22B42
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Xoneea9/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z7n28Qr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732812AbgGVVKG (ORCPT
+        id S1733018AbgGVVNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:10:06 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:56124 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgGVVKF (ORCPT
+        Wed, 22 Jul 2020 17:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732896AbgGVVNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5bLC7zj+BNGLM6XnF44Ejyj7euF29Rdfx+nocYnq+Gs=; b=Xoneea9/eg744dwJ9ZucMgGoWJ
-        f0jzHQmLLGpMVrvcGA48C5FkO1vDnz0qgCJPX6lJTRQrzPme1dwF1hKaCSYeWYMT2m91zKvPq6Kwe
-        0rXtgMrc1TiksPoyzLAGXS666/vwFiHKzfQU2tu2NEmOCjrbYkzdma867mMZU9ZS9DNSmvhp9ApJC
-        uoVrK2itV5O8kFICO5kPRmI9lIvlZ3JQfGuFB2deGiENX/ve3E8p2AEnTp8+Gnb2Z/8pMcn9Dzy2u
-        avQbbyrpLmNh8AEdbpnJwU2hYxGzuvCURg9yyiRBo+o2nHOoW3Dt7yfHAtNTk6T3lTornj8GTeFSL
-        igO5R/Qg==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jyLzy-00069M-4Z; Wed, 22 Jul 2020 15:09:59 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20200716203319.16022-1-logang@deltatee.com>
- <20200716203319.16022-8-logang@deltatee.com> <20200720141606.GF4627@lst.de>
- <e939dd43-9e7f-8ef0-162b-2a27f53e6e1a@grimberg.me>
- <5cc390cf-9b0b-b48b-7447-37934be51ee0@deltatee.com>
- <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <98f45e65-2967-3af9-69d1-077a32c43fa2@deltatee.com>
-Date:   Wed, 22 Jul 2020 15:09:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 17:13:16 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABC3C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:13:15 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id d18so2776213edv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4x7MXfjAHP2OqVahR16pifID3jW+ZfJYn4I2NJML5F0=;
+        b=Z7n28Qr2Afeyip2TTRIaKRZ1P8PLGsK6JPk5T6J+GRX0uwMZxrAzYMqduYV0jv5ZvE
+         Dt1tVg8CpJYw/DA8YzaqC73uF0fQ8elUDN8m0P1R+O7tg0IubBdDqPByTymhDal1DyQ4
+         9WxjFytxVtWK5xVS7giYWlioJi3IK9FjbR0PAK6j2uV0/ckSGFCFOO8u9I9H7veV6BYV
+         s6PHJO4yCotlxvXj/GoEgs37U6CMOeOFfKYdi89ZQs9k7Q+rR3rDa+hsUEMvI9bYAya2
+         Izop23/2wAbff08VYg6UBgi2VdWzm3QiNVnzJF+5ZMqhJtM3OyXQ2pqwJOdAcOk2QhaN
+         oIxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4x7MXfjAHP2OqVahR16pifID3jW+ZfJYn4I2NJML5F0=;
+        b=Iipq1IGLHleyVC7y0JUb1sP7tkJJK9iPxgtcT5/WVpq13q8hwb1/TDP2Ejc9+a+3q2
+         MHoUuK5rLVo1M5aeZcl9rk7Bq52hmVXsGFW9kEENk7toslH+bK1mSye+5B10KwKhY0Op
+         7I3oRvUOGzP0iPy8ySz/FRUDajHInw0zM5FWoXisWyUszYHe/zLxNlaeCQvozm66btBP
+         9Bg22bFLDVgmrjkn/HFpJdhsqFGTEvu4p9NwDY1M6uSvcLMSHpfsHEr/1vu38gq2BpnI
+         3m3R0bpFApRLQdurxapXlV68pJQv+ixvQtLEcBfQH3l/Ek6kamz2O8Pb/9q1jwRUIBb0
+         qg6Q==
+X-Gm-Message-State: AOAM5339DPLpSmMV6zs3RNNfu9kEorsVbXYJkiQsAUx5w/M7FoQZpYaO
+        NHBoQ6PSyiY63v7TjqNskfsMjesoaphhH/Vm8NAY8Kdw39U=
+X-Google-Smtp-Source: ABdhPJwyScPYxzvRKewC/U9XRkoM92lky4JqJepfTA7C5u8Jco5VQu5qwdd9bzZxnP2cbMpwMrZRsEs3Vww9v9ic5U0=
+X-Received: by 2002:a05:6402:22f0:: with SMTP id dn16mr1295083edb.83.1595452393987;
+ Wed, 22 Jul 2020 14:13:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2dc39232-4042-1f93-3dcc-3266e70cf6f0@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, kbusch@kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v15 7/9] nvmet-passthru: Add passthru code to process
- commands
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20200722015732.1720840-1-briannorris@chromium.org>
+ <20200722015732.1720840-2-briannorris@chromium.org> <5ebf1534-8045-9894-9c1c-b92b9c6d8479@collabora.com>
+ <CA+ASDXMk7Tg7Lwqt8Pv5BQT0J40dpJtqrL9TAn8y5Nj3TCkj6Q@mail.gmail.com>
+In-Reply-To: <CA+ASDXMk7Tg7Lwqt8Pv5BQT0J40dpJtqrL9TAn8y5Nj3TCkj6Q@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Wed, 22 Jul 2020 14:13:03 -0700
+Message-ID: <CABXOdTfvNBuaEx-vTU2MqNF_EmULJu=506oUtd29kN=FAPswBQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_proto: check for missing EC_CMD_HOST_EVENT_GET_WAKE_MASK
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 22, 2020 at 1:50 PM Brian Norris <briannorris@chromium.org> wrote:
+>
+> On Wed, Jul 22, 2020 at 3:19 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> >
+> > Hi Brian,
+> >
+> > Thank you for your patch, I'll take a look soon but I'd like to ask if you can
+> > join the discussion with this patchset [1], specially this one [2]. We're trying
+> > to match EC errors with standard linux kernel errors because we think can be
+> > helpful.
+> >
+> > [1] https://lore.kernel.org/patchwork/cover/1276734/
+> > [2] https://lore.kernel.org/patchwork/patch/1276738/
+>
+> Hi Enric,
+>
+> Thanks, I'll do that. I do wonder sometimes how non-maintainers should
+> best support "community" around these things, for subsystems that
+> don't have a dedicated mailing list and are therefore sent only to
+> maintainers + LKML-fire-hose. I could probably subscribe to LKML and
+> filter it, but something tells me my mailbox will still manage to
+> explode somehow... Anyway, I digress.
+>
+> Other than perhaps taking a lesson not to propagate -ENOTSUPP, I don't
+> think this series should block on that, as this is a bugfix IMO.
+>
 
+My patch will return -EOPNOTSUPP for EC_RES_INVALID_COMMAND, so maybe
+you could do the same. In my latest version (not yet submitted) I
+extracted the conversion into a separate function, so if your patch is
+accepted now I can just add another patch on top of it to start using
+that function.
 
-On 2020-07-20 4:35 p.m., Sagi Grimberg wrote:
-> 
->> Thanks for the review Christoph. I think I should be able to make all
->> the requested changes in the next week or two.
->>
->> On 2020-07-20 1:35 p.m., Sagi Grimberg wrote:
->>>
->>>> I'm still not so happy about having to look up the namespace and still
->>>> wonder if we should generalize the connect_q to a passthrough_q.  But
->>>> I guess we can do that later and then reduce some of the exports here..
->>>
->>> That is a neat idea! should be easy to do (and we can then lose the host
->>> xarray stuff). I don't mind having it on a later patch, but it should be
->>> easy enough to do even before...
->>>
->>
->> I sort of follow this. I can try to work something up but it will
->> probably take me a few iterations to get it to where you want it. So,
->> roughly, we'd create a passthrough_q in core with the controller's IO
->> tagset and then cleanup the fabrics hosts to use that instead of each
->> independently creating their connect_q?
->>
->> Though, I don't understand how this relates to the host xarray stuff
->> that Sagi mentioned...
-> 
-> passthru commands are in essence REQ_OP_DRV_IN/REQ_OP_DRV_OUT, which
-> means that the driver shouldn't need the ns at all. So if you have a
-> dedicated request queue (mapped to the I/O tagset), you don't need the
-> ns->queue and we can lose the ns lookup altogether.
-> 
-> The only part is to check the effects, but that can probably be handled
-> when we setup the passthru controller or something...
-
-Yes, I implemented the passthru_q (which was quite simple). But I'm not
-sure how we are supposed to call nvme_command_effects() correctly
-without the ns. You can't possibly do that during setup for every
-possible opcode on every namespace. And even if we do, we'll still need
-the same nvme_find_get_ns() and nvme_put_ns() exports and probably
-another xarray to lookup the information.
-
-Also, we pass the namespace's disk to in order to get proper block
-accounting for the underlying disk. (Which is pretty important for
-debugging). So we need to lookup the namespace for this too.
-
-Unless there are some other ideas to solve these issues, I don't think
-this change will gain us anything.
-
-Logan
+Thanks,
+Guenter
