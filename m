@@ -2,126 +2,117 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5143C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F791207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F5A2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595421269;
+	bh=0QEFoJLeBfGzFAv1ye3oNErTb7Vj/OYnW7+WOE6tzdg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RkaCOc6vqB7HrYDd7ShKYd4NbSSZH+DOw2BdT/tgYW6XGRp2OZTn5WOFqfJxlmy4B
+	 VwuDydWVwRd8TRNnP72/tzu0xK1YgywimxMizvKxfOnavRIVoRWw3mHZgU1jrsKkNN
+	 9/iMfJXggUkwQhflkfErSGQL1FvDK9MK3HNdb0jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732337AbgGVMe0 convert rfc822-to-8bit (ORCPT
+        id S1732346AbgGVMe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Jul 2020 08:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731857AbgGVMe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 08:34:26 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2510 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731857AbgGVMeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:34:25 -0400
-Received: from lhreml716-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id B4809598BED4F0C36017;
-        Wed, 22 Jul 2020 13:34:23 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml716-chm.china.huawei.com (10.201.108.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Wed, 22 Jul 2020 13:34:23 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Wed, 22 Jul 2020 13:34:23 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>
-Subject: RE: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
- (vendor) CPER records
-Thread-Topic: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
- (vendor) CPER records
-Thread-Index: AQHWYBeNEuC2snlLPEu+XBWu+0jruKkTg3ww
-Date:   Wed, 22 Jul 2020 12:34:23 +0000
-Message-ID: <eb8336f0357f447baf5c37309d320f57@huawei.com>
-References: <20200722103952.1009-1-shiju.jose@huawei.com>
- <20200722103952.1009-2-shiju.jose@huawei.com>
- <20200722110146.GW3703480@smile.fi.intel.com>
-In-Reply-To: <20200722110146.GW3703480@smile.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.80.253]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Received: from quaco.ghostprotocols.net (unknown [177.17.3.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8D2A2065E;
+        Wed, 22 Jul 2020 12:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595421266;
+        bh=0QEFoJLeBfGzFAv1ye3oNErTb7Vj/OYnW7+WOE6tzdg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0tT+yW2ZgKBXhXrn8dztXfSrgS3VSxvDqUzFBdOfqK9TDw2dpUlRozq3Beg0ze+Vv
+         FLgss7QxPlQHh6n0FflJFDzdPx+194b7x01BPHdJiCmqdXRTNAXShARbiVL0zGHTgk
+         5n5JkTT0iD+jnfL75uJ7oNO3d/7lANzOITz+LJbY=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E0923404B1; Wed, 22 Jul 2020 09:34:23 -0300 (-03)
+Date:   Wed, 22 Jul 2020 09:34:23 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 05/15] perf evlist: implement control command
+ handling functions
+Message-ID: <20200722123423.GK77866@kernel.org>
+References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
+ <62518ceb-1cc9-2aba-593b-55408d07c1bf@linux.intel.com>
+ <20200722122734.GJ77866@kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722122734.GJ77866@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Em Wed, Jul 22, 2020 at 09:27:34AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Jul 17, 2020 at 10:01:33AM +0300, Alexey Budankov escreveu:
+> > 
+> > Implement functions of initialization, finalization and processing
+> > of control command messages coming from control file descriptors.
+> > Allocate control file descriptor as descriptor at struct pollfd
+> > object of evsel_list for atomic poll() operation.
+> > 
+> > Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> I'm applying locally for testing, but can you answer what is the reason
+> for that newline in the CMD_ACK_TAG? I tried looking at previous
+> discussion but couldn't quickly find any reasoning for that
+> 
+> - Arnaldo
+> 
+> > +++ b/tools/perf/util/evlist.h
+> > @@ -359,4 +359,22 @@ void perf_evlist__force_leader(struct evlist *evlist);
+> >  struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
+> >  						 struct evsel *evsel,
+> >  						bool close);
+> > +#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
+> > +#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
+> > +#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
+> 
+> What for? That '\n'?
 
->-----Original Message-----
->From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
->Sent: 22 July 2020 12:02
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
->bp@alien8.de; james.morse@arm.com; lenb@kernel.org;
->tony.luck@intel.com; dan.carpenter@oracle.com;
->zhangliguang@linux.alibaba.com; Wangkefeng (OS Kernel Lab)
-><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
-><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>; Jonathan
->Cameron <jonathan.cameron@huawei.com>; tanxiaofei
-><tanxiaofei@huawei.com>
->Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
->(vendor) CPER records
->
->On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
->> CPER records describing a firmware-first error are identified by GUID.
->> The ghes driver currently logs, but ignores any unknown CPER records.
->> This prevents describing errors that can't be represented by a
->> standard entry, that would otherwise allow a driver to recover from an
->error.
->> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
->> version 2.8).
->>
->> Add a notifier chain for these non-standard/vendor-records. Callers
->> must identify their type of records by GUID.
->>
->> Record data is copied to memory from the ghes_estatus_pool to allow us
->> to keep it until after the notifier has run.
->>
->> Co-developed-by: James Morse <james.morse@arm.com>
->
->Co-developed-by: is going _in conjunction with_ SoB tag which is missing
->here.
-This tag was added as per instruction from Rafael.
-I was told that I cannot add SoB tag for others unless specifically given.
-Probably I will leave it with Rafael/James to help on this SoB tag
-as Rafael was ok to merge this patch.
->
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->
->--
->With Best Regards,
->Andy Shevchenko
->
-Thanks,
-Shiju
+Oh, I see, this is not a _command_, it is a _response_, and the sender
+expects a newline, right?
+
+So I think this needs to be marked clearly as:
+
+// Commands accepted by 'perf record'
+
+#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
+#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
 
 
+// Responses sent by 'perf record'
+
+#define EVLIST_CTL_RSP_ACK     "ack"
+
+And then make the response add the newline, as conceivably we could have
+something like "nack", "invalid", "enoperm", etc, no?
+
+Anyway, this can be done on top of this series, so I'm continuing
+processing it locally.
+
+- Arnaldo
