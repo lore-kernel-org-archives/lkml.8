@@ -2,116 +2,106 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EFAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C560EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E35C22077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5684207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dPVC1J92"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NgRWNg2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgGVAoG (ORCPT
+        id S1731540AbgGVAs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:44:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60275 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726468AbgGVAoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:44:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBGtW10frz9sR4;
-        Wed, 22 Jul 2020 10:44:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595378643;
-        bh=HWIIhnG4c5m+8etDE8Vn31V6Al/spuQpJSoHGrnNFOA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dPVC1J92D4brCD7Vt1/F2txmldkjFMejL9zEkv7JznOtRCOUp14nZicBHzdbzyZIN
-         mfNMrdDCbSeOMkN5m5vD3wZd9mGwSEAK6B1DGW4AkEzxuE/kOCs2RC+JhyBu1Fopy2
-         WDMhpErApi1zxWYETMN3LHI8jGsQ5p14fpKnMeZ7mgEWmTLQJQhsv1Y511z53Vx7Y1
-         XrbyJq6wQa/XP92acKhlER+fshogiweN9S0baC/NOzd69Qz3X/IxYtYRJX+XgJrH2s
-         23lZWl2Qun0AF7fnq6p47ZZkLT1mn+SF693PzN73FseLHjgQqr+2AU2zbkmnH5DaaU
-         xicUsBYjOmFnA==
-Date:   Wed, 22 Jul 2020 10:44:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <ren_guo@c-sky.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the xtensa tree with the csky tree
-Message-ID: <20200722104402.5f95bcc1@canb.auug.org.au>
+        Tue, 21 Jul 2020 20:48:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58237 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726468AbgGVAs5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 20:48:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595378936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RWGSZm0mD0Hsn964zAHjsyYpgFxMJEkHeUi58lCG8KY=;
+        b=NgRWNg2cY954VBDR5yx7sHw7ouqzSp4Q8n5V3t9nrvaNd519pR3n5afL6ER6RmAMJBgmn3
+        Ef2BenjuYL9WKA+5vJzWdxjY/7/dgIwEA9lWgpcLybMzfBpnq9s8pyfO1YbvMqmTSv17Z7
+        m600azGlfjMHyuZ2uE+T+zEv9YCkg00=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-166Hben3O0er4xj42NmneA-1; Tue, 21 Jul 2020 20:48:55 -0400
+X-MC-Unique: 166Hben3O0er4xj42NmneA-1
+Received: by mail-qt1-f198.google.com with SMTP id 71so280549qte.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:48:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RWGSZm0mD0Hsn964zAHjsyYpgFxMJEkHeUi58lCG8KY=;
+        b=fDPUhSHF0QuJrzSD4MybEPzYrncIZw9ktiMT0GSHaTCGb53XKxZKcdjBc8MZ8mmJtH
+         eXkccuF6hV06OF6S3HWtbnXWQ548fZ7ysS5BSH7hAVAv0yLvLy9lQ9cMPwGC2Onw3T2C
+         4nydSil3RplqBPAfkj2h9tgSyEEuVF7Nm6nKLfkKm1/bjSlKyRZHBJUMEowzRxQnCSS3
+         WpLrirzQBZQIvD7+4GOpYVtPmPogkIsg1g4Q83CW8jLgZ38TsNNedzuvnqhkiYYcuhdk
+         T65EFNcYikeIbrIKLS90jZs1lbdlW7e7+jMFFyDkD88UwXvZZicvediIMZodVr5wgX+9
+         CI1w==
+X-Gm-Message-State: AOAM531BrBRrM2x9DrtqvNGAI16BIsgY/1yoUNVBPmhrZvlPwfWTh6oz
+        UVbx8dIwEMcaaI6IzGQFRhDwiK733PzuSWz0OSltXY3+kR4kM/kqGkx2TV8h+rO+sREptfqbGB2
+        fQJhdat72z4pYJ5qppgjPFzCH
+X-Received: by 2002:a37:4711:: with SMTP id u17mr23575349qka.54.1595378934445;
+        Tue, 21 Jul 2020 17:48:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxWo0UiizA03wUsCSxpLxCUuVi6CjaeEv2A/IRRJwpXQsph164b5zXlWqHCZZwzWoCTBmIt5g==
+X-Received: by 2002:a37:4711:: with SMTP id u17mr23575333qka.54.1595378934196;
+        Tue, 21 Jul 2020 17:48:54 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c8:6f::1f4f])
+        by smtp.gmail.com with ESMTPSA id q126sm3509556qke.34.2020.07.21.17.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 17:48:53 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 20:48:51 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Jay Zhou <jianjay.zhou@huawei.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, cohuck@redhat.com, maoming.maoming@huawei.com,
+        weidong.huang@huawei.com, Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH] vfio dma_map/unmap: optimized for hugetlbfs pages
+Message-ID: <20200722004851.GV535743@xz-x1>
+References: <20200720082947.1770-1-jianjay.zhou@huawei.com>
+ <20200720164603.3a622548@x1.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/29F/PfU2JgwE1THz1oU0DyX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200720164603.3a622548@x1.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/29F/PfU2JgwE1THz1oU0DyX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 20, 2020 at 04:46:03PM -0600, Alex Williamson wrote:
+> > +		/*
+> > +		 * We got a hugetlbfs page using vaddr_get_pfn alreadly.
+> > +		 * In this case,we do not need to alloc pages and we can finish all
+> > +		 * work by a single operation to the head page.
+> > +		 */
+> > +		lock_acct += contiguous_npage;
+> > +		head = compound_head(pfn_to_page(*pfn_base));
+> > +		atomic_add(contiguous_npage, compound_pincount_ptr(head));
+> > +		page_ref_add(head, contiguous_npage);
+> > +		mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED, contiguous_npage);
+> > +		pinned += contiguous_npage;
+> > +		goto out;
+> 
+> I'm hoping Peter or Andrea understand this, but I think we still have
+> pfn_base pinned separately and I don't see that we've done an unpin
+> anywhere, so are we leaking the pin of the first page??
 
-Hi all,
+I'm not very familiar with that either, however it seems to me most of above
+chunk was already done in the gup core.  For hugetlbfs, imho it should be where
+follow_hugetlb_page() calls try_grab_page().  Thanks,
 
-Today's linux-next merge of the xtensa tree got a conflict in:
+-- 
+Peter Xu
 
-  tools/testing/selftests/seccomp/seccomp_bpf.c
-
-between commit:
-
-  f4dd2edafba0 ("csky: add support for SECCOMP and SECCOMP_FILTER")
-
-from the csky tree and commit:
-
-  deccfc9ce639 ("selftests/seccomp: add xtensa support")
-
-from the xtensa tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/seccomp/seccomp_bpf.c
-index 8d18a0ddafdd,1b445c2e7fbe..000000000000
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@@ -1704,7 -1704,7 +1714,7 @@@ void change_syscall(struct __test_metad
- =20
-  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
-  	defined(__s390__) || defined(__hppa__) || defined(__riscv) || \
-- 	defined(__csky__)
- -	defined(__xtensa__)
-++	defined(__csky__) || defined(__xtensa__)
-  	{
-  		regs.SYSCALL_NUM =3D syscall;
-  	}
-
---Sig_/29F/PfU2JgwE1THz1oU0DyX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Xi9IACgkQAVBC80lX
-0GzPpQf+IFV67SA3EFrfTacozaVBNTPDo/ZIBE0366Xu7i7j5jlXgU0GSX1OcIGx
-U/voFs7l1OuwpfCHuHycxTqsfYlnSLO/HUpbzjaSPePaFSspTAHZ8EKwgQbSgZs6
-2hucAjKtWx8AEsO6dVkkzIS/hAlckkajx5Iucz0WZQgEnlE6t+V7cGsm/YmtrDfI
-kwFah4ie5g1VDRS1pPJ+eb5WvtNVZDE4VlN9gjO/41UW5neCOi25fPFYADtBjnFV
-ArT/8reLSHxF05Nrqy//CyLwanjtgA87KLzgoOC/RTXMtGdxxyPmp750/0o6bMjL
-35HQ6WE1u4gp/XJ5UfSsNM9jbP5VvA==
-=Tqz2
------END PGP SIGNATURE-----
-
---Sig_/29F/PfU2JgwE1THz1oU0DyX--
