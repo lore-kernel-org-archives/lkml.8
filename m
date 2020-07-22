@@ -2,131 +2,98 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A745C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A8C20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="MQp8z9MQ"
+	by mail.kernel.org (Postfix) with ESMTP id 51C4320737
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbgGVSko (ORCPT
+        id S1732445AbgGVSlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVSko (ORCPT
+        Wed, 22 Jul 2020 14:41:44 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:50021 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgGVSln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:40:44 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317D0C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:44 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id w2so1749948pgg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=B9NmDFLAg+S5lUz7K2pvf1RhE94Cz0luh7cCv2JHKXA=;
-        b=MQp8z9MQbjNzSSgYFwXVflDMZXY4DvuxHtdAXlCmLFxx0hOtegVLhCBZUQ9TLduLz5
-         ahZ3TrUoGAUsC1cMno4k0/T8sWa/5T9W9ohDh5NvhVKcAtDnl1MQ/kJKKgKgorwYvdMH
-         IgJukohrmjsI1i8pALKgQ2CCs+bl75yZzQseWKIAQ2u0itey7ajZ2NsPdWB528iAEyNN
-         9i9gQ+MK49i5GAVGKtTrWlcFURx/zBexDaIR5Bkow+ASqjSS1QvNtQsT0PewqGa4UHoC
-         KUWrDiFfrrigWke+quMV9W7DkPWApb7WxckAiF9APlR49Q9UnuT4d01yBiFAknTR8HC6
-         yX/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=B9NmDFLAg+S5lUz7K2pvf1RhE94Cz0luh7cCv2JHKXA=;
-        b=fUiuVLif+eUcs0/k89a6s2T/3mDGDYN+OKVFXC4v5HB67bAZzSI6FbVQ676ZWMQD+B
-         OkNZmdDcMI5V33+FEWNq/9aoZWdHb2FnN7TpX9ecSooI+6HcBY4ojJWJ/gcqriEd+ZKR
-         l6CHbSDWrEDq/Dq3jSAs7yfYQZ1aBL15KGgG6YX+ep6ptUWEJYGCWgQNstPYpG2O4nix
-         E7xAd36ANyfgQbTVZDL1Z7UMPgQBmI9JmDCteo4ednRIKMs3/kAK3T3RAiQP4TuhXR1D
-         e7RQSAe9A/lO589VG3r6aR01CnM2TsBHT1W9UTllFa72Z+uQ/jhov+2uEP0OnXy5HmMy
-         fGZg==
-X-Gm-Message-State: AOAM532Ugb1Kz7TOBsY+jNt+ZAo/xmw3U1GwzZkBPjZGC+rXyhacRins
-        czjrLw8Eyf2D2q1mXHfO673jrg==
-X-Google-Smtp-Source: ABdhPJxio2fC0vpPrfbEyyEzIA8d296ammbTqFH+Pc8D13bMlX4ePTOLEEh2mfXOOZ3yAf9ENDEjwA==
-X-Received: by 2002:a63:c58:: with SMTP id 24mr963125pgm.343.1595443243660;
-        Wed, 22 Jul 2020 11:40:43 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id r70sm324144pfc.109.2020.07.22.11.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 11:40:43 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 11:40:34 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     "Andres Beltran" <lkmlabelt@gmail.com>
-Cc:     "Andres Beltran" <t-mabelt@microsoft.com>,
-        "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        <parri.andrea@gmail.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 0/3] Drivers: hv: vmbus: vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200722114034.443f5af2@hermes.lan>
-In-Reply-To: <20200722181051.2688-1-lkmlabelt@gmail.com>
-References: <20200722181051.2688-1-lkmlabelt@gmail.com>
+        Wed, 22 Jul 2020 14:41:43 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N1gac-1kvfav3ssK-011y0L; Wed, 22 Jul 2020 20:41:42 +0200
+Received: by mail-qk1-f170.google.com with SMTP id 11so3029978qkn.2;
+        Wed, 22 Jul 2020 11:41:41 -0700 (PDT)
+X-Gm-Message-State: AOAM53327j9/gEy4SKdk466X3SK7KCj5RQnRWjScNWaky9ImPFBAE/0A
+        xAwfqJJhrKF5y64x4VLVanAevGhBhYk6HEhKbfQ=
+X-Google-Smtp-Source: ABdhPJyhbrD6tzQxx6tX0jvgDW3CuNZbeFESKXN/P3EjNbM4QSRZdQvTqZXS1d+oo+E+xij7I8GhcpR7DQeIgnPVjL0=
+X-Received: by 2002:a05:620a:2444:: with SMTP id h4mr1481373qkn.352.1595443300710;
+ Wed, 22 Jul 2020 11:41:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200722172329.16727-1-madhuparnabhowmik10@gmail.com>
+In-Reply-To: <20200722172329.16727-1-madhuparnabhowmik10@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Jul 2020 20:41:23 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a23zUHGnVBsBX=GqBzbRxwkqmOA_7heMze4EsyQvVfg3g@mail.gmail.com>
+Message-ID: <CAK8P3a23zUHGnVBsBX=GqBzbRxwkqmOA_7heMze4EsyQvVfg3g@mail.gmail.com>
+Subject: Re: [PATCH] drivers: isdn: capi: Fix data-race bug
+To:     madhuparnabhowmik10@gmail.com
+Cc:     Karsten Keil <isdn@linux-pingi.de>,
+        David Miller <davem@davemloft.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        andrianov@ispras.ru, ldv-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:aNK/nvkB9ZCM6woMY5T9CGO9BENrHy5uQvQkanc1Pbed9KqX9tJ
+ +wl76T0zrTQAvqp5NWj9g66YBoeEO7CUPufpzgwlLvKO5Hhos1cDtsE8iMP0L7oZyunRE3O
+ iHLcO4Gz8xbieUn9OCCsUi+0J+alWL93SvuUF7a3LS/ba9c4+3AYJ/bAP4L+Qy4wfHP7k8v
+ 1u/XB48SzF4xGL1e7IuHg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4cJMUcNIDuo=:HoIR/x3awrbj3u6LAh5nU6
+ 30nvKnT+5L9dppHCuzlEVHcNQ4jXzmtw2LA054tTAz/2rYO8zYFXAnC5Ay818ISN7byLb+NYJ
+ oQ2DOA/4vEhy+DkIJp/bOxcy9aNZoAeeZ2OYDwOLb1YhhnRQQXKnCb/WqYpjKZ8b0Y7/+Rdsf
+ GPgsfloPJ6obgQjoXdcEOz0k+kZ0TWBAJBB14yimVco49RWEgVVtfJlBnMR08VAaYJ4x3sVlz
+ K7HMH5zGvJrGL+MqBj7Atv8bxqj7F0nHb1UoY0ven9fTagxDPINLS3SX5ah5TgAaLYw5x42aq
+ VHCe2+pz6DSGwWZkiVd5eCFsO5TQfXJSKG42hcYIHKgDYPaOiD/WJwpnRTsLCYB7XXCe0nEYU
+ jn3FKVCq5NW372kzUpAn236drbHpo+DUXmTZ0vXL/TE1AaW7cFHba/2C5yTi6byp07R7lyNCx
+ 5qvuU5H9hFcYmXxj9B38Vfzj/AVNweMzpcXidv8Pbd50lxmbv1oSmthbvvjzK3dt7gAMByHu0
+ uqopQncEaWsxdXNo0S2NTZoulTpkZM3S9SDvsRRbxE0ZGMCQTmEzaUmUskbmQO/AAMhV0Pb+j
+ VXjk2i6kNR5Iqb+DKWFQQBerEAolWHQ+utixt6VssVSwbzAZdG69Rw9QVoUw0uM0ZX18BtKUk
+ xiR4CFM+mraf07lVsB6ioxFdntcr1wdcjS0U1yEX72xp+CpuKMhLGenllnBZ3j0ais1+PYiCv
+ hIcqcndLGgE7qor7OGJaAsXUqjxUI2hdI1IeGUJfPmXgcflO1rTum8mgO3705Hi2otEo8eUtJ
+ qfJQHy4oR3Of8IIpDrX1ZPK3fUL0dlga7re+b2jleVH9IPC4QGmOTf90c7c2JEm77kHIoBb9d
+ J89m3IjLH1Sl89HRoIThhaF64o81ejTpIgFHSwrMiEnQWsTHqcVsPfT3odEjvrOjg747gzyaV
+ 8VD3g2OyeIKQ71oWrDqEUO8dE9eUo/qksWSSHONzzTUU9WshlrWTC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 11:10:48 -0700
-"Andres Beltran" <lkmlabelt@gmail.com> wrote:
+On Wed, Jul 22, 2020 at 7:23 PM <madhuparnabhowmik10@gmail.com> wrote:
+>
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>
+> In capi_init(), after register_chrdev() the file operation callbacks
+> can be called. However capinc_tty_init() is called later.
+> Since capiminors and capinc_tty_driver are initialized in
+> capinc_tty_init(), their initialization can race with their usage
+> in various callbacks like in capi_release().
+>
+> Therefore, call capinc_tty_init() before register_chrdev to avoid
+> such race conditions.
+>
+> Found by Linux Driver Verification project (linuxtesting.org).
+>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-> Currently, VMbus drivers use pointers into guest memory as request IDs
-> for interactions with Hyper-V. To be more robust in the face of errors
-> or malicious behavior from a compromised Hyper-V, avoid exposing
-> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> bad request ID that is then treated as the address of a guest data
-> structure with no validation. Instead, encapsulate these memory
-> addresses and provide small integers as request IDs.
-> 
-> The first patch creates the definitions for the data structure, provides
-> helper methods to generate new IDs and retrieve data, and
-> allocates/frees the memory needed for vmbus_requestor.
-> 
-> The second and third patches make use of vmbus_requestor to send request
-> IDs to Hyper-V in storvsc and netvsc respectively.
-> 
-> Thanks.
-> Andres Beltran
-> 
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> 
-> Andres Beltran (3):
->   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
->     hardening
->   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
->     VMBus hardening
->   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
->     hardening
-> 
->  drivers/hv/channel.c              | 175 ++++++++++++++++++++++++++++++
->  drivers/net/hyperv/hyperv_net.h   |  13 +++
->  drivers/net/hyperv/netvsc.c       |  79 +++++++++++---
->  drivers/net/hyperv/rndis_filter.c |   1 +
->  drivers/scsi/storvsc_drv.c        |  85 +++++++++++++--
->  include/linux/hyperv.h            |  22 ++++
->  6 files changed, 350 insertions(+), 25 deletions(-)
-> 
+I don't think there are any users of this driver, but I had a look anyway.
 
+The patch looks reasonable at first, but I'm not sure if you just
+replace one race with another, since now the tty device can be
+opened before the rest of the subsystem is initialized.
 
-What is the performance impact of this?
-It means keeping a global (bookkeeping) structure which should have
-noticeable impact on mult-queue performance.
+It's probably fine.
+
+         Arnd
