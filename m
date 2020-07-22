@@ -2,28 +2,29 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3364CC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C70C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6D320717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2AD20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgGVRS5 (ORCPT
+        id S1728194AbgGVRS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:18:57 -0400
-Received: from out28-98.mail.aliyun.com ([115.124.28.98]:50175 "EHLO
-        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgGVRS5 (ORCPT
+        Wed, 22 Jul 2020 13:18:59 -0400
+Received: from out28-221.mail.aliyun.com ([115.124.28.221]:39870 "EHLO
+        out28-221.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbgGVRS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:18:57 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2956703|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.054435-0.000271357-0.945294;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6.3qla_1595438306;
+        Wed, 22 Jul 2020 13:18:58 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.11587|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0254854-0.000610698-0.973904;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03268;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6.3qla_1595438306;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6.3qla_1595438306)
           by smtp.aliyun-inc.com(10.147.41.138);
-          Thu, 23 Jul 2020 01:18:53 +0800
+          Thu, 23 Jul 2020 01:18:54 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     daniel.lezcano@linaro.org, robh+dt@kernel.org
@@ -32,10 +33,12 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
         yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v11 0/2] Add support for the OST in Ingenic X1000.
-Date:   Thu, 23 Jul 2020 01:18:02 +0800
-Message-Id: <20200722171804.97559-1-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v11 1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
+Date:   Thu, 23 Jul 2020 01:18:03 +0800
+Message-Id: <20200722171804.97559-2-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200722171804.97559-1-zhouyanjie@wanyeetech.com>
+References: <20200722171804.97559-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -44,23 +47,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v10->v11:
-Fix typos.
+Add the OST bindings for the X1000 SoC from Ingenic.
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: timer: Add Ingenic X1000 OST bindings.
-  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
- .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
- drivers/clocksource/Kconfig                        |  12 +-
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
- include/dt-bindings/clock/ingenic,sysost.h         |  12 +
- 5 files changed, 626 insertions(+), 1 deletion(-)
+Notes:
+    v1->v2:
+    No change.
+    
+    v2->v3:
+    Fix wrong parameters in "clocks".
+    
+    v3->v4:
+    1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
+    2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
+    3.Modify the description in "ingenic,sysost.yaml".
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    1.Drop "oneOf" and the blank line.
+    2.Add "additionalProperties: false".
+    
+    v6->v7:
+    No change.
+    
+    v7->v8:
+    No change.
+    
+    v8->v9:
+    Fix warning while applying.
+    Reported-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+    
+    v9->v10:
+    Fix errors which case "make dt_binding_check" failed.
+    
+    v10->v11:
+    Fix typos.
+
+ .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
+ include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
+ 2 files changed, 75 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
- create mode 100644 drivers/clocksource/ingenic-sysost.c
  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
 
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+new file mode 100644
+index 000000000000..df3eb76045e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for SYSOST in Ingenic XBurst family SoCs
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++
++description:
++  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
++  and one or more 32bit timers for clockevent.
++
++properties:
++  "#clock-cells":
++    const: 1
++
++  compatible:
++    enum:
++      - ingenic,x1000-ost
++      - ingenic,x2000-ost
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: ost
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - "#clock-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/x1000-cgu.h>
++
++    ost: timer@12000000 {
++        compatible = "ingenic,x1000-ost";
++        reg = <0x12000000 0x3c>;
++
++        #clock-cells = <1>;
++
++        clocks = <&cgu X1000_CLK_OST>;
++        clock-names = "ost";
++
++        interrupt-parent = <&cpuintc>;
++        interrupts = <3>;
++    };
++...
+diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
+new file mode 100644
+index 000000000000..9ac88e90babf
+--- /dev/null
++++ b/include/dt-bindings/clock/ingenic,sysost.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,tcu DT binding.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
++#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
++
++#define OST_CLK_PERCPU_TIMER	0
++#define OST_CLK_GLOBAL_TIMER	1
++
++#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
 -- 
 2.11.0
 
