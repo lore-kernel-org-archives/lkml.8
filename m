@@ -2,46 +2,87 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,RCVD_ILLEGAL_IP,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA19AC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAEDC433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8CF22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA8F22B42
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:15:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4dUVs2L5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OPeSDaNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733029AbgGVVOi (ORCPT
+        id S1732901AbgGVVPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:14:38 -0400
-Received: from 50-196-187-248-static.hfc.comcastbusiness.net ([50.196.187.248]:15775
-        "EHLO baywinds.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732677AbgGVVOi (ORCPT
+        Wed, 22 Jul 2020 17:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGVVPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:14:38 -0400
-X-Greylist: delayed 3600 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Jul 2020 17:14:38 EDT
-Received: from [192.0.2.130] (rr-iii [192.0.2.130])
-        by baywinds.org (8.14.4/8.14.4) with ESMTP id 06MJI88E002182
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:18:08 -0700
-To:     linux-kernel@vger.kernel.org
-From:   Bruce Ferrell <bferrell@baywinds.org>
-Subject: List down?
-Message-ID: <a25f67ed-44b2-c013-7aa4-383a188efa8c@baywinds.org>
-Date:   Wed, 22 Jul 2020 12:18:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 22 Jul 2020 17:15:11 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D88C0619DC;
+        Wed, 22 Jul 2020 14:15:10 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595452509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wimSqbltrQnSesY3skr5Df0xojhTY8Yy4hyTLr3Fuak=;
+        b=4dUVs2L5wtvRxvFTUwKajtdmrXdtuL/NWjtIeoL7448CUD01XrjZnzuegTHzm0kSUsp8X3
+        89D/WUHrQqXRbLZcJU9q1ZQlKHB4G56oq1fFLqyfBfYzJeBXgt8s2mXGZPaLQfkcemRMZo
+        kzSKJHKTItfux2t4/pPvS3wU87aJUiXkl3IMdYThkb7fbSldc6JYFrzECtu8IKaaFN1Jr1
+        uceIz3uFl+PTnGOnZ98oA1kLBK9n9EDF2U7ma+74mv/1h0ZkN9SqRTPrJfdazzaGgv+dtH
+        NCH8/ks6cVcKeBDyYaD5e1Ep8udG4/H6y660n/qjL03Um5Lj3EOzE6ytbvdyTw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595452509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wimSqbltrQnSesY3skr5Df0xojhTY8Yy4hyTLr3Fuak=;
+        b=OPeSDaNTY1oms4EEQ9e2C7R0KptY3qCOSWgAj4fF9m9gcVMeBCoWhFC8lk4JeSvc4hEa/l
+        R2tvWd4o+ZJaxmDQ==
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqdomain/treewide: Free firmware node after domain removal
+In-Reply-To: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
+References: <1595363169-7157-1-git-send-email-jonathan.derrick@intel.com>
+Date:   Wed, 22 Jul 2020 23:15:08 +0200
+Message-ID: <87h7tzz1yb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Greylist: inspected by milter-greylist-4.5.12 (baywinds.org [192.0.2.134]); Wed, 22 Jul 2020 12:18:08 -0700 (PDT) for IP:'192.0.2.130' DOMAIN:'rr-iii' HELO:'[192.0.2.130]' FROM:'bferrell@baywinds.org' RCPT:''
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.12 (baywinds.org [192.0.2.134]); Wed, 22 Jul 2020 12:18:08 -0700 (PDT)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing in since 2030 pacific
+Jon Derrick <jonathan.derrick@intel.com> writes:
+> Change 711419e504eb ("irqdomain: Add the missing assignment of
+> domain->fwnode for named fwnode") unintentionally caused a dangling
+> pointer page fault issue on firmware nodes that were freed after IRQ
+> domain allocation. Change e3beca48a45b fixed that dangling pointer issue
+> by only freeing the firmware node after an IRQ domain allocation
+> failure. That fix no longer frees the firmware node immediately, but
+> leaves the firmware node allocated after the domain is removed.
 
+Gah, I missed that under the assumption that these nodes are freed when
+the domain is removed. What a mess.
+
+> We need to keep the firmware node through irq_domain_remove, but should
+> free it afterwards. This patch saves the handle and adds the freeing of
+> firmware node after domain removal where appropriate.
+
+Care to read Documentation/process/submitting-patches.rst and look for
+'I/We' and 'This patch' next time?
+
+Thanks,
+
+        tglx
