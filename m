@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F36C43445
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4550C43464
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A2D20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9842520771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F9+8gvkS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PthZYZz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732152AbgGVLEC (ORCPT
+        id S1732193AbgGVLEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:04:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39050 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVLEA (ORCPT
+        Wed, 22 Jul 2020 07:04:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56282 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGVLEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:04:00 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3o21070475;
-        Wed, 22 Jul 2020 06:03:50 -0500
+        Wed, 22 Jul 2020 07:04:10 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3wtr072627;
+        Wed, 22 Jul 2020 06:03:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595415830;
-        bh=78wWOd3ZsPARwxc3JQyFkWSrWhbfEtK3ytyjWuF48qg=;
+        s=ti-com-17Q1; t=1595415838;
+        bh=oDHixXQpSiTZez44a8+8lE4nJpgDYDjM303UR0TQSis=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F9+8gvkSiWc/MMVzVax/PG5UVT1BGX9Hvdir9cWEDIu+mcT7E4wzA+MeC3A9DyHJD
-         QqBvxILk9YxP0svsNKzlffpgPDmF6exYSvD58mdgOLfax89BCo6vm5QdQghpbCR/aQ
-         KTX4cC1z3o7fOiCNOTFCB/twyWCmUhmgQuBIjuwA=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MB3oqp005891
+        b=PthZYZz4663EZg3MgdClyUesNmv2la6ijyyHyrbUJkIatw7U0lMFOc/5NPpWG3UKA
+         THlBMUhmHPz0Y+/BxF2WMi9J4YYfr833HxcDHHPUC7oX1wZNNg6vdkCBwdBpmaStke
+         A007rbEuOe+CgjeqbbBUQsS7xcuU+U4wMtpZOr+Y=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MB3wnM020133
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 06:03:50 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 22 Jul 2020 06:03:58 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 06:03:49 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 06:03:57 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 06:03:49 -0500
+ Frontend Transport; Wed, 22 Jul 2020 06:03:57 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFf078616;
-        Wed, 22 Jul 2020 06:03:46 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFh078616;
+        Wed, 22 Jul 2020 06:03:54 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -59,9 +59,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v8 07/15] dt-bindings: PCI: cadence: Remove "mem" from reg binding
-Date:   Wed, 22 Jul 2020 16:33:09 +0530
-Message-ID: <20200722110317.4744-8-kishon@ti.com>
+Subject: [PATCH v8 09/15] PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+Date:   Wed, 22 Jul 2020 16:33:11 +0530
+Message-ID: <20200722110317.4744-10-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722110317.4744-1-kishon@ti.com>
 References: <20200722110317.4744-1-kishon@ti.com>
@@ -73,46 +73,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"mem" is not a memory resource and it overlaps with PCIe config space
-and memory region. Remove "mem" from reg binding.
+Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
+controller") in order to update Vendor ID, directly wrote to
+PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
+space is read-only register and writing to it will have no effect.
+Use local management register to configure Vendor ID and Subsystem Vendor
+ID.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
 Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml      | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-index 84a8f095d031..6d67067843bf 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-@@ -18,13 +18,12 @@ properties:
-     const: cdns,cdns-pcie-host
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 10127ea71b83..8935f7a37e5a 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -82,6 +82,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+ 	u32 value, ctrl;
++	u32 id;
  
-   reg:
--    maxItems: 3
-+    maxItems: 2
+ 	/*
+ 	 * Set the root complex BAR configuration register:
+@@ -101,8 +102,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
  
-   reg-names:
-     items:
-       - const: reg
-       - const: cfg
--      - const: mem
+ 	/* Set root port configuration space */
+-	if (rc->vendor_id != 0xffff)
+-		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
++	if (rc->vendor_id != 0xffff) {
++		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
++			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
++		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
++	}
++
+ 	if (rc->device_id != 0xffff)
+ 		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
  
-   msi-parent: true
- 
-@@ -49,9 +48,8 @@ examples:
-             device-id = <0x0200>;
- 
-             reg = <0x0 0xfb000000  0x0 0x01000000>,
--                  <0x0 0x41000000  0x0 0x00001000>,
--                  <0x0 0x40000000  0x0 0x04000000>;
--            reg-names = "reg", "cfg", "mem";
-+                  <0x0 0x41000000  0x0 0x00001000>;
-+            reg-names = "reg", "cfg";
- 
-             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
 -- 
 2.17.1
 
