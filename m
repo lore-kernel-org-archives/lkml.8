@@ -2,127 +2,107 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DCBC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B98207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B8B20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnQdt9AT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731730AbgGVC3k (ORCPT
+        id S1731808AbgGVCab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:29:40 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:64449 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731595AbgGVC3k (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:29:40 -0400
-X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 22:29:38 EDT
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="36533941"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 22 Jul 2020 10:19:36 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(139077:0:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Wed, 22 Jul 2020 10:19:34 +0800 (CST)
-Received: from 192.168.33.57
-        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2477:0:AUTH_RELAY)
-        (envelope-from <dave.wang@emc.com.tw>); Wed, 22 Jul 2020 10:19:33 +0800 (CST)
-From:   "Dave.Wang" <dave.wang@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <Linux-input@vger.kernel.org>, <Linux-kernel@vger.kernel.org>,
-        <phoenix@emc.com.tw>, <josh.chen@emc.com.tw>,
-        <jingle.wu@emc.com.tw>, <kai.heng.feng@canonical.com>
-References: <20191209111107.32239-1-dave.wang@emc.com.tw> <20200721161236.GI1665100@dtor-ws>
-In-Reply-To: <20200721161236.GI1665100@dtor-ws>
-Subject: RE: [PATCH 1/3] Input: elan_i2c - Do no operation for elan_smbus_set_mode function
-Date:   Wed, 22 Jul 2020 10:19:33 +0800
-Message-ID: <002601d65fce$8a0148d0$9e03da70$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQKMobxR7qDwdRZsC9ditFT1DgHVnAJCKYzFp5RE3UA=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1jNzQ1ODM0Mi1jYmMxLTExZWEtYWE4Yy04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcYzc0NTgzNDMtY2JjMS0xMWVhLWFhOGMtODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSIyNDMwIiB0PSIxMzIzOTg1Nzk3MzEyNzIyMzUiIGg9IjNHWVo1d1lBSHpXRHEvZk1ZN0pOb3ljV3pWTT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+        Tue, 21 Jul 2020 22:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731595AbgGVCaa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:30:30 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458A4C061794;
+        Tue, 21 Jul 2020 19:30:30 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x9so234463plr.2;
+        Tue, 21 Jul 2020 19:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=bZoAGO9UqMb9k2aaOxBapyIOFUbeVrqhQVyeMVxo/y4=;
+        b=bnQdt9ATSyUz5zZQXojiCtoKBhvzXBgHsCIH9YPlNsXvOyQrsb9ItQrhig+MOj+jRk
+         /aAZqNu++8a5NwgKC3uZPLBkeCvrlMX+/17F0twjfaH42ncxcMEZa0IJKYIbsRpEXPnY
+         OmUl+j8hCP5Xvg0xExlAV4rNLiOqTj37sV2d1qIE+j7e9RxF3EbbHpFyN6aqOOSIKCSS
+         +PPbQn8g5uWcbYebKGrxPlSx5znMhmwnSPeeDzf8bGF8gvAIiWeO2K3KIUHdmi8b1HaV
+         /6X4MAAvN2qssDqtSRlWGx7SI9wuzvNi/WsdNlBy1K/+i1jS6WBiiBEJsx0tVtHIcBH+
+         hWIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=bZoAGO9UqMb9k2aaOxBapyIOFUbeVrqhQVyeMVxo/y4=;
+        b=sBH7Pd4mskXoiz67B+5JNT4NPPpDg/8UW5R7f4vkfkKyIyR3S+0XrYelphnB+ttUV8
+         UnjyIEvy6Y0hwg8nIuOpu1NUUdrPubXl1wWC9C8jvTRnKbGqt/uzNf8cCfU1ZCnLPp/J
+         PRC4RsSl5v7z42Nc9468W9PZS+HKDt0kDBspH0JbUGoCU2Qeu3hHf2Wri0LSP1iF5G9K
+         Xi0hEvAT+cneP/f1JkfJo1JTBqtdyFxzy4ymDa23g1aibwpQVsjN4cdSQFNThhvaC/EH
+         rtElZhf9ckouMi7/Tm6Vqu+EkNtIy1ooxGT5TcWOuXcbY29Gv6ZrAvBOaAxMy0rf2tYE
+         jwyQ==
+X-Gm-Message-State: AOAM533FcUGveB9qpG6Vq2jV5q67BU/TmgvjolHpsYTsaH868yiN6qtc
+        As4NjkfJsAdl6M4NFM4swAA=
+X-Google-Smtp-Source: ABdhPJxdK2VUwuHMvp/Evo2Q/AsH/cbwz8vMbbEvYgZ8PkK3LXjNHTM+w46TivUSTnMCFqBjTw3LdA==
+X-Received: by 2002:a17:90a:72c7:: with SMTP id l7mr8213239pjk.34.1595385029794;
+        Tue, 21 Jul 2020 19:30:29 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p187sm20053969pfb.22.2020.07.21.19.30.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 19:30:28 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>
+Subject: [PATCH -next] scsi: lpfc: Add dependency on CPU_FREQ
+Date:   Tue, 21 Jul 2020 19:30:27 -0700
+Message-Id: <20200722023027.36866-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Dmitry,
+Since commit 317aeb83c92b ("scsi: lpfc: Add blk_io_poll support for
+latency improvment"), the lpfc driver depends on CPUFREQ. Without it,
+builds fail with
 
-Are there devices that do not trigger errors?
-=> Yes, there exist devices that would act normally. However, our team
-cannot organize the rule to recognize which devices could trigger this
-command without error. 
-What I sure about is that some devices would get TP no function while
-triggering this command. 
-Besides, ABS mode had been set in P/S2 protocol, so there is no need to set
-ABS mode again in SMBUS driver. 
+drivers/scsi/lpfc/lpfc_sli.c: In function 'lpfc_init_idle_stat_hb':
+drivers/scsi/lpfc/lpfc_sli.c:7329:26: error:
+	implicit declaration of function 'get_cpu_idle_time'
 
-How do we put SMbus devices into low power mode?
-=> As far as I am concerned, core.c only set the mode into ABS mode or
-ENABLE_CALIBRATE mode after updating firmware. 
-I don't know what or when to set SMbus devices into low power mode.
+Add the missing dependency.
 
-Best regards,
-Dave
+Fixes: 317aeb83c92b ("scsi: lpfc: Add blk_io_poll support for latency improvment")
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+Cc: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/scsi/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
------Original Message-----
-From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] 
-Sent: Wednesday, July 22, 2020 12:13 AM
-To: Dave Wang <dave.wang@emc.com.tw>
-Cc: Linux-input@vger.kernel.org; Linux-kernel@vger.kernel.org;
-phoenix@emc.com.tw; josh.chen@emc.com.tw; jingle.wu@emc.com.tw;
-kai.heng.feng@canonical.com
-Subject: Re: [PATCH 1/3] Input: elan_i2c - Do no operation for
-elan_smbus_set_mode function
-
-Hi Dave,
-
-On Mon, Dec 09, 2019 at 06:11:07AM -0500, Dave Wang wrote:
-> Some touchpads might get error while triggerring the set_mode command 
-> in SMBus interface. Do no operation for elan_smbus_set_mode function.
-
-Are there devices that do not trigger errors? How do we put SMbus devices
-into low power mode?
-
-> 
-> Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
-> ---
->  drivers/input/mouse/elan_i2c_smbus.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/input/mouse/elan_i2c_smbus.c 
-> b/drivers/input/mouse/elan_i2c_smbus.c
-> index 8c3185d54c73..bcb9ec4a7a6b 100644
-> --- a/drivers/input/mouse/elan_i2c_smbus.c
-> +++ b/drivers/input/mouse/elan_i2c_smbus.c
-> @@ -84,10 +84,7 @@ static int elan_smbus_initialize(struct i2c_client 
-> *client)
->  
->  static int elan_smbus_set_mode(struct i2c_client *client, u8 mode)  {
-> -	u8 cmd[4] = { 0x00, 0x07, 0x00, mode };
-> -
-> -	return i2c_smbus_write_block_data(client, ETP_SMBUS_IAP_CMD,
-> -					  sizeof(cmd), cmd);
-> +	return 0; /* A no-op */
->  }
->  
->  static int elan_smbus_sleep_control(struct i2c_client *client, bool 
-> sleep)
-> --
-> 2.17.1
-> 
-
-Thanks.
-
---
-Dmitry
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 571473a58f98..701b61ec76ee 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -1154,6 +1154,7 @@ source "drivers/scsi/qedf/Kconfig"
+ config SCSI_LPFC
+ 	tristate "Emulex LightPulse Fibre Channel Support"
+ 	depends on PCI && SCSI
++	depends on CPU_FREQ
+ 	depends on SCSI_FC_ATTRS
+ 	depends on NVME_TARGET_FC || NVME_TARGET_FC=n
+ 	depends on NVME_FC || NVME_FC=n
+-- 
+2.17.1
 
