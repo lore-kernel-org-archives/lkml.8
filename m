@@ -2,242 +2,110 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3408C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044C4C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9E720729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:29:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YB5UtrFA"
+	by mail.kernel.org (Postfix) with ESMTP id CE70E20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595413757;
+	bh=KMLpaxcePCpXp4URNPpOHVjKKc7YKBwOyGmXdo5i96Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fdnH8iMntF4V5g7qGpEJae6BJqQHRtBhEzdCZqYojIi9qRHLmFuj1KP8ZQxlL6jHX
+	 lrhBn8vKJV4sy51VhDuscSBk2ahcNtbm+Lgr0FBhpfOwtqRyTeV9XvTkeLRL1CS++e
+	 f0+coCAEq7VvEYI8ZfATGh8kVwslqze0wZqkl65A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732174AbgGVK3N (ORCPT
+        id S1732160AbgGVK3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:29:13 -0400
-Received: from mail-eopbgr50072.outbound.protection.outlook.com ([40.107.5.72]:59498
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730296AbgGVK3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:29:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oaq3++vlO8HC0aA5FMCIgVXKIeRkpS8zRu6kG6Hjc+vbH7APNPN3FWHjo0WoCelfAbSGfcq8tNDZvYup0TCJYYluoHxFWZDp1cdVYsGeHaB6hsTePbrA2jZM3hryNlCTGIGY07gThdeotD6oigGbFQ7cDatkTT+1WoZQfTAOUENL2wGM7c7HYEQkKy6t/r/d2TtDdzkWDFIEKUBBX/qSdWQLEq6YCC6efm/06EqsU7D7DLPqa7vQmWmCwf2NpLQ/GyiY5tixCAtIIlUS2RKBBAmCP0DsMUtEWiVO5INJRJHeITawfCVaKy5BPagw93kql252UQmOa5tmpXNcsKiSsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8fEuhfbbpQ5hujEdrQ2HX0XIduN1nTKiY8RF5tU9uPM=;
- b=EBc0KYd5+yYV7/7Z+pwFgrrh3yEYfsFop/6nskOKMPrcBFWnH41Jt5EI80rN1ARwKVmFY17E1FwE0mr4+Uip7pxx6YKtRdJ3O+R02ylHd+n11Oj86+nhHEmMuH1bw8NnvMy4LA1vrFaRHidZ29j+F7wgZCw8NDYlVPlu9m7Gx44cPTOKuw7WrBDpVQd3t3quo97+XxG7cU1OY21n9MQ88VSYqJR4I+hToxr93u/4P+txeCxtVqQ5BTTUkMOMfmi2zWdGr/28mgSYxVAxh2iFyhh7ZP7GEulzAtseJ6WqfgKhJM/JxSP+Jv6tUDga7gJWc/5BCNCMvIE7RTcxLsYaEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8fEuhfbbpQ5hujEdrQ2HX0XIduN1nTKiY8RF5tU9uPM=;
- b=YB5UtrFAIvLKqb6GyCRpXjKp4xq4aAA5sVL2/HBM4VJBuL+LB7pFJ/JmWsk4986/+F3aOM4GbuSVjNy/YLB2sNts+Euei45biHfMFJkN9ifk7mlFo4o5B9NAjpWarp1BCSbyywyyUP+FE6LqaCuFbdfhf2PybIGBvZV5jc6oMb0=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
- by VI1PR04MB3151.eurprd04.prod.outlook.com (2603:10a6:802:6::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 22 Jul
- 2020 10:29:07 +0000
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7]) by VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7%2]) with mapi id 15.20.3216.022; Wed, 22 Jul 2020
- 10:29:07 +0000
-From:   hongbo.wang@nxp.com
-To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
-        po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        kuba@kernel.org, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, ivecera@redhat.com
-Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
-Subject: [PATCH v3 1/2] net: dsa: Add protocol support for 802.1AD when adding or  deleting vlan for dsa switch and port
-Date:   Wed, 22 Jul 2020 18:31:59 +0800
-Message-Id: <20200722103200.15395-2-hongbo.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200722103200.15395-1-hongbo.wang@nxp.com>
-References: <20200722103200.15395-1-hongbo.wang@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0159.apcprd04.prod.outlook.com (2603:1096:4::21)
- To VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
+        Wed, 22 Jul 2020 06:29:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732151AbgGVK3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:29:10 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC15E20729;
+        Wed, 22 Jul 2020 10:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595413749;
+        bh=KMLpaxcePCpXp4URNPpOHVjKKc7YKBwOyGmXdo5i96Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PMggXTytoMX2+ayoPs8fR6Re/9yytPEBRg2AWVXRH496o7Yc/Jl4Pc05AJTi2TvUI
+         JqT+eGzcamn4d89RaQDf1rJZw+YxMKXtPPztmfHLgeGJAchlFdlBPvf+XoFvPXVMpV
+         kfaqS2zfBzQENcOVSqbGwEoQuK7jPRLjMJBmayh4=
+Date:   Wed, 22 Jul 2020 12:29:06 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+Cc:     linux-i2c@vger.kernel.org, michal.simek@xilinx.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com
+Subject: Re: [PATCH 2/2] i2c: cadence: Clear HOLD bit at correct time in Rx
+ path
+Message-ID: <20200722102906.GJ1030@ninjato>
+References: <1593784572-21910-1-git-send-email-raviteja.narayanam@xilinx.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SG2PR04CA0159.apcprd04.prod.outlook.com (2603:1096:4::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Wed, 22 Jul 2020 10:29:00 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1e2a3438-524e-477a-9fb4-08d82e2a1072
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3151:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB3151ABDBA4040774B182B229E1790@VI1PR04MB3151.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aZf3d1sU9C96hk6pw3478Bh0WzR5Bmph4q8KJRV589cHLBrRAIrU+lzJv+h/xeu77hYHQVlsOPjORWW76DYv6T0NNOuiFufzNk5aJSZM+iYsnr0bIRxTqCi0fbZ/DJvARdPfqX6TRwaDrMTEjCNtP747lTrEdq39njzyuA+gNx0YnFfTeZtcy2QDvJ2JQmVXt0askyzI0njOD+PstNNzUTEpLk3LZqXDrC1xcxQ3tPU7m2kah810YS8f9YbBUkHWaast6SmYFeWxNvETnHRD7xcL85Ly2w8Hu8wf86asp2GaUjX+YODK0PO6gRGBtVVMgxinRU7qpqcUdCkJTRwHfh4rVlOr4Nhd9S6AckprMepB2EEihIIM1r/HJQ1IAfUZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(8936002)(7416002)(2906002)(66476007)(66556008)(66946007)(8676002)(83380400001)(1076003)(6486002)(36756003)(6512007)(316002)(5660300002)(9686003)(6506007)(478600001)(86362001)(2616005)(956004)(16526019)(186003)(26005)(4326008)(52116002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: TqfobscGQdF4NJyCkT4r9md/ait7tCuFoOZvAJMA1p2M3uetk0LoFTxu0VBBd9O2ERgVjHc/eUSCPbKyRyVkRFCzUmPDfzAVV8Xj8Pu+E8oCX+ZyhYSxBQ7XCdJYoPAAvgHDU+R4RJPLLmgOGjmFU2FUlmzG0+eOM4d/TEIYiVsoAnv4mS3ZjnqFl33PRVRv7Gvc1DjSNZQ4WKDxCSrF8vMQbIFWxzi4R8tve8Pt+FxH3kn1NgyvloZ0AkiPiV16eXoosMNOSG2c9BFEngJwzf4y9R99BByK+HrdW5YaG/wStT9gFN0meJPrYfHHMAKtVhJhVudKHhiI34AR8P08xlgxIurPXNDCefMVtU/tGn0IF7Cgh5uHFpdrEYDAtESHRReImNDko5qqO4mHsBEdnKerZMl7ysTrH8ta2Cu3UPtqLJGd2rTd6C/+n1P/GNEtI789tJizrfWbXMC56pA1C/IdKS6D+ieFxWm7je83qmJgFbzUZSyTfLWlNgN71Zl1
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e2a3438-524e-477a-9fb4-08d82e2a1072
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 10:29:07.4495
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ts24L4ChuwOuUDzZSx5WmApzyYStUh01bRcKA0twZkXQkKqjuE9HJs5xfVjQ8Ri4Qqn2M1cC8uOJGnmW+kme5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3151
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8tZVdKiiYitVG083"
+Content-Disposition: inline
+In-Reply-To: <1593784572-21910-1-git-send-email-raviteja.narayanam@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "hongbo.wang" <hongbo.wang@nxp.com>
 
-the following command will be supported:
-Add VLAN:
-    ip link add link swp1 name swp1.100 type vlan protocol 802.1ad id 100
-Delete VLAN:
-    ip link del link swp1 name swp1.100
+--8tZVdKiiYitVG083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-when adding vlan, this patch only set protocol for user port,
-cpu port don't care it, so set parameter proto to 0 for cpu port.
+On Fri, Jul 03, 2020 at 07:26:12PM +0530, Raviteja Narayanam wrote:
+> There are few issues on Zynq SOC observed in the stress tests causing
+> timeout errors. Even though all the data is received, timeout error
+> is thrown. This is due to an IP bug in which the COMP bit in ISR is
+> not set at end of transfer and completion interrupt is not generated.
+>=20
+> This bug is seen on Zynq platforms when the following condition occurs:
+> Master read & HOLD bit set & Transfer size register reaches '0'.
+>=20
+> One workaround is to clear the HOLD bit before the transfer size
+> register reaches '0'. The current implementation checks for this at
+> the start of the loop and also only for less than FIFO DEPTH case
+> (ignoring the equal to case).
+>=20
+> So clear the HOLD bit when the data yet to receive is less than or
+> equal to the FIFO DEPTH. This avoids the IP bug condition.
+>=20
+> Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
 
-Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
----
- include/net/switchdev.h | 1 +
- net/dsa/dsa_priv.h      | 4 ++--
- net/dsa/port.c          | 6 ++++--
- net/dsa/slave.c         | 9 +++++----
- net/dsa/tag_8021q.c     | 4 ++--
- 5 files changed, 14 insertions(+), 10 deletions(-)
+Applied to for-current, thanks!
 
-diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-index ff2246914301..7594ea82879f 100644
---- a/include/net/switchdev.h
-+++ b/include/net/switchdev.h
-@@ -97,6 +97,7 @@ struct switchdev_obj_port_vlan {
- 	u16 flags;
- 	u16 vid_begin;
- 	u16 vid_end;
-+	u16 proto;
- };
- 
- #define SWITCHDEV_OBJ_PORT_VLAN(OBJ) \
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index 1653e3377cb3..52685b9875e5 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -164,8 +164,8 @@ int dsa_port_vlan_add(struct dsa_port *dp,
- 		      struct switchdev_trans *trans);
- int dsa_port_vlan_del(struct dsa_port *dp,
- 		      const struct switchdev_obj_port_vlan *vlan);
--int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 proto, u16 flags);
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 proto);
- int dsa_port_link_register_of(struct dsa_port *dp);
- void dsa_port_link_unregister_of(struct dsa_port *dp);
- extern const struct phylink_mac_ops dsa_port_phylink_mac_ops;
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index e23ece229c7e..c98bbac3980a 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -433,13 +433,14 @@ int dsa_port_vlan_del(struct dsa_port *dp,
- 	return dsa_port_notify(dp, DSA_NOTIFIER_VLAN_DEL, &info);
- }
- 
--int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 proto, u16 flags)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
- 		.flags = flags,
- 		.vid_begin = vid,
- 		.vid_end = vid,
-+		.proto = proto,
- 	};
- 	struct switchdev_trans trans;
- 	int err;
-@@ -454,12 +455,13 @@ int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
- }
- EXPORT_SYMBOL(dsa_port_vid_add);
- 
--int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid, u16 proto)
- {
- 	struct switchdev_obj_port_vlan vlan = {
- 		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
- 		.vid_begin = vid,
- 		.vid_end = vid,
-+		.proto = proto,
- 	};
- 
- 	return dsa_port_vlan_del(dp, &vlan);
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 41d60eeefdbd..ba3984565f7e 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -1252,11 +1252,11 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 			return -EBUSY;
- 	}
- 
--	ret = dsa_port_vid_add(dp, vid, 0);
-+	ret = dsa_port_vid_add(dp, vid, ntohs(proto), 0);
- 	if (ret)
- 		return ret;
- 
--	ret = dsa_port_vid_add(dp->cpu_dp, vid, 0);
-+	ret = dsa_port_vid_add(dp->cpu_dp, vid, 0, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -1289,7 +1289,7 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 	/* Do not deprogram the CPU port as it may be shared with other user
- 	 * ports which can be members of this VLAN as well.
- 	 */
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, ntohs(proto));
- }
- 
- struct dsa_hw_port {
-@@ -1744,7 +1744,8 @@ int dsa_slave_create(struct dsa_port *port)
- 
- 	slave_dev->features = master->vlan_features | NETIF_F_HW_TC;
- 	if (ds->ops->port_vlan_add && ds->ops->port_vlan_del)
--		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-+		slave_dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER |
-+				       NETIF_F_HW_VLAN_STAG_FILTER;
- 	slave_dev->hw_features |= NETIF_F_HW_TC;
- 	slave_dev->features |= NETIF_F_LLTX;
- 	slave_dev->ethtool_ops = &dsa_slave_ethtool_ops;
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index 780b2a15ac9b..848f85ed5c0f 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -152,9 +152,9 @@ static int dsa_8021q_vid_apply(struct dsa_switch *ds, int port, u16 vid,
- 	struct dsa_port *dp = dsa_to_port(ds, port);
- 
- 	if (enabled)
--		return dsa_port_vid_add(dp, vid, flags);
-+		return dsa_port_vid_add(dp, vid, 0, flags);
- 
--	return dsa_port_vid_del(dp, vid);
-+	return dsa_port_vid_del(dp, vid, 0);
- }
- 
- /* RX VLAN tagging (left) and TX VLAN tagging (right) setup shown for a single
--- 
-2.17.1
 
+--8tZVdKiiYitVG083
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YFPIACgkQFA3kzBSg
+KbZ6gRAAk+U1RJWBmsO1kg17hPWLV4CKbeQwkokAO7OxQ+Xz4eMBTlAZX9T3vqh5
+8bsrQ/oiFTFWqEaKrtkK2kgvUIZqOAwdmXKvEL676ft3cjjg/4oJjr/zfRZWhlq+
+FrRHbVo+U1BjiuLmBm/D/hdR/p2AuekW899KrM/ZszFW5+RFcYQRoCF2eMwilLuH
+5ZxHAdK66xbOof71C6jlsQOWpFUXDVjRN1Qy7k9iE7tpwscZ4YT/+IJk/h3dQFFH
+Mgrh05rH4z5vu7ED6Iu3WKjlG1+IUjPbBFB2Ay+Ulc2SZunLKHQw6oNzjp2LxyNu
+1lRYwt4xCwkEe8eGXSM5gw+wcS+w0rnZMtDaUWyxzQTCDouykj49Kbt/f8jxawIN
+6HVGMZeJvUSioiXEOSOPBtLe9Ra3Wd3FI7G0UfDJAhsBKX2Xn2Jt+HsPs0X2Ey3o
+cU7xHaIK+oI66RLC+IWzXXXk4wOyBHVNRatacwRGNS9KBPpCDYlv7N5L0Y690y4N
+FO5iSKxYJKA5k2MypsBLHG/2aiK6RPEYOi2GkNPmEx6wKOuniPtonsOU80Vwrb7m
+f+DMNmEkiEniGihZGEj4vLwI4ZMgH9JVLKzj5S6ygu7wPqnYEdxZXUYossBmR+rk
+gt8C1EpIJvFlFioaTSMIR/sdNr5wnuGPpJ+68V+WnPwAwtoSDjA=
+=uPhR
+-----END PGP SIGNATURE-----
+
+--8tZVdKiiYitVG083--
