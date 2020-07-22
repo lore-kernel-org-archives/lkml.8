@@ -2,139 +2,140 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B13C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BD5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C80F20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C921206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbgGVN1U (ORCPT
+        id S1732410AbgGVN2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:27:20 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48248 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731717AbgGVN1T (ORCPT
+        Wed, 22 Jul 2020 09:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgGVN2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:27:19 -0400
-Received: by mail-io1-f69.google.com with SMTP id r9so1808994ioa.15
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 06:27:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Hem7p8hNe4Qugd6M1b99iDXjRu4+oidWXJdfZNavWOE=;
-        b=TRn3c5zbKghWaJFSguTeJzqYaq8wi3tvF1gzqV/JaQn+Wc7gZkoZvLpWi/aLMxyejL
-         QByXUMw57k5qcrxKBGVwmCU09zKQS6Y5akPlrZ0je4yL2QYoDFd9RpdH0bgKJCB+h4AC
-         TZRlSIWogzaPZsM1BkiLYH4EIy2UP4Aa9hTqmh421Tmt29TltkrfKn0xvQIAC4kg1bZR
-         UIO4ATWge9fkGQ+/5QtKFFZLiV/LflcpyTAYFjl/ydW9GoJYF8XJ0y+qwGaqp1XTI7WL
-         oFgSDSkvSgSuilNPnIRL6pnbvWjZgdQjxTB5JQStVgKe6mopwfB6mMPg8H3jb+LpJHwj
-         5wdA==
-X-Gm-Message-State: AOAM530Vpn5YOiNTJiFwHz6ZZ+Lx6JCitPdgsRFX39KW34/o+IEv2bKx
-        PRl33jEF9JVZoBu76NzM2SVV7doACh3DMMaifKEu7n+aUmGo
-X-Google-Smtp-Source: ABdhPJzaQ1IAy7nlO8mPL6HyYvAHN3Ozns9AEYm2QpmC92toebkFEIfSl2bdmNJnyfMNwsxCYJE+d46o5PIFYckoEzos5cGbnQf6
+        Wed, 22 Jul 2020 09:28:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0AFC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 06:28:45 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jyEnX-0002az-JQ; Wed, 22 Jul 2020 15:28:39 +0200
+Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jyEnW-0005IW-On; Wed, 22 Jul 2020 15:28:38 +0200
+Date:   Wed, 22 Jul 2020 15:28:38 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@codeaurora.org, sboyd@kernel.org,
+        michal.simek@xilinx.com, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org, rajanv@xilinx.com, jollys@xilinx.com,
+        tejasp@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>
+Subject: Re: [PATCH v2 3/3] clk: zynqmp: Use firmware specific mux clock flags
+Message-ID: <20200722132838.GE21264@pengutronix.de>
+References: <1595400932-303612-1-git-send-email-amit.sunil.dhamne@xilinx.com>
+ <1595400932-303612-4-git-send-email-amit.sunil.dhamne@xilinx.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:f85:: with SMTP id v5mr32202839ilo.31.1595424437340;
- Wed, 22 Jul 2020 06:27:17 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 06:27:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000da8ee505ab07b2e0@google.com>
-Subject: general protection fault in udp_tunnel_notify_del_rx_port
-From:   syzbot <syzbot+a41f2e0a3a2dad7febb0@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1595400932-303612-4-git-send-email-amit.sunil.dhamne@xilinx.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:28:18 up 153 days, 20:58, 130 users,  load average: 0.04, 0.11,
+ 0.13
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 21 Jul 2020 23:55:32 -0700, Amit Sunil Dhamne wrote:
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
+> 
+> Use ZynqMP specific mux clock flags instead of using CCF flags.
+> 
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
+> Signed-off-by: Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+> ---
+>  drivers/clk/zynqmp/clk-mux-zynqmp.c | 14 +++++++++++++-
+>  drivers/clk/zynqmp/clk-zynqmp.h     |  8 ++++++++
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/zynqmp/clk-mux-zynqmp.c b/drivers/clk/zynqmp/clk-mux-zynqmp.c
+> index 1dc17a0..10cf021 100644
+> --- a/drivers/clk/zynqmp/clk-mux-zynqmp.c
+> +++ b/drivers/clk/zynqmp/clk-mux-zynqmp.c
+> @@ -125,7 +125,19 @@ struct clk_hw *zynqmp_clk_register_mux(const char *name, u32 clk_id,
+> 
+>         init.parent_names = parents;
+>         init.num_parents = num_parents;
+> -       mux->flags = nodes->type_flag;
+> +       mux->flags = 0;
+> +       mux->flags |= (nodes->type_flag & ZYNQMP_CLK_MUX_INDEX_ONE) ?
+> +                     CLK_MUX_INDEX_ONE : 0;
+> +       mux->flags |= (nodes->type_flag & ZYNQMP_CLK_MUX_INDEX_BIT) ?
+> +                     CLK_MUX_INDEX_BIT : 0;
+> +       mux->flags |= (nodes->type_flag & ZYNQMP_CLK_MUX_HIWORD_MASK) ?
+> +                     CLK_MUX_HIWORD_MASK : 0;
+> +       mux->flags |= (nodes->type_flag & ZYNQMP_CLK_MUX_READ_ONLY) ?
+> +                     CLK_MUX_READ_ONLY : 0;
+> +       mux->flags |= (nodes->type_flag & ZYNQMP_CLK_MUX_ROUND_CLOSEST) ?
+> +                     CLK_MUX_ROUND_CLOSEST : 0;
+> +       mux->flags |= (nodes->type_flag & ZYNQMP_CLK_MUX_BIG_ENDIAN) ?
+> +                     CLK_MUX_BIG_ENDIAN : 0;
 
-syzbot found the following issue on:
+Add a helper function for converting the flags.
 
-HEAD commit:    88825726 Merge tag 'drm-fixes-2020-07-17-1' of git://anong..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=143518bb100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a160d1053fc89af5
-dashboard link: https://syzkaller.appspot.com/bug?extid=a41f2e0a3a2dad7febb0
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Michael
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>         mux->hw.init = &init;
+>         mux->clk_id = clk_id;
+> 
+> diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqmp.h
+> index ec33525..b1ac7e8 100644
+> --- a/drivers/clk/zynqmp/clk-zynqmp.h
+> +++ b/drivers/clk/zynqmp/clk-zynqmp.h
+> @@ -41,6 +41,14 @@
+>  #define ZYNQMP_CLK_DIVIDER_READ_ONLY           BIT(5)
+>  #define ZYNQMP_CLK_DIVIDER_MAX_AT_ZERO         BIT(6)
+> 
+> +/* Type Flags for mux clock */
+> +#define ZYNQMP_CLK_MUX_INDEX_ONE               BIT(0)
+> +#define ZYNQMP_CLK_MUX_INDEX_BIT               BIT(1)
+> +#define ZYNQMP_CLK_MUX_HIWORD_MASK             BIT(2)
+> +#define ZYNQMP_CLK_MUX_READ_ONLY               BIT(3)
+> +#define ZYNQMP_CLK_MUX_ROUND_CLOSEST           BIT(4)
+> +#define ZYNQMP_CLK_MUX_BIG_ENDIAN              BIT(5)
+> +
+>  enum topology_type {
+>         TYPE_INVALID,
+>         TYPE_MUX,
+> --
+> 2.7.4
+> 
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+> 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a41f2e0a3a2dad7febb0@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc000000003b: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000001d8-0x00000000000001df]
-CPU: 0 PID: 22020 Comm: syz-executor.2 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:udp_tunnel_notify_del_rx_port+0x1e8/0x3f0 net/ipv4/udp_tunnel.c:161
-Code: 01 00 00 48 89 f8 48 c1 e8 03 80 3c 28 00 0f 85 e0 01 00 00 4c 8b a3 e0 01 00 00 49 8d bc 24 d8 01 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 b6 01 00 00 4d 8b a4 24 d8 01 00 00 4d 85 e4 74
-RSP: 0018:ffffc900165ef810 EFLAGS: 00010202
-RAX: 000000000000003b RBX: ffff888000102000 RCX: ffffc9000d7a2000
-RDX: 0000000000040000 RSI: ffffffff86c7005a RDI: 00000000000001d8
-RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffffff8c599a27
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88805b9c0210 R14: ffffc900165ef838 R15: ffff88809dffa268
-FS:  00007f890f5fa700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000004 CR3: 00000000614b3000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __geneve_sock_release.part.0+0x13d/0x1e0 drivers/net/geneve.c:610
- __geneve_sock_release drivers/net/geneve.c:631 [inline]
- geneve_sock_release+0x1bf/0x290 drivers/net/geneve.c:629
- geneve_stop+0x198/0x200 drivers/net/geneve.c:720
- __dev_close_many+0x1b3/0x2e0 net/core/dev.c:1599
- __dev_close net/core/dev.c:1611 [inline]
- __dev_change_flags+0x272/0x660 net/core/dev.c:8276
- dev_change_flags+0x8a/0x160 net/core/dev.c:8349
- devinet_ioctl+0x14fd/0x1ca0 net/ipv4/devinet.c:1143
- inet_ioctl+0x1ea/0x330 net/ipv4/af_inet.c:964
- sock_do_ioctl+0xcb/0x2d0 net/socket.c:1048
- sock_ioctl+0x3b8/0x730 net/socket.c:1199
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c1d9
-Code: Bad RIP value.
-RSP: 002b:00007f890f5f9c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000013e00 RCX: 000000000045c1d9
-RDX: 0000000020000000 RSI: 0000000000008914 RDI: 0000000000000003
-RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 0000000000c9fb6f R14: 00007f890f5fa9c0 R15: 000000000078bf0c
-Modules linked in:
----[ end trace 82520c6676e9d8d2 ]---
-RIP: 0010:udp_tunnel_notify_del_rx_port+0x1e8/0x3f0 net/ipv4/udp_tunnel.c:161
-Code: 01 00 00 48 89 f8 48 c1 e8 03 80 3c 28 00 0f 85 e0 01 00 00 4c 8b a3 e0 01 00 00 49 8d bc 24 d8 01 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 b6 01 00 00 4d 8b a4 24 d8 01 00 00 4d 85 e4 74
-RSP: 0018:ffffc900165ef810 EFLAGS: 00010202
-RAX: 000000000000003b RBX: ffff888000102000 RCX: ffffc9000d7a2000
-RDX: 0000000000040000 RSI: ffffffff86c7005a RDI: 00000000000001d8
-RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffffff8c599a27
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88805b9c0210 R14: ffffc900165ef838 R15: ffff88809dffa268
-FS:  00007f890f5fa700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f890f575db8 CR3: 00000000614b3000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Pengutronix e.K.                           | Michael Tretter             |
+Steuerwalder Str. 21                       | https://www.pengutronix.de/ |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
