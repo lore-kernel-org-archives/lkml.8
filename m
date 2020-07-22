@@ -2,190 +2,224 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347B6C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68452C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7F2206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cSdsJ8iU"
+	by mail.kernel.org (Postfix) with ESMTP id 3DDC0206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbgGVGzx (ORCPT
+        id S1729727AbgGVG47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:55:53 -0400
-Received: from mail-mw2nam12on2080.outbound.protection.outlook.com ([40.107.244.80]:33952
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728049AbgGVGzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:55:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RWpsXV6rvd5L5gsml8aGSMUzTIay51XtX+QJNpttfgIZg/u6Oh4rMI7/JrD96l8Abnnd4gti5vzSoru6w8xx/t1COnKYZUrIByw+L5ItJ4OZeze3csQ15fUGh4Wxqf5zsXZBdJpDPrghhA4MJ4y8kBa3iFGosx/6A9NZrJCFCKFabY2FtkwEF5Co1NmUGkt8PsgeJ1mId0d4YPpk+2H+fbebS2Kpk4Kh8s+h99QN2Pn4TzkSkueNxz6Dn/xTcEKA4BTGCbyquZatnNVvYM9uYoq+cCa6POLoz8VPBWGvhsuWfj1YbMpy9KwNsxNLECd0PTBTRR0jZN0dLdXlO5BvjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dGrJeUW5L2amVzh3hcIbNcJh2OPrCFtHka13VmFnbJY=;
- b=aRvxXEKVOn3hjSabY+dBYaIt1+Lhku6GAnGD7ZpE1ObK872gYvXsF5mEx9idvJ4t8aBayUj9MRBBUcdWgxJw5RsEr7j/Q5BwiZtUP9sDIhFcc05Jjn9jGX500tWP48aK3lnuDXic8oOo8JDPv8soOfMhw01u7XaGnp+p+v/KGabdc8JXLIUQzlcH1EcMr26Kodo2lPwW+Rt94+wD667hbsCi1m2n0AMueVI8dxz9V3AP8zh+yh831jGYxsvQlG1KgjqXT6L4gJb8SxaIcBh7sB3SpHFaof8XkM7X5sy14BglSJbTjpuW0ZtldNwJSWblKdcusasjAss4JiRoUSCSOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dGrJeUW5L2amVzh3hcIbNcJh2OPrCFtHka13VmFnbJY=;
- b=cSdsJ8iULL+0IIyOp6XLDIHMpFn8LpsSAwoWDrpeHacRoP6lS25ZKNOajEIsRZkpGNRUyo0TqwZD0MgjqYNReMEJOVMUotWoxf7bY+lNJzkiBjfe82DI4KLmUbz7bNgNeEHvfIBcUVjMsK2QyegLbdS6xCJQ8Jpn7FdgFvGCjHQ=
-Received: from MN2PR01CA0042.prod.exchangelabs.com (2603:10b6:208:23f::11) by
- DM6PR02MB6714.namprd02.prod.outlook.com (2603:10b6:5:214::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3195.17; Wed, 22 Jul 2020 06:55:42 +0000
-Received: from BL2NAM02FT006.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:23f:cafe::a) by MN2PR01CA0042.outlook.office365.com
- (2603:10b6:208:23f::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend
- Transport; Wed, 22 Jul 2020 06:55:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT006.mail.protection.outlook.com (10.152.76.239) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Wed, 22 Jul 2020 06:55:41
- +0000
-Received: from [149.199.38.66] (port=59649 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jy8dR-00024j-3n; Tue, 21 Jul 2020 23:53:49 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jy8fF-00037V-90; Tue, 21 Jul 2020 23:55:41 -0700
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06M6tZdj007795;
-        Tue, 21 Jul 2020 23:55:35 -0700
-Received: from [172.19.3.8] (helo=xsjamitsuni50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jy8f9-00036T-8C; Tue, 21 Jul 2020 23:55:35 -0700
-From:   Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-To:     mturquette@baylibre.com, m.tretter@pengutronix.de,
-        sboyd@codeaurora.org, sboyd@kernel.org, michal.simek@xilinx.com,
-        mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc:     rajanv@xilinx.com, jollys@xilinx.com, tejasp@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
-        Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-Subject: [PATCH v2 3/3] clk: zynqmp: Use firmware specific mux clock flags
-Date:   Tue, 21 Jul 2020 23:55:32 -0700
-Message-Id: <1595400932-303612-4-git-send-email-amit.sunil.dhamne@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595400932-303612-1-git-send-email-amit.sunil.dhamne@xilinx.com>
-References: <1595400932-303612-1-git-send-email-amit.sunil.dhamne@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(39850400004)(396003)(376002)(136003)(346002)(46966005)(8936002)(5660300002)(8676002)(9786002)(6666004)(426003)(356005)(316002)(70206006)(336012)(2616005)(83380400001)(54906003)(7696005)(47076004)(81166007)(2906002)(36756003)(4326008)(478600001)(70586007)(82740400003)(26005)(107886003)(186003)(82310400002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
+        Wed, 22 Jul 2020 02:56:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44812 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728063AbgGVG47 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 02:56:59 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M61omV160858;
+        Wed, 22 Jul 2020 02:56:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrftdq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 02:56:49 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M6tgg1120457;
+        Wed, 22 Jul 2020 02:56:49 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrftdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 02:56:48 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M6p4pH019269;
+        Wed, 22 Jul 2020 06:56:48 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02wdc.us.ibm.com with ESMTP id 32brq99rj3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 06:56:48 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M6uktE64160134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 06:56:46 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 212097805C;
+        Wed, 22 Jul 2020 06:56:46 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4382B7805F;
+        Wed, 22 Jul 2020 06:56:45 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.82.72])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Jul 2020 06:56:45 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 76D7B2E340E; Wed, 22 Jul 2020 12:26:40 +0530 (IST)
+Date:   Wed, 22 Jul 2020 12:26:40 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <michaele@au1.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v2 06/10] powerpc/smp: Generalize 2nd sched domain
+Message-ID: <20200722065640.GE31038@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+ <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 7be4bd13-ca13-4e44-a596-08d82e0c3fb7
-X-MS-TrafficTypeDiagnostic: DM6PR02MB6714:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB6714C47642D4E3252D8BEF6FA7790@DM6PR02MB6714.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:415;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rnKkeypNtFqiuQm5SeBP1USzxIlOKrKH99Kad0WXSJyaF1EeF2R17LYcWI0Pt9+/BD/wfDe9bMEeFnOmlyjorH0jPi+Oy+GVHJ81iHWyg+nxpUE89KOVYRu+9TbODbSr/Z+09EIRPlrpehQFH2VWBgbkAKiMEaQ0dmSVoxfr8ins3CTGmX/1MKK66hU+k9KTwclH9GNlMuvw+Ql9/7uRW0B0B1lhnwjc0ag8Sg9OYvjNbrmdPKW3yE3lTSJ7woFcJ3Lu7daA2qJ8mqdds1AqrL/7eF1j6aE1N2tZ6ZGl5QMMsoox6D34fTWMmpilDLRCxYU0+1ASN03x5uTXHvTfkc/XtPqv78CqAY6OfsYUnpafXQ/+uyFVcYaPSJg1oHniKqTGQO6wBHT7ES0sH85hIA==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 06:55:41.6290
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7be4bd13-ca13-4e44-a596-08d82e0c3fb7
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT006.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6714
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_02:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007220040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+Hello Srikar,
 
-Use ZynqMP specific mux clock flags instead of using CCF flags.
+On Tue, Jul 21, 2020 at 05:08:10PM +0530, Srikar Dronamraju wrote:
+> Currently "CACHE" domain happens to be the 2nd sched domain as per
+> powerpc_topology. This domain will collapse if cpumask of l2-cache is
+> same as SMT domain. However we could generalize this domain such that it
+> could mean either be a "CACHE" domain or a "BIGCORE" domain.
+> 
+> While setting up the "CACHE" domain, check if shared_cache is already
+> set.
+> 
+> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: Michael Ellerman <michaele@au1.ibm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Nick Piggin <npiggin@au1.ibm.com>
+> Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Michael Neuling <mikey@linux.ibm.com>
+> Cc: Anton Blanchard <anton@au1.ibm.com>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+> Cc: Jordan Niethe <jniethe5@gmail.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+> Changelog v1 -> v2:
+> powerpc/smp: Generalize 2nd sched domain
+> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
+>
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
----
- drivers/clk/zynqmp/clk-mux-zynqmp.c | 14 +++++++++++++-
- drivers/clk/zynqmp/clk-zynqmp.h     |  8 ++++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
+Just one comment below.
 
-diff --git a/drivers/clk/zynqmp/clk-mux-zynqmp.c b/drivers/clk/zynqmp/clk-m=
-ux-zynqmp.c
-index 1dc17a0..10cf021 100644
---- a/drivers/clk/zynqmp/clk-mux-zynqmp.c
-+++ b/drivers/clk/zynqmp/clk-mux-zynqmp.c
-@@ -125,7 +125,19 @@ struct clk_hw *zynqmp_clk_register_mux(const char *nam=
-e, u32 clk_id,
+>  arch/powerpc/kernel/smp.c | 49 ++++++++++++++++++++++++++++-----------
+>  1 file changed, 35 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index 57468877499a..933ebdf97432 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -85,6 +85,14 @@ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
+>  EXPORT_PER_CPU_SYMBOL(cpu_core_map);
+>  EXPORT_SYMBOL_GPL(has_big_cores);
+> 
+> +enum {
+> +#ifdef CONFIG_SCHED_SMT
+> +	smt_idx,
+> +#endif
+> +	bigcore_idx,
+> +	die_idx,
+> +};
+> +
 
-        init.parent_names =3D parents;
-        init.num_parents =3D num_parents;
--       mux->flags =3D nodes->type_flag;
-+       mux->flags =3D 0;
-+       mux->flags |=3D (nodes->type_flag & ZYNQMP_CLK_MUX_INDEX_ONE) ?
-+                     CLK_MUX_INDEX_ONE : 0;
-+       mux->flags |=3D (nodes->type_flag & ZYNQMP_CLK_MUX_INDEX_BIT) ?
-+                     CLK_MUX_INDEX_BIT : 0;
-+       mux->flags |=3D (nodes->type_flag & ZYNQMP_CLK_MUX_HIWORD_MASK) ?
-+                     CLK_MUX_HIWORD_MASK : 0;
-+       mux->flags |=3D (nodes->type_flag & ZYNQMP_CLK_MUX_READ_ONLY) ?
-+                     CLK_MUX_READ_ONLY : 0;
-+       mux->flags |=3D (nodes->type_flag & ZYNQMP_CLK_MUX_ROUND_CLOSEST) ?
-+                     CLK_MUX_ROUND_CLOSEST : 0;
-+       mux->flags |=3D (nodes->type_flag & ZYNQMP_CLK_MUX_BIG_ENDIAN) ?
-+                     CLK_MUX_BIG_ENDIAN : 0;
-        mux->hw.init =3D &init;
-        mux->clk_id =3D clk_id;
 
-diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqm=
-p.h
-index ec33525..b1ac7e8 100644
---- a/drivers/clk/zynqmp/clk-zynqmp.h
-+++ b/drivers/clk/zynqmp/clk-zynqmp.h
-@@ -41,6 +41,14 @@
- #define ZYNQMP_CLK_DIVIDER_READ_ONLY           BIT(5)
- #define ZYNQMP_CLK_DIVIDER_MAX_AT_ZERO         BIT(6)
+[..snip..]
 
-+/* Type Flags for mux clock */
-+#define ZYNQMP_CLK_MUX_INDEX_ONE               BIT(0)
-+#define ZYNQMP_CLK_MUX_INDEX_BIT               BIT(1)
-+#define ZYNQMP_CLK_MUX_HIWORD_MASK             BIT(2)
-+#define ZYNQMP_CLK_MUX_READ_ONLY               BIT(3)
-+#define ZYNQMP_CLK_MUX_ROUND_CLOSEST           BIT(4)
-+#define ZYNQMP_CLK_MUX_BIG_ENDIAN              BIT(5)
-+
- enum topology_type {
-        TYPE_INVALID,
-        TYPE_MUX,
+> @@ -1339,14 +1345,20 @@ void start_secondary(void *unused)
+>  	/* Update topology CPU masks */
+>  	add_cpu_to_masks(cpu);
+> 
+> -	if (has_big_cores)
+> -		sibling_mask = cpu_smallcore_mask;
+>  	/*
+>  	 * Check for any shared caches. Note that this must be done on a
+>  	 * per-core basis because one core in the pair might be disabled.
+>  	 */
+> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
+> -		shared_caches = true;
+> +	if (!shared_caches) {
+> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
+> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
+> +
+> +		if (has_big_cores)
+> +			sibling_mask = cpu_smallcore_mask;
+> +
+> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
+> +			shared_caches = true;
+
+At the risk of repeating my comment to the v1 version of the patch, we
+have shared caches only l2_cache_mask(cpu) is a strict superset of
+sibling_mask(cpu).
+
+"cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu))" does not
+capture this.
+
+Could we please use
+
+      if (!cpumask_equal(sibling_mask(cpu), mask) &&
+      	  cpumask_subset(sibling_mask(cpu), mask) {
+      }
+
+?
+
+
+> +	}
+> 
+>  	set_numa_node(numa_cpu_lookup_table[cpu]);
+>  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
+> @@ -1374,10 +1386,19 @@ int setup_profiling_timer(unsigned int multiplier)
+> 
+>  static void fixup_topology(void)
+>  {
+> +	if (shared_caches) {
+> +		pr_info("Using shared cache scheduler topology\n");
+> +		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
+> +#ifdef CONFIG_SCHED_DEBUG
+> +		powerpc_topology[bigcore_idx].name = "CACHE";
+> +#endif
+> +		powerpc_topology[bigcore_idx].sd_flags = powerpc_shared_cache_flags;
+> +	}
+> +
+>  #ifdef CONFIG_SCHED_SMT
+>  	if (has_big_cores) {
+>  		pr_info("Big cores detected but using small core scheduling\n");
+> -		powerpc_topology[0].mask = smallcore_smt_mask;
+> +		powerpc_topology[smt_idx].mask = smallcore_smt_mask;
+>  	}
+>  #endif
+
+
+Otherwise the patch looks good to me.
+
 --
-2.7.4
-
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+Thanks and Regards
+gautham.
