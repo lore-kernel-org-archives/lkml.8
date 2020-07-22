@@ -2,247 +2,285 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA20C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A07C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6772F20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83F622CBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="ZaNz9mTK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d46NXFi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbgGVXBE (ORCPT
+        id S1733024AbgGVXLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:01:04 -0400
-Received: from ozlabs.org ([203.11.71.1]:49927 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVXBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:01:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBrY8032Vz9sPf;
-        Thu, 23 Jul 2020 09:00:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1595458860; bh=fPZL/Y4DVUb3JB9+eWSHpZsPLOAIwy85ePtm79pGmGI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZaNz9mTKmXDUY5KHxeG2AWePHD5Iv5ncxKjBsKZkUsHY4UOoXKVvvBg2kx4sEQEcj
-         td4PdWF4TB2qFuzTf6T+FcMqDbQHSdjtvITgC+kP066QHi6I0u0rJtb1gphnfExgAd
-         pdNVxnP2BOJI9bDyNUfrpu+oxh6AZTOoIG0M59w7lrClj+mreqFfeRFooIRcSfX9Cd
-         tYbB2BiNIrJKQVgoIc+Yyz9v2PDucNzIm1bu+FlFPY3dDxWu7klsBVhWsaIJlK9G3V
-         fpDr57Odzf0HtofwaRvtFiCZ9nzYzz7ze5DLWvjajwdnbozKobCvZlFuJKskdUNLH9
-         dunzN+f9uifxg==
-Date:   Thu, 23 Jul 2020 09:00:58 +1000
-From:   Anton Blanchard <anton@ozlabs.org>
-To:     Scott Cheloha <cheloha@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Nathan Fontenont <ndfont@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michal Suchanek <msuchanek@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Rick Lindley <ricklind@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 1/2] powerpc/drmem: accelerate
- memory_add_physaddr_to_nid() with LMB xarray
-Message-ID: <20200723090058.62ab0df9@kryten.localdomain>
-In-Reply-To: <20200221172901.1596249-2-cheloha@linux.ibm.com>
-References: <20200128221113.17158-1-cheloha@linux.ibm.com>
-        <20200221172901.1596249-2-cheloha@linux.ibm.com>
-X-Mailer: Mutt/1.8.0 (2017-02-23)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Jul 2020 19:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgGVXLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 19:11:24 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB6EC0619E1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:11:24 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e196so149654ybh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=0km8aMyCJjjdjhfFnUtIozCp8/eWA0gV2Bg/E+QIRZA=;
+        b=d46NXFi54zDqLux/KMsqsA2QFOmP2feJDN+LUk7F+5+wYcRHWgxsX8LwJGjUacD6Qz
+         hlbUnd3GDCcboY1avjnD3lPndkSoZl+fkahWxRvBpYTSz3e4GlXmJnazz7T0e+3+wXif
+         Hhq+E8bbE4Qn3rdL6FwDqKB+f7P/CMFFpQ9VI73/ulmDXqnEgaTWmeX/ZlWD9C0an/Kp
+         7VAy0ACUq5pDsjS/lsupzbsfn6xFtpwY72JKjTcS6opJYEfQoE8HPMaN9prIF8v1eQ5p
+         6RyIQwJeK9YKXuy1QlJOpwAiVr9Il7sxEhYuAPFJr5gAL6gYUw9p0eajpVe/3IDnOWWx
+         eXzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=0km8aMyCJjjdjhfFnUtIozCp8/eWA0gV2Bg/E+QIRZA=;
+        b=oJGDFOFcv555MKcHL5E93w8vI0tzElPJq7vlmY0tFKTYgouzwL+J4r06dzzzXqwCDz
+         /E8DJ9S3++ZujktaNY0RYIgRMZU3KUGzsVcrEzGQ1Y3aW6q6AMSIHpqtq6LHT5wZSA+D
+         xRvK20dSre5q5dBBFCJMC44VVSfME+mkvjXfvMQuWSbmipfa5SH7qfK0SPZU2u141Qgk
+         wrUFZcLSuIt9ue8BKbWXzrTjAx7QtBCZHt2+XQih4ZiPcIYK8rYDllsRXRSrm3488KM0
+         cGjo18TaQixQaZieiOnwF5vw7Q4vcZV4aVKmuQF6R7C85b4guoYiH527VZSIuFH+Jcqh
+         cT4A==
+X-Gm-Message-State: AOAM5325wboRc2CmcLUCXcqosra1/RA23qlC48Mm+roegvUKKAfi72ug
+        dG3t1U3Wcx8v3Hfyc/YM8i3JfLZBtg==
+X-Google-Smtp-Source: ABdhPJz+EH1HG2sNJVpZfh8jNMN7SjfCOv+mciPiG/6z2kWCI+UbDhouY4WITO0MilaglKNu+Vj3wObTkA==
+X-Received: by 2002:a25:ae01:: with SMTP id a1mr2585741ybj.119.1595459483337;
+ Wed, 22 Jul 2020 16:11:23 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 23:10:46 +0000
+In-Reply-To: <CAGG=3QUSOnosdPs7XMWdGdcOWNy_jYrFWT2evb9EwjWSUWaORQ@mail.gmail.com>
+Message-Id: <20200722231045.1421735-1-nhuck@google.com>
+Mime-Version: 1.0
+References: <CAGG=3QUSOnosdPs7XMWdGdcOWNy_jYrFWT2evb9EwjWSUWaORQ@mail.gmail.com>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH v5] Makefile: Add clang-tidy and static analyzer support to makefile
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, pirama@google.com,
+        morbo@google.com, Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
+This patch adds clang-tidy and the clang static-analyzer as make
+targets. The goal of this patch is to make static analysis tools
+usable and extendable by any developer or researcher who is familiar
+with basic c++.
 
-I'm hitting this issue and Rick just pointed my at your patch. Any
-chance we could get it upstream?
+The current static analysis tools require intimate knowledge of the
+internal workings of the static analysis. Clang-tidy and the clang
+static analyzers expose an easy to use api and allow users unfamiliar
+with clang to write new checks with relative ease.
 
-Thanks,
-Anton
+===Clang-tidy===
 
-> On PowerPC, memory_add_physaddr_to_nid() uses a linear search to find
-> an LMB matching the given address.  This scales very poorly when there
-> are many LMBs.  The poor scaling cripples drmem_init() during boot:
-> lmb_set_nid(), which calls memory_add_physaddr_to_nid(), is called for
-> each LMB.
-> 
-> If we index each LMB in an xarray by its base address we can achieve
-> O(log n) search during memory_add_physaddr_to_nid(), which scales much
-> better.
-> 
-> For example, in the lab we have a 64TB P9 machine with 256MB LMBs.
-> So, suring drmem_init() we instantiate 249854 LMBs.  On a vanilla
-> kernel it completes drmem_init() in ~35 seconds with a soft lockup
-> trace.  On the patched kernel it completes drmem_init() in ~0.5
-> seconds.
-> 
-> Before:
-> [   53.721639] drmem: initializing drmem v2
-> [   80.604346] watchdog: BUG: soft lockup - CPU#65 stuck for 23s!
-> [swapper/0:1] [   80.604377] Modules linked in:
-> [   80.604389] CPU: 65 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc2+
-> #4 [   80.604397] NIP:  c0000000000a4980 LR: c0000000000a4940 CTR:
-> 0000000000000000 [   80.604407] REGS: c0002dbff8493830 TRAP: 0901
-> Not tainted  (5.6.0-rc2+) [   80.604412] MSR:  8000000002009033
-> <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 44000248  XER: 0000000d [
-> 80.604431] CFAR: c0000000000a4a38 IRQMASK: 0 [   80.604431] GPR00:
-> c0000000000a4940 c0002dbff8493ac0 c000000001904400 c0003cfffffede30 [
->   80.604431] GPR04: 0000000000000000 c000000000f4095a
-> 000000000000002f 0000000010000000 [   80.604431] GPR08:
-> c0000bf7ecdb7fb8 c0000bf7ecc2d3c8 0000000000000008 c00c0002fdfb2001 [
->   80.604431] GPR12: 0000000000000000 c00000001e8ec200 [   80.604477]
-> NIP [c0000000000a4980] hot_add_scn_to_nid+0xa0/0x3e0 [   80.604486]
-> LR [c0000000000a4940] hot_add_scn_to_nid+0x60/0x3e0 [   80.604492]
-> Call Trace: [   80.604498] [c0002dbff8493ac0] [c0000000000a4940]
-> hot_add_scn_to_nid+0x60/0x3e0 (unreliable) [   80.604509]
-> [c0002dbff8493b20] [c000000000087c10]
-> memory_add_physaddr_to_nid+0x20/0x60 [   80.604521]
-> [c0002dbff8493b40] [c0000000010d4880] drmem_init+0x25c/0x2f0 [
-> 80.604530] [c0002dbff8493c10] [c000000000010154]
-> do_one_initcall+0x64/0x2c0 [   80.604540] [c0002dbff8493ce0]
-> [c0000000010c4aa0] kernel_init_freeable+0x2d8/0x3a0 [   80.604550]
-> [c0002dbff8493db0] [c000000000010824] kernel_init+0x2c/0x148 [
-> 80.604560] [c0002dbff8493e20] [c00000000000b648]
-> ret_from_kernel_thread+0x5c/0x74 [   80.604567] Instruction dump: [
-> 80.604574] 392918e8 e9490000 e90a000a e92a0000 80ea000c 1d080018
-> 3908ffe8 7d094214 [   80.604586] 7fa94040 419d00dc e9490010 714a0088
-> <2faa0008> 409e00ac e9490000 7fbe5040 [   89.047390] drmem: 249854
-> LMB(s)
-> 
-> After:
-> [   53.424702] drmem: initializing drmem v2
-> [   53.898813] drmem: 249854 LMB(s)
-> 
-> lmb_set_nid() is called from dlpar_lmb_add() so this patch will also
-> improve memory hot-add speeds on big machines.
-> 
-> Signed-off-by: Scott Cheloha <cheloha@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/drmem.h |  1 +
->  arch/powerpc/mm/drmem.c          | 24 ++++++++++++++++++++++++
->  arch/powerpc/mm/numa.c           | 29 ++++++++++-------------------
->  3 files changed, 35 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/drmem.h
-> b/arch/powerpc/include/asm/drmem.h index 3d76e1c388c2..90a5a9ad872b
-> 100644 --- a/arch/powerpc/include/asm/drmem.h
-> +++ b/arch/powerpc/include/asm/drmem.h
-> @@ -88,6 +88,7 @@ static inline bool drmem_lmb_reserved(struct
-> drmem_lmb *lmb) return lmb->flags & DRMEM_LMB_RESERVED;
->  }
->  
-> +struct drmem_lmb *drmem_find_lmb_by_base_addr(u64 base_addr);
->  u64 drmem_lmb_memory_max(void);
->  void __init walk_drmem_lmbs(struct device_node *dn,
->  			void (*func)(struct drmem_lmb *, const
-> __be32 **)); diff --git a/arch/powerpc/mm/drmem.c
-> b/arch/powerpc/mm/drmem.c index 44bfbdae920c..62cbe79e3860 100644
-> --- a/arch/powerpc/mm/drmem.c
-> +++ b/arch/powerpc/mm/drmem.c
-> @@ -11,12 +11,31 @@
->  #include <linux/of.h>
->  #include <linux/of_fdt.h>
->  #include <linux/memblock.h>
-> +#include <linux/xarray.h>
->  #include <asm/prom.h>
->  #include <asm/drmem.h>
->  
-> +static DEFINE_XARRAY(drmem_lmb_xa_base_addr);
->  static struct drmem_lmb_info __drmem_info;
->  struct drmem_lmb_info *drmem_info = &__drmem_info;
->  
-> +static int drmem_cache_lmb_for_lookup(struct drmem_lmb *lmb)
-> +{
-> +	void *ret;
-> +
-> +	ret = xa_store(&drmem_lmb_xa_base_addr, lmb->base_addr, lmb,
-> +		       GFP_KERNEL);
-> +	if (xa_is_err(ret))
-> +		return xa_err(ret);
-> +
-> +	return 0;
-> +}
-> +
-> +struct drmem_lmb *drmem_find_lmb_by_base_addr(u64 base_addr)
-> +{
-> +	return xa_load(&drmem_lmb_xa_base_addr, base_addr);
-> +}
-> +
->  u64 drmem_lmb_memory_max(void)
->  {
->  	struct drmem_lmb *last_lmb;
-> @@ -364,6 +383,8 @@ static void __init init_drmem_v1_lmbs(const
-> __be32 *prop) 
->  	for_each_drmem_lmb(lmb) {
->  		read_drconf_v1_cell(lmb, &prop);
-> +		if (drmem_cache_lmb_for_lookup(lmb) != 0)
-> +			return;
->  		lmb_set_nid(lmb);
->  	}
->  }
-> @@ -411,6 +432,9 @@ static void __init init_drmem_v2_lmbs(const
-> __be32 *prop) lmb->aa_index = dr_cell.aa_index;
->  			lmb->flags = dr_cell.flags;
->  
-> +			if (drmem_cache_lmb_for_lookup(lmb) != 0)
-> +				return;
-> +
->  			lmb_set_nid(lmb);
->  		}
->  	}
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index 3c7dec70cda0..0fd7963a991e 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -958,27 +958,18 @@ early_param("topology_updates",
-> early_topology_updates); static int
-> hot_add_drconf_scn_to_nid(unsigned long scn_addr) {
->  	struct drmem_lmb *lmb;
-> -	unsigned long lmb_size;
-> -	int nid = NUMA_NO_NODE;
-> -
-> -	lmb_size = drmem_lmb_size();
-> -
-> -	for_each_drmem_lmb(lmb) {
-> -		/* skip this block if it is reserved or not assigned
-> to
-> -		 * this partition */
-> -		if ((lmb->flags & DRCONF_MEM_RESERVED)
-> -		    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
-> -			continue;
-> -
-> -		if ((scn_addr < lmb->base_addr)
-> -		    || (scn_addr >= (lmb->base_addr + lmb_size)))
-> -			continue;
->  
-> -		nid = of_drconf_to_nid_single(lmb);
-> -		break;
-> -	}
-> +	lmb = drmem_find_lmb_by_base_addr(scn_addr);
-> +	if (lmb == NULL)
-> +		return NUMA_NO_NODE;
-> +	
-> +	/* can't use this block if it is reserved or not assigned to
-> +	 * this partition */
-> +	if ((lmb->flags & DRCONF_MEM_RESERVED)
-> +	    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
-> +		return NUMA_NO_NODE;
->  
-> -	return nid;
-> +	return of_drconf_to_nid_single(lmb);
->  }
->  
->  /*
+Clang-tidy is an easily extendable 'linter' that runs on the AST.
+Clang-tidy checks are easy to write and understand. A check consists of
+two parts, a matcher and a checker. The matcher is created using a
+domain specific language that acts on the AST
+(https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+nodes are found by the matcher a callback is made to the checker. The
+checker can then execute additional checks and issue warnings.
+
+Here is an example clang-tidy check to report functions that have calls
+to local_irq_disable without calls to local_irq_enable and vice-versa.
+Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+are ignored for analysis. (https://reviews.llvm.org/D65828)
+
+===Clang static analyzer===
+
+The clang static analyzer is a more powerful static analysis tool that
+uses symbolic execution to find bugs. Currently there is a check that
+looks for potential security bugs from invalid uses of kmalloc and
+kfree. There are several more general purpose checks that are useful for
+the kernel.
+
+The clang static analyzer is well documented and designed to be
+extensible.
+(https://clang-analyzer.llvm.org/checker_dev_manual.html)
+(https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+
+The main draw of the clang tools is how accessible they are. The clang
+documentation is very nice and these tools are built specifically to be
+easily extendable by any developer. They provide an accessible method of
+bug-finding and research to people who are not overly familiar with the
+kernel codebase.
+
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+---
+Changes v4->v5
+* Use PEP8 style
+* Other misc style fixes
+ MAINTAINERS                                   |  1 +
+ Makefile                                      |  3 +
+ scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+ .../{ => clang-tools}/gen_compile_commands.py |  0
+ scripts/clang-tools/run-clang-tools.py        | 76 +++++++++++++++++++
+ 5 files changed, 103 insertions(+)
+ create mode 100644 scripts/clang-tools/Makefile.clang-tools
+ rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+ create mode 100755 scripts/clang-tools/run-clang-tools.py
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1d4aa7f942de..a444564e5572 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4198,6 +4198,7 @@ W:	https://clangbuiltlinux.github.io/
+ B:	https://github.com/ClangBuiltLinux/linux/issues
+ C:	irc://chat.freenode.net/clangbuiltlinux
+ F:	Documentation/kbuild/llvm.rst
++F:	scripts/clang-tools/
+ K:	\b(?i:clang|llvm)\b
+ 
+ CLEANCACHE API
+diff --git a/Makefile b/Makefile
+index fe0164a654c7..3e2df010b342 100644
+--- a/Makefile
++++ b/Makefile
+@@ -747,6 +747,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
+ 
+ include scripts/Makefile.kcov
+ include scripts/Makefile.gcc-plugins
++include scripts/clang-tools/Makefile.clang-tools
+ 
+ ifdef CONFIG_READABLE_ASM
+ # Disable optimizations that make assembler listings hard to read.
+@@ -1543,6 +1544,8 @@ help:
+ 	@echo  '  export_report   - List the usages of all exported symbols'
+ 	@echo  '  headerdep       - Detect inclusion cycles in headers'
+ 	@echo  '  coccicheck      - Check with Coccinelle'
++	@echo  '  clang-analyzer  - Check with clang static analyzer'
++	@echo  '  clang-tidy      - Check with clang-tidy'
+ 	@echo  ''
+ 	@echo  'Tools:'
+ 	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+new file mode 100644
+index 000000000000..5c9d76f77595
+--- /dev/null
++++ b/scripts/clang-tools/Makefile.clang-tools
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) Google LLC, 2020
++#
++# Author: Nathan Huckleberry <nhuck@google.com>
++#
++PHONY += clang-tidy
++clang-tidy:
++ifdef CONFIG_CC_IS_CLANG
++	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
++	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
++else
++	$(error clang-tidy requires CC=clang)
++endif
++
++PHONY += clang-analyzer
++clang-analyzer:
++ifdef CONFIG_CC_IS_CLANG
++	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
++	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
++else
++	$(error clang-analyzer requires CC=clang)
++endif
+diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+similarity index 100%
+rename from scripts/gen_compile_commands.py
+rename to scripts/clang-tools/gen_compile_commands.py
+diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+new file mode 100755
+index 000000000000..41ed15d99933
+--- /dev/null
++++ b/scripts/clang-tools/run-clang-tools.py
+@@ -0,0 +1,76 @@
++#!/usr/bin/env python
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) Google LLC, 2020
++#
++# Author: Nathan Huckleberry <nhuck@google.com>
++#
++"""A helper routine run clang-tidy and the clang static-analyzer on
++compile_commands.json.
++"""
++
++import argparse
++import json
++import logging
++import multiprocessing
++import os
++import subprocess
++import sys
++
++
++def parse_arguments():
++    """Set up and parses command-line arguments.
++    Returns:
++        args: Dict of parsed args
++        Has keys: [file, type]
++    """
++    usage = """Run clang-tidy or the clang static-analyzer on a
++        compilation database."""
++    parser = argparse.ArgumentParser(description=usage)
++
++    type_help = "Type of analysis to be performed"
++    parser.add_argument("type",
++                        choices=["clang-tidy", "clang-analyzer"],
++                        help=type_help)
++    file_path_help = "Path to the compilation database to parse"
++    parser.add_argument("file", type=str, help=file_path_help)
++
++    args = parser.parse_args()
++
++    return args
++
++
++def init(l, t):
++    global lock
++    global analysis_type
++    lock = l
++    analysis_type = t
++
++
++def run_analysis(entry):
++    filename = entry["file"]
++    # Disable all checks, then re-enable the ones we want
++    checks = "-checks=-*,{}".format("linuxkernel-*" if analysis_type ==
++                                    "clang-tidy" else "clang-analyzer-*")
++    p = subprocess.run(
++        ["clang-tidy", "-p", os.getcwd(), checks, filename],
++        stdout=subprocess.PIPE,
++        stderr=subprocess.STDOUT)
++    with lock:
++        sys.stderr.buffer.write(p.stdout)
++
++
++def main():
++    args = parse_arguments()
++    filename = args.file
++
++    lock = multiprocessing.Lock()
++    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args.type))
++    # Read JSON data into the datastore variable
++    with open(filename, "r") as f:
++        datastore = json.load(f)
++        pool.map(run_analysis, datastore)
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
 
