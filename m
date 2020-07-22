@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC1F2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CFD2065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731760AbgGVTMa (ORCPT
+        id S1732472AbgGVTNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:12:30 -0400
-Received: from mailout10.rmx.de ([94.199.88.75]:34384 "EHLO mailout10.rmx.de"
+        Wed, 22 Jul 2020 15:13:06 -0400
+Received: from mailout12.rmx.de ([94.199.88.78]:36241 "EHLO mailout12.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbgGVTM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:12:29 -0400
-X-Greylist: delayed 1944 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Jul 2020 15:12:28 EDT
+        id S1728821AbgGVTNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:13:06 -0400
 Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mailout10.rmx.de (Postfix) with ESMTPS id 4BBkm14tvhz31LK;
-        Wed, 22 Jul 2020 20:40:01 +0200 (CEST)
+        by mailout12.rmx.de (Postfix) with ESMTPS id 4BBkn24scMzRq9f;
+        Wed, 22 Jul 2020 20:40:54 +0200 (CEST)
 Received: from mta.arri.de (unknown [217.111.95.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BBklZ6bfCz2TSGr;
-        Wed, 22 Jul 2020 20:39:38 +0200 (CEST)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BBkmW6hFtz2TRlg;
+        Wed, 22 Jul 2020 20:40:27 +0200 (CEST)
 Received: from N95HX1G2.wgnetz.xx (192.168.54.68) by mta.arri.de
  (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 22 Jul
- 2020 20:39:38 +0200
+ 2020 20:40:27 +0200
 From:   Christian Eggers <ceggers@arri.de>
 To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Richard Leitner <richard.leitner@skidata.com>,
         <linux-kernel@vger.kernel.org>, Christian Eggers <ceggers@arri.de>
-Subject: [PATCH 1/4] dt-bindings: usb: Add Microchip USB253x/USB3x13/USB46x4 support
-Date:   Wed, 22 Jul 2020 20:38:56 +0200
-Message-ID: <20200722183859.24470-2-ceggers@arri.de>
+Subject: [PATCH 3/4] dt-bindings: usb: Add Microchip USB47xx/USB49xx support
+Date:   Wed, 22 Jul 2020 20:38:58 +0200
+Message-ID: <20200722183859.24470-4-ceggers@arri.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200722183859.24470-1-ceggers@arri.de>
 References: <20200722183859.24470-1-ceggers@arri.de>
@@ -50,58 +49,58 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [192.168.54.68]
-X-RMX-ID: 20200722-203938-4BBklZ6bfCz2TSGr-0@kdin02
+X-RMX-ID: 20200722-204027-4BBkmW6hFtz2TRlg-0@kdin02
 X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for Microchip USB253x/USB3x13/USB46x4 driver.
+Add DT bindings for Microchip USB47xx/USB49xx driver.
 
 Signed-off-by: Christian Eggers <ceggers@arri.de>
 ---
- .../devicetree/bindings/usb/usb253x.yaml      | 234 ++++++++++++++++++
- 1 file changed, 234 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/usb253x.yaml
+ .../devicetree/bindings/usb/usb49xx.yaml      | 230 ++++++++++++++++++
+ 1 file changed, 230 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb49xx.yaml
 
-diff --git a/Documentation/devicetree/bindings/usb/usb253x.yaml b/Documentation/devicetree/bindings/usb/usb253x.yaml
+diff --git a/Documentation/devicetree/bindings/usb/usb49xx.yaml b/Documentation/devicetree/bindings/usb/usb49xx.yaml
 new file mode 100644
-index 000000000000..88ea744147b6
+index 000000000000..20c7b64c6b7d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb253x.yaml
-@@ -0,0 +1,234 @@
++++ b/Documentation/devicetree/bindings/usb/usb49xx.yaml
+@@ -0,0 +1,230 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/usb/usb253x.yaml#
++$id: http://devicetree.org/schemas/usb/usb49xx.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Microchip USB253x/USB3x13/USB46x4 USB 2.0 Hi-Speed Hub Controller
++title: Microchip USB47xx/USB49xx USB 2.0 Hi-Speed Hub Controller
 +
 +maintainers:
 +  - Christian Eggers <ceggers@arri.de>
 +
 +description: |
-+  http://ww1.microchip.com/downloads/en/AppNotes/00001801C.pdf
++  http://ww1.microchip.com/downloads/en/Appnotes/AN2651-Configuration-of-Microchip-USB47xx-USB49xx-Application-Note-00002651B.pdf
 +
 +properties:
 +  compatible:
 +    enum:
-+      - microchip,usb2532
-+      - microchip,usb2532i
-+      - microchip,usb2533
-+      - microchip,usb2533i
-+      - microchip,usb2534
-+      - microchip,usb2534i
-+      - microchip,usb3613
-+      - microchip,usb3613i
-+      - microchip,usb3813
-+      - microchip,usb3813i
-+      - microchip,usb4604
-+      - microchip,usb4604i
-+      - microchip,usb4624
-+      - microchip,usb4624i
++      - microchip,usb4712
++      - microchip,usb4712i
++      - microchip,usb4715
++      - microchip,usb4715i
++      - microchip,usb4912
++      - microchip,usb4912i
++      - microchip,usb4914
++      - microchip,usb4914i
++      - microchip,usb4916
++      - microchip,usb4916i
++      - microchip,usb4925
++      - microchip,usb4925i
++      - microchip,usb4927
++      - microchip,usb4927i
 +
 +  reg:
 +    maxItems: 1
@@ -150,20 +149,12 @@ index 000000000000..88ea744147b6
 +  manufacturer:
 +    $ref: /schemas/types.yaml#/definitions/string
 +    description:
-+      Set USB Manufacturer string (max. a total of 93 characters for
-+      manufacturer, product and serial).
++      Set USB Manufacturer string (max. 62 characters long).
 +
 +  product:
 +    $ref: /schemas/types.yaml#/definitions/string
 +    description:
-+      Set USB Product string (max. a total of 93 characters for
-+      manufacturer, product and serial).
-+
-+  serial:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Set USB Serial string (max. a total of 93 characters for
-+      manufacturer, product and serial).
++      Set USB Product string (max. 62 characters long).
 +
 +  bus-powered:
 +    $ref: /schemas/types.yaml#/definitions/flag
@@ -223,11 +214,11 @@ index 000000000000..88ea744147b6
 +
 +  oc-delay-us:
 +    enum:
++      - 50
 +      - 100
-+      - 4000
-+      - 8000
-+      - 16000
-+    default: 8000
++      - 200
++      - 400
++    default: 200
 +    description:
 +      Delay time (in microseconds) for filtering the over-current sense inputs.
 +      If an invalid value is given, the default is used instead.
@@ -285,22 +276,26 @@ index 000000000000..88ea744147b6
 +      #address-cells = <1>;
 +      #size-cells = <0>;
 +
-+      usb2534i@2d {
-+        compatible = "microchip,usb2534i";
++      usb4916i@2d {
++        compatible = "microchip,usb4916i";
 +        reg = <0x2d>;
 +        pinctrl-names = "default";
 +        pinctrl-0 = <&pinctrl_usb_hub>;
-+        /* usb253x.c already assumes low-active, don't negate twice */
++        /* usb49xx.c already assumes low-active, don't negate twice */
 +        reset-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-+        /*skip-config;*/
-+        /* T_ON,max = 4 ms for NCP380 */
-+        power-on-time-ms = <4>;
++        //skip-config;
++        //self-powered;         /* power on default */
++        //individual-sensing;   /* power on default */
++        //multi-tt;             /* power on default */
++        //disable-eop;          /* power on default */
++        //individual-port-switching;  /* power on default */
++        //oc-delay-ns = <200>;  /* power on default */
++        power-on-time-ms = <4>; /* T_ON,max = 4 ms for NCP380 */
++        ocs-min-width-ms = <0>; /* MIC2005 only outputs 2us FAULT pulses */
 +        manufacturer = "Foo";
 +        product = "Foo-Bar";
-+        /* port 2 is connected to an internal SD-Card reader */
-+        non-removable-ports = <2>;
-+        /* hub controller mapped to logical port 5 */
-+        hub-controller-port = <5>;
++        /* port 5 is connected to an internal SD-Card reader */
++        non-removable-ports = <5>;
 +      };
 +    };
 +
