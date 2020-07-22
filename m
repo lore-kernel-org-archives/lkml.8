@@ -2,144 +2,91 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88618C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E83B20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64064207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595379207;
-	bh=+gY9MbQoLKty1PmxYA9ivmvJgcGEc9tKdnNR2r9ETLI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qdqJZWMhJiTvTMl6TyAVbdn/OFXYv+2YsduRc046ubGgs9ihc2dSxL1d5Hh9DB2cu
-	 sNcnM5p0MnudwFP1WvLv6QhGdeECKhp4RlGWFLODzsrCEyCMPMYU0Ef863trthmrXZ
-	 FZZjazMQ20fi96cwGbM2xIiac+I6DoE6+cMWVQiY=
+	s=default; t=1595379460;
+	bh=DAIdFDmW+h5zF5hFqyKn+jR4F9cSr3ZBHMIP0qp/9ds=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=MXxZQIfnS8vSU7RnmZ0calx7VVhiEr4v/X8DkhRN9r/3QHpmWQ34ywAYTWDdarTtS
+	 B2zL39E3OQeGB7sa/r5wWIuz/CKnCsa18voDl5yPs8YU1esW/0eVb5IM9qHAXhAcUZ
+	 5yw+ui8kNECWSoL93nYFG6xqxdnWkYzrkYXfFAFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbgGVAxZ (ORCPT
+        id S1731627AbgGVA5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:53:25 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:27157 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgGVAxZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:53:25 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 06M0qpba008736
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:52:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 06M0qpba008736
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595379172;
-        bh=Rmd1MC2JpL/qsW+KJXGi9dvkbRqpp67uHrZvlZPqnnQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fCuRqEo5R7tsBimcwvosMA5r7zoLn83XhCF9ewj70bkCQZBAFUtqrMHXymUzdkY4C
-         sADO9gy+Kb+fylP06zV5KB40k47skKqunCe6Q+qMhwGhAt0jUefZzOPe4CfoAnj07q
-         HiyNY9od0hNuVoYOuy33uo9GXO5SMqk0VBtdDi+6dR4NSv1Q9fcoCv6RqFwD3zimuk
-         +rsYlUwpNvPMy/NABxgXh+mETbiAkpSfhaPgzXaTTteHMkts/ALYis51vqfz7oei3y
-         lSk586KJ4N4dG0Qcbvih+fNd8BVO2BaXGFJQnHBQxHs9b4G+MLEBSKOBSRBW/YLu3u
-         Vcq2JUC4F5VHg==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id s20so257989vsq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:52:51 -0700 (PDT)
-X-Gm-Message-State: AOAM533trHN1d/YLRFdYkW6ZJHEyArMLaHNGf5CJE2piuwwZbjqK2YSG
-        idcWtn6NsFPW992JlzButa0pLrO20/zRNiqO8FI=
-X-Google-Smtp-Source: ABdhPJw4GP6sLIaLF4KWGv+V0XOy1HGvyPU1VIDRU3+GhEDAciWu7TXSOoiC1ziqZi74sSCd2CFUMjsvZFNrsxdI3cY=
-X-Received: by 2002:a67:694d:: with SMTP id e74mr23382636vsc.155.1595379170484;
- Tue, 21 Jul 2020 17:52:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200721093748.26627-1-jcmvbkbc@gmail.com>
-In-Reply-To: <20200721093748.26627-1-jcmvbkbc@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jul 2020 09:52:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARtTZD5x3CYLVj48dwC9n7Z4kMx1gCLq3aD2_OfQKuXnA@mail.gmail.com>
-Message-ID: <CAK7LNARtTZD5x3CYLVj48dwC9n7Z4kMx1gCLq3aD2_OfQKuXnA@mail.gmail.com>
-Subject: Re: [PATCH v2] xtensa: add boot subdirectories targets to extra-y
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Jul 2020 20:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731474AbgGVA5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 20:57:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7161206E3;
+        Wed, 22 Jul 2020 00:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595379458;
+        bh=DAIdFDmW+h5zF5hFqyKn+jR4F9cSr3ZBHMIP0qp/9ds=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=HOmpgAhDx6nTg7lEBnKxil1dtOP5haLT2NcN1WdjaNTkNxwCwP1NTOdhJg5uYsxcU
+         M6jQtG5HT9Zs0VvsqEEO/8W9P7K3AV4gtPzKSaRHFabzYCy4kF/wS135qlvVUkFTfJ
+         Xil2czF3lyidjPoM8VpOhDEq8OzgVZQSX3iki+PY=
+Date:   Wed, 22 Jul 2020 01:57:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20200720132809.26908-1-wens@kernel.org>
+References: <20200720132809.26908-1-wens@kernel.org>
+Subject: Re: [PATCH v3] regulator: gpio: Honor regulator-boot-on property
+Message-Id: <159537943520.49645.14773067675144419268.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:37 PM Max Filippov <jcmvbkbc@gmail.com> wrote:
->
-> The commit 8fe87a92f262 ("kbuild: always create directories of targets")
-> exposed an issue in the xtensa makefiles that results in the following
-> build error in a clean directory:
->   scripts/Makefile.build:374: arch/xtensa/boot/boot-elf/boot.lds] Error 1
->     arch/xtensa/boot/boot-elf/bootstrap.S:21: fatal error:
->     opening dependency file arch/xtensa/boot/boot-elf/.bootstrap.o.d:
->     No such file or directory
->
-> Intermediate targets in arch/xtensa/boot/boot-elf don't get into
-> 'targets' and build directory is not created for them.
-> Add boot.lds and bootstrap.o to extra-y in subdirectories of
-> arch/xtensa/boot.
->
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-> ---
-> Changes v1->v2:
-> - update boot-redboot/Makefile in the same manner as boot-elf/Makefile.
+On Mon, 20 Jul 2020 21:28:09 +0800, Chen-Yu Tsai wrote:
+> When requesting the enable GPIO, the driver should do so with the
+> correct output level matching some expected state. This is especially
+> important if the regulator is a critical one, such as a supply for
+> the boot CPU. This is currently done by checking for the enable-at-boot
+> property, but this is not documented in the device tree binding, nor
+> does it match the common regulator properties.
+> 
+> [...]
 
+Applied to
 
-Oops, sorry and thanks.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-But, we need to fix this in the kbuild tree
-to retain the bisectability.
+Thanks!
 
+[1/1] regulator: gpio: Honor regulator-boot-on property
+      commit: 3acff11cef1dece31cd29956f19181895996a7c5
 
-I will insert the following before the offending commit.
-https://patchwork.kernel.org/patch/11676883/
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I used 'targets' instead of 'extra-y'
-because they are built on demand
-while building the final boot image.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-
-
->  arch/xtensa/boot/boot-elf/Makefile     | 1 +
->  arch/xtensa/boot/boot-redboot/Makefile | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-> index 12ae1e91cb75..ad341c0fff15 100644
-> --- a/arch/xtensa/boot/boot-elf/Makefile
-> +++ b/arch/xtensa/boot/boot-elf/Makefile
-> @@ -15,6 +15,7 @@ export CPPFLAGS_boot.lds += -P -C
->  export KBUILD_AFLAGS += -mtext-section-literals
->
->  boot-y         := bootstrap.o
-> +extra-y                := boot.lds $(boot-y)
->
->  OBJS           := $(addprefix $(obj)/,$(boot-y))
->
-> diff --git a/arch/xtensa/boot/boot-redboot/Makefile b/arch/xtensa/boot/boot-redboot/Makefile
-> index 8632473ad319..022a76a2282a 100644
-> --- a/arch/xtensa/boot/boot-redboot/Makefile
-> +++ b/arch/xtensa/boot/boot-redboot/Makefile
-> @@ -13,6 +13,7 @@ endif
->  LD_ARGS        = -T $(srctree)/$(obj)/boot.ld
->
->  boot-y := bootstrap.o
-> +extra-y        := $(boot-y)
->
->  OBJS   := $(addprefix $(obj)/,$(boot-y))
->  LIBS   := arch/xtensa/boot/lib/lib.a arch/xtensa/lib/lib.a
-> --
-> 2.20.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+Thanks,
+Mark
