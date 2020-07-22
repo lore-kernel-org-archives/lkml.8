@@ -2,121 +2,121 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A052C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1139520714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3213920729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgGVH2Z (ORCPT
+        id S1731506AbgGVHaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:28:25 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:14888 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727096AbgGVH2Z (ORCPT
+        Wed, 22 Jul 2020 03:30:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16766 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727096AbgGVHaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:28:25 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M7Oxi8025051;
-        Wed, 22 Jul 2020 03:28:24 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32cv1457nu-1
+        Wed, 22 Jul 2020 03:30:03 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M71YXW192139;
+        Wed, 22 Jul 2020 03:29:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1wkr8ks-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:28:24 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06M7SNCp022426
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 22 Jul 2020 03:28:23 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 22 Jul 2020 03:28:21 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 22 Jul 2020 03:28:21 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 22 Jul 2020 03:28:21 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06M7SF2r018214;
-        Wed, 22 Jul 2020 03:28:16 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, Stefan Popa <stefan.popa@analog.com>,
-        "Alexandru Ardelean" <alexandru.ardelean@analog.com>
-Subject: [PATCH v2] iio: adxl372_i2c: Add OF device ID table
-Date:   Wed, 22 Jul 2020 10:30:03 +0300
-Message-ID: <20200722073003.67373-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200720134931.71537-1-alexandru.ardelean@analog.com>
-References: <20200720134931.71537-1-alexandru.ardelean@analog.com>
+        Wed, 22 Jul 2020 03:29:53 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M7Qih8083510;
+        Wed, 22 Jul 2020 03:29:52 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1wkr8k2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 03:29:52 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M7PIor002401;
+        Wed, 22 Jul 2020 07:29:50 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 32dbmn13e2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 07:29:50 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M7TkEh65274330
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 07:29:46 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2973AAE051;
+        Wed, 22 Jul 2020 07:29:46 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDB0AAE059;
+        Wed, 22 Jul 2020 07:29:43 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 22 Jul 2020 07:29:43 +0000 (GMT)
+Date:   Wed, 22 Jul 2020 12:59:43 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <michaele@au1.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v2 09/10] Powerpc/smp: Create coregroup domain
+Message-ID: <20200722072943.GD9290@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+ <20200721113814.32284-10-srikar@linux.vnet.ibm.com>
+ <20200722070436.GF31038@in.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200722070436.GF31038@in.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-22_03:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- clxscore=1015 adultscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007220055
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0
+ clxscore=1015 spamscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Popa <stefan.popa@analog.com>
+> > @@ -1386,6 +1421,9 @@ int setup_profiling_timer(unsigned int multiplier)
+> > 
+> >  static void fixup_topology(void)
+> >  {
+> > +	if (!has_coregroup_support())
+> > +		powerpc_topology[mc_idx].mask = cpu_bigcore_mask;
+> > +
+> 
+> Shouldn't we move this condition after doing the fixup for shared
+> caches ? Because if we have shared_caches, but not core_group, then we
+> want the coregroup domain to degenerate correctly.
+> 
 
-The driver does not have a struct of_device_id table, but supported
-devices are registered via Device Trees. This patch adds OF device ID
-table.
+Currently we aren't consolidating, and hence the order doesn't matter for
+degeneration. However even if in future, if we want to consolidate the
+domains before calling set_sched_topology(), this order would be ideal.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+> 
+> >  	if (shared_caches) {
+> >  		pr_info("Using shared cache scheduler topology\n");
+> >  		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
+> 
 
-Changelog v1 -> v2:
-* use linux/mod_devicetable.h include instead for the OF table
-* remove comma from null terminator
-
- drivers/iio/accel/adxl372_i2c.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/iio/accel/adxl372_i2c.c b/drivers/iio/accel/adxl372_i2c.c
-index e1affe480c77..9a07ab3d151a 100644
---- a/drivers/iio/accel/adxl372_i2c.c
-+++ b/drivers/iio/accel/adxl372_i2c.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
- 
-@@ -46,9 +47,16 @@ static const struct i2c_device_id adxl372_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, adxl372_i2c_id);
- 
-+static const struct of_device_id adxl372_of_match[] = {
-+	{ .compatible = "adi,adxl372" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, adxl372_of_match);
-+
- static struct i2c_driver adxl372_i2c_driver = {
- 	.driver = {
- 		.name = "adxl372_i2c",
-+		.of_match_table = adxl372_of_match,
- 	},
- 	.probe = adxl372_i2c_probe,
- 	.id_table = adxl372_i2c_id,
 -- 
-2.17.1
-
+Thanks and Regards
+Srikar Dronamraju
