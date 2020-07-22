@@ -2,137 +2,155 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C357C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7392E20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7948220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AX+FqyFP";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="a/9R+n5B"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Qx0vK0fi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgGVHpb (ORCPT
+        id S1727876AbgGVHq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:45:31 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:60082 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGVHp3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:45:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595403929; x=1626939929;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=2dYsmetetAQjGFOstq75gNTdBHAVPGPd6z19LIgcbAs=;
-  b=AX+FqyFP42cvLdAwluqAh6NJ4NC9KumH6E5bwT2Do6gs35PIRX44z/fp
-   rHFo2N6mcQ1c9TpzbPJnMdS+/vIJPdezH9ELCuoQbWM294ewrU8AOjrP8
-   srit02Vsv9yJozycvqVfww6wx3N7vg96O8YIpaZFpmwUhas0cCikpzLPl
-   vnWUkEHDsIkE2QkALziB/UmqluvTEmFinO0589aqYSgjB3I8CtrBASTJd
-   NvmFfHrauXPZYvKdzj46zQj1yhGETqXX/v1O6JtW3FAqPnoHkRTA3DD+j
-   M6Jjx36GZHmQq2ICEBhny7PJiCjdazGU/sefV3bD6u/70D8ASJ3W4dsBc
-   Q==;
-IronPort-SDR: SDjlXVEhUp0fAxb7HA0iZl2lppjVGzgppUkGG+WGLW49GubZShj2qUNUK5fNy4VXMQ7uM5NF6g
- MarhJ3NvqMvRPN/606pU/xuhmhczi+lE91rLKYEKA+oV6uoB5H0IdBUqdnKqU36BIXI5+/DVgT
- wgx9aceZ/vD9Eop0RBjUf+MudWDzMAGwbQcjD0PFQ5hzZ1q/QUjE19+Vql9NhvSaR8W98oqvMz
- qjibeh+XqSl2YoU50c12tPKRtuhHIbtFEukHVOoXJJV86GB5DD7DPM0Lpj5gzLvU6/YwO3x6Y6
- Q4U=
-X-IronPort-AV: E=Sophos;i="5.75,381,1589212800"; 
-   d="scan'208";a="144357296"
-Received: from mail-bn8nam12lp2172.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.172])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Jul 2020 15:45:27 +0800
+        Wed, 22 Jul 2020 03:46:26 -0400
+Received: from mail-eopbgr40061.outbound.protection.outlook.com ([40.107.4.61]:36484
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726147AbgGVHqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 03:46:25 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=drU+PObeyP3UdTqV790WO7C7ywL2JUxTmqUeMUz5Stk/lb7uW1UesRnhM8Bghke9cpVbX1l+A0ghUYsD6uONEDPIfm/z73C0GptuwOLdoSOStVdRiK4ErYwGSMmTB8GIKxQcRNNzTxjcOPVWnXyT5Vx5KQURD3ibXiCeDKmWVmck++vNxZvfTwuK2LakYaiYqUVJY/uwDcNQEi0NOKYQyB9Ko0LK6xTwgHSA3zUUtmswN1NC7eaVqD/KQYJqitLhRooZBMUUzLJ2Q3ofLymn/bHO4FNyx94dLVizecb6ggSo72Ipoxfsan24IL40+mn2OdzVTf88LZL4EvK9AbABeQ==
+ b=TMpqg1qJ6WAZi6heXuG3ulu/dQ07UGndKWi07af3eN3lCQGEQdxPzYVE26M014W3p0ecBEurRTSlrPNtaCe+qZD2XH7Wp78kzNTsrlSObUSYfMo5Nm39p6Wz8HH7sBzuKAg699N0Nmf4BpY3kp1fg+Hpl+ciaLhcDFu99hcZK28iXVkW/oZUlumcZYhNEkRvfMAVdhXhf2a52p6q2jIAVc8xHG5WWthgShKqTCoPmjmgmuZdagVw+BJYCqlChpNj/f2eRPgJ4l7PkgR6KzMJJ1DJD30FkNFHWrflvdTz/A+M5NmBaIBv6MDSoSoHS8j2jaek1SkFTZZqnNHPTTWJrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0K5mJznmfxjwY39VW0JeYpFKeILGV3n8VhABZp5fF0=;
- b=QHi8m12gXJAZFvDfFS+/9Ds0HLkoapN9cfjcRy0VvFYZTBR6NyuCx+otChUHAnb3qlIROeJaR8ji5RPiKRDI0L4/ARXAgOPzY/GfSRmtn4NuPG+79LUDpHZg53LN3S93p7x+FMV2P1bymnvylbv3SQvnD83FciBm2Bq6pct4/uFcyQ5NDK4VeqvN/5Vfoxsieogb7of8PRjCCfyHpS+mzpNFkWxHZ1PjyLYPjaNKJ4REhYDQb5bH3YH0rSJ+bLlCZlMxy+T95pW4MnG2MSILwebfSbMXDaYktgpq+5z9aDJ5CSNKM7zDdl29OErlCFRXEoLdsAgKHMXV4eNdyRh2LA==
+ bh=EnCctu3vmdAHTLCMXZiyHPufMNQrlPxsbltTBWSpKAQ=;
+ b=kfC0gG+iWCKddFPiw8eUgP0hCbKBXVwiFz5pV8xiIqa/9jOFyvG9OueF5AiMoh01R6amcr9YlW5giqOJbR6FUC6srwD4cXsT6+PpG5Xsr3HTKCWqMR8/F9RyOpTVfmqt7whDMCPDP9kBXR8WwTARxVyT2szT/mVUlK+xVh4p4s18rue5a4gEYo4NrjD/LkXc64wWQ3YxZtspnZiYsAogUe+Fgvw8Bb70ljVrPI9OYpOX3qL4903yHjVPh4Qn4gUmL+KRMwxOOf+zxnLgoivov2NTSP51s6/5Tmh5L5P/Xn1EHPm2EtwVqk6fMT6yXItSaQZtsJtscRUosYJ5wXcFtA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0K5mJznmfxjwY39VW0JeYpFKeILGV3n8VhABZp5fF0=;
- b=a/9R+n5BrdGnFvHmK72vVSTNqZyTcUh2/W/H5HRXaBYZJJFj6fag2W8sUdt+D1wg8YbLPwkfmtSwkPd6qAfXsxozzx/9GJcww1xDIA9SHpfliZe3w2opM2huZfYgSW77aFyzYlj43Q6qS1FVjdu8ZM81iim5HkVQKJqFQRyTIDc=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB5166.namprd04.prod.outlook.com
- (2603:10b6:805:94::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Wed, 22 Jul
- 2020 07:45:25 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
- 07:45:25 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
-Subject: Re: [PATCH 09/14] bdi: remove BDI_CAP_CGROUP_WRITEBACK
-Thread-Topic: [PATCH 09/14] bdi: remove BDI_CAP_CGROUP_WRITEBACK
-Thread-Index: AQHWX/E7tn9lZZ9OhUyy9G9ALxYa2w==
-Date:   Wed, 22 Jul 2020 07:45:24 +0000
-Message-ID: <SN4PR0401MB35988BC2003CCDFC7CE8258F9B790@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200722062552.212200-1-hch@lst.de>
- <20200722062552.212200-10-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c408b401-570b-44b8-cdf6-08d82e133232
-x-ms-traffictypediagnostic: SN6PR04MB5166:
-x-microsoft-antispam-prvs: <SN6PR04MB51661888992ABF6700F326FB9B790@SN6PR04MB5166.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EfDnxd+GPm0gZxTebfIFv6FzPlTSO1L25VMdJjFqeTLDSm95+2EeoCncor1Ikx12NOs4A+eQLtb91OotgtTkwkMqjEjcLDYer1UXXwFK88XlDNn1VcC789J1XI+YCfboC4NQONkv1aqjH2CGDULcJvndJokgksu+OyxWeUJ7sui9iztfLHfi4h58+IcNHU9petmCnmts7XzJ8feEu8J7MzCOPz/+O66g51FfXLHwDFfuo/FKIH9r0/+Cg4GR4g+BJTTeRFfkvlUyiQGc9z/ZjV+LrFhQKJD7JCd+oqdQXKCqCMn/aQUmhjRqjxZN7XcLPYMVWY6tgZGNDWXbz1Uqpw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(39860400002)(136003)(346002)(9686003)(55016002)(86362001)(26005)(558084003)(7416002)(52536014)(5660300002)(83380400001)(186003)(76116006)(66946007)(66446008)(64756008)(66476007)(66556008)(8936002)(478600001)(54906003)(8676002)(7696005)(110136005)(316002)(2906002)(91956017)(4326008)(53546011)(6506007)(71200400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4Vf7Bw2L2SMhl3Jt3ilKs7ZxghqXd79kKvSP0ct+ChAlqLmLNj25NXPhAalKXCu+YIG48i068OUEUN4KbDcYD0Hs/4j3WJUCFvzLlt53HJvY/ue9U+1J4qJGyiIFHnJbqZkwfh5gcTysF4pp0RekCJ9GpLa/gL7pxT5vh35fxY/ONSjnEm1YFiihH0NflWOi62TZ4iUOtvcqy8kPeRgvhsMxNHAD+c3NVTilVhm32WxzcUWmG8IEJS+97EFA3iCNiQr3EbnB8sozmmMHjVZH0QG7Vp1YT2z2PL0ZR9pM5MyFMTN/unviq9YFquqWSSmDfyEu+VQ8XJYnvqHzkqTkEZ1ZiQ0x9U2ydIA5/YGw/KT8m+pA2hWsxgBhkidG5ZrFUqkSkUSwJ5jhWEusaX4QaW+vL6YHK4QyZrHGmLc9W5hvA0iDXzx+//rVN6Q5xL0DCjkkAO59PGD5+es9JShbbi+JPLfiXOeIrnzflaWg4qgWIqs51Z6d8CAdXS8f0wwv
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=EnCctu3vmdAHTLCMXZiyHPufMNQrlPxsbltTBWSpKAQ=;
+ b=Qx0vK0fiL+jzJYEzAvCLGrcCxeGXoFQq5vqMAJ2mZRcGnXfx6zH4RP4WmuHOIK86F0xmjU4+bK76K6d1zWVdupIlYszrAcQnPnFVZXqoxMghFewRV6M8wbqu0w8FD8uVOnxh66yNl+PwSnAW0e/OWDJUU0/1minIzVirmqiKMA0=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
+ by AM4PR0501MB2226.eurprd05.prod.outlook.com (2603:10a6:200:52::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Wed, 22 Jul
+ 2020 07:46:21 +0000
+Received: from AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::e00a:324b:e95c:750f]) by AM0PR05MB4786.eurprd05.prod.outlook.com
+ ([fe80::e00a:324b:e95c:750f%7]) with mapi id 15.20.3195.025; Wed, 22 Jul 2020
+ 07:46:21 +0000
+Date:   Wed, 22 Jul 2020 10:46:17 +0300
+From:   Eli Cohen <eli@mellanox.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
+        shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
+Subject: Re: [PATCH V2 vhost next 10/10] vdpa/mlx5: Add VDPA driver for
+ supported mlx5 devices
+Message-ID: <20200722074617.GA210999@mtl-vdi-166.wap.labs.mlnx>
+References: <20200720071416.32112-11-eli@mellanox.com>
+ <202007202033.m3akyfrJ%lkp@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007202033.m3akyfrJ%lkp@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-ClientProxiedBy: AM0PR03CA0039.eurprd03.prod.outlook.com (2603:10a6:208::16)
+ To AM0PR05MB4786.eurprd05.prod.outlook.com (2603:10a6:208:b3::15)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mtl-vdi-166.wap.labs.mlnx (94.188.199.18) by AM0PR03CA0039.eurprd03.prod.outlook.com (2603:10a6:208::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Wed, 22 Jul 2020 07:46:19 +0000
+X-Originating-IP: [94.188.199.18]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 51fdd91a-88d2-4223-74bd-08d82e13531a
+X-MS-TrafficTypeDiagnostic: AM4PR0501MB2226:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM4PR0501MB222639F00219401764D2809BC5790@AM4PR0501MB2226.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3aIiBNexg7aT8bhHmWQMhcdbXBZXg8xHPyj/OfBw8QxXZxsfe2NsXE+8tXu6pVRZipGysKH8pmG0dkQKsz3vAxx3DmA1DFfJerwffDbNvxYCLFcUje4SzHxrfnhJWgueaYZsnqMgLLDiKVncS1B6Xe/lHwlRf5Pc4Qen3mq/EKzaDlm0VItIFV+kofqdi/fUVXeHxECsjQvvlHt6mmdJ1OiJwAMaFA5wPVWh377USCkp7Ps12gT3Bl8qiMDU+1u+S4+/s3aFlmBeVaR3PbSZMub6hfNAqbIYp5I5KFlWsbav0g+2GgVsxt4EwGZWr3r1gTOQ2MODkSxjMRm1xlaFJwV4SCEpwDQ5WA8MnaSiZXwxfDLL0c+y42wmJkHaHhBgotuSZuMGmDFIf2b2tyWEcg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4786.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(86362001)(6916009)(6506007)(1076003)(66946007)(16526019)(52116002)(7696005)(186003)(8936002)(55016002)(9686003)(26005)(107886003)(4326008)(8676002)(2906002)(956004)(33656002)(316002)(478600001)(966005)(5660300002)(66476007)(66556008)(83080400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: JBEo318OmE6MC4FFOpqma1RKwhIccmmNn5Qh/xX1+tmmFd3tTNqrFAJ827rAG8fTdA3y2k0X1mTuZ/vH6tvw9eDS8KEWv/RQ4CGxg6SaO6X1ax/WYGAcp6uJfvvZ7JWC7IBnkpUkF+IxIcet44lTPuvl39y/A93GYy0JVQdsGBI5r4uXTX7oj7TRPrlkqoTqdlybEW9NqAw4UBN3cXTc5+J2wG248LJAmV3weIbKDfV6/JjylyiP7cLqN02rd9S+VySA5eEhKZmSNsKq8FJ5T14HAhHBjRI2PFeCExRAoc1Ud+fQERw4bgBRlW+BmbMr3cylzgUvZG0+IRFwRko3Ul8DeK60z7HwvrZ4PldtujUUtDJyeb0NQS/q1i4XNE9wdF94+FT7ls+PvSdZn6BnMF3nlmD/GOU+UtwVWipS8/4Rd0r98pf4Pq4lw/4BsvKl1bRneIRG0CKG3sDXzkSgwSlDzavEnqT4hwOY2/SktuI=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51fdd91a-88d2-4223-74bd-08d82e13531a
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4786.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c408b401-570b-44b8-cdf6-08d82e133232
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 07:45:24.9244
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 07:46:20.9612
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SirNX0bUajLMGXRH0iKCjWPNXUs9Ukmcwo5ehc24DNrjMj6KWKusnbx4pI2xSrXuVT41q2axOQJFRyDnqTFudULMSRzXqqnqTrUhVIuh+2Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5166
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GcxdgBmeLYmu2f+xTvJd8eqaZkMIg9Sp0bqXiKGWthxtpq6uK8jhxHIQtHANF3hUfRS8EV0OzR9ECXJAJNkwLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2226
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/07/2020 08:27, Christoph Hellwig wrote:=0A=
-> it is know to support cgroup writeback, or the bdi comes from the block=
-=0A=
-knwon  ~^=0A=
-=0A=
-Apart from that,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+On Mon, Jul 20, 2020 at 08:55:54PM +0800, kernel test robot wrote:
+> Hi Eli,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on next-20200717]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Eli-Cohen/VDPA-support-for-Mellanox-ConnectX-devices/20200720-160220
+> base:    aab7ee9f8ff0110bfcd594b33dc33748dc1baf46
+> config: arc-allyesconfig (attached as .config)
+> compiler: arc-elf-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/vdpa/mlx5/net/main.c:7:10: fatal error: mlx5_vdpa_ifc.h: No such file or directory
+>        7 | #include "mlx5_vdpa_ifc.h"
+>          |          ^~~~~~~~~~~~~~~~~
+
+Does anyone understand this error? The code compiles with no issues. I
+think there may be an issue with the tool not interpreting the include
+path in the makefile:
+
+subdir-ccflags-y += -I$(src)/core
+
+>    compilation terminated.
+> --
+>    In file included from drivers/vdpa/mlx5/net/mlx5_vnet.c:12:
+> >> drivers/vdpa/mlx5/net/mlx5_vnet.h:13:10: fatal error: mlx5_vdpa.h: No such file or directory
+>       13 | #include "mlx5_vdpa.h"
+>          |          ^~~~~~~~~~~~~
+>    compilation terminated.
+> 
+> vim +7 drivers/vdpa/mlx5/net/main.c
+> 
+>      3	
+>      4	#include <linux/module.h>
+>      5	#include <linux/mlx5/driver.h>
+>      6	#include <linux/mlx5/device.h>
+>    > 7	#include "mlx5_vdpa_ifc.h"
+>      8	#include "mlx5_vnet.h"
+>      9	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
