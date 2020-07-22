@@ -6,69 +6,80 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E0C433EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A22B22B42
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7D122B47
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732797AbgGVT7y (ORCPT
+        id S1732488AbgGVUCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:59:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgGVT7y (ORCPT
+        Wed, 22 Jul 2020 16:02:33 -0400
+Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:40610 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726462AbgGVUCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:59:54 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42592C0619DC;
-        Wed, 22 Jul 2020 12:59:54 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF56611FFC80E;
-        Wed, 22 Jul 2020 12:43:07 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 12:59:52 -0700 (PDT)
-Message-Id: <20200722.125952.2002253965644109632.davem@davemloft.net>
-To:     hongbo.wang@nxp.com
-Cc:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
-        po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com, jiri@resnulli.us,
-        idosch@idosch.org, kuba@kernel.org, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
-Subject: Re: [PATCH] net: dsa: ocelot: Add support for QinQ Operation
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200722055048.6129-1-hongbo.wang@nxp.com>
-References: <20200722055048.6129-1-hongbo.wang@nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 22 Jul 2020 16:02:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id B60D41842C03F;
+        Wed, 22 Jul 2020 20:02:30 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: force93_1a17f4e26f38
+X-Filterd-Recvd-Size: 1832
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 Jul 2020 20:02:28 +0000 (UTC)
+Message-ID: <2bdd6b8ec731d180023d593b679afc66def19b4f.camel@perches.com>
+Subject: Re: [PATCH v2] KEYS: remove redundant memset
+From:   Joe Perches <joe@perches.com>
+To:     trix@redhat.com, dhowells@redhat.com,
+        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
+        serge@hallyn.com, denkenz@gmail.com, marcel@holtmann.org
+Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 22 Jul 2020 13:02:27 -0700
+In-Reply-To: <20200722134610.31947-1-trix@redhat.com>
+References: <20200722134610.31947-1-trix@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jul 2020 12:43:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: hongbo.wang@nxp.com
-Date: Wed, 22 Jul 2020 13:50:48 +0800
+On Wed, 2020-07-22 at 06:46 -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> Reviewing use of memset in keyctrl_pkey.c
+> 
+> keyctl_pkey_params_get prologue code to set params up
+> 
+> 	memset(params, 0, sizeof(*params));
+> 	params->encoding = "raw";
+> 
+> keyctl_pkey_query has the same prologue
+> and calls keyctl_pkey_params_get.
+> 
+> So remove the prologue.
+> 
+> Fixes: 00d60fd3b932 ("KEYS: Provide keyctls to drive the new key type ops for asymmetric keys [ver #2]")
 
-> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-> index c69d9592a2b7..12b46cb6549c 100644
-> --- a/drivers/net/dsa/ocelot/felix.c
-> +++ b/drivers/net/dsa/ocelot/felix.c
-> @@ -132,9 +132,13 @@ static void felix_vlan_add(struct dsa_switch *ds, int port,
->  {
->  	struct ocelot *ocelot = ds->priv;
->  	u16 flags = vlan->flags;
-> +	struct ocelot_port *ocelot_port = ocelot->ports[port];
->  	u16 vid;
->  	int err;
+At best, this is a micro optimization.
 
-Please use reverse christmas tree ordering for local variables.
+How is this appropriate for a Fixes: line?
+
+> diff --git a/security/keys/keyctl_pkey.c b/security/keys/keyctl_pkey.c
+[]
+> @@ -166,8 +166,6 @@ long keyctl_pkey_query(key_serial_t id,
+>  	struct kernel_pkey_query res;
+>  	long ret;
+>  
+> -	memset(&params, 0, sizeof(params));
+> -
+>  	ret = keyctl_pkey_params_get(id, _info, &params);
+>  	if (ret < 0)
+>  		goto error;
+
