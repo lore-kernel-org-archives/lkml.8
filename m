@@ -2,165 +2,151 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFD2C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 916A0207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF99D20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tPcUArAX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgGVFV6 (ORCPT
+        id S1727786AbgGVFYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:21:58 -0400
-Received: from out28-121.mail.aliyun.com ([115.124.28.121]:51815 "EHLO
-        out28-121.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGVFV5 (ORCPT
+        Wed, 22 Jul 2020 01:24:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgGVFYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:21:57 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436803|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0309937-0.00197279-0.967034;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.I5hMDsk_1595395304;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I5hMDsk_1595395304)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Wed, 22 Jul 2020 13:21:51 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     tsbogend@alpha.franken.de, paul@crapouillou.net
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        paulburton@kernel.org, jiaxun.yang@flygoat.com,
-        Sergey.Semin@baikalelectronics.ru, chenhc@lemote.com,
-        Alexey.Malahov@baikalelectronics.ru, huanglllzu@gmail.com,
-        prasannatsmkumar@gmail.com, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: [PATCH 1/1] MIPS: X2000: Add X2000 system type.
-Date:   Wed, 22 Jul 2020 13:21:19 +0800
-Message-Id: <20200722052119.60129-2-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200722052119.60129-1-zhouyanjie@wanyeetech.com>
-References: <20200722052119.60129-1-zhouyanjie@wanyeetech.com>
+        Wed, 22 Jul 2020 01:24:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC50C0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:24:48 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f16so566588pjt.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sKsu2k4zgHSwkJM1tGdl1w2cpO2vsxMcLmVlUEcUe4I=;
+        b=tPcUArAXeKgDPP+5uhYAO+IddNgf5clIh1GvfT9og2rVyw/GDB3vMFPJLJT5Q80lK7
+         M16unqNehP0zaoRQWzToJQd6ZSZQT4ojfUQxhSXRUsHWWJUGDOammwIs9huiuZxi+QgC
+         RqbR3edVqGyYFjt1qRUk5KOLP6oCzp4Hg9lm4vF9vhk5WhCCbX34GM0kiucsa6RaR1sB
+         LqHKrmbTDBkhjC+Gt+dyJz7+C0BOn/9dkl3zIibme2ggwqFSRCU1KmiqY7jjlN+vJG+v
+         0OQjg/2MN/F+H6TCzgo18p4/0jV0EXYV2IeDm0dhOKhbJzsZQk58g5Av6pakErnj5qfg
+         nI1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sKsu2k4zgHSwkJM1tGdl1w2cpO2vsxMcLmVlUEcUe4I=;
+        b=fFW8ug4dLXaEc25ikNKltlio3pQPpXxEFfTgdu/2l1zHMzubHvgN0bW98NdluYOXok
+         pS4C08kYsvasx6RL5xkR7RTX7M5D9If1OK+WVnEGBDIp5H0Gaj2H4cEmfYPcS9wgy4Qr
+         gJL1gC8y3cYTBekFZrl6iTB2p/SC/sWT0YpJwnrDqCIpbSQBTWXNcYIth33XfFtZ51Rc
+         qfKmI+/z/N0ZWpmqgGLXpoZnRbRAoBm4IhFTy/MVuihr2XLabv3cq7MlcWmu4hYSWyFI
+         ovs5j5lNo2ifJpQoZtpNbGMOsrzvI4FudNFtV46eTA1TUe+GbxtRwm3c5MoB6Y2m9k9X
+         oQ0Q==
+X-Gm-Message-State: AOAM530UmHrcZYG1OBmNxyIHe00MA4RaJa6sHRDiMVNJydREzrkZAIzy
+        mmyVZI0/V05zuyBv791JhgMh7A==
+X-Google-Smtp-Source: ABdhPJy4KtwrRmb0WHGLTdusgx9+v5/UvU1PCVaIysq25oC726zsaTjQhBx2RAqTt8iVfLZkBgfnIg==
+X-Received: by 2002:a17:90a:f68c:: with SMTP id cl12mr7306414pjb.116.1595395488285;
+        Tue, 21 Jul 2020 22:24:48 -0700 (PDT)
+Received: from localhost ([182.77.116.224])
+        by smtp.gmail.com with ESMTPSA id 21sm22102854pfu.124.2020.07.21.22.24.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 22:24:46 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 10:54:44 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robdclark@chromium.org,
+        robdclark@gmail.com, stanimir.varbanov@linaro.org,
+        mka@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v6 1/6] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+Message-ID: <20200722052444.updchi2yfjgbf3hb@vireshk-mac-ubuntu>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-2-git-send-email-rnayak@codeaurora.org>
+ <159347264530.1987609.11350620235820019545@swboyd.mtv.corp.google.com>
+ <a3d53f82-b29d-97ef-3ba1-ca9bd650d354@codeaurora.org>
+ <20200630030552.cfp5oh33qde6nlnf@vireshk-i7>
+ <159532101373.3847286.9695594340556014384@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159532101373.3847286.9695594340556014384@swboyd.mtv.corp.google.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.Add "PRID_COMP_INGENIC_13" and "PRID_IMP_XBURST2" for X2000.
-2.Add X2000 system type for cat /proc/cpuinfo to give out X2000.
+On 21-07-20, 01:43, Stephen Boyd wrote:
+> It seems that dev_pm_opp_set_rate() calls _find_opp_table() and finds
+> something that isn't an error pointer but then dev_pm_opp_of_add_table()
+> returns an error value because there isn't an operating-points property
+> in DT. We're getting saved because this driver also happens to call
+> dev_pm_opp_set_clkname() which allocates the OPP table a second time
+> (because the first time it got freed when dev_pm_opp_of_add_table()
+> return -ENODEV because the property was missing).
+> 
+> Why do we need 'has_opp_table' logic? It seems that we have to keep
+> track of the fact that dev_pm_opp_of_add_table() failed so that we don't
+> put the table again, but then dev_pm_opp_set_clkname() can be called
+> to allocate the table regardless.
+> 
+> This maintainer is paying very close attention
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- arch/mips/include/asm/bootinfo.h |  1 +
- arch/mips/include/asm/cpu.h      |  6 ++++--
- arch/mips/jz4740/setup.c         |  4 ++++
- arch/mips/kernel/cpu-probe.c     | 11 +++++++++++
- 4 files changed, 20 insertions(+), 2 deletions(-)
+:)
 
-diff --git a/arch/mips/include/asm/bootinfo.h b/arch/mips/include/asm/bootinfo.h
-index 26f267d5649f..147c9327ce04 100644
---- a/arch/mips/include/asm/bootinfo.h
-+++ b/arch/mips/include/asm/bootinfo.h
-@@ -80,6 +80,7 @@ enum ingenic_machine_type {
- 	MACH_INGENIC_JZ4780,
- 	MACH_INGENIC_X1000,
- 	MACH_INGENIC_X1830,
-+	MACH_INGENIC_X2000,
- };
- 
- extern char *system_type;
-diff --git a/arch/mips/include/asm/cpu.h b/arch/mips/include/asm/cpu.h
-index 104a509312b3..f5b04e8f6061 100644
---- a/arch/mips/include/asm/cpu.h
-+++ b/arch/mips/include/asm/cpu.h
-@@ -46,6 +46,7 @@
- #define PRID_COMP_NETLOGIC	0x0c0000
- #define PRID_COMP_CAVIUM	0x0d0000
- #define PRID_COMP_LOONGSON	0x140000
-+#define PRID_COMP_INGENIC_13	0x130000	/* X2000 */
- #define PRID_COMP_INGENIC_D0	0xd00000	/* JZ4740, JZ4750, X1830 */
- #define PRID_COMP_INGENIC_D1	0xd10000	/* JZ4770, JZ4775, X1000 */
- #define PRID_COMP_INGENIC_E1	0xe10000	/* JZ4780 */
-@@ -185,8 +186,9 @@
-  * These are the PRID's for when 23:16 == PRID_COMP_INGENIC_*
-  */
- 
--#define PRID_IMP_XBURST_REV1	0x0200	/* XBurst with MXU SIMD ISA		*/
--#define PRID_IMP_XBURST_REV2	0x0100	/* XBurst with MXU2 SIMD ISA	*/
-+#define PRID_IMP_XBURST_REV1	0x0200	/* XBurst®1 with MXU1.0/MXU1.1 SIMD ISA	*/
-+#define PRID_IMP_XBURST_REV2	0x0100	/* XBurst®1 with MXU2.0 SIMD ISA		*/
-+#define PRID_IMP_XBURST2		0x2000	/* XBurst®2 with MXU2.1 SIMD ISA		*/
- 
- /*
-  * These are the PRID's for when 23:16 == PRID_COMP_NETLOGIC
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index 61468a87775c..7d6cd087c5a9 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -49,6 +49,8 @@ static void __init jz4740_detect_mem(void)
- 
- static unsigned long __init get_board_mach_type(const void *fdt)
- {
-+	if (!fdt_node_check_compatible(fdt, 0, "ingenic,x2000"))
-+		return MACH_INGENIC_X2000;
- 	if (!fdt_node_check_compatible(fdt, 0, "ingenic,x1830"))
- 		return MACH_INGENIC_X1830;
- 	if (!fdt_node_check_compatible(fdt, 0, "ingenic,x1000"))
-@@ -91,6 +93,8 @@ void __init device_tree_init(void)
- const char *get_system_type(void)
- {
- 	switch (mips_machtype) {
-+	case MACH_INGENIC_X2000:
-+		return "X2000";
- 	case MACH_INGENIC_X1830:
- 		return "X1830";
- 	case MACH_INGENIC_X1000:
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index def1659fe262..90b11bc59d97 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -2110,6 +2110,8 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 	BUG_ON(!__builtin_constant_p(cpu_has_counter) || cpu_has_counter);
- 
- 	switch (c->processor_id & PRID_IMP_MASK) {
-+
-+	/* XBurst®1 with MXU1.0/MXU1.1 SIMD ISA */
- 	case PRID_IMP_XBURST_REV1:
- 
- 		/*
-@@ -2148,12 +2150,20 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 			break;
- 		}
- 		fallthrough;
-+
-+	/* XBurst®1 with MXU2.0 SIMD ISA */
- 	case PRID_IMP_XBURST_REV2:
- 		c->cputype = CPU_XBURST;
- 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
- 		__cpu_name[cpu] = "Ingenic XBurst";
- 		break;
- 
-+	/* XBurst®2 with MXU2.1 SIMD ISA */
-+	case PRID_IMP_XBURST2:
-+		c->cputype = CPU_XBURST;
-+		__cpu_name[cpu] = "Ingenic XBurst II";
-+		break;
-+
- 	default:
- 		panic("Unknown Ingenic Processor ID!");
- 		break;
-@@ -2299,6 +2309,7 @@ void cpu_probe(void)
- 	case PRID_COMP_LOONGSON:
- 		cpu_probe_loongson(c, cpu);
- 		break;
-+	case PRID_COMP_INGENIC_13:
- 	case PRID_COMP_INGENIC_D0:
- 	case PRID_COMP_INGENIC_D1:
- 	case PRID_COMP_INGENIC_E1:
+> to super confusing code like
+> this:
+> 
+> 	if (drv->has_opp_table)
+> 		dev_pm_opp_of_remove_table(dev);
+> 	dev_pm_opp_put_clkname(drv->opp_table);
+> 
+> which reads as "if I have an opp table remove it and oh by the way
+> remove the clk name for this opp table pointer I also happen to always
+> have".
+> 
+> Maybe I would be happier if dev_pm_opp_of_table() went away and we just
+> had dev_pm_opp_add_table(const struct opp_config *config) that did all
+> the things for us like set a clk name, set the supported hw, set the
+> prop name, etc. based on the single config struct pointer and also
+> parsed out the OPP table from DT or just ignored that if there isn't any
+> operating-points property. Then the caller wouldn't need to keep track
+> of 'if has_opp_table' because it doesn't seem to actually care and the
+> core is happy to allocate a table for the device anyway so long as it
+> sets a clk name.
+
+The config style wouldn't work as well as we don't really want to
+allocate an OPP table if the property isn't found in DT.
+
+All the mess is coming from the fact that I wanted to make it easy for
+the generic drivers to have code which can do opp-set-rate or
+clk-set-rate depending on how the platform is configured. While the
+intention was fine, the end result is still not great as you figured
+out.
+
+Because we need to keep a flag to make the right decision anyway, I
+wonder if doing this is the best solution we have at hand.
+
+if (opp-table-present)
+        opp_set_rate();
+else
+        clk_set_rate();
+
+Or maybe stop printing errors from dev_pm_opp_of_remove_table() if the
+OPP table isn't found. And so we can get rid of the flag.
+
 -- 
-2.11.0
-
+viresh
