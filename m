@@ -2,193 +2,103 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4983C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7788622BEF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595433338;
-	bh=kbnKA7mCq4Ti8FRp3szUEaPvkReboJRHj1Bnap/yDXc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rkSyjqcdcqxOppwH1mMPksn+FjwN/in+x0j8DqXXPjFxiP98swo+NP0/FljEVMEtC
-	 mw3SlQ1s23dY1sKzPjO0byLYI0ejLUyLdXNUbW2Mu3gBjecG1TjbQlhwMUsP7Hh+Uw
-	 6z0ANmCFkhDV132dOuufeA+viWKNujQqov7u5tRU=
+	by mail.kernel.org (Postfix) with ESMTP id 8FDCB22CAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733047AbgGVPzh (ORCPT
+        id S1733108AbgGVPzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733022AbgGVPzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:55:35 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E14722BEF;
-        Wed, 22 Jul 2020 15:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595433334;
-        bh=kbnKA7mCq4Ti8FRp3szUEaPvkReboJRHj1Bnap/yDXc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M7PCNAT9DGUX2L0caH+10UVk/p1rx6cEhyeyfCRf6jASk+SutrbKCUhw/JYEbYB32
-         BjD0ohEjSXEDVDq1qz6Q8MfXlggxLHeV1j3pv/wpdz0SRtzmomA0dZBVPY43/EzREm
-         Ocy1sPp4IMvGRDmbA0L51GpMPky3zMlh5grWjl2M=
-Received: by mail-ot1-f43.google.com with SMTP id t18so2122728otq.5;
-        Wed, 22 Jul 2020 08:55:34 -0700 (PDT)
-X-Gm-Message-State: AOAM530N5TuAfQ/pLHpqByyI61P8YN2eA3v3d8CJjtoyGidTLgKWC5GX
-        Ptrb3Z2DSNb5dzgwhOLIzzfc5i3UmQuiqBFgNg==
-X-Google-Smtp-Source: ABdhPJyb6F8z3WA4lftymR6yk0cNa75DCHAW9IbL6thShEbw7ONJr6PozDiOwNdaclBZhAjRHcaGBf8TXqSfAfl9dE4=
-X-Received: by 2002:a9d:46c:: with SMTP id 99mr580182otc.192.1595433333529;
- Wed, 22 Jul 2020 08:55:33 -0700 (PDT)
+        Wed, 22 Jul 2020 11:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732799AbgGVPzr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 11:55:47 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9A1C0619DC;
+        Wed, 22 Jul 2020 08:55:47 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id CAE2B297600
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
+        eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
+        robin.murphy@arm.com
+Subject: [PATCH v5 0/9] move Rockchip ISP bindings out of staging / add ISP DT nodes for RK3399
+Date:   Wed, 22 Jul 2020 12:55:24 -0300
+Message-Id: <20200722155533.252844-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc1
 MIME-Version: 1.0
-References: <20200721141742.996350-1-jiaxun.yang@flygoat.com> <20200721141742.996350-2-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200721141742.996350-2-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Jul 2020 09:55:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLFZc8ChR=Sj3N-G-b0tq_4F0-HSQPt5+WmkcDZrxUznA@mail.gmail.com>
-Message-ID: <CAL_JsqLFZc8ChR=Sj3N-G-b0tq_4F0-HSQPt5+WmkcDZrxUznA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] of_address: Add bus type match for pci ranges parser
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 8:18 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> So the parser can be used to parse range property of ISA bus.
->
-> As they're all using PCI-like method of range property, there is no need
-> start a new parser.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->
-> --
-> v2: Drop useless check, fix some na for bus_addr
->         add define of of_range_parser_init according to
->         Rob's suggestion.
-> ---
->  drivers/of/address.c       | 27 +++++++++++++++------------
->  include/linux/of_address.h |  5 +++++
->  2 files changed, 20 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 8eea3f6e29a4..7406636cea87 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -698,9 +698,10 @@ static int parser_init(struct of_pci_range_parser *parser,
->
->         parser->node = node;
->         parser->pna = of_n_addr_cells(node);
-> -       parser->na = of_bus_n_addr_cells(node);
-> -       parser->ns = of_bus_n_size_cells(node);
->         parser->dma = !strcmp(name, "dma-ranges");
-> +       parser->bus = of_match_bus(node);
-> +
-> +       parser->bus->count_cells(parser->node, &parser->na, &parser->ns);
->
->         parser->range = of_get_property(node, name, &rlen);
->         if (parser->range == NULL)
-> @@ -732,6 +733,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->         int na = parser->na;
->         int ns = parser->ns;
->         int np = parser->pna + na + ns;
-> +       int busflag_na = 0;
->
->         if (!range)
->                 return NULL;
-> @@ -739,12 +741,14 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->         if (!parser->range || parser->range + np > parser->end)
->                 return NULL;
->
-> -       if (parser->na == 3)
-> -               range->flags = of_bus_pci_get_flags(parser->range);
-> -       else
-> -               range->flags = 0;
-> +       range->flags = parser->bus->get_flags(parser->range);
-> +
-> +       /* PCI and ISA have a extra cell for resource flags */
-> +       if (strcmp(parser->bus->name, "pci") ||
-> +           strcmp(parser->bus->name, "isa"))
-> +               busflag_na = 1;
+Move the bindings out of drivers/staging and place them in
+Documentation/devicetree/bindings instead.
 
-This should be abstracted out. Probably the easiest is to add a
-'has_flags' boolean to the of_bus struct.
+Also, add DT nodes for RK3399 and verify with make ARCH=arm64 dtbs_check
+and make ARCH=arm64 dt_binding_check.
 
->
-> -       range->pci_addr = of_read_number(parser->range, na);
-> +       range->bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
->
->         if (parser->dma)
->                 range->cpu_addr = of_translate_dma_address(parser->node,
-> @@ -759,11 +763,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->         /* Now consume following elements while they are contiguous */
->         while (parser->range + np <= parser->end) {
->                 u32 flags = 0;
-> -               u64 pci_addr, cpu_addr, size;
-> +               u64 bus_addr, cpu_addr, size;
->
-> -               if (parser->na == 3)
-> -                       flags = of_bus_pci_get_flags(parser->range);
-> -               pci_addr = of_read_number(parser->range, na);
-> +               flags = parser->bus->get_flags(parser->range);
-> +               bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
->                 if (parser->dma)
->                         cpu_addr = of_translate_dma_address(parser->node,
->                                         parser->range + na);
-> @@ -774,7 +777,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
->
->                 if (flags != range->flags)
->                         break;
-> -               if (pci_addr != range->pci_addr + range->size ||
-> +               if (bus_addr != range->bus_addr + range->size ||
->                     cpu_addr != range->cpu_addr + range->size)
->                         break;
->
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 763022ed3456..3e8d6489cbf1 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -6,8 +6,11 @@
->  #include <linux/of.h>
->  #include <linux/io.h>
->
-> +struct of_bus;
-> +
->  struct of_pci_range_parser {
->         struct device_node *node;
-> +       struct of_bus *bus;
->         const __be32 *range;
->         const __be32 *end;
->         int na;
-> @@ -53,6 +56,7 @@ extern const __be32 *of_get_address(struct device_node *dev, int index,
->
->  extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
->                         struct device_node *node);
-> +#define of_range_parser_init of_pci_range_parser_init
->  extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
->                         struct device_node *node);
->  extern struct of_pci_range *of_pci_range_parser_one(
-> @@ -83,6 +87,7 @@ static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
->  {
->         return -ENOSYS;
->  }
-> +#define of_range_parser_init of_pci_range_parser_init
+Tested by verifying images streamed from Scarlet Chromebook
 
-No need for 2 defines. Move this outside of the ifdef like the others.
+Changes in v5:
+- Drop unit addresses in dt-bindings example for simplification and fix
+errors as suggested by Rob Herring in previous version
+- Fix typos
+- Re-write clock organization with if/then schema
+
+Changes in v4:
+- simplify clocks with "isp", "aclk" and "hclk" as suggested by
+Robin Murphy on https://patchwork.kernel.org/patch/11475007/
+
+Changes in v3:
+- dropped accepted patches
+- cleanup clocks
+- fix "no reg" error in dt-bindings parent@0 example
+- add linux-rockchip list in MAINTAINERS and reorder items
+- add Scarlet sensors dt nodes to the series
+
+Changes in v2:
+Add patches modifying bindings, as sugested by Johan Jonker in v1,
+before moving them out of staging.
+
+Eddie Cai (1):
+  arm64: dts: rockchip: add isp and sensors for Scarlet
+
+Helen Koike (7):
+  media: staging: dt-bindings: rkisp1: add missing required nodes
+  media: staging: dt-bindings: rkisp1: drop i2c unit address
+  media: staging: dt-bindings: rkisp1: re-order properties
+  media: staging: dt-bindings: rkisp1: drop parent unit address
+  media: staging: rkisp1: remove unecessary clocks
+  dt-bindings: media: rkisp1: move rockchip-isp1 bindings out of staging
+  media: MAINTAINERS: rkisp1: add path to dt-bindings
+
+Shunqian Zheng (1):
+  arm64: dts: rockchip: add isp0 node for rk3399
+
+ .../bindings/media/rockchip-isp1.yaml         | 81 ++++++++++++-------
+ MAINTAINERS                                   |  2 +
+ .../boot/dts/rockchip/rk3399-gru-scarlet.dtsi | 74 +++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 25 ++++++
+ drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 +-
+ 5 files changed, 156 insertions(+), 34 deletions(-)
+ rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (80%)
+
+-- 
+2.28.0.rc1
+
