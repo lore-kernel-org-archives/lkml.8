@@ -2,210 +2,86 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA136C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEFC3206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA44206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DxlOfR0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgGVGwR (ORCPT
+        id S1730012AbgGVGwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:52:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54885 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbgGVGwQ (ORCPT
+        Wed, 22 Jul 2020 02:52:40 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:49983 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728063AbgGVGwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:52:16 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1jy8bu-0005xb-3Z
-        for linux-kernel@vger.kernel.org; Wed, 22 Jul 2020 06:52:14 +0000
-Received: by mail-wr1-f71.google.com with SMTP id s16so244950wrv.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:52:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=uhBXqoms6Y2BJ+DRWgv1UXrLfuoV1AP2/YI2uOM0BIc=;
-        b=sObdFnIfHKT3cVDg2uz+NxnYR2pf6wV6jf1RPj2vD7l5jrdGs+95eICyTkTggnGbMv
-         mj/8m2qhC9974jELsukuQ+ozAyHMOciTc5320GgAMYNBY4ZfemvkG4Uf0HQDh85Q9slZ
-         WOWtKa05nt1nakaM+Syj0MrdMEQu4pebXl+SYsOYUG4+gYN1dWHEhkZjTaH2i3SKB8TR
-         yEr+EPMoup5weprttsqJZxbYwATPmSdNPhC6v75iOk5NGqN3ppPcb5upfV7x5SuYZVpK
-         X3eyRSg1wP7WdEywJUgQgEo+DbL5u4uskKrMs8rb+laGHQ7C+p4OCzKUbiaaLFWRE3+j
-         3VIA==
-X-Gm-Message-State: AOAM532jG8NOwnDZIZ/HlIrEEqwdG9qmfL6k2hIH73nzuRxe276k14r8
-        dB3qRtYdFQYE5J1Dau8EMdX9QMzhGoVFbUy9xYErsZCNkbei75fUjVQ53PTeAkTJCao8NEdFqg6
-        7frtdBkrsbQBgB7MP3IQ5C/QQrzWBbOiuTH6F373FCQ==
-X-Received: by 2002:a7b:c05a:: with SMTP id u26mr1897721wmc.73.1595400733676;
-        Tue, 21 Jul 2020 23:52:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhC1gnk9TlQyUIEJ3tOszObyW4FaQs/e6/6fGBY61IX5lMt1lAPzd6jSpjxL2aHTCAHJKvaQ==
-X-Received: by 2002:a7b:c05a:: with SMTP id u26mr1897700wmc.73.1595400733297;
-        Tue, 21 Jul 2020 23:52:13 -0700 (PDT)
-Received: from localhost (host-87-11-131-192.retail.telecomitalia.it. [87.11.131.192])
-        by smtp.gmail.com with ESMTPSA id g70sm2426599wmg.24.2020.07.21.23.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 23:52:12 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 08:52:11 +0200
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] xen-netfront: fix potential deadlock in xennet_remove()
-Message-ID: <20200722065211.GA841369@xps-13>
+        Wed, 22 Jul 2020 02:52:39 -0400
+X-UUID: b8e31aa69ef14041bf4931ca86dde9c5-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=08ahtnmNrBBtT3nmOzdLNlR4diPbsxUTXv6y1fIw5lQ=;
+        b=DxlOfR0DATwm7KW+V3JQs6BlXKER5IXKFJXqBncoNHqIz3zu/bnemjfSZlAg6ELgz00IirHatbbHWE+6eqs3UTgSKZgnYvCDI/IcwIC7MG3QJPum8Ue9R13sygJrxAqrj0oXgYNPNNSn71MbPzWRdQodfPqtJL6atg04iOEL2KA=;
+X-UUID: b8e31aa69ef14041bf4931ca86dde9c5-20200722
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1835170231; Wed, 22 Jul 2020 14:52:27 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 14:52:25 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 14:52:24 +0800
+Message-ID: <1595400680.23885.59.camel@mhfsdcap03>
+Subject: Re: [v3 PATCH] usb: gadget: bdc: use readl_poll_timeout() to
+ simplify code
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 22 Jul 2020 14:51:20 +0800
+In-Reply-To: <87eep5p5jz.fsf@kernel.org>
+References: <1594622881-6563-1-git-send-email-chunfeng.yun@mediatek.com>
+         <87eep5p5jz.fsf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-TM-SNTS-SMTP: 6934C1A160E6292ED1B6B2C90BF72BF7A76190B4B58533C98A2BEDF22A9AD80C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a potential race in xennet_remove(); this is what the driver is
-doing upon unregistering a network device:
-
-  1. state = read bus state
-  2. if state is not "Closed":
-  3.    request to set state to "Closing"
-  4.    wait for state to be set to "Closing"
-  5.    request to set state to "Closed"
-  6.    wait for state to be set to "Closed"
-
-If the state changes to "Closed" immediately after step 1 we are stuck
-forever in step 4, because the state will never go back from "Closed" to
-"Closing".
-
-Make sure to check also for state == "Closed" in step 4 to prevent the
-deadlock.
-
-Also add a 5 sec timeout any time we wait for the bus state to change,
-to avoid getting stuck forever in wait_event() and add a debug message
-to help tracking down potential similar issues.
-
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- drivers/net/xen-netfront.c | 79 +++++++++++++++++++++++++++-----------
- 1 file changed, 57 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index 482c6c8b0fb7..e09caba93dd9 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -63,6 +63,8 @@ module_param_named(max_queues, xennet_max_queues, uint, 0644);
- MODULE_PARM_DESC(max_queues,
- 		 "Maximum number of queues per virtual interface");
- 
-+#define XENNET_TIMEOUT  (5 * HZ)
-+
- static const struct ethtool_ops xennet_ethtool_ops;
- 
- struct netfront_cb {
-@@ -1334,12 +1336,20 @@ static struct net_device *xennet_create_dev(struct xenbus_device *dev)
- 
- 	netif_carrier_off(netdev);
- 
--	xenbus_switch_state(dev, XenbusStateInitialising);
--	wait_event(module_wq,
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateClosed &&
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateUnknown);
-+	do {
-+		dev_dbg(&dev->dev,
-+			"%s: switching to XenbusStateInitialising\n",
-+			dev->nodename);
-+		xenbus_switch_state(dev, XenbusStateInitialising);
-+		err = wait_event_timeout(module_wq,
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateClosed &&
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateUnknown, XENNET_TIMEOUT);
-+		dev_dbg(&dev->dev, "%s: state = %d\n", dev->nodename,
-+			xenbus_read_driver_state(dev->otherend));
-+	} while (!err);
-+
- 	return netdev;
- 
-  exit:
-@@ -2139,28 +2149,53 @@ static const struct attribute_group xennet_dev_group = {
- };
- #endif /* CONFIG_SYSFS */
- 
--static int xennet_remove(struct xenbus_device *dev)
-+static void xennet_bus_close(struct xenbus_device *dev)
- {
--	struct netfront_info *info = dev_get_drvdata(&dev->dev);
--
--	dev_dbg(&dev->dev, "%s\n", dev->nodename);
-+	int ret;
- 
--	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
-+	do {
-+		dev_dbg(&dev->dev, "%s: switching to XenbusStateClosing\n",
-+			dev->nodename);
- 		xenbus_switch_state(dev, XenbusStateClosing);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosing ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosing ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+		dev_dbg(&dev->dev, "%s: state = %d\n", dev->nodename,
-+			xenbus_read_driver_state(dev->otherend));
-+	} while (!ret);
-+
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
- 
-+	do {
-+		dev_dbg(&dev->dev, "%s: switching to XenbusStateClosed\n",
-+			dev->nodename);
- 		xenbus_switch_state(dev, XenbusStateClosed);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosed ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
--	}
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+		dev_dbg(&dev->dev, "%s: state = %d\n", dev->nodename,
-+			xenbus_read_driver_state(dev->otherend));
-+	} while (!ret);
-+}
-+
-+static int xennet_remove(struct xenbus_device *dev)
-+{
-+	struct netfront_info *info = dev_get_drvdata(&dev->dev);
-+
-+	dev_dbg(&dev->dev, "%s\n", dev->nodename);
- 
-+	xennet_bus_close(dev);
- 	xennet_disconnect_backend(info);
- 
- 	if (info->netdev->reg_state == NETREG_REGISTERED)
--- 
-2.25.1
+T24gVHVlLCAyMDIwLTA3LTIxIGF0IDEyOjQyICswMzAwLCBGZWxpcGUgQmFsYmkgd3JvdGU6DQo+
+IEhpLA0KPiANCj4gQ2h1bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPiB3cml0
+ZXM6DQo+ID4gVXNlIHJlYWRsX3BvbGxfdGltZW91dCgpIHRvIHBvbGwgcmVnaXN0ZXIgc3RhdHVz
+DQo+ID4NCj4gPiBDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogQ2h1bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29t
+Pg0KPiA+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNv
+bT4NCj4gDQo+IEkgaGFkIGEgbG90IG9mIHRyb3VibGUgdG8gYXBwbHkgdGhpcyBwYXRjaCwgY291
+bGQgeW91IGF2b2lkIGJhc2U2NA0KPiBlbmNvZGluZyBvbiB0aGUgcGF0Y2ggYm9keSBuZXh0IHRp
+bWU/DQpTb3JyeSBmb3IgaW5jb252ZW5pZW5jZS4NCg0KDQpJIHVzdWFsbHkgdXNlIFNvdXJjZSBJ
+bnNpZ2h0IDMuNSBvciBWaW0gdG8gZWRpdCB0aGUgY29kZSwgc29tZXRpbWVzIHVzZQ0KQmV5b25k
+IENvbXBhcmUgdG8gY29tcGFyZSBwYXRjaGVzLCB0aGVpciBkZWZhdWx0IGVuY29kaW5nIGlzIFVU
+Ri04IG9yDQpBTlNJLiBOb3Qgc3VyZSB3aGljaCB0b29sIHdvdWxkIHVzZSBiYXNlNjQgZW5jb2Rp
+bmcsIG1heWJlIGludHJvZHVjZWQNCndoZW4gSSBjb3B5IGVtYWlsIGFkZHJlc3MgZnJvbSBXaW43
+IHdpdGggQ2hpbmVzZSAodXNlZCB0byByZWNlaXZlIGVtYWlsKQ0KaW50byBXaW4xMCB3aXRoIEVu
+Z2xpc2ggKHVzZWQgdG8gc2VudCBlbWFpbC9wYXRjaCkuIA0KDQoNCkNhbiB5b3UgdGVsbCBtZSB3
+aGljaCBsaW5lcyBhcmUgYmFzZTY0IGVuY29kaW5nIGluIHRoaXMgcGF0Y2g/DQoNCg0KVGhlIHBh
+dGNoJ3MgZW5jb2RpbmcgaXMgQU5TSSwgSSdsbCBjb252ZXJ0IGl0IGludG8gVVRGLTggYW5kIHJl
+c2VuZCBpdCwNCnBsZWFzZSB0cnkgaXQgYWdhaW4uDQoNCj4gDQo+IFRoYW5rcw0KPiANCg0K
 
