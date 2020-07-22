@@ -2,107 +2,109 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED08C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB2F20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CE220729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595428296;
+	bh=R9Fecg1j6n04pUIBM0fwXtjbmYSjbCHZRgh6WgCL/BM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dd5C8BO5AQT1Y/X16nJ/pdMBCMmjP/jTNnzYdyscOPl5YUvSWidvGUvsuhC0YnVlF
+	 YwE7K31NYiSTV8/5cgpCypIbm5kDtT+eq5dEqoClUDmsUEGnwVRqFWuT3knyGpAOUp
+	 /Odu21BN4fTEpUKjTDOzCd9/h8r7PvjIs6Hmqo7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbgGVOgK (ORCPT
+        id S1732517AbgGVObf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:36:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18459 "EHLO mga17.intel.com"
+        Wed, 22 Jul 2020 10:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgGVOgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:36:08 -0400
-IronPort-SDR: aQEyGysVT7Jwc6T3JMd3XNGteO8WCibRd37uw7PrwWJgSM32RwY6vv8pNvqSNK2lr4CxhaSCxx
- cj/QHmMjkoTQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="130415735"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="130415735"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 07:36:08 -0700
-IronPort-SDR: 0fDA+wFM2VhH/FNuai2oBdG5m5IqSLN3WBVI03QvuIPscpFFKfhz8xwTE0a1wZJbBU1K9LeRhM
- TUEYRGTotjNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="392692686"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Jul 2020 07:36:05 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 22 Jul 2020 17:36:04 +0300
-Date:   Wed, 22 Jul 2020 17:36:04 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Tudor.Ambarus@microchip.com
-Cc:     alexander.sverdlin@nokia.com, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ibr@ilbers.de
-Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Simulate WRDI command
-Message-ID: <20200722143604.GQ5180@lahna.fi.intel.com>
-References: <282e1305-fd08-e446-1a22-eb4dff78cfb4@nokia.com>
- <b5c17892-24ec-a690-96ca-d2238b8925d1@microchip.com>
+        id S1729126AbgGVObe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:31:34 -0400
+Received: from embeddedor (unknown [201.166.157.101])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C28B20709;
+        Wed, 22 Jul 2020 14:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595428294;
+        bh=R9Fecg1j6n04pUIBM0fwXtjbmYSjbCHZRgh6WgCL/BM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ybp8cdiYia42CxukEZUwLynLe/KnejR4040+QxBwDPLd2Y6VWP7WL/XfwoPr+Fyk1
+         RGtCGWvM6GZVsTWzCxGxbrO3zAcYMCGGu7cys+m7RNRwtgGP16lTZDeP0YXRqMPTYC
+         R/eSlDeHRYB2J8f3lOfGdrs18n0Yuha2H9f5aM+s=
+Date:   Wed, 22 Jul 2020 09:37:13 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
+Message-ID: <20200722143713.GB22267@embeddedor>
+References: <20200721233814.GA3058@embeddedor>
+ <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b5c17892-24ec-a690-96ca-d2238b8925d1@microchip.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jul 22, 2020 at 11:52:56AM +0300, Andy Shevchenko wrote:
+> On Wed, Jul 22, 2020 at 2:48 AM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+> >
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1].
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> 
+> > [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Perhaps you may do it as Link: tag?
+> 
 
-On Wed, Jul 22, 2020 at 02:28:30PM +0000, Tudor.Ambarus@microchip.com wrote:
-> + Mika
-> 
-> Hi, Mika,
-> 
-> Would you please review the patch from below?
+mmh... that's a good suggestion; thanks, Andy.
 
-Sure, there is minor comment below.
+--
+Gustavo
 
-> 
-> Thanks!
-> 
-> On 7/22/20 5:01 PM, Alexander Sverdlin wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> > 
-> > After spi_nor_write_disable() return code checks were introduced in the
-> > spi-nor front end intel-spi backend stopped to work because WRDI was never
-> > supported and always failed.
-> > 
-> > Just pretend it was sucessful and ignore the command itself. HW sequencer
-> > shall do the right thing automatically, while with SW sequencer we cannot
-> > do it anyway, because the only tool we had was preopcode and it makes no
-> > sense for WRDI.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: bce679e5ae3a ("mtd: spi-nor: Check for errors after each Register Operation")
-> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > > ---
-> >  drivers/mtd/spi-nor/controllers/intel-spi.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> > index 61d2a0a..134b356 100644
-> > --- a/drivers/mtd/spi-nor/controllers/intel-spi.c
-> > +++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> > @@ -612,6 +612,14 @@ static int intel_spi_write_reg(struct spi_nor *nor, u8 opcode, const u8 *buf,
-> >                 return 0;
-> >         }
-> > 
-> > +       /*
-> > +        * We hope that HW sequencer will do the right thing automatically and
-> > +        * with the SW seuencer we cannot use preopcode any way, so just ignore
-                           ^^^^^^^^
-Typo, should be sequencer.
-
-Otherwise looks good to me.
+> >  drivers/i2c/busses/i2c-designware-pcidrv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
+> > index 8522134f9ea9..55c83a7a24f3 100644
+> > --- a/drivers/i2c/busses/i2c-designware-pcidrv.c
+> > +++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
+> > @@ -90,7 +90,7 @@ static int mfld_setup(struct pci_dev *pdev, struct dw_pci_controller *c)
+> >         switch (pdev->device) {
+> >         case 0x0817:
+> >                 dev->timings.bus_freq_hz = I2C_MAX_STANDARD_MODE_FREQ;
+> > -               /* fall through */
+> > +               fallthrough;
+> >         case 0x0818:
+> >         case 0x0819:
+> >                 c->bus_num = pdev->device - 0x817 + 3;
+> > --
+> > 2.27.0
+> >
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
