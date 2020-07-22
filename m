@@ -2,195 +2,112 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A905C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F112C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC842077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A780205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILgCH7OV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgGVIld (ORCPT
+        id S1730479AbgGVInU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:41:33 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2655 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726638AbgGVIlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:41:32 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 63D67DED05347DFCE05A;
-        Wed, 22 Jul 2020 16:41:25 +0800 (CST)
-Received: from DGGEMM421-HUB.china.huawei.com (10.1.198.38) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 22 Jul 2020 16:41:25 +0800
-Received: from DGGEMM526-MBX.china.huawei.com ([169.254.8.195]) by
- dggemm421-hub.china.huawei.com ([10.1.198.38]) with mapi id 14.03.0487.000;
- Wed, 22 Jul 2020 16:41:18 +0800
-From:   "liwei (CM)" <liwei213@huawei.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        fengbaopeng <fengbaopeng2@hisilicon.com>,
-        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sujunfei <sujunfei2@hisilicon.com>,
-        zhaojiapeng <zhaojiapeng@huawei.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBhcm02NDogbW06IGZyZWUgdW51c2VkIG1lbW1hcCBm?=
- =?gb2312?Q?or_sparse_memory_model_that_define_VMEMMAP?=
-Thread-Topic: [PATCH] arm64: mm: free unused memmap for sparse memory model
- that define VMEMMAP
-Thread-Index: AQHWXzEQMpvo3yT4K0COUiys26URoqkSmCeAgAClMpA=
-Date:   Wed, 22 Jul 2020 08:41:17 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140F2312E948@dggemm526-mbx.china.huawei.com>
-References: <20200721073203.107862-1-liwei213@huawei.com>
- <20200722060705.GK802087@linux.ibm.com>
-In-Reply-To: <20200722060705.GK802087@linux.ibm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.144.77.141]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 22 Jul 2020 04:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgGVInS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:43:18 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8983CC0619DC;
+        Wed, 22 Jul 2020 01:43:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so1046598wrl.8;
+        Wed, 22 Jul 2020 01:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wjB5ELp9SHAf9SrbqAcXBLR0Nucf1cmk8PLR4YQ6EeE=;
+        b=ILgCH7OVE1I2wwwPOX+7NQudT+l7/ZlhvlAf2Wxc+ALPOdpvxovZVdBQnKDv4VvSOX
+         WeKNWKbs6o41dVeiDf1bHgAM+FhsHf5ijbZnbipChAvemxTzKPiQf0ThMl/3Zg67x32f
+         YPJF15cSwmSj7JPKUDfnHxj4P0QGdiDgQtRZh3mzOAWBbKcPluLSJXKEl9vlyNRdk0Bp
+         iO77Mv5K5Vst6unlftQXlcONA8EM6WRUvB4+9NMBIuAVZJx5Lm/j7PU1OmNSz7DpGfIi
+         C9FMKzrLXZeEsXq3GDm9z3Hnpv+ZjohX9kD/HP9YLzjasxAgbSWD7X1jyZrp3MQLP4kh
+         QmFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wjB5ELp9SHAf9SrbqAcXBLR0Nucf1cmk8PLR4YQ6EeE=;
+        b=shI9NVscmPFDycT2F3OCQB0/S7L+SIamVZTh+HoU5Ybl4cBVqajPpAOOVWn02KEK5Z
+         OF9HojNmUGZHMZSvK1xtv1DLSqT1+kxHd+j1gNbcZZyrq8Db4yOtjHUL7o9npHvBy2s0
+         QzEPGCq7p6oiDhuXAQ+ZVTaIeNxC2fk6KFDkb3JIrufS+iAnNw2KQfpx3mLjSgwzdmZ7
+         uEcGMEK8NCmTm0GwZeUMelMA7mVFnPSx7HL/oXzysB/dQBxkneUoaFpbHvijMW331VZU
+         QilgohaAE9q+Wl+hkwInNfSfbZzry2YoCfDk8pASnwlRVPgrgTQA3ANSi7w+zPskJd4l
+         w1fA==
+X-Gm-Message-State: AOAM530MPHkhHrn6PRUaqq472a3meL/C5A2zUuPXNm8KvKWqgQ5uX2Rf
+        GvOi4vZcidu8oxs7UkWrz0Y=
+X-Google-Smtp-Source: ABdhPJxlWiEov15iy9/riqXA7B2hI67oGx3zp7/BbZOGyfUGYQf4x5XHJFdL6u7mY1E1itglTCxrcw==
+X-Received: by 2002:adf:f18c:: with SMTP id h12mr28847223wro.375.1595407397275;
+        Wed, 22 Jul 2020 01:43:17 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id n16sm6255231wmc.40.2020.07.22.01.43.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 01:43:16 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
+To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com
+References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
+Date:   Wed, 22 Jul 2020 10:43:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCi0tLS0t08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBNaWtlIFJhcG9wb3J0IFttYWlsdG86cnBw
-dEBsaW51eC5pYm0uY29tXSANCreiy83KsbzkOiAyMDIwxOo31MIyMsjVIDE0OjA3DQrK1bz+yMs6
-IGxpd2VpIChDTSkgPGxpd2VpMjEzQGh1YXdlaS5jb20+DQqzrcvNOiBjYXRhbGluLm1hcmluYXNA
-YXJtLmNvbTsgd2lsbEBrZXJuZWwub3JnOyBYaWFxaW5nIChBKSA8c2FiZXJsaWx5LnhpYUBoaXNp
-bGljb24uY29tPjsgQ2hlbmZlbmcgKHB1Y2spIDxwdWNrLmNoZW5AaGlzaWxpY29uLmNvbT47IGJ1
-dGFvIDxidXRhb0BoaXNpbGljb24uY29tPjsgZmVuZ2Jhb3BlbmcgPGZlbmdiYW9wZW5nMkBoaXNp
-bGljb24uY29tPjsgbnNhZW56anVsaWVubmVAc3VzZS5kZTsgc3RldmUuY2FwcGVyQGFybS5jb207
-IFNvbmcgQmFvIEh1YSAoQmFycnkgU29uZykgPHNvbmcuYmFvLmh1YUBoaXNpbGljb24uY29tPjsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBzdWp1bmZlaSA8c3VqdW5mZWkyQGhpc2lsaWNvbi5jb20+DQrW98ziOiBSZTog
-W1BBVENIXSBhcm02NDogbW06IGZyZWUgdW51c2VkIG1lbW1hcCBmb3Igc3BhcnNlIG1lbW9yeSBt
-b2RlbCB0aGF0IGRlZmluZSBWTUVNTUFQDQoNCkhpLA0KDQpPbiBUdWUsIEp1bCAyMSwgMjAyMCBh
-dCAwMzozMjowM1BNICswODAwLCBXZWkgTGkgd3JvdGU6DQo+IEZvciB0aGUgbWVtb3J5IGhvbGUs
-IHNwYXJzZSBtZW1vcnkgbW9kZWwgdGhhdCBkZWZpbmUgU1BBUlNFTUVNX1ZNRU1NQVAgDQo+IGRv
-IG5vdCBmcmVlIHRoZSByZXNlcnZlZCBtZW1vcnkgZm9yIHRoZSBwYWdlIG1hcCwgdGhpcyBwYXRj
-aCBkbyBpdC4NCg0KQXJlIHRoZXJlIG51bWJlcnMgc2hvd2luZyBob3cgbXVjaCBtZW1vcnkgaXMg
-YWN0dWFsbHkgZnJlZWQ/DQoNClRoZSBmcmVlaW5nIG9mIGVtcHR5IG1lbW1hcCB3b3VsZCBiZWNv
-bWUgcmF0aGVyIGNvbXBsZXggd2l0aCB0aGVzZSBjaGFuZ2VzLCBkbyB0aGUgbWVtb3J5IHNhdmlu
-Z3MganVzdGlmeSBpdD8NCg0KSGksIE1pa2UNCkluIHRoZSBzcGFyc2UgbWVtb3J5IG1vZGVsLCB0
-aGUgc2l6ZSBvZiBhIHNlY3Rpb24gaXMgMSBHQiAoU0VDVElPTl9TSVpFX0JJVFMgMzApIGJ5IGRl
-ZmF1bHQuIFRoZXJlZm9yZSwgd2hlbiB0aGUgbWVtb3J5IGlzIGxlc3MgdGhhbiB0aGUgc2l6ZSBv
-ZiBhIHNlY3Rpb24sIHRoYXQgaXMsIHdoZW4gdGhlcmUgaXMgYSBob2xlLCB0aGUgcGF0Y2ggdGFr
-ZXMgZWZmZWN0o7oNCg0KMSkgRm9yIGV4YW1wbGUsIHRoZSBERFIgc2l6ZSB1c2VkIGJ5IG91ciBw
-bGF0Zm9ybSBpcyA4IEdCLCBob3dldmVyLCAzLjUgfiA0IEdCIGlzIHRoZSBzcGFjZSB3aGVyZSB0
-aGUgU09DIHJlZ2lzdGVyIGlzIGxvY2F0ZWQuIFRoZXJlZm9yZSwgaWYgdGhlIHBhZ2UgbWFwIGlz
-IHBlcmZvcm1lZCBvbiBtZW1vcnkzICgzIH40IEdCKSwgNTEyIE1CLzQgS0IgeCA2NCBieXRlcyA9
-IDggTUIgaXMgd2FzdGVkIGJlY2F1c2UgdGhlIHBhZ2UgbWFwIGlzIG5vdCByZXF1aXJlZCBmb3Ig
-dGhlIDMuNX40IEdCIHNwYWNlOyBIb3dldmVyLCB0aGUgRERSIG1lbW9yeSBzcGFjZSBvZiAzLjV+
-NCBHQiBpcyBzaGlmdCB0byAxNn4xNi41IEdCLiBJbiB0aGlzIGNhc2UsIG1lbW9yeSBpcyB3YXN0
-ZWQgYmVjYXVzZSB0aGUgcGFnZSBtYXAgaXMgbm90IHJlcXVpcmVkIGZvciAxNi41fjE3IEdCLCB0
-aGUgcGF0Y2ggY2FuIGFsc28gc2F2ZSA4IE1CLiBUaGVyZWZvcmUsIHRoZSB0b3RhbCBzYXZlZCBt
-ZW1vcnkgaXMgMTYgTUIuDQoNCjIpIEluIHRoZSByZXNlcnZlZCBtZW1vcnksIHNvbWUgbW9kdWxl
-cyBuZWVkIHRvIHJlc2VydmUgYSBsYXJnZSBhbW91bnQgb2YgbWVtb3J5IChuby1tYXAgYXR0ciku
-IE9uIG91ciBwbGF0Zm9ybSwgdGhlIG1vZGVtIG1vZHVsZSBuZWVkcyB0byByZXNlcnZlIG1vcmUg
-dGhhbiAyNTYgTUIgbWVtb3J5LCBhbmQgdGhlIHBhdGNoIGNhbiBzYXZlIDQgTUIuIEFjdHVhbGx5
-LCBpZiB0aGUgcmVzZXJ2ZWQgbWVtb3J5IGlzIGdyZWF0ZXIgdGhhbiAxMjggTUIsIHRoZSBwYXRj
-aCBjYW4gZnJlZSB1bm5lY2Vzc2FyeSBwYWdlIG1hcCBtZW1vcnkuDQoNCkl0IG1heSBiZSBwb3Nz
-aWJsZSB0byBzYXZlIHNvbWUgd2FzdGUgYnkgcmVkdWNpbmcgdGhlIHNlY3Rpb24gc2l6ZSwgYnV0
-IGZyZWUgdGhlIHdhc3RlIHBhZ2UgbWFwIHRoYXQgZGVmaW5lcyBWTUVNTUFQIGlzIGFub3RoZXIg
-YXBwcm9hY2ggc2ltaWxhciB0byBmbGF0IG1lbW9yeSBtb2RlbCBhbmQgc3BhcnNlIG1lbW9yeSBt
-b2RlIHRoYXQgZG9lcyBub3QgZGVmaW5lIFZNRU1NQVAsIGFuZCBtYWtlcyB0aGUgZW50aXJlIGNv
-ZGUgbG9vayBtb3JlIGNvbXBsZXRlLg0KDQpJZiB5b3UgaGF2ZSBhIGJldHRlciBpZGVhLCBJJ2Qg
-YmUgaGFwcHkgdG8gZGlzY3VzcyBpdCB3aXRoIHlvdS4NCg0KVGhhbmtzIQ0KDQo+IFNpZ25lZC1v
-ZmYtYnk6IFdlaSBMaSA8bGl3ZWkyMTNAaHVhd2VpLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQ2hl
-biBGZW5nIDxwdWNrLmNoZW5AaGlzaWxpY29uLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogWGlhIFFp
-bmcgPHNhYmVybGlseS54aWFAaGlzaWxpY29uLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FybTY0L21t
-L2luaXQuYyB8IDgxIA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKystLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNzEgaW5zZXJ0aW9ucygrKSwgMTAgZGVs
-ZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9tbS9pbml0LmMgYi9hcmNo
-L2FybTY0L21tL2luaXQuYyBpbmRleCANCj4gMWU5M2NmYzdjNDdhLi5kMWI1NmI0N2Q1YmEgMTAw
-NjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQvbW0vaW5pdC5jDQo+ICsrKyBiL2FyY2gvYXJtNjQvbW0v
-aW5pdC5jDQo+IEBAIC00NDEsNyArNDQxLDQ4IEBAIHZvaWQgX19pbml0IGJvb3RtZW1faW5pdCh2
-b2lkKQ0KPiAgCW1lbWJsb2NrX2R1bXBfYWxsKCk7DQo+ICB9DQo+IA0KPiAtI2lmbmRlZiBDT05G
-SUdfU1BBUlNFTUVNX1ZNRU1NQVANCj4gKyNpZmRlZiBDT05GSUdfU1BBUlNFTUVNX1ZNRU1NQVAN
-Cj4gKyNkZWZpbmUgVk1FTU1BUF9QQUdFX0lOVVNFIDB4RkQNCj4gK3N0YXRpYyBpbmxpbmUgdm9p
-ZCBmcmVlX21lbW1hcCh1bnNpZ25lZCBsb25nIHN0YXJ0X3BmbiwgdW5zaWduZWQgbG9uZyANCj4g
-K2VuZF9wZm4pIHsNCj4gKwl1bnNpZ25lZCBsb25nIGFkZHIsIGVuZDsNCj4gKwl1bnNpZ25lZCBs
-b25nIG5leHQ7DQo+ICsJcG1kX3QgKnBtZDsNCj4gKwl2b2lkICpwYWdlX2FkZHI7DQo+ICsJcGh5
-c19hZGRyX3QgcGh5c19hZGRyOw0KPiArDQo+ICsJYWRkciA9ICh1bnNpZ25lZCBsb25nKXBmbl90
-b19wYWdlKHN0YXJ0X3Bmbik7DQo+ICsJZW5kID0gKHVuc2lnbmVkIGxvbmcpcGZuX3RvX3BhZ2Uo
-ZW5kX3Bmbik7DQo+ICsNCj4gKwlwbWQgPSBwbWRfb2Zmc2V0KHB1ZF9vZmZzZXQocGdkX29mZnNl
-dF9rKGFkZHIpLCBhZGRyKSwgYWRkcik7DQo+ICsJZm9yICg7IGFkZHIgPCBlbmQ7IGFkZHIgPSBu
-ZXh0LCBwbWQrKykgew0KPiArCQluZXh0ID0gcG1kX2FkZHJfZW5kKGFkZHIsIGVuZCk7DQo+ICsN
-Cj4gKwkJaWYgKCFwbWRfcHJlc2VudCgqcG1kKSkNCj4gKwkJCWNvbnRpbnVlOw0KPiArDQo+ICsJ
-CWlmIChJU19BTElHTkVEKGFkZHIsIFBNRF9TSVpFKSAmJg0KPiArCQkJSVNfQUxJR05FRChuZXh0
-LCBQTURfU0laRSkpIHsNCj4gKwkJCXBoeXNfYWRkciA9IF9fcGZuX3RvX3BoeXMocG1kX3Bmbigq
-cG1kKSk7DQo+ICsJCQlmcmVlX2Jvb3RtZW0ocGh5c19hZGRyLCBQTURfU0laRSk7DQo+ICsJCQlw
-bWRfY2xlYXIocG1kKTsNCj4gKwkJfSBlbHNlIHsNCj4gKwkJCS8qIElmIGhlcmUsIHdlIGFyZSBm
-cmVlaW5nIHZtZW1tYXAgcGFnZXMuICovDQo+ICsJCQltZW1zZXQoKHZvaWQgKilhZGRyLCBWTUVN
-TUFQX1BBR0VfSU5VU0UsIG5leHQgLSBhZGRyKTsNCj4gKwkJCXBhZ2VfYWRkciA9IHBhZ2VfYWRk
-cmVzcyhwbWRfcGFnZSgqcG1kKSk7DQo+ICsNCj4gKwkJCWlmICghbWVtY2hyX2ludihwYWdlX2Fk
-ZHIsIFZNRU1NQVBfUEFHRV9JTlVTRSwNCj4gKwkJCQlQTURfU0laRSkpIHsNCj4gKwkJCQlwaHlz
-X2FkZHIgPSBfX3Bmbl90b19waHlzKHBtZF9wZm4oKnBtZCkpOw0KPiArCQkJCWZyZWVfYm9vdG1l
-bShwaHlzX2FkZHIsIFBNRF9TSVpFKTsNCj4gKwkJCQlwbWRfY2xlYXIocG1kKTsNCj4gKwkJCX0N
-Cj4gKwkJfQ0KPiArCX0NCj4gKw0KPiArCWZsdXNoX3RsYl9hbGwoKTsNCj4gK30NCj4gKyNlbHNl
-DQo+ICBzdGF0aWMgaW5saW5lIHZvaWQgZnJlZV9tZW1tYXAodW5zaWduZWQgbG9uZyBzdGFydF9w
-Zm4sIHVuc2lnbmVkIGxvbmcgDQo+IGVuZF9wZm4pICB7DQo+ICAJc3RydWN0IHBhZ2UgKnN0YXJ0
-X3BnLCAqZW5kX3BnOw0KPiBAQCAtNDY4LDMxICs1MDksNTMgQEAgc3RhdGljIGlubGluZSB2b2lk
-IGZyZWVfbWVtbWFwKHVuc2lnbmVkIGxvbmcgc3RhcnRfcGZuLCB1bnNpZ25lZCBsb25nIGVuZF9w
-Zm4pDQo+ICAJCW1lbWJsb2NrX2ZyZWUocGcsIHBnZW5kIC0gcGcpOw0KPiAgfQ0KPiANCj4gKyNl
-bmRpZg0KPiArDQo+ICAvKg0KPiAgICogVGhlIG1lbV9tYXAgYXJyYXkgY2FuIGdldCB2ZXJ5IGJp
-Zy4gRnJlZSB0aGUgdW51c2VkIGFyZWEgb2YgdGhlIG1lbW9yeSBtYXAuDQo+ICAgKi8NCj4gIHN0
-YXRpYyB2b2lkIF9faW5pdCBmcmVlX3VudXNlZF9tZW1tYXAodm9pZCkgIHsNCj4gLQl1bnNpZ25l
-ZCBsb25nIHN0YXJ0LCBwcmV2X2VuZCA9IDA7DQo+ICsJdW5zaWduZWQgbG9uZyBzdGFydCwgY3Vy
-X3N0YXJ0LCBwcmV2X2VuZCA9IDA7DQo+ICAJc3RydWN0IG1lbWJsb2NrX3JlZ2lvbiAqcmVnOw0K
-PiANCj4gIAlmb3JfZWFjaF9tZW1ibG9jayhtZW1vcnksIHJlZykgew0KPiAtCQlzdGFydCA9IF9f
-cGh5c190b19wZm4ocmVnLT5iYXNlKTsNCj4gKwkJY3VyX3N0YXJ0ID0gX19waHlzX3RvX3Bmbihy
-ZWctPmJhc2UpOw0KPiANCj4gICNpZmRlZiBDT05GSUdfU1BBUlNFTUVNDQo+ICAJCS8qDQo+ICAJ
-CSAqIFRha2UgY2FyZSBub3QgdG8gZnJlZSBtZW1tYXAgZW50cmllcyB0aGF0IGRvbid0IGV4aXN0
-IGR1ZQ0KPiAgCQkgKiB0byBTUEFSU0VNRU0gc2VjdGlvbnMgd2hpY2ggYXJlbid0IHByZXNlbnQu
-DQo+ICAJCSAqLw0KPiAtCQlzdGFydCA9IG1pbihzdGFydCwgQUxJR04ocHJldl9lbmQsIFBBR0VT
-X1BFUl9TRUNUSU9OKSk7DQo+IC0jZW5kaWYNCj4gKwkJc3RhcnQgPSBtaW4oY3VyX3N0YXJ0LCBB
-TElHTihwcmV2X2VuZCwgUEFHRVNfUEVSX1NFQ1RJT04pKTsNCj4gKw0KPiAgCQkvKg0KPiAtCQkg
-KiBJZiB3ZSBoYWQgYSBwcmV2aW91cyBiYW5rLCBhbmQgdGhlcmUgaXMgYSBzcGFjZSBiZXR3ZWVu
-IHRoZQ0KPiAtCQkgKiBjdXJyZW50IGJhbmsgYW5kIHRoZSBwcmV2aW91cywgZnJlZSBpdC4NCj4g
-KwkJICogRnJlZSBtZW1vcnkgaW4gdGhlIGNhc2Ugb2Y6DQo+ICsJCSAqIDEuIGlmIGN1cl9zdGFy
-dCAtIHByZXZfZW5kIDw9IFBBR0VTX1BFUl9TRUNUSU9OLA0KPiArCQkgKiBmcmVlIHByZV9lbmQg
-fiBjdXJfc3RhcnQuDQo+ICsJCSAqIDIuIGlmIGN1cl9zdGFydCAtIHByZXZfZW5kID4gUEFHRVNf
-UEVSX1NFQ1RJT04sDQo+ICsJCSAqIGZyZWUgcHJlX2VuZCB+IEFMSUdOKHByZXZfZW5kLCBQQUdF
-U19QRVJfU0VDVElPTikuDQo+ICAJCSAqLw0KPiAgCQlpZiAocHJldl9lbmQgJiYgcHJldl9lbmQg
-PCBzdGFydCkNCj4gIAkJCWZyZWVfbWVtbWFwKHByZXZfZW5kLCBzdGFydCk7DQo+IA0KPiArCQkv
-Kg0KPiArCQkgKiBGcmVlIG1lbW9yeSBpbiB0aGUgY2FzZSBvZjoNCj4gKwkJICogaWYgY3VyX3N0
-YXJ0IC0gcHJldl9lbmQgPiBQQUdFU19QRVJfU0VDVElPTiwNCj4gKwkJICogZnJlZSBBTElHTl9E
-T1dOKGN1cl9zdGFydCwgUEFHRVNfUEVSX1NFQ1RJT04pIH4gY3VyX3N0YXJ0Lg0KPiArCQkgKi8N
-Cj4gKwkJaWYgKGN1cl9zdGFydCA+IHN0YXJ0ICYmDQo+ICsJCSAgICAhSVNfQUxJR05FRChjdXJf
-c3RhcnQsIFBBR0VTX1BFUl9TRUNUSU9OKSkNCj4gKwkJCWZyZWVfbWVtbWFwKEFMSUdOX0RPV04o
-Y3VyX3N0YXJ0LCBQQUdFU19QRVJfU0VDVElPTiksDQo+ICsJCQkJICAgIGN1cl9zdGFydCk7DQo+
-ICsjZWxzZQ0KPiArCQkvKg0KPiArCQkgKiBJZiB3ZSBoYWQgYSBwcmV2aW91cyBiYW5rLCBhbmQg
-dGhlcmUgaXMgYSBzcGFjZSBiZXR3ZWVuIHRoZQ0KPiArCQkgKiBjdXJyZW50IGJhbmsgYW5kIHRo
-ZSBwcmV2aW91cywgZnJlZSBpdC4NCj4gKwkJICovDQo+ICsJCWlmIChwcmV2X2VuZCAmJiBwcmV2
-X2VuZCA8IGN1cl9zdGFydCkNCj4gKwkJCWZyZWVfbWVtbWFwKHByZXZfZW5kLCBjdXJfc3RhcnQp
-Ow0KPiArI2VuZGlmDQo+ICAJCS8qDQo+ICAJCSAqIEFsaWduIHVwIGhlcmUgc2luY2UgdGhlIFZN
-IHN1YnN5c3RlbSBpbnNpc3RzIHRoYXQgdGhlDQo+ICAJCSAqIG1lbW1hcCBlbnRyaWVzIGFyZSB2
-YWxpZCBmcm9tIHRoZSBiYW5rIGVuZCBhbGlnbmVkIHRvIEBAIC01MDcsNyANCj4gKzU3MCw2IEBA
-IHN0YXRpYyB2b2lkIF9faW5pdCBmcmVlX3VudXNlZF9tZW1tYXAodm9pZCkNCj4gIAkJZnJlZV9t
-ZW1tYXAocHJldl9lbmQsIEFMSUdOKHByZXZfZW5kLCBQQUdFU19QRVJfU0VDVElPTikpOyAgI2Vu
-ZGlmICANCj4gfQ0KPiAtI2VuZGlmCS8qICFDT05GSUdfU1BBUlNFTUVNX1ZNRU1NQVAgKi8NCj4g
-DQo+ICAvKg0KPiAgICogbWVtX2luaXQoKSBtYXJrcyB0aGUgZnJlZSBhcmVhcyBpbiB0aGUgbWVt
-X21hcCBhbmQgdGVsbHMgdXMgaG93IA0KPiBtdWNoIG1lbW9yeSBAQCAtNTI0LDkgKzU4Niw4IEBA
-IHZvaWQgX19pbml0IG1lbV9pbml0KHZvaWQpDQo+IA0KPiAgCXNldF9tYXhfbWFwbnIobWF4X3Bm
-biAtIFBIWVNfUEZOX09GRlNFVCk7DQo+IA0KPiAtI2lmbmRlZiBDT05GSUdfU1BBUlNFTUVNX1ZN
-RU1NQVANCj4gIAlmcmVlX3VudXNlZF9tZW1tYXAoKTsNCj4gLSNlbmRpZg0KPiArDQo+ICAJLyog
-dGhpcyB3aWxsIHB1dCBhbGwgdW51c2VkIGxvdyBtZW1vcnkgb250byB0aGUgZnJlZWxpc3RzICov
-DQo+ICAJbWVtYmxvY2tfZnJlZV9hbGwoKTsNCj4gDQo+IC0tDQo+IDIuMTUuMA0KPiANCg0KLS0N
-ClNpbmNlcmVseSB5b3VycywNCk1pa2UuDQo=
+
+
+On 22/07/2020 05:09, Hanks Chen wrote:
+> remove the redundant clk interface of uart.
+> CLK_INFRA_UART3 is a dummy clk interface,
+> it has no effect on the operation of the read/write instruction.
+> 
+> Change since v2:
+> Commit "dt-bindings: clock: remove UART3 clock support"
+
+Sorry just another comment. I think we can make this one patch deleting everything.
+
+> -- remove Fixes tag
+> Commit "clk: mediatek: remove UART3 clock support"
+> -- remove Fixes tag
+> 
+> Hanks Chen (2):
+>    dt-bindings: clock: remove UART3 clock support
+>    clk: mediatek: remove UART3 clock support
+> 
+>   drivers/clk/mediatek/clk-mt6779.c      | 2 --
+>   include/dt-bindings/clock/mt6779-clk.h | 1 -
+>   2 files changed, 3 deletions(-)
+> 
