@@ -2,209 +2,282 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA681C4345A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B470A20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA61D20825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="v3wgaAQ8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F3YtnZlD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ssWHc5d+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387445AbgGVWMe (ORCPT
+        id S2387420AbgGVWMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:12:34 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:51578 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387421AbgGVWMb (ORCPT
+        Wed, 22 Jul 2020 18:12:30 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52690 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733165AbgGVWLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:12:31 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6NwB027312;
-        Wed, 22 Jul 2020 15:12:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=YdH18anOnOfotz7dCcu2Qk951gXqE+vLtMEFYOTUaAo=;
- b=v3wgaAQ84SK5P5+JcGAiY1vnuPQIEzL0YI51XGogO7TPgW69XqNhLdfwLUIebd01pGpN
- dVBC88Sq4UX+tz0OkkMwP1/8vnLZyPnaJjinr40rAIFYpSU92CkQTV494pdaSQ/jD1QZ
- bAenH+UPntjNqQnAeEwbYIva53io+NU46bgw2P3HGEdu3B1uPPADlDnS4SoVDqNU0YDE
- 6ribthwqsCp/lRNU03tD7atV07jTYRlkx7LzdwBLTmDZdZuj6OQrbza3WVsQtQ3dejns
- H/XvuMXM8WTTmuygJFyLwUm3PBX/aqB61HzwnIR9dNq4Jq5LF8R5Cj6TUkpWtWh8KHOf Ww== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32bxentx93-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 15:12:15 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:12:13 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 15:12:14 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 6C4513F703F;
-        Wed, 22 Jul 2020 15:12:07 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 10/15] qed: optimize common chain accessors
-Date:   Thu, 23 Jul 2020 01:10:40 +0300
-Message-ID: <20200722221045.5436-11-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
-References: <20200722221045.5436-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 18:11:42 -0400
+Message-Id: <20200722220520.711492752@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=V/R9YoJMWiPsEXC7CtH2TFLpMALtyUA+rhE3Vsekrrw=;
+        b=F3YtnZlDzzSids8yTmFe7ksXE74SXWhJCfCzDdPwiBK+NJjG7leeZklSMsmmlWQBBcN+rl
+        BibisPN2wqw0jxZUohNeHx53aa8/me4t7gCWbyXA69CxBkLlynJyd+1arM85tthMl20iq2
+        kehOWSBkGNL40CMsAvRcAXmMWIi4By6ZrFvqGPKNU5jMG06U72QaM8Gvtfm1sMbzgk0+MW
+        r8vzVjrIFLwc3/+UV7jtGcUssBd0AB4bR1IoEg4Rr1HsJhDvCdLeBfwfiM2tWM7n/bvVKR
+        1AwDQYsDTVyl3GGrZIjWFBhhp7iNTA1/i62J1AUG+L8Zrh0YFIyzs02YYDNtkQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=V/R9YoJMWiPsEXC7CtH2TFLpMALtyUA+rhE3Vsekrrw=;
+        b=ssWHc5d+u0GvH4uG+wT0q/zviHxVUh9ClNu5eveBRvJkjMdMi5HgQ/qTOciq23tY04kqtn
+        kndZcX+cLnu6egCA==
+Date:   Thu, 23 Jul 2020 00:00:07 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V5 13/15] x86/entry: Use generic interrupt entry/exit code
+References: <20200722215954.464281930@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Constify chain pointers and refactor qed_chain_get_elem_left{,u32}() a bit.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Replace the x86 code with the generic variant. Use temporary defines for
+idtentry_* which will be cleaned up in the next step.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
 ---
- include/linux/qed/qed_chain.h | 60 +++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 27 deletions(-)
+ arch/x86/entry/common.c         |  167 ----------------------------------------
+ arch/x86/include/asm/idtentry.h |   10 --
+ 2 files changed, 5 insertions(+), 172 deletions(-)
 
-diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 8a96c361cc19..434479e2ab65 100644
---- a/include/linux/qed/qed_chain.h
-+++ b/include/linux/qed/qed_chain.h
-@@ -182,73 +182,79 @@ struct qed_chain_init_params {
- 	((p)->cnt_type == QED_CHAIN_CNT_TYPE_U32)
- 
- /* Accessors */
--static inline u16 qed_chain_get_prod_idx(struct qed_chain *p_chain)
-+
-+static inline u16 qed_chain_get_prod_idx(const struct qed_chain *chain)
-+{
-+	return chain->u.chain16.prod_idx;
-+}
-+
-+static inline u16 qed_chain_get_cons_idx(const struct qed_chain *chain)
- {
--	return p_chain->u.chain16.prod_idx;
-+	return chain->u.chain16.cons_idx;
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -198,171 +198,6 @@ SYSCALL_DEFINE0(ni_syscall)
+ 	return -ENOSYS;
  }
  
--static inline u16 qed_chain_get_cons_idx(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_prod_idx_u32(const struct qed_chain *chain)
- {
--	return p_chain->u.chain16.cons_idx;
-+	return chain->u.chain32.prod_idx;
- }
+-/**
+- * idtentry_enter - Handle state tracking on ordinary idtentries
+- * @regs:	Pointer to pt_regs of interrupted context
+- *
+- * Invokes:
+- *  - lockdep irqflag state tracking as low level ASM entry disabled
+- *    interrupts.
+- *
+- *  - Context tracking if the exception hit user mode.
+- *
+- *  - The hardirq tracer to keep the state consistent as low level ASM
+- *    entry disabled interrupts.
+- *
+- * As a precondition, this requires that the entry came from user mode,
+- * idle, or a kernel context in which RCU is watching.
+- *
+- * For kernel mode entries RCU handling is done conditional. If RCU is
+- * watching then the only RCU requirement is to check whether the tick has
+- * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
+- * invoked on entry and rcu_irq_exit() on exit.
+- *
+- * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
+- * solves the problem of kernel mode pagefaults which can schedule, which
+- * is not possible after invoking rcu_irq_enter() without undoing it.
+- *
+- * For user mode entries irqentry_enter_from_user_mode() must be invoked to
+- * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
+- * would not be possible.
+- *
+- * Returns: An opaque object that must be passed to idtentry_exit()
+- *
+- * The return value must be fed into the state argument of
+- * idtentry_exit().
+- */
+-idtentry_state_t noinstr idtentry_enter(struct pt_regs *regs)
+-{
+-	idtentry_state_t ret = {
+-		.exit_rcu = false,
+-	};
+-
+-	if (user_mode(regs)) {
+-		irqentry_enter_from_user_mode(regs);
+-		return ret;
+-	}
+-
+-	/*
+-	 * If this entry hit the idle task invoke rcu_irq_enter() whether
+-	 * RCU is watching or not.
+-	 *
+-	 * Interupts can nest when the first interrupt invokes softirq
+-	 * processing on return which enables interrupts.
+-	 *
+-	 * Scheduler ticks in the idle task can mark quiescent state and
+-	 * terminate a grace period, if and only if the timer interrupt is
+-	 * not nested into another interrupt.
+-	 *
+-	 * Checking for __rcu_is_watching() here would prevent the nesting
+-	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
+-	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
+-	 * assume that it is the first interupt and eventually claim
+-	 * quiescient state and end grace periods prematurely.
+-	 *
+-	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
+-	 * consistent.
+-	 *
+-	 * TINY_RCU does not support EQS, so let the compiler eliminate
+-	 * this part when enabled.
+-	 */
+-	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
+-		/*
+-		 * If RCU is not watching then the same careful
+-		 * sequence vs. lockdep and tracing is required
+-		 * as in irqentry_enter_from_user_mode().
+-		 */
+-		lockdep_hardirqs_off(CALLER_ADDR0);
+-		rcu_irq_enter();
+-		instrumentation_begin();
+-		trace_hardirqs_off_finish();
+-		instrumentation_end();
+-
+-		ret.exit_rcu = true;
+-		return ret;
+-	}
+-
+-	/*
+-	 * If RCU is watching then RCU only wants to check whether it needs
+-	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
+-	 * already contains a warning when RCU is not watching, so no point
+-	 * in having another one here.
+-	 */
+-	instrumentation_begin();
+-	rcu_irq_enter_check_tick();
+-	/* Use the combo lockdep/tracing function */
+-	trace_hardirqs_off();
+-	instrumentation_end();
+-
+-	return ret;
+-}
+-
+-static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+-{
+-	if (may_sched && !preempt_count()) {
+-		/* Sanity check RCU and thread stack */
+-		rcu_irq_exit_check_preempt();
+-		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+-			WARN_ON_ONCE(!on_thread_stack());
+-		if (need_resched())
+-			preempt_schedule_irq();
+-	}
+-	/* Covers both tracing and lockdep */
+-	trace_hardirqs_on();
+-}
+-
+-/**
+- * idtentry_exit - Handle return from exception that used idtentry_enter()
+- * @regs:	Pointer to pt_regs (exception entry regs)
+- * @state:	Return value from matching call to idtentry_enter()
+- *
+- * Depending on the return target (kernel/user) this runs the necessary
+- * preemption and work checks if possible and reguired and returns to
+- * the caller with interrupts disabled and no further work pending.
+- *
+- * This is the last action before returning to the low level ASM code which
+- * just needs to return to the appropriate context.
+- *
+- * Counterpart to idtentry_enter(). The return value of the entry
+- * function must be fed into the @state argument.
+- */
+-void noinstr idtentry_exit(struct pt_regs *regs, idtentry_state_t state)
+-{
+-	lockdep_assert_irqs_disabled();
+-
+-	/* Check whether this returns to user mode */
+-	if (user_mode(regs)) {
+-		irqentry_exit_to_user_mode(regs);
+-	} else if (regs->flags & X86_EFLAGS_IF) {
+-		/*
+-		 * If RCU was not watching on entry this needs to be done
+-		 * carefully and needs the same ordering of lockdep/tracing
+-		 * and RCU as the return to user mode path.
+-		 */
+-		if (state.exit_rcu) {
+-			instrumentation_begin();
+-			/* Tell the tracer that IRET will enable interrupts */
+-			trace_hardirqs_on_prepare();
+-			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+-			instrumentation_end();
+-			rcu_irq_exit();
+-			lockdep_hardirqs_on(CALLER_ADDR0);
+-			return;
+-		}
+-
+-		instrumentation_begin();
+-		idtentry_exit_cond_resched(regs, IS_ENABLED(CONFIG_PREEMPTION));
+-		instrumentation_end();
+-	} else {
+-		/*
+-		 * IRQ flags state is correct already. Just tell RCU if it
+-		 * was not watching on entry.
+-		 */
+-		if (state.exit_rcu)
+-			rcu_irq_exit();
+-	}
+-}
+-
+ #ifdef CONFIG_XEN_PV
+ #ifndef CONFIG_PREEMPTION
+ /*
+@@ -427,7 +262,7 @@ static void __xen_pv_evtchn_do_upcall(vo
+ 	inhcall = get_and_clear_inhcall();
+ 	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
+ 		instrumentation_begin();
+-		idtentry_exit_cond_resched(regs, true);
++		irqentry_exit_cond_resched();
+ 		instrumentation_end();
+ 		restore_inhcall(inhcall);
+ 	} else {
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -11,12 +11,10 @@
  
--static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_cons_idx_u32(const struct qed_chain *chain)
- {
--	return p_chain->u.chain32.cons_idx;
-+	return chain->u.chain32.cons_idx;
- }
+ #include <asm/irq_stack.h>
  
--static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
-+static inline u16 qed_chain_get_elem_left(const struct qed_chain *chain)
- {
--	u16 elem_per_page = p_chain->elem_per_page;
--	u32 prod = p_chain->u.chain16.prod_idx;
--	u32 cons = p_chain->u.chain16.cons_idx;
-+	u32 prod = qed_chain_get_prod_idx(chain);
-+	u32 cons = qed_chain_get_cons_idx(chain);
-+	u16 elem_per_page = chain->elem_per_page;
- 	u16 used;
- 
- 	if (prod < cons)
- 		prod += (u32)U16_MAX + 1;
- 
- 	used = (u16)(prod - cons);
--	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
--		used -= prod / elem_per_page - cons / elem_per_page;
-+	if (chain->mode == QED_CHAIN_MODE_NEXT_PTR)
-+		used -= (u16)(prod / elem_per_page - cons / elem_per_page);
- 
--	return (u16)(p_chain->capacity - used);
-+	return (u16)(chain->capacity - used);
- }
- 
--static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_elem_left_u32(const struct qed_chain *chain)
- {
--	u16 elem_per_page = p_chain->elem_per_page;
--	u64 prod = p_chain->u.chain32.prod_idx;
--	u64 cons = p_chain->u.chain32.cons_idx;
-+	u64 prod = qed_chain_get_prod_idx_u32(chain);
-+	u64 cons = qed_chain_get_cons_idx_u32(chain);
-+	u16 elem_per_page = chain->elem_per_page;
- 	u32 used;
- 
- 	if (prod < cons)
- 		prod += (u64)U32_MAX + 1;
- 
- 	used = (u32)(prod - cons);
--	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
-+	if (chain->mode == QED_CHAIN_MODE_NEXT_PTR)
- 		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
- 
--	return p_chain->capacity - used;
-+	return chain->capacity - used;
- }
- 
--static inline u16 qed_chain_get_usable_per_page(struct qed_chain *p_chain)
-+static inline u16 qed_chain_get_usable_per_page(const struct qed_chain *chain)
- {
--	return p_chain->usable_per_page;
-+	return chain->usable_per_page;
- }
- 
--static inline u8 qed_chain_get_unusable_per_page(struct qed_chain *p_chain)
-+static inline u8 qed_chain_get_unusable_per_page(const struct qed_chain *chain)
- {
--	return p_chain->elem_unusable;
-+	return chain->elem_unusable;
- }
- 
--static inline u32 qed_chain_get_page_cnt(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_page_cnt(const struct qed_chain *chain)
- {
--	return p_chain->page_cnt;
-+	return chain->page_cnt;
- }
- 
--static inline dma_addr_t qed_chain_get_pbl_phys(struct qed_chain *p_chain)
-+static inline dma_addr_t qed_chain_get_pbl_phys(const struct qed_chain *chain)
- {
--	return p_chain->pbl_sp.table_phys;
-+	return chain->pbl_sp.table_phys;
- }
+-typedef struct idtentry_state {
+-	bool exit_rcu;
+-} idtentry_state_t;
+-
+-idtentry_state_t idtentry_enter(struct pt_regs *regs);
+-void idtentry_exit(struct pt_regs *regs, idtentry_state_t state);
++/* Temporary defines */
++typedef irqentry_state_t idtentry_state_t;
++#define idtentry_enter irqentry_enter
++#define idtentry_exit irqentry_exit
  
  /**
--- 
-2.25.1
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+
 
