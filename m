@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F01C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042BCC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7240D20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C422820709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xW8cgBAW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="skUv2rXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731993AbgGVHjf (ORCPT
+        id S1732016AbgGVHjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:39:35 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:35079 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730856AbgGVHjc (ORCPT
+        Wed, 22 Jul 2020 03:39:42 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:58174 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732010AbgGVHjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:39:32 -0400
+        Wed, 22 Jul 2020 03:39:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595403570; x=1626939570;
+  t=1595403578; x=1626939578;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=F4n24Hn6n8rbcY6NrrFZqVIgnii0kjjrLD9A3P447NY=;
-  b=xW8cgBAWCkFlybFJTj2q8BhAe3+S4T3Kq4sEda1XBTJ5ofOGx1h0IHSJ
-   1slKpeiOK1CTwyLF0Ws2ObinIGoq2kv+FdX9qLvckRpCNWG3amSIZmFSS
-   NTW4xBrU4gpbxwlyHgHTKJITMX6HiZrAlNjHyMDxBA8v8YxzhfUJFgFVw
-   uC64X+wtYVxEHUZPkcSi/q3Pqwu6q21xmJotFJ2tHoCCys8hgKCwqd6Ks
-   o3wZ3dSQIqzagd8jyJ200Hlf0qYUMauinJHubLUGCPU8gmS4iuIGfCtVU
-   dTS+Ir5dO8orSB4m+lbj/YUgbmyNxyml1dzYXR+zjRU7b/BsLiswYxdsR
-   A==;
-IronPort-SDR: 8tqsPIy6OS+1S8akhEdPg7EvV3pJfM753vVZ3PvbUJ9Dtqtad92mRlbIETXWm9MmtuDmtJ4I6U
- 8UWHoGdhuLhUVc/oi+DliRRYCMxwpC2Yje6S5eTMQdBdfx5Jlv3ybTJgKGMBwHMC3nSugG0XEq
- 5eza0aQH+zwtZ0ZuRsEgHBHL5yjq3euVi8BrqFP54WXP0ds16cZLJ1/oEgyeDIaETotkreYo4U
- LndlmMmFr4OBcKdaV7ytnixQ+Jpehw5ZSyGhZNK8vx6Auca8rcuyD7zvmNZ7KuDRLF3DsWStyY
- cPk=
+  bh=luEJ62qwGC+u0168DCqTJYhp0sf0DveJutS1k13ivKA=;
+  b=skUv2rXotsvF97kCgPli4aldxWUBOI/Xwl3BXD1Xr+kV/O7q+vHZeMiC
+   ywuNWGgmWSydIWLAU/kydZPLgHkIhRaXlxRSA2mzr9wx6r5b/HqrBJ1C8
+   llO1d8KN/y7wqSJfsnR8EiNa9vi5os7Janqy2cxIdooCaW+l3Hxuo2OZS
+   lBsdHL0qcN8IDjP0h/VDYPsm2pr02ryIEFQMw1KCZ0iJ++Zgfldpt9gDz
+   PR4/dkFJmDmRE0+JOOfRp4cE+v6UVNmeAQFx/MqbrAgY+L4+YKoNaCdDx
+   vl+VYKK6MIMbWmbjsuUlWb38N6lre+seEWH77DLmuSDOF49ILNI78vu7d
+   Q==;
+IronPort-SDR: tiVokKOG2rYieptemrVw/NRsyP/b4H5CKrq3/vHC9Bgy71RmA3J7dt7gsJM9geYz5UJbptfHeC
+ ILQl41RQx9W74fK94StO9kNHxttQHv/ZGZPyvAAvPCuowuDCKoNQagz0Gmro1aJK6TNsXlnzlk
+ aHxvQdqhGPlKvg4LD+uFiyaoNQ1PysqmgVQ+x5pD5Yd5KdBXUkFMiTYPMRNipWhCf4hzXIspIb
+ M4W7pB6Ef+qR4sB41Jb8XPotuQ0xn7POFX7S+RevSZ1WIC9dyvKxJDG8VwxGg6TR3nh+zh0IR1
+ LxM=
 X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="20120870"
+   d="scan'208";a="80862261"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 00:39:30 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 00:39:37 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 22 Jul 2020 00:38:51 -0700
+ 15.1.1979.3; Wed, 22 Jul 2020 00:38:57 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 22 Jul 2020 00:39:26 -0700
+ 15.1.1979.3 via Frontend Transport; Wed, 22 Jul 2020 00:39:34 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -60,9 +60,9 @@ CC:     <bbrezillon@kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "Claudiu Beznea" <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 16/18] clk: at91: clk-sam9x60-pll: re-factor to support plls with multiple outputs
-Date:   Wed, 22 Jul 2020 10:38:24 +0300
-Message-ID: <1595403506-8209-17-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 18/18] clk: at91: sama7g5: add clock support for sama7g5
+Date:   Wed, 22 Jul 2020 10:38:26 +0300
+Message-ID: <1595403506-8209-19-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595403506-8209-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1595403506-8209-1-git-send-email-claudiu.beznea@microchip.com>
@@ -73,842 +73,1089 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the SAMA7G5 PLLs support multiple outputs (e.g. AUDIO PLL).
-For these, split the PLL clock in two: fractional clock and
-divider clock. In case PLLs supports multiple outputs (since these
-outputs are dividers (with different settings) sharing the same
-fractional part), it will register one fractional clock and multiple
-divider clocks (dividers sharing the fractional clock).
+Add clock support for SAMA7G5.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/clk/at91/clk-sam9x60-pll.c | 547 +++++++++++++++++++++++++------------
- drivers/clk/at91/pmc.h             |  22 +-
- drivers/clk/at91/sam9x60.c         |  50 +++-
- 3 files changed, 433 insertions(+), 186 deletions(-)
+ drivers/clk/at91/Makefile  |    1 +
+ drivers/clk/at91/sama7g5.c | 1059 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 1060 insertions(+)
+ create mode 100644 drivers/clk/at91/sama7g5.c
 
-diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
-index 1f0bcc6b4fea..b473298ef7e6 100644
---- a/drivers/clk/at91/clk-sam9x60-pll.c
-+++ b/drivers/clk/at91/clk-sam9x60-pll.c
-@@ -25,20 +25,31 @@
- #define FCORE_MIN		(600000000)
- #define FCORE_MAX		(1200000000)
- 
--#define PLL_MAX_ID		1
-+#define PLL_MAX_ID		7
- 
--struct sam9x60_pll {
--	struct clk_hw hw;
-+struct sam9x60_pll_core {
- 	struct regmap *regmap;
- 	spinlock_t *lock;
- 	const struct clk_pll_characteristics *characteristics;
--	u32 frac;
-+	const struct clk_pll_layout *layout;
-+	struct clk_hw hw;
- 	u8 id;
--	u8 div;
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index 8b90357f2a93..79301e1c1c36 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -23,3 +23,4 @@ obj-$(CONFIG_SOC_SAM9X60) += sam9x60.o
+ obj-$(CONFIG_SOC_SAMA5D3) += sama5d3.o
+ obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
+ obj-$(CONFIG_SOC_SAMA5D2) += sama5d2.o
++obj-$(CONFIG_SOC_SAMA7G5) += sama7g5.o
+diff --git a/drivers/clk/at91/sama7g5.c b/drivers/clk/at91/sama7g5.c
+new file mode 100644
+index 000000000000..0db2ab3eca14
+--- /dev/null
++++ b/drivers/clk/at91/sama7g5.c
+@@ -0,0 +1,1059 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * SAMA7G5 PMC code.
++ *
++ * Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries
++ *
++ * Author: Claudiu Beznea <claudiu.beznea@microchip.com>
++ *
++ */
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
++#include <linux/slab.h>
++
++#include <dt-bindings/clock/at91.h>
++
++#include "pmc.h"
++
++#define SAMA7G5_INIT_TABLE(_table, _count)		\
++	do {						\
++		u8 _i;					\
++		for (_i = 0; _i < (_count); _i++)	\
++			(_table)[_i] = _i;		\
++	} while (0)
++
++#define SAMA7G5_FILL_TABLE(_to, _from, _count)		\
++	do {						\
++		u8 _i;					\
++		for (_i = 0; _i < (_count); _i++) {	\
++			(_to)[_i] = (_from)[_i];	\
++		}					\
++	} while (0)
++
++static DEFINE_SPINLOCK(pmc_pll_lock);
++static DEFINE_SPINLOCK(pmc_mckX_lock);
++
++/**
++ * PLL clocks identifiers
++ * @PLL_ID_CPU:		CPU PLL identifier
++ * @PLL_ID_SYS:		System PLL identifier
++ * @PLL_ID_DDR:		DDR PLL identifier
++ * @PLL_ID_IMG:		Image subsystem PLL identifier
++ * @PLL_ID_BAUD:	Baud PLL identifier
++ * @PLL_ID_AUDIO:	Audio PLL identifier
++ * @PLL_ID_ETH:		Ethernet PLL identifier
++ */
++enum pll_ids {
++	PLL_ID_CPU,
++	PLL_ID_SYS,
++	PLL_ID_DDR,
++	PLL_ID_IMG,
++	PLL_ID_BAUD,
++	PLL_ID_AUDIO,
++	PLL_ID_ETH,
++	PLL_ID_MAX,
 +};
 +
-+struct sam9x60_frac {
-+	struct sam9x60_pll_core core;
-+	u32 frac;
- 	u16 mul;
- };
- 
--#define to_sam9x60_pll(hw) container_of(hw, struct sam9x60_pll, hw)
-+struct sam9x60_div {
-+	struct sam9x60_pll_core core;
-+	u8 div;
++/**
++ * PLL type identifiers
++ * @PLL_TYPE_FRAC:	fractional PLL identifier
++ * @PLL_TYPE_DIV:	divider PLL identifier
++ */
++enum pll_type {
++	PLL_TYPE_FRAC,
++	PLL_TYPE_DIV,
 +};
 +
-+#define to_sam9x60_pll_core(hw)	container_of(hw, struct sam9x60_pll_core, hw)
-+#define to_sam9x60_frac(core)	container_of(core, struct sam9x60_frac, core)
-+#define to_sam9x60_div(core)	container_of(core, struct sam9x60_div, core)
- 
- static inline bool sam9x60_pll_ready(struct regmap *regmap, int id)
- {
-@@ -49,43 +60,53 @@ static inline bool sam9x60_pll_ready(struct regmap *regmap, int id)
- 	return !!(status & BIT(id));
- }
- 
--static int sam9x60_pll_prepare(struct clk_hw *hw)
-+static bool sam9x60_frac_pll_ready(struct regmap *regmap, u8 id)
- {
--	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
--	struct regmap *regmap = pll->regmap;
--	unsigned long flags;
--	u8 div;
--	u16 mul;
--	u32 val, frac;
-+	return sam9x60_pll_ready(regmap, id);
-+}
- 
--	spin_lock_irqsave(pll->lock, flags);
--	regmap_write(regmap, AT91_PMC_PLL_UPDT, pll->id);
-+static unsigned long sam9x60_frac_pll_recalc_rate(struct clk_hw *hw,
-+						  unsigned long parent_rate)
-+{
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct sam9x60_frac *frac = to_sam9x60_frac(core);
- 
--	regmap_read(regmap, AT91_PMC_PLL_CTRL0, &val);
--	div = FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, val);
-+	return (parent_rate * (frac->mul + 1) +
-+		((u64)parent_rate * frac->frac >> 22));
-+}
- 
-+static int sam9x60_frac_pll_prepare(struct clk_hw *hw)
-+{
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct sam9x60_frac *frac = to_sam9x60_frac(core);
-+	struct regmap *regmap = core->regmap;
-+	unsigned int val, cfrac, cmul;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(core->lock, flags);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_ID_MSK, core->id);
- 	regmap_read(regmap, AT91_PMC_PLL_CTRL1, &val);
--	mul = FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, val);
--	frac = FIELD_GET(PMC_PLL_CTRL1_FRACR_MSK, val);
-+	cmul = (val & core->layout->mul_mask) >> core->layout->mul_shift;
-+	cfrac = (val & core->layout->frac_mask) >> core->layout->frac_shift;
- 
--	if (sam9x60_pll_ready(regmap, pll->id) &&
--	    (div == pll->div && mul == pll->mul && frac == pll->frac)) {
--		spin_unlock_irqrestore(pll->lock, flags);
--		return 0;
--	}
-+	if (sam9x60_frac_pll_ready(regmap, core->id) &&
-+	    (cmul == frac->mul && cfrac == frac->frac))
-+		goto unlock;
- 
--	/* Recommended value for AT91_PMC_PLL_ACR */
--	if (pll->characteristics->upll)
-+	/* Recommended value for PMC_PLL_ACR */
-+	if (core->characteristics->upll)
- 		val = AT91_PMC_PLL_ACR_DEFAULT_UPLL;
- 	else
- 		val = AT91_PMC_PLL_ACR_DEFAULT_PLLA;
- 	regmap_write(regmap, AT91_PMC_PLL_ACR, val);
- 
- 	regmap_write(regmap, AT91_PMC_PLL_CTRL1,
--		     FIELD_PREP(PMC_PLL_CTRL1_MUL_MSK, pll->mul) |
--		     FIELD_PREP(PMC_PLL_CTRL1_FRACR_MSK, pll->frac));
-+		     (frac->mul << core->layout->mul_shift) |
-+		     (frac->frac << core->layout->frac_shift));
- 
--	if (pll->characteristics->upll) {
-+	if (core->characteristics->upll) {
- 		/* Enable the UTMI internal bandgap */
- 		val |= AT91_PMC_PLL_ACR_UTMIBG;
- 		regmap_write(regmap, AT91_PMC_PLL_ACR, val);
-@@ -100,229 +121,409 @@ static int sam9x60_pll_prepare(struct clk_hw *hw)
- 	}
- 
- 	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
--			   AT91_PMC_PLL_UPDT_UPDATE, AT91_PMC_PLL_UPDT_UPDATE);
-+			   AT91_PMC_PLL_UPDT_UPDATE | AT91_PMC_PLL_UPDT_ID_MSK,
-+			   AT91_PMC_PLL_UPDT_UPDATE | core->id);
- 
--	regmap_write(regmap, AT91_PMC_PLL_CTRL0,
--		     AT91_PMC_PLL_CTRL0_ENLOCK | AT91_PMC_PLL_CTRL0_ENPLL |
--		     AT91_PMC_PLL_CTRL0_ENPLLCK | pll->div);
-+	regmap_update_bits(regmap, AT91_PMC_PLL_CTRL0,
-+			   AT91_PMC_PLL_CTRL0_ENLOCK | AT91_PMC_PLL_CTRL0_ENPLL,
-+			   AT91_PMC_PLL_CTRL0_ENLOCK | AT91_PMC_PLL_CTRL0_ENPLL);
- 
- 	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
--			   AT91_PMC_PLL_UPDT_UPDATE, AT91_PMC_PLL_UPDT_UPDATE);
-+			   AT91_PMC_PLL_UPDT_UPDATE | AT91_PMC_PLL_UPDT_ID_MSK,
-+			   AT91_PMC_PLL_UPDT_UPDATE | core->id);
- 
--	while (!sam9x60_pll_ready(regmap, pll->id))
-+	while (!sam9x60_pll_ready(regmap, core->id))
- 		cpu_relax();
- 
--	spin_unlock_irqrestore(pll->lock, flags);
-+unlock:
-+	spin_unlock_irqrestore(core->lock, flags);
- 
- 	return 0;
- }
- 
--static int sam9x60_pll_is_prepared(struct clk_hw *hw)
-+static void sam9x60_frac_pll_unprepare(struct clk_hw *hw)
- {
--	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct regmap *regmap = core->regmap;
-+	unsigned long flags;
- 
--	return sam9x60_pll_ready(pll->regmap, pll->id);
-+	spin_lock_irqsave(core->lock, flags);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_ID_MSK, core->id);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_CTRL0, AT91_PMC_PLL_CTRL0_ENPLL, 0);
-+
-+	if (core->characteristics->upll)
-+		regmap_update_bits(regmap, AT91_PMC_PLL_ACR,
-+				   AT91_PMC_PLL_ACR_UTMIBG | AT91_PMC_PLL_ACR_UTMIVR, 0);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_UPDATE | AT91_PMC_PLL_UPDT_ID_MSK,
-+			   AT91_PMC_PLL_UPDT_UPDATE | core->id);
-+
-+	spin_unlock_irqrestore(core->lock, flags);
- }
- 
--static void sam9x60_pll_unprepare(struct clk_hw *hw)
-+static int sam9x60_frac_pll_is_prepared(struct clk_hw *hw)
- {
--	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
--	unsigned long flags;
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+
-+	return sam9x60_pll_ready(core->regmap, core->id);
-+}
- 
--	spin_lock_irqsave(pll->lock, flags);
-+static long sam9x60_frac_pll_compute_mul_frac(struct sam9x60_pll_core *core,
-+					      unsigned long rate,
-+					      unsigned long parent_rate,
-+					      bool update)
-+{
-+	struct sam9x60_frac *frac = to_sam9x60_frac(core);
-+	unsigned long tmprate, remainder;
-+	unsigned long nmul = 0;
-+	unsigned long nfrac = 0;
- 
--	regmap_write(pll->regmap, AT91_PMC_PLL_UPDT, pll->id);
-+	if (rate < FCORE_MIN || rate > FCORE_MAX)
-+		return -ERANGE;
- 
--	regmap_update_bits(pll->regmap, AT91_PMC_PLL_CTRL0,
--			   AT91_PMC_PLL_CTRL0_ENPLLCK, 0);
-+	/*
-+	 * Calculate the multiplier associated with the current
-+	 * divider that provide the closest rate to the requested one.
-+	 */
-+	nmul = mult_frac(rate, 1, parent_rate);
-+	tmprate = mult_frac(parent_rate, nmul, 1);
-+	remainder = rate - tmprate;
- 
--	regmap_update_bits(pll->regmap, AT91_PMC_PLL_UPDT,
--			   AT91_PMC_PLL_UPDT_UPDATE, AT91_PMC_PLL_UPDT_UPDATE);
-+	if (remainder) {
-+		nfrac = DIV_ROUND_CLOSEST_ULL((u64)remainder * (1 << 22),
-+					      parent_rate);
- 
--	regmap_update_bits(pll->regmap, AT91_PMC_PLL_CTRL0,
--			   AT91_PMC_PLL_CTRL0_ENPLL, 0);
-+		tmprate += DIV_ROUND_CLOSEST_ULL((u64)nfrac * parent_rate,
-+						 (1 << 22));
-+	}
- 
--	if (pll->characteristics->upll)
--		regmap_update_bits(pll->regmap, AT91_PMC_PLL_ACR,
--				   AT91_PMC_PLL_ACR_UTMIBG |
--				   AT91_PMC_PLL_ACR_UTMIVR, 0);
-+	/* Check if resulted rate is a valid.  */
-+	if (tmprate < FCORE_MIN || tmprate > FCORE_MAX)
-+		return -ERANGE;
- 
--	regmap_update_bits(pll->regmap, AT91_PMC_PLL_UPDT,
--			   AT91_PMC_PLL_UPDT_UPDATE, AT91_PMC_PLL_UPDT_UPDATE);
-+	if (update) {
-+		frac->mul = nmul - 1;
-+		frac->frac = nfrac;
-+	}
- 
--	spin_unlock_irqrestore(pll->lock, flags);
-+	return tmprate;
- }
- 
--static unsigned long sam9x60_pll_recalc_rate(struct clk_hw *hw,
--					     unsigned long parent_rate)
-+static long sam9x60_frac_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+					unsigned long *parent_rate)
- {
--	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
- 
--	return DIV_ROUND_CLOSEST_ULL((parent_rate * (pll->mul + 1) +
--		((u64)parent_rate * pll->frac >> 22)), (pll->div + 1));
-+	return sam9x60_frac_pll_compute_mul_frac(core, rate, *parent_rate, false);
- }
- 
--static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
--					 unsigned long rate,
--					 unsigned long parent_rate,
--					 bool update)
-+static int sam9x60_frac_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long parent_rate)
- {
--	const struct clk_pll_characteristics *characteristics =
--							pll->characteristics;
--	unsigned long bestremainder = ULONG_MAX;
--	unsigned long maxdiv, mindiv, tmpdiv;
--	long bestrate = -ERANGE;
--	unsigned long bestdiv = 0;
--	unsigned long bestmul = 0;
--	unsigned long bestfrac = 0;
--	u64 fcore = 0;
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
- 
--	if (rate < characteristics->output[0].min ||
--	    rate > characteristics->output[0].max)
--		return -ERANGE;
-+	return sam9x60_frac_pll_compute_mul_frac(core, rate, parent_rate, true);
-+}
- 
--	if (!pll->characteristics->upll) {
--		mindiv = parent_rate / rate;
--		if (mindiv < 2)
--			mindiv = 2;
-+static const struct clk_ops sam9x60_frac_pll_ops = {
-+	.prepare = sam9x60_frac_pll_prepare,
-+	.unprepare = sam9x60_frac_pll_unprepare,
-+	.is_prepared = sam9x60_frac_pll_is_prepared,
-+	.recalc_rate = sam9x60_frac_pll_recalc_rate,
-+	.round_rate = sam9x60_frac_pll_round_rate,
-+	.set_rate = sam9x60_frac_pll_set_rate,
++/* Layout for fractional PLLs. */
++static const struct clk_pll_layout pll_layout_frac = {
++	.mul_mask	= GENMASK(31, 24),
++	.frac_mask	= GENMASK(21, 0),
++	.mul_shift	= 24,
++	.frac_shift	= 0,
 +};
- 
--		maxdiv = DIV_ROUND_UP(parent_rate * PLL_MUL_MAX, rate);
--		if (maxdiv > PLL_DIV_MAX)
--			maxdiv = PLL_DIV_MAX;
--	} else {
--		mindiv = maxdiv = UPLL_DIV;
--	}
-+static int sam9x60_div_pll_prepare(struct clk_hw *hw)
++
++/* Layout for DIVPMC dividers. */
++static const struct clk_pll_layout pll_layout_divpmc = {
++	.div_mask	= GENMASK(7, 0),
++	.endiv_mask	= BIT(29),
++	.div_shift	= 0,
++	.endiv_shift	= 29,
++};
++
++/* Layout for DIVIO dividers. */
++static const struct clk_pll_layout pll_layout_divio = {
++	.div_mask	= GENMASK(19, 12),
++	.endiv_mask	= BIT(30),
++	.div_shift	= 12,
++	.endiv_shift	= 30,
++};
++
++/**
++ * PLL clocks description
++ * @n:		clock name
++ * @p:		clock parent
++ * @l:		clock layout
++ * @t:		clock type
++ * @f:		true if clock is critical and cannot be disabled
++ * @eid:	export index in sama7g5->chws[] array
++ */
++static const struct {
++	const char *n;
++	const char *p;
++	const struct clk_pll_layout *l;
++	u8 t;
++	u8 c;
++	u8 eid;
++} sama7g5_plls[][PLL_ID_MAX] = {
++	[PLL_ID_CPU] = {
++		{ .n = "cpupll_fracck",
++		  .p = "mainck",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC,
++		  .c = 1, },
++
++		{ .n = "cpupll_divpmcck",
++		  .p = "cpupll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV,
++		  .c = 1, },
++	},
++
++	[PLL_ID_SYS] = {
++		{ .n = "syspll_fracck",
++		  .p = "mainck",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC,
++		  .c = 1, },
++
++		{ .n = "syspll_divpmcck",
++		  .p = "syspll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV,
++		  .c = 1, },
++	},
++
++	[PLL_ID_DDR] = {
++		{ .n = "ddrpll_fracck",
++		  .p = "mainck",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC,
++		  .c = 1, },
++
++		{ .n = "ddrpll_divpmcck",
++		  .p = "ddrpll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV,
++		  .c = 1, },
++	},
++
++	[PLL_ID_IMG] = {
++		{ .n = "imgpll_fracck",
++		  .p = "mainck",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC, },
++
++		{ .n = "imgpll_divpmcck",
++		  .p = "imgpll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV, },
++	},
++
++	[PLL_ID_BAUD] = {
++		{ .n = "baudpll_fracck",
++		  .p = "mainck",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC, },
++
++		{ .n = "baudpll_divpmcck",
++		  .p = "baudpll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV, },
++	},
++
++	[PLL_ID_AUDIO] = {
++		{ .n = "audiopll_fracck",
++		  .p = "main_xtal",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC, },
++
++		{ .n = "audiopll_divpmcck",
++		  .p = "audiopll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV,
++		  .eid = PMC_I2S0_MUX, },
++
++		{ .n = "audiopll_diviock",
++		  .p = "audiopll_fracck",
++		  .l = &pll_layout_divio,
++		  .t = PLL_TYPE_DIV,
++		  .eid = PMC_I2S1_MUX, },
++	},
++
++	[PLL_ID_ETH] = {
++		{ .n = "ethpll_fracck",
++		  .p = "main_xtal",
++		  .l = &pll_layout_frac,
++		  .t = PLL_TYPE_FRAC, },
++
++		{ .n = "ethpll_divpmcck",
++		  .p = "ethpll_fracck",
++		  .l = &pll_layout_divpmc,
++		  .t = PLL_TYPE_DIV, },
++	},
++};
++
++/**
++ * Master clock (MCK[1..4]) description
++ * @n:			clock name
++ * @ep:			extra parents names array
++ * @ep_chg_chg_id:	index in parents array that specifies the changeable
++ *			parent
++ * @ep_count:		extra parents count
++ * @ep_mux_table:	mux table for extra parents
++ * @id:			clock id
++ * @c:			true if clock is critical and cannot be disabled
++ */
++static const struct {
++	const char *n;
++	const char *ep[4];
++	int ep_chg_id;
++	u8 ep_count;
++	u8 ep_mux_table[4];
++	u8 id;
++	u8 c;
++} sama7g5_mckx[] = {
++	{ .n = "mck1",
++	  .id = 1,
++	  .ep = { "syspll_divpmcck", },
++	  .ep_mux_table = { 5, },
++	  .ep_count = 1,
++	  .ep_chg_id = INT_MIN,
++	  .c = 1, },
++
++	{ .n = "mck2",
++	  .id = 2,
++	  .ep = { "ddrpll_divpmcck", },
++	  .ep_mux_table = { 6, },
++	  .ep_count = 1,
++	  .ep_chg_id = INT_MIN,
++	  .c = 1, },
++
++	{ .n = "mck3",
++	  .id = 3,
++	  .ep = { "syspll_divpmcck", "ddrpll_divpmcck", "imgpll_divpmcck", },
++	  .ep_mux_table = { 5, 6, 7, },
++	  .ep_count = 3,
++	  .ep_chg_id = 6, },
++
++	{ .n = "mck4",
++	  .id = 4,
++	  .ep = { "syspll_divpmcck", },
++	  .ep_mux_table = { 5, },
++	  .ep_count = 1,
++	  .ep_chg_id = INT_MIN,
++	  .c = 1, },
++};
++
++/**
++ * System clock description
++ * @n:	clock name
++ * @p:	clock parent name
++ * @id: clock id
++ */
++static const struct {
++	const char *n;
++	const char *p;
++	u8 id;
++} sama7g5_systemck[] = {
++	{ .n = "pck0",		.p = "prog0", .id = 8, },
++	{ .n = "pck1",		.p = "prog1", .id = 9, },
++	{ .n = "pck2",		.p = "prog2", .id = 10, },
++	{ .n = "pck3",		.p = "prog3", .id = 11, },
++	{ .n = "pck4",		.p = "prog4", .id = 12, },
++	{ .n = "pck5",		.p = "prog5", .id = 13, },
++	{ .n = "pck6",		.p = "prog6", .id = 14, },
++	{ .n = "pck7",		.p = "prog7", .id = 15, },
++};
++
++/* Mux table for programmable clocks. */
++static u32 sama7g5_prog_mux_table[] = { 0, 1, 2, 3, 5, 6, 7, 8, 9, 10, };
++
++/**
++ * Peripheral clock description
++ * @n:		clock name
++ * @p:		clock parent name
++ * @r:		clock range values
++ * @id:		clock id
++ * @chgp:	index in parent array of the changeable parent
++ */
++static const struct {
++	const char *n;
++	const char *p;
++	struct clk_range r;
++	u8 chgp;
++	u8 id;
++} sama7g5_periphck[] = {
++	{ .n = "pioA_clk",	.p = "mck0", .id = 11, },
++	{ .n = "sfr_clk",	.p = "mck1", .id = 19, },
++	{ .n = "hsmc_clk",	.p = "mck1", .id = 21, },
++	{ .n = "xdmac0_clk",	.p = "mck1", .id = 22, },
++	{ .n = "xdmac1_clk",	.p = "mck1", .id = 23, },
++	{ .n = "xdmac2_clk",	.p = "mck1", .id = 24, },
++	{ .n = "acc_clk",	.p = "mck1", .id = 25, },
++	{ .n = "aes_clk",	.p = "mck1", .id = 27, },
++	{ .n = "tzaesbasc_clk",	.p = "mck1", .id = 28, },
++	{ .n = "asrc_clk",	.p = "mck1", .id = 30, .r = { .max = 200000000, }, },
++	{ .n = "cpkcc_clk",	.p = "mck0", .id = 32, },
++	{ .n = "csi_clk",	.p = "mck3", .id = 33, .r = { .max = 266000000, }, .chgp = 1, },
++	{ .n = "csi2dc_clk",	.p = "mck3", .id = 34, .r = { .max = 266000000, }, .chgp = 1, },
++	{ .n = "eic_clk",	.p = "mck1", .id = 37, },
++	{ .n = "flex0_clk",	.p = "mck1", .id = 38, },
++	{ .n = "flex1_clk",	.p = "mck1", .id = 39, },
++	{ .n = "flex2_clk",	.p = "mck1", .id = 40, },
++	{ .n = "flex3_clk",	.p = "mck1", .id = 41, },
++	{ .n = "flex4_clk",	.p = "mck1", .id = 42, },
++	{ .n = "flex5_clk",	.p = "mck1", .id = 43, },
++	{ .n = "flex6_clk",	.p = "mck1", .id = 44, },
++	{ .n = "flex7_clk",	.p = "mck1", .id = 45, },
++	{ .n = "flex8_clk",	.p = "mck1", .id = 46, },
++	{ .n = "flex9_clk",	.p = "mck1", .id = 47, },
++	{ .n = "flex10_clk",	.p = "mck1", .id = 48, },
++	{ .n = "flex11_clk",	.p = "mck1", .id = 49, },
++	{ .n = "gmac0_clk",	.p = "mck1", .id = 51, },
++	{ .n = "gmac1_clk",	.p = "mck1", .id = 52, },
++	{ .n = "icm_clk",	.p = "mck1", .id = 55, },
++	{ .n = "isc_clk",	.p = "mck3", .id = 56, .r = { .max = 266000000, }, .chgp = 1, },
++	{ .n = "i2smcc0_clk",	.p = "mck1", .id = 57, .r = { .max = 200000000, }, },
++	{ .n = "i2smcc1_clk",	.p = "mck1", .id = 58, .r = { .max = 200000000, }, },
++	{ .n = "matrix_clk",	.p = "mck1", .id = 60, },
++	{ .n = "mcan0_clk",	.p = "mck1", .id = 61, .r = { .max = 200000000, }, },
++	{ .n = "mcan1_clk",	.p = "mck1", .id = 62, .r = { .max = 200000000, }, },
++	{ .n = "mcan2_clk",	.p = "mck1", .id = 63, .r = { .max = 200000000, }, },
++	{ .n = "mcan3_clk",	.p = "mck1", .id = 64, .r = { .max = 200000000, }, },
++	{ .n = "mcan4_clk",	.p = "mck1", .id = 65, .r = { .max = 200000000, }, },
++	{ .n = "mcan5_clk",	.p = "mck1", .id = 66, .r = { .max = 200000000, }, },
++	{ .n = "pdmc0_clk",	.p = "mck1", .id = 68, .r = { .max = 200000000, }, },
++	{ .n = "pdmc1_clk",	.p = "mck1", .id = 69, .r = { .max = 200000000, }, },
++	{ .n = "pit64b0_clk",	.p = "mck1", .id = 70, },
++	{ .n = "pit64b1_clk",	.p = "mck1", .id = 71, },
++	{ .n = "pit64b2_clk",	.p = "mck1", .id = 72, },
++	{ .n = "pit64b3_clk",	.p = "mck1", .id = 73, },
++	{ .n = "pit64b4_clk",	.p = "mck1", .id = 74, },
++	{ .n = "pit64b5_clk",	.p = "mck1", .id = 75, },
++	{ .n = "pwm_clk",	.p = "mck1", .id = 77, },
++	{ .n = "qspi0_clk",	.p = "mck1", .id = 78, },
++	{ .n = "qspi1_clk",	.p = "mck1", .id = 79, },
++	{ .n = "sdmmc0_clk",	.p = "mck1", .id = 80, },
++	{ .n = "sdmmc1_clk",	.p = "mck1", .id = 81, },
++	{ .n = "sdmmc2_clk",	.p = "mck1", .id = 82, },
++	{ .n = "sha_clk",	.p = "mck1", .id = 83, },
++	{ .n = "spdifrx_clk",	.p = "mck1", .id = 84, .r = { .max = 200000000, }, },
++	{ .n = "spdiftx_clk",	.p = "mck1", .id = 85, .r = { .max = 200000000, }, },
++	{ .n = "ssc0_clk",	.p = "mck1", .id = 86, .r = { .max = 200000000, }, },
++	{ .n = "ssc1_clk",	.p = "mck1", .id = 87, .r = { .max = 200000000, }, },
++	{ .n = "tcb0_ch0_clk",	.p = "mck1", .id = 88, .r = { .max = 200000000, }, },
++	{ .n = "tcb0_ch1_clk",	.p = "mck1", .id = 89, .r = { .max = 200000000, }, },
++	{ .n = "tcb0_ch2_clk",	.p = "mck1", .id = 90, .r = { .max = 200000000, }, },
++	{ .n = "tcb1_ch0_clk",	.p = "mck1", .id = 91, .r = { .max = 200000000, }, },
++	{ .n = "tcb1_ch1_clk",	.p = "mck1", .id = 92, .r = { .max = 200000000, }, },
++	{ .n = "tcb1_ch2_clk",	.p = "mck1", .id = 93, .r = { .max = 200000000, }, },
++	{ .n = "tcpca_clk",	.p = "mck1", .id = 94, },
++	{ .n = "tcpcb_clk",	.p = "mck1", .id = 95, },
++	{ .n = "tdes_clk",	.p = "mck1", .id = 96, },
++	{ .n = "trng_clk",	.p = "mck1", .id = 97, },
++	{ .n = "udphsa_clk",	.p = "mck1", .id = 104, },
++	{ .n = "udphsb_clk",	.p = "mck1", .id = 105, },
++	{ .n = "uhphs_clk",	.p = "mck1", .id = 106, },
++};
++
++/**
++ * Generic clock description
++ * @n:			clock name
++ * @pp:			PLL parents
++ * @pp_mux_table:	PLL parents mux table
++ * @r:			clock output range
++ * @pp_chg_id:		id in parrent array of changeable PLL parent
++ * @pp_count:		PLL parents count
++ * @id:			clock id
++ */
++static const struct {
++	const char *n;
++	const char *pp[8];
++	const char pp_mux_table[8];
++	struct clk_range r;
++	int pp_chg_id;
++	u8 pp_count;
++	u8 id;
++} sama7g5_gck[] = {
++	{ .n  = "adc_gclk",
++	  .id = 26,
++	  .r = { .max = 100000000, },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "audiopll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 9, },
++	  .pp_count = 3,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "asrc_gclk",
++	  .id = 30,
++	  .r = { .max = 200000000 },
++	  .pp = { "audiopll_divpmcck", },
++	  .pp_mux_table = { 9, },
++	  .pp_count = 1,
++	  .pp_chg_id = 4, },
++
++	{ .n  = "csi_gclk",
++	  .id = 33,
++	  .r = { .max = 27000000  },
++	  .pp = { "ddrpll_divpmcck", "imgpll_divpmcck", },
++	  .pp_mux_table = { 6, 7, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex0_gclk",
++	  .id = 38,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex1_gclk",
++	  .id = 39,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex2_gclk",
++	  .id = 40,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex3_gclk",
++	  .id = 41,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex4_gclk",
++	  .id = 42,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex5_gclk",
++	  .id = 43,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex6_gclk",
++	  .id = 44,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex7_gclk",
++	  .id = 45,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex8_gclk",
++	  .id = 46,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex9_gclk",
++	  .id = 47,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex10_gclk",
++	  .id = 48,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "flex11_gclk",
++	  .id = 49,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "gmac0_gclk",
++	  .id = 51,
++	  .r = { .max = 125000000 },
++	  .pp = { "ethpll_divpmcck", },
++	  .pp_mux_table = { 10, },
++	  .pp_count = 1,
++	  .pp_chg_id = 4, },
++
++	{ .n  = "gmac1_gclk",
++	  .id = 52,
++	  .r = { .max = 50000000  },
++	  .pp = { "ethpll_divpmcck", },
++	  .pp_mux_table = { 10, },
++	  .pp_count = 1,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "gmac0_tsu_gclk",
++	  .id = 53,
++	  .r = { .max = 300000000 },
++	  .pp = { "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 9, 10, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "gmac1_tsu_gclk",
++	  .id = 54,
++	  .r = { .max = 300000000 },
++	  .pp = { "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 9, 10, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "i2smcc0_gclk",
++	  .id = 57,
++	  .r = { .max = 100000000 },
++	  .pp = { "syspll_divpmcck", "audiopll_divpmcck", },
++	  .pp_mux_table = { 5, 9, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n  = "i2smcc1_gclk",
++	  .id = 58,
++	  .r = { .max = 100000000 },
++	  .pp = { "syspll_divpmcck", "audiopll_divpmcck", },
++	  .pp_mux_table = { 5, 9, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n  = "mcan0_gclk",
++	  .id = 61,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "mcan1_gclk",
++	  .id = 62,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "mcan2_gclk",
++	  .id = 63,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "mcan3_gclk",
++	  .id = 64,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "mcan4_gclk",
++	  .id = 65,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "mcan5_gclk",
++	  .id = 66,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pdmc0_gclk",
++	  .id = 68,
++	  .r = { .max = 50000000  },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pdmc1_gclk",
++	  .id = 69,
++	  .r = { .max = 50000000, },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pit64b0_gclk",
++	  .id = 70,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pit64b1_gclk",
++	  .id = 71,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pit64b2_gclk",
++	  .id = 72,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pit64b3_gclk",
++	  .id = 73,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pit64b4_gclk",
++	  .id = 74,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "pit64b5_gclk",
++	  .id = 75,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "qspi0_gclk",
++	  .id = 78,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "qspi1_gclk",
++	  .id = 79,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "sdmmc0_gclk",
++	  .id = 80,
++	  .r = { .max = 208000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n  = "sdmmc1_gclk",
++	  .id = 81,
++	  .r = { .max = 208000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n  = "sdmmc2_gclk",
++	  .id = 82,
++	  .r = { .max = 208000000 },
++	  .pp = { "syspll_divpmcck", "baudpll_divpmcck", },
++	  .pp_mux_table = { 5, 8, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n  = "spdifrx_gclk",
++	  .id = 84,
++	  .r = { .max = 150000000 },
++	  .pp = { "syspll_divpmcck", "audiopll_divpmcck", },
++	  .pp_mux_table = { 5, 9, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n = "spdiftx_gclk",
++	  .id = 85,
++	  .r = { .max = 25000000  },
++	  .pp = { "syspll_divpmcck", "audiopll_divpmcck", },
++	  .pp_mux_table = { 5, 9, },
++	  .pp_count = 2,
++	  .pp_chg_id = 5, },
++
++	{ .n  = "tcb0_ch0_gclk",
++	  .id = 88,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "tcb1_ch0_gclk",
++	  .id = 91,
++	  .r = { .max = 200000000 },
++	  .pp = { "syspll_divpmcck", "imgpll_divpmcck", "baudpll_divpmcck",
++		  "audiopll_divpmcck", "ethpll_divpmcck", },
++	  .pp_mux_table = { 5, 7, 8, 9, 10, },
++	  .pp_count = 5,
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "tcpca_gclk",
++	  .id = 94,
++	  .r = { .max = 32768, },
++	  .pp_chg_id = INT_MIN, },
++
++	{ .n  = "tcpcb_gclk",
++	  .id = 95,
++	  .r = { .max = 32768, },
++	  .pp_chg_id = INT_MIN, },
++};
++
++/* PLL output range. */
++static const struct clk_range pll_outputs[] = {
++	{ .min = 2343750, .max = 1200000000 },
++};
++
++/* PLL characteristics. */
++static const struct clk_pll_characteristics pll_characteristics = {
++	.input = { .min = 12000000, .max = 50000000 },
++	.num_output = ARRAY_SIZE(pll_outputs),
++	.output = pll_outputs,
++};
++
++/* MCK0 characteristics. */
++static const struct clk_master_characteristics mck0_characteristics = {
++	.output = { .min = 140000000, .max = 200000000 },
++	.divisors = { 1, 2, 4, 3 },
++	.have_div3_pres = 1,
++};
++
++/* MCK0 layout. */
++static const struct clk_master_layout mck0_layout = {
++	.mask = 0x373,
++	.pres_shift = 4,
++	.offset = 0x28,
++};
++
++/* Programmable clock layout. */
++static const struct clk_programmable_layout programmable_layout = {
++	.pres_mask = 0xff,
++	.pres_shift = 8,
++	.css_mask = 0x1f,
++	.have_slck_mck = 0,
++	.is_pres_direct = 1,
++};
++
++/* Peripheral clock layout. */
++static const struct clk_pcr_layout sama7g5_pcr_layout = {
++	.offset = 0x88,
++	.cmd = BIT(31),
++	.gckcss_mask = GENMASK(12, 8),
++	.pid_mask = GENMASK(6, 0),
++};
++
++static void __init sama7g5_pmc_setup(struct device_node *np)
 +{
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct sam9x60_div *div = to_sam9x60_div(core);
-+	struct regmap *regmap = core->regmap;
-+	unsigned long flags;
-+	unsigned int val, cdiv;
- 
--	for (tmpdiv = mindiv; tmpdiv <= maxdiv; tmpdiv++) {
--		unsigned long remainder;
--		unsigned long tmprate;
--		unsigned long tmpmul;
--		unsigned long tmpfrac = 0;
-+	spin_lock_irqsave(core->lock, flags);
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_ID_MSK, core->id);
-+	regmap_read(regmap, AT91_PMC_PLL_CTRL0, &val);
-+	cdiv = (val & core->layout->div_mask) >> core->layout->div_shift;
- 
--		/*
--		 * Calculate the multiplier associated with the current
--		 * divider that provide the closest rate to the requested one.
--		 */
--		tmpmul = mult_frac(rate, tmpdiv, parent_rate);
--		tmprate = mult_frac(parent_rate, tmpmul, tmpdiv);
--		remainder = rate - tmprate;
-+	/* Stop if enabled an nothing changed. */
-+	if (!!(val & core->layout->endiv_mask) && cdiv == div->div)
-+		goto unlock;
- 
--		if (remainder) {
--			tmpfrac = DIV_ROUND_CLOSEST_ULL((u64)remainder * tmpdiv * (1 << 22),
--							parent_rate);
-+	regmap_update_bits(regmap, AT91_PMC_PLL_CTRL0,
-+			   core->layout->div_mask | core->layout->endiv_mask,
-+			   (div->div << core->layout->div_shift) |
-+			   (1 << core->layout->endiv_shift));
- 
--			tmprate += DIV_ROUND_CLOSEST_ULL((u64)tmpfrac * parent_rate,
--							 tmpdiv * (1 << 22));
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_UPDATE | AT91_PMC_PLL_UPDT_ID_MSK,
-+			   AT91_PMC_PLL_UPDT_UPDATE | core->id);
- 
--			if (tmprate > rate)
--				remainder = tmprate - rate;
--			else
--				remainder = rate - tmprate;
--		}
-+	while (!sam9x60_pll_ready(regmap, core->id))
-+		cpu_relax();
-+
-+unlock:
-+	spin_unlock_irqrestore(core->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void sam9x60_div_pll_unprepare(struct clk_hw *hw)
-+{
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct regmap *regmap = core->regmap;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(core->lock, flags);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_ID_MSK, core->id);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_CTRL0,
-+			   core->layout->endiv_mask, 0);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_UPDATE | AT91_PMC_PLL_UPDT_ID_MSK,
-+			   AT91_PMC_PLL_UPDT_UPDATE | core->id);
-+
-+	spin_unlock_irqrestore(core->lock, flags);
-+}
-+
-+static int sam9x60_div_pll_is_prepared(struct clk_hw *hw)
-+{
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct regmap *regmap = core->regmap;
-+	unsigned long flags;
-+	unsigned int val;
-+
-+	spin_lock_irqsave(core->lock, flags);
-+
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_ID_MSK, core->id);
-+	regmap_read(regmap, AT91_PMC_PLL_CTRL0, &val);
-+
-+	spin_unlock_irqrestore(core->lock, flags);
- 
--		fcore = parent_rate * (tmpmul + 1) +
--			((u64)parent_rate * tmpfrac >> 22);
--		if (fcore < FCORE_MIN || fcore > FCORE_MAX)
-+	return !!(val & core->layout->endiv_mask);
-+}
-+
-+static unsigned long sam9x60_div_pll_recalc_rate(struct clk_hw *hw,
-+						 unsigned long parent_rate)
-+{
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct sam9x60_div *div = to_sam9x60_div(core);
-+
-+	return DIV_ROUND_CLOSEST_ULL(parent_rate, (div->div + 1));
-+}
-+
-+static long sam9x60_div_pll_compute_div(struct sam9x60_pll_core *core,
-+					unsigned long *parent_rate,
-+					unsigned long rate)
-+{
-+	const struct clk_pll_characteristics *characteristics =
-+							core->characteristics;
-+	struct clk_hw *parent = clk_hw_get_parent(&core->hw);
-+	unsigned long tmp_rate, tmp_parent_rate, tmp_diff;
-+	long best_diff = -1, best_rate = -EINVAL;
-+	u32 divid, best_div;
-+
-+	if (!rate)
-+		return 0;
-+
-+	if (rate < characteristics->output[0].min ||
-+	    rate > characteristics->output[0].max)
-+		return -ERANGE;
-+
-+	for (divid = 1; divid < core->layout->div_mask; divid++) {
-+		tmp_parent_rate = clk_hw_round_rate(parent, rate * divid);
-+		if (!tmp_parent_rate)
- 			continue;
- 
--		/*
--		 * Compare the remainder with the best remainder found until
--		 * now and elect a new best multiplier/divider pair if the
--		 * current remainder is smaller than the best one.
--		 */
--		if (remainder < bestremainder) {
--			bestremainder = remainder;
--			bestdiv = tmpdiv;
--			bestmul = tmpmul;
--			bestrate = tmprate;
--			bestfrac = tmpfrac;
-+		tmp_rate = DIV_ROUND_CLOSEST_ULL(tmp_parent_rate, divid);
-+		tmp_diff = abs(rate - tmp_rate);
-+
-+		if (best_diff < 0 || best_diff > tmp_diff) {
-+			*parent_rate = tmp_parent_rate;
-+			best_rate = tmp_rate;
-+			best_diff = tmp_diff;
-+			best_div = divid;
- 		}
- 
--		/* We've found a perfect match!  */
--		if (!remainder)
-+		if (!best_diff)
- 			break;
- 	}
- 
--	/* Check if bestrate is a valid output rate  */
--	if (fcore < FCORE_MIN || fcore > FCORE_MAX ||
--	    bestrate < characteristics->output[0].min ||
--	    bestrate > characteristics->output[0].max)
-+	if (best_rate < characteristics->output[0].min ||
-+	    best_rate > characteristics->output[0].max)
- 		return -ERANGE;
- 
--	if (update) {
--		pll->div = bestdiv - 1;
--		pll->mul = bestmul - 1;
--		pll->frac = bestfrac;
--	}
--
--	return bestrate;
-+	return best_rate;
- }
- 
--static long sam9x60_pll_round_rate(struct clk_hw *hw, unsigned long rate,
--				   unsigned long *parent_rate)
-+static long sam9x60_div_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+				       unsigned long *parent_rate)
- {
--	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
- 
--	return sam9x60_pll_get_best_div_mul(pll, rate, *parent_rate, false);
-+	return sam9x60_div_pll_compute_div(core, parent_rate, rate);
- }
- 
--static int sam9x60_pll_set_rate(struct clk_hw *hw, unsigned long rate,
--				unsigned long parent_rate)
-+static int sam9x60_div_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-+				    unsigned long parent_rate)
- {
--	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
-+	struct sam9x60_pll_core *core = to_sam9x60_pll_core(hw);
-+	struct sam9x60_div *div = to_sam9x60_div(core);
-+
-+	div->div = DIV_ROUND_CLOSEST(parent_rate, rate) - 1;
- 
--	return sam9x60_pll_get_best_div_mul(pll, rate, parent_rate, true);
-+	return 0;
- }
- 
--static const struct clk_ops pll_ops = {
--	.prepare = sam9x60_pll_prepare,
--	.unprepare = sam9x60_pll_unprepare,
--	.is_prepared = sam9x60_pll_is_prepared,
--	.recalc_rate = sam9x60_pll_recalc_rate,
--	.round_rate = sam9x60_pll_round_rate,
--	.set_rate = sam9x60_pll_set_rate,
-+static const struct clk_ops sam9x60_div_pll_ops = {
-+	.prepare = sam9x60_div_pll_prepare,
-+	.unprepare = sam9x60_div_pll_unprepare,
-+	.is_prepared = sam9x60_div_pll_is_prepared,
-+	.recalc_rate = sam9x60_div_pll_recalc_rate,
-+	.round_rate = sam9x60_div_pll_round_rate,
-+	.set_rate = sam9x60_div_pll_set_rate,
- };
- 
- struct clk_hw * __init
--sam9x60_clk_register_pll(struct regmap *regmap, spinlock_t *lock,
--			 const char *name, const char *parent_name, u8 id,
--			 const struct clk_pll_characteristics *characteristics)
-+sam9x60_clk_register_frac_pll(struct regmap *regmap, spinlock_t *lock,
-+			      const char *name, const char *parent_name,
-+			      struct clk_hw *parent_hw, u8 id,
-+			      const struct clk_pll_characteristics *characteristics,
-+			      const struct clk_pll_layout *layout, bool critical)
- {
--	struct sam9x60_pll *pll;
-+	struct sam9x60_frac *frac;
- 	struct clk_hw *hw;
- 	struct clk_init_data init;
--	unsigned int pllr;
-+	unsigned long parent_rate, flags;
-+	unsigned int val;
- 	int ret;
- 
--	if (id > PLL_MAX_ID)
-+	if (id > PLL_MAX_ID || !lock || !parent_hw)
- 		return ERR_PTR(-EINVAL);
- 
--	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
--	if (!pll)
-+	frac = kzalloc(sizeof(*frac), GFP_KERNEL);
-+	if (!frac)
- 		return ERR_PTR(-ENOMEM);
- 
- 	init.name = name;
--	init.ops = &pll_ops;
- 	init.parent_names = &parent_name;
- 	init.num_parents = 1;
-+	init.ops = &sam9x60_frac_pll_ops;
- 	init.flags = CLK_SET_RATE_GATE;
-+	if (critical)
-+		init.flags |= CLK_IS_CRITICAL;
-+
-+	frac->core.id = id;
-+	frac->core.hw.init = &init;
-+	frac->core.characteristics = characteristics;
-+	frac->core.layout = layout;
-+	frac->core.regmap = regmap;
-+	frac->core.lock = lock;
-+
-+	spin_lock_irqsave(frac->core.lock, flags);
-+	if (sam9x60_pll_ready(regmap, id)) {
-+		regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+				   AT91_PMC_PLL_UPDT_ID_MSK, id);
-+		regmap_read(regmap, AT91_PMC_PLL_CTRL1, &val);
-+		frac->mul = FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, val);
-+		frac->frac = FIELD_GET(PMC_PLL_CTRL1_FRACR_MSK, val);
-+	} else {
-+		/*
-+		 * This means the PLL is not setup by bootloaders. In this
-+		 * case we need to set the minimum rate for it. Otherwise
-+		 * a clock child of this PLL may be enabled before setting
-+		 * its rate leading to enabling this PLL with unsupported
-+		 * rate. This will lead to PLL not being locked at all.
-+		 */
-+		parent_rate = clk_hw_get_rate(parent_hw);
-+		if (!parent_rate) {
-+			hw = ERR_PTR(-EINVAL);
-+			goto free;
-+		}
-+
-+		ret = sam9x60_frac_pll_compute_mul_frac(&frac->core, FCORE_MIN,
-+							parent_rate, true);
-+		if (ret <= 0) {
-+			hw = ERR_PTR(ret);
-+			goto free;
-+		}
-+	}
-+	spin_unlock_irqrestore(frac->core.lock, flags);
-+
-+	hw = &frac->core.hw;
-+	ret = clk_hw_register(NULL, hw);
-+	if (ret) {
-+		kfree(frac);
-+		hw = ERR_PTR(ret);
-+	}
- 
--	pll->id = id;
--	pll->hw.init = &init;
--	pll->characteristics = characteristics;
--	pll->regmap = regmap;
--	pll->lock = lock;
-+	return hw;
-+
-+free:
-+	spin_unlock_irqrestore(frac->core.lock, flags);
-+	kfree(frac);
-+	return hw;
-+}
-+
-+struct clk_hw * __init
-+sam9x60_clk_register_div_pll(struct regmap *regmap, spinlock_t *lock,
-+			     const char *name, const char *parent_name, u8 id,
-+			     const struct clk_pll_characteristics *characteristics,
-+			     const struct clk_pll_layout *layout, bool critical)
-+{
-+	struct sam9x60_div *div;
++	const char *td_slck_name, *md_slck_name, *mainxtal_name;
++	struct pmc_data *sama7g5_pmc;
++	const char *parent_names[10];
++	void **alloc_mem = NULL;
++	int alloc_mem_size = 0;
++	struct regmap *regmap;
 +	struct clk_hw *hw;
-+	struct clk_init_data init;
-+	unsigned long flags;
-+	unsigned int val;
-+	int ret;
++	bool bypass;
++	int i, j;
 +
-+	if (id > PLL_MAX_ID || !lock)
-+		return ERR_PTR(-EINVAL);
++	i = of_property_match_string(np, "clock-names", "td_slck");
++	if (i < 0)
++		return;
 +
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
++	td_slck_name = of_clk_get_parent_name(np, i);
 +
-+	init.name = name;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	init.ops = &sam9x60_div_pll_ops;
-+	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
-+		     CLK_SET_RATE_PARENT;
-+	if (critical)
-+		init.flags |= CLK_IS_CRITICAL;
++	i = of_property_match_string(np, "clock-names", "md_slck");
++	if (i < 0)
++		return;
 +
-+	div->core.id = id;
-+	div->core.hw.init = &init;
-+	div->core.characteristics = characteristics;
-+	div->core.layout = layout;
-+	div->core.regmap = regmap;
-+	div->core.lock = lock;
++	md_slck_name = of_clk_get_parent_name(np, i);
 +
-+	spin_lock_irqsave(div->core.lock, flags);
++	i = of_property_match_string(np, "clock-names", "main_xtal");
++	if (i < 0)
++		return;
 +
-+	regmap_update_bits(regmap, AT91_PMC_PLL_UPDT,
-+			   AT91_PMC_PLL_UPDT_ID_MSK, id);
-+	regmap_read(regmap, AT91_PMC_PLL_CTRL0, &val);
-+	div->div = FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, val);
- 
--	regmap_write(regmap, AT91_PMC_PLL_UPDT, id);
--	regmap_read(regmap, AT91_PMC_PLL_CTRL0, &pllr);
--	pll->div = FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, pllr);
--	regmap_read(regmap, AT91_PMC_PLL_CTRL1, &pllr);
--	pll->mul = FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, pllr);
-+	spin_unlock_irqrestore(div->core.lock, flags);
- 
--	hw = &pll->hw;
-+	hw = &div->core.hw;
- 	ret = clk_hw_register(NULL, hw);
- 	if (ret) {
--		kfree(pll);
-+		kfree(div);
- 		hw = ERR_PTR(ret);
- 	}
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 8d3e22f566cf..6340b9be8205 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -54,8 +54,14 @@ struct clk_master_characteristics {
- 
- struct clk_pll_layout {
- 	u32 pllr_mask;
--	u16 mul_mask;
-+	u32 mul_mask;
-+	u32 frac_mask;
-+	u32 div_mask;
-+	u32 endiv_mask;
- 	u8 mul_shift;
-+	u8 frac_shift;
-+	u8 div_shift;
-+	u8 endiv_shift;
- };
- 
- extern const struct clk_pll_layout at91rm9200_pll_layout;
-@@ -181,9 +187,17 @@ at91_clk_register_plldiv(struct regmap *regmap, const char *name,
- 			 const char *parent_name);
- 
- struct clk_hw * __init
--sam9x60_clk_register_pll(struct regmap *regmap, spinlock_t *lock,
--			 const char *name, const char *parent_name, u8 id,
--			 const struct clk_pll_characteristics *characteristics);
-+sam9x60_clk_register_div_pll(struct regmap *regmap, spinlock_t *lock,
-+			     const char *name, const char *parent_name, u8 id,
-+			     const struct clk_pll_characteristics *characteristics,
-+			     const struct clk_pll_layout *layout, bool critical);
++	mainxtal_name = of_clk_get_parent_name(np, i);
 +
-+struct clk_hw * __init
-+sam9x60_clk_register_frac_pll(struct regmap *regmap, spinlock_t *lock,
-+			      const char *name, const char *parent_name,
-+			      struct clk_hw *parent_hw, u8 id,
-+			      const struct clk_pll_characteristics *characteristics,
-+			      const struct clk_pll_layout *layout, bool critical);
- 
- struct clk_hw * __init
- at91_clk_register_programmable(struct regmap *regmap, const char *name,
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index f2306615c7e7..88574d799208 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -42,6 +42,20 @@ static const struct clk_pll_characteristics upll_characteristics = {
- 	.upll = true,
- };
- 
-+static const struct clk_pll_layout pll_frac_layout = {
-+	.mul_mask = GENMASK(31, 24),
-+	.frac_mask = GENMASK(21, 0),
-+	.mul_shift = 24,
-+	.frac_shift = 0,
-+};
++	regmap = device_node_to_regmap(np);
++	if (IS_ERR(regmap))
++		return;
 +
-+static const struct clk_pll_layout pll_div_layout = {
-+	.div_mask = GENMASK(7, 0),
-+	.endiv_mask = BIT(29),
-+	.div_shift = 0,
-+	.endiv_shift = 29,
-+};
++	sama7g5_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
++					nck(sama7g5_systemck),
++					nck(sama7g5_periphck),
++					nck(sama7g5_gck));
++	if (!sama7g5_pmc)
++		return;
 +
- static const struct clk_programmable_layout sam9x60_programmable_layout = {
- 	.pres_mask = 0xff,
- 	.pres_shift = 8,
-@@ -156,6 +170,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	const char *td_slck_name, *md_slck_name, *mainxtal_name;
- 	struct pmc_data *sam9x60_pmc;
- 	const char *parent_names[6];
-+	struct clk_hw *main_osc_hw;
- 	struct regmap *regmap;
- 	struct clk_hw *hw;
- 	int i;
-@@ -200,6 +215,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 					bypass);
- 	if (IS_ERR(hw))
- 		goto err_free;
-+	main_osc_hw = hw;
- 
- 	parent_names[0] = "main_rc_osc";
- 	parent_names[1] = "main_osc";
-@@ -209,15 +225,31 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 
- 	sam9x60_pmc->chws[PMC_MAIN] = hw;
- 
--	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "pllack",
--				      "mainck", 0, &plla_characteristics);
-+	hw = sam9x60_clk_register_frac_pll(regmap, &pmc_pll_lock, "pllack_fracck",
-+					   "mainck", sam9x60_pmc->chws[PMC_MAIN],
-+					   0, &plla_characteristics,
-+					   &pll_frac_layout, true);
++	alloc_mem = kmalloc(sizeof(void *) *
++			    (ARRAY_SIZE(sama7g5_mckx) + ARRAY_SIZE(sama7g5_gck)),
++			    GFP_KERNEL);
++	if (!alloc_mem)
++		goto err_free;
++
++	hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000,
++					   50000000);
 +	if (IS_ERR(hw))
 +		goto err_free;
 +
-+	hw = sam9x60_clk_register_div_pll(regmap, &pmc_pll_lock, "pllack_divck",
-+					  "pllack_fracck", 0, &plla_characteristics,
-+					  &pll_div_layout, true);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
- 	sam9x60_pmc->chws[PMC_PLLACK] = hw;
- 
--	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
--				      "main_osc", 1, &upll_characteristics);
-+	hw = sam9x60_clk_register_frac_pll(regmap, &pmc_pll_lock, "upllck_fracck",
-+					   "main_osc", main_osc_hw, 1,
-+					   &upll_characteristics,
-+					   &pll_frac_layout, false);
++	bypass = of_property_read_bool(np, "atmel,osc-bypass");
++
++	hw = at91_clk_register_main_osc(regmap, "main_osc", mainxtal_name,
++					bypass);
 +	if (IS_ERR(hw))
 +		goto err_free;
 +
-+	hw = sam9x60_clk_register_div_pll(regmap, &pmc_pll_lock, "upllck_divck",
-+					  "upllck_fracck", 1, &upll_characteristics,
-+					  &pll_div_layout, false);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-@@ -225,7 +257,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 
- 	parent_names[0] = md_slck_name;
- 	parent_names[1] = "mainck";
--	parent_names[2] = "pllack";
-+	parent_names[2] = "pllack_divck";
- 	hw = at91_clk_register_master(regmap, "masterck", 3, parent_names,
- 				      &sam9x60_master_layout,
- 				      &mck_characteristics);
-@@ -234,8 +266,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 
- 	sam9x60_pmc->chws[PMC_MCK] = hw;
- 
--	parent_names[0] = "pllack";
--	parent_names[1] = "upllck";
-+	parent_names[0] = "pllack_divck";
-+	parent_names[1] = "upllck_divck";
- 	parent_names[2] = "main_osc";
- 	hw = sam9x60_clk_register_usb(regmap, "usbck", parent_names, 3);
- 	if (IS_ERR(hw))
-@@ -245,8 +277,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	parent_names[1] = td_slck_name;
- 	parent_names[2] = "mainck";
- 	parent_names[3] = "masterck";
--	parent_names[4] = "pllack";
--	parent_names[5] = "upllck";
-+	parent_names[4] = "pllack_divck";
-+	parent_names[5] = "upllck_divck";
- 	for (i = 0; i < 8; i++) {
- 		char name[6];
- 
++	parent_names[0] = "main_rc_osc";
++	parent_names[1] = "main_osc";
++	hw = at91_clk_register_sam9x5_main(regmap, "mainck", parent_names, 2);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	sama7g5_pmc->chws[PMC_MAIN] = hw;
++
++	for (i = 0; i < PLL_ID_MAX; i++) {
++		for (j = 0; j < 3; j++) {
++			struct clk_hw *parent_hw;
++
++			if (!sama7g5_plls[i][j].n)
++				continue;
++
++			switch (sama7g5_plls[i][j].t) {
++			case PLL_TYPE_FRAC:
++				if (!strcmp(sama7g5_plls[i][j].p, "mainck"))
++					parent_hw = sama7g5_pmc->chws[PMC_MAIN];
++				else
++					parent_hw = __clk_get_hw(of_clk_get_by_name(np,
++						sama7g5_plls[i][j].p));
++
++				hw = sam9x60_clk_register_frac_pll(regmap,
++					&pmc_pll_lock, sama7g5_plls[i][j].n,
++					sama7g5_plls[i][j].p, parent_hw, i,
++					&pll_characteristics,
++					sama7g5_plls[i][j].l,
++					sama7g5_plls[i][j].c);
++				break;
++
++			case PLL_TYPE_DIV:
++				hw = sam9x60_clk_register_div_pll(regmap,
++					&pmc_pll_lock, sama7g5_plls[i][j].n,
++					sama7g5_plls[i][j].p, i,
++					&pll_characteristics,
++					sama7g5_plls[i][j].l,
++					sama7g5_plls[i][j].c);
++				break;
++
++			default:
++				continue;
++			}
++
++			if (IS_ERR(hw))
++				goto err_free;
++
++			if (sama7g5_plls[i][j].eid)
++				sama7g5_pmc->chws[sama7g5_plls[i][j].eid] = hw;
++		}
++	}
++
++	parent_names[0] = md_slck_name;
++	parent_names[1] = "mainck";
++	parent_names[2] = "cpupll_divpmcck";
++	parent_names[3] = "syspll_divpmcck";
++	hw = at91_clk_register_master(regmap, "mck0", 4, parent_names,
++				      &mck0_layout, &mck0_characteristics);
++	if (IS_ERR(hw))
++		goto err_free;
++
++	sama7g5_pmc->chws[PMC_MCK] = hw;
++
++	parent_names[0] = md_slck_name;
++	parent_names[1] = td_slck_name;
++	parent_names[2] = "mainck";
++	parent_names[3] = "mck0";
++	for (i = 0; i < ARRAY_SIZE(sama7g5_mckx); i++) {
++		u8 num_parents = 4 + sama7g5_mckx[i].ep_count;
++		u32 *mux_table;
++
++		mux_table = kmalloc_array(num_parents, sizeof(*mux_table),
++					  GFP_KERNEL);
++		if (!mux_table)
++			goto err_free;
++
++		SAMA7G5_INIT_TABLE(mux_table, 4);
++		SAMA7G5_FILL_TABLE(&mux_table[4], sama7g5_mckx[i].ep_mux_table,
++				   sama7g5_mckx[i].ep_count);
++		SAMA7G5_FILL_TABLE(&parent_names[4], sama7g5_mckx[i].ep,
++				   sama7g5_mckx[i].ep_count);
++
++		hw = at91_clk_sama7g5_register_master(regmap, sama7g5_mckx[i].n,
++				   num_parents, parent_names, mux_table,
++				   &pmc_mckX_lock, sama7g5_mckx[i].id,
++				   sama7g5_mckx[i].c,
++				   sama7g5_mckx[i].ep_chg_id);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		alloc_mem[alloc_mem_size++] = mux_table;
++	}
++
++	hw = at91_clk_sama7g5_register_utmi(regmap, "utmick", "main_xtal");
++	if (IS_ERR(hw))
++		goto err_free;
++
++	sama7g5_pmc->chws[PMC_UTMI] = hw;
++
++	parent_names[0] = md_slck_name;
++	parent_names[1] = td_slck_name;
++	parent_names[2] = "mainck";
++	parent_names[3] = "mck0";
++	parent_names[4] = "syspll_divpmcck";
++	parent_names[5] = "ddrpll_divpmcck";
++	parent_names[6] = "imgpll_divpmcck";
++	parent_names[7] = "baudpll_divpmcck";
++	parent_names[8] = "audiopll_divpmcck";
++	parent_names[9] = "ethpll_divpmcck";
++	for (i = 0; i < 8; i++) {
++		char name[6];
++
++		snprintf(name, sizeof(name), "prog%d", i);
++
++		hw = at91_clk_register_programmable(regmap, name, parent_names,
++						    10, i,
++						    &programmable_layout,
++						    sama7g5_prog_mux_table);
++		if (IS_ERR(hw))
++			goto err_free;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(sama7g5_systemck); i++) {
++		hw = at91_clk_register_system(regmap, sama7g5_systemck[i].n,
++					      sama7g5_systemck[i].p,
++					      sama7g5_systemck[i].id);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		sama7g5_pmc->shws[sama7g5_systemck[i].id] = hw;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(sama7g5_periphck); i++) {
++		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++						&sama7g5_pcr_layout,
++						sama7g5_periphck[i].n,
++						sama7g5_periphck[i].p,
++						sama7g5_periphck[i].id,
++						&sama7g5_periphck[i].r,
++						sama7g5_periphck[i].chgp ? 0 :
++						INT_MIN);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		sama7g5_pmc->phws[sama7g5_periphck[i].id] = hw;
++	}
++
++	parent_names[0] = md_slck_name;
++	parent_names[1] = td_slck_name;
++	parent_names[2] = "mainck";
++	parent_names[3] = "mck0";
++	for (i = 0; i < ARRAY_SIZE(sama7g5_gck); i++) {
++		u8 num_parents = 4 + sama7g5_gck[i].pp_count;
++		u32 *mux_table;
++
++		mux_table = kmalloc_array(num_parents, sizeof(*mux_table),
++					  GFP_KERNEL);
++		if (!mux_table)
++			goto err_free;
++
++		SAMA7G5_INIT_TABLE(mux_table, 4);
++		SAMA7G5_FILL_TABLE(&mux_table[4], sama7g5_gck[i].pp_mux_table,
++				   sama7g5_gck[i].pp_count);
++		SAMA7G5_FILL_TABLE(&parent_names[4], sama7g5_gck[i].pp,
++				   sama7g5_gck[i].pp_count);
++
++		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
++						 &sama7g5_pcr_layout,
++						 sama7g5_gck[i].n,
++						 parent_names, mux_table,
++						 num_parents,
++						 sama7g5_gck[i].id,
++						 &sama7g5_gck[i].r,
++						 sama7g5_gck[i].pp_chg_id);
++		if (IS_ERR(hw))
++			goto err_free;
++
++		sama7g5_pmc->ghws[sama7g5_gck[i].id] = hw;
++		alloc_mem[alloc_mem_size++] = mux_table;
++	}
++
++	of_clk_add_hw_provider(np, of_clk_hw_pmc_get, sama7g5_pmc);
++
++	return;
++
++err_free:
++	if (alloc_mem) {
++		for (i = 0; i < alloc_mem_size; i++)
++			kfree(alloc_mem[i]);
++		kfree(alloc_mem);
++	}
++
++	pmc_data_free(sama7g5_pmc);
++}
++
++/* Some clks are used for a clocksource */
++CLK_OF_DECLARE(sama7g5_pmc, "microchip,sama7g5-pmc", sama7g5_pmc_setup);
 -- 
 2.7.4
 
