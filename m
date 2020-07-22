@@ -2,240 +2,107 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE79C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D85C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08E72084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:04:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XMpS/yfU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hkW41v1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbgGVSDe (ORCPT
+        id S1731663AbgGVSE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
+        Wed, 22 Jul 2020 14:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730111AbgGVSDd (ORCPT
+        with ESMTP id S1726907AbgGVSE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:03:33 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C6C9C0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:03:33 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u185so1707404pfu.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:03:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yWcfktADb3uPJbFkIiNC/fq9uZOsRANKyg7Yhrbd3tg=;
-        b=XMpS/yfUE5QvKTqgqHXr498QBJt1LtXUBTlBwABMTYg0Endz9kTZGsNVoItzCCJ8JZ
-         kBCM5saOtYxBLzG65jr1vE+X4/UzMu73f/A1NH+keySUjedHG6c6BI2LlBufsNrhATxN
-         bVH3baDqsU8Nh8OwoeDBGNIQ54aggROKqB9px+29u7Cy+lea4Oy56Z/axz1FhQ42Fgvq
-         +7ca24D4Qcfr83XGHgalFULZ9om5Fbfwf3QHAIAJB1cGJtn2M8oicM3DTaYflPkkDvWA
-         ClceWQu4Ql4Ons+Ct9bcqc602uKrNDtogEo0tlJaIvxjU9ZCUCDBz6Fkpmw0a+exYJUm
-         FN7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yWcfktADb3uPJbFkIiNC/fq9uZOsRANKyg7Yhrbd3tg=;
-        b=EaP+xjHkNbspw3d4EVkZY42ttZkgO3sTKI5jPgdqwkapbKrSA6c9Vy6Hj1l4ILfjKL
-         rPjnKgoDVQ9aKllbFDZ9n3BGoOLHmaP3gXSiCjjauP1a+AlztQesGDHYUZ1ESIHIoWn5
-         UTT+DWIaQT/dlB4Qcm6olvmkjQOVh3e+7cjmYNiBmdhGl+LRR3sMV6ScYv9FMQMtgAVx
-         OEY4wbo9XkZDwc83Y3mqOxl0+3uipYu1Os+fkTMSiLP7XZ49dk7iXa76E95EMHl4qxx7
-         Rf2FB3SLEQmsuqiX7y7yrDitPVq/1PLlZoVJpu34/JRVOsD46qtYLS3RYQRQvbtBpegH
-         1Iuw==
-X-Gm-Message-State: AOAM530GdkiB5GDr9SXU0qYGEBB6arZoVPxIPRbkY1uzORfQviQhPDln
-        P6Blz6Au7NCnRJ2zjcD7Xb3iOg==
-X-Google-Smtp-Source: ABdhPJw4CCh/JqUryfanhVXNO34PrKWEi7bBLUJ8EKXba3fX0MsU9Wcj2adh+VkHowSyvD3Dk78D3Q==
-X-Received: by 2002:a63:c509:: with SMTP id f9mr920841pgd.144.1595441012822;
-        Wed, 22 Jul 2020 11:03:32 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w9sm341994pja.39.2020.07.22.11.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 11:03:32 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 11:01:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Siddharth Gupta <sidgup@codeaurora.org>, agross@kernel.org,
-        ohad@wizery.com, corbet@lwn.net, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] remoteproc: Add remoteproc character device
- interface
-Message-ID: <20200722180139.GA3700915@builder.lan>
-References: <1594148870-27276-1-git-send-email-sidgup@codeaurora.org>
- <1594148870-27276-2-git-send-email-sidgup@codeaurora.org>
- <20200715201839.GA3204081@xps15>
- <20200715215149.GA3267350@xps15>
- <81d7514c-727e-b4dc-e4ac-74a25966ccaf@codeaurora.org>
- <20200721205635.GM2922385@builder.lan>
- <20200722171841.GA1268891@xps15>
+        Wed, 22 Jul 2020 14:04:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236ADC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CMMHY0mGrSS0LIPSa86C/P5gTx9E8xNlElv3H254r/Y=; b=hkW41v1dZGPXp3JpYDiAnmZM7x
+        ZjLtYMCIG9CeT6hkLnYFS7YBZt/vgnic8P9UVkqooMc8IuSeSFTEowFUIxWWgNuF4wgUSq+dzh+j4
+        SngfppWE6/AolYAeyZz1F9L3dUfG8RXgY3+8eA143q+IY32ex5yKNMJ+rpxorDqWHEbs1OtL+m+69
+        IGxAeOfxxvpg/iAoEFbF0eUkG0l0W1siBSDRporQIY8hNbR7Mhn8VPaH2ySK+hTHkPyYONgOVcLjn
+        it4zZLfXECP6ZzYftwlMS9oJsKEyXx3VRenvKKxiG4ddyM5K6x1D5qj1+w1J7ieSyN3cb+hbwGsO6
+        s8TXNMXQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyJ6P-0008RR-S5; Wed, 22 Jul 2020 18:04:25 +0000
+Date:   Wed, 22 Jul 2020 19:04:25 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: swap: do not wait for lock_page() in
+ unuse_pte_range()
+Message-ID: <20200722180425.GP15516@casper.infradead.org>
+References: <20200722174436.GB841369@xps-13>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722171841.GA1268891@xps15>
+In-Reply-To: <20200722174436.GB841369@xps-13>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22 Jul 10:18 PDT 2020, Mathieu Poirier wrote:
+On Wed, Jul 22, 2020 at 07:44:36PM +0200, Andrea Righi wrote:
+> Waiting for lock_page() with mm->mmap_sem held in unuse_pte_range() can
+> lead to stalls while running swapoff (i.e., not being able to ssh into
+> the system, inability to execute simple commands like 'ps', etc.).
+> 
+> Replace lock_page() with trylock_page() and release mm->mmap_sem if we
+> fail to lock it, giving other tasks a chance to continue and prevent
+> the stall.
 
-> On Tue, Jul 21, 2020 at 01:56:35PM -0700, Bjorn Andersson wrote:
-> > On Tue 21 Jul 12:16 PDT 2020, Siddharth Gupta wrote:
-> > > On 7/15/2020 2:51 PM, Mathieu Poirier wrote:
-> > > > On Wed, Jul 15, 2020 at 02:18:39PM -0600, Mathieu Poirier wrote:
-> > > > > On Tue, Jul 07, 2020 at 12:07:49PM -0700, Siddharth Gupta wrote:
-> > [..]
-> > > > > > diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
-> > [..]
-> > > > > > +int rproc_char_device_add(struct rproc *rproc)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +	dev_t cdevt;
-> > > > > > +
-> > > > > > +	cdev_init(&rproc->char_dev, &rproc_fops);
-> > > > > > +	rproc->char_dev.owner = THIS_MODULE;
-> > > > > > +
-> > > > > > +	cdevt = MKDEV(rproc_major, rproc->index);
-> > > > > > +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
-> > > > Trying this patchset on my side gave me the following splat[1].  After finding
-> > > > the root case I can't understand how you haven't see it on your side when you
-> > > > tested the feature.
-> > > > 
-> > > > [1]. https://pastebin.com/aYTUUCdQ
-> > 
-> > Mathieu, I've looked at this back and forth. Afaict this implies that
-> > rproc_major is still 0. Could it be that either alloc_chrdev_region()
-> > failed or somehow has yet to be called when you hit this point?
-> 
-> That is exacly what I thought when I first stumbled on this but instrumenting
-> the code showed otherwise.
-> 
-> After function rproc_init_cdev() has been called @rproc_major contains the
-> dynamically allocated major number in the upper 12 bits and the base minor
-> number in the lower 20 bits.
-> 
+I think you've removed the warning at the expense of turning a stall
+into a potential livelock.
 
-Ahh, alloc_chrdev_region() actually returns the dev_t, not the major.
-Too bad that we all name this variable "major" to maximize the
-confusion.
+> @@ -1977,7 +1977,11 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+>  			return -ENOMEM;
+>  		}
+>  
+> -		lock_page(page);
+> +		if (!trylock_page(page)) {
+> +			ret = -EAGAIN;
+> +			put_page(page);
+> +			goto out;
+> +		}
 
-> In rproc_char_device_add() we find this line:
-> 
->         cdevt = MKDEV(rproc_major, rproc->index);
-> 
-> Macro MKDEV() builds a device number by shifting @rproc_major by 20 bits to the
-> left and OR'ing that with @rproc->index.  But the device's major number is
-> already occupying the upper 12bits, so shifthing another 20 bits to the left
-> makes the major portion of the device number '0'.  That is causing cdev_add() to
-> complain bitterly.
-> 
-> The right way to do this is:
-> 
->         cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
-> 
+If you look at the patterns we have elsewhere in the MM for doing
+this kind of thing (eg truncate_inode_pages_range()), we iterate over the
+entire range, take care of the easy cases, then go back and deal with the
+hard cases later.
 
-Agreed (and let's continue naming it rproc_major, in line with all other
-drivers - now I know better).
+So that would argue for skipping any page that we can't trylock, but
+continue over at least the VMA, and quite possibly the entire MM until
+we're convinced that we have unused all of the required pages.
 
-Thanks,
-Bjorn
+Another thing we could do is drop the MM semaphore _here_, sleep on this
+page until it's unlocked, then go around again.
 
-> Once I found the problem I thought about 32/64 bit issues.  Since Siddharth is
-> using a 64bit application processor shifting another 20 bits would still have
-> yielded a non-zero value.  But that can't be since dev_t is a u32 in
-> linux/types.h.
-> 
-> As such I can't see how it is possible to not hit that problem on a 64bit
-> platform.
-> 
-> > 
-> > > Hey Mathieu,
-> > > 
-> > > We aren't able to reproduce the error that you are seeing, the splat is
-> > > coming
-> > > from the check for whiteout device[1] - which shouldn't happen because of
-> > > the
-> > > find_dynamic_major call[2], right?
-> > > 
-> > > We are successfully seeing all our character device files and able to
-> > > successfully boot remoteprocs. From what I read and understood about
-> > > whiteout
-> > > devices they will be hidden in the fs.
-> > > 
-> > > Could you provide more details about your configuration and testing?
-> > > 
-> > > [1]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486
-> > > <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123>
-> > > [2]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123
-> > > 
-> > > <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486>
-> > > > > > +	if (ret < 0)
-> > > > > > +		goto out;
-> > > > > > +
-> > > > > > +	rproc->dev.devt = cdevt;
-> > > > > > +out:
-> > > > > > +	return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > > +void rproc_char_device_remove(struct rproc *rproc)
-> > > > > > +{
-> > > > > > +	__unregister_chrdev(rproc_major, rproc->index, 1, "remoteproc");
-> > > > > > +}
-> > > > > > +
-> > > > > > +void __init rproc_init_cdev(void)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "remoteproc");
-> > > > > > +	if (ret < 0)
-> > > > > > +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
-> > > > > > +}
-> > > > > > +
-> > > > > > +void __exit rproc_exit_cdev(void)
-> > > > > > +{
-> > > > > > +	unregister_chrdev_region(MKDEV(rproc_major, 0), NUM_RPROC_DEVICES);
-> > > > > Please go back to the comment I made on this during my last review and respin.
-> > > > After digging in the code while debugging the above problem, I don't see how
-> > > > unregistering the chrdev region the way it is done here would have worked.
-> > > Since this is compiled statically and not built as a module, we will never
-> > > exercise the code path, so I will remove it in the next patchset.
-> > > 
-> > 
-> > You're right Siddharth, since we changed CONFIG_REMOTEPROC to bool it's no longer
-> > possible to hit remoteproc_exit(), so you can omit this function
-> > entirely. (And we should clean up the rest of that as well)
-> > 
-> > [..]
-> > > > > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> > [..]
-> > > > > > @@ -488,6 +489,8 @@ struct rproc_dump_segment {
-> > > > > >    * @auto_boot: flag to indicate if remote processor should be auto-started
-> > > > > >    * @dump_segments: list of segments in the firmware
-> > > > > >    * @nb_vdev: number of vdev currently handled by rproc
-> > > > > > + * @char_dev: character device of the rproc
-> > > > > > + * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
-> > > > > >    */
-> > > > > >   struct rproc {
-> > > > > >   	struct list_head node;
-> > > > > > @@ -523,6 +526,8 @@ struct rproc {
-> > > > > >   	int nb_vdev;
-> > > > > >   	u8 elf_class;
-> > > > > >   	u16 elf_machine;
-> > > > > > +	struct cdev char_dev;
-> > 
-> > As stated privately, I assumed based on this name that this is a struct
-> > device related to that character device. So please rename this cdev to
-> > save me from doing this mistake again.
-> > 
-> > Thanks,
-> > Bjorn
+		if (!trylock_page(page)) {
+			mmap_read_unlock(mm);
+			lock_page(page);
+			unlock_page(page);
+			put_page(page);
+			ret = -EAGAIN;
+			goto out;
+		}
+
+(I haven't checked the call paths; maybe you can't do this because
+sometimes it's called with the mmap sem held for write)
+
+Also, if we're trying to scale this better, there are some fun
+workloads where readers block writers who block subsequent readers
+and we shouldn't wait for I/O in swapin_readahead().  See patches like
+6b4c9f4469819a0c1a38a0a4541337e0f9bf6c11 for more on this kind of thing.
