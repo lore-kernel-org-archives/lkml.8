@@ -2,94 +2,152 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82247C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D04BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4579A20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB0822B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="TpH3Bfin"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbgGVWwo (ORCPT
+        id S1733059AbgGVWxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:52:44 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:35116 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgGVWwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:52:43 -0400
-Date:   Wed, 22 Jul 2020 18:52:39 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: add missing EXPORT_SYMBOL() for __delay
-Message-ID: <20200722225239.GX14669@brightrain.aerifal.cx>
-References: <87wob2clos.wl-kuninori.morimoto.gx@renesas.com>
- <20200722023840.GA55317@roeck-us.net>
+        Wed, 22 Jul 2020 18:53:07 -0400
+Received: from mail-eopbgr680052.outbound.protection.outlook.com ([40.107.68.52]:15239
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726447AbgGVWxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 18:53:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gGdOG/zS6p49x+bqoKMNQnW/oSAUng1DZmJLEoS7KNq01O1GKoTaysV4aRM1hw3M5BsZPI/xPsICumTepdSRlKi/ICN7E4NlMoV03f2J48RRP4HGEHI61dYUwcGc0MGwAxCY9hY3MTM05a3Elh4VH7FqB+STdF62escsl9BttUKtUh/4HSSLqaMDkChDf7HJslWw9HcRV7TkrLhTEKHr3eXIkNZ1Og21Q75xYlW0/hiviJOvNfd9iJboyEifG+iQWVKyGJvnKsBoDWyOcCOyUEv5z6gJHVLz3QHyjWDfAf0tq4gTVfSWrfzHxZWTWUg3T2owFW5ivLIn1XfQ4d46ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U9dmnQYw+8OpAG19bu3lH7k1jhjV2eiNtRJFcHo/Qog=;
+ b=iJenZH3qltnrsMjCbR3xYrgG/Tn0Yigx92e9kkHM5OR78wq0fxMcOvKVGHUiKmazR5420qE9wN13kU15NE8N2gAkfYBIecSm4UF/TvtYstApKzOM0ly4SU5CWxXy82GiWHEnq9FTBJhdEtBqWBzjpIdYL9xgJVYzMmdSrGU8DE7Dylk/ZAUPFQ0lIFy+r7aG92DWZsyc1o/T9It/TiESzVYh4sLJjelKWySfVc4g3/eR2kkd6hBLbCb4z64guLPjjxK/AVrMiJHdwoUYjB+UkI+wONnUjcTkfJt56+ZToXbE5T7dXsWrPBAanhogtY04U26UszlF+35HMv7jWiKhBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U9dmnQYw+8OpAG19bu3lH7k1jhjV2eiNtRJFcHo/Qog=;
+ b=TpH3Bfin/8blXGWjnzWaX6T89G/VxAsJaP+vsLsvXbEBoOR0UpdFd1NJGHgq/kLDpKtOzKEQXQIGs2sQ9Baav8GwsepzLx7c0MCpXyiyPJkjpNDkzI/Q+gJRy02jckoSh2Fa4Nv2gTASSlDD+foOHwp/n5P5GzQu+u4W8RBCVkc=
+Received: from BL0PR05MB7186.namprd05.prod.outlook.com (2603:10b6:208:1ca::14)
+ by MN2PR05MB6223.namprd05.prod.outlook.com (2603:10b6:208:cb::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.14; Wed, 22 Jul
+ 2020 22:53:02 +0000
+Received: from BL0PR05MB7186.namprd05.prod.outlook.com
+ ([fe80::885a:c376:7d71:ca6c]) by BL0PR05MB7186.namprd05.prod.outlook.com
+ ([fe80::885a:c376:7d71:ca6c%7]) with mapi id 15.20.3216.015; Wed, 22 Jul 2020
+ 22:53:02 +0000
+From:   Mike Stunes <mstunes@vmware.com>
+To:     Joerg Roedel <jroedel@suse.de>
+CC:     Joerg Roedel <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
+Thread-Topic: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
+Thread-Index: AQHWWdfdDTzyqLev5U6Jd/iJZ+m0yKkSkJaAgAC5dQCAAPf4gA==
+Date:   Wed, 22 Jul 2020 22:53:02 +0000
+Message-ID: <7020C1D2-5900-4AD8-ADCD-04A571DF2EA7@vmware.com>
+References: <20200714120917.11253-1-joro@8bytes.org>
+ <20200714120917.11253-52-joro@8bytes.org>
+ <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
+ <20200722080530.GH6132@suse.de>
+In-Reply-To: <20200722080530.GH6132@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=vmware.com;
+x-originating-ip: [2601:600:9e7f:eac1:5dd4:d88d:97ba:df70]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e460f2fa-e052-453e-f566-08d82e91fd2e
+x-ms-traffictypediagnostic: MN2PR05MB6223:
+x-microsoft-antispam-prvs: <MN2PR05MB62231424E28051203B419606C8790@MN2PR05MB6223.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FJBsnX6kJyDU3Y1u1t4Q/Z0U2cdQ+tE/uPwgEKfnDnQW7g/fJJQArtlhVG39aa6hk/cpvvyhCyPi7uknAkcb4s7fxsVPh8PlejNBOX8m0/3Pt6MQ8lkrq+E9xC1LYuFANTCW5nI4/pbFtH/f1DvFAJHTTg19MCRtMwWBogodAs6cw3vsAb0Uvt1T+RiYte5mulsc0dcwvz6JMYlXw7dxUHTLopBTamHAe5V3tEF53qZcf8VTpiXwxhJALgT432TimrVgMiD6U+WGsGvitM3oEi4lbzHaCzuBpr7ZodvJn0/hxf3b/fmn9A/4Zq6Z1hXu
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR05MB7186.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(6506007)(53546011)(316002)(478600001)(5660300002)(186003)(4326008)(33656002)(54906003)(71200400001)(6512007)(86362001)(6486002)(6916009)(66446008)(64756008)(66476007)(76116006)(91956017)(66946007)(2616005)(66556008)(8676002)(8936002)(36756003)(2906002)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: BX8HZnpKozFGz6+j+Nv9OGmWz6sRZ9nhQIWR73Yn+HPGeSdH8c/zEP/1FP6f6+1qJM51bedK+k8vEKQ13U2Aeh8XPZBtsqfbtIK3khSOhnQH27q8l9izMnj1IJlBDYuaD9uiTC2e6mmVElBPtcQ611Sahd0WQcyFHWDe1zVjqzqFNGeni0RrzUhmcBlkp2zpONnv8y5Q5Hd6RW2kdK/kRrxONeu71lO3fYegfRinsaZDO/28IDA/l3XKxQ9LdCiZ4nYBoUnPW05h74++cBc9Zofq7aGzNYRe4V+LLDfnv857Z+l3AdLkQNttylOE/Yi+/7FKzD+j9QC0HYSUfeS/7a8vUENr8kG60IKV0cugiRr8sj5lxr9vjNEa3FcrEtAKjTDu0dGfOdhQA3dVX3h2n/xIfL/mg5cQ62yEvtwjNSSo7HVQrp1vfZ3S4QNKRL8gY6OvhOgEP3MOf9FNVyMQeQ2ei3/zqINEulLlPizv/2WRDfRBt5lYicyMJGJPZiX0+bE17ymijyfrjzphZJNvqL970xDxReibySb3PHDne3VY2mRLjkaiFHn4Vai2e7Xl
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <51B15EE8EF8CB4429AD15694F86720A0@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722023840.GA55317@roeck-us.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR05MB7186.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e460f2fa-e052-453e-f566-08d82e91fd2e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 22:53:02.4380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HTtqvKlqcRvzATVHtDlriYmOt+qVgFVaMGyimPTeeYYd4cI3NrmyHVeOFOB3TJgShq7dYCIRQilLvE+RfZPzng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 07:38:40PM -0700, Guenter Roeck wrote:
-> On Thu, Dec 12, 2019 at 11:38:43AM +0900, Kuninori Morimoto wrote:
-> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > 
-> > __delay() is used from kernel module.
-> > We need EXPORT_SYMBOL(), otherwise we will get compile error.
-> > 
-> > ERROR: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!
-> > 
-> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> I must admit that this patch completely baffles me. __delay was
-> already exported, only elsewhere in the file. With this patch
-> in place, it is exported twice, and all sh builds in -next fail
-> with
-> 
-> In file included from include/linux/linkage.h:7,
->                  from arch/sh/include/asm/bug.h:5,
->                  from include/linux/bug.h:5,
->                  from include/linux/thread_info.h:12,
->                  from include/asm-generic/current.h:5,
->                  from ./arch/sh/include/generated/asm/current.h:1,
->                  from include/linux/sched.h:12,
->                  from arch/sh/lib/delay.c:8:
-> include/linux/export.h:67:36: error: redefinition of '__ksymtab___delay'
-> 
-> Guenter
-> 
-> > ---
-> >  arch/sh/lib/delay.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/sh/lib/delay.c b/arch/sh/lib/delay.c
-> > index dad8e6a..540e670 100644
-> > --- a/arch/sh/lib/delay.c
-> > +++ b/arch/sh/lib/delay.c
-> > @@ -29,6 +29,7 @@ void __delay(unsigned long loops)
-> >  		: "0" (loops)
-> >  		: "t");
-> >  }
-> > +EXPORT_SYMBOL(__delay);
-> >  
-> >  inline void __const_udelay(unsigned long xloops)
-> >  {
 
-I presently have a revert of this commit in queue for next. If it's
-sufficiently breaking (and especially if there are other regressions
-that need to be fixed, see the pmd_free thing) I could try to get it
-in for 5.8 still but that's getting a bit late.
 
-Rich
+> On Jul 22, 2020, at 1:05 AM, Joerg Roedel <jroedel@suse.de> wrote:
+>=20
+> Hmm, I have a theory ...
+>=20
+> On Tue, Jul 21, 2020 at 09:01:44PM +0000, Mike Stunes wrote:
+>> If I remove the call to probe_roms from setup_arch, or remove the calls =
+to romchecksum from probe_roms, this kernel boots normally.
+>>=20
+>> Please let me know of other tests I should run or data that I can collec=
+t. Thanks!
+>=20
+> ... can you please try the attached diff?
+>=20
+> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+> index 251d0aabc55a..e1fea7a38019 100644
+> --- a/arch/x86/kernel/sev-es.c
+> +++ b/arch/x86/kernel/sev-es.c
+> @@ -389,7 +389,8 @@ static bool vc_slow_virt_to_phys(struct ghcb *ghcb, s=
+truct es_em_ctxt *ctxt,
+> 	pgd_t *pgd;
+> 	pte_t *pte;
+>=20
+> -	pgd =3D pgd_offset(current->active_mm, va);
+> +	pgd =3D __va(read_cr3_pa());
+> +	pgd =3D &pgd[pgd_index(va)];
+> 	pte =3D lookup_address_in_pgd(pgd, va, &level);
+> 	if (!pte) {
+> 		ctxt->fi.vector     =3D X86_TRAP_PF;
+
+Thanks Joerg! With that change in place, this kernel boots normally. What w=
+as the problem?
+
