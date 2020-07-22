@@ -2,224 +2,148 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68452C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDC0206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365FE206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GEF78V2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgGVG47 (ORCPT
+        id S1730453AbgGVG6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:56:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44812 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728063AbgGVG47 (ORCPT
+        Wed, 22 Jul 2020 02:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbgGVG6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:56:59 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M61omV160858;
-        Wed, 22 Jul 2020 02:56:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrftdq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 02:56:49 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M6tgg1120457;
-        Wed, 22 Jul 2020 02:56:49 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrftdg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 02:56:48 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M6p4pH019269;
-        Wed, 22 Jul 2020 06:56:48 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02wdc.us.ibm.com with ESMTP id 32brq99rj3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 06:56:48 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M6uktE64160134
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 06:56:46 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 212097805C;
-        Wed, 22 Jul 2020 06:56:46 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4382B7805F;
-        Wed, 22 Jul 2020 06:56:45 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.82.72])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jul 2020 06:56:45 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 76D7B2E340E; Wed, 22 Jul 2020 12:26:40 +0530 (IST)
-Date:   Wed, 22 Jul 2020 12:26:40 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <michaele@au1.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v2 06/10] powerpc/smp: Generalize 2nd sched domain
-Message-ID: <20200722065640.GE31038@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
- <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
+        Wed, 22 Jul 2020 02:58:00 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2653FC061794;
+        Tue, 21 Jul 2020 23:58:00 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id u64so990183qka.12;
+        Tue, 21 Jul 2020 23:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zjl8jyI4JNnQLeTVzyCzHh3c+nXxWye5Cj6ubPO13J0=;
+        b=GEF78V2k9OiWRf81LyakVnVCsY+WdOadZDPh8XZnSjoWpqyVyHSBqYesBwcUVU6qn+
+         A2GOiIMI7D4+BCo2X43tWNGsBUTQEV15+iF25xICpC6R75QeFwAJf9f7IL+FtnY2Ynco
+         guWA3aOcbK99jE7qNpAW14da2xrh4F+sNJ+p9hT2QIbZMXkJ4Z6vapPJLeseMS20z5ki
+         hH/T6IJ5Prf/pBvgnXtu03h5EckJP4dmb0vjt5PknVgmm/fm7KZtKVn5sTFZ/Ya5Ntf8
+         37VXErV/NMpuNfETve3WI/+hiyztBgVpQioouREp/80KkRHIHv8x2KumKGBgXnqeSxCo
+         Nzyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zjl8jyI4JNnQLeTVzyCzHh3c+nXxWye5Cj6ubPO13J0=;
+        b=tWEXuWAdpbLMBpQzOm77gH8+wH6UhYMoYG5ti2dPAaFQeSJ92FUpSJKODboaFVxleZ
+         uBMZeihMIEjvz81ovYPaQuZwusMsxvNTmMfV/6o3hP0tyLPrZqUhIAWP1SXo923xY69d
+         29Wa3WCb4IC6HZmrTE8rQ+iXnQ+UDhWyqwUfAoDiS5Rosl1SOkAqQ2BnCaHNc2HVUFp+
+         QBmoi9JepLVpIF1djjXiMWVUtyRR695g7yubl3/sqAMKkPqrTc9OlVNS48U3F6VKevks
+         DARVF3f4YnS/xdp4Tj6EAA/0ccTJmvIM7ezNU5gg0R1+lnkBTWtaC8kfLpJmzoqpiB0T
+         ti7A==
+X-Gm-Message-State: AOAM5302ZnjhlvJAlgGB0G1ChHkUrox5OyUbMfp3aOyjGcGD8d0mMC5t
+        umNiVZ9idx/Ml8rlFglA4ELyFhWGFFMu2UZjd10=
+X-Google-Smtp-Source: ABdhPJyURO1mFslPp3J0AAImaBN2tPe38/iVgkWkY18Z1Rf8Lb/feerQVzkkSUH/emANzphylSQxhxBjLXImoOgFhNc=
+X-Received: by 2002:a37:a655:: with SMTP id p82mr14245845qke.92.1595401079241;
+ Tue, 21 Jul 2020 23:57:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_02:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007220040
+References: <20200722054314.2103880-1-irogers@google.com>
+In-Reply-To: <20200722054314.2103880-1-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 21 Jul 2020 23:57:48 -0700
+Message-ID: <CAEf4BzaBYaFJ3eUinS9nHeykJ0xEbZpwLts33ZDp1PT=bkyjww@mail.gmail.com>
+Subject: Re: [RFC PATCH] bpftool btf: Add prefix option to dump C
+To:     Ian Rogers <irogers@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Srikar,
+On Tue, Jul 21, 2020 at 10:44 PM Ian Rogers <irogers@google.com> wrote:
+>
+> When bpftool dumps types and enum members into a header file for
+> inclusion the names match those in the original source. If the same
+> header file needs to be included in the original source and the bpf
+> program, the names of structs, unions, typedefs and enum members will
+> have naming collisions.
 
-On Tue, Jul 21, 2020 at 05:08:10PM +0530, Srikar Dronamraju wrote:
-> Currently "CACHE" domain happens to be the 2nd sched domain as per
-> powerpc_topology. This domain will collapse if cpumask of l2-cache is
-> same as SMT domain. However we could generalize this domain such that it
-> could mean either be a "CACHE" domain or a "BIGCORE" domain.
-> 
-> While setting up the "CACHE" domain, check if shared_cache is already
-> set.
-> 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <michaele@au1.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Nick Piggin <npiggin@au1.ibm.com>
-> Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@linux.ibm.com>
-> Cc: Anton Blanchard <anton@au1.ibm.com>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+vmlinux.h is not really intended to be used from user-space, because
+it's incompatible with pretty much any other header that declares any
+type. Ideally we should make this better, but that might require some
+compiler support. We've been discussing with Yonghong extending Clang
+with a compile-time check for whether some type is defined or not,
+which would allow to guard every type and only declare it
+conditionally, if it's missing. But that's just an idea at this point.
+
+Regardless, vmlinux.h is also very much Clang-specific, and shouldn't
+work well with GCC. Could you elaborate on the specifics of the use
+case you have in mind? That could help me see what might be the right
+solution. Thanks!
+
+>
+> To avoid these collisions an approach is to redeclare the header file
+> types and enum members, which leads to duplication and possible
+> inconsistencies. Another approach is to use preprocessor macros
+> to rename conflicting names, but this can be cumbersome if there are
+> many conflicts.
+>
+> This patch adds a prefix option for the dumped names. Use of this option
+> can avoid name conflicts and compile time errors.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
-> Changelog v1 -> v2:
-> powerpc/smp: Generalize 2nd sched domain
-> 	Moved shared_cache topology fixup to fixup_topology (Gautham)
+>  .../bpf/bpftool/Documentation/bpftool-btf.rst |  7 ++++++-
+>  tools/bpf/bpftool/btf.c                       | 18 ++++++++++++++---
+>  tools/lib/bpf/btf.h                           |  1 +
+>  tools/lib/bpf/btf_dump.c                      | 20 +++++++++++++------
+>  4 files changed, 36 insertions(+), 10 deletions(-)
 >
 
-Just one comment below.
+[...]
 
->  arch/powerpc/kernel/smp.c | 49 ++++++++++++++++++++++++++++-----------
->  1 file changed, 35 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 57468877499a..933ebdf97432 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -85,6 +85,14 @@ EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
->  EXPORT_PER_CPU_SYMBOL(cpu_core_map);
->  EXPORT_SYMBOL_GPL(has_big_cores);
-> 
-> +enum {
-> +#ifdef CONFIG_SCHED_SMT
-> +	smt_idx,
-> +#endif
-> +	bigcore_idx,
-> +	die_idx,
-> +};
-> +
+> diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> index 491c7b41ffdc..fea4baab00bd 100644
+> --- a/tools/lib/bpf/btf.h
+> +++ b/tools/lib/bpf/btf.h
+> @@ -117,6 +117,7 @@ struct btf_dump;
+>
+>  struct btf_dump_opts {
+>         void *ctx;
+> +       const char *name_prefix;
+>  };
 
+BTW, we can't do that, this breaks ABI. btf_dump_opts were added
+before we understood the problem of backward/forward  compatibility of
+libbpf APIs, unfortunately.
 
-[..snip..]
+>
+>  typedef void (*btf_dump_printf_fn_t)(void *ctx, const char *fmt, va_list args);
+> diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+> index e1c344504cae..baf2b4d82e1e 100644
+> --- a/tools/lib/bpf/btf_dump.c
+> +++ b/tools/lib/bpf/btf_dump.c
 
-> @@ -1339,14 +1345,20 @@ void start_secondary(void *unused)
->  	/* Update topology CPU masks */
->  	add_cpu_to_masks(cpu);
-> 
-> -	if (has_big_cores)
-> -		sibling_mask = cpu_smallcore_mask;
->  	/*
->  	 * Check for any shared caches. Note that this must be done on a
->  	 * per-core basis because one core in the pair might be disabled.
->  	 */
-> -	if (!cpumask_equal(cpu_l2_cache_mask(cpu), sibling_mask(cpu)))
-> -		shared_caches = true;
-> +	if (!shared_caches) {
-> +		struct cpumask *(*sibling_mask)(int) = cpu_sibling_mask;
-> +		struct cpumask *mask = cpu_l2_cache_mask(cpu);
-> +
-> +		if (has_big_cores)
-> +			sibling_mask = cpu_smallcore_mask;
-> +
-> +		if (cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu)))
-> +			shared_caches = true;
-
-At the risk of repeating my comment to the v1 version of the patch, we
-have shared caches only l2_cache_mask(cpu) is a strict superset of
-sibling_mask(cpu).
-
-"cpumask_weight(mask) > cpumask_weight(sibling_mask(cpu))" does not
-capture this.
-
-Could we please use
-
-      if (!cpumask_equal(sibling_mask(cpu), mask) &&
-      	  cpumask_subset(sibling_mask(cpu), mask) {
-      }
-
-?
-
-
-> +	}
-> 
->  	set_numa_node(numa_cpu_lookup_table[cpu]);
->  	set_numa_mem(local_memory_node(numa_cpu_lookup_table[cpu]));
-> @@ -1374,10 +1386,19 @@ int setup_profiling_timer(unsigned int multiplier)
-> 
->  static void fixup_topology(void)
->  {
-> +	if (shared_caches) {
-> +		pr_info("Using shared cache scheduler topology\n");
-> +		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-> +#ifdef CONFIG_SCHED_DEBUG
-> +		powerpc_topology[bigcore_idx].name = "CACHE";
-> +#endif
-> +		powerpc_topology[bigcore_idx].sd_flags = powerpc_shared_cache_flags;
-> +	}
-> +
->  #ifdef CONFIG_SCHED_SMT
->  	if (has_big_cores) {
->  		pr_info("Big cores detected but using small core scheduling\n");
-> -		powerpc_topology[0].mask = smallcore_smt_mask;
-> +		powerpc_topology[smt_idx].mask = smallcore_smt_mask;
->  	}
->  #endif
-
-
-Otherwise the patch looks good to me.
-
---
-Thanks and Regards
-gautham.
+[...]
