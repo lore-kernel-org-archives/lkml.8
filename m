@@ -2,61 +2,60 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE5BC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B86207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7600A207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jvBFFbCK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J6GjZ5OP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbgGVROY (ORCPT
+        id S1732063AbgGVRO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
+        Wed, 22 Jul 2020 13:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731435AbgGVROT (ORCPT
+        with ESMTP id S1732058AbgGVROZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:14:19 -0400
+        Wed, 22 Jul 2020 13:14:25 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0920C0619E4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:14:18 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 9so2581106wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:14:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E832C08C5CE
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:14:22 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so2700339wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:14:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TEaUq+sWoEZqNt0u37xw6q5hH3h2Y2mNgz4rAdiOMPI=;
-        b=jvBFFbCKiganPtd/qCwrN/ljxOfpM2PKSB8XoZWRmYka1kRgNiIxQjvdXBhntqnt1K
-         +CK4oXJ2QcWjkoDd2m99+Qq2jwQCexMgSBR5styC6T9f88C5S5nczpP8ktb0da3qko4b
-         ghAZBMtmsKKTY0w1qlSXQ8YgJJCg3zXVAwEa0=
+        bh=gp0OnWT+ezEb5kvY+8ZpcjBj/ySeUlAdu5kTWrUzIIE=;
+        b=J6GjZ5OPG6ow57yZ7rrXnV1PgY01FRLTvi7AIfZmZmeq44ow4JFWTnBY0MI90eUVlG
+         z1PSexB/fvV7txKRO5ti2t7tZt/sJaDWNRsRxBiQsoNwMVRpSx+V1FxegH5rWlsyxCji
+         gh6UiSw5785r3iAoNQMZ+zEqwBK9Wyp+WyCJY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TEaUq+sWoEZqNt0u37xw6q5hH3h2Y2mNgz4rAdiOMPI=;
-        b=Wup2RGgZvm620s6Ch5P0mcbCYwDsbmO1fFDLL9tXAI15Gy81WXXEu+i6WZMSu3WVvj
-         aAtVlm76CQPZaZspJmhiDUbSc2/W0M/4EMRpiwULyIiqCmqiBTye19hZbcBporlR/X2I
-         0zEbPTTbDzkTL3NBmelJ8gBs5DFfwZAfrfglScu6h7S7xtxh0/NntrOMf9yBxZGNWDYT
-         FGnKfg5SFCL0hzISQ9GKoqYl4fmTYfmMl3Dtg6zbKDl2wzQrAm8PcSqsjGCaYbGONg1s
-         uhmk/ZOEgCALFG37oKg2qlNSZyV4qByLAHRsQNVYmcGyEAnIW0PXH9XR8nUB2J0/dL3k
-         O38Q==
-X-Gm-Message-State: AOAM532PhpYUQM3WdOOeiSk+5J4Ebqw52XFdsxFPjuCD7U4u1s+9/lAi
-        z9rdbXpnLq6+m54rxTjv5OKfoLhmG4ggLA==
-X-Google-Smtp-Source: ABdhPJy3//vyNc30GgewuvOD1VqLShcCFmOVQj8VB7FzKMiDJcqY9KCMf5fq9tu76xFJ4iplNhh8dg==
-X-Received: by 2002:a05:600c:2209:: with SMTP id z9mr585123wml.70.1595438057213;
-        Wed, 22 Jul 2020 10:14:17 -0700 (PDT)
+        bh=gp0OnWT+ezEb5kvY+8ZpcjBj/ySeUlAdu5kTWrUzIIE=;
+        b=EwmnckXuFDy/SCHfsO+9X6Dxn5DGBMsbN86YPrqpWOl5A79/7mN0Hlw6tS/CU4bH4G
+         ZrFrDVfgmeNAfNakMAamf43jezJAwlDqDS8LLL/df/hgYmeBZZQJSXQ7XaCc6rO52ki6
+         08gAQKPpmYONRj/wCLh9g+MUjXfEa/99tGbN6Rk5kJnt1ymgl+sgy2qoLSAPIFkbA2oV
+         KfnhGh9W6A+E524Jo+7fNDFKyzeEMT3Kyxql/ROMjlpEcCYlNw6X2vKfYXw4M2hR5qWk
+         mZ/2De0UKfaJFE8HmzZwu2zDkr0X68Aofl7sSr0kgP/l/JtJO81PsPkvKefqJP2Nxl0j
+         C3Kw==
+X-Gm-Message-State: AOAM533WDPlkSYZZIyOefX9AxNw3jL14rlKCLBnL3Y5YATJzFABekWEl
+        Qgi9IZfnWYeP+PUcggEAmRO4kOA83V8TQg==
+X-Google-Smtp-Source: ABdhPJwCCXk9vaVuSY9tqLlBmznmzV2x0tC36L55ROdQS66E6XrJS66s/KAIr41aF/0pYaaqSU8YKw==
+X-Received: by 2002:a7b:cd09:: with SMTP id f9mr600477wmj.160.1595438060818;
+        Wed, 22 Jul 2020 10:14:20 -0700 (PDT)
 Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id 26sm349214wmj.25.2020.07.22.10.14.16
+        by smtp.gmail.com with ESMTPSA id 26sm349214wmj.25.2020.07.22.10.14.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 10:14:16 -0700 (PDT)
+        Wed, 22 Jul 2020 10:14:20 -0700 (PDT)
 From:   KP Singh <kpsingh@chromium.org>
 To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
         linux-security-module@vger.kernel.org
@@ -65,9 +64,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Martin KaFai Lau <kafai@fb.com>,
         Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
         Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next v5 2/7] bpf: Generalize caching for sk_storage.
-Date:   Wed, 22 Jul 2020 19:14:04 +0200
-Message-Id: <20200722171409.102949-3-kpsingh@chromium.org>
+Subject: [PATCH bpf-next v5 6/7] bpf: Allow local storage to be used from LSM programs
+Date:   Wed, 22 Jul 2020 19:14:08 +0200
+Message-Id: <20200722171409.102949-7-kpsingh@chromium.org>
 X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
 In-Reply-To: <20200722171409.102949-1-kpsingh@chromium.org>
 References: <20200722171409.102949-1-kpsingh@chromium.org>
@@ -80,147 +79,194 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: KP Singh <kpsingh@google.com>
 
-Provide the a ability to define local storage caches on a per-object
-type basis. The caches and caching indices for different objects should
-not be inter-mixed as suggested in:
+Adds support for both bpf_{sk, inode}_storage_{get, delete} to be used
+in LSM programs. These helpers are not used for tracing programs
+(currently) as their usage is tied to the life-cycle of the object and
+should only be used where the owning object won't be freed (when the
+owning object is passed as an argument to the LSM hook). Thus, they
+are safer to use in LSM hooks than tracing. Usage of local storage in
+tracing programs will probably follow a per function based whitelist
+approach.
 
-  https://lore.kernel.org/bpf/20200630193441.kdwnkestulg5erii@kafai-mbp.dhcp.thefacebook.com/
-
-  "Caching a sk-storage at idx=0 of a sk should not stop an
-  inode-storage to be cached at the same idx of a inode."
+Since the UAPI helper signature for bpf_sk_storage expect a bpf_sock,
+it, leads to a compilation warning for LSM programs, it's also updated
+to accept a void * pointer instead.
 
 Signed-off-by: KP Singh <kpsingh@google.com>
 ---
- include/net/bpf_sk_storage.h | 19 +++++++++++++++++++
- net/core/bpf_sk_storage.c    | 31 +++++++++++++++----------------
- 2 files changed, 34 insertions(+), 16 deletions(-)
+ include/net/bpf_sk_storage.h   |  2 ++
+ include/uapi/linux/bpf.h       |  8 ++++++--
+ kernel/bpf/bpf_lsm.c           | 21 ++++++++++++++++++++-
+ net/core/bpf_sk_storage.c      | 27 +++++++++++++++++++++++++++
+ tools/include/uapi/linux/bpf.h |  8 ++++++--
+ 5 files changed, 61 insertions(+), 5 deletions(-)
 
 diff --git a/include/net/bpf_sk_storage.h b/include/net/bpf_sk_storage.h
-index 5036c94c0503..950c5aaba15e 100644
+index 4cdf37ac278c..d123807b5083 100644
 --- a/include/net/bpf_sk_storage.h
 +++ b/include/net/bpf_sk_storage.h
-@@ -3,6 +3,9 @@
- #ifndef _BPF_SK_STORAGE_H
- #define _BPF_SK_STORAGE_H
+@@ -19,6 +19,8 @@ void bpf_sk_storage_free(struct sock *sk);
  
-+#include <linux/types.h>
-+#include <linux/spinlock.h>
-+
- struct sock;
+ extern const struct bpf_func_proto bpf_sk_storage_get_proto;
+ extern const struct bpf_func_proto bpf_sk_storage_delete_proto;
++extern const struct bpf_func_proto sk_storage_get_btf_proto;
++extern const struct bpf_func_proto sk_storage_delete_btf_proto;
  
- void bpf_sk_storage_free(struct sock *sk);
-@@ -15,6 +18,22 @@ struct sk_buff;
- struct nlattr;
- struct sock;
+ struct bpf_sk_storage_diag;
+ struct sk_buff;
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 0bdfbe6067be..5be19f93b159 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -2790,7 +2790,7 @@ union bpf_attr {
+  *
+  *		**-ERANGE** if resulting value was out of range.
+  *
+- * void *bpf_sk_storage_get(struct bpf_map *map, struct bpf_sock *sk, void *value, u64 flags)
++ * void *bpf_sk_storage_get(struct bpf_map *map, void *sk, void *value, u64 flags)
+  *	Description
+  *		Get a bpf-local-storage from a *sk*.
+  *
+@@ -2806,6 +2806,10 @@ union bpf_attr {
+  *		"type". The bpf-local-storage "type" (i.e. the *map*) is
+  *		searched against all bpf-local-storages residing at *sk*.
+  *
++ *		For socket programs, *sk* should be a **struct bpf_sock** pointer
++ *		and an **ARG_PTR_TO_BTF_ID** of type **struct sock** for LSM
++ *		programs.
++ *
+  *		An optional *flags* (**BPF_SK_STORAGE_GET_F_CREATE**) can be
+  *		used such that a new bpf-local-storage will be
+  *		created if one does not exist.  *value* can be used
+@@ -2818,7 +2822,7 @@ union bpf_attr {
+  *		**NULL** if not found or there was an error in adding
+  *		a new bpf-local-storage.
+  *
+- * long bpf_sk_storage_delete(struct bpf_map *map, struct bpf_sock *sk)
++ * long bpf_sk_storage_delete(struct bpf_map *map, void *sk)
+  *	Description
+  *		Delete a bpf-local-storage from a *sk*.
+  *	Return
+diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+index fb278144e9fd..9cd1428c7199 100644
+--- a/kernel/bpf/bpf_lsm.c
++++ b/kernel/bpf/bpf_lsm.c
+@@ -11,6 +11,8 @@
+ #include <linux/bpf_lsm.h>
+ #include <linux/kallsyms.h>
+ #include <linux/bpf_verifier.h>
++#include <net/bpf_sk_storage.h>
++#include <linux/bpf_local_storage.h>
  
-+#define BPF_LOCAL_STORAGE_CACHE_SIZE	16
-+
-+struct bpf_local_storage_cache {
-+	spinlock_t idx_lock;
-+	u64 idx_usage_counts[BPF_LOCAL_STORAGE_CACHE_SIZE];
-+};
-+
-+#define DEFINE_BPF_STORAGE_CACHE(name)				\
-+static struct bpf_local_storage_cache name = {			\
-+	.idx_lock = __SPIN_LOCK_UNLOCKED(name.idx_lock),	\
-+}
-+
-+u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache);
-+void bpf_local_storage_cache_idx_free(struct bpf_local_storage_cache *cache,
-+				      u16 idx);
-+
- #ifdef CONFIG_BPF_SYSCALL
- int bpf_sk_storage_clone(const struct sock *sk, struct sock *newsk);
- struct bpf_sk_storage_diag *
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index fb7ea6f4174d..aa3e3a47acb5 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -13,6 +13,8 @@
- 
- #define BPF_LOCAL_STORAGE_CREATE_FLAG_MASK (BPF_F_NO_PREALLOC | BPF_F_CLONE)
- 
-+DEFINE_BPF_STORAGE_CACHE(sk_cache);
-+
- struct bpf_local_storage_map_bucket {
- 	struct hlist_head list;
- 	raw_spinlock_t lock;
-@@ -77,10 +79,6 @@ struct bpf_local_storage_elem {
- #define SELEM(_SDATA)							\
- 	container_of((_SDATA), struct bpf_local_storage_elem, sdata)
- #define SDATA(_SELEM) (&(_SELEM)->sdata)
--#define BPF_LOCAL_STORAGE_CACHE_SIZE	16
--
--static DEFINE_SPINLOCK(cache_idx_lock);
--static u64 cache_idx_usage_counts[BPF_LOCAL_STORAGE_CACHE_SIZE];
- 
- struct bpf_local_storage {
- 	struct bpf_local_storage_data __rcu *cache[BPF_LOCAL_STORAGE_CACHE_SIZE];
-@@ -516,16 +514,16 @@ static int sk_storage_delete(struct sock *sk, struct bpf_map *map)
+ /* For every LSM hook that allows attachment of BPF programs, declare a nop
+  * function where a BPF program can be attached.
+@@ -45,10 +47,27 @@ int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
  	return 0;
  }
  
--static u16 cache_idx_get(void)
-+u16 bpf_local_storage_cache_idx_get(struct bpf_local_storage_cache *cache)
- {
- 	u64 min_usage = U64_MAX;
- 	u16 i, res = 0;
++static const struct bpf_func_proto *
++bpf_lsm_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
++{
++	switch (func_id) {
++	case BPF_FUNC_inode_storage_get:
++		return &bpf_inode_storage_get_proto;
++	case BPF_FUNC_inode_storage_delete:
++		return &bpf_inode_storage_delete_proto;
++	case BPF_FUNC_sk_storage_get:
++		return &sk_storage_get_btf_proto;
++	case BPF_FUNC_sk_storage_delete:
++		return &sk_storage_delete_btf_proto;
++	default:
++		return tracing_prog_func_proto(func_id, prog);
++	}
++}
++
+ const struct bpf_prog_ops lsm_prog_ops = {
+ };
  
--	spin_lock(&cache_idx_lock);
-+	spin_lock(&cache->idx_lock);
+ const struct bpf_verifier_ops lsm_verifier_ops = {
+-	.get_func_proto = tracing_prog_func_proto,
++	.get_func_proto = bpf_lsm_func_proto,
+ 	.is_valid_access = btf_ctx_access,
+ };
+diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+index be0ed44d0887..17efb8a9196d 100644
+--- a/net/core/bpf_sk_storage.c
++++ b/net/core/bpf_sk_storage.c
+@@ -11,6 +11,7 @@
+ #include <net/sock.h>
+ #include <uapi/linux/sock_diag.h>
+ #include <uapi/linux/btf.h>
++#include <linux/btf_ids.h>
  
- 	for (i = 0; i < BPF_LOCAL_STORAGE_CACHE_SIZE; i++) {
--		if (cache_idx_usage_counts[i] < min_usage) {
--			min_usage = cache_idx_usage_counts[i];
-+		if (cache->idx_usage_counts[i] < min_usage) {
-+			min_usage = cache->idx_usage_counts[i];
- 			res = i;
+ DEFINE_BPF_STORAGE_CACHE(sk_cache);
  
- 			/* Found a free cache_idx */
-@@ -533,18 +531,19 @@ static u16 cache_idx_get(void)
- 				break;
- 		}
- 	}
--	cache_idx_usage_counts[res]++;
-+	cache->idx_usage_counts[res]++;
+@@ -465,6 +466,32 @@ const struct bpf_func_proto bpf_sk_storage_delete_proto = {
+ 	.arg2_type	= ARG_PTR_TO_SOCKET,
+ };
  
--	spin_unlock(&cache_idx_lock);
-+	spin_unlock(&cache->idx_lock);
- 
- 	return res;
- }
- 
--static void cache_idx_free(u16 idx)
-+void bpf_local_storage_cache_idx_free(struct bpf_local_storage_cache *cache,
-+				      u16 idx)
- {
--	spin_lock(&cache_idx_lock);
--	cache_idx_usage_counts[idx]--;
--	spin_unlock(&cache_idx_lock);
-+	spin_lock(&cache->idx_lock);
-+	cache->idx_usage_counts[idx]--;
-+	spin_unlock(&cache->idx_lock);
- }
- 
- /* Called by __sk_destruct() & bpf_sk_storage_clone() */
-@@ -596,7 +595,7 @@ static void bpf_local_storage_map_free(struct bpf_map *map)
- 
- 	smap = (struct bpf_local_storage_map *)map;
- 
--	cache_idx_free(smap->cache_idx);
-+	bpf_local_storage_cache_idx_free(&sk_cache, smap->cache_idx);
- 
- 	/* Note that this map might be concurrently cloned from
- 	 * bpf_sk_storage_clone. Wait for any existing bpf_sk_storage_clone
-@@ -712,7 +711,7 @@ static struct bpf_map *bpf_local_storage_map_alloc(union bpf_attr *attr)
- 	}
- 
- 	smap->elem_size = sizeof(struct bpf_local_storage_elem) + attr->value_size;
--	smap->cache_idx = cache_idx_get();
-+	smap->cache_idx = bpf_local_storage_cache_idx_get(&sk_cache);
- 
- 	return &smap->map;
- }
++BTF_ID_LIST(sk_storage_get_btf_ids)
++BTF_ID(struct, sock)
++
++const struct bpf_func_proto sk_storage_get_btf_proto = {
++	.func		= bpf_sk_storage_get,
++	.gpl_only	= false,
++	.ret_type	= RET_PTR_TO_MAP_VALUE_OR_NULL,
++	.arg1_type	= ARG_CONST_MAP_PTR,
++	.arg2_type	= ARG_PTR_TO_BTF_ID,
++	.arg3_type	= ARG_PTR_TO_MAP_VALUE_OR_NULL,
++	.arg4_type	= ARG_ANYTHING,
++	.btf_id		= sk_storage_get_btf_ids,
++};
++
++BTF_ID_LIST(sk_storage_delete_btf_ids)
++BTF_ID(struct, sock)
++
++const struct bpf_func_proto sk_storage_delete_btf_proto = {
++	.func		= bpf_sk_storage_delete,
++	.gpl_only	= false,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_CONST_MAP_PTR,
++	.arg2_type	= ARG_PTR_TO_BTF_ID,
++	.btf_id		= sk_storage_delete_btf_ids,
++};
++
+ struct bpf_sk_storage_diag {
+ 	u32 nr_maps;
+ 	struct bpf_map *maps[];
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 0bdfbe6067be..5be19f93b159 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -2790,7 +2790,7 @@ union bpf_attr {
+  *
+  *		**-ERANGE** if resulting value was out of range.
+  *
+- * void *bpf_sk_storage_get(struct bpf_map *map, struct bpf_sock *sk, void *value, u64 flags)
++ * void *bpf_sk_storage_get(struct bpf_map *map, void *sk, void *value, u64 flags)
+  *	Description
+  *		Get a bpf-local-storage from a *sk*.
+  *
+@@ -2806,6 +2806,10 @@ union bpf_attr {
+  *		"type". The bpf-local-storage "type" (i.e. the *map*) is
+  *		searched against all bpf-local-storages residing at *sk*.
+  *
++ *		For socket programs, *sk* should be a **struct bpf_sock** pointer
++ *		and an **ARG_PTR_TO_BTF_ID** of type **struct sock** for LSM
++ *		programs.
++ *
+  *		An optional *flags* (**BPF_SK_STORAGE_GET_F_CREATE**) can be
+  *		used such that a new bpf-local-storage will be
+  *		created if one does not exist.  *value* can be used
+@@ -2818,7 +2822,7 @@ union bpf_attr {
+  *		**NULL** if not found or there was an error in adding
+  *		a new bpf-local-storage.
+  *
+- * long bpf_sk_storage_delete(struct bpf_map *map, struct bpf_sock *sk)
++ * long bpf_sk_storage_delete(struct bpf_map *map, void *sk)
+  *	Description
+  *		Delete a bpf-local-storage from a *sk*.
+  *	Return
 -- 
 2.28.0.rc0.105.gf9edc3c819-goog
 
