@@ -2,129 +2,128 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71023C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BED20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDca0dIa"
+	by mail.kernel.org (Postfix) with ESMTP id 58731206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732054AbgGVLqr (ORCPT
+        id S1731814AbgGVLvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:46:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60984 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726503AbgGVLqp (ORCPT
+        Wed, 22 Jul 2020 07:51:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726334AbgGVLvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:46:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595418403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VA50D44PwP36EMatm3r8jkryzFI+xci/xyxPDoYxEHw=;
-        b=CDca0dIawbO/q/8JOMnNOsHXDDSsCa6K74P5unPd8U/NHnt48jntlIpUw8py/kvWDYNXJL
-        OsumW9kDsD9pLm2ngElLLMMkKVtcKZ1n+O6jGC4v4MH9f7wrnFZSFq4N5XWDtDWvbOJzGP
-        0Qih+B6mekM1gLUryQr7xhQqqaGTbCY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322-Ksn9SZTxPyqsU9MeeGIg9g-1; Wed, 22 Jul 2020 07:46:41 -0400
-X-MC-Unique: Ksn9SZTxPyqsU9MeeGIg9g-1
-Received: by mail-wr1-f72.google.com with SMTP id 5so518877wrc.17
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:46:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VA50D44PwP36EMatm3r8jkryzFI+xci/xyxPDoYxEHw=;
-        b=j3jzInXxEbalzjMODcNhJ73yRTHneW9KV8H50iyfF3OZNmDO6k9X8hi+LeQ3kftpGF
-         R+/r4PsAXQd0kt128vc4qhwX7H+J1O10LKkL3Ele+31JKazFEmhEaLeWEEqcYO3WoLNQ
-         dQ6V7FD9WXQloVlWfKI38k0ycgZDqiiP9SBebvw48Nl6kJgDSXUbd7Ro4Dx6Z10hRMUB
-         5PfX4fXCkjRvay2Xm8SP9M5hq/7vfbJWBar17jEB8tPfpj8GOtM3epJNslWodPqDEufX
-         P2AbHT+BXBXKp9XVb79Ofrvhrs2ekLSXGZQLhyan5D5KHVzwBr8N1S8bT7E0AEiDez7b
-         aIKw==
-X-Gm-Message-State: AOAM532NEKvCd5AS6Z2fZlrGL45ACOEDdRjtIsU5dKu0IZdXcABwSBcf
-        cyIb3FT9V7zGU+4eQYLMBV1CKwsodGXKTEWfqKrOhEEitdqlJP7LUDsTO9bamKSWiTLN1pVKN5R
-        1DrHOCahw+N1bg2Ni+SkAsp3e
-X-Received: by 2002:a5d:65d2:: with SMTP id e18mr14890862wrw.70.1595418400764;
-        Wed, 22 Jul 2020 04:46:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwT9fHDPnqPq43vdSPvjeRis+cuUR2jlT9N/471iNd7v56L0Upt0p7rdaoBly9Dp9gOrJm4TA==
-X-Received: by 2002:a5d:65d2:: with SMTP id e18mr14890841wrw.70.1595418400524;
-        Wed, 22 Jul 2020 04:46:40 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id 5sm6787929wmk.9.2020.07.22.04.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 04:46:39 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 07:46:36 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 2/2] virtio-mmio: Reject invalid IRQ 0 command line
- argument
-Message-ID: <20200722074630-mutt-send-email-mst@kernel.org>
-References: <20200701221040.3667868-1-helgaas@kernel.org>
- <20200701221040.3667868-3-helgaas@kernel.org>
+        Wed, 22 Jul 2020 07:51:31 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MBXRFd125842;
+        Wed, 22 Jul 2020 07:51:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yayggw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 07:51:21 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06MBYZiL129623;
+        Wed, 22 Jul 2020 07:51:21 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yaygg0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 07:51:20 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06MBfPXb012436;
+        Wed, 22 Jul 2020 11:51:18 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 32brq7mybr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 11:51:18 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06MBpG3w56295454
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 11:51:16 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 711BC5204F;
+        Wed, 22 Jul 2020 11:51:16 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.102.3.172])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 2EFB35204E;
+        Wed, 22 Jul 2020 11:51:14 +0000 (GMT)
+Date:   Wed, 22 Jul 2020 17:21:11 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, kvm-ppc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH v3 2/5] mm/migrate: add a flags parameter to migrate_vma
+Message-ID: <20200722115111.GR7902@in.ibm.com>
+Reply-To: bharata@linux.ibm.com
+References: <20200721213119.32344-1-rcampbell@nvidia.com>
+ <20200721213119.32344-3-rcampbell@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701221040.3667868-3-helgaas@kernel.org>
+In-Reply-To: <20200721213119.32344-3-rcampbell@nvidia.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_05:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=1 bulkscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 mlxlogscore=989 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 05:10:40PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Jul 21, 2020 at 02:31:16PM -0700, Ralph Campbell wrote:
+> The src_owner field in struct migrate_vma is being used for two purposes,
+> it acts as a selection filter for which types of pages are to be migrated
+> and it identifies device private pages owned by the caller. Split this
+> into separate parameters so the src_owner field can be used just to
+> identify device private pages owned by the caller of migrate_vma_setup().
+> Rename the src_owner field to pgmap_owner to reflect it is now used only
+> to identify which device private pages to migrate.
 > 
-> The "virtio_mmio.device=" command line argument allows a user to specify
-> the size, address, and IRQ of a virtio device.  Previously the only
-> requirement for the IRQ was that it be an unsigned integer.
-> 
-> Zero is an unsigned integer but an invalid IRQ number, and after
-> a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid"),
-> attempts to use IRQ 0 cause warnings.
-> 
-> If the user specifies IRQ 0, return failure instead of registering a device
-> with IRQ 0.
-> 
-> Fixes: a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid")
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: virtualization@lists.linux-foundation.org
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 > ---
->  drivers/virtio/virtio_mmio.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/powerpc/kvm/book3s_hv_uvmem.c     |  4 +++-
+>  drivers/gpu/drm/nouveau/nouveau_dmem.c |  4 +++-
+>  include/linux/migrate.h                | 13 +++++++++----
+>  lib/test_hmm.c                         |  6 ++++--
+>  mm/migrate.c                           |  6 ++++--
+>  5 files changed, 23 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-> index 9d16aaffca9d..627ac0487494 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -641,11 +641,11 @@ static int vm_cmdline_set(const char *device,
->  			&vm_cmdline_id, &consumed);
+> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> index 09d8119024db..6850bd04bcb9 100644
+> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> @@ -400,6 +400,7 @@ kvmppc_svm_page_in(struct vm_area_struct *vma, unsigned long start,
+>  	mig.end = end;
+>  	mig.src = &src_pfn;
+>  	mig.dst = &dst_pfn;
+> +	mig.flags = MIGRATE_VMA_SELECT_SYSTEM;
 >  
 >  	/*
-> -	 * sscanf() must processes at least 2 chunks; also there
-> +	 * sscanf() must process at least 2 chunks; also there
->  	 * must be no extra characters after the last chunk, so
->  	 * str[consumed] must be '\0'
->  	 */
-> -	if (processed < 2 || str[consumed])
-> +	if (processed < 2 || str[consumed] || irq == 0)
->  		return -EINVAL;
+>  	 * We come here with mmap_lock write lock held just for
+> @@ -577,7 +578,8 @@ kvmppc_svm_page_out(struct vm_area_struct *vma, unsigned long start,
+>  	mig.end = end;
+>  	mig.src = &src_pfn;
+>  	mig.dst = &dst_pfn;
+> -	mig.src_owner = &kvmppc_uvmem_pgmap;
+> +	mig.pgmap_owner = &kvmppc_uvmem_pgmap;
+> +	mig.flags = MIGRATE_VMA_SELECT_DEVICE_PRIVATE;
 >  
->  	resources[0].flags = IORESOURCE_MEM;
-> -- 
-> 2.25.1
+>  	mutex_lock(&kvm->arch.uvmem_lock);
 
+For the kvmppc changes above,
+Reviewed-by: Bharata B Rao <bharata@linux.ibm.com>
