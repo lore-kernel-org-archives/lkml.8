@@ -2,141 +2,89 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D06C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F3820771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7670420771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DExJSLC/";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="o6mcNi+R"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m6/oHRfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732619AbgGVOj3 (ORCPT
+        id S1732626AbgGVOj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:39:29 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:29186 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGVOj2 (ORCPT
+        Wed, 22 Jul 2020 10:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGVOj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:39:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595428767; x=1626964767;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=8HvsVF6+6vfOPXqFtm5mDRHc/7xydWxhkCej4weMdbU=;
-  b=DExJSLC/feBZHVvYmMf/IQ5vv22I5u8egQMZtFf+jkeYRQd0qGKKfrw8
-   lZx+W5MIMyyeeeC6R8m9kywQ6HuD2IH45+whP9f6rVWOxeBKfldRKowhA
-   RGYnoEqWZqAf0gf+xtNOh0cbcdkUfWQS6+Gpc0PeEqzPPB5yQcOQ+WMRS
-   8FiRfiaqS0tBnTJ9KBWzBRYhC9N1NuxMIBgTAvKWugoCoruida4l+8+hC
-   8Ymze+MZrhPtJY4B6JpDv2fY0WVh8xhEwnOpeX9Rts+tq5x/2EVDWkF4F
-   l0vpDJ/zgPiuVAqThTtUZFshTsBlZhNGYydnh4nZzvsJir987l8K8xzhX
-   Q==;
-IronPort-SDR: RDd7MM6gLecCa0p2WHq6KBOYlxNxT6lWNqIx6sbfFOvDheAAkEUiYfP31so+TEivea/VfC+sjf
- p/ZB35g8wiyMbtbqEV6iayBfYXSPmgZ1923azt7xCIF5+l4WVMDduCqhKVjLfQGmPFUfwdgE86
- O4AO3sweyxdFXTH3ikMlcE3E/SKrK271tjE5DzULVtRL53kM4E+dhyb7qPX90y48EzLEziKksD
- 96T4KlHCCCB8HjAcClbIKMBlEX7kXWJFqzHNseYkpslAsA+o/eow3nZ8N3EWN04pfQBgr80BsE
- 7qw=
-X-IronPort-AV: E=Sophos;i="5.75,383,1589212800"; 
-   d="scan'208";a="144383943"
-Received: from mail-co1nam04lp2050.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.50])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Jul 2020 22:39:26 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HNMOCqWqC2bUa6a6o+Ru+JI4zVuqS7CvNfbfBJ3JysODUWYPz94CJ7oq+mi5LMO5KR3qL/zRaoUp+ez3HktaEK1e+taUX1xTsR8JhjsPAwtRRZD/F7LFsrtrrPI4DSfk72WkopA4sx5JxBKqPlYEdlqkjs+2s/VpZhwvnw7oVniy3RH41Wwc+Qn8vPGogjsXHYoVeJDDYq0gZh7B/T5TRM72TF9j7lpLwPBz4+Gp+Bpk2OgY8YB/5BDcTee7tiYhD0EdjnPLk1RbgjXAyhj/1BnkU4uAPtO5iv0lywA6Z/SY9prbVnRWw8qCBBC8bj2okz2gjFGCtDdva2ANpKp7Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dCHEmqhzb7gHUPZ+LF5xSdaGXNCQv/HgPToYC3NfKPQ=;
- b=OijvJ+fE64lsu389pfkdi318nIJsY+YlDFSC0PCTCDbVdhHWk7b9AIjk5TBC8CImYs/B5HTkZFSJSLQCMtgEHfpKPPDGdJsyJ0IbCCWkhz+FbSbINuAkINvpzn/JXlOJX7/iHSCQONeMhyoH4azU9cr8Pt4RNoof99tXzyyy2zouQ9YgTuiikUjN5UWHJF7b7F6RDQMARnUElzlz3C90IuKJeCWUNOv3PcXChW4tmHR2OgmnZ7/lDgMNSptRvluzPYWpQ2f2HP4kL4gwwIzvSafCN3zSGeNfisTyAkPHT/ooL5KMcHkq7E4hbtEipS7RqpPpuXWTuNbp8mkU6fXzYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 22 Jul 2020 10:39:58 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DFD7C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:39:58 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l63so1352445pge.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dCHEmqhzb7gHUPZ+LF5xSdaGXNCQv/HgPToYC3NfKPQ=;
- b=o6mcNi+RcpfVl/pEoiKrd7IW6tPKZXZr+q5dB1/EW8OGUUJ1g8xezRJmGxj6nKCXVMv/krJtKkXWgv3NDulUR2cuWmBBv7xMJzpe3Z6ZB1aE8X6t/F4xuJPEy2xm3thkH9HIS7J0+SRKMSr5SZWafBzInyp1LrPMRDH+kvZAG14=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB0566.namprd04.prod.outlook.com (2603:10b6:903:b5::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Wed, 22 Jul
- 2020 14:39:24 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::d9e5:135e:cfd9:4de0%7]) with mapi id 15.20.3195.025; Wed, 22 Jul 2020
- 14:39:24 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: linux-next: interesting merge in the zonefs tree
-Thread-Topic: linux-next: interesting merge in the zonefs tree
-Thread-Index: AQHWYDAlawvQHwkQg0uu/iK03AzjUg==
-Date:   Wed, 22 Jul 2020 14:39:24 +0000
-Message-ID: <CY4PR04MB37519AA66C3B84BDF00C658CE7790@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200722235802.1f01457e@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: canb.auug.org.au; dkim=none (message not signed)
- header.d=none;canb.auug.org.au; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.182.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 84daa2b2-b68f-4e93-1922-08d82e4d0746
-x-ms-traffictypediagnostic: CY4PR04MB0566:
-x-microsoft-antispam-prvs: <CY4PR04MB0566953C0C654A5B49E676BAE7790@CY4PR04MB0566.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NfH5SoKVs+LtN3rhoAdqZwg9XvXnu2GvqHOVpwTlNCm6sXLAJdr6yIu/mF+tDXGzujFv6czdcODtH8wy9zlk8jhD+xVMz90tq1+vXHY2ZUqVHitU6LzRWtJi3mu8LsZiD6lAFASeTSf+CxMPRvxuxQWQ2RVBuTp9lxIuIj+wTJ4qMGyy9i24sSiKFaQUbiWMGHgxXLAwnImk8T9C0DscThzhp1zUDONjDEDCh3diEN+SVwHfVM/dg5lghw7XtdxAkcQVBbQ/ihJ8RMC0nxQFDOY+rPCAbtPeOgl20ObpW2eiygu3C2rNqwYUpvZ7jIqU
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(66946007)(66446008)(66556008)(64756008)(66476007)(8936002)(76116006)(7696005)(71200400001)(91956017)(2906002)(8676002)(4744005)(186003)(54906003)(86362001)(26005)(316002)(6506007)(53546011)(9686003)(478600001)(55016002)(5660300002)(6916009)(52536014)(4326008)(83380400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: M+ZwrpyJV9Bb5Fa3GE8B7LHBZD51MowddqZt9ciuEseLdezNJDoFA09IL3gt+rFpzewDFrIwkoqXABYt+GI10qB/l2N5/iSyHjfct8NuGG1SBTcfrdOh4AwjZjqFH0lwYH25VmfZgyJsa8thdV4znd5jLqNBbSG9mj5AAJOtwfN6w30oix7efaezU42dMgtGk000IEAmCnM8vcj/Qp4Z/lO2nJ6aDWxVSWvbHeXy9AhAgSSZJ0b9Qx+KKo19ADrQNLP/J8bMh22lqeOpusd2M0CYYaK0zYgp1jIsWNXRsuLy7G958LuDeQEwiIgwV+NCT2eJdF2ue3jorsSmLJ6xv8fO9hIPn+kDrhJ9zFoWzrbcuXvmC0+ROY2HPRfjhrXIDXson+rLmj9VJcqGi0Rg0GVshykQvpm9h0q9MlnB3hR3fpkjweAM6Rve1NPXaNNObDJLlEkyGrONdFgCZzoDPePxE4qczFleg6KjKf6nPMsKmmD+ZiIX8FCgcWsp5pYv
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=16Y8bWUyysyD6RX/r5XeFDtXgEqasoaIb5QlD/Fn9gY=;
+        b=m6/oHRfM8k+Nz9zcIKR0qeNOD5tEEwDyDId3PTGUUDN4p9UGsI0fn00KoI9/QyQ1v8
+         apM4heGRp20HL1suh7bRv/oYHQT+8FbwsOEUGzspMxDK5to8xMCVJ1IVeG4ELQ8PRnvM
+         UVLan5R8bzs3XxdU33aX86W1aVtTlW0hiqd8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=16Y8bWUyysyD6RX/r5XeFDtXgEqasoaIb5QlD/Fn9gY=;
+        b=RiNjsmaL2WLc6g13T1Dm3iFbcp6JQYOVr6GI+cJL5w8fC80NTYP2rgGulxRfvVl3Y/
+         HFelRMXPCu9iB/FD0+Z18aNieZfMU0E1hrGIk2RXkKsZGjSvy8M7o4zJ2qAmKOB2xE4M
+         5E8te6tIG7yhCHiE99ZWtXA6ksu6W86OtXp1ACpfbvkSEn9V6k4lIb/Xe1A/8prPYWrq
+         5O8DGjU5y9oCXhO2+/xdgwKrEDhJgli/Re/qxRQ382ICPhHgyRILW4NUqCWXr5SCR5z+
+         li8c9/qV59EB+jDaeUbauy+uY5j83IblF+iWoAl9yA1A5jDWQkXplieI0I+T+N/yYx3B
+         /3Ww==
+X-Gm-Message-State: AOAM533utEUK5F6r4mls8PGlCvq+TfdNAoIhqp79vXfYrtryYhoIy4M7
+        9rsUhJ5InUfHJhvLOSfblS2QpQ==
+X-Google-Smtp-Source: ABdhPJybf+F7pwNThVxNEaAxDjLaau/pl+1vyZd8ayI2jp7rUGVlHGz+ar7yf1UhbFootA15osR7TA==
+X-Received: by 2002:aa7:9ac6:: with SMTP id x6mr3300pfp.326.1595428797861;
+        Wed, 22 Jul 2020 07:39:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q17sm116352pfk.0.2020.07.22.07.39.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 07:39:56 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 07:39:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+Message-ID: <202007220738.72F26D2480@keescook>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84daa2b2-b68f-4e93-1922-08d82e4d0746
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 14:39:24.1449
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4R6+ZJg6MSDE9rft0GGZvOMoCGY3QlyDL7c6bktmkwrKfE1DMObs04ENUW1Qk60J59yKhgN/NeEagVzsavA5yw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB0566
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/22 22:58, Stephen Rothwell wrote:=0A=
-> Hi all,=0A=
-> =0A=
-> It looks an old version of the block tree has been merged into the=0A=
-> zonefs tree.  Is that deliberate?  Other trees should not be merged unles=
-s=0A=
-> they are guaranteed not to be rebased (which is what has happened here).=
-=0A=
-> =0A=
-=0A=
-I rebuild zonefs for-5.9 branch: 5.8-rc6 base + Jens block tree for-5.9/dri=
-vers=0A=
-branch merged on top (not rebased). zonefs for-next branch is now identical=
- to=0A=
-that. Please let me know if there is still a problem.=0A=
-=0A=
-Thanks !=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes wrote:
+> Let me CC live-patching ML, because from a quick glance this is something 
+> which could impact live patching code. At least it invalidates assumptions 
+> which "sympos" is based on.
+
+In a quick skim, it looks like the symbol resolution is using
+kallsyms_on_each_symbol(), so I think this is safe? What's a good
+selftest for live-patching?
+
+-- 
+Kees Cook
