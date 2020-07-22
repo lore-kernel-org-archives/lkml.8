@@ -2,107 +2,88 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01267C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A834C20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94924206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="V3gnVArd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9kkA8q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbgGVOtz (ORCPT
+        id S1732684AbgGVOui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:49:55 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:14468 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgGVOtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:49:55 -0400
+        Wed, 22 Jul 2020 10:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732467AbgGVOuh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:50:37 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926D8C0619DC;
+        Wed, 22 Jul 2020 07:50:37 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id q17so1102541pls.9;
+        Wed, 22 Jul 2020 07:50:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1497; q=dns/txt; s=axis-central1;
-  t=1595429393; x=1626965393;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=baYZLtX3aKwOTSmhfy5KuJLM6gJoW1ANGxx/SmqyNeM=;
-  b=V3gnVArd1m0aNyepSqn7Ey0d0PRqam8QQOllnszO43nPZug/MzR5Rskw
-   wYM4t5UFnFMmAKg39rd/g8MiUt+m14D4bdXkKP2AaPDsk/SPcfHwNonIF
-   MnfK3AzOV5dM4tk4g5gFvo1weodgRUMuIa2zq+NFHPAQoQlATsv61+oo0
-   CFhlueCtdRRrCQlsIP+VVk9Giu5sbXqRTnULHIiwtgSZFuNaxtVSyDWlC
-   ZcwbnqjZAYHTa0CfyKaYDT9EVnGBeHtIfBNeSh6U0w1no2XbDL8x/Y7EH
-   Y95vN4L4sRkSWidzIPa81JsiT1zjE6jFSr9D1ty/Bdw5pkGwllfV02gRm
-   w==;
-IronPort-SDR: mbTTJiW2W07rlCfh+N3FwpryhyE49fPLBLEbRRDKrFN9xWDIL9d5SYwEzDGYo843hu+yRO09OZ
- 4iaikNhwCBXuryiyAulLv211P85iWTszHr5xP86bH/zm+LhhivbpRQQ/9iKgRbH/21shZD6Ycu
- VLysSAqi/QGKM7J0sHYfAib2WYpqcHcMluQ/HgidsjoDLMi0uDFIq6I9QGj+qirIuok7ULCPrC
- dcp67YgMUEpa1rGY+iDxlaP7fGtvjWts72Re/IaE4YzuXWAsLFgaKGbhJJTS2zOR4Hv2INWakp
- HLw=
-X-IronPort-AV: E=Sophos;i="5.75,383,1589234400"; 
-   d="scan'208";a="11110818"
-Date:   Wed, 22 Jul 2020 16:49:52 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     John Ogness <john.ogness@linutronix.de>
-CC:     Steven Rostedt <rostedt@goodmis.org>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "mingo@redhat.com" <mingo@redhat.com>, kernel <kernel@axis.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] dynamic debug: allow printing to trace event
-Message-ID: <20200722144952.2mewrgebgkyr2zyf@axis.com>
-References: <20200721141105.16034-1-vincent.whitchurch@axis.com>
- <20200721173045.540ae500@oasis.local.home>
- <87eep3zmg9.fsf@jogness.linutronix.de>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=5KwDFzjwATlcwnMsKxx3jtI0OOjrYoZsX8bMqHTFy80=;
+        b=a9kkA8q3PPehP2B672LSFx62bjZbNwORAao4mIGVqvOETLOs1+JfnGGkY5/Vt2yPct
+         iWFcLhSRIs+eUyGSEa0tp03mGOS5JAlegURFOMF+WdrJTL6LA55mgO2ykxE6rj/2uNbT
+         FxWpGKqZhGzKWiAwqKlWeysrCucbqQM1GD9z49aZ3beL5OVn7b/OeCrT6H4Sp0CnvAzl
+         5jcnJjG10YUszy1axPAtoKYMhWhHlfAggdThjNI9G2Zya8wAW3vb8aklMHExaFv41RV2
+         oPj+0nG5IF8VfVleyakNLYrTx/g4EbqdDF35mEXcsim6ahhANQlpZjI/0Fys6CM6MFWU
+         +Hjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=5KwDFzjwATlcwnMsKxx3jtI0OOjrYoZsX8bMqHTFy80=;
+        b=DXHCc0L0qhDMfF0wORdhyOqnnt4trA+GVVDnkApCBS8R25MIxpMkyF379jWW9Y/fqL
+         bJjP594RObL8UJDuYxx3B80WEclsd2afWKNsCY/cyPbCTPkPQoEBcfhir0s7B71vY6Oy
+         zbytZ5V4usvOjufkO7xgFOpwHSKTb/YJGAyPLkkOB6KuxLR/nKwwche8C6d26bRI+4j9
+         yqkqhifwVxtDoNq1t+Fsu8yF7vO90eJ6L+4KfgXXgVnH+GDmuG1Jg0kKGHzc8Br+OBEl
+         OmJkRRj4cKa8PTfPq5Duw1yeD4kIzjPXafgFAqCwKpwV9jKblglutUZNyEOPN2hLLAnk
+         5C7Q==
+X-Gm-Message-State: AOAM532roieZ7N/JltSajH9iFV0j6kmdgxtqr4atRvMu0tzCLCnXPtPE
+        h4sSQ3Lqg1hnRB0BuhWfyrg=
+X-Google-Smtp-Source: ABdhPJwIQtkQV/Nw0j8zIa2C2+iCHblYYqg9M6w29nOlQsOIwLitKsspEQaVMSbEIiHcdZW4RrQrpg==
+X-Received: by 2002:a17:90b:1993:: with SMTP id mv19mr10406755pjb.39.1595429437108;
+        Wed, 22 Jul 2020 07:50:37 -0700 (PDT)
+Received: from rahulg-ThinkPad-T450 ([122.175.125.202])
+        by smtp.gmail.com with ESMTPSA id j26sm64267pfe.200.2020.07.22.07.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 07:50:36 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 20:20:32 +0530
+From:   Rahul Gottipati <rahul.blr97@gmail.com>
+To:     mchehab@kernel.org
+Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] General coding style clean-up
+Message-ID: <cover.1595429109.git.rahul.blr97@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87eep3zmg9.fsf@jogness.linutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:52:22PM +0200, John Ogness wrote:
-> On 2020-07-21, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> >> index 321437bbf87d..9f6d8867af7c 100644
-> >> --- a/lib/dynamic_debug.c
-> >> +++ b/lib/dynamic_debug.c
-> [..]
-> >> +static void dynamic_printk(unsigned int flags, const char *fmt, ...)
-> >> +{
-> >> +	if (flags & _DPRINTK_FLAGS_TRACE) {
-> >> +		va_list args;
-> >> +
-> >> +		va_start(args, fmt);
-> >> +		/*
-> >> +		 * All callers include the KERN_DEBUG prefix to keep the
-> >> +		 * vprintk case simple; strip it out for tracing.
-> >> +		 */
-> >> +		dynamic_trace(fmt + strlen(KERN_DEBUG), args);
-> 
-> Do we really need a separate tracing event for this? Why not just:
-> 
->                 ftrace_vprintk(fmt + strlen(KERN_DEBUG), args);
+This patchset fixes several checkpatch.pl warnings in atomisp_ioctl.c
+that have been distributed across 2 patches logically.
 
-Thanks, I tried that out now and it seems to work, but it results in the
-trace_printk() splat (even if the feature is not used), though:
+Rahul Gottipati (2):
+  media: atomisp: Fix coding style issue - remove beginning whitespaces
+  media: atomisp: Fix coding style issue - correct multiline comments
 
- **********************************************************
- **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
- **                                                      **
- ** trace_printk() being used. Allocating extra memory.  **
- **                                                      **
- ** This means that this is a DEBUG kernel and it is     **
- ** unsafe for production use.                           **
- **                                                      **
- ** If you see this message and you are not debugging    **
- ** the kernel, report this immediately to your vendor!  **
- **                                                      **
- **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
- **********************************************************
+ .../staging/media/atomisp/pci/atomisp_ioctl.c | 38 +++++++++++--------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
+
+-- 
+2.25.1
+
