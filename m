@@ -2,443 +2,691 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1014C433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84FEC433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94CEB20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Iu45R/h/"
+	by mail.kernel.org (Postfix) with ESMTP id 8C35720717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgGVRTe (ORCPT
+        id S1730257AbgGVRTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:19:34 -0400
-Received: from crapouillou.net ([89.234.176.41]:37268 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgGVRTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:19:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595438370; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZXKShU6bcyALeSYPEd+6LzT86GWsAOmo+1LcD0YApEI=;
-        b=Iu45R/h/X+MGbF7yxaPCKZXycEcyg729NvrAg6ncui3xroBL7kHUCo+SPN6xGixXYgLJH6
-        AO3/DsUOMw5DBCwHc0JU20Wwr8TsOhtVRDru6PmT7/K1s+ofeIY5O06Nql/hgyhmRTXP9o
-        cg4JfDE89DnCCQfFqptjSIBOj7G2fXI=
-Date:   Wed, 22 Jul 2020 19:19:20 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 2/3] USB: PHY: JZ4770: Add support for new Ingenic
- SoCs.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, prasannatsmkumar@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <84SVDQ.U2WOG9BOMMYN1@crapouillou.net>
-In-Reply-To: <20200722063355.67781-3-zhouyanjie@wanyeetech.com>
-References: <20200722063355.67781-1-zhouyanjie@wanyeetech.com>
-        <20200722063355.67781-3-zhouyanjie@wanyeetech.com>
+        Wed, 22 Jul 2020 13:19:06 -0400
+Received: from out28-170.mail.aliyun.com ([115.124.28.170]:45740 "EHLO
+        out28-170.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728511AbgGVRTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:19:05 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0448904-0.0022582-0.952851;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6.3qla_1595438306;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6.3qla_1595438306)
+          by smtp.aliyun-inc.com(10.147.41.138);
+          Thu, 23 Jul 2020 01:18:55 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     daniel.lezcano@linaro.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, paul@crapouillou.net
+Subject: [PATCH v11 2/2] clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+Date:   Thu, 23 Jul 2020 01:18:04 +0800
+Message-Id: <20200722171804.97559-3-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200722171804.97559-1-zhouyanjie@wanyeetech.com>
+References: <20200722171804.97559-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+X1000 and SoCs after X1000 (such as X1500 and X1830) had a separate
+OST, it no longer belongs to TCU. This driver will register both a
+clocksource and a sched_clock to the system.
 
-Le mer. 22 juil. 2020 =C3=A0 14:33, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanji=
-e)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
-> the X1000 SoC and the X1830 SoC from Ingenic.
->=20
-> Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Co-developed-by: =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@ing=
-enic.com>
-> Signed-off-by: =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@ingen=
-ic.com>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     Add bindings for the JZ4780 SoC.
->=20
->     v2->v3:
->     Use "of_device_get_match_data" instead "of_match_device"
->     to get version information.
->=20
->     v3->v4:
->     Fix typos.
->=20
->  drivers/usb/phy/Kconfig      |   4 +-
->  drivers/usb/phy/phy-jz4770.c | 174=20
-> ++++++++++++++++++++++++++++++++-----------
->  2 files changed, 133 insertions(+), 45 deletions(-)
->=20
-> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-> index 4b3fa78995cf..775f0dd7b5f5 100644
-> --- a/drivers/usb/phy/Kconfig
-> +++ b/drivers/usb/phy/Kconfig
-> @@ -185,11 +185,11 @@ config USB_ULPI_VIEWPORT
->  	  controllers with a viewport register (e.g. Chipidea/ARC=20
-> controllers).
->=20
->  config JZ4770_PHY
-> -	tristate "Ingenic JZ4770 Transceiver Driver"
-> +	tristate "Ingenic SoCs Transceiver Driver"
->  	depends on MIPS || COMPILE_TEST
->  	select USB_PHY
->  	help
->  	  This driver provides PHY support for the USB controller found
-> -	  on the JZ4770 SoC from Ingenic.
-> +	  on the JZ4770/JZ4780/X1000/X1830 SoC from Ingenic.
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-'JZ-series / X-series SoCs' would be more future-proof :)
+Notes:
+    v1->v2:
+    Fix compile warnings.
+    Reported-by: kernel test robot <lkp@intel.com>
+    
+    v2->v3:
+    No change.
+    
+    v3->v4:
+    1.Rename "ost" to "sysost"
+    1.Remove unrelated changes.
+    2.Remove ost_clock_parent enum.
+    3.Remove ost->percpu_timer_channel/ost->global_timer_channel.
+    4.Set up independent .recalc_rate/.set_rate for percpu/global timer.
+    5.No longer call functions in variable declarations.
+    
+    v4->v5:
+    Use "of_io_request_and_map()" instead "of_iomap()".
+    Suggested-by: Paul Cercueil <paul@crapouillou.net>
+    
+    v5->v6:
+    No change.
+    
+    v6->v7:
+    Remove "default MACH_INGENIC" and make options silent.
+    Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+    
+    v7->v8:
+    Revert the changes made in v7, remove the "default MACH_INGENIC"
+    in SYSOST, and modify the bool description in OST to make it
+    consistent with the style of TCU and SYSOST.
+    Suggested-by: Paul Cercueil <paul@crapouillou.net>
+    
+    v8->v9:
+    No change.
+    
+    v9->v10:
+    No change.
+    
+    v10->v11:
+    No change.
 
->=20
->  endmenu
-> diff --git a/drivers/usb/phy/phy-jz4770.c=20
-> b/drivers/usb/phy/phy-jz4770.c
-> index 8f62dc2a90ff..cd49b32b4c13 100644
-> --- a/drivers/usb/phy/phy-jz4770.c
-> +++ b/drivers/usb/phy/phy-jz4770.c
-> @@ -1,27 +1,30 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Ingenic JZ4770 USB PHY driver
-> + * Ingenic SoCs USB PHY driver
->   * Copyright (c) Paul Cercueil <paul@crapouillou.net>
-> + * Copyright (c) =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@in=
-genic.com>
-> + * Copyright (c) =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@w=
-anyeetech.com>
->   */
->=20
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/usb/otg.h>
->  #include <linux/usb/phy.h>
->=20
-> +/* OTGPHY register offsets */
->  #define REG_USBPCR_OFFSET	0x00
->  #define REG_USBRDT_OFFSET	0x04
->  #define REG_USBVBFIL_OFFSET	0x08
->  #define REG_USBPCR1_OFFSET	0x0c
->=20
-> -/* USBPCR */
-> +/* bits within the USBPCR register */
->  #define USBPCR_USB_MODE		BIT(31)
->  #define USBPCR_AVLD_REG		BIT(30)
-> -#define USBPCR_INCRM		BIT(27)
-> -#define USBPCR_CLK12_EN		BIT(26)
-> +#define USBPCR_INCR_MASK	BIT(27)
+ drivers/clocksource/Kconfig          |  12 +-
+ drivers/clocksource/Makefile         |   1 +
+ drivers/clocksource/ingenic-sysost.c | 539 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 551 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clocksource/ingenic-sysost.c
 
-Please don't rename macros, it adds a lot of noise to the patch.
-
->  #define USBPCR_COMMONONN	BIT(25)
->  #define USBPCR_VBUSVLDEXT	BIT(24)
->  #define USBPCR_VBUSVLDEXTSEL	BIT(23)
-> @@ -32,46 +35,80 @@
->=20
->  #define USBPCR_IDPULLUP_LSB	28
->  #define USBPCR_IDPULLUP_MASK	GENMASK(29, USBPCR_IDPULLUP_LSB)
-> -#define USBPCR_IDPULLUP_ALWAYS	(3 << USBPCR_IDPULLUP_LSB)
-> -#define USBPCR_IDPULLUP_SUSPEND	(1 << USBPCR_IDPULLUP_LSB)
-> -#define USBPCR_IDPULLUP_OTG	(0 << USBPCR_IDPULLUP_LSB)
-> +#define USBPCR_IDPULLUP_ALWAYS	(0x2 << USBPCR_IDPULLUP_LSB)
-> +#define USBPCR_IDPULLUP_SUSPEND	(0x1 << USBPCR_IDPULLUP_LSB)
-> +#define USBPCR_IDPULLUP_OTG	(0x0 << USBPCR_IDPULLUP_LSB)
-
-a '3' turned into a '2' here...
-
->=20
->  #define USBPCR_COMPDISTUNE_LSB	17
->  #define USBPCR_COMPDISTUNE_MASK	GENMASK(19, USBPCR_COMPDISTUNE_LSB)
-> -#define USBPCR_COMPDISTUNE_DFT	4
-> +#define USBPCR_COMPDISTUNE_DFT	(0x4 << USBPCR_COMPDISTUNE_LSB)
-
-Why? Even if you have a valid reason to do that, it does not belong in=20
-this patch.
-
->=20
->  #define USBPCR_OTGTUNE_LSB	14
->  #define USBPCR_OTGTUNE_MASK	GENMASK(16, USBPCR_OTGTUNE_LSB)
-> -#define USBPCR_OTGTUNE_DFT	4
-> +#define USBPCR_OTGTUNE_DFT	(0x4 << USBPCR_OTGTUNE_LSB)
->=20
->  #define USBPCR_SQRXTUNE_LSB	11
->  #define USBPCR_SQRXTUNE_MASK	GENMASK(13, USBPCR_SQRXTUNE_LSB)
-> -#define USBPCR_SQRXTUNE_DFT	3
-> +#define USBPCR_SQRXTUNE_DCR_20PCT	(0x7 << USBPCR_SQRXTUNE_LSB)
-> +#define USBPCR_SQRXTUNE_DFT	(0x3 << USBPCR_SQRXTUNE_LSB)
->=20
->  #define USBPCR_TXFSLSTUNE_LSB	7
->  #define USBPCR_TXFSLSTUNE_MASK	GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
-> -#define USBPCR_TXFSLSTUNE_DFT	3
-> +#define USBPCR_TXFSLSTUNE_DCR_50PPT	(0xf << USBPCR_TXFSLSTUNE_LSB)
-> +#define USBPCR_TXFSLSTUNE_DCR_25PPT	(0x7 << USBPCR_TXFSLSTUNE_LSB)
-> +#define USBPCR_TXFSLSTUNE_DFT	(0x3 << USBPCR_TXFSLSTUNE_LSB)
-> +#define USBPCR_TXFSLSTUNE_INC_25PPT	(0x1 << USBPCR_TXFSLSTUNE_LSB)
-> +#define USBPCR_TXFSLSTUNE_INC_50PPT	(0x0 << USBPCR_TXFSLSTUNE_LSB)
-> +
-> +#define USBPCR_TXHSXVTUNE_LSB	4
-> +#define USBPCR_TXHSXVTUNE_MASK	GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
-> +#define USBPCR_TXHSXVTUNE_DFT	(0x3 << USBPCR_TXHSXVTUNE_LSB)
-> +#define USBPCR_TXHSXVTUNE_DCR_15MV	(0x1 << USBPCR_TXHSXVTUNE_LSB)
->=20
->  #define USBPCR_TXRISETUNE_LSB	4
->  #define USBPCR_TXRISETUNE_MASK	GENMASK(5, USBPCR_TXRISETUNE_LSB)
-> -#define USBPCR_TXRISETUNE_DFT	3
-> +#define USBPCR_TXRISETUNE_DFT	(0x3 << USBPCR_TXRISETUNE_LSB)
->=20
->  #define USBPCR_TXVREFTUNE_LSB	0
->  #define USBPCR_TXVREFTUNE_MASK	GENMASK(3, USBPCR_TXVREFTUNE_LSB)
-> -#define USBPCR_TXVREFTUNE_DFT	5
-> +#define USBPCR_TXVREFTUNE_INC_25PPT	(0x7 << USBPCR_TXVREFTUNE_LSB)
-> +#define USBPCR_TXVREFTUNE_DFT	(0x5 << USBPCR_TXVREFTUNE_LSB)
->=20
-> -/* USBRDT */
-> +/* bits within the USBRDTR register */
-> +#define USBRDT_UTMI_RST		BIT(27)
-> +#define USBRDT_HB_MASK		BIT(26)
->  #define USBRDT_VBFIL_LD_EN	BIT(25)
->  #define USBRDT_IDDIG_EN		BIT(24)
->  #define USBRDT_IDDIG_REG	BIT(23)
-> -
-> -#define USBRDT_USBRDT_LSB	0
-> -#define USBRDT_USBRDT_MASK	GENMASK(22, USBRDT_USBRDT_LSB)
-> -
-> -/* USBPCR1 */
-> -#define USBPCR1_UHC_POWON	BIT(5)
-> +#define USBRDT_VBFIL_EN		BIT(2)
-> +
-> +/* bits within the USBPCR1 register */
-> +#define USBPCR1_BVLD_REG			BIT(31)
-> +#define USBPCR1_DPPD				BIT(29)
-> +#define USBPCR1_DMPD				BIT(28)
-> +#define USBPCR1_USB_SEL				BIT(28)
-> +#define USBPCR1_WORD_IF_16BIT		BIT(19)
-> +
-> +#define USBPCR1_REFCLKSEL_LSB		26
-> +#define USBPCR1_REFCLKSEL_MASK		GENMASK(27, USBPCR1_REFCLKDIV_LSB)
-> +#define USBPCR1_REFCLKSEL_CLKCORE	(0x3 << USBPCR1_REFCLKSEL_LSB)
-> +
-> +#define USBPCR1_REFCLKDIV_LSB		24
-> +#define USBPCR1_REFCLKDIV_MASK		GENMASK(25, USBPCR1_REFCLKDIV_LSB)
-> +#define USBPCR1_REFCLKDIV_48M		(0x2 << USBPCR1_REFCLKDIV_LSB)
-> +#define USBPCR1_REFCLKDIV_24M		(0x1 << USBPCR1_REFCLKDIV_LSB)
-> +#define USBPCR1_REFCLKDIV_12M		(0x0 << USBPCR1_REFCLKDIV_LSB)
-> +
-> +enum ingenic_usb_phy_version {
-> +	ID_JZ4770,
-> +	ID_JZ4780,
-> +	ID_X1000,
-> +	ID_X1830,
-> +};
->=20
->  struct jz4770_phy {
-> +	enum ingenic_usb_phy_version version;
-> +
->  	struct usb_phy phy;
->  	struct usb_otg otg;
->  	struct device *dev;
-> @@ -96,6 +133,12 @@ static int jz4770_phy_set_peripheral(struct=20
-> usb_otg *otg,
->  	struct jz4770_phy *priv =3D otg_to_jz4770_phy(otg);
->  	u32 reg;
->=20
-> +	if (priv->version >=3D ID_X1000) {
-> +		reg =3D readl(priv->base + REG_USBPCR1_OFFSET);
-> +		reg |=3D USBPCR1_BVLD_REG;
-> +		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-> +	}
-> +
->  	reg =3D readl(priv->base + REG_USBPCR_OFFSET);
->  	reg &=3D ~USBPCR_USB_MODE;
->  	reg |=3D USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL |=20
-> USBPCR_OTG_DISABLE;
-> @@ -135,17 +178,59 @@ static int jz4770_phy_init(struct usb_phy *phy)
->  		return err;
->  	}
->=20
-> -	reg =3D USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
-> -		(USBPCR_COMPDISTUNE_DFT << USBPCR_COMPDISTUNE_LSB) |
-> -		(USBPCR_OTGTUNE_DFT << USBPCR_OTGTUNE_LSB) |
-> -		(USBPCR_SQRXTUNE_DFT << USBPCR_SQRXTUNE_LSB) |
-> -		(USBPCR_TXFSLSTUNE_DFT << USBPCR_TXFSLSTUNE_LSB) |
-> -		(USBPCR_TXRISETUNE_DFT << USBPCR_TXRISETUNE_LSB) |
-> -		(USBPCR_TXVREFTUNE_DFT << USBPCR_TXVREFTUNE_LSB) |
-> -		USBPCR_POR;
-> +	if (priv->version >=3D ID_X1830) {
-> +		/* rdt */
-> +		writel(USBRDT_VBFIL_EN | USBRDT_UTMI_RST, priv->base +=20
-> REG_USBRDT_OFFSET);
-> +
-> +		reg =3D readl(priv->base + REG_USBPCR1_OFFSET) |=20
-> USBPCR1_WORD_IF_16BIT |
-> +			USBPCR1_DMPD | USBPCR1_DPPD;
-> +		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-> +
-> +		reg =3D USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT=20
-> |	USBPCR_TXPREEMPHTUNE;
-> +	} else if (priv->version >=3D ID_X1000) {
-> +		reg =3D readl(priv->base + REG_USBPCR1_OFFSET) |=20
-> USBPCR1_WORD_IF_16BIT;
-> +		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-> +
-> +		reg =3D USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
-> +			USBPCR_TXHSXVTUNE_DCR_15MV | USBPCR_TXVREFTUNE_INC_25PPT;
-> +	} else if (priv->version >=3D ID_JZ4780) {
-> +		reg =3D readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_USB_SEL |
-> +			USBPCR1_WORD_IF_16BIT;
-> +		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-> +
-> +		reg =3D USBPCR_TXPREEMPHTUNE;
-> +	} else {
-> +		reg =3D USBPCR_AVLD_REG | USBPCR_IDPULLUP_ALWAYS |
-> +			USBPCR_COMPDISTUNE_DFT | USBPCR_OTGTUNE_DFT |
-> +			USBPCR_SQRXTUNE_DFT | USBPCR_TXFSLSTUNE_DFT |
-> +			USBPCR_TXRISETUNE_DFT | USBPCR_TXVREFTUNE_DFT;
-> +	}
-> +
-> +	reg |=3D USBPCR_COMMONONN | USBPCR_POR;
->  	writel(reg, priv->base + REG_USBPCR_OFFSET);
->=20
-> -	/* Wait for PHY to reset */
-> +	/*
-> +	 * Power-On Reset(POR)
-> +	 * Function:This customer-specific signal resets all test registers
-> +	 * and state machines in the USB 2.0 nanoPHY.
-> +	 * The POR signal must be asserted for a minimum of 10 =CE=BCs.
-> +	 * For POR timing information:
-> +	 *
-> +	 * T0: Power-on reset (POR) is initiated. 0 (reference).
-> +	 * T1: T1 indicates when POR can be set to 1=E2=80=99b0. (To provide=20
-> examples,
-> +	 * values for T2 and T3 are also shown where T1 =3D T0 + 30 =CE=BCs.);
-> +	 * In general, T1 must be =E2=89=A5 T0 + 10 =CE=BCs. T0 + 10 =CE=BCs =
-=E2=89=A4 T1.
-> +	 * T2: T2 indicates when PHYCLOCK, CLK48MOHCI, and CLK12MOHCI are
-> +	 * available at the macro output, based on the USB 2.0 nanoPHY
-> +	 * reference clock source.
-> +	 * Crystal:
-> +	 *    =E2=80=A2 When T1 =3D T0 + 10 =CE=BCs:
-> +	 *      T2 < T1 + 805 =CE=BCs =3D T0 + 815 =CE=BCs
-> +	 *    =E2=80=A2 When T1 =3D T0 + 30 =CE=BCs:
-> +	 *      T2 < T1 + 805 =CE=BCs =3D T0 + 835 =CE=BCs
-> +	 * see "Reset and Power-Saving Signals" on page 60 an =E2=80=9CPowering=
- Up
-> +	 * and Powering Down the USB 2.0 nanoPHY=E2=80=9D on page 73.
-> +	 */
-
-I don't think this comment is very interesting. The code already says=20
-that the hardware needs at least 30 =C2=B5s to reset, all the low-level=20
-details are in the programming manual for those who want to learn more.=20
-Besides, since you don't actually modify the reset code, why update the=20
-comment in this patch?
-
->  	usleep_range(30, 300);
->  	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
->  	usleep_range(300, 1000);
-> @@ -166,6 +251,15 @@ static void jz4770_phy_remove(void *phy)
->  	usb_remove_phy(phy);
->  }
->=20
-> +static const struct of_device_id ingenic_usb_phy_of_matches[] =3D {
-> +	{ .compatible =3D "ingenic,jz4770-phy", .data =3D (void *) ID_JZ4770 },
-> +	{ .compatible =3D "ingenic,jz4780-phy", .data =3D (void *) ID_JZ4780 },
-> +	{ .compatible =3D "ingenic,x1000-phy", .data =3D (void *) ID_X1000 },
-> +	{ .compatible =3D "ingenic,x1830-phy", .data =3D (void *) ID_X1830 },
-
-I'm not a fan of having ID_* as platform data. Create 'soc_info'=20
-structures, one per supported SoC, and pass them here. Then you can add=20
-a 'version' field of type 'enum ingenic_usb_phy_version'. And add a=20
-'.phy_init' field as a function pointer, that would be called within=20
-jz4770_phy_init(). That would make the jz4770_phy_init() function much=20
-cleaner (no if/else/else/else/...).
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ingenic_usb_phy_of_matches);
-> +
->  static int jz4770_phy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev =3D &pdev->dev;
-> @@ -176,11 +270,13 @@ static int jz4770_phy_probe(struct=20
-> platform_device *pdev)
->  	if (!priv)
->  		return -ENOMEM;
->=20
-> +	priv->version =3D (enum=20
-> ingenic_usb_phy_version)of_device_get_match_data(dev);
-> +
->  	platform_set_drvdata(pdev, priv);
->  	priv->dev =3D dev;
->  	priv->phy.dev =3D dev;
->  	priv->phy.otg =3D &priv->otg;
-> -	priv->phy.label =3D "jz4770-phy";
-> +	priv->phy.label =3D "ingenic-usb-phy";
->  	priv->phy.init =3D jz4770_phy_init;
->  	priv->phy.shutdown =3D jz4770_phy_shutdown;
->=20
-> @@ -221,23 +317,15 @@ static int jz4770_phy_probe(struct=20
-> platform_device *pdev)
->  	return devm_add_action_or_reset(dev, jz4770_phy_remove, &priv->phy);
->  }
->=20
-> -#ifdef CONFIG_OF
-> -static const struct of_device_id jz4770_phy_of_matches[] =3D {
-> -	{ .compatible =3D "ingenic,jz4770-phy" },
-> -	{ }
-> -};
-> -MODULE_DEVICE_TABLE(of, jz4770_phy_of_matches);
-> -#endif
-> -
-> -static struct platform_driver jz4770_phy_driver =3D {
-> +static struct platform_driver ingenic_usb_phy_driver =3D {
->  	.probe		=3D jz4770_phy_probe,
->  	.driver		=3D {
-> -		.name	=3D "jz4770-phy",
-> -		.of_match_table =3D of_match_ptr(jz4770_phy_of_matches),
-> +		.name	=3D "ingenic-usb-phy",
-> +		.of_match_table =3D of_match_ptr(ingenic_usb_phy_of_matches),
-
-It's preferred not to rename the functions unless you have a good=20
-reason, and you definitely shouldn't rename the module. It's OK to have=20
-a driver called 'jz4770-phy' even if it supports more SoCs. Renaming it=20
-breaks userspace ABI.
-
-Cheers,
--Paul
-
->  	},
->  };
-> -module_platform_driver(jz4770_phy_driver);
-> +module_platform_driver(ingenic_usb_phy_driver);
->=20
->  MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> -MODULE_DESCRIPTION("Ingenic JZ4770 USB PHY driver");
-> +MODULE_DESCRIPTION("Ingenic SoCs USB PHY driver");
->  MODULE_LICENSE("GPL");
-> --
-> 2.11.0
->=20
-
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 91418381fcd4..7d227915cb8f 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -696,8 +696,18 @@ config INGENIC_TIMER
+ 	help
+ 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
+ 
++config INGENIC_SYSOST
++	bool "Clocksource/timer using the SYSOST in Ingenic X SoCs"
++	depends on MIPS || COMPILE_TEST
++	depends on COMMON_CLK
++	select MFD_SYSCON
++	select TIMER_OF
++	select IRQ_DOMAIN
++	help
++	  Support for the SYSOST of the Ingenic X Series SoCs.
++
+ config INGENIC_OST
+-	bool "Clocksource for Ingenic OS Timer"
++	bool "Clocksource using the OST in Ingenic JZ SoCs"
+ 	depends on MIPS || COMPILE_TEST
+ 	depends on COMMON_CLK
+ 	select MFD_SYSCON
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index bdda1a2e4097..3994e221e262 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -82,6 +82,7 @@ obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+ obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+ obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
++obj-$(CONFIG_INGENIC_SYSOST)	+= ingenic-sysost.o
+ obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+diff --git a/drivers/clocksource/ingenic-sysost.c b/drivers/clocksource/ingenic-sysost.c
+new file mode 100644
+index 000000000000..e77d58449005
+--- /dev/null
++++ b/drivers/clocksource/ingenic-sysost.c
+@@ -0,0 +1,539 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Ingenic XBurst SoCs SYSOST clocks driver
++ * Copyright (c) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++ */
++
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/clockchips.h>
++#include <linux/clocksource.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/sched_clock.h>
++#include <linux/slab.h>
++#include <linux/syscore_ops.h>
++
++#include <dt-bindings/clock/ingenic,sysost.h>
++
++/* OST register offsets */
++#define OST_REG_OSTCCR			0x00
++#define OST_REG_OSTCR			0x08
++#define OST_REG_OSTFR			0x0c
++#define OST_REG_OSTMR			0x10
++#define OST_REG_OST1DFR			0x14
++#define OST_REG_OST1CNT			0x18
++#define OST_REG_OST2CNTL		0x20
++#define OST_REG_OSTCNT2HBUF		0x24
++#define OST_REG_OSTESR			0x34
++#define OST_REG_OSTECR			0x38
++
++/* bits within the OSTCCR register */
++#define OSTCCR_PRESCALE1_MASK	0x3
++#define OSTCCR_PRESCALE2_MASK	0xc
++#define OSTCCR_PRESCALE1_LSB	0
++#define OSTCCR_PRESCALE2_LSB	2
++
++/* bits within the OSTCR register */
++#define OSTCR_OST1CLR			BIT(0)
++#define OSTCR_OST2CLR			BIT(1)
++
++/* bits within the OSTFR register */
++#define OSTFR_FFLAG				BIT(0)
++
++/* bits within the OSTMR register */
++#define OSTMR_FMASK				BIT(0)
++
++/* bits within the OSTESR register */
++#define OSTESR_OST1ENS			BIT(0)
++#define OSTESR_OST2ENS			BIT(1)
++
++/* bits within the OSTECR register */
++#define OSTECR_OST1ENC			BIT(0)
++#define OSTECR_OST2ENC			BIT(1)
++
++struct ingenic_soc_info {
++	unsigned int num_channels;
++};
++
++struct ingenic_ost_clk_info {
++	struct clk_init_data init_data;
++	u8 ostccr_reg;
++};
++
++struct ingenic_ost_clk {
++	struct clk_hw hw;
++	unsigned int idx;
++	struct ingenic_ost *ost;
++	const struct ingenic_ost_clk_info *info;
++};
++
++struct ingenic_ost {
++	void __iomem *base;
++	const struct ingenic_soc_info *soc_info;
++	struct clk *clk, *percpu_timer_clk, *global_timer_clk;
++	struct clock_event_device cevt;
++	struct clocksource cs;
++	char name[20];
++
++	struct clk_hw_onecell_data *clocks;
++};
++
++static struct ingenic_ost *ingenic_ost;
++
++static inline struct ingenic_ost_clk *to_ost_clk(struct clk_hw *hw)
++{
++	return container_of(hw, struct ingenic_ost_clk, hw);
++}
++
++static unsigned long ingenic_ost_percpu_timer_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
++	const struct ingenic_ost_clk_info *info = ost_clk->info;
++	unsigned int prescale;
++
++	prescale = readl(ost_clk->ost->base + info->ostccr_reg);
++
++	prescale = (prescale & OSTCCR_PRESCALE1_MASK) >> OSTCCR_PRESCALE1_LSB;
++
++	return parent_rate >> (prescale * 2);
++}
++
++static unsigned long ingenic_ost_global_timer_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
++	const struct ingenic_ost_clk_info *info = ost_clk->info;
++	unsigned int prescale;
++
++	prescale = readl(ost_clk->ost->base + info->ostccr_reg);
++
++	prescale = (prescale & OSTCCR_PRESCALE2_MASK) >> OSTCCR_PRESCALE2_LSB;
++
++	return parent_rate >> (prescale * 2);
++}
++
++static u8 ingenic_ost_get_prescale(unsigned long rate, unsigned long req_rate)
++{
++	u8 prescale;
++
++	for (prescale = 0; prescale < 2; prescale++)
++		if ((rate >> (prescale * 2)) <= req_rate)
++			return prescale;
++
++	return 2; /* /16 divider */
++}
++
++static long ingenic_ost_round_rate(struct clk_hw *hw, unsigned long req_rate,
++		unsigned long *parent_rate)
++{
++	unsigned long rate = *parent_rate;
++	u8 prescale;
++
++	if (req_rate > rate)
++		return rate;
++
++	prescale = ingenic_ost_get_prescale(rate, req_rate);
++
++	return rate >> (prescale * 2);
++}
++
++static int ingenic_ost_percpu_timer_set_rate(struct clk_hw *hw, unsigned long req_rate,
++		unsigned long parent_rate)
++{
++	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
++	const struct ingenic_ost_clk_info *info = ost_clk->info;
++	u8 prescale = ingenic_ost_get_prescale(parent_rate, req_rate);
++	int val;
++
++	val = readl(ost_clk->ost->base + info->ostccr_reg);
++	val = (val & ~OSTCCR_PRESCALE1_MASK) | (prescale << OSTCCR_PRESCALE1_LSB);
++	writel(val, ost_clk->ost->base + info->ostccr_reg);
++
++	return 0;
++}
++
++static int ingenic_ost_global_timer_set_rate(struct clk_hw *hw, unsigned long req_rate,
++		unsigned long parent_rate)
++{
++	struct ingenic_ost_clk *ost_clk = to_ost_clk(hw);
++	const struct ingenic_ost_clk_info *info = ost_clk->info;
++	u8 prescale = ingenic_ost_get_prescale(parent_rate, req_rate);
++	int val;
++
++	val = readl(ost_clk->ost->base + info->ostccr_reg);
++	val = (val & ~OSTCCR_PRESCALE2_MASK) | (prescale << OSTCCR_PRESCALE2_LSB);
++	writel(val, ost_clk->ost->base + info->ostccr_reg);
++
++	return 0;
++}
++
++static const struct clk_ops ingenic_ost_percpu_timer_ops = {
++	.recalc_rate	= ingenic_ost_percpu_timer_recalc_rate,
++	.round_rate		= ingenic_ost_round_rate,
++	.set_rate		= ingenic_ost_percpu_timer_set_rate,
++};
++
++static const struct clk_ops ingenic_ost_global_timer_ops = {
++	.recalc_rate	= ingenic_ost_global_timer_recalc_rate,
++	.round_rate		= ingenic_ost_round_rate,
++	.set_rate		= ingenic_ost_global_timer_set_rate,
++};
++
++static const char * const ingenic_ost_clk_parents[] = { "ext" };
++
++static const struct ingenic_ost_clk_info ingenic_ost_clk_info[] = {
++	[OST_CLK_PERCPU_TIMER] = {
++		.init_data = {
++			.name = "percpu timer",
++			.parent_names = ingenic_ost_clk_parents,
++			.num_parents = ARRAY_SIZE(ingenic_ost_clk_parents),
++			.ops = &ingenic_ost_percpu_timer_ops,
++			.flags = CLK_SET_RATE_UNGATE,
++		},
++		.ostccr_reg = OST_REG_OSTCCR,
++	},
++
++	[OST_CLK_GLOBAL_TIMER] = {
++		.init_data = {
++			.name = "global timer",
++			.parent_names = ingenic_ost_clk_parents,
++			.num_parents = ARRAY_SIZE(ingenic_ost_clk_parents),
++			.ops = &ingenic_ost_global_timer_ops,
++			.flags = CLK_SET_RATE_UNGATE,
++		},
++		.ostccr_reg = OST_REG_OSTCCR,
++	},
++};
++
++static u64 notrace ingenic_ost_global_timer_read_cntl(void)
++{
++	struct ingenic_ost *ost = ingenic_ost;
++	unsigned int count;
++
++	count = readl(ost->base + OST_REG_OST2CNTL);
++
++	return count;
++}
++
++static u64 notrace ingenic_ost_clocksource_read(struct clocksource *cs)
++{
++	return ingenic_ost_global_timer_read_cntl();
++}
++
++static inline struct ingenic_ost *to_ingenic_ost(struct clock_event_device *evt)
++{
++	return container_of(evt, struct ingenic_ost, cevt);
++}
++
++static int ingenic_ost_cevt_set_state_shutdown(struct clock_event_device *evt)
++{
++	struct ingenic_ost *ost = to_ingenic_ost(evt);
++
++	writel(OSTECR_OST1ENC, ost->base + OST_REG_OSTECR);
++
++	return 0;
++}
++
++static int ingenic_ost_cevt_set_next(unsigned long next,
++				     struct clock_event_device *evt)
++{
++	struct ingenic_ost *ost = to_ingenic_ost(evt);
++
++	writel((u32)~OSTFR_FFLAG, ost->base + OST_REG_OSTFR);
++	writel(next, ost->base + OST_REG_OST1DFR);
++	writel(OSTCR_OST1CLR, ost->base + OST_REG_OSTCR);
++	writel(OSTESR_OST1ENS, ost->base + OST_REG_OSTESR);
++	writel((u32)~OSTMR_FMASK, ost->base + OST_REG_OSTMR);
++
++	return 0;
++}
++
++static irqreturn_t ingenic_ost_cevt_cb(int irq, void *dev_id)
++{
++	struct clock_event_device *evt = dev_id;
++	struct ingenic_ost *ost = to_ingenic_ost(evt);
++
++	writel(OSTECR_OST1ENC, ost->base + OST_REG_OSTECR);
++
++	if (evt->event_handler)
++		evt->event_handler(evt);
++
++	return IRQ_HANDLED;
++}
++
++static int __init ingenic_ost_register_clock(struct ingenic_ost *ost,
++			unsigned int idx, const struct ingenic_ost_clk_info *info,
++			struct clk_hw_onecell_data *clocks)
++{
++	struct ingenic_ost_clk *ost_clk;
++	int val, err;
++
++	ost_clk = kzalloc(sizeof(*ost_clk), GFP_KERNEL);
++	if (!ost_clk)
++		return -ENOMEM;
++
++	ost_clk->hw.init = &info->init_data;
++	ost_clk->idx = idx;
++	ost_clk->info = info;
++	ost_clk->ost = ost;
++
++	/* Reset clock divider */
++	val = readl(ost->base + info->ostccr_reg);
++	val &= ~(OSTCCR_PRESCALE1_MASK | OSTCCR_PRESCALE2_MASK);
++	writel(val, ost->base + info->ostccr_reg);
++
++	err = clk_hw_register(NULL, &ost_clk->hw);
++	if (err) {
++		kfree(ost_clk);
++		return err;
++	}
++
++	clocks->hws[idx] = &ost_clk->hw;
++
++	return 0;
++}
++
++static struct clk * __init ingenic_ost_get_clock(struct device_node *np, int id)
++{
++	struct of_phandle_args args;
++
++	args.np = np;
++	args.args_count = 1;
++	args.args[0] = id;
++
++	return of_clk_get_from_provider(&args);
++}
++
++static int __init ingenic_ost_percpu_timer_init(struct device_node *np,
++					 struct ingenic_ost *ost)
++{
++	unsigned int timer_virq, channel = OST_CLK_PERCPU_TIMER;
++	unsigned long rate;
++	int err;
++
++	ost->percpu_timer_clk = ingenic_ost_get_clock(np, channel);
++	if (IS_ERR(ost->percpu_timer_clk))
++		return PTR_ERR(ost->percpu_timer_clk);
++
++	err = clk_prepare_enable(ost->percpu_timer_clk);
++	if (err)
++		goto err_clk_put;
++
++	rate = clk_get_rate(ost->percpu_timer_clk);
++	if (!rate) {
++		err = -EINVAL;
++		goto err_clk_disable;
++	}
++
++	timer_virq = of_irq_get(np, 0);
++	if (!timer_virq) {
++		err = -EINVAL;
++		goto err_clk_disable;
++	}
++
++	snprintf(ost->name, sizeof(ost->name), "OST percpu timer");
++
++	err = request_irq(timer_virq, ingenic_ost_cevt_cb, IRQF_TIMER,
++			  ost->name, &ost->cevt);
++	if (err)
++		goto err_irq_dispose_mapping;
++
++	ost->cevt.cpumask = cpumask_of(smp_processor_id());
++	ost->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
++	ost->cevt.name = ost->name;
++	ost->cevt.rating = 400;
++	ost->cevt.set_state_shutdown = ingenic_ost_cevt_set_state_shutdown;
++	ost->cevt.set_next_event = ingenic_ost_cevt_set_next;
++
++	clockevents_config_and_register(&ost->cevt, rate, 4, 0xffffffff);
++
++	return 0;
++
++err_irq_dispose_mapping:
++	irq_dispose_mapping(timer_virq);
++err_clk_disable:
++	clk_disable_unprepare(ost->percpu_timer_clk);
++err_clk_put:
++	clk_put(ost->percpu_timer_clk);
++	return err;
++}
++
++static int __init ingenic_ost_global_timer_init(struct device_node *np,
++					       struct ingenic_ost *ost)
++{
++	unsigned int channel = OST_CLK_GLOBAL_TIMER;
++	struct clocksource *cs = &ost->cs;
++	unsigned long rate;
++	int err;
++
++	ost->global_timer_clk = ingenic_ost_get_clock(np, channel);
++	if (IS_ERR(ost->global_timer_clk))
++		return PTR_ERR(ost->global_timer_clk);
++
++	err = clk_prepare_enable(ost->global_timer_clk);
++	if (err)
++		goto err_clk_put;
++
++	rate = clk_get_rate(ost->global_timer_clk);
++	if (!rate) {
++		err = -EINVAL;
++		goto err_clk_disable;
++	}
++
++	/* Clear counter CNT registers */
++	writel(OSTCR_OST2CLR, ost->base + OST_REG_OSTCR);
++
++	/* Enable OST channel */
++	writel(OSTESR_OST2ENS, ost->base + OST_REG_OSTESR);
++
++	cs->name = "ingenic-ost";
++	cs->rating = 400;
++	cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
++	cs->mask = CLOCKSOURCE_MASK(32);
++	cs->read = ingenic_ost_clocksource_read;
++
++	err = clocksource_register_hz(cs, rate);
++	if (err)
++		goto err_clk_disable;
++
++	return 0;
++
++err_clk_disable:
++	clk_disable_unprepare(ost->global_timer_clk);
++err_clk_put:
++	clk_put(ost->global_timer_clk);
++	return err;
++}
++
++static const struct ingenic_soc_info x1000_soc_info = {
++	.num_channels = 2,
++};
++
++static const struct of_device_id __maybe_unused ingenic_ost_of_match[] __initconst = {
++	{ .compatible = "ingenic,x1000-ost", .data = &x1000_soc_info, },
++	{ /* sentinel */ }
++};
++
++static int __init ingenic_ost_probe(struct device_node *np)
++{
++	const struct of_device_id *id = of_match_node(ingenic_ost_of_match, np);
++	struct ingenic_ost *ost;
++	unsigned int i;
++	int ret;
++
++	ost = kzalloc(sizeof(*ost), GFP_KERNEL);
++	if (!ost)
++		return -ENOMEM;
++
++	ost->base = of_io_request_and_map(np, 0, of_node_full_name(np));
++	if (IS_ERR(ost->base)) {
++		pr_err("%s: Failed to map OST registers\n", __func__);
++		ret = PTR_ERR(ost->base);
++		goto err_free_ost;
++	}
++
++	ost->clk = of_clk_get_by_name(np, "ost");
++	if (IS_ERR(ost->clk)) {
++		ret = PTR_ERR(ost->clk);
++		pr_crit("%s: Cannot get OST clock\n", __func__);
++		goto err_free_ost;
++	}
++
++	ret = clk_prepare_enable(ost->clk);
++	if (ret) {
++		pr_crit("%s: Unable to enable OST clock\n", __func__);
++		goto err_put_clk;
++	}
++
++	ost->soc_info = id->data;
++
++	ost->clocks = kzalloc(struct_size(ost->clocks, hws, ost->soc_info->num_channels),
++			      GFP_KERNEL);
++	if (!ost->clocks) {
++		ret = -ENOMEM;
++		goto err_clk_disable;
++	}
++
++	ost->clocks->num = ost->soc_info->num_channels;
++
++	for (i = 0; i < ost->clocks->num; i++) {
++		ret = ingenic_ost_register_clock(ost, i, &ingenic_ost_clk_info[i], ost->clocks);
++		if (ret) {
++			pr_crit("%s: Cannot register clock %d\n", __func__, i);
++			goto err_unregister_ost_clocks;
++		}
++	}
++
++	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, ost->clocks);
++	if (ret) {
++		pr_crit("%s: Cannot add OF clock provider\n", __func__);
++		goto err_unregister_ost_clocks;
++	}
++
++	ingenic_ost = ost;
++
++	return 0;
++
++err_unregister_ost_clocks:
++	for (i = 0; i < ost->clocks->num; i++)
++		if (ost->clocks->hws[i])
++			clk_hw_unregister(ost->clocks->hws[i]);
++	kfree(ost->clocks);
++err_clk_disable:
++	clk_disable_unprepare(ost->clk);
++err_put_clk:
++	clk_put(ost->clk);
++err_free_ost:
++	kfree(ost);
++	return ret;
++}
++
++static int __init ingenic_ost_init(struct device_node *np)
++{
++	struct ingenic_ost *ost;
++	unsigned long rate;
++	int ret;
++
++	ret = ingenic_ost_probe(np);
++	if (ret) {
++		pr_crit("%s: Failed to initialize OST clocks: %d\n", __func__, ret);
++		return ret;
++	}
++
++	of_node_clear_flag(np, OF_POPULATED);
++
++	ost = ingenic_ost;
++	if (IS_ERR(ost))
++		return PTR_ERR(ost);
++
++	ret = ingenic_ost_global_timer_init(np, ost);
++	if (ret) {
++		pr_crit("%s: Unable to init global timer: %x\n", __func__, ret);
++		goto err_free_ingenic_ost;
++	}
++
++	ret = ingenic_ost_percpu_timer_init(np, ost);
++	if (ret)
++		goto err_ost_global_timer_cleanup;
++
++	/* Register the sched_clock at the end as there's no way to undo it */
++	rate = clk_get_rate(ost->global_timer_clk);
++	sched_clock_register(ingenic_ost_global_timer_read_cntl, 32, rate);
++
++	return 0;
++
++err_ost_global_timer_cleanup:
++	clocksource_unregister(&ost->cs);
++	clk_disable_unprepare(ost->global_timer_clk);
++	clk_put(ost->global_timer_clk);
++err_free_ingenic_ost:
++	kfree(ost);
++	return ret;
++}
++
++TIMER_OF_DECLARE(x1000_ost,  "ingenic,x1000-ost",  ingenic_ost_init);
+-- 
+2.11.0
 
