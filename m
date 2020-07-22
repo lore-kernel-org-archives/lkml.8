@@ -2,77 +2,142 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD83FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F13BC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAEA20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8D320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595426734;
+	bh=iloCKMSR9b1tfTvy/7rJoAq1rMiDVjg+2iSq3QdT19U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=glQhc0NfhTjMXSJsbj+x7sEps+FEVAZmqV1fvlpOm5AgXplwynq/0Uw8CHFCw2jMY
+	 12/8pa/EkKNnNu5ZsZO48W98qBw6m/ByEHjzuq24i9+oTb93porwpBszN3Ze8A8els
+	 mTWzkqSeWvO6VABbcMuDK10+gf5LYHOPNlETCpHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732501AbgGVOFa (ORCPT
+        id S1732519AbgGVOFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:05:30 -0400
-Received: from verein.lst.de ([213.95.11.211]:56460 "EHLO verein.lst.de"
+        Wed, 22 Jul 2020 10:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgGVOF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:05:28 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7C57268B05; Wed, 22 Jul 2020 16:05:25 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 16:05:25 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH 06/24] md: open code vfs_stat in md_setup_drive
-Message-ID: <20200722140525.GA16395@lst.de>
-References: <20200721162818.197315-1-hch@lst.de> <20200721162818.197315-7-hch@lst.de> <20200721165539.GT2786714@ZenIV.linux.org.uk> <20200721182701.GB14450@lst.de> <20200722074432.GD2786714@ZenIV.linux.org.uk>
+        id S1728837AbgGVOFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:05:31 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A985205CB;
+        Wed, 22 Jul 2020 14:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595426730;
+        bh=iloCKMSR9b1tfTvy/7rJoAq1rMiDVjg+2iSq3QdT19U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iNeeTwj3TjCoEzSr90MvRIkmt/LcCd92oxk5dJb0VzqASUTyQLM+pe7WqjMEeJNMG
+         Y4VfbbE9YN4YiWrBOJmYU55zvAncU0xsd8XHsQdaRBOUwEprSWaR/7ldZncgeYLoXu
+         op/ZtUkB8cyVJE6ry2C54BdykodXWFHClDXjQw8w=
+Date:   Wed, 22 Jul 2020 16:05:26 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Rahul Gottipati <rahul.blr97@gmail.com>
+Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] media: atomisp: Fix coding style issue - correct
+ multiline comments
+Message-ID: <20200722160526.5b83341e@coco.lan>
+In-Reply-To: <c73ee9bced34777cea5b1a3a97f57c723b0a97b1.1595416585.git.rahul.blr97@gmail.com>
+References: <cover.1595416585.git.rahul.blr97@gmail.com>
+        <c73ee9bced34777cea5b1a3a97f57c723b0a97b1.1595416585.git.rahul.blr97@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722074432.GD2786714@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 08:44:32AM +0100, Al Viro wrote:
-> On Tue, Jul 21, 2020 at 08:27:01PM +0200, Christoph Hellwig wrote:
-> > On Tue, Jul 21, 2020 at 05:55:39PM +0100, Al Viro wrote:
-> > > How about fs/for_init.c and putting the damn helpers there?  With
-> > > calling conventions as close to syscalls as possible, and a fat
-> > > comment regarding their intended use being _ONLY_ the setup
-> > > in should-have-been-done-in-userland parts of init?
-> > 
-> > Where do you want the prototypes to go?  Also do you want devtmpfs
-> > use the same helpers, which then't can't be marked __init (mount,
-> > chdir, chroot), or separate copies?
+Em Wed, 22 Jul 2020 17:00:52 +0530
+Rahul Gottipati <rahul.blr97@gmail.com> escreveu:
+
+> This fixes some coding style issues of multiline comments to
+> correct a few checkpatch.pl warnings.
 > 
-> Hmm...  mount still can be __init (devtmpfs_mount() is), and I suspect
-> devtmpfs_setup() could also be made such - just turn devtmpfsd()
-> into
-> static int __init devtmpfsd(void *p)
-> {
->         int err = devtmpfs_setup(p);
+> Signed-off-by: Rahul Gottipati <rahul.blr97@gmail.com>
+> ---
+> Changes in v2:
+> 	Distributed changes across 2 patches instead of the previous 1.
+>  drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 > 
-> 	if (!err)
-> 		devtmpfsd_real();	/* never returns */
-> 	return err;
-> }
-> and you are done.
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+> index 9cdcbe774229..5bf3a86f98f8 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+> @@ -1281,7 +1281,8 @@ static int atomisp_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+>  	 * But the capture number cannot be determined by HAL.
+>  	 * So HAL only sets the capture number to be 1 and queue multiple
+>  	 * buffers. Atomisp driver needs to check this case and re-trigger
+> -	 * CSS to do capture when new buffer is queued. */
+> +	 * CSS to do capture when new buffer is queued.
+> +	 */
+>  	if (asd->continuous_mode->val &&
+>  	    atomisp_subdev_source_pad(vdev)
+>  	    == ATOMISP_SUBDEV_PAD_SOURCE_CAPTURE &&
+> @@ -1806,7 +1807,7 @@ static int atomisp_streamon(struct file *file, void *fh,
+>  		/*
+>  		 * set freq to max when streaming count > 1 which indicate
+>  		 * dual camera would run
+> -		*/
+> +		 */
+>  		if (atomisp_streaming_count(isp) > 1) {
+>  			if (atomisp_freq_scaling(isp,
+>  						 ATOMISP_DFS_MODE_MAX, false) < 0)
+> @@ -2438,7 +2439,8 @@ static int atomisp_g_ext_ctrls(struct file *file, void *fh,
+>  	int i, ret = 0;
+>  
+>  	/* input_lock is not need for the Camera related IOCTLs
+> -	 * The input_lock downgrade the FPS of 3A*/
+> +	 * The input_lock downgrade the FPS of 3A
+> +	 */
 
-Yes, that seems to work.  We can obviously call non-__init functions
-from __init ones, and kthread_run doesn't seem to care if it gets passed
-a __init function.
 
-Here is what I have now:
+On media (and on several subsystems), we keep the first line in blank,
+on multi-line comments:
 
-http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init_path
+ 	/* 
+	 * input_lock is not need for the Camera related IOCTLs
+	 * The input_lock downgrade the FPS of 3A
+	 */
+	
+>  	ret = atomisp_camera_g_ext_ctrls(file, fh, c);
+>  	if (ret != -EINVAL)
+>  		return ret;
+> @@ -2521,7 +2523,8 @@ static int atomisp_camera_s_ext_ctrls(struct file *file, void *fh,
+>  				    v4l2_s_ctrl(NULL, isp->flash->ctrl_handler,
+>  						&ctrl);
+>  				/* When flash mode is changed we need to reset
+> -				 * flash state */
+> +				 * flash state
+> +				 */
+>  				if (ctrl.id == V4L2_CID_FLASH_MODE) {
+>  					asd->params.flash_state =
+>  					    ATOMISP_FLASH_IDLE;
+> @@ -2560,7 +2563,8 @@ static int atomisp_s_ext_ctrls(struct file *file, void *fh,
+>  	int i, ret = 0;
+>  
+>  	/* input_lock is not need for the Camera related IOCTLs
+> -	 * The input_lock downgrade the FPS of 3A*/
+> +	 * The input_lock downgrade the FPS of 3A
+> +	 */
+>  	ret = atomisp_camera_s_ext_ctrls(file, fh, c);
+>  	if (ret != -EINVAL)
+>  		return ret;
+
+
+
+Thanks,
+Mauro
