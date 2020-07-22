@@ -2,253 +2,232 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0152AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC9A42071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A682071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:21:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="1FfGlNl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbgGVVUh (ORCPT
+        id S1732917AbgGVVVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:20:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3530 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVVUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:20:37 -0400
-IronPort-SDR: 6iaVSd4XYR7gaVao477hpJn+swBFv3IBqUkei7VFX5ldQaTR8Ib1RiLTFd69+PEeKsmLMcc7hc
- d5Wn9yVlkX+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="137925442"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="137925442"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 14:20:36 -0700
-IronPort-SDR: ecS7zNPvOkn1uU0G8nxVrJSSgqIoeth/G/dOiHVaG4XrkwKTsw121yEi3mmACARvjfzxf8obdM
- 8xCZcQh+YHGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="272115355"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Jul 2020 14:20:35 -0700
-Date:   Wed, 22 Jul 2020 14:20:35 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [RESEND v13 08/11] KVM: VMX: Enable CET support for nested VM
-Message-ID: <20200722212035.GI9114@linux.intel.com>
-References: <20200716031627.11492-1-weijiang.yang@intel.com>
- <20200716031627.11492-9-weijiang.yang@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716031627.11492-9-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 22 Jul 2020 17:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgGVVVM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:21:12 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1075C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:21:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so3323099wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=RQ5EqUygspbnIShpkO6on2zzEAPxkgSj/dTotJ3WQQY=;
+        b=1FfGlNl2FJ+MFxdOWkLcBC4eZNznbhFaRr/lU2r0GOYLIDhO8IxJfRVf/LYZWwPzIU
+         Uvo0x8mH85vOFmu6dNazveYW/iSvLcAXW5ZTf+Hld57Arf/mgjB6UFhrbZ9lzzrdshNV
+         GarqDA1XscxSyH3zp+3pMnkqsAYj8IeeJSYJyXVwBM8DOZR7QRl5VOCgB5UiP3IHCc4M
+         rXb7+JY+yq/yKgLyP6SMmFtFCFsxDJngb9M7wtnskk44ncyohbEPDwmtxP/T7oSIBpqZ
+         dtlun+YjvUkuAjXy39NKHcKsltozO8g96nYbVhnYrfX0moRgOS+wdM3q1euH8EI1HL08
+         JYJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RQ5EqUygspbnIShpkO6on2zzEAPxkgSj/dTotJ3WQQY=;
+        b=bSKkg3+ChBOZYBq5xnqw9QRrzsBK6iwYBLBRn/0QgDntGuMdsgIx4+XHx2NCnBSm7A
+         ttbUEqoZhjlnlkWwCzXO8r6fgDE0cGtMVXBipuWIpOyk82stzIQ5naq9GlXyaVAmLYAu
+         JplhNvobLiGnynhB4WhqW6AsmbleFSMUj4MCD36QtuoL1kP44aOalir47Hn8sYVEMPyy
+         Nhcvvog9TgRsJxlulGM2aEOkvCmGt/cs6Wd06fSe6/nbpbpLoYEZ2sXmlDWGs4Wsaqnr
+         lRTg1aR84/ixVtRxxTkhKvRZDDx+KRKMGYmwY7w6ckDMIKUjU71DHsFvrQMjgmucP0+f
+         P8Bg==
+X-Gm-Message-State: AOAM533hYGYGKtKZakd9yIFI9apobmFcxmxfVfxCi90opQ5L9O98GD9b
+        pvqcm4J2cWVQzAJmV1atXlahThQ3wTs=
+X-Google-Smtp-Source: ABdhPJyXCsZcy/QKlTnWnXKw6ZA9pdE0KdQq7iZD876JgXIdVco3K8ZGkjz84r7OaF21YFBeXa/uLw==
+X-Received: by 2002:a7b:c205:: with SMTP id x5mr1350566wmi.161.1595452870500;
+        Wed, 22 Jul 2020 14:21:10 -0700 (PDT)
+Received: from localhost.localdomain (126.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.126])
+        by smtp.gmail.com with ESMTPSA id a11sm1346507wrq.0.2020.07.22.14.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 14:21:10 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge@foundries.io>
+To:     jorge@foundries.io, jens.wiklander@linaro.org,
+        sumit.garg@linaro.org
+Cc:     ricardo@foundries.io, mike@foundries.io, tee-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCHv6] drivers: optee: allow op-tee to access devices on the i2c bus
+Date:   Wed, 22 Jul 2020 23:21:05 +0200
+Message-Id: <20200722212105.1798-1-jorge@foundries.io>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:16:24AM +0800, Yang Weijiang wrote:
-> CET MSRs pass through guests for performance consideration. Configure the
-> MSRs to match L0/L1 settings so that nested VM is able to run with CET.
-> 
-> Add assertions for vmcs12 offset table initialization, these assertions can
-> detect the mismatch of VMCS field encoding and data type at compiling time.
-> 
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c |  34 +++++
->  arch/x86/kvm/vmx/vmcs12.c | 267 +++++++++++++++++++++++---------------
->  arch/x86/kvm/vmx/vmcs12.h |  14 +-
->  arch/x86/kvm/vmx/vmx.c    |  10 ++
->  4 files changed, 216 insertions(+), 109 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index d4a4cec034d0..ddb1a69ce947 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -550,6 +550,18 @@ static inline void enable_x2apic_msr_intercepts(unsigned long *msr_bitmap)
->  	}
->  }
->  
-> +static void nested_vmx_update_intercept_for_msr(struct kvm_vcpu *vcpu,
+Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
+control this type of cryptographic devices it needs coordinated access
+to the bus, so collisions and RUNTIME_PM dont get in the way.
 
-"update" is misleading.  That implies the helper can set or clear
-interception, whereas this is purely a one-way ticket for disabling
-intereption.  nested_vmx_cond_disable_intercept_for_msr() is the best I
-could come up with.  It's long, but wrapping can be avoided with some
-extra massaging.
-> +						u32 msr,
-> +						unsigned long *msr_bitmap_l1,
-> +						unsigned long *msr_bitmap_l0,
-> +						int type)
-> +{
-> +	if (!msr_write_intercepted_l01(vcpu, msr))
-> +		nested_vmx_disable_intercept_for_msr(msr_bitmap_l1,
-> +						     msr_bitmap_l0,
-> +						     msr, type);
+This trampoline driver allow OP-TEE to access them.
+Tested on imx8mm LPDDR4
 
-This can avoid wrapping by renaming variables and refactoring code:
+Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+---
+ v6: compile out if CONFIG_I2C not enabled
+ v5: alphabetic order of includes
+ v4: remove unnecessary extra line in optee_msg.h
+ v3: use from/to msg param to support all types of memory
+     modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
+     
+ drivers/tee/optee/optee_msg.h | 16 +++++++
+ drivers/tee/optee/rpc.c       | 88 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
 
-	if (msr_write_intercepted_l01(vcpu, msr))
-		return;
+diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
+index 795bc19ae17a..14b580f55356 100644
+--- a/drivers/tee/optee/optee_msg.h
++++ b/drivers/tee/optee/optee_msg.h
+@@ -419,4 +419,20 @@ struct optee_msg_arg {
+  */
+ #define OPTEE_MSG_RPC_CMD_SHM_FREE	7
+ 
++/*
++ * Access a device on an i2c bus
++ *
++ * [in]  param[0].u.value.a		mode: RD(0), WR(1)
++ * [in]  param[0].u.value.b		i2c adapter
++ * [in]  param[0].u.value.c		i2c chip
++ *
++ * [in/out] memref[1]			buffer to exchange the transfer data
++ *					with the secure world
++ *
++ * [out]  param[0].u.value.a		bytes transferred by the driver
++ */
++#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 21
++#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
++#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
++
+ #endif /* _OPTEE_MSG_H */
+diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+index b4ade54d1f28..5fd5c6c93896 100644
+--- a/drivers/tee/optee/rpc.c
++++ b/drivers/tee/optee/rpc.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/i2c.h>
+ #include <linux/slab.h>
+ #include <linux/tee_drv.h>
+ #include "optee_private.h"
+@@ -49,6 +50,90 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
+ 	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+ }
+ 
++#if IS_ENABLED(CONFIG_I2C)
++static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
++					     struct optee_msg_arg *arg)
++{
++	struct i2c_client client;
++	struct tee_param *params;
++	uint32_t type;
++	int i, ret;
++	size_t len;
++	char *buf;
++	uint32_t attr[] = {
++		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
++		TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
++		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT,
++	};
++
++	if (arg->num_params != ARRAY_SIZE(attr)) {
++		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++		return;
++	}
++
++	params = kmalloc_array(arg->num_params, sizeof(struct tee_param),
++			       GFP_KERNEL);
++	if (!params) {
++		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
++		return;
++	}
++
++	if (optee_from_msg_param(params, arg->num_params, arg->params))
++		goto bad;
++
++	for (i = 0; i < arg->num_params; i++) {
++		type = params[i].attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK;
++		if (type != attr[i])
++			goto bad;
++	}
++
++	client.addr = params[0].u.value.c;
++	client.adapter = i2c_get_adapter(params[0].u.value.b);
++	if (!client.adapter)
++		goto bad;
++
++	snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
++
++	buf = params[1].u.memref.shm->kaddr;
++	len = params[1].u.memref.size;
++
++	switch (params[0].u.value.a) {
++	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
++		ret = i2c_master_recv(&client, buf, len);
++		break;
++	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
++		ret = i2c_master_send(&client, buf, len);
++		break;
++	default:
++		i2c_put_adapter(client.adapter);
++		goto bad;
++	}
++
++	if (ret >= 0) {
++		params[2].u.value.a = ret;
++		arg->ret = TEEC_SUCCESS;
++	} else {
++		arg->ret = TEEC_ERROR_COMMUNICATION;
++	}
++
++	if (optee_to_msg_param(arg->params, arg->num_params, params))
++		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++
++	i2c_put_adapter(client.adapter);
++	kfree(params);
++	return;
++bad:
++	kfree(params);
++	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++}
++#else
++static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
++					     struct optee_msg_arg *arg)
++{
++	arg->ret = TEEC_ERROR_COMMUNICATION;
++}
++#endif
++
+ static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
+ {
+ 	struct wq_entry *w;
+@@ -382,6 +467,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
+ 	case OPTEE_MSG_RPC_CMD_SHM_FREE:
+ 		handle_rpc_func_cmd_shm_free(ctx, arg);
+ 		break;
++	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
++		handle_rpc_func_cmd_i2c_transfer(ctx, arg);
++		break;
+ 	default:
+ 		handle_rpc_supp_cmd(ctx, arg);
+ 	}
+-- 
+2.17.1
 
-	nested_vmx_disable_intercept_for_msr(bitmap_12, bitmap_02, msr, type);
-
-And since there are existing users, the helper should also be added in a
-separate patch.  Doing so does two things: allows further consolidation of
-code, and separates the new logic from the CET logic, e.g. if the new helper
-is broken then (with luck) bisection will point at the helper patch and not
-the CET patch.
-
-> +}
-> +
->  /*
->   * Merge L0's and L1's MSR bitmap, return false to indicate that
->   * we do not use the hardware.
-> @@ -621,6 +633,28 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
->  	nested_vmx_disable_intercept_for_msr(msr_bitmap_l1, msr_bitmap_l0,
->  					     MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
->  
-> +	/* Pass CET MSRs to nested VM if L0 and L1 are set to pass-through. */
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_U_CET,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_PL3_SSP,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_S_CET,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_PL0_SSP,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_PL1_SSP,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_PL2_SSP,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
-> +	nested_vmx_update_intercept_for_msr(vcpu, MSR_IA32_INT_SSP_TAB,
-> +					    msr_bitmap_l1, msr_bitmap_l0,
-> +					    MSR_TYPE_RW);
->  	/*
->  	 * Checking the L0->L1 bitmap is trying to verify two things:
->  	 *
-> diff --git a/arch/x86/kvm/vmx/vmcs12.c b/arch/x86/kvm/vmx/vmcs12.c
-> index c8e51c004f78..147e0d8eeab2 100644
-> --- a/arch/x86/kvm/vmx/vmcs12.c
-> +++ b/arch/x86/kvm/vmx/vmcs12.c
-> @@ -4,31 +4,76 @@
->  
->  #define ROL16(val, n) ((u16)(((u16)(val) << (n)) | ((u16)(val) >> (16 - (n)))))
->  #define VMCS12_OFFSET(x) offsetof(struct vmcs12, x)
-> -#define FIELD(number, name)	[ROL16(number, 6)] = VMCS12_OFFSET(name)
-> -#define FIELD64(number, name)						\
-> -	FIELD(number, name),						\
-> -	[ROL16(number##_HIGH, 6)] = VMCS12_OFFSET(name) + sizeof(u32)
-> +
-
-Again, this does not belong in this series.  At the very least, not in this
-patch.  I also suspect we can use some macro shenanigans to automagically
-detect the field size, i.e. isntead of having FIELDN, FIELD32, etc...
-
-...
-
->  const unsigned int nr_vmcs12_fields = ARRAY_SIZE(vmcs_field_to_offset_table);
-> diff --git a/arch/x86/kvm/vmx/vmcs12.h b/arch/x86/kvm/vmx/vmcs12.h
-> index 80232daf00ff..016896c9e701 100644
-> --- a/arch/x86/kvm/vmx/vmcs12.h
-> +++ b/arch/x86/kvm/vmx/vmcs12.h
-> @@ -115,7 +115,13 @@ struct __packed vmcs12 {
->  	natural_width host_ia32_sysenter_eip;
->  	natural_width host_rsp;
->  	natural_width host_rip;
-> -	natural_width paddingl[8]; /* room for future expansion */
-> +	natural_width host_s_cet;
-> +	natural_width host_ssp;
-> +	natural_width host_ssp_tbl;
-> +	natural_width guest_s_cet;
-> +	natural_width guest_ssp;
-> +	natural_width guest_ssp_tbl;
-> +	natural_width paddingl[2]; /* room for future expansion */
->  	u32 pin_based_vm_exec_control;
->  	u32 cpu_based_vm_exec_control;
->  	u32 exception_bitmap;
-> @@ -295,6 +301,12 @@ static inline void vmx_check_vmcs12_offsets(void)
->  	CHECK_OFFSET(host_ia32_sysenter_eip, 656);
->  	CHECK_OFFSET(host_rsp, 664);
->  	CHECK_OFFSET(host_rip, 672);
-> +	CHECK_OFFSET(host_s_cet, 680);
-> +	CHECK_OFFSET(host_ssp, 688);
-> +	CHECK_OFFSET(host_ssp_tbl, 696);
-> +	CHECK_OFFSET(guest_s_cet, 704);
-> +	CHECK_OFFSET(guest_ssp, 712);
-> +	CHECK_OFFSET(guest_ssp_tbl, 720);
->  	CHECK_OFFSET(pin_based_vm_exec_control, 744);
->  	CHECK_OFFSET(cpu_based_vm_exec_control, 748);
->  	CHECK_OFFSET(exception_bitmap, 752);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 4ce61427ed49..d465ff990094 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7321,6 +7321,7 @@ static void nested_vmx_cr_fixed1_bits_update(struct kvm_vcpu *vcpu)
->  	cr4_fixed1_update(X86_CR4_PKE,        ecx, feature_bit(PKU));
->  	cr4_fixed1_update(X86_CR4_UMIP,       ecx, feature_bit(UMIP));
->  	cr4_fixed1_update(X86_CR4_LA57,       ecx, feature_bit(LA57));
-> +	cr4_fixed1_update(X86_CR4_CET,	      ecx, feature_bit(SHSTK));
->  
->  #undef cr4_fixed1_update
->  }
-> @@ -7340,6 +7341,15 @@ static void nested_vmx_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
->  			vmx->nested.msrs.exit_ctls_high &= ~VM_EXIT_CLEAR_BNDCFGS;
->  		}
->  	}
-> +
-> +	if (is_cet_state_supported(vcpu, XFEATURE_MASK_CET_USER |
-> +	    XFEATURE_MASK_CET_KERNEL)) {
-
-I prefer the above MPX style of:
-
-	if (kvm_cet_supported()) {
-		bool cet_enabled = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-				   guest_cpuid_has(vcpu, X86_FEATURE_IBT);
-
-		if (cet_enabled) {
-			msrs->entry_ctls_high |= VM_ENTRY_LOAD_CET_STATE;
-			msrs->exit_ctls_high |= VM_EXIT_LOAD_CET_STATE;
-		} else {
-			msrs->entry_ctls_high &= ~VM_ENTRY_LOAD_CET_STATE;
-			msrs->exit_ctls_high &= ~VM_EXIT_LOAD_CET_STATE;
-		}
-	}
-
-That's also more in line with the logic for computing secondary execution
-controls.  Not that it really matters, but it means we're not updating the
-MSRs when KVM doesn't support CET in the first place.
-
-> +		vmx->nested.msrs.entry_ctls_high |= VM_ENTRY_LOAD_CET_STATE;
-> +		vmx->nested.msrs.exit_ctls_high |= VM_EXIT_LOAD_CET_STATE;
-
-The line lengths can be shortened by adding a prep patch to grab
-vmx->nested.msrs in a local msrs variable, that way the extra level of
-indentation doesn't need a wrap.  'vmx' itself is unnecessary.
-
-> +	} else {
-> +		vmx->nested.msrs.entry_ctls_high &= ~VM_ENTRY_LOAD_CET_STATE;
-> +		vmx->nested.msrs.exit_ctls_high &= ~VM_EXIT_LOAD_CET_STATE;
-> +	}
->  }
->  
->  static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
-> -- 
-> 2.17.2
-> 
