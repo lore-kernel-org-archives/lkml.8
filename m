@@ -2,202 +2,162 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C77BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E514BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C90D206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B805020729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IsAoqvXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbgGVGyU (ORCPT
+        id S1730527AbgGVGye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:54:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46954 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbgGVGyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:54:19 -0400
-IronPort-SDR: I8YTVBs9Xk9bvIIoNAp0XOrQ25BmbSnY74JLGaR4ov+CUzEvOSOEKJCvr5Z9O82CCDPIC/2oEL
- GO8CUEnwGaKQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="149446598"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="149446598"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 23:54:18 -0700
-IronPort-SDR: xGGOMz3HOd6VHBenhxMVsFU7TUuTprOtPprL9IMDIiNyLAVBjVtbm2S8E01zfnKRbSd+39WTCu
- z7DYNEw5b9iQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="288185871"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jul 2020 23:54:16 -0700
-Date:   Wed, 22 Jul 2020 14:51:07 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgoncalv@redhat.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH 1/2] fpga: dfl: map feature mmio resources in their own
-  feature drivers
-Message-ID: <20200722065107.GA7791@yilunxu-OptiPlex-7050>
-References: <1594791498-14495-1-git-send-email-yilun.xu@intel.com>
- <1594791498-14495-2-git-send-email-yilun.xu@intel.com>
- <9cec52cb-13aa-8b99-ef75-22eefa9f1710@redhat.com>
+        Wed, 22 Jul 2020 02:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgGVGyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 02:54:33 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6536BC0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:54:33 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a14so762774wra.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ocBmwtCFiYWP9YFIU9y/qGa4fpuschond1lKiBqRad4=;
+        b=IsAoqvXNG2/0xQHeu18hvZcm6DuJpizwx+JDHvWFU2JKIN2MpdQDmUQ+uu2ylHccoI
+         rJdblvsBWP/F5sJjt+ptjDC26ZfdRZDhCbl5/c7eJo7gg6xVok0/gXRFbA6bGdlsK+YI
+         yJF7m5VWJY+VT/8DasrqeqIwKreZRj2FwcpU2EIGQhCBBj21Cfm4ZQvK9V/QIAM4kUiz
+         3WH0GrgLYsyCQQsfK9ZHsB3flBg2QcBZFllL884AZaxPmRmmuNwrn++/k3q19c/wIQZS
+         +dSOwzNYmZB0Zawp3c3EYJPI9lVSmHeieq1TmcZpLjVjfJr9v8pU6KcmPjcreQ9qD0LE
+         mNxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ocBmwtCFiYWP9YFIU9y/qGa4fpuschond1lKiBqRad4=;
+        b=BV+Nkqz/M3oL219SgGm9kB8SweDGF5KX2VOTSd9yNj+FEo+wKWtSUvlWIZ4Lf8nM4e
+         B8nPJ7poSuZJckZDfm8n4rwwbrczSHWu46Xz+fw/pDWS6LSjtvd5OZvDWdoTVJYrlAXb
+         211sArSuPEnhfTYh4g30k5fQMcULwpMeR3zomWhq6cMEokGj/tehHuwKWZQtASXlvADR
+         cQAMIC6/K7I3wrJpt7Bqvb6vF8U3ttQeLE7aZfLdOMXrZN4I/10NUyCway2YK3T7pm71
+         Y5NJQ13VZHz6nn+qInBXGxFASuMXazGiPAZlEcRzbLE8R577l9Jt0YjpN2svm4IFSPQk
+         O7VA==
+X-Gm-Message-State: AOAM530wX3TiwSsUPIzOoOxt1Jr8zsbyDeQdiUFqAsKt+J2Jk/5mV9TV
+        153D6V+SHLAgR+ESkq9KTcZA0X/Vs1Y=
+X-Google-Smtp-Source: ABdhPJyo10m2wQJAJRAjVOGmLFVQEnAPrhWt00A+y6ezpxtZSlEAclgSzZxiLt39v1L/xOQWpCQkGg==
+X-Received: by 2002:adf:a3d0:: with SMTP id m16mr28162290wrb.232.1595400871982;
+        Tue, 21 Jul 2020 23:54:31 -0700 (PDT)
+Received: from dell ([2.27.167.94])
+        by smtp.gmail.com with ESMTPSA id h14sm39439532wrt.36.2020.07.21.23.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 23:54:31 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 07:54:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, tony@atomide.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH for v5.9] mfd: Replace HTTP links with HTTPS ones
+Message-ID: <20200722065429.GI621928@dell>
+References: <20200719195613.61458-1-grandmaster@al2klimov.de>
+ <20200721161028.GA389086@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9cec52cb-13aa-8b99-ef75-22eefa9f1710@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200721161028.GA389086@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I missed some comments. Reply inline.
+On Tue, 21 Jul 2020, Rob Herring wrote:
 
-> > +	/* release I/O mappings for next step enumeration */
-> > +	cci_pci_iounmap_bars(pcidev, mapped_bars);
-> There is no iounmap_bars in error handling, likely need to add this.
+> On Sun, 19 Jul 2020 21:56:13 +0200, Alexander A. Klimov wrote:
+> > Rationale:
+> > Reduces attack surface on kernel devs opening the links for MITM
+> > as HTTPS traffic is much harder to manipulate.
+> > 
+> > Deterministic algorithm:
+> > For each file:
+> >   If not .svg:
+> >     For each line:
+> >       If doesn't contain `\bxmlns\b`:
+> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+> >             If both the HTTP and HTTPS versions
+> >             return 200 OK and serve the same content:
+> >               Replace HTTP with HTTPS.
+> > 
+> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > ---
+> >  Continuing my work started at 93431e0607e5.
+> >  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> >  (Actually letting a shell for loop submit all this stuff for me.)
 
-The memory allocated by pcim_iomap_xxx will be released along with
-pcidev destory.
+I'm guessing something went wrong with your submission, as Rob's reply
+is the first time I saw this patch.  Did your bot send it to me?
 
-> > +
-> >  	/* start enumeration with prepared enumeration information */
-> >  	cdev = dfl_fpga_feature_devs_enumerate(info);
-> >  	if (IS_ERR(cdev)) {
-> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> > index 649958a..7dc6411 100644
-> > --- a/drivers/fpga/dfl.c
-> > +++ b/drivers/fpga/dfl.c
-> > @@ -250,6 +250,11 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
-> >  
-> > +static bool is_header_feature(struct dfl_feature *feature)
-> > +{
-> > +	return feature->id == FEATURE_ID_FIU_HEADER;
-> Could this be a macro ?
+You really should be fully reviewing anything that gets sent to the
+MLs.  "Sorry, I didn't send it, my bot did" is not an acceptable
+excuse for inadequacies.
 
-Yes
+> >  If there are any URLs to be removed completely
+> >  or at least not (just) HTTPSified:
+> >  Just clearly say so and I'll *undo my change*.
+> >  See also: https://lkml.org/lkml/2020/6/27/64
+> > 
+> >  If there are any valid, but yet not changed URLs:
+> >  See: https://lkml.org/lkml/2020/6/26/837
+> > 
+> >  If you apply the patch, please let me know.
+> > 
+> >  Sorry again to all maintainers who complained about subject lines.
+> >  Now I realized that you want an actually perfect prefixes,
+> >  not just subsystem ones.
+> >  I tried my best...
+> >  And yes, *I could* (at least half-)automate it.
+> >  Impossible is nothing! :)
+> > 
+> > 
+> >  Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
+> >  drivers/mfd/hi6421-pmic-core.c                       | 2 +-
+> >  drivers/mfd/lp873x.c                                 | 2 +-
+> >  drivers/mfd/lp87565.c                                | 2 +-
+> >  drivers/mfd/omap-usb-host.c                          | 2 +-
+> >  drivers/mfd/omap-usb-tll.c                           | 2 +-
+> >  drivers/mfd/smsc-ece1099.c                           | 2 +-
+> >  drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
+> >  drivers/mfd/tps65086.c                               | 2 +-
+> >  drivers/mfd/tps65217.c                               | 2 +-
+> >  drivers/mfd/tps65218.c                               | 2 +-
+> >  drivers/mfd/tps65912-core.c                          | 2 +-
+> >  drivers/mfd/tps65912-i2c.c                           | 2 +-
+> >  drivers/mfd/tps65912-spi.c                           | 2 +-
+> >  include/linux/mfd/hi6421-pmic.h                      | 2 +-
+> >  include/linux/mfd/lp873x.h                           | 2 +-
+> >  include/linux/mfd/lp87565.h                          | 2 +-
+> >  include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
+> >  include/linux/mfd/tps65086.h                         | 2 +-
+> >  include/linux/mfd/tps65217.h                         | 2 +-
+> >  include/linux/mfd/tps65218.h                         | 2 +-
+> >  include/linux/mfd/tps65912.h                         | 2 +-
+> >  22 files changed, 22 insertions(+), 22 deletions(-)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-> > +}
-> > +
-> >  /**
-> >   * dfl_fpga_dev_feature_uinit - uinit for sub features of dfl feature device
-> >   * @pdev: feature device.
-> > @@ -273,8 +278,20 @@ static int dfl_feature_instance_init(struct platform_device *pdev,
-> >  				     struct dfl_feature *feature,
-> >  				     struct dfl_feature_driver *drv)
-> >  {
-> > +	void __iomem *base;
-> >  	int ret = 0;
-> >  
-> > +	if (!is_header_feature(feature)) {
-> > +		base = devm_platform_ioremap_resource(pdev,
-> > +						      feature->resource_index);
-> > +		if (IS_ERR(base)) {
-> > +			dev_err(&pdev->dev, "fail to get iomem resource!\n");
-> > +			return PTR_ERR(base);
-> > +		}
-> > +
-> > +		feature->ioaddr = base;
-> > +	}
-> > +
-> >  	if (drv->ops->init) {
-> >  		ret = drv->ops->init(pdev, feature);
-> >  		if (ret)
-> > @@ -427,7 +444,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> >   * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> >   *	       this device.
-> >   * @feature_dev: current feature device.
-> > - * @ioaddr: header register region address of feature device in enumeration.
-> > + * @ioaddr: header register region address of current FIU in enumeration.
-> > + * @start: register resource start of current FIU.
-> > + * @len: max register resource length of current FIU.
-> >   * @sub_features: a sub features linked list for feature device in enumeration.
-> >   * @feature_num: number of sub features for feature device in enumeration.
-> >   */
-> > @@ -439,6 +458,9 @@ struct build_feature_devs_info {
-> >  
-> >  	struct platform_device *feature_dev;
-> >  	void __iomem *ioaddr;
-> > +	resource_size_t start;
-> > +	resource_size_t len;
-> > +
-> extra whitespace, remove
-
-Yes
-
-> >  	struct list_head sub_features;
-> >  	int feature_num;
-> >  };
-> > @@ -484,10 +506,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  	struct dfl_feature_platform_data *pdata;
-> >  	struct dfl_feature_info *finfo, *p;
-> >  	enum dfl_id_type type;
-> > -	int ret, index = 0;
-> > -
-> > -	if (!fdev)
-> > -		return 0;
-> > +	int ret, index = 0, res_idx = 0;
-> >  
-> >  	type = feature_dev_id_type(fdev);
-> >  	if (WARN_ON_ONCE(type >= DFL_ID_MAX))
-> > @@ -530,16 +549,30 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  
-> >  	/* fill features and resource information for feature dev */
-> >  	list_for_each_entry_safe(finfo, p, &binfo->sub_features, node) {
-> > -		struct dfl_feature *feature = &pdata->features[index];
-> > +		struct dfl_feature *feature = &pdata->features[index++];
-> >  		struct dfl_feature_irq_ctx *ctx;
-> >  		unsigned int i;
-> >  
-> >  		/* save resource information for each feature */
-> >  		feature->dev = fdev;
-> >  		feature->id = finfo->fid;
-> > -		feature->resource_index = index;
-> > -		feature->ioaddr = finfo->ioaddr;
-> > -		fdev->resource[index++] = finfo->mmio_res;
-> > +
-> > +		/*
-> > +		 * map header resource for dfl bus device. Don't add header
-> > +		 * resource to feature devices, or the resource tree will be
-> > +		 * disordered and cause warning on resource release
-> > +		 */
-> > +		if (is_header_feature(feature)) {
-> > +			feature->resource_index = -1;
-> > +			feature->ioaddr =
-> > +				devm_ioremap_resource(binfo->dev,
-> > +						      &finfo->mmio_res);
-> > +			if (IS_ERR(feature->ioaddr))
-> > +				return PTR_ERR(feature->ioaddr);
-> feature->ioaddr is garbage, is this ok ?
-
-It should be OK. We will not touch this field during cleaning up.
-
-> > +static bool is_feature_dev_detected(struct build_feature_devs_info *binfo)
-> > +{
-> > +	return !!binfo->feature_dev;
-> Another macro.
-
-Yes
-
-> > +}
-> > +
-> > +static void dfl_binfo_shift(struct build_feature_devs_info *binfo,
-> > +			    resource_size_t ofst)
-> shift? where is shifting happening.� A better name would be dfl_binfo_update or dfl_binfo_increment
-
-I'll delete this function, it is not useful.
-
-Thanks,
-Yilun
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
