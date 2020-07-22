@@ -2,73 +2,91 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E8C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0063DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43028207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BDA20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:12:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="atGnOu7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbgGVCMB (ORCPT
+        id S1731824AbgGVCMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:12:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50846 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731621AbgGVCMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:12:00 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EA8AC2BF1FBB69F44CA1;
-        Wed, 22 Jul 2020 10:11:58 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
- 10:11:56 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <aelior@marvell.com>, <GR-everest-linux-l2@marvell.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: qed: Remove unneeded cast from memory allocation
-Date:   Wed, 22 Jul 2020 10:10:27 +0800
-Message-ID: <20200722021027.12797-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jul 2020 22:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731621AbgGVCMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:12:41 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9449C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 19:12:41 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o13so396513pgf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 19:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9rx2ICY1n/mQSkvQxm3DqiqKMym6DrzmjM7s6SFLwEo=;
+        b=atGnOu7xHD1d7gov5LcXUyObLmqvtY+NKSNPa6d6jiajFGLijXYs76qCGG2MyxBXpt
+         B4bCLJke54FioXB7TsLyXbctIuODAyg16qUDhNP9VyX7cVOdVgazx2VRtEkJCvESrShA
+         D5FCyYUeM4oFS5jlVeUgWWTs6v7LIjj7XbbAw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9rx2ICY1n/mQSkvQxm3DqiqKMym6DrzmjM7s6SFLwEo=;
+        b=bMyzJ1NynHsUII+tbQytlYRe9zMtKtGsfxQqwqUJz0U03B4tKO6+86m60F4rl0VNPq
+         TjHVFtA5agUbeOS3/QHrVsjeP8uDmvwFVaoQz3Op78gW1fsirMK5m5nYVxa244IPt230
+         Lz8r45IhEI8r6yinjhSjETabTfhR/ygAgjl/lTAoxxKuAwDmHvSel686O6+4vUU/sm1I
+         trbIKw3SNPl22RyItchthrYwBxQ3wAZ4tqDJphhURiIHWuwvdlfGuVoEv3cQvnila8UT
+         f8LjH3PIrHj/UlMkRlPLE3uKdjl0DxUWcvVjv3OVlFS6VadiXpnwPhOhvNC6p0DbjAZx
+         i7sg==
+X-Gm-Message-State: AOAM533j8bFiOGgehhUyViNsCBFE+javNwGAMMXiFKd8pFeZUWgYZf2D
+        EkmYcSPjtLtU9kvJFfEF0PTEig==
+X-Google-Smtp-Source: ABdhPJxqnoNNPu7Gh1zJCb1n8eFvBd5/4XYBGHD0TD6QA8KDFgS1fU3XMMQqJud4CqpFOVMOBEqe9Q==
+X-Received: by 2002:a62:cd89:: with SMTP id o131mr26386979pfg.195.1595383961041;
+        Tue, 21 Jul 2020 19:12:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i67sm22574975pfg.13.2020.07.21.19.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 19:12:40 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 19:12:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v3] lib: Convert test_user_copy to KUnit test
+Message-ID: <202007211911.666E080@keescook>
+References: <20200721174654.72132-1-vitor@massaru.org>
+ <202007211207.5BAA9D8D@keescook>
+ <CADQ6JjU8rX2F_iBqth3u0EiA+CBgz4H+YL_-nbQ_cojYeLFXKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADQ6JjU8rX2F_iBqth3u0EiA+CBgz4H+YL_-nbQ_cojYeLFXKQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove casting the values returned by memory allocation function.
+On Tue, Jul 21, 2020 at 07:19:12PM -0300, Vitor Massaru Iha wrote:
+> When you talk about end-of-test summary, is it what is written in
+> dmesg and not the kunit-tool?
 
-Coccinelle emits WARNING: casting value returned by memory allocation
-unction to (struct roce_destroy_qp_req_output_params *) is useless.
+Right, if I build this as a module and do "modprobe user_copy_kunit",
+what will show up in dmesg?
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/ethernet/qlogic/qed/qed_roce.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
-index a1423ec0edf7..f16a157bb95a 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
-@@ -757,8 +757,7 @@ static int qed_roce_sp_destroy_qp_requester(struct qed_hwfn *p_hwfn,
- 	if (!qp->req_offloaded)
- 		return 0;
- 
--	p_ramrod_res = (struct roce_destroy_qp_req_output_params *)
--		       dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
-+	p_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
- 					  sizeof(*p_ramrod_res),
- 					  &ramrod_res_phys, GFP_KERNEL);
- 	if (!p_ramrod_res) {
 -- 
-2.17.1
-
+Kees Cook
