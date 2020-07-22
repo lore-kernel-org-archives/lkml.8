@@ -2,124 +2,114 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E41C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB85207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9558A207D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595387608;
+	bh=dtoCdUEmKe3K+GX9hTYYwHUWlcrljUxsFv8D57+cspo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WzYi0YFRA10s3dyyN8EJce4NenR6rG7/iIZ9hjNHUYFOs3UeAfGgo9MpQ+Ou9oVpZ
+	 DFD9dTE5RqGUqXCmT4x9btV0jwVM8W1NYv8bKpVeuhqk7fYXbF9rjjVWtU1CLleVL3
+	 DIMPXK4ZsfDMAll4KosyxQZNuam/vh7osaHkC+h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbgGVDMY (ORCPT
+        id S1731911AbgGVDN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:12:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64797 "EHLO mga07.intel.com"
+        Tue, 21 Jul 2020 23:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731621AbgGVDMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:12:23 -0400
-IronPort-SDR: AgYCkBrhi6JXtnAzw+ygApbsocnkbQ92fe7PuxyyO+SiQ0DhF775kAXggz7fWUNQAvdpwanOR1
- oJNFmkTzLS1Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="214907370"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="214907370"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 20:12:22 -0700
-IronPort-SDR: FnjopQo3224BDDXFX+o84GruhY429us9L97tuuHKyBTwMO8IdOS2jZS2+20vYW2MjMrnk7U2T5
- JR8M/FXhUcTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="392545749"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Jul 2020 20:12:21 -0700
-Cc:     baolu.lu@linux.intel.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: Subject: Re: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky
- gfx dedicated iommu
-To:     Jun Miao <jun.miao@windriver.com>
-References: <DM6PR11MB2587034DFBEDFB091CE9AAD58E790@DM6PR11MB2587.namprd11.prod.outlook.com>
- <0f4b6760-bb8f-ebd3-ab9d-4ecba819883c@linux.intel.com>
- <afb6b8d8-20b1-b00e-575e-0a4474f723b7@windriver.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d7627e6a-9984-3d73-79b5-36011da45bfb@linux.intel.com>
-Date:   Wed, 22 Jul 2020 11:07:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1731621AbgGVDN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 23:13:27 -0400
+Received: from embeddedor (unknown [201.162.241.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C73E207CD;
+        Wed, 22 Jul 2020 03:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595387606;
+        bh=dtoCdUEmKe3K+GX9hTYYwHUWlcrljUxsFv8D57+cspo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vk2YMEdFcMgL1qzpSDrii3EXT+ZwZWyG3yjeh6eLsVrNH5wW8lCkZrVG7sGmOczxz
+         W9p1C7EmhHkpzPAJiRBP6s/LV6+2J1J6CJ5U9KXnreZh1+YRkScE+hu6r2box0BAjR
+         Qj9HYehoxzxiWxlmDRdQvSRGPKahBz4IbZ4EcBEY=
+Date:   Tue, 21 Jul 2020 22:19:03 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2][next] PCI: imx6: Use fallthrough pseudo-keyword
+Message-ID: <20200722031903.GA3711@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <afb6b8d8-20b1-b00e-575e-0a4474f723b7@windriver.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/20 11:03 AM, Jun Miao wrote:
-> On 7/22/20 10:40 AM, Lu Baolu wrote:
->> Hi Jun,
->>
->> On 7/22/20 10:26 AM, Miao, Jun wrote:
->>>>> Kernel panic - not syncing: DMAR hardware is malfunctioning
->>>>> CPU: 0 PID: 347 Comm: rtcwake Not tainted 5.4.0-yocto-standard #124
->>>>> Hardware name: Intel Corporation Ice Lake Client Platform/IceLake U 
->>>>> DDR4
->>>>> SODIMM PD RVP TLC, BIOS ICLSFWR1.R00.3162.A00.1904162000 04/16/2019
->>>>> Call Trace:
->>>>>    dump_stack+0x59/0x75
->>>>>    panic+0xff/0x2d4
->>>>>    iommu_disable_translation+0x88/0x90
->>>>>    iommu_suspend+0x12f/0x1b0
->>>>>    syscore_suspend+0x6c/0x220
->>>>>    suspend_devices_and_enter+0x313/0x840
->>>>>    pm_suspend+0x30d/0x390
->>>>>    state_store+0x82/0xf0
->>>>>    kobj_attr_store+0x12/0x20
->>>>>    sysfs_kf_write+0x3c/0x50
->>>>>    kernfs_fop_write+0x11d/0x190
->>>>>    __vfs_write+0x1b/0x40
->>>>>    vfs_write+0xc6/0x1d0
->>>>>    ksys_write+0x5e/0xe0
->>>>>    __x64_sys_write+0x1a/0x20
->>>>>    do_syscall_64+0x4d/0x150
->>>>>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>>> RIP: 0033:0x7f97b8080113
->>>>> Code: 8b 15 81 bd 0c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 
->>>>> 0f 1f 00
->>>>> 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 01 00 00 00 0f 05 <48> 3d 00 
->>>>> f0 ff ff
->>>>> 77 55 c3 0f 1f 40 00 48 83 ec 28 48 89 54 24 18
->>>>> RSP: 002b:00007ffcfa6f48b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
->>>>> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f97b8080113
->>>>> RDX: 0000000000000004 RSI: 000055e7db03b700 RDI: 0000000000000004
->>>>> RBP: 000055e7db03b700 R08: 000055e7db03b700 R09: 0000000000000004
->>>>> R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000004
->>>>> R13: 000055e7db039380 R14: 0000000000000004 R15: 00007f97b814d700
->>>>> Kernel Offset: 0x38a00000 from 0xffffffff81000000 (relocation range:
->>>>> 0xffffffff80000000-0xffffffffbfffffff)
->>>>> ---[ end Kernel panic - not syncing: DMAR hardware is 
->>>>> malfunctioning ]---
->>>
->>
->> Do you mean that system hangs in iommu_disable_translation() without 
->> this fix.
->>
-> Yes ,From the call trace and i also read the DMARD_GCMD_RGS is wrong 
-> without this patch.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Okay! Thanks a lot for confirming this.
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Best regards,
-baolu
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update URL. Use proper URL to Linux v5.7 documentation.
 
->>> [S3 successfully with the patch]
->>
->> And, this failure disappeared after you applied this fix?
->>
->> Best regards,
->> baolu
+ drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 8f08ae53f53e..6c78903b49be 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -439,7 +439,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
+ 		break;
+-	case IMX6QP:		/* FALLTHROUGH */
++	case IMX6QP:
+ 	case IMX6Q:
+ 		/* power up core phy and enable ref clock */
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+@@ -642,7 +642,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
+ 				   IMX6SX_GPR12_PCIE_RX_EQ_2);
+-		/* FALLTHROUGH */
++		fallthrough;
+ 	default:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
+@@ -1107,7 +1107,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+ 			return PTR_ERR(imx6_pcie->pcie_aux);
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case IMX7D:
+ 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+ 			imx6_pcie->controller_id = 1;
+-- 
+2.27.0
+
