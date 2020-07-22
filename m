@@ -2,152 +2,197 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCBAC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CE8C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E2A22CAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B47207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UR1CnosO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbgGVSWe (ORCPT
+        id S1732131AbgGVSWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:22:34 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:40118 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729816AbgGVSW0 (ORCPT
+        Wed, 22 Jul 2020 14:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731944AbgGVSWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:22:26 -0400
-Received: by mail-il1-f200.google.com with SMTP id z16so1675793ill.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:22:25 -0700 (PDT)
+        Wed, 22 Jul 2020 14:22:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4CDC0619DC;
+        Wed, 22 Jul 2020 11:22:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a14so1730265pfi.2;
+        Wed, 22 Jul 2020 11:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=7oX+Ui6Om/fIjYvfDxV2/4AZHvhi7NBOu1a0cZDb96s=;
+        b=UR1CnosOGT0n6sc0mNa5OXUU9mC4UZo9f3JTepr3rk4R1d+ACyr95dQbS5pJF13kpm
+         fue0Th0pbW4NW3D5buzPmmOQbxXoxiEUHanOnEivqnGNxV/sH94ylMb3QwPCKH4ShLqu
+         AsjSoWG9fQ5CjYemIBFh6EZO6SnwviC4ipvG0Z6lTL8Gd8Oso/FORba0BlbDpLGiNKb7
+         hZwZpIhC4MxUcKxkXgfZUbGZPpCYbHaa3KXBS4CT37nW0HIAOY288Vq2qY0a38ukoDCD
+         7TfNxDpeDLRt9YHzJb4FU1gAQsPbmHMKeWEnCooJpXdImW1DKu/SJsmtK0PXjrXt1dlc
+         Tnfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=QJptuQmPpK84AkiYZk0IVS1um85kAHPSR0himC5GjcI=;
-        b=HpWb9nhP1n7EkfWF3zCwICF1//4/9e8HYZHOrqT15PQYQLeE2gAU4vqq94D6i6ETMr
-         IoXsUTNbo46vi2KdB7Ch16i8NT9bI1RYbsqFxFKaAVW7ZhKK86Vz/MP5PLfP2Y6N5U1P
-         zkGq53J7Lc2C3L1O0BZSSuyT/kCD8rxj39pZay3zsVrk34olKjjnL64sDXAQlxnl+xJK
-         fw38NvzkaPfdsiI3wrgvSBfb7oCscKIHXdkrA1Evw4spdV6Cw/wBdyAKYb7P5K/v2Oes
-         yZFGZ1tdr5vWa6s4BjNvhOUjogsuYPs5p/k62jKvwoBHcwopLpvNG3ToACRoz02OKoML
-         JaqA==
-X-Gm-Message-State: AOAM531oG5POzJftSBxwucNUWBEqKZ3QXIi58ZN+7QbXf13iOTl9Ro8F
-        FdYk3njGCa2yxtGut6qTqo8lrQiwsXnGq7WQ7ZHBHOMeuRxw
-X-Google-Smtp-Source: ABdhPJyQtTqA0zK+ihej3d/4CuVawBI+bfjAaCR0NYueZbIiI4LplmoLbi7sw1syf28I1el9+3xi40YtpmFd2b2mQ7aWPQ144KMy
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7oX+Ui6Om/fIjYvfDxV2/4AZHvhi7NBOu1a0cZDb96s=;
+        b=YLu1A+w9DfB3XvhyXEzFV1uB9A8dFSAm4EnN/1PU2ELKRJ3lZ6m/mPpeijZURVvHpt
+         lrKxlZCHVtwkjboxU459zHqWN6T+uA9SpdHWgWb2Lq+FaE+tJjuK7DjDAzBBy4BnQZCJ
+         2cd6FOEnFmmxk5PcgMn0Z/QmbHwFRfIdyH3mi92V1Yhs1MTDzKF1Y07stNXHw1c4NnX3
+         fQgbFZ6RXJxlThrrT+i2gzmZw9GHkrpCJemZQ5OnmYRjn2fS5/08Enj+8dFBnf3ZPDf+
+         mzh0zt6jC4sm8ETl2qvIUWPnRySMA5yCYGng3jtcY7XaIAK4Gma6I8zKnrWaAWKRENaG
+         4ErQ==
+X-Gm-Message-State: AOAM530vzg2QgiOybzPmlualR2StKSr1awRcASg5+xO2jhlAZgtuahXm
+        fZ2F0BXz9P65300+kq5gsxjO7pby
+X-Google-Smtp-Source: ABdhPJw3fR8L+Q2k1yAFoLNVKKtbcm1jpJf3BKHBN9Vi0OSPQK43x3ovEVLKmRw+L02lZhprAJJWNA==
+X-Received: by 2002:a62:1801:: with SMTP id 1mr845788pfy.242.1595442163507;
+        Wed, 22 Jul 2020 11:22:43 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id gn5sm369103pjb.23.2020.07.22.11.22.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 11:22:42 -0700 (PDT)
+Subject: Re: INFO: rcu detected stall in seq_read (2)
+To:     syzbot <syzbot+c28b5fee66fd3b7f766e@syzkaller.appspotmail.com>,
+        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org, corbet@lwn.net,
+        davem@davemloft.net, fweisbec@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        mingo@kernel.org, netdev@vger.kernel.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vasundhara-v.volam@broadcom.com
+References: <000000000000b217d105ab0b8ae4@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <435c3097-9174-f45b-b9bb-42bc377e43e2@gmail.com>
+Date:   Wed, 22 Jul 2020 11:22:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:294:: with SMTP id 142mr1293463ilc.112.1595442144888;
- Wed, 22 Jul 2020 11:22:24 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 11:22:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004e572405ab0bd283@google.com>
-Subject: WARNING in ttwu_queue_wakelist
-From:   syzbot <syzbot+c9cb7a5af4ab24dc9088@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000000000000b217d105ab0b8ae4@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    4fa640dc Merge tag 'vfio-v5.8-rc7' of git://github.com/awi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10ae7ec8900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f3bc31881f1ae8a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=c9cb7a5af4ab24dc9088
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c9cb7a5af4ab24dc9088@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 22272 at kernel/sched/core.c:2382 __ttwu_queue_wakelist kernel/sched/core.c:2326 [inline]
-WARNING: CPU: 1 PID: 22272 at kernel/sched/core.c:2382 ttwu_queue_wakelist+0x19a/0x250 kernel/sched/core.c:2386
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 22272 Comm: syz-executor.5 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:ttwu_queue_wakelist+0x19a/0x250 kernel/sched/core.c:2326
-Code: e8 03 42 8a 04 28 84 c0 0f 85 82 00 00 00 c7 03 01 00 00 00 49 83 c6 30 44 89 ff 4c 89 f6 e8 ed d2 17 00 b0 01 e9 a6 00 00 00 <0f> 0b 31 c0 e9 9d 00 00 00 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c b6
-RSP: 0018:ffffc90000da8cc8 EFLAGS: 00010046
-RAX: 0000000000000001 RBX: ffff8880ae920cb4 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000010002 RDI: 0000000000000000
-RBP: 1ffffffff125ab1d R08: dffffc0000000000 R09: fffffbfff131a7f1
-R10: fffffbfff131a7f1 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8880ae900000 R14: ffffffff892d58e8 R15: 0000000000000001
- ttwu_queue kernel/sched/core.c:2400 [inline]
- try_to_wake_up+0x774/0xbb0 kernel/sched/core.c:2666
- hrtimer_wakeup+0x60/0x80 kernel/time/hrtimer.c:1774
- __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
- __hrtimer_run_queues+0x47f/0x930 kernel/time/hrtimer.c:1584
- hrtimer_interrupt+0x373/0xd60 kernel/time/hrtimer.c:1646
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
- __sysvec_apic_timer_interrupt+0xf0/0x260 arch/x86/kernel/apic/apic.c:1097
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- sysvec_apic_timer_interrupt+0xb9/0x130 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
-RIP: 0010:lock_acquire+0x1bf/0x720 kernel/locking/lockdep.c:4962
-Code: c1 e8 03 80 3c 10 00 74 0c 48 c7 c7 f8 c7 4b 89 e8 a6 03 5a 00 48 83 3d c6 2b f2 07 00 0f 84 09 05 00 00 48 8b 7c 24 10 57 9d <0f> 1f 44 00 00 65 48 8b 04 25 28 00 00 00 48 3b 44 24 50 0f 85 e0
-RSP: 0018:ffffc900018779c8 EFLAGS: 00000286
-RAX: 1ffffffff12978ff RBX: 0000000000000001 RCX: 67ea766929fc7dd6
-RDX: dffffc0000000000 RSI: ffff888054d56bf8 RDI: 0000000000000286
-RBP: 1ffff1100a9aad79 R08: dffffc0000000000 R09: fffffbfff1674eb1
-R10: fffffbfff1674eb1 R11: 0000000000000000 R12: 0000000000000001
-R13: 0000000000000000 R14: ffff888054d56bcc R15: 0000000000000000
- percpu_down_read_trylock include/linux/percpu-rwsem.h:92 [inline]
- __sb_start_write+0x29d/0x410 fs/super.c:1674
- sb_start_write_trylock include/linux/fs.h:1670 [inline]
- touch_atime+0xb7/0x2a0 fs/inode.c:1831
- file_accessed include/linux/fs.h:2229 [inline]
- shmem_file_read_iter+0x8c4/0xb60 mm/shmem.c:2604
- call_read_iter include/linux/fs.h:1902 [inline]
- generic_file_splice_read+0x3c4/0x660 fs/splice.c:312
- do_splice_to fs/splice.c:870 [inline]
- splice_direct_to_actor+0x3bd/0xb60 fs/splice.c:950
- do_splice_direct+0x201/0x340 fs/splice.c:1059
- do_sendfile+0x809/0xfe0 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64 fs/read_write.c:1587 [inline]
- __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1587
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c1f9
-Code: Bad RIP value.
-RSP: 002b:00007f87766dbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000000260c0 RCX: 000000000045c1f9
-RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
-RBP: 000000000078bf48 R08: 0000000000000000 R09: 0000000000000000
-R10: 02008000fffffffe R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007fff4986196f R14: 00007f87766dc9c0 R15: 000000000078bf0c
-
-======================================================
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 7/22/20 11:02 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    4fa640dc Merge tag 'vfio-v5.8-rc7' of git://github.com/awi..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=145cac30900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c28b5fee66fd3b7f766e
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e23ac8900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1198c440900000
+> 
+> The issue was bisected to:
+> 
+> commit 53e233ea2fa9fa7e2405e95070981f327d90e519
+> Author: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+> Date:   Thu Oct 4 05:43:52 2018 +0000
+> 
+>     devlink: Add Documentation/networking/devlink-params-bnxt.txt
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Probably bogus bisection.
+
+This rather looks like a bug in taprio packet scheduler.
+
+
+
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e22b94900000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17e22b94900000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13e22b94900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+c28b5fee66fd3b7f766e@syzkaller.appspotmail.com
+> Fixes: 53e233ea2fa9 ("devlink: Add Documentation/networking/devlink-params-bnxt.txt")
+> 
+> hrtimer: interrupt took 6305559 ns
+> rcu: INFO: rcu_preempt self-detected stall on CPU
+> rcu: 	1-...!: (1 GPs behind) idle=91e/1/0x4000000000000000 softirq=10105/10107 fqs=1 
+> 	(t=18319 jiffies g=8905 q=457)
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 4008 Comm: systemd-journal Not tainted 5.8.0-rc6-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+>  nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+>  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+>  rcu_dump_cpu_stacks+0x194/0x1cf kernel/rcu/tree_stall.h:320
+>  print_cpu_stall kernel/rcu/tree_stall.h:553 [inline]
+>  check_cpu_stall kernel/rcu/tree_stall.h:627 [inline]
+>  rcu_pending kernel/rcu/tree.c:3489 [inline]
+>  rcu_sched_clock_irq.cold+0x5b3/0xccc kernel/rcu/tree.c:2504
+>  update_process_times+0x25/0x60 kernel/time/timer.c:1737
+>  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
+>  tick_sched_timer+0x108/0x290 kernel/time/tick-sched.c:1320
+>  __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+>  __hrtimer_run_queues+0x1d5/0xfc0 kernel/time/hrtimer.c:1584
+>  hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
+>  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+>  __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
+>  asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+>  </IRQ>
+>  __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+>  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+>  sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
+>  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
+> RIP: 0010:format_decode+0x0/0xad0 lib/vsprintf.c:2329
+> Code: c7 c7 10 05 af 8a be 10 00 00 00 e8 5a c3 46 00 48 c7 c7 20 78 0d 8a e9 6e f2 e2 fd 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 <41> 57 41 56 41 55 41 54 55 48 89 f5 53 48 bb 00 00 00 00 00 fc ff
+> RSP: 0018:ffffc90001077a10 EFLAGS: 00000293
+> RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffff83b0a497
+> RDX: ffff888093224040 RSI: ffffc90001077a80 RDI: ffffffff884e6293
+> RBP: ffffffff884e6293 R08: 0000000000000001 R09: ffff8880952a63d1
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880952a63d2
+> R13: ffffffff884e6293 R14: 0000000000000025 R15: ffffc90001077b30
+>  vsnprintf+0x155/0x14f0 lib/vsprintf.c:2572
+>  seq_vprintf fs/seq_file.c:379 [inline]
+>  seq_printf+0x195/0x240 fs/seq_file.c:394
+>  proc_pid_status+0x1c6d/0x24b0 fs/proc/array.c:424
+>  proc_single_show+0x116/0x1e0 fs/proc/base.c:766
+>  seq_read+0x432/0x1070 fs/seq_file.c:208
+>  vfs_read+0x1df/0x520 fs/read_write.c:479
+>  ksys_read+0x12d/0x250 fs/read_write.c:607
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f0fc43d9910
+> Code: Bad RIP value.
+> RSP: 002b:00007ffdcb193978 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 000055b1476b96f0 RCX: 00007f0fc43d9910
+> RDX: 0000000000000800 RSI: 000055b1476b8b00 RDI: 0000000000000013
+> RBP: 00007f0fc4694440 R08: 00007f0fc4697fc8 R09: 0000000000000410
+> R10: 000055b1476b96f0 R11: 0000000000000246 R12: 0000000000000800
+> R13: 0000000000000d68 R14: 000055b1476b8b00 R15: 00007f0fc4693900
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
