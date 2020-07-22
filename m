@@ -2,353 +2,81 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9376FC433F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE6C4345E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621DE22CAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="OpSM6pwa"
+	by mail.kernel.org (Postfix) with ESMTP id 7506E22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbgGVP4G (ORCPT
+        id S1733199AbgGVP4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:56:06 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:28118 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733167AbgGVP4D (ORCPT
+        Wed, 22 Jul 2020 11:56:10 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35762 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733182AbgGVP4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:56:03 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MFUKab010157;
-        Wed, 22 Jul 2020 08:55:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=jo7zq49EmldMSHyr0Cgl+awUK69ydVsJpsPNWv3pVX0=;
- b=OpSM6pwaH7SdwZKoWLt0aKc1S9HydrNbYP1M0trbk63IYvfjSxPpUfRSnvT8/SpgDt42
- NARszuOzVCqAkKmYQ/YWael//Jq2vrokaGzy90hql1XtsQK3oi7naio/Zcuo1nxg6L3N
- K9Z4YfF8W9Fcs1KfLk5/kYsRzfbuB4xd4UiHUIHJrubVVfMDz6qEK7GZbNcrnDBoQuHH
- CQlUcHZAK8S2QkbTZp7uxLnZWVj0TtX1pxLBBIP3/mE3Bt+J/O9/HTCO2ANxmCE/+gNB
- 0nCzhtjvN3f8nCbWtQLlFktm8xsQZRMNS1N+OCVfH7xmM7i3671cq/iiN0fnhFNn/xxe zg== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32bxensfuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 08:55:47 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 08:55:46 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 08:55:45 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 08:55:45 -0700
-Received: from NN-LT0049.marvell.com (unknown [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id C889D3F703F;
-        Wed, 22 Jul 2020 08:55:39 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 12/15] qede: reformat several structures in "qede.h"
-Date:   Wed, 22 Jul 2020 18:53:46 +0300
-Message-ID: <20200722155349.747-13-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722155349.747-1-alobakin@marvell.com>
-References: <20200722155349.747-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 11:56:06 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 52CA02976FD
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
+        eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
+        robin.murphy@arm.com
+Subject: [PATCH v5 4/9] media: staging: dt-bindings: rkisp1: drop parent unit address
+Date:   Wed, 22 Jul 2020 12:55:28 -0300
+Message-Id: <20200722155533.252844-5-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
+References: <20200722155533.252844-1-helen.koike@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_09:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the file more readable and easier for adding new fields.
+Fix the following error found with make ARCH=arm64 dt_binding_check:
 
-Misc: use IFNAMSIZ and netdev_name() instead of sizeof_field()
-and direct net_device::name dereferencing.
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dts:24.27-101.11:
+Warning (unit_address_vs_reg): /example-0/parent@0: node has a unit name, but no reg or ranges property
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Reported-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h | 166 +++++++++++++-----------
- 1 file changed, 89 insertions(+), 77 deletions(-)
+V5:
+- Patch re-written to drop the unit address instead of adding reg
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index f1d7f73de902..e8ed0bb94ee0 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -176,16 +176,17 @@ struct qede_dev {
- 	u32				dp_module;
- 	u8				dp_level;
+V3:
+- this is a new patch in the series
+---
+ .../Documentation/devicetree/bindings/media/rockchip-isp1.yaml  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index 79ebacab83cf3..62a6b9c959498 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -125,7 +125,7 @@ examples:
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/power/rk3399-power.h>
  
--	unsigned long flags;
--#define IS_VF(edev)	(test_bit(QEDE_FLAGS_IS_VF, &(edev)->flags))
-+	unsigned long			flags;
-+#define IS_VF(edev)			test_bit(QEDE_FLAGS_IS_VF, \
-+						 &(edev)->flags)
+-    parent0: parent@0 {
++    parent0: parent {
+         #address-cells = <2>;
+         #size-cells = <2>;
  
- 	const struct qed_eth_ops	*ops;
- 	struct qede_ptp			*ptp;
- 	u64				ptp_skip_txts;
- 
--	struct qed_dev_eth_info dev_info;
--#define QEDE_MAX_RSS_CNT(edev)	((edev)->dev_info.num_queues)
--#define QEDE_MAX_TSS_CNT(edev)	((edev)->dev_info.num_queues)
-+	struct qed_dev_eth_info		dev_info;
-+#define QEDE_MAX_RSS_CNT(edev)		((edev)->dev_info.num_queues)
-+#define QEDE_MAX_TSS_CNT(edev)		((edev)->dev_info.num_queues)
- #define QEDE_IS_BB(edev) \
- 	((edev)->dev_info.common.dev_type == QED_DEV_TYPE_BB)
- #define QEDE_IS_AH(edev) \
-@@ -198,14 +199,15 @@ struct qede_dev {
- 	u8				fp_num_rx;
- 	u16				req_queues;
- 	u16				num_queues;
--#define QEDE_QUEUE_CNT(edev)	((edev)->num_queues)
--#define QEDE_RSS_COUNT(edev)	((edev)->num_queues - (edev)->fp_num_tx)
-+
-+#define QEDE_QUEUE_CNT(edev)		((edev)->num_queues)
-+#define QEDE_RSS_COUNT(edev)		((edev)->num_queues - (edev)->fp_num_tx)
- #define QEDE_RX_QUEUE_IDX(edev, i)	(i)
--#define QEDE_TSS_COUNT(edev)	((edev)->num_queues - (edev)->fp_num_rx)
-+#define QEDE_TSS_COUNT(edev)		((edev)->num_queues - (edev)->fp_num_rx)
- 
- 	struct qed_int_info		int_info;
- 
--	/* Smaller private varaiant of the RTNL lock */
-+	/* Smaller private variant of the RTNL lock */
- 	struct mutex			qede_lock;
- 	u32				state; /* Protected by qede_lock */
- 	u16				rx_buf_size;
-@@ -226,22 +228,28 @@ struct qede_dev {
- 	      SKB_DATA_ALIGN(sizeof(struct skb_shared_info)))
- 
- 	struct qede_stats		stats;
--#define QEDE_RSS_INDIR_INITED	BIT(0)
--#define QEDE_RSS_KEY_INITED	BIT(1)
--#define QEDE_RSS_CAPS_INITED	BIT(2)
--	u32 rss_params_inited; /* bit-field to track initialized rss params */
--	u16 rss_ind_table[128];
--	u32 rss_key[10];
--	u8 rss_caps;
--
--	u16			q_num_rx_buffers; /* Must be a power of two */
--	u16			q_num_tx_buffers; /* Must be a power of two */
--
--	bool gro_disable;
--	struct list_head vlan_list;
--	u16 configured_vlans;
--	u16 non_configured_vlans;
--	bool accept_any_vlan;
-+
-+	/* Bitfield to track initialized RSS params */
-+	u32				rss_params_inited;
-+#define QEDE_RSS_INDIR_INITED		BIT(0)
-+#define QEDE_RSS_KEY_INITED		BIT(1)
-+#define QEDE_RSS_CAPS_INITED		BIT(2)
-+
-+	u16				rss_ind_table[128];
-+	u32				rss_key[10];
-+	u8				rss_caps;
-+
-+	/* Both must be a power of two */
-+	u16				q_num_rx_buffers;
-+	u16				q_num_tx_buffers;
-+
-+	bool				gro_disable;
-+
-+	struct list_head		vlan_list;
-+	u16				configured_vlans;
-+	u16				non_configured_vlans;
-+	bool				accept_any_vlan;
-+
- 	struct delayed_work		sp_task;
- 	unsigned long			sp_flags;
- 	u16				vxlan_dst_port;
-@@ -252,14 +260,14 @@ struct qede_dev {
- 
- 	struct qede_rdma_dev		rdma_info;
- 
--	struct bpf_prog *xdp_prog;
-+	struct bpf_prog			*xdp_prog;
- 
--	unsigned long err_flags;
--#define QEDE_ERR_IS_HANDLED	31
--#define QEDE_ERR_ATTN_CLR_EN	0
--#define QEDE_ERR_GET_DBG_INFO	1
--#define QEDE_ERR_IS_RECOVERABLE	2
--#define QEDE_ERR_WARN		3
-+	unsigned long			err_flags;
-+#define QEDE_ERR_IS_HANDLED		31
-+#define QEDE_ERR_ATTN_CLR_EN		0
-+#define QEDE_ERR_GET_DBG_INFO		1
-+#define QEDE_ERR_IS_RECOVERABLE		2
-+#define QEDE_ERR_WARN			3
- 
- 	struct qede_dump_info		dump_info;
- };
-@@ -372,29 +380,30 @@ struct sw_tx_bd {
- };
- 
- struct sw_tx_xdp {
--	struct page *page;
--	dma_addr_t mapping;
-+	struct page			*page;
-+	dma_addr_t			mapping;
- };
- 
- struct qede_tx_queue {
--	u8 is_xdp;
--	bool is_legacy;
--	u16 sw_tx_cons;
--	u16 sw_tx_prod;
--	u16 num_tx_buffers; /* Slowpath only */
-+	u8				is_xdp;
-+	bool				is_legacy;
-+	u16				sw_tx_cons;
-+	u16				sw_tx_prod;
-+	u16				num_tx_buffers; /* Slowpath only */
- 
--	u64 xmit_pkts;
--	u64 stopped_cnt;
--	u64 tx_mem_alloc_err;
-+	u64				xmit_pkts;
-+	u64				stopped_cnt;
-+	u64				tx_mem_alloc_err;
- 
--	__le16 *hw_cons_ptr;
-+	__le16				*hw_cons_ptr;
- 
- 	/* Needed for the mapping of packets */
--	struct device *dev;
-+	struct device			*dev;
-+
-+	void __iomem			*doorbell_addr;
-+	union db_prod			tx_db;
- 
--	void __iomem *doorbell_addr;
--	union db_prod tx_db;
--	int index; /* Slowpath only */
-+	int				index; /* Slowpath only */
- #define QEDE_TXQ_XDP_TO_IDX(edev, txq)	((txq)->index - \
- 					 QEDE_MAX_TSS_CNT(edev))
- #define QEDE_TXQ_IDX_TO_XDP(edev, idx)	((idx) + QEDE_MAX_TSS_CNT(edev))
-@@ -406,22 +415,22 @@ struct qede_tx_queue {
- #define QEDE_NDEV_TXQ_ID_TO_TXQ(edev, idx)	\
- 	(&((edev)->fp_array[QEDE_NDEV_TXQ_ID_TO_FP_ID(edev, idx)].txq \
- 	[QEDE_NDEV_TXQ_ID_TO_TXQ_COS(edev, idx)]))
--#define QEDE_FP_TC0_TXQ(fp)	(&((fp)->txq[0]))
-+#define QEDE_FP_TC0_TXQ(fp)		(&((fp)->txq[0]))
- 
- 	/* Regular Tx requires skb + metadata for release purpose,
- 	 * while XDP requires the pages and the mapped address.
- 	 */
- 	union {
--		struct sw_tx_bd *skbs;
--		struct sw_tx_xdp *xdp;
--	} sw_tx_ring;
-+		struct sw_tx_bd		*skbs;
-+		struct sw_tx_xdp	*xdp;
-+	}				sw_tx_ring;
- 
--	struct qed_chain tx_pbl;
-+	struct qed_chain		tx_pbl;
- 
- 	/* Slowpath; Should be kept in end [unless missing padding] */
--	void *handle;
--	u16 cos;
--	u16 ndev_txq_id;
-+	void				*handle;
-+	u16				cos;
-+	u16				ndev_txq_id;
- };
- 
- #define BD_UNMAP_ADDR(bd)		HILO_U64(le32_to_cpu((bd)->addr.hi), \
-@@ -435,32 +444,35 @@ struct qede_tx_queue {
- #define BD_UNMAP_LEN(bd)		(le16_to_cpu((bd)->nbytes))
- 
- struct qede_fastpath {
--	struct qede_dev	*edev;
--#define QEDE_FASTPATH_TX	BIT(0)
--#define QEDE_FASTPATH_RX	BIT(1)
--#define QEDE_FASTPATH_XDP	BIT(2)
--#define QEDE_FASTPATH_COMBINED	(QEDE_FASTPATH_TX | QEDE_FASTPATH_RX)
--	u8			type;
--	u8			id;
--	u8			xdp_xmit;
--	struct napi_struct	napi;
--	struct qed_sb_info	*sb_info;
--	struct qede_rx_queue	*rxq;
--	struct qede_tx_queue	*txq;
--	struct qede_tx_queue	*xdp_tx;
--
--#define VEC_NAME_SIZE  (sizeof_field(struct net_device, name) + 8)
--	char	name[VEC_NAME_SIZE];
-+	struct qede_dev			*edev;
-+
-+	u8				type;
-+#define QEDE_FASTPATH_TX		BIT(0)
-+#define QEDE_FASTPATH_RX		BIT(1)
-+#define QEDE_FASTPATH_XDP		BIT(2)
-+#define QEDE_FASTPATH_COMBINED		(QEDE_FASTPATH_TX | QEDE_FASTPATH_RX)
-+
-+	u8				id;
-+
-+	u8				xdp_xmit;
-+
-+	struct napi_struct		napi;
-+	struct qed_sb_info		*sb_info;
-+	struct qede_rx_queue		*rxq;
-+	struct qede_tx_queue		*txq;
-+	struct qede_tx_queue		*xdp_tx;
-+
-+	char				name[IFNAMSIZ + 8];
- };
- 
- /* Debug print definitions */
--#define DP_NAME(edev) ((edev)->ndev->name)
-+#define DP_NAME(edev)			netdev_name((edev)->ndev)
- 
--#define XMIT_PLAIN		0
--#define XMIT_L4_CSUM		BIT(0)
--#define XMIT_LSO		BIT(1)
--#define XMIT_ENC		BIT(2)
--#define XMIT_ENC_GSO_L4_CSUM	BIT(3)
-+#define XMIT_PLAIN			0
-+#define XMIT_L4_CSUM			BIT(0)
-+#define XMIT_LSO			BIT(1)
-+#define XMIT_ENC			BIT(2)
-+#define XMIT_ENC_GSO_L4_CSUM		BIT(3)
- 
- #define QEDE_CSUM_ERROR			BIT(0)
- #define QEDE_CSUM_UNNECESSARY		BIT(1)
 -- 
-2.25.1
+2.28.0.rc1
 
