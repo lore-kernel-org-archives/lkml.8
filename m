@@ -2,150 +2,138 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D00C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F66C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8013F2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A102073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbgGVBGO (ORCPT
+        id S1731577AbgGVBGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 21:06:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26542 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgGVBGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 21:06:13 -0400
-IronPort-SDR: LNRIsgH6Ugs4ewlMnT6dqHK4PSvLbQ+BPGLvHvHBqE2shF5LkB1/3Cexs8tyfG1Mk2ajz/uDTc
- 7wF4XR+O/JBA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="235118367"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="235118367"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 18:06:13 -0700
-IronPort-SDR: rRK2QOhEswznu82D5O8AVJvsH3HtTfgWnE7Secv6pJtJlwm4qJNo8h8La5U3dnaOd5xK4cQNjM
- GVX7xVlahmiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="462275980"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga005.jf.intel.com with ESMTP; 21 Jul 2020 18:06:10 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 4/7] iommu/vt-d: Handle non-page aligned address
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1594080774-33413-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1594080774-33413-5-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200721095036.1977e3bf@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7a8f70af-f39b-1b57-a9eb-db085ab63149@linux.intel.com>
-Date:   Wed, 22 Jul 2020 09:01:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 21 Jul 2020 21:06:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54112 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726959AbgGVBGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 21:06:52 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 86ACFD3762CF24A44D79;
+        Wed, 22 Jul 2020 09:06:49 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
+ 09:06:42 +0800
+From:   Xu Qiang <xuqiang36@huawei.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <rui.xiang@huawei.com>
+Subject: [PATCH -next] gpu: drm: Fix spinlock vblank_time_lock use error.
+Date:   Wed, 22 Jul 2020 01:05:27 +0000
+Message-ID: <20200722010527.52293-1-xuqiang36@huawei.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200721095036.1977e3bf@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.208]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+The drm_handle_vblank function is in the interrupt context.
+Therefore, the spin lock vblank_time_lock is obtained
+from the interrupt context.
 
-On 7/22/20 12:50 AM, Jacob Pan wrote:
-> Hi Baolu,
-> 
-> Not sure what state is this patch in, there is a bug in this patch
-> (see below), shall I send out an updated version of this one only? or
-> another incremental patch.
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Xu Qiang <xuqiang36@huawei.com>
+---
+ drivers/gpu/drm/drm_vblank.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-Please send an updated version. I hope Joerg could pick these as 5.8
-fix.
+diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+index f402c75b9d34..4ca63ff33a43 100644
+--- a/drivers/gpu/drm/drm_vblank.c
++++ b/drivers/gpu/drm/drm_vblank.c
+@@ -229,10 +229,11 @@ static void drm_reset_vblank_timestamp(struct drm_device *dev, unsigned int pipe
+ {
+ 	u32 cur_vblank;
+ 	bool rc;
++	unsigned long irqflags;
+ 	ktime_t t_vblank;
+ 	int count = DRM_TIMESTAMP_MAXRETRIES;
+ 
+-	spin_lock(&dev->vblank_time_lock);
++	spin_lock_irqsave(&dev->vblank_time_lock, irqflags);
+ 
+ 	/*
+ 	 * sample the current counter to avoid random jumps
+@@ -257,7 +258,7 @@ static void drm_reset_vblank_timestamp(struct drm_device *dev, unsigned int pipe
+ 	 */
+ 	store_vblank(dev, pipe, 1, t_vblank, cur_vblank);
+ 
+-	spin_unlock(&dev->vblank_time_lock);
++	spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags);
+ }
+ 
+ /*
+@@ -1106,11 +1107,12 @@ static int __enable_vblank(struct drm_device *dev, unsigned int pipe)
+ static int drm_vblank_enable(struct drm_device *dev, unsigned int pipe)
+ {
+ 	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
++	unsigned long irqflags;
+ 	int ret = 0;
+ 
+ 	assert_spin_locked(&dev->vbl_lock);
+ 
+-	spin_lock(&dev->vblank_time_lock);
++	spin_lock_irqsave(&dev->vblank_time_lock, irqflags);
+ 
+ 	if (!vblank->enabled) {
+ 		/*
+@@ -1136,7 +1138,7 @@ static int drm_vblank_enable(struct drm_device *dev, unsigned int pipe)
+ 		}
+ 	}
+ 
+-	spin_unlock(&dev->vblank_time_lock);
++	spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags);
+ 
+ 	return ret;
+ }
+@@ -1917,6 +1919,7 @@ bool drm_handle_vblank(struct drm_device *dev, unsigned int pipe)
+ {
+ 	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+ 	unsigned long irqflags;
++	unsigned long irqflags_vblank;
+ 	bool disable_irq;
+ 
+ 	if (drm_WARN_ON_ONCE(dev, !drm_dev_has_vblank(dev)))
+@@ -1931,18 +1934,18 @@ bool drm_handle_vblank(struct drm_device *dev, unsigned int pipe)
+ 	 * vblank enable/disable, as this would cause inconsistent
+ 	 * or corrupted timestamps and vblank counts.
+ 	 */
+-	spin_lock(&dev->vblank_time_lock);
++	spin_lock_irqsave(&dev->vblank_time_lock, irqflags_vblank);
+ 
+ 	/* Vblank irq handling disabled. Nothing to do. */
+ 	if (!vblank->enabled) {
+-		spin_unlock(&dev->vblank_time_lock);
++		spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags_vblank);
+ 		spin_unlock_irqrestore(&dev->event_lock, irqflags);
+ 		return false;
+ 	}
+ 
+ 	drm_update_vblank_count(dev, pipe, true);
+ 
+-	spin_unlock(&dev->vblank_time_lock);
++	spin_unlock_irqrestore(&dev->vblank_time_lock, irqflags_vblank);
+ 
+ 	wake_up(&vblank->queue);
+ 
+-- 
+2.25.0
 
-Best regards,
-baolu
-
-> 
-> Thanks,
-> 
-> Jacob
-> 
-> On Mon,  6 Jul 2020 17:12:51 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> 
->> From: Liu Yi L <yi.l.liu@intel.com>
->>
->> Address information for device TLB invalidation comes from userspace
->> when device is directly assigned to a guest with vIOMMU support.
->> VT-d requires page aligned address. This patch checks and enforce
->> address to be page aligned, otherwise reserved bits can be set in the
->> invalidation descriptor. Unrecoverable fault will be reported due to
->> non-zero value in the reserved bits.
->>
->> Fixes: 61a06a16e36d8 ("iommu/vt-d: Support flushing more translation
->> cache types")
->> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
->> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
->> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>
->> ---
->>   drivers/iommu/intel/dmar.c | 20 ++++++++++++++++++--
->>   1 file changed, 18 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
->> index d9f973fa1190..b2c53bada905 100644
->> --- a/drivers/iommu/intel/dmar.c
->> +++ b/drivers/iommu/intel/dmar.c
->> @@ -1455,9 +1455,25 @@ void qi_flush_dev_iotlb_pasid(struct
->> intel_iommu *iommu, u16 sid, u16 pfsid,
->>   	 * Max Invs Pending (MIP) is set to 0 for now until we have
->> DIT in
->>   	 * ECAP.
->>   	 */
->> -	desc.qw1 |= addr & ~mask;
->> -	if (size_order)
->> +	if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
->> +		pr_warn_ratelimited("Invalidate non-aligned address
->> %llx, order %d\n", addr, size_order); +
->> +	/* Take page address */
->> +	desc.qw1 = QI_DEV_EIOTLB_ADDR(addr);
->> +
->> +	if (size_order) {
->> +		/*
->> +		 * Existing 0s in address below size_order may be
->> the least
->> +		 * significant bit, we must set them to 1s to avoid
->> having
->> +		 * smaller size than desired.
->> +		 */
->> +		desc.qw1 |= GENMASK_ULL(size_order + VTD_PAGE_SHIFT,
->> +					VTD_PAGE_SHIFT);
-> Yi reported the issue, it should be:
-> desc.qw1 |= GENMASK_ULL(size_order + VTD_PAGE_SHIFT - 1,
-> 					VTD_PAGE_SHIFT);
-> 
->> +		/* Clear size_order bit to indicate size */
->> +		desc.qw1 &= ~mask;
->> +		/* Set the S bit to indicate flushing more than 1
->> page */ desc.qw1 |= QI_DEV_EIOTLB_SIZE;
->> +	}
->>   
->>   	qi_submit_sync(iommu, &desc, 1, 0);
->>   }
-> 
-> [Jacob Pan]
-> 
