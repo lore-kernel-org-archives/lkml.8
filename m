@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ACCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB3F5206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3971B22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r94Bx+p3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N60bJeq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgGVLBr (ORCPT
+        id S1730377AbgGVLBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47708 "EHLO
+        Wed, 22 Jul 2020 07:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730054AbgGVLBo (ORCPT
+        with ESMTP id S1728966AbgGVLBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:01:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B269C0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:43 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id 88so1477638wrh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:43 -0700 (PDT)
+        Wed, 22 Jul 2020 07:01:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B00C0619DE
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so1486874wrw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=niAmRUGsg4kxR596xiqQAVaMYD9d+SGcGWnDYDntXxM=;
-        b=r94Bx+p3fcIDdAUsi8ATLuebYYefpEfjtAfalUhzc8pUWLe7DYZlGToUERmUT6175v
-         ridcQ7TDaWP5Jou4y5JCHVow5LoJaJmJTCGsqXpB1OrI5UBftKfAYaVYfwzURR66u/H9
-         iHci+7rpt+mdko5bdHcESZMNj4ARx6gtgIhfZZ/o0auMSlQPxuV4B2FlB+9MMh7yl9Iv
-         nBI5Anaw9Q7+OmR8XNlS06NTmtjbZTzwh5i4lOJra4g19ge0YzKw0ZZOzzm/YUG6QVwU
-         8Am9GunVPEw14N3o7HFV6CuCO0QWUc6s/ie+Uy5RY9m5EjGvqPB07L4KQv75NEShn5qI
-         N7IA==
+        bh=Mb4TDwngKstdYsXu7RUzjZ9eyxkXyxQaDZSnxs4t1+Y=;
+        b=N60bJeq90gF41M58w7DHRMQvF6qMoRnkCpkk5WCEHbDJW0aHQ6I4402GfkkTroitnv
+         DxGEB6UcyEovmUTMewJhlshvkGdmcaqwzbcqdfA9nxgw8Spu298DxnjSikpWRXypTvC8
+         dQSOOG0oVp3kRk+4vQZBFRagUdUm0V8zL5nCuMACDngI5NldIASAtY9m3s+pDNjYVNEZ
+         Ga8vzcgGqEaScwPGpp2H60wF2eh+4Q9q9UsO3QEH84g81YpAwV7+Ti9bty7qsYWIdfSA
+         uYRKddOBJ/AArr/opFW0AMFu8JnJf8jQZLjQoYGrQLEdLYE7a2pVrXYOpPbKi3sQdRLd
+         RSNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=niAmRUGsg4kxR596xiqQAVaMYD9d+SGcGWnDYDntXxM=;
-        b=ubRlqjO5XAM9XzkZHTy0FyJTabC0MzBG5egzRWC5/njAH1qSp2MKk45hl/ArmCJhcB
-         MJnOlxHmNqa93PHsCUnCk99WaQjbnCobR3gQo1pLZ1cNLXuBH/lVdU5D1lA79pjcZJr1
-         em3PajzxngYvdvVOmR2C7wLqkxUBlLA20zxp+sDb7KN4XuHPrmDB8UCe3Sla+xZFuBl/
-         7avTPTVTJju3DlU4RI+A2UO5d4NbIkN6NhIhahG71YEzfJ5IS52GhVDMrsFjiI1dpjcB
-         mzB0FiycWyo7IvGylySp1DyKtbgPhXHObdZv870AWsYjue1/8c/z4JrN8Nfn8qbxwwip
-         3+pw==
-X-Gm-Message-State: AOAM5329nxg4KMj6zmvsP9M+AeOokcoxuGI24O0NNFMaiTFPU+2K548M
-        QiWjMF6BaM2VzB2+SUxNHqV3qQ==
-X-Google-Smtp-Source: ABdhPJxDV2Vmpdiz+h/u+9NMFx3xGKLE7lckZbCG8ZfyTR6oMuWNipVN11Zb3mzDpjoxhrGwzS6DbQ==
-X-Received: by 2002:a5d:4a0d:: with SMTP id m13mr13001479wrq.12.1595415702339;
-        Wed, 22 Jul 2020 04:01:42 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id y6sm41256164wrr.74.2020.07.22.04.01.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        bh=Mb4TDwngKstdYsXu7RUzjZ9eyxkXyxQaDZSnxs4t1+Y=;
+        b=FtlAPALKiySpOBhdqFX6zejqr4278HVk25HA1/E4kqudQ9XjqYY/iZAwQnllnVYlP0
+         c8MdJtSNiCnId/UEdF4GQj3qJjwR22bmXmH0woQWdAKw6X1n7IP/IPPvey8bJAre6dEP
+         NjyxsCp0VlQUo3z7nE0f0yjfebf2ZWY+niOu3iTYSsDlBaFwia/jvzs2MhQCgL98YtwV
+         KyMxdrWywrmeHLg38NWIb2l8DmJw0bqq4iZ8Kv+TRGey3cWsX00bRB5cwVINjc5XzmMp
+         Ozv37vGnXdmqA8RrspyAfSg8hZOumXst8CsfwgtTgZvZJRqyNlQwALRexCG+4xH6Fgi2
+         yrTA==
+X-Gm-Message-State: AOAM533kKAoPPIWkB8TlrnNa9rwWPilqiKLhmaH71gco6YEa+x6C1u0W
+        ikyxYEO2bbxOQUMKaGfp9j/ksw==
+X-Google-Smtp-Source: ABdhPJyVFEACUDVgyJ7BwW37Wm8jOezlYQOmluktE5flWxq8GlmeRLwB1J95+gBWQAjMSub6hpTORA==
+X-Received: by 2002:adf:cd8b:: with SMTP id q11mr22330993wrj.98.1595415701114;
         Wed, 22 Jul 2020 04:01:41 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id y6sm41256164wrr.74.2020.07.22.04.01.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jul 2020 04:01:40 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org
 Cc:     saravanak@google.com, mdtipton@codeaurora.org,
         okukatla@codeaurora.org, bjorn.andersson@linaro.org,
         vincent.guittot@linaro.org, georgi.djakov@linaro.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] interconnect: qcom: Use icc_sync_state in sdm845 and osm-3l drivers
-Date:   Wed, 22 Jul 2020 14:01:39 +0300
-Message-Id: <20200722110139.24778-3-georgi.djakov@linaro.org>
+Subject: [PATCH v2 1/2] interconnect: Add sync state support
+Date:   Wed, 22 Jul 2020 14:01:38 +0300
+Message-Id: <20200722110139.24778-2-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200722110139.24778-1-georgi.djakov@linaro.org>
 References: <20200722110139.24778-1-georgi.djakov@linaro.org>
@@ -78,56 +78,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lowering the bandwidth on the bus might have negative consequences if
-it's done before all consumers had a chance to cast their vote. Let's
-return the maximum amount of bandwidth as initial value. This bandwidth
-level would be maintained until all consumers have probed.
+The bootloaders often do some initial configuration of the interconnects
+in the system and we want to keep this configuration until all consumers
+have probed and expressed their bandwidth needs. This is because we don't
+want to change the configuration by starting to disable unused paths until
+every user had a chance to request the amount of bandwidth it needs.
+
+To accomplish this we will implement an interconnect specific sync_state
+callback which will synchronize (aggregate and set) the current bandwidth
+settings when all consumers have been probed.
 
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/qcom/osm-l3.c | 3 +++
- drivers/interconnect/qcom/sdm845.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
+ include/linux/interconnect-provider.h |  5 +++
+ 2 files changed, 66 insertions(+)
 
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-index 96fb9ff5ff2e..54aff6273af1 100644
---- a/drivers/interconnect/qcom/osm-l3.c
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -236,6 +236,8 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index e5f998744501..0c4e38d9f1fa 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -26,6 +26,8 @@
  
- 		node->name = qnodes[i]->name;
- 		node->data = qnodes[i];
-+		node->init_avg = INT_MAX;
-+		node->init_peak = INT_MAX;
- 		icc_node_add(node, provider);
+ static DEFINE_IDR(icc_idr);
+ static LIST_HEAD(icc_providers);
++static int providers_count;
++static bool synced_state;
+ static DEFINE_MUTEX(icc_lock);
+ static struct dentry *icc_debugfs_dir;
  
- 		for (j = 0; j < qnodes[i]->num_links; j++)
-@@ -268,6 +270,7 @@ static struct platform_driver osm_l3_driver = {
- 	.driver = {
- 		.name = "osm-l3",
- 		.of_match_table = osm_l3_of_match,
-+		.sync_state = icc_sync_state,
- 	},
+@@ -255,6 +257,12 @@ static int aggregate_requests(struct icc_node *node)
+ 			continue;
+ 		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
+ 			     &node->avg_bw, &node->peak_bw);
++
++		/* during boot use the initial bandwidth as a floor value */
++		if (!synced_state) {
++			node->avg_bw = max(node->avg_bw, node->init_avg);
++			node->peak_bw = max(node->peak_bw, node->init_peak);
++		}
+ 	}
+ 
+ 	return 0;
+@@ -919,6 +927,13 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
+ 	node->provider = provider;
+ 	list_add_tail(&node->node_list, &provider->nodes);
+ 
++	/* get the initial bandwidth values and sync them with hardware */
++	if ((node->init_avg || node->init_peak) && provider->set) {
++		node->avg_bw = node->init_avg;
++		node->peak_bw = node->init_peak;
++		provider->set(node, node);
++	}
++
+ 	mutex_unlock(&icc_lock);
+ }
+ EXPORT_SYMBOL_GPL(icc_node_add);
+@@ -1014,8 +1029,54 @@ int icc_provider_del(struct icc_provider *provider)
+ }
+ EXPORT_SYMBOL_GPL(icc_provider_del);
+ 
++static int of_count_icc_providers(struct device_node *np)
++{
++	struct device_node *child;
++	int count = 0;
++
++	for_each_available_child_of_node(np, child) {
++		if (of_property_read_bool(child, "#interconnect-cells"))
++			count++;
++		count += of_count_icc_providers(child);
++	}
++	of_node_put(np);
++
++	return count;
++}
++
++void icc_sync_state(struct device *dev)
++{
++	struct icc_provider *p;
++	struct icc_node *n;
++	static int count;
++
++	count++;
++
++	if (count < providers_count)
++		return;
++
++	mutex_lock(&icc_lock);
++	synced_state = true;
++	list_for_each_entry(p, &icc_providers, provider_list) {
++		dev_dbg(p->dev, "interconnect provider is in synced state\n");
++		list_for_each_entry(n, &p->nodes, node_list) {
++			if (n->init_avg || n->init_peak) {
++				aggregate_requests(n);
++				p->set(n, n);
++			}
++		}
++	}
++	mutex_unlock(&icc_lock);
++}
++EXPORT_SYMBOL_GPL(icc_sync_state);
++
+ static int __init icc_init(void)
+ {
++	struct device_node *root = of_find_node_by_path("/");
++
++	providers_count = of_count_icc_providers(root);
++	of_node_put(root);
++
+ 	icc_debugfs_dir = debugfs_create_dir("interconnect", NULL);
+ 	debugfs_create_file("interconnect_summary", 0444,
+ 			    icc_debugfs_dir, NULL, &icc_summary_fops);
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index 0c494534b4d3..aa85b96296c4 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -71,6 +71,8 @@ struct icc_provider {
+  * @req_list: a list of QoS constraint requests associated with this node
+  * @avg_bw: aggregated value of average bandwidth requests from all consumers
+  * @peak_bw: aggregated value of peak bandwidth requests from all consumers
++ * @init_avg: average bandwidth value that is read from the hardware during init
++ * @init_peak: peak bandwidth value that is read from the hardware during init
+  * @data: pointer to private data
+  */
+ struct icc_node {
+@@ -87,6 +89,8 @@ struct icc_node {
+ 	struct hlist_head	req_list;
+ 	u32			avg_bw;
+ 	u32			peak_bw;
++	u32			init_avg;
++	u32			init_peak;
+ 	void			*data;
  };
- module_platform_driver(osm_l3_driver);
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index f6c7b969520d..c04775820f15 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -503,6 +503,8 @@ static int qnoc_probe(struct platform_device *pdev)
  
- 		node->name = qnodes[i]->name;
- 		node->data = qnodes[i];
-+		node->init_avg = INT_MAX;
-+		node->init_peak = INT_MAX;
- 		icc_node_add(node, provider);
+@@ -103,6 +107,7 @@ void icc_node_del(struct icc_node *node);
+ int icc_nodes_remove(struct icc_provider *provider);
+ int icc_provider_add(struct icc_provider *provider);
+ int icc_provider_del(struct icc_provider *provider);
++void icc_sync_state(struct device *dev);
  
- 		for (j = 0; j < qnodes[i]->num_links; j++)
-@@ -559,6 +561,7 @@ static struct platform_driver qnoc_driver = {
- 	.driver = {
- 		.name = "qnoc-sdm845",
- 		.of_match_table = qnoc_of_match,
-+		.sync_state = icc_sync_state,
- 	},
- };
- module_platform_driver(qnoc_driver);
+ #else
+ 
