@@ -2,101 +2,107 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62414C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C77C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A19C2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9462F22B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0VIdlQaY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2PJLzQX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733072AbgGVXNp (ORCPT
+        id S1729843AbgGVXIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:13:45 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48888 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVXNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:13:45 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jyNvg-0006Rv-PO; Thu, 23 Jul 2020 01:13:40 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: arm: rockchip: Add ROCKPi 4B binding
-Date:   Thu, 23 Jul 2020 01:13:39 +0200
-Message-ID: <3893924.cuH9TW0V3R@phil>
-In-Reply-To: <20200722190949.215656-3-jagan@amarulasolutions.com>
-References: <20200722190949.215656-1-jagan@amarulasolutions.com> <20200722190949.215656-3-jagan@amarulasolutions.com>
+        Wed, 22 Jul 2020 19:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgGVXIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 19:08:44 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8538DC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:08:44 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595459322;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WyEi4r6pHlCnjds15Evf4SyPGIdz2gkscTmxlZ56a7c=;
+        b=0VIdlQaYmuU15xJKR2Vpu8IZRz4nGtHhg8vfaQlvdhVSw+gcedvuz9juuJ2Mfcgx7trj4X
+        kbQwll7FYVjPNFGijxlpSc2RiWrM4y6VSLSVMhdp7sD1aW1N3q6cRap0AaNBEEkj3N9WCs
+        tl34aWpmmKv7kaVT5q7SpQdjRRbDvKOxMQt8TC2TYTbwo8v+GLGu3FhGn23e+oJEPUeFb4
+        atu/+nq4gdgQ3zkiR+l+HVGP/Gd4rLOVZNbFZ+EhSkW6xWMuda+VVKryw/PVrEyn06hHhN
+        zORjEhukzQw/gufdOpxK5k9zEad0IWjYw83raD4ZyNd4HGDhfLtpGPeg9oISjA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595459322;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WyEi4r6pHlCnjds15Evf4SyPGIdz2gkscTmxlZ56a7c=;
+        b=2PJLzQX5a1QOkaKYxq4l13cl5Zpw5jHy6laMnbmQ2JW1XUOLxYwXKK1aNkm9iQpfwwWxzB
+        fIy/OIU1EhYvkkBw==
+To:     Dennis Zhou <dennis@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v3 00/11] i386 Clang support
+In-Reply-To: <20200721222754.GA820494@google.com>
+References: <20200720204925.3654302-1-ndesaulniers@google.com> <20200721222754.GA820494@google.com>
+Date:   Thu, 23 Jul 2020 01:08:42 +0200
+Message-ID: <87blk7ywp1.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jagan,
+Dennis Zhou <dennis@kernel.org> writes:
+> On Mon, Jul 20, 2020 at 01:49:14PM -0700, Nick Desaulniers wrote:
+>> Resend of Brian's v2 with Acks from Peter and Linus collected, as well
+>> as the final patch (mine) added. The commit of the final patch discusses
+>> some of the architectural differences between GCC and Clang, and the
+>> kernels tickling of this difference for i386, which necessitated these
+>> patches.
+>> 
+>> Brian Gerst (10):
+>>   x86/percpu: Introduce size abstraction macros
+>>   x86/percpu: Clean up percpu_to_op()
+>>   x86/percpu: Clean up percpu_from_op()
+>>   x86/percpu: Clean up percpu_add_op()
+>>   x86/percpu: Remove "e" constraint from XADD
+>>   x86/percpu: Clean up percpu_add_return_op()
+>>   x86/percpu: Clean up percpu_xchg_op()
+>>   x86/percpu: Clean up percpu_cmpxchg_op()
+>>   x86/percpu: Clean up percpu_stable_op()
+>>   x86/percpu: Remove unused PER_CPU() macro
+>> 
+>> Nick Desaulniers (1):
+>>   x86: support i386 with Clang
+>> 
+>>  arch/x86/include/asm/percpu.h  | 510 +++++++++++----------------------
+>>  arch/x86/include/asm/uaccess.h |   4 +-
+>>  2 files changed, 175 insertions(+), 339 deletions(-)
+>> 
+>> -- 
+>> 2.28.0.rc0.105.gf9edc3c819-goog
+>> 
+>
+> This looks great to me! I applied it to for-5.9.
 
-Am Mittwoch, 22. Juli 2020, 21:09:46 CEST schrieb Jagan Teki:
-> Add dt-bindings for ROCKPi 4B which is similar to 4A with
-> additional AP6256 Wifi/BT, PoE.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v2:
-> - new patch
-> 
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index 36057c9e4b83..7250adb43d24 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -448,6 +448,12 @@ properties:
->            - const: radxa,rockpi4a
->            - const: rockchip,rk3399
->  
-> +      - description: Radxa ROCK Pi 4B
-> +        items:
-> +          - const: radxa,rockpi4
-> +          - const: radxa,rockpi4b
-> +          - const: rockchip,rk3399
-> +
+You applied it? I'm not aware that you're maintaining x86 nowadays.
 
-Please do all RockPi4 variants into one entry, so we want something like:
+Thanks,
 
-      - description: Radxa ROCK Pi 4
-        items:
-          - enum:
-              - radxa,rockpi4a
-              - radxa,rockpi4b
-              - radxa,rockpi4c
-          - const: radxa,rockpi4
-          - const: rockchip,rk3399
-
-And as the {a,b,c} variant is the most specific it also should be the
-first entry, not the second.
-
-
-Heiko
-
->        - description: Radxa ROCK Pi N8
->          items:
->            - const: radxa,rockpi-n8
-> 
-
-
-
-
+        tglx
