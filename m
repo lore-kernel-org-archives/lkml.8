@@ -2,401 +2,211 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDBAC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D96C433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FBC207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEB220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SyzWyYKx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="v8AxR96u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732564AbgGVSpD (ORCPT
+        id S1732264AbgGVSpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:45:03 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:63734 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732491AbgGVSpA (ORCPT
+        Wed, 22 Jul 2020 14:45:14 -0400
+Received: from gateway36.websitewelcome.com ([192.185.199.121]:24431 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728497AbgGVSpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:45:00 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MIZi2U005536
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:44:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=kLiRNkzTf0D6xXXE4xYsJFN1/otcpDPBRxMJPlWMO1k=;
- b=SyzWyYKxzV+TF3gkjg3wzsnmg5wuJTMd26e/3f6YHqTW67Jpg6+FN9Q+v5oYqfuXCqTc
- by9eMGnhYV/adr+9xJ7liUHyi8pS3qY/zZuKXhX/muLFDeMDzYSQpYBcII59PbCSSr8U
- nL/tP+7PBW3DQEp85cp6lLqSRi+yAGO1iwc= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32eg0bb7d6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:44:58 -0700
-Received: from intmgw005.03.ash8.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 22 Jul 2020 11:44:56 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id DADC062E4E7F; Wed, 22 Jul 2020 11:42:15 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
-        <brouer@redhat.com>, <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v4 bpf-next 1/4] bpf: separate bpf_get_[stack|stackid] for perf events BPF
-Date:   Wed, 22 Jul 2020 11:42:07 -0700
-Message-ID: <20200722184210.4078256-2-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200722184210.4078256-1-songliubraving@fb.com>
-References: <20200722184210.4078256-1-songliubraving@fb.com>
+        Wed, 22 Jul 2020 14:45:13 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 2A93340518271
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:44:33 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id yJMxjbdjYhmVTyJMxjxzMC; Wed, 22 Jul 2020 13:21:31 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6Hf0hTi79QqH5wR+v5/kTejIjdPdaSCv8dlz4gt17UM=; b=v8AxR96umy1MXj0UJP1Arx9x6i
+        C05xPI4UXW8Ci9rVEuMAIxomfp6Ob7j1WoouyGrh5MlLQ7Av84xedFTiAtAJ99FuwjzvETkFIgOxj
+        SYus5ybjOXpEw+03zStnM9RDB8RR05XWSy43l3/GDAm2biscWtP9wEQs4yViFHdlXnO5sABXw17cq
+        esjKQMNZxsD2E6ujU4UCBjYhr4de9H9YeBUpzmK2l9fSucDO1dR1LQ4tm3nT8KDDK2VzN3KIgbp8r
+        CuK93EA+yt6277MdedE1J51SfbfJRURIoC/MeexR3xUXt1/SsonsRCMHW86oKd3ApzOvOAMr3Y1KS
+        5IIKivLg==;
+Received: from [201.166.157.48] (port=39362 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jyJMw-000Wnz-BS; Wed, 22 Jul 2020 13:21:30 -0500
+Subject: Re: [PATCH v2] mei: Avoid the use of one-element arrays
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200714214516.GA1040@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
+Date:   Wed, 22 Jul 2020 13:27:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_10:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 bulkscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007220119
-X-FB-Internal: deliver
+In-Reply-To: <20200714214516.GA1040@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.157.48
+X-Source-L: No
+X-Exim-ID: 1jyJMw-000Wnz-BS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.166.157.48]:39362
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling get_perf_callchain() on perf_events from PEBS entries may cause
-unwinder errors. To fix this issue, the callchain is fetched early. Such
-perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
+Hi all,
 
-Similarly, calling bpf_get_[stack|stackid] on perf_events from PEBS may
-also cause unwinder errors. To fix this, add separate version of these
-two helpers, bpf_get_[stack|stackid]_pe. These two hepers use callchain i=
-n
-bpf_perf_event_data_kern->data->callchain.
+Friendly ping: who can take this? :)
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- include/linux/bpf.h      |   2 +
- kernel/bpf/stackmap.c    | 184 +++++++++++++++++++++++++++++++++++----
- kernel/trace/bpf_trace.c |   4 +-
- 3 files changed, 170 insertions(+), 20 deletions(-)
+Thanks
+--
+Gustavo
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index bae557ff2da8b..70e34a0ebbac6 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1644,6 +1644,8 @@ extern const struct bpf_func_proto bpf_get_current_=
-comm_proto;
- extern const struct bpf_func_proto bpf_get_stackid_proto;
- extern const struct bpf_func_proto bpf_get_stack_proto;
- extern const struct bpf_func_proto bpf_get_task_stack_proto;
-+extern const struct bpf_func_proto bpf_get_stackid_proto_pe;
-+extern const struct bpf_func_proto bpf_get_stack_proto_pe;
- extern const struct bpf_func_proto bpf_sock_map_update_proto;
- extern const struct bpf_func_proto bpf_sock_hash_update_proto;
- extern const struct bpf_func_proto bpf_get_current_cgroup_id_proto;
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 48d8e739975fa..5beb2f8c23da1 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -4,6 +4,7 @@
- #include <linux/bpf.h>
- #include <linux/jhash.h>
- #include <linux/filter.h>
-+#include <linux/kernel.h>
- #include <linux/stacktrace.h>
- #include <linux/perf_event.h>
- #include <linux/elf.h>
-@@ -387,11 +388,10 @@ get_callchain_entry_for_task(struct task_struct *ta=
-sk, u32 init_nr)
- #endif
- }
-=20
--BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, ma=
-p,
--	   u64, flags)
-+static long __bpf_get_stackid(struct bpf_map *map,
-+			      struct perf_callchain_entry *trace, u64 flags)
- {
- 	struct bpf_stack_map *smap =3D container_of(map, struct bpf_stack_map, =
-map);
--	struct perf_callchain_entry *trace;
- 	struct stack_map_bucket *bucket, *new_bucket, *old_bucket;
- 	u32 max_depth =3D map->value_size / stack_map_data_size(map);
- 	/* stack_map_alloc() checks that max_depth <=3D sysctl_perf_event_max_s=
-tack */
-@@ -399,21 +399,9 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, =
-struct bpf_map *, map,
- 	u32 skip =3D flags & BPF_F_SKIP_FIELD_MASK;
- 	u32 hash, id, trace_nr, trace_len;
- 	bool user =3D flags & BPF_F_USER_STACK;
--	bool kernel =3D !user;
- 	u64 *ips;
- 	bool hash_matches;
-=20
--	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
--			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
--		return -EINVAL;
--
--	trace =3D get_perf_callchain(regs, init_nr, kernel, user,
--				   sysctl_perf_event_max_stack, false, false);
--
--	if (unlikely(!trace))
--		/* couldn't fetch the stack trace */
--		return -EFAULT;
--
- 	/* get_perf_callchain() guarantees that trace->nr >=3D init_nr
- 	 * and trace-nr <=3D sysctl_perf_event_max_stack, so trace_nr <=3D max_=
-depth
- 	 */
-@@ -478,6 +466,30 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, =
-struct bpf_map *, map,
- 	return id;
- }
-=20
-+BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, ma=
-p,
-+	   u64, flags)
-+{
-+	u32 max_depth =3D map->value_size / stack_map_data_size(map);
-+	/* stack_map_alloc() checks that max_depth <=3D sysctl_perf_event_max_s=
-tack */
-+	u32 init_nr =3D sysctl_perf_event_max_stack - max_depth;
-+	bool user =3D flags & BPF_F_USER_STACK;
-+	struct perf_callchain_entry *trace;
-+	bool kernel =3D !user;
-+
-+	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
-+			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
-+		return -EINVAL;
-+
-+	trace =3D get_perf_callchain(regs, init_nr, kernel, user,
-+				   sysctl_perf_event_max_stack, false, false);
-+
-+	if (unlikely(!trace))
-+		/* couldn't fetch the stack trace */
-+		return -EFAULT;
-+
-+	return __bpf_get_stackid(map, trace, flags);
-+}
-+
- const struct bpf_func_proto bpf_get_stackid_proto =3D {
- 	.func		=3D bpf_get_stackid,
- 	.gpl_only	=3D true,
-@@ -487,7 +499,77 @@ const struct bpf_func_proto bpf_get_stackid_proto =3D=
- {
- 	.arg3_type	=3D ARG_ANYTHING,
- };
-=20
-+static __u64 count_kernel_ip(struct perf_callchain_entry *trace)
-+{
-+	__u64 nr_kernel =3D 0;
-+
-+	while (nr_kernel < trace->nr) {
-+		if (trace->ip[nr_kernel] =3D=3D PERF_CONTEXT_USER)
-+			break;
-+		nr_kernel++;
-+	}
-+	return nr_kernel;
-+}
-+
-+BPF_CALL_3(bpf_get_stackid_pe, struct bpf_perf_event_data_kern *, ctx,
-+	   struct bpf_map *, map, u64, flags)
-+{
-+	struct perf_event *event =3D ctx->event;
-+	struct perf_callchain_entry *trace;
-+	bool kernel, user;
-+	__u64 nr_kernel;
-+	int ret;
-+
-+	/* perf_sample_data doesn't have callchain, use bpf_get_stackid */
-+	if (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
-+		return bpf_get_stackid((unsigned long)(ctx->regs),
-+				       (unsigned long) map, flags, 0, 0);
-+
-+	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
-+			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
-+		return -EINVAL;
-+
-+	user =3D flags & BPF_F_USER_STACK;
-+	kernel =3D !user;
-+
-+	trace =3D ctx->data->callchain;
-+	if (unlikely(!trace))
-+		return -EFAULT;
-+
-+	nr_kernel =3D count_kernel_ip(trace);
-+
-+	if (kernel) {
-+		__u64 nr =3D trace->nr;
-+
-+		trace->nr =3D nr_kernel;
-+		ret =3D __bpf_get_stackid(map, trace, flags);
-+
-+		/* restore nr */
-+		trace->nr =3D nr;
-+	} else { /* user */
-+		u64 skip =3D flags & BPF_F_SKIP_FIELD_MASK;
-+
-+		skip +=3D nr_kernel;
-+		if (skip > BPF_F_SKIP_FIELD_MASK)
-+			return -EFAULT;
-+
-+		flags =3D (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
-+		ret =3D __bpf_get_stackid(map, trace, flags);
-+	}
-+	return ret;
-+}
-+
-+const struct bpf_func_proto bpf_get_stackid_proto_pe =3D {
-+	.func		=3D bpf_get_stackid_pe,
-+	.gpl_only	=3D false,
-+	.ret_type	=3D RET_INTEGER,
-+	.arg1_type	=3D ARG_PTR_TO_CTX,
-+	.arg2_type	=3D ARG_CONST_MAP_PTR,
-+	.arg3_type	=3D ARG_ANYTHING,
-+};
-+
- static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *ta=
-sk,
-+			    struct perf_callchain_entry *trace_in,
- 			    void *buf, u32 size, u64 flags)
- {
- 	u32 init_nr, trace_nr, copy_len, elem_size, num_elem;
-@@ -520,7 +602,9 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
-uct task_struct *task,
- 	else
- 		init_nr =3D sysctl_perf_event_max_stack - num_elem;
-=20
--	if (kernel && task)
-+	if (trace_in)
-+		trace =3D trace_in;
-+	else if (kernel && task)
- 		trace =3D get_callchain_entry_for_task(task, init_nr);
- 	else
- 		trace =3D get_perf_callchain(regs, init_nr, kernel, user,
-@@ -556,7 +640,7 @@ static long __bpf_get_stack(struct pt_regs *regs, str=
-uct task_struct *task,
- BPF_CALL_4(bpf_get_stack, struct pt_regs *, regs, void *, buf, u32, size=
-,
- 	   u64, flags)
- {
--	return __bpf_get_stack(regs, NULL, buf, size, flags);
-+	return __bpf_get_stack(regs, NULL, NULL, buf, size, flags);
- }
-=20
- const struct bpf_func_proto bpf_get_stack_proto =3D {
-@@ -574,7 +658,7 @@ BPF_CALL_4(bpf_get_task_stack, struct task_struct *, =
-task, void *, buf,
- {
- 	struct pt_regs *regs =3D task_pt_regs(task);
-=20
--	return __bpf_get_stack(regs, task, buf, size, flags);
-+	return __bpf_get_stack(regs, task, NULL, buf, size, flags);
- }
-=20
- BTF_ID_LIST(bpf_get_task_stack_btf_ids)
-@@ -591,6 +675,70 @@ const struct bpf_func_proto bpf_get_task_stack_proto=
- =3D {
- 	.btf_id		=3D bpf_get_task_stack_btf_ids,
- };
-=20
-+BPF_CALL_4(bpf_get_stack_pe, struct bpf_perf_event_data_kern *, ctx,
-+	   void *, buf, u32, size, u64, flags)
-+{
-+	struct perf_event *event =3D ctx->event;
-+	struct perf_callchain_entry *trace;
-+	bool kernel, user;
-+	int err =3D -EINVAL;
-+	__u64 nr_kernel;
-+
-+	if (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
-+		return __bpf_get_stack(ctx->regs, NULL, NULL, buf, size, flags);
-+
-+	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
-+			       BPF_F_USER_BUILD_ID)))
-+		goto clear;
-+
-+	user =3D flags & BPF_F_USER_STACK;
-+	kernel =3D !user;
-+
-+	err =3D -EFAULT;
-+	trace =3D ctx->data->callchain;
-+	if (unlikely(!trace))
-+		goto clear;
-+
-+	nr_kernel =3D count_kernel_ip(trace);
-+
-+	if (kernel) {
-+		__u64 nr =3D trace->nr;
-+
-+		trace->nr =3D nr_kernel;
-+		err =3D __bpf_get_stack(ctx->regs, NULL, trace, buf,
-+				      size, flags);
-+
-+		/* restore nr */
-+		trace->nr =3D nr;
-+	} else { /* user */
-+		u64 skip =3D flags & BPF_F_SKIP_FIELD_MASK;
-+
-+		skip +=3D nr_kernel;
-+		if (skip > BPF_F_SKIP_FIELD_MASK)
-+			goto clear;
-+
-+		flags =3D (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
-+		err =3D __bpf_get_stack(ctx->regs, NULL, trace, buf,
-+				      size, flags);
-+	}
-+	return err;
-+
-+clear:
-+	memset(buf, 0, size);
-+	return err;
-+
-+}
-+
-+const struct bpf_func_proto bpf_get_stack_proto_pe =3D {
-+	.func		=3D bpf_get_stack_pe,
-+	.gpl_only	=3D true,
-+	.ret_type	=3D RET_INTEGER,
-+	.arg1_type	=3D ARG_PTR_TO_CTX,
-+	.arg2_type	=3D ARG_PTR_TO_UNINIT_MEM,
-+	.arg3_type	=3D ARG_CONST_SIZE_OR_ZERO,
-+	.arg4_type	=3D ARG_ANYTHING,
-+};
-+
- /* Called from eBPF program */
- static void *stack_map_lookup_elem(struct bpf_map *map, void *key)
- {
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 3cc0dcb60ca20..cb91ef902cc43 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1411,9 +1411,9 @@ pe_prog_func_proto(enum bpf_func_id func_id, const =
-struct bpf_prog *prog)
- 	case BPF_FUNC_perf_event_output:
- 		return &bpf_perf_event_output_proto_tp;
- 	case BPF_FUNC_get_stackid:
--		return &bpf_get_stackid_proto_tp;
-+		return &bpf_get_stackid_proto_pe;
- 	case BPF_FUNC_get_stack:
--		return &bpf_get_stack_proto_tp;
-+		return &bpf_get_stack_proto_pe;
- 	case BPF_FUNC_perf_prog_read_value:
- 		return &bpf_perf_prog_read_value_proto;
- 	case BPF_FUNC_read_branch_records:
---=20
-2.24.1
-
+On 7/14/20 16:45, Gustavo A. R. Silva wrote:
+> One-element arrays are being deprecated[1]. Replace the one-element
+> arrays with a simple value type u8 reserved, once this is just a
+> placeholder for alignment.
+> 
+> Also, while there, use the preferred form for passing a size of a struct.
+> The alternative form where struct name is spelled out hurts readability
+> and introduces an opportunity for a bug when the variable type is changed
+> but the corresponding sizeof that is passed as argument is not.
+> 
+> [1] https://github.com/KSPP/linux/issues/79
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Use a more concise changelog text.
+> 
+>  drivers/misc/mei/hbm.c | 4 ++--
+>  drivers/misc/mei/hw.h  | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c
+> index a44094cdbc36..f020d5594154 100644
+> --- a/drivers/misc/mei/hbm.c
+> +++ b/drivers/misc/mei/hbm.c
+> @@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct mei_device *dev, u8 addr, u8 status)
+>  {
+>  	struct mei_msg_hdr mei_hdr;
+>  	struct hbm_add_client_response resp;
+> -	const size_t len = sizeof(struct hbm_add_client_response);
+> +	const size_t len = sizeof(resp);
+>  	int ret;
+>  
+>  	dev_dbg(dev->dev, "adding client response\n");
+>  
+>  	mei_hbm_hdr(&mei_hdr, len);
+>  
+> -	memset(&resp, 0, sizeof(struct hbm_add_client_response));
+> +	memset(&resp, 0, len);
+>  	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
+>  	resp.me_addr = addr;
+>  	resp.status  = status;
+> diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h
+> index b1a8d5ec88b3..8c0297f0e7f3 100644
+> --- a/drivers/misc/mei/hw.h
+> +++ b/drivers/misc/mei/hw.h
+> @@ -346,13 +346,13 @@ struct hbm_add_client_request {
+>   * @hbm_cmd: bus message command header
+>   * @me_addr: address of the client in ME
+>   * @status: if HBMS_SUCCESS then the client can now accept connections.
+> - * @reserved: reserved
+> + * @reserved: reserved for alignment.
+>   */
+>  struct hbm_add_client_response {
+>  	u8 hbm_cmd;
+>  	u8 me_addr;
+>  	u8 status;
+> -	u8 reserved[1];
+> +	u8 reserved;
+>  } __packed;
+>  
+>  /**
+> @@ -461,7 +461,7 @@ struct hbm_notification {
+>  	u8 hbm_cmd;
+>  	u8 me_addr;
+>  	u8 host_addr;
+> -	u8 reserved[1];
+> +	u8 reserved;
+>  } __packed;
+>  
+>  /**
+> 
