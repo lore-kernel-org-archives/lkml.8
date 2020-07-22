@@ -2,96 +2,112 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C366BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A30BE20792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A589C20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G6VdYKgx"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="KScI1b+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbgGVC5e (ORCPT
+        id S1731883AbgGVC7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:57:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31437 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731641AbgGVC5e (ORCPT
+        Tue, 21 Jul 2020 22:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731641AbgGVC7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:57:34 -0400
-X-UUID: fb9b01909a404cba9aebdb396f49c62b-20200722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=l6OcG3uN4M4JHJlI4Y8cP9n9w0eI6Ij31TW2Nd0Ssuc=;
-        b=G6VdYKgx6/4++yjVBm++A/d4pA0jv6qjDXwEBmj2rU5V505pFn/VkKwsxcaZSAwvbNyBKrmNKeNzdFB3DzAYodkBxziSvKvDze5aDcuAL96gP2t0u7O7oZ0EV5DWE0G/+COXjhNzWNUiCLY4BbvZOj7S/69tINIQbb8opFvloRc=;
-X-UUID: fb9b01909a404cba9aebdb396f49c62b-20200722
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2099778706; Wed, 22 Jul 2020 10:57:29 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 22 Jul 2020 10:57:28 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 10:57:25 +0800
-Message-ID: <1595386648.10251.2.camel@mtksdaap41>
-Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add pwrap driver for
- MT6873/8192 SoCs
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Argus Lin <argus.lin@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Date:   Wed, 22 Jul 2020 10:57:28 +0800
-In-Reply-To: <e80b2e38-1324-a038-5647-6f595381ba47@gmail.com>
-References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1594720432-19586-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <e80b2e38-1324-a038-5647-6f595381ba47@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 21 Jul 2020 22:59:00 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CBFC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 19:59:00 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id p1so255998pls.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 19:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jwmIpuIZKpcc0Q+zuIwHWh3kDRMkK5YkPe/3s8OgK8M=;
+        b=KScI1b+blKBYy4f3sDkI9g0G1j4jqclpWVB09gXAVq7+FMeao6EDj4GFpK8+ZW/DlN
+         iPB28KdBUXJOwAUGX+Y/0cbiCEWwuR5OvrF5+TnFFsGt5BGKhepXulde5ZASR0q6EGKE
+         +jSLRSj9R4sUKOfx3DHQOxvYDuJCUgldBQxOevkGiuYuVhXuDowKgey7aiA0mzl30/1I
+         TRmtFRYTuvdinZ3RJazsktJJl8UJPcXcnbIOJ8HTVCs+OURHpiaJI8uh/Vq0+kkR3zM0
+         GGUCwXGvD4u/NxgqS03C3IjBUVKI2xvcX3WNLG6EZiCBWmmauDkuULEaM2Wyf5CZatic
+         1TfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=jwmIpuIZKpcc0Q+zuIwHWh3kDRMkK5YkPe/3s8OgK8M=;
+        b=WCdhMPM9Qxh6HDtRZoRDDp5YbGcUb7WySiE4VtmDHQGhj+ciDOZx4JAzhs4j8mnCT0
+         D2ivUFP/MzFh/xNi9gShaeTV4D5RPOFCaW26ECUe5EFkANRFxO8fVIQVGKesCGecfWKl
+         lg44HKcoQRRrhMiw6RCv/8hYBRo+BNI/ORmUffOnpNwccPn19IF29w8u/GhGjuo5nYTf
+         Qe8UOAIaPpxx93uFMMCDJegr4yGWbQXj8ijwnq5fpaS7MeW6plf8ebgUbD22nG/mzEi3
+         ChvBk9VW890YjSLfLFw+ZrbEUjyylsiofoA9GyPH0/KndKybxzaElN0lJKMIcVF+bUuO
+         pu5Q==
+X-Gm-Message-State: AOAM533z1lVnnwQrcp0nBKJ8cBXfVP3K2vY+7i2n6WiH4lRcznpXhMo5
+        ToDL8v3zlWbuHKsYspcBQfqVkA==
+X-Google-Smtp-Source: ABdhPJyMGFdJRFFM26XdtP/bLX9ofuQ9mihGMzeIGOthRaB7mjiEKCQeljlCDhckItGtse2CXo9VUg==
+X-Received: by 2002:a17:90a:ea84:: with SMTP id h4mr7888106pjz.128.1595386739541;
+        Tue, 21 Jul 2020 19:58:59 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id x9sm18811539pgr.57.2020.07.21.19.58.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 19:58:58 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 19:58:58 -0700 (PDT)
+X-Google-Original-Date: Tue, 21 Jul 2020 19:47:23 PDT (-0700)
+Subject:     Re: [PATCH 1/2] riscv: Fix building error in entry.S when CONFIG_RISCV_M_MODE is enabled
+In-Reply-To: <742f0a82a9d4ab62d8616784db5a88a95d8b5389.1594629047.git.greentime.hu@sifive.com>
+CC:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        Paul Walmsley <paul.walmsley@sifive.com>, lkp@intel.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     greentime.hu@sifive.com
+Message-ID: <mhng-ca23efdb-a932-4c2c-9b67-223fe779a284@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIFdlZCwgMjAyMC0wNy0yMiBhdCAwMDo1MSArMDIwMCwgTWF0dGhpYXMgQnJ1Z2dl
-ciB3cm90ZToNCj4gDQo+IE9uIDE0LzA3LzIwMjAgMTE6NTMsIEhzaW4tSHNpdW5nIFdhbmcgd3Jv
-dGU6DQo+ID4gTVQ2ODczLzgxOTIgYXJlIGhpZ2hseSBpbnRlZ3JhdGVkIFNvQ3MgYW5kIHVzZSBQ
-TUlDX01UNjM1OSBmb3INCj4gPiBwb3dlciBtYW5hZ2VtZW50LiBUaGlzIHBhdGNoIGFkZHMgcHdy
-YXAgbWFzdGVyIGRyaXZlciB0bw0KPiA+IGFjY2VzcyBQTUlDX01UNjM1OS4NCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVr
-LmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAu
-YyB8IDk4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ICAgMSBmaWxl
-IGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgYi9kcml2ZXJz
-L3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCj4gPiBpbmRleCBjODk3MjA1Li42ZTdmNzk2
-ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMN
-Cj4gPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCj4gPiBAQCAt
-MjQsMTEgKzI0LDEzIEBADQo+ID4gICAjZGVmaW5lIFBXUkFQX01UODEzNV9CUklER0VfV0RUX1NS
-Q19FTgkJMHg1NA0KPiA+ICAgDQo+ID4gICAvKiBtYWNybyBmb3Igd3JhcHBlciBzdGF0dXMgKi8N
-Cj4gPiArI2RlZmluZSBQV1JBUF9HRVRfU1dJTkZfMl9GU00oeCkJKCgoeCkgPj4gMSkgJiAweDAw
-MDAwMDA3KQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9HRVRfV0FDU19SREFUQSh4KQkJKCgoeCkgPj4g
-MCkgJiAweDAwMDBmZmZmKQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9HRVRfV0FDU19GU00oeCkJCSgo
-KHgpID4+IDE2KSAmIDB4MDAwMDAwMDcpDQo+ID4gICAjZGVmaW5lIFBXUkFQX0dFVF9XQUNTX1JF
-USh4KQkJKCgoeCkgPj4gMTkpICYgMHgwMDAwMDAwMSkNCj4gPiAgICNkZWZpbmUgUFdSQVBfU1RB
-VEVfU1lOQ19JRExFMAkJQklUKDIwKQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9TVEFURV9JTklUX0RP
-TkUwCQlCSVQoMjEpDQo+ID4gKyNkZWZpbmUgUFdSQVBfU1RBVEVfSU5JVF9ET05FMQkJQklUKDE1
-KQ0KPiA+ICAgDQo+ID4gICAvKiBtYWNybyBmb3IgV0FDUyBGU00gKi8NCj4gPiAgICNkZWZpbmUg
-UFdSQVBfV0FDU19GU01fSURMRQkJMHgwMA0KPiA+IEBAIC03NCw2ICs3Niw3IEBADQo+ID4gICAj
-ZGVmaW5lIFBXUkFQX0NBUF9EQ00JCUJJVCgyKQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9DQVBfSU5U
-MV9FTglCSVQoMykNCj4gPiAgICNkZWZpbmUgUFdSQVBfQ0FQX1dEVF9TUkMxCUJJVCg0KQ0KPiA+
-ICsjZGVmaW5lIFBXUkFQX0NBUF9BUkIJCUJJVCg1KQ0KPiANCj4gVGhpcyBjb21taXQgc2hvdWxk
-IGJlIHR3byBwYXRjaGVzIChhdCBsZWFzdCkuIE9uZSBhZGRpbmcgUFdSQVBfQ0FQX0FSQiBhbmQg
-dGhlbiANCj4gYW5vdGhlciBvbmUgYWRkaW5nIE1UNjg3MyBzdXBwb3J0Lg0KPiANCj4gUmVnYXJk
-cywNCj4gTWF0dGhpYXMNCj4gDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50LCBJIHdpbGwgdXBk
-YXRlIGl0IGluIG5leHQgcGF0Y2guDQoNCg0KDQo=
+On Mon, 13 Jul 2020 01:32:15 PDT (-0700), greentime.hu@sifive.com wrote:
+> arch/riscv/kernel/entry.S: Assembler messages:
+> arch/riscv/kernel/entry.S:106: Error: illegal operands `andi a0,s1,0x00001800'
+>
+> This building error is because of the SR_MPP value is too large to be used
+> as an immediate value for andi. To fix this issue I use li to set the
+> immediate value to t0, then it can use t0 and s1 to do and operation.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> ---
+>  arch/riscv/kernel/entry.S | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 6ed579fc1073..000984695cd6 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -99,7 +99,8 @@ _save_context:
+>
+>  #ifdef CONFIG_CONTEXT_TRACKING
+>  	/* If previous state is in user mode, call context_tracking_user_exit. */
+> -	andi a0, s1, SR_SPP
+> +	li t0, SR_PP
+> +	and a0, s1, t0
+>  	bnez a0, skip_context_tracking
+>  	call context_tracking_user_exit
 
+Looks like this one already got fixed, I guess I saw the build report go by and
+fixed it?  I don't remember if I actually pulled this in, but I ended up with a
+3-register andi so I guess I didn't do it that well.
+
+I'm not sure why my build test aren't catching the M-mode stuff, as the
+defconfigs are in the list.  I'll go take a look...
