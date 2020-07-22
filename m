@@ -2,150 +2,116 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2921BC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40098C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA7912077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:49:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eRc9g9Ie"
+	by mail.kernel.org (Postfix) with ESMTP id 1922A2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595407827;
+	bh=KBex7YObWFkv3ZED+tckY/19Y0OC0cIjEMo2Ccpv9Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cpOFp9YeGKUYwZlIyWLkplRNdlNGF4ETUerBewm3Wt9CR9waarfEAntUNhbYmR9bh
+	 SH7Ons1ZclmEjFq2V+Bz9j8rYINu94oodNsUTCSoiPm7cAEd8IrAUKKPiQFRFZScGx
+	 gDvsBIG9ay3fOfS6UE3GslZNS7LY4IQC0fx+dvqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgGVIt0 (ORCPT
+        id S1726638AbgGVIuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:49:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29349 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726526AbgGVIt0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:49:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595407764;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZUHpIDnSN/WmenwqHmZ9mTzcwD02l0uaA4Y7CipC5gk=;
-        b=eRc9g9Iej4RwzWcV5KW0JeqzeMFdcPTU1L7NyuABhtF5qc5M/9uqfzBiMAq8Cm3tc9vuBD
-        IPVfmEKQZQ06OdkoglkxMRsPJ/KspPLWNihVAiLwZsqi0AUPRQkChu4NbtYeYJTEJ6G3+v
-        lX2+pGvN2T3lZS+pojzQHA0ZH1/v17A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375--Sve9uS6OuuqmTN1DPSUwQ-1; Wed, 22 Jul 2020 04:49:19 -0400
-X-MC-Unique: -Sve9uS6OuuqmTN1DPSUwQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 22 Jul 2020 04:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgGVIuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:50:23 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3185A800C64;
-        Wed, 22 Jul 2020 08:49:18 +0000 (UTC)
-Received: from localhost (ovpn-12-70.pek2.redhat.com [10.72.12.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C1E05C1C3;
-        Wed, 22 Jul 2020 08:49:16 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 16:49:13 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 5/5] mm/hugetl.c: warn out if expected count of huge
- pages adjustment is not achieved
-Message-ID: <20200722084913.GO32539@MiWiFi-R3L-srv>
-References: <20200720062623.13135-1-bhe@redhat.com>
- <20200720062623.13135-6-bhe@redhat.com>
- <c5eb3692-2d05-d6dc-437d-21e51705560e@oracle.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6785D2065E;
+        Wed, 22 Jul 2020 08:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595407823;
+        bh=KBex7YObWFkv3ZED+tckY/19Y0OC0cIjEMo2Ccpv9Bg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iJzPYASLrtpyTXcRKDvZ/DG2+ITva/hZLilKwxh9W9WVvDgyr+Jf7zCm98iQodmP0
+         wXVnB3cdXiMmbV1Db++NNRZ35/pzumvSy/HpvIrhnm2t9ibHKi+f3AnTAYeoWSJnFY
+         yAsS1ll5wCriS7wGUkQlq5BljvfR5NCn3mALKCKs=
+Date:   Wed, 22 Jul 2020 10:50:20 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 00/20] Add support for SATA/PCIe/USB2[3]/VIN/CSI on
+ R8A774E1
+Message-ID: <20200722085020.GD1030@ninjato>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C1iGAkRnbeBonpVg"
 Content-Disposition: inline
-In-Reply-To: <c5eb3692-2d05-d6dc-437d-21e51705560e@oracle.com>
+In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
 
-On 07/20/20 at 05:38pm, Mike Kravetz wrote:
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index 467894d8332a..1dfb5d9e4e06 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -2661,7 +2661,7 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
-> >  static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
-> >  			      nodemask_t *nodes_allowed)
-> >  {
-> > -	unsigned long min_count, ret;
-> > +	unsigned long min_count, ret, old_max;
-> >  	NODEMASK_ALLOC(nodemask_t, node_alloc_noretry, GFP_KERNEL);
-> >  
-> >  	/*
-> > @@ -2723,6 +2723,7 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
-> >  	 * pool might be one hugepage larger than it needs to be, but
-> >  	 * within all the constraints specified by the sysctls.
-> >  	 */
-> > +	old_max = persistent_huge_pages(h);
-> >  	while (h->surplus_huge_pages && count > persistent_huge_pages(h)) {
-> >  		if (!adjust_pool_surplus(h, nodes_allowed, -1))
-> >  			break;
-> > @@ -2779,6 +2780,16 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
-> >  	}
-> >  out:
-> >  	h->max_huge_pages = persistent_huge_pages(h);
-> > +	if (count != h->max_huge_pages) {
-> > +		char buf[32];
-> > +
-> > +		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
-> > +		pr_warn("HugeTLB: %s %lu of page size %s failed. Only %s %lu hugepages.\n",
-> > +			count > old_max ? "increasing" : "decreasing",
-> > +			abs(count - old_max), buf,
-> > +			count > old_max ? "increased" : "decreased",
-> > +			abs(old_max - h->max_huge_pages));
-> > +	}
-> >  	spin_unlock(&hugetlb_lock);
-> 
-> I would prefer if we drop the lock before logging the message.  That would
-> involve grabbing the value of h->max_huge_pages before dropping the lock.
+--C1iGAkRnbeBonpVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Do you think the below change is OK to you to move the message logging
-after lock dropping? If yes, I will repost with updated patches.
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6a9b7556ce5b..b5aa32a13569 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2661,7 +2661,7 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
- static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
- 			      nodemask_t *nodes_allowed)
- {
--	unsigned long min_count, ret, old_max;
-+	unsigned long min_count, ret, old_max, new_max;
- 	NODEMASK_ALLOC(nodemask_t, node_alloc_noretry, GFP_KERNEL);
- 
- 	/*
-@@ -2780,7 +2780,10 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
- 	}
- out:
- 	h->max_huge_pages = persistent_huge_pages(h);
--	if (count != h->max_huge_pages) {
-+	new_max = h->max_huge_pages;
-+	spin_unlock(&hugetlb_lock);
-+
-+	if (count != new_max) {
- 		char buf[32];
- 
- 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
-@@ -2788,9 +2791,8 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
- 			count > old_max ? "increasing" : "decreasing",
- 			abs(count - old_max), buf,
- 			count > old_max ? "increased" : "decreased",
--			abs(old_max - h->max_huge_pages));
-+			abs(old_max - new_max));
- 	}
--	spin_unlock(&hugetlb_lock);
- 
- 	NODEMASK_FREE(node_alloc_noretry);
- 
+> This patch series adds support for the following peripherals on RZ/G2H SoC
+>  * PCIe
+>  * SATA
+>  * USB2
+>  * USB3
+>  * Audio
+>  * VIN
+>  * CSI
 
+Nice. But please update your recipients list. No need to have the i2c
+mailing list in there.
+
+
+--C1iGAkRnbeBonpVg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8X/cwACgkQFA3kzBSg
+KbbCjg/9EwkGut+pjFLsSqqQcdsIzTD9kym4OTeB/bHTnHu+yCKyYJ0Sa6ytd/+O
+J9JLAahz7QkGnfOSFkz17HGK29XcNocub/8bIAuUBuydV8yQrleXLt/3oOKWOWrt
+FC9p8gGr1q0/DLKeCOeIG1ftIaOe22L6bJsuxCzhJG8DetJY0If4fZ+nZc08r6Af
+qMClhrnXZDqG7mYhLiWkeeKoiootXREJ8b2NozWKGLkQF0zMpSzQ0H+IwNrj6ElB
+OCZHdbRrRLc1oIHmNWosZiFrH20DmVdjRUaZhvP1sBiw7/CdjZAf10OedOF8fv48
+PGMhu3HM2FsqzPncnYAiNtTJrwESnDDROinJW8D+mAjFToABbnr1Nhc5iC38elIl
+HTsJgC03NEZfZ1k6rvr1t/cYGcHePKzXod1ftEvvmT9093mGLlArZhMmKDFcXiDU
+4g01TTz4SetHaOqdzZlPdxu5cJ1YGyMcOQQgBAC1C2vOLGg2Fsqs8VBI/ud/VAG2
+XYAILg0D7wbFUd1fMYkG1W4x9HNdVlNXd4cCZWr4Geqc51B/9CQyJPhPJfCMK8py
+KNcd8JmzsXN1oXW9E7K1VjHiMCb9TsBswsXXz8nnsfUuE09CpVQGfFqtmS+2nMjV
+4VyHziCHbgqRqmlFlzwkGp7gcBcxBywyBwhRobKdGCTwFF+J7VE=
+=oXte
+-----END PGP SIGNATURE-----
+
+--C1iGAkRnbeBonpVg--
