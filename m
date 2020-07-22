@@ -2,119 +2,162 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFE8C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF365C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B233E20792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C344A20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbgGVDSt (ORCPT
+        id S1731940AbgGVDUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:18:49 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:47052 "EHLO mail5.wrs.com"
+        Tue, 21 Jul 2020 23:20:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:38097 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731793AbgGVDSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:18:48 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 06M3HNft004768
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 20:17:44 -0700
-Received: from [128.224.162.214] (128.224.162.214) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Tue, 21 Jul 2020
- 20:17:29 -0700
-Subject: Re: Subject: Re: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky
- gfx dedicated iommu
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <DM6PR11MB2587034DFBEDFB091CE9AAD58E790@DM6PR11MB2587.namprd11.prod.outlook.com>
- <0f4b6760-bb8f-ebd3-ab9d-4ecba819883c@linux.intel.com>
- <afb6b8d8-20b1-b00e-575e-0a4474f723b7@windriver.com>
- <d7627e6a-9984-3d73-79b5-36011da45bfb@linux.intel.com>
-From:   Jun Miao <jun.miao@windriver.com>
-Message-ID: <6cbf5b1e-93a5-c308-59ee-257676912d24@windriver.com>
-Date:   Wed, 22 Jul 2020 11:17:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1731857AbgGVDUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 23:20:37 -0400
+IronPort-SDR: DA/wmofzwNL/EP37dQClHrcUWBFOV6SNkcUm1bsegNMZ26cUgf6C3m46pq1Mo/JUs07IE8IP0P
+ VUyj7NXiXDww==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="235128441"
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="235128441"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 20:20:36 -0700
+IronPort-SDR: IH/fLz0k+jegMkpSGoHyVSoCir/B5B3F0oXw3CmTciRDyeX7TNoUASihcWPc3sEWcTUBG0QOav
+ unIvsP9oTZ8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="320129330"
+Received: from lkp-server02.sh.intel.com (HELO 7dd7ac9fbea4) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Jul 2020 20:20:35 -0700
+Received: from kbuild by 7dd7ac9fbea4 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jy5J4-0000Kv-Dm; Wed, 22 Jul 2020 03:20:34 +0000
+Date:   Wed, 22 Jul 2020 11:19:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.07.14a] BUILD SUCCESS
+ aace6daf32cce6b644083754c7be6260aae439db
+Message-ID: <5f17b02d.79fk4AQftNyYVz3e%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <d7627e6a-9984-3d73-79b5-36011da45bfb@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/20 11:07 AM, Lu Baolu wrote:
-> On 7/22/20 11:03 AM, Jun Miao wrote:
->> On 7/22/20 10:40 AM, Lu Baolu wrote:
->>> Hi Jun,
->>>
->>> On 7/22/20 10:26 AM, Miao, Jun wrote:
->>>>>> Kernel panic - not syncing: DMAR hardware is malfunctioning
->>>>>> CPU: 0 PID: 347 Comm: rtcwake Not tainted 5.4.0-yocto-standard #124
->>>>>> Hardware name: Intel Corporation Ice Lake Client Platform/IceLake 
->>>>>> U DDR4
->>>>>> SODIMM PD RVP TLC, BIOS ICLSFWR1.R00.3162.A00.1904162000 04/16/2019
->>>>>> Call Trace:
->>>>>>    dump_stack+0x59/0x75
->>>>>>    panic+0xff/0x2d4
->>>>>>    iommu_disable_translation+0x88/0x90
->>>>>>    iommu_suspend+0x12f/0x1b0
->>>>>>    syscore_suspend+0x6c/0x220
->>>>>>    suspend_devices_and_enter+0x313/0x840
->>>>>>    pm_suspend+0x30d/0x390
->>>>>>    state_store+0x82/0xf0
->>>>>>    kobj_attr_store+0x12/0x20
->>>>>>    sysfs_kf_write+0x3c/0x50
->>>>>>    kernfs_fop_write+0x11d/0x190
->>>>>>    __vfs_write+0x1b/0x40
->>>>>>    vfs_write+0xc6/0x1d0
->>>>>>    ksys_write+0x5e/0xe0
->>>>>>    __x64_sys_write+0x1a/0x20
->>>>>>    do_syscall_64+0x4d/0x150
->>>>>>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>>>>> RIP: 0033:0x7f97b8080113
->>>>>> Code: 8b 15 81 bd 0c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 
->>>>>> 0f 1f 00
->>>>>> 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 01 00 00 00 0f 05 <48> 3d 
->>>>>> 00 f0 ff ff
->>>>>> 77 55 c3 0f 1f 40 00 48 83 ec 28 48 89 54 24 18
->>>>>> RSP: 002b:00007ffcfa6f48b8 EFLAGS: 00000246 ORIG_RAX: 
->>>>>> 0000000000000001
->>>>>> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007f97b8080113
->>>>>> RDX: 0000000000000004 RSI: 000055e7db03b700 RDI: 0000000000000004
->>>>>> RBP: 000055e7db03b700 R08: 000055e7db03b700 R09: 0000000000000004
->>>>>> R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000004
->>>>>> R13: 000055e7db039380 R14: 0000000000000004 R15: 00007f97b814d700
->>>>>> Kernel Offset: 0x38a00000 from 0xffffffff81000000 (relocation range:
->>>>>> 0xffffffff80000000-0xffffffffbfffffff)
->>>>>> ---[ end Kernel panic - not syncing: DMAR hardware is 
->>>>>> malfunctioning ]---
->>>>
->>>
->>> Do you mean that system hangs in iommu_disable_translation() without 
->>> this fix.
->>>
->> Yes ,From the call trace and i also read the DMARD_GCMD_RGS is wrong 
->> without this patch.
->
-> Okay! Thanks a lot for confirming this.
->
-> Best regards,
-> baolu
->
->>>> [S3 successfully with the patch]
->>>
->>> And, this failure disappeared after you applied this fix?
-YES     , the log is too long , only head and tail . this failure 
-disappereared.
->>>
->>> Best regards,
->>> baolu
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.14a
+branch HEAD: aace6daf32cce6b644083754c7be6260aae439db  refperf: Avoid null pointer dereference when buf fails to allocate
+
+elapsed time: 2074m
+
+configs tested: 91
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+sh                               alldefconfig
+mips                         bigsur_defconfig
+arm                           sama5_defconfig
+arm                           omap1_defconfig
+mips                            e55_defconfig
+s390                          debug_defconfig
+arm                          pxa3xx_defconfig
+m68k                        m5407c3_defconfig
+sh                          sdk7780_defconfig
+c6x                         dsk6455_defconfig
+arm                           h5000_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20200721
+i386                 randconfig-a005-20200721
+i386                 randconfig-a004-20200721
+i386                 randconfig-a006-20200721
+i386                 randconfig-a002-20200721
+i386                 randconfig-a001-20200721
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
