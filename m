@@ -2,102 +2,92 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE81DC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F9EC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B19520729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5A622C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbgGVJ1j convert rfc822-to-8bit (ORCPT
+        id S1731153AbgGVJZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:27:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:44912 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731338AbgGVJ1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:27:37 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-127-Z0VvaxF8OUCPOnK0zoEJlw-1; Wed, 22 Jul 2020 10:27:33 +0100
-X-MC-Unique: Z0VvaxF8OUCPOnK0zoEJlw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 10:27:32 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 22 Jul 2020 10:27:32 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0Fg
-Date:   Wed, 22 Jul 2020 09:27:32 +0000
-Message-ID: <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
-In-Reply-To: <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 22 Jul 2020 05:25:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:38606 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726821AbgGVJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:25:17 -0400
+IronPort-SDR: Dshz7hZBMcK5ovvd5kpPK2lqAxj1reEwpKgp5MjGVd6KdbM0Akd0tbIDAkqDGfclx1k4/VlWsQ
+ oW+gLujTXGxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="138378835"
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="138378835"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 02:25:11 -0700
+IronPort-SDR: EOpJ7Pi5GhJPrVgrFw+6krLmQuyu24P0i+zE7fQ4EyQQ6sxaEeWwzgKFc7MI/TqfL3+fxGXL1t
+ KVkLOW1mG4Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="392625020"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 22 Jul 2020 02:25:08 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 22 Jul 2020 12:25:07 +0300
+Date:   Wed, 22 Jul 2020 12:25:07 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Patrick Volkerding <volkerdi@gmail.com>
+Cc:     Lyude Paul <lyude@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200722092507.GC5180@lahna.fi.intel.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+ <20200716235440.GA675421@bjorn-Precision-5520>
+ <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+ <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+ <20200721122247.GI5180@lahna.fi.intel.com>
+ <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+ <20200721152737.GS5180@lahna.fi.intel.com>
+ <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro
-> Sent: 21 July 2020 21:26
-> Preparation for the change of calling conventions; right now all
-> callers pass 0 as initial sum.  Passing 0xffffffff instead yields
-> the values comparable mod 0xffff and guarantees that 0 will not
-> be returned on success.
+On Tue, Jul 21, 2020 at 01:37:12PM -0500, Patrick Volkerding wrote:
+> On 7/21/20 10:27 AM, Mika Westerberg wrote:
+> > On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
+> >> Sure thing. Also, feel free to let me know if you'd like access to one of the
+> >> systems we saw breaking with this patch - I'm fairly sure I've got one of them
+> >> locally at my apartment and don't mind setting up AMT/KVM/SSH
+> > Probably no need for remote access (thanks for the offer, though). I
+> > attached a test patch to the bug report:
+> >
+> >   https://bugzilla.kernel.org/show_bug.cgi?id=208597
+> >
+> > that tries to work it around (based on the ->pm_cap == 0). I wonder if
+> > anyone would have time to try it out.
 > 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
->  lib/iov_iter.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index 7405922caaec..d5b7e204fea6 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -1451,7 +1451,7 @@ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
->  		int err = 0;
->  		next = csum_and_copy_from_user(v.iov_base,
->  					       (to += v.iov_len) - v.iov_len,
-> -					       v.iov_len, 0, &err);
-> +					       v.iov_len, ~0U, &err);
->  		if (!err) {
->  			sum = csum_block_add(sum, next, off);
->  			off += v.iov_len;
+> Hi Mika,
+> 
+> I can confirm that this patch applied to 5.4.52 fixes the issue with
+> hybrid graphics on the Thinkpad X1 Extreme gen2.
 
-Can't you remove the csum_block_add() by passing the
-old 'sum' in instead of the ~0U ?
-You'll need to keep track of whether the buffer fragment
-is odd/even aligned.
-After an odd length fragment a bswap32() or 8 bit rotate will
-fix things (and maybe one right at the end).
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Great, thanks for testing!
