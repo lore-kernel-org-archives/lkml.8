@@ -2,147 +2,149 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CEFC4345C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76ABC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAFD22CAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="SyANUJSq"
+	by mail.kernel.org (Postfix) with ESMTP id BEDA322CA1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbgGVPz7 (ORCPT
+        id S1733172AbgGVP4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:55:59 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:31162 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733113AbgGVPz5 (ORCPT
+        Wed, 22 Jul 2020 11:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733113AbgGVP4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:55:57 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MFsWdK008856;
-        Wed, 22 Jul 2020 08:55:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=abvwJyxQ5+FVGDhi3/w7dacNEWbcUQpv4mD6cdlqFSk=;
- b=SyANUJSqFG9bcA0afhZagOjdbo2fiiL1dZvg7rZUZo0FKWMryYecW5+05+ft1FGY+LL0
- 16fN84YqoViGgOckQ/Q1Bs+88BGirScrQjlc5QJAhP17vpkwdc5oqjG5Vn83tZb7myjK
- Cwh9CPV/JCvR5oO3rG9NqR+XSyo4cy6GDCkhqzvQKNO8PvNEM+8UQqdeCqUvOiTmGCVQ
- iGVoUNoSacy4Ng/wb4bwsnkY12mT5X7mNcWvMzZOIVOasz+i9Skgvi2Sag2a///N9sfS
- rStyuQgUWtPNwRe+xcJ6R6ccQ4s4aR9gtBQbfTrVFopgwbj8ETTGS2oJ+teAbblRNEsJ 5g== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkrkpr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 08:55:41 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 08:55:39 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 08:55:39 -0700
-Received: from NN-LT0049.marvell.com (unknown [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 833DE3F703F;
-        Wed, 22 Jul 2020 08:55:33 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 11/15] qed: introduce qed_chain_get_elem_used{,u32}()
-Date:   Wed, 22 Jul 2020 18:53:45 +0300
-Message-ID: <20200722155349.747-12-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722155349.747-1-alobakin@marvell.com>
-References: <20200722155349.747-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 11:56:01 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9ECEC0619DC;
+        Wed, 22 Jul 2020 08:56:00 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id ACEB2297FEA
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
+        eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
+        robin.murphy@arm.com
+Subject: [PATCH v5 3/9] media: staging: dt-bindings: rkisp1: re-order properties
+Date:   Wed, 22 Jul 2020 12:55:27 -0300
+Message-Id: <20200722155533.252844-4-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
+References: <20200722155533.252844-1-helen.koike@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_09:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reverse-variants of qed_chain_get_elem_left{,u32}() to be able to
-know current chain occupation. They will be used in the upcoming qede
-XDP_REDIRECT code.
-They share most of the logics with the mentioned ones, so were reused
-to collapse the latters.
+Organize properties order in dt-bindings to move it out of staging.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+On top: compatible, reg and interrupts.
+Then alphabetical order, then properties starting with '#'.
+
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- include/linux/qed/qed_chain.h | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+V5:
+- s/binbings/bindings
 
-diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 434479e2ab65..4d58dc8943f0 100644
---- a/include/linux/qed/qed_chain.h
-+++ b/include/linux/qed/qed_chain.h
-@@ -203,7 +203,7 @@ static inline u32 qed_chain_get_cons_idx_u32(const struct qed_chain *chain)
- 	return chain->u.chain32.cons_idx;
- }
+V2:
+- this is a new patch in the series
+---
+ .../bindings/media/rockchip-isp1.yaml         | 32 +++++++++----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index 4c31cfaee2709..79ebacab83cf3 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -23,19 +23,6 @@ properties:
+   interrupts:
+     maxItems: 1
  
--static inline u16 qed_chain_get_elem_left(const struct qed_chain *chain)
-+static inline u16 qed_chain_get_elem_used(const struct qed_chain *chain)
- {
- 	u32 prod = qed_chain_get_prod_idx(chain);
- 	u32 cons = qed_chain_get_cons_idx(chain);
-@@ -217,10 +217,15 @@ static inline u16 qed_chain_get_elem_left(const struct qed_chain *chain)
- 	if (chain->mode == QED_CHAIN_MODE_NEXT_PTR)
- 		used -= (u16)(prod / elem_per_page - cons / elem_per_page);
+-  iommus:
+-    maxItems: 1
+-
+-  power-domains:
+-    maxItems: 1
+-
+-  phys:
+-    maxItems: 1
+-    description: phandle for the PHY port
+-
+-  phy-names:
+-    const: dphy
+-
+   clocks:
+     items:
+       - description: ISP clock
+@@ -52,6 +39,19 @@ properties:
+       - const: hclk_isp
+       - const: hclk_isp_wrap
  
--	return (u16)(chain->capacity - used);
-+	return used;
- }
- 
--static inline u32 qed_chain_get_elem_left_u32(const struct qed_chain *chain)
-+static inline u16 qed_chain_get_elem_left(const struct qed_chain *chain)
-+{
-+	return (u16)(chain->capacity - qed_chain_get_elem_used(chain));
-+}
++  iommus:
++    maxItems: 1
 +
-+static inline u32 qed_chain_get_elem_used_u32(const struct qed_chain *chain)
- {
- 	u64 prod = qed_chain_get_prod_idx_u32(chain);
- 	u64 cons = qed_chain_get_cons_idx_u32(chain);
-@@ -234,7 +239,12 @@ static inline u32 qed_chain_get_elem_left_u32(const struct qed_chain *chain)
- 	if (chain->mode == QED_CHAIN_MODE_NEXT_PTR)
- 		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
- 
--	return chain->capacity - used;
-+	return used;
-+}
++  phys:
++    maxItems: 1
++    description: phandle for the PHY port
 +
-+static inline u32 qed_chain_get_elem_left_u32(const struct qed_chain *chain)
-+{
-+	return chain->capacity - qed_chain_get_elem_used_u32(chain);
- }
++  phy-names:
++    const: dphy
++
++  power-domains:
++    maxItems: 1
++
+   # See ./video-interfaces.txt for details
+   ports:
+     type: object
+@@ -110,10 +110,10 @@ required:
+   - interrupts
+   - clocks
+   - clock-names
+-  - power-domains
+   - iommus
+   - phys
+   - phy-names
++  - power-domains
+   - ports
  
- static inline u16 qed_chain_get_usable_per_page(const struct qed_chain *chain)
+ additionalProperties: false
+@@ -139,19 +139,19 @@ examples:
+             clock-names = "clk_isp",
+                           "aclk_isp", "aclk_isp_wrap",
+                           "hclk_isp", "hclk_isp_wrap";
+-            power-domains = <&power RK3399_PD_ISP0>;
+             iommus = <&isp0_mmu>;
+             phys = <&dphy>;
+             phy-names = "dphy";
++            power-domains = <&power RK3399_PD_ISP0>;
+ 
+             ports {
+                 #address-cells = <1>;
+                 #size-cells = <0>;
+ 
+                 port@0 {
++                    reg = <0>;
+                     #address-cells = <1>;
+                     #size-cells = <0>;
+-                    reg = <0>;
+ 
+                     mipi_in_wcam: endpoint@0 {
+                         reg = <0>;
 -- 
-2.25.1
+2.28.0.rc1
 
