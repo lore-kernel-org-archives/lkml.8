@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F18C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6534C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E28E206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A003A20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dU63nrG8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kqJZ9Wz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbgGVKIc (ORCPT
+        id S1732041AbgGVKIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39442 "EHLO
+        Wed, 22 Jul 2020 06:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732010AbgGVKI2 (ORCPT
+        with ESMTP id S1731984AbgGVKI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:08:28 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B9EC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:27 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 17so1430965wmo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:27 -0700 (PDT)
+        Wed, 22 Jul 2020 06:08:27 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE12C0619DF
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:26 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id x5so829534wmi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9gY9Xz1b3hxtJwHsxB5opm7y/1T5Sf2OUR7Nr1mwtjs=;
-        b=dU63nrG8GxOtfLcB/9q/SoMW237Sgf2oDNEAJ4G9kBmTWhK/l4eNxP5IVohk9oA554
-         3Rg5em++QvjT3ihAV+6fBNf36USInKU8hog7ZyzD2TbVheqFI00Y0Aap6y2+TSNRV1Zw
-         UaH59eJn4StncCzGD5h63tvJNINr3heiI04XN0Z3WSojSv2b0suSJmplx9A2GLA4gJaq
-         FheaCZc4Hdbj8tGOzEEmH5AzJV4/Q784WdibgehpGUCA4ReRbWD4NKme202MMjlmxO7B
-         I3hSNiqn2iJFuUcI33IH0QpcPuNV6qOJAHYzVXs4CKtp1DqDbRFlL0qrZ2vw29+zb6gX
-         DNJA==
+        bh=vZOb8R7MJ2d5mfe9t2yzGmTymT+mHQhGLtoqq5U00jQ=;
+        b=kqJZ9Wz6O05/5quqgWjyGgTYJ8I2k3BynGbf+b1OstUX6CITO55O1xdu6a84r7XHwc
+         78hfs09QfvFiRdyB3r+TjfTK9Dh3SVOkwJGXGTU2eDGgpZM5N1LkDJ7e+eEmH7PWjUAv
+         GYK/oC2HPBM9oX3EKa0zZIjMrgADG/JQivOecitMfjFX/erQNVUs3o00DiHCRHPHPyaV
+         9lijQ925EeEt2rc80nq5lEsmIPyF3PqtYTEOL0jcu/AKer9o/XvJolssRN/L5YPvHGna
+         aFvOlW8CwqUC3gBvXPnIVJnyXArVFWth8Q8dlvQIcZ2AM/0znqjXWpepXI2tCqHYEm8Y
+         plWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9gY9Xz1b3hxtJwHsxB5opm7y/1T5Sf2OUR7Nr1mwtjs=;
-        b=r2S8D0jHSDNYOk+66+9uydMpc0bMsW/NFz7d8ONKLPHI1wrIC2eK6gzcNOLzQL7+jP
-         MHZudcbeKg/Ltyeb1w3885EcB8f/Ky8ylfdCH33LlBf/drlI/aAo+gDpaOZ5y4Y+7Cyk
-         I7vND/pb/TJrDl0m9SpLlWB+0YvJGs2JIetZbfOEKPy3YYAL9zpwyL/m5Xdqup4BuuNS
-         qwA70a63Xz8I8cnreBQhmINfUDQUkCGNbzn9Qz3mL8D2CoO9OkaKD9ruSmayWcWL3k19
-         8yjZS1rDBEawmCc2YJsCaKFDT3zx7oS+pD0Dn1KCxldViy5UOd1O0x/pq/TnwA0qnS3T
-         z6Xg==
-X-Gm-Message-State: AOAM533MVKRIEYMJICWP4zkJtiz438ywxbQM7AzomE0YN5C6EIlPCS1f
-        /eosZ1oQs6p4hPSBA/1vu9eiBw==
-X-Google-Smtp-Source: ABdhPJwPBcg2OXIW9gKUFMZ4tq+/d9mc63cIXd6nJyJgTC/kVTlH98ykPtimCKP1IEmYSHE0+y/chQ==
-X-Received: by 2002:a05:600c:20d3:: with SMTP id y19mr8384930wmm.10.1595412506655;
-        Wed, 22 Jul 2020 03:08:26 -0700 (PDT)
+        bh=vZOb8R7MJ2d5mfe9t2yzGmTymT+mHQhGLtoqq5U00jQ=;
+        b=Syd8uvVqbJR7rH/Jcqsaa00q5fzcctdhGIgfswU65quVqVI/BHSJSZlPqxwK5iYzbl
+         ENfY5jtb3EX4Ezok9yW2iuv7Zh+D5X6M6fDgOwXCxQrzjzWSVoV87Nv896hIzGNHynpg
+         Wa4tnekf19zZZeQRNOywotVZFnndvqN8jxNOfNEnqpEI+icg8ZV/hsA0GJJG6k2X7v9k
+         C/lQbDOaNKRI5YC3iiiKtm5bJ83P0VuUH8ipF6R7FllZE/eVQwyrsSfytTV9cCEeXBEz
+         ah1KB3GGoOUzvqROb6pFwgEgbDkbWHRpVLXzfU8YP0063H5StcNhubxMrr8X9aN8i2Do
+         zzaA==
+X-Gm-Message-State: AOAM530Z9oIvfngMaN+RuMFGDGdD7+8m4zh/KybZBuFku4CAUDjGsren
+        ufw1+8LKXpp4JC4qQ1dT2d4pOA==
+X-Google-Smtp-Source: ABdhPJzBB42SqN02WSmnpJATjFMOcEmQMZvIG65eyQlZZBYLJB07buIdBSf7D/Q+HWkrdHlLrGM0Og==
+X-Received: by 2002:a7b:c1c6:: with SMTP id a6mr2291722wmj.92.1595412505416;
+        Wed, 22 Jul 2020 03:08:25 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.25
+        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:08:26 -0700 (PDT)
+        Wed, 22 Jul 2020 03:08:24 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
+Cc:     linux-kernel@vger.kernel.org, Yangtao Li <frank@allwinnertech.com>,
+        Rob Herring <robh@kernel.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 14/14] nvmem: qcom-spmi-sdam: Enable multiple devices
-Date:   Wed, 22 Jul 2020 11:07:05 +0100
-Message-Id: <20200722100705.7772-15-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 13/14] dt-bindings: nvmem: SID: add binding for A100's SID controller
+Date:   Wed, 22 Jul 2020 11:07:04 +0100
+Message-Id: <20200722100705.7772-14-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
 References: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
@@ -77,43 +77,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guru Das Srinagesh <gurus@codeaurora.org>
+From: Yangtao Li <frank@allwinnertech.com>
 
-Using pdev->id as the nvmem's config ID (which, by default, is
-NVMEM_DEVID_NONE) prevents multiple instances of this driver from
-probing because of the following error:
+Add a binding for A100's SID controller.
 
-  sysfs: cannot create duplicate filename '/bus/nvmem/devices/spmi_sdam'
-
-Use NVMEM_DEVID_AUTO as the NVMEM config ID to fix the issue.
-
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/qcom-spmi-sdam.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvmem/qcom-spmi-sdam.c b/drivers/nvmem/qcom-spmi-sdam.c
-index 8682cda448d6..a72704cd0468 100644
---- a/drivers/nvmem/qcom-spmi-sdam.c
-+++ b/drivers/nvmem/qcom-spmi-sdam.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2017 The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017, 2020 The Linux Foundation. All rights reserved.
-  */
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+index daf1321d76ad..6687ab720304 100644
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+@@ -15,14 +15,17 @@ allOf:
  
- #include <linux/device.h>
-@@ -141,7 +141,7 @@ static int sdam_probe(struct platform_device *pdev)
+ properties:
+   compatible:
+-    enum:
+-      - allwinner,sun4i-a10-sid
+-      - allwinner,sun7i-a20-sid
+-      - allwinner,sun8i-a83t-sid
+-      - allwinner,sun8i-h3-sid
+-      - allwinner,sun50i-a64-sid
+-      - allwinner,sun50i-h5-sid
+-      - allwinner,sun50i-h6-sid
++    oneOf:
++      - const: allwinner,sun4i-a10-sid
++      - const: allwinner,sun7i-a20-sid
++      - const: allwinner,sun8i-a83t-sid
++      - const: allwinner,sun8i-h3-sid
++      - const: allwinner,sun50i-a64-sid
++      - items:
++          - const: allwinner,sun50i-a100-sid
++          - const: allwinner,sun50i-a64-sid
++      - const: allwinner,sun50i-h5-sid
++      - const: allwinner,sun50i-h6-sid
  
- 	sdam->sdam_config.dev = &pdev->dev;
- 	sdam->sdam_config.name = "spmi_sdam";
--	sdam->sdam_config.id = pdev->id;
-+	sdam->sdam_config.id = NVMEM_DEVID_AUTO;
- 	sdam->sdam_config.owner = THIS_MODULE,
- 	sdam->sdam_config.stride = 1;
- 	sdam->sdam_config.word_size = 1;
+   reg:
+     maxItems: 1
 -- 
 2.21.0
 
