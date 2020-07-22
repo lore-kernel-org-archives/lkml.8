@@ -2,121 +2,90 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A052C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9069C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3213920729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966D820781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AeuhoWxQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xnni68CJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbgGVHaE (ORCPT
+        id S1731676AbgGVHez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:30:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727096AbgGVHaD (ORCPT
+        Wed, 22 Jul 2020 03:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgGVHez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:30:03 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M71YXW192139;
-        Wed, 22 Jul 2020 03:29:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1wkr8ks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:29:53 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M7Qih8083510;
-        Wed, 22 Jul 2020 03:29:52 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1wkr8k2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:29:52 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M7PIor002401;
-        Wed, 22 Jul 2020 07:29:50 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 32dbmn13e2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:29:50 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M7TkEh65274330
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 07:29:46 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2973AAE051;
-        Wed, 22 Jul 2020 07:29:46 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDB0AAE059;
-        Wed, 22 Jul 2020 07:29:43 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed, 22 Jul 2020 07:29:43 +0000 (GMT)
-Date:   Wed, 22 Jul 2020 12:59:43 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <michaele@au1.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v2 09/10] Powerpc/smp: Create coregroup domain
-Message-ID: <20200722072943.GD9290@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
- <20200721113814.32284-10-srikar@linux.vnet.ibm.com>
- <20200722070436.GF31038@in.ibm.com>
+        Wed, 22 Jul 2020 03:34:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4403C0619DC;
+        Wed, 22 Jul 2020 00:34:54 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595403292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e238TGtYSTJU/Nj4nz8uM/OcqtGfTu5cp+moDbUUjKo=;
+        b=AeuhoWxQOdrudw5w1KzhY7xrOY5NgpVfvove3vHqfArVfKbJASD64AhJSezNITqXsykKmA
+        OeD4oT8t/yR/sR46YfLes0xUmzLU/g0+HBx7vTuCyTMwe1c76XsKYIssmokHgxcooubmqa
+        tlKFlg7z8+LPAXq9qKOGWYT3d3TYFcw+hBM3BaZ3eHOVXfOu2qb9ZOR7wW/dMpuAVbl6IL
+        D/JHxH5SdNmyu5y8tFWjkCPv8SjyE37XWeAw46Eip49nmel1DDsiq+mrSCYRsQrJfL5Du2
+        IJuvu26bvZSRxQhc9yV9KsO/qag4b89u2xX70oJFfWlcJ/f6KBm04MYIHBYDBg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595403292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e238TGtYSTJU/Nj4nz8uM/OcqtGfTu5cp+moDbUUjKo=;
+        b=xnni68CJ501/RLGRfwNcocBgzDg8uBhVTvntbkUEUifL/e360iM0lFQn44NybsFp4PB6/S
+        Sx3oSXKhjNdeDxDg==
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V4 02/15] entry: Provide generic syscall entry functionality
+In-Reply-To: <202007211426.B40A7A7BD@keescook>
+References: <20200721105706.030914876@linutronix.de> <20200721110808.455350746@linutronix.de> <202007211426.B40A7A7BD@keescook>
+Date:   Wed, 22 Jul 2020 09:34:51 +0200
+Message-ID: <87o8o82eas.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200722070436.GF31038@in.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_03:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007220048
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > @@ -1386,6 +1421,9 @@ int setup_profiling_timer(unsigned int multiplier)
-> > 
-> >  static void fixup_topology(void)
-> >  {
-> > +	if (!has_coregroup_support())
-> > +		powerpc_topology[mc_idx].mask = cpu_bigcore_mask;
-> > +
-> 
-> Shouldn't we move this condition after doing the fixup for shared
-> caches ? Because if we have shared_caches, but not core_group, then we
-> want the coregroup domain to degenerate correctly.
-> 
+Kees Cook <keescook@chromium.org> writes:
+> On Tue, Jul 21, 2020 at 12:57:08PM +0200, Thomas Gleixner wrote:
+>> --- /dev/null
+>> +++ b/kernel/entry/Makefile
+>> @@ -0,0 +1,3 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +obj-$(CONFIG_GENERIC_ENTRY) += common.o
+>
+> But, my point is, let's avoid tripping over this again, and retain the
+> disabling here:
+>
+> CFLAGS_common.o += -fno-stack-protector
+>
+> I can add this again later, but it'd be nice if it was done here to
+> avoid gaining back the TIF_WORK stack protector overhead penalty (which
+> we're free of in v5.8 for the first time). ;)
 
-Currently we aren't consolidating, and hence the order doesn't matter for
-degeneration. However even if in future, if we want to consolidate the
-domains before calling set_sched_topology(), this order would be ideal.
+Duh, yes. I completely forgot about that.
 
-> 
-> >  	if (shared_caches) {
-> >  		pr_info("Using shared cache scheduler topology\n");
-> >  		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-> 
+Thanks for spotting it!
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+       tglx
