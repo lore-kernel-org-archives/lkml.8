@@ -2,162 +2,90 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64696C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FEEC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F627207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C4E20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EvZnLUq9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBj9pV2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgGVFef (ORCPT
+        id S1727997AbgGVFep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:34:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        Wed, 22 Jul 2020 01:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGVFed (ORCPT
+        with ESMTP id S1727876AbgGVFeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:34:33 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1615CC061794;
-        Tue, 21 Jul 2020 22:34:33 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j20so581262pfe.5;
-        Tue, 21 Jul 2020 22:34:33 -0700 (PDT)
+        Wed, 22 Jul 2020 01:34:44 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20393C061794;
+        Tue, 21 Jul 2020 22:34:44 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d7so379980plq.13;
+        Tue, 21 Jul 2020 22:34:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6XH81WBXfO6/iXFH94MhfENTEKFbXx3UNBzvy3U/FJs=;
-        b=EvZnLUq9D7tu6rleIdPCSMEV5Tz1yJQq0CwJNfZiM+GRaEaiJoY6IaRGqrPP9HAMKo
-         R74RtVhJo0/jeyvO/zn/0UEPTOpZwXBc5G+6ebEqicwBhwy/FVvGe62AuY2TGLcJH1AL
-         1qWAE46zoSlLuRnq5tv6s8yv/PfwBgcdjlxNRzHeOpbq6v69aSPFoXpZXULIh17BYl25
-         mjvJAHdmF+RuZG4TgHY8czjHZ9/xce1Mwq/9Qc8f+GxAxJIJUM8Rsmq67pF0qQfh3IKQ
-         vP9ljjb4PDIThGI7KSva0f+w5DkG0ppHrhzZeC9S5nhTALC0TxkYYTZef4fsiEvFIAYU
-         PaCg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CqQzl9x6CoNQH4iSZy7+drapjLq7r03O/hTWPhkbmb4=;
+        b=jBj9pV2JBo1eQC4Pxy7mt7cRao9xVS6pBABuAGtx89kVOr6edNorEOc8C2Z94b/n5u
+         Z8cYB5NKkngbVdtg+REvUON+ZiTBbTp5NU5I/tdcUMj3UQkY7aU4axCn3P1KZEpTOKYA
+         hfMpuLWXb+ZRbYzImoCAmUUv0LnbIx9+m+RtnE7YZCMHze+zO7/Mn546BDWIAiaR7rie
+         tGJz2ji3XlT1hPbaqAcFoMTUY6WaJNPCTeI7h3WtLnleb3e60ZTnaqcMLwU7myR3J+VG
+         uyaSmsx+sa5BBlVNtNDegtTEP9j/qb/GZ3tjLfRpHG3/LCrWVXpgDcJAycF8qD3CRIDu
+         7H9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6XH81WBXfO6/iXFH94MhfENTEKFbXx3UNBzvy3U/FJs=;
-        b=sca9ZgAjktVgknmbGFO/8iGmIr1qytN9Y5GAZcfdT3WZa1xPxa9+P9FsKbwV5gA5IK
-         0O9mQJIYYU3tL+MxJ5o6XgRGAFElZ0eXbVhp323stXUGyq+iRq+NV/dDcffo+oblbSQw
-         Pp0UEX1+WZhBpVTRc+YHZVTWytJIHaL38XToRZSGGNm1gqR/lgWyE2QwiQnWFhorfi4t
-         c8aD2U1VGiVxy5/WUIJ0faGsvx3HeGEsOxKjkvPORz1waV9kjNaL5t8r4GPgsOnyJuwv
-         FpeUKmqE1sDzToI/fxC3FPU+WX48Sby6wV9kBdDr7TbGOTleTu8LcGHFKtV9k2A//Bw0
-         0uag==
-X-Gm-Message-State: AOAM532szd5UAbJ6rC4eTRPcwDKak1DrYuqMC9ELUIAQ8c+s4t99PvxX
-        fbrVnFp/coC3Ra4x7t+6MZw=
-X-Google-Smtp-Source: ABdhPJyGlWS5308n24byzEKfDIFi9PkFx3Pz1oKnlAO1LOt40uA3co0mEYCOc3QdPCEoW32ZUaClow==
-X-Received: by 2002:a63:1059:: with SMTP id 25mr22543659pgq.302.1595396072530;
-        Tue, 21 Jul 2020 22:34:32 -0700 (PDT)
-Received: from octofox.cadence.com ([2601:641:400:e00:19b7:f650:7bbe:a7fb])
-        by smtp.gmail.com with ESMTPSA id q5sm22536608pfc.130.2020.07.21.22.34.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CqQzl9x6CoNQH4iSZy7+drapjLq7r03O/hTWPhkbmb4=;
+        b=K9/ClYeXoEt8CgEX4s+fuKwWR6jLbMLv2r7risfHKiO2HdLEgmMHs+tGONfSsTjiq4
+         ROwjsdtn46sOdNLuHGoNgktFkdnS5GSt7QbUGWGULKmYxqg0C05FnE0MEFplevOJVkx/
+         pMha69uLAbfLai5+u+oSO9DpuJ5zEPC06EQka5zSDrk60J3H3eX4mqSfxzCmtPOgivyR
+         huOgzubWsAyQitnR2aordB3ZW62TUBO+1y6DlJ4u1VkpeHTF5q9t49t+hyIY83FD0JBM
+         kFPdeYgqSFqnPndPqmqs2lhTsI/rbdUXmfC1Up2TKbDBP/Rtp8oWqGcVeSrhcoKIhy+Q
+         YzwQ==
+X-Gm-Message-State: AOAM531O60g/ANF8+5vzOk/C4ruYbEXJMxw6UtmfnLT76/aU1xrxTatf
+        akGyX4tuSHerW0mR0xCdMgD9Lqqfa38=
+X-Google-Smtp-Source: ABdhPJyu+CzemnTp/p5r21Cwez2GpFQC9UPZTsSq0YHnO6GaMZIUTugw0PqCfpU/S3v+TqBrbl98lw==
+X-Received: by 2002:a17:90a:ba05:: with SMTP id s5mr7648643pjr.132.1595396083459;
+        Tue, 21 Jul 2020 22:34:43 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id r8sm22358883pfg.147.2020.07.21.22.34.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 22:34:32 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 1/2] xtensa: move vmlinux.bin[.gz] to boot subdirectory
-Date:   Tue, 21 Jul 2020 22:34:16 -0700
-Message-Id: <20200722053417.5915-2-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200722053417.5915-1-jcmvbkbc@gmail.com>
-References: <20200722053417.5915-1-jcmvbkbc@gmail.com>
+        Tue, 21 Jul 2020 22:34:42 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 22:34:40 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: psmouse: add a newline when printing 'proto' by
+ sysfs
+Message-ID: <20200722053440.GO1665100@dtor-ws>
+References: <20200720073846.120724-1-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720073846.120724-1-wangxiongfeng2@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmlinux.bin and vmlinux.bin.gz are always rebuilt in the kernel build
-process. Add them to 'targets' and move them to the boot subdirectory
-where their rules are. Update make rules that refer to them.
+On Mon, Jul 20, 2020 at 03:38:46PM +0800, Xiongfeng Wang wrote:
+> When I cat parameter 'proto' by sysfs, it displays as follows. It's
+> better to add a newline for easy reading.
+> 
+> root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+> autoroot@syzkaller:~#
+> 
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
- arch/xtensa/boot/Makefile              | 11 ++++++-----
- arch/xtensa/boot/boot-elf/Makefile     |  4 ++--
- arch/xtensa/boot/boot-redboot/Makefile |  4 ++--
- 3 files changed, 10 insertions(+), 9 deletions(-)
+Applied, thank you.
 
-diff --git a/arch/xtensa/boot/Makefile b/arch/xtensa/boot/Makefile
-index 1a14d38d9b33..801fe30b4dfe 100644
---- a/arch/xtensa/boot/Makefile
-+++ b/arch/xtensa/boot/Makefile
-@@ -17,6 +17,7 @@ BIG_ENDIAN	:= $(shell echo __XTENSA_EB__ | $(CC) -E - | grep -v "\#")
- export BIG_ENDIAN
- 
- subdir-y	:= lib
-+targets		+= vmlinux.bin vmlinux.bin.gz
- 
- # Subdirs for the boot loader(s)
- 
-@@ -35,19 +36,19 @@ boot-elf boot-redboot: $(addprefix $(obj)/,$(subdir-y))
- 
- OBJCOPYFLAGS = --strip-all -R .comment -R .notes -O binary
- 
--vmlinux.bin: vmlinux FORCE
-+$(obj)/vmlinux.bin: vmlinux FORCE
- 	$(call if_changed,objcopy)
- 
--vmlinux.bin.gz: vmlinux.bin FORCE
-+$(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
- 	$(call if_changed,gzip)
- 
--boot-elf: vmlinux.bin
--boot-redboot: vmlinux.bin.gz
-+boot-elf: $(obj)/vmlinux.bin
-+boot-redboot: $(obj)/vmlinux.bin.gz
- 
- UIMAGE_LOADADDR = $(CONFIG_KERNEL_LOAD_ADDRESS)
- UIMAGE_COMPRESSION = gzip
- 
--$(obj)/uImage: vmlinux.bin.gz FORCE
-+$(obj)/uImage: $(obj)/vmlinux.bin.gz FORCE
- 	$(call if_changed,uimage)
- 	$(Q)$(kecho) '  Kernel: $@ is ready'
- 
-diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-index badee63dae27..0ebc9827f7e5 100644
---- a/arch/xtensa/boot/boot-elf/Makefile
-+++ b/arch/xtensa/boot/boot-elf/Makefile
-@@ -19,9 +19,9 @@ targets		+= $(boot-y) boot.lds
- 
- OBJS		:= $(addprefix $(obj)/,$(boot-y))
- 
--$(obj)/Image.o: vmlinux.bin $(OBJS)
-+$(obj)/Image.o: $(obj)/../vmlinux.bin $(OBJS)
- 	$(Q)$(OBJCOPY) $(OBJCOPY_ARGS) -R .comment \
--		--add-section image=vmlinux.bin \
-+		--add-section image=$< \
- 		--set-section-flags image=contents,alloc,load,load,data \
- 		$(OBJS) $@
- 
-diff --git a/arch/xtensa/boot/boot-redboot/Makefile b/arch/xtensa/boot/boot-redboot/Makefile
-index 1a277dd57b2a..07cb24afedc2 100644
---- a/arch/xtensa/boot/boot-redboot/Makefile
-+++ b/arch/xtensa/boot/boot-redboot/Makefile
-@@ -20,9 +20,9 @@ LIBS	:= arch/xtensa/boot/lib/lib.a arch/xtensa/lib/lib.a
- 
- LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
- 
--$(obj)/zImage.o: vmlinux.bin.gz $(OBJS)
-+$(obj)/zImage.o: $(obj)/../vmlinux.bin.gz $(OBJS)
- 	$(Q)$(OBJCOPY) $(OBJCOPY_ARGS) -R .comment \
--		--add-section image=vmlinux.bin.gz \
-+		--add-section image=$< \
- 		--set-section-flags image=contents,alloc,load,load,data \
- 		$(OBJS) $@
- 
 -- 
-2.20.1
-
+Dmitry
