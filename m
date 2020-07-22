@@ -2,124 +2,104 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B37C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7F4C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B5520771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A1420771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nf6Ht3J/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgGVQRI convert rfc822-to-8bit (ORCPT
+        id S1729894AbgGVQS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:17:08 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20194 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730049AbgGVQRI (ORCPT
+        Wed, 22 Jul 2020 12:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgGVQS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:17:08 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-226-Is5B0LHAODKlWwSet36rAw-1; Wed, 22 Jul 2020 17:17:03 +0100
-X-MC-Unique: Is5B0LHAODKlWwSet36rAw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 17:17:02 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 22 Jul 2020 17:17:02 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0FggABJU4CAABlpkP//+uQAgAAU8xA=
-Date:   Wed, 22 Jul 2020 16:17:02 +0000
-Message-ID: <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
- <20200722144213.GE2786714@ZenIV.linux.org.uk>
- <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
- <20200722155452.GF2786714@ZenIV.linux.org.uk>
-In-Reply-To: <20200722155452.GF2786714@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Wed, 22 Jul 2020 12:18:26 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0370DC0619DC;
+        Wed, 22 Jul 2020 09:18:26 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f12so2823431eja.9;
+        Wed, 22 Jul 2020 09:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TBVZPJ7eiK7Rj07MgbjTYAxf0mSfdzYtCLBYEc1p9SI=;
+        b=nf6Ht3J/nNK0uiHU7avSENiPKKiDP/9q10mv1APHwAEK3FlMOrIOTbTnLxoIochtKC
+         froOopOJ2DtLCC07mtzokdvMF4DC8xJyd0i6rRlSFRu66m15Sg18Qmu0wyfRa7szIee7
+         gABM6RiXv5mnoHF01D0qM8IB4BcQ1rHjQs2dUop2radeLAgt9Opi54a6QY4mN6YBjWo3
+         Mmd7KGIrlh9bc5VTSfm45ifND/LgZXuIX6Pg1y/+dW2bxv/GBz2xBjhytSHz1l2hXJ2b
+         AhYx1+4h09LpOX2Qa4hKgPcs62C+BVNEFFf7mQKfTFRspl4p6iFsW5Zvx/1NvdBSfMqP
+         LZAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TBVZPJ7eiK7Rj07MgbjTYAxf0mSfdzYtCLBYEc1p9SI=;
+        b=B6VGStQ681hx8Md6jpf5gkMLzFguWQEt/AGzY8GT+aIZ186JTniP9CPM8ghtluSuJx
+         wz8M/eHvrLEY/cggxhbXZUHID/RMozZwBwa2UoMuO0HriBSay4GsX0CFD9vu8fn8B9fd
+         CaGOJm9gXsTZqpVp0ZE5no0Dxxy7t+tLQ6hSa18nyzcB304Mcv0C9JwqPsf4JmNwFj/S
+         R3J0E0T9ScmOLnMkKfODPw6QYyxApCjGtc5PutWmC+8O/Cl4QSht8io1nl3e7FyqmQ+R
+         aSIt8dBrduBvuRPofw7maB9dhy2aybcaX0heKFTyrrg6viqWKtwDgJdvEk0jiU40/RhM
+         r87A==
+X-Gm-Message-State: AOAM530sHHRIM5SfXxNn2A6JzZ19T23g2SR2TYZf/TjalJZLescpt7A+
+        i59jIwL14tAz4rRi0C2KD5Rb4NcasQ==
+X-Google-Smtp-Source: ABdhPJx6hR1jLeKhYCIi6mOgl2ZnQOXoHE/znZ1XOOsjmKUpaiW/2XlZUT6RaGGJveS3J4HKymIypg==
+X-Received: by 2002:a17:906:9381:: with SMTP id l1mr339791ejx.20.1595434704723;
+        Wed, 22 Jul 2020 09:18:24 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:810b:f40:e00:922b:34ff:fe38:6455])
+        by smtp.googlemail.com with ESMTPSA id v25sm190334edr.74.2020.07.22.09.18.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 09:18:24 -0700 (PDT)
+From:   Alex Bee <knaerzche@gmail.com>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     Alex Bee <knaerzche@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: rockchip: add sclk_mac_lbtest to rk3188_critical_clocks
+Date:   Wed, 22 Jul 2020 18:18:20 +0200
+Message-Id: <20200722161820.5316-1-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro > Sent: 22 July 2020 16:55
-> To: David Laight <David.Laight@ACULAB.COM>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>; linux-kernel@vger.kernel.org; linux-
-> arch@vger.kernel.org
-> Subject: Re: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead of 0 as initial sum
-> 
-> On Wed, Jul 22, 2020 at 03:22:45PM +0000, David Laight wrote:
-> 
-> > > And the benefit of that would be...?  It wouldn't be any simpler,
-> > > it almost certainly would not even be a valid microoptimization
-> > > (nevermind that this is an arch-independent code)...
-> >
-> > It ought to give a minor improvement because it saves the extra
-> > csum_fold() when the checksum from a buffer is added to the
-> > previous total.
-> >
-> 
-> Sigh...  _WHAT_ csum_fold()?
-> 
-> static inline __wsum
-> csum_block_add(__wsum csum, __wsum csum2, int offset)
-> {
->         u32 sum = (__force u32)csum2;
-> 
->         /* rotate sum to align it with a 16b boundary */
->         if (offset & 1)
->                 sum = ror32(sum, 8);
-> 
->         return csum_add(csum, (__force __wsum)sum);
-> }
-> 
-> David, do you *ever* bother to RTFS?  I mean, competent supercilious twits
-> are annoying, but at least with those you can generally assume that what
-> they say makes sense and has some relation to reality.  You, OTOH, keep
-> spewing utter bollocks, without ever lowering yourself to checking if your
-> guesses have anything to do with the reality.  With supercilious twit part
-> proudly on the display - you do speak with confidence, and the way you
-> dispense the oh-so-valuable advice to everyone around...
+Since the loopbacktest clock is not exported and is not touched in the
+driver, it has to be added to rk3188_critical_clocks to be protected from
+being disabled and in order to get the emac working.
 
-Yes, I do look at the code.
-I've actually spent a lot of time looking at the x86 checksum code.
-I've posted a patch for a version that is about twice as fast as the
-current one on a large range of x86 cpus.
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+---
 
-Possibly I meant the 32bit reduction inside csum_add()
-rather than what csum_fold() does.
+Changes in v2:
+- add sclk_mac_lbtest to rk3188_critical_clocks instead of adding the
+  CLOCK_IGNORE_UNUSED flag
 
-Having worked on the internals of SYSV, NetBSD and Linux I probably
-forget the exact names for a few things.
-The brain can only hold so much information.
+ drivers/clk/rockchip/clk-rk3188.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
+index 77aebfb1d6d5..730020fcc7fe 100644
+--- a/drivers/clk/rockchip/clk-rk3188.c
++++ b/drivers/clk/rockchip/clk-rk3188.c
+@@ -751,6 +751,7 @@ static const char *const rk3188_critical_clocks[] __initconst = {
+ 	"pclk_peri",
+ 	"hclk_cpubus",
+ 	"hclk_vio_bus",
++	"sclk_mac_lbtest",
+ };
+ 
+ static struct rockchip_clk_provider *__init rk3188_common_clk_init(struct device_node *np)
+-- 
+2.17.1
 
