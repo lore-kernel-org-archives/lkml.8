@@ -2,95 +2,127 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB560C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B2120729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2222420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XD0eZDpm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKQFyU7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbgGVKWv (ORCPT
+        id S1731833AbgGVKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:22:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28283 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726153AbgGVKWu (ORCPT
+        Wed, 22 Jul 2020 06:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726153AbgGVKXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:22:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595413369;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=GxCgvuoK8NuxbGBXVCCusTbGlNPSfTrnO2P7BCm4FhQ=;
-        b=XD0eZDpmXcfIfAehSLZoRtxAToBdS7mvnkGemvrrR316qtRrSRRwAY7XcEYYyoc0DiQjDe
-        r4P0XcjSbo1h4/XgSIn3rm9H47PccTsELtLOKgTdc0H5O7dlTn2+dBf1JygOzWGuk3jboG
-        vpJ16/cUZdpnVCp/B+fPn5LoryXkJpI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-spEUJSSAPy2OXuvs2fPvJQ-1; Wed, 22 Jul 2020 06:22:44 -0400
-X-MC-Unique: spEUJSSAPy2OXuvs2fPvJQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F246758;
-        Wed, 22 Jul 2020 10:22:43 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-113-242.ams2.redhat.com [10.36.113.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0CDB5D9D3;
-        Wed, 22 Jul 2020 10:22:41 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH] scripts/gdb: fix lx-symbols 'gdb.error' while loading modules
-Date:   Wed, 22 Jul 2020 12:22:39 +0200
-Message-Id: <20200722102239.313231-1-sgarzare@redhat.com>
+        Wed, 22 Jul 2020 06:23:38 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB74C0619DC;
+        Wed, 22 Jul 2020 03:23:37 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o13so990220pgf.0;
+        Wed, 22 Jul 2020 03:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=351AZ2ekNDQ3m5sRAihkmJTU7M8Jo1Yfnte60wYBP14=;
+        b=RKQFyU7Z0jmcWuaFp3mPqomB4elfcjfPsGGbVGUeVH7pNz1N7B3QlSKSKeEVwE0GwJ
+         v0FMMi05JhglpwUcvnqQFgsaA/AkhjsAcu0QT62f0c/BvJ22NPxdZzcsvToc8hYEZXSg
+         +KvQRDm5kJ7qjev+0WgkRtCl+nO4V4Lx9ogrT8XZwjTqqJx42DisqG7Fed44iZlKD4/K
+         77Ef26mQcJxunrv06/NWkLC4FdJ1kspGDEqs+6DyatqTK/PeSipS64cCgmYl96sGsqqQ
+         Z0H5b+TMwVOR94ztgy1nHZkjwVbkOadhUY+eyj6dxHX12w/Vo2SqsC9OXLBRJwDkwFPv
+         90qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=351AZ2ekNDQ3m5sRAihkmJTU7M8Jo1Yfnte60wYBP14=;
+        b=BU4DF3PNtRJYnrnSuiSRAK/CKiO3VoGeHKWL/dNppmyPg7UmnPxRjaJAY6oSBBsGR+
+         JlURbtDN+JjygXzIdpuaTQ5QeUmaw2dAml/oA5oDUGTryBAuaUwDjdRGujdJ8zo/b4j3
+         EjDn8+TsJk3z6uF9lcQCGgUYmTYk01Q1Erzptf+vKQZkwIfw5zU4Xmmo2IeRCNM7bous
+         04VlzsXJigc5PQh7b6Ehn8oGwUUVMsk73WwqA5wyD8Tmzw0lMySE6/OdwBMVUfAwpO/o
+         bOhyxivOU9tEo/ae+3FetBd3VVqi76StZDq7pItXOrVcEzvDvy++Z8FYdU5FUxYG9agc
+         fSBQ==
+X-Gm-Message-State: AOAM5332aZ6KcA8KZ1homv4zahLyDXC3QHmvt/ugwEO8apk6p2VrESI7
+        9Rfr/Zhuq7I4EM2qbkcJ86PElzQ2hR54Dko8Wb1HXoeT
+X-Google-Smtp-Source: ABdhPJznhHV4wRh1vVD3DRvPc5ORyCZWKGQAPgNl60Kc27nGzVkS/w4wM4PCmFTDGiEhu1h2Tr7X33OVxCsHGWBvdF0=
+X-Received: by 2002:a62:7657:: with SMTP id r84mr27188292pfc.130.1595413417435;
+ Wed, 22 Jul 2020 03:23:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200721181926.27046-1-nish.malpani25@gmail.com>
+ <CAHp75Vdr+Uo2uw3mzYP+LMRgp-eyi+YjG=O+wGVqyYx-+MRCaw@mail.gmail.com>
+ <7ba8469a-dd8c-1686-6d26-e2a4cbfedce9@gmail.com> <CAHp75VdYVC9n7-2MH62J46N0p+sNSE9QVwonor5QfdnvL4hoLg@mail.gmail.com>
+ <5cb55101-af5c-b6a2-d770-9717f8a463cc@gmail.com>
+In-Reply-To: <5cb55101-af5c-b6a2-d770-9717f8a463cc@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Jul 2020 13:23:22 +0300
+Message-ID: <CAHp75Vc5e0HfVe04yzyfGC_qqhcPNnJOHXcADLfz+RKMuFBbcA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] iio: gyro: Add driver support for ADXRS290
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
+        darius.berghe@analog.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ed66f991bb19 ("module: Refactor section attr into bin
-attribute") removed the 'name' field from 'struct module_sect_attr'
-triggering the following error when invoking lx-symbols:
+On Wed, Jul 22, 2020 at 12:40 PM Nishant Malpani
+<nish.malpani25@gmail.com> wrote:
+> On 22/07/20 3:08 am, Andy Shevchenko wrote:
+> > On Tue, Jul 21, 2020 at 11:35 PM Nishant Malpani
+> > <nish.malpani25@gmail.com> wrote:
+> >> On 22/07/20 1:16 am, Andy Shevchenko wrote:
 
-  (gdb) lx-symbols
-  loading vmlinux
-  scanning for modules in linux/build
-  loading @0xffffffffc014f000: linux/build/drivers/net/tun.ko
-  Python Exception <class 'gdb.error'> There is no member named name.:
-  Error occurred in Python: There is no member named name.
+...
 
-This patch fixes the issue taking the module name from the 'struct
-attribute'.
+> > Can't you declare table as const int?
+> >
+> I'm not sure I understand you completely here; do you mean const int *?
+> So, an array of alternate integer and fractional parts? I suppose that's
+> possible but we'd be introducing unwanted complexity I feel - for
+> example, currently the index of the 3db frequency in the table is used
+> to directly map & set bits in the filter register corresponding to that
+> frequency but with the approach you share, we'd have to apply a
+> transformation (div by 2) to set the same bits in the filter register.
+> Do you think the added complexity justifies the removal of the casting?
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- scripts/gdb/linux/symbols.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It was a question. If you think it is too much, don't change :-)
 
-diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-index be984aa29b75..1be9763cf8bb 100644
---- a/scripts/gdb/linux/symbols.py
-+++ b/scripts/gdb/linux/symbols.py
-@@ -96,7 +96,7 @@ lx-symbols command."""
-             return ""
-         attrs = sect_attrs['attrs']
-         section_name_to_address = {
--            attrs[n]['name'].string(): attrs[n]['address']
-+            attrs[n]['battr']['attr']['name'].string(): attrs[n]['address']
-             for n in range(int(sect_attrs['nsections']))}
-         args = []
-         for section_name in [".data", ".data..read_mostly", ".rodata", ".bss",
+...
+
+> >>>> +       /* max transition time to measurement mode */
+> >>>> +       msleep_interruptible(ADXRS290_MAX_TRANSITION_TIME_MS);
+> >>>
+> >>> I'm not sure what the point of interruptible variant here?
+> >>>
+> >> I referred Documentation/timers/timers-howto.rst for this.
+> >> My reasoning was shaped to use the interruptible variant because the
+> >> transition settles in a time *less than* 100ms and since 100ms is quite
+> >> a huge time to sleep, it should be interrupted in case a signal arrives.
+> >
+> > This is probe of the device,
+> > What are the expectations here?
+> >
+> I fail to understand why this can't be used in the probe() but perhaps
+> in a routine to standby/resume. Could you please elaborate?
+
+I didn't say it can not be used, what I'm asking is what are the
+expectations of the interruptible part here.
+In other words what is the benefit that makes you choose this over
+plain msleep().
+
+
 -- 
-2.26.2
-
+With Best Regards,
+Andy Shevchenko
