@@ -2,133 +2,130 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F26C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B13712073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4898420792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbgGVCsm (ORCPT
+        id S1731849AbgGVC4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:48:42 -0400
-Received: from mga01.intel.com ([192.55.52.88]:48202 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731614AbgGVCsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:48:42 -0400
-IronPort-SDR: bM0Cmu1REzGJgQz3SRVMf8RSis6x7NX89hmNEWcVloP8WzEz2qgC6/t1VvH7/LZVEHHtr8QdoT
- og4cHsNwOm8g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="168406943"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="168406943"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 19:48:41 -0700
-IronPort-SDR: scpZNHuQAquY5BZHrw9dys84tZRFSJT1mTDvjCfvT4iE9aiLMKrVCQeJnxjMbMNMNFXEQ+j5Fi
- TjfLfAcqfu2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="392542213"
-Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Jul 2020 19:48:40 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 1/1] iommu/vt-d: Rename intel-pasid.h to pasid.h
-Date:   Wed, 22 Jul 2020 10:43:48 +0800
-Message-Id: <20200722024348.5893-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jul 2020 22:56:00 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:16735 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731641AbgGVC4A (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:56:00 -0400
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36534838"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 22 Jul 2020 10:55:56 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(78053:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Wed, 22 Jul 2020 10:55:55 +0800 (CST)
+Received: from 192.168.33.57
+        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2479:1:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Wed, 22 Jul 2020 10:55:53 +0800 (CST)
+From:   "Dave.Wang" <dave.wang@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
+Cc:     <Linux-input@vger.kernel.org>, <Linux-kernel@vger.kernel.org>,
+        <phoenix@emc.com.tw>, <josh.chen@emc.com.tw>,
+        <jingle.wu@emc.com.tw>, <kai.heng.feng@canonical.com>
+References: <20191209111107.32239-1-dave.wang@emc.com.tw> <20200721161236.GI1665100@dtor-ws>
+In-Reply-To: <20200721161236.GI1665100@dtor-ws>
+Subject: RE: [PATCH 1/3] Input: elan_i2c - Do no operation for elan_smbus_set_mode function
+Date:   Wed, 22 Jul 2020 10:55:53 +0800
+Message-ID: <002801d65fd3$9d82edf0$d888c9d0$@emc.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQKMobxR7qDwdRZsC9ditFT1DgHVnAJCKYzFp5RNdQA=
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1kYWU5ZTYwZC1jYmM2LTExZWEtYWE4Yy04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcZGFlOWU2MGYtY2JjNi0xMWVhLWFhOGMtODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSIyNjM5IiB0PSIxMzIzOTg2MDE1MzUwMjU5NDgiIGg9IjllUnEvbUhKSVFIK05ta1lDRDM5UUdiNFRGRT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Intel VT-d files have been move to its own subdirectory, the prefix
-makes no sense.
+Dear Dmitry,
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/debugfs.c                  | 2 +-
- drivers/iommu/intel/iommu.c                    | 2 +-
- drivers/iommu/intel/pasid.c                    | 2 +-
- drivers/iommu/intel/{intel-pasid.h => pasid.h} | 2 +-
- drivers/iommu/intel/svm.c                      | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
- rename drivers/iommu/intel/{intel-pasid.h => pasid.h} (98%)
+Should this be moved into core? Or we only plan on using this on SMbus?
+=> using on smbus.
 
-diff --git a/drivers/iommu/intel/debugfs.c b/drivers/iommu/intel/debugfs.c
-index cf1ebb98e418..efea7f02abd9 100644
---- a/drivers/iommu/intel/debugfs.c
-+++ b/drivers/iommu/intel/debugfs.c
-@@ -15,7 +15,7 @@
- 
- #include <asm/irq_remapping.h>
- 
--#include "intel-pasid.h"
-+#include "pasid.h"
- 
- struct tbl_walk {
- 	u16 bus;
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 5228f2c18a90..60de9daea62e 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -48,7 +48,7 @@
- #include <trace/events/intel_iommu.h>
- 
- #include "../irq_remapping.h"
--#include "intel-pasid.h"
-+#include "pasid.h"
- 
- #define ROOT_SIZE		VTD_PAGE_SIZE
- #define CONTEXT_SIZE		VTD_PAGE_SIZE
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index fa0154cce537..e6faedf42fd4 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -19,7 +19,7 @@
- #include <linux/pci-ats.h>
- #include <linux/spinlock.h>
- 
--#include "intel-pasid.h"
-+#include "pasid.h"
- 
- /*
-  * Intel IOMMU system wide PASID name space:
-diff --git a/drivers/iommu/intel/intel-pasid.h b/drivers/iommu/intel/pasid.h
-similarity index 98%
-rename from drivers/iommu/intel/intel-pasid.h
-rename to drivers/iommu/intel/pasid.h
-index c5318d40e0fa..c9850766c3a9 100644
---- a/drivers/iommu/intel/intel-pasid.h
-+++ b/drivers/iommu/intel/pasid.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * intel-pasid.h - PASID idr, table and entry header
-+ * pasid.h - PASID idr, table and entry header
-  *
-  * Copyright (C) 2018 Intel Corporation
-  *
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 85ce8daa3177..442623ac4b47 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -20,7 +20,7 @@
- #include <linux/ioasid.h>
- #include <asm/page.h>
- 
--#include "intel-pasid.h"
-+#include "pasid.h"
- 
- static irqreturn_t prq_event_thread(int irq, void *d);
- static void intel_svm_drain_prq(struct device *dev, int pasid);
--- 
-2.17.1
+What will happen after firmware update? How can userspace verify that the
+firmware update completed successfully if we always return static data?
+=> FW modified the architecture that reading register cmd in P/S2 and then
+updating flow in SMbus.
+As a result, it would not get success result while updating firmware in
+SMbus driver.
+Elan will use the tool to update firmware.
+
+Can the device still be accessed via PS/2 while also using SMbus?
+=> Yes, the device could still be accessed via PS/2 while also using SMbus.
+However, we cannot use P/S2 driver and SMbus driver to read register
+simultaneously because of the limitation of driver (elantench (ps2) driver
+would be unmounted before loading into SMbus driver). So we use tool to
+update firmware in SMbus interface.
+
+Best regards,
+Dave
+
+-----Original Message-----
+From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] 
+Sent: Wednesday, July 22, 2020 12:13 AM
+To: Dave Wang <dave.wang@emc.com.tw>
+Cc: Linux-input@vger.kernel.org; Linux-kernel@vger.kernel.org;
+phoenix@emc.com.tw; josh.chen@emc.com.tw; jingle.wu@emc.com.tw;
+kai.heng.feng@canonical.com
+Subject: Re: [PATCH 1/3] Input: elan_i2c - Do no operation for
+elan_smbus_set_mode function
+
+Hi Dave,
+
+On Mon, Dec 09, 2019 at 06:11:07AM -0500, Dave Wang wrote:
+> Some touchpads might get error while triggerring the set_mode command 
+> in SMBus interface. Do no operation for elan_smbus_set_mode function.
+
+Are there devices that do not trigger errors? How do we put SMbus devices
+into low power mode?
+
+> 
+> Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+> ---
+>  drivers/input/mouse/elan_i2c_smbus.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/mouse/elan_i2c_smbus.c 
+> b/drivers/input/mouse/elan_i2c_smbus.c
+> index 8c3185d54c73..bcb9ec4a7a6b 100644
+> --- a/drivers/input/mouse/elan_i2c_smbus.c
+> +++ b/drivers/input/mouse/elan_i2c_smbus.c
+> @@ -84,10 +84,7 @@ static int elan_smbus_initialize(struct i2c_client 
+> *client)
+>  
+>  static int elan_smbus_set_mode(struct i2c_client *client, u8 mode)  {
+> -	u8 cmd[4] = { 0x00, 0x07, 0x00, mode };
+> -
+> -	return i2c_smbus_write_block_data(client, ETP_SMBUS_IAP_CMD,
+> -					  sizeof(cmd), cmd);
+> +	return 0; /* A no-op */
+>  }
+>  
+>  static int elan_smbus_sleep_control(struct i2c_client *client, bool 
+> sleep)
+> --
+> 2.17.1
+> 
+
+Thanks.
+
+--
+Dmitry
 
