@@ -6,94 +6,81 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B825C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B07B20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4014120684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgGVHzw (ORCPT
+        id S1728650AbgGVH4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:55:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36452 "EHLO mx2.suse.de"
+        Wed, 22 Jul 2020 03:56:31 -0400
+Received: from verein.lst.de ([213.95.11.211]:55291 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726153AbgGVHzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:55:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8D778AEDA;
-        Wed, 22 Jul 2020 07:55:56 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 09:55:46 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Mike Stunes <mstunes@vmware.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
-Message-ID: <20200722075546.GG6132@suse.de>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-52-joro@8bytes.org>
- <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
+        id S1726153AbgGVH4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 03:56:30 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E5D696736F; Wed, 22 Jul 2020 09:56:20 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 09:56:20 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: Re: [PATCH 03/24] net: add a new sockptr_t type
+Message-ID: <20200722075620.GA26554@lst.de>
+References: <20200720124737.118617-1-hch@lst.de> <20200720124737.118617-4-hch@lst.de> <20200720163748.GA1292162@gmail.com> <20200720174322.GA21785@lst.de> <20200720175543.GF1292162@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200720175543.GF1292162@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-On Tue, Jul 21, 2020 at 09:01:44PM +0000, Mike Stunes wrote:
-> I’m running into an MMIO-related bug when I try testing this on our hypervisor.
+On Mon, Jul 20, 2020 at 10:55:43AM -0700, Eric Biggers wrote:
+> On Mon, Jul 20, 2020 at 07:43:22PM +0200, Christoph Hellwig wrote:
+> > On Mon, Jul 20, 2020 at 09:37:48AM -0700, Eric Biggers wrote:
+> > > How does this not introduce a massive security hole when
+> > > CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
+> > > 
+> > > AFAICS, userspace can pass in a pointer >= TASK_SIZE,
+> > > and this code makes it be treated as a kernel pointer.
+> > 
+> > Yeah, we'll need to validate that before initializing the pointer.
+> > 
+> > But thinking this a little further:  doesn't this mean any
+> > set_fs(KERNEL_DS) that has other user pointers than the one it is
+> > intended for has the same issue?  Pretty much all of these are gone
+> > in mainline now, but in older stable kernels there might be some
+> > interesting cases, especially in the compat ioctl handlers.
 > 
-> During boot, probe_roms (arch/x86/kernel/probe_roms.c) uses
-> romchecksum over the video ROM and extension ROM regions. In my test
-> VM, the video ROM romchecksum starts at virtual address
-> 0xffff8880000c0000 and has length 65536. But, at address
-> 0xffff8880000c4000, we switch from being video-ROM-backed to being
-> unbacked by anything.
+> Yes.  I thought that eliminating that class of bug is one of the main
+> motivations for your "remove set_fs" work.  See commit 128394eff343
+> ("sg_write()/bsg_write() is not fit to be called under KERNEL_DS") for a case
+> where this type of bug was fixed.
 > 
-> With SEV-ES enabled, our platform handles reads and writes to unbacked
-> memory by treating them as MMIO. So, the read from 0xffff8880000c4000
-> causes a #VC, which is handled by do_early_exception.
-> 
-> In handling the #VC, vc_slow_virt_to_phys fails for that address. My
-> understanding is that the #VC handler should then add an entry to the
-> page tables and retry the faulting access. Somehow, that isn’t
-> happening. From the hypervisor side, it looks like the guest is
-> looping somehow. (I think the VCPU is mostly unhalted and making
-> progress, but the guest never gets past that romchecksum.) The guest
-> never actually makes an MMIO vmgexit for that address.
+> Are you aware of any specific cases that weren't already fixed?  If there are
+> any, they need to be urgently fixed.
 
-That sounds like your guest is in a page-fault loop, but I can't yet
-explain why. Can you please find out the instruction which is causing
-the #VC exception?
-
-If a page-fault happens during #VC emulation it is forwared to the
-page-fault handler, so this should work. But somehow this isn't
-happening or the page-fault handler can't map the faulting address.
-
-
-Regards,
-
-	Joerg
+current mainline has almost no set_fs left, and setsockopt seems
+pretty much safe.  But if we go back a long term stable release or two
+I bet I'd find one or two.
