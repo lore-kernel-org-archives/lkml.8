@@ -2,185 +2,132 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9703C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED1D20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC53206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dtBntllj";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Vhccjgxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbgGVHEx (ORCPT
+        id S1731007AbgGVHGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:04:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5924 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727096AbgGVHEx (ORCPT
+        Wed, 22 Jul 2020 03:06:45 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:5262 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgGVHGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:04:53 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M72uYF063679;
-        Wed, 22 Jul 2020 03:04:44 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ecpa5qf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:04:44 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M74dSS070181;
-        Wed, 22 Jul 2020 03:04:44 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ecpa5qeb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:04:44 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M6xZTf010110;
-        Wed, 22 Jul 2020 07:04:42 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01wdc.us.ibm.com with ESMTP id 32brq91s8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:04:42 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M74fvG34865562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 07:04:41 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50146112063;
-        Wed, 22 Jul 2020 07:04:41 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC585112064;
-        Wed, 22 Jul 2020 07:04:40 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.82.72])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jul 2020 07:04:40 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 43C2B2E340E; Wed, 22 Jul 2020 12:34:36 +0530 (IST)
-Date:   Wed, 22 Jul 2020 12:34:36 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <michaele@au1.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v2 09/10] Powerpc/smp: Create coregroup domain
-Message-ID: <20200722070436.GF31038@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
- <20200721113814.32284-10-srikar@linux.vnet.ibm.com>
+        Wed, 22 Jul 2020 03:06:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595401604; x=1626937604;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=dtBntlljU61tZbNsvQysWNnJiRPb/WRijQ+A2EcQiukTp5t9nmfijj+F
+   se90Zuz46V6t2zW62bV+K5tlcm9SkNP9aqQJfdhDxSNv9vWZOKGupZldo
+   1D3oVKXefhf4SXCg/5VZ0QoSp7/ZCZ6yoleJmZW29KyRfo6lWUTCAHw8I
+   UU5q7wirkDeqka7ckUdUmEbhgjYKCbA/gMRXJzm4fcLREDg/NHFMR3Jje
+   cnGPRNCE9MWmIIWpVh6CbLwqD5sUU9rtyNrEgZbpzkb7U7RuXxm0vEOwh
+   zNO2tNZMGsAAeXigPJ413tUZPKXw/O4GKfaj+4taLp0ju3Nydko/QWJO7
+   Q==;
+IronPort-SDR: 1cC/ZmCXw2L7KZN7j+3FnZb6iD/zGOdmDPw2wC+8afPlAXyrtfLqQ0IHxiR6NTt3NyAY2OcsYh
+ CE9ypca0AV3xIyIR0/BhLD3mCOK0eEJO0/nOcDXTrSOIDcyRbaMgUNWQAnBitZO841K6T1vHmU
+ +/GmrA8sZCEMCGZJd3fdri1/Ko5X1D0WtFD4LOZLyBj0YGT+0Hr7yDdv+b9iuS4SiHyZU21jP5
+ XOygclq9wl1W+l3z5n5DatFGrUzpkbKrKWRQJ4HXUTaEamXSwfzd7KuO4kD3NSlz1vAz7CLb5F
+ Oug=
+X-IronPort-AV: E=Sophos;i="5.75,381,1589212800"; 
+   d="scan'208";a="252374963"
+Received: from mail-bn8nam12lp2177.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.177])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jul 2020 15:06:42 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f6sb+2WL8QHWnTUYL2ym8sVhds+28a4IzNJCV1ZVBsuAAVyRvct2eWrgyMWsvMIolp47PUVyPWU/2BGQoj34mY9++hO7EcKvB485ko0RrFUg0ulkfmkL7z6XDmmWPHPrcqoGzAjM3lus07EQrz5VeKg/OClQQIJtCsm0cpaQu4WLBmscODUuWpmtrnG+O/IwIXOBePhNSZO2hp69IZNkh8JadVNcmeXMJ4UHMDIfdcKtwVrjXhsWib0rBILQgPulgD3MbPFvIUC94ioiowwrr0/ffFHOfNABByFlQfxfJuyBYhMlCaXtbAnqzNVrbkSAMtM+EyNrRuKNFl5rzIHFFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=U66On1cmLp6jxJ+efAXN7XXMbx1V81dXwgfnitcx+a2JucSWEjwLPmXPrnoLpH/CcpcwDnEQY/id/2dTP2eOvyqRsLeDiou8hVBMd9os31XjHTZg5VMc0EwHYY+xrnY2W29JMkHjHMGtEURdv1OnKpmSW45CvcyPj47QeuAX853nKufyvAHovONf6tWRsiOY8SdgHge1vYvHJwPjMBaF8/iHS3/de289FD+HGOoYmYx4gNJDZaTJMUd4P9865xceiwTdBiOn6ShdScD7jQXaYLvDykJ9KphQA14jykqVN8oDrpzxairfCeNm6dHMY9I+68UN+pA4vBI+XwuH8QLa0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=VhccjgxcMqxTYFrTPoOjhbaOQpxVFAq+3p5QqnNYWWJ+eMMAjzOg2m1lGB0S9AHARlQyQLvO6/dfREW8V9YhgXHwvogx7EqjutHZucjVzCtOY3Dxtsd1wFgcDErv3G+i0WVgwkFueqfIVljSiFFOOow0I6bhnzfRngeaOsNGZ+g=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN2PR04MB2239.namprd04.prod.outlook.com
+ (2603:10b6:804:15::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Wed, 22 Jul
+ 2020 07:06:41 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 07:06:40 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 03/14] drbd: remove RB_CONGESTED_REMOTE
+Thread-Topic: [PATCH 03/14] drbd: remove RB_CONGESTED_REMOTE
+Thread-Index: AQHWX/EU/Gp+h3cxdEuFDKhh6e2P/A==
+Date:   Wed, 22 Jul 2020 07:06:40 +0000
+Message-ID: <SN4PR0401MB359858B7C65ADC19A58680B89B790@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200722062552.212200-1-hch@lst.de>
+ <20200722062552.212200-4-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 423529e9-2d25-48fd-271c-08d82e0dc8b8
+x-ms-traffictypediagnostic: SN2PR04MB2239:
+x-microsoft-antispam-prvs: <SN2PR04MB22399BE18885C4555C49EF769B790@SN2PR04MB2239.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CZ2WBoKTjUiCRczBINJPXt8slJKCWaB7VG2GIiU/jcWAzvPUpQHTcqy72iURil34lyAyUTsk7iDbehuJYJWDmFoOxwxnoKpMhoL2FFiy+o15O8Fn/xzk+W0qDZfZq9rqy6Ku8CNhZMo2YhhqDHMWhQRFhPf0otxV5YIJ7SwOqcrzvf6wA1TJxVpK3uDp68xMKG2A5lfT9IgHGmx8r0tcsqbVepSMNX7wkNAC1VRjxP5YCrteQ1NJvasmnqz9bqBg9fLQlMAl4tIX6wztxcBtC52S8ey9WOwdVwSCwTjDGkZvIJX9uLcEhLWk4P94LReVU6hUp2F8/uPmtIzAPAaIZQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(52536014)(4326008)(478600001)(9686003)(7416002)(55016002)(5660300002)(33656002)(558084003)(8676002)(8936002)(76116006)(66476007)(64756008)(4270600006)(66446008)(66556008)(66946007)(26005)(54906003)(86362001)(6506007)(316002)(2906002)(71200400001)(110136005)(91956017)(7696005)(19618925003)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lF+WLkAW1iTv8GTT+lrWQKEw/9YFv0A2vLwi8HFMpNw2MSBWI+PnWVEZGtIeJd9hKwwQRy/HZHxu2Bfn7Sn4KsOEpudZ0WQH7wQzHmuOuPzxYIyPfNp8GlKnGk1MpDHa1qNRt42kk/Uo/RBv704eC2E2jZiY2o+bOVn8Sh9l/domlQ9896gTFJVBjan3vlqHgAYA/i6t9FIxB02qKwq2akOmkLrjsC+VwS0VIFtR59y/iUfEYYYUQjwencUfqY//y/UYcONBlWatvTTFF/OsIWCoUnulDa/oTPPdvotwB1ryB4XisFUZ2pBdUPDjG0wU7jTWywaaboZTDf9dOR1qc0/zg4jP5DRIgDN9OKil/jzIps4OsPRGaH9vjS9wwCelgBbkIR8V9Va8En/ZFPMVPcxEsw1TXOtTU3yzmcNti2d2s2vZ9qr+CZgfssA4frMB3uTF+B0CmIMZI/avQ8Vua+Cwp2suY9K0pbvHuugm122kMzlJ4n/ZzhXKyZSPGLwN
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721113814.32284-10-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_03:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- impostorscore=0 clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007220048
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 423529e9-2d25-48fd-271c-08d82e0dc8b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 07:06:40.9030
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 69clVlzfq5RK22/6bqsJwMAzhrFxun4DqnADjbPPMnMgSFFvB/DDmpxjSlrTkxFvCJ8XY7liRo80WXv/vIV97xHvradsQ9JdYVBFdz5AZWI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR04MB2239
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srikar,
-
-On Tue, Jul 21, 2020 at 05:08:13PM +0530, Srikar Dronamraju wrote:
-> Add percpu coregroup maps and masks to create coregroup domain.
-> If a coregroup doesn't exist, the coregroup domain will be degenerated
-> in favour of SMT/CACHE domain.
-> 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <michaele@au1.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Nick Piggin <npiggin@au1.ibm.com>
-> Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@linux.ibm.com>
-> Cc: Anton Blanchard <anton@au1.ibm.com>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-
-A query below.
-
-> ---
-> Changelog v1 -> v2:
-> Powerpc/smp: Create coregroup domain
-> 	Moved coregroup topology fixup to fixup_topology (Gautham)
-> 
->  arch/powerpc/include/asm/topology.h | 10 ++++++++
->  arch/powerpc/kernel/smp.c           | 38 +++++++++++++++++++++++++++++
->  arch/powerpc/mm/numa.c              |  5 ++++
->  3 files changed, 53 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-> index f0b6300e7dd3..6609174918ab 100644
-> --- a/arch/powerpc/include/asm/topology.h
-> +++ b/arch/powerpc/include/asm/topology.h
-
-[..snip..]
-
-> @@ -91,6 +92,7 @@ enum {
->  	smt_idx,
->  #endif
->  	bigcore_idx,
-> +	mc_idx,
->  	die_idx,
->  };
-> 
-
-
-[..snip..]
-
-> @@ -879,6 +896,7 @@ static struct sched_domain_topology_level powerpc_topology[] = {
->  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
->  #endif
->  	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
-> +	{ cpu_mc_mask, SD_INIT_NAME(MC) },
->  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
->  	{ NULL, },
->  };
-
-
-[..snip..]
-
-> @@ -1386,6 +1421,9 @@ int setup_profiling_timer(unsigned int multiplier)
-> 
->  static void fixup_topology(void)
->  {
-> +	if (!has_coregroup_support())
-> +		powerpc_topology[mc_idx].mask = cpu_bigcore_mask;
-> +
-
-Shouldn't we move this condition after doing the fixup for shared
-caches ? Because if we have shared_caches, but not core_group, then we
-want the coregroup domain to degenerate correctly.
-
-
->  	if (shared_caches) {
->  		pr_info("Using shared cache scheduler topology\n");
->  		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-
-
---
-Thanks and regards
-gautham.
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
