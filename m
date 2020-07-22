@@ -7,100 +7,96 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461BAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0316FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2379820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EAF20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UQTdPm/n"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rvheysi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732402AbgGVTmx (ORCPT
+        id S1728942AbgGVTpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44314 "EHLO
+        Wed, 22 Jul 2020 15:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVTmx (ORCPT
+        with ESMTP id S1726157AbgGVTpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:42:53 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C22C0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:42:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k5so1932500pjg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:42:52 -0700 (PDT)
+        Wed, 22 Jul 2020 15:45:13 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA95C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:45:12 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w17so1493697ply.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:45:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=j8EVfDnsbKkDzkQmKYCo8r+kuzC3a5xUIaeiauPjHyg=;
-        b=UQTdPm/nC+HkSL2BrWnoVYlDw4QRQrGAqDirB5zm5BpUzgtCvJy4d6xrBDUdh5Guck
-         /So1K/Y/MIZEeY8A8JAEnjxncJ8eGOce7xc0/mjnlbSh3Wd2At8ckPa28ZKIzSZ4bf/0
-         ZywAUOxsQOzs1FswGb+32DSfL9xYxikcwziYE=
+        bh=nWRg8habjmwUq/aSOIs5oJ/PIMDu1J2enCdaZpnqjtI=;
+        b=Rvheysi+PYCBmuMOpzRtK6Oze6jqgkcolfrm0c2G06ZfucZ7GN0cNoCE00nMt2FymF
+         bAeDzTaaaM7LEWiVN/ByX7unj0u0rupZmXTT/6dfvTS1tdTa5UQ1K1x+SZPtoxk/hjTq
+         +c06od/fOU5c0Kj4Evbb/bGw1U4B0Ub2f8v6k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=j8EVfDnsbKkDzkQmKYCo8r+kuzC3a5xUIaeiauPjHyg=;
-        b=RtaFMs/uimuqHnLG/GRogqOmvKsduAYKj0gRWn1r3TeXAFheJWRGLkoGDc28Ms4XZ+
-         w86zXP2Ww2b2lfIEgKZhGkqmuUQSVFcJUtzl7NlTG6vrOls7BJn5nkNOvE7E+bGPwAEN
-         jZQgOgUOrx8gz2bttUPVsHkqD63grQ7sNw+v4oO7OJTQtlK7IIPtSaYvB0E7e1afCVWd
-         N+7TWbB7tdTFG1j+z72YF+818fqZCikw18KXeYu6qiaLNmTqWBtHcEjgBXm75/f79RxQ
-         uq1jZ5PNpAiyRks3uZdSdSFYTDclJ5Nqyh8fFnRR+iUCby6/2TYkfeJgjremomJ/PxmS
-         X2yw==
-X-Gm-Message-State: AOAM53138Y34bfcgRuG9lraOnCPYcFNNk1RuwKrcQsaYmczWGStlVX9q
-        W7Ro6Wku4sOGjl971yKCUqY86g==
-X-Google-Smtp-Source: ABdhPJwNDMuWHpZri+I/lnXdThH9TpOPI3+GSq/C/NGpYVJ4A3ptfCQ9jBQki7H6FXs3LEtMLCmGWw==
-X-Received: by 2002:a17:90b:2350:: with SMTP id ms16mr903643pjb.127.1595446972510;
-        Wed, 22 Jul 2020 12:42:52 -0700 (PDT)
+        bh=nWRg8habjmwUq/aSOIs5oJ/PIMDu1J2enCdaZpnqjtI=;
+        b=E8r2Grc+6tEw6U43XvyuZzyEtVjeogLKSmFTh8tTA9lh3+lXja172l4mGs25j+hhLF
+         DPN5GRf2J0cM1iF1gt1qTi2Z9aLWX01qDmggSMrCL8ipVdPluN22RBmSRgEmCFXD8KLD
+         JkC+jvd6SRL6jOu9m6gjfugGqPKSDBWFC35Yv5O/Omw4aGozAST4Wn6gWIvg8/0SPh5D
+         rAumQycEDl8HQN1aCWR8xelmRQJLnW6tmPrvBrfZ5fR8ztjtR2hPYCyMljJEKNzQQPaS
+         9j+/Ey03bSTgeyWkK8YPcMsFiR/42gGu+dupYdRdESBuTeyZx6aITShsl4PNPbXthRuK
+         R4WQ==
+X-Gm-Message-State: AOAM531rajImn31U5JIA5GFU++ZzAAhNtq4ec0GrK6lglnZqgEAMpYdo
+        u/iSdZHSD0MKkFwRVO4v35a1Pg==
+X-Google-Smtp-Source: ABdhPJxp0OPbK17T/FisysBhZk0+gpPejV6bgMq7eWQizEQTOQ0sgf0Q3VWKJW6xGgrHmxb3WQ5IuA==
+X-Received: by 2002:a17:90a:a50d:: with SMTP id a13mr837453pjq.95.1595447112507;
+        Wed, 22 Jul 2020 12:45:12 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k98sm476660pjb.42.2020.07.22.12.42.51
+        by smtp.gmail.com with ESMTPSA id t29sm432106pfq.50.2020.07.22.12.45.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 12:42:51 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 12:42:50 -0700
+        Wed, 22 Jul 2020 12:45:11 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 12:45:10 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-Message-ID: <202007221241.EBC2215A@keescook>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
- <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
- <202007220738.72F26D2480@keescook>
- <20200722160730.cfhcj4eisglnzolr@treble>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v3] lib: Convert test_user_copy to KUnit test
+Message-ID: <202007221244.4E3C9E45@keescook>
+References: <20200721174654.72132-1-vitor@massaru.org>
+ <202007211207.5BAA9D8D@keescook>
+ <CADQ6JjU8rX2F_iBqth3u0EiA+CBgz4H+YL_-nbQ_cojYeLFXKQ@mail.gmail.com>
+ <202007211911.666E080@keescook>
+ <CADQ6JjUgVXBfHfb=V2ajwm=rHi12rxiqEtpivjY03xZbp6k7wg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722160730.cfhcj4eisglnzolr@treble>
+In-Reply-To: <CADQ6JjUgVXBfHfb=V2ajwm=rHi12rxiqEtpivjY03xZbp6k7wg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:07:30AM -0500, Josh Poimboeuf wrote:
-> On Wed, Jul 22, 2020 at 07:39:55AM -0700, Kees Cook wrote:
-> > On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes wrote:
-> > > Let me CC live-patching ML, because from a quick glance this is something 
-> > > which could impact live patching code. At least it invalidates assumptions 
-> > > which "sympos" is based on.
-> > 
-> > In a quick skim, it looks like the symbol resolution is using
-> > kallsyms_on_each_symbol(), so I think this is safe? What's a good
-> > selftest for live-patching?
+On Wed, Jul 22, 2020 at 03:29:27PM -0300, Vitor Massaru Iha wrote:
+> On Tue, Jul 21, 2020 at 11:12 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Tue, Jul 21, 2020 at 07:19:12PM -0300, Vitor Massaru Iha wrote:
+> > > When you talk about end-of-test summary, is it what is written in
+> > > dmesg and not the kunit-tool?
+> >
+> > Right, if I build this as a module and do "modprobe user_copy_kunit",
+> > what will show up in dmesg?
 > 
-> The problem is duplicate symbols.  If there are two static functions
-> named 'foo' then livepatch needs a way to distinguish them.
-> 
-> Our current approach to that problem is "sympos".  We rely on the fact
-> that the second foo() always comes after the first one in the symbol
-> list and kallsyms.  So they're referred to as foo,1 and foo,2.
+> No, It doesn't. I'll put the messages again.
 
-Ah. Fun. In that case, perhaps the LTO series has some solutions. I
-think builds with LTO end up renaming duplicate symbols like that, so
-it'll be back to being unique.
+Would it be possible to add that behavior to the core KUnit output? Then
+all module-based tests would include a summary line?
 
 -- 
 Kees Cook
