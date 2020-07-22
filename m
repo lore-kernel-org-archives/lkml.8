@@ -2,89 +2,261 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D22C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCCF20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CE820781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bed0O3JP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joY9I2AT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgGVQHj (ORCPT
+        id S1729249AbgGVQJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:07:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41981 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728579AbgGVQHi (ORCPT
+        Wed, 22 Jul 2020 12:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgGVQJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:07:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595434057;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bE26wHn/H6+Nxep03XAoDVa8RROZuwKayFCoxg4SHVI=;
-        b=Bed0O3JPdiDiBoePqKHAX5iAsEsNCh7pJU82v3Pn3ovGaohNKL/W+GjsPQhj8h3eA5nZ+d
-        ScGuoQGN0eta7limsEN/dZVxztqIXtDFeFqmJ9eOH0bgBqU3zs6DpzkWnsHAl/y0G226Rj
-        lacj255VnZMz8EaqiMORSk5iFsIF3ws=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-73-ZOruSB_gPSe_y9gfuhk1QQ-1; Wed, 22 Jul 2020 12:07:35 -0400
-X-MC-Unique: ZOruSB_gPSe_y9gfuhk1QQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9535193F571;
-        Wed, 22 Jul 2020 16:07:33 +0000 (UTC)
-Received: from treble (ovpn-117-60.rdu2.redhat.com [10.10.117.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5574B2B4DD;
-        Wed, 22 Jul 2020 16:07:32 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 11:07:30 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-Message-ID: <20200722160730.cfhcj4eisglnzolr@treble>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
- <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
- <202007220738.72F26D2480@keescook>
+        Wed, 22 Jul 2020 12:09:28 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1C2C0619DC;
+        Wed, 22 Jul 2020 09:09:28 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id bm28so2081330edb.2;
+        Wed, 22 Jul 2020 09:09:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zoyELi16cUvbyGY2mXBhWNaZ9/6nrareVV6zGnAvnSQ=;
+        b=joY9I2ATz7qOoQQFlBV2rHB+EyovZlWNSrccYvhpPZQGZ5fmCzWYsVmD9ca6PW0pYJ
+         K8XTRuBqOExV2/gArGOzo9r488TYLIQNIutunj27QGIDrJhu0ymaaIzJtthRVG/d5iVb
+         9HhkOlRZpwyw/QJWjp3xpywQAsUEZi4UTPFmh3nXFxf/I61OPFY+a7oStJIQ0CZ7RBVg
+         fCZroDYaA/MELHSxJwsu1KayCo3pYl5guBs9mTcDgg3UJFf7DGT9NPkXjHed/ep+HBAn
+         +RzJGYaBuC4FrQSf1DSuNtxDrbhcpT3JohF286WydWNk2ZkaB807K6aS/ObbGOl6t+S3
+         ++og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zoyELi16cUvbyGY2mXBhWNaZ9/6nrareVV6zGnAvnSQ=;
+        b=fwXkL7XXss6EbTO70Hlo7+QO9Auucn5vtLVKMM0UsGgQDc6NuU3t7ZgssPx/l4mvZ+
+         0vRjNPFkONQKnXNbXzmm6ji4b6J/IivjsKWf9UjAlYESajtn3rw3y3QYpgIAv8KhywA3
+         tKUJG288fmqJ4616QuDE86fQv3Zg5IY1ondauTvLeSMeys22RJRoX/Cix/O9rij7AoKm
+         Lu0tzC/KzODqwEu8gEg2BMXrwv4XPSCSD3U5jFgvTjKhGiamf1txRI9aCBpAysiynViP
+         tadsBUpLMzei5eYXTcVKrP/p+39Blt11Orjxm2iYCQyIZvGi3zbtm4s7KHIGYzslnMty
+         If/A==
+X-Gm-Message-State: AOAM533SBWN/dlT/Nz04Mt9pSvtgr/BxdfoGqEDrdrtXf5RCSPBnpByk
+        q/ENssxyq1n+k8yyrr+1Zbt7t1uqcWU=
+X-Google-Smtp-Source: ABdhPJzPO/V2uw0v1Lu2o6aHQ8SfqBtMjCtG5dE9CLpZNRR5JBJZ5jRRPA4lwRa3985cDvOmZ5h2Pw==
+X-Received: by 2002:a50:cd1e:: with SMTP id z30mr183189edi.364.1595434166675;
+        Wed, 22 Jul 2020 09:09:26 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
+        by smtp.gmail.com with ESMTPSA id lv17sm70523ejb.56.2020.07.22.09.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 09:09:25 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH 06/10] media: uapi: h264: Cleanup DPB entry interface
+Date:   Wed, 22 Jul 2020 18:09:24 +0200
+Message-ID: <2192247.mDtJn7f4FH@jernej-laptop>
+In-Reply-To: <20200715202233.185680-7-ezequiel@collabora.com>
+References: <20200715202233.185680-1-ezequiel@collabora.com> <20200715202233.185680-7-ezequiel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202007220738.72F26D2480@keescook>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 07:39:55AM -0700, Kees Cook wrote:
-> On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes wrote:
-> > Let me CC live-patching ML, because from a quick glance this is something 
-> > which could impact live patching code. At least it invalidates assumptions 
-> > which "sympos" is based on.
+Hi!
+
+Dne sreda, 15. julij 2020 ob 22:22:29 CEST je Ezequiel Garcia napisal(a):
+> As discussed recently, the current interface for the
+> Decoded Picture Buffer is not enough to properly
+> support field coding.
 > 
-> In a quick skim, it looks like the symbol resolution is using
-> kallsyms_on_each_symbol(), so I think this is safe? What's a good
-> selftest for live-patching?
+> This commit introduces enough semantics to support
+> frame and field coding, and to signal how DPB entries
+> are "used for reference".
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  .../media/v4l/ext-ctrls-codec.rst             | 46 ++++++++++++-------
+>  drivers/media/v4l2-core/v4l2-h264.c           |  4 +-
+>  drivers/staging/media/rkvdec/rkvdec-h264.c    |  8 ++--
+>  include/media/h264-ctrls.h                    |  8 +++-
+>  4 files changed, 42 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
+> dd8e5a2e8986..46d4c8c6ad47 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -2058,10 +2058,35 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> * - __s32
+>        - ``bottom_field_order_cnt``
+>        -
+> +    * - enum :c:type:`v4l2_h264_dpb_reference`
+> +      - ``reference``
+> +      - Specifies how the DPB entry is referenced.
+>      * - __u32
+>        - ``flags``
+>        - See :ref:`DPB Entry Flags <h264_dpb_flags>`
+> 
+> +.. c:type:: v4l2_h264_dpb_reference
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - ``V4L2_H264_DPB_TOP_REF``
+> +      - 0x1
+> +      - The top field in field pair is used for
+> +        short-term reference.
+> +    * - ``V4L2_H264_DPB_BOTTOM_REF``
+> +      - 0x2
+> +      - The bottom field in field pair is used for
+> +        short-term reference.
+> +    * - ``V4L2_H264_DPB_FRAME_REF``
+> +      - 0x3
+> +      - The frame (or the top/bottom fields, if it's a field pair)
+> +        is used for short-term reference.
+> +
+>  .. _h264_dpb_flags:
+> 
+>  ``DPB Entries Flags``
+> @@ -2075,29 +2100,16 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> 
+>      * - ``V4L2_H264_DPB_ENTRY_FLAG_VALID``
+>        - 0x00000001
+> -      - The DPB entry is valid and should be considered
+> +      - The DPB entry is valid (non-empty) and should be considered.
+>      * - ``V4L2_H264_DPB_ENTRY_FLAG_ACTIVE``
 
-The problem is duplicate symbols.  If there are two static functions
-named 'foo' then livepatch needs a way to distinguish them.
+I'm still not sure that we actually need both flags. Technically, if entry is 
+not used for reference then doesn't need to be present. Am I missing 
+something?
 
-Our current approach to that problem is "sympos".  We rely on the fact
-that the second foo() always comes after the first one in the symbol
-list and kallsyms.  So they're referred to as foo,1 and foo,2.
+Best regards,
+Jernej
 
--- 
-Josh
+>        - 0x00000002
+> -      - The DPB entry is currently being used as a reference frame
+> +      - The DPB entry is used for reference.
+>      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
+>        - 0x00000004
+> -      - The DPB entry is a long term reference frame
+> +      - The DPB entry is used for long-term reference.
+>      * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD``
+>        - 0x00000008
+> -      - The DPB entry is a field reference, which means only one of the
+> field -        will be used when decoding the new frame/field. When not set
+> the DPB -        entry is a frame reference (both fields will be used).
+> Note that this -        flag does not say anything about the number of
+> fields contained in the -        reference frame, it just describes the one
+> used to decode the new -        field/frame
+> -    * - ``V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD``
+> -      - 0x00000010
+> -      - The DPB entry is a bottom field reference (only the bottom field of
+> the -        reference frame is needed to decode the new frame/field). Only
+> valid if -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set. When
+> -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set but
+> -        V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD is not, that means the
+> -        DPB entry is a top field reference
+> +      - The DPB entry is a single field or a complementary field pair.
+> 
+>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
+>      Specifies the decoding mode to use. Currently exposes slice-based and
+> diff --git a/drivers/media/v4l2-core/v4l2-h264.c
+> b/drivers/media/v4l2-core/v4l2-h264.c index edf6225f0522..306a51683606
+> 100644
+> --- a/drivers/media/v4l2-core/v4l2-h264.c
+> +++ b/drivers/media/v4l2-core/v4l2-h264.c
+> @@ -66,10 +66,10 @@ v4l2_h264_init_reflist_builder(struct
+> v4l2_h264_reflist_builder *b, else
+>  			b->refs[i].frame_num = dpb[i].frame_num;
+> 
+> -		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> +		if (dpb[i].reference & V4L2_H264_DPB_FRAME_REF)
+>  			pic_order_count = 
+min(dpb[i].top_field_order_cnt,
+>  					      
+dpb[i].bottom_field_order_cnt);
+> -		else if (dpb[i].flags & 
+V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
+>  			pic_order_count = 
+dpb[i].bottom_field_order_cnt;
+>  		else
+>  			pic_order_count = dpb[i].top_field_order_cnt;
+> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c
+> b/drivers/staging/media/rkvdec/rkvdec-h264.c index
+> 7b66e2743a4f..57539c630422 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+> @@ -953,11 +953,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
+>  			     RKVDEC_COLMV_USED_FLAG_REF;
+> 
+>  		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> -			refer_addr |= RKVDEC_TOPFIELD_USED_REF |
+> -				      RKVDEC_BOTFIELD_USED_REF;
+> -		else if (dpb[i].flags & 
+V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> +			refer_addr |= RKVDEC_FIELD_REF;
+> +
+> +		if (dpb[i].reference & V4L2_H264_DPB_TOP_REF)
+>  			refer_addr |= RKVDEC_BOTFIELD_USED_REF;
+> -		else
+> +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
+>  			refer_addr |= RKVDEC_TOPFIELD_USED_REF;
+> 
+>  		writel_relaxed(dpb[i].top_field_order_cnt,
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index 620ee8863d74..52f3976b986c 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -202,7 +202,12 @@ struct v4l2_ctrl_h264_slice_params {
+>  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
+>  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
+>  #define V4L2_H264_DPB_ENTRY_FLAG_FIELD		0x08
+> -#define V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD	0x10
+> +
+> +enum v4l2_h264_dpb_reference {
+> +	V4L2_H264_DPB_TOP_REF = 0x1,
+> +	V4L2_H264_DPB_BOTTOM_REF = 0x2,
+> +	V4L2_H264_DPB_FRAME_REF = 0x3,
+> +};
+> 
+>  struct v4l2_h264_dpb_entry {
+>  	__u64 reference_ts;
+> @@ -211,6 +216,7 @@ struct v4l2_h264_dpb_entry {
+>  	/* Note that field is indicated by v4l2_buffer.field */
+>  	__s32 top_field_order_cnt;
+>  	__s32 bottom_field_order_cnt;
+> +	enum v4l2_h264_dpb_reference reference;
+>  	__u32 flags; /* V4L2_H264_DPB_ENTRY_FLAG_* */
+>  };
+
+
+
 
