@@ -2,119 +2,130 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,
-	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5043AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC89C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2B520717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJY1XYN/"
+	by mail.kernel.org (Postfix) with ESMTP id 3C4A620717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732073AbgGVTC4 (ORCPT
+        id S1732142AbgGVTEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgGVTCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:02:55 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16634C0619DC;
-        Wed, 22 Jul 2020 12:02:55 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id u8so1495828qvj.12;
-        Wed, 22 Jul 2020 12:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=12epvX/YDdXmyKZnFd07mtt1bamPJ0DstDN5iDweXtM=;
-        b=eJY1XYN/eqs5gaHFISnW7MlvUpIZZE2Z09LhmguAZfDAHOJKHDQbn78ZCY/zlVjj3C
-         Z13p2TUXhKnae2+0mdX/NAmZ9Qp1V7evVd8HoxqvX62G1J6Mn136JYEKh1uc7awz1DRt
-         LtQA1FxjizDXcBmbIU2r6rLUO24XTCKl0U07H/xZEicBsvGALeoqanhb3UnMAKlhDKG1
-         TYhm3AvNUwFhC5IdcO7iIZs/RzZ6paxh3cRZv/WKmRiRCWRaM+MyriAi8oSAurfdKv9q
-         O7CiBKINzBbckaL0dW2CJfwN3LruYeYrThQxOsyE+F0vMVXCzX87qxtC9ngvm/1acMuP
-         Ag8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=12epvX/YDdXmyKZnFd07mtt1bamPJ0DstDN5iDweXtM=;
-        b=S7VhFVTGRjqbQlXiRy10PYEtTQxu0a+e1eCcf18ctQ2SVb2Xw+utq6ttOPwtdaeMqP
-         604N1igv0SNyTDm7+026hDr7dnZJV+SPXIq6m/vHCtl2Ivd3pncdx/UB+u6jQwi+b4fM
-         FX1/VLtR/YtIovsBdQMWBxaNlQy/BZhIBvvUT9vKFEm37WC/mLH54uDEpcSkj6ENQ0Sb
-         h5lcQpwR5WON1EHivScHkvzsz4TYGGaUqog3cZ+8FHI3eO0deINf4VtweXD3MA0HMf56
-         aPJn49oL7WquEKvAlMTRk2MGXOsYKGku8+OcVipvbWU0p14JDyZZvTLTl0ix8ERaOc8E
-         npjA==
-X-Gm-Message-State: AOAM532yeAg/p5a0oxFA+UsURj/B870Y8Kqzt4dmyJx2/yKPjpqzrJNw
-        RqGJL37Ud6hd7Ojxwvap2AU=
-X-Google-Smtp-Source: ABdhPJxKfqgjc+tpXcSxtpjEKWq7KBS8lT1TQN2pdqTb1eZ3k2Gd79q4iBAfLZBK9y4qMJWZiuB7og==
-X-Received: by 2002:a0c:ec04:: with SMTP id y4mr1448669qvo.148.1595444574218;
-        Wed, 22 Jul 2020 12:02:54 -0700 (PDT)
-Received: from localhost.localdomain ([138.204.24.96])
-        by smtp.gmail.com with ESMTPSA id y12sm430437qto.87.2020.07.22.12.02.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 12:02:53 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id EAF9CC18B3; Wed, 22 Jul 2020 16:02:50 -0300 (-03)
-Date:   Wed, 22 Jul 2020 16:02:50 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     syzbot <syzbot+0e4699d000d8b874d8dc@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com, hch@lst.de
-Subject: Re: KASAN: slab-out-of-bounds Write in sctp_setsockopt
-Message-ID: <20200722190250.GE3307@localhost.localdomain>
-References: <0000000000003b813605ab0bd243@google.com>
+        Wed, 22 Jul 2020 15:04:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58053 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgGVTEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:04:30 -0400
+IronPort-SDR: 2RnBpeiNIZ63eHWWlaBIS25rwaFMwtZqDly+b8rjiuD21GXyoDCypcYka0yOmT4IIWF8GEurW4
+ bEZmC8Wj9apA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="150382574"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="150382574"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 12:04:28 -0700
+IronPort-SDR: uk7n41y5v5wh//cwlohMzEkS9y4emRfmX4PTtOWL9d7oXw4qEbhk/ZvVYJOtyYylpIquDG55CW
+ e/BQ3FxG3AOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="488557438"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Jul 2020 12:04:28 -0700
+Received: from lcsmsx602.ger.corp.intel.com (10.109.210.11) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 22 Jul 2020 12:04:28 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX602.ger.corp.intel.com (10.109.210.11) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 22 Jul 2020 22:04:25 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Wed, 22 Jul 2020 22:04:25 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] mei: Avoid the use of one-element arrays
+Thread-Topic: [PATCH v2] mei: Avoid the use of one-element arrays
+Thread-Index: AQHWWidOxN4pAYMiq02OyqLfgDEhOKkTxNMAgAA6qQA=
+Date:   Wed, 22 Jul 2020 19:04:25 +0000
+Message-ID: <3cac21c8798b48bdb412a5504126489f@intel.com>
+References: <20200714214516.GA1040@embeddedor>
+ <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
+In-Reply-To: <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000003b813605ab0bd243@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:22:23AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    4f1b4da5 Merge branch 'net-atlantic-various-features'
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14b3a040900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2b7b67c0c1819c87
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0e4699d000d8b874d8dc
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c93358900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ab61f0900000
-
-The syz repo has:
-setsockopt$inet_sctp6_SCTP_MAX_BURST(r0, 0x84, 0x10, &(0x7f0000000100)=@assoc_value, 0x8)
-                      ^^^^^^^^^^^^^^           ^^^^
-
-#define SCTP_DELAYED_ACK_TIME   16
-#define SCTP_DELAYED_ACK SCTP_DELAYED_ACK_TIME
-#define SCTP_DELAYED_SACK SCTP_DELAYED_ACK_TIME
-#define SCTP_MAX_BURST  20              /* Set/Get max burst */
-
-C repro has:
-  syscall(__NR_setsockopt, r[0], 0x84, 0x10, 0x20000100ul, 8ul);
-                                       ^^^^
-
-So I'm wondering, what was the real intention of the call?
-
-
-Anyhow, the issue is real, introduced by ebb25defdc17 ("sctp: pass a
-kernel pointer to sctp_setsockopt_delayed_ack"). It used to use a
-local storage bigger than the data provided by the user and used
-one struct to read another's content on top of it. Quite masked.
-I'll cook a fix.
-
-  Marcelo
+DQo+IA0KPiBIaSBhbGwsDQo+IA0KPiBGcmllbmRseSBwaW5nOiB3aG8gY2FuIHRha2UgdGhpcz8g
+OikNCj4gDQo+IFRoYW5rcw0KPiAtLQ0KPiBHdXN0YXZvDQo+IA0KPiBPbiA3LzE0LzIwIDE2OjQ1
+LCBHdXN0YXZvIEEuIFIuIFNpbHZhIHdyb3RlOg0KPiA+IE9uZS1lbGVtZW50IGFycmF5cyBhcmUg
+YmVpbmcgZGVwcmVjYXRlZFsxXS4gUmVwbGFjZSB0aGUgb25lLWVsZW1lbnQNCj4gPiBhcnJheXMg
+d2l0aCBhIHNpbXBsZSB2YWx1ZSB0eXBlIHU4IHJlc2VydmVkLCBvbmNlIHRoaXMgaXMganVzdCBh
+DQo+ID4gcGxhY2Vob2xkZXIgZm9yIGFsaWdubWVudC4NCj4gPg0KPiA+IEFsc28sIHdoaWxlIHRo
+ZXJlLCB1c2UgdGhlIHByZWZlcnJlZCBmb3JtIGZvciBwYXNzaW5nIGEgc2l6ZSBvZiBhIHN0cnVj
+dC4NCj4gPiBUaGUgYWx0ZXJuYXRpdmUgZm9ybSB3aGVyZSBzdHJ1Y3QgbmFtZSBpcyBzcGVsbGVk
+IG91dCBodXJ0cw0KPiA+IHJlYWRhYmlsaXR5IGFuZCBpbnRyb2R1Y2VzIGFuIG9wcG9ydHVuaXR5
+IGZvciBhIGJ1ZyB3aGVuIHRoZSB2YXJpYWJsZQ0KPiA+IHR5cGUgaXMgY2hhbmdlZCBidXQgdGhl
+IGNvcnJlc3BvbmRpbmcgc2l6ZW9mIHRoYXQgaXMgcGFzc2VkIGFzIGFyZ3VtZW50IGlzDQo+IG5v
+dC4NCj4gPg0KPiA+IFsxXSBodHRwczovL2dpdGh1Yi5jb20vS1NQUC9saW51eC9pc3N1ZXMvNzkN
+Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEd1c3Rhdm8gQS4gUi4gU2lsdmEgPGd1c3Rhdm9hcnNA
+a2VybmVsLm9yZz4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+ICAtIFVzZSBhIG1v
+cmUgY29uY2lzZSBjaGFuZ2Vsb2cgdGV4dC4NCj4gPg0KPiA+ICBkcml2ZXJzL21pc2MvbWVpL2hi
+bS5jIHwgNCArKy0tDQo+ID4gIGRyaXZlcnMvbWlzYy9tZWkvaHcuaCAgfCA2ICsrKy0tLQ0KPiA+
+ICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvbWVpL2hibS5jIGIvZHJpdmVycy9taXNjL21l
+aS9oYm0uYyBpbmRleA0KPiA+IGE0NDA5NGNkYmMzNi4uZjAyMGQ1NTk0MTU0IDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvbWlzYy9tZWkvaGJtLmMNCj4gPiArKysgYi9kcml2ZXJzL21pc2MvbWVp
+L2hibS5jDQo+ID4gQEAgLTQwOCwxNCArNDA4LDE0IEBAIHN0YXRpYyBpbnQgbWVpX2hibV9hZGRf
+Y2xfcmVzcChzdHJ1Y3QgbWVpX2RldmljZQ0KPiA+ICpkZXYsIHU4IGFkZHIsIHU4IHN0YXR1cykg
+IHsNCj4gPiAgCXN0cnVjdCBtZWlfbXNnX2hkciBtZWlfaGRyOw0KPiA+ICAJc3RydWN0IGhibV9h
+ZGRfY2xpZW50X3Jlc3BvbnNlIHJlc3A7DQo+ID4gLQljb25zdCBzaXplX3QgbGVuID0gc2l6ZW9m
+KHN0cnVjdCBoYm1fYWRkX2NsaWVudF9yZXNwb25zZSk7DQo+ID4gKwljb25zdCBzaXplX3QgbGVu
+ID0gc2l6ZW9mKHJlc3ApOw0KPiA+ICAJaW50IHJldDsNCj4gPg0KPiA+ICAJZGV2X2RiZyhkZXYt
+PmRldiwgImFkZGluZyBjbGllbnQgcmVzcG9uc2VcbiIpOw0KPiA+DQo+ID4gIAltZWlfaGJtX2hk
+cigmbWVpX2hkciwgbGVuKTsNCj4gPg0KPiA+IC0JbWVtc2V0KCZyZXNwLCAwLCBzaXplb2Yoc3Ry
+dWN0IGhibV9hZGRfY2xpZW50X3Jlc3BvbnNlKSk7DQo+ID4gKwltZW1zZXQoJnJlc3AsIDAsIGxl
+bik7DQo+ID4gIAlyZXNwLmhibV9jbWQgPSBNRUlfSEJNX0FERF9DTElFTlRfUkVTX0NNRDsNCj4g
+PiAgCXJlc3AubWVfYWRkciA9IGFkZHI7DQo+ID4gIAlyZXNwLnN0YXR1cyAgPSBzdGF0dXM7DQoN
+ClRoaXMgc2hvdWxkIGJlIHByb2JhYmx5IGluIGEgZGlmZmVyZW50IHBhdGNoIGl0J3Mgbm90IHJl
+bGF0ZWQgdG8gdGhlIHNlY29uZCBwYXJ0Lg0KDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlz
+Yy9tZWkvaHcuaCBiL2RyaXZlcnMvbWlzYy9tZWkvaHcuaCBpbmRleA0KPiA+IGIxYThkNWVjODhi
+My4uOGMwMjk3ZjBlN2YzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWlzYy9tZWkvaHcuaA0K
+PiA+ICsrKyBiL2RyaXZlcnMvbWlzYy9tZWkvaHcuaA0KSSBoYXZlIHNlY29uZCB0aG91Z2h0cyBv
+ZiB0aGlzIHBhcnQgYXMgYWxsIHJlc2VydmVkIGZpZWxkcyBpbiB0aGlzIGZpbGUgYXJlIG9mIGZv
+cm0gdTggcmVzZXJ2ZWRbWF0sIA0Kc28gd2Ugd2lsbCBsb3NlIHRoYXQgdW5pZm9ybWl0eSB3aXRo
+IHRoaXMgY2hhbmdlLCB5b3UgaGF2ZSB0byBsb29rIGF0IHRoZSBmaWxlIGFzIHdob2xlDQpub3Qg
+anVzdCBhdCB0aGUgcGF0Y2guICBTbyBJIHByZWZlciB3ZSBkcm9wIHRoYXQgcGFydCBvZiB0aGUg
+cGF0Y2guIA0KDQo+ID4gQEAgLTM0NiwxMyArMzQ2LDEzIEBAIHN0cnVjdCBoYm1fYWRkX2NsaWVu
+dF9yZXF1ZXN0IHsNCj4gPiAgICogQGhibV9jbWQ6IGJ1cyBtZXNzYWdlIGNvbW1hbmQgaGVhZGVy
+DQo+ID4gICAqIEBtZV9hZGRyOiBhZGRyZXNzIG9mIHRoZSBjbGllbnQgaW4gTUUNCj4gPiAgICog
+QHN0YXR1czogaWYgSEJNU19TVUNDRVNTIHRoZW4gdGhlIGNsaWVudCBjYW4gbm93IGFjY2VwdCBj
+b25uZWN0aW9ucy4NCj4gPiAtICogQHJlc2VydmVkOiByZXNlcnZlZA0KPiA+ICsgKiBAcmVzZXJ2
+ZWQ6IHJlc2VydmVkIGZvciBhbGlnbm1lbnQuDQo+ID4gICAqLw0KPiA+ICBzdHJ1Y3QgaGJtX2Fk
+ZF9jbGllbnRfcmVzcG9uc2Ugew0KPiA+ICAJdTggaGJtX2NtZDsNCj4gPiAgCXU4IG1lX2FkZHI7
+DQo+ID4gIAl1OCBzdGF0dXM7DQo+ID4gLQl1OCByZXNlcnZlZFsxXTsNCj4gPiArCXU4IHJlc2Vy
+dmVkOw0KPiA+ICB9IF9fcGFja2VkOw0KPiA+DQo+ID4gIC8qKg0KPiA+IEBAIC00NjEsNyArNDYx
+LDcgQEAgc3RydWN0IGhibV9ub3RpZmljYXRpb24gew0KPiA+ICAJdTggaGJtX2NtZDsNCj4gPiAg
+CXU4IG1lX2FkZHI7DQo+ID4gIAl1OCBob3N0X2FkZHI7DQo+ID4gLQl1OCByZXNlcnZlZFsxXTsN
+Cj4gPiArCXU4IHJlc2VydmVkOw0KPiA+ICB9IF9fcGFja2VkOw0KPiA+DQo+ID4gIC8qKg0KPiA+
+DQo=
