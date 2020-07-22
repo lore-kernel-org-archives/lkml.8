@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A66C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF3A2086A
+	by mail.kernel.org (Postfix) with ESMTP id CD5602086A
 	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tMUtattn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZCpyLTN2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hsqwJcOC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Za092CMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732989AbgGVWBO (ORCPT
+        id S1733020AbgGVWBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 22 Jul 2020 18:01:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52416 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:52408 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgGVWBM (ORCPT
+        with ESMTP id S1729843AbgGVWBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:01:12 -0400
+        Wed, 22 Jul 2020 18:01:13 -0400
 Date:   Wed, 22 Jul 2020 22:01:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1595455270;
@@ -32,12 +32,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8ZqBD0H1LWlJxsQ61ALlfHIsDMsog0tR1YbzLAy24MU=;
-        b=tMUtattnLiy/f81y1b9WlqyqgmeJCvL+wuy/O2YPg3jOSStlP6SzqdNXSGMqgPu3ik1jhI
-        34k/04qha7opJcq0LWQHZAz9HmjzCHC39BGJnZ9UThwXzEODvaqWSDwjowkn2Kp3y+3L/M
-        tprMQFhiXKlom/VI543UznhKGDLKm48yh/TXRHoQ/9wkONZIhPVHkK2gVNStexkEId+qEK
-        i+zrNj6/JSr+SCMDoEojhSYC6vrRcDmKRwcupTPbI3CU4PuLsmuPI0efYHSF0RE6up1U+8
-        LGU5JJrJjmNMXlzm/TDy+mWuDr/94vcn3z+t16naQ53JqlkBu84txBGpPJ1znw==
+        bh=rdnPhZuh/HPM/I7q1U7IP+2jIdnuESmQR94eRlQ8J6k=;
+        b=hsqwJcOCcj89tdKOjvdHPMKyZ/mptdtyMlFhPkM4TgAAFKlhgDNHqHoC9vq4KSZSheVaIE
+        lDfvITsWx3Jj1xqXTiswYjCtvjFEyGmzqjzeRsHdXsYXA+VfUlWcMgQbNoLP0DTMUfWTVx
+        EfLp++3K6UyDsEDa1mpi++x1cT1mMD3d3v+Ct00zzrrz098tBFcxOWQEtln5PhPNQBrDqL
+        S55fb/dfwQsg+Q4CMbWF2jGLoeHMaNe+Uva1xcTPkRnuV4hpsa3sLJVudCshVriWglmKpn
+        /0dSJxP+zWAOmB4Rk3Yzltq5H5T80xQcLj/Rq2+vsO6PDl/vzPeeNtYoCmKAaw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1595455270;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -45,21 +45,21 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8ZqBD0H1LWlJxsQ61ALlfHIsDMsog0tR1YbzLAy24MU=;
-        b=ZCpyLTN2StsvsyvGJKpOHRg8gPsy1ExlMOWZnldTaXWI1YGAepurM6UpN+JoJQoITe/2iF
-        5Lq4Uz/Wq3g7RJBw==
+        bh=rdnPhZuh/HPM/I7q1U7IP+2jIdnuESmQR94eRlQ8J6k=;
+        b=Za092CMAB4u03jwFqHpuFAX6VoUyQUEvfM9Px5RdGhm7Hj7tyN55IstebcRCoLtX6jBmAj
+        9z/FrFJ1P5u/oSDQ==
 From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/dumpstack: Add log_lvl to show_iret_regs()
+Subject: [tip: x86/core] x86/dumpstack: Add log_lvl to __show_regs()
 Cc:     Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Petr Mladek <pmladek@suse.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200629144847.492794-2-dima@arista.com>
-References: <20200629144847.492794-2-dima@arista.com>
+In-Reply-To: <20200629144847.492794-3-dima@arista.com>
+References: <20200629144847.492794-3-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <159545526999.4006.11438373366826140681.tip-bot2@tip-bot2>
+Message-ID: <159545526937.4006.3207917869633596873.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,14 +71,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     fd07f802a70935fbbfb9cc2d11e1d8ac95f28e44
-Gitweb:        https://git.kernel.org/tip/fd07f802a70935fbbfb9cc2d11e1d8ac95f28e44
+Commit-ID:     44e215352cf17333992d56941b5bf4af60a67609
+Gitweb:        https://git.kernel.org/tip/44e215352cf17333992d56941b5bf4af60a67609
 Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Mon, 29 Jun 2020 15:48:45 +01:00
+AuthorDate:    Mon, 29 Jun 2020 15:48:46 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 22 Jul 2020 23:56:53 +02:00
 
-x86/dumpstack: Add log_lvl to show_iret_regs()
+x86/dumpstack: Add log_lvl to __show_regs()
 
 show_trace_log_lvl() provides x86 platform-specific way to unwind
 backtrace with a given log level. Unfortunately, registers dump(s) are
@@ -98,8 +98,8 @@ functions. Besides, there is a potential use-case for printing traces
 with KERN_DEBUG level [2] (where registers dump shouldn't appear with
 higher log level).
 
-Add log_lvl parameter to show_iret_regs() as a preparation to add it
-to __show_regs() and show_regs_if_on_stack().
+Add log_lvl parameter to __show_regs().
+Keep the used log level intact to separate visible change.
 
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/
 [2]: https://lore.kernel.org/linux-doc/20190724170249.9644-1-dima@arista.com/
@@ -107,64 +107,222 @@ to __show_regs() and show_regs_if_on_stack().
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Petr Mladek <pmladek@suse.com>
-Link: https://lkml.kernel.org/r/20200629144847.492794-2-dima@arista.com
+Link: https://lkml.kernel.org/r/20200629144847.492794-3-dima@arista.com
 
 ---
- arch/x86/include/asm/kdebug.h | 2 +-
- arch/x86/kernel/dumpstack.c   | 8 ++++----
- arch/x86/kernel/process_64.c  | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kdebug.h |  3 +-
+ arch/x86/kernel/dumpstack.c   |  9 ++++--
+ arch/x86/kernel/process_32.c  | 29 +++++++++----------
+ arch/x86/kernel/process_64.c  | 51 +++++++++++++++++-----------------
+ 4 files changed, 49 insertions(+), 43 deletions(-)
 
 diff --git a/arch/x86/include/asm/kdebug.h b/arch/x86/include/asm/kdebug.h
-index 247ab14..da024bb 100644
+index da024bb..d1514e7 100644
 --- a/arch/x86/include/asm/kdebug.h
 +++ b/arch/x86/include/asm/kdebug.h
-@@ -37,7 +37,7 @@ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr);
+@@ -36,7 +36,8 @@ extern void die(const char *, struct pt_regs *,long);
+ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr);
  extern int __must_check __die(const char *, struct pt_regs *, long);
  extern void show_stack_regs(struct pt_regs *regs);
- extern void __show_regs(struct pt_regs *regs, enum show_regs_mode);
--extern void show_iret_regs(struct pt_regs *regs);
-+extern void show_iret_regs(struct pt_regs *regs, const char *log_lvl);
+-extern void __show_regs(struct pt_regs *regs, enum show_regs_mode);
++extern void __show_regs(struct pt_regs *regs, enum show_regs_mode,
++			const char *log_lvl);
+ extern void show_iret_regs(struct pt_regs *regs, const char *log_lvl);
  extern unsigned long oops_begin(void);
  extern void oops_end(unsigned long, struct pt_regs *, int signr);
- 
 diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index b037cfa..c36d629 100644
+index c36d629..4954d66 100644
 --- a/arch/x86/kernel/dumpstack.c
 +++ b/arch/x86/kernel/dumpstack.c
-@@ -126,10 +126,10 @@ void show_ip(struct pt_regs *regs, const char *loglvl)
- 	show_opcodes(regs, loglvl);
- }
+@@ -146,7 +146,7 @@ static void show_regs_if_on_stack(struct stack_info *info, struct pt_regs *regs,
+ 	 * they can be printed in the right context.
+ 	 */
+ 	if (!partial && on_stack(info, regs, sizeof(*regs))) {
+-		__show_regs(regs, SHOW_REGS_SHORT);
++		__show_regs(regs, SHOW_REGS_SHORT, KERN_DEFAULT);
  
--void show_iret_regs(struct pt_regs *regs)
-+void show_iret_regs(struct pt_regs *regs, const char *log_lvl)
+ 	} else if (partial && on_stack(info, (void *)regs + IRET_FRAME_OFFSET,
+ 				       IRET_FRAME_SIZE)) {
+@@ -345,7 +345,7 @@ void oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+ 	oops_exit();
+ 
+ 	/* Executive summary in case the oops scrolled away */
+-	__show_regs(&exec_summary_regs, SHOW_REGS_ALL);
++	__show_regs(&exec_summary_regs, SHOW_REGS_ALL, KERN_DEFAULT);
+ 
+ 	if (!signr)
+ 		return;
+@@ -437,9 +437,12 @@ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr)
+ 
+ void show_regs(struct pt_regs *regs)
  {
++	enum show_regs_mode print_kernel_regs;
++
+ 	show_regs_print_info(KERN_DEFAULT);
+ 
+-	__show_regs(regs, user_mode(regs) ? SHOW_REGS_USER : SHOW_REGS_ALL);
++	print_kernel_regs = user_mode(regs) ? SHOW_REGS_USER : SHOW_REGS_ALL;
++	__show_regs(regs, print_kernel_regs, KERN_DEFAULT);
+ 
+ 	/*
+ 	 * When in-kernel, we also print out the stack at the time of the fault..
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index acfd6d2..4f2f54e 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -56,7 +56,8 @@
+ 
+ #include "process.h"
+ 
+-void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
++void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
++		 const char *log_lvl)
+ {
+ 	unsigned long cr0 = 0L, cr2 = 0L, cr3 = 0L, cr4 = 0L;
+ 	unsigned long d0, d1, d2, d3, d6, d7;
+@@ -67,14 +68,14 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	else
+ 		savesegment(gs, gs);
+ 
 -	show_ip(regs, KERN_DEFAULT);
--	printk(KERN_DEFAULT "RSP: %04x:%016lx EFLAGS: %08lx", (int)regs->ss,
 +	show_ip(regs, log_lvl);
-+	printk("%sRSP: %04x:%016lx EFLAGS: %08lx", log_lvl, (int)regs->ss,
- 		regs->sp, regs->flags);
+ 
+-	printk(KERN_DEFAULT "EAX: %08lx EBX: %08lx ECX: %08lx EDX: %08lx\n",
+-		regs->ax, regs->bx, regs->cx, regs->dx);
+-	printk(KERN_DEFAULT "ESI: %08lx EDI: %08lx EBP: %08lx ESP: %08lx\n",
+-		regs->si, regs->di, regs->bp, regs->sp);
+-	printk(KERN_DEFAULT "DS: %04x ES: %04x FS: %04x GS: %04x SS: %04x EFLAGS: %08lx\n",
+-	       (u16)regs->ds, (u16)regs->es, (u16)regs->fs, gs, regs->ss, regs->flags);
++	printk("%sEAX: %08lx EBX: %08lx ECX: %08lx EDX: %08lx\n",
++		log_lvl, regs->ax, regs->bx, regs->cx, regs->dx);
++	printk("%sESI: %08lx EDI: %08lx EBP: %08lx ESP: %08lx\n",
++		log_lvl, regs->si, regs->di, regs->bp, regs->sp);
++	printk("%sDS: %04x ES: %04x FS: %04x GS: %04x SS: %04x EFLAGS: %08lx\n",
++	       log_lvl, (u16)regs->ds, (u16)regs->es, (u16)regs->fs, gs, regs->ss, regs->flags);
+ 
+ 	if (mode != SHOW_REGS_ALL)
+ 		return;
+@@ -83,8 +84,8 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	cr2 = read_cr2();
+ 	cr3 = __read_cr3();
+ 	cr4 = __read_cr4();
+-	printk(KERN_DEFAULT "CR0: %08lx CR2: %08lx CR3: %08lx CR4: %08lx\n",
+-			cr0, cr2, cr3, cr4);
++	printk("%sCR0: %08lx CR2: %08lx CR3: %08lx CR4: %08lx\n",
++		log_lvl, cr0, cr2, cr3, cr4);
+ 
+ 	get_debugreg(d0, 0);
+ 	get_debugreg(d1, 1);
+@@ -98,10 +99,10 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	    (d6 == DR6_RESERVED) && (d7 == 0x400))
+ 		return;
+ 
+-	printk(KERN_DEFAULT "DR0: %08lx DR1: %08lx DR2: %08lx DR3: %08lx\n",
+-			d0, d1, d2, d3);
+-	printk(KERN_DEFAULT "DR6: %08lx DR7: %08lx\n",
+-			d6, d7);
++	printk("%sDR0: %08lx DR1: %08lx DR2: %08lx DR3: %08lx\n",
++		log_lvl, d0, d1, d2, d3);
++	printk("%sDR6: %08lx DR7: %08lx\n",
++		log_lvl, d6, d7);
  }
  
-@@ -155,7 +155,7 @@ static void show_regs_if_on_stack(struct stack_info *info, struct pt_regs *regs,
- 		 * full pt_regs might not have been saved yet.  In that case
- 		 * just print the iret frame.
- 		 */
--		show_iret_regs(regs);
-+		show_iret_regs(regs, KERN_DEFAULT);
- 	}
- }
- 
+ void release_thread(struct task_struct *dead_task)
 diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 9a97415..09bcb29 100644
+index 09bcb29..04d201a 100644
 --- a/arch/x86/kernel/process_64.c
 +++ b/arch/x86/kernel/process_64.c
-@@ -69,7 +69,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+@@ -62,30 +62,31 @@
+ #include "process.h"
+ 
+ /* Prints also some state that isn't saved in the pt_regs */
+-void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
++void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
++		 const char *log_lvl)
+ {
+ 	unsigned long cr0 = 0L, cr2 = 0L, cr3 = 0L, cr4 = 0L, fs, gs, shadowgs;
+ 	unsigned long d0, d1, d2, d3, d6, d7;
  	unsigned int fsindex, gsindex;
  	unsigned int ds, es;
  
--	show_iret_regs(regs);
-+	show_iret_regs(regs, KERN_DEFAULT);
+-	show_iret_regs(regs, KERN_DEFAULT);
++	show_iret_regs(regs, log_lvl);
  
  	if (regs->orig_ax != -1)
  		pr_cont(" ORIG_RAX: %016lx\n", regs->orig_ax);
+ 	else
+ 		pr_cont("\n");
+ 
+-	printk(KERN_DEFAULT "RAX: %016lx RBX: %016lx RCX: %016lx\n",
+-	       regs->ax, regs->bx, regs->cx);
+-	printk(KERN_DEFAULT "RDX: %016lx RSI: %016lx RDI: %016lx\n",
+-	       regs->dx, regs->si, regs->di);
+-	printk(KERN_DEFAULT "RBP: %016lx R08: %016lx R09: %016lx\n",
+-	       regs->bp, regs->r8, regs->r9);
+-	printk(KERN_DEFAULT "R10: %016lx R11: %016lx R12: %016lx\n",
+-	       regs->r10, regs->r11, regs->r12);
+-	printk(KERN_DEFAULT "R13: %016lx R14: %016lx R15: %016lx\n",
+-	       regs->r13, regs->r14, regs->r15);
++	printk("%sRAX: %016lx RBX: %016lx RCX: %016lx\n",
++	       log_lvl, regs->ax, regs->bx, regs->cx);
++	printk("%sRDX: %016lx RSI: %016lx RDI: %016lx\n",
++	       log_lvl, regs->dx, regs->si, regs->di);
++	printk("%sRBP: %016lx R08: %016lx R09: %016lx\n",
++	       log_lvl, regs->bp, regs->r8, regs->r9);
++	printk("%sR10: %016lx R11: %016lx R12: %016lx\n",
++	       log_lvl, regs->r10, regs->r11, regs->r12);
++	printk("%sR13: %016lx R14: %016lx R15: %016lx\n",
++	       log_lvl, regs->r13, regs->r14, regs->r15);
+ 
+ 	if (mode == SHOW_REGS_SHORT)
+ 		return;
+@@ -93,8 +94,8 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	if (mode == SHOW_REGS_USER) {
+ 		rdmsrl(MSR_FS_BASE, fs);
+ 		rdmsrl(MSR_KERNEL_GS_BASE, shadowgs);
+-		printk(KERN_DEFAULT "FS:  %016lx GS:  %016lx\n",
+-		       fs, shadowgs);
++		printk("%sFS:  %016lx GS:  %016lx\n",
++		       log_lvl, fs, shadowgs);
+ 		return;
+ 	}
+ 
+@@ -112,12 +113,12 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	cr3 = __read_cr3();
+ 	cr4 = __read_cr4();
+ 
+-	printk(KERN_DEFAULT "FS:  %016lx(%04x) GS:%016lx(%04x) knlGS:%016lx\n",
+-	       fs, fsindex, gs, gsindex, shadowgs);
+-	printk(KERN_DEFAULT "CS:  %04lx DS: %04x ES: %04x CR0: %016lx\n", regs->cs, ds,
+-			es, cr0);
+-	printk(KERN_DEFAULT "CR2: %016lx CR3: %016lx CR4: %016lx\n", cr2, cr3,
+-			cr4);
++	printk("%sFS:  %016lx(%04x) GS:%016lx(%04x) knlGS:%016lx\n",
++	       log_lvl, fs, fsindex, gs, gsindex, shadowgs);
++	printk("%sCS:  %04lx DS: %04x ES: %04x CR0: %016lx\n",
++		log_lvl, regs->cs, ds, es, cr0);
++	printk("%sCR2: %016lx CR3: %016lx CR4: %016lx\n",
++		log_lvl, cr2, cr3, cr4);
+ 
+ 	get_debugreg(d0, 0);
+ 	get_debugreg(d1, 1);
+@@ -129,14 +130,14 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	/* Only print out debug registers if they are in their non-default state. */
+ 	if (!((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
+ 	    (d6 == DR6_RESERVED) && (d7 == 0x400))) {
+-		printk(KERN_DEFAULT "DR0: %016lx DR1: %016lx DR2: %016lx\n",
+-		       d0, d1, d2);
+-		printk(KERN_DEFAULT "DR3: %016lx DR6: %016lx DR7: %016lx\n",
+-		       d3, d6, d7);
++		printk("%sDR0: %016lx DR1: %016lx DR2: %016lx\n",
++		       log_lvl, d0, d1, d2);
++		printk("%sDR3: %016lx DR6: %016lx DR7: %016lx\n",
++		       log_lvl, d3, d6, d7);
+ 	}
+ 
+ 	if (boot_cpu_has(X86_FEATURE_OSPKE))
+-		printk(KERN_DEFAULT "PKRU: %08x\n", read_pkru());
++		printk("%sPKRU: %08x\n", log_lvl, read_pkru());
+ }
+ 
+ void release_thread(struct task_struct *dead_task)
