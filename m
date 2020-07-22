@@ -2,121 +2,211 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C698C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC76FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F46B207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EC7207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:23:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAEQLD0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732857AbgGVPWv convert rfc822-to-8bit (ORCPT
+        id S1732745AbgGVPXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:22:51 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:44038 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732849AbgGVPWu (ORCPT
+        Wed, 22 Jul 2020 11:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbgGVPXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:22:50 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-74-f_ZtVPR8PtCaz6mMzPOs4w-1; Wed, 22 Jul 2020 16:22:46 +0100
-X-MC-Unique: f_ZtVPR8PtCaz6mMzPOs4w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 16:22:45 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 22 Jul 2020 16:22:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0FggABJU4CAABlpkA==
-Date:   Wed, 22 Jul 2020 15:22:45 +0000
-Message-ID: <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
- <20200722144213.GE2786714@ZenIV.linux.org.uk>
-In-Reply-To: <20200722144213.GE2786714@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 22 Jul 2020 11:23:49 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1D7C0619DC;
+        Wed, 22 Jul 2020 08:23:49 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e7so2111096qti.1;
+        Wed, 22 Jul 2020 08:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=szq1EIALXI1InaxXczbdpSUPUkPqU/Qn6lzK/O+OxWc=;
+        b=CAEQLD0OIy3i76OKUVUS9iV+HfgTRqQh4zszhLDC4LN7XC5ZyA0o6CufBfhJxn4HO8
+         rH2qq5xY5Ex9GAc6mWgK1ej2k75dsWoGhYOwOvcT1chpP4OzZQ1/xAfEje5rEuEcgXXr
+         l4Q8QC6jP3o3uok4YZMv4sNc4v9bZzljJaj47Xi1leBMAiZwN8hUV37/luAgXoQbdgMX
+         GC7TS4nwFR79LtFHFQ2rcpFXYuBF8CWcYw3ZBrK7J5JWmfzpA0eGwaS00W/Es/iHZ8YF
+         lqi8H3YxWX7fTaZxvuFLKRwzi9sXVvNFt+YRzZio29P+RxmqIqbSKN3vnf07XH0X3bvu
+         DcPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=szq1EIALXI1InaxXczbdpSUPUkPqU/Qn6lzK/O+OxWc=;
+        b=VG2Y4Kqz/2RMKYYEpt/e2hH11p4o0iAr6tlm/iPC0G8+Xmo8q388cTtYjjY7oVoe6P
+         EX4IexiNuCm+sM0NLhmQA5WrVNT0sbPiS7piKEil0H7smRyRJ+MshYfDZgnU+/KBsmJX
+         o13hQB2GBpFIB14MyaTbjZfCRoZjs/9B36Ly1oay/ojWIaHMRu+OM0V0FC2lkMApwDR4
+         acOK98AnB56zrGC4gKhdhLbWDcyFwgH5ryqeRbdWkguOTo+xCyshGs7eDUpEmrX7aRjg
+         wCy2MIqBDkYRmdcMxl+N0lJsObBpIuPRbK+UdrCNeZsCNLgLxEJmiIzxpSdMrngrgUPB
+         4oMg==
+X-Gm-Message-State: AOAM5300//bfKV6AS5anhT68IxglKuP+UpWrFK3HgW0IFWWL4mjEHuAb
+        BO4NK9HbKYDDtZ+Vkm/I5TI=
+X-Google-Smtp-Source: ABdhPJyzsK6HT8/HMfmXsVfQBXHE3dyaA10OKIOIE/mnJ3TL4vgh3TQyfKIKhLOQA5bCg8/9sOPv5Q==
+X-Received: by 2002:ac8:41c6:: with SMTP id o6mr33903563qtm.292.1595431428291;
+        Wed, 22 Jul 2020 08:23:48 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11e1::10da? ([2620:10d:c091:480::1:4a2])
+        by smtp.gmail.com with ESMTPSA id d8sm6953qtr.12.2020.07.22.08.23.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 08:23:46 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH v16 3/3] Input: new da7280 haptic driver
+To:     Roy Im <roy.im.opensource@diasemi.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+References: <cover.1594279649.git.Roy.Im@diasemi.com>
+ <b02ba5b5dbd3d58f27440ba639d32e4405061df3.1594279649.git.Roy.Im@diasemi.com>
+Message-ID: <bdc76da9-9223-b6d9-1fc1-2ef6e3b7afa7@gmail.com>
+Date:   Wed, 22 Jul 2020 11:23:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <b02ba5b5dbd3d58f27440ba639d32e4405061df3.1594279649.git.Roy.Im@diasemi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro
-> Sent: 22 July 2020 15:42
+On 7/9/20 3:27 AM, Roy Im wrote:
+> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
+> multiple mode and integrated waveform memory and wideband support.
+> It communicates via an I2C bus to the device.
 > 
-> On Wed, Jul 22, 2020 at 09:27:32AM +0000, David Laight wrote:
-> > From: Al Viro
-> > > Sent: 21 July 2020 21:26
-> > > Preparation for the change of calling conventions; right now all
-> > > callers pass 0 as initial sum.  Passing 0xffffffff instead yields
-> > > the values comparable mod 0xffff and guarantees that 0 will not
-> > > be returned on success.
-> > >
-> > > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> > > ---
-> > >  lib/iov_iter.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> > > index 7405922caaec..d5b7e204fea6 100644
-> > > --- a/lib/iov_iter.c
-> > > +++ b/lib/iov_iter.c
-> > > @@ -1451,7 +1451,7 @@ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
-> > >  		int err = 0;
-> > >  		next = csum_and_copy_from_user(v.iov_base,
-> > >  					       (to += v.iov_len) - v.iov_len,
-> > > -					       v.iov_len, 0, &err);
-> > > +					       v.iov_len, ~0U, &err);
-> > >  		if (!err) {
-> > >  			sum = csum_block_add(sum, next, off);
-> > >  			off += v.iov_len;
-> >
-> > Can't you remove the csum_block_add() by passing the
-> > old 'sum' in instead of the ~0U ?
-> > You'll need to keep track of whether the buffer fragment
-> > is odd/even aligned.
-> > After an odd length fragment a bswap32() or 8 bit rotate will
-> > fix things (and maybe one right at the end).
+> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> ---
+> v16:
+> 	- Corrected some code and updated description in Kconfig.
+> v15:
+> 	- Removed some defines and updated some comments.
+> v14:
+> 	- Updated pwm related code, alignments and comments.
+> v13:
+> 	- Updated some conditions in pwm function and alignments.
+> v12: No changes.
+> v11: 
+> 	- Updated the pwm related code, comments and typo.
+> v10: 
+> 	- Updated the pwm related function and added some comments.
+> v9: 
+> 	- Removed the header file and put the definitions into the c file.
+> 	- Updated the pwm code and error logs with %pE
+> v8: 
+> 	- Added changes to support FF_PERIODIC/FF_CUSTOM and FF_CONSTANT.
+> 	- Updated the dt-related code.
+> 	- Removed memless related functions.
+> v7: 
+> 	- Added more attributes to handle one value per file.
+> 	- Replaced and updated the dt-related code and functions called.
+> 	- Fixed error/functions.
+> v6: No changes.
+> v5: Fixed errors in Kconfig file.
+> v4: Updated code as dt-bindings are changed.
+> v3: No changes.
+> v2: Fixed kbuild error/warning
 > 
-> And the benefit of that would be...?  It wouldn't be any simpler,
-> it almost certainly would not even be a valid microoptimization
-> (nevermind that this is an arch-independent code)...
+> 
+>  drivers/input/misc/Kconfig  |   13 +
+>  drivers/input/misc/Makefile |    1 +
+>  drivers/input/misc/da7280.c | 1840 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1854 insertions(+)
+>  create mode 100644 drivers/input/misc/da7280.c
 
-It ought to give a minor improvement because it saves the extra
-csum_fold() when the checksum from a buffer is added to the
-previous total.
+Hi Roy,
 
-On 64bit systems there are even advantages in passing in a 64bit
-value - so the caller can add many 32bit values together.
-If nothing else it lets you use a '<< 8' if the previous fragment
-had an odd length.
+Overall the driver looks pretty good now. I did find one issue, see
+below. If you fix that I am happy to add a Reviewed-by line.
 
-	David
+Reviewed-By: Jes Sorensen <Jes.Sorensen@gmail.com>
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
+> new file mode 100644
+> index 0000000..c8c42ac
+> --- /dev/null
+> +++ b/drivers/input/misc/da7280.c
 
+[snip]
+
+> +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool enabled)
+> +{
+> +	struct pwm_state state;
+> +	u64 period_mag_multi;
+> +	int error;
+> +
+> +	if (!haptics->gain && enabled) {
+> +		dev_err(haptics->dev,
+> +			"Please set the gain first for the pwm mode\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pwm_get_state(haptics->pwm_dev, &state);
+> +	state.enabled = enabled;
+> +	if (enabled) {
+> +		period_mag_multi = state.period * haptics->gain;
+
+You are multiplying an unsigned int to a u16 and storing it in a u64.
+However, C doesn't promote the types, so you'll end up with an
+unexpected result here. You can fix it by promoting state.period to u64, ie:
+
+		period_mage_multi = (u64)state.period * haptics->gain;
+
+See the following example code which demonstrates the problem.
+
+#include <stdio.h>
+#include <stdint.h>
+
+uint64_t foo(unsigned int a, uint16_t b)
+{
+	uint64_t tmp = a * b;
+	return tmp;
+}
+
+uint64_t bar(unsigned int a, uint16_t b)
+{
+	uint64_t tmp = (uint64_t)a * b;
+	return tmp;
+}
+
+int main()
+{
+	uint64_t val;
+	unsigned int a = 0xff00ff00;
+	uint16_t b = 0x200;
+
+	val = foo(a, b);
+	printf("result(%0x, %0x) = %0llx\n", a, b, val);
+
+	val = bar(a, b);
+	printf("result(%0x, %0x) = %0llx\n", a, b, val);
+}
+
+Cheers,
+Jes
