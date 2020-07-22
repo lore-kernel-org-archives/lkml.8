@@ -2,90 +2,361 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B560EC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C121C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C1D2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DEE20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="AJVOmtly"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="j3VjI31l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732977AbgGVVxc (ORCPT
+        id S1730718AbgGVVzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:53:32 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:31984 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726841AbgGVVxb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:53:31 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MLehx2011129;
-        Wed, 22 Jul 2020 14:53:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=nXGQFz13UrR6JaFA6YbqUKvaj2VtE34elxufvD8zFyE=;
- b=AJVOmtly8oVT/BsCaUzoNex/ICnt+lz5mLuf4hLhPpFKkkatlgRc4G9CqKiiQ0KY0FcQ
- VhuEr59v79Ql12zCHvIPSYr5UDyeYxNAjkpnRlKGYLCCNtrierwcLZ/YV70prkWp3CFZ
- FhrcI+yj49Ewnxqh4wTyihHoY3LkrVfKrcsQYbxSjWF7YexaKUWLZkzq5ixDzurlWPqh
- evPQQg4tOs0+Cy0VeYsXIt2OQrLz9OzpP4neNWLRihde0nRj1nlsi4zXVz9nfwTHi7Ld
- Gpy448sqDmoXH/OyzoiltTpSxhu+QwOAghvhzD3m/i03dl+wTgYw+h+cVmyVZU6dgxBv sw== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kksxd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 14:53:13 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 14:53:12 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 14:53:11 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 69E673F703F;
-        Wed, 22 Jul 2020 14:53:05 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 03/15] qed: move chain methods to a separate file
-Date:   Thu, 23 Jul 2020 00:52:49 +0300
-Message-ID: <20200722215249.2695-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722155349.747-4-alobakin@marvell.com>
-References: <20200722155349.747-4-alobakin@marvell.com>,
- <20200722155349.747-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 17:55:37 -0400
+Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:50529
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726685AbgGVVzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:55:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h46WKeqa+QybwxJKoG6DVZBB4B2HTlo/2TuVCmhZ4/cKdLVAu4jGRFS0kIbdQSMpbKzn0ywZRBwd6I4JvTV5Pth5kZBHL+hSk1X6VbLkW+nw1/hN9b64IFadfXIwulhRShQGcRBtt32Poy6Noe21DjKfpiGYXne4tiJ6i4HE1C+GoZESUUy7k+SfJbYgvMvdKAmKprNIOYIUaUENu35JKr70LEH3x/bWH9IFx/7z27A+7v1m8zm9q1St0EQpPt4IM584PHrZQFHlBt3sHvA1ACqWHkzxxY+YkstLi41/WIJFlBWV7gPRtcGWRBSHpPH+WNyIH5qVSzQiKXKhbUifJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BlGZjebzE57gHn+5sKfurMuK0R7344ncjIYBc5Vk4Ok=;
+ b=jb+CHsB6GxvS8tYdU8GzK5GjCVMmG5K7aqL+ruEAKiGRdAf5N5QRTclU4eaoOe7YsCogQpVXwpzqL4bZgZLOIwhFpEWRsALuNMYpjqLn+7YYdiJ7J2T/CPVGh/gAhDjfAnDxG/VsVCuIIfUfSWSZHvJR4HKPM87RGzMEIuX+1mnYKsat2Bp3/Bw0BiWsLWOTMifbTJx2rb47sFs9QZGwBYrzw7PzOD331qpmpCtkIdT4edp4cwicfWbX1s6NZhfxzmKwnkGzrxlBqnxHhzsI+XZbhduX5k+e6i51/ZIhH8NSPDRy0CdanfIOKRDzuAcQt+GSGwMplaRfPTYSMnnkLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BlGZjebzE57gHn+5sKfurMuK0R7344ncjIYBc5Vk4Ok=;
+ b=j3VjI31lDX8r9KFH0giQHepHU5NI9fvtutYVmXpMW+XXPweLCmf3iNyfXX0wGhyaYTYdbYsHzVkbeCqdOCR8ZTXwnKVlGdQ5f0YenfENXw8ISOIMvQvbfhm8Baf0QJ9VGSZ1d5LqRsCC4532WFCy+SYl0kPEb4/pR7QpactO+GQ=
+Authentication-Results: jms.id.au; dkim=none (message not signed)
+ header.d=none;jms.id.au; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB4582.namprd12.prod.outlook.com (2603:10b6:208:26b::18)
+ by MN2PR12MB3917.namprd12.prod.outlook.com (2603:10b6:208:166::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 22 Jul
+ 2020 21:55:32 +0000
+Received: from MN2PR12MB4582.namprd12.prod.outlook.com
+ ([fe80::7d2d:b00b:bac4:a66b]) by MN2PR12MB4582.namprd12.prod.outlook.com
+ ([fe80::7d2d:b00b:bac4:a66b%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 21:55:32 +0000
+From:   Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+To:     joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, robh+dt@kernel.org
+Cc:     Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+Subject: [PATCH v2 1/1] ARM:dts:aspeed: Initial device tree for AMD EthanolX
+Date:   Wed, 22 Jul 2020 16:55:06 -0500
+Message-Id: <20200722215506.5984-1-supreeth.venkatesh@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0701CA0002.namprd07.prod.outlook.com
+ (2603:10b6:803:28::12) To MN2PR12MB4582.namprd12.prod.outlook.com
+ (2603:10b6:208:26b::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from BMCDEV-02.amd.com (165.204.78.1) by SN4PR0701CA0002.namprd07.prod.outlook.com (2603:10b6:803:28::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Wed, 22 Jul 2020 21:55:30 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 67349b89-ce61-402c-a4e6-08d82e89f466
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3917:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3917A9BF810DF4D7C05DC3D696790@MN2PR12MB3917.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZsaBwO9tFu80ZHjB0xsXvCZXInGxl0nBTeQuWRdqQ1KL8cNcYlfF1sSo+4nBz7jtTCWtQQ6rU9ekH7H23cJ3t8/cq4vwVNYfq7pRlu7p/vbbjIrumwDpnABi8CTA07/YGT3JL6iHjaAik4N7GRhPF5s3VCuQiPIL9EDD9oKDPSCqI2vIcNOP/etny2Rdh+n4NnoP4+zWCGuOwAdoDJH2sb0PgmdiYJ0CTU3/alP/db1GfZSNpDrQHyUBApuenXYjZydt9AaK9KGowCbELMiMO8o9CFXgKwQYRIcCmeswYsbvSYLQvLe1fSzwa4RFkWUGSSmGgUy9IQXgksu9FOm5sw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4582.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(8676002)(478600001)(36756003)(186003)(66556008)(6486002)(7696005)(44832011)(66476007)(52116002)(83380400001)(66946007)(16526019)(6666004)(2616005)(316002)(26005)(956004)(8936002)(5660300002)(1076003)(4326008)(2906002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: /VrQ9RWC/f+pC+21P40CKTfnhMYrV2IFzJkKQrHnujhConufO2in+3MQ8S1P7CDxNbS1sAzMaW1GUQ0eA/sHiVKGZwoQp5hM7kkgFmqnizmDUpecm8sgjLPZwDxlM5xXnsJtfIxfM5JxacKisGYd/pShOe0eV1hX+86ygArFpCUUkMrF4X8vJhLZMFSNVyqNyNnxDBfj84BrUELfldXuthREGzJR/m44b+KPqT9eyLVV4QD5B+/nEUachmf+klHYc7f6W8iaC17Rt1uKwQuaZcxa0hcrG7o5oRAkhwuPQ1RtBaOt/r8dmN+Bjvd9/XJD1sOnYTyeJ7sGclk23AmpX6tUXA2HTJhfAPAVHshSzjppc6rb9IwI0zntGqeGWITj2sDG2PaTUWDsG4bCuOz+MTl5UNOufnHEHUmbuxW3MrnsUqH+Hl7n0txLgyNdHpditCZ9Rnr3bxaWWaz8Mu4TKFp96fWQfIbKKVEcLFpxVYU=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67349b89-ce61-402c-a4e6-08d82e89f466
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4582.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 21:55:31.9894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lRwILJdWd74pFCSnRnj2Giis/1tcq4/SjqvqnljNc1SozvSDAEmF3TlHownd3qNlIty+K3GunLcj/Ke+XbuqFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3917
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild test robot triggered a build error on Alpha, sorry. Will send
-v2 soon.
+Initial introduction of AMD EthanolX platform equipped with an
+Aspeed ast2500 BMC manufactured by AMD.
 
-Al
+AMD EthanolX platform is an AMD customer reference board with an
+Aspeed ast2500 BMC manufactured by AMD.
+This adds AMD EthanolX device tree file including the flash layout
+used by EthanolX BMC machines.
+
+This also adds an entry of AMD EthanolX device tree file in Makefile.
+
+Signed-off-by: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+---
+Changes since v1:
+* Addressed review comment regarding SPDX License Identifier
+* Added I2c0 and I2c1 which cater to AMD's APML Interface
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts | 221 ++++++++++++++++++
+ 2 files changed, 222 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d6dfdf73e66b..55ed881d2ebc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1281,6 +1281,7 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-ast2500-evb.dtb \
+ 	aspeed-ast2600-evb.dtb \
++	aspeed-bmc-amd-ethanolx.dtb \
+ 	aspeed-bmc-arm-centriq2400-rep.dtb \
+ 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
+ 	aspeed-bmc-facebook-cmm.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+new file mode 100644
+index 000000000000..3d67fa31a3ab
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2020 AMD Inc.
++// Author: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "AMD EthanolX BMC";
++	compatible = "amd,ethanolx-bmc", "aspeed,ast2500";
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++	aliases {
++		serial0 = &uart1;
++		serial4 = &uart5;
++	};
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++	leds {
++		compatible = "gpio-leds";
++
++		fault {
++			gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
++		};
++
++		identify {
++			gpios = <&gpio ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
++		};
++	};
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>, <&adc 4>;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
++		 <&syscon ASPEED_CLK_MAC1RCLK>;
++	clock-names = "MACCLK", "RCLK";
++};
++
++&uart1 {
++	//Host Console
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++		     &pinctrl_rxd1_default>;
++};
++
++&uart5 {
++	//BMC Console
++	status = "okay";
++};
++
++&adc {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++		     &pinctrl_adc1_default
++		     &pinctrl_adc2_default
++		     &pinctrl_adc3_default
++		     &pinctrl_adc4_default>;
++};
++
++//APML for P0
++&i2c0 {
++	reg = <0x80 0x40>;
++	status = "okay";
++};
++
++//APML for P1
++&i2c1 {
++	reg = <0xc0 0x40>;
++	status = "okay";
++};
++
++// Thermal Sensors
++&i2c7 {
++	status = "okay";
++
++	lm75a@48 {
++		compatible = "national,lm75a";
++		reg = <0x48>;
++	};
++
++	lm75a@49 {
++		compatible = "national,lm75a";
++		reg = <0x49>;
++	};
++
++	lm75a@4a {
++		compatible = "national,lm75a";
++		reg = <0x4a>;
++	};
++
++	lm75a@4b {
++		compatible = "national,lm75a";
++		reg = <0x4b>;
++	};
++
++	lm75a@4c {
++		compatible = "national,lm75a";
++		reg = <0x4c>;
++	};
++
++	lm75a@4d {
++		compatible = "national,lm75a";
++		reg = <0x4d>;
++	};
++
++	lm75a@4e {
++		compatible = "national,lm75a";
++		reg = <0x4e>;
++	};
++
++	lm75a@4f {
++		compatible = "national,lm75a";
++		reg = <0x4f>;
++	};
++};
++
++&kcs1 {
++	status = "okay";
++	kcs_addr = <0x60>;
++};
++
++&kcs2 {
++	status = "okay";
++	kcs_addr = <0x62>;
++};
++
++&kcs4 {
++	status = "okay";
++	kcs_addr = <0x97DE>;
++};
++
++&lpc_snoop {
++	status = "okay";
++	snoop-ports = <0x80>;
++};
++
++&lpc_ctrl {
++	//Enable lpc clock
++	status = "okay";
++};
++
++&pwm_tacho {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default
++	&pinctrl_pwm1_default
++	&pinctrl_pwm2_default
++	&pinctrl_pwm3_default
++	&pinctrl_pwm4_default
++	&pinctrl_pwm5_default
++	&pinctrl_pwm6_default
++	&pinctrl_pwm7_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++
++	fan@2 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++
++	fan@3 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
++	};
++
++	fan@4 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++	fan@5 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
++	};
++
++	fan@6 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
++	};
++
++	fan@7 {
++		reg = <0x07>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
++	};
++};
++
++
++
+-- 
+2.17.1
+
