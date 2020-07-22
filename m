@@ -2,75 +2,65 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7482C433EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CC72077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 016E3206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbgGVJEy (ORCPT
+        id S1731242AbgGVJGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:04:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57230 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729894AbgGVJEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:04:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BA40FABD2;
-        Wed, 22 Jul 2020 09:04:59 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8AA96DA70B; Wed, 22 Jul 2020 11:04:26 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 11:04:26 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@tron.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 04/14] bdi: initialize ->ra_pages in bdi_init
-Message-ID: <20200722090426.GQ3703@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>, linux-mtd@lists.infradead.org,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drbd-dev@tron.linbit.com,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, cgroups@vger.kernel.org
-References: <20200722062552.212200-1-hch@lst.de>
- <20200722062552.212200-5-hch@lst.de>
+        Wed, 22 Jul 2020 05:06:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51980 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728642AbgGVJGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:06:02 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D540A48C73173991CFE3;
+        Wed, 22 Jul 2020 17:05:59 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
+ 17:05:51 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <martin.petersen@oracle.com>, <jejb@linux.ibm.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <john.garry@huawei.com>, <yanaijie@huawei.com>,
+        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
+        <linuxarm@huawei.com>
+Subject: [PATCH v1 0/2] scsi: libsas: An improvement on error handle and tidy-up
+Date:   Wed, 22 Jul 2020 17:04:01 +0800
+Message-ID: <1595408643-63011-1-git-send-email-luojiaxing@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722062552.212200-5-hch@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 08:25:42AM +0200, Christoph Hellwig wrote:
-> Set up a readahead size by default, as very few users have a good
-> reason to change it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+This patch introduces an improvement to reduce error handle time and a
+tidy-up, including: 
+- postreset() is deleted from sas_sata_ops. 
+- Do not perform hard reset and delayed retry on a removed SATA disk. This
+can effectively reduce the error handle duration of hot unplug a SATA disk
+with traffic(reduce about 30s depending on the delay setting of libata). 
 
-For the btrfs bits
+Both John garry and Jason Yan participated in the review of the solution
+and provided good suggestions during the development. 
 
->  fs/btrfs/disk-io.c    | 1 -
+Luo Jiaxing (2):
+  {topost} scsi: libsas: delete postreset at sas_sata_ops
+  {topost} scsi: libsas: check link status at ATA prereset() ops
 
-Acked-by: David Sterba <dsterba@suse.com>
+ drivers/scsi/libsas/sas_ata.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
+
