@@ -2,87 +2,111 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C648AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A17752065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2012065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgGVNTG (ORCPT
+        id S1730018AbgGVNO0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:19:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:35853 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgGVNTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:19:06 -0400
-IronPort-SDR: oSyA1SIRynK1KaoawLzHMyokwcvTHTxTpjOeIAKL10QYq0wwi6+6iPwXjg60ARHpwFOta3eqO+
- /ljUP1dUOFag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="151647978"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="151647978"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 06:19:05 -0700
-IronPort-SDR: ACgWfQ4BZfoggtLmdHtSbbnDIdYMzBpHlpVk1auW2DlzEBCuGRW+I9qbjpipeipPLxQ7jrO2td
- dmw1eDD40mWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="462450536"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 22 Jul 2020 06:19:05 -0700
-Received: from [10.249.230.82] (abudanko-mobl.ccr.corp.intel.com [10.249.230.82])
-        by linux.intel.com (Postfix) with ESMTP id B08015802E4;
-        Wed, 22 Jul 2020 06:19:01 -0700 (PDT)
-Subject: Re: [PATCH v12 11/15] perf stat: implement control commands handling
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
- <3cb8a826-145f-81f4-fcb2-fa20045c6957@linux.intel.com>
- <20200722125624.GM77866@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2529e951-3ef9-763b-f3d8-ca36038503d5@linux.intel.com>
-Date:   Wed, 22 Jul 2020 16:18:59 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200722125624.GM77866@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 22 Jul 2020 09:14:26 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53483 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726003AbgGVNO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:14:26 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-116-sW_rWl1MOCeWFYsGvVYncg-1; Wed, 22 Jul 2020 14:14:22 +0100
+X-MC-Unique: sW_rWl1MOCeWFYsGvVYncg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 14:14:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 22 Jul 2020 14:14:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Catalin Marinas' <catalin.marinas@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC] raw_copy_from_user() semantics
+Thread-Topic: [RFC] raw_copy_from_user() semantics
+Thread-Index: AQHWYBxygAO6HUS840aFW/LsMa1rTakTksjw
+Date:   Wed, 22 Jul 2020 13:14:21 +0000
+Message-ID: <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
+References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
+ <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
+ <20200722113707.GC27540@gaia>
+In-Reply-To: <20200722113707.GC27540@gaia>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 22.07.2020 15:56, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jul 17, 2020 at 10:05:06AM +0300, Alexey Budankov escreveu:
->>
->> Implement handling of 'enable' and 'disable' control commands coming
->> from control file descriptor. If poll event splits initiated timeout
->> interval then the reminder is calculated and still waited in the
->> following evlist__poll() call.
+From: Catalin Marinas
+> Sent: 22 July 2020 12:37
 > 
-> So the cover letter is not preserved in the git history, only going from
-> the Link tag to the patch series to then lookup the cover letter and
-> then find examples of each feature, I'll now have to do that and collect
-> the parts that are needed to test this specific feature implemented in
-> this specific patch, add the command here so that we can test patch by
-> patch, please next time try to have the testing steps in each patch.
+> On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
+> > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > > I think we should try to get rid of the exact semantics.
+> >
+> > Side note: I think one of the historical reasons for the exact
+> > semantics was that we used to do things like the mount option copying
+> > with a "copy_from_user()" iirc.
+> >
+> > And that could take a fault at the end of the stack etc, because
+> > "copy_mount_options()" is nasty and doesn't get a size, and just
+> > copies "up to 4kB" of data.
+> >
+> > It's a mistake in the interface, but it is what it is. But we've
+> > always handled the inexact count there anyway by originally doing byte
+> > accesses, and at some point you optimized it to just look at where
+> > page boundaries might be..
+> 
+> And we may have to change this again since, with arm64 MTE, the page
+> boundary check is insufficient:
+> 
+> https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+> 
+> While currently the fault path is unlikely to trigger, with MTE in user
+> space it's a lot more likely since the buffer (e.g. a string) is
+> normally less than 4K and the adjacent addresses would have a different
+> colour.
+> 
+> I looked (though briefly) into passing the copy_from_user() problem to
+> filesystems that would presumably know better how much to copy. In most
+> cases the options are string, so something like strncpy_from_user()
+> would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
+> has a better way to figure out how much to copy.
 
-Accepted. Will be providing possible test steps as a part of description
-for relevant patches.
+What about changing the mount code to loop calling get_user()
+to read aligned words until failure?
+Mount is fairly uncommon and the extra cost is probably small compared
+to the rest of doing a mount.
 
-Thanks,
-Alexei
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
