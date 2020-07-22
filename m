@@ -2,139 +2,122 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08269C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F270C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D24A320657
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BdPqys0p"
+	by mail.kernel.org (Postfix) with ESMTP id 047E520657
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgGVIOc (ORCPT
+        id S1728484AbgGVIPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:14:32 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:51592 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVIOc (ORCPT
+        Wed, 22 Jul 2020 04:15:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:54149 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGVIPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:14:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595405671; x=1626941671;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=dhWOvaKuZvqbMlqikAYroykVPMvhvR9PaTC07Akfv54=;
-  b=BdPqys0pOLtkf9gRx2W7V48qkET/ymBRCSOjEePll5TKODsF6fHDOpnB
-   kqBmxR6sagPY0pwEESAys8DOk1WxmvMIHRd5+rGUQGXfO6QdLrLUIOSk4
-   C/kq1km6lKnUPh08X49QzEXDfhUjZJ5td6POL5S3SRixFc4A8d0YuD2fC
-   Q=;
-IronPort-SDR: 9ouwtjGL+sWaqj74RXly9rA6zL4Jcj2Qd3IekWM4R99XokeEmNopQMc2rgdMzfFPg0gXPt7FZg
- Gu4npJ1hyffw==
-X-IronPort-AV: E=Sophos;i="5.75,381,1589241600"; 
-   d="scan'208";a="61833173"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 22 Jul 2020 08:14:29 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com (Postfix) with ESMTPS id 6988AA1F0B;
-        Wed, 22 Jul 2020 08:14:28 +0000 (UTC)
-Received: from EX13D16EUA003.ant.amazon.com (10.43.165.51) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 08:14:27 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.248) by
- EX13D16EUA003.ant.amazon.com (10.43.165.51) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 08:14:18 +0000
-Subject: Re: [PATCH v5 05/18] nitro_enclaves: Handle PCI device command
- requests
-To:     Alexander Graf <graf@amazon.de>, <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Karen Noel <knoel@redhat.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>, kbuild test robot <lkp@intel.com>
-References: <20200715194540.45532-1-andraprs@amazon.com>
- <20200715194540.45532-6-andraprs@amazon.com>
- <87d25260-24e7-319a-f94f-d1eb77c3da00@amazon.de>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <0a840d0c-fdb6-2346-8fcb-edc10aaf1229@amazon.com>
-Date:   Wed, 22 Jul 2020 11:14:09 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Wed, 22 Jul 2020 04:15:24 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M2Nm2-1jyiP614Kk-003uVO; Wed, 22 Jul 2020 10:15:22 +0200
+Received: by mail-qk1-f180.google.com with SMTP id h7so1157563qkk.7;
+        Wed, 22 Jul 2020 01:15:21 -0700 (PDT)
+X-Gm-Message-State: AOAM532wjO64Z+d3CTwKf8R7ZGOqjG8eHICWXf0g07AMFKCAna2sganK
+        H02CCCdf30LscmESqVQcIX8yE6IrLrnAL45a0Gs=
+X-Google-Smtp-Source: ABdhPJxagWHIltsd9Y/Q05+su4bERDSiI05YQqxd93lRzKMZfkhjYuXY9Gz+GQLMwzj41iA+H33WQKqVlNof6awBZO4=
+X-Received: by 2002:a37:9004:: with SMTP id s4mr22189849qkd.286.1595405721056;
+ Wed, 22 Jul 2020 01:15:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87d25260-24e7-319a-f94f-d1eb77c3da00@amazon.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.248]
-X-ClientProxiedBy: EX13P01UWA004.ant.amazon.com (10.43.160.127) To
- EX13D16EUA003.ant.amazon.com (10.43.165.51)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Jul 2020 10:15:04 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
+Message-ID: <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Peter Chen <peter.chen@nxp.com>, oleksandr.suvorov@toradex.com,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Peng Fan <peng.fan@nxp.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Olof Johansson <olof@lixom.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>, michael@walle.cc,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2+1HvxydBqMn5yYipjFC8GFVU2TNleW+f/pTxKufbuXKucE3cW0
+ RAYn8DTEH2GMVmuVy+nuZKYiW/lNH7aYfZbw1w2pj8W0gZ0+roRixc68t2xHPGPcbfTQmcR
+ RaAt/cxvTLACHs+mL5KrteXYssBzctMa2v+T5D+05hBAjMTPNMKasfKn+v42uegYzT/px28
+ TgOvxLyjrtiCnf8QVwS1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9e0Btv5QQVo=:O89GEMuTiq6qPyegwQo49r
+ PfC2qntbTFRaF95teHM7opnxT92dUYr76fX5F+xQeGH9IG+rnk1BCCcR7L+lkOMRHOv4b+EuD
+ Dm6Cx/qLZvea9H/qbyDwLZ3gIdqRleao+YfHD3cd0cIEWHy1Tx0qHHokC0v1ZZggOqtT3szLI
+ AbmWKsVB1CcwbsfUOo8M/IBkZPYEjbhmhJUFb0E/+dAbOhH+Tn/XggD1a5euMGvlClKGr3oX7
+ 5KPZLLx4YGvs6GiIKMNLtUrBZqHemP1Q6YZX6NGDQpk943gnr7R7UzVhO2N/uj+JzaEzUSCsq
+ XuazUpin6xVkEIGureW428uiU9Fue/bao0DrROyfo3bEXw7J2aGcplA1vxKKMJ/O3W07k154D
+ f4xpMPe4iVYWcqnO88Qr9TelNI+f+6ZmVDxBO35g1ZffAQlZMcYZ3JIIKpf0URLW/hqeI/33w
+ ufpe2wypWl9Fef8bDRKegO+rjNZY8qpDYa4HYnAvZh/y15WwcMGKgBbe2iF8FDRbtTFOkpLR2
+ DcfiqLmqCfoGvmDSbO/OHQU0GWdMuLC/GcU/llV/a9b5Gk/5wsfq0k9F8t9axG2vo6gDEo3oQ
+ hlZO8MNXVUxHL5W+9sjWHFs/J3NuLcwmOOay9swQqiWHl8YoQ7dMWBeFw0XBDhC/fGMyDxlhX
+ HzZL3ueqmqgnUMHsFWJ7/vFWVJWo67ToK4XLxCYrg9kZH6Z/9F9+iHtrPOsVUE9e/Vk2IQ7Eo
+ DfIObAExtux70UWkXGStgyxQdgbuwRW4CkoY4o1jc7GmKtoD5nSMFgbYLRfebWpBg3Z/x6kEk
+ rBkPNPOJ5ue9VzrRKxIx/IrBWkRfnICfCNTDgiolkzj04s/Jpc35gDmS8G2rD5HFCiqlJmB2i
+ /NJCC3Ui4LxF01Ee9KRTQJEVw187+WOil3E/fR8fe5ywKGuHaWZYXZVGPppDHJ/YvRKeGnBp6
+ dfICmmS637URQgionWToq3JKzJ84s4jEQp5nuWcLfED263kLX5BBa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21/07/2020 13:17, Alexander Graf wrote:
+On Wed, Jul 22, 2020 at 3:50 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 >
+> Change config to tristate, add module device table, module author,
+> description and license to support module build for i.MX GPIO driver.
 >
-> On 15.07.20 21:45, Andra Paraschiv wrote:
->> The Nitro Enclaves PCI device exposes a MMIO space that this driver
->> uses to submit command requests and to receive command replies e.g. for
->> enclave creation / termination or setting enclave resources.
->>
->> Add logic for handling PCI device command requests based on the given
->> command type.
->>
->> Register an MSI-X interrupt vector for command reply notifications to
->> handle this type of communication events.
->>
->> Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->>
->> Fix issue reported in:
->> https://lore.kernel.org/lkml/202004231644.xTmN4Z1z%25lkp@intel.com/
->>
->> Reported-by: kbuild test robot <lkp@intel.com>
+> As this is a SoC GPIO module, it provides common functions for most
+> of the peripheral devices, such as GPIO pins control, secondary
+> interrupt controller for GPIO pins IRQ etc., without GPIO driver, most
+> of the peripheral devices will NOT work properly, so GPIO module is
+> similar with clock, pinctrl driver that should be loaded ONCE and
+> never unloaded.
 >
-> This means that the overall patch is a fix that was reported by the =
+> Since MXC GPIO driver needs to have init function to register syscore
+> ops once, here still use subsys_initcall(), NOT module_platform_driver().
 
-> test rebot. I doubt that's what you mean. Just remove the line.
+I'm not following this explanation.
 
-I wanted to mention that the patch includes also the fix for the report. =
+Why is this driver using syscore_ops rather than
+SIMPLE_DEV_PM_OPS() or similar?
 
-I moved these details to the changelog.
+Why can the driver not unregister the syscore_ops the way it
+registers them when unloading the module?
 
->
->> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
->
-> Reviewed-by: Alexander Graf <graf@amazon.com>
+Why do you need subsys_initcall() rather than a device_initcall()?
 
-Thanks for review.
+If the subsys_initcall() is indeed required here instead of
+device_initcall(), how can it work if the driver is a loadable
+module?
 
-Andra
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
-
+       Arnd
