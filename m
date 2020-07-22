@@ -2,161 +2,91 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09F3C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3B2C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792EC20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E654F2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S8luBJgF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wVfIXSUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgGVHyS (ORCPT
+        id S1728063AbgGVHzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46850 "EHLO
+        Wed, 22 Jul 2020 03:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGVHyR (ORCPT
+        with ESMTP id S1726506AbgGVHzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:54:17 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC111C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 00:54:17 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id h190so356833vkh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 00:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wp7cLzalHd7kyU2cYcp7xvtQkBGEmVbye1wtB/k/l3Y=;
-        b=S8luBJgFvit1zlJAsvYPv7f4ldEkJxzK4yZgF7GfFM/4xtumiUsYejg+P0RIR9DhzM
-         E1qS0MG45c/nt05/BhOxdDQBOd1TxDqyormzXUBTLmnWGjcwQDVNG2G6tVwnsdiZuMwt
-         aYdd17W2oDqlJpO91CX0F/ahwuFwop1WBJo9CIvjUVn+ep+q1VpisrVR0zTcsYXB8KPf
-         N925FbxN/tIezpMA1LDKX7myH0ukvNCKsYDrKKGKx6jR4HrojU3hYnwI7/rC2Gu3XeWM
-         02iPK2J0C7L3JtN3CdZkmZDIE1ECee4DMsrv0he+z2gBNLOJjB7UflrzQTNQTMicLjnQ
-         OdAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wp7cLzalHd7kyU2cYcp7xvtQkBGEmVbye1wtB/k/l3Y=;
-        b=REsj7cicC49YMy9jUDFlZIKcH9iaOlfCJcvJfijKP60bVoUmBpkzUTuXLSdG3QRxl0
-         e38OdzBHAkZh3irxv2kIKcUHpqQ9bx7Fr5ytUcgh/FPIgOnIxkF9XfCHw7gmcejnpo/t
-         /yRFofYBmJSip/9/h4I4dCWYkGrcBVh01/zGbfvqI7yR07+wKK5aDJrEjlODg6bAtCGq
-         KO9GqnGg9DOJj9N1xJFFAJVyZz+ps9sQkMPzUIBIXG/sjmiynggeyjT25/00pi2CCvKR
-         iqlf4GZ93WEMm6kNWsf3Vw5EUIHavEym6giJ9YxJr0S3JTZqUYitb1Fix4UCVuceQPI0
-         nrMg==
-X-Gm-Message-State: AOAM532M4QiQUXWbteXe4nffE7sVkXJp2ddL4Xz778HBvZuosVkbwp+5
-        Gq3s/Bklk5h0NR45IZqhXmHZPD+wEtqoTAdi0aQHO2pXsyp0Kz+u
-X-Google-Smtp-Source: ABdhPJwpJE6nZ/4uqieQIpxG0DaJE1P7Dq3awxlUKdO1z6CLKIW3zUuJaPsYiyFK6Av4UUwsn3sIaI+KyweJiz6gKUE=
-X-Received: by 2002:a1f:5e14:: with SMTP id s20mr17461433vkb.63.1595404456374;
- Wed, 22 Jul 2020 00:54:16 -0700 (PDT)
+        Wed, 22 Jul 2020 03:55:05 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 160EBC0619DC;
+        Wed, 22 Jul 2020 00:55:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RM7GOf2CU2j7IEdxsQ76+7tPsuDp35umedz/Oe8IL6c=; b=wVfIXSUtGE9pDSPf46IprCtRvt
+        rlP4DWLTU+26h7YnzffGvPwx+Q2V5KStDB4gowD8s7ZZPyjjQVbdcNRz7+j0R7IR4XOtvs2rUjWC1
+        k6y/xZUeyIKYZGAM7I8yNwLrgkRoj1kgHzOVzvTP0ydEzmzgaYqYxd0TV0b9aCa4+k3NQb8+7IVqs
+        ICcLMaAeUsXe1p6j3U2a9gtA5y2ra0GrRVvTm5UBCFozLFNoWobQZLIMxocwnw8BEZWEwm+L6+iPh
+        Nc0Bf4pLM6xygsvwGTyEYclLbqc97zAnATlncIKI8vXTQwPnxeuPouY72d2tZkMrMcTJEnDtMCQW3
+        ZETQILTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jy9aa-0005h7-Sf; Wed, 22 Jul 2020 07:54:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8529E301AC6;
+        Wed, 22 Jul 2020 09:54:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4B06D20140AD7; Wed, 22 Jul 2020 09:54:55 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 09:54:55 +0200
+From:   peterz@infradead.org
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [patch V4 02/15] entry: Provide generic syscall entry
+ functionality
+Message-ID: <20200722075455.GQ119549@hirez.programming.kicks-ass.net>
+References: <20200721105706.030914876@linutronix.de>
+ <20200721110808.455350746@linutronix.de>
+ <202007211426.B40A7A7BD@keescook>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 22 Jul 2020 13:24:05 +0530
-Message-ID: <CA+G9fYvUOTWJdPpUM=_ciPbZ+roQBBnjH6aJffWwUfeFG2OGwg@mail.gmail.com>
-Subject: WARNING: fs/kernfs/dir.c:1508 kernfs_remove_by_name_ns
-To:     open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>, walter-zh.wu@mediatek.com,
-        neeraju@codeaurora.org, Vinod Koul <vinod.koul@linaro.org>,
-        Mateusz Nosek <mateusznosek0@gmail.com>,
-        Tejun Heo <tj@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007211426.B40A7A7BD@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel WARNING noticed on arm64 db410c device while booting linux next
-20200721 tag.
-Kernel BUGs followed by kernel WARNINGS noticed on this db410c device.
+On Tue, Jul 21, 2020 at 02:38:16PM -0700, Kees Cook wrote:
+> One thing I noticed while doing syscall entry timings for the kernel
+> stack base offset randomization was that the stack protector was being
+> needlessly enabled in certain paths (seccomp, audit) due to seeing a
+> register array being declared on the stack. As part of that series I
+> suggested down-grading the stack protector. Since then, Peter's changes
+> entirely disabled the stack protector on the entry code, which I
+> grudgingly accept (I'd rather have a way to mark a variable as "ignore
+> this for stack protector detection", but ... there isn't, so fine.)
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: de2e69cfe54a8f2ed4b75f09d3110c514f45d38e
-  git describe: next-20200721
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/818/config
-  build-location:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/818
+I don't think I'd like to have that per variable, but a function
+attribute to disable stack protector would be awesome, except our
+GCC-besties forgot to create that function attribute :-(
 
-Crash log:
-[    5.802135] ------------[ cut here ]------------
-[    5.802509] l12: supplied by regulator-dummy
-[    5.805901] kernfs: can not remove 'supplier:regulator.14', no directory
-[    5.810782] l12: Bringing 0uV into 1750000-1750000uV
-[    5.814789] WARNING: CPU: 3 PID: 164 at
-/usr/src/kernel/fs/kernfs/dir.c:1508
-kernfs_remove_by_name_ns+0xb0/0xc0
-[    5.823085] l13: supplied by regulator-dummy
-[    5.826334] Modules linked in:
-[    5.826354] CPU: 3 PID: 164 Comm: kworker/3:2 Tainted: G        W
-      5.8.0-rc6-next-20200721 #1
-[    5.826363] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    5.826378] Workqueue: rcu_gp srcu_invoke_callbacks
-[    5.826396] pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
-[    5.826409] pc : kernfs_remove_by_name_ns+0xb0/0xc0
-[    5.836530] l13: Bringing 0uV into 1750000-1750000uV
-[    5.840651] lr : kernfs_remove_by_name_ns+0xb0/0xc0
-[    5.840659] sp : ffff800014093be0
-[    5.840667] x29: ffff800014093be0 x28: 0000000000000000
-[    5.840688] x27: ffff8000101c42cc x26: ffff8000101c42cc
-[    5.840708] x25: ffff8000129fee68 x24: ffff00003fcb7640
-[    5.845080] l14: supplied by regulator-dummy
-[    5.852811] x23: ffff00003fcb76c0 x22: 0000000000000000
-[    5.852831] x21: ffff00003a5cb400 x20: 0000000000000000
-[    5.852851] x19: ffff00003a604018 x18: ffffffffffffffff
-[    5.852875] x17: 0000000000000000
-[    5.859830] l14: Bringing 0uV into 1750000-1750000uV
-[    5.864089] x16: 0000000000000000
-[    5.864102] x15: ffff800012720a88 x14: ffff800094093877
-[    5.864123] x13: ffff800014093885 x12: 0000000000000003
-[    5.864143] x11: 0000000005f5e0ff x10: 0000000000000000
-[    5.871315] l15: supplied by regulator-dummy
-[    5.874505] x9 : ffff800012720a88 x8 : 0000000018bc90a0
-[    5.874526] x7 : 00000000b9433f15 x6 : ffff800014093820
-[    5.874546] x5 : ffff800012721000 x4 : 0000000000000003
-[    5.874566] x3 : 0000000000000004 x2 : 0000000000000201
-[    5.880082] l15: Bringing 0uV into 1750000-1750000uV
-[    5.884311] x1 : b2684f8263e0e600 x0 : 0000000000000000
-[    5.884333] Call trace:
-[    5.884346]  kernfs_remove_by_name_ns+0xb0/0xc0
-[    5.884358]  sysfs_remove_link+0x30/0x60
-[    5.884371]  devlink_remove_symlinks+0xa8/0x138
-[    5.884382]  device_del+0xf4/0x3c0
-[    5.890179] l16: supplied by regulator-dummy
-[    5.893172]  device_unregister+0x24/0x78
-[    5.893182]  __device_link_free_srcu+0x64/0x70
-[    5.898780] l16: Bringing 0uV into 1750000-1750000uV
-[    5.903762]  srcu_invoke_callbacks+0x10c/0x1a0
-[    5.903773]  process_one_work+0x2b0/0x768
-[    5.903783]  worker_thread+0x48/0x498
-[    5.903795]  kthread+0x158/0x168
-[    5.903806]  ret_from_fork+0x10/0x1c
-[    5.903815] irq event stamp: 18695
-[    5.909658] l17: supplied by regulator-dummy
-[    5.913312] hardirqs last  enabled at (18694): [<ffff800010083318>]
-el1_irq+0xd8/0x180
-[    5.913325] hardirqs last disabled at (18695): [<ffff8000100aaebc>]
-debug_exception_enter+0xac/0xe8
-[    5.913337] softirqs last  enabled at (18614): [<ffff8000101c42cc>]
-srcu_invoke_callbacks+0xf4/0x1a0
-[    5.913349] softirqs last disabled at (18652): [<ffff8000101c42cc>]
-srcu_invoke_callbacks+0xf4/0x1a0
-[    5.913358] ---[ end trace 8fa12bb0128735e5 ]---
+If/when we get such a function attribute, we can add it to noinstr.
 
-full test log,
-https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200721/testrun/2972385/suite/linux-log-parser/test/check-kernel-warning-1595062/log
+Also see this here:
 
---
-Linaro LKFT
-https://lkft.linaro.org
+  https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
