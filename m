@@ -2,164 +2,133 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD76EC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F9620771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595417539;
-	bh=bbNukseyVTD6OF4Enu3SgI2e1xGEt4JiYh8YRpN7oLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WW6QoLONdVhxB4V5K4EyCkVi9d54XiVaTNM8eENAdr3onZu2AZKg+UiixO3evgdFn
-	 d2qGz0uOIdCM/VaTNe/MBYWIFGdf6xgIrv/Bej1NYGL3M1yT7dkbLpycsS6IGoXBDO
-	 YIK+U8oFFvSaUWGV4O5Ge3VMO26oSYAV5+e2xRc8=
+	by mail.kernel.org (Postfix) with ESMTP id BA8D020787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aZL9LR7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731763AbgGVLcS (ORCPT
+        id S1728546AbgGVLfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgGVLcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:32:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD57020771;
-        Wed, 22 Jul 2020 11:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595417536;
-        bh=bbNukseyVTD6OF4Enu3SgI2e1xGEt4JiYh8YRpN7oLU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HHskUkU+6ZNbYiVWBPqjWFS/QK9QNdqTVWA28+FzJHrwVDIEggjLKhci4A+MRvJnw
-         nPYtVooBNahU0MbT1ndiPi8tBTaXJ7P7RI+eSXJMr3PL76yoKnC0iwMSosFN/clPjo
-         nn/DKRuBkW95kVPryy/Cn1Vyd9Iyper1hI9mFHpI=
-Date:   Wed, 22 Jul 2020 12:32:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        trix@redhat.com, matthew.gerlach@linux.intel.com,
-        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com
-Subject: Re: [PATCH v2 1/3] regmap: add Intel SPI Slave to AVMM Bus Bridge
- support
-Message-ID: <20200722113202.GK4845@sirena.org.uk>
-References: <1594896174-18826-1-git-send-email-yilun.xu@intel.com>
- <1594896174-18826-2-git-send-email-yilun.xu@intel.com>
- <20200717181508.GA905@sirena.org.uk>
- <20200720171131.GA18829@yilunxu-OptiPlex-7050>
+        Wed, 22 Jul 2020 07:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgGVLfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 07:35:47 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BF9AC0619DF
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:35:47 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f5so2092616ljj.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TGNDP7TokQIPIiDyQQilw1gTxHg2ntwORp5IuJSSxuk=;
+        b=aZL9LR7W/tIRttDyuKuxTLD2H6940gR+znMFp2lInXL0+1POU9uVrCT4hYQxPdhmrn
+         S2+g7c/STj8trDv1J2dQh3yyuNbmZ/FBmfEofuV2tYt9DbWbverlMsjtAkntWgcoBobl
+         GmDgFcdpbAIHAOBcT+RBAoeWRhrGDrKkVU9oGAjoW+TesAdIwns/dtIXqAMavqIOPb8q
+         xHk0KNI0Tyh4U6NHUfxwyi5CC896PdNiIKLXyXjv83xR+Xzdz2Uq+gXtg41h/iWsNeyf
+         sH5vhVzLjP4d3Igau5+FBEbxHeer8J86otHzCm6cfki7BTD3cKxo7/mNY4xV309jy07l
+         VllQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TGNDP7TokQIPIiDyQQilw1gTxHg2ntwORp5IuJSSxuk=;
+        b=ovM2Y4nvDYYC1wQ54pxLbY8cJpxgPQyQaN4DW8a0mMb3EGI506uicXghQXTzE7ltoc
+         OWVEIDwtF+be/6SglNXZ3FGpv4VbcXQ+/skC1yIfCmugBDiPacUdUYjQ1jH7l4y1NW40
+         2t6/i8m2MOBmLrMbIZzP7v+J5acr7Czm2W4nsPXaaYIKInUhJ7SowJS81PrpK7ufPBP6
+         Wnc8KRWSxfAwW0B6YP0ULmgFBaMMFjQ+CGv0wuTaYWxZ0DRGCcmuRandzTHQ9yfvIojS
+         4I2Bqf1R5y7bO2j874HYbJMSOkj0PBSdxeGnFvVAbrDx+Vrv9JjJvQZY0XnH947fiVm/
+         kg5Q==
+X-Gm-Message-State: AOAM5313PAjqw7bRLqlw6pasge3QcBV2jz6DzBWK9VTbDvzRIsOnvHl6
+        jJmQDn5981UUpkkCPR/OND3pVA==
+X-Google-Smtp-Source: ABdhPJx10tJmh0m7u1T2ZgbF1/QplULMvy/0nd1WW5FAXaMP8a/XeDzSYyeVLyeB1Xeshxh8kVGUpQ==
+X-Received: by 2002:a2e:978c:: with SMTP id y12mr14882344lji.270.1595417745685;
+        Wed, 22 Jul 2020 04:35:45 -0700 (PDT)
+Received: from [192.168.1.12] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id p1sm6537308lji.93.2020.07.22.04.35.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 04:35:44 -0700 (PDT)
+Subject: Re: [PATCH v2 5/6] media: s5p-mfc: Use standard frame skip mode
+ control
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maheshwar Ajja <majja@codeaurora.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+References: <20200721074538.505-1-stanimir.varbanov@linaro.org>
+ <20200721074538.505-6-stanimir.varbanov@linaro.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <d219e893-8a9e-e977-a901-d17b71121555@linaro.org>
+Date:   Wed, 22 Jul 2020 14:35:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OOq1TgGhe8eTwFBO"
-Content-Disposition: inline
-In-Reply-To: <20200720171131.GA18829@yilunxu-OptiPlex-7050>
-X-Cookie: I'm also against BODY-SURFING!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200721074538.505-6-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---OOq1TgGhe8eTwFBO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Could someone mfc driver maintainers ack or review this patch?
 
-On Tue, Jul 21, 2020 at 01:11:31AM +0800, Xu Yilun wrote:
-> On Fri, Jul 17, 2020 at 07:15:08PM +0100, Mark Brown wrote:
+On 7/21/20 10:45 AM, Stanimir Varbanov wrote:
+> Use the standard menu control for frame skip mode in the MFC
+> driver. The legacy private menu control is kept for backward
+> compatibility.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  drivers/media/platform/s5p-mfc/s5p_mfc_enc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+> index 912fe0c5ab18..3092eb6777a5 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+> @@ -261,6 +261,11 @@ static struct mfc_control controls[] = {
+>  		.menu_skip_mask = 0,
+>  		.default_value = V4L2_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE_DISABLED,
+>  	},
+> +	{
+> +		.id = V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE,
+> +		.maximum = V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_BUF_LIMIT,
+> +		.default_value = V4L2_MPEG_VIDEO_FRAME_SKIP_MODE_DISABLED,
+> +	},
+>  	{
+>  		.id = V4L2_CID_MPEG_MFC51_VIDEO_RC_FIXED_TARGET_BIT,
+>  		.type = V4L2_CTRL_TYPE_BOOLEAN,
+> @@ -1849,6 +1854,7 @@ static int s5p_mfc_enc_s_ctrl(struct v4l2_ctrl *ctrl)
+>  		p->seq_hdr_mode = ctrl->val;
+>  		break;
+>  	case V4L2_CID_MPEG_MFC51_VIDEO_FRAME_SKIP_MODE:
+> +	case V4L2_CID_MPEG_VIDEO_FRAME_SKIP_MODE:
+>  		p->frame_skip_mode = ctrl->val;
+>  		break;
+>  	case V4L2_CID_MPEG_MFC51_VIDEO_RC_FIXED_TARGET_BIT:
+> 
 
-> > there looks to be a lot of abstraction layers simply within the software
-> > here which make things hard to follow.  At the very least there doesn't
-
-> We need to follow the 3 layers protocol for register accessing. On SPI
-> slave side, spi-avmm HW finishes the whole protocol encoding/decoding
-> work. But on host side, no dedicated IP block is designed. So host need
-> to handle all the protocol work by SW. This introduces the complexity of
-> the driver.
-
-> We don't introduce any extra software layers, just follows the
-> definition of 3 layers in HW spec. But I know reviewing the detail of the
-> protocol is tedious. Maybe I should put more comments about what part of
-> SPEC should be referenced for some piece of code. Hope this makes the
-> review work easier.
-
-You don't need to reflect all the layers that the system has in the
-software, if some of the layers are always used together with no
-possibility of replacing them then it can make sense to collapse them in
-software.  That did seem to be the case here.
-
-> > > +config REGMAP_SPI_AVMM
-> > > +	tristate
-> > > +	depends on SPI
-
-> > Note that for selected symbols dependencies don't take effect.
-
-> I see. So should I change something here? I see the same case for other
-> regmap options.
-
-It's fine, just be aware that you still need to have appropriate
-dependencies and selects in the user.
-
-> > > +/* The input is a trans stream in trans_buf, format a phy stream in phy_buf. */
-> > > +static void pkt_phy_tx_prepare(char *trans_buf, unsigned int trans_len,
-> > > +			       char *phy_buf, unsigned int *phy_len)
-> > > +{
-> > > +	unsigned int i;
-> > > +	char *b, *p;
-> > > +
-> > > +	b = trans_buf;
-> > > +	p = phy_buf;
-
-> > I'm not seeing any bounds checking on the size of an operation in this
-> > function and I think I'd expect some, similarly for a lot of the other
-> > I/O operations.
-
-> I have caculated and allocated 2 buffers that are large enough to
-> contain any possible data stream for regmap_bus.max_raw_read/write. See
-> the definition of TRANS_BUF_SIZE & PHY_BUF_SIZE.
-
-> So maybe we don't have to check the length?
-
-This isn't at all clear looking at the code, perhaps it would be clearer
-with fewer layers of abstraction but at the minute it's a lot of effort
-to confirm if it's safe.
-
-> > > +	if (spi->bits_per_word != 8 && spi->bits_per_word != 32)
-> > > +		return ERR_PTR(-EINVAL);
-
-> > Most controllers support configurable bits per word (and modes) - you
-> > shouldn't be rejecting things based on whatever the default happens to
-> > be.
-
-> I'm not sure if it is good that the spi_avmm_regmap_init changes the
-> configuration of spi devices silently.
-
-That's the expected usage.
-
-> In my current implementation, the spi device driver should be aware and
-> choose the right spi setup before trying to init the regmap. Would it be
-> too hard for other drivers to use it?
-
-It'd be duplicated effort in all the users, if the only way to use the
-bus is with this configuration then simply saying that they're using the
-bus should be enough.
-
---OOq1TgGhe8eTwFBO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8YI7IACgkQJNaLcl1U
-h9AZTggAhkccdpqjqFdXRJhp679SkftzAGf2j1i3VnRXIfFsHj8fGMEHxdSOGeek
-cukF+F8r/VgIyK8AT6WqVBr3vETWDi8ox3/Bpv9BTjZ2gNemQ/aa/ejsMxuWbo/D
-nH1eSBj/MWDmasFTsnTKsORehmHJ6aa/wWTPm08+kC6dMiscq8eD0Dyem8yQFXqZ
-V5cZYnNMXbZhq1Nhe8iT051D+p6ADoCImoyIllavfoikfeN5ighTWQPtEoXBp/tJ
-iukqMRTsSFCZIP+ke8Y6U7kRiHwZoQoVcH49GsKjVmuRBW8ftIhcMyjegyUPkqrN
-6mx5ZDGP1j9MNzh+IgJ0L7w9p84MbQ==
-=adP/
------END PGP SIGNATURE-----
-
---OOq1TgGhe8eTwFBO--
+-- 
+regards,
+Stan
