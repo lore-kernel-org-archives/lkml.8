@@ -2,79 +2,179 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD60C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A095C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E12522B42
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595450365;
-	bh=cSAkTV0rvULhkTDYAX0TFBSOxsananBIFa2o9Sm6ws0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DRGapyrP8ok8pQ2jHtqKnunN5EberWY18QyY8F9Tvr2mdM4/omepzAt1YZ3TBeHEa
-	 D3BJF2gB96ZYroQBPTYCqdlZMD9V5VY1EQqAC+PTGSGahgE3Xt1so/XCOyed2TD0aw
-	 nLa7l/HFbcEg9jQ7Wu3CMPGaZTXUbt0NSP+/U6/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7979922B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgGVUjX (ORCPT
+        id S1732818AbgGVUm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgGVUjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:39:23 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E341D20709;
-        Wed, 22 Jul 2020 20:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595450363;
-        bh=cSAkTV0rvULhkTDYAX0TFBSOxsananBIFa2o9Sm6ws0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dDsnccgjqcnfdMAevRrkt46qhSMjpfmNtb86JnoDvK8p/Xu/3EfXpu3Z2ntEJO++3
-         zQRzJz4LnrfRldR33CQ9o2xECi/+tIOTb+rQVw1CgDU04GPz+D925ZGcFqK+9BZ8z2
-         6THDxiaZwU94XRx26nK+XXO/CQEHQwz7ElsZs6vQ=
-Date:   Wed, 22 Jul 2020 16:39:21 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        kernel@collabora.com, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, krisman@collabora.com,
-        Nikolaus Rath <Nikolaus@rath.org>,
-        Hugh Dickins <hughd@google.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: Re: [PATCH 5.7 1/1] fuse: fix weird page warning
-Message-ID: <20200722203921.GD406581@sasha-vm>
-References: <20200721185459.103445-1-andrealmeid@collabora.com>
+        Wed, 22 Jul 2020 16:42:28 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:52635 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgGVUm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 16:42:27 -0400
+Received: by mail-il1-f197.google.com with SMTP id o17so1927540ilt.19
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:42:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=XD+SXlq3/2gU9EkMcZLGPTp8jmHGm8EtipgOib0Vg24=;
+        b=eSabHpaDYmD3ex8SygkjldehY7ISz4uDtpT2J53YhbPKTMXhZZOexRJ8AC4r/lpl5a
+         OYumA4BAVwm4GcJbuyQXmVlQSBxSUHPn0d72ztgP6e1Opw5H+JPVwc9mJTPUo51Tb1Xm
+         NE0DwjcmLmc1Qe0gWH3sPN3v1OVLahu2emKybjAFRW6ZiuWWb3t1+OXDzRq4kzkPvT9P
+         yUtiieIWhw7/1LZSNRdAeWczARCW1z2IREQuIMpC1DkHaSMbY2Ln2AB2nvZ57nYgYGNP
+         B7GbSeGQdKXQ0MVuVzkMchx0mBNI/8WqY3Nci1jjOd0tgUqupQwPo0oFus+noefV75I0
+         KV4w==
+X-Gm-Message-State: AOAM5306isozOT4I66P++q0PyX/KtXHXMdkaFAJoFvE94CB4KQPsi8NR
+        jBqkZ5oEcbFfjBUogLwQmFqNF/RutIj/DmWH02JJW3ke0nt2
+X-Google-Smtp-Source: ABdhPJyIVUe7TBkJ7v52/44AYMjF3LCCv5SR/P+tek0q5wlkLyDtLnVA2NDEqhHFTroTNwGVWSsmkU3mgJUXaYcveNhBWM5NExnA
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721185459.103445-1-andrealmeid@collabora.com>
+X-Received: by 2002:a02:5b83:: with SMTP id g125mr1081660jab.91.1595450546168;
+ Wed, 22 Jul 2020 13:42:26 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 13:42:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000fa7b205ab0dc778@google.com>
+Subject: KASAN: use-after-free Write in __linkwatch_run_queue
+From:   syzbot <syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com>
+To:     andrew@lunn.ch, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 03:54:59PM -0300, André Almeida wrote:
->From: Miklos Szeredi <mszeredi@redhat.com>
->
->commit a5005c3cda6eeb6b95645e6cc32f58dafeffc976 upstream.
->
->When PageWaiters was added, updating this check was missed.
->
->Reported-by: Nikolaus Rath <Nikolaus@rath.org>
->Reported-by: Hugh Dickins <hughd@google.com>
->Fixes: 62906027091f ("mm: add PageWaiters indicating tasks are waiting for a page bit")
->Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
->Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Hello,
 
-Queued for 5.7-4.19, thanks!
+syzbot found the following issue on:
 
--- 
-Thanks,
-Sasha
+HEAD commit:    544f287b bonding: check error value of register_netdevice(..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=14385887100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dddbcb5a9f4192db
+dashboard link: https://syzkaller.appspot.com/bug?extid=bbc3a11c4da63c1b74d6
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b11780900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1080f887100000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __list_splice include/linux/list.h:422 [inline]
+BUG: KASAN: use-after-free in list_splice_init include/linux/list.h:464 [inline]
+BUG: KASAN: use-after-free in __linkwatch_run_queue+0x58a/0x630 net/core/link_watch.c:200
+Write of size 8 at addr ffff888094ccc578 by task kworker/0:1/12
+
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events linkwatch_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ __list_splice include/linux/list.h:422 [inline]
+ list_splice_init include/linux/list.h:464 [inline]
+ __linkwatch_run_queue+0x58a/0x630 net/core/link_watch.c:200
+ linkwatch_event+0x4a/0x60 net/core/link_watch.c:251
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+
+Allocated by task 6822:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ kmalloc_node include/linux/slab.h:578 [inline]
+ kvmalloc_node+0xb4/0xf0 mm/util.c:574
+ kvmalloc include/linux/mm.h:753 [inline]
+ kvzalloc include/linux/mm.h:761 [inline]
+ alloc_netdev_mqs+0x97/0xdc0 net/core/dev.c:9938
+ rtnl_create_link+0x219/0xad0 net/core/rtnetlink.c:3067
+ __rtnl_newlink+0xfa0/0x1750 net/core/rtnetlink.c:3329
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 6822:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ kvfree+0x42/0x50 mm/util.c:603
+ device_release+0x71/0x200 drivers/base/core.c:1559
+ kobject_cleanup lib/kobject.c:693 [inline]
+ kobject_release lib/kobject.c:722 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1c0/0x270 lib/kobject.c:739
+ put_device+0x1b/0x30 drivers/base/core.c:2779
+ free_netdev+0x35d/0x480 net/core/dev.c:10054
+ __rtnl_newlink+0x14d8/0x1750 net/core/rtnetlink.c:3354
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff888094ccc000
+ which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 1400 bytes inside of
+ 8192-byte region [ffff888094ccc000, ffff888094cce000)
+The buggy address belongs to the page:
+page:ffffea0002533300 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002533300 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002519408 ffffea0002623008 ffff8880aa0021c0
+raw: 0000000000000000 ffff888094ccc000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888094ccc400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888094ccc480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888094ccc500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                ^
+ ffff888094ccc580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888094ccc600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
