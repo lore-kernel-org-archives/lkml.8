@@ -2,212 +2,78 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCBF120729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FOkZQDff"
+	by mail.kernel.org (Postfix) with ESMTP id 44A5320709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbgGVOOS (ORCPT
+        id S1731994AbgGVOOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:14:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30208 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726003AbgGVOOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:14:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595427253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ps88iqkraXTn/rbzr2+oz1MZHz7VliYQ9j+dqbYwLek=;
-        b=FOkZQDffUfRQKnQf+vbJfg15RsxoX3fZ36VmEEhI4nzEaz5oixG9j9mqR1bX7bmjFrsUI5
-        37irN5qhC5Z4Pnez/MJsNAzSNEydKKqIfxNCla8O76Bsfp/o5rLJLk3UXuoDoXaXL/VlpI
-        KnqJD8vdmoJ/rDnyt0TOkP/y+IqqEbU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-KRr9dM-PMJGaDM2L3KC_AQ-1; Wed, 22 Jul 2020 10:14:12 -0400
-X-MC-Unique: KRr9dM-PMJGaDM2L3KC_AQ-1
-Received: by mail-wm1-f72.google.com with SMTP id h205so1147533wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:14:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ps88iqkraXTn/rbzr2+oz1MZHz7VliYQ9j+dqbYwLek=;
-        b=rG+HS1XDYNn3KKPHx5goltO/8Yra1WU7rOZDCqzjRRZVeoOSceNAm5jvIFfMJvPZ5y
-         LZjElTef/B/9MN0GWCSOslTMjVft4qV/1yPQ6wX3C5WHSWNnvKsr1CF8b732Ek6h+5WH
-         XuXdGTIyc5xb3GM3WgcTBVaTU9kaabDHOueBTHNwT1DO7svXqE+Y56j7oE1r6nppHt7Y
-         mdqh/Di4peobInwlSxrSDqU1dl5RfCKkEs0COVDkfWYvFBBZPssJfDtd/Y4Uq7M0q06+
-         2Nzpx4mU73wcRgNu2Mky4WYpPne0W1lOgy8NigFvWN3CA9nWoAi+/fbIQbgRdcQ/Jn2l
-         PXTQ==
-X-Gm-Message-State: AOAM531pge6Xl+fMxPiAwpJaPzdBzWUu/oRWk2iatvIRn3z5uQQ4UxPZ
-        XlNlcaoRtv5YDzXfel1qCQ9GIFy8VMAfSlsVUNzeDY4Jl0tr0dezypHgcsMjgW6FfPVHOtSv4hL
-        YAUHBh2glXE9gOPkYKjE1I5Ii
-X-Received: by 2002:a7b:cd83:: with SMTP id y3mr8594863wmj.105.1595427250733;
-        Wed, 22 Jul 2020 07:14:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz178qGAQ1jCBRTkpJrLbY4BB2WPhou45FPoMFaFZC17iXHMBUam/196r1RSA2qFKbt6kQqYQ==
-X-Received: by 2002:a7b:cd83:: with SMTP id y3mr8594833wmj.105.1595427250464;
-        Wed, 22 Jul 2020 07:14:10 -0700 (PDT)
-Received: from steredhat ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id d18sm92174wrj.8.2020.07.22.07.14.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 07:14:09 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 16:14:04 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Daurnimator <quae@daurnimator.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>,
-        io-uring <io-uring@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS
- opcode
-Message-ID: <20200722141404.jfzfl3alpyw7o7dw@steredhat>
-References: <20200716124833.93667-1-sgarzare@redhat.com>
- <20200716124833.93667-3-sgarzare@redhat.com>
- <0fbb0393-c14f-3576-26b1-8bb22d2e0615@kernel.dk>
- <20200721104009.lg626hmls5y6ihdr@steredhat>
- <15f7fcf5-c5bb-7752-fa9a-376c4c7fc147@kernel.dk>
- <CAEnbY+fCP-HS_rWfOF2rnUPos-eZRF1dL+m2Q8CZidi_W=a7xw@mail.gmail.com>
+        Wed, 22 Jul 2020 10:14:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:23142 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbgGVOOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:14:44 -0400
+IronPort-SDR: 6/HXe+MVhu6kwAKLQWfrR5xAI7WRAbXsBvTMAjdu8nU4yymFw2A/3ktVfzYCZZE7A8eVxuh441
+ lOka8tv552+Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="137836566"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="137836566"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 07:14:43 -0700
+IronPort-SDR: TwU9st3SfjJIJdrXID4JCICd1AGfD3MEjEoDRt2kGhUOWFppOiRoiZZlCdP4IBZp2KJGOwsr29
+ QQ+GKE1V5eyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="432390891"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga004.jf.intel.com with ESMTP; 22 Jul 2020 07:14:42 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH] MAINTAINERS: altera: change maintainer for Altera drivers
+To:     Greg KH <gregkh@linuxfoundation.org>, richard.gong@linux.intel.com
+Cc:     mchehab+huawei@kernel.org, davem@davemloft.net, robh@kernel.org,
+        linux-kernel@vger.kernel.org, Richard Gong <richard.gong@intel.com>
+References: <1595426980-32062-1-git-send-email-richard.gong@linux.intel.com>
+ <20200722140831.GB3755463@kroah.com>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <de3709c8-e341-3f11-e182-721d596bf563@linux.intel.com>
+Date:   Wed, 22 Jul 2020 09:14:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEnbY+fCP-HS_rWfOF2rnUPos-eZRF1dL+m2Q8CZidi_W=a7xw@mail.gmail.com>
+In-Reply-To: <20200722140831.GB3755463@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 12:35:15PM +1000, Daurnimator wrote:
-> On Wed, 22 Jul 2020 at 03:11, Jens Axboe <axboe@kernel.dk> wrote:
-> >
-> > On 7/21/20 4:40 AM, Stefano Garzarella wrote:
-> > > On Thu, Jul 16, 2020 at 03:26:51PM -0600, Jens Axboe wrote:
-> > >> On 7/16/20 6:48 AM, Stefano Garzarella wrote:
-> > >>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> > >>> index efc50bd0af34..0774d5382c65 100644
-> > >>> --- a/include/uapi/linux/io_uring.h
-> > >>> +++ b/include/uapi/linux/io_uring.h
-> > >>> @@ -265,6 +265,7 @@ enum {
-> > >>>     IORING_REGISTER_PROBE,
-> > >>>     IORING_REGISTER_PERSONALITY,
-> > >>>     IORING_UNREGISTER_PERSONALITY,
-> > >>> +   IORING_REGISTER_RESTRICTIONS,
-> > >>>
-> > >>>     /* this goes last */
-> > >>>     IORING_REGISTER_LAST
-> > >>> @@ -293,4 +294,30 @@ struct io_uring_probe {
-> > >>>     struct io_uring_probe_op ops[0];
-> > >>>  };
-> > >>>
-> > >>> +struct io_uring_restriction {
-> > >>> +   __u16 opcode;
-> > >>> +   union {
-> > >>> +           __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
-> > >>> +           __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
-> > >>> +   };
-> > >>> +   __u8 resv;
-> > >>> +   __u32 resv2[3];
-> > >>> +};
-> > >>> +
-> > >>> +/*
-> > >>> + * io_uring_restriction->opcode values
-> > >>> + */
-> > >>> +enum {
-> > >>> +   /* Allow an io_uring_register(2) opcode */
-> > >>> +   IORING_RESTRICTION_REGISTER_OP,
-> > >>> +
-> > >>> +   /* Allow an sqe opcode */
-> > >>> +   IORING_RESTRICTION_SQE_OP,
-> > >>> +
-> > >>> +   /* Only allow fixed files */
-> > >>> +   IORING_RESTRICTION_FIXED_FILES_ONLY,
-> > >>> +
-> > >>> +   IORING_RESTRICTION_LAST
-> > >>> +};
-> > >>> +
-> > >>
-> > >> Not sure I totally love this API. Maybe it'd be cleaner to have separate
-> > >> ops for this, instead of muxing it like this. One for registering op
-> > >> code restrictions, and one for disallowing other parts (like fixed
-> > >> files, etc).
-> > >>
-> > >> I think that would look a lot cleaner than the above.
-> > >>
-> > >
-> > > Talking with Stefan, an alternative, maybe more near to your suggestion,
-> > > would be to remove the 'struct io_uring_restriction' and add the
-> > > following register ops:
-> > >
-> > >     /* Allow an sqe opcode */
-> > >     IORING_REGISTER_RESTRICTION_SQE_OP
-> > >
-> > >     /* Allow an io_uring_register(2) opcode */
-> > >     IORING_REGISTER_RESTRICTION_REG_OP
-> > >
-> > >     /* Register IORING_RESTRICTION_*  */
-> > >     IORING_REGISTER_RESTRICTION_OP
-> > >
-> > >
-> > >     enum {
-> > >         /* Only allow fixed files */
-> > >         IORING_RESTRICTION_FIXED_FILES_ONLY,
-> > >
-> > >         IORING_RESTRICTION_LAST
-> > >     }
-> > >
-> > >
-> > > We can also enable restriction only when the rings started, to avoid to
-> > > register IORING_REGISTER_ENABLE_RINGS opcode. Once rings are started,
-> > > the restrictions cannot be changed or disabled.
-> >
-> > My concerns are largely:
-> >
-> > 1) An API that's straight forward to use
-> > 2) Something that'll work with future changes
-> >
-> > The "allow these opcodes" is straightforward, and ditto for the register
-> > opcodes. The fixed file I guess is the odd one out. So if we need to
-> > disallow things in the future, we'll need to add a new restriction
-> > sub-op. Should this perhaps be "these flags must be set", and that could
-> > easily be augmented with "these flags must not be set"?
-> >
-> > --
-> > Jens Axboe
-> >
+On 7/22/20 9:08 AM, Greg KH wrote:
+> On Wed, Jul 22, 2020 at 09:09:40AM -0500, richard.gong@linux.intel.com wrote:
+>> From: Richard Gong <richard.gong@intel.com>
+>>
+>> Thor is moving to a new position and I will take over the maintainership.
+>> Add myself as maintainer for 3 Altera drivers below:
+>> 1. Altera I2C driver
+>> 2. Altera System Manager driver
+>> 3. Altera System Resource driver
+>>
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
 > 
-> This is starting to sound a lot like seccomp filtering.
-> Perhaps we should go straight to adding a BPF hook that fires when
-> reading off the submission queue?
+> No ack from Thor?
 > 
+> :(
+> 
+I was too slow... :)
 
-You're right. I e-mailed about that whit Kees Cook [1] and he agreed that the
-restrictions in io_uring should allow us to address some issues that with
-seccomp it's a bit difficult. For example:
-- different restrictions for different io_uring instances in the same
-  process
-- limit SQEs to use only registered fds and buffers
-
-Maybe seccomp could take advantage of the restrictions to filter SQEs opcodes.
-
-Thanks,
-Stefano
-
-[1] https://lore.kernel.org/io-uring/202007160751.ED56C55@keescook/
-
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
