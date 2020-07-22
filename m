@@ -2,99 +2,77 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E80C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9951C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC26F20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF79F206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbgGVCD1 (ORCPT
+        id S1731749AbgGVCGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:03:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38092 "EHLO huawei.com"
+        Tue, 21 Jul 2020 22:06:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35958 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731614AbgGVCD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:03:27 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9E13415924246FF15238;
-        Wed, 22 Jul 2020 09:56:45 +0800 (CST)
-Received: from [10.174.178.63] (10.174.178.63) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 22 Jul 2020 09:56:39 +0800
-Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-To:     Yang Yingliang <yangyingliang@huawei.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <jslaby@suse.com>, LKML <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>
-References: <20200721143852.4058352-1-yangyingliang@huawei.com>
-From:   "liwei (GF)" <liwei391@huawei.com>
-Message-ID: <c56e0ecc-275c-2cd6-4f9b-8ae37656ab5b@huawei.com>
-Date:   Wed, 22 Jul 2020 09:56:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0
+        id S1731614AbgGVCGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:06:49 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5356BB9FFDCA6C681067;
+        Wed, 22 Jul 2020 10:06:46 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
+ 10:06:39 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <akashast@codeaurora.org>, <mka@chromium.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soc: qcom: geni: Fix unused lable warning
+Date:   Wed, 22 Jul 2020 10:06:19 +0800
+Message-ID: <20200722020619.25988-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200721143852.4058352-1-yangyingliang@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.63]
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yingliang,
+If CONFIG_SERIAL_EARLYCON is not set, gcc warns this:
 
-On 2020/7/21 22:38, Yang Yingliang wrote:
-(SNIP)
-> 
-> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
-> serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
-> so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
-> Fix this problem by calling serial8250_set_defaults() after init uart port.
-> 
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->  drivers/tty/serial/8250/8250_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-> index fc118f649887..cae61d1ebec5 100644
-> --- a/drivers/tty/serial/8250/8250_core.c
-> +++ b/drivers/tty/serial/8250/8250_core.c
-> @@ -524,6 +524,7 @@ static void __init serial8250_isa_init_ports(void)
->  		 */
->  		up->mcr_mask = ~ALPHA_KLUDGE_MCR;
->  		up->mcr_force = ALPHA_KLUDGE_MCR;
-> +		serial8250_set_defaults(up);
+drivers/soc/qcom/qcom-geni-se.c: In function ‘geni_se_probe’:
+drivers/soc/qcom/qcom-geni-se.c:914:1: warning: label ‘exit’ defined but not used [-Wunused-label]
+ exit:
+ ^~~~
 
-That is really a good catch, but this modification looks not good to me.
+Fixes: 048eb908a1f2 ("soc: qcom-geni-se: Add interconnect support to fix earlycon crash")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/soc/qcom/qcom-geni-se.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-First, serial8250_set_defaults()'s parameter 'up' updated in the loop below is used to
-lead to different branch in this function. So that the logic is broken.
-
-Second, up->port.iobase and up->port.iotype are both initialized to 0, so the 'serial_in'
-and 'serial_out' will be assigned to the ops for IO space with port 0 here, i don't think
-that is correct.
-
->  	}
->  
->  	/* chain base port ops to support Remote Supervisor Adapter */
-> @@ -547,7 +548,6 @@ static void __init serial8250_isa_init_ports(void)
->  		port->membase  = old_serial_port[i].iomem_base;
->  		port->iotype   = old_serial_port[i].io_type;
->  		port->regshift = old_serial_port[i].iomem_reg_shift;
-> -		serial8250_set_defaults(up);
->  
->  		port->irqflags |= irqflag;
->  		if (serial8250_isa_config != NULL)
-> 
+diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+index 3413129d73ef..d0e4f520cff8 100644
+--- a/drivers/soc/qcom/qcom-geni-se.c
++++ b/drivers/soc/qcom/qcom-geni-se.c
+@@ -910,8 +910,8 @@ static int geni_se_probe(struct platform_device *pdev)
+ 	if (of_get_compatible_child(pdev->dev.of_node, "qcom,geni-debug-uart"))
+ 		earlycon_wrapper = wrapper;
+ 	of_node_put(pdev->dev.of_node);
+-#endif
+ exit:
++#endif
+ 	dev_set_drvdata(dev, wrapper);
+ 	dev_dbg(dev, "GENI SE Driver probed\n");
+ 	return devm_of_platform_populate(dev);
+-- 
+2.17.1
 
 
-Thanks,
-Wei
