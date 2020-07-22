@@ -2,243 +2,203 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30DBC433FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18B0C43461
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C598722BEF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Wj7xDq39"
+	by mail.kernel.org (Postfix) with ESMTP id C9F6922BEF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733230AbgGVP4U (ORCPT
+        id S1733210AbgGVP4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:56:20 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:8034 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733197AbgGVP4L (ORCPT
+        Wed, 22 Jul 2020 11:56:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35784 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733194AbgGVP4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:56:11 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MFsX22008864;
-        Wed, 22 Jul 2020 08:55:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=Ssj4J4qySheODq3g8D9MIv3C9Zs4Q9sn3HtKtpEr3Pc=;
- b=Wj7xDq390id6TPkRv6F46+1g3j74pN/YNUlhCOKe5ElflWfkwl/uYv2Nhlfcbivutxp8
- XDeY3a8HdCV8PLgginJTywCbMpClN8yWA+0RTBDv4zbV/0zQ96FnxznVbv00VqYHySmq
- LiaplsO0uvuJDvijqjwdLL2FXEjoUbB1pzCDbvJJpb9Q7W+bjLVuaiVYNc35JGZyj97s
- 4u3h4c+j42fQTBekPZ9UYT8j0Wnv2/OYhmKlxiaLS4qK1xNBhHKEF+Nt9Vpsz435fA1c
- 6sIVMJm6e7LIsDTYR6EvM+4CdeURaWrahNCIGANJBZ1HBuJbVTy8JF+svytS8boTnp8k aQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkrkr1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 08:55:53 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 08:55:51 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 08:55:51 -0700
-Received: from NN-LT0049.marvell.com (unknown [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id F11BE3F7040;
-        Wed, 22 Jul 2020 08:55:45 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 13/15] qede: reformat net_device_ops declarations
-Date:   Wed, 22 Jul 2020 18:53:47 +0300
-Message-ID: <20200722155349.747-14-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722155349.747-1-alobakin@marvell.com>
-References: <20200722155349.747-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 11:56:10 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id DD6B0297600
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
+        eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
+        robin.murphy@arm.com
+Subject: [PATCH v5 5/9] media: staging: rkisp1: remove unecessary clocks
+Date:   Wed, 22 Jul 2020 12:55:29 -0300
+Message-Id: <20200722155533.252844-6-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
+References: <20200722155533.252844-1-helen.koike@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_09:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correct the indentation of net_device_ops declarations for fancier look.
+aclk_isp_wrap is a child of aclk_isp, and hclk_isp_wrap is a child of
+hclk_isp, thus we can remove parents from the list.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Also, for the isp0, we only need the ISP clock, ACLK and HCLK.
+In the future we'll need a pixel clock for RK3288 and RK3399, and a JPEG
+clock for RK3288.
+
+So with the goal to cleanup the dt-bindings and remove it from staging,
+simplify clock names to isp, aclk and hclk.
+
+Assigned clocks are meant to refer to the full path in the clock tree,
+i.e. the leaf in the tree.
+For instance, in RK3399, the clock responsible for ACLK (ISP AXI CLOCK)
+is aclk_isp0_wrapper.
+
+For reference, this is the isp clock topology on RK3399:
+
+ xin24m
+    pll_npll
+       npll
+          clk_isp1
+          clk_isp0
+    pll_cpll
+       cpll
+          aclk_isp1
+             aclk_isp1_noc
+             hclk_isp1
+                aclk_isp1_wrapper
+                hclk_isp1_noc
+          aclk_isp0
+             hclk_isp1_wrapper
+             aclk_isp0_wrapper
+             aclk_isp0_noc
+             hclk_isp0
+                hclk_isp0_wrapper
+                hclk_isp0_noc
+ pclkin_isp1_wrapper
+
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
 ---
- drivers/net/ethernet/qlogic/qede/qede_main.c | 122 +++++++++----------
- 1 file changed, 61 insertions(+), 61 deletions(-)
+Changes in V5:
+- Use if/then schema as suggested by Rob Herring on
+https://patchwork.linuxtv.org/project/linux-media/patch/20200702191322.2639681-6-helen.koike@collabora.com/#119729
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index b5a95f165520..92bcdfa27961 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -639,79 +639,79 @@ qede_setup_tc_offload(struct net_device *dev, enum tc_setup_type type,
+Changes in V4:
+- update binding according to suggestion by Robin Murphy
+on https://patchwork.kernel.org/patch/11475007/
+
+Changes in V3:
+- this is a new patch in the series
+---
+ .../bindings/media/rockchip-isp1.yaml         | 50 ++++++++++++-------
+ drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 ++-
+ 2 files changed, 36 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index 62a6b9c959498..23c677d15037a 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -24,20 +24,10 @@ properties:
+     maxItems: 1
+ 
+   clocks:
+-    items:
+-      - description: ISP clock
+-      - description: ISP AXI clock clock
+-      - description: ISP AXI clock  wrapper clock
+-      - description: ISP AHB clock clock
+-      - description: ISP AHB wrapper clock
++    minItems: 3
+ 
+   clock-names:
+-    items:
+-      - const: clk_isp
+-      - const: aclk_isp
+-      - const: aclk_isp_wrap
+-      - const: hclk_isp
+-      - const: hclk_isp_wrap
++    minItems: 3
+ 
+   iommus:
+     maxItems: 1
+@@ -116,6 +106,34 @@ required:
+   - power-domains
+   - ports
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        const: rockchip,rk3399-cif-isp
++then:
++  properties:
++    clocks:
++      maxItems: 4
++      minItems: 3
++      items:
++        # isp0 and isp1
++        - description: ISP clock
++        - description: ISP AXI clock
++        - description: ISP AHB clock
++        # only for isp1
++        - description: ISP Pixel clock
++    clock-names:
++      maxItems: 4
++      minItems: 3
++      items:
++        # isp0 and isp1
++        - const: isp
++        - const: aclk
++        - const: hclk
++        # only for isp1
++        - const: pclk_isp
++
+ additionalProperties: false
+ 
+ examples:
+@@ -134,11 +152,9 @@ examples:
+             reg = <0x0 0xff910000 0x0 0x4000>;
+             interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+             clocks = <&cru SCLK_ISP0>,
+-                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+-                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+-            clock-names = "clk_isp",
+-                          "aclk_isp", "aclk_isp_wrap",
+-                          "hclk_isp", "hclk_isp_wrap";
++                     <&cru ACLK_ISP0_WRAPPER>,
++                     <&cru HCLK_ISP0_WRAPPER>;
++            clock-names = "isp", "aclk", "hclk";
+             iommus = <&isp0_mmu>;
+             phys = <&dphy>;
+             phy-names = "dphy";
+diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
+index a0eb8f08708b9..1ebf10a6f188c 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-dev.c
++++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
+@@ -406,11 +406,9 @@ static irqreturn_t rkisp1_isr(int irq, void *ctx)
  }
  
- static const struct net_device_ops qede_netdev_ops = {
--	.ndo_open = qede_open,
--	.ndo_stop = qede_close,
--	.ndo_start_xmit = qede_start_xmit,
--	.ndo_select_queue = qede_select_queue,
--	.ndo_set_rx_mode = qede_set_rx_mode,
--	.ndo_set_mac_address = qede_set_mac_addr,
--	.ndo_validate_addr = eth_validate_addr,
--	.ndo_change_mtu = qede_change_mtu,
--	.ndo_do_ioctl = qede_ioctl,
--	.ndo_tx_timeout = qede_tx_timeout,
-+	.ndo_open		= qede_open,
-+	.ndo_stop		= qede_close,
-+	.ndo_start_xmit		= qede_start_xmit,
-+	.ndo_select_queue	= qede_select_queue,
-+	.ndo_set_rx_mode	= qede_set_rx_mode,
-+	.ndo_set_mac_address	= qede_set_mac_addr,
-+	.ndo_validate_addr	= eth_validate_addr,
-+	.ndo_change_mtu		= qede_change_mtu,
-+	.ndo_do_ioctl		= qede_ioctl,
-+	.ndo_tx_timeout		= qede_tx_timeout,
- #ifdef CONFIG_QED_SRIOV
--	.ndo_set_vf_mac = qede_set_vf_mac,
--	.ndo_set_vf_vlan = qede_set_vf_vlan,
--	.ndo_set_vf_trust = qede_set_vf_trust,
-+	.ndo_set_vf_mac		= qede_set_vf_mac,
-+	.ndo_set_vf_vlan	= qede_set_vf_vlan,
-+	.ndo_set_vf_trust	= qede_set_vf_trust,
- #endif
--	.ndo_vlan_rx_add_vid = qede_vlan_rx_add_vid,
--	.ndo_vlan_rx_kill_vid = qede_vlan_rx_kill_vid,
--	.ndo_fix_features = qede_fix_features,
--	.ndo_set_features = qede_set_features,
--	.ndo_get_stats64 = qede_get_stats64,
-+	.ndo_vlan_rx_add_vid	= qede_vlan_rx_add_vid,
-+	.ndo_vlan_rx_kill_vid	= qede_vlan_rx_kill_vid,
-+	.ndo_fix_features	= qede_fix_features,
-+	.ndo_set_features	= qede_set_features,
-+	.ndo_get_stats64	= qede_get_stats64,
- #ifdef CONFIG_QED_SRIOV
--	.ndo_set_vf_link_state = qede_set_vf_link_state,
--	.ndo_set_vf_spoofchk = qede_set_vf_spoofchk,
--	.ndo_get_vf_config = qede_get_vf_config,
--	.ndo_set_vf_rate = qede_set_vf_rate,
-+	.ndo_set_vf_link_state	= qede_set_vf_link_state,
-+	.ndo_set_vf_spoofchk	= qede_set_vf_spoofchk,
-+	.ndo_get_vf_config	= qede_get_vf_config,
-+	.ndo_set_vf_rate	= qede_set_vf_rate,
- #endif
--	.ndo_udp_tunnel_add = udp_tunnel_nic_add_port,
--	.ndo_udp_tunnel_del = udp_tunnel_nic_del_port,
--	.ndo_features_check = qede_features_check,
--	.ndo_bpf = qede_xdp,
-+	.ndo_udp_tunnel_add	= udp_tunnel_nic_add_port,
-+	.ndo_udp_tunnel_del	= udp_tunnel_nic_del_port,
-+	.ndo_features_check	= qede_features_check,
-+	.ndo_bpf		= qede_xdp,
- #ifdef CONFIG_RFS_ACCEL
--	.ndo_rx_flow_steer = qede_rx_flow_steer,
-+	.ndo_rx_flow_steer	= qede_rx_flow_steer,
- #endif
--	.ndo_setup_tc = qede_setup_tc_offload,
-+	.ndo_setup_tc		= qede_setup_tc_offload,
+ static const char * const rk3399_isp_clks[] = {
+-	"clk_isp",
+-	"aclk_isp",
+-	"hclk_isp",
+-	"aclk_isp_wrap",
+-	"hclk_isp_wrap",
++	"isp",
++	"aclk",
++	"hclk",
  };
  
- static const struct net_device_ops qede_netdev_vf_ops = {
--	.ndo_open = qede_open,
--	.ndo_stop = qede_close,
--	.ndo_start_xmit = qede_start_xmit,
--	.ndo_select_queue = qede_select_queue,
--	.ndo_set_rx_mode = qede_set_rx_mode,
--	.ndo_set_mac_address = qede_set_mac_addr,
--	.ndo_validate_addr = eth_validate_addr,
--	.ndo_change_mtu = qede_change_mtu,
--	.ndo_vlan_rx_add_vid = qede_vlan_rx_add_vid,
--	.ndo_vlan_rx_kill_vid = qede_vlan_rx_kill_vid,
--	.ndo_fix_features = qede_fix_features,
--	.ndo_set_features = qede_set_features,
--	.ndo_get_stats64 = qede_get_stats64,
--	.ndo_udp_tunnel_add = udp_tunnel_nic_add_port,
--	.ndo_udp_tunnel_del = udp_tunnel_nic_del_port,
--	.ndo_features_check = qede_features_check,
-+	.ndo_open		= qede_open,
-+	.ndo_stop		= qede_close,
-+	.ndo_start_xmit		= qede_start_xmit,
-+	.ndo_select_queue	= qede_select_queue,
-+	.ndo_set_rx_mode	= qede_set_rx_mode,
-+	.ndo_set_mac_address	= qede_set_mac_addr,
-+	.ndo_validate_addr	= eth_validate_addr,
-+	.ndo_change_mtu		= qede_change_mtu,
-+	.ndo_vlan_rx_add_vid	= qede_vlan_rx_add_vid,
-+	.ndo_vlan_rx_kill_vid	= qede_vlan_rx_kill_vid,
-+	.ndo_fix_features	= qede_fix_features,
-+	.ndo_set_features	= qede_set_features,
-+	.ndo_get_stats64	= qede_get_stats64,
-+	.ndo_udp_tunnel_add	= udp_tunnel_nic_add_port,
-+	.ndo_udp_tunnel_del	= udp_tunnel_nic_del_port,
-+	.ndo_features_check	= qede_features_check,
- };
- 
- static const struct net_device_ops qede_netdev_vf_xdp_ops = {
--	.ndo_open = qede_open,
--	.ndo_stop = qede_close,
--	.ndo_start_xmit = qede_start_xmit,
--	.ndo_select_queue = qede_select_queue,
--	.ndo_set_rx_mode = qede_set_rx_mode,
--	.ndo_set_mac_address = qede_set_mac_addr,
--	.ndo_validate_addr = eth_validate_addr,
--	.ndo_change_mtu = qede_change_mtu,
--	.ndo_vlan_rx_add_vid = qede_vlan_rx_add_vid,
--	.ndo_vlan_rx_kill_vid = qede_vlan_rx_kill_vid,
--	.ndo_fix_features = qede_fix_features,
--	.ndo_set_features = qede_set_features,
--	.ndo_get_stats64 = qede_get_stats64,
--	.ndo_udp_tunnel_add = udp_tunnel_nic_add_port,
--	.ndo_udp_tunnel_del = udp_tunnel_nic_del_port,
--	.ndo_features_check = qede_features_check,
--	.ndo_bpf = qede_xdp,
-+	.ndo_open		= qede_open,
-+	.ndo_stop		= qede_close,
-+	.ndo_start_xmit		= qede_start_xmit,
-+	.ndo_select_queue	= qede_select_queue,
-+	.ndo_set_rx_mode	= qede_set_rx_mode,
-+	.ndo_set_mac_address	= qede_set_mac_addr,
-+	.ndo_validate_addr	= eth_validate_addr,
-+	.ndo_change_mtu		= qede_change_mtu,
-+	.ndo_vlan_rx_add_vid	= qede_vlan_rx_add_vid,
-+	.ndo_vlan_rx_kill_vid	= qede_vlan_rx_kill_vid,
-+	.ndo_fix_features	= qede_fix_features,
-+	.ndo_set_features	= qede_set_features,
-+	.ndo_get_stats64	= qede_get_stats64,
-+	.ndo_udp_tunnel_add	= udp_tunnel_nic_add_port,
-+	.ndo_udp_tunnel_del	= udp_tunnel_nic_del_port,
-+	.ndo_features_check	= qede_features_check,
-+	.ndo_bpf		= qede_xdp,
- };
- 
- /* -------------------------------------------------------------------------
+ static const struct rkisp1_match_data rk3399_isp_clk_data = {
 -- 
-2.25.1
+2.28.0.rc1
 
