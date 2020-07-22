@@ -2,164 +2,407 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F05C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C73C20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595377118;
-	bh=VJtScx2bVukP/mlcrClwkoR4ksqhOSgVTh+yFH7IWqM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xxnVWQv9YqoMOwXft4XxpE4763zVRy2ioCLYUXsI+mp/LHMf1VvxRWY4F/LjCBCpO
-	 HvqS98UqNzhZVJOHby0lZjMSi64IhxIvqjDDdWAod68IJl5Szdy8C7xcUUZjGYedf8
-	 FZSDCbDwmVNRy7rkpgE0DEZYRgtmjBxcxdApSMCo=
+	by mail.kernel.org (Postfix) with ESMTP id 71F1D20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="FgTOCOmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgGVASh (ORCPT
+        id S1728611AbgGVAXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgGVASg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:18:36 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D5F206F2;
-        Wed, 22 Jul 2020 00:18:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595377116;
-        bh=VJtScx2bVukP/mlcrClwkoR4ksqhOSgVTh+yFH7IWqM=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=q/rbNlzMTu2d7h5yLJQ8MI4vWYi2LX7ozhDoYhAUPEoDZ8904PyP/6DGkZPlaa7h+
-         o8Fhe9tLoc59rwBt81rS8ZNb2x+kajIYiSDt6wqdK85Qfy3Jg1VyVaAQUbxbsTZyIp
-         xLurlKmXOP87yAI9egGiQP25yNvM/MDfjaezUFq0=
-Date:   Tue, 21 Jul 2020 17:18:34 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-cc:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
-        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org
-Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend
- mode
-In-Reply-To: <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
-Message-ID: <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
-References: <cover.1593665947.git.anchalag@amazon.com> <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com> <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com> <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com> <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com> <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com> <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 21 Jul 2020 20:23:48 -0400
+Received: from mail6.tencent.com ([220.249.245.26]:40768 "EHLO
+        mail6.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgGVAXs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 20:23:48 -0400
+Received: from EX-SZ019.tencent.com (unknown [10.28.6.74])
+        by mail6.tencent.com (Postfix) with ESMTP id F1213CC27C;
+        Wed, 22 Jul 2020 08:24:53 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+        s=s202002; t=1595377494;
+        bh=zGpOvXintxRrcxirEJtmvaD4xUuLoamTnkCPpcbzXno=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=FgTOCOmMse1L1rA2RYth6MDW6l/o18gcyBVDHzK7xFtgAFf8Lpjwfr2bjfeYH8+Sp
+         koZIqVRGmH1U/P3CwckG7LdNlkbHg9iUJVw+dbdJZBxUvFeMUERc6+ku2UVQFeeog+
+         YjRF3Q6cqPre9RwYu4/wQfrtFtE9+4DmXuB4f5vo=
+Received: from EX-SZ008.tencent.com (10.28.6.32) by EX-SZ019.tencent.com
+ (10.28.6.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 22 Jul
+ 2020 08:23:45 +0800
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ008.tencent.com
+ (10.28.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 22 Jul
+ 2020 08:23:45 +0800
+Received: from EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b]) by
+ EX-SZ012.tencent.com ([fe80::f57b:8971:e6d4:fe6b%3]) with mapi id
+ 15.01.1847.007; Wed, 22 Jul 2020 08:23:45 +0800
+From:   =?iso-2022-jp?B?YmVuYmppYW5nKBskQj5VSTcbKEIp?= 
+        <benbjiang@tencent.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+CC:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "vineethrp@gmail.com" <vineethrp@gmail.com>,
+        "Chen Yu" <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Aaron Lu <ziqian.lzq@antfin.com>
+Subject: Re: [RFC PATCH 09/16] sched/fair: core wide cfs task priority
+ comparison(Internet mail)
+Thread-Topic: [RFC PATCH 09/16] sched/fair: core wide cfs task priority
+ comparison(Internet mail)
+Thread-Index: AQHWTyYpR5h3B5ayLkqXVxL86Q2nQqkSWE2A
+Date:   Wed, 22 Jul 2020 00:23:44 +0000
+Message-ID: <4229D3E1-8792-4B43-9AC4-F648D49CCC99@tencent.com>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <2d0e3da8c80c314048d598fb03ae3fe52d9619f3.1593530334.git.vpillai@digitalocean.com>
+In-Reply-To: <2d0e3da8c80c314048d598fb03ae3fe52d9619f3.1593530334.git.vpillai@digitalocean.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [9.19.161.59]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <410D634F4467CD479F6F893822DE97C7@tencent.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-219213542-1595374972=:17562"
-Content-ID: <alpine.DEB.2.21.2007211643430.17562@sstabellini-ThinkPad-T480s>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-219213542-1595374972=:17562
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.DEB.2.21.2007211643431.17562@sstabellini-ThinkPad-T480s>
-
-On Tue, 21 Jul 2020, Boris Ostrovsky wrote:
-> >>>>>> +static int xen_setup_pm_notifier(void)
-> >>>>>> +{
-> >>>>>> +     if (!xen_hvm_domain())
-> >>>>>> +             return -ENODEV;
-> >>>>>>
-> >>>>>> I forgot --- what did we decide about non-x86 (i.e. ARM)?
-> >>>>> It would be great to support that however, its  out of
-> >>>>> scope for this patch set.
-> >>>>> I’ll be happy to discuss it separately.
-> >>>>
-> >>>> I wasn't implying that this *should* work on ARM but rather whether this
-> >>>> will break ARM somehow (because xen_hvm_domain() is true there).
-> >>>>
-> >>>>
-> >>> Ok makes sense. TBH, I haven't tested this part of code on ARM and the series
-> >>> was only support x86 guests hibernation.
-> >>> Moreover, this notifier is there to distinguish between 2 PM
-> >>> events PM SUSPEND and PM hibernation. Now since we only care about PM
-> >>> HIBERNATION I may just remove this code and rely on "SHUTDOWN_SUSPEND" state.
-> >>> However, I may have to fix other patches in the series where this check may
-> >>> appear and cater it only for x86 right?
-> >>
-> >>
-> >> I don't know what would happen if ARM guest tries to handle hibernation
-> >> callbacks. The only ones that you are introducing are in block and net
-> >> fronts and that's arch-independent.
-> >>
-> >>
-> >> You do add a bunch of x86-specific code though (syscore ops), would
-> >> something similar be needed for ARM?
-> >>
-> >>
-> > I don't expect this to work out of the box on ARM. To start with something
-> > similar will be needed for ARM too.
-> > We may still want to keep the driver code as-is.
-> > 
-> > I understand the concern here wrt ARM, however, currently the support is only
-> > proposed for x86 guests here and similar work could be carried out for ARM.
-> > Also, if regular hibernation works correctly on arm, then all is needed is to
-> > fix Xen side of things.
-> > 
-> > I am not sure what could be done to achieve any assurances on arm side as far as
-> > this series is concerned.
-
-Just to clarify: new features don't need to work on ARM or cause any
-addition efforts to you to make them work on ARM. The patch series only
-needs not to break existing code paths (on ARM and any other platforms).
-It should also not make it overly difficult to implement the ARM side of
-things (if there is one) at some point in the future.
-
-FYI drivers/xen/manage.c is compiled and working on ARM today, however
-Xen suspend/resume is not supported. I don't know for sure if
-guest-initiated hibernation works because I have not tested it.
 
 
- 
-> If you are not sure what the effects are (or sure that it won't work) on
-> ARM then I'd add IS_ENABLED(CONFIG_X86) check, i.e.
-> 
-> 
-> if (!IS_ENABLED(CONFIG_X86) || !xen_hvm_domain())
-> 	return -ENODEV;
+> On Jul 1, 2020, at 5:32 AM, Vineeth Remanan Pillai <vpillai@digitalocean.=
+com> wrote:
+>=20
+> From: Aaron Lu <aaron.lwe@gmail.com>
+>=20
+> This patch provides a vruntime based way to compare two cfs task's
+> priority, be it on the same cpu or different threads of the same core.
+>=20
+> When the two tasks are on the same CPU, we just need to find a common
+> cfs_rq both sched_entities are on and then do the comparison.
+>=20
+> When the two tasks are on differen threads of the same core, each thread
+> will choose the next task to run the usual way and then the root level
+> sched entities which the two tasks belong to will be used to decide
+> which task runs next core wide.
+>=20
+> An illustration for the cross CPU case:
+>=20
+>   cpu0         cpu1
+> /   |  \     /   |  \
+> se1 se2 se3  se4 se5 se6
+>    /  \            /   \
+>  se21 se22       se61  se62
+>  (A)                    /
+>                       se621
+>                        (B)
+>=20
+> Assume CPU0 and CPU1 are smt siblings and cpu0 has decided task A to
+> run next and cpu1 has decided task B to run next. To compare priority
+> of task A and B, we compare priority of se2 and se6. Whose vruntime is
+> smaller, who wins.
+>=20
+> To make this work, the root level sched entities' vruntime of the two
+> threads must be directly comparable. So one of the hyperthread's root
+> cfs_rq's min_vruntime is chosen as the core wide one and all root level
+> sched entities' vruntime is normalized against it.
+>=20
+> All sub cfs_rqs and sched entities are not interesting in cross cpu
+> priority comparison as they will only participate in the usual cpu local
+> schedule decision so no need to normalize their vruntimes.
+>=20
+> Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
+> ---
+> kernel/sched/core.c  |  23 +++----
+> kernel/sched/fair.c  | 142 ++++++++++++++++++++++++++++++++++++++++++-
+> kernel/sched/sched.h |   3 +
+> 3 files changed, 150 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index f51e5c4798c8..4d6d6a678013 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -114,19 +114,8 @@ static inline bool prio_less(struct task_struct *a, =
+struct task_struct *b)
+> 	if (pa =3D=3D -1) /* dl_prio() doesn't work because of stop_class above =
+*/
+> 		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+>=20
+> -	if (pa =3D=3D MAX_RT_PRIO + MAX_NICE)  { /* fair */
+> -		u64 vruntime =3D b->se.vruntime;
+> -
+> -		/*
+> -		 * Normalize the vruntime if tasks are in different cpus.
+> -		 */
+> -		if (task_cpu(a) !=3D task_cpu(b)) {
+> -			vruntime -=3D task_cfs_rq(b)->min_vruntime;
+> -			vruntime +=3D task_cfs_rq(a)->min_vruntime;
+> -		}
+> -
+> -		return !((s64)(a->se.vruntime - vruntime) <=3D 0);
+> -	}
+> +	if (pa =3D=3D MAX_RT_PRIO + MAX_NICE) /* fair */
+> +		return cfs_prio_less(a, b);
+>=20
+> 	return false;
+> }
+> @@ -229,8 +218,12 @@ static int __sched_core_stopper(void *data)
+> 	bool enabled =3D !!(unsigned long)data;
+> 	int cpu;
+>=20
+> -	for_each_possible_cpu(cpu)
+> -		cpu_rq(cpu)->core_enabled =3D enabled;
+> +	for_each_possible_cpu(cpu) {
+> +		struct rq *rq =3D cpu_rq(cpu);
+> +		rq->core_enabled =3D enabled;
+> +		if (cpu_online(cpu) && rq->core !=3D rq)
+> +			sched_core_adjust_sibling_vruntime(cpu, enabled);
+> +	}
+>=20
+> 	return 0;
+> }
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 61d19e573443..d16939766361 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -462,11 +462,142 @@ find_matching_se(struct sched_entity **se, struct =
+sched_entity **pse)
+>=20
+> #endif	/* CONFIG_FAIR_GROUP_SCHED */
+>=20
+> +#ifdef CONFIG_SCHED_CORE
+> +static inline struct cfs_rq *root_cfs_rq(struct cfs_rq *cfs_rq)
+> +{
+> +	return &rq_of(cfs_rq)->cfs;
+> +}
+> +
+> +static inline bool is_root_cfs_rq(struct cfs_rq *cfs_rq)
+> +{
+> +	return cfs_rq =3D=3D root_cfs_rq(cfs_rq);
+> +}
+> +
+> +static inline struct cfs_rq *core_cfs_rq(struct cfs_rq *cfs_rq)
+> +{
+> +	return &rq_of(cfs_rq)->core->cfs;
+> +}
+> +
+> +static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
+> +{
+> +	if (!sched_core_enabled(rq_of(cfs_rq)) || !is_root_cfs_rq(cfs_rq))
+> +		return cfs_rq->min_vruntime;
+> +
+> +	return core_cfs_rq(cfs_rq)->min_vruntime;
+> +}
+> +
+> +#ifndef CONFIG_64BIT
+> +static inline u64 cfs_rq_min_vruntime_copy(struct cfs_rq *cfs_rq)
+> +{
+> +	if (!sched_core_enabled(rq_of(cfs_rq)) || !is_root_cfs_rq(cfs_rq))
+> +		return cfs_rq->min_vruntime_copy;
+> +
+> +	return core_cfs_rq(cfs_rq)->min_vruntime_copy;
+> +}
+> +#endif /* CONFIG_64BIT */
+> +
+> +bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
+> +{
+> +	struct sched_entity *sea =3D &a->se;
+> +	struct sched_entity *seb =3D &b->se;
+> +	bool samecpu =3D task_cpu(a) =3D=3D task_cpu(b);
+> +	s64 delta;
+> +
+> +#ifdef CONFIG_FAIR_GROUP_SCHED
+> +	if (samecpu) {
+> +		/* vruntime is per cfs_rq */
+> +		while (!is_same_group(sea, seb)) {
+> +			int sea_depth =3D sea->depth;
+> +			int seb_depth =3D seb->depth;
+> +
+> +			if (sea_depth >=3D seb_depth)
+> +				sea =3D parent_entity(sea);
+> +			if (sea_depth <=3D seb_depth)
+> +				seb =3D parent_entity(seb);
+> +		}
+> +
+> +		delta =3D (s64)(sea->vruntime - seb->vruntime);
+> +		goto out;
+> +	}
+> +
+> +	/* crosscpu: compare root level se's vruntime to decide priority */
+> +	while (sea->parent)
+> +		sea =3D sea->parent;
+> +	while (seb->parent)
+> +		seb =3D seb->parent;
+> +#else
+> +	/*
+> +	 * Use the min_vruntime of root cfs_rq if the tasks are
+> +	 * enqueued in different cpus.
+> +	 * */
+> +	if (!samecpu) {
+> +		delta =3D (s64)(task_rq(a)->cfs.min_vruntime -
+> +			      task_rq(b)->cfs.min_vruntime);
+> +		goto out;
+> +	}
+> +#endif /* CONFIG_FAIR_GROUP_SCHED */
+> +
+> +	delta =3D (s64)(sea->vruntime - seb->vruntime);
+> +
+> +out:
+> +	return delta > 0;
+> +}
+> +
+> +/*
+> + * This function takes care of adjusting the min_vruntime of siblings of
+> + * a core during coresched enable/disable.
+> + * This is called in stop machine context so no need to take the rq lock=
+.
+Hi,
 
-That is a good principle to have and thanks for suggesting it. However,
-in this specific case there is nothing in this patch that doesn't work
-on ARM. From an ARM perspective I think we should enable it and
-&xen_pm_notifier_block should be registered.
+IMHO, it seems that stop machine context cannot guarantee race free. The pa=
+ram *cpu* maybe not *this_cpu*, rq lock should be taken even in stop machin=
+e context, and irq should be disabled too, to avoid potential races with ot=
+her contexts.
 
-Given that all guests are HVM guests on ARM, it should work fine as is.
+Thx.
+Regards,
+Jiang
 
+> + *
+> + * Coresched enable case
+> + *  Once Core scheduling is enabled, the root level sched entities
+> + *  of both siblings will use cfs_rq->min_vruntime as the common cfs_rq
+> + *  min_vruntime, so it's necessary to normalize vruntime of existing ro=
+ot
+> + *  level sched entities in sibling_cfs_rq.
+> + *
+> + *  Update of sibling_cfs_rq's min_vruntime isn't necessary as we will b=
+e
+> + *  only using cfs_rq->min_vruntime during the entire run of core schedu=
+ling.
+> + *
+> + * Coresched disable case
+> + *  During the entire run of core scheduling, sibling_cfs_rq's min_vrunt=
+ime
+> + *  is left unused and could lag far behind its still queued sched entit=
+ies.
+> + *  Sync it to the up2date core wide one to avoid problems.
+> + */
+> +void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled)
+> +{
+> +	struct cfs_rq *cfs =3D &cpu_rq(cpu)->cfs;
+> +	struct cfs_rq *core_cfs =3D &cpu_rq(cpu)->core->cfs;
+> +	if (coresched_enabled) {
+> +		struct sched_entity *se, *next;
+> +		s64 delta =3D core_cfs->min_vruntime - cfs->min_vruntime;
+> +		rbtree_postorder_for_each_entry_safe(se, next,
+> +				&cfs->tasks_timeline.rb_root,
+> +				run_node) {
+> +			se->vruntime +=3D delta;
+> +		}
+> +	} else {
+> +		cfs->min_vruntime =3D core_cfs->min_vruntime;
+> +#ifndef CONFIG_64BIT
+> +		smp_wmb();
+> +		cfs->min_vruntime_copy =3D core_cfs->min_vruntime;
+> +#endif
+> +	}
+> +}
+> +
+> +#else
+> static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
+> {
+> 	return cfs_rq->min_vruntime;
+> }
+>=20
+> +#ifndef CONFIG_64BIT
+> +static inline u64 cfs_rq_min_vruntime_copy(struct cfs_rq *cfs_rq)
+> +{
+> +	return cfs_rq->min_vruntime_copy;
+> +}
+> +#endif /* CONFIG_64BIT */
+> +
+> +#endif /* CONFIG_SCHED_CORE */
+> +
+> static __always_inline
+> void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec);
+>=20
+> @@ -522,8 +653,13 @@ static void update_min_vruntime(struct cfs_rq *cfs_r=
+q)
+> 			vruntime =3D min_vruntime(vruntime, se->vruntime);
+> 	}
+>=20
+> +#ifdef CONFIG_SCHED_CORE
+> +	if (sched_core_enabled(rq_of(cfs_rq)) && is_root_cfs_rq(cfs_rq))
+> +		cfs_rq =3D core_cfs_rq(cfs_rq);
+> +#endif
+> +
+> 	/* ensure we never gain time by being placed backwards. */
+> -	cfs_rq->min_vruntime =3D max_vruntime(cfs_rq_min_vruntime(cfs_rq), vrun=
+time);
+> +	cfs_rq->min_vruntime =3D max_vruntime(cfs_rq->min_vruntime, vruntime);
+> #ifndef CONFIG_64BIT
+> 	smp_wmb();
+> 	cfs_rq->min_vruntime_copy =3D cfs_rq->min_vruntime;
+> @@ -6700,9 +6836,9 @@ static void migrate_task_rq_fair(struct task_struct=
+ *p, int new_cpu)
+> 		u64 min_vruntime_copy;
+>=20
+> 		do {
+> -			min_vruntime_copy =3D cfs_rq->min_vruntime_copy;
+> +			min_vruntime_copy =3D cfs_rq_min_vruntime_copy(cfs_rq);
+> 			smp_rmb();
+> -			min_vruntime =3D cfs_rq->min_vruntime;
+> +			min_vruntime =3D cfs_rq_min_vruntime(cfs_rq);
+> 		} while (min_vruntime !=3D min_vruntime_copy);
+> #else
+> 		min_vruntime =3D cfs_rq_min_vruntime(cfs_rq);
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 4a738093d731..293aa1ae0308 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1086,6 +1086,9 @@ static inline raw_spinlock_t *rq_lockp(struct rq *r=
+q)
+> 	return &rq->__lock;
+> }
+>=20
+> +bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+> +void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled)=
+;
+> +
+> #else /* !CONFIG_SCHED_CORE */
+>=20
+> static inline bool sched_core_enabled(struct rq *rq)
+> --=20
+> 2.17.1
+>=20
+>=20
 
-I gave a quick look at the rest of the series and everything looks fine
-to me from an ARM perspective. I cannot imaging that the new freeze,
-thaw, and restore callbacks for net and block are going to cause any
-trouble on ARM. The two main x86-specific functions are
-xen_syscore_suspend/resume and they look trivial to implement on ARM (in
-the sense that they are likely going to look exactly the same.)
-
-
-One question for Anchal: what's going to happen if you trigger a
-hibernation, you have the new callbacks, but you are missing
-xen_syscore_suspend/resume?
-
-Is it any worse than not having the new freeze, thaw and restore
-callbacks at all and try to do a hibernation?
---8323329-219213542-1595374972=:17562--
