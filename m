@@ -2,117 +2,95 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F46C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADCCC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF417206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALIKBDfs"
+	by mail.kernel.org (Postfix) with ESMTP id B92CA22C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbgGVRDJ (ORCPT
+        id S1731120AbgGVRDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:03:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60013 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726784AbgGVRDJ (ORCPT
+        Wed, 22 Jul 2020 13:03:20 -0400
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:40806 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgGVRDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:03:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595437387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rNxAC2081w6KkDSHTZofG7jYDLRJsJOKNUQR0/igp1I=;
-        b=ALIKBDfsvDxoH5zu0hVo39m/t08eIebmpgAxHLw7Uns570kyWUw9yIxgXJNRRVaVEKZ1g5
-        kvqktIjETNJAiQSgAY4X/V0F59Jyk6y71+NKFAjCoc+ZvrmCKn/LQMWFeUruOnPyGDa903
-        fVGCKTVirGgoYrJJ7I9g28sDVYkGFaw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-UlCdbfnNNT6NNRdnZGjhwA-1; Wed, 22 Jul 2020 13:03:05 -0400
-X-MC-Unique: UlCdbfnNNT6NNRdnZGjhwA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C422181EDEE;
-        Wed, 22 Jul 2020 17:03:04 +0000 (UTC)
-Received: from [10.10.114.255] (ovpn-114-255.rdu2.redhat.com [10.10.114.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 611221017E28;
-        Wed, 22 Jul 2020 17:03:04 +0000 (UTC)
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH 1/2] docs/livepatch: Add new compiler considerations doc
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200721161407.26806-1-joe.lawrence@redhat.com>
- <20200721161407.26806-2-joe.lawrence@redhat.com>
- <20200721230442.5v6ah7bpjx4puqva@treble>
-Message-ID: <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
-Date:   Wed, 22 Jul 2020 13:03:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 22 Jul 2020 13:03:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0809535|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0192437-0.000249335-0.980507;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07381;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6.6HMv_1595437393;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6.6HMv_1595437393)
+          by smtp.aliyun-inc.com(10.147.42.135);
+          Thu, 23 Jul 2020 01:03:14 +0800
+Subject: Re: [PATCH v10 0/2] Add support for the OST in Ingenic X1000.
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, paul@crapouillou.net
+References: <20200720173134.22826-1-zhouyanjie@wanyeetech.com>
+ <6aca88ad-1e20-97da-effe-fa5a4cec789c@linaro.org>
+ <0ace68b6-9d75-8b8f-c108-89863cb6d03d@wanyeetech.com>
+ <8129fbbf-652d-5429-4b8a-63038cd42ccb@linaro.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <35e3e3f9-8348-cb09-8809-5e93be03744d@wanyeetech.com>
+Date:   Thu, 23 Jul 2020 01:03:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200721230442.5v6ah7bpjx4puqva@treble>
+In-Reply-To: <8129fbbf-652d-5429-4b8a-63038cd42ccb@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 7:04 PM, Josh Poimboeuf wrote:
-> On Tue, Jul 21, 2020 at 12:14:06PM -0400, Joe Lawrence wrote:
->> Compiler optimizations can have serious implications on livepatching.
->> Create a document that outlines common optimization patterns and safe
->> ways to livepatch them.
+
+在 2020/7/23 上午12:49, Daniel Lezcano 写道:
+> On 22/07/2020 18:47, Zhou Yanjie wrote:
+>> Hello Daniel,
 >>
->> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> 
-> There's a lot of good info here, but I wonder if it should be
-> reorganized a bit and instead called "how to create a livepatch module",
-> because that's really the point of it all.
-> 
+>> 在 2020/7/21 下午8:53, Daniel Lezcano 写道:
+>>> On 20/07/2020 19:31, 周琰杰 (Zhou Yanjie) wrote:
+>>>> v9->v10:
+>>>> Fix errors which case "make dt_binding_check" failed.
+>>>>
+>>>> 周琰杰 (Zhou Yanjie) (2):
+>>>>     dt-bindings: timer: Add Ingenic X1000 OST bindings.
+>>>>     clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+>>>>
+>>>>    .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
+>>>>    drivers/clocksource/Kconfig                        |  12 +-
+>>>>    drivers/clocksource/Makefile                       |   1 +
+>>>>    drivers/clocksource/ingenic-sysost.c               | 539
+>>>> +++++++++++++++++++++
+>>>>    include/dt-bindings/clock/ingenic,sysost.h         |  12 +
+>>>>    5 files changed, 626 insertions(+), 1 deletion(-)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+>>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
+>>>>    create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+>>> Applied, thanks
+>>
+>> I'm very sorry, I found some typos in this series, do I need to send a
+>> v11 to fix these typos?
+> As your convenience, V11 or patches on top of V10. But please do it
+> quickly as I'm preparing the PR.
 
-That would be nice.  Would you consider a stand-alone 
-compiler-optimizations doc an incremental step towards that end?  Note 
-that the other files (callbacks, shadow-vars, system-state) in their 
-current form might be as confusing to the newbie.
 
-> I'm thinking a newcomer reading this might be lost.  It's not
-> necessarily clear that there are currently two completely different
-> approaches to creating a livepatch module, each with their own quirks
-> and benefits/drawbacks.  There is one mention of a "source-based
-> livepatch author" but no explanation of what that means.
-> 
+Okay, thank you very much, I will finish v11 in half an hour.
 
-Yes, the initial draft was light on source-based patching since I only 
-really tinker with it for samples/kselftests.  The doc was the result of 
-an experienced livepatch developer and Sunday afternoon w/the compiler. 
-I'm sure it reads as such. :)
+Thanks and best regards!
 
-> Maybe it could begin with an overview of the two approaches, and then
-> delve more into the details of each approach, and then delve even more
-> into the gory details about compiler optimizations.
-> 
 
-Up until now, the livepatch documentation has danced around the 
-particular creation method and only described the API in abstract.  If a 
-compiler considerations doc needs to have that complete context then I'd 
-suggest we reorganize the entire lot as a prerequisite.
-
-> Also the kpatch-build section can reference the patch author guide which
-> we have on github.
-> 
-
-Good point.  I think there are a few kpatch-specific implications 
-(sibling call changes maybe) to consider.
-
--- Joe
-
+> Thanks
+>
+>    -- Daniel
+>
+>
