@@ -2,109 +2,146 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76158C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51CE220729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595428296;
-	bh=R9Fecg1j6n04pUIBM0fwXtjbmYSjbCHZRgh6WgCL/BM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dd5C8BO5AQT1Y/X16nJ/pdMBCMmjP/jTNnzYdyscOPl5YUvSWidvGUvsuhC0YnVlF
-	 YwE7K31NYiSTV8/5cgpCypIbm5kDtT+eq5dEqoClUDmsUEGnwVRqFWuT3knyGpAOUp
-	 /Odu21BN4fTEpUKjTDOzCd9/h8r7PvjIs6Hmqo7A=
+	by mail.kernel.org (Postfix) with ESMTP id 4A97720787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEdN6208"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732517AbgGVObf (ORCPT
+        id S1732606AbgGVOhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbgGVObe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:31:34 -0400
-Received: from embeddedor (unknown [201.166.157.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C28B20709;
-        Wed, 22 Jul 2020 14:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595428294;
-        bh=R9Fecg1j6n04pUIBM0fwXtjbmYSjbCHZRgh6WgCL/BM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ybp8cdiYia42CxukEZUwLynLe/KnejR4040+QxBwDPLd2Y6VWP7WL/XfwoPr+Fyk1
-         RGtCGWvM6GZVsTWzCxGxbrO3zAcYMCGGu7cys+m7RNRwtgGP16lTZDeP0YXRqMPTYC
-         R/eSlDeHRYB2J8f3lOfGdrs18n0Yuha2H9f5aM+s=
-Date:   Wed, 22 Jul 2020 09:37:13 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
-Message-ID: <20200722143713.GB22267@embeddedor>
-References: <20200721233814.GA3058@embeddedor>
- <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
+        Wed, 22 Jul 2020 10:37:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGVOhb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:37:31 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533E3C0619DC;
+        Wed, 22 Jul 2020 07:37:31 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id e18so1472600ilr.7;
+        Wed, 22 Jul 2020 07:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uum90XmfNycK6jDJoE+OLFnrkzTNxS7+iW+O9eCiWeM=;
+        b=lEdN6208f44Sn6ODIAJK83c4RYAShaqQuCEZ4xGt6JSzk6lgHXBHLoYTeHSHu5T3mu
+         iDE2UKBY6Md1ouGeE6xaBR8N4KmfptqJyLR2vFxJKw50KKKfVaW3hCr88TclQ+u4OnX1
+         xlndCgxHBrAXcKc562ZmvCtgfx2EPhdcIRtAl6Ktxoc1baOlmVBB+wWPbH8FfO3+UIcQ
+         LQWse1rBe0wLvcn7Ug6YjXGpY7jkMyzccvf4oJc1NdBjKVOQqhVUd4NIqcZJHrHqiN7Z
+         HWg2zYoJIPdx3qP8F2nmWT/0z5Oy/vkcm++uw01yXot3zRdg7tlC3NjiAnvqVS2HoSgj
+         IXLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uum90XmfNycK6jDJoE+OLFnrkzTNxS7+iW+O9eCiWeM=;
+        b=WFvRrhyl3thWBNU5wBnn7I79TdVN4ayRbwx+Pk8dS/DPk3QcfJtGnYdOhnepwjgcIU
+         JEz3Ou3VtojzBrLxLKG2BQM4vD5NW/WB2/j+TnRVlp9BNgfSd+gOmEl7HGyKunc/tWKi
+         AuXhp2jigz0UziFx1eJGHYWDoiDb9DX2y7zzwnAcC7h8kAOZHtIO4GXDw1J9kE9tYOW1
+         MYzemkeFeKL2o2B/LmfleSHCm54sw686b3hgt83SadSMRX07STRKG+4haKNiKbAelMJ9
+         3LEI/sNBJNBmPVv1E7vDg9nHhEM2V3qIiOmeZ4GLZSHM1dFYuRym38mOIEHmHl1ZOMRL
+         bRRQ==
+X-Gm-Message-State: AOAM533xgeyfIu6oaug4vLl/XqpBnF85DEX0Rgi/ED1RhiqoQqrFGyHa
+        AuoRzqDUuKNnlP+PW9jJsaMvAZ63vZTK4p9a62g=
+X-Google-Smtp-Source: ABdhPJwpE8HkCfsDSkfAjPnUVeuc7tn6xF0l2+UATzJPcOG6uy+pfG1LTgzeK0upHl081OQGfXfTFHXcgwkpU2B4WIc=
+X-Received: by 2002:a05:6e02:80b:: with SMTP id u11mr226641ilm.178.1595428650674;
+ Wed, 22 Jul 2020 07:37:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1595226956-7779-1-git-send-email-cang@codeaurora.org> <1595226956-7779-4-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1595226956-7779-4-git-send-email-cang@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 22 Jul 2020 08:37:19 -0600
+Message-ID: <CAOCk7NpLLV8yoWsrFKJ+OirGcQjeP4NmFYnMfXj-9=sMt7E94Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] ufs: ufs-qcom: Fix a few BUGs in func ufs_qcom_dump_dbg_regs()
+To:     Can Guo <cang@codeaurora.org>
+Cc:     Asutosh Das <asutoshd@codeaurora.org>, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com,
+        Mark Salyzyn <salyzyn@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:52:56AM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 22, 2020 at 2:48 AM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > Replace the existing /* fall through */ comments and its variants with
-> > the new pseudo-keyword macro fallthrough[1].
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> 
-> > [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Perhaps you may do it as Link: tag?
-> 
+On Mon, Jul 20, 2020 at 12:39 AM Can Guo <cang@codeaurora.org> wrote:
+>
+> Dumping testbus registers needs to sleep a bit intermittently as there are
+> too many of them. Skip them for those contexts where sleep is not allowed.
+>
+> Meanwhile, if ufs_qcom_dump_dbg_regs() calls ufs_qcom_testbus_config() from
+> ufshcd_suspend/resume and/or clk gate/ungate context, pm_runtime_get_sync()
+> and ufshcd_hold() will cause racing problems. Fix it by removing the
+> unnecessary calls of pm_runtime_get_sync() and ufshcd_hold().
 
-mmh... that's a good suggestion; thanks, Andy.
+It sounds like this is two different changes which are clubbed
+together into the same patch and really should be two different
+patches.
 
---
-Gustavo
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs-qcom.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 2e6ddb5..3743c17 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -1604,9 +1604,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+>          */
+>         }
+>         mask <<= offset;
+> -
+> -       pm_runtime_get_sync(host->hba->dev);
+> -       ufshcd_hold(host->hba, false);
+>         ufshcd_rmwl(host->hba, TEST_BUS_SEL,
+>                     (u32)host->testbus.select_major << 19,
+>                     REG_UFS_CFG1);
+> @@ -1619,8 +1616,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host *host)
+>          * committed before returning.
+>          */
+>         mb();
+> -       ufshcd_release(host->hba);
+> -       pm_runtime_put_sync(host->hba->dev);
+>
+>         return 0;
+>  }
+> @@ -1658,11 +1653,13 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+>
+>         /* sleep a bit intermittently as we are dumping too much data */
+>         ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+> -       udelay(1000);
+> -       ufs_qcom_testbus_read(hba);
+> -       udelay(1000);
+> -       ufs_qcom_print_unipro_testbus(hba);
+> -       udelay(1000);
+> +       if (in_task()) {
+> +               udelay(1000);
+> +               ufs_qcom_testbus_read(hba);
+> +               udelay(1000);
+> +               ufs_qcom_print_unipro_testbus(hba);
+> +               udelay(1000);
+> +       }
 
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/i2c/busses/i2c-designware-pcidrv.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
-> > index 8522134f9ea9..55c83a7a24f3 100644
-> > --- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-> > +++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-> > @@ -90,7 +90,7 @@ static int mfld_setup(struct pci_dev *pdev, struct dw_pci_controller *c)
-> >         switch (pdev->device) {
-> >         case 0x0817:
-> >                 dev->timings.bus_freq_hz = I2C_MAX_STANDARD_MODE_FREQ;
-> > -               /* fall through */
-> > +               fallthrough;
-> >         case 0x0818:
-> >         case 0x0819:
-> >                 c->bus_num = pdev->device - 0x817 + 3;
-> > --
-> > 2.27.0
-> >
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Did you run into a specific issue with this?  udelay is not a "sleep"
+in the sense that it causes scheduling to occur, which is the problem
+with atomic contexts.
