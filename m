@@ -2,110 +2,124 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B1C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B37C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B53207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:17:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yubxcjwt"
+	by mail.kernel.org (Postfix) with ESMTP id 81B5520771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgGVQRM (ORCPT
+        id S1730293AbgGVQRI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbgGVQRK (ORCPT
+        Wed, 22 Jul 2020 12:17:08 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:20194 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730049AbgGVQRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:17:10 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D80C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:17:10 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t27so1774325ill.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tcL+fVRHFbwjcT2YoeEyW0ovDsmOpco9f4REaf4pOLw=;
-        b=Yubxcjwtpc7YJGf0Tziz+sT7J49N0W4XOpcuP6qz+/oiMJmZWQU/Kd8bRbKoKhkvRZ
-         RnULiCwqMICOqU1HdOr0DGkfNUWsljA27n+XJ+U5D4l98CuiRYbkSXMPr4+W0DyFNtb+
-         AY+GHqK5P2TwUgTqNVgFJTxJoi0sTaFqqe+6N0p/LenOodA1YiaVIgE+e2BMkKkM402X
-         R4n2L8/Xi3rrf4jYh3bII4QM3zJZ2tIZWJ5l8SbQpLT5zkqRCfn06WbbJYUNLuUFZK79
-         2WjQU9hbziDqo4arXlFdwyZ0UC8MY80G8CFPHzWB/TsG+e4NxODiBVUvc4xDIlT2n9fa
-         B76A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tcL+fVRHFbwjcT2YoeEyW0ovDsmOpco9f4REaf4pOLw=;
-        b=NebSxQ+UVzMj5uiPCrbC4yykg3bOp1BpXT8AcpNVt2XKlTGPtlGS+k4TwM48OYqzvx
-         fmSgsjuzqYeGXqol/Bn6IWkpnwaLtZl6FPdUjp/HD8Zm+KoAAzUv5ohtlhTBtSFZq1oE
-         4cg/sRqZfHFm9lmkK3EWhE8SF5T5dFxJHAAAdFZSpgnwhBvXuGGlrymLGuGzKweGpfUJ
-         5nXx6Sh2Hp95w86Gzf3APpSMmNz+P8PZfcHm0VI05v4as5OQhi0xRCisqkelDdT8L+tz
-         PmUP7VeZkuemy1NccO9fEmK9hKBD8KcEQpJeSCsmUxvVcRI3bck79EoR4HqVDZnaviU2
-         bYDA==
-X-Gm-Message-State: AOAM5300T053RdzlZO0Q0VgrXCDdnSBJU3doUuZ4jb3sDasH766RwZVo
-        CQGnX3l1EY+MiSFiC9+9hU8mEI8slGwG/vuCAKKCPQ==
-X-Google-Smtp-Source: ABdhPJzRjVSHUdq95L4uwyL/QiKe4BnlIZ7BNNuAXtthqySJmpzNdrp3+RktG+FL20eMYaBBJOPnsGSirp9tKRuuYbA=
-X-Received: by 2002:a92:404e:: with SMTP id n75mr615859ila.203.1595434629062;
- Wed, 22 Jul 2020 09:17:09 -0700 (PDT)
+        Wed, 22 Jul 2020 12:17:08 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-226-Is5B0LHAODKlWwSet36rAw-1; Wed, 22 Jul 2020 17:17:03 +0100
+X-MC-Unique: Is5B0LHAODKlWwSet36rAw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 17:17:02 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 22 Jul 2020 17:17:02 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0FggABJU4CAABlpkP//+uQAgAAU8xA=
+Date:   Wed, 22 Jul 2020 16:17:02 +0000
+Message-ID: <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
+References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
+ <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
+ <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
+ <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
+ <20200722144213.GE2786714@ZenIV.linux.org.uk>
+ <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
+ <20200722155452.GF2786714@ZenIV.linux.org.uk>
+In-Reply-To: <20200722155452.GF2786714@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <CA+G9fYuj3bHUMz8XQztbmTgF0c5+rZ5-FkUjFyvEftej2jLT+Q@mail.gmail.com>
- <CAK8P3a3br1bDc8C6UjRWzdmwzVV26YYe3ixHV7LH5Z0-OiqPQQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3br1bDc8C6UjRWzdmwzVV26YYe3ixHV7LH5Z0-OiqPQQ@mail.gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 22 Jul 2020 09:16:57 -0700
-Message-ID: <CALvZod5cBTsytQz5=EbqT_s1_ZJ8YpkBe+CLEAU+25FP4kHSAg@mail.gmail.com>
-Subject: Re: BUG at mm/vmalloc.c:3089! - invalid opcode: 0000 [#1] SMP KASAN PTI
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
-        LTP List <ltp@lists.linux.it>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Roman Gushchin <guro@fb.com>,
-        Dennis Zhou <dennis@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 1:55 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Adding Roman Gushchin to Cc, he touched that code recently.
->
-> Naresh, if nobody has any immediate ideas, you could double-check by
-> reverting these commits:
->
-> e0b8d00b7561 mm: memcg/percpu: per-memcg percpu memory statistics
-> 99411af13595 mm/percpu: fix 'defined but not used' warning
-> 9398ce6306b6 mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix-fix
-> 54116d471779 mm-memcg-percpu-account-percpu-memory-to-memory-cgroups-fix
-> ec518e090843 mm: memcg/percpu: account percpu memory to memory cgroups
-> 9bc897d18dc3 percpu: return number of released bytes from pcpu_free_area()
->
->        Arnd
->
+From: Al Viro > Sent: 22 July 2020 16:55
+> To: David Laight <David.Laight@ACULAB.COM>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>; linux-kernel@vger.kernel.org; linux-
+> arch@vger.kernel.org
+> Subject: Re: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead of 0 as initial sum
+> 
+> On Wed, Jul 22, 2020 at 03:22:45PM +0000, David Laight wrote:
+> 
+> > > And the benefit of that would be...?  It wouldn't be any simpler,
+> > > it almost certainly would not even be a valid microoptimization
+> > > (nevermind that this is an arch-independent code)...
+> >
+> > It ought to give a minor improvement because it saves the extra
+> > csum_fold() when the checksum from a buffer is added to the
+> > previous total.
+> >
+> 
+> Sigh...  _WHAT_ csum_fold()?
+> 
+> static inline __wsum
+> csum_block_add(__wsum csum, __wsum csum2, int offset)
+> {
+>         u32 sum = (__force u32)csum2;
+> 
+>         /* rotate sum to align it with a 16b boundary */
+>         if (offset & 1)
+>                 sum = ror32(sum, 8);
+> 
+>         return csum_add(csum, (__force __wsum)sum);
+> }
+> 
+> David, do you *ever* bother to RTFS?  I mean, competent supercilious twits
+> are annoying, but at least with those you can generally assume that what
+> they say makes sense and has some relation to reality.  You, OTOH, keep
+> spewing utter bollocks, without ever lowering yourself to checking if your
+> guesses have anything to do with the reality.  With supercilious twit part
+> proudly on the display - you do speak with confidence, and the way you
+> dispense the oh-so-valuable advice to everyone around...
 
-I think syzbot has bisected this issue to the suspect patch.
+Yes, I do look at the code.
+I've actually spent a lot of time looking at the x86 checksum code.
+I've posted a patch for a version that is about twice as fast as the
+current one on a large range of x86 cpus.
 
-https://lore.kernel.org/lkml/00000000000043f09405ab01b0b8@google.com/
+Possibly I meant the 32bit reduction inside csum_add()
+rather than what csum_fold() does.
+
+Having worked on the internals of SYSV, NetBSD and Linux I probably
+forget the exact names for a few things.
+The brain can only hold so much information.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
