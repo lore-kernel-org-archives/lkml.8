@@ -2,138 +2,108 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F70C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62E9420787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C148920787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hwfZCG1X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZT+wLdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbgGVSQp (ORCPT
+        id S1732226AbgGVSOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:16:45 -0400
-Received: from mail-eopbgr20081.outbound.protection.outlook.com ([40.107.2.81]:35202
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726539AbgGVSQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:16:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A/PdJOZ3XZgau3SAm8kiNuUyQgdDJdQM5ad9X1T1J/guXHJCAMcSYaprRLwmoga07dUU0/bYo6oJov18PxOPzhhfLc4b6lQM3pIP2hCikmTtBqM1STLMQupE7ii2MmjjeRvd+E5h9D7uHK/2bkIWjOcswK+6eUF9taBH8D1IOEYK31+7T3WfFeyTngAi7lx5SDPyhQxG3jAf+iSxBHp7XKzK7pfLoJBFYHvJOuc27fpmJKnWY+p40KxB3QDphOI2CvsTnCfDbb8dJa8vCszXxwJK1EuF69gHDLSykYfNQBXssfYMXzuYpdcmAs0HrWvKbXLW+dPTHy4eOJXFq1hUug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z7SHrnXVdr6Ck3wqQol1rleTH7vmMemyrDjgdqnDvMU=;
- b=F8tgll6rjvwbBddD/N+KokFYWU/bLC41cPYkdVJb9XIWW2Mx4jcFQfrvVE2jw2rbEjYqcygj47HYqTxqm10uUeW2elQlrtQS7L2gBNAM1hTOZ+DgKIgT3PD4d4ihTivbLn+eZWw5/mRW/kvYaGcfh5RKPacOW4y2YbSThWpbr6JSt1k2UP9VWz0wfaBOSMNrc6X+QTlPY092Zkkrs3fV4QHJ0hBvawiSggXM3Ap3G1cmG2FIU/6tC02255ZZW3k+xF7s8u6MWBJXR+cXziIEM57I8JMjQ3K7cX6aYPG5eSoqWswSCb0mCVgUYn3Szl1lLMop8LG888xVkSKmFGtxgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z7SHrnXVdr6Ck3wqQol1rleTH7vmMemyrDjgdqnDvMU=;
- b=hwfZCG1Xq0sB4+yJqMiF50ViYjIE3WhqSyAkIM7AHoL4UR4TzrL9eS5KaJTOqxxZ+RTaMvjTJiKe9Bis2Vt2w9LFLWh9occYqv+/lgVeTWJSOd2jAQU+DoLazgrx9pJkolSlqXjjsDMBiHcdzatF4EZ/E/8r7/qGKUVHgWF2SiM=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from DB7PR05MB4138.eurprd05.prod.outlook.com (2603:10a6:5:23::16) by
- DB6PR0501MB2213.eurprd05.prod.outlook.com (2603:10a6:4:50::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.21; Wed, 22 Jul 2020 18:16:40 +0000
-Received: from DB7PR05MB4138.eurprd05.prod.outlook.com
- ([fe80::4025:1579:1d10:fd4d]) by DB7PR05MB4138.eurprd05.prod.outlook.com
- ([fe80::4025:1579:1d10:fd4d%7]) with mapi id 15.20.3216.022; Wed, 22 Jul 2020
- 18:16:40 +0000
-Date:   Wed, 22 Jul 2020 15:16:30 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Dey, Megha" <megha.dey@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200722181630.GM2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <d0ab496e-8eb1-3365-8b2c-533cf95d6556@intel.com>
- <8655dcee-58e2-73fe-a2fd-ca8d770103d9@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8655dcee-58e2-73fe-a2fd-ca8d770103d9@intel.com>
-X-ClientProxiedBy: YT1PR01CA0130.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::9) To DB7PR05MB4138.eurprd05.prod.outlook.com
- (2603:10a6:5:23::16)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by YT1PR01CA0130.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend Transport; Wed, 22 Jul 2020 18:16:40 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jyJI6-00E1Ix-W1; Wed, 22 Jul 2020 15:16:31 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 259bbe25-e332-413c-58ff-08d82e6b613a
-X-MS-TrafficTypeDiagnostic: DB6PR0501MB2213:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0501MB22138407E17EB0DEE5960138CF790@DB6PR0501MB2213.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B/Ry3+Yur8J4a7bWzABieI/s0XFsgvO2xWe5Rh6wR7k37W47VFc4FqpL8wRcRlGNqyfXf5qkmTxjbvLZL85enTdrF5oIk8y+MqOHgNik2NYuJLSDDQXg2SCir+NMRj8SDkOUIZOEp1h5RwfAzCdHZ5n/HgqYRWcrS2d9FaWd3+QbXXeLhc6iACr2ydgC9bg7FNGI/tkhpyMJQ8BxoBXBYHtSv+HnxheiIhi+v2PgysQpQ6y/G+130yJyQdj8PSiUJvzUfSchR12PFGu+DOa8j3jrXvYigdN1bMRh6i6uUtsJoj1gs0PoEIF3XYnv7K4OBcxaYL8308tdj14nCQH8wg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR05MB4138.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(426003)(5660300002)(26005)(4326008)(8676002)(2616005)(8936002)(316002)(6916009)(36756003)(66946007)(478600001)(66556008)(66476007)(186003)(9786002)(86362001)(33656002)(1076003)(7406005)(7416002)(9746002)(2906002)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1YWNlCiGRg67NMAHIFPxMpP2YzUrKrPgWD+gNdk3ObI6AJeF21VtMVjBhbgeLdhO66dTFzwEJl6rINMtJq5strWlNLfefcrYLiEZPTH0Y08DdFpocqdMG2zeNA8BRX/eSAX5XteP9Nf3iXCseyGiTw+M8k8Rg3wWD5f45VjxaAATgLW4EMdjVccpiZffP1YCP3/BdYFOpjFhR9VuubO+xzfu4LOKz9mZREFCEy5eMAkKJmFLDRtReXDj67HJ/4xmFLBR/M36sGlz55Rt5AGel991OV053N5bVqsiBjtMshj78uUjfGOeSq2Ba2v2eo/qZGPWHkLRO2T/lHOYUt0kpbrUa0maOyEUU+Z3QLNWFODd1+48bcF+hfhITq8iffLLYJW9FbF5qFJR4rtkBdPjkDsDlfGkvj9fxYG0j5QPtLqVzLHcRRqr4GX9i+4AfnXVFfHfSi6uH3IKny/KrtdOHYkI0Bx87VV4ekMwnASJJJw=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 259bbe25-e332-413c-58ff-08d82e6b613a
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR05MB4138.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 18:16:40.2066
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qEzAlhD4JPZ23XtRmYA2VWfBtLMtb5dI86qq17ohBi3bxK0UKEMwrzUXpXhSTZJMvwLbLcFguufBjp2w+EPq6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2213
+        Wed, 22 Jul 2020 14:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgGVSOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:14:33 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE83BC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:14:32 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id o18so3233469eje.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9YXzBu5CzF+ORy2slLhhzsC7TGMl1ab46whl8Gc0jIE=;
+        b=YZT+wLdJt81DIoI1eEOPyqj1ApstGxBDSFtKpxwA9aFw78rHiaPtz1o5R5aWPA7mJV
+         zmNy+2woINSM+h80UBALJOtOA5Upoq2morXnjWFdTQ+Wtq6buPJsqYcpPDzzaESTPck8
+         tqZXYqMilV+HuupNqSOpFSxS29xvqMO9EENURQIGqLlabe8vJ8zb3/5WKCe6akTx6gDA
+         SUp6DhxR16CeNKMBUPluYu+Z6vVdb83WgEs8iYvA+T5Qj20InAeKKUMLFkdk+OmiOKLc
+         LL+k+HbMYlgqkEwBrDHamrOmKY1UgM1OIJAGO7wZjw+h6mM9gTK41HYB0dM36Eqxdsr9
+         pJvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9YXzBu5CzF+ORy2slLhhzsC7TGMl1ab46whl8Gc0jIE=;
+        b=QANuBUMzb1HVzC9fYQtNkCmmkw3E1uoe0UzmUZOnCdOzYM/JuUqYn0Q5s7NKyxp9Z7
+         JiOV7eX67osXeYaIzwLcVSscjtqV0MLSkbcgHG/bbxEB/7tH/9pCPL4CkQYXSsPdNueb
+         pB1gk5jkswdiuQwKE5KwEvpy4zdBmeRi/TzsDKd5HSoX5z8pBNo1pmh1xUfQSXD1yyl1
+         Iz7uWGfYIvpT6kNp2GDGiVSiwfp+s7YHmIl3XCR62y6uxWl67+vB51l6MdVbVLtd9SUj
+         Bu9BQN+p14QbVKNlRkIqVzJk3MHMRMbd+oHLl0YnS5OP7mh4KUwdZ5BUJD3XzmrPaJxb
+         uN7g==
+X-Gm-Message-State: AOAM5307dGBs6ZJNBPqhLR0pcT9Aiddvla9dBNEh7/2/jbNm6bBGn6b2
+        H4VnSUvp0itPOoaba0SwZLsfujlnvQ==
+X-Google-Smtp-Source: ABdhPJw3iiCki6IlU7m1rxI1/D3e8gIWcFUfyjOXBSfZ5zryqeraDoQ2XJLCt9CzAECYRrmd99AhNA==
+X-Received: by 2002:a17:906:6406:: with SMTP id d6mr810152ejm.30.1595441671712;
+        Wed, 22 Jul 2020 11:14:31 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:810b:f40:e00:922b:34ff:fe38:6455])
+        by smtp.googlemail.com with ESMTPSA id x64sm372954edc.95.2020.07.22.11.14.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 11:14:31 -0700 (PDT)
+From:   Alex Bee <knaerzche@gmail.com>
+To:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner=20?= <heiko@sntech.de>
+Cc:     Alex Bee <knaerzche@gmail.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/5] drm: rockchip: set alpha_en to 0 if it is not used
+Date:   Wed, 22 Jul 2020 20:13:31 +0200
+Message-Id: <20200722181332.26995-5-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200722181332.26995-1-knaerzche@gmail.com>
+References: <20200722181332.26995-1-knaerzche@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:31:28AM -0700, Dey, Megha wrote:
-> > > I didn't notice any of this in the patch series? What is the calling
-> > > context for the platform_msi_ops ? I think I already mentioned that
-> > > ideally we'd need blocking/sleeping. The big selling point is that IMS
-> > > allows this data to move off-chip, which means accessing it is no
-> > > longer just an atomic write to some on-chip memory.
-> > > 
-> > > These details should be documented in the comment on top of
-> > > platform_msi_ops
-> 
-> so the platform_msi_ops care called from the same context as the existing
-> msi_ops for instance, we are not adding anything new. I think the above
-> comment is a little misleading I will remove it next time around.
+alpha_en should be set to 0 if it is not used, i.e. to disable alpha
+blending if it was enabled before and should be disabled now.
 
-If it is true that all calls are under driver control then I think it
-would be good to document that. I actually don't know off hand if
-mask/unmask are restricted like that
+Fixes: 2aae8ed1f390 ("drm/rockchip: Add per-pixel alpha support for the PX30 VOP")
 
-As this is a op a driver has to implement vs the arch it probably need
-a bit more hand holding.
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+---
 
-> Also, I thought even the current write to on-chip memory is not
-> atomic..
+Changes in v2:
+- capitalize "F" of "Fixes" in the commit message
 
-The writel to the MSI-X table in MMIO memory is 'atomic'
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jason
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index c80f7d9fd13f..0f23144491e4 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -1013,6 +1013,7 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+ 		VOP_WIN_SET(vop, win, alpha_en, 1);
+ 	} else {
+ 		VOP_WIN_SET(vop, win, src_alpha_ctl, SRC_ALPHA_EN(0));
++		VOP_WIN_SET(vop, win, alpha_en, 0);
+ 	}
+ 
+ 	VOP_WIN_SET(vop, win, enable, 1);
+-- 
+2.17.1
+
