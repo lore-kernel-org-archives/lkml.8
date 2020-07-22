@@ -2,176 +2,236 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A64C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5E0C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A4120709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3AFE20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:07:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OSSDHRqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbgGVHGv (ORCPT
+        id S1731484AbgGVHHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:06:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44312 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727096AbgGVHGq (ORCPT
+        Wed, 22 Jul 2020 03:07:04 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40476 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727096AbgGVHHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:06:46 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M73Lfm098772;
-        Wed, 22 Jul 2020 03:06:38 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1xx6gu9-1
+        Wed, 22 Jul 2020 03:07:03 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M6v2Gc009722;
+        Wed, 22 Jul 2020 09:06:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
+ : from : message-id : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=FRpQMmPFPg8ANDFOsUwPFCvonf7Q8fHnZkrh2v4evW4=;
+ b=OSSDHRqBv1Fev5CXXuLaBdca1+XIBCHALQtPyChzBheTW0qH/B48ipOs2K+uLuSx1+N0
+ kcN1xM32Ft0vogJhUdW+I/fAA8iujpEr4l0PZ4NfmEePRiZbmtCH+0au98fvwTFKmsmI
+ PNtsPC3QmffCXEqs27tG+FkEdyk1MkeT8t62EpbvT69QvG/7WgC+JxpZIOX5CGon1U79
+ J3mSD1MKd4epP/R1GHTQvwYN4nW8C3pNK0jW4ilAkefuNv0Gu23T4ZyhUIr+R+nD4E/+
+ i3rwjnBBeZs3wx22mBaTNGQShij9sS91vEnjr1293aZwbi9fJvhmiVniCAVvKUWkgNBQ QA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsah221m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:06:38 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M73l8x102034;
-        Wed, 22 Jul 2020 03:06:37 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1xx6grj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:06:37 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M7563h014061;
-        Wed, 22 Jul 2020 07:06:35 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 32brq99vx9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:06:35 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M76X7l66454014
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 07:06:33 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C0AD7805C;
-        Wed, 22 Jul 2020 07:06:33 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1522D78063;
-        Wed, 22 Jul 2020 07:06:32 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.82.72])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jul 2020 07:06:32 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id CF9902E340E; Wed, 22 Jul 2020 12:36:28 +0530 (IST)
-Date:   Wed, 22 Jul 2020 12:36:28 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <michaele@au1.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v2 10/10] powerpc/smp: Implement cpu_to_coregroup_id
-Message-ID: <20200722070628.GG31038@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
- <20200721113814.32284-11-srikar@linux.vnet.ibm.com>
+        Wed, 22 Jul 2020 09:06:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5789610002A;
+        Wed, 22 Jul 2020 09:06:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 44D6121F676;
+        Wed, 22 Jul 2020 09:06:31 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Jul
+ 2020 09:06:30 +0200
+Subject: Re: [PATCH for v5.9] ARM: STM32: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        <linux@armlinux.org.uk>, <mcoquelin.stm32@gmail.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+References: <20200719094948.57487-1-grandmaster@al2klimov.de>
+ <43c11c7a-269e-cc41-6934-0d2e0dec3226@st.com>
+ <219075a0-d7cf-a699-21d7-fabc6f077f95@al2klimov.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <55c95208-de0f-b2d3-c20c-d19f3ce34e2a@st.com>
+Date:   Wed, 22 Jul 2020 09:06:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721113814.32284-11-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
+In-Reply-To: <219075a0-d7cf-a699-21d7-fabc6f077f95@al2klimov.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-22_03:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007220052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 05:08:14PM +0530, Srikar Dronamraju wrote:
-> Lookup the coregroup id from the associativity array.
-> 
-> If unable to detect the coregroup id, fallback on the core id.
-> This way, ensure sched_domain degenerates and an extra sched domain is
-> not created.
-> 
-> Ideally this function should have been implemented in
-> arch/powerpc/kernel/smp.c. However if its implemented in mm/numa.c, we
-> don't need to find the primary domain again.
-> 
-> If the device-tree mentions more than one coregroup, then kernel
-> implements only the last or the smallest coregroup, which currently
-> corresponds to the penultimate domain in the device-tree.
-> 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <michaele@au1.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Nick Piggin <npiggin@au1.ibm.com>
-> Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@linux.ibm.com>
-> Cc: Anton Blanchard <anton@au1.ibm.com>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-
-Looks good to me.
-
-Reviewed-by : Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 
 
-> ---
-> Changelog v1 -> v2:
-> powerpc/smp: Implement cpu_to_coregroup_id
-> 	Move coregroup_enabled before getting associativity (Gautham)
+On 7/21/20 7:49 PM, Alexander A. Klimov wrote:
 > 
->  arch/powerpc/mm/numa.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
 > 
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index ef8aa580da21..ae57b68beaee 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -1218,6 +1218,26 @@ int find_and_online_cpu_nid(int cpu)
+> Am 21.07.20 um 10:49 schrieb Alexandre Torgue:
+>> Hi Alexander
+>>
+>> On 7/19/20 11:49 AM, Alexander A. Klimov wrote:
+>>> Rationale:
+>>> Reduces attack surface on kernel devs opening the links for MITM
+>>> as HTTPS traffic is much harder to manipulate.
+>>>
+>>> Deterministic algorithm:
+>>> For each file:
+>>>    If not .svg:
+>>>      For each line:
+>>>        If doesn't contain `\bxmlns\b`:
+>>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>>       If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>>>              If both the HTTP and HTTPS versions
+>>>              return 200 OK and serve the same content:
+>>>                Replace HTTP with HTTPS.
+>>>
+>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>>
+>> This patch touch 2 different subsystems. Can you please split it ?
+> I can. But don't all files belong to the subsystem this patch is for?
 > 
->  int cpu_to_coregroup_id(int cpu)
->  {
-> +	__be32 associativity[VPHN_ASSOC_BUFSIZE] = {0};
-> +	int index;
-> +
-> +	if (cpu < 0 || cpu > nr_cpu_ids)
-> +		return -1;
-> +
-> +	if (!coregroup_enabled)
-> +		goto out;
-> +
-> +	if (!firmware_has_feature(FW_FEATURE_VPHN))
-> +		goto out;
-> +
-> +	if (vphn_get_associativity(cpu, associativity))
-> +		goto out;
-> +
-> +	index = of_read_number(associativity, 1);
-> +	if (index > min_common_depth + 1)
-> +		return of_read_number(&associativity[index - 1], 1);
-> +
-> +out:
->  	return cpu_to_core_id(cpu);
->  }
+> ➜  linux git:(autogen/1029) git show arch/arm/mach-stm32/Makefile.boot 
+> |perl scripts/get_maintainer.pl --nogit{,-fallback}
+> Russell King <linux@armlinux.org.uk> (odd fixer:ARM PORT)
+> Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 
+> ARCHITECTURE)
+> Alexandre Torgue <alexandre.torgue@st.com> (maintainer:ARM/STM32 
+> ARCHITECTURE)
+> linux-arm-kernel@lists.infradead.org (moderated list:ARM SUB-ARCHITECTURES)
+> linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 
+> ARCHITECTURE)
+> linux-kernel@vger.kernel.org (open list)
+> ➜  linux git:(autogen/1029) git show crypto/testmgr.h |perl 
+> scripts/get_maintainer.pl --nogit{,-fallback}
+> Herbert Xu <herbert@gondor.apana.org.au> (maintainer:CRYPTO API)
+> "David S. Miller" <davem@davemloft.net> (maintainer:CRYPTO API)
+> Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 
+> ARCHITECTURE)
+> Alexandre Torgue <alexandre.torgue@st.com> (maintainer:ARM/STM32 
+> ARCHITECTURE)
+> linux-crypto@vger.kernel.org (open list:CRYPTO API)
+> linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 
+> ARCHITECTURE)
+> linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 
+> ARCHITECTURE)
+> linux-kernel@vger.kernel.org (open list)
+> ➜  linux git:(autogen/1029)
+
+hum, I was not aware that I could take "crypto" patches. But anyway I 
+think, the clean way (to avoid merge  issue later) is that I take 
+mach-stm32 patch and Herbert the crypto one. Except if Herbert doesn't 
+agree can you please split ?
+
+Thanks
+Alex
+
 > 
-> -- 
-> 2.17.1
-> 
+>>
+>> Regards
+>> Alex
+>>
+>>
+>>> ---
+>>>   Continuing my work started at 93431e0607e5.
+>>>   See also: git log --oneline '--author=Alexander A. Klimov 
+>>> <grandmaster@al2klimov.de>' v5.7..master
+>>>   (Actually letting a shell for loop submit all this stuff for me.)
+>>>
+>>>   If there are any URLs to be removed completely
+>>>   or at least not (just) HTTPSified:
+>>>   Just clearly say so and I'll *undo my change*.
+>>>   See also: https://lkml.org/lkml/2020/6/27/64
+>>>
+>>>   If there are any valid, but yet not changed URLs:
+>>>   See: https://lkml.org/lkml/2020/6/26/837
+>>>
+>>>   If you apply the patch, please let me know.
+>>>
+>>>   Sorry again to all maintainers who complained about subject lines.
+>>>   Now I realized that you want an actually perfect prefixes,
+>>>   not just subsystem ones.
+>>>   I tried my best...
+>>>   And yes, *I could* (at least half-)automate it.
+>>>   Impossible is nothing! :)
+>>>
+>>>
+>>>   arch/arm/mach-stm32/Makefile.boot | 2 +-
+>>>   crypto/testmgr.h                  | 6 +++---
+>>>   2 files changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-stm32/Makefile.boot 
+>>> b/arch/arm/mach-stm32/Makefile.boot
+>>> index cec195d4fcba..5dde7328a7a9 100644
+>>> --- a/arch/arm/mach-stm32/Makefile.boot
+>>> +++ b/arch/arm/mach-stm32/Makefile.boot
+>>> @@ -1,4 +1,4 @@
+>>>   # SPDX-License-Identifier: GPL-2.0-only
+>>>   # Empty file waiting for deletion once Makefile.boot isn't needed 
+>>> any more.
+>>>   # Patch waits for application at
+>>> -# 
+>>> http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+>>> +# 
+>>> https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+>>> diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+>>> index d29983908c38..cdcf0d2fe40d 100644
+>>> --- a/crypto/testmgr.h
+>>> +++ b/crypto/testmgr.h
+>>> @@ -16231,7 +16231,7 @@ static const struct cipher_testvec 
+>>> aes_lrw_tv_template[] = {
+>>>                 "\xe9\x5d\x48\x92\x54\x63\x4e\xb8",
+>>>           .len    = 48,
+>>>       }, {
+>>> -/* 
+>>> http://www.mail-archive.com/stds-p1619@listserv.ieee.org/msg00173.html */ 
+>>>
+>>> +/* 
+>>> https://www.mail-archive.com/stds-p1619@listserv.ieee.org/msg00173.html 
+>>> */
+>>>           .key    = "\xf8\xd4\x76\xff\xd6\x46\xee\x6c"
+>>>                 "\x23\x84\xcb\x1c\x77\xd6\x19\x5d"
+>>>                 "\xfe\xf1\xa9\xf3\x7b\xbc\x8d\x21"
+>>> @@ -21096,7 +21096,7 @@ static const struct aead_testvec 
+>>> aegis128_tv_template[] = {
+>>>   /*
+>>>    * All key wrapping test vectors taken from
+>>> - * http://csrc.nist.gov/groups/STM/cavp/documents/mac/kwtestvectors.zip
+>>> + * 
+>>> https://csrc.nist.gov/groups/STM/cavp/documents/mac/kwtestvectors.zip
+>>>    *
+>>>    * Note: as documented in keywrap.c, the ivout for encryption is 
+>>> the first
+>>>    * semiblock of the ciphertext from the test vector. For 
+>>> decryption, iv is
+>>> @@ -22825,7 +22825,7 @@ static const struct cipher_testvec 
+>>> xeta_tv_template[] = {
+>>>    * FCrypt test vectors
+>>>    */
+>>>   static const struct cipher_testvec fcrypt_pcbc_tv_template[] = {
+>>> -    { /* 
+>>> http://www.openafs.org/pipermail/openafs-devel/2000-December/005320.html 
+>>> */
+>>> +    { /* 
+>>> https://www.openafs.org/pipermail/openafs-devel/2000-December/005320.html 
+>>> */
+>>>           .key    = "\x00\x00\x00\x00\x00\x00\x00\x00",
+>>>           .klen    = 8,
+>>>           .iv    = "\x00\x00\x00\x00\x00\x00\x00\x00",
+>>>
