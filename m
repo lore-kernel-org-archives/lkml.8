@@ -7,125 +7,130 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C24AC433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57815C433ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF3A20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4F920729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbAzfFVw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AWkmOFEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgGVKIT (ORCPT
+        id S1732086AbgGVKI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
+        Wed, 22 Jul 2020 06:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731763AbgGVKIP (ORCPT
+        with ESMTP id S1731846AbgGVKIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:08:15 -0400
+        Wed, 22 Jul 2020 06:08:18 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B61C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:15 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so1330476wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EABDC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y3so1316478wrl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Cu4LuhlpDSlOofMxjxPFDlq0CYY7PcSEJrvgG99XiXI=;
-        b=LbAzfFVwG/XsAHQVg8oeOO4psiqnVJNvkQHUAgJEXWxkIpgsE/xDov9QiJVRqjYaxF
-         ufJFFMOWxrDOq4w5m5HIMyCuWBvO3WAfJ/shYa8ntf6AcFMRZnkJrdYlcZpm+Fkagxz/
-         3hW9Sx1r74abqiW7IO3OwEHpFGWCyi6t4wDzWxOug1cisMpXEa+0aq48FjD7Wsi6tcbQ
-         42POuqiLwtKsO3NySJl6lN80KnYr3eKr1EynkoBvwTIoBGR0UF3eQgxr6kNY1ZzzbrhC
-         lfUUGTKazDwfuA7SHl4PeDwT9xSYljzqE+/otNVj35ytFTz08kiKIwtpD+pUhtNBeh/K
-         wShQ==
+        bh=A5OyaDKazB9R0G5RFCOuxIA9I8H8rA5wRtI5qxedDLM=;
+        b=AWkmOFENuGxlgm20HEjydkPvslOX3oGwjR3KF/ZAEBdeKMzzbfwTt0wGynwt1wZ3qc
+         QAAUaBeYd3z1sHUeQAyPWP7XMvQCT1Y0EpzbVgDeS16UANAn3X839Fj4KDW1gNacxK49
+         OuBRJMAOPSxTNO60xUuc15pPBCeRUtCADQLB278Plwp2zT9BMWsl0WoE5HGDoFvp6Xfv
+         rCgGp4XA8NkE89K8OAA92Cz2skzTIU9lk7kHepDjDfDiKxXAZ7oLD/U8Cj+fC4AkNM2m
+         agBkI1cP2ZOnukdm9a0Zwy9RsI86NVq1aYrFCnRFJNmVQOd9/9K+AmeTwsWX60P+sgVs
+         eGag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Cu4LuhlpDSlOofMxjxPFDlq0CYY7PcSEJrvgG99XiXI=;
-        b=j36ZOe6DIixcMEc2Fni8CIGK1MdTwhTa/BqP6gLGmLie7+cXqGrSIBANAZ7yxTEBGP
-         RodQCAfcc2oEAd1/ZzNHsFUDOp1af6yKWyZBAaru/Qb2yPBb48vg5qDEkWQZ3Q/XidtK
-         ZwIKI2NYYfPcPqtBlxLv35NpKURY8ET4aVr6ofebc0HcD7b1pgehA/4ft1EQVZAn+wcn
-         HiapyV/+pwV1DYc7CySB8GXQtYx1qYsY5CQlEp2AejcgsQZBdOIjikE36uGWbSqjyeMA
-         Ybrj+8QYGM76PeIqB5Wx76RAUDOChzPsItnubQ9yjJECqSfmBQ6OYkgrhf+fTHvQP/gQ
-         nzqw==
-X-Gm-Message-State: AOAM532ekzC/Q1QLYpXx/A1i5f7RmqXz1JKSGN6Qa4EafVgZ3TEK9Mgz
-        7H95ZYj+0PmrIpwUqhuXE2i9EQ==
-X-Google-Smtp-Source: ABdhPJxvTlEfPd/pLtSnllPeSFiUbCsUIeP+kIhePDLcvtH7uxUJ7uII40gwpw8PiVo9izQJq3j02A==
-X-Received: by 2002:adf:94c3:: with SMTP id 61mr19611860wrr.289.1595412493892;
-        Wed, 22 Jul 2020 03:08:13 -0700 (PDT)
+        bh=A5OyaDKazB9R0G5RFCOuxIA9I8H8rA5wRtI5qxedDLM=;
+        b=XeAXzVAQto/08Eyh+BRhO5/rwQ+NmNlKcBWF4XF2FvViBw6Lo7c75WP/FjAbEf7LrG
+         CXp7jJSVfB9m5u6mClQz4X8dRYzu3F0/MOvtCCTSgyinJPHmYrgQxv9Q3HQi51mz2Om+
+         nbLAEVaZ7FXIYti6zFsaj/jdUUvrR3GHh2QE1gqhRg3pxAtp0TgQpL65qrr+0fH4HcCE
+         kX7dSdAp4m/V7u0eZ5+npnHlVq92/EHZPuOQvLLCa7NWM5J4B7wu7Rulo4N/VVJfNf08
+         w3i0L6Qf2F0ymYOo6+8+8rrmWtUaRW7I7unSYjcASeD2Yjttw5mZh01dASChmqnXBcrq
+         z8qw==
+X-Gm-Message-State: AOAM530+3GdpSt2Nr62Ikg1fNMc6gehalZ/F+IbhfqfaCvrrKKWoIlxT
+        kiPN2gxUz7BdYbA5FtMLeH/suw==
+X-Google-Smtp-Source: ABdhPJwm2kjoQc9ihWHv0VlE/0oihzewOO8+TnZja0V1rUhp5ZndjI4gaMiZ1uSWMVejAVcPv45RSA==
+X-Received: by 2002:adf:9f12:: with SMTP id l18mr17693457wrf.35.1595412497232;
+        Wed, 22 Jul 2020 03:08:17 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.12
+        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:08:13 -0700 (PDT)
+        Wed, 22 Jul 2020 03:08:16 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 03/14] nvmem: Enforce nvmem stride in the sysfs interface
-Date:   Wed, 22 Jul 2020 11:06:54 +0100
-Message-Id: <20200722100705.7772-4-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 06/14] nvmem: core: Add nvmem_cell_read_u8()
+Date:   Wed, 22 Jul 2020 11:06:57 +0100
+Message-Id: <20200722100705.7772-7-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
 References: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Andreas Färber <afaerber@suse.de>
 
-The 'struct nvmem_config' has a stride attribute that specifies the
-needed alignment for accesses into the nvmem.  This is used in
-nvmem_cell_info_to_nvmem_cell() but not in the sysfs read/write
-functions.  If the alignment is important in one place it's important
-everywhere, so let's add enforcement.
+Complement the u16, u32 and u64 helpers with a u8 variant to ease
+accessing byte-sized values.
 
-For now we'll consider it totally invalid to access with the wrong
-alignment.  We could relax this in the read case where we could just
-read some extra bytes and throw them away.  Relaxing it in the write
-case seems harder (and less safe?) since we'd have to read some data
-first and then write it back.  To keep it symmetric we'll just
-disallow it in both cases.
+This helper will be useful for Realtek Digital Home Center platforms,
+which store some byte and sub-byte sized values in non-volatile memory.
 
-Reported-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-Tested-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/nvmem/core.c           | 15 +++++++++++++++
+ include/linux/nvmem-consumer.h |  1 +
+ 2 files changed, 16 insertions(+)
 
 diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 927eb5f6003f..fc480d636be2 100644
+index 95bed31391cd..d6bacc878500 100644
 --- a/drivers/nvmem/core.c
 +++ b/drivers/nvmem/core.c
-@@ -135,6 +135,9 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
- 	if (pos >= nvmem->size)
- 		return 0;
+@@ -1374,6 +1374,21 @@ static int nvmem_cell_read_common(struct device *dev, const char *cell_id,
+ 	return 0;
+ }
  
-+	if (!IS_ALIGNED(pos, nvmem->stride))
-+		return -EINVAL;
++/**
++ * nvmem_cell_read_u8() - Read a cell value as a u8
++ *
++ * @dev: Device that requests the nvmem cell.
++ * @cell_id: Name of nvmem cell to read.
++ * @val: pointer to output value.
++ *
++ * Return: 0 on success or negative errno.
++ */
++int nvmem_cell_read_u8(struct device *dev, const char *cell_id, u8 *val)
++{
++	return nvmem_cell_read_common(dev, cell_id, val, sizeof(*val));
++}
++EXPORT_SYMBOL_GPL(nvmem_cell_read_u8);
 +
- 	if (count < nvmem->word_size)
- 		return -EINVAL;
- 
-@@ -172,6 +175,9 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
- 	if (pos >= nvmem->size)
- 		return -EFBIG;
- 
-+	if (!IS_ALIGNED(pos, nvmem->stride))
-+		return -EINVAL;
-+
- 	if (count < nvmem->word_size)
- 		return -EINVAL;
- 
+ /**
+  * nvmem_cell_read_u16() - Read a cell value as a u16
+  *
+diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+index 1b311d27c9b8..052293f4cbdb 100644
+--- a/include/linux/nvmem-consumer.h
++++ b/include/linux/nvmem-consumer.h
+@@ -61,6 +61,7 @@ void nvmem_cell_put(struct nvmem_cell *cell);
+ void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
+ void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
+ int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len);
++int nvmem_cell_read_u8(struct device *dev, const char *cell_id, u8 *val);
+ int nvmem_cell_read_u16(struct device *dev, const char *cell_id, u16 *val);
+ int nvmem_cell_read_u32(struct device *dev, const char *cell_id, u32 *val);
+ int nvmem_cell_read_u64(struct device *dev, const char *cell_id, u64 *val);
 -- 
 2.21.0
 
