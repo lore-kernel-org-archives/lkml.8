@@ -2,179 +2,144 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD52C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DBEC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39AAB207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA91206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivufnweq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbgGVJ1e (ORCPT
+        id S1731498AbgGVJ1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:27:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49764 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726153AbgGVJ1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:27:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2CE5EABD2;
-        Wed, 22 Jul 2020 09:27:38 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 11:27:30 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-In-Reply-To: <20200717170008.5949-1-kristen@linux.intel.com>
-Message-ID: <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 22 Jul 2020 05:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731338AbgGVJ1j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:27:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C365C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:27:39 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t6so894763pgq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pDsj9nZdzBG+5WY/yle5GyRO0Zn2RK3XNjk1nxrgETU=;
+        b=ivufnweq8/EvEjbxrMe0YH2cjWUQrZ6lhGmtZXxqhuYGPmPGChoQMTCHIh8NYU9P19
+         0N3NAqzNvWndc7/XaiIClaXDvSjHp4IekSB/ukqBTM7pK7pONsQ6rLaB/3NH5ZNBqX06
+         ktC+mzxaCE6f0m/kv5CJbPJjBcK0Qx59Lgh4yhoK+jUlLxK/Lq6EJvI7gbX5fb/CGrt0
+         +pG6uFSXIvGtZhZtlojtoAqVp0v04L5wbesesC/kLdRcDquF2b3lg07jV/LRdwkwCMNH
+         bQ0VROmUB4NqQ2eDa1eMo6F7+AkWrAl7FoKRi8c639M1H+9ZeZpIoUBmafdxQnBvnX0g
+         0SiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pDsj9nZdzBG+5WY/yle5GyRO0Zn2RK3XNjk1nxrgETU=;
+        b=KewHuoo5ZFUbppubxHwxLOELZbzE35psxhG5LLL7z/DcAmPp/JRjbmOqHTpTruwvRj
+         k0oNHkx5c589E/90L0xKYHxtFD44KzivQbQwHIZnKn+waYbANQjCETaVBwWwHm3DUGNu
+         ENRZtwnrgCO1mDLYUmo4K8bEglb/Td9RJQzch2EojgLBG2aP7bOcuHV5pT+i+boUyP0S
+         1W5kltfCpmEIx+7ODyYoZuhwyOe3Pm1eIPIyihMjI+DhCwbJc8PXw8wHwarSn89IuHbA
+         MJnwfaD8bjiIy7Luj11qeLV6+lN9UzVl9T36dhjtGzXFewo/yj8jtJ4dcnVEz5BaZvRb
+         tVDw==
+X-Gm-Message-State: AOAM532A2dHVb/dn8o4v8vY1fpowStImcbprGJAIGHVv/BSIACTm+tWI
+        lI0Hmx+lchZjRThwt6bLRiU=
+X-Google-Smtp-Source: ABdhPJzuVPnpKl5F1C6P4pwhs2f3+/uvCOmyD7+7Vl6Kp/JWpOQNKGGNoJm9+c5wes3QNpR2nLSdmA==
+X-Received: by 2002:a62:ceca:: with SMTP id y193mr26982626pfg.11.1595410058758;
+        Wed, 22 Jul 2020 02:27:38 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([103.29.143.67])
+        by smtp.gmail.com with ESMTPSA id z26sm23275414pfr.187.2020.07.22.02.27.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jul 2020 02:27:37 -0700 (PDT)
+From:   Yue Hu <zbestahu@gmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com
+Cc:     linux-kernel@vger.kernel.org, huyue2@yulong.com, zbestahu@163.com
+Subject: [PATCH] sysrq: use only one slot for loglevels in key table
+Date:   Wed, 22 Jul 2020 17:26:09 +0800
+Message-Id: <20200722092610.11504-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.19.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let me CC live-patching ML, because from a quick glance this is something 
-which could impact live patching code. At least it invalidates assumptions 
-which "sympos" is based on.
+From: Yue Hu <huyue2@yulong.com>
 
-Miroslav
+Currently, sysrq_key_table[] has 10 slots for same interface to change
+console loglevel. No specific purpose to do that. Let's use only one slot
+to save memory space. Also, update the key2index calculation. And remove
+needless code in help message print path to make the logic simpler.
 
-On Fri, 17 Jul 2020, Kristen Carlson Accardi wrote:
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+ drivers/tty/sysrq.c | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
 
-> Function Granular Kernel Address Space Layout Randomization (fgkaslr)
-> ---------------------------------------------------------------------
-> 
-> This patch set is an implementation of finer grained kernel address space
-> randomization. It rearranges your kernel code at load time 
-> on a per-function level granularity, with only around a second added to
-> boot time.
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 7c95afa9..3f12910 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -442,17 +442,8 @@ static void sysrq_handle_unrt(int key)
+ /* Key Operations table and lock */
+ static DEFINE_SPINLOCK(sysrq_key_table_lock);
+ 
+-static const struct sysrq_key_op *sysrq_key_table[36] = {
+-	&sysrq_loglevel_op,		/* 0 */
+-	&sysrq_loglevel_op,		/* 1 */
+-	&sysrq_loglevel_op,		/* 2 */
+-	&sysrq_loglevel_op,		/* 3 */
+-	&sysrq_loglevel_op,		/* 4 */
+-	&sysrq_loglevel_op,		/* 5 */
+-	&sysrq_loglevel_op,		/* 6 */
+-	&sysrq_loglevel_op,		/* 7 */
+-	&sysrq_loglevel_op,		/* 8 */
+-	&sysrq_loglevel_op,		/* 9 */
++static const struct sysrq_key_op *sysrq_key_table[27] = {
++	&sysrq_loglevel_op,		/* 0 - 9 */
+ 
+ 	/*
+ 	 * a: Don't use for system provided sysrqs, it is handled specially on
+@@ -507,9 +498,9 @@ static int sysrq_key_table_key2index(int key)
+ 	int retval;
+ 
+ 	if ((key >= '0') && (key <= '9'))
+-		retval = key - '0';
++		retval = 0;
+ 	else if ((key >= 'a') && (key <= 'z'))
+-		retval = key + 10 - 'a';
++		retval = key + 1 - 'a';
+ 	else
+ 		retval = -1;
+ 	return retval;
+@@ -577,16 +568,8 @@ void __handle_sysrq(int key, bool check_mask)
+ 		pr_info("HELP : ");
+ 		/* Only print the help msg once per handler */
+ 		for (i = 0; i < ARRAY_SIZE(sysrq_key_table); i++) {
+-			if (sysrq_key_table[i]) {
+-				int j;
+-
+-				for (j = 0; sysrq_key_table[i] !=
+-						sysrq_key_table[j]; j++)
+-					;
+-				if (j != i)
+-					continue;
++			if (sysrq_key_table[i])
+ 				pr_cont("%s ", sysrq_key_table[i]->help_msg);
+-			}
+ 		}
+ 		pr_cont("\n");
+ 		console_loglevel = orig_log_level;
+-- 
+1.9.1
 
-[...]
-
-> Background
-> ----------
-> KASLR was merged into the kernel with the objective of increasing the
-> difficulty of code reuse attacks. Code reuse attacks reused existing code
-> snippets to get around existing memory protections. They exploit software bugs
-> which expose addresses of useful code snippets to control the flow of
-> execution for their own nefarious purposes. KASLR moves the entire kernel
-> code text as a unit at boot time in order to make addresses less predictable.
-> The order of the code within the segment is unchanged - only the base address
-> is shifted. There are a few shortcomings to this algorithm.
-> 
-> 1. Low Entropy - there are only so many locations the kernel can fit in. This
->    means an attacker could guess without too much trouble.
-> 2. Knowledge of a single address can reveal the offset of the base address,
->    exposing all other locations for a published/known kernel image.
-> 3. Info leaks abound.
-> 
-> Finer grained ASLR has been proposed as a way to make ASLR more resistant
-> to info leaks. It is not a new concept at all, and there are many variations
-> possible. Function reordering is an implementation of finer grained ASLR
-> which randomizes the layout of an address space on a function level
-> granularity. We use the term "fgkaslr" in this document to refer to the
-> technique of function reordering when used with KASLR, as well as finer grained
-> KASLR in general.
-> 
-> Proposed Improvement
-> --------------------
-> This patch set proposes adding function reordering on top of the existing
-> KASLR base address randomization. The over-arching objective is incremental
-> improvement over what we already have. It is designed to work in combination
-> with the existing solution. The implementation is really pretty simple, and
-> there are 2 main area where changes occur:
-> 
-> * Build time
-> 
-> GCC has had an option to place functions into individual .text sections for
-> many years now. This option can be used to implement function reordering at
-> load time. The final compiled vmlinux retains all the section headers, which
-> can be used to help find the address ranges of each function. Using this
-> information and an expanded table of relocation addresses, individual text
-> sections can be suffled immediately after decompression. Some data tables
-> inside the kernel that have assumptions about order require re-sorting
-> after being updated when applying relocations. In order to modify these tables,
-> a few key symbols are excluded from the objcopy symbol stripping process for
-> use after shuffling the text segments.
-> 
-> Some highlights from the build time changes to look for:
-> 
-> The top level kernel Makefile was modified to add the gcc flag if it
-> is supported. Currently, I am applying this flag to everything it is
-> possible to randomize. Anything that is written in C and not present in a
-> special input section is randomized. The final binary segment 0 retains a
-> consolidated .text section, as well as all the individual .text.* sections.
-> Future work could turn off this flags for selected files or even entire
-> subsystems, although obviously at the cost of security.
-> 
-> The relocs tool is updated to add relative relocations. This information
-> previously wasn't included because it wasn't necessary when moving the
-> entire .text segment as a unit. 
-> 
-> A new file was created to contain a list of symbols that objcopy should
-> keep. We use those symbols at load time as described below.
-> 
-> * Load time
-> 
-> The boot kernel was modified to parse the vmlinux elf file after
-> decompression to check for our interesting symbols that we kept, and to
-> look for any .text.* sections to randomize. The consolidated .text section
-> is skipped and not moved. The sections are shuffled randomly, and copied
-> into memory following the .text section in a new random order. The existing
-> code which updated relocation addresses was modified to account for
-> not just a fixed delta from the load address, but the offset that the function
-> section was moved to. This requires inspection of each address to see if
-> it was impacted by a randomization. We use a bsearch to make this less
-> horrible on performance. Any tables that need to be modified with new
-> addresses or resorted are updated using the symbol addresses parsed from the
-> elf symbol table.
-> 
-> In order to hide our new layout, symbols reported through /proc/kallsyms
-> will be displayed in a random order.
-> 
-> Security Considerations
-> -----------------------
-> The objective of this patch set is to improve a technology that is already
-> merged into the kernel (KASLR). This code will not prevent all attacks,
-> but should instead be considered as one of several tools that can be used.
-> In particular, this code is meant to make KASLR more effective in the presence
-> of info leaks.
-> 
-> How much entropy we are adding to the existing entropy of standard KASLR will
-> depend on a few variables. Firstly and most obviously, the number of functions
-> that are randomized matters. This implementation keeps the existing .text
-> section for code that cannot be randomized - for example, because it was
-> assembly code. The less sections to randomize, the less entropy. In addition,
-> due to alignment (16 bytes for x86_64), the number of bits in a address that
-> the attacker needs to guess is reduced, as the lower bits are identical.
-
-[...]
-
-> Modules
-> -------
-> Modules are randomized similarly to the rest of the kernel by shuffling
-> the sections at load time prior to moving them into memory. The module must
-> also have been build with the -ffunction-sections compiler option.
-> 
-> Although fgkaslr for the kernel is only supported for the X86_64 architecture,
-> it is possible to use fgkaslr with modules on other architectures. To enable
-> this feature, select
-> 
-> CONFIG_MODULE_FG_KASLR=y
-> 
-> This option is selected automatically for X86_64 when CONFIG_FG_KASLR is set.
-> 
-> Disabling
-> ---------
-> Disabling normal KASLR using the nokaslr command line option also disables
-> fgkaslr. It is also possible to disable fgkaslr separately by booting with
-> fgkaslr=off on the commandline.
