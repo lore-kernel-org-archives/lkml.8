@@ -2,195 +2,313 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E1EC433FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66436C433F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99AC720825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388A820825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="e9jeHI8E"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H1dpczW7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3AjL0kv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733305AbgGVWMP (ORCPT
+        id S2387435AbgGVWMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:12:15 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:57500 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733032AbgGVWMN (ORCPT
+        Wed, 22 Jul 2020 18:12:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52552 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733150AbgGVWLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:12:13 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6g1a019807;
-        Wed, 22 Jul 2020 15:11:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=SVerhC+9GGCE5gDkusm4mu13mYnVROxSnyAfziKMekE=;
- b=e9jeHI8Eov7Zs2Gwygqzmai4Gh9mDnU6ymVAuEXra7CtntjwyJ0qtGt+AHwemuISADPu
- VbhMMdF6lxzVF9oArRTa7SB3BkXYVlOEkvvbvPK6qkRTzS15bGsX5DIT46eeVNO8r654
- VNXGpxZTQQY1t1Y2JcZvs6dHpihS07qcXiYH1GgmISatRBM6eBGA4QrpCJ8lngOErMYS
- xb4BFpA2u+l3JVSzerqF3WWE7YbirjJuebbgdtA74bepGJwZ4kgtMHPAb9OLJiKW2s3Q
- l1TlIbigo/DjusyMq92XDaA4e8+T1Rs13JaW3strRiSNZzn+JMvX6OZhQ7yzFv4W40K5 4w== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkt0mj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 15:11:56 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:54 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:53 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 15:11:53 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 053243F7048;
-        Wed, 22 Jul 2020 15:11:46 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 07/15] qed: simplify initialization of the chains with an external PBL
-Date:   Thu, 23 Jul 2020 01:10:37 +0300
-Message-ID: <20200722221045.5436-8-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
-References: <20200722221045.5436-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 18:11:42 -0400
+Message-Id: <20200722220520.855839271@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=RjhPGcuOSxiM5h2vqZ/ay/HrgGpLDZMkPwTL1jcmYpc=;
+        b=H1dpczW7kN3lnZbDHYf0bplk5nfI/8oeJ/kXKjlDuvRyq12M8xpQM5i37c0rVCCHk0g5MF
+        xgGoryDcwU02TuFi7X/WBxjlaeFHKqz4l88DCXBXBDgo0AywT0ewdjy9vejRWERPO4OuXB
+        3vwZo6JswDEa8m0B49lrthPVQ1a1neaZU0D4MpVpwrKYMY9QJeYDP8LQWkm+wR0v9TZ0v5
+        igfab0CoC3lNBkFX3xzh4k72NM1K75jq3FXEeZYHz8bDi36FNBHeYLVUx9bUA5VWSWZM5/
+        ZXQDoyIS44P9Dqwp2BRagLtCfvlhmeRjlZUv39BGMOcodcTmdvC1igOAOxQLpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=RjhPGcuOSxiM5h2vqZ/ay/HrgGpLDZMkPwTL1jcmYpc=;
+        b=3AjL0kv7a4HLsOlpWGMZsnql2rhJ4PLKhHFyN23fgzttmHHviwoDPvE2kP/pqIBGIcRovz
+        tz6B7LC7o8t4u5Bw==
+Date:   Thu, 23 Jul 2020 00:00:08 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V5 14/15] x86/entry: Cleanup idtentry_enter/exit
+References: <20200722215954.464281930@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fill PBL table parameters for chains with an external PBL data earlier on
-qed_chain_init_params() rather than on allocation itself. This simplifies
-allocation code and allows to extend struct ext_pbl for other chain types.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Remove the temporary defines and fixup all references.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 ---
- drivers/net/ethernet/qlogic/qed/qed_chain.c | 37 +++++++++++----------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ arch/x86/entry/common.c         |    6 +++---
+ arch/x86/include/asm/idtentry.h |   33 ++++++++++++++-------------------
+ arch/x86/kernel/kvm.c           |    6 +++---
+ arch/x86/kernel/traps.c         |    6 +++---
+ arch/x86/mm/fault.c             |    6 +++---
+ 5 files changed, 26 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_chain.c b/drivers/net/ethernet/qlogic/qed/qed_chain.c
-index b60ec3e4654c..6effee3b50f4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_chain.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_chain.c
-@@ -11,7 +11,8 @@ static void qed_chain_init_params(struct qed_chain *chain,
- 				  u32 page_cnt, u8 elem_size,
- 				  enum qed_chain_use_mode intended_use,
- 				  enum qed_chain_mode mode,
--				  enum qed_chain_cnt_type cnt_type)
-+				  enum qed_chain_cnt_type cnt_type,
-+				  const struct qed_chain_ext_pbl *ext_pbl)
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -248,9 +248,9 @@ static void __xen_pv_evtchn_do_upcall(vo
  {
- 	memset(chain, 0, sizeof(*chain));
+ 	struct pt_regs *old_regs;
+ 	bool inhcall;
+-	idtentry_state_t state;
++	irqentry_state_t state;
  
-@@ -31,6 +32,13 @@ static void qed_chain_init_params(struct qed_chain *chain,
- 	chain->page_cnt = page_cnt;
- 	chain->capacity = chain->usable_per_page * page_cnt;
- 	chain->size = chain->elem_per_page * page_cnt;
-+
-+	if (ext_pbl && ext_pbl->p_pbl_virt) {
-+		chain->pbl_sp.table_virt = ext_pbl->p_pbl_virt;
-+		chain->pbl_sp.table_phys = ext_pbl->p_pbl_phys;
-+
-+		chain->b_external_pbl = true;
-+	}
+-	state = idtentry_enter(regs);
++	state = irqentry_enter(regs);
+ 	old_regs = set_irq_regs(regs);
+ 
+ 	instrumentation_begin();
+@@ -266,7 +266,7 @@ static void __xen_pv_evtchn_do_upcall(vo
+ 		instrumentation_end();
+ 		restore_inhcall(inhcall);
+ 	} else {
+-		idtentry_exit(regs, state);
++		irqentry_exit(regs, state);
+ 	}
  }
+ #endif /* CONFIG_XEN_PV */
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -11,11 +11,6 @@
  
- static void qed_chain_init_next_ptr_elem(const struct qed_chain *chain,
-@@ -230,8 +238,7 @@ static int qed_chain_alloc_single(struct qed_dev *cdev,
- 	return 0;
- }
+ #include <asm/irq_stack.h>
  
--static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain,
--			       struct qed_chain_ext_pbl *ext_pbl)
-+static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain)
- {
- 	struct device *dev = &cdev->pdev->dev;
- 	struct addr_tbl_entry *addr_tbl;
-@@ -253,21 +260,14 @@ static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain,
- 
- 	chain->pbl.pp_addr_tbl = addr_tbl;
- 
--	if (ext_pbl) {
--		size = 0;
--		pbl_virt = ext_pbl->p_pbl_virt;
--		pbl_phys = ext_pbl->p_pbl_phys;
-+	if (chain->b_external_pbl)
-+		goto alloc_pages;
- 
--		chain->b_external_pbl = true;
--	} else {
--		size = array_size(page_cnt, sizeof(*pbl_virt));
--		if (unlikely(size == SIZE_MAX))
--			return -EOVERFLOW;
+-/* Temporary defines */
+-typedef irqentry_state_t idtentry_state_t;
+-#define idtentry_enter irqentry_enter
+-#define idtentry_exit irqentry_exit
 -
--		pbl_virt = dma_alloc_coherent(dev, size, &pbl_phys,
--					      GFP_KERNEL);
--	}
-+	size = array_size(page_cnt, sizeof(*pbl_virt));
-+	if (unlikely(size == SIZE_MAX))
-+		return -EOVERFLOW;
+ /**
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+  *		      No error code pushed by hardware
+@@ -45,8 +40,8 @@ typedef irqentry_state_t idtentry_state_
+  * The macro is written so it acts as function definition. Append the
+  * body with a pair of curly brackets.
+  *
+- * idtentry_enter() contains common code which has to be invoked before
+- * arbitrary code in the body. idtentry_exit() contains common code
++ * irqentry_enter() contains common code which has to be invoked before
++ * arbitrary code in the body. irqentry_exit() contains common code
+  * which has to run before returning to the low level assembly code.
+  */
+ #define DEFINE_IDTENTRY(func)						\
+@@ -54,12 +49,12 @@ static __always_inline void __##func(str
+ 									\
+ __visible noinstr void func(struct pt_regs *regs)			\
+ {									\
+-	idtentry_state_t state = idtentry_enter(regs);			\
++	irqentry_state_t state = irqentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	__##func (regs);						\
+ 	instrumentation_end();						\
+-	idtentry_exit(regs, state);					\
++	irqentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs)
+@@ -101,12 +96,12 @@ static __always_inline void __##func(str
+ __visible noinstr void func(struct pt_regs *regs,			\
+ 			    unsigned long error_code)			\
+ {									\
+-	idtentry_state_t state = idtentry_enter(regs);			\
++	irqentry_state_t state = irqentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	__##func (regs, error_code);					\
+ 	instrumentation_end();						\
+-	idtentry_exit(regs, state);					\
++	irqentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs,		\
+@@ -161,7 +156,7 @@ static __always_inline void __##func(str
+  * body with a pair of curly brackets.
+  *
+  * Contrary to DEFINE_IDTENTRY_ERRORCODE() this does not invoke the
+- * idtentry_enter/exit() helpers before and after the body invocation. This
++ * irqentry_enter/exit() helpers before and after the body invocation. This
+  * needs to be done in the body itself if applicable. Use if extra work
+  * is required before the enter/exit() helpers are invoked.
+  */
+@@ -197,7 +192,7 @@ static __always_inline void __##func(str
+ __visible noinstr void func(struct pt_regs *regs,			\
+ 			    unsigned long error_code)			\
+ {									\
+-	idtentry_state_t state = idtentry_enter(regs);			\
++	irqentry_state_t state = irqentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	irq_enter_rcu();						\
+@@ -205,7 +200,7 @@ static __always_inline void __##func(str
+ 	__##func (regs, (u8)error_code);				\
+ 	irq_exit_rcu();							\
+ 	instrumentation_end();						\
+-	idtentry_exit(regs, state);					\
++	irqentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs, u8 vector)
+@@ -229,7 +224,7 @@ static __always_inline void __##func(str
+  * DEFINE_IDTENTRY_SYSVEC - Emit code for system vector IDT entry points
+  * @func:	Function name of the entry point
+  *
+- * idtentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
++ * irqentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
+  * function body. KVM L1D flush request is set.
+  *
+  * Runs the function on the interrupt stack if the entry hit kernel mode
+@@ -239,7 +234,7 @@ static void __##func(struct pt_regs *reg
+ 									\
+ __visible noinstr void func(struct pt_regs *regs)			\
+ {									\
+-	idtentry_state_t state = idtentry_enter(regs);			\
++	irqentry_state_t state = irqentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	irq_enter_rcu();						\
+@@ -247,7 +242,7 @@ static void __##func(struct pt_regs *reg
+ 	run_on_irqstack_cond(__##func, regs, regs);			\
+ 	irq_exit_rcu();							\
+ 	instrumentation_end();						\
+-	idtentry_exit(regs, state);					\
++	irqentry_exit(regs, state);					\
+ }									\
+ 									\
+ static noinline void __##func(struct pt_regs *regs)
+@@ -268,7 +263,7 @@ static __always_inline void __##func(str
+ 									\
+ __visible noinstr void func(struct pt_regs *regs)			\
+ {									\
+-	idtentry_state_t state = idtentry_enter(regs);			\
++	irqentry_state_t state = irqentry_enter(regs);			\
+ 									\
+ 	instrumentation_begin();					\
+ 	__irq_enter_raw();						\
+@@ -276,7 +271,7 @@ static __always_inline void __##func(str
+ 	__##func (regs);						\
+ 	__irq_exit_raw();						\
+ 	instrumentation_end();						\
+-	idtentry_exit(regs, state);					\
++	irqentry_exit(regs, state);					\
+ }									\
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs)
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -233,7 +233,7 @@ EXPORT_SYMBOL_GPL(kvm_read_and_reset_apf
+ noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+ {
+ 	u32 reason = kvm_read_and_reset_apf_flags();
+-	idtentry_state_t state;
++	irqentry_state_t state;
  
-+	pbl_virt = dma_alloc_coherent(dev, size, &pbl_phys, GFP_KERNEL);
- 	if (!pbl_virt)
- 		return -ENOMEM;
- 
-@@ -275,6 +275,7 @@ static int qed_chain_alloc_pbl(struct qed_dev *cdev, struct qed_chain *chain,
- 	chain->pbl_sp.table_phys = pbl_phys;
- 	chain->pbl_sp.table_size = size;
- 
-+alloc_pages:
- 	for (i = 0; i < page_cnt; i++) {
- 		virt = dma_alloc_coherent(dev, QED_CHAIN_PAGE_SIZE, &phys,
- 					  GFP_KERNEL);
-@@ -325,7 +326,7 @@ int qed_chain_alloc(struct qed_dev *cdev,
+ 	switch (reason) {
+ 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+@@ -243,7 +243,7 @@ noinstr bool __kvm_handle_async_pf(struc
+ 		return false;
  	}
  
- 	qed_chain_init_params(chain, page_cnt, elem_size, intended_use, mode,
--			      cnt_type);
-+			      cnt_type, ext_pbl);
+-	state = idtentry_enter(regs);
++	state = irqentry_enter(regs);
+ 	instrumentation_begin();
  
- 	switch (mode) {
- 	case QED_CHAIN_MODE_NEXT_PTR:
-@@ -335,7 +336,7 @@ int qed_chain_alloc(struct qed_dev *cdev,
- 		rc = qed_chain_alloc_single(cdev, chain);
- 		break;
- 	case QED_CHAIN_MODE_PBL:
--		rc = qed_chain_alloc_pbl(cdev, chain, ext_pbl);
-+		rc = qed_chain_alloc_pbl(cdev, chain);
- 		break;
- 	default:
- 		return -EINVAL;
--- 
-2.25.1
+ 	/*
+@@ -264,7 +264,7 @@ noinstr bool __kvm_handle_async_pf(struc
+ 	}
+ 
+ 	instrumentation_end();
+-	idtentry_exit(regs, state);
++	irqentry_exit(regs, state);
+ 	return true;
+ }
+ 
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -245,7 +245,7 @@ static noinstr bool handle_bug(struct pt
+ 
+ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ {
+-	idtentry_state_t state;
++	irqentry_state_t state;
+ 
+ 	/*
+ 	 * We use UD2 as a short encoding for 'CALL __WARN', as such
+@@ -255,11 +255,11 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ 	if (!user_mode(regs) && handle_bug(regs))
+ 		return;
+ 
+-	state = idtentry_enter(regs);
++	state = irqentry_enter(regs);
+ 	instrumentation_begin();
+ 	handle_invalid_op(regs);
+ 	instrumentation_end();
+-	idtentry_exit(regs, state);
++	irqentry_exit(regs, state);
+ }
+ 
+ DEFINE_IDTENTRY(exc_coproc_segment_overrun)
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1377,7 +1377,7 @@ handle_page_fault(struct pt_regs *regs,
+ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
+ {
+ 	unsigned long address = read_cr2();
+-	idtentry_state_t state;
++	irqentry_state_t state;
+ 
+ 	prefetchw(&current->mm->mmap_lock);
+ 
+@@ -1412,11 +1412,11 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_f
+ 	 * code reenabled RCU to avoid subsequent wreckage which helps
+ 	 * debugability.
+ 	 */
+-	state = idtentry_enter(regs);
++	state = irqentry_enter(regs);
+ 
+ 	instrumentation_begin();
+ 	handle_page_fault(regs, error_code, address);
+ 	instrumentation_end();
+ 
+-	idtentry_exit(regs, state);
++	irqentry_exit(regs, state);
+ }
+
+
 
