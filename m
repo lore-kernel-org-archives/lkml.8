@@ -2,50 +2,107 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681D6C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E62020657
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AD120657
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="NB2HPYMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732317AbgGVM7F (ORCPT
+        id S1732438AbgGVNAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:59:05 -0400
-Received: from 8bytes.org ([81.169.241.247]:58572 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVM7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:59:04 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 231822C8; Wed, 22 Jul 2020 14:59:03 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 14:59:01 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 0/2] iommu/ipmmu-vmsa: Add entry for R8A774E1 and r8a77961
-Message-ID: <20200722125901.GA27672@8bytes.org>
-References: <1594722055-9298-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 22 Jul 2020 09:00:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732358AbgGVNAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:00:35 -0400
+X-Greylist: delayed 1950 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Jul 2020 06:00:35 PDT
+Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5C1C0619DE;
+        Wed, 22 Jul 2020 06:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=prNWsm46MYcgDtF/dzb/PV+sMw8upY2psw9wWRZWqcI=; b=NB2HPYMmdJy+KZFhb6tZrL59Yo
+        7izifHabhNyYMENKlDc55MGN3ydhf0DG33W7CslQ5mYRPuN92srZQ88+zwvx0o/6yAmDoD9gAgwLB
+        g5Ti5a/oZ0mS4aG5bqGVETB+dpfolCabdG9IqKB7Ns/0I+c+APmHZB+xk2TR30wxnz+o=;
+Received: from p54ae9e66.dip0.t-ipconnect.de ([84.174.158.102] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1jyEMJ-0002Tw-1j; Wed, 22 Jul 2020 15:00:31 +0200
+Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Rajkumar Manoharan <rmanohar@codeaurora.org>,
+        Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        dianders@chromium.org, evgreen@chromium.org
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <1595351666-28193-3-git-send-email-pillair@codeaurora.org>
+ <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
+ <d79ae05e-e75a-de2f-f2e3-bc73637e1501@nbd.name>
+ <04d7301d5ad7555a0377c7df530ad8522fc00f77.camel@sipsolutions.net>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <1f2726ff-8ba9-5278-0ec6-b80be475ea98@nbd.name>
+Date:   Wed, 22 Jul 2020 15:00:30 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594722055-9298-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <04d7301d5ad7555a0377c7df530ad8522fc00f77.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:20:53AM +0100, Lad Prabhakar wrote:
-> Lad Prabhakar (1):
->   iommu/ipmmu-vmsa: Add an entry for r8a77961 in soc_rcar_gen3[]
+On 2020-07-22 14:55, Johannes Berg wrote:
+> On Wed, 2020-07-22 at 14:27 +0200, Felix Fietkau wrote:
 > 
-> Marian-Cristian Rotariu (1):
->   iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
+>> I'm considering testing a different approach (with mt76 initially):
+>> - Add a mac80211 rx function that puts processed skbs into a list
+>> instead of handing them to the network stack directly.
+> 
+> Would this be *after* all the mac80211 processing, i.e. in place of the
+> rx-up-to-stack?
+Yes, it would run all the rx handlers normally and then put the
+resulting skbs into a list instead of calling netif_receive_skb or
+napi_gro_frags.
 
-Applied, thanks.
+- Felix
