@@ -2,204 +2,129 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7064C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9876820787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BED20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDca0dIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbgGVLsl (ORCPT
+        id S1732054AbgGVLqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:48:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13464 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726462AbgGVLsk (ORCPT
+        Wed, 22 Jul 2020 07:46:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60984 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726503AbgGVLqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:48:40 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MBWM5w052537;
-        Wed, 22 Jul 2020 07:48:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrr308-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:48:31 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06MBWXnx053701;
-        Wed, 22 Jul 2020 07:48:30 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrr2yj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:48:30 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06MBeoI8032571;
-        Wed, 22 Jul 2020 11:48:28 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq84yjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 11:48:28 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06MBl2TA66453950
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 11:47:02 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0FB71AE045;
-        Wed, 22 Jul 2020 11:48:26 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DA1CAE04D;
-        Wed, 22 Jul 2020 11:48:25 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.50.252])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jul 2020 11:48:25 +0000 (GMT)
-Subject: Re: [PATCH v7 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
- <1594801869-13365-3-git-send-email-pmorel@linux.ibm.com>
- <20200715054807-mutt-send-email-mst@kernel.org>
- <bc5e09ad-faaf-8b38-83e0-5f4a4b1daeb0@redhat.com>
- <20200715074917-mutt-send-email-mst@kernel.org>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <be992b00-de1d-4499-ee7f-b2b2b5a8879d@linux.ibm.com>
-Date:   Wed, 22 Jul 2020 13:48:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 22 Jul 2020 07:46:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595418403;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VA50D44PwP36EMatm3r8jkryzFI+xci/xyxPDoYxEHw=;
+        b=CDca0dIawbO/q/8JOMnNOsHXDDSsCa6K74P5unPd8U/NHnt48jntlIpUw8py/kvWDYNXJL
+        OsumW9kDsD9pLm2ngElLLMMkKVtcKZ1n+O6jGC4v4MH9f7wrnFZSFq4N5XWDtDWvbOJzGP
+        0Qih+B6mekM1gLUryQr7xhQqqaGTbCY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-Ksn9SZTxPyqsU9MeeGIg9g-1; Wed, 22 Jul 2020 07:46:41 -0400
+X-MC-Unique: Ksn9SZTxPyqsU9MeeGIg9g-1
+Received: by mail-wr1-f72.google.com with SMTP id 5so518877wrc.17
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:46:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VA50D44PwP36EMatm3r8jkryzFI+xci/xyxPDoYxEHw=;
+        b=j3jzInXxEbalzjMODcNhJ73yRTHneW9KV8H50iyfF3OZNmDO6k9X8hi+LeQ3kftpGF
+         R+/r4PsAXQd0kt128vc4qhwX7H+J1O10LKkL3Ele+31JKazFEmhEaLeWEEqcYO3WoLNQ
+         dQ6V7FD9WXQloVlWfKI38k0ycgZDqiiP9SBebvw48Nl6kJgDSXUbd7Ro4Dx6Z10hRMUB
+         5PfX4fXCkjRvay2Xm8SP9M5hq/7vfbJWBar17jEB8tPfpj8GOtM3epJNslWodPqDEufX
+         P2AbHT+BXBXKp9XVb79Ofrvhrs2ekLSXGZQLhyan5D5KHVzwBr8N1S8bT7E0AEiDez7b
+         aIKw==
+X-Gm-Message-State: AOAM532NEKvCd5AS6Z2fZlrGL45ACOEDdRjtIsU5dKu0IZdXcABwSBcf
+        cyIb3FT9V7zGU+4eQYLMBV1CKwsodGXKTEWfqKrOhEEitdqlJP7LUDsTO9bamKSWiTLN1pVKN5R
+        1DrHOCahw+N1bg2Ni+SkAsp3e
+X-Received: by 2002:a5d:65d2:: with SMTP id e18mr14890862wrw.70.1595418400764;
+        Wed, 22 Jul 2020 04:46:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwT9fHDPnqPq43vdSPvjeRis+cuUR2jlT9N/471iNd7v56L0Upt0p7rdaoBly9Dp9gOrJm4TA==
+X-Received: by 2002:a5d:65d2:: with SMTP id e18mr14890841wrw.70.1595418400524;
+        Wed, 22 Jul 2020 04:46:40 -0700 (PDT)
+Received: from redhat.com ([192.117.173.58])
+        by smtp.gmail.com with ESMTPSA id 5sm6787929wmk.9.2020.07.22.04.46.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 04:46:39 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 07:46:36 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 2/2] virtio-mmio: Reject invalid IRQ 0 command line
+ argument
+Message-ID: <20200722074630-mutt-send-email-mst@kernel.org>
+References: <20200701221040.3667868-1-helgaas@kernel.org>
+ <20200701221040.3667868-3-helgaas@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200715074917-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_04:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0
- impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007220085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701221040.3667868-3-helgaas@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-07-15 13:51, Michael S. Tsirkin wrote:
-> On Wed, Jul 15, 2020 at 06:16:59PM +0800, Jason Wang wrote:
->>
->> On 2020/7/15 下午5:50, Michael S. Tsirkin wrote:
->>> On Wed, Jul 15, 2020 at 10:31:09AM +0200, Pierre Morel wrote:
->>>> If protected virtualization is active on s390, the virtio queues are
->>>> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
->>>> negotiated. Use the new arch_validate_virtio_features() interface to
->>>> fail probe if that's not the case, preventing a host error on access
->>>> attempt.
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>> Acked-by: Halil Pasic <pasic@linux.ibm.com>
->>>> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>>> ---
->>>>    arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
->>>>    1 file changed, 28 insertions(+)
->>>>
->>>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->>>> index 6dc7c3b60ef6..d39af6554d4f 100644
->>>> --- a/arch/s390/mm/init.c
->>>> +++ b/arch/s390/mm/init.c
->>>> @@ -45,6 +45,7 @@
->>>>    #include <asm/kasan.h>
->>>>    #include <asm/dma-mapping.h>
->>>>    #include <asm/uv.h>
->>>> +#include <linux/virtio_config.h>
->>>>    pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->>>> @@ -161,6 +162,33 @@ bool force_dma_unencrypted(struct device *dev)
->>>>    	return is_prot_virt_guest();
->>>>    }
->>>> +/*
->>>> + * arch_validate_virtio_features
->>>> + * @dev: the VIRTIO device being added
->>>> + *
->>>> + * Return an error if required features are missing on a guest running
->>>> + * with protected virtualization.
->>>> + */
->>>> +int arch_validate_virtio_features(struct virtio_device *dev)
->>>> +{
->>>> +	if (!is_prot_virt_guest())
->>>> +		return 0;
->>>> +
->>>> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
->>>> +		dev_warn(&dev->dev,
->>>> +			 "legacy virtio not supported with protected virtualization\n");
->>>> +		return -ENODEV;
->>>> +	}
->>>> +
->>>> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
->>>> +		dev_warn(&dev->dev,
->>>> +			 "support for limited memory access required for protected virtualization\n");
->>>> +		return -ENODEV;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>>    /* protected virtualization */
->>>>    static void pv_init(void)
->>>>    {
->>> What bothers me here is that arch code depends on virtio now.
->>> It works even with a modular virtio when functions are inline,
->>> but it seems fragile: e.g. it breaks virtio as an out of tree module,
->>> since layout of struct virtio_device can change.
->>
->>
->> The code was only called from virtio.c so it should be fine.
->>
->> And my understanding is that we don't need to care about the kABI issue
->> during upstream development?
->>
->> Thanks
+On Wed, Jul 01, 2020 at 05:10:40PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> No, but so far it has been convenient at least for me, for development,
-> to just be able to unload all of virtio and load a different version.
+> The "virtio_mmio.device=" command line argument allows a user to specify
+> the size, address, and IRQ of a virtio device.  Previously the only
+> requirement for the IRQ was that it be an unsigned integer.
 > 
+> Zero is an unsigned integer but an invalid IRQ number, and after
+> a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid"),
+> attempts to use IRQ 0 cause warnings.
 > 
->>
->>>
->>> I'm not sure what to do with this yet, will try to think about it
->>> over the weekend. Thanks!
->>>
->>>
->>>> -- 
->>>> 2.25.1
+> If the user specifies IRQ 0, return failure instead of registering a device
+> with IRQ 0.
 > 
+> Fixes: a85a6c86c25be ("driver core: platform: Clarify that IRQ 0 is invalid")
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: virtualization@lists.linux-foundation.org
 
-Hi Michael,
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-I am not sure to understand the problem so I may propose a wrong 
-solution but, let's try:
+> ---
+>  drivers/virtio/virtio_mmio.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index 9d16aaffca9d..627ac0487494 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -641,11 +641,11 @@ static int vm_cmdline_set(const char *device,
+>  			&vm_cmdline_id, &consumed);
+>  
+>  	/*
+> -	 * sscanf() must processes at least 2 chunks; also there
+> +	 * sscanf() must process at least 2 chunks; also there
+>  	 * must be no extra characters after the last chunk, so
+>  	 * str[consumed] must be '\0'
+>  	 */
+> -	if (processed < 2 || str[consumed])
+> +	if (processed < 2 || str[consumed] || irq == 0)
+>  		return -EINVAL;
+>  
+>  	resources[0].flags = IORESOURCE_MEM;
+> -- 
+> 2.25.1
 
-Would a callback registration instead of a weak function solve the problem?
-The registrating function in core could test a parameter to check if the 
-callback is in sync with the VIRTIO core.
-
-What do you think?
-
-Regards,
-Pierre
-
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
