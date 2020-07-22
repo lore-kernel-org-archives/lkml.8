@@ -2,136 +2,158 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BD5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE59C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3A920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78BD20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mL54vk1c"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="EVJa0A16";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="hk9Mbd9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbgGVO5Z (ORCPT
+        id S1732802AbgGVO6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:57:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57058 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732143AbgGVO5Y (ORCPT
+        Wed, 22 Jul 2020 10:58:03 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:31122 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730382AbgGVO6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:57:24 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MEvBpk004910;
-        Wed, 22 Jul 2020 09:57:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595429831;
-        bh=4Uf4TRn5vUb8L0d8FDIOQK0Qy4pBZfSImAAgzuqEAOI=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=mL54vk1csAw2axZ2LgbskInwLF51fwF3sqNSAbtJmQPnQ+NO8K+aigcaM2ZgLIiWd
-         jyRAPQKq+uyfL2ZoIGSZMXzlI7a8uCGPISwHFS4WI45IZLPPYrYlnqHlr4dUlB640r
-         w2gFe2LMSAvbbRB84nDLNHy7f70k5ZbcXbpBEWrU=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MEv67o090277
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 09:57:11 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 09:57:06 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 09:57:06 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MEv4fq071548;
-        Wed, 22 Jul 2020 09:57:05 -0500
-Subject: Re: [PATCH -next] ASoC: ti: fix SND_SOC_J721E_EVM warnings & errors
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>,
-        Mark Brown <broonie@kernel.org>
-References: <e74c690c-c7f8-fd42-e461-4f33571df4ef@infradead.org>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <8a5baa38-e5a9-ab82-d186-9939733e4d7e@ti.com>
-Date:   Wed, 22 Jul 2020 17:58:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <e74c690c-c7f8-fd42-e461-4f33571df4ef@infradead.org>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 22 Jul 2020 10:58:02 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MEml23012168;
+        Wed, 22 Jul 2020 07:57:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=39S4vVNIusSsi2LuvNZmhBBhMhNTv0T4UrDYfmP6564=;
+ b=EVJa0A16lfuFUlWKLZwXw+n8R881k/ZS22EehTrvAnPM66x6SDId+O0ZbNDXSmi0+T/0
+ B757ZJwzBlKBCttui7WlyVvARBC7lrNUCEbfRcDKrXist3L4yVRGDhUz2q7XpDdZTbUi
+ LH1FkhAETb7mfolgyHqVT5LNvd5hQZLuHe7l1jSGbd2q70wfiZEa/myKJJg10qCTVZQN
+ R3Z2JyKusEtFW2a4DmD/ai7dXbzGnY5Z6eNeYvqm2BptvjP0nYM8PObbV9CglArzVxu/
+ n4M0gyQCBnsoRDSQWlbTcNl/4X8dDFwlZSfA70nrjXSoKvDQK5T8qk5cKPxxB+wFkjBj pw== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkrbpe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 07:57:36 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 07:57:34 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 07:57:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tu4VdwZldBfUismKGfeOqVVBE1uc0BQl4NeXvxy/Aa8/eHi5efGhG7zKLvmEbOrFtTcKR4zT97RBX5jmV7UgRsVUz6U8hN+fnJUW1YN6Lkicuv0+K05S5qTLvfB1WtTIJmYkBF7SVYwaoKHVDevmiKWDa5kCLzNN8qeZ0KkyPf9uPX0GOxCYdFZ0rL6YR88go3H8SRkvpJ0DIwIKJgQumDo+OOeRTN6ih6kDQLQltdlj22i5KKh7/pzBQuP90Vj0yWLAnjKvwzEmAJZga42BqoanQM2Ie8lJ74sMFv0tT08zzjTMXKdqd3GVTiD6W70T272U8u6D67tNaXll0BDwww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=39S4vVNIusSsi2LuvNZmhBBhMhNTv0T4UrDYfmP6564=;
+ b=BDCt/f2IbSIw4jmK1W6+I8fadY3RDlv9TYDWAIRJ7MKjRB+yDmQ6vPnuLItVvQN51GTqat8DwBS6V0ZNIX6TXUNj8yvW/oWoanfmwvNknE0ugHHUauT3iCiL0ZaGz6FEtk9fTEm72C8EFwvddJuRii9gLlAUkkBnna0OHYqo/hRFXjo2IucoEqBMM5j2yYDCBxPIDVcrR3TUUcthZgAiS8ujrUheuiCKhdPwQ098ZlQc0+vUhmiyCnOSlPtviNcPvJc9zcM0aAH2NlIKiFIlQc277pw3e5kw1AFwWXzgWM3se35ql3a3NfhIiOzj/jZtxDli8kZ2XQUCmeQJnuSJug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=39S4vVNIusSsi2LuvNZmhBBhMhNTv0T4UrDYfmP6564=;
+ b=hk9Mbd9ca2K2qL1TZ55BgoIt9eD590LWokURNZkJ27imn4sFtN8H6utPmotL8ape1eojbbKqhpkiH97mbgRhqGgosYrv89KkJ/aICop50lttnoMeIRxO6RRpyFVahb6hofN3IBUTbkSLcyVcuQm85GPFDHh080IoJzZkJMNl87I=
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com (2603:10b6:907:3::11)
+ by MW2PR18MB2156.namprd18.prod.outlook.com (2603:10b6:907:a::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Wed, 22 Jul
+ 2020 14:57:33 +0000
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32]) by MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32%4]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 14:57:33 +0000
+From:   Alex Belits <abelits@marvell.com>
+To:     "frederic@kernel.org" <frederic@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+CC:     Prasun Kapoor <pkapoor@marvell.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: [PATCH v4 10/13] task_isolation: don't interrupt CPUs with
+ tick_nohz_full_kick_cpu()
+Thread-Topic: [PATCH v4 10/13] task_isolation: don't interrupt CPUs with
+ tick_nohz_full_kick_cpu()
+Thread-Index: AQHWYDhuh3VfINlM20KwSBz5WuaF0Q==
+Date:   Wed, 22 Jul 2020 14:57:33 +0000
+Message-ID: <5acf7502c071c0d1365ba5e5940e003a7da6521f.camel@marvell.com>
+References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+In-Reply-To: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [173.228.7.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 60530ab6-8501-4f78-a3db-08d82e4f90c8
+x-ms-traffictypediagnostic: MW2PR18MB2156:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR18MB21569041D9529EFD3BAAA03FBC790@MW2PR18MB2156.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kAcENqRTVC5LJDNWTFi0gJmqH2I+N5X/pfX1V9oBWY4/qyx7ShZZPp5Dc/7ZIfLdcXeCQk2sxHyi7MsmO3DOlAhXRtgug7/EwIVwIxWPB0Or+BHjY0GbOVv3rJXlsFLnQn8iBomnc6kszGA9291xRqBV+SNEN958jtLcVIKkjWWZJ5ir2FVeRSRoJjuZv0Cub7G6iOVGhmPfTH3gh/HrVdfswglAzLCWWGu6W2f4c/H+btRK2P7LqmJu0mR2UNIS27TlGDqVY2eKvJFNJyH/xGOHDXF0YRtKsVu0BuXx9P78Tm8MMjWgwCTFA+tMDvsBAjLJUJYkG+fipYcaboYBnw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2267.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(396003)(136003)(346002)(4744005)(110136005)(6486002)(2906002)(6506007)(54906003)(66476007)(478600001)(6512007)(8936002)(2616005)(8676002)(316002)(4326008)(66946007)(186003)(64756008)(86362001)(83380400001)(76116006)(91956017)(5660300002)(66446008)(36756003)(66556008)(26005)(71200400001)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: hswFjFfQgQYiuGRCvgk40lPngN77FXIzxt8LURz8O65T+1PLG18Uk5zwZ8uvbF7Ik6iW8iwFxbooCp4hpDjR74dnQdtmSoIMz6cUUZl1EfByxnX/3QQ7eFJtQs0f4LAvSr4rZdSPJ+ZIVIngMoY62TH41L2XdsDRPVV9Beuep4CcH/L5M7uvtLUSLsRisW9rZ8UPjQgtqG/r3u2Dep3pvvPKkpI3fPAr6bI9ytvP7A/L8ognHyFMCtLV0S/s7XQYo2tFWi7wprYtipWgug5/y2oB0qVbLrfhpcaSs3SO7+QA4ZVv6xHKGQQUcuNtHDTKDp6yH6XrS5xHcHSWq9/yjHT+ak+P/Z2KWJWfFCBpdSCggpWm4GxGQ2NKGfJSCmW35Mo45a/+g/KhgQj22OkYQTuIHxj4CH/Jkv95prSKWmiWmlVjrgErrv1Ix8n23tnA9kemjK/Xz7brdP5HqKK0I9Ngn5XmS+yfBqy0bPovHQu4PRnnXF1V/haa7ZHWfARE
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3D078BC1A3E6A443A62F85A300A63A00@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2267.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60530ab6-8501-4f78-a3db-08d82e4f90c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 14:57:33.8038
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: k1ncmc415f4yR0Orvm+hvx+HAnxoA9diUWrhilJ909VBki5tlOwBAVbVp/a0GwtRS+kh0xjjeGfj2mUUSdno+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR18MB2156
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_08:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
-
-On 20/07/2020 21.32, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->=20
-> SND_SOC_J721E_EVM should not select SND_SOC_PCM3168A_I2C when I2C
-> is not enabled. That causes build errors, so make this driver's
-> symbol depend on I2C.
-
-Thank you for the fix!
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> WARNING: unmet direct dependencies detected for SND_SOC_PCM3168A_I2C
->   Depends on [n]: SOUND [=3Dm] && !UML && SND [=3Dm] && SND_SOC [=3Dm] =
-&& I2C [=3Dn]
->   Selected by [m]:
->   - SND_SOC_J721E_EVM [=3Dm] && SOUND [=3Dm] && !UML && SND [=3Dm] && S=
-ND_SOC [=3Dm] && (DMA_OMAP [=3Dy] || TI_EDMA [=3Dm] || TI_K3_UDMA [=3Dn] =
-|| COMPILE_TEST [=3Dy]) && (ARCH_K3_J721E_SOC [=3Dn] || COMPILE_TEST [=3D=
-y])
->=20
-> ../sound/soc/codecs/pcm3168a-i2c.c:59:1: warning: data definition has n=
-o type or storage class
->  module_i2c_driver(pcm3168a_i2c_driver);
->  ^~~~~~~~~~~~~~~~~
-> ../sound/soc/codecs/pcm3168a-i2c.c:59:1: error: type defaults to =E2=80=
-=98int=E2=80=99 in declaration of =E2=80=98module_i2c_driver=E2=80=99 [-W=
-error=3Dimplicit-int]
-> ../sound/soc/codecs/pcm3168a-i2c.c:59:1: warning: parameter names (with=
-out types) in function declaration
-> ../sound/soc/codecs/pcm3168a-i2c.c:49:26: warning: =E2=80=98pcm3168a_i2=
-c_driver=E2=80=99 defined but not used [-Wunused-variable]
->  static struct i2c_driver pcm3168a_i2c_driver =3D {
->                           ^~~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
->=20
->=20
-> Fixes: 6748d0559059 ("ASoC: ti: Add custom machine driver for j721e EVM=
- (CPB and IVI)")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> ---
->  sound/soc/ti/Kconfig |    1 +
->  1 file changed, 1 insertion(+)
->=20
-> --- linux-next-20200720.orig/sound/soc/ti/Kconfig
-> +++ linux-next-20200720/sound/soc/ti/Kconfig
-> @@ -222,6 +222,7 @@ config SND_SOC_DM365_VOICE_CODEC_MODULE
->  config SND_SOC_J721E_EVM
->  	tristate "SoC Audio support for j721e EVM"
->  	depends on ARCH_K3_J721E_SOC || COMPILE_TEST
-> +	depends on I2C
->  	select SND_SOC_PCM3168A_I2C
->  	select SND_SOC_DAVINCI_MCASP
->  	help
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+RnJvbTogWXVyaSBOb3JvdiA8eW5vcm92QG1hcnZlbGwuY29tPg0KDQpGb3Igbm9oel9mdWxsIENQ
+VXMgdGhlIGRlc2lyYWJsZSBiZWhhdmlvciBpcyB0byByZWNlaXZlIGludGVycnVwdHMNCmdlbmVy
+YXRlZCBieSB0aWNrX25vaHpfZnVsbF9raWNrX2NwdSgpLiBCdXQgZm9yIGhhcmQgaXNvbGF0aW9u
+IGl0J3MNCm9idmlvdXNseSBub3QgZGVzaXJhYmxlIGJlY2F1c2UgaXQgYnJlYWtzIGlzb2xhdGlv
+bi4NCg0KVGhpcyBwYXRjaCBhZGRzIGNoZWNrIGZvciBpdC4NCg0KU2lnbmVkLW9mZi1ieTogWXVy
+aSBOb3JvdiA8eW5vcm92QG1hcnZlbGwuY29tPg0KW2FiZWxpdHNAbWFydmVsbC5jb206IHVwZGF0
+ZWQsIG9ubHkgZXhjbHVkZSBDUFVzIHJ1bm5pbmcgaXNvbGF0ZWQgdGFza3NdDQpTaWduZWQtb2Zm
+LWJ5OiBBbGV4IEJlbGl0cyA8YWJlbGl0c0BtYXJ2ZWxsLmNvbT4NCi0tLQ0KIGtlcm5lbC90aW1l
+L3RpY2stc2NoZWQuYyB8IDQgKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyks
+IDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2tlcm5lbC90aW1lL3RpY2stc2NoZWQuYyBi
+L2tlcm5lbC90aW1lL3RpY2stc2NoZWQuYw0KaW5kZXggNmU0Y2Q4NDU5ZjA1Li4yZjgyYTZkYWY4
+ZmMgMTAwNjQ0DQotLS0gYS9rZXJuZWwvdGltZS90aWNrLXNjaGVkLmMNCisrKyBiL2tlcm5lbC90
+aW1lL3RpY2stc2NoZWQuYw0KQEAgLTIwLDYgKzIwLDcgQEANCiAjaW5jbHVkZSA8bGludXgvc2No
+ZWQvY2xvY2suaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvc3RhdC5oPg0KICNpbmNsdWRlIDxs
+aW51eC9zY2hlZC9ub2h6Lmg+DQorI2luY2x1ZGUgPGxpbnV4L2lzb2xhdGlvbi5oPg0KICNpbmNs
+dWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSA8bGludXgvaXJxX3dvcmsuaD4NCiAjaW5j
+bHVkZSA8bGludXgvcG9zaXgtdGltZXJzLmg+DQpAQCAtMjY4LDcgKzI2OSw4IEBAIHN0YXRpYyB2
+b2lkIHRpY2tfbm9oel9mdWxsX2tpY2sodm9pZCkNCiAgKi8NCiB2b2lkIHRpY2tfbm9oel9mdWxs
+X2tpY2tfY3B1KGludCBjcHUpDQogew0KLQlpZiAoIXRpY2tfbm9oel9mdWxsX2NwdShjcHUpKQ0K
+KwlzbXBfcm1iKCk7DQorCWlmICghdGlja19ub2h6X2Z1bGxfY3B1KGNwdSkgfHwgdGFza19pc29s
+YXRpb25fb25fY3B1KGNwdSkpDQogCQlyZXR1cm47DQogDQogCWlycV93b3JrX3F1ZXVlX29uKCZw
+ZXJfY3B1KG5vaHpfZnVsbF9raWNrX3dvcmssIGNwdSksIGNwdSk7DQotLSANCjIuMjYuMg0KDQo=
