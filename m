@@ -2,314 +2,196 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA50C433FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20368C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E2A2080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE19920727
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PnZThPhW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKEmnc6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbgGVX4p (ORCPT
+        id S1733074AbgGVXxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:56:45 -0400
-Received: from mail-eopbgr690095.outbound.protection.outlook.com ([40.107.69.95]:42049
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733112AbgGVX4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:56:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h/hbObLSdfxvgejmp16Y2kvSrCmT4lV+Zj9yvaGOqf8Af8NWZjZRh8ABS3Q0i7GeRICWtNyinZIBHOKZ8RuQc9JfPSlZ25qkNR4xzmcihC9FbaonCZTFKFYJlkq8uhOkHIz0nxUu06LiMw7QtNu+krWFIVU+jVGpG5EqG/Pe3SPIaS+ldQk4J8jhK11/6zgHWlRZG27xse+imRaFGUEEshtTz6OjNS7yMim4h/JLo0oGQifJZ+UgmxkdIfVM8pA+40gnXfuJJmDfwJmIQc/jVO6iZIecBlrzkWj7a8JVZPuZNlrYI1XP+Ftq0lvCLCpRFsdJ2GBv7DBwyJ65x4xhBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rv6XjiWUkY7dUz9YDu1m5U02Txpb/4JzoiZ43uhaR3E=;
- b=JPBEWwoE1NcWTuSs4LQVI4GoJW37rnRlS0ZCDwJMLuC/4BeKnxO8Tf7nksgce3pjrVNpxa+ziXWSeqBN/Oz8BOfVN2s+3oLsov5H5WhIL82mkE1G6WHvQKm7/HNTqlFsIBu6zow9FG2j6pP/JlSHUKS+pXrddgQ1Z3KyN2ZtOdxEu/50MYEH7ByzuUndXS4rW1Iz+gUKiNlFnmraOLYI6y9d4jbXkfC46Ht3bUQ3N+jtpI1sLxPdq3DkF9TZLnlSM3d56w4yCAUp4osBcmJuJboj01nEhjCWKAIBhFSUVgKPjj4v6j/O3Fya3tWYXM9moNSB7bvy+Tk+VA7114a25A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rv6XjiWUkY7dUz9YDu1m5U02Txpb/4JzoiZ43uhaR3E=;
- b=PnZThPhWd30bx1BMnuVGuAvrflFhhp2Md7XzAaZzL1kmpCYVxwmYnLs01zPIPjaHOe0CLH0EngkktCBz8/QoRqHDlcPivVKZQJrgZLTU8xP6Nquma+b+pIgRJgptEsmLac9rKiTq99cOOTbSqtWct/JHca3Pb0i37senxYB9uT8=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MWHPR2101MB0731.namprd21.prod.outlook.com (2603:10b6:301:81::37) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.0; Wed, 22 Jul
- 2020 23:56:41 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3239.005; Wed, 22 Jul 2020
- 23:56:41 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: RE: [RFC 03/11] Drivers: hv: vmbus: Introduce types of GPADL
-Thread-Topic: [RFC 03/11] Drivers: hv: vmbus: Introduce types of GPADL
-Thread-Index: AQHWXwAfq8py9R1cgk6EBitVHLoMRqkUP0WwgAAGfoCAAALYQA==
-Date:   Wed, 22 Jul 2020 23:56:41 +0000
-Message-ID: <MW2PR2101MB10525571DACE6447A8C269B8D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200721014135.84140-1-boqun.feng@gmail.com>
- <20200721014135.84140-4-boqun.feng@gmail.com>
- <MW2PR2101MB1052E3D15D411A5DC62A60F2D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200722234321.GC35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-In-Reply-To: <20200722234321.GC35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-22T23:56:39Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f7fc97a8-9fc5-470e-b13c-4ecc7021a1e6;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0baecf83-fc7a-4b50-5db1-08d82e9ae148
-x-ms-traffictypediagnostic: MWHPR2101MB0731:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2101MB0731A298183BF5549E3D2041D7790@MWHPR2101MB0731.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xAReN8uuhXI3kbdLMRzVRuQ2oa3cprQXevpKVsoQrw1Al4s2ltOAzdpCoaYGcMBmACvfPlMHTuyU8PIXrvTA8JKF3AcvE712LP3/2nyOVpj6fr/QQpQJm8EJCw+TbMIqLwZ5qMf14l+QCxGRjy9WepZyXgwD03vNtsmDknFRzfKwbsh4HYSkQiw6KafM+FNcpMxxYihfRxlGgJ1jma2cVJesRUShLt8img4lFbPlPFUgL5ay0BPM0g6Z/nnE+TcNk+6xA7YoB6hgm0y402YjxQKKEplu6pMyz4F6yI8PjmlHUmiOKCUZtcUdrCJD4NjC/XDQt372duCBnEh9YkprQw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(10290500003)(54906003)(71200400001)(7696005)(5660300002)(66446008)(66946007)(83380400001)(7416002)(76116006)(86362001)(478600001)(64756008)(66556008)(66476007)(186003)(26005)(6506007)(8990500004)(82950400001)(82960400001)(4326008)(8936002)(33656002)(316002)(8676002)(52536014)(6916009)(9686003)(55016002)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Nj9QTs01t8dne7QOC5vJHSz94IWf42gh9SGt1KX3v6OthG5M8MRJ+jjlaroCxTkgmuJCTdTXIfPqYm8v9LBVMxLLszDDi/zCM+rJePCQbdZP0xuwr3bNtY4fAIsav8ou08U3QOlplDKI0F7o5+l51rSviEM1CrSdYJAlrHQzCw87P7HQNbGsLIJ06fwEkqoK8es3DiBS8OMBfcvztjPRtcVsSwZ8UhuKd4iogUxmFNvC8cAcSTi57MZy/Tgv4Wfn9DyfVBng0R9HnMhuucJS1A8HXhpyE3aSbcI4KK5fxdpx8LmBZn/a9g655FMGW4eUMLMpv+hL2iJj+bfo4gmpxcze5e3b2w9mkMu5eBaXCrllsCR4nRI/S6KkVQrvC1jSotbJ6dW3cOYORVKmkCjbyTOTpWDiS3X98v8e9r+I5uGN3uCpKVdmpRt9TvLASaB9dGBqxJJSPWDu1dsbeJdR0+HmgmeEkQjBJEGmCgHAHGzDPkGvTKDwRdoNykQGwlf6fZx3JJDNNHicbBmYl7ATxUtlxAPc/T+NX3y9YassSaxd3aG/+t9XrDLUh5Xwz8lW4qz6oYZYl6+LWG9VI29GYnwdKI3mT7fILTES8aeCd8t1S3Igl+vpoqUYxzyMX7ODQt44uBAZ5UH66svL1BSYpw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 Jul 2020 19:53:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbgGVXxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 19:53:01 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB82BC0619DC;
+        Wed, 22 Jul 2020 16:53:00 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u5so2081917pfn.7;
+        Wed, 22 Jul 2020 16:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B5mk9djHDrhZQjRnYy8xg8m6WI9FXyZZZHr/dT2BIYU=;
+        b=jKEmnc6qdbr+pSxMexbN5/0ydyb9jmmb/CtnBEhEA6/eA8yB2kplXzQeuADuMg7/87
+         Ek6zng6kNQoOoiYeCj5Y1eQQTI8+BCpDgzHZZIVD1sEcEt/YC06S2tGS9cngJLnPoNu9
+         xSugmrcuZoAoK06D4TFrGc8dOGA40S6+mWjILrpBVH2qYi+7d5EUq1a4xrc8AktEXwAp
+         o4Zu4cDUf/xx9pPZSdtRmbliiw2e+4mo3HMh30a433vZkkoQQwThsF9QVadXKym+qBmc
+         OJ66r0NoqGT8zzwUvDMMgtsyEz5NirAh4WIyE6fJ9PTz13Wjy4I9M5sE68SwNJe5WE0W
+         qeeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=B5mk9djHDrhZQjRnYy8xg8m6WI9FXyZZZHr/dT2BIYU=;
+        b=kmDf24++PSJNnXHpqz83F6g83CEVp/d963MiIqCA4IBpFDohNP3U46xqRY18l28b9F
+         6HKHbKpTyhwkrF1tklMOucJaI0/nwTWxuG4oW8EWguZCb25sdBsaUR+iaDUEFMV9y3tg
+         WIEHYq7OBIfZmyt1BYbDUFdj2SiZw31e0+sf8UIB0YJTOZg/RNTVuQWClvzsrOU4ce8Y
+         m7UDH+3j1cg/yjlkvFAJtuckz4MSfUEwN/qosU9FvRenOipWgzsfxYfkiXxuHzUrwkEa
+         tdRljoLe/OKccsfypJqhZuU0JCq60FEoHG3nhzmtCLmqophtl+AbtJEFcsmrFzFaIZUz
+         ysJg==
+X-Gm-Message-State: AOAM532cAEs4Tv/ahKrsjip2iskbAjR8Zxe6FaSbO3wH15leq/ErZ8gc
+        bxboWOGiyg2TgKUD6LpGj7VvhWyi
+X-Google-Smtp-Source: ABdhPJy0DBSEwvu2CNfFxKmkCKvY0Jp7Icur6ZIHGZjTOF/DjMn54r4Cgx6ficLJcfcPRByIL3WlZw==
+X-Received: by 2002:a62:8ccb:: with SMTP id m194mr1870232pfd.36.1595461980003;
+        Wed, 22 Jul 2020 16:53:00 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9sm698919pfd.133.2020.07.22.16.52.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 16:52:58 -0700 (PDT)
+Subject: Re: [PATCH] sh: add missing EXPORT_SYMBOL() for __delay
+To:     Rich Felker <dalias@libc.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <87wob2clos.wl-kuninori.morimoto.gx@renesas.com>
+ <20200722023840.GA55317@roeck-us.net>
+ <20200722225239.GX14669@brightrain.aerifal.cx>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <fa0456c9-cef0-45e7-59d7-ad652734b1d5@roeck-us.net>
+Date:   Wed, 22 Jul 2020 16:52:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0baecf83-fc7a-4b50-5db1-08d82e9ae148
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 23:56:41.0493
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6NUSNLOVWEKBPtuna78x2YmMtAfj9OrN7NzCEt1PZ7nGWZav1OHERJrYrJCkRPAUPJTInmi8qKHI1THifJr2qkOUFFF3RLPtulMwZFfXv68=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0731
+In-Reply-To: <20200722225239.GX14669@brightrain.aerifal.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com> Sent: Wednesday, July 22, 2020 4:43=
- PM
->=20
-> On Wed, Jul 22, 2020 at 11:25:18PM +0000, Michael Kelley wrote:
-> > From: Boqun Feng <boqun.feng@gmail.com> Sent: Monday, July 20, 2020 6:4=
-1 PM
-> > >
-> > > This patch introduces two types of GPADL: HV_GPADL_{BUFFER, RING}. Th=
-e
-> > > types of GPADL are purely the concept in the guest, IOW the hyperviso=
-r
-> > > treat them as the same.
-> > >
-> > > The reason of introducing the types of GPADL is to support guests who=
-se
-> > > page size is not 4k (the page size of Hyper-V hypervisor). In these
-> > > guests, both the headers and the data parts of the ringbuffers need t=
-o
-> > > be aligned to the PAGE_SIZE, because 1) some of the ringbuffers will =
-be
-> > > mapped into userspace and 2) we use "double mapping" mechanism to
-> > > support fast wrap-around, and "double mapping" relies on ringbuffers
-> > > being page-aligned. However, the Hyper-V hypervisor only uses 4k
-> > > (HV_HYP_PAGE_SIZE) headers. Our solution to this is that we always ma=
-ke
-> > > the headers of ringbuffers take one guest page and when GPADL is
-> > > established between the guest and hypervisor, the only first 4k of
-> > > header is used. To handle this special case, we need the types of GPA=
-DL
-> > > to differ different guest memory usage for GPADL.
-> > >
-> > > Type enum is introduced along with several general interfaces to
-> > > describe the differences between normal buffer GPADL and ringbuffer
-> > > GPADL.
-> > >
-> > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > > ---
-> > >  drivers/hv/channel.c   | 140 +++++++++++++++++++++++++++++++++++----=
---
-> > >  include/linux/hyperv.h |  44 ++++++++++++-
-> > >  2 files changed, 164 insertions(+), 20 deletions(-)
-> >
-> > [snip]
-> >
-> > >
-> > >
-> > > @@ -437,7 +528,17 @@ static int __vmbus_open(struct vmbus_channel *ne=
-wchannel,
-> > >  	open_msg->openid =3D newchannel->offermsg.child_relid;
-> > >  	open_msg->child_relid =3D newchannel->offermsg.child_relid;
-> > >  	open_msg->ringbuffer_gpadlhandle =3D newchannel->ringbuffer_gpadlha=
-ndle;
-> > > -	open_msg->downstream_ringbuffer_pageoffset =3D newchannel-
-> > > >ringbuffer_send_offset;
-> > > +	/*
-> > > +	 * The unit of ->downstream_ringbuffer_pageoffset is HV_HYP_PAGE an=
-d
-> > > +	 * the unit of ->ringbuffer_send_offset is PAGE, so here we first
-> > > +	 * calculate it into bytes and then convert into HV_HYP_PAGE. Also
-> > > +	 * ->ringbuffer_send_offset is the offset in guest, while
-> > > +	 * ->downstream_ringbuffer_pageoffset is the offset in gpadl (i.e. =
-in
-> > > +	 * hypervisor), so a (PAGE_SIZE - HV_HYP_PAGE_SIZE) gap need to be
-> > > +	 * skipped.
-> > > +	 */
-> > > +	open_msg->downstream_ringbuffer_pageoffset =3D
-> > > +		((newchannel->ringbuffer_send_offset << PAGE_SHIFT) - (PAGE_SIZE -
-> > > HV_HYP_PAGE_SIZE)) >> HV_HYP_PAGE_SHIFT;
-> >
-> > I couldn't find that the "downstream_ringbuffer_pageoffset" field
-> > is used anywhere.  Can it just be deleted entirely instead of having
-> > this really messy calculation?
-> >
->=20
-> This field is part of struct vmbus_channel_open_channel, which means
-> guest-hypervisor communication protocal requires us to set the field,
-> IIUC. So I don't think we can delete it.
+Rich,
 
-Indeed, you are right.  I mis-read it as a field in struct vmbus_channel,
-but that's not the case.  Thanks.
+On 7/22/20 3:52 PM, Rich Felker wrote:
+> On Tue, Jul 21, 2020 at 07:38:40PM -0700, Guenter Roeck wrote:
+>> On Thu, Dec 12, 2019 at 11:38:43AM +0900, Kuninori Morimoto wrote:
+>>> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>>>
+>>> __delay() is used from kernel module.
+>>> We need EXPORT_SYMBOL(), otherwise we will get compile error.
+>>>
+>>> ERROR: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!
+>>>
+>>> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>>
+>> I must admit that this patch completely baffles me. __delay was
+>> already exported, only elsewhere in the file. With this patch
+>> in place, it is exported twice, and all sh builds in -next fail
+>> with
+>>
+>> In file included from include/linux/linkage.h:7,
+>>                  from arch/sh/include/asm/bug.h:5,
+>>                  from include/linux/bug.h:5,
+>>                  from include/linux/thread_info.h:12,
+>>                  from include/asm-generic/current.h:5,
+>>                  from ./arch/sh/include/generated/asm/current.h:1,
+>>                  from include/linux/sched.h:12,
+>>                  from arch/sh/lib/delay.c:8:
+>> include/linux/export.h:67:36: error: redefinition of '__ksymtab___delay'
+>>
+>> Guenter
+>>
+>>> ---
+>>>  arch/sh/lib/delay.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/sh/lib/delay.c b/arch/sh/lib/delay.c
+>>> index dad8e6a..540e670 100644
+>>> --- a/arch/sh/lib/delay.c
+>>> +++ b/arch/sh/lib/delay.c
+>>> @@ -29,6 +29,7 @@ void __delay(unsigned long loops)
+>>>  		: "0" (loops)
+>>>  		: "t");
+>>>  }
+>>> +EXPORT_SYMBOL(__delay);
+>>>  
+>>>  inline void __const_udelay(unsigned long xloops)
+>>>  {
+> 
+> I presently have a revert of this commit in queue for next. If it's
+> sufficiently breaking (and especially if there are other regressions
+> that need to be fixed, see the pmd_free thing) I could try to get it
+> in for 5.8 still but that's getting a bit late.
+> 
 
->=20
-> To deal with the messy calculation, I do realize there is a similar
-> calculation in hv_gpadl_hvpfn() too, so in the next version, I will
-> add a new helper to do this "send offset in guest virtual address to
-> send offset in GPADL calculation", and use it here and in
-> hv_gpadl_hvpfn(). Thoughts?
+The patch in mainline is ok. It appears that it has been applied
+again in -next.
 
-Yes, that helps.
+"git log --oneline v5.7.. arch/sh/lib/delay.c" on top of next-20200721
+reports:
 
->=20
-> > >  	open_msg->target_vp =3D newchannel->target_vp;
-> > >
-> > >  	if (userdatalen)
-> > > @@ -497,6 +598,7 @@ static int __vmbus_open(struct vmbus_channel *new=
-channel,
-> > >  	return err;
-> > >  }
-> > >
-> > > +
-> >
-> > Spurious add of a blank line?
-> >
->=20
-> Yeah, I will fix this, thanks!
->=20
-> Regards,
-> Boqun
->=20
-> > >  /*
-> > >   * vmbus_connect_ring - Open the channel but reuse ring buffer
-> > >   */
-> > > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> > > index 692c89ccf5df..663f0a016237 100644
-> > > --- a/include/linux/hyperv.h
-> > > +++ b/include/linux/hyperv.h
-> > > @@ -29,6 +29,48 @@
-> > >
-> > >  #pragma pack(push, 1)
-> > >
-> > > +/*
-> > > + * Types for GPADL, decides is how GPADL header is created.
-> > > + *
-> > > + * It doesn't make much difference between BUFFER and RING if PAGE_S=
-IZE is the
-> > > + * same as HV_HYP_PAGE_SIZE.
-> > > + *
-> > > + * If PAGE_SIZE is bigger than HV_HYP_PAGE_SIZE, the headers of ring=
- buffers
-> > > + * will be of PAGE_SIZE, however, only the first HV_HYP_PAGE will be=
- put
-> > > + * into gpadl, therefore the number for HV_HYP_PAGE and the indexes =
-of each
-> > > + * HV_HYP_PAGE will be different between different types of GPADL, f=
-or example
-> > > + * if PAGE_SIZE is 64K:
-> > > + *
-> > > + * BUFFER:
-> > > + *
-> > > + * gva:    |--       64k      --|--       64k      --| ... |
-> > > + * gpa:    | 4k | 4k | ... | 4k | 4k | 4k | ... | 4k |
-> > > + * index:  0    1    2     15   16   17   18 .. 31   32 ...
-> > > + *         |    |    ...   |    |    |   ...    |   ...
-> > > + *         v    V          V    V    V          V
-> > > + * gpadl:  | 4k | 4k | ... | 4k | 4k | 4k | ... | 4k | ... |
-> > > + * index:  0    1    2 ... 15   16   17   18 .. 31   32 ...
-> > > + *
-> > > + * RING:
-> > > + *
-> > > + *         | header  |           data           | header  |     data=
-      |
-> > > + * gva:    |-- 64k --|--       64k      --| ... |-- 64k --|-- 64k --=
-| ... |
-> > > + * gpa:    | 4k | .. | 4k | 4k | ... | 4k | ... | 4k | .. | 4k | .. =
-| ... |
-> > > + * index:  0    1    16   17   18    31   ...   n   n+1  n+16 ...   =
-      2n
-> > > + *         |         /    /          /          |         /         =
-      /
-> > > + *         |        /    /          /           |        /          =
-     /
-> > > + *         |       /    /   ...    /    ...     |       /      ...  =
-    /
-> > > + *         |      /    /          /             |      /            =
-   /
-> > > + *         |     /    /          /              |     /             =
-  /
-> > > + *         V    V    V          V               V    V              =
- v
-> > > + * gpadl:  | 4k | 4k |   ...    |    ...        | 4k | 4k |  ...    =
- |
-> > > + * index:  0    1    2   ...    16   ...       n-15 n-14 n-13  ...  =
-2n-30
-> > > + */
-> > > +enum hv_gpadl_type {
-> > > +	HV_GPADL_BUFFER,
-> > > +	HV_GPADL_RING
-> > > +};
-> > > +
-> > >  /* Single-page buffer */
-> > >  struct hv_page_buffer {
-> > >  	u32 len;
-> > > @@ -111,7 +153,7 @@ struct hv_ring_buffer {
-> > >  	} feature_bits;
-> > >
-> > >  	/* Pad it to PAGE_SIZE so that data starts on page boundary */
-> > > -	u8	reserved2[4028];
-> > > +	u8	reserved2[PAGE_SIZE - 68];
-> > >
-> > >  	/*
-> > >  	 * Ring data starts here + RingDataStartOffset
-> > > --
-> > > 2.27.0
-> >
+ee0e4f15dfd4 (origin/akpm) sh: add missing EXPORT_SYMBOL() for __delay
+d1f56f318d23 sh: add missing EXPORT_SYMBOL() for __delay
+
+Maybe it just needs to be dropped from the akpm tree in -next ?
+
+Thanks,
+Guenter
