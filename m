@@ -2,449 +2,352 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C02C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D62EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED44206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="DiyKIj4O"
+	by mail.kernel.org (Postfix) with ESMTP id 58261206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732530AbgGVTZR (ORCPT
+        id S1732575AbgGVT0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:25:17 -0400
-Received: from mail-co1nam11on2115.outbound.protection.outlook.com ([40.107.220.115]:41185
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726462AbgGVTZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:25:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yw8x2pIyhTBVAzHyUclFAyblvIB8XsEJupS4FPTvTtVjrwtnBG/7q5WD6ayx3Q67bKypIK2iXQUG2XDIv0qQnhatZksMN0q9HT4IJhP30ddzjWEeepfYFeEDOq3HY5Lmf9/MMY72YTFsxTaRLgzvdS/CXSLaa1Y5qQ9m6KwuDIN82AM9VifUPvmpj83j1WXnyUT9UcS9L9xWQMC79qqx9ATGv82vLz7SnYgJOJQURr24He02ObgNCVEm4xkMgzaaH87AUk0gEP3MHknm5p3idYs6uNLwVDcSe5hz/GIln2NMDNGyMjYxPa6SRmabnFlGWcEv0OJJFdbmtL59ssvMcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4Nm60oRUhUYskA9vD2+SBUXmzn7o14G0qFyVHmrY90=;
- b=gFJAqqS8f1r/dn7iEQRCjKsfv5luvIAM8+5pJIic6o2XteVXCdeCDrE7HAhS70kPFJ7PR8p8zc/Q/eHwb4yxaVMYHJ19Uedi/3dY5rXnptL8J74GbOVXsMNaEOqSAmJCSoYF9+QmIVsVstAVYKaKnp/KpcHU/ozBRFkxrKMHuTiiL0hlCrPDQnAmrlXTORq0QV9O/xazCFLNy2C8KMZB5sGwO+IFKVJeR2A5CQhLyJRnIYMKt8CucldSKujHA+qevRcjKybNUH/kzcwj+4TIMAApdeqYOtdYrK53PRDXFzH8LYOZeZRwQbPpfvtMSVaQ2g0wAq32/jqfuOkheBP+Cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4Nm60oRUhUYskA9vD2+SBUXmzn7o14G0qFyVHmrY90=;
- b=DiyKIj4O+LF47R97PzNgeI3MarCtvP+N1dyoYsB4hwlyzdDRxOME93dFjtb+MiZWDw5QiO+oF876fn7NLCwM3opszSs9ySfgMNInu2PPisK9NU2DqmAHLd8/wGLEn9FcOGw2cI3tYALLBYSvLHCYJwYcP+064Vy3rSHDtFccvjY=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MWHPR2101MB0810.namprd21.prod.outlook.com (2603:10b6:301:78::39) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.3; Wed, 22 Jul
- 2020 19:25:12 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3239.005; Wed, 22 Jul 2020
- 19:25:12 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Andres Beltran <t-mabelt@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>
-Subject: RE: [PATCH v5 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Thread-Topic: [PATCH v5 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Thread-Index: AQHWYFNyHj2wRUmHT0OFH7kIFlRijKkT9s0w
-Date:   Wed, 22 Jul 2020 19:25:12 +0000
-Message-ID: <MW2PR2101MB105231CB8AE6BE0E8BD6A535D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200722181051.2688-1-lkmlabelt@gmail.com>
- <20200722181051.2688-2-lkmlabelt@gmail.com>
-In-Reply-To: <20200722181051.2688-2-lkmlabelt@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-22T19:25:10Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3351fb0d-71db-4b50-a619-e5a58c7848be;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f776c52a-9ad4-4954-41d0-08d82e74f473
-x-ms-traffictypediagnostic: MWHPR2101MB0810:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2101MB0810A9781EB3B48A3701914BD7790@MWHPR2101MB0810.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RpWuDfOwReliBB1eptEPRQEf2YwdnUymE/KGHN5mwtaAUPo7F3RyxLBznrvV51r/OyzG+FQUiIlzQ+csfjMP4jU5vR5CM6BvOpsmwXHTOHYjhV/HgXjhKRgXVxg3g/jEmgvHhXdSuIn8XLuUmzcjpNcb7FWUi+djWDAvX7NaaCh2Us/mgu1yxEriK6vIZfJ8iOTIZNtmAndCUNN4UCNUTt2NMUkaU79C6u1r/zRnyxjmDhh6sO9Jzz4dvxD0/KpKg1KBdfZndq3bPpiO1E5nJc1fl1byLt9zRiO7gIFQLIF2yRx/Xoww1v4fdeTFI5fm2jbpyoPPpOL/fGvlLUIBwA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(396003)(39860400002)(346002)(86362001)(26005)(5660300002)(33656002)(9686003)(4326008)(83380400001)(186003)(71200400001)(8936002)(10290500003)(82960400001)(8676002)(66446008)(76116006)(64756008)(7696005)(66476007)(66556008)(316002)(6506007)(2906002)(66946007)(52536014)(55016002)(82950400001)(110136005)(478600001)(54906003)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: xi58ZBnmcjGxMdAJsKebpVg990m3xcV0YfK9Wd/62qyxYdt7Rva8++tFjai+jb1KZvi5YAs/URDtpyrLia87ixBnmp5RUiaINVKLIqTRWqgSExYm4+9evHLlJs3dR8SsNNojFMPe/NIqjIIA3ST3DKSaYw0GFCX9UhLJW5HQSw4VjA8delJF8+/5y8b5afbyBybSM2QH8PMpXG7yIDVKFFvOmd5ORkJ8fTxVEt2lXlrMW3P1DlxJPovtX/R0nqyOGhioQze6rF8b820PaqfLwmux7WfPUAWET8WmD68yl8lITpjfxTkq7qp/0Kdvo/D80IwJ8tSCpJhhcbpZFy5a/KVf7RVg2wTmIYLCwF0AMh6/vym/PXIjokjzvY2vGJZWwpGxS5gCkUy3R8jleLVspSRokBNakERaxCmOqyvTnAN9tHStnCcq+cKuIc2XTVxjukE8qbcEYqfFB0UDr34dKijTsc9/sXcAHZDWIXW/Q2XBlMiVm+kTKrPZZHsI8VqJnLPDjQME1Lpar6xN/Gq1hOXlDs454vyVoPux+hREhX2dZyvZVnhQDrTcPEBofvh4F6lD0gMJGcAqioQTqDhskcTNzUIT2GQ4D0gP68Ofh+NJvrJnjDyx7akGQ6AsynXrWPBg4/a7AgisLnB5iFAXsA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 Jul 2020 15:26:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57714 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726462AbgGVT0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:26:47 -0400
+IronPort-SDR: XxQ2WnUIbMfHX0eNd//YoYRjWlgUAqdSdB2WakIbMVZ9SFsrWZfyW0XmQy8N5WQyMSlq4R9Va+
+ bebyBALzKgtw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="137909789"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="137909789"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 12:26:47 -0700
+IronPort-SDR: nOsE7Ndks8lSoQBqh5yBvMiPKKBNLvRMHW0l9mkBz1g+CUd17noPE20kLlMNgjsKOnwCymm0AP
+ sBxYwMpXKu0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="318758537"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 22 Jul 2020 12:26:47 -0700
+Received: from [10.251.9.199] (kliang2-mobl.ccr.corp.intel.com [10.251.9.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 6C5FA5802E4;
+        Wed, 22 Jul 2020 12:26:46 -0700 (PDT)
+Subject: Re: [PATCH V6 11/14] perf/x86/intel: Disable sample-read the slots
+ and metrics events
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+References: <20200717140554.22863-1-kan.liang@linux.intel.com>
+ <20200717140554.22863-12-kan.liang@linux.intel.com>
+ <20200721131011.GY10769@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <1bfa475e-2f7c-31e0-5114-34ac9808e4d6@linux.intel.com>
+Date:   Wed, 22 Jul 2020 15:26:44 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f776c52a-9ad4-4954-41d0-08d82e74f473
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 19:25:12.1725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F1Op9XiqHjShd7Sy26hS1uq2+sfHMGl6sqfUdmfi5O2//Ol7fkOvGnGcCOFWwR8is1yCTZ6matc4xdFOLOBmwZ8FBbi5r3xgqDNIR/4kgqo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0810
+In-Reply-To: <20200721131011.GY10769@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Beltran <lkmlabelt@gmail.com> Sent: Wednesday, July 22, 2020 1=
-1:11 AM
->=20
-> Currently, VMbus drivers use pointers into guest memory as request IDs
-> for interactions with Hyper-V. To be more robust in the face of errors
-> or malicious behavior from a compromised Hyper-V, avoid exposing
-> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> bad request ID that is then treated as the address of a guest data
-> structure with no validation. Instead, encapsulate these memory
-> addresses and provide small integers as request IDs.
->=20
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> ---
-> Changes in v5:
-> 	- Add support for unsolicited messages sent by the host with a
-> 	  request ID of 0.
-> Changes in v4:
->         - Use channel->rqstor_size to check if rqstor has been
->           initialized.
-> Changes in v3:
->         - Check that requestor has been initialized in
->           vmbus_next_request_id() and vmbus_request_addr().
-> Changes in v2:
->         - Get rid of "rqstor" variable in __vmbus_open().
->=20
->  drivers/hv/channel.c   | 175 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/hyperv.h |  21 +++++
->  2 files changed, 196 insertions(+)
 
-These changes do indeed solve the previously reported problem, which
-is good.  I've tested on my own WSLv2 installation, and everything works.
-But see comments further down.
 
->=20
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index 3ebda7707e46..b0a607ec4a37 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -112,6 +112,71 @@ int vmbus_alloc_ring(struct vmbus_channel *newchanne=
-l,
->  }
->  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
->=20
-> +/**
-> + * request_arr_init - Allocates memory for the requestor array. Each slo=
-t
-> + * keeps track of the next available slot in the array. Initially, each
-> + * slot points to the next one (as in a Linked List). The last slot
-> + * does not point to anything, so its value is U64_MAX by default.
-> + * @size The size of the array
-> + */
-> +static u64 *request_arr_init(u32 size)
-> +{
-> +	int i;
-> +	u64 *req_arr;
-> +
-> +	req_arr =3D kcalloc(size, sizeof(u64), GFP_KERNEL);
-> +	if (!req_arr)
-> +		return NULL;
-> +
-> +	for (i =3D 0; i < size - 1; i++)
-> +		req_arr[i] =3D i + 2;
+On 7/21/2020 9:10 AM, Peter Zijlstra wrote:
+> On Fri, Jul 17, 2020 at 07:05:51AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Users fail to sample-read the slots and metrics events, e.g.,
+>> perf record -e '{slots, topdown-retiring}:S'.
+>>
+>> When reading the metrics event, the fixed counter 3 (slots) has to be
+>> reset, which impacts the sampling of the slots event.
+>>
+>> Add a specific validate_group() support to reject the case and error out
+>> for Ice Lake.
+>>
+>> An alternative fix may unconditionally disable slots sampling, but it's
+>> not a decent fix. Users may want to only sample the slot events
+>> without the topdown metrics events.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> I'm confused by this; it doesn't make sense.
+> 
+> Should not patch 7 have something like the below instead?
+> 
+> Also, I think there is a bug when we create a group like this and then
+> kill the leader, in that case the core code will 'promote' the sibling
+> metric events to their own individual events, see perf_group_detach().
+> 
+> We need additional code to move those events into unrecoverable ERROR
+> state. A new group_caps flag could indicate this promotion isn't
+> allowed.
 
-I don't think the above does what you want.  The allocated
-array ends up as follows:
+Yes, I can produce the bug with a custom program. The below patch can 
+fix it. I will add it into the upcoming V7 patch set.
 
-Slot 0 contains "2"
-Slot 1 contains "3"
-...
-Slot size-2 contains size
-Slot size-1 contains U64_MAX
+ From c90d4c19b24392e6bd9ff3c6d23d0d300bfa774f Mon Sep 17 00:00:00 2001
+From: Kan Liang <kan.liang@linux.intel.com>
+Date: Wed, 22 Jul 2020 12:06:32 -0700
+Subject: [PATCH] perf/core: Add a new PERF_EV_CAP_COEXIST event capability
 
-This means that allocating the next-to-last entry will go
-awry.  I think the previous version of the slot initialization
-code will actually work just fine.
+Current perf assumes that group events are independent. Close an event
+doesn't impact the value of the other events in the same group. If the
+closed event is a member, after the event closure, other events are
+running like a group. If the closed event is a leader, after the
+closure, other events are running as singleton events.
 
-> +
-> +	/* Last slot (no more available slots) */
-> +	req_arr[i] =3D U64_MAX;
-> +
-> +	return req_arr;
-> +}
-> +
-> +/*
-> + * vmbus_alloc_requestor - Initializes @rqstor's fields.
-> + * Start the ID count at 1 because Hyper-V can send an unsolicited messa=
-ge
-> + * with request ID of 0.
-> + * @size: Size of the requestor array
-> + */
-> +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 siz=
-e)
-> +{
-> +	u64 *rqst_arr;
-> +	unsigned long *bitmap;
-> +
-> +	rqst_arr =3D request_arr_init(size);
-> +	if (!rqst_arr)
-> +		return -ENOMEM;
-> +
-> +	bitmap =3D bitmap_zalloc(size, GFP_KERNEL);
-> +	if (!bitmap) {
-> +		kfree(rqst_arr);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	rqstor->req_arr =3D rqst_arr;
-> +	rqstor->req_bitmap =3D bitmap;
-> +	rqstor->size =3D size;
-> +	rqstor->next_request_id =3D 1;
-> +	spin_lock_init(&rqstor->req_lock);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * vmbus_free_requestor - Frees memory allocated for @rqstor
-> + * @rqstor: Pointer to the requestor struct
-> + */
-> +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
-> +{
-> +	kfree(rqstor->req_arr);
-> +	bitmap_free(rqstor->req_bitmap);
-> +}
-> +
->  static int __vmbus_open(struct vmbus_channel *newchannel,
->  		       void *userdata, u32 userdatalen,
->  		       void (*onchannelcallback)(void *context), void *context)
-> @@ -132,6 +197,12 @@ static int __vmbus_open(struct vmbus_channel *newcha=
-nnel,
->  	if (newchannel->state !=3D CHANNEL_OPEN_STATE)
->  		return -EINVAL;
->=20
-> +	/* Create and init requestor */
-> +	if (newchannel->rqstor_size) {
-> +		if (vmbus_alloc_requestor(&newchannel->requestor, newchannel->rqstor_s=
-ize))
-> +			return -ENOMEM;
-> +	}
-> +
->  	newchannel->state =3D CHANNEL_OPENING_STATE;
->  	newchannel->onchannel_callback =3D onchannelcallback;
->  	newchannel->channel_callback_context =3D context;
-> @@ -228,6 +299,7 @@ static int __vmbus_open(struct vmbus_channel *newchan=
-nel,
->  error_clean_ring:
->  	hv_ringbuffer_cleanup(&newchannel->outbound);
->  	hv_ringbuffer_cleanup(&newchannel->inbound);
-> +	vmbus_free_requestor(&newchannel->requestor);
->  	newchannel->state =3D CHANNEL_OPEN_STATE;
->  	return err;
->  }
-> @@ -703,6 +775,9 @@ static int vmbus_close_internal(struct vmbus_channel =
-*channel)
->  		channel->ringbuffer_gpadlhandle =3D 0;
->  	}
->=20
-> +	if (!ret)
-> +		vmbus_free_requestor(&channel->requestor);
-> +
->  	return ret;
->  }
->=20
-> @@ -937,3 +1012,103 @@ int vmbus_recvpacket_raw(struct vmbus_channel *cha=
-nnel,
-> void *buffer,
->  				  buffer_actual_len, requestid, true);
->  }
->  EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
-> +
-> +/*
-> + * vmbus_requestor_hash_idx - Returns the index in the requestor array
-> + * that rqst_id maps to.
-> + */
-> +static inline u64 vmbus_requestor_hash_idx(const u64 rqst_id)
-> +{
-> +	return rqst_id - 1;
-> +}
+However, the assumption is not correct anymore, e.g., the TopDown slots
+and metrics events. The slots and metrics events must coexist in the
+same group. If the slots event is closed, the value for the metrics
+events is invalid.
 
-The overall scheme you are using to handle the 0 transactionID is
-a good one.  Basically the slot array is still tracking values 0 thru
-size-1, but what is presented to the calling VMbus driver is values
-in the range 1 thru size.  That way you can recognize 0 as a special case.
-So take this implementation approach:
-*  Start with the previous version of the vmbus_next_request_id()
-and vmbus_request_addr() code.
-*  In vmbus_next_request_id(), just return current_id+1 instead of
-current_id.
-* In vmbus_request_addr(), add the new code that checks trans_id
-for 0 and returns immediately.  Otherwise, decrement trans_id by 1
-and proceed with the existing code.
+Add a new PERF_EV_CAP_COEXIST event capability to indicate the
+relationship among group events.
 
-With this approach, none of the initialization code needs to change.
-Everything uses values in the range 0 to size-1, except that what is
-presented to the VMbus drivers is shifted higher by 1.
+If any event with the flag is detached from the group, split the group
+into singleton events, and move the events, which also have the flag,
+to the unrecoverable ERROR state.
 
-Hopefully, I'm thinking about this correctly.
+The leader of a PERF_EV_CAP_COEXIST group has to be updated at last.
+Move perf_event__header_size(leader); to the end of perf_group_detach().
 
-Michael
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+  arch/x86/events/intel/core.c |  2 ++
+  include/linux/perf_event.h   |  5 ++++
+  kernel/events/core.c         | 52 +++++++++++++++++++++++++++++++++---
+  3 files changed, 55 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 35694f6337c9..b0ab638e48ee 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3659,6 +3659,8 @@ static int intel_pmu_hw_config(struct perf_event 
+*event)
+  				return -EINVAL;
+
+  			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
++
++			event->event_caps |= PERF_EV_CAP_COEXIST;
+  		}
+  	}
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index a26f3c9589b7..aa60a1381aa1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -585,9 +585,14 @@ typedef void (*perf_overflow_handler_t)(struct 
+perf_event *,
+   * PERF_EV_CAP_SOFTWARE: Is a software event.
+   * PERF_EV_CAP_READ_ACTIVE_PKG: A CPU event (or cgroup event) that can 
+be read
+   * from any CPU in the package where it is active.
++ * PERF_EV_CAP_COEXIST: An event with this flag must coexist with other 
+sibling
++ * events, which have the same flag. If any event with the flag is detached
++ * from the group, split the group into singleton events, and move the 
+events
++ * with the flag to the unrecoverable ERROR state.
+   */
+  #define PERF_EV_CAP_SOFTWARE		BIT(0)
+  #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
++#define PERF_EV_CAP_COEXIST		BIT(2)
+
+  #define SWEVENT_HLIST_BITS		8
+  #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7c436d705fbd..e35d549a356d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2133,10 +2133,28 @@ static inline struct list_head 
+*get_event_list(struct perf_event *event)
+  	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
+  }
+
++/*
++ * If the event has PERF_EV_CAP_COEXIST capability,
++ * schedule it out and move it into the ERROR state.
++ */
++static inline void perf_remove_coexist_events(struct perf_event *event)
++{
++	struct perf_event_context *ctx = event->ctx;
++	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
++
++	if (!(event->event_caps & PERF_EV_CAP_COEXIST))
++		return;
++
++	event_sched_out(event, cpuctx, ctx);
++	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
++}
++
+  static void perf_group_detach(struct perf_event *event)
+  {
++	struct perf_event *leader = event->group_leader;
+  	struct perf_event *sibling, *tmp;
+  	struct perf_event_context *ctx = event->ctx;
++	bool cap_coexist = !!(event->event_caps & PERF_EV_CAP_COEXIST);
+
+  	lockdep_assert_held(&ctx->lock);
+
+@@ -2150,15 +2168,25 @@ static void perf_group_detach(struct perf_event 
+*event)
+
+  	perf_put_aux_event(event);
+
++	/*
++	 * If a PERF_EV_CAP_COEXIST event is detached,
++	 * split the group into singleton events.
++	 */
++	if (cap_coexist) {
++		event = leader;
++		goto split_group;
++	}
++
+  	/*
+  	 * If this is a sibling, remove it from its group.
+  	 */
+-	if (event->group_leader != event) {
++	if (leader != event) {
+  		list_del_init(&event->sibling_list);
+  		event->group_leader->nr_siblings--;
+  		goto out;
+  	}
+
++split_group:
+  	/*
+  	 * If this was a group event with sibling events then
+  	 * upgrade the siblings to singleton events by adding them
+@@ -2172,6 +2200,10 @@ static void perf_group_detach(struct perf_event 
+*event)
+  		/* Inherit group flags from the previous leader */
+  		sibling->group_caps = event->group_caps;
+
++		/* Remove sibling PERF_EV_CAP_COEXIST event */
++		if (cap_coexist)
++			perf_remove_coexist_events(sibling);
++
+  		if (!RB_EMPTY_NODE(&event->group_node)) {
+  			add_event_to_groups(sibling, event->ctx);
+
+@@ -2181,12 +2213,24 @@ static void perf_group_detach(struct perf_event 
+*event)
+
+  		WARN_ON_ONCE(sibling->ctx != event->ctx);
+  	}
+-
+  out:
+-	perf_event__header_size(event->group_leader);
+
+-	for_each_sibling_event(tmp, event->group_leader)
++	for_each_sibling_event(tmp, leader)
+  		perf_event__header_size(tmp);
++
++	/*
++	 * Change the leader of a PERF_EV_CAP_COEXIST group into
++	 * a singleton event. If the leader is a PERF_EV_CAP_COEXIST
++	 * event as well, remove it.
++	 */
++
++	if (cap_coexist) {
++		list_del_init(&leader->sibling_list);
++		leader->group_leader->nr_siblings = 0;
++		perf_remove_coexist_events(leader);
++	}
++
++	perf_event__header_size(leader);
+  }
+
+  static bool is_orphaned_event(struct perf_event *event)
+-- 
+2.17.1
+
+
+> 
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3441,8 +3441,22 @@ static int intel_pmu_hw_config(struct pe
+>   	 * A flag PERF_X86_EVENT_TOPDOWN is applied for the case.
+>   	 */
+>   	if (x86_pmu.intel_cap.perf_metrics && is_topdown_event(event)) {
+> -		if (is_metric_event(event) && is_sampling_event(event))
+> -			return -EINVAL;
 > +
-> +/*
-> + * vmbus_next_request_id - Returns a new request id. It is also
-> + * the index at which the guest memory address is stored.
-> + * Uses a spin lock to avoid race conditions.
-> + * @rqstor: Pointer to the requestor struct
-> + * @rqst_add: Guest memory address to be stored in the array
-> + */
-> +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
-> +{
-> +	unsigned long flags;
-> +	u64 current_id, idx;
-> +	const struct vmbus_channel *channel =3D
-> +		container_of(rqstor, const struct vmbus_channel, requestor);
+> +		if (is_metric_event(event)) {
+> +			struct perf_event *leader = event->group_leader;
 > +
-> +	/* Check rqstor has been initialized */
-> +	if (!channel->rqstor_size)
-> +		return VMBUS_RQST_ERROR;
+> +			if (is_sampling_event(event))
+> +				return -EINVAL;
 > +
-> +	spin_lock_irqsave(&rqstor->req_lock, flags);
-> +	current_id =3D rqstor->next_request_id;
-> +	idx =3D vmbus_requestor_hash_idx(current_id);
+> +			if (leader == event)
+> +				return -EINVAL;
 > +
-> +	/* Requestor array is full */
-> +	if (current_id > rqstor->size) {
-> +		current_id =3D VMBUS_RQST_ERROR;
-> +		goto exit;
-> +	}
+> +			if (!is_slots_event(leader))
+> +				return -EINVAL;
 > +
-> +	rqstor->next_request_id =3D rqstor->req_arr[idx];
-> +	rqstor->req_arr[idx] =3D rqst_addr;
-> +
-> +	/* The already held spin lock provides atomicity */
-> +	bitmap_set(rqstor->req_bitmap, idx, 1);
-> +
-> +exit:
-> +	spin_unlock_irqrestore(&rqstor->req_lock, flags);
-> +	return current_id;
-> +}
-> +EXPORT_SYMBOL_GPL(vmbus_next_request_id);
-> +
-> +/*
-> + * vmbus_request_addr - Returns the memory address stored at @trans_id
-> + * in @rqstor. Uses a spin lock to avoid race conditions.
-> + * @rqstor: Pointer to the requestor struct
-> + * @trans_id: Request id sent back from Hyper-V. Becomes the requestor's
-> + * next request id.
-> + */
-> +u64 vmbus_request_addr(struct vmbus_requestor *rqstor, u64 trans_id)
-> +{
-> +	unsigned long flags;
-> +	u64 req_addr, idx;
-> +	const struct vmbus_channel *channel =3D
-> +		container_of(rqstor, const struct vmbus_channel, requestor);
-> +
-> +	/* Check rqstor has been initialized */
-> +	if (!channel->rqstor_size)
-> +		return VMBUS_RQST_ERROR;
-> +
-> +	/* Hyper-V can send an unsolicited message with tid of 0 */
-> +	if (!trans_id)
-> +		return trans_id;
-> +
-> +	spin_lock_irqsave(&rqstor->req_lock, flags);
-> +
-> +	/* Invalid trans_id */
-> +	if (trans_id > rqstor->size) {
-> +		req_addr =3D VMBUS_RQST_ERROR;
-> +		goto exit;
-> +	}
-> +
-> +	idx =3D vmbus_requestor_hash_idx(trans_id);
-> +
-> +	/* Invalid trans_id: empty slot */
-> +	if (!test_bit(idx, rqstor->req_bitmap)) {
-> +		req_addr =3D VMBUS_RQST_ERROR;
-> +		goto exit;
-> +	}
-> +
-> +	req_addr =3D rqstor->req_arr[idx];
-> +	rqstor->req_arr[idx] =3D rqstor->next_request_id;
-> +	rqstor->next_request_id =3D trans_id;
-> +
-> +	/* The already held spin lock provides atomicity */
-> +	bitmap_clear(rqstor->req_bitmap, idx, 1);
-> +
-> +exit:
-> +	spin_unlock_irqrestore(&rqstor->req_lock, flags);
-> +	return req_addr;
-> +}
-> +EXPORT_SYMBOL_GPL(vmbus_request_addr);
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 38100e80360a..c509d20ab7db 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -716,6 +716,21 @@ enum vmbus_device_type {
->  	HV_UNKNOWN,
->  };
->=20
-> +/*
-> + * Provides request ids for VMBus. Encapsulates guest memory
-> + * addresses and stores the next available slot in req_arr
-> + * to generate new ids in constant time.
-> + */
-> +struct vmbus_requestor {
-> +	u64 *req_arr;
-> +	unsigned long *req_bitmap; /* is a given slot available? */
-> +	u32 size;
-> +	u64 next_request_id;
-> +	spinlock_t req_lock; /* provides atomicity */
-> +};
-> +
-> +#define VMBUS_RQST_ERROR U64_MAX
-> +
->  struct vmbus_device {
->  	u16  dev_type;
->  	guid_t guid;
-> @@ -940,8 +955,14 @@ struct vmbus_channel {
->  	u32 fuzz_testing_interrupt_delay;
->  	u32 fuzz_testing_message_delay;
->=20
-> +	/* request/transaction ids for VMBus */
-> +	struct vmbus_requestor requestor;
-> +	u32 rqstor_size;
->  };
->=20
-> +u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)=
-;
-> +u64 vmbus_request_addr(struct vmbus_requestor *rqstor, u64 trans_id);
-> +
->  static inline bool is_hvsock_channel(const struct vmbus_channel *c)
->  {
->  	return !!(c->offermsg.offer.chn_flags &
-> --
-> 2.25.1
+> +			if (is_sampling_event(leader))
+> +				return -EINVAL;
+> +		}
+
+The leader doesn't need to be a slots event, e.g., {cycles, slots, 
+topdown_fe_bound} is also a valid group.
+But the slots event must be before all metric events.
+
+So I will also use the below codes to replace the above one in V7.
+
+
++		if (is_metric_event(event)) {
++			struct perf_event *leader = event->group_leader;
++			struct perf_event *sibling;
++
++			/* The metric events don't support sampling. */
++			if (is_sampling_event(event))
++				return -EINVAL;
++
++			/* The metric events cannot be a group leader. */
++			if (leader == event)
++				return -EINVAL;
++
++			/*
++			 * The slots event cannot be the leader of a topdown
++			 * sample-read group, e.g., {slots, topdown-retiring}:S
++			 */
++			if (is_slots_event(leader) && is_sampling_event(leader))
++				return -EINVAL;
++
++			/*
++			 * The slots event must be before the metric events,
++			 * because we only update the values of a topdown
++			 * group once with the slots event.
++			 */
++			if (!is_slots_event(leader)) {
++				for_each_sibling_event(sibling, leader) {
++					if (is_slots_event(sibling))
++						break;
++					if (is_metric_event(sibling))
++						return -EINVAL;
++				}
++			}
++		}
+
+
+
+Thanks,
+Kan
 
