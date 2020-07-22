@@ -2,192 +2,100 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A11C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09EC206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DD1207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731142AbgGVQuy (ORCPT
+        id S1731151AbgGVQxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:50:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12009 "EHLO mga07.intel.com"
+        Wed, 22 Jul 2020 12:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgGVQux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:50:53 -0400
-IronPort-SDR: yiVEIujHbbYbaMEjiDiNcyTh5qmSgLPkrBiPOSmYpj6la6z/3lzSMs9ZwvI9PzJlF9sItzlAOc
- b/rp1EmHkp+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215002841"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="215002841"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 09:50:51 -0700
-IronPort-SDR: L+8m7J8RWmfQdUFP7nNVsRis/hvFKPt3CUmzdUuG4sPpU5xSTU/i5zwca/aG50/A9u2+9/d4gx
- vrvmDvcVD7gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="462526859"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga005.jf.intel.com with ESMTP; 22 Jul 2020 09:50:50 -0700
-Received: from [10.254.181.38] (10.254.181.38) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 Jul
- 2020 09:50:50 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>
-CC:     <vkoul@kernel.org>, <maz@kernel.org>, <bhelgaas@google.com>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <hpa@zytor.com>,
-        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
-        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
-        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
-        <tony.luck@intel.com>, <jing.lin@intel.com>,
-        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <parav@mellanox.com>,
-        <dave.hansen@intel.com>, <netanelg@mellanox.com>,
-        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
-        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
-        <mona.hossain@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <20200721161344.GA2021248@mellanox.com>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <a99af84f-f3ef-ee3c-1f94-680909e97868@intel.com>
-Date:   Wed, 22 Jul 2020 09:50:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726649AbgGVQxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:53:51 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE0B206F5;
+        Wed, 22 Jul 2020 16:53:49 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 17:53:47 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] raw_copy_from_user() semantics
+Message-ID: <20200722165346.GB4069@gaia>
+References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
+ <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
+ <20200722113707.GC27540@gaia>
+ <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721161344.GA2021248@mellanox.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.254.181.38]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
-
-On 7/21/2020 9:13 AM, Jason Gunthorpe wrote:
-> On Tue, Jul 21, 2020 at 09:02:28AM -0700, Dave Jiang wrote:
->> From: Megha Dey <megha.dey@intel.com>
->>
->> Add support for the creation of a new DEV_MSI irq domain. It creates a
->> new irq chip associated with the DEV_MSI domain and adds the necessary
->> domain operations to it.
->>
->> Add a new config option DEV_MSI which must be enabled by any
->> driver that wants to support device-specific message-signaled-interrupts
->> outside of PCI-MSI(-X).
->>
->> Lastly, add device specific mask/unmask callbacks in addition to a write
->> function to the platform_msi_ops.
->>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Megha Dey <megha.dey@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>   arch/x86/include/asm/hw_irq.h |    5 ++
->>   drivers/base/Kconfig          |    7 +++
->>   drivers/base/Makefile         |    1
->>   drivers/base/dev-msi.c        |   95 +++++++++++++++++++++++++++++++++++++++++
->>   drivers/base/platform-msi.c   |   45 +++++++++++++------
->>   drivers/base/platform-msi.h   |   23 ++++++++++
->>   include/linux/msi.h           |    8 +++
->>   7 files changed, 168 insertions(+), 16 deletions(-)
->>   create mode 100644 drivers/base/dev-msi.c
->>   create mode 100644 drivers/base/platform-msi.h
->>
->> diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
->> index 74c12437401e..8ecd7570589d 100644
->> +++ b/arch/x86/include/asm/hw_irq.h
->> @@ -61,6 +61,11 @@ struct irq_alloc_info {
->>   			irq_hw_number_t	msi_hwirq;
->>   		};
->>   #endif
->> +#ifdef CONFIG_DEV_MSI
->> +		struct {
->> +			irq_hw_number_t hwirq;
->> +		};
->> +#endif
+On Wed, Jul 22, 2020 at 01:14:21PM +0000, David Laight wrote:
+> From: Catalin Marinas
+> > Sent: 22 July 2020 12:37
+> > On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
+> > > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
+> > > <torvalds@linux-foundation.org> wrote:
+> > > > I think we should try to get rid of the exact semantics.
+> > >
+> > > Side note: I think one of the historical reasons for the exact
+> > > semantics was that we used to do things like the mount option copying
+> > > with a "copy_from_user()" iirc.
+> > >
+> > > And that could take a fault at the end of the stack etc, because
+> > > "copy_mount_options()" is nasty and doesn't get a size, and just
+> > > copies "up to 4kB" of data.
+> > >
+> > > It's a mistake in the interface, but it is what it is. But we've
+> > > always handled the inexact count there anyway by originally doing byte
+> > > accesses, and at some point you optimized it to just look at where
+> > > page boundaries might be..
+> > 
+> > And we may have to change this again since, with arm64 MTE, the page
+> > boundary check is insufficient:
+> > 
+> > https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+> > 
+> > While currently the fault path is unlikely to trigger, with MTE in user
+> > space it's a lot more likely since the buffer (e.g. a string) is
+> > normally less than 4K and the adjacent addresses would have a different
+> > colour.
+> > 
+> > I looked (though briefly) into passing the copy_from_user() problem to
+> > filesystems that would presumably know better how much to copy. In most
+> > cases the options are string, so something like strncpy_from_user()
+> > would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
+> > has a better way to figure out how much to copy.
 > 
-> Why is this in this patch? I didn't see an obvious place where it is
-> used?
+> What about changing the mount code to loop calling get_user()
+> to read aligned words until failure?
+> Mount is fairly uncommon and the extra cost is probably small compared
+> to the rest of doing a mount.
 
-Since I have introduced the DEV-MSI domain and related ops, this is 
-required in the dev_msi_set_hwirq and dev_msi_set_desc in this patch.
+Before commit 12efec560274 ("saner copy_mount_options()"), it was using
+single-byte get_user(). That could have been optimised for aligned words
+reading but I don't really think it's worth the hassle. Since the source
+and destination don't have the same alignment and some architecture
+don't support unaligned accesses (for storing to the kernel buffer), it
+would just make this function unnecessarily complicated.
 
->>   
->> +static void __platform_msi_desc_mask_unmask_irq(struct msi_desc *desc, u32 mask)
->> +{
->> +	const struct platform_msi_ops *ops;
->> +
->> +	ops = desc->platform.msi_priv_data->ops;
->> +	if (!ops)
->> +		return;
->> +
->> +	if (mask) {
->> +		if (ops->irq_mask)
->> +			ops->irq_mask(desc);
->> +	} else {
->> +		if (ops->irq_unmask)
->> +			ops->irq_unmask(desc);
->> +	}
->> +}
->> +
->> +void platform_msi_mask_irq(struct irq_data *data)
->> +{
->> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 1);
->> +}
->> +
->> +void platform_msi_unmask_irq(struct irq_data *data)
->> +{
->> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 0);
->> +}
-> 
-> This is a bit convoluted, just call the op directly:
-> 
-> void platform_msi_unmask_irq(struct irq_data *data)
-> {
-> 	const struct platform_msi_ops *ops = desc->platform.msi_priv_data->ops;
-> 
-> 	if (ops->irq_unmask)
-> 		ops->irq_unmask(desc);
-> }
->
-
-Sure, I will update this.
-
->> diff --git a/include/linux/msi.h b/include/linux/msi.h
->> index 7f6a8eb51aca..1da97f905720 100644
->> +++ b/include/linux/msi.h
->> @@ -323,9 +323,13 @@ enum {
->>   
->>   /*
->>    * platform_msi_ops - Callbacks for platform MSI ops
->> + * @irq_mask:   mask an interrupt source
->> + * @irq_unmask: unmask an interrupt source
->>    * @write_msg:	write message content
->>    */
->>   struct platform_msi_ops {
->> +	unsigned int            (*irq_mask)(struct msi_desc *desc);
->> +	unsigned int            (*irq_unmask)(struct msi_desc *desc);
-> 
-> Why do these functions return things if the only call site throws it
-> away?
-
-Hmmm, fair enough, I will change it to void.
-
-> 
-> Jason
-> 
+-- 
+Catalin
