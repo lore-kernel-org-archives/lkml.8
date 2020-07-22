@@ -2,136 +2,265 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB53C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65160C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12F820792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B870207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="fCuEEXu+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SR4z5E0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgGVFqk (ORCPT
+        id S1728104AbgGVFr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbgGVFqk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:46:40 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B162C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:46:40 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s189so592414pgc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c3WKCCywdgvLGCz57S7am54sr0h7w7V/JrEMUHUMU/o=;
-        b=fCuEEXu++BATZZEgu63jyhgE+Y1XNFfh/hfRTuYGDp7tRoc6LbkGOtZmRlJEX0Q4mc
-         58Wx5DrHLgqWGA15ODfmp4BD+A6kqkaXmwBVAcQy7tZT4nC6LrgGJ3lzv06Ej9jur88k
-         XGQBpKOytzyljGp9JTo/2ytrZBP2jJniHbB1MwjDRZhque2NwdZ0aWGsgryRqU+3DE9U
-         m+vgwzNJSvheMii7MxNhJxPUYaZbP4XIj428wVkVonkWkFnWlNi3Hd/UlX/sByadTgHP
-         sXR0VV6uQ74NOk6fTFxzR7f22jvf+xzhKswTeZHjL411qPbZeON+M2WgzsdrCjh868sb
-         i6BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=c3WKCCywdgvLGCz57S7am54sr0h7w7V/JrEMUHUMU/o=;
-        b=jRkuC/v/F5Tj0AZz+3naoWfl++jrWNsGvbu56QzOb+BehDedyFpMkH11GpXA74ko5j
-         0K5PBnJzjMzf9ANkD0OYcgE82fLHxLlf1yFdfDv2DPcSLvVdCsdfAu8x3MgUGYNdIkjB
-         XtvkTHjSYubMfkFOgTxbqQuWsEfEMDxgDpcn8YQQL0JqQvuTehslgLUl8nwd/F7TWRbY
-         h6eKn/iAmI2pGnBTHrhWrBLSweKdezz2022fy+3g11K68kBMYvgz2AfDhk3yGGk6FmiG
-         /JdYBOkJhV+LtlmMpLNLLmSXBzw737DRZyxyqv6+ZS0YvOBxY0xbVeqyyXG14zaI5zAk
-         idKQ==
-X-Gm-Message-State: AOAM533k2Qv+yWgayPj2IDJiJam/9ihKSyDcrD2QW2EzJyzeV/43SrgC
-        yA2UzOZPs8UGpjwGM0MfsLNBqg==
-X-Google-Smtp-Source: ABdhPJwR06FNegYVsAU8o74hwv373Yq9KlDunC4jItd8mIVMPn3zgJSHBlM3MLtzBDjvCEtSQnV5Fg==
-X-Received: by 2002:a62:7505:: with SMTP id q5mr25490271pfc.262.1595396799507;
-        Tue, 21 Jul 2020 22:46:39 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id r16sm22153983pfh.64.2020.07.21.22.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 22:46:38 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 22:46:38 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Jul 2020 22:46:37 PDT (-0700)
-Subject:     Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
-In-Reply-To: <87sgdkqhjx.fsf@mpe.ellerman.id.au>
-CC:     benh@kernel.crashing.org, alex@ghiti.fr, paulus@samba.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     mpe@ellerman.id.au
-Message-ID: <mhng-378c6e4e-9eba-4bfd-89d6-b4d2549ff3a1@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 22 Jul 2020 01:47:56 -0400
+Received: from mail-am6eur05on2078.outbound.protection.outlook.com ([40.107.22.78]:10592
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726696AbgGVFrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 01:47:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D9kW/Djg9D5PNkShtZK2KWHNJeH1+FXrPHKYec7yuWKlUfxxcqqtoH0iG1bNRziZ9pJk9lMXpstjJB248nqQieoViNgjj41NbsQP0rKg0oyiCac5lY9v0F+MI0Oa0F1dmrxjNdp9KHixFYV5fFaY1IEbobSMsy9lEfL9Gg2s/AunGuYsQxb20GOxOYc6PSYHwXLZaVQWTXDyAGTF5OpO4z/7lzKyv2FSN47rp/kqjX/4BBaqAJcl24rkX5lWXAnMwkZLcHdbzfqqmfY69OCj/LBD8jD2Em5Ba5w2lUUAdOChKql6nVX4otowiDDenvQrSr+z1V1NgW/fyOG50BuZ1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GYWwqWPtvv7UD3rHyfAFJM2/UVBbRfO1quttY+Vu8Jc=;
+ b=YLXkPZc5Pmn7k0mE9HqEvdYyGVCQHX7Lxzn1iJMRku58yPj0/hYfTw8y7ef+KDSYNRqk9lKue2Frbq/MITIqcpdMI5jqA85ok5oM/LIfvqdwk6xt7zRxDAHJeGtCX4iQgWj6LyoMKfIlXnol36ujFWR/L1KuSRJokEch/h8ay44jiWjSG3SI+4DkMX6ldOws7MmUQQiRMkguWSBdPwaMXtkbEWy5vfzJzt26S3BK37lFQST4R7jtCMJJkm31QD4uzfBkUZ7Q+t2mvrdviuq+QjWHVaAK+2wxcmfmRGm5+Ux6x5CHGm/KmXvxsy/uO0ftw54lF5C0TxJ09gYlQv/1tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GYWwqWPtvv7UD3rHyfAFJM2/UVBbRfO1quttY+Vu8Jc=;
+ b=SR4z5E0mvg/b1Jw8WiQ+6t+JG9Mgy/8AbA83V3jcae7tm2cJKz4eximcAkObROLHcwn/jY+MZv0a9blH1EvWk2yPNlazpphslBpnRFat8SPewXjmoHsv6VpiYAYtcptPOREGKlZefGiZnw11Z0TGHNGNJ4L3LRnwd8jTYRCJB18=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
+ by VI1PR04MB5104.eurprd04.prod.outlook.com (2603:10a6:803:5a::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Wed, 22 Jul
+ 2020 05:47:51 +0000
+Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
+ ([fe80::596d:cc81:f48a:daf7]) by VI1PR04MB5103.eurprd04.prod.outlook.com
+ ([fe80::596d:cc81:f48a:daf7%2]) with mapi id 15.20.3216.022; Wed, 22 Jul 2020
+ 05:47:51 +0000
+From:   hongbo.wang@nxp.com
+To:     xiaoliang.yang_1@nxp.com, allan.nielsen@microchip.com,
+        po.liu@nxp.com, claudiu.manoil@nxp.com,
+        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
+        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        kuba@kernel.org, vinicius.gomes@intel.com,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, linux-devel@linux.nxdi.nxp.com
+Cc:     "hongbo.wang" <hongbo.wang@nxp.com>
+Subject: [PATCH] net: dsa: ocelot: Add support for QinQ Operation
+Date:   Wed, 22 Jul 2020 13:50:48 +0800
+Message-Id: <20200722055048.6129-1-hongbo.wang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0207.apcprd06.prod.outlook.com
+ (2603:1096:4:68::15) To VI1PR04MB5103.eurprd04.prod.outlook.com
+ (2603:10a6:803:51::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from whb-OptiPlex-790.ap.freescale.net (119.31.174.73) by SG2PR06CA0207.apcprd06.prod.outlook.com (2603:1096:4:68::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Wed, 22 Jul 2020 05:47:43 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 43688d52-fa06-4f65-3dae-08d82e02c534
+X-MS-TrafficTypeDiagnostic: VI1PR04MB5104:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB51046079FF8BBBE7822A0211E1790@VI1PR04MB5104.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pXYTQbR/ARbMDrNM9VTIHQcy+loJU/YeivNQYzoEWPjfmMnBUItG5V8bBWYpgopOrQXytcq/mWrOKNbu+syHLTrLV0pT6JoqRHet3+ZhOxrH63bYSxQD2VjOTMqSXXEWUJrpWjZEAerZI1aWITywTSLslpyEJh23HpMkJo0FpRINi9KM5r/f0xoKi23bSaVHf182kpUEf1flGHKAuGm8KmmyjKxIqxKheeo3G3Kpz6muNE0iw25RRbD+BORxB7BZBiE+InLYIbW/21zCt3y2TFz8odG2PKbeOVQtGq/SPP3xmG/RWZNDJlFfuzC1FuN3veeLkMzsH+nQLDK0JAM54Dj42cuzbcEAHjP85AnokrlBY+yaXUIRpEmSSVTnuMne
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(2616005)(956004)(6506007)(36756003)(26005)(1076003)(8676002)(86362001)(186003)(16526019)(4326008)(83380400001)(8936002)(66476007)(66946007)(66556008)(6512007)(9686003)(6486002)(5660300002)(7416002)(478600001)(2906002)(52116002)(316002)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: cfWVFmSfiFF0ZDW+PexLDwr/0C+Gpw+mJGxx8iKy/9Xy11JUyVzbxY4f6XPmX3rqvU7Ky1Pjj0noWWloiPijpUkehZZagi+R+tbsuvPZZXKVCb/jn+/dOXqnYAFv+ZWKeXQGg+QXt8eXUrDl6GQRvNhPQUqaJoAwifc9NvY84Fm7JIAOyRpJd1zQxhR+BD/QfrnFQ7P0dsNRPI/+d1jArTvb2K/VJ5lmpsYiZI3K0DobveFQeiRj8atzHDC0lQfd3lGDfhR1+EjIElFwyWn4WKurpleAoCWpjurPhytpNvAAodEjYvm++cKSE2iBIQCItROHBVZRg0eOSogEDGHFLT28r4Y5nEantS1Ku7M81MVslu/deZWLub4/yPSF/EHa1vJdaltod+ZNPWnijjiHbca3d9tcU/KN9ZHco6rDl/ossbOl0CZcmUHluWLr2FMOXiUv7lNiq7OuQryL1klb8D4zcN2z+LwJ/xsO3AhN2MU=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43688d52-fa06-4f65-3dae-08d82e02c534
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 05:47:50.9960
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9N0I2jsS8jT6Bo8kFk8KdwPLr6XzCuQJxuz2xFJpdu4DbEU3hMi7oHdmG5nh9W9xd8R7TsCiQO+wWRNi2V/HBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 21:50:42 PDT (-0700), mpe@ellerman.id.au wrote:
-> Benjamin Herrenschmidt <benh@kernel.crashing.org> writes:
->> On Tue, 2020-07-21 at 16:48 -0700, Palmer Dabbelt wrote:
->>> > Why ? Branch distance limits ? You can't use trampolines ?
->>>
->>> Nothing fundamental, it's just that we don't have a large code model in the C
->>> compiler.  As a result all the global symbols are resolved as 32-bit
->>> PC-relative accesses.  We could fix this with a fast large code model, but then
->>> the kernel would need to relax global symbol references in modules and we don't
->>> even do that for the simple code models we have now.  FWIW, some of the
->>> proposed large code models are essentially just split-PLT/GOT and therefor
->>> don't require relaxation, but at that point we're essentially PIC until we
->>> have more that 2GiB of kernel text -- and even then, we keep all the
->>> performance issues.
->>
->> My memory might be out of date but I *think* we do it on powerpc
->> without going to a large code model, but just having the in-kernel
->> linker insert trampolines.
->
-> We build modules with the large code model, and always have AFAIK:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/powerpc/Makefile?commit=4fa640dc52302b5e62b01b05c755b055549633ae#n129
->
->   # -mcmodel=medium breaks modules because it uses 32bit offsets from
->   # the TOC pointer to create pointers where possible. Pointers into the
->   # percpu data area are created by this method.
->   #
->   # The kernel module loader relocates the percpu data section from the
->   # original location (starting with 0xd...) to somewhere in the base
->   # kernel percpu data space (starting with 0xc...). We need a full
->   # 64bit relocation for this to work, hence -mcmodel=large.
->   KBUILD_CFLAGS_MODULE += -mcmodel=large
+From: "hongbo.wang" <hongbo.wang@nxp.com>
 
-Well, a fast large code model would solve a lot of problems :).  Unfortunately
-we just don't have enough people working on this stuff to do that.  It's a
-somewhat tricky thing to do on RISC-V as there aren't any quick sequences for
-long addresses, but I don't think we're that much worse off than everyone else.
-At some point I had a bunch of designs written up, but they probably went along
-with my SiFive computer.  I think we ended up decided that the best bet would
-be to distribute constant tables throughout the text such that they're
-accessible via the 32-bit PC-relative loads at any point -- essentially the
-multi-GOT stuff that MIPS used for big objects.  Doing that well is a lot of
-work and doing it poorly is just as slow as PIC, so we never got around to it.
+This featue can be test using network test tools
+    TX-tool -----> swp0  -----> swp1 -----> RX-tool
 
-> We also insert trampolines for branches, but IIUC that's a separate
-> issue.
+TX-tool simulates Customer that will send and receive packets with single
+VLAN tag(CTAG), RX-tool simulates Service-Provider that will send and
+receive packets with double VLAN tag(STAG and CTAG). This refers to
+"4.3.3 Provider Bridges and Q-in-Q Operation" in VSC99599_1_00_TS.pdf.
 
-"PowerPC branch trampolines" points me here
-https://sourceware.org/binutils/docs-2.20/ld/PowerPC-ELF32.html .  That sounds
-like what we're doing already in the medium code models: we have short and
-medium control transfer sequences, linker relaxation optimizes them when
-possible.  Since we rely on linker relaxation pretty heavily we just don't
-bother with the smaller code model: it'd be a 12-bit address space for data and
-a 21-bit address space for text (with 13-bit maximum function size).  Instead
-of building out such a small code model we just spent time improving the linker.
+The related test commands:
+1.
+ip link add dev br0 type bridge
+ip link set dev swp0 master br0
+ip link set dev swp1 master br0
+2.
+ip link add link swp0 name swp0.111 type vlan id 111
+ip link add link swp1 name swp1.111 type vlan protocol 802.1ad id 111
+3.
+bridge vlan add dev swp0 vid 100 pvid
+bridge vlan add dev swp1 vid 100
+bridge vlan del dev swp1 vid 1 pvid
+bridge vlan add dev swp1 vid 200 pvid untagged
+Result:
+Customer(tpid:8100 vid:111) -> swp0 -> swp1 -> Service-Provider(STAG \
+                    tpid:88A8 vid:100, CTAG tpid:8100 vid:111)
+
+Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
+---
+ drivers/net/dsa/ocelot/felix.c     |  8 ++++++
+ drivers/net/ethernet/mscc/ocelot.c | 44 ++++++++++++++++++++++++------
+ include/soc/mscc/ocelot.h          |  1 +
+ 3 files changed, 45 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index c69d9592a2b7..12b46cb6549c 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -132,9 +132,13 @@ static void felix_vlan_add(struct dsa_switch *ds, int port,
+ {
+ 	struct ocelot *ocelot = ds->priv;
+ 	u16 flags = vlan->flags;
++	struct ocelot_port *ocelot_port = ocelot->ports[port];
+ 	u16 vid;
+ 	int err;
+ 
++	if (vlan->proto == ETH_P_8021AD)
++		ocelot_port->qinq_mode = true;
++
+ 	if (dsa_is_cpu_port(ds, port))
+ 		flags &= ~BRIDGE_VLAN_INFO_UNTAGGED;
+ 
+@@ -154,9 +158,13 @@ static int felix_vlan_del(struct dsa_switch *ds, int port,
+ 			  const struct switchdev_obj_port_vlan *vlan)
+ {
+ 	struct ocelot *ocelot = ds->priv;
++	struct ocelot_port *ocelot_port = ocelot->ports[port];
+ 	u16 vid;
+ 	int err;
+ 
++	if (vlan->proto == ETH_P_8021AD)
++		ocelot_port->qinq_mode = false;
++
+ 	for (vid = vlan->vid_begin; vid <= vlan->vid_end; vid++) {
+ 		err = ocelot_vlan_del(ocelot, port, vid);
+ 		if (err) {
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index f2d94b026d88..621277e875a5 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -144,6 +144,8 @@ static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
+ {
+ 	struct ocelot_port *ocelot_port = ocelot->ports[port];
+ 	u32 val = 0;
++	u32 tag_tpid = 0;
++	u32 port_tpid = 0;
+ 
+ 	if (ocelot_port->vid != vid) {
+ 		/* Always permit deleting the native VLAN (vid = 0) */
+@@ -156,8 +158,14 @@ static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
+ 		ocelot_port->vid = vid;
+ 	}
+ 
+-	ocelot_rmw_gix(ocelot, REW_PORT_VLAN_CFG_PORT_VID(vid),
+-		       REW_PORT_VLAN_CFG_PORT_VID_M,
++	if (ocelot_port->qinq_mode)
++		port_tpid = REW_PORT_VLAN_CFG_PORT_TPID(ETH_P_8021AD);
++	else
++		port_tpid = REW_PORT_VLAN_CFG_PORT_TPID(ETH_P_8021Q);
++
++	ocelot_rmw_gix(ocelot, REW_PORT_VLAN_CFG_PORT_VID(vid) | port_tpid,
++		       REW_PORT_VLAN_CFG_PORT_VID_M |
++		       REW_PORT_VLAN_CFG_PORT_TPID_M,
+ 		       REW_PORT_VLAN_CFG, port);
+ 
+ 	if (ocelot_port->vlan_aware && !ocelot_port->vid)
+@@ -180,12 +188,28 @@ static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
+ 		else
+ 			/* Tag all frames */
+ 			val = REW_TAG_CFG_TAG_CFG(3);
++
++		if (ocelot_port->qinq_mode)
++			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(1);
++		else
++			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(0);
+ 	} else {
+-		/* Port tagging disabled. */
+-		val = REW_TAG_CFG_TAG_CFG(0);
++		if (ocelot_port->qinq_mode) {
++			if (ocelot_port->vid)
++				val = REW_TAG_CFG_TAG_CFG(1);
++			else
++				val = REW_TAG_CFG_TAG_CFG(3);
++
++			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(1);
++		} else {
++			/* Port tagging disabled. */
++			val = REW_TAG_CFG_TAG_CFG(0);
++			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(0);
++		}
+ 	}
+-	ocelot_rmw_gix(ocelot, val,
+-		       REW_TAG_CFG_TAG_CFG_M,
++
++	ocelot_rmw_gix(ocelot, val | tag_tpid,
++		       REW_TAG_CFG_TAG_CFG_M | REW_TAG_CFG_TAG_TPID_CFG_M,
+ 		       REW_TAG_CFG, port);
+ 
+ 	return 0;
+@@ -216,11 +240,15 @@ EXPORT_SYMBOL(ocelot_port_vlan_filtering);
+ /* Default vlan to clasify for untagged frames (may be zero) */
+ static void ocelot_port_set_pvid(struct ocelot *ocelot, int port, u16 pvid)
+ {
++	u32 tag_type = 0;
+ 	struct ocelot_port *ocelot_port = ocelot->ports[port];
+ 
++	if (ocelot_port->qinq_mode)
++		tag_type = ANA_PORT_VLAN_CFG_VLAN_TAG_TYPE;
++
+ 	ocelot_rmw_gix(ocelot,
+-		       ANA_PORT_VLAN_CFG_VLAN_VID(pvid),
+-		       ANA_PORT_VLAN_CFG_VLAN_VID_M,
++		       ANA_PORT_VLAN_CFG_VLAN_VID(pvid) | tag_type,
++		       ANA_PORT_VLAN_CFG_VLAN_VID_M | tag_type,
+ 		       ANA_PORT_VLAN_CFG, port);
+ 
+ 	ocelot_port->pvid = pvid;
+diff --git a/include/soc/mscc/ocelot.h b/include/soc/mscc/ocelot.h
+index da369b12005f..cc394740078e 100644
+--- a/include/soc/mscc/ocelot.h
++++ b/include/soc/mscc/ocelot.h
+@@ -556,6 +556,7 @@ struct ocelot_port {
+ 	struct regmap			*target;
+ 
+ 	bool				vlan_aware;
++	bool				qinq_mode;
+ 
+ 	/* Ingress default VLAN (pvid) */
+ 	u16				pvid;
+-- 
+2.17.1
+
