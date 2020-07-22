@@ -2,283 +2,131 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88726C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594372086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C002086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bDvwaPrQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDfPg+q2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbgGVXUg (ORCPT
+        id S1733195AbgGVXUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:20:36 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.80]:21102 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733125AbgGVXUf (ORCPT
+        Wed, 22 Jul 2020 19:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733132AbgGVXUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:20:35 -0400
-X-Greylist: delayed 1457 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Jul 2020 19:20:33 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 021E713C460
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 17:56:14 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id yNenjKktCzOauyNenj8cyo; Wed, 22 Jul 2020 17:56:13 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eIzKJF8jNji+BynBmA3f+h/SU/2RQ4nZCvi7qumLhJQ=; b=bDvwaPrQvUsed6SrcORIS7JSCq
-        DQ84Mvaxim5ENYjs5h/qH1F7kLISvdrCvMUu/eQA+lCkPpJTj45/5jRCb51nlP4Ti+uLVI34tD7Fz
-        NrsMV8l3upYsKq4f+CtMmrMqyldRGbsZjdgBgjfv3KThJ3owYodnLsbQ30i5VqfLZQDl4nfc2k0Sf
-        hh9g+WNdZuEBoHTgTGCpShsTZ9yxXeiINhBsvm39eljzNMOvQDYC7TDyHQJo0QfdmWk5h6/xSeabc
-        sUfhaHzPr4CZHua77HXQRb1DCB4W/DeMel6EMtx5S4FLDsPEhudvl1o5VPIRLnSDP+mpYtbV0sUFV
-        Tz5ib43Q==;
-Received: from [201.162.161.222] (port=56764 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jyNem-002nvm-JK; Wed, 22 Jul 2020 17:56:13 -0500
-To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20200714214516.GA1040@embeddedor>
- <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
- <3cac21c8798b48bdb412a5504126489f@intel.com>
- <b79bbb51-50e4-6437-b485-eaecdb3fa18e@embeddedor.com>
- <071940a8c76c4652b4fd58195719c471@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzStHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvYXJzQGtlcm5lbC5vcmc+wsGrBBMBCAA+FiEEkmRahXBSurMI
- g1YvRwW0y0cG2zEFAl6zFvQCGyMFCQlmAYAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AAIQkQ
- RwW0y0cG2zEWIQSSZFqFcFK6swiDVi9HBbTLRwbbMZsEEACWjJyXLjtTAF21Vuf1VDoGzitP
- oE69rq9UhXIGR+e0KACyIFoB9ibG/1j/ESMa0RPSwLpJDLgfvi/I18H/9cKtdo2uz0XNbDT8
- i3llIu0b43nzGIDzRudINBXC8Coeob+hrp/MMZueyzt0CUoAnY4XqpHQbQsTfTrpFeHT02Qz
- ITw6kTSmK7dNbJj2naH2vSrU11qGdU7aFzI7jnVvGgv4NVQLPxm/t4jTG1o+P1Xk4N6vKafP
- zqzkxj99JrUAPt+LyPS2VpNvmbSNq85PkQ9gpeTHpkio/D9SKsMW62njITPgy6M8TFAmx8JF
- ZAI6k8l1eU29F274WnlQ6ZokkJoNctwHa+88euWKHWUDolCmQpegJJ8932www83GLn1mdUZn
- NsymjFSdMWE+y8apWaV9QsDOKWf7pY2uBuE6GMPRhX7e7h5oQwa1lYeO2L9LTDeXkEOJe+hE
- qQdEEvkC/nok0eoRlBlZh433DQlv4+IvSsfN/uWld2TuQFyjDCLIm1CPRfe7z0TwiCM27F+O
- lHnUspCFSgpnrxqNH6CM4aj1EF4fEX+ZyknTSrKL9BGZ/qRz7Xe9ikU2/7M1ov6rOXCI4NR9
- THsNax6etxCBMzZs2bdMHMcajP5XdRsOIARuN08ytRjDolR2r8SkTN2YMwxodxNWWDC3V8X2
- RHZ4UwQw487BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJBH1AAh8tq2ULl
- 7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0DbnWSOrG7z9H
- IZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo5NwYiwS0lGis
- LTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOPotJTApqGBq80
- X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfFl5qH5RFY/qVn
- 3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpDjKxY/HBUSmaE
- 9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+ezS/pzC/YTzAv
- CWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQI6Zk91jbx96n
- rdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqozol6ioMHMb+In
- rHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcAEQEAAcLBZQQY
- AQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QSUMebQRFjKavw
- XB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sdXvUjUocKgUQq
- 6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4WrZGh/1hAYw4
- ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVnimua0OpqRXhC
- rEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfgfBNOb1p1jVnT
- 2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF8ieyHVq3qatJ
- 9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDCORYf5kW61fcr
- HEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86YJWH93PN+ZUh
- 6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
- rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
- AP7RWS474w==
-Subject: Re: [PATCH v2] mei: Avoid the use of one-element arrays
-Message-ID: <6e50fb93-8130-766f-8688-2a07a1744701@embeddedor.com>
-Date:   Wed, 22 Jul 2020 18:01:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 22 Jul 2020 19:20:41 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F142BC0619E1;
+        Wed, 22 Jul 2020 16:20:40 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l6so3731347qkc.6;
+        Wed, 22 Jul 2020 16:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jeZreKDLGQJ/Jdd2kokTsoFaBdpo+SHh85v/8w3Kt6s=;
+        b=iDfPg+q2N0j+QEFb6C76HEy3RuhKS2RzaHQodwWTwlG2C9EzK7tTdMjHXFGXnPYbyM
+         sALV/RvUBaC6PPkhc6k3Y6UrYaUDLj76h3bNpaXUP24E3baIO6WY/t791hu1fzp6vowe
+         Gp3ZFmMSx1gFBu1B3SV+WmzEHm8xO1JlHt62/cGCtq7HtZeyCO6N+NF4LBojf/4O/f7R
+         O83caGrZluNFL36fTwlDKIDC2x0m88LOJJjfu7VCkMy3pPjUX4DPvMtjNRZJN4nJQbDL
+         dyp6Z8l1IfS353f8DIZnYNS589bWq4dWchVNRSIw22LjC38Icim1d06LydIFmBef3w0O
+         i71A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jeZreKDLGQJ/Jdd2kokTsoFaBdpo+SHh85v/8w3Kt6s=;
+        b=kB1B8gI9rCnjHgP4ThZnMODESoyTEVCNdjhYIq4xaiASgP6Y7Dor5B5wN1X14AI0IH
+         MohDJMnEtNLxEWo+Yj5oZEvEcBujR+j+/hNNUTFL/wt7y2srTXgqGcF+BM55DkoI0XO1
+         CZDafFfQ73pPFstc/PAB/ORcORfDsslBrDGgVrlONm9ucgnET1QHE3wl3L1L5IyOpJni
+         vLyMFmu9LVvFgAnmlMLLminW//oVywIhzW5+9sEiIRBlgu6XteL/p9/ASLqf/Aj3CT6L
+         jQ279DqJx8HGxZgRlLjuCpTdbPkiqBYikNAa1Pv/yH6HhdWmXLKTqh28Ny+5DhPV0c6N
+         O/QQ==
+X-Gm-Message-State: AOAM530On9RLIcixOUa6dyQwoG+Tzko56PpaH6n65MszI0RYIHgVdx1q
+        8t6BZXP7gGsMoU0XwOoMaC8=
+X-Google-Smtp-Source: ABdhPJxh11At9hPgNwYpGZKxyU6SKg6Dl6hnWNxmRLW2cyP+pm0I76RQmRuj54+6S4HX3xcUeV3ZIw==
+X-Received: by 2002:a37:b387:: with SMTP id c129mr2449391qkf.292.1595460040175;
+        Wed, 22 Jul 2020 16:20:40 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id p17sm1091785qkj.69.2020.07.22.16.20.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jul 2020 16:20:39 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id BC19B27C0054;
+        Wed, 22 Jul 2020 19:20:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 22 Jul 2020 19:20:37 -0400
+X-ME-Sender: <xms:xckYX6TjYGcA2LZjBrHUZvmr5zKTeELFRk3fagL4IA_GsNIfxqvOIA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedtgddvvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
+    jeenucfkphephedvrdduheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghr
+    shhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvg
+    hngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:xckYX_xg7GvHmkSnWDADLEQvOnEx_pbaCwfsMmoqMVVcSObVwtklxg>
+    <xmx:xckYX30LeDoMGnaggVRdql5GcCOCm9lWNGbiefV65Z5KwNV6HvS4Eg>
+    <xmx:xckYX2CejgGDLrAJjrahTWGckjh4qdj5M_6DGlt4ZX0lEwSsjFhGxQ>
+    <xmx:xckYXz7ZrquPCJejjqVMH6LPkqss1IcRdRGVugwlFBBoxflyi_sp3Vwf57k>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C4B59328006A;
+        Wed, 22 Jul 2020 19:20:36 -0400 (EDT)
+Date:   Thu, 23 Jul 2020 07:20:35 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [RFC 01/11] Drivers: hv: vmbus: Always use HV_HYP_PAGE_SIZE for
+ gpadl
+Message-ID: <20200722232035.GB35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200721014135.84140-1-boqun.feng@gmail.com>
+ <20200721014135.84140-2-boqun.feng@gmail.com>
+ <20200721152218.ozpk2b4ymfdocu4p@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-In-Reply-To: <071940a8c76c4652b4fd58195719c471@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.161.222
-X-Source-L: No
-X-Exim-ID: 1jyNem-002nvm-JK
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.161.222]:56764
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721152218.ozpk2b4ymfdocu4p@liuwe-devbox-debian-v2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/22/20 17:40, Winkler, Tomas wrote:
->>
->> Hi Tomas,
->>
->> Please, see my comments below...
->>
->> On 7/22/20 14:04, Winkler, Tomas wrote:
->>>
->>>>
->>>> Hi all,
->>>>
->>>> Friendly ping: who can take this? :)
->>>>
->>>> Thanks
->>>> --
->>>> Gustavo
->>>>
->>>> On 7/14/20 16:45, Gustavo A. R. Silva wrote:
->>>>> One-element arrays are being deprecated[1]. Replace the one-element
->>>>> arrays with a simple value type u8 reserved, once this is just a
->>>>> placeholder for alignment.
->>>>>
->>>>> Also, while there, use the preferred form for passing a size of a struct.
->>>>> The alternative form where struct name is spelled out hurts
->>>>> readability and introduces an opportunity for a bug when the
->>>>> variable type is changed but the corresponding sizeof that is passed
->>>>> as argument is
->>>> not.
->>>>>
->>>>> [1] https://github.com/KSPP/linux/issues/79
->>>>>
->>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>>> ---
->>>>> Changes in v2:
->>>>>  - Use a more concise changelog text.
->>>>>
->>>>>  drivers/misc/mei/hbm.c | 4 ++--
->>>>>  drivers/misc/mei/hw.h  | 6 +++---
->>>>>  2 files changed, 5 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c index
->>>>> a44094cdbc36..f020d5594154 100644
->>>>> --- a/drivers/misc/mei/hbm.c
->>>>> +++ b/drivers/misc/mei/hbm.c
->>>>> @@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct
->>>>> mei_device *dev, u8 addr, u8 status)  {
->>>>>  	struct mei_msg_hdr mei_hdr;
->>>>>  	struct hbm_add_client_response resp;
->>>>> -	const size_t len = sizeof(struct hbm_add_client_response);
->>>>> +	const size_t len = sizeof(resp);
->>>>>  	int ret;
->>>>>
->>>>>  	dev_dbg(dev->dev, "adding client response\n");
->>>>>
->>>>>  	mei_hbm_hdr(&mei_hdr, len);
->>>>>
->>>>> -	memset(&resp, 0, sizeof(struct hbm_add_client_response));
->>>>> +	memset(&resp, 0, len);
->>>>>  	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
->>>>>  	resp.me_addr = addr;
->>>>>  	resp.status  = status;
->>>
->>> This should be probably in a different patch it's not related to the second
->> part.
+On Tue, Jul 21, 2020 at 03:22:18PM +0000, Wei Liu wrote:
+> On Tue, Jul 21, 2020 at 09:41:25AM +0800, Boqun Feng wrote:
+> > Since the hypervisor always uses 4K as its page size, the size of PFNs
+> > used for gpadl should be HV_HYP_PAGE_SIZE rather than PAGE_SIZE, so
+> > adjust this accordingly as the preparation for supporting 16K/64K page
+> > size guests.
 > 
-> 
-> Frankly I will post other version of this that cleans the whole file. 
+> It may be worth calling out there is no change on x86 because
+> HV_HYP_PAGE_SHIFT and PAGE_SHIFT are of the same value there.
 > 
 
-Sounds good. :)
+Sure, I will call it out in the commit log of the next version, thanks!
 
->>>
->>>>> diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h index
->>>>> b1a8d5ec88b3..8c0297f0e7f3 100644
->>>>> --- a/drivers/misc/mei/hw.h
->>>>> +++ b/drivers/misc/mei/hw.h
->>> I have second thoughts of this part as all reserved fields in this
->>> file are of form u8 reserved[X], so we will lose that uniformity with
->>> this change, you have to look at the file as whole not just at the patch.  So I
->> prefer we drop that part of the patch.
->>>
->>
->> This is actually the main point of this patch: the removal of one-element
->> arrays.
->> And yeah, every place in the kernel that uses the form that you mention will
->> see it's uniformity slightly modified, and that's for a good cause: the removal
->> of one-element arrays, so we can enable bounds checking.
-> 
-> I was going over https://github.com/KSPP/linux/issues/79, I'm not sure this all related  to flexible arrays,
+Regards,
+Boqun
 
-I've opened a new issue for this:
-
-https://github.com/KSPP/linux/issues/86
-
-And I'm already including the link above in these sorts
-of patches; please, see:
-
-https://lore.kernel.org/lkml/20200717215500.GA13910@embeddedor/
-
-> those are just reserved struct members. So because it's hard to identify a legitimate usage of single element arrays
-> we are going to kill them all? It's more esthetic / readability issue here but there might be some legit use case for one element array, no?
-> 
-
-The code is continuously evolving and, if a one-element array is not intended
-to be used as a variable-length array at all, I frankly cannot think of any another
-use that is not merely esthetic/readability. :)
-
-Thanks
---
-Gustavo
-
-> 
->>
->> Thanks
->> --
->> Gustavo
->>
->>>>> @@ -346,13 +346,13 @@ struct hbm_add_client_request {
->>>>>   * @hbm_cmd: bus message command header
->>>>>   * @me_addr: address of the client in ME
->>>>>   * @status: if HBMS_SUCCESS then the client can now accept
->> connections.
->>>>> - * @reserved: reserved
->>>>> + * @reserved: reserved for alignment.
->>>>>   */
->>>>>  struct hbm_add_client_response {
->>>>>  	u8 hbm_cmd;
->>>>>  	u8 me_addr;
->>>>>  	u8 status;
->>>>> -	u8 reserved[1];
->>>>> +	u8 reserved;
->>>>>  } __packed;
->>>>>
->>>>>  /**
->>>>> @@ -461,7 +461,7 @@ struct hbm_notification {
->>>>>  	u8 hbm_cmd;
->>>>>  	u8 me_addr;
->>>>>  	u8 host_addr;
->>>>> -	u8 reserved[1];
->>>>> +	u8 reserved;
->>>>>  } __packed;
->>>>>
->>>>>  /**
->>>>>
+> Wei.
