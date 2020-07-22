@@ -2,67 +2,66 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E57FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544D92071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3242086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="M+VGBvQ+"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="N01ONQS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732647AbgGVWdQ (ORCPT
+        id S1732919AbgGVWf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
+        Wed, 22 Jul 2020 18:35:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVWdP (ORCPT
+        with ESMTP id S1726447AbgGVWfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:33:15 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018DCC0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:33:15 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id s23so3062604qtq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:33:14 -0700 (PDT)
+        Wed, 22 Jul 2020 18:35:55 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6729CC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:35:55 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id h7so3637164qkk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=FNTzG6qcBQuW0UnSYe8/jDfHi5XObGtNTg45FW0KfjY=;
-        b=M+VGBvQ+eQKQBCSLRfLaL/v6FZSuwRdtyTJX6r07YtUqLEva+Fz5S4iJyShRBpQ119
-         bcDKHcMIoRzgHSuqq0/fMI96YHvIv+USJdZ5Z6+uZY9nQhSww6xl0ywoebu+4WX87wgk
-         FF74hwwPU7XWFybe3w/4/PoWIoFlevi/87tc6OYP+b/KplY9Ui4oHj/etquSuVuLtS7S
-         PQgWA9ASEwCJbPzsByGq2exdZIQcyh7VpC6bICadwajduRf+C4LaAYeu3xjIt2Vtr2D5
-         8m3ZKcpYylNX3Iuhze4CR60MHFC0Sz8yAyDmL+CS9XASuzDeI+sEqvhr2rXkaOMQdaJ3
-         omyA==
+        bh=IhNGI/vefCUNAfGzfX3ewpvDJYe2LrOiMX29xiUrGJc=;
+        b=N01ONQS/4zclZekgvot0Yp1ETViAnVH1jD+D1f2UEb841mhu10XyFyBgULkoGBFSHZ
+         LN1gp3SJ8ttov0OjYNfUBozyGunzD1hz5/Eiu1hrr22q1IJZcE0dSqjo2uA5iQJAsg6j
+         +t8c7OxqTvWJ4vHlqQlF8KD6faKA7k6fAJIAgf7ZL8TBSIdBC6Uf4zXlImi71Afc+HjQ
+         lkEG+KzmKKraAH0yabmUx3cS8ZXe3kuWOp30VBMmVBX4/pdZab7IwSk9b7njnA/+EuYS
+         vMjwduanWcLYb70DmRABhyhK+vG1AAONKc5ZGFkEMyoi2AjD8XexcMmCjZQk/oDRbPEq
+         zh+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FNTzG6qcBQuW0UnSYe8/jDfHi5XObGtNTg45FW0KfjY=;
-        b=Vn7AMURfQpxB35cUgfIXA91I/0pPud/7eVk8Ui6DokWGnEhHFB7Z05HsPz1n4DOU4l
-         wGCEKwqf4uxWkji05/B5RMDB8pxQPZ0FLzutOsDeOw1cPR1GGi7tuEazkiQl42K+Lzld
-         lrWTmwcCt/FaviC5dc9T+UxCBMU7ziJ+yfsmdmjwdLfPr+dj9WVM3WML7SY/YCLpFKZI
-         Wdq0utNwuO0ZbqeLkaj2sQGX2clR08b4GqDcJdmqSKqgTla+RaG6LyFw8qYDV1JzFsJ0
-         xljN6UwhTibuYOhf9Dsov+qMt4S26/PYpHWUJoZVGchcjuf4A+KkiB/pmvs+FCiKRoUJ
-         YKlg==
-X-Gm-Message-State: AOAM5301I0bs7xNP+N0mceIbzoZMXXHN5v29wBLvaxXjDXGVb586cfbV
-        LF/6dCG/DbJCPlypc9zCBVGVWA==
-X-Google-Smtp-Source: ABdhPJxiKbn56anOP6nT+bAbNNtR/OqTNAMF/G7Mw2zuA7Od619cKlMkiA82MbBqicSsEqw9RJOhMA==
-X-Received: by 2002:ac8:7454:: with SMTP id h20mr1587073qtr.84.1595457194224;
-        Wed, 22 Jul 2020 15:33:14 -0700 (PDT)
+        bh=IhNGI/vefCUNAfGzfX3ewpvDJYe2LrOiMX29xiUrGJc=;
+        b=flRPG0UWziVBwjxTOBcNhzHcr+TEMiEh6mLM4qlpygvIZJTZbCG0U3OfIw0nagnyEN
+         5Izxsjq5JfW3NY/01XFLtTCAdj4nfQtSNDE4NFcOyqiM9t6sWQNE+lRnWS1m+jd+zoCL
+         pAZ7+jZOg/Z63XS61Ef622dzB/YZ1SDwaP2l5es7QzPwRRiRG/VZf8Utv8tSmFBQqHBz
+         EuGwF4hAG2SYAv2m01bOhWo1RUcBEoyx3/NP710O/3L2LBmbQaFnhK6RmH7vSB54KpIf
+         TghDm+9J7xenYBJaNOi1QmoNzublPvRB5Ll7dPDcIqlzEP9/nD8sJP0y2bHd0v1WGBBk
+         t7ig==
+X-Gm-Message-State: AOAM530KBnvzlFlBnls4vPYXcKIvRbyJSXX+O524bImlhTVWtrWIcVTa
+        Zntlaq/A9twsbMD2OlIC0DQOqA==
+X-Google-Smtp-Source: ABdhPJymY0pjFiYFmtBSynjwEf1B841wDAKehivuxXUJzUqRKu7Abm8XcMEBA3UVvqqMrxDbZSS14g==
+X-Received: by 2002:a37:8283:: with SMTP id e125mr2255480qkd.175.1595457354602;
+        Wed, 22 Jul 2020 15:35:54 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id x36sm990975qtk.36.2020.07.22.15.33.12
+        by smtp.gmail.com with ESMTPSA id w28sm982143qkw.92.2020.07.22.15.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 15:33:13 -0700 (PDT)
+        Wed, 22 Jul 2020 15:35:53 -0700 (PDT)
 Received: from jgg by mlx with local (Exim 4.94)
         (envelope-from <jgg@ziepe.ca>)
-        id 1jyNIV-00E6RQ-L9; Wed, 22 Jul 2020 19:33:11 -0300
-Date:   Wed, 22 Jul 2020 19:33:11 -0300
+        id 1jyNL7-00E6VI-3d; Wed, 22 Jul 2020 19:35:53 -0300
+Date:   Wed, 22 Jul 2020 19:35:53 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Alexander Lobakin <alobakin@marvell.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -83,58 +82,27 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
         bpf@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next 01/15] qed: reformat "qed_chain.h" a bit
-Message-ID: <20200722223311.GK25301@ziepe.ca>
+Subject: Re: [PATCH v2 net-next 00/15] qed, qede: improve chain API and add
+ XDP_REDIRECT support
+Message-ID: <20200722223553.GL25301@ziepe.ca>
 References: <20200722221045.5436-1-alobakin@marvell.com>
- <20200722221045.5436-2-alobakin@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722221045.5436-2-alobakin@marvell.com>
+In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 01:10:31AM +0300, Alexander Lobakin wrote:
-> Reformat structs and macros definitions a bit prior to making functional
-> changes.
-> 
-> Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-> Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-> Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
->  include/linux/qed/qed_chain.h | 126 ++++++++++++++++++----------------
->  1 file changed, 66 insertions(+), 60 deletions(-)
-> 
-> diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-> index 7071dc92b4e2..087073517c09 100644
-> +++ b/include/linux/qed/qed_chain.h
-> @@ -26,9 +26,9 @@ enum qed_chain_mode {
->  };
->  
->  enum qed_chain_use_mode {
-> -	QED_CHAIN_USE_TO_PRODUCE,		/* Chain starts empty */
-> -	QED_CHAIN_USE_TO_CONSUME,		/* Chain starts full */
-> -	QED_CHAIN_USE_TO_CONSUME_PRODUCE,	/* Chain starts empty */
-> +	QED_CHAIN_USE_TO_PRODUCE,			/* Chain starts empty */
-> +	QED_CHAIN_USE_TO_CONSUME,			/* Chain starts full */
-> +	QED_CHAIN_USE_TO_CONSUME_PRODUCE,		/* Chain starts empty */
->  };
->  
->  enum qed_chain_cnt_type {
-> @@ -40,84 +40,86 @@ enum qed_chain_cnt_type {
->  };
->  
->  struct qed_chain_next {
-> -	struct regpair	next_phys;
-> -	void		*next_virt;
-> +	struct regpair					next_phys;
-> +	void						*next_virt;
->  };
+On Thu, Jul 23, 2020 at 01:10:30AM +0300, Alexander Lobakin wrote:
+> Netdev folks, could you please take the entire series through your tree
+> after the necessary acks and reviews? Patches 8-9 also touch qedr driver
+> under rdma tree, but these changes can't be separated as it would break
+> incremental buildability and bisecting.
 
-I'm surprised this is considered an improvement??
+There is nothing significant in the rdma changes, just be wary to not
+submit patches to the rdma tree that would cause conflicts
 
-I've been encouring people to go the other way, maintaining vertical alignment is
-harmful to backporting..
-
+Thanks
 Jason
