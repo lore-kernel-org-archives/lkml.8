@@ -2,303 +2,172 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95614C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C47BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CFC20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB1A20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LGTg3sne"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XiVGTwtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732529AbgGVO0o (ORCPT
+        id S1732539AbgGVO2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:26:44 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:48509 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728837AbgGVO0n (ORCPT
+        Wed, 22 Jul 2020 10:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGVO2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:26:43 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id yFhcjw1x7uuXOyFhej7fgS; Wed, 22 Jul 2020 16:26:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1595427999; bh=56yRUiKhD0MOtm04mXf4Q+G03kN/DqhCNQ2ElNxcYak=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=LGTg3snecQ8VXP2b8e1jJ5a4NafqBy5y0CrD+xSM7Ix1RYkKQxteVf1Vu7Jm85t5x
-         rOQlj8f9Mc+cQ8HnuY7qyTGUP4ja22RUgYbF0D3dAlQEBS96oKRJ56kYOQNdCPZnAo
-         0YQS/804uyOLHmO7pdXUToHcdeg+XTEgH0+buVXFfRDBCZskNbdwZ3kme4mOlWIY3f
-         5RFkS04RTBxYDoFjXZjKhF3MB6PtIEdZB9Qy7oblOippJYqP8lLWgmWwFGRCc17hsk
-         alVT1JP03kCZfv56CAMjgS71EbKef7WBdpaKOFa6Rfa8MwVJHfDePDGfoSPHEgZvRX
-         WF7CqbmguTT/A==
-Subject: Re: [RFC PATCH 0/1] Add LTR controls
-To:     dikshita@codeaurora.org
-Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
-        ezequiel@collabora.com, boris.brezillon@collabora.com,
-        ribalda@kernel.org, paul.kocialkowski@bootlin.com,
-        posciak@chromium.org, linux-media@vger.kernel.org,
-        stanimir.varbanov@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
-        majja@codeaurora.org, linux-media-owner@vger.kernel.org
-References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
- <f07c4aab69d2b333c0e36c50c526c0a85322e708.camel@ndufresne.ca>
- <1a9904b6-60a5-0faa-8a5e-c9dc00802184@xs4all.nl>
- <40040141fc3027c3eb1fdebc1a0e8ade@codeaurora.org>
- <d37e4e83-b7ae-7d44-c75f-2055f11ae898@xs4all.nl>
- <dd365fe82523c4e44af4353f4f457137@codeaurora.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <976be099-f003-d08f-3394-ff2dad43d7aa@xs4all.nl>
-Date:   Wed, 22 Jul 2020 16:26:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 10:28:04 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18FBFC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:28:04 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k18so1914769qtm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H6WE3JyokUNpf3pZ07U954Le17+CyTzIij3tqVBs39I=;
+        b=XiVGTwtQsXVJRXr5uow2BuPY/0MaetFyj1IpenDWud/W0awmx/5jZvpVkzNGVtAwmb
+         rjavL/pa0HY7TYIhcPd1Fp4F5JCP6u/26cXac9UgpKX912Lhr6/YqW7sqov7y0nx3S8b
+         nERgUUP1AP7OlM3vMPdCijqpc9QLPJxa+4wdt+7N9mIG4H324l+CPmIkWbmcz+Vqj7do
+         RQvVsuJTRHAhLJHspL/vzlISkLsSVPF6VBROnccbHkrerplAFWvB3s074hQbWgyS0koW
+         O/dSNsD5hskQ1F7RCMrCopsUcTLPhgB4vRk/oZ+HYCF58UZjAzchozYEffdjL7KD53cT
+         lVgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H6WE3JyokUNpf3pZ07U954Le17+CyTzIij3tqVBs39I=;
+        b=KtZXEX1jOwFkbgbWje1oUYHNls1DKEvmWy9em/aO7bTr6/u2ZmxWzRlKJ8NgEdVW/N
+         V7V7MEvguHTrv/jbMj+LpLrFEkIPY2omDj461wdraENtfxifVCC8WuB2av8HQMCX+Myw
+         tMvLjiJnqO3AxFgUzMe4QEU8MuZeR5/0vv1y+Ii0F1iSC36PArmoel8R7NP89UbnYsl5
+         MKNF+lrN+S24r/FtXl2ttWOePu4nkkE/Sx0bxcVY78UO4GDEuirf9/m/qVamk6bOqJxO
+         gdSW9zYKrmjd3BcU+DJeaDwhpjVn3R7qwJjAg+yvVDxJT4LYeWyaQKO0eOjK3Dj9tWos
+         KNHA==
+X-Gm-Message-State: AOAM530I/8mV4kNzjjkziADNbFS4RX+ppuL6hjNiLIq0Ztoo4QeuDxFy
+        1UF5ntjcW1WpOHckojaHQlnZww==
+X-Google-Smtp-Source: ABdhPJx+zZSGSakjQ6BZGwuAsGBRlXDp3FliHmomkqKOENaWVWfp9CvwEeJGS2okAYYvxdpw9h3dIw==
+X-Received: by 2002:ac8:554f:: with SMTP id o15mr34924964qtr.278.1595428083244;
+        Wed, 22 Jul 2020 07:28:03 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id f130sm18441qke.99.2020.07.22.07.28.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 07:28:02 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 10:28:00 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     akpm@linux-foundation.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
+        mingo@redhat.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        x86@kernel.org, sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+        lpf.vector@gmail.com
+Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
+Message-ID: <20200722142759.GB4041@lca.pw>
+References: <000000000000588c2c05aa156b2b@google.com>
+ <0000000000003cdc6c05aae24652@google.com>
+ <20200720200618.GA9501@pc636>
 MIME-Version: 1.0
-In-Reply-To: <dd365fe82523c4e44af4353f4f457137@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfLIxkTxMQLWFLT5uvhMei0eW/SGw7VDiK5KAPO8L154niCUZr6u1mncfnYch66GjnFgCpf2kEAg67RhEunBfP1t291DDwhYBRYjEPCjHJt4LJnrVLnJb
- CA4n+xldnvnzYCNKOD6PZOMmuQCd2JoDC8UFiQA9FYDH8HmxjFLNzQtR9Z9pDP/2I0klAgFys9qt2hxZxaDKWfIICOajIkYp9YEniET8nLr8RFUO7NLtEE7c
- WczH9mZdl3AdF3yMcdxzsJEZacLgdyps74Nzw7hkirEoQ+KVCxJ/U6dLKt3l5KeHVy6m5ABagYXTBwwkZdo0BWE/ftkZlq7mDcskDnXdJgMFBHuxBOVBIK0e
- qxcx2IAzT2xxLVfl9LMaN0es2AsxqTlNH8hfH/rdLtYTls9ojm2SYMPst32IP25O9gkbd5Jplfhfz2Ak09A84/RsrM1zx+XrtjSLv6v5W6xUxDibN+zZlnAb
- qHBaiSXPUeuxeiAB7H27vpBXhQuZpZ4EYDsHJccA5ACx2HOb9Yd1XxLR3cTsNOgeTeGdH9DaTFS8m/eITFcVWZaRtcXoGQ7sba9emsFPE5KHhsUTlg1Tjw0x
- v6eaffbXV0Y1X6Msj601jq1oTGWGOdZ87zczUraFMb7GxViC5RB4WpVMBqgio1GhCICTXodfTWEshgTy5aTkNf1RsxP+IPFlmmNpDWyzVxGxfEq5/7w2oeDQ
- Vkq0aGMQLjSkWJZsYzrRVE9jIlu60gW+S8Nv8aV1v/yebf4+2fNw+AeRj565jX7j0OOyksMSDbuGuFirULcbnmIOsxiLEFVsJaMqUTTT5Ct9XH/lXFdndw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720200618.GA9501@pc636>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/07/2020 16:33, dikshita@codeaurora.org wrote:
-> On 2020-07-16 14:25, Hans Verkuil wrote:
->> On 16/06/2020 20:41, dikshita@codeaurora.org wrote:
->>> Hi Hans, Nicolas,
->>>
->>> Thanks for your comments.
->>>
->>> On 2020-06-12 14:41, Hans Verkuil wrote:
->>>> Hi Dikshita, Nicolas,
->>>>
->>>> On 11/06/2020 16:22, Nicolas Dufresne wrote:
->>>>> Le jeudi 11 juin 2020 à 15:55 +0530, Dikshita Agarwal a écrit :
->>>>>> LTR (Long Term Reference) frames are the frames that are encoded
->>>>>> sometime in the past
->>>>>> and stored in the DPB buffer list to be used as reference to encode
->>>>>> future frames.
->>>>>> One usage of LTR encoding is to reduce error propagation for video
->>>>>> transmission
->>>>>> in packet lossy networks.  For example, encoder may want to specify
->>>>>> some key frames as
->>>>>> LTR pictures and use them as reference frames for encoding. With
->>>>>> extra protection
->>>>>> selectively on these LTR frames or synchronization with the receiver
->>>>>> of reception of
->>>>>> the LTR frames during transmission, decoder can receive reference
->>>>>> frames more reliably
->>>>>> than other non-reference frames. As a result, transmission error can
->>>>>> be effectively
->>>>>> restricted within certain frames rather than propagated to future
->>>>>> frames.
->>>>>>
->>>>>> We are introducing below V4l2 Controls for this feature
->>>>>> 1. V4L2_CID_MPEG_VIDEO_LTRCOUNT
->>>>>>     a. This is used to query or configure the number of LTR frames.
->>>>>>        This is a static control and is controlled by the client.
->>>>>>     b. The LTR index varies from 0 to the max LTR-1.
->>>>>>     c. If LTR Count is more than max supported LTR count (max LTR) by
->>>>>> driver, it will be rejected.
->>>>>>     d. Auto Marking : If LTR count is non zero,
->>>>>>         1) first LTR count frames would be mark as LTR automatically
->>>>>> after
->>>>>>              every IDR frame (inclusive).
->>>>>>         2) For multilayer encoding: first LTR count base layer
->>>>>> reference frames starting after
->>>>>>            every IDR frame (inclusive) in encoding order would be
->>>>>> marked as LTR frames by the encoder.
->>>>>>         3) Auto marking of LTR due to IDR should consider following
->>>>>> conditions:
->>>>>>             1. The frame is not already set to be marked as LTR.
->>>>>>             2. The frame is part of the base layer in the
->>>>>> hierarchical layer case.
->>>>>>             3. The number of frames currently marked as LTR is less
->>>>>> than the maximum LTR frame index plus 1.
->>>>>>     e. Encoder needs to handle explicit Mark/Use command when encoder
->>>>>> is still doing "auto" marking
->>>>
->>>> I don't follow this, quite possibly due to lack of experience with
->>>> encoders.
->>>>
->>>> I kind of would expect to see two modes: either automatic where
->>>> encoders can
->>>> mark up to LTR_COUNT frames as long term reference, and userspace just
->>>> sets
->>>> LTR_COUNT and doesn't have to do anything else.
->>>>
->>>> Or it is manual mode where userspace explicitly marks long term
->>>> reference
->>>> frames.
->>>>
->>>> From the proposal above it looks like you can mix auto and manual
->>>> modes.
->>>>
->>>> BTW, how do you 'unmark' long term reference frames?
->>>>
->>>> This feature is for stateful encoders, right?
->>>>
->>>>>
->>>>> Perhaps we are missing a LONG_TERM_REFERENCE_MODE ? I bet some encoder
->>>>> can select by themself long term references and even some encoders may
->>>>> not let the user decide.
->>>>>
->>>>> (not huge han of LTR acronyme, but that could be fine too, assuming
->>>>> you
->>>>> add more _).
->>>>>
->>>
->>> Userspace sets LTR count which signifies the number of LTR frames
->>> encoder needs to generate or keep.
->>> The encoder has to build-up its internal buffer reference list (aka DBP
->>> list or recon buffer list).
->>> In order to achieve that encoder will fill It's LTR (long term
->>> references) list and STR (short term references) list
->>> by auto marking n frames as LTR frames(n is equal to LTR count) based on
->>> auto-marking dictated by the encoder spec.
->>> The client then can replace those automatically marked frames with new
->>> frames using V4L2_CID_MPEG_VIDEO_MARKLTRFRAME and can ask
->>> encoder to refer the newly marked frame for encoding the next frame
->>> using V4L2_CID_MPEG_VIDEO_USELTRFRAME.
->>>
->>>>>>
->>>>>> 2. V4L2_CID_MPEG_VIDEO_MARKLTRFRAME :
->>>>>>     a. This signals to mark the current frame as LTR frame. It is a
->>>>>> dynamic control and also provide the LTR index to be used.
->>>>>>     b. the LTR index provided by this control should never exceed the
->>>>>> max LTR-1. Else it will be rejected.
->>>>>
->>>>> The "current" frame seems a bit loose. Perhaps you wanted to use
->>>>> buffer
->>>>> flags ? A bit like what we have to signal TOP/BOTTOM fields in
->>>>> alternate interlacing.
->>>>
->>>> I was thinking the same thing. Using a control for this doesn't seem
->>>> right.
->>>>
->>>
->>> the client sets this to replace automatically marked frames by the
->>> encoder with a particular frame.
->>> this provides an index that ranges from 0 to LTR count-1 and then the
->>> particular frame will be marked with that index.
->>> this can be achieved through request by associating this control with a
->>> specific buffer to make it synchronized.
->>>
->>>>>
->>>>>>
->>>>>> 3. V4L2_CID_MPEG_VIDEO_USELTRFRAME :
->>>>>>     a. This specifies the LTR frame(s) to be used for encoding the
->>>>>> current frame. This is a dynamic control.
->>>>>>     b. LTR Use Bitmap : this consists of bits [0, 15]. A total of N
->>>>>> LSB bits of this field are valid,
->>>>>>        where N is the maximum number of LTRs supported. All the other
->>>>>> bits are invalid and should be rejected.
->>>>>>        The LSB corresponds to the LTR index 0. Bit N-1 from the LSB
->>>>>> corresponds to the LTR index max LTR-1.
->>>>
->>>> How would userspace know this? Esp. with auto marking since userspace
->>>> would have
->>>> to predict how auto marking works (if I understand this correctly).
->>>>
->>>
->>> Client sets LTR count which tells about the number of LTR frames
->>> automatically marked by the encoder.
->>> so client can use LTR index (0 to LTR count -1) to ask encoder to refer
->>> any particular
->>> frame (marked automatically by driver or marked by client with
->>> V4L2_CID_MPEG_VIDEO_MARKLTRFRAME) as a reference to encode the next
->>> frame.
->>>
->>>> For which HW encoder is this meant?
->>>>
->>> This is primarily meant for H264 and HEVC.
->>
->> The venus encoder?
-> yes
->>
->> Some more questions:
->>
->> 1) How many LTR frames do h.264 and hevc allow?
-> According to spec, MAX LTR allowed by H.264 is 15 and HEVC allows max 32 LTR frames.
->> 2) Given N LTR frames, is there a ordering of those frames? E.g.
->>    the LTR frame with index 0 is processed/used differently from
->>    LTR frame with index 1? Or are they all equal in that it is just a pool
->>    of LTR frames that the encoder can use as it wishes?
-> they are different frames marked to be used as LTR and stored in available indices.
-> Userspace notifies encoder which LTR frame index to use via USE LTR control.
-
-One more question: if a frame is marked as a LTR frame, does that mean that userspace
-can't reuse the buffer containing that frame? I assume that's the case.
-
-One thing that I don't like about this API is that it introduces the LTR indices.
-Would it be possible to instead use buffer indices? (i.e. the v4l2_buffer index field).
-Then you can use a buffer flag to indicate that a buffer should be an LTR buffer,
-or (for automarking) the driver can mark a buffer as an LTR buffer by setting this flag
-before returning the buffer to userspace.
-
-You would still need a V4L2_CID_MPEG_VIDEO_USELTRFRAME, but that can be a bitmask
-using the buffer index.
-
-This would avoid introducing a second method of referring to buffers (LTR index),
-and I think that V4L2_CID_MPEG_VIDEO_MARKLTRFRAME can be dropped.
-
-Regards,
-
-	Hans
-
+On Mon, Jul 20, 2020 at 10:06:18PM +0200, Uladzislau Rezki wrote:
+> On Mon, Jul 20, 2020 at 09:48:21AM -0700, syzbot wrote:
+> > syzbot has found a reproducer for the following issue on:
+> > 
+> > HEAD commit:    ab8be66e Add linux-next specific files for 20200720
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=161a0cc8900000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c4bf77d63d0cf88c
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=5f326d255ca648131f87
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151192bb100000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d7a873100000
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com
+> > 
+> > ------------[ cut here ]------------
+> > kernel BUG at mm/vmalloc.c:3089!
+> > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc6-next-20200720-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Workqueue: events pcpu_balance_workfn
+> > RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
+> > RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
+> > RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
+> > Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
+> > RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
+> > RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
+> > RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
+> > RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
+> > R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
+> > R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
+> > FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  pcpu_destroy_chunk mm/percpu-vm.c:366 [inline]
+> >  __pcpu_balance_workfn mm/percpu.c:1982 [inline]
+> >  pcpu_balance_workfn+0x8b3/0x1310 mm/percpu.c:2069
+> >  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+> >  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+> >  kthread+0x3b5/0x4a0 kernel/kthread.c:292
+> >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+> > Modules linked in:
+> > ---[ end trace 6a2e56ec52e1f480 ]---
+> > RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
+> > RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
+> > RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
+> > Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
+> > RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
+> > RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
+> > RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
+> > RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
+> > R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
+> > R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
+> > FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > 
+> That is because of below revert:
 > 
-> Thanks,
-> Dikshita
->>
->> Regards,
->>
->>     Hans
->>
->>>
->>> Thanks,
->>> Dikshita
->>>
->>>>>
->>>>> Note, I haven't captured very well the userspace control flow, perhaps
->>>>> this could be enhanced through writing some documentation.
->>>>>
->>>>> As per all other generic encoder controls, we need to make sure it
->>>>> will
->>>>> be usable and flexible enough for multiple HW blocks, as it can be
->>>>> tedious to extend later otherwise. It is important that along with
->>>>> this
->>>>> RFC you provide some comparisons with with other HW / SW APIs in order
->>>>> to help justify the design decisions. I also think there should be
->>>>> link made V4L2_CID_MPEG_VIDEO_GOP_* , number of B-Frames etc.
->>>>
->>>> I agree with Nicolas.
->>>>
->>>> Regards,
->>>>
->>>>     Hans
->>>>
->>>>>
->>>>> regards,
->>>>> Nicolas
->>>>>
->>>>>>
->>>>>> Dikshita Agarwal (1):
->>>>>>   media: v4l2-ctrls:  add control for ltr
->>>>>>
->>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
->>>>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
->>>>>>  2 files changed, 10 insertions(+)
->>>>>>
->>>>>
+> <snip>
+> commit bdbfb1d52d5e576c1d275fd8ab59b677011229e8
+> Author: Ingo Molnar <mingo@kernel.org>
+> Date:   Sun Jun 7 21:12:51 2020 +0200
+> 
+>     Revert "mm/vmalloc: modify struct vmap_area to reduce its size"
+>     
+>     This reverts commit 688fcbfc06e4fdfbb7e1d5a942a1460fe6379d2d.
+>     
+>     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>     
+>     Conflicts:
+>             mm/vmalloc.c
+> <snip>
+> 
+> I can check further, but it can be it was not correctly reverted,
+> because everything should work just fine even with the revert,
+> though i i do not understand a reason of reverting.
 
+Vlad, how sure are you about this? We also start to trigger this now on
+linux-next, but the reverting patch surely looks like doggy without any useful
+information in the commit description.
