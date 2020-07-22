@@ -2,87 +2,113 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D122C433F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB7DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC162065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595425548;
-	bh=nHj4qidlCzPnSj6K3Rd04M4Ti2n81ozk+ic2UrNZ/uA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=QY944CAYIBuPO6N3zL1mGI8eZY86KgGDlxYgcgBMTslEdPGhMcvpT4ie3453JDRYj
-	 ahJaekeac6x+WliOG4Tls6GO01U5tsAnc5fGWKc2I3SE0rhcFvS+7i52LJL4jiH/mU
-	 ob1brw13rG9f+jjqH9iDHMfpeSCmyX1JKVNLZNkU=
+	by mail.kernel.org (Postfix) with ESMTP id 778C02064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TvGgedDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732642AbgGVNpq (ORCPT
+        id S1732654AbgGVNqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732623AbgGVNpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:45:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD3802064C;
-        Wed, 22 Jul 2020 13:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595425545;
-        bh=nHj4qidlCzPnSj6K3Rd04M4Ti2n81ozk+ic2UrNZ/uA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=hIdorwcyP9KeG8W1hYiCVHJhwSRjuYWfbIeAtMkRiwREcpHJP/Bu6hWhbqFDUWOqu
-         U8hDeuZUR9/dju4tLIU+lG2tDzWVeKQynQRtY8YZb0r/4BA+xKP3B0zHZ6QYkcLupG
-         FgkN1CM21Q+ubYs8AokhGta/W2ztZw5f3uSIUaOs=
-Date:   Wed, 22 Jul 2020 14:45:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200721024819.7150-1-leilk.liu@mediatek.com>
-References: <20200721024819.7150-1-leilk.liu@mediatek.com>
-Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
-Message-Id: <159542550175.19884.11879506725313401487.b4-ty@kernel.org>
+        Wed, 22 Jul 2020 09:46:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47937 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732639AbgGVNqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:46:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595425580;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=LoVB2XkV/JmhdiMIi0eaHtAvVvJ9iBBJWs8+jEnq95c=;
+        b=TvGgedDOacKeexhXymoKk5NCekvnSO1pxj30YTEOD6lPwH5tGOU+5OHeQBKGxRN9UP6wcZ
+        O5FEMhnATlmxn9L9jGJuO7EXI3h4kw/jrgjNks9m10XKOCb8nkjdCrJeUn8NqEsxtUpHFq
+        Ai9Ht8IQ/DOWeTxPIt7c/kETrb347R0=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-Tp0_8Cp0MMCu388gSIIg9Q-1; Wed, 22 Jul 2020 09:46:16 -0400
+X-MC-Unique: Tp0_8Cp0MMCu388gSIIg9Q-1
+Received: by mail-qv1-f72.google.com with SMTP id s2so1448162qvn.19
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 06:46:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LoVB2XkV/JmhdiMIi0eaHtAvVvJ9iBBJWs8+jEnq95c=;
+        b=kqBF/jDpUDoQ7rgfBsXlYSIUnHdX8xXlyNZF5tFUjclH3Cs86fetuTeVBY/9B8+nk7
+         SOYlXTsOaM4Zfk8EOmb13M6TUd+RO7t8piEfET6pHIJXOA8uDZam0eCH+vTvbyx9ifcq
+         oDISO2gflWykeART2mZ9i1XX6vzqEWAMT5BFyguUvOhVYZrRq3gX4Dr0DVuyHqgxi8Ep
+         VCRhYbQNTEPhA+V015bUrRTHEXe7PraMnx/qwLP6jXh8kzsR3PIsJQgo5B5iJ+pIUCfh
+         wBQg47HNMEygWNU2+8ohD/KaoVqEPMllpTtN1D99ae0c9ui8Emgq/EN/geowDegbKcZR
+         FKTQ==
+X-Gm-Message-State: AOAM530FndBTOy09Z5VFf21dUV7f+Cnhu/55mqABTW0ezxnBZ8BMw6yS
+        dN97WFqKhvuOkxuL6oZLhmFQg2G41Sk2xMAcmdEH/HW+4qTgzjL61QLLF3nJmGM3nb/o6NjijEC
+        Xcj5IPjFUSRb54aMPZ/hDzFm/
+X-Received: by 2002:ac8:32b8:: with SMTP id z53mr33969613qta.273.1595425576162;
+        Wed, 22 Jul 2020 06:46:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyfMEnBBaM6DsbbxBJ4uPRNyr603IgCTG7siQlW6XbNWY2+gJiK+tOAp3D+vg0UJYKefzEXRQ==
+X-Received: by 2002:ac8:32b8:: with SMTP id z53mr33969597qta.273.1595425575967;
+        Wed, 22 Jul 2020 06:46:15 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id w28sm4803247qkw.92.2020.07.22.06.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 06:46:15 -0700 (PDT)
+From:   trix@redhat.com
+To:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, serge@hallyn.com, denkenz@gmail.com,
+        marcel@holtmann.org
+Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH v2] KEYS: remove redundant memset
+Date:   Wed, 22 Jul 2020 06:46:10 -0700
+Message-Id: <20200722134610.31947-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020 10:48:19 +0800, Leilk Liu wrote:
-> Add a DT binding documentation for the MT8192 soc.
+From: Tom Rix <trix@redhat.com>
 
-Applied to
+Reviewing use of memset in keyctrl_pkey.c
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+keyctl_pkey_params_get prologue code to set params up
 
-Thanks!
+	memset(params, 0, sizeof(*params));
+	params->encoding = "raw";
 
-[1/1] spi: update bindings for MT8192 SoC
-      commit: 30962fe33ab5ed4bbd78c12f4b9e25a85c3e8d0b
+keyctl_pkey_query has the same prologue
+and calls keyctl_pkey_params_get.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+So remove the prologue.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Fixes: 00d60fd3b932 ("KEYS: Provide keyctls to drive the new key type ops for asymmetric keys [ver #2]")
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+v1: remove change to keyctl_pkey_params_get_2
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+ security/keys/keyctl_pkey.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks,
-Mark
+diff --git a/security/keys/keyctl_pkey.c b/security/keys/keyctl_pkey.c
+index 931d8dfb4a7f..5de0d599a274 100644
+--- a/security/keys/keyctl_pkey.c
++++ b/security/keys/keyctl_pkey.c
+@@ -166,8 +166,6 @@ long keyctl_pkey_query(key_serial_t id,
+ 	struct kernel_pkey_query res;
+ 	long ret;
+ 
+-	memset(&params, 0, sizeof(params));
+-
+ 	ret = keyctl_pkey_params_get(id, _info, &params);
+ 	if (ret < 0)
+ 		goto error;
+-- 
+2.18.1
+
