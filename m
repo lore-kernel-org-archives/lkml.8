@@ -6,129 +6,108 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32353C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7072C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB2F22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF32620825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LDgxRU0P"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ROx4a5tL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4UC7b1Vf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733043AbgGVXBj (ORCPT
+        id S1733069AbgGVXCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
+        Wed, 22 Jul 2020 19:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgGVXBi (ORCPT
+        with ESMTP id S1729614AbgGVXCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:01:38 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C6EC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:01:38 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id t18so3047731otq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:01:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zMYtvDBeGfcQxAGCAdsv13lRzxlc7JtBvhHF/yrjphQ=;
-        b=LDgxRU0PPlOqe+jIyOjiUKQdehMfoZWAjfvZ25p0KPl8vFDDdOtUj3vbuWcx1d2HiM
-         bsCRH9MS1l8LDU98iOSE7GPEolaslu2fkxDb1T3PBTgCR24VzMdTGS6k/iPRG3QEztNe
-         Em9GsZq+bVr765qjSjudsYKVBDe/BWvUycBl0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zMYtvDBeGfcQxAGCAdsv13lRzxlc7JtBvhHF/yrjphQ=;
-        b=hTVoZWlieksQz9dvchQcRhrULIrxBdZKpfnYym9KirZRPHQJPNu9tPp3zwH+kCVZ4v
-         pLWQGB66PPj7C1H8ddn9vTmB6R8r3NgB0ve/9jfP6E00fU9J+FjO6UDOBEmTGmuIAnJh
-         OG6Q8ppela71fwzD5u5QPrnZ4WLs/Z/tfF0fFIMDQcj9nW4I7Lal7nw3+mYGNQBFvyBM
-         ePBmm3CbLOEGAGkyVlmbPQvB++0JfA8Kq9mjYTxi/m2/kO7QXcYI4+m3VPWH0ta8JEKn
-         PDn1d9kHCRVKWeB7O/9DmvGF2w3W1bo9i0j8so8gnn4FDYHXoi8OIgA1i9K9bhKCvmJs
-         6siA==
-X-Gm-Message-State: AOAM532jOw/N0mss8De4VjthLI+05AtykKcQGwQ0IUIxlBMp9Se6P3s3
-        3K69eDP6fN2n8DWNDla5BXIrkWunLs8oKC6SXvgsVw==
-X-Google-Smtp-Source: ABdhPJzMRGNhyEWDrKRLOE3infJnLErmNB6h5FHJQExFCTQdMa95a4Z/n+l6f4RR6YJ3xa3qMPCPWE5qcULyrQPYc4Y=
-X-Received: by 2002:a9d:d55:: with SMTP id 79mr2018905oti.281.1595458897417;
- Wed, 22 Jul 2020 16:01:37 -0700 (PDT)
+        Wed, 22 Jul 2020 19:02:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC645C0619DC;
+        Wed, 22 Jul 2020 16:02:46 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595458964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kmMueF/7HOydUTFXGR11d/8gXdHC62tpqTpaLg7E05E=;
+        b=ROx4a5tLAjlr52lN9gIkrhQ8jwU0aM/EjW+ilG9YNYu8ZMIq+YUwOhOkP6EM/9nPTMOvwH
+        cuhylCisGd1pD3Cxg6n9+wxb1reL4ASPhoCLLAjSO8PMik8da6lrEmCDrgTxVLwXcwS52O
+        b58jPIa7X9ig0JCxR2u+CxcClZvayImtThOODsDQgmyYemaphtZ4/Fq5JLlldfKsgdzQBy
+        R1GVATDLJoU9To98jbYUnGgS4bBrPZVnzvnHTKFjWtYsv95E72hoMXfc6H/LCo1eht6P2O
+        O7LYXZi2lDKK+hm6b55pX/2uLJRcguYENyFnW5OWDA1qS2FNXoVMeg1M6rMU+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595458964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kmMueF/7HOydUTFXGR11d/8gXdHC62tpqTpaLg7E05E=;
+        b=4UC7b1Vfgs/2s5GVhWqzeqdTDdHDyaYG83n5oj9z9aT70LdaugWTbDiS0prKc8svL7oIc+
+        j+XDTUEDJzloYFAw==
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Cathy Zhang <cathy.zhang@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, fenghua.yu@intel.com
+Subject: Re: [PATCH v2 1/4] x86/cpufeatures: Add enumeration for SERIALIZE instruction
+In-Reply-To: <20200708022102.GA25016@ranerica-svr.sc.intel.com>
+References: <1594088183-7187-1-git-send-email-cathy.zhang@intel.com> <1594088183-7187-2-git-send-email-cathy.zhang@intel.com> <CALCETrWudiF8G8r57r5i4JefuP5biG1kHg==0O8YXb-bYS-0BA@mail.gmail.com> <20200708022102.GA25016@ranerica-svr.sc.intel.com>
+Date:   Thu, 23 Jul 2020 01:02:43 +0200
+Message-ID: <87eep3ywz0.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
- <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu> <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
- <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu> <CAF6AEGsOZshgBUnUKUF_hOLNHmvrvsDwPzX24-RKos6MZEeusg@mail.gmail.com>
-In-Reply-To: <CAF6AEGsOZshgBUnUKUF_hOLNHmvrvsDwPzX24-RKos6MZEeusg@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 23 Jul 2020 01:01:25 +0200
-Message-ID: <CAKMK7uF=vhzZSKuy6XV=R7roabxMt104Vg_w8axNmLi4EE6+0g@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
-        saravanak@google.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        dri-devel@freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 5:47 PM Rob Clark <robdclark@gmail.com> wrote:
+Ricardo Neri <ricardo.neri-calderon@linux.intel.com> writes:
+> On Tue, Jul 07, 2020 at 09:36:15AM -0700, Andy Lutomirski wrote:
+>> On Mon, Jul 6, 2020 at 7:21 PM Cathy Zhang <cathy.zhang@intel.com> wrote:
+>> >
+>> > This instruction gives software a way to force the processor to complete
+>> > all modifications to flags, registers and memory from previous instructions
+>> > and drain all buffered writes to memory before the next instruction is
+>> > fetched and executed.
+>> >
+>> > The same effect can be obtained using the cpuid instruction. However,
+>> > cpuid causes modification on the eax, ebx, ecx, and ecx regiters; it
+>> > also causes a VM exit.
+>> >
+>> > A processor supports SERIALIZE instruction if CPUID.0x0x.0x0:EDX[14] is
+>> > present. The CPU feature flag is shown as "serialize" in /proc/cpuinfo.
+>> >
+>> > Detailed information on the instructions and CPUID feature flag SERIALIZE
+>> > can be found in the latest Intel Architecture Instruction Set Extensions
+>> > and Future Features Programming Reference and Intel 64 and IA-32
+>> > Architectures Software Developer's Manual.
+>> 
+>> Can you also wire this up so sync_core() uses it?
 >
-> On Tue, Jul 21, 2020 at 10:30 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 21-07-20, 07:28, Rob Clark wrote:
-> > > With your ack, I can add the patch the dev_pm_opp_set_bw patch to my
-> > > tree and merge it via msm-next -> drm-next -> linus
-> >
-> > I wanted to send it via my tree, but its okay. Pick this patch from
-> > linux-next and add my Ack, I will drop it after that.
-> >
-> > a8351c12c6c7 OPP: Add and export helper to set bandwidth
->
-> Thanks, I'll do that
->
-> >
-> > > Otherwise I can send a second later pull req that adds the final patch
-> > > after has rebased to 5.9-rc1 (by which point the opp next tree will
-> > > have presumably been merged
-> >
-> > The PM stuff gets pushed fairly early and so I was asking you to
-> > rebase just on my tree, so you could have sent the pull request right
-> > after the PM tree landed there instead of waiting for rc1.
->
-> I guess I should have explained that my tree gets pulled first into
-> drm-next, which then gets pulled by Linus.
+> I am cc'ing Fenghua, who has volunteered to work on this. Addind support
+> for SERIALIZE in sync_core() should not block merging these patches,
+> correct?
 
-Yeah either topic tree or acks for merging in the other branch. No
-rebasing in the middle of the merge window, that's rather uncool.
--Daniel
+Come on. We are not serving KVM first before making this usable on bare
+metal.
 
->
-> BR,
-> -R
->
-> > But its fine now.
-> >
-> > --
-> > viresh
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks,
 
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+        tglx
