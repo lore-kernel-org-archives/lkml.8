@@ -2,268 +2,196 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2769C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34051C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83D94206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FAB22C9C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:37:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="RQEJK3+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbgGVQlh (ORCPT
+        id S1730435AbgGVQh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:41:37 -0400
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:49793 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVQlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:41:36 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436638|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0284586-0.000932928-0.970609;FP=0|0|0|0|0|-1|-1|-1;HT=e01l10434;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.I6-OcxX_1595436029;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6-OcxX_1595436029)
-          by smtp.aliyun-inc.com(10.147.40.200);
-          Thu, 23 Jul 2020 00:41:28 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org, mpm@selenic.com,
-        herbert@gondor.apana.org.au, robh+dt@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, hadar.gat@arm.com,
-        prasannatsmkumar@gmail.com, krzk@kernel.org, masahiroy@kernel.org,
-        rdunlap@infradead.org, xuzaibo@huawei.com,
-        daniel.thompson@linaro.org, tmaimon77@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 2/2] crypto: Ingenic: Add hardware RNG for Ingenic JZ4780 and X1000.
-Date:   Thu, 23 Jul 2020 00:40:07 +0800
-Message-Id: <20200722164007.77655-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200722164007.77655-1-zhouyanjie@wanyeetech.com>
-References: <20200722164007.77655-1-zhouyanjie@wanyeetech.com>
+        Wed, 22 Jul 2020 12:37:29 -0400
+Received: from mail-eopbgr70118.outbound.protection.outlook.com ([40.107.7.118]:56321
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726535AbgGVQh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:37:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LTc41Zmil7wCsptcclKhDwpPygO9n4I6Af8FPNAvPclV+ZXorCD1c8nTR0uy2rBMUR5RRlYPckIBpQs634+U6tjBjqKlNabtJYjOxTaTeD+YbIdeiH6wQbYeLZNgU6nyImr9cdWPW3QYDl3zpm+8hc3EAGfcoqiomojA+jSaPgmqpzBJyK1CBERzQQtUWfId8C+KoI+UMcYWU0OOiUfKHWVfIaiiHcwrDsWElwdVzqrUlO1R1hisLSsjT7W0lTO74cxiMFot1O4Y2/M3db78vBqsHArNdc3T5iVzcpvXCreIela9FLUYlYIbu/613VD28cSIQwn7M7xfIk3hV0av/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F+BL6dKCR3K8/oMj87c1lWrP/CK9vcNgkRY3CFC6ATc=;
+ b=A2L6LXK+ux/ynm0QWImV3mBy56ED8TknC9NCA5RcZUTNQgpcUA86Qn8ta6G3iTYNtY2ImZHQX4tc835qTQEXeoYB9lrz5pSIIQCjga0Gor0ajN2CnwuF00E58azFdgfiC4kntHYfhENMrv3jB0mlEiQXMIrZeyQgSv1aXmwZZIj24t93EZs1+AYVRgJvAtLUnqg5xLthTdAspERzFHyRV8ZjPfTkdYBMgTf5o/79Vo7InK17uWTA3v7dfSB53+kjpOQgQ6UEQg7dqewyZJBEV/AIZU2HnXEDWxyOmSV+J1Qj2oDZSfO8tuBN4as19vK7f0F4SAD4gP7LiLpkNrDa+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F+BL6dKCR3K8/oMj87c1lWrP/CK9vcNgkRY3CFC6ATc=;
+ b=RQEJK3+r56sTQS3HmAWdcpMuHblDgbrE4SqgsQ1QrVyWWlRMcA0A4r3qwMsHxVz/fjiJwUECHAcsakIlaf26Qj6KXvDblsDmHVJPexbkuuGTqZHDnlbJfyGDPiEdNsR7MpAqTHjJQoqGhmIArMvXTfqKi7Zo4Ogypc29/hX+/Vs=
+Authentication-Results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=nokia.com;
+Received: from HE1PR07MB4412.eurprd07.prod.outlook.com (2603:10a6:7:96::13) by
+ HE1PR07MB4379.eurprd07.prod.outlook.com (2603:10a6:7:9b::25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.14; Wed, 22 Jul 2020 16:37:25 +0000
+Received: from HE1PR07MB4412.eurprd07.prod.outlook.com
+ ([fe80::7071:9f4d:b39a:823e]) by HE1PR07MB4412.eurprd07.prod.outlook.com
+ ([fe80::7071:9f4d:b39a:823e%6]) with mapi id 15.20.3216.018; Wed, 22 Jul 2020
+ 16:37:25 +0000
+Subject: Re: [PATCH] mtd: revert "spi-nor: intel: provide a range for
+ poll_timout"
+To:     Luis Alberto Herrera <luisalberto@google.com>,
+        tudor.ambarus@microchip.com
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Jethro Beekman <jethro@fortanix.com>,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20200610224652.64336-1-luisalberto@google.com>
+From:   Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Message-ID: <40ef3da0-56f4-3c78-f875-a750afaf2ec5@nokia.com>
+Date:   Wed, 22 Jul 2020 18:37:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200610224652.64336-1-luisalberto@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR0101CA0023.eurprd01.prod.exchangelabs.com
+ (2603:10a6:3:77::33) To HE1PR07MB4412.eurprd07.prod.outlook.com
+ (2603:10a6:7:96::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ulegcpsvhp1.emea.nsn-net.net (131.228.32.167) by HE1PR0101CA0023.eurprd01.prod.exchangelabs.com (2603:10a6:3:77::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Wed, 22 Jul 2020 16:37:23 +0000
+X-Originating-IP: [131.228.32.167]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fb043270-f286-4283-7007-08d82e5d83a2
+X-MS-TrafficTypeDiagnostic: HE1PR07MB4379:
+X-Microsoft-Antispam-PRVS: <HE1PR07MB437988F67BD1D882EEB3CF0F88790@HE1PR07MB4379.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1265;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zqfj4KzCwd/BShU0sZHScMP1GUL925m0RvNrLjE4SJutj2/ndP1LbJbnnGsN6Qeomk8/nCrQMxpn3lmud/ux+rLj/HqtJnkLD/Hn3WrwPyRV6XLowqFSeYZQDWd/+DF16fX+j8JwoWA9u73/p3569kSD8ZAkKKlK5Yq2TtBOmCtFybA+KIAiBO7ScRM+I41JGGsCEmIjuxpSuW/84p95N5b8eHL/SUso9K/VH8/wRe4n6rfTT9YBo6OT1aKPWbbTyDIn1LYzt433AjNimntK34+8YRbHvoGYYo7B+DI+phFcT/PU1VaZ1AGzCgdnLPvGQKVScU7dVQDJ+5lvspJljzkplkIBsFbasuql+zAtMGTsQXSDVzq33RafoLNV4V2zq2+vzqCAJhs3sMWU5EM4CA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR07MB4412.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(66556008)(66946007)(66476007)(86362001)(26005)(53546011)(52116002)(6512007)(6506007)(8936002)(478600001)(7416002)(8676002)(31696002)(31686004)(54906003)(2906002)(6486002)(16526019)(36756003)(5660300002)(316002)(4326008)(44832011)(186003)(956004)(2616005)(83380400001)(21314003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: zLjB7KiH/F/eyzDD2Z+oYnHiP8EZ/iAZDM1Tp/XTVeu+Z7TWKSQYgJlgho2ZefpgCq8WRkgSUfMI6i5qfoV7OoFhRY51JblsYurc1ZQtqpYIX6pSjkjWeuJepDhy0PBgFPSV4Dd7mJ7UWGdCYIee66XbHPMuxda0asYFmrqbhpN9xzT1Wrdb0JP7nN7DouvoafNzwSWGGSWsNPW/+dtWylIfDcgxRB3k0Dfkz6TuvFfSpz0X7LsPWhs2VavEcbpQN8QYjYNrCTRA3mf04Tl9mGQbvUs/FkdMpxnPxCvz6IMd2v0saeFAUtgPtpSWJM37ViedzrNjBW10PMVLCnZYJ/E3zDQM5juwwDinq+XTK6Yj4YEH+K34w3MZ0S22VpiYh13hnF+pLDragy/SkuX842K1rgzzn/3852rLmWpIv5zTOMqpcVA0Mta1g7eGuS3IaRj5HSaCHoHUlXw7GFpkh0nxTaTtSE0MhL/waNU7sr7tZwyVnuv+t21KJ9lRN2Ef
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb043270-f286-4283-7007-08d82e5d83a2
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR07MB4412.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 16:37:25.5098
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yJ+Tx0Lx8sqqnnut54tIsaAGKeJyPrzs5kzwSNvVW0S/OVa2VkTtAoQqD71weGi3vQj5BJeGy2HYl/tt2VRX4r+lDpGEcCce6ZO4bCYYQbA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR07MB4379
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add JZ4780 SoC and X1000 SoC random number generator driver,
-based on PrasannaKumar Muralidharan's JZ4780 RNG driver.
+Hello Luis,
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Suggested-by: Jeffrey Walton <noloader@gmail.com>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- drivers/char/hw_random/Kconfig       |  15 ++++
- drivers/char/hw_random/Makefile      |   1 +
- drivers/char/hw_random/ingenic-rng.c | 154 +++++++++++++++++++++++++++++++++++
- 3 files changed, 170 insertions(+)
- create mode 100644 drivers/char/hw_random/ingenic-rng.c
+thank you for the patch!
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 0ad17efc96df..fcb06027cd88 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -257,6 +257,21 @@ config HW_RANDOM_IMX_RNGC
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_INGENIC_RNG
-+	tristate "Ingenic Random Number Generator support"
-+	depends on HW_RANDOM
-+	depends on MACH_JZ4780 || MACH_X1000
-+	default HW_RANDOM
-+	---help---
-+	  This driver provides kernel-side support for the Random Number Generator
-+	  hardware found in ingenic JZ4780 and X1000 SoC. MIPS Creator CI20 uses
-+	  JZ4780 SoC, YSH & ATIL CU1000-Neo uses X1000 SoC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ingenic-rng.
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_NOMADIK
- 	tristate "ST-Ericsson Nomadik Random Number Generator support"
- 	depends on ARCH_NOMADIK
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 2c6724735345..acb1a1978d23 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_HW_RANDOM_VIRTIO) += virtio-rng.o
- obj-$(CONFIG_HW_RANDOM_TX4939) += tx4939-rng.o
- obj-$(CONFIG_HW_RANDOM_MXC_RNGA) += mxc-rnga.o
- obj-$(CONFIG_HW_RANDOM_IMX_RNGC) += imx-rngc.o
-+obj-$(CONFIG_HW_RANDOM_INGENIC_RNG) += ingenic-rng.o
- obj-$(CONFIG_HW_RANDOM_OCTEON) += octeon-rng.o
- obj-$(CONFIG_HW_RANDOM_NOMADIK) += nomadik-rng.o
- obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
-diff --git a/drivers/char/hw_random/ingenic-rng.c b/drivers/char/hw_random/ingenic-rng.c
-new file mode 100644
-index 000000000000..d704cef64b64
---- /dev/null
-+++ b/drivers/char/hw_random/ingenic-rng.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic Random Number Generator driver
-+ * Copyright (c) 2017 PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+ * Copyright (c) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+/* RNG register offsets */
-+#define RNG_REG_ERNG_OFFSET		0x0
-+#define RNG_REG_RNG_OFFSET		0x4
-+
-+/* bits within the ERND register */
-+#define ERNG_READY				BIT(31)
-+#define ERNG_ENABLE				BIT(0)
-+
-+enum ingenic_rng_version {
-+	ID_JZ4780,
-+	ID_X1000,
-+};
-+
-+/* Device associated memory */
-+struct ingenic_rng {
-+	enum ingenic_rng_version version;
-+
-+	void __iomem *base;
-+	struct hwrng rng;
-+};
-+
-+static int ingenic_rng_init(struct hwrng *rng)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+
-+	writel(ERNG_ENABLE, priv->base + RNG_REG_ERNG_OFFSET);
-+
-+	return 0;
-+}
-+
-+static void ingenic_rng_cleanup(struct hwrng *rng)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+
-+	writel(0, priv->base + RNG_REG_ERNG_OFFSET);
-+}
-+
-+static int ingenic_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+	u32 *data = buf;
-+	u32 status;
-+	int ret;
-+
-+	if (priv->version >= ID_X1000) {
-+		ret = readl_poll_timeout(priv->base + RNG_REG_ERNG_OFFSET, status,
-+					 status & ERNG_READY, 10, 1000);
-+		if (ret == -ETIMEDOUT) {
-+			pr_err("%s: Wait for RNG data ready timeout\n", __func__);
-+			return ret;
-+		}
-+	} else {
-+		/*
-+		 * A delay is required so that the current RNG data is not bit shifted
-+		 * version of previous RNG data which could happen if random data is
-+		 * read continuously from this device.
-+		 */
-+		udelay(20);
-+	}
-+
-+	*data = readl(priv->base + RNG_REG_RNG_OFFSET);
-+
-+	return 4;
-+}
-+
-+static int ingenic_rng_probe(struct platform_device *pdev)
-+{
-+	struct ingenic_rng *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base)) {
-+		pr_err("%s: Failed to map RNG registers\n", __func__);
-+		ret = PTR_ERR(priv->base);
-+		goto err_free_rng;
-+	}
-+
-+	priv->version = (enum ingenic_rng_version)of_device_get_match_data(&pdev->dev);
-+
-+	priv->rng.name = pdev->name;
-+	priv->rng.init = ingenic_rng_init;
-+	priv->rng.cleanup = ingenic_rng_cleanup;
-+	priv->rng.read = ingenic_rng_read;
-+
-+	ret = hwrng_register(&priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register hwrng\n");
-+		goto err_free_rng;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	dev_info(&pdev->dev, "Ingenic RNG driver registered\n");
-+	return 0;
-+
-+err_free_rng:
-+	kfree(priv);
-+	return ret;
-+}
-+
-+static int ingenic_rng_remove(struct platform_device *pdev)
-+{
-+	struct ingenic_rng *priv = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&priv->rng);
-+
-+	writel(0, priv->base + RNG_REG_ERNG_OFFSET);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ingenic_rng_of_match[] = {
-+	{ .compatible = "ingenic,jz4780-rng", .data = (void *) ID_JZ4780 },
-+	{ .compatible = "ingenic,x1000-rng", .data = (void *) ID_X1000 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_rng_of_match);
-+
-+static struct platform_driver ingenic_rng_driver = {
-+	.probe		= ingenic_rng_probe,
-+	.remove		= ingenic_rng_remove,
-+	.driver		= {
-+		.name	= "ingenic-rng",
-+		.of_match_table = ingenic_rng_of_match,
-+	},
-+};
-+
-+module_platform_driver(ingenic_rng_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>");
-+MODULE_AUTHOR("周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>");
-+MODULE_DESCRIPTION("Ingenic Random Number Generator driver");
+On 11/06/2020 00:46, Luis Alberto Herrera wrote:
+> This change reverts aba3a882a178: "mtd: spi-nor: intel: provide a range
+> for poll_timout". That change introduces a performance regression when
+> reading sequentially from flash. Logging calls to intel_spi_read without
+> this change we get:
+> 
+> Start MTD read
+> [   20.045527] intel_spi_read(from=1800000, len=400000)
+> [   20.045527] intel_spi_read(from=1800000, len=400000)
+> [  282.199274] intel_spi_read(from=1c00000, len=400000)
+> [  282.199274] intel_spi_read(from=1c00000, len=400000)
+> [  544.351528] intel_spi_read(from=2000000, len=400000)
+> [  544.351528] intel_spi_read(from=2000000, len=400000)
+> End MTD read
+> 
+> With this change:
+> 
+> Start MTD read
+> [   21.942922] intel_spi_read(from=1c00000, len=400000)
+> [   21.942922] intel_spi_read(from=1c00000, len=400000)
+> [   23.784058] intel_spi_read(from=2000000, len=400000)
+> [   23.784058] intel_spi_read(from=2000000, len=400000)
+> [   25.625006] intel_spi_read(from=2400000, len=400000)
+> [   25.625006] intel_spi_read(from=2400000, len=400000)
+> End MTD read
+
+I've performed my testing as well and got the following results:
+
+Vanilla Linux 4.9 (i.e. before the introduction of the offending
+patch):
+
+dd if=/dev/flash/by-name/XXX of=/dev/null bs=4k              
+1280+0 records in
+1280+0 records out
+5242880 bytes (5.2 MB, 5.0 MiB) copied, 3.91981 s, 1.3 MB/s
+
+Vanilla 4.19 (i.e. with offending patch):
+
+dd if=/dev/flash/by-name/XXX of=/dev/null bs=4k
+1280+0 records in
+1280+0 records out
+5242880 bytes (5.2 MB, 5.0 MiB) copied, 6.70891 s, 781 kB/s
+
+4.19 + revert:
+
+dd if=/dev/flash/by-name/XXX of=/dev/null bs=4k
+1280+0 records in
+1280+0 records out
+5242880 bytes (5.2 MB, 5.0 MiB) copied, 3.90503 s, 1.3 MB/s
+
+Therefore it looks good from my PoV:
+
+Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+
+> Signed-off-by: Luis Alberto Herrera <luisalberto@google.com>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/mtd/spi-nor/controllers/intel-spi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
+> index 61d2a0ad2131..2b89361a0d3a 100644
+> --- a/drivers/mtd/spi-nor/controllers/intel-spi.c
+> +++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
+> @@ -292,7 +292,7 @@ static int intel_spi_wait_hw_busy(struct intel_spi *ispi)
+>  	u32 val;
+>  
+>  	return readl_poll_timeout(ispi->base + HSFSTS_CTL, val,
+> -				  !(val & HSFSTS_CTL_SCIP), 40,
+> +				  !(val & HSFSTS_CTL_SCIP), 0,
+>  				  INTEL_SPI_TIMEOUT * 1000);
+>  }
+>  
+> @@ -301,7 +301,7 @@ static int intel_spi_wait_sw_busy(struct intel_spi *ispi)
+>  	u32 val;
+>  
+>  	return readl_poll_timeout(ispi->sregs + SSFSTS_CTL, val,
+> -				  !(val & SSFSTS_CTL_SCIP), 40,
+> +				  !(val & SSFSTS_CTL_SCIP), 0,
+>  				  INTEL_SPI_TIMEOUT * 1000);
+>  }
+>  
+> 
+
 -- 
-2.11.0
-
+Best regards,
+Alexander Sverdlin.
