@@ -2,164 +2,148 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C00FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6435C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52255206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB812080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="gKMmofTD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFU9MpvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgGVHIO (ORCPT
+        id S1731886AbgGVHIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:08:14 -0400
-Received: from bgl-iport-2.cisco.com ([72.163.197.26]:5624 "EHLO
-        bgl-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbgGVHIO (ORCPT
+        Wed, 22 Jul 2020 03:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgGVHIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:08:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=4015; q=dns/txt; s=iport;
-  t=1595401692; x=1596611292;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Smiy237MIFJj+6OWALRzgIJFYKqit4eKK+OJhzqDNq0=;
-  b=gKMmofTDCZJfyu0HD2R8cbT+/3MaBFXmG2mwsVKVthnjpuXDeG/IoVBv
-   0wDuKO2qcoL6UVe3ouLF/0PqrkOIGTcQ9qwfJw5Mgyoln8DhvRFx2xmqK
-   TJpjKuaTTYoxC6uC7xB6i249SRJ0zc+5tFzMX2ygW174aLD4AaaVYr1xg
-   w=;
-X-IronPort-AV: E=Sophos;i="5.75,381,1589241600"; 
-   d="scan'208";a="156253655"
-Received: from vla196-nat.cisco.com (HELO bgl-core-2.cisco.com) ([72.163.197.24])
-  by bgl-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 22 Jul 2020 07:08:10 +0000
-Received: from SRIRAKR2-M-R0A8.cisco.com ([10.65.42.168])
-        by bgl-core-2.cisco.com (8.15.2/8.15.2) with ESMTP id 06M789Ie006529;
-        Wed, 22 Jul 2020 07:08:09 GMT
-From:   Sriram Krishnan <srirakr2@cisco.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     mbumgard@cisco.com, ugm@cisco.com, nimm@cisco.com,
-        xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5] hv_netvsc: add support for vlans in AF_PACKET mode
-Date:   Wed, 22 Jul 2020 12:38:07 +0530
-Message-Id: <20200722070809.70876-1-srirakr2@cisco.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 22 Jul 2020 03:08:24 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA83C061794;
+        Wed, 22 Jul 2020 00:08:23 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id n24so1021701otr.13;
+        Wed, 22 Jul 2020 00:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vv6mjOP8SpjjnDhw8GwlKnMXEsutI46n6lzkUQF8tkw=;
+        b=UFU9MpvRS/y+TNwXyc45b4mqyFH6w3m8D1C0tN60EEcFpYc4bRF19z5MXiYySiz6ZU
+         g9Xcv0K8DSPsnfbg+f21mbWDNiUf/+Rt4DuVbSH7PNWJowvBUun2h3tWPv/ESqnDc/OH
+         +h/+8mPMzS/ebXWyEN2F2zlfl47YeglMj3ncgarka8towJP5EBlpJqX/c01gKOJYcplj
+         L6M+RDEO7fzgEPbVsl4QLRzk7WE1iyf11lYrIYeZIFAmNKKdEk9KZtE0BxkeyIepwVIs
+         ZfaNrFXA20q+TsUG4lU0kg7hiHY5uuQMWJfeAghj7oWi7k4s4VUn8/ks2BWGnX6fEia1
+         iA7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vv6mjOP8SpjjnDhw8GwlKnMXEsutI46n6lzkUQF8tkw=;
+        b=VCq5qX6VTcENaSnNMCqwu5oAL9C2cGcjRfSrRnfa73YqFIdbCJVcIiD31lGPimLiCn
+         HGSGlnLGfBZxe5kg+hCNIB3J4scQe28YRGsh12Mi8asxQjBvs9zhI6RM70xAnePv5G7Z
+         hbRczZOdUskJcL6pe8Q9RNgnVeCP4VsamBC53S7yB4il8taJxFSR04+AQ8tTsRKkLUH4
+         KqTqPUgMJaIFoCmyNoXTDRo3aJiBQzcWRGFit824NPH0cCFT0El/hm7SXqGidhE33C0A
+         419aSUCW3SPSPeJls8u3GKjR2MjRrl+wFfSXP3WnsBOxG6K/IptkGrukhCvZw33D9jQ5
+         l5zQ==
+X-Gm-Message-State: AOAM531eYs4hnF6dw/b/ospomoy5VcdabQq6dlhTRn0RJK5E0I2S6Qyn
+        egG77DXbp5IrMO3yeAZo8niZOBJcMvTgZEHB/gHAdr7u
+X-Google-Smtp-Source: ABdhPJxo9vG64VfOkf3OIlEGKsqkTeBufeBPKshJUoFIMN/OBuB2EImQdg9wl4uRrJgeDDdFvHP5z9eJ1uBW0/3RAS8=
+X-Received: by 2002:a05:6830:19eb:: with SMTP id t11mr26935831ott.207.1595401703383;
+ Wed, 22 Jul 2020 00:08:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.65.42.168, [10.65.42.168]
-X-Outbound-Node: bgl-core-2.cisco.com
+References: <20200720134931.71537-1-alexandru.ardelean@analog.com> <CAHp75VfmvGgCK3Cg1nxPtYeF1Y9oQAKST1bAnKXxB2hpd8=feg@mail.gmail.com>
+In-Reply-To: <CAHp75VfmvGgCK3Cg1nxPtYeF1Y9oQAKST1bAnKXxB2hpd8=feg@mail.gmail.com>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Wed, 22 Jul 2020 10:08:12 +0300
+Message-ID: <CA+U=DsrqGkhpbu32b0F8uzihtwbJVSbPQ7xOtHq8UgmM7-2peA@mail.gmail.com>
+Subject: Re: [PATCH] iio: accel: adxl372: Add OF device ID table
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Stefan Popa <stefan.popa@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vlan tagged packets are getting dropped when used with DPDK that uses
-the AF_PACKET interface on a hyperV guest.
+On Tue, Jul 21, 2020 at 9:39 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Jul 20, 2020 at 4:48 PM Alexandru Ardelean
+> <alexandru.ardelean@analog.com> wrote:
+> >
+> > From: Stefan Popa <stefan.popa@analog.com>
+> >
+> > The driver does not have a struct of_device_id table, but supported
+> > devices are registered via Device Trees. This patch adds OF device ID
+> > table.
+> >
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  drivers/iio/accel/adxl372_i2c.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/iio/accel/adxl372_i2c.c b/drivers/iio/accel/adxl372_i2c.c
+> > index e1affe480c77..5197d1eb6803 100644
+> > --- a/drivers/iio/accel/adxl372_i2c.c
+> > +++ b/drivers/iio/accel/adxl372_i2c.c
+> > @@ -8,6 +8,8 @@
+> >  #include <linux/i2c.h>
+> >  #include <linux/module.h>
+> >  #include <linux/regmap.h>
+>
+>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+>
+> With the huge patch series from Jonathan I think you may learn that
+> proper header here is
+>
+> mod_devicetable.h.
 
-The packet layer uses the tpacket interface to communicate the vlans
-information to the upper layers. On Rx path, these drivers can read the
-vlan info from the tpacket header but on the Tx path, this information
-is still within the packet frame and requires the paravirtual drivers to
-push this back into the NDIS header which is then used by the host OS to
-form the packet.
+yep;
+thanks for pointing that out;
 
-This transition from the packet frame to NDIS header is currently missing
-hence causing the host OS to drop the all vlan tagged packets sent by
-the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
-
-Here is an overview of the changes in the vlan header in the packet path:
-
-The RX path (userspace handles everything):
-  1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
-  2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
-     header into kernel SKB
-  3. Kernel shares packets with user space application with PACKET_MMAP.
-     The SKB VLAN info is copied to tpacket layer and indication set
-     TP_STATUS_VLAN_VALID.
-  4. The user space application will re-insert the VLAN info into the frame.
-
-The TX path:
-  1. The user space application has the VLAN info in the frame.
-  2. Guest kernel gets packets from the application with PACKET_MMAP.
-  3. The kernel later sends the frame to the hv_netvsc driver. The only way
-     to send VLANs is when the SKB is setup & the VLAN is is stripped from the
-     frame.
-  4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it sees
-     a VLAN in the frame the packet is dropped.
-
-Cc: xe-linux-external@cisco.com
-Cc: Sriram Krishnan <srirakr2@cisco.com>
-Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
----
- drivers/net/hyperv/hyperv_net.h |  1 +
- drivers/net/hyperv/netvsc_drv.c | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index abda736e7c7d..2181d4538ab7 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -897,6 +897,7 @@ struct netvsc_ethtool_stats {
- 	unsigned long rx_no_memory;
- 	unsigned long stop_queue;
- 	unsigned long wake_queue;
-+	unsigned long vlan_error;
- };
- 
- struct netvsc_ethtool_pcpu_stats {
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 6267f706e8ee..3e9bd93f54ed 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -605,6 +605,28 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 		*hash_info = hash;
- 	}
- 
-+	/* When using AF_PACKET we need to drop VLAN header from
-+	 * the frame and update the SKB to allow the HOST OS
-+	 * to transmit the 802.1Q packet
-+	 */
-+	if (skb->protocol == htons(ETH_P_8021Q)) {
-+		u16 vlan_tci = 0;
-+		skb_reset_mac_header(skb);
-+		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
-+			if (unlikely(__skb_vlan_pop(skb, &vlan_tci) != 0)) {
-+				++net_device_ctx->eth_stats.vlan_error;
-+				goto drop;
-+ 			}
-+
-+			__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-+			/* Update the NDIS header pkt lengths */
-+			packet->total_data_buflen -= VLAN_HLEN;
-+			packet->total_bytes -= VLAN_HLEN;
-+			rndis_msg->msg_len = packet->total_data_buflen;
-+			rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
-+		}
-+	}
-+
- 	if (skb_vlan_tag_present(skb)) {
- 		struct ndis_pkt_8021q_info *vlan;
- 
-@@ -1427,6 +1449,7 @@ static const struct {
- 	{ "rx_no_memory", offsetof(struct netvsc_ethtool_stats, rx_no_memory) },
- 	{ "stop_queue", offsetof(struct netvsc_ethtool_stats, stop_queue) },
- 	{ "wake_queue", offsetof(struct netvsc_ethtool_stats, wake_queue) },
-+	{ "vlan_error", offsetof(struct netvsc_ethtool_stats, vlan_error) },
- }, pcpu_stats[] = {
- 	{ "cpu%u_rx_packets",
- 		offsetof(struct netvsc_ethtool_pcpu_stats, rx_packets) },
--- 
-2.24.0
-
+>
+>
+> >
+> >  #include "adxl372.h"
+> >
+> > @@ -46,9 +48,16 @@ static const struct i2c_device_id adxl372_i2c_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, adxl372_i2c_id);
+> >
+> > +static const struct of_device_id adxl372_of_match[] = {
+> > +       { .compatible = "adi,adxl372" },
+>
+> > +       { },
+>
+> No comma, please!
+>
+> > +};
+> > +MODULE_DEVICE_TABLE(of, adxl372_of_match);
+> > +
+> >  static struct i2c_driver adxl372_i2c_driver = {
+> >         .driver = {
+> >                 .name = "adxl372_i2c",
+> > +               .of_match_table = adxl372_of_match,
+> >         },
+> >         .probe = adxl372_i2c_probe,
+> >         .id_table = adxl372_i2c_id,
+> > --
+> > 2.17.1
+> >
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
