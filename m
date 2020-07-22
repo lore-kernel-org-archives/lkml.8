@@ -2,158 +2,77 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB6DC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD83FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6F0320709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACAEA20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGVOEs (ORCPT
+        id S1732501AbgGVOFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:04:48 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36216 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGVOEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:04:47 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8680F1C0BD8; Wed, 22 Jul 2020 16:04:43 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 16:04:43 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Denis Osterland-Heim <denis.osterland@diehl.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 1/2] leds: pwm: add support for default-state device
- property
-Message-ID: <20200722140443.6cagitx3dozgjazh@duo.ucw.cz>
-References: <20200713054259.7608-1-Denis.Osterland@diehl.com>
- <20200713054259.7608-2-Denis.Osterland@diehl.com>
+        Wed, 22 Jul 2020 10:05:30 -0400
+Received: from verein.lst.de ([213.95.11.211]:56460 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728837AbgGVOF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:05:28 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7C57268B05; Wed, 22 Jul 2020 16:05:25 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 16:05:25 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH 06/24] md: open code vfs_stat in md_setup_drive
+Message-ID: <20200722140525.GA16395@lst.de>
+References: <20200721162818.197315-1-hch@lst.de> <20200721162818.197315-7-hch@lst.de> <20200721165539.GT2786714@ZenIV.linux.org.uk> <20200721182701.GB14450@lst.de> <20200722074432.GD2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="v2ovlewz76qvmngn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713054259.7608-2-Denis.Osterland@diehl.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200722074432.GD2786714@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 22, 2020 at 08:44:32AM +0100, Al Viro wrote:
+> On Tue, Jul 21, 2020 at 08:27:01PM +0200, Christoph Hellwig wrote:
+> > On Tue, Jul 21, 2020 at 05:55:39PM +0100, Al Viro wrote:
+> > > How about fs/for_init.c and putting the damn helpers there?  With
+> > > calling conventions as close to syscalls as possible, and a fat
+> > > comment regarding their intended use being _ONLY_ the setup
+> > > in should-have-been-done-in-userland parts of init?
+> > 
+> > Where do you want the prototypes to go?  Also do you want devtmpfs
+> > use the same helpers, which then't can't be marked __init (mount,
+> > chdir, chroot), or separate copies?
+> 
+> Hmm...  mount still can be __init (devtmpfs_mount() is), and I suspect
+> devtmpfs_setup() could also be made such - just turn devtmpfsd()
+> into
+> static int __init devtmpfsd(void *p)
+> {
+>         int err = devtmpfs_setup(p);
+> 
+> 	if (!err)
+> 		devtmpfsd_real();	/* never returns */
+> 	return err;
+> }
+> and you are done.
 
---v2ovlewz76qvmngn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that seems to work.  We can obviously call non-__init functions
+from __init ones, and kthread_run doesn't seem to care if it gets passed
+a __init function.
 
+Here is what I have now:
 
-> This patch adds support for "default-state" devicetree property, which
-> allows to defer pwm init to first use of led.
->=20
-> This allows to configure the PWM early in bootloader to let the LED
-> blink until an application in Linux userspace sets something different.
->=20
-> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-
-> +#define LEDS_PWM_DEFSTATE_OFF	0
-> +#define LEDS_PWM_DEFSTATE_ON	1
-> +#define LEDS_PWM_DEFSTATE_KEEP	2
-
-Turn this into enum; no need for prefix as this is private to the driver.
-
->  struct led_pwm {
->  	const char	*name;
->  	const char	*default_trigger;
->  	u8		active_low;
-> +	u8		default_state;
->  	unsigned int	max_brightness;
->  };
-> =20
-> @@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
-pwm_priv *priv,
-> =20
->  	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
-> =20
-> -	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> +	/* init PWM state */
-> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-> +		pwm_get_state(led_data->pwm, &led_data->pwmstate);
-> +		if (!led_data->pwmstate.period) {
-> +			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
-> +			dev_warn(dev,
-> +				"failed to read period for %s, default to off",
-> +				led->name);
-> +		}
-> +	}
-> +	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
-> +		pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> +
-> +	/* set brightness */
-> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
-> +		led_data->cdev.brightness =3D led->max_brightness;
-> +	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-> +		uint64_t brightness;
-> +
-> +		brightness =3D led->max_brightness;
-> +		brightness *=3D led_data->pwmstate.duty_cycle;
-> +		do_div(brightness, led_data->pwmstate.period);
-> +		led_data->cdev.brightness =3D brightness;
-> +	}
-
-Try to clean this up... switch() might help. Maybe two of them.
-
-> @@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
- struct led_pwm_priv *priv)
->  		fwnode_property_read_u32(fwnode, "max-brightness",
->  					 &led.max_brightness);
-> =20
-> +		if (!fwnode_property_read_string(fwnode, "default-state",
-> +						 &state)) {
-> +			if (!strcmp(state, "keep"))
-> +				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
-> +			else if (!strcmp(state, "on"))
-> +				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
-> +			else
-> +				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
-> +		}
-
-Actually... Move the enum to core, and add helper for this. We don't
-want to see this duplicated.
-
-> The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please in=
-form us if you have received this e-mail by
-> mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is stri=
-ctly prohibited.=20
-> - For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-obl=
-igations/
-
-Get rid of this.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---v2ovlewz76qvmngn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxhHewAKCRAw5/Bqldv6
-8rmuAJ4rvbdm8hCC5wda9/NyXq6BFCfuYQCglCBcKWz5JOVJkDmRIX+8DtvNYdc=
-=Hxhr
------END PGP SIGNATURE-----
-
---v2ovlewz76qvmngn--
+http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/init_path
