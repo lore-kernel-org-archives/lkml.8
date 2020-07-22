@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F59C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52367C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D177322B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5A820658
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3lMKpZG/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kjsOPflk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p0o6P5s5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ThnfCRmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbgGVVzr (ORCPT
+        id S1733017AbgGVVzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:55:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
+        Wed, 22 Jul 2020 17:55:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730938AbgGVVzj (ORCPT
+        with ESMTP id S1730837AbgGVVzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:55:39 -0400
+        Wed, 22 Jul 2020 17:55:38 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D7AC0619DC;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79671C0619E1;
         Wed, 22 Jul 2020 14:55:38 -0700 (PDT)
 Date:   Wed, 22 Jul 2020 21:55:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595454937;
+        s=2020; t=1595454936;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sMB1u185xELWvtA2XnvmJscfBxUyPz4bqw9RjDthIVI=;
-        b=3lMKpZG/UiGjsx6/N2dDssrsL3jVrUs5qDF+6q/Iq0Cm3o1RosA0QOaVUAlIcyF/pAwgAO
-        jkezdH+vDeQjqCNHcvkdnctyhKq4Cs8H8goD4QGPWtGrq2Fa+126zRppfOfPOCmjZDpXCM
-        ZOM5CCyShZJvxfdW+i73q9EQTUTEFBZP9KShreZWtYQ7AzLdyqICDNbfzjudiRdOuVd0zH
-        IdAD0xuoimVXcgDz8aVzeYNyrpCfsF1u0dMUvss9FVr+6eDIXa4zFaXlAg6Km2oUTKnt6N
-        eNCcq7Oo+YVRHzISOsU0zKMaJ0MA/rC2ZtlwXUKH/i5sfksjAePvh5mvuwrlpQ==
+        bh=onB23TV72snXsM4Kk96d5u93DsT0lvJ0OrxNxUiy8sE=;
+        b=p0o6P5s5BhdLlp7pKo4s6PmgWr+C9miZGU0gCo8LtmjeDMKEON1TUpaN/IcnRCjZLc22TD
+        nfYe1D1ykPnGi2WFB9/J8a1BfqxGqQQhEUXIQJ4eOG8X5JNxHbNONJ8/ow/Vs0GzYelEZf
+        p85qxdTPsDnLv5wsbHQ/15wKwyrUCHZ0idXQUKKiPcSbhxSuzFexCWo3GeJy9u6dMyGCdX
+        4x5nQjubva1HfG20SziXeDB4kCgTf8kDWFr4rVAIAlrWzxek5o59WtBa3ICaPAmmJ6PSqb
+        Ji2P+BzNucC43+MLBJyV5J9glJFyJ800lMP0QM6csi/fqRrejNeXoqYwDcpPmw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595454937;
+        s=2020e; t=1595454936;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sMB1u185xELWvtA2XnvmJscfBxUyPz4bqw9RjDthIVI=;
-        b=kjsOPflk0wpTa2tK3KGbDlupC+qxx5K7elor+2bG1p4fBKoX0NIC1D+KtjrC17/ldRPPs2
-        yaoopoiR6+Gh6UAg==
+        bh=onB23TV72snXsM4Kk96d5u93DsT0lvJ0OrxNxUiy8sE=;
+        b=ThnfCRmojj4756uQOXu4tU+8xR4DYwcdu9i8JkV7KolVSHgqd7Tyrb/gh6K/8uYYw1tBK1
+        GaPUy/amx7HMn2Ag==
 From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/unwind/orc: Fix ORC for newly forked tasks
+Subject: [tip: x86/urgent] x86/stacktrace: Fix reliable check for empty user
+ task stacks
 Cc:     Wang ShaoBo <bobo.shaobowang@huawei.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com>
-References: <f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com>
+In-Reply-To: <f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com>
+References: <f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Message-ID: <159545493667.4006.9690401904155723707.tip-bot2@tip-bot2>
+Message-ID: <159545493605.4006.17560256116826409394.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,57 +75,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     372a8eaa05998cd45b3417d0e0ffd3a70978211a
-Gitweb:        https://git.kernel.org/tip/372a8eaa05998cd45b3417d0e0ffd3a70978211a
+Commit-ID:     039a7a30ec102ec866d382a66f87f6f7654f8140
+Gitweb:        https://git.kernel.org/tip/039a7a30ec102ec866d382a66f87f6f7654f8140
 Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Fri, 17 Jul 2020 09:04:25 -05:00
+AuthorDate:    Fri, 17 Jul 2020 09:04:26 -05:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 22 Jul 2020 23:47:47 +02:00
 
-x86/unwind/orc: Fix ORC for newly forked tasks
+x86/stacktrace: Fix reliable check for empty user task stacks
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+If a user task's stack is empty, or if it only has user regs, ORC
+reports it as a reliable empty stack.  But arch_stack_walk_reliable()
+incorrectly treats it as unreliable.
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
+That happens because the only success path for user tasks is inside the
+loop, which only iterates on non-empty stacks.  Generally, a user task
+must end in a user regs frame, but an empty stack is an exception to
+that rule.
+
+Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
+__unwind_start()"), unwind_start() now sets state->error appropriately.
+So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
+always means the end of the stack was successfully reached.  So the
+success path for kthreads is no longer needed -- it can also be used for
+empty user tasks.
 
 Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
 
 ---
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/stacktrace.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2..ec88bbe 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -440,8 +440,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc) {
-@@ -662,6 +665,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
- 	}
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 6ad43fc..2fd698e 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			 * or a page fault), which can make frame pointers
+ 			 * unreliable.
+ 			 */
+-
+ 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
+ 				return -EINVAL;
+ 		}
+@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 	if (unwind_error(&state))
+ 		return -EINVAL;
  
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
+-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
+-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
+-		return -EINVAL;
+-
+ 	return 0;
+ }
+ 
