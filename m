@@ -2,162 +2,140 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A436C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AF2C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF6B20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFEE5207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Btsx+F+K"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="drGfHuME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgGVLTc (ORCPT
+        id S1729541AbgGVLUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:19:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:46218 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgGVLTb (ORCPT
+        Wed, 22 Jul 2020 07:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgGVLT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:19:31 -0400
-X-UUID: f4eacbf9b29f4c2ca118753468804077-20200722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RSwgljTRgkEcHXir5exEiZR1FuMb9nTNQg3w4yYtvsM=;
-        b=Btsx+F+KyUSA8K3exfGSEFiLNCxRXvx4B6aMA5/yeyPYKcEg4b5yzxLhruNrmujxi0pusrprDcOYbLc6363LRL90YAbfQN49UgtCNIC4Dl0pjGkyjXR/gybKNTIJH/aLtIrt5y5w2hR/jOXGKRzb3zRmKnNexPA7cgBfNsPDW6g=;
-X-UUID: f4eacbf9b29f4c2ca118753468804077-20200722
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1247376614; Wed, 22 Jul 2020 19:19:24 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 22 Jul 2020 19:19:21 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 19:19:22 +0800
-Message-ID: <1595416762.22392.5.camel@mtkswgap22>
-Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
-Date:   Wed, 22 Jul 2020 19:19:22 +0800
-In-Reply-To: <20200709205915.GA865123@bogus>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
-         <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
-         <20200709205915.GA865123@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 22 Jul 2020 07:19:59 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2449C0619DC;
+        Wed, 22 Jul 2020 04:19:58 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 66B4CAE6;
+        Wed, 22 Jul 2020 13:19:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595416797;
+        bh=9bheVS99DQaRwwdpBomM0E03oIp9aDYofl6Bxy+lGec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=drGfHuMEbciHC9WdUPfke/cq1AfJNe3AVSCs8hCTL+8FLoq4KrkzUo2p+hIruq9iB
+         cvlqu8xThmZpjCEkJ8vm04n8/Tx+cnT/p5abshMMLD7TRk33ni6zZLe4uaNJ4dEJ90
+         Eto05h81Je5fIN0sBFgs3BFkqJOUYiH7bV7zjo6U=
+Date:   Wed, 22 Jul 2020 14:19:52 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH for v5.9] media: omap: Replace HTTP links with HTTPS ones
+Message-ID: <20200722111952.GC5833@pendragon.ideasonboard.com>
+References: <20200719112133.58236-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 64B4CD0E11C60C63EEBAC5E16AB7A324C9F7C8C5961F0971A8F21997C7A4088F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200719112133.58236-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTA5IGF0IDE0OjU5IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCBKdWwgMDIsIDIwMjAgYXQgMDM6MDY6MDFQTSArMDgwMCwgRWFzdEwgTGVlIHdyb3Rl
-Og0KPiA+IERvY3VtZW50IHRoZSBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvciBNZWRpYVRlayBDb21t
-YW5kLVF1ZXVlIERNQSBjb250cm9sbGVyDQo+ID4gd2hpY2ggY291bGQgYmUgZm91bmQgb24gTVQ2
-Nzc5IFNvQyBvciBvdGhlciBzaW1pbGFyIE1lZGlhdGVrIFNvQ3MuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogRWFzdEwgTGVlIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgICAgICAgICB8IDEx
-MyArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExMyBpbnNlcnRp
-b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi44M2VkNzQyDQo+ID4gLS0tIC9kZXYv
-bnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRr
-LWNxZG1hLnlhbWwNCj4gPiBAQCAtMCwwICsxLDExMyBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArJVlBTUwgMS4y
-DQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwOi8v
-ZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kbWEvbXRrLWNxZG1hLnlhbWwqX187SXchIUNUUk5LQTl3
-TWcwQVJidyExUF9pZjNSaVpPVnB6TjhuNEVRSTBJeFpxMGQwN1Vrc1NnZUhZQTBoNkhMeWxVOWw0
-cHUyZWdncTdlZVZzRjJIJCANCj4gPiArJHNjaGVtYTogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92
-My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sKl9fO0l3ISFD
-VFJOS0E5d01nMEFSYnchMVBfaWYzUmlaT1Zwek44bjRFUUkwSXhacTBkMDdVa3NTZ2VIWUEwaDZI
-THlsVTlsNHB1MmVnZ3E3Wk1Qb3cyMyQgDQo+ID4gKw0KPiA+ICt0aXRsZTogTWVkaWFUZWsgQ29t
-bWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciBEZXZpY2UgVHJlZSBCaW5kaW5nDQo+ID4gKw0KPiA+
-ICttYWludGFpbmVyczoNCj4gPiArICAtIEVhc3RMIExlZSA8RWFzdEwuTGVlQG1lZGlhdGVrLmNv
-bT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOg0KPiA+ICsgIE1lZGlhVGVrIENvbW1hbmQtUXVl
-dWUgRE1BIGNvbnRyb2xsZXIgKENRRE1BKSBvbiBNZWRpYXRlayBTb0MNCj4gPiArICBpcyBkZWRp
-Y2F0ZWQgdG8gbWVtb3J5LXRvLW1lbW9yeSB0cmFuc2ZlciB0aHJvdWdoIHF1ZXVlIGJhc2VkDQo+
-ID4gKyAgZGVzY3JpcHRvciBtYW5hZ2VtZW50Lg0KPiA+ICsNCj4gPiArYWxsT2Y6DQo+ID4gKyAg
-LSAkcmVmOiAiZG1hLWNvbnRyb2xsZXIueWFtbCMiDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0K
-PiA+ICsgICIjZG1hLWNlbGxzIjoNCj4gPiArICAgIG1pbmltdW06IDENCj4gPiArICAgIG1heGlt
-dW06IDI1NQ0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFVzZWQgdG8gcHJvdmlk
-ZSBETUEgY29udHJvbGxlciBzcGVjaWZpYyBpbmZvcm1hdGlvbi4NCj4gDQo+IE5vLCBmb3IgYSBz
-cGVjaWZpYyBiaW5kaW5nIGxpa2UgdGhpcywgaXQgc2hvdWxkIGJlIDEgZGVmaW5lZCB2YWx1ZS4N
-Ck9LLkknbGwgZml4IGl0IHRvIGNvbnN0IDENCj4gDQo+ID4gKw0KPiA+ICsgIGNvbXBhdGlibGU6
-DQo+ID4gKyAgICBvbmVPZjoNCj4gPiArICAgICAgLSBjb25zdDogbWVkaWF0ZWssbXQ2NzY1LWNx
-ZG1hDQo+ID4gKyAgICAgIC0gY29uc3Q6IG1lZGlhdGVrLG10Njc3OS1jcWRtYQ0KPiA+ICsNCj4g
-PiArICByZWc6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDUNCj4g
-PiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgIEEgYmFzZSBhZGRyZXNzIG9mIE1lZGlh
-VGVrIENvbW1hbmQtUXVldWUgRE1BIGNvbnRyb2xsZXIsDQo+ID4gKyAgICAgICAgYSBjaGFubmVs
-IHdpbGwgaGF2ZSBhIHNldCBvZiBiYXNlIGFkZHJlc3MuDQo+ID4gKw0KPiA+ICsgIGludGVycnVw
-dHM6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDUNCj4gPiArICAg
-IGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgIEEgaW50ZXJydXB0IG51bWJlciBvZiBNZWRpYVRl
-ayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyLA0KPiA+ICsgICAgICAgIG9uZSBpbnRlcnJ1
-cHQgbnVtYmVyIHBlciBkbWEtY2hhbm5lbHMuDQo+ID4gKw0KPiA+ICsgIGNsb2NrczoNCj4gPiAr
-ICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgY29u
-c3Q6IGNxZG1hDQo+ID4gKw0KPiA+ICsgIGRtYS1jaGFubmVsLW1hc2s6DQo+ID4gKyAgICAkcmVm
-OiAvc2NoZW1hcy90eXBlcy55YW1sI2RlZmluaXRpb25zL3VpbnQzMg0KPiANCj4gQWxyZWF5IGhh
-cyBhIHR5cGUsIGRvbid0IHJlZGVmaW5lIGl0IGhlcmUuDQpPSw0KPiANCj4gPiArICAgIGRlc2Ny
-aXB0aW9uOg0KPiA+ICsgICAgICAgRm9yIERNQSBjYXBhYmlsaXR5LCBXZSB3aWxsIGtub3cgdGhl
-IGFkZHJlc3NpbmcgY2FwYWJpbGl0eSBvZg0KPiA+ICsgICAgICAgTWVkaWFUZWsgQ29tbWFuZC1R
-dWV1ZSBETUEgY29udHJvbGxlciB0aHJvdWdoIGRtYS1jaGFubmVsLW1hc2suDQo+IA0KPiBUaGlz
-IHNvdW5kcyBsaWtlIHRoZSBrZXJuZWwncyBETUEgbWFza3Mgd2hpY2ggaXMgbm90IHdoYXQgdGhp
-cyBwcm9wZXJ0eSANCj4gaXMuDQpZZXMsIHRoaXMgaXMgZm9yIGtlcm5lbCdzIERNQSBtYXNrLg0K
-RG8gSSBuZWVkIHRvIGRlY2xhcmUgdGhpcyBtZW1iZXIgYWdhaW4/DQo+IA0KPiA+ICsgICAgaXRl
-bXM6DQo+ID4gKyAgICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICAgIG1heEl0ZW1zOiA2Mw0KPiAN
-Cj4gQW4gYXJyYXkgb2YgNjMgZWxlbWVudHM/DQo+IA0KPiBJIHRoaW5rIHlvdSB3YW50Og0KPiAN
-Cj4gbWluaW11bTogMQ0KPiBtYXhpbXVtOiA2Mw0KPiANCj4gT3I6DQo+IA0KPiBlbnVtOiBbIDEs
-IDMsIDcsIDB4ZiwgMHgxZiwgMHgzZiBdDQo+IA0KPiAoVGhvdWdoIGlmIHRoaXMgd29ya3MsIHRo
-ZW4ganVzdCAnZG1hLWNoYW5uZWxzJyBpcyBlbm91Z2guKQ0KPiANCj4gPiArDQo+ID4gKyAgZG1h
-LWNoYW5uZWxzOg0KPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9u
-cy91aW50MzINCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBOdW1iZXIgb2YgRE1B
-IGNoYW5uZWxzIHN1cHBvcnRlZCBieSBNZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQQ0KPiA+ICsg
-ICAgICBjb250cm9sbGVyLCBzdXBwb3J0IHVwIHRvIGZpdmUuDQo+IA0KPiBJcyBpdCA1IG9yIDYg
-Y2hhbm5lbHM/IFlvdSdyZSBvZmYgYnkgb25lIHNvbWV3aGVyZS4NCkN1cnJlbnRseSBjaGlwIENR
-RE1BIG9ubHkgaGFzIHRocmVlIGNoYW5uZWxzIGF0IG1vc3QsIEknbGwgZml4IGl0IHRvDQptYXhu
-dW0gMw0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICAg
-IG1heEl0ZW1zOiA1DQo+ID4gKw0KPiA+ICsgIGRtYS1yZXF1ZXN0czoNCj4gPiArICAgICRyZWY6
-IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWludDMyDQo+ID4gKyAgICBkZXNjcmlw
-dGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSByZXF1ZXN0ICh2aXJ0dWFsIGNoYW5uZWwp
-IHN1cHBvcnRlZCBieSBNZWRpYVRlaw0KPiA+ICsgICAgICBDb21tYW5kLVF1ZXVlIERNQSBjb250
-cm9sbGVyLCBzdXBwb3J0IHVwIHRvIDMyLg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIG1p
-bkl0ZW1zOiAxDQo+ID4gKyAgICAgIG1heEl0ZW1zOiAzMg0KPiANCj4gWW91IGFyZSBkZXNjcmli
-aW5nIGhvdyBtYW55IGVsZW1lbnRzIGluIGFuIGFycmF5IGFuZCB0aGlzIGlzIGEgc2NhbGFyLg0K
-T0sgSTtsbCBmaXggdG8gbWlubnVtICYgbWF4bnVtDQo+IA0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6
-DQo+ID4gKyAgLSAiI2RtYS1jZWxscyINCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJl
-Zw0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSBjbG9jay1u
-YW1lcw0KPiA+ICsgIC0gZG1hLWNoYW5uZWwtbWFzaw0KPiA+ICsgIC0gZG1hLWNoYW5uZWxzDQo+
-ID4gKyAgLSBkbWEtcmVxdWVzdHMNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBm
-YWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ID4gKyAgICAjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsg
-ICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaD4NCj4gPiArICAgIGNx
-ZG1hOiBkbWEtY29udHJvbGxlckAxMDIxMjAwMCB7DQo+ID4gKyAgICAgICAgY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxtdDY3NzktY3FkbWEiOw0KPiA+ICsgICAgICAgIHJlZyA9IDwweDEwMjEyMDAw
-IDB4ODA+LA0KPiA+ICsgICAgICAgICAgICA8MHgxMDIxMjA4MCAweDgwPiwNCj4gPiArICAgICAg
-ICAgICAgPDB4MTAyMTIxMDAgMHg4MD47DQo+ID4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNf
-U1BJIDEzOSBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+ICsgICAgICAgICAgICA8R0lDX1NQSSAx
-NDAgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gPiArICAgICAgICAgICAgPEdJQ19TUEkgMTQxIElS
-UV9UWVBFX0xFVkVMX0xPVz47DQo+ID4gKyAgICAgICAgY2xvY2tzID0gPCZpbmZyYWNmZ19hbyBD
-TEtfSU5GUkFfQ1FfRE1BPjsNCj4gPiArICAgICAgICBjbG9jay1uYW1lcyA9ICJjcWRtYSI7DQo+
-ID4gKyAgICAgICAgZG1hLWNoYW5uZWwtbWFzayA9IDw2Mz47DQo+ID4gKyAgICAgICAgZG1hLWNo
-YW5uZWxzID0gPDM+Ow0KPiA+ICsgICAgICAgIGRtYS1yZXF1ZXN0cyA9IDwzMj47DQo+ID4gKyAg
-ICAgICAgI2RtYS1jZWxscyA9IDwxPjsNCj4gPiArICAgIH07DQo+ID4gKw0KPiA+ICsuLi4NCj4g
-PiAtLSANCj4gPiAxLjkuMQ0KDQo=
+Hi Alexander,
 
+Thank you for the patch.
+
+On Sun, Jul 19, 2020 at 01:21:33PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+I expect Sakari to take this patch in his tree when he will be back from
+vacation at the end of the month.
+
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  drivers/media/platform/omap3isp/isp.c | 2 +-
+>  drivers/staging/media/omap4iss/iss.c  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+> index b91e472ee764..74fa67082e09 100644
+> --- a/drivers/media/platform/omap3isp/isp.c
+> +++ b/drivers/media/platform/omap3isp/isp.c
+> @@ -142,7 +142,7 @@ static struct isp_reg isp_reg_list[] = {
+>   * readback the same register, in this case the revision register.
+>   *
+>   * See this link for reference:
+> - *   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
+> + *   https://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
+>   */
+>  void omap3isp_flush(struct isp_device *isp)
+>  {
+> diff --git a/drivers/staging/media/omap4iss/iss.c b/drivers/staging/media/omap4iss/iss.c
+> index 6fb60b58447a..e06ea7ea1e50 100644
+> --- a/drivers/staging/media/omap4iss/iss.c
+> +++ b/drivers/staging/media/omap4iss/iss.c
+> @@ -55,7 +55,7 @@ static void iss_print_status(struct iss_device *iss)
+>   * readback the same register, in this case the revision register.
+>   *
+>   * See this link for reference:
+> - *   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
+> + *   https://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
+>   */
+>  static void omap4iss_flush(struct iss_device *iss)
+>  {
+
+-- 
+Regards,
+
+Laurent Pinchart
