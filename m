@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3E0C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A62A22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5B022B45
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbgGVXUH (ORCPT
+        id S1733123AbgGVXU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:20:07 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:53717 "EHLO
+        Wed, 22 Jul 2020 19:20:28 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:34279 "EHLO
         outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726447AbgGVXUG (ORCPT
+        by vger.kernel.org with ESMTP id S1726447AbgGVXU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:20:06 -0400
+        Wed, 22 Jul 2020 19:20:27 -0400
 Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
           by outpost.zedat.fu-berlin.de (Exim 4.93)
           with esmtps (TLS1.2)
           tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
           (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jyO1p-000ckM-4f; Thu, 23 Jul 2020 01:20:01 +0200
+          id 1jyO2A-000cv0-LP; Thu, 23 Jul 2020 01:20:22 +0200
 Received: from p57bd9e19.dip0.t-ipconnect.de ([87.189.158.25] helo=[192.168.178.139])
           by inpost2.zedat.fu-berlin.de (Exim 4.93)
           with esmtpsa (TLS1.2)
           tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
           (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jyO1o-002XYF-UE; Thu, 23 Jul 2020 01:20:01 +0200
-Subject: Re: [PATCH 2/4] sh: Rearrange blocks in entry-common.S
+          id 1jyO2A-002Xd0-EP; Thu, 23 Jul 2020 01:20:22 +0200
+Subject: Re: [PATCH 3/4] sh: Add SECCOMP_FILTER
 To:     Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
         linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
 References: <20200722231322.419642-1-kernel@mkarcher.dialup.fu-berlin.de>
- <20200722231322.419642-2-kernel@mkarcher.dialup.fu-berlin.de>
+ <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
 From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
  mQINBE3JE9wBEADMrYGNfz3oz6XLw9XcWvuIxIlPWoTyw9BxTicfGAv0d87wngs9U+d52t/R
@@ -85,12 +85,12 @@ Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
  jEF9ImTPcYZpw5vhdyPwBdXW2lSjV3EAqknWujRgcsm84nycuJnImwJptR481EWmtuH6ysj5
  YhRVGbQPfdsjVUQfZdRdkEv4CZ90pdscBi1nRqcqANtzC+WQFwekDzk2lGqNRDg56s+q0KtY
  scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <f9484f1b-3aee-ca1e-ce10-f3f22f636fd7@physik.fu-berlin.de>
-Date:   Thu, 23 Jul 2020 01:20:00 +0200
+Message-ID: <77da0625-b4b3-78ca-b540-208b7889bd75@physik.fu-berlin.de>
+Date:   Thu, 23 Jul 2020 01:20:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200722231322.419642-2-kernel@mkarcher.dialup.fu-berlin.de>
+In-Reply-To: <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -102,89 +102,97 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/23/20 1:13 AM, Michael Karcher wrote:
-> This avoids out-of-range jumps that get auto-replaced by the assembler
-> and prepares for the changes needed to implement SECCOMP_FILTER cleanly.
+> Port sh to use the new SECCOMP_FILTER code.
 > 
 > Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
 > ---
->  arch/sh/kernel/entry-common.S | 57 ++++++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 28 deletions(-)
+>  arch/sh/Kconfig                               | 1 +
+>  arch/sh/kernel/entry-common.S                 | 2 ++
+>  arch/sh/kernel/ptrace_32.c                    | 5 +++--
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 8 +++++++-
+>  4 files changed, 13 insertions(+), 3 deletions(-)
 > 
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 32d959849df9..10b510c16841 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -27,6 +27,7 @@ config SUPERH
+>  	select GENERIC_SMP_IDLE_THREAD
+>  	select GUP_GET_PTE_LOW_HIGH if X2TLB
+>  	select HAVE_ARCH_AUDITSYSCALL
+> +	select HAVE_ARCH_SECCOMP_FILTER
+>  	select HAVE_ARCH_KGDB
+>  	select HAVE_ARCH_TRACEHOOK
+>  	select HAVE_DEBUG_BUGVERBOSE
 > diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-> index 9bac5bbb67f3..c4d88d61890d 100644
+> index c4d88d61890d..ad963104d22d 100644
 > --- a/arch/sh/kernel/entry-common.S
 > +++ b/arch/sh/kernel/entry-common.S
-> @@ -178,34 +178,6 @@ syscall_exit_work:
->  	bra	resume_userspace
+> @@ -368,6 +368,8 @@ syscall_trace_entry:
+>  	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
+>  	jsr	@r11	    	! superior (will chomp R[0-7])
 >  	 nop
+> +	cmp/eq	#-1, r0
+> +	bt	syscall_exit
+>  	mov.l	r0, @(OFF_R0,r15)	! Save return value
+>  	!			Reload R0-R4 from kernel stack, where the
+>  	!   	    	    	parent may have modified them using
+> diff --git a/arch/sh/kernel/ptrace_32.c b/arch/sh/kernel/ptrace_32.c
+> index 64bfb714943e..25ccfbd02bfa 100644
+> --- a/arch/sh/kernel/ptrace_32.c
+> +++ b/arch/sh/kernel/ptrace_32.c
+> @@ -485,8 +485,6 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+>  {
+>  	long ret = 0;
 >  
-> -	.align	2
-> -syscall_trace_entry:
-> -	!                     	Yes it is traced.
-> -	mov     r15, r4
-> -	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
-> -	jsr	@r11	    	! superior (will chomp R[0-7])
-> -	 nop
-> -	mov.l	r0, @(OFF_R0,r15)	! Save return value
-> -	!			Reload R0-R4 from kernel stack, where the
-> -	!   	    	    	parent may have modified them using
-> -	!   	    	    	ptrace(POKEUSR).  (Note that R0-R2 are
-> -	!   	    	    	reloaded from the kernel stack by syscall_call
-> -	!   	    	    	below, so don't need to be reloaded here.)
-> -	!   	    	    	This allows the parent to rewrite system calls
-> -	!   	    	    	and args on the fly.
-> -	mov.l	@(OFF_R4,r15), r4   ! arg0
-> -	mov.l	@(OFF_R5,r15), r5
-> -	mov.l	@(OFF_R6,r15), r6
-> -	mov.l	@(OFF_R7,r15), r7   ! arg3
-> -	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
-> -	!
-> -	mov.l	6f, r10			! Number of syscalls
-> -	cmp/hs	r10, r3
-> -	bf	syscall_call
-> -	mov	#-ENOSYS, r0
-> -	bra	syscall_exit
-> -	 mov.l	r0, @(OFF_R0,r15)	! Return value
+> -	secure_computing_strict(regs->regs[0]);
 > -
->  __restore_all:
->  	mov	#OFF_SR, r0
->  	mov.l	@(r0,r15), r0	! get status register
-> @@ -388,6 +360,35 @@ syscall_exit:
->  	bf	syscall_exit_work
->  	bra	__restore_all
->  	 nop
+>  	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
+>  	    tracehook_report_syscall_entry(regs))
+>  		/*
+> @@ -496,6 +494,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+>  		 */
+>  		ret = -1L;
+>  
+> +	if (secure_computing() == -1)
+> +		return -1;
 > +
-> +	.align	2
-> +syscall_trace_entry:
-> +	!                     	Yes it is traced.
-> +	mov     r15, r4
-> +	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
-> +	jsr	@r11	    	! superior (will chomp R[0-7])
-> +	 nop
-> +	mov.l	r0, @(OFF_R0,r15)	! Save return value
-> +	!			Reload R0-R4 from kernel stack, where the
-> +	!   	    	    	parent may have modified them using
-> +	!   	    	    	ptrace(POKEUSR).  (Note that R0-R2 are
-> +	!   	    	    	reloaded from the kernel stack by syscall_call
-> +	!   	    	    	below, so don't need to be reloaded here.)
-> +	!   	    	    	This allows the parent to rewrite system calls
-> +	!   	    	    	and args on the fly.
-> +	mov.l	@(OFF_R4,r15), r4   ! arg0
-> +	mov.l	@(OFF_R5,r15), r5
-> +	mov.l	@(OFF_R6,r15), r6
-> +	mov.l	@(OFF_R7,r15), r7   ! arg3
-> +	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
-> +	!
-> +	mov.l	6f, r10			! Number of syscalls
-> +	cmp/hs	r10, r3
-> +	bf	syscall_call
-> +	mov	#-ENOSYS, r0
-> +	bra	syscall_exit
-> +	 mov.l	r0, @(OFF_R0,r15)	! Return value
-> +
->  	.align	2
->  #if !defined(CONFIG_CPU_SH2)
->  1:	.long	TRA
+>  	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
+>  		trace_sys_enter(regs, regs->regs[0]);
+>  
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index 252140a52553..6eb21685c88f 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -122,6 +122,8 @@ struct seccomp_data {
+>  #  define __NR_seccomp 358
+>  # elif defined(__s390__)
+>  #  define __NR_seccomp 348
+> +# elif defined(__sh__)
+> +#  define __NR_seccomp 372
+>  # else
+>  #  warning "seccomp syscall number unknown for this architecture"
+>  #  define __NR_seccomp 0xffff
+> @@ -1622,6 +1624,10 @@ TEST_F(TRACE_poke, getpid_runs_normally)
+>  # define SYSCALL_SYSCALL_NUM regs[4]
+>  # define SYSCALL_RET	regs[2]
+>  # define SYSCALL_NUM_RET_SHARE_REG
+> +#elif defined(__sh__)
+> +# define ARCH_REGS	struct pt_regs
+> +# define SYSCALL_NUM	gpr[3]
+> +# define SYSCALL_RET	gpr[0]
+>  #else
+>  # error "Do not know how to find your architecture's registers and syscalls"
+>  #endif
+> @@ -1693,7 +1699,7 @@ void change_syscall(struct __test_metadata *_metadata,
+>  	EXPECT_EQ(0, ret) {}
+>  
+>  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
+> -	defined(__s390__) || defined(__hppa__) || defined(__riscv)
+> +	defined(__s390__) || defined(__hppa__) || defined(__riscv) || defined(__sh__)
+>  	{
+>  		regs.SYSCALL_NUM = syscall;
+>  	}
 > 
 
 Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
