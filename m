@@ -2,129 +2,114 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C29C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F06C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 605D52071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595426642;
-	bh=vD1NxW7kOLSfAbm298saG/wWrWb+LYxUbp9VvYPUJFQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fPYC4X0SvWSilbOwilKZ76aJKprMCpd9/6I+e+UCs+T2Ptdf2POy8097dGiRhdX0O
-	 1ExbiReeiXu9c0PTZHOi3HdyPqDlFdQhC8e6qeYTaSnyuDlBbklTQxhCqAQlAxf036
-	 d09FH1IgL1EHRV2kl+phlSQrsoUdrwlf2WmwDMHE=
+	by mail.kernel.org (Postfix) with ESMTP id 90D3520709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ks1r01r8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbgGVOEB (ORCPT
+        id S1731503AbgGVOEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgGVOEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:04:00 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034D72071A;
-        Wed, 22 Jul 2020 14:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595426640;
-        bh=vD1NxW7kOLSfAbm298saG/wWrWb+LYxUbp9VvYPUJFQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IyArLE0g04QibcnJXV16X14S96h4RuAedeYcoITNUg8sNZjizaRMLkScMQVTVVd3W
-         W76oyKy37edCFFkO7lo7CfaHpJkt1B+y/U8ovnJqtDMxoOu54wpR+PUsSohTQ5iZDs
-         Wl37Q+dorI2AMVPkWHOStHy391/FfQB0wq/kVyiw=
-Date:   Wed, 22 Jul 2020 16:03:56 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Rahul Gottipati <rahul.blr97@gmail.com>
-Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] media: atomisp: Fix coding style issue - remove
- beginning whitespaces
-Message-ID: <20200722160356.010a05df@coco.lan>
-In-Reply-To: <5b2242008c92871daa5bfb7c9c3cafbbf592228b.1595416585.git.rahul.blr97@gmail.com>
-References: <cover.1595416585.git.rahul.blr97@gmail.com>
-        <5b2242008c92871daa5bfb7c9c3cafbbf592228b.1595416585.git.rahul.blr97@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 22 Jul 2020 10:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGVOEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:04:43 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407D1C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:04:43 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x5so1491314wmi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Rs2Y2EqzdkKrOA6XoS+7IQYSW7ep9XsRJtfJ1V00SI=;
+        b=ks1r01r8IlR17EoE2Q5OyQVSs4AV9IGOQE1iaO69O1yAzO7nIEE0kbTXCSNW+hmHbm
+         RQrHbYI35gsDOVPSFAwtW3J4PPwkOS4OH+pPX3HHOsGNsYhn7f1duuxwYJfCFIWVm9/U
+         BZTcbtEpjVEhMLOKSLcMrbEthdks1UCP5rHk+XiUNwf+TywwR8swnUdxnPoTbPd1vPrJ
+         JxN9ltz1Mcj6AnzOz7E2oHmT7N0zeSKY1jA+Jac99v/4rO3AFrWeKME/L6wx4Iw/IZ2H
+         vl0S02Yj4RUPqrcuYA08ibKKeHPFOkX1ATDQsXqDk/uWWPA8Pz75m758Je0/bUkAJWMC
+         Mkbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Rs2Y2EqzdkKrOA6XoS+7IQYSW7ep9XsRJtfJ1V00SI=;
+        b=sKll4rc76gZOp54htGQ8W2rEvqDfjHLPkHH/MEbvKWfuVXuWC/oqTR0YGctb6wSVei
+         xNoR+1Hnrljrrs2Vxm62n47JT1ycEMwR+puIuEiN1qQdIa+DgXJ9IjzwaiVraB8DKV6y
+         zFLMMBMDjYjplNYrESIkCmwu6Onuv+sz8trZRKKXK8+UhkY3AmgUfG7ZcBjucrYff0K4
+         mPXu9WNgABOFL5AJE//zsAWPNZt4xHwbxiCS+q/l4JQAvHWaeHdHroPQwv22HboLPt3A
+         7FPYl06DppVMEEfObOpZeAnn9p/4i0XYk57htl/6B3GxayoVWGjsCee+JA9W+KhytHGW
+         dMWg==
+X-Gm-Message-State: AOAM530e5hXx0NTFFXui/2fRu4zzW8p1Xk/hgLzrNBxnBJpwk519weuT
+        u1eW8aZKSJRZCpRcAP9reENVXL1gfBILGlMoHBY=
+X-Google-Smtp-Source: ABdhPJzbBZpmvKOmpiAE1M0Qdqb/UFYsFJDbC0RenHJ5MR1TbtbU/Hqntla9nhteJ8Rfgxb5Lvy5BMZJ2KDmAy9jXz4=
+X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr2173888wmk.153.1595426682017;
+ Wed, 22 Jul 2020 07:04:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org> <20200721170007.4554-7-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200721170007.4554-7-srinivas.kandagatla@linaro.org>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 22 Jul 2020 17:04:30 +0300
+Message-ID: <CAEnQRZA6Y99znD3ZtpuGhc+i-WVDtUW-jP1sF3MTg289S_Mr_g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 6/6] ASoC: q6asm-dai: add support to set_codec_params
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        ckeepax@opensource.cirrus.com, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 22 Jul 2020 16:58:31 +0530
-Rahul Gottipati <rahul.blr97@gmail.com> escreveu:
-
-> This removes whitespaces at the beginning of a few lines to fix
-> some checkpatch.pl warnings.
-> 
-> Signed-off-by: Rahul Gottipati <rahul.blr97@gmail.com>
+On Tue, Jul 21, 2020 at 8:03 PM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> Make use of new set_codec_params callback to allow decoder switching
+> during gapless playback.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
-> Changes in v2:
-> 	Distributed changes across 2 patches instead of the previous 1
-> 
->  drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-> index 9404a678fa6f..9cdcbe774229 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
-> @@ -512,7 +512,7 @@ const struct atomisp_format_bridge atomisp_output_fmts[] = {
->  };
->  
->  const struct atomisp_format_bridge *atomisp_get_format_bridge(
-> -    unsigned int pixelformat)
-> +				unsigned int pixelformat)
-
-This is still a coding style violation, as:
-
-1) the continuation line won't be aligned after the open parenthesis;
-2) the line will end with an open parenthesis.
-
- A fix would be:
-
-	const struct atomisp_format_bridge *
-	atomisp_get_format_bridge(unsigned int pixelformat)
-
-The same applies to similar patterns.
-
-Yet, patches to atomisp have a high chance of having conflicts,
-and being rejected, as we're doing lots of non-aesthetic changes 
-on this driver.
-
-
->  {
->  	unsigned int i;
->  
-> @@ -525,7 +525,7 @@ const struct atomisp_format_bridge *atomisp_get_format_bridge(
+>  sound/soc/qcom/qdsp6/q6asm-dai.c | 33 ++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>
+> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> index b5c719682919..a8cfb1996614 100644
+> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> @@ -876,6 +876,37 @@ static int __q6asm_dai_compr_set_codec_params(struct snd_soc_component *componen
+>         return 0;
 >  }
->  
->  const struct atomisp_format_bridge *atomisp_get_format_bridge_from_mbus(
-> -    u32 mbus_code)
-> +				u32 mbus_code)
->  {
->  	unsigned int i;
->  
-> @@ -607,7 +607,7 @@ static int atomisp_enum_input(struct file *file, void *fh,
->  }
->  
->  static unsigned int atomisp_subdev_streaming_count(
-> -    struct atomisp_sub_device *asd)
-> +				struct atomisp_sub_device *asd)
->  {
->  	return asd->video_out_preview.capq.streaming
->  	       + asd->video_out_capture.capq.streaming
+>
+> +static int q6asm_dai_compr_set_codec_params(struct snd_soc_component *component,
+> +                                           struct snd_compr_stream *stream,
+> +                                           struct snd_codec *codec)
+> +{
+> +       struct snd_compr_runtime *runtime = stream->runtime;
+> +       struct q6asm_dai_rtd *prtd = runtime->private_data;
+> +       int ret;
+> +
+> +       ret = q6asm_open_write(prtd->audio_client, prtd->next_track_stream_id,
+> +                              codec->id, codec->profile, prtd->bits_per_sample,
+> +                              true);
+> +       if (ret < 0) {
+> +               pr_err("q6asm_open_write failed\n");
 
+Since you have component->dev here I think it is worth it to use
+dev_err instead of pr_err.
 
-
-Thanks,
-Mauro
+Same for the rest of the code.
