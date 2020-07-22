@@ -2,128 +2,190 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B55C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6406207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8361220787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgGVQQx (ORCPT
+        id S1728579AbgGVQMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:16:53 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:52263 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGVQQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:16:52 -0400
-X-Originating-IP: 90.63.246.187
-Received: from gandi.net (laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr [90.63.246.187])
-        (Authenticated sender: thibaut.sautereau@clip-os.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id BF6C5E0002;
-        Wed, 22 Jul 2020 16:16:39 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 18:16:39 +0200
-From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-To:     Kees Cook <keescook@chromium.org>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] fs,doc: Enable to enforce noexec mounts or file
- exec through O_MAYEXEC
-Message-ID: <20200722161639.GA24129@gandi.net>
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-6-mic@digikod.net>
- <202007151312.C28D112013@keescook>
- <35ea0914-7360-43ab-e381-9614d18cceba@digikod.net>
+        Wed, 22 Jul 2020 12:12:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54981 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgGVQMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:12:23 -0400
+IronPort-SDR: BhJMPmGZrQKITLw6bqsd/Bq/SoDO226bxM91yeJ32RBnKNozM/86QpBuurUP9URl+VxMs2AyoI
+ pGJnenFfT0Ww==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="151683981"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="151683981"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 09:12:22 -0700
+IronPort-SDR: bl84eW1ylPfnZRFO4e2ki/DvvQwax3+R169zsx2nAN1CYKSEUhvjvm+unZiZcIohcqBoikGYKU
+ B8ltBaIyzfoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="326732195"
+Received: from lkp-server01.sh.intel.com (HELO 7a9a14fb1d52) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jul 2020 09:12:20 -0700
+Received: from kbuild by 7a9a14fb1d52 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jyHLw-000025-4I; Wed, 22 Jul 2020 16:12:20 +0000
+Date:   Thu, 23 Jul 2020 00:11:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:timers/urgent] BUILD SUCCESS
+ b4a25fb0e62990df467451744b22e0e24960a5e6
+Message-ID: <5f18654c./pMuVt3k+LghC55p%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <35ea0914-7360-43ab-e381-9614d18cceba@digikod.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 04:39:14PM +0200, Mickaël Salaün wrote:
-> 
-> On 15/07/2020 22:37, Kees Cook wrote:
-> > On Tue, Jul 14, 2020 at 08:16:36PM +0200, Mickaël Salaün wrote:
-> >> @@ -2849,7 +2855,7 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> >>  	case S_IFLNK:
-> >>  		return -ELOOP;
-> >>  	case S_IFDIR:
-> >> -		if (acc_mode & (MAY_WRITE | MAY_EXEC))
-> >> +		if (acc_mode & (MAY_WRITE | MAY_EXEC | MAY_OPENEXEC))
-> >>  			return -EISDIR;
-> >>  		break;
-> > 
-> > (I need to figure out where "open for reading" rejects S_IFDIR, since
-> > it's clearly not here...)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/urgent
+branch HEAD: b4a25fb0e62990df467451744b22e0e24960a5e6  Merge tag 'timers-v5.8-rc7' of https://git.linaro.org/people/daniel.lezcano/linux into timers/urgent
 
-Doesn't it come from generic_read_dir() in fs/libfs.c?
+elapsed time: 1210m
 
-> > 
-> >>  	case S_IFBLK:
-> >> @@ -2859,13 +2865,26 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> >>  		fallthrough;
-> >>  	case S_IFIFO:
-> >>  	case S_IFSOCK:
-> >> -		if (acc_mode & MAY_EXEC)
-> >> +		if (acc_mode & (MAY_EXEC | MAY_OPENEXEC))
-> >>  			return -EACCES;
-> >>  		flag &= ~O_TRUNC;
-> >>  		break;
-> > 
-> > This will immediately break a system that runs code with MAY_OPENEXEC
-> > set but reads from a block, char, fifo, or socket, even in the case of
-> > a sysadmin leaving the "file" sysctl disabled.
-> 
-> As documented, O_MAYEXEC is for regular files. The only legitimate use
-> case seems to be with pipes, which should probably be allowed when
-> enforcement is disabled.
+configs tested: 119
+configs skipped: 3
 
-By the way Kees, while we fix that for the next series, do you think it
-would be relevant, at least for the sake of clarity, to add a
-WARN_ON_ONCE(acc_mode & MAY_OPENEXEC) for the S_IFSOCK case, since a
-socket cannot be open anyway?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--- 
-Thibaut Sautereau
-CLIP OS developer
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+c6x                                 defconfig
+c6x                        evmc6474_defconfig
+c6x                         dsk6455_defconfig
+m68k                         amcore_defconfig
+arm                          simpad_defconfig
+openrisc                         allyesconfig
+mips                   sb1250_swarm_defconfig
+arm                         shannon_defconfig
+arm                      footbridge_defconfig
+s390                             alldefconfig
+powerpc                       ppc64_defconfig
+c6x                               allnoconfig
+s390                          debug_defconfig
+arm                          pxa3xx_defconfig
+m68k                        m5407c3_defconfig
+sh                          sdk7780_defconfig
+arm                           h5000_defconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a001-20200719
+i386                 randconfig-a006-20200719
+i386                 randconfig-a002-20200719
+i386                 randconfig-a005-20200719
+i386                 randconfig-a003-20200719
+i386                 randconfig-a004-20200719
+i386                 randconfig-a003-20200721
+i386                 randconfig-a005-20200721
+i386                 randconfig-a004-20200721
+i386                 randconfig-a006-20200721
+i386                 randconfig-a002-20200721
+i386                 randconfig-a001-20200721
+x86_64               randconfig-a014-20200720
+x86_64               randconfig-a015-20200720
+x86_64               randconfig-a016-20200720
+x86_64               randconfig-a012-20200720
+x86_64               randconfig-a013-20200720
+x86_64               randconfig-a011-20200720
+x86_64               randconfig-a005-20200719
+x86_64               randconfig-a002-20200719
+x86_64               randconfig-a006-20200719
+x86_64               randconfig-a001-20200719
+x86_64               randconfig-a003-20200719
+x86_64               randconfig-a004-20200719
+i386                 randconfig-a015-20200719
+i386                 randconfig-a011-20200719
+i386                 randconfig-a016-20200719
+i386                 randconfig-a012-20200719
+i386                 randconfig-a013-20200719
+i386                 randconfig-a014-20200719
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
