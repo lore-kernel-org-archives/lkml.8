@@ -2,120 +2,118 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26431C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A5C207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BE020787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0v9IQWn"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZtVJ6k8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGVQLD (ORCPT
+        id S1729123AbgGVQNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39462 "EHLO
+        Wed, 22 Jul 2020 12:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgGVQLC (ORCPT
+        with ESMTP id S1726666AbgGVQNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:11:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8429AC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:11:02 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a9so1748903pjd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:11:02 -0700 (PDT)
+        Wed, 22 Jul 2020 12:13:20 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBE6C0619E0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:13:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id p1so1229602pls.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:13:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HmPcqdLvVGHN8YIZDSoWp5mmL8DNRYwFD2mWJlFG/CI=;
-        b=m0v9IQWnDgV4s6SMh/3HK0Ls3dL54sIPnN+m5UT2/hUC3PlDl2/W4kuw8mLT/+t/cN
-         HxiCHcfv8HDrIysntb62I552PqeuEOyH/S3SO3QBkcx+RYaeSULjwkP8arqM1QWO4wg1
-         E6yzW6xGFhKPhLOTimdH487g2u68ZJqeiWPUxM01HC06RbE1hniX0ZTXTdPWg2yufgjd
-         nLTIf5z1CQ9sfy3TvT/oebTz//xFOR4fVrxrSBEhCivva3v/3XBk4x9TSl5DGIdulDLH
-         BE6h9ocHdNRBxV2BbVliv5GN8cFfm7d+CBU5ngLDUJQnsAzFN2IEdQkyveZQvervZIHb
-         WyAg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=sCo/inNgkLQRT12JTmJMZ3t5FYhm9G5o0OvWRhxmUYY=;
+        b=ZtVJ6k8n6QgA5V0GDnL+qCelw405mI5mbymnEASb/d/sbO7p8pvMJ0pGUXqxK1diGO
+         I4pxKbknYjMDPKA4YU0OmtZhMXmOrBv4tWbqZ5bKQnwtOR+WO6mtDNO7cUqIPyIL1PDJ
+         5y3ltK4uqTP2+UEN/TzXmAlIda0lZ9AYfpjqs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HmPcqdLvVGHN8YIZDSoWp5mmL8DNRYwFD2mWJlFG/CI=;
-        b=dfp/TUkpVg08vGDPv7LGH3PWvP03v4O17fHMSc//xw3UxdUCR3bvgrZuezXpMmbtlk
-         GXBO7qXbeS0ZXAB6Fv9Wj5XyFD2Vn23CLe+DvxS9oT6EI4j4Cikqr9vdEazK1KFxgqK6
-         T+V3HHsnumPRx601b5/hxlCD2/BKDmPWErIERwuoL4cMWSMcauNUfKy4hf3voN53PIyh
-         VcV74mf975SBorSbbg9e8ouFeWe/59xAAaqzLK9DJf+hs6mbdMFAyokJNtohPbWpPGCI
-         1YK0HSLBUMFDzb+tTO9wKIX1zn7SRcUZSyUAtTWOXaZbNiqmlc9CcSA+aNJT401cnk+G
-         aSpg==
-X-Gm-Message-State: AOAM533bQvx4UQQlSEWrksbpoBTED3ExTQ16bc52w9fykZv6If1fB6cm
-        DZ0gBcL8Pe4XsRjdvxTfXA0pZNSQa44=
-X-Google-Smtp-Source: ABdhPJzbx4BjNV5Obyp/YLufMMjsWtKMTtCF6Df/GgQvhyi0ZF27dT0hVdtJ2eX5wQF9bVXuMITvpw==
-X-Received: by 2002:a17:902:b084:: with SMTP id p4mr213677plr.58.1595434261973;
-        Wed, 22 Jul 2020 09:11:01 -0700 (PDT)
-Received: from thinkpad.teksavvy.com ([69.172.171.109])
-        by smtp.gmail.com with ESMTPSA id 21sm37393pfu.124.2020.07.22.09.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 09:11:01 -0700 (PDT)
-From:   Rustam Kovhaev <rkovhaev@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Rustam Kovhaev <rkovhaev@gmail.com>
-Subject: [PATCH] staging: wlan-ng: properly check endpoint types
-Date:   Wed, 22 Jul 2020 09:10:52 -0700
-Message-Id: <20200722161052.999754-1-rkovhaev@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=sCo/inNgkLQRT12JTmJMZ3t5FYhm9G5o0OvWRhxmUYY=;
+        b=rRDRikLxJ3IEhAccZNWCy60iEMQ+esXrDuSn/FmkWjjDQEI7CQSVlfPDBJDaG+JDP1
+         txzwRO2XZ2Sw6ReDlnZRbVFcm+q7TZdqXI8Gdm7sOLq/JtkYU2uQr1gVTCkDaJXkLB0t
+         fTEjwA7uMis7bPAoqyebyUs15Pe5bZpSSHO6zsro6Ru/pmy2kcXE+KFudOmIMp9YMySb
+         3XeI746+7uj5gP/LcocMwC2KqEaDBhC++kkbz6bsWxKoDhXmP64KlnnKLyHy6bfS9SCK
+         YXPXOsQNrjHDF0W3OFykYP/jpmznniAs9ZBylKynAA/tNI4Y3nQotWIG/O7ijt80pqEB
+         /RlQ==
+X-Gm-Message-State: AOAM530DAhjnr8+T6YEXU5z6OKg0FOWqU66P4w1IdktnO1wFzoK7p0ju
+        1K1HDZJclr9v2j4JlK/FtacYlaXe1YbJAA==
+X-Google-Smtp-Source: ABdhPJy0W1IuXt9MEXOac/YWBS3DNz4wrXiLLLVZ57+dq9dOC6LdmQY/m1fU9sjLUkbAoCAmpH/org==
+X-Received: by 2002:a17:90a:1b2c:: with SMTP id q41mr115652pjq.195.1595434399571;
+        Wed, 22 Jul 2020 09:13:19 -0700 (PDT)
+Received: from [10.230.185.151] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id r9sm163543pje.12.2020.07.22.09.13.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 09:13:18 -0700 (PDT)
+Subject: Re: [PATCH -next] scsi: lpfc: Add dependency on CPU_FREQ
+To:     Guenter Roeck <linux@roeck-us.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>
+References: <20200722023027.36866-1-linux@roeck-us.net>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <0829df21-26fd-b023-4728-42025fb2dc20@broadcom.com>
+Date:   Wed, 22 Jul 2020 09:13:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200722023027.36866-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As syzkaller detected, wlan-ng driver does not do sanity check of
-endpoints in prism2sta_probe_usb(), add check for xfer direction and type
+On 7/21/2020 7:30 PM, Guenter Roeck wrote:
+> Since commit 317aeb83c92b ("scsi: lpfc: Add blk_io_poll support for
+> latency improvment"), the lpfc driver depends on CPUFREQ. Without it,
+> builds fail with
+>
+> drivers/scsi/lpfc/lpfc_sli.c: In function 'lpfc_init_idle_stat_hb':
+> drivers/scsi/lpfc/lpfc_sli.c:7329:26: error:
+> 	implicit declaration of function 'get_cpu_idle_time'
+>
+> Add the missing dependency.
+>
+> Fixes: 317aeb83c92b ("scsi: lpfc: Add blk_io_poll support for latency improvment")
+> Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+> Cc: James Smart <jsmart2021@gmail.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>   drivers/scsi/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+> index 571473a58f98..701b61ec76ee 100644
+> --- a/drivers/scsi/Kconfig
+> +++ b/drivers/scsi/Kconfig
+> @@ -1154,6 +1154,7 @@ source "drivers/scsi/qedf/Kconfig"
+>   config SCSI_LPFC
+>   	tristate "Emulex LightPulse Fibre Channel Support"
+>   	depends on PCI && SCSI
+> +	depends on CPU_FREQ
+>   	depends on SCSI_FC_ATTRS
+>   	depends on NVME_TARGET_FC || NVME_TARGET_FC=n
+>   	depends on NVME_FC || NVME_FC=n
 
-Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
-Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
----
- drivers/staging/wlan-ng/prism2usb.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Reviewed-by:  James Smart <james.smart@broadcom.com>
 
-diff --git a/drivers/staging/wlan-ng/prism2usb.c b/drivers/staging/wlan-ng/prism2usb.c
-index 4689b2170e4f..456603fd26c0 100644
---- a/drivers/staging/wlan-ng/prism2usb.c
-+++ b/drivers/staging/wlan-ng/prism2usb.c
-@@ -61,11 +61,25 @@ static int prism2sta_probe_usb(struct usb_interface *interface,
- 			       const struct usb_device_id *id)
- {
- 	struct usb_device *dev;
--
-+	const struct usb_endpoint_descriptor *epd;
-+	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
- 	struct wlandevice *wlandev = NULL;
- 	struct hfa384x *hw = NULL;
- 	int result = 0;
- 
-+	if (iface_desc->desc.bNumEndpoints != 2) {
-+		result = -ENODEV;
-+		goto failed;
-+	}
-+
-+	result = -EINVAL;
-+	epd = &iface_desc->endpoint[1].desc;
-+	if (!usb_endpoint_is_bulk_in(epd))
-+		goto failed;
-+	epd = &iface_desc->endpoint[2].desc;
-+	if (!usb_endpoint_is_bulk_out(epd))
-+		goto failed;
-+
- 	dev = interface_to_usbdev(interface);
- 	wlandev = create_wlan();
- 	if (!wlandev) {
--- 
-2.27.0
+-- james
 
