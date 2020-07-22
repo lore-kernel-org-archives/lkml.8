@@ -2,109 +2,73 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E495C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136F5C433F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5401E2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61632065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbgGVRF5 (ORCPT
+        id S1731871AbgGVRGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:05:57 -0400
-Received: from mga07.intel.com ([134.134.136.100]:13822 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgGVRF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:05:57 -0400
-IronPort-SDR: /oCfT+a9GmLu2AXGt3FjF+8zo4mNtJiSqKHdPDGK41mGHd4DmO2Ob4CP7hSRNKzkhyogXEXBi1
- Nq4nrUShJmkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215008550"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="215008550"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 10:05:56 -0700
-IronPort-SDR: LzRvidCjs/m9a564knoOx4ZyoubMuvJUXEs5TAVSzPayEV+nJ1bEljsUkzKx5PKhBUpJ5lZR9x
- GVzVn7GWImyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="328276703"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga007.jf.intel.com with ESMTP; 22 Jul 2020 10:05:56 -0700
-Received: from [10.254.181.38] (10.254.181.38) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 Jul
- 2020 10:05:55 -0700
-Subject: Re: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to allocate/free
- dev-msi interrupts
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>
-CC:     <vkoul@kernel.org>, <maz@kernel.org>, <bhelgaas@google.com>,
-        <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <hpa@zytor.com>,
-        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
-        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
-        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
-        <tony.luck@intel.com>, <jing.lin@intel.com>,
-        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <parav@mellanox.com>,
-        <dave.hansen@intel.com>, <netanelg@mellanox.com>,
-        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
-        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
-        <mona.hossain@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534736176.28840.5547007059232964457.stgit@djiang5-desk3.ch.intel.com>
- <20200721162501.GC2021248@mellanox.com>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <b3bc68b3-937e-4b64-e1c7-84942d7ba60c@intel.com>
-Date:   Wed, 22 Jul 2020 10:05:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 13:06:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45045 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731736AbgGVRGO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:06:14 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jyIC0-0003zI-KM; Wed, 22 Jul 2020 17:06:08 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>, linux-acpi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: APEI: remove redundant assignment to variable rc
+Date:   Wed, 22 Jul 2020 18:06:08 +0100
+Message-Id: <20200722170608.960983-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200721162501.GC2021248@mellanox.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.254.181.38]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+The variable rc is being initialized with a value that is
+never read and it is being updated later with a new value. The
+initialization is redundant and can be removed.
 
-On 7/21/2020 9:25 AM, Jason Gunthorpe wrote:
-> On Tue, Jul 21, 2020 at 09:02:41AM -0700, Dave Jiang wrote:
->> From: Megha Dey <megha.dey@intel.com>
->>
->> The dev-msi interrupts are to be allocated/freed only for custom devices,
->> not standard PCI-MSIX devices.
->>
->> These interrupts are device-defined and they are distinct from the already
->> existing msi interrupts:
->> pci-msi: Standard PCI MSI/MSI-X setup format
->> platform-msi: Platform custom, but device-driver opaque MSI setup/control
->> arch-msi: fallback for devices not assigned to the generic PCI domain
->> dev-msi: device defined IRQ domain for ancillary devices. For e.g. DSA
->> portal devices use device specific IMS(Interrupt message store) interrupts.
->>
->> dev-msi interrupts are represented by their own device-type. That means
->> dev->msi_list is never contended for different interrupt types. It
->> will either be all PCI-MSI or all device-defined.
-> 
-> Not sure I follow this, where is the enforcement that only dev-msi or
-> normal MSI is being used at one time on a single struct device?
-> 
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/acpi/apei/hest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So, in the dev_msi_alloc_irqs, I first check if the dev_is_pci..
-If it is a pci device, it is forbidden to use dev-msi and must use the 
-pci subsystem calls. dev-msi is to be used for all other custom devices, 
-mdev or otherwise.
+diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
+index 953a2fae8b15..6e980fe16772 100644
+--- a/drivers/acpi/apei/hest.c
++++ b/drivers/acpi/apei/hest.c
+@@ -227,7 +227,7 @@ __setup("hest_disable", setup_hest_disable);
+ void __init acpi_hest_init(void)
+ {
+ 	acpi_status status;
+-	int rc = -ENODEV;
++	int rc;
+ 	unsigned int ghes_count = 0;
+ 
+ 	if (hest_disable) {
+-- 
+2.27.0
 
-> Jason
-> 
