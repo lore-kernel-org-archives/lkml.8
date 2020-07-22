@@ -2,89 +2,89 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3180DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A50BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012E3208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595443998;
-	bh=f8L1/mWk1WxKSeB8IoWJ9p9hZ6uj4JQNstTzmlRy1F4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=vrdCC8KshavZf9KPZE+Df/qoeo+GxIQDmSJOTZBRpxDTe4FMhW/WTqxeFHAoKxOSw
-	 A5wtsou5Ao0+mHWlDYTkRZhK+cOc2NDEISV0qNLKp2nl4lbT2YehR2EweFUUqMXhpC
-	 aVz/nSAwdUeCJSf86xt8Gdkg54gT/9PEGR5sh1F4=
+	by mail.kernel.org (Postfix) with ESMTP id 6C61320781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AKN3YODj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbgGVSxQ (ORCPT
+        id S1726390AbgGVS4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgGVSxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:53:15 -0400
-Received: from embeddedor (unknown [200.39.29.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0018A207E8;
-        Wed, 22 Jul 2020 18:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595443995;
-        bh=f8L1/mWk1WxKSeB8IoWJ9p9hZ6uj4JQNstTzmlRy1F4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZMJLGObp80o7pPgKnfWFkKyW2KzENFNfm63e0wL9cCU+MqXE9pt1OlKZd4bRytXMo
-         tWWNWe5I09MuQ1dOuk2JhzjFPfi9D06qKS9h6gHkIX8HBii2rva3Cedi5STQbaFl4V
-         y2/uHqeOd3AYbq0eZu755l3gXsWf1S+INmZfbcHc=
-Date:   Wed, 22 Jul 2020 13:58:52 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] net: qed_hsi.h: Avoid the use of one-element array
-Message-ID: <20200722185852.GA16220@embeddedor>
+        Wed, 22 Jul 2020 14:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgGVS4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:56:05 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36959C0619E0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:56:04 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id q2so3020103qkc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:56:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8WNY2CxXZhFyfG36mcsmoWBP8jQf9E5iWxL+7JoT3QM=;
+        b=AKN3YODj3oyzXTuDCkjFiRx0ubFOmPCQyRU7fSCndkoxtuG4njAUVt86VxdbEmeZWH
+         nQUV6h5cPqeK7nkdDMlMAjFK6gbzsIvnHpks8GHXexeutGJsMkxN9hgnekcV3UpiFHUV
+         qHlGyLUtb7QLXv1Fhih+NZHslV0yIvhUjuh24=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8WNY2CxXZhFyfG36mcsmoWBP8jQf9E5iWxL+7JoT3QM=;
+        b=Pwvj1GPLpe+0Y0sFr8nDdKWvMxKZfGHk5ZqPXp0PIf2NGfyq1mwUEqDiqFjBMDYNeH
+         RG5NfAh4Dsb1ueBWsJx0yIIMxopJTp2/GmAiMzBVCv76HgWLidlPeeyhUePcWUn0IL3l
+         S5vGhOSE3vGlsoNJwSBhXUV25/SQQCEZ2im/KdEBPrdrKETwj61P/5fXBsiqbOCx2CHN
+         ma8TQsAf5meqYl6OgICPwcX2ixT+qP4JlU/LEM+JQh3f11zfPGKJSXIQ5JDyt6eK/0qS
+         DGONrIoEoiBwIV9BUYa8lLMCQgHE7uCg3L9x8CudifHbfbMV3GP+PW/pqAmZ0OkqgfHj
+         5FgQ==
+X-Gm-Message-State: AOAM5320P7iLNQCqilF8JcCtBU4inkHsuTn1yi22kpLZJdQwpqbLjUWl
+        wLUiy+JtjqXCHCkDiyBfKwrCdl/xD5nYLSNyHXRQ6g==
+X-Google-Smtp-Source: ABdhPJwb65YS/eaVNn6Kf/wrD2aPtRHefUwDZ/rAHS4qc8uKXBuMDd+ibHTV4AgX/xTWLNRhJrW7AUkQcQer7DxWZ6g=
+X-Received: by 2002:ae9:e641:: with SMTP id x1mr1422408qkl.424.1595444163106;
+ Wed, 22 Jul 2020 11:56:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200722184358.GA15694@embeddedor>
+In-Reply-To: <20200722184358.GA15694@embeddedor>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Wed, 22 Jul 2020 11:55:51 -0700
+Message-ID: <CACKFLik4j4w-EHfJQt0-PA6O0FUp_Np8W4KaDwosQGL2niNP2A@mail.gmail.com>
+Subject: Re: [PATCH][next] tg3: Avoid the use of one-element array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One-element arrays are being deprecated[1]. Replace the one-element
-array with a simple value type '__le32 reserved1'[2], once it seems
-this is just a placeholder for alignment.
+On Wed, Jul 22, 2020 at 11:38 AM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> One-element arrays are being deprecated[1]. Replace the one-element
+> array with a simple value type 'u32 reserved2'[2], once it seems
+> this is just a placeholder for alignment.
+>
+> [1] https://github.com/KSPP/linux/issues/79
+> [2] https://github.com/KSPP/linux/issues/86
+>
+> Tested-by: kernel test robot <lkp@intel.com>
+> Link: https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/0-day/tg3-20200718.md
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[1] https://github.com/KSPP/linux/issues/79
-[2] https://github.com/KSPP/linux/issues/86
-
-Tested-by: kernel test robot <lkp@intel.com>
-Link: https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/0-day/qed_hsi-20200718.md
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/qlogic/qed/qed_hsi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
-index 1af3f65ab862..559df9f4d656 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
-@@ -361,7 +361,7 @@ struct core_tx_update_ramrod_data {
- 	u8 update_qm_pq_id_flg;
- 	u8 reserved0;
- 	__le16 qm_pq_id;
--	__le32 reserved1[1];
-+	__le32 reserved1;
- };
- 
- /* Enum flag for what type of dcb data to update */
--- 
-2.27.0
-
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
