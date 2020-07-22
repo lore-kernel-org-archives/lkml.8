@@ -4,76 +4,364 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4132C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C93FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B445E24895
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BD5206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbgGVTV5 (ORCPT
+        id S1732391AbgGVTZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:21:57 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:47772 "EHLO gloria.sntech.de"
+        Wed, 22 Jul 2020 15:25:07 -0400
+Received: from smtp.al2klimov.de ([78.46.175.9]:34260 "EHLO smtp.al2klimov.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgGVTV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:21:57 -0400
-Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jyKJN-0005VY-W2; Wed, 22 Jul 2020 21:21:54 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: Add PCIe for RockPI N10
-Date:   Wed, 22 Jul 2020 21:21:52 +0200
-Message-ID: <3418931.F1eFr0XNtI@phil>
-In-Reply-To: <CAMty3ZDkvRGn6a54ryVFNJOwm+X6YXW-TxSjO+kC9o2kshRxtg@mail.gmail.com>
-References: <20200720110230.367985-1-jagan@amarulasolutions.com> <20200720110230.367985-3-jagan@amarulasolutions.com> <CAMty3ZDkvRGn6a54ryVFNJOwm+X6YXW-TxSjO+kC9o2kshRxtg@mail.gmail.com>
+        id S1726462AbgGVTZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:25:07 -0400
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id EB49DBC27D;
+        Wed, 22 Jul 2020 19:25:00 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, tony@atomide.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] mfd: Replace HTTP links with HTTPS ones
+Date:   Wed, 22 Jul 2020 21:24:54 +0200
+Message-Id: <20200722192454.69591-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200722184711.GI3533@dell>
+References: <20200722184711.GI3533@dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 22. Juli 2020, 20:51:07 CEST schrieb Jagan Teki:
-> Hi Heiko,
-> 
-> On Mon, Jul 20, 2020 at 4:33 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > This patch adds support to enable PCIe for RockPI N10.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 41 ++++++++++++++++++-
-> >  1 file changed, 39 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > index ebccc4a153a2..b415b8a16c78 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > @@ -11,6 +11,19 @@
-> >
-> >  / {
-> >         compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
-> > +
-> > +
-> 
-> Sorry for this extra space, let me know so that I can resend next version.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I fixed that up when applying the series.
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Heiko
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
+ drivers/mfd/hi6421-pmic-core.c                       | 2 +-
+ drivers/mfd/lp873x.c                                 | 2 +-
+ drivers/mfd/lp87565.c                                | 2 +-
+ drivers/mfd/omap-usb-host.c                          | 2 +-
+ drivers/mfd/omap-usb-tll.c                           | 2 +-
+ drivers/mfd/smsc-ece1099.c                           | 2 +-
+ drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
+ drivers/mfd/tps65086.c                               | 2 +-
+ drivers/mfd/tps65217.c                               | 2 +-
+ drivers/mfd/tps65218.c                               | 2 +-
+ drivers/mfd/tps65912-core.c                          | 2 +-
+ drivers/mfd/tps65912-i2c.c                           | 2 +-
+ drivers/mfd/tps65912-spi.c                           | 2 +-
+ include/linux/mfd/hi6421-pmic.h                      | 2 +-
+ include/linux/mfd/lp873x.h                           | 2 +-
+ include/linux/mfd/lp87565.h                          | 2 +-
+ include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
+ include/linux/mfd/tps65086.h                         | 2 +-
+ include/linux/mfd/tps65217.h                         | 2 +-
+ include/linux/mfd/tps65218.h                         | 2 +-
+ include/linux/mfd/tps65912.h                         | 2 +-
+ 22 files changed, 22 insertions(+), 22 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mfd/twl-family.txt b/Documentation/devicetree/bindings/mfd/twl-family.txt
+index 56f244b5d8a4..c2f9302965de 100644
+--- a/Documentation/devicetree/bindings/mfd/twl-family.txt
++++ b/Documentation/devicetree/bindings/mfd/twl-family.txt
+@@ -26,7 +26,7 @@ Optional node:
+ Example:
+ /*
+  * Integrated Power Management Chip
+- * http://www.ti.com/lit/ds/symlink/twl6030.pdf
++ * https://www.ti.com/lit/ds/symlink/twl6030.pdf
+  */
+ twl@48 {
+     compatible = "ti,twl6030";
+diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
+index edfc172b8607..eba88b80d969 100644
+--- a/drivers/mfd/hi6421-pmic-core.c
++++ b/drivers/mfd/hi6421-pmic-core.c
+@@ -5,7 +5,7 @@
+  * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
+  *              http://www.hisilicon.com
+  * Copyright (c) <2013-2017> Linaro Ltd.
+- *              http://www.linaro.org
++ *              https://www.linaro.org
+  *
+  * Author: Guodong Xu <guodong.xu@linaro.org>
+  */
+diff --git a/drivers/mfd/lp873x.c b/drivers/mfd/lp873x.c
+index 873c608e6a5d..858c9e0a49a4 100644
+--- a/drivers/mfd/lp873x.c
++++ b/drivers/mfd/lp873x.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2016 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Author: Keerthy <j-keerthy@ti.com>
+  *
+diff --git a/drivers/mfd/lp87565.c b/drivers/mfd/lp87565.c
+index 4a5c8ade4ae0..2268be9113f1 100644
+--- a/drivers/mfd/lp87565.c
++++ b/drivers/mfd/lp87565.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2017 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * Author: Keerthy <j-keerthy@ti.com>
+  */
+diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+index 1f4f01b02d98..26c8b928307f 100644
+--- a/drivers/mfd/omap-usb-host.c
++++ b/drivers/mfd/omap-usb-host.c
+@@ -2,7 +2,7 @@
+ /**
+  * omap-usb-host.c - The USBHS core driver for OMAP EHCI & OHCI
+  *
+- * Copyright (C) 2011-2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2011-2013 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Keshava Munegowda <keshava_mgowda@ti.com>
+  * Author: Roger Quadros <rogerq@ti.com>
+  */
+diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
+index 4b7f73c317e8..a2db4ee3a244 100644
+--- a/drivers/mfd/omap-usb-tll.c
++++ b/drivers/mfd/omap-usb-tll.c
+@@ -2,7 +2,7 @@
+ /**
+  * omap-usb-tll.c - The USB TLL driver for OMAP EHCI & OHCI
+  *
+- * Copyright (C) 2012-2013 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2012-2013 Texas Instruments Incorporated - https://www.ti.com
+  * Author: Keshava Munegowda <keshava_mgowda@ti.com>
+  * Author: Roger Quadros <rogerq@ti.com>
+  */
+diff --git a/drivers/mfd/smsc-ece1099.c b/drivers/mfd/smsc-ece1099.c
+index 57b792eb58fd..387898447789 100644
+--- a/drivers/mfd/smsc-ece1099.c
++++ b/drivers/mfd/smsc-ece1099.c
+@@ -1,7 +1,7 @@
+ /*
+  * TI SMSC MFD Driver
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com
+  *
+  * Author: Sourav Poddar <sourav.poddar@ti.com>
+  *
+diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
+index 926c289cb040..0e6e25308190 100644
+--- a/drivers/mfd/ti_am335x_tscadc.c
++++ b/drivers/mfd/ti_am335x_tscadc.c
+@@ -1,7 +1,7 @@
+ /*
+  * TI Touch Screen / ADC MFD driver
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+diff --git a/drivers/mfd/tps65086.c b/drivers/mfd/tps65086.c
+index 43119a6867fe..341466ef20cc 100644
+--- a/drivers/mfd/tps65086.c
++++ b/drivers/mfd/tps65086.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
+  *	Andrew F. Davis <afd@ti.com>
+  *
+  * This program is free software; you can redistribute it and/or
+diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+index 7566ce4457a0..42bcdf040614 100644
+--- a/drivers/mfd/tps65217.c
++++ b/drivers/mfd/tps65217.c
+@@ -3,7 +3,7 @@
+  *
+  * TPS65217 chip family multi-function driver
+  *
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+index a62ea4cb8be7..eb6e7ad8b648 100644
+--- a/drivers/mfd/tps65218.c
++++ b/drivers/mfd/tps65218.c
+@@ -1,7 +1,7 @@
+ /*
+  * Driver for TPS65218 Integrated power management chipsets
+  *
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License version 2 as
+diff --git a/drivers/mfd/tps65912-core.c b/drivers/mfd/tps65912-core.c
+index f33567bc428d..b55b1d5d6955 100644
+--- a/drivers/mfd/tps65912-core.c
++++ b/drivers/mfd/tps65912-core.c
+@@ -1,7 +1,7 @@
+ /*
+  * Core functions for TI TPS65912x PMICs
+  *
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
+  *	Andrew F. Davis <afd@ti.com>
+  *
+  * This program is free software; you can redistribute it and/or
+diff --git a/drivers/mfd/tps65912-i2c.c b/drivers/mfd/tps65912-i2c.c
+index 785d19f6f7c9..f7c22ea7b36c 100644
+--- a/drivers/mfd/tps65912-i2c.c
++++ b/drivers/mfd/tps65912-i2c.c
+@@ -1,7 +1,7 @@
+ /*
+  * I2C access driver for TI TPS65912x PMICs
+  *
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
+  *	Andrew F. Davis <afd@ti.com>
+  *
+  * This program is free software; you can redistribute it and/or
+diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
+index f78be039e463..21a8d6ac5c4a 100644
+--- a/drivers/mfd/tps65912-spi.c
++++ b/drivers/mfd/tps65912-spi.c
+@@ -1,7 +1,7 @@
+ /*
+  * SPI access driver for TI TPS65912x PMICs
+  *
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
+  *	Andrew F. Davis <afd@ti.com>
+  *
+  * This program is free software; you can redistribute it and/or
+diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
+index bbc64484c021..2cadf8897c64 100644
+--- a/include/linux/mfd/hi6421-pmic.h
++++ b/include/linux/mfd/hi6421-pmic.h
+@@ -5,7 +5,7 @@
+  * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
+  *              http://www.hisilicon.com
+  * Copyright (c) <2013-2014> Linaro Ltd.
+- *              http://www.linaro.org
++ *              https://www.linaro.org
+  *
+  * Author: Guodong Xu <guodong.xu@linaro.org>
+  */
+diff --git a/include/linux/mfd/lp873x.h b/include/linux/mfd/lp873x.h
+index edbec8350a49..5546688c7da7 100644
+--- a/include/linux/mfd/lp873x.h
++++ b/include/linux/mfd/lp873x.h
+@@ -1,7 +1,7 @@
+ /*
+  * Functions to access LP873X power management chip.
+  *
+- * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2016 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+diff --git a/include/linux/mfd/lp87565.h b/include/linux/mfd/lp87565.h
+index ce965354bbad..43716aca46fa 100644
+--- a/include/linux/mfd/lp87565.h
++++ b/include/linux/mfd/lp87565.h
+@@ -2,7 +2,7 @@
+ /*
+  * Functions to access LP87565 power management chip.
+  *
+- * Copyright (C) 2017 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2017 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #ifndef __LINUX_MFD_LP87565_H
+diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+index 483168403ae5..ffc091b77633 100644
+--- a/include/linux/mfd/ti_am335x_tscadc.h
++++ b/include/linux/mfd/ti_am335x_tscadc.h
+@@ -4,7 +4,7 @@
+ /*
+  * TI Touch Screen / ADC MFD driver
+  *
+- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2012 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+diff --git a/include/linux/mfd/tps65086.h b/include/linux/mfd/tps65086.h
+index a228ae4c88d9..e0a417e53766 100644
+--- a/include/linux/mfd/tps65086.h
++++ b/include/linux/mfd/tps65086.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
+  *	Andrew F. Davis <afd@ti.com>
+  *
+  * This program is free software; you can redistribute it and/or
+diff --git a/include/linux/mfd/tps65217.h b/include/linux/mfd/tps65217.h
+index b5dd108421c8..db7091824ed0 100644
+--- a/include/linux/mfd/tps65217.h
++++ b/include/linux/mfd/tps65217.h
+@@ -3,7 +3,7 @@
+  *
+  * Functions to access TPS65217 power management chip.
+  *
+- * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2011 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+index b0470c35162d..f4ca367e3473 100644
+--- a/include/linux/mfd/tps65218.h
++++ b/include/linux/mfd/tps65218.h
+@@ -3,7 +3,7 @@
+  *
+  * Functions to access TPS65219 power management chip.
+  *
+- * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2014 Texas Instruments Incorporated - https://www.ti.com/
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License version 2 as
+diff --git a/include/linux/mfd/tps65912.h b/include/linux/mfd/tps65912.h
+index b25d0297ba88..7943e413deae 100644
+--- a/include/linux/mfd/tps65912.h
++++ b/include/linux/mfd/tps65912.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2015 Texas Instruments Incorporated - https://www.ti.com/
+  *	Andrew F. Davis <afd@ti.com>
+  *
+  * This program is free software; you can redistribute it and/or
+-- 
+2.27.0
 
