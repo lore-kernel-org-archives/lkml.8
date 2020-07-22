@@ -2,94 +2,116 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D9DC433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D48C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5FFA2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWVBt/pE"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED6720792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595408335;
+	bh=R0xVdgqiB7s3O/DqEs6GN9dYzeeYY+lcRy+1jPlzd70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mo5P4j4oKL3ozPyHqF+ZoxnKdcuHr+J/jAuNYgzcFNXRLXuFjc6C3CJGSIr7NLvqH
+	 HM+ZJEtqqmV5HPt8hwGlA64n5MZTnAg0tM/sdCKoSwqTzEfd4+/UYdAdMQGdOssgwF
+	 W0DPhmfl4Z9gguqXAy0urGPJGB64p0eloLCtlEog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgGVI4p (ORCPT
+        id S1730779AbgGVI6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgGVI4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:56:45 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F249CC0619DC;
-        Wed, 22 Jul 2020 01:56:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so833337pje.0;
-        Wed, 22 Jul 2020 01:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lJz8m7biG5oe9MPJBUclD03AWiGFPOB3TE3jVUSihK4=;
-        b=FWVBt/pEyg3rQFkBIh2Z91kxppaBJi2TnjHsYl4WZThpFb9kSwlgCm4wOY7S0YTQQ1
-         Q9hx1We3PHX90zWKFF1670ARvdZ1FttPkjiKQnIADFPtHmNG44TCsxR4hL7cJsSkHJ4a
-         hoU3QiG86i2SGq/KyTVZznO0Wy8Q7wphKYfk/Osv69WgnmECueTcJmWrlRbbP66SDXsA
-         8ZNQ6yJOx8RtiGx23va/ayFTzXfq6OH9ebivBm32v2BhwpnP+PEFK8u/L3Xn+xyoo1rX
-         FKNVKKdtQO29ILwnF6ZINIHQXXBrSO7lGo5MMAC/ct7D3t7NaTasyBe/DFg00w2jmyQo
-         NG3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lJz8m7biG5oe9MPJBUclD03AWiGFPOB3TE3jVUSihK4=;
-        b=OAYvv0zRqPnxNYD2XKnNw+YluTu0XBRh3OTve+vNGgLzQGVbN18fxsuUPTO+2emFi8
-         Kk5U4Y5r8zTh3o4uAfvRxXEt7+Qv3t7yOt/wDwfJ7XpbY38Lp+oj3xRF+J+g21jSYcwC
-         VGZfzzcXf+BydAHPP+C4JOhAJYXdRukVuZPfCBuTFUacq6yBCL0pXvKauUkN2UXLYk8l
-         VUcBGwqhe6KmdobuZdnliW2f1SIb8gmlHuidPT6qM2oKHdOvpJ4zPh2zALX3f9wcBWqm
-         s+uAmg5yxF5QC6eYBWODQPJuCAvBsKjm+0f8UaNQ1ycaTj7ARnwY9eFxqaV94uYU6Ony
-         2fpA==
-X-Gm-Message-State: AOAM532VvufZ5mjWqtAdyesG8THXN8oz5UMcD4KgGmlg3rVs+Pjqli/S
-        XoRPnspN0c4s8l7gKpv2De8uy2YN4eAeZC+w0vkQbH5V
-X-Google-Smtp-Source: ABdhPJz9EpilhKy972agAbkamJ9cQSzsfFGEJYOYGsykuFoEYrA6+lnteU87/19PwRI832bR9uN//9SVikUsnOkfpVM=
-X-Received: by 2002:a17:90b:3748:: with SMTP id ne8mr8255833pjb.7.1595408204594;
- Wed, 22 Jul 2020 01:56:44 -0700 (PDT)
+        Wed, 22 Jul 2020 04:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgGVI6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:58:53 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718E92077D;
+        Wed, 22 Jul 2020 08:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595408332;
+        bh=R0xVdgqiB7s3O/DqEs6GN9dYzeeYY+lcRy+1jPlzd70=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W9pwhuYHxVLA9WFvIszWER7midOVsx2uDEZoEd7TXs7QtDMzaybMeyOsADVuqMixq
+         8C9QMQnw9W7brJHXh/UP+CTjQYwzdX6Xnwns3sb58eLqFWn1nspNwOdSNRFNo7rfF/
+         2yWgceNvAxLbxamBwNA/XlbfB8F3vLj4kDrDDu5w=
+Date:   Wed, 22 Jul 2020 10:58:49 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 02/20] arm64: dts: renesas: r8a774e1: Add PCIe device
+ nodes
+Message-ID: <20200722085849.GF1030@ninjato>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk> <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-15-viro@ZenIV.linux.org.uk>
-In-Reply-To: <20200721202549.4150745-15-viro@ZenIV.linux.org.uk>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Wed, 22 Jul 2020 01:56:33 -0700
-Message-ID: <CAMo8BfJ7atdFKqkc7nTy5NGXpfAHLGSh95pmVsrZCOGFufw=Kg@mail.gmail.com>
-Subject: Re: [PATCH 15/18] xtensa: propagate the calling conventions change
- down into csum_partial_copy_generic()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
+Content-Disposition: inline
+In-Reply-To: <1594919915-5225-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 1:27 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> From: Al Viro <viro@zeniv.linux.org.uk>
->
-> turn the exception handlers into returning 0.
->
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
->  arch/xtensa/include/asm/checksum.h | 20 +++---------
->  arch/xtensa/lib/checksum.S         | 67 +++++++++-----------------------------
->  2 files changed, 19 insertions(+), 68 deletions(-)
 
-Reviewed-by: Max Filippov <jcmvbkbc@gmail.com>
-Tested-by: Max Filippov <jcmvbkbc@gmail.com>
+--1Y7d0dPL928TPQbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Thanks.
--- Max
+On Thu, Jul 16, 2020 at 06:18:17PM +0100, Lad Prabhakar wrote:
+> Add PCIe{0,1} device nodes for R8A774E1 SoC.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
+as.com>
+
+Hmm, doesn't apply on top of 5.8-rc6 for me. Is there a branch to pull
+for easier review?
+
+
+--1Y7d0dPL928TPQbc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8X/8QACgkQFA3kzBSg
+Kbb+qw//biayHVrdtr2LDibooHUV8qi0GGMOUqYzn6LSC97+YHSK+LuSg3RfHW28
+WF9bREAuLpDfZj7B7VKkjk1UN+MBrzOtXvXMmVhenztZQQxBHd8HX+axLFK1HrZ/
+K+3X+jbEsCB/NTac43d0yYFj9IkFBIPVcExN83vJcn4MWYpk6kUPN1yFz5bdLO76
+Jh56YvRaeVbxKfU6rwv4Oho5JjJxbpmjZ3m+yyuT8dp+VEE3cV9aesW3R3Rl2d71
+pV7hc5gr7zIgadYfWUovWX1MzgD4Q0e5H5nLjjOIGYwhj8A6l1JT8n5vw6b3ERbM
+MPBgNHQbohKl9HWcD48LWNQBhH8j4AM9tD7iXxXFeC8olpn+aFFKLV0YK1fqocXE
+EZXT7Pv544SZPZetGfHNEkq9fQkkJ/IzcomQIIfWLCTLw0wc67QwDpE11pphkHg/
+fwcYu54T/WhlUGrmFQmbrXYboytT7CzXFSuZ5VeJZqgi1zDtFqThHjPr/us5E0SA
+Jghh/PHZnWDIYS2MB+revceePGtrEnK8Chu0XMDnfyrh4Naspk88ISX5WLDq8juh
+FBb4W335vVfUJ0ByD1kgErUH6/qxrvcYC5QH0Txk40i2WBt8ISyeEugJir2uS2U6
+M8fJEh5lzVQeKdG8zyI6i+aD+xhktGR66DbOLncW8feW2NB0m9Q=
+=RR4j
+-----END PGP SIGNATURE-----
+
+--1Y7d0dPL928TPQbc--
