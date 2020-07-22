@@ -2,93 +2,130 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3182C20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595420859;
-	bh=Fa5CofAQhSoiPsbbQ+uJaJinSOhOGsOMU5AMeRircfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0S4UBakC+xJ3+2UzPtchvD7WraYSCF/H3qHOstBccHfZF56ER9KggmDeLnjrXHHwy
-	 ZaMQK2er48l0qrgnJ9GHNBDthR6AUQn53cILa08DHcSvhtn967k+crtmGclfBL654X
-	 AUnXwoE/568WCWW2jGwCEFuUzBZF66RORS95gPVY=
+	by mail.kernel.org (Postfix) with ESMTP id D38CC20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="uklxvUXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732202AbgGVM1h (ORCPT
+        id S1732258AbgGVM2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35356 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 08:28:07 -0400
+Received: from nbd.name ([46.4.11.11]:58696 "EHLO nbd.name"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVM1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:27:37 -0400
-Received: from quaco.ghostprotocols.net (unknown [177.17.3.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B928920729;
-        Wed, 22 Jul 2020 12:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595420857;
-        bh=Fa5CofAQhSoiPsbbQ+uJaJinSOhOGsOMU5AMeRircfE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h66NaUtR3LUv8B6qfuqaJ/9n4sL3iQJDtu8sXbZ2wbnZozp7wDA1NIw2c4TOK5zoM
-         r5uuRdtVkzfVIGVJPKnsMpacaD1Ixa0YiA1bM1YFlPAkDenz893d7cFpL9y5dOR4ms
-         C+cpXmA9eDxek492K7ED/xmqxuOwKTpM2tk4lH8A=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A8246404B1; Wed, 22 Jul 2020 09:27:34 -0300 (-03)
-Date:   Wed, 22 Jul 2020 09:27:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 05/15] perf evlist: implement control command
- handling functions
-Message-ID: <20200722122734.GJ77866@kernel.org>
-References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
- <62518ceb-1cc9-2aba-593b-55408d07c1bf@linux.intel.com>
+        id S1726161AbgGVM2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:28:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6Um3eY46ty5qgGLen9Kr+bicC/xmnrvjDfLiPTMsjio=; b=uklxvUXge7GMFuZwK4H9WE+O66
+        RQ+ThpBVTSjmtykruBKWysb3Su3UZ8z/4h7XF30/t8QxvPPblX6ZmcY9ccJOXCeh++jVnT4X9lFFr
+        KmXcj7hpbwHlFuHsT4fbNimA0K81F+gr1nKyK0kJD+2H7GLexfrg8dJwsEaZSqF0EY5Y=;
+Received: from p54ae9e66.dip0.t-ipconnect.de ([84.174.158.102] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1jyDqZ-0000Z3-VP; Wed, 22 Jul 2020 14:27:44 +0200
+Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
+To:     Rajkumar Manoharan <rmanohar@codeaurora.org>,
+        Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
+        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <1595351666-28193-3-git-send-email-pillair@codeaurora.org>
+ <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <d79ae05e-e75a-de2f-f2e3-bc73637e1501@nbd.name>
+Date:   Wed, 22 Jul 2020 14:27:42 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62518ceb-1cc9-2aba-593b-55408d07c1bf@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jul 17, 2020 at 10:01:33AM +0300, Alexey Budankov escreveu:
+On 2020-07-21 23:53, Rajkumar Manoharan wrote:
+> On 2020-07-21 10:14, Rakesh Pillai wrote:
+>> NAPI instance gets scheduled on a CPU core on which
+>> the IRQ was triggered. The processing of rx packets
+>> can be CPU intensive and since NAPI cannot be moved
+>> to a different CPU core, to get better performance,
+>> its better to move the gist of rx packet processing
+>> in a high priority thread.
+>> 
+>> Add the init/deinit part for a thread to process the
+>> receive packets.
+>> 
+> IMHO this defeat the whole purpose of NAPI. Originally in ath10k
+> irq processing happened in tasklet (high priority) context which in
+> turn push more data to net core even though net is unable to process
+> driver data as both happen in different context (fast producer - slow 
+> consumer)
+> issue. Why can't CPU governor schedule the interrupts in less loaded CPU 
+> core?
+> Otherwise you can play with different RPS and affinity settings to meet 
+> your
+> requirement.
 > 
-> Implement functions of initialization, finalization and processing
-> of control command messages coming from control file descriptors.
-> Allocate control file descriptor as descriptor at struct pollfd
-> object of evsel_list for atomic poll() operation.
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> IMO introducing high priority tasklets/threads is not viable solution.
+I'm beginning to think that the main problem with NAPI here is that the
+work done by poll functions on 802.11 drivers is significantly more CPU
+intensive compared to ethernet drivers, possibly more than what NAPI was
+designed for.
 
-I'm applying locally for testing, but can you answer what is the reason
-for that newline in the CMD_ACK_TAG? I tried looking at previous
-discussion but couldn't quickly find any reasoning for that
+I'm considering testing a different approach (with mt76 initially):
+- Add a mac80211 rx function that puts processed skbs into a list
+instead of handing them to the network stack directly.
+- Move all rx processing to a high priority thread, keep a driver
+internal queue for fully processed packets.
+- Schedule NAPI poll on completion.
+- NAPI poll function pulls from the internal queue and passes to the
+network stack.
 
-- Arnaldo
+With this approach, the network stack retains some control over the
+processing rate of rx packets, while the scheduler can move the CPU
+intensive processing around to where it fits best.
 
-> +++ b/tools/perf/util/evlist.h
-> @@ -359,4 +359,22 @@ void perf_evlist__force_leader(struct evlist *evlist);
->  struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
->  						 struct evsel *evsel,
->  						bool close);
-> +#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
-> +#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
-> +#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
+What do you think?
 
-What for? That '\n'?
-
+- Felix
