@@ -2,148 +2,281 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC37C433EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0A4C433ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5902322B43
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7351620825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="c6Y2N2ZL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QgPc+0Q0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hDmQ4DHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733038AbgGVWNu (ORCPT
+        id S2387617AbgGVWOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:13:50 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:3176 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733145AbgGVWLh (ORCPT
+        Wed, 22 Jul 2020 18:14:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52552 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730938AbgGVWLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:37 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6f3D019802;
-        Wed, 22 Jul 2020 15:11:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=GmEgsOs6h9b3iKtTR1f7ZzvpfMSp6NwSWPeac8kAzwo=;
- b=c6Y2N2ZLJaqT0j2CraOBXVCGB54OVxNENrQe1pxef7nuy7vMViODmBvNTRXbaMp3sZp3
- 3AEuvZx++ODlRoSWQLe+q0KSXs3XgtfUUFaMhwYvNr9mgkMJ/e+mSbjR5jpBr0jkZ7Nf
- UnMNG1OuYMSgPqL+ZMe0JLbzKueUZKHtjYHA4fmIuTnx4I57Z5lFqr3H2D2cGJZfIIJr
- z/asPlY/0afpipBkcpWjhdNTWx/x6Z/2GFThL7r/UGqmLfll2ltBC1jdeCMUSN/o2Gfy
- 9JuHCjVu2MP53bTYHB+AdMxSTHgxHDYwE4+dyIx8NnjNIm2UejAEi9mhsEAEIpdCU0Mu 5Q== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkt0jr-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 15:11:21 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:20 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:19 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 15:11:19 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id A61E43F7040;
-        Wed, 22 Jul 2020 15:11:12 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 02/15] qed: reformat Makefile
-Date:   Thu, 23 Jul 2020 01:10:32 +0300
-Message-ID: <20200722221045.5436-3-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
-References: <20200722221045.5436-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 18:11:31 -0400
+Message-Id: <20200722220519.833296398@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=ME3PQX9GdECA9ZkinQ9fWUsF86JfwUKma+CTqWqs8dk=;
+        b=QgPc+0Q0VolEURIJFJACNOdu81SudG+nQuJndN8u8219Ja5hT+wlo3AsxGnP6DPqaxrIh8
+        +l6Fd4bOollLnlo0y5ZNLGjtd7d07XsqbWDCK/zAzrwhKiGUZTVLMfKyupp0nZzrThgOtm
+        2Pjrb/rXlN55aMp7kwMK4TIUeLHf986dWbaSphlhWQcE/u5BYrOD/buV8wiENS57JpXEu+
+        1u4+oktD31/Vz9uaBuY3VqnejfclrUbFLgvb7/3V9saA5uyV4NtmZOv4rD7AEgo9Um2XBf
+        clzUIw7shhYqZLQpZi8k9/6s2B8jnsKTqHDUL885PbBLl1NjzPzMujlM4ksS8w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=ME3PQX9GdECA9ZkinQ9fWUsF86JfwUKma+CTqWqs8dk=;
+        b=hDmQ4DHFaWNevNckooSbFM8TJSIzb0+v4rem/nNDzOweVJtD74V5apIVUlkLhWunIbVUKd
+        5y3OgesCl+kJjMBg==
+Date:   Wed, 22 Jul 2020 23:59:59 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V5 05/15] entry: Provide infrastructure for work before
+ transitioning to guest mode
+References: <20200722215954.464281930@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-List one entry per line and sort them alphabetically to simplify the
-addition of the new ones.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Entering a guest is similar to exiting to user space. Pending work like
+handling signals, rescheduling, task work etc. needs to be handled before
+that.
+
+Provide generic infrastructure to avoid duplication of the same handling
+code all over the place.
+
+The transfer to guest mode handling is different from the exit to usermode
+handling, e.g. vs. rseq and live patching, so a separate function is used.
+
+The initial list of work items handled is:
+
+    TIF_SIGPENDING, TIF_NEED_RESCHED, TIF_NOTIFY_RESUME
+
+Architecture specific TIF flags can be added via defines in the
+architecture specific include files.
+
+The calling convention is also different from the syscall/interrupt entry
+functions as KVM invokes this from the outer vcpu_run() loop with
+interrupts and preemption enabled. To prevent missing a pending work item
+it invokes a check for pending TIF work from interrupt disabled code right
+before transitioning to guest mode. The lockdep, RCU and tracing state
+handling is also done directly around the switch to and from guest mode.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/net/ethernet/qlogic/qed/Makefile | 36 +++++++++++++++++++-----
- 1 file changed, 29 insertions(+), 7 deletions(-)
+V5: Rename exit -> xfer (Sean)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/Makefile b/drivers/net/ethernet/qlogic/qed/Makefile
-index 4176bbf2a22b..3c75e4fa9b02 100644
---- a/drivers/net/ethernet/qlogic/qed/Makefile
-+++ b/drivers/net/ethernet/qlogic/qed/Makefile
-@@ -3,12 +3,34 @@
+V3: Reworked and simplified version adopted to recent X86 and KVM changes
+    
+V2: Moved KVM specific functions to kvm (Paolo)
+    Added lockdep assert (Andy)
+    Dropped live patching from enter guest mode work (Miroslav)
+---
+ include/linux/entry-kvm.h |   80 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/kvm_host.h  |    8 ++++
+ kernel/entry/Makefile     |    3 +
+ kernel/entry/kvm.c        |   51 +++++++++++++++++++++++++++++
+ virt/kvm/Kconfig          |    3 +
+ 5 files changed, 144 insertions(+), 1 deletion(-)
+
+--- /dev/null
++++ b/include/linux/entry-kvm.h
+@@ -0,0 +1,80 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_ENTRYKVM_H
++#define __LINUX_ENTRYKVM_H
++
++#include <linux/entry-common.h>
++
++/* Transfer to guest mode work */
++#ifdef CONFIG_KVM_XFER_TO_GUEST_WORK
++
++#ifndef ARCH_XFER_TO_GUEST_MODE_WORK
++# define ARCH_XFER_TO_GUEST_MODE_WORK	(0)
++#endif
++
++#define XFER_TO_GUEST_MODE_WORK					\
++	(_TIF_NEED_RESCHED | _TIF_SIGPENDING |			\
++	 _TIF_NOTIFY_RESUME | ARCH_XFER_TO_GUEST_MODE_WORK)
++
++struct kvm_vcpu;
++
++/**
++ * arch_xfer_to_guest_mode_work - Architecture specific xfer to guest mode
++ *				  work function.
++ * @vcpu:	Pointer to current's VCPU data
++ * @ti_work:	Cached TIF flags gathered in xfer_to_guest_mode()
++ *
++ * Invoked from xfer_to_guest_mode_work(). Defaults to NOOP. Can be
++ * replaced by architecture specific code.
++ */
++static inline int arch_xfer_to_guest_mode_work(struct kvm_vcpu *vcpu,
++					      unsigned long ti_work);
++
++#ifndef arch_xfer_to_guest_mode_work
++static inline int arch_xfer_to_guest_mode_work(struct kvm_vcpu *vcpu,
++					       unsigned long ti_work)
++{
++	return 0;
++}
++#endif
++
++/**
++ * xfer_to_guest_mode - Check and handle pending work which needs to be
++ *			handled before returning to guest mode
++ * @vcpu:	Pointer to current's VCPU data
++ *
++ * Returns: 0 or an error code
++ */
++int xfer_to_guest_mode(struct kvm_vcpu *vcpu);
++
++/**
++ * __xfer_to_guest_mode_work_pending - Check if work is pending
++ *
++ * Returns: True if work pending, False otherwise.
++ *
++ * Bare variant of xfer_to_guest_mode_work_pending(). Can be called from
++ * interrupt enabled code for racy quick checks with care.
++ */
++static inline bool __xfer_to_guest_mode_work_pending(void)
++{
++	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
++
++	return !!(ti_work & XFER_TO_GUEST_MODE_WORK);
++}
++
++/**
++ * xfer_to_guest_mode_work_pending - Check if work is pending which needs to be
++ *				     handled before returning to guest mode
++ *
++ * Returns: True if work pending, False otherwise.
++ *
++ * Has to be invoked with interrupts disabled before the transition to
++ * guest mode.
++ */
++static inline bool xfer_to_guest_mode_work_pending(void)
++{
++	lockdep_assert_irqs_disabled();
++	return __xfer_to_guest_mode_work_pending();
++}
++#endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
++
++#endif
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1439,4 +1439,12 @@ int kvm_vm_create_worker_thread(struct k
+ 				uintptr_t data, const char *name,
+ 				struct task_struct **thread_ptr);
  
- obj-$(CONFIG_QED) := qed.o
++#ifdef CONFIG_KVM_XFER_TO_GUEST_WORK
++static inline void kvm_handle_signal_exit(struct kvm_vcpu *vcpu)
++{
++	vcpu->run->exit_reason = KVM_EXIT_INTR;
++	vcpu->stat.signal_exits++;
++}
++#endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
++
+ #endif
+--- a/kernel/entry/Makefile
++++ b/kernel/entry/Makefile
+@@ -9,4 +9,5 @@ KCOV_INSTRUMENT := n
+ CFLAGS_REMOVE_common.o	 = -fstack-protector -fstack-protector-strong
+ CFLAGS_common.o		+= -fno-stack-protector
  
--qed-y := qed_cxt.o qed_dev.o qed_hw.o qed_init_fw_funcs.o qed_init_ops.o \
--	 qed_int.o qed_main.o qed_mcp.o qed_sp_commands.o qed_spq.o qed_l2.o \
--	 qed_selftest.o qed_dcbx.o qed_debug.o qed_ptp.o qed_mng_tlv.o
--qed-$(CONFIG_QED_SRIOV) += qed_sriov.o qed_vf.o
--qed-$(CONFIG_QED_LL2) += qed_ll2.o
--qed-$(CONFIG_QED_RDMA) += qed_roce.o qed_rdma.o qed_iwarp.o
--qed-$(CONFIG_QED_ISCSI) += qed_iscsi.o
-+qed-y :=			\
-+	qed_cxt.o		\
-+	qed_dcbx.o		\
-+	qed_debug.o		\
-+	qed_dev.o		\
-+	qed_hw.o		\
-+	qed_init_fw_funcs.o	\
-+	qed_init_ops.o		\
-+	qed_int.o		\
-+	qed_l2.o		\
-+	qed_main.o		\
-+	qed_mcp.o		\
-+	qed_mng_tlv.o		\
-+	qed_ptp.o		\
-+	qed_selftest.o		\
-+	qed_sp_commands.o	\
-+	qed_spq.o
+-obj-$(CONFIG_GENERIC_ENTRY) += common.o
++obj-$(CONFIG_GENERIC_ENTRY) 		+= common.o
++obj-$(CONFIG_KVM_XFER_TO_GUEST_WORK)	+= kvm.o
+--- /dev/null
++++ b/kernel/entry/kvm.c
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- qed-$(CONFIG_QED_FCOE) += qed_fcoe.o
-+qed-$(CONFIG_QED_ISCSI) += qed_iscsi.o
-+qed-$(CONFIG_QED_LL2) += qed_ll2.o
- qed-$(CONFIG_QED_OOO) += qed_ooo.o
++#include <linux/entry-kvm.h>
++#include <linux/kvm_host.h>
 +
-+qed-$(CONFIG_QED_RDMA) +=	\
-+	qed_iwarp.o		\
-+	qed_rdma.o		\
-+	qed_roce.o
++static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
++{
++	do {
++		int ret;
 +
-+qed-$(CONFIG_QED_SRIOV) +=	\
-+	qed_sriov.o		\
-+	qed_vf.o
--- 
-2.25.1
++		if (ti_work & _TIF_SIGPENDING) {
++			kvm_handle_signal_exit(vcpu);
++			return -EINTR;
++		}
++
++		if (ti_work & _TIF_NEED_RESCHED)
++			schedule();
++
++		if (ti_work & _TIF_NOTIFY_RESUME) {
++			clear_thread_flag(TIF_NOTIFY_RESUME);
++			tracehook_notify_resume(NULL);
++		}
++
++		ret = arch_xfer_to_guest_mode_work(vcpu, ti_work);
++		if (ret)
++			return ret;
++
++		ti_work = READ_ONCE(current_thread_info()->flags);
++	} while (ti_work & XFER_TO_GUEST_MODE_WORK || need_resched());
++	return 0;
++}
++
++int xfer_to_guest_mode(struct kvm_vcpu *vcpu)
++{
++	unsigned long ti_work;
++
++	/*
++	 * This is invoked from the outer guest loop with interrupts and
++	 * preemption enabled.
++	 *
++	 * KVM invokes xfer_to_guest_mode_work_pending() with interrupts
++	 * disabled in the inner loop before going into guest mode. No need
++	 * to disable interrupts here.
++	 */
++	ti_work = READ_ONCE(current_thread_info()->flags);
++	if (!(ti_work & XFER_TO_GUEST_MODE_WORK))
++		return 0;
++
++	return xfer_to_guest_mode_work(vcpu, ti_work);
++}
++EXPORT_SYMBOL_GPL(xfer_to_guest_mode);
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -60,3 +60,6 @@ config HAVE_KVM_VCPU_RUN_PID_CHANGE
+ 
+ config HAVE_KVM_NO_POLL
+        bool
++
++config KVM_XFER_TO_GUEST_WORK
++       bool
 
