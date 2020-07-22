@@ -7,51 +7,58 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE48CC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A13E2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA8F22B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="deuXnCCH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ALyWDWGV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F78QnrC4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jkZ6lxtk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbgGVWsm (ORCPT
+        id S1733154AbgGVWss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:48:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52882 "EHLO
+        Wed, 22 Jul 2020 18:48:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52906 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732755AbgGVWsl (ORCPT
+        with ESMTP id S1733098AbgGVWso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:48:41 -0400
-Date:   Wed, 22 Jul 2020 22:48:38 -0000
+        Wed, 22 Jul 2020 18:48:44 -0400
+Date:   Wed, 22 Jul 2020 22:48:42 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595458119;
+        s=2020; t=1595458122;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=jiZr9OI2nURziBYbmcqTV2pR8v4WZmMUcVBptqs0iE4=;
-        b=deuXnCCHQw7t06dBjaI2r3xHmg+Zw0oZa7h2LxACCWUfC8UvtXK2jM3PZakH//mBVTGy40
-        WK0O81PiS4FnZpbYbcLMGxfYpbWj4Ld/yYz3dTRe8+fgaIsBeGp6Q73GoloKkit7CaDvfj
-        9QviYReZhQa4TGVWFtPR08AwRohqrfkoFZjiGjaKgoel2N1zqasejULHC8vkR42s3zlkVn
-        10jsp7eOIZ9DfqxCY47qKqh43gRHpjTZOTJrFuxjbR3Vcesv4oU79MN3n802ThZV6nTu9U
-        1axgZS4db6pjMtOMVNMp9K3fXQArT0VzcZQYmfFy7jGW3eJ/zRS2m9ysLMtoFw==
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H3Zsm5XM9OBmDffs9at+DaOqbM4V2GVf0KVN6w1L27U=;
+        b=F78QnrC4p6INZoqajaS7UB9IGQMUJ5eKW2sJmVdR7HUKjTH1qVwb6kx/cIaWFrVGL6h1AD
+        9NHitARLmCZy25hQ5teaqRqXtK4NxmOvsSnw0B+z076Lu1uIjKzrK+0ThY25dRD6wNzZeo
+        YGNQJuxJ/xq+hxFsCOW+oAUOs9vRyd69p3Qjwoo079KIzBSWByJR1iCSOFM7Y4QBsHXfv+
+        sNDTsgiSVYjAttzhMkQi350yG91gK7zLx198371ptYPg40iv/hAcD2ZEvx79GcxR5LMlC/
+        sNfoLz8WAV6nx9HNJNqA9kTbJvMEZjPrIPirGmb80+4kek9WZ3QZ7CbqyIkAAw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595458119;
+        s=2020e; t=1595458122;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=jiZr9OI2nURziBYbmcqTV2pR8v4WZmMUcVBptqs0iE4=;
-        b=ALyWDWGV25e/yllGsLnGJDydyQPOj6bUXXL1D7XgfyuUVExa09knTzaM/TUH51wHazTF4w
-        XogyYqGxG5MYSsCQ==
-From:   "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H3Zsm5XM9OBmDffs9at+DaOqbM4V2GVf0KVN6w1L27U=;
+        b=jkZ6lxtkk5bAZjWX9XPJRHmpUZFmLpXays2SNipVzb61gr3xL0i2KFHWV2mwnDK5JbGj+a
+        NkoKCKvXaQCbROBQ==
+From:   "tip-bot2 for Masahiro Yamada" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi: Revert "efi/x86: Fix build with gcc 4"
-Cc:     Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: efi/urgent] efi/libstub/arm64: link stub lib.a conditionally
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200604022031.164207-1-masahiroy@kernel.org>
+References: <20200604022031.164207-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159545811862.4006.10590013695157698470.tip-bot2@tip-bot2>
+Message-ID: <159545812203.4006.2339306971648144813.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -63,34 +70,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the efi/urgent branch of tip:
 
-Commit-ID:     769e0fe1171e95d90ea5a2d6d0b2bdc7d5d2e7b2
-Gitweb:        https://git.kernel.org/tip/769e0fe1171e95d90ea5a2d6d0b2bdc7d5d2e7b2
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Thu, 09 Jul 2020 09:59:57 +03:00
+Commit-ID:     c1aac64ddc01112e137121a43645b96c3633c41b
+Gitweb:        https://git.kernel.org/tip/c1aac64ddc01112e137121a43645b96c3633c41b
+Author:        Masahiro Yamada <masahiroy@kernel.org>
+AuthorDate:    Thu, 04 Jun 2020 11:20:30 +09:00
 Committer:     Ard Biesheuvel <ardb@kernel.org>
-CommitterDate: Thu, 09 Jul 2020 10:14:29 +03:00
+CommitterDate: Thu, 09 Jul 2020 09:45:09 +03:00
 
-efi: Revert "efi/x86: Fix build with gcc 4"
+efi/libstub/arm64: link stub lib.a conditionally
 
-This reverts commit 5435f73d5c4a1b75, which is no longer needed now
-that the minimum GCC version has been bumped to v4.9
+Since commit 799c43415442 ("kbuild: thin archives make default for
+all archs"), core-y is passed to the linker with --whole-archive.
+Hence, the whole of stub library is linked to vmlinux.
 
+Use libs-y so that lib.a is passed after --no-whole-archive for
+conditional linking.
+
+The unused drivers/firmware/efi/libstub/relocate.o will be dropped
+for ARCH=arm64.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Link: https://lore.kernel.org/r/20200604022031.164207-1-masahiroy@kernel.org
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/Makefile | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 4cce372..75daaf2 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -6,8 +6,7 @@
- # enabled, even if doing so doesn't break the build.
- #
- cflags-$(CONFIG_X86_32)		:= -march=i386
--cflags-$(CONFIG_X86_64)		:= -mcmodel=small \
--				   $(call cc-option,-maccumulate-outgoing-args)
-+cflags-$(CONFIG_X86_64)		:= -mcmodel=small
- cflags-$(CONFIG_X86)		+= -m$(BITS) -D__KERNEL__ \
- 				   -fPIC -fno-strict-aliasing -mno-red-zone \
- 				   -mno-mmx -mno-sse -fshort-wchar \
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 76359cf..4621fb6 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -143,7 +143,7 @@ export	TEXT_OFFSET
+ 
+ core-y		+= arch/arm64/
+ libs-y		:= arch/arm64/lib/ $(libs-y)
+-core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
+ # Default target when executing plain make
+ boot		:= arch/arm64/boot
