@@ -2,50 +2,49 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F2AC433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34D6C433ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3A522D04
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8020322B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G7gFd1y4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="miICDflK"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZNcGnPir";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/a03u3no"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbgGVWLa (ORCPT
+        id S1733194AbgGVWLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733043AbgGVWL0 (ORCPT
+        Wed, 22 Jul 2020 18:11:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52552 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733097AbgGVWLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:26 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80ACC0619DC;
-        Wed, 22 Jul 2020 15:11:24 -0700 (PDT)
-Message-Id: <20200722215954.464281930@linutronix.de>
+        Wed, 22 Jul 2020 18:11:34 -0400
+Message-Id: <20200722220520.159112003@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595455882;
+        s=2020; t=1595455892;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
-        bh=ahlK79PK5YUaQAhd7lygE8UJdfTKv0Vu+HW5xnc5ELM=;
-        b=G7gFd1y4nAOmB1fa4bznNO6Hn3Xz5vGns+k1b2AAzgB3r8aFNsAxK66jM7k+woJjeVIGPk
-        98ntp/LIG2+BVCPqkuHjXZQI75CRxyf81EpjyYchX1/id1bgwygapu4zV6NpZj5iV+34lN
-        5jupVlM/5oMJUto46ob0x4SNkXVFEdZ/4vVsJBiX7zlSsHAjQy9gxt5C0toWs91Bpe/RZs
-        L185WibgR0N4V4qXYAj4nyjC7PSyi9i1q0vQ+1ut7dpat2CwoFRTkp6RJ+x9moWliHMRCE
-        h3QD1iopZgNwAdQKa8R+EDTF0w281Ry2bTenti8lF/lPd6GforcDq/MMnNnnZQ==
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=bWVGXey2lJ1irAVnA4O/ihpzfVujSYh2rHOVl6EK2E4=;
+        b=ZNcGnPirO7GVvvAKk9/7xCrJWwZ6f+4PeCHE1jv4M7ohUxPI0xu+EbEiolyQPIg/6FrIG1
+        X/YXtnhorLabIwG7Lg5vAmTdWFHTuD56ik6uBsel6qkZrixIBYA+ZSTKrDgl1hv6P4VcWu
+        rFgZfdPFrqBqcMYG/uRvkdOw6Z03RvrsSTBx80O6FgbiJpaecp+GnNjkg0jK5jmUovzmjN
+        0LzCfkPm/RaAlUpxpN0GKakOPhrKh6z8RIJIWHJYr73MVi5ReuMKgVi26cFaCN18vhVs3f
+        LaYhpfBrD3riByGsqsDgadOlBdWiqqYNv2EiyOVUjKnl8MXPeCD+1VAR7CQ9mg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595455882;
+        s=2020e; t=1595455892;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
-        bh=ahlK79PK5YUaQAhd7lygE8UJdfTKv0Vu+HW5xnc5ELM=;
-        b=miICDflKl+rPTMgRosTGj5rJ8+uSXdXfY8WUsObaLLnl8ki5Ojwpope+EfNnupX4TEtU3L
-        iAM7h9QaqHryhDDQ==
-Date:   Wed, 22 Jul 2020 23:59:54 +0200
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=bWVGXey2lJ1irAVnA4O/ihpzfVujSYh2rHOVl6EK2E4=;
+        b=/a03u3noJLM9zDItsYn43MQPIsBHcRhqWneRAGKvqbAQY+vFZMWFjARoDT/BzzbQ+AU7KF
+        HPkC7UtN0E83yQAA==
+Date:   Thu, 23 Jul 2020 00:00:02 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
@@ -56,36 +55,71 @@ Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         Gabriel Krisman Bertazi <krisman@collabora.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V5 00/15] entry, x86, kvm: Generic entry/exit functionality
- for host and guest
+Subject: [patch V5 08/15] x86/entry: Move user return notifier out of loop
+References: <20200722215954.464281930@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the 5th version of generic entry/exit functionality for host and
-guest.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-The 4th version is available here:
+Guests and user space share certain MSRs. KVM sets these MSRs to guest
+values once and does not set them back to user space values on every VM
+exit to spare the costly MSR operations.
 
-    https://lore.kernel.org/r/20200721105706.030914876@linutronix.de
+User return notifiers ensure that these MSRs are set back to the correct
+values before returning to user space in exit_to_usermode_loop().
 
-Changes vs. V4:
+There is no reason to evaluate the TIF flag indicating that user return
+notifiers need to be invoked in the loop. The important point is that they
+are invoked before returning to user space.
 
-  - Add the missing instrumentation prevetions to the entry Makefile (Kees)
-  - Rename exit_to_guest to xfer_to_guest (Sean)
+Move the invocation out of the loop into the section which does the last
+preperatory steps before returning to user space. That section is not
+preemptible and runs with interrupts disabled until the actual return.
 
-The patches depend on:
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+---
+V4: New patch
+---
+ arch/x86/entry/common.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-The lot is also available from git:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/entry
-
-Thanks,
-
-	tglx
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -208,7 +208,7 @@ static long syscall_trace_enter(struct p
+ 
+ #define EXIT_TO_USERMODE_LOOP_FLAGS				\
+ 	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |	\
+-	 _TIF_NEED_RESCHED | _TIF_USER_RETURN_NOTIFY | _TIF_PATCH_PENDING)
++	 _TIF_NEED_RESCHED | _TIF_PATCH_PENDING)
+ 
+ static void exit_to_usermode_loop(struct pt_regs *regs, u32 cached_flags)
+ {
+@@ -242,9 +242,6 @@ static void exit_to_usermode_loop(struct
+ 			rseq_handle_notify_resume(NULL, regs);
+ 		}
+ 
+-		if (cached_flags & _TIF_USER_RETURN_NOTIFY)
+-			fire_user_return_notifiers();
+-
+ 		/* Disable IRQs and retry */
+ 		local_irq_disable();
+ 
+@@ -273,6 +270,9 @@ static void __prepare_exit_to_usermode(s
+ 	/* Reload ti->flags; we may have rescheduled above. */
+ 	cached_flags = READ_ONCE(ti->flags);
+ 
++	if (cached_flags & _TIF_USER_RETURN_NOTIFY)
++		fire_user_return_notifiers();
++
+ 	if (unlikely(cached_flags & _TIF_IO_BITMAP))
+ 		tss_update_io_bitmap();
+ 
 
 
