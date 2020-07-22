@@ -2,181 +2,65 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C817DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A375C2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BtZ9Nvf8"
+	by mail.kernel.org (Postfix) with ESMTP id 3A38120714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732090AbgGVTkY (ORCPT
+        id S1732389AbgGVTlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
+        Wed, 22 Jul 2020 15:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVTkV (ORCPT
+        with ESMTP id S1726535AbgGVTlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:40:21 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45FB5C0619E2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:40:21 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t6so1504424plo.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 12:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jjUf3A9HubTVaUqe7Zad+MUemnjZyICfz18It9oZSwM=;
-        b=BtZ9Nvf8isLyQCQ50XpXD/ebRCdBjkHCCGnxVM0OZAVUpANRBBMkjIj06Zdw9/XpBn
-         ZFD8aNoO8CrwWK2+N4nmMD0rTFkdF72k74MsJNFZWuktshu5ucg9wp2qUVlDzWfUY4Ja
-         ol6MqQXlLRetbAhUkjy41VWkXgnqEDPN3tA18=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jjUf3A9HubTVaUqe7Zad+MUemnjZyICfz18It9oZSwM=;
-        b=L8qdm8+yObmrQfTFqOOwIfRkkbyRN7rpSw/oCw2icNU8CwvAIslWr8YYDbefgii7KH
-         SSXTdxjC2feKVUFNmgP9kTiCxTLKZrazRHckxRjgc0zhrrC1LZ7Y6dOuS//Ga+GAxQdT
-         96/0vNgf44tq8rSD5cxlxQn/x7mqEjlLlG/iqvhC8vMsuOFAxt2HUjiVA/GEVC87/eA2
-         WP3ygsGm3JvsS+HChoPdFoQudVPTW1N8b+tGEP+FaU0+Y0tj8UpoeainoiFFmRgJUX42
-         531y8o5L8bfo8PYfM89ma69du9yS57rXtqP2PI0wOv4E6zA+1U9OMrZXgRfTVey2m9TQ
-         NOXw==
-X-Gm-Message-State: AOAM53131sUpm7Zzw/Amqci0Lp0CTFe00h1oJwJxb1rWZBmDl4DxF0Wu
-        m5LMMQ6HjxooksTK9MkGUnlo7w==
-X-Google-Smtp-Source: ABdhPJyT2VSdLIe8tOpWuzfYoIvgn4i+cMVfKxosGUgPymW4NU2ZBedNm+ZTGrz2uSKWm+z7tIxFEg==
-X-Received: by 2002:a17:90b:338d:: with SMTP id ke13mr906409pjb.60.1595446820815;
-        Wed, 22 Jul 2020 12:40:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 38sm420287pgu.61.2020.07.22.12.40.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 12:40:19 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 12:40:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] fs,doc: Enable to enforce noexec mounts or file
- exec through O_MAYEXEC
-Message-ID: <202007221239.E00125F019@keescook>
-References: <20200714181638.45751-1-mic@digikod.net>
- <20200714181638.45751-6-mic@digikod.net>
- <202007151312.C28D112013@keescook>
- <35ea0914-7360-43ab-e381-9614d18cceba@digikod.net>
- <20200722161639.GA24129@gandi.net>
- <efb88aab-f9f9-4b66-e7ab-3aa054eec96e@digikod.net>
+        Wed, 22 Jul 2020 15:41:10 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E855C0619DC;
+        Wed, 22 Jul 2020 12:41:10 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jyKbc-009Dkq-Qb; Wed, 22 Jul 2020 21:40:44 +0200
+Message-ID: <adb69bc4b83d9a03ac4e8a4556f79a72c7a6f2cc.camel@sipsolutions.net>
+Subject: Re: [PATCH][next] wil6210: Avoid the use of one-element array
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 22 Jul 2020 21:40:43 +0200
+In-Reply-To: <20200715215755.GA21716@embeddedor> (sfid-20200715_235229_800667_63552319)
+References: <20200715215755.GA21716@embeddedor>
+         (sfid-20200715_235229_800667_63552319)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <efb88aab-f9f9-4b66-e7ab-3aa054eec96e@digikod.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 09:04:28PM +0200, Mickaël Salaün wrote:
+On Wed, 2020-07-15 at 16:57 -0500, Gustavo A. R. Silva wrote:
+> One-element arrays are being deprecated[1]. Replace the one-element
+> array with a simple value type 'u8 reserved'[2], once this is just
+> a placeholder for alignment.
 > 
-> On 22/07/2020 18:16, Thibaut Sautereau wrote:
-> > On Thu, Jul 16, 2020 at 04:39:14PM +0200, Mickaël Salaün wrote:
-> >>
-> >> On 15/07/2020 22:37, Kees Cook wrote:
-> >>> On Tue, Jul 14, 2020 at 08:16:36PM +0200, Mickaël Salaün wrote:
-> >>>> @@ -2849,7 +2855,7 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> >>>>  	case S_IFLNK:
-> >>>>  		return -ELOOP;
-> >>>>  	case S_IFDIR:
-> >>>> -		if (acc_mode & (MAY_WRITE | MAY_EXEC))
-> >>>> +		if (acc_mode & (MAY_WRITE | MAY_EXEC | MAY_OPENEXEC))
-> >>>>  			return -EISDIR;
-> >>>>  		break;
-> >>>
-> >>> (I need to figure out where "open for reading" rejects S_IFDIR, since
-> >>> it's clearly not here...)
-> > 
-> > Doesn't it come from generic_read_dir() in fs/libfs.c?
-> > 
-> >>>
-> >>>>  	case S_IFBLK:
-> >>>> @@ -2859,13 +2865,26 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> >>>>  		fallthrough;
-> >>>>  	case S_IFIFO:
-> >>>>  	case S_IFSOCK:
-> >>>> -		if (acc_mode & MAY_EXEC)
-> >>>> +		if (acc_mode & (MAY_EXEC | MAY_OPENEXEC))
-> >>>>  			return -EACCES;
-> >>>>  		flag &= ~O_TRUNC;
-> >>>>  		break;
-> >>>
-> >>> This will immediately break a system that runs code with MAY_OPENEXEC
-> >>> set but reads from a block, char, fifo, or socket, even in the case of
-> >>> a sysadmin leaving the "file" sysctl disabled.
-> >>
-> >> As documented, O_MAYEXEC is for regular files. The only legitimate use
-> >> case seems to be with pipes, which should probably be allowed when
-> >> enforcement is disabled.
-> > 
-> > By the way Kees, while we fix that for the next series, do you think it
-> > would be relevant, at least for the sake of clarity, to add a
-> > WARN_ON_ONCE(acc_mode & MAY_OPENEXEC) for the S_IFSOCK case, since a
-> > socket cannot be open anyway?
+> [1] https://github.com/KSPP/linux/issues/79
+> [2] https://github.com/KSPP/linux/issues/86
 
-If it's a state that userspace should never be able to reach, then yes,
-I think a WARN_ON_ONCE() would be nice.
+Umm, no, you're misinterpreting this ... This has nothing to do with
+variable length and isn't used that way. As you can see from your own
+patch, since you're not changing any users.
 
-> We just did some more tests (for the next patch series) and it turns out
-> that may_open() can return EACCES before another part returns ENXIO.
-> 
-> As a reminder, the next series will deny access to block devices,
-> character devices, fifo and socket when opened with O_MAYEXEC *and* if
-> any policy is enforced (via the sysctl).
-> 
-> The question is then: do we prefer to return EACCES when a policy is
-> enforced (on a socket), or do we stick to the ENXIO? The EACCES approach
-> will be more consistent with devices and fifo handling, and seems safer
-> (belt and suspenders) thought.
+johannes
 
-I think EACCES is correct for these cases, since it's a new flag, etc.
-
--- 
-Kees Cook
