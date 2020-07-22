@@ -2,181 +2,103 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B383C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2C7207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8DDF207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:03:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6BRilkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgGVFAK (ORCPT
+        id S1726996AbgGVFDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:00:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25846 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgGVFAK (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:00:10 -0400
-IronPort-SDR: U+erDAPj+ce9X+5x9tt5QXpP8eYjU6uF3EUSlaN0E19/iBnxDovEPcWG7v3cqiXWL2klctH4NV
- +LGO/sLHtDoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="130353883"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="130353883"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2020 22:00:07 -0700
-IronPort-SDR: Pngk4cExt1fTFdLWchrpLWJAVnwmCqbt75wTcYzAc2lbuOMll1iTVWz4G8DRfprseH56LMhe2u
- Pou+XqJMKBng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="328101117"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2020 22:00:04 -0700
-Subject: Re: [PATCH v2] perf evsel: Don't set
- sample_regs_intr/sample_regs_user for dummy event
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, irogers@google.com,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20200720010013.18238-1-yao.jin@linux.intel.com>
- <20200720091748.GH760733@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <af1da971-5c60-4c17-e5d9-01430c928592@linux.intel.com>
-Date:   Wed, 22 Jul 2020 13:00:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 01:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgGVFDZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 01:03:25 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BEAAC061794
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:03:25 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id x2so176250oog.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FxgnxLZth5AlOay7AH6dscxuaOg+rKinWvDSlFd8kJ8=;
+        b=R6BRilkOut7JttbU2bRmlzrHWrGXTfGi5C6+OAV1GwOT5YjBgfNKl5X2DTibn7fTj/
+         PaqRZqItZMviAulp8nQ31nJyD8Ow29GxmyEJcyrzWRgrZnhRV4hPKMUWQlX8cVnSHpQQ
+         DxnWOhRnFsRKLuDuHBwFwWIw3SoTVx6jAeGs+CDa4sBnDbX08a1I1eEEB6/cBRuxh7Ea
+         F2jWbW4pn+ejMUe348PyaBHv9xUBd3RbNBipZc2P7MqHXb4WGNAS2EZ6AMdyON3LG68X
+         DSOLPr7LuqXL+bJ8yQHh4oFKPaxoa33p8vqc3czIzIrrCIjRfWfKBjEtKDKIj1j31UyO
+         OMmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FxgnxLZth5AlOay7AH6dscxuaOg+rKinWvDSlFd8kJ8=;
+        b=e+PHozEgAH39csAhsDj9bGW76n66w8p27+XGmZMWUV0v5a2OLE4pcsPq0vp97RZ1PS
+         IRExKOnDnxYeH4NbN+HBm6JuCD/ik8fFHvRgD8y6v57CqfJm1Y+6UUC9//thUITy3Lpy
+         hCkWZFLSLRqKpjpxwParnsdwD+ibLHel1Vl3eXvVOAmcfnZ7zLAmaHbPwBDBq+64m5YP
+         yn1WmCSCgx4f0DAj3F4I49tQYKkzfL+vhZltZynk5RSXn+f6vhVMRcu+AN98Dg+i/qf7
+         XX2aiSgOXop/8oozPy/fpuWEPF19Fg668juXILecn3kp4hFfzni1pl5HfIAJMzJ2IU2C
+         ysiw==
+X-Gm-Message-State: AOAM533Vxsa7CUYSYq4BhM/SEvjaNvOQYBM/6I9wMKCCD2cz1iZ9CG7n
+        OQWhCuNdxbCJaB0tTsFNOE76Rh1vVbBCSzSy6GQ=
+X-Google-Smtp-Source: ABdhPJwsOf9tigI7Wqr3y57tfv9uSVOghJ1Yo/sPCmwKu/3cN6pj74/MBhBnn/dGUvvHRZJgu/Gp7mIMcKmRB5AOSRk=
+X-Received: by 2002:a4a:d63d:: with SMTP id n29mr26998771oon.74.1595394204713;
+ Tue, 21 Jul 2020 22:03:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200720091748.GH760733@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1594299795-39394-1-git-send-email-qianjun.kernel@gmail.com>
+In-Reply-To: <1594299795-39394-1-git-send-email-qianjun.kernel@gmail.com>
+From:   jun qian <qianjun.kernel@gmail.com>
+Date:   Wed, 22 Jul 2020 13:03:13 +0800
+Message-ID: <CAKc596JQUqKsAUQ_=dqzkHYmQxeN95261=25t5XSOWzBV25ewg@mail.gmail.com>
+Subject: Re: [PATCH] perf-c2c: Fix the wrong description.
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, qianjun <qianjun@didiglobal.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+On Thu, Jul 9, 2020 at 9:07 PM qianjun <qianjun.kernel@gmail.com> wrote:
+>
+> From: qianjun <qianjun@didiglobal.com>
+>
+> Use L1Miss to replace L1Hit to describe the correct scene
+>
+> Signed-off-by: qianjun <qianjun@didiglobal.com>
+> ---
+>  tools/perf/Documentation/perf-c2c.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+> index 98efdab..083e99a 100644
+> --- a/tools/perf/Documentation/perf-c2c.txt
+> +++ b/tools/perf/Documentation/perf-c2c.txt
+> @@ -186,7 +186,7 @@ For each cacheline in the 1) list we display following data:
+>    Store Reference - Total, L1Hit, L1Miss
+>      Total - all store accesses
+>      L1Hit - store accesses that hit L1
+> -    L1Hit - store accesses that missed L1
+> +    L1Miss - store accesses that missed L1
+>
+>    Load Dram
+>    - count of local and remote DRAM accesses
+> --
+> 1.8.3.1
+>
 
-On 7/20/2020 5:17 PM, Jiri Olsa wrote:
-> On Mon, Jul 20, 2020 at 09:00:13AM +0800, Jin Yao wrote:
->> Since commit 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis"),
->> a dummy event is added to capture mmaps.
->>
->> But if we run perf-record as,
->>
->>   # perf record -e cycles:p -IXMM0 -a -- sleep 1
->>   Error:
->>   dummy:HG: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
->>
->> The issue is, if we enable the extended regs (-IXMM0), but the
->> pmu->capabilities is not set with PERF_PMU_CAP_EXTENDED_REGS, the kernel
->> will return -EOPNOTSUPP error.
->>
->> See following code:
->>
->> /* in kernel/events/core.c */
->> static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
->>
->> {
->>          ....
->>          if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
->>              has_extended_regs(event))
->>                  ret = -EOPNOTSUPP;
->>          ....
->> }
->>
->> For software dummy event, the PMU should not be set with
->> PERF_PMU_CAP_EXTENDED_REGS. But unfortunately now, the dummy
->> event has possibility to be set with PERF_REG_EXTENDED_MASK bit.
->>
->> In evsel__config, /* tools/perf/util/evsel.c */
->>
->> if (opts->sample_intr_regs) {
->>          attr->sample_regs_intr = opts->sample_intr_regs;
->> }
->>
->> If we use -IXMM0, the attr>sample_regs_intr will be set with
->> PERF_REG_EXTENDED_MASK bit.
->>
->> It doesn't make sense to set attr->sample_regs_intr for a
->> software dummy event.
->>
->> This patch adds dummy event checking before setting
->> attr->sample_regs_intr and attr->sample_regs_user.
->>
->> After:
->>    # ./perf record -e cycles:p -IXMM0 -a -- sleep 1
->>    [ perf record: Woken up 1 times to write data ]
->>    [ perf record: Captured and wrote 0.413 MB perf.data (45 samples) ]
->>
->>   v2:
->>   ---
->>   Rebase to perf/core
->>
->> Fixes: 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis")
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/util/evsel.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 9aa51a65593d..11794d3b7879 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -1014,12 +1014,14 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->>   	if (callchain && callchain->enabled && !evsel->no_aux_samples)
->>   		evsel__config_callchain(evsel, opts, callchain);
->>   
->> -	if (opts->sample_intr_regs && !evsel->no_aux_samples) {
->> +	if (opts->sample_intr_regs && !evsel->no_aux_samples &&
->> +	    !evsel__is_dummy_event(evsel)) {
-> 
-> hum, I thought it'd look something like this:
-> 
->    if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel))
-> 
-> but I'm not sure how no_aux_samples flag works exactly.. so it might be
-> correct.. just making sure ;-)
-> 
-> cc-ing Adrian
-> 
-> jirka
-> 
-> 
+hi man
 
-no_aux_samples is set to false by default and it's only set to true by pt, right?
-
-So most of the time, !evsel->no_aux_samples is always true.
-
-if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel)) {
-	attr->sample_regs_intr = opts->sample_intr_regs;
-	evsel__set_sample_bit(evsel, REGS_INTR);
-}
-
-So even if the evsel is dummy event, the condition check is true. :(
-
-Or maybe I misunderstand anything?
-
-Thanks
-Jin Yao
-
->>   		attr->sample_regs_intr = opts->sample_intr_regs;
->>   		evsel__set_sample_bit(evsel, REGS_INTR);
->>   	}
->>   
->> -	if (opts->sample_user_regs && !evsel->no_aux_samples) {
->> +	if (opts->sample_user_regs && !evsel->no_aux_samples &&
->> +	    !evsel__is_dummy_event(evsel)) {
->>   		attr->sample_regs_user |= opts->sample_user_regs;
->>   		evsel__set_sample_bit(evsel, REGS_USER);
->>   	}
->> -- 
->> 2.17.1
->>
-> 
+I think it's a problem :)
