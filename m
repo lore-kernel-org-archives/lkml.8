@@ -2,239 +2,153 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44774C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1129820825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C36420825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1cijpiU"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hDqogZ5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbgGVXhp (ORCPT
+        id S1733111AbgGVXgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgGVXho (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:37:44 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2490EC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:37:44 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id e13so3769506qkg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=H8BbmRX160xyQeVFFIdlPVklsyPOWgbirdL1MMhs52A=;
-        b=A1cijpiUtfu4FxFuW41K7F27e5icdy4NAmOps6rIUBiNTdyAQ/pQhZjIiCkL8iJNXx
-         J1rdf5hKePDxGJjUR6xQSsJ7sp36kRtPuxWXMNykZmOkBkjyw2fbJZU1Jj9ObC4VFfB9
-         rZJRTbAw2TPSSkgLCzqohsZ2QG9TWwJN+soaTTpJ5kiZ5BEIbhCCXdo5PhkVOhSTHlH6
-         x9/fLgicxrPczXatLBCAu/sfeC8sqvKv2y/OefXQeGQWsaf/IYt4vB3kzIOf8gwqRTII
-         xwpHG9uIqhkr5jRWh6u0tj02tUqRsEnrKe23/Eyxrzk9QoArDOjs+T5VlaYua7a8Hpk7
-         l1Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=H8BbmRX160xyQeVFFIdlPVklsyPOWgbirdL1MMhs52A=;
-        b=NUCW6rr2jRkbFcfsKhQn9Kj7cYyBOjs3ikijKmOsyQxFEv2/ogNhmR/kMmtRenFkL7
-         t+LXMp5MJ9cy8fl4bTYuGIkXFL3DTs8kI4ZWAPtOxVYHwujU1ugtwkgtvOEyCA7Yu8RP
-         dcIrp+297gfN9pYGZW7P/EGfmJFkxRJ9016/GQFXqONQt0kVCBJZLdpoaNQLwGR23UBu
-         YHasVoq6k3SBm0osBrKCsruC3IgOnVgr3Z7BHXd9e4tURyy2tvRaOIiSK4OPqOqpCXRE
-         uIF+hk3e/UmH30ol+XLbbSy+zJlb3fi2G2IwbEhE7oShVHJ6BBBKFxKAYy5mN//cCLWq
-         NGlw==
-X-Gm-Message-State: AOAM5330np89IRMy/vBqRxAQQiA50GNvnV+OKMiQd5zvZ7PjWtN3Yx/I
-        3+qdqUJ+anIIQ/QODfTf5nfk+6ow
-X-Google-Smtp-Source: ABdhPJxUn3wK41CBa+sKu5oWixw9j3f8UMBn8EM27juDma3YS+Ar9XmjwiziY9s5nsJoVr1BNeg/Uw==
-X-Received: by 2002:a37:4048:: with SMTP id n69mr2386577qka.421.1595461063336;
-        Wed, 22 Jul 2020 16:37:43 -0700 (PDT)
-Received: from LeoBras (179-125-153-225.dynamic.desktop.com.br. [179.125.153.225])
-        by smtp.gmail.com with ESMTPSA id c70sm1126936qke.109.2020.07.22.16.37.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 16:37:42 -0700 (PDT)
-Message-ID: <396d343962bb4e3b845bab4f46721a5ebed39cf6.camel@gmail.com>
-Subject: Re: [PATCH v4 5/7] powerpc/iommu: Move iommu_table cleaning routine
- to iommu_table_clean
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 22 Jul 2020 20:37:36 -0300
-In-Reply-To: <dd26d682-f013-763d-3a92-6d99633c6175@ozlabs.ru>
-References: <20200716071658.467820-1-leobras.c@gmail.com>
-         <20200716071658.467820-6-leobras.c@gmail.com>
-         <51235292-a571-8792-c693-d0dc6faeb21c@ozlabs.ru>
-         <0f4c2d84d0958e98e7ada53c25750fe548cadf0b.camel@gmail.com>
-         <dd26d682-f013-763d-3a92-6d99633c6175@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 22 Jul 2020 19:36:31 -0400
+Received: from mail-dm6nam10on2093.outbound.protection.outlook.com ([40.107.93.93]:64672
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726447AbgGVXga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 19:36:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DOJR7fbLwpEwaEaKmKTE7PRQO0ZPaW6nVtVSyyLczOSLnJVdvftDTQp02lk72xvIW8FKRWPNzB0+sFKgUEQNgWHEHYvefBpdrKbW+X356QUcs/950fat9H0vYci0PjZdnPqYKCyTuGzc/K4BQsew8IVobwhjcGwhpAmtyFo3Hznpxi4jSYp57WXKqH4Y6uvtdiyOpiko+LE0e/HWhV8QoUu+d49F2gj9Fijjx8P15iYaVZeuAQm+LHRlBoztB9+GTvkXwUE07DOmJo5uru9NyeUEnzqUqnhU+8Sz9EkSGYYBO+4JGCUVZsrVT+Dg1WUI6RMyIG31HwCPs4jbv0DkWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwVZouGpBSEgbqRjpcHlHpYAkJzK9W/s6rqvMshw0Y4=;
+ b=IQ/t9EO7v0twslPA+PQcoXFJ3XDfK452uSO03nYMzZI9Y3MXv1+YYj/Z4j/HRxm6wOvB0CVrtlgYmC9ajamhR4crJJiNMixE7XHtgfWY3plKr95PzGW2cZj42wg/UaCdnUOi1EhhGopyekujFrwGkkSGCOSuIrqLJSi5R4LMDCcUGJY//vH/FL5qK9qHzxPSju2spYRNUllKjfLLmPVMs/QR9cuswdEtw+XfULZfNyIQPe5hSMqqLzkaLk/r+bg+yeH7UJHPY30VrvLfJIi6BMioXeiOoZw+jfDrN8CoXlNl1JyEgiGJRL2MZb4OilICom4XM2vNz0f6sDfZpdauCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwVZouGpBSEgbqRjpcHlHpYAkJzK9W/s6rqvMshw0Y4=;
+ b=hDqogZ5tIS6tT/H45FgRNOvahoOS/NyHnlsTal36WMIx6g0tE8zSWTAD+uqcMFFNFPcTEI1hs8rN9nY5e7TQg46938MlHlBiPgMmw8Z+jeDHKqpZ99P3JxcuiyZTeuVBRcYSUAM84LGzWJ4F4lx2Yw4HPHJWa0JLW7zulq+0QAY=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1849.namprd21.prod.outlook.com (2603:10b6:302:7::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.5; Wed, 22 Jul
+ 2020 23:36:20 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3239.005; Wed, 22 Jul 2020
+ 23:36:20 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Boqun Feng <boqun.feng@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: RE: [RFC 09/11] HID: hyperv: Make ringbuffer at least take two pages
+Thread-Topic: [RFC 09/11] HID: hyperv: Make ringbuffer at least take two pages
+Thread-Index: AQHWXwAnmlUu9XIV40S6+D4F8ioDMqkUQ2XQ
+Date:   Wed, 22 Jul 2020 23:36:15 +0000
+Message-ID: <MW2PR2101MB10524E4C2DB9FBADEF887165D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200721014135.84140-1-boqun.feng@gmail.com>
+ <20200721014135.84140-10-boqun.feng@gmail.com>
+In-Reply-To: <20200721014135.84140-10-boqun.feng@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-22T23:36:13Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b5faba3b-3e0f-4702-9b21-bf88bb383024;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4d9d3e7a-160b-4fca-7c86-08d82e9809c3
+x-ms-traffictypediagnostic: MW2PR2101MB1849:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB18498D9714F4864EBF43AD67D7790@MW2PR2101MB1849.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: e3Ejb98qkyTLx5H2U9E9JLmq2aabRzEE9gMj4WvkJaoMRFmssKHSJU8rwLPxxpN5wq+gJcot8/99ZLK92SkjfVgfu7lXYEXGb2LmOVjHrMUXLVna5ug/+qcPO3JY5H70VOZQI9e+Xfv6lul+2+HewT8U0+hkvrlTosYzRNJjQ0VMV7O/6y4hao5MJzCuCfvB5DuiTf4fNSvxXIIhATOGV7LmKfE9tB1PON4AdqOiWdnfBko+qbfk9sdjGTv8Oo5cPfO5NG6Umq2quBfLWkCrkyHGSeivsJkosbA2s0QvcJM1O+iNPAp9NY9he4Ai7KmeeG5d45H/m1x3N4cWFOzqRw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(71200400001)(54906003)(110136005)(5660300002)(4326008)(2906002)(316002)(6666004)(8990500004)(86362001)(55016002)(52536014)(7416002)(9686003)(76116006)(66946007)(64756008)(66556008)(66476007)(66446008)(8936002)(26005)(83380400001)(186003)(82950400001)(10290500003)(33656002)(6506007)(7696005)(478600001)(8676002)(82960400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: wsliCfEwL1oec4M+7Zm3Rk4IXaGUS7Oq/tzV03hXNu/8oWj2K+1tqheTELOTIcf8jQoImKStKoTOga/rUfOw0fMnAdSSCpo7JvwWwIPmzTf/nq2XAkbHXtlXYI2yNw0cHf+J9ONe8A9Q2xV/bZNGxIjjnlvZHeCZyICDTHirPqPE6eBWkTNJlvOWIAT2nGiD1eM/17bNCkww0j3vSMSDWrJt1sdCy3c5wrM9aVxYGxZAlYUblX9bpafoeR4kjVGu6sHObchucrXQ+I0ImUuvPdssY1nuk8k3z1ZjUT8cwRy30p9h6oXXrz/k/Y9Ii2+0+BaFISzMoDu6icm8Zn+Xs4nd6GPh6eeVyZFmugphfAjO3weq0SfQaxgA9llUZmSf9ZdVr83NLxfabsZHBQZAIampcLHRRohyptX0ko9PK1R48BQIn5nV/XJzJX6ddd21a+1tCFTYxvgjSVzFIRjvsbkygXwSeRwnvorwCU98xeBpleszEbex0ob/KYaisWiKGmGTKPlwb+u9+LaLiRh1FPVyf0JXlTXh0kajCaKivvLXXIVKeblziF8cRyGmfVJTrL649YC61SLaFKBjZ4qKoo1yOtrm/oRNwoLEzWAOPRgcuOZqCuB7elnaHbD6/EqCZlAfUwI9iyR9kv/4+aiLPw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d9d3e7a-160b-4fca-7c86-08d82e9809c3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 23:36:15.8845
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j4mFeE/6btu381LIiOMjbXPWNHoNh9jqpStGRLgHHObRAa0cBQRRH+3lwrfVmfMTs5yeub+YeKUw/2jC7PCOD9PJKS/9/rjWNY9fC8Ae1Kk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1849
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-22 at 11:28 +1000, Alexey Kardashevskiy wrote:
-> 
-> On 22/07/2020 08:13, Leonardo Bras wrote:
-> > On Tue, 2020-07-21 at 14:59 +1000, Alexey Kardashevskiy wrote:
-> > > On 16/07/2020 17:16, Leonardo Bras wrote:
-> > > > Move the part of iommu_table_free() that does struct iommu_table cleaning
-> > > > into iommu_table_clean, so we can invoke it separately.
-> > > > 
-> > > > This new function is useful for cleaning struct iommu_table before
-> > > > initializing it again with a new DMA window, without having it freed and
-> > > > allocated again.
-> > > > 
-> > > > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> > > > ---
-> > > >  arch/powerpc/kernel/iommu.c | 30 ++++++++++++++++++------------
-> > > >  1 file changed, 18 insertions(+), 12 deletions(-)
-> > > > 
-> > > > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> > > > index 9704f3f76e63..c3242253a4e7 100644
-> > > > --- a/arch/powerpc/kernel/iommu.c
-> > > > +++ b/arch/powerpc/kernel/iommu.c
-> > > > @@ -735,21 +735,10 @@ struct iommu_table *iommu_init_table(struct iommu_table *tbl, int nid,
-> > > >  	return tbl;
-> > > >  }
-> > > >  
-> > > > -static void iommu_table_free(struct kref *kref)
-> > > > +static void iommu_table_clean(struct iommu_table *tbl)
-> > > 
-> > > iommu_table_free() + iommu_init_table() + set_iommu_table_base() should
-> > > work too, why new helper?
-> > 
-> > iommu_table_free() also frees the tbl, which would need allocate it
-> > again (new address) and to fill it up again, unnecessarily. 
-> 
-> It is a new table in fact, everything is new there. You are only saving
-> kfree+kzalloc which does not seem a huge win.
-> 
-> Also, iommu_table_update() simply assumes 64bit window by passing
-> res_start=res_end=0 to iommu_init_table() which is not horribly robust
-> either. Yeah, I know, iommu_init_table() is always called with zeroes in
-> pseries but this is somewhat ok as those tables are from the device tree
-> and those windows don't overlap with 32bit MMIO but under KVM they will
-> (well, if we hack QEMU to advertise a single window).
-> 
-> I suggest removing iommu_pseries_table_update() from 6/7 and do
-> iommu_table_free() + iommu_init_table() + set_iommu_table_base() with a
-> WARN_ON(pdev->dev.archdata.dma_offset>=SZ_4G), may be even do this all
-> in enable_ddw() where we know for sure if it is 1:1 mapping or just a
-> big window.
+From: Boqun Feng <boqun.feng@gmail.com> Sent: Monday, July 20, 2020 6:42 PM
+>=20
+> When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
+> least 2 * PAGE_SIZE: one page for the header and at least one page of
+> the data part (because of the alignment requirement for double mapping).
+>=20
+> So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
+> using vmbus_open() to establish the vmbus connection.
+>=20
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  drivers/hid/hid-hyperv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+> index 0b6ee1dee625..36c5e157c691 100644
+> --- a/drivers/hid/hid-hyperv.c
+> +++ b/drivers/hid/hid-hyperv.c
+> @@ -104,8 +104,8 @@ struct synthhid_input_report {
+>=20
+>  #pragma pack(pop)
+>=20
+> -#define INPUTVSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
+> -#define INPUTVSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+> +#define INPUTVSC_SEND_RING_BUFFER_SIZE		(128 * 1024)
+> +#define INPUTVSC_RECV_RING_BUFFER_SIZE		(128 * 1024)
 
-Sure, I have yet to understand the full impact of this change, but I
-will implement this and give it a try.
+Use max(40 * 1024, 2 * PAGE_SIZE) like in patch 8 of the series?
 
-> 
-> Out of curiosity - what page sizes does pHyp advertise in "query"?
-
-64kB (page shift 0x10)
-
-> 
-> 
-> > I think it's a better approach to only change what is needed.
-> > 
-> > > There is also iommu_table_clear() which does a different thing so you
-> > > need a better name.
-> > 
-> > I agree.
-> > I had not noticed this other function before sending the patchset. What
-> > would be a better name though? __iommu_table_free()? 
-> > 
-> > > Second, iommu_table_free
-> > > use and it would be ok as we would only see this when hot-unplugging a
-> > > PE because we always kept the default window.
-> > > Btw you must be seeing these warnings now every time you create DDW with
-> > > these patches as at least the first page is reserved, do not you?
-> > 
-> > It does not print a warning.
-> > I noticed other warnings,
-> 
-> And what are these?
-
-tce_freemulti_pSeriesLP: plpar_tce_stuff failed
-[...]
-
-It's regarding the change in pagesize. 
-Some places have the tceshift hardcoded as 12, tce_freemulti_pSeriesLP
-is one of them, and that is causing some errors.
-
-I wrote a patch fixing this, and I will include it in the next series.
-
-> 
-> > but not this one from iommu_table_free():
-> > /* verify that table contains no entries */
-> > if (!bitmap_empty(tbl->it_ma
-> > p, tbl->it_size))
-> > 	pr_warn("%s: Unexpected TCEs\n", __func__);
-> > 
-> > Before that, iommu_table_release_pages(tbl) is supposed to clear the 
-> > bitmap, so this only tests for a tce that is created in this short period.
-> 
-> iommu_table_release_pages() only clears reserved pages - page 0 (just a
-> protection against NULL DMA pointers) and 32bit MMIO (these should not
-> be set for 64bit window). The "%s: Unexpected TCEs\n" is what checks for
-> actual mapped TCEs.
-> 
-
-Oh, I haven't noticed that. Thanks for pointing!
-
-> > > Since we are replacing a table for a device which is still in the
-> > > system, we should not try messing with its DMA if it already has
-> > > mappings so the warning should become an error preventing DDW. It is
-> > > rather hard to trigger in practice but I could hack a driver to ask for
-> > > 32bit DMA mask first, map few pages and then ask for 64bit DMA mask, it
-> > > is not illegal, I think. So this needs a new helper - "bool
-> > > iommu_table_in_use(tbl)" - to use in enable_ddw(). Or I am overthinking
-> > > this?... Thanks,
-> > 
-> > As of today, there seems to be nothing like that happening in the
-> > driver I am testing. 
-> > I spoke to Brian King on slack, and he mentioned that at the point DDW
-> > is created there should be no allocations in place.
-> 
-> Correct, there should not be. But it is also not a huge effort to fall
-> back if there are.
-
-True.
-
-> 
-> > But I suppose some driver could try to do this.
-> > 
-> > Maybe a better approach would be removing the mapping only if the
-> > default window is removed (at the end of enable_ddw, as an else to
-> > resetting the default DMA window), and having a way to add more
-> > mappings to those pools. But this last part doesn't look so simple, and
-> > it would be better to understand if it's necessary investing work in
-> > this.
-> > 
-> > What do you think?
-> 
-> Add iommu_table_in_use(tbl) and fail DDW if that says "yes".
-
-Seems good, I will include that on the next patchset.
-
-Still, I will try to implement that more complex approach in a future
-patchset, as it may come to be useful.
-
-Thank you for the feedback!
+>=20
+>=20
+>  enum pipe_prot_msg_type {
+> --
+> 2.27.0
 
