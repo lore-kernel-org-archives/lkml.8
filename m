@@ -7,72 +7,109 @@ X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 921F1207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FA420714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="f0sNwiQ+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="B1wRYs+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732091AbgGVTdr (ORCPT
+        id S1730625AbgGVTiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:33:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42860 "EHLO
+        Wed, 22 Jul 2020 15:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgGVTdq (ORCPT
+        with ESMTP id S1726322AbgGVTiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:33:46 -0400
+        Wed, 22 Jul 2020 15:38:54 -0400
 Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21096C0619DC;
-        Wed, 22 Jul 2020 12:33:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DB9C0619DC;
+        Wed, 22 Jul 2020 12:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
          s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
         :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=ISoKoytpq3L1gpPEtulltusvnGO1W6LIHiEoj4uXF2c=; b=f0sNwiQ+UX4pzQhlVBmTh3xG7o
-        4YSfhWgYpJgenOFBT0vtJ8o6MODCszo3t6NdExdyAuXrm+sevejdOidD+vmMlXXDdVITO3+IOMI9A
-        YoXjCoQN+0i6xkGzEcrBDvRMVsHlCVd2M+XoBJKquRu3DnqaQencBaS6io55kUAfEXz3kbgw6On+y
-        EB8J9Qz30oDVOcf9oMFDHH3ZHYxYO9jkBUgFOSXbwnKbO2LF9ystwal8dfX2BKCLOit3xLo4ptius
-        n7Y9qqCbG2bS7Q30e3tU1VywpdoNqGnZRLItX0HNH8pYF1lmNF9XuO0z4sprzo/QAXdO/4b+NYmHI
-        eTH6pcpQ==;
+        bh=GnczeIjxWZXuvAgu/k+KP3eIQzgZoam5q8JjSnqywo4=; b=B1wRYs+UaHzh44+7K46LA6t79S
+        wj7eaj+Rf9MF8O5uLSuqr3n4bT4tG8NVkGyNeQmnalXO/f67Jx2YSc85qXBVchaJ/RjOE1xsSMYsv
+        l9hfBfrTA6Pldyfaz04XmKgMeb3z9/6/JUqDhdhA4podlyJcZyIJ65FR37gXLquybw3kDBvax03Y+
+        sDBWD9zAhfCIErwBTZkCUl2EcDwG3Ok3Y/SJ4Y/CEecRS1JxhdmRg8ghzKIzblsgeSKcTkYxEW7Vz
+        G8Oz1YgAWiQCb9JdR134uMQRqkRRxNLTqd5GC78iGLu1C1bEmDgiD52zEX2MMenru5bKzFzxvMCfY
+        dfqr33yw==;
 Received: from noodles by the.earth.li with local (Exim 4.92)
         (envelope-from <noodles@earth.li>)
-        id 1jyKUi-00036F-Ox; Wed, 22 Jul 2020 20:33:36 +0100
-Date:   Wed, 22 Jul 2020 20:33:36 +0100
+        id 1jyKZm-0003V2-EX; Wed, 22 Jul 2020 20:38:50 +0100
+Date:   Wed, 22 Jul 2020 20:38:50 +0100
 From:   Jonathan McDowell <noodles@earth.li>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     Andrew Lunn <andrew@lunn.ch>,
         Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
         David Miller <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
         Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH] net: dsa: qca8k: Add 802.1q VLAN support
-Message-ID: <20200722193336.GL23489@earth.li>
+Message-ID: <20200722193850.GM23489@earth.li>
 References: <20200721171624.GK23489@earth.li>
- <20200721204818.GB1551@shell.armlinux.org.uk>
+ <1bf941f5-fdb3-3d9b-627a-a0464787b0ab@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721204818.GB1551@shell.armlinux.org.uk>
+In-Reply-To: <1bf941f5-fdb3-3d9b-627a-a0464787b0ab@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 09:48:18PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Jul 21, 2020 at 06:16:24PM +0100, Jonathan McDowell wrote:
+On Tue, Jul 21, 2020 at 10:26:07AM -0700, Florian Fainelli wrote:
+> On 7/21/20 10:16 AM, Jonathan McDowell wrote:
 > > This adds full 802.1q VLAN support to the qca8k, allowing the use of
 > > vlan_filtering and more complicated bridging setups than allowed by
 > > basic port VLAN support.
 > > 
 > > Tested with a number of untagged ports with separate VLANs and then a
 > > trunk port with all the VLANs tagged on it.
+> 
+> This looks good to me at first glance, at least not seeing obvious
+> issue, however below are a few questions:
+
+Thanks for the comments.
+
+> - vid == 0 appears to be unsupported according to your port_vlan_prepare
+> callback, is this really the case, or is it more a case of VID 0 should
+> be pvid untagged, which is what dsa_slave_vlan_rx_add_vid() would
+> attempt to program
+
+I don't quite follow you here. VID 0 doesn't appear to be supported by
+the hardware (and several other DSA drivers don't seem to like it
+either), hence the check; I'm not clear if there's something alternate I
+should be doing in that case instead?
+
+> - since we have a qca8k_port_bridge_join() callback which programs the
+> port lookup control register, putting all ports by default in VID==1
+> does not break per-port isolation between non-bridged and bridged ports,
+> right?
+
+VLAN_MODE_NONE (set when we don't have VLAN filtering enabled)
+configures us for port filtering, ignoring the VLAN info, so I think
+we're good here.
+
+> - since you program the ports with a default VLAN ID upon startup of the
+> switch driver should not you also set
+> dsa_switch::configure_vlan_while_not_filtering to indicate to the DSA
+> layer that there is a VLAN table programmed regardless of VLAN filtering
+> being enabled in the bridge or not?
+
+Yup, this should be set. I'd seen the vlan_bridge_vtu patch from
+December but not noticed it had been renamed, just assumed it hadn't
+been applied.
+
+> See some nitpicks below:
+> 
 > > 
 > > Signed-off-by: Jonathan McDowell <noodles@earth.li>
 > > 
@@ -90,8 +127,7 @@ On Tue, Jul 21, 2020 at 09:48:18PM +0100, Russell King - ARM Linux admin wrote:
 > > +	u32 reg;
 > > +
 > > +	/* Set the command and VLAN index */
-> > +	reg = QCA8K_VTU_FUNC1_BUSY;
-> > +	reg |= cmd;
+> > +	reg = QCA8K_VTU_FUNC1_BUSY;> +	reg |= cmd;
 > > +	reg |= vid << QCA8K_VTU_FUNC1_VID_S;
 > > +
 > > +	/* Write the function register triggering the table access */
@@ -101,14 +137,11 @@ On Tue, Jul 21, 2020 at 09:48:18PM +0100, Russell King - ARM Linux admin wrote:
 > > +	if (qca8k_busy_wait(priv, QCA8K_REG_VTU_FUNC1, QCA8K_VTU_FUNC1_BUSY))
 > > +		return -1;
 > 
-> You return -1 here.  Personally, I don't like this in the kernel, as
-> convention is for functions returning "int" to return negative errno
-> values, and this risks returning -1 (-EPERM) being returned to userspace
-> if someone decides to propagate the "error code".
+> Can you propagate the return value from qca8k_busy_wait() directly?
 
-Reasonable. I based this code off the qca8k_fdb_access code, but I'll
-switch over to more sensible returns (and clean the fdb stuff up in a
-separate patch).
+It just returns a boolean. rmk makes a valid point about a sensible
+errno instead, so I'll switch to ETIMEDOUT in v2 (and ENOMEM when the
+VLAN table is full below).
 
 > > +
 > > +	/* Check for table full violation when adding an entry */
@@ -116,9 +149,6 @@ separate patch).
 > > +		reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC1);
 > > +		if (reg & QCA8K_VTU_FUNC1_FULL)
 > > +			return -1;
-> 
-> ... and here.
-> 
 > > +	}
 > > +
 > > +	return 0;
@@ -132,54 +162,52 @@ separate patch).
 > > +
 > > +	if (!vid)
 > > +		return -EOPNOTSUPP;
+> > +
+> > +	mutex_lock(&priv->reg_mutex);
+> > +	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
+> > +	if (ret >= 0) {
 > 
-> Have you checked whether this can be called with vid=0 ?
+> Do an early return upon negative error code instead of reidenting the
+> code block?
 
-It's called at startup with VID 0 (part of setting up the HW filter
-according to the log message?) and the hardware isn't happy with that.
+I'll switch over to a goto for cleanup (unlocking the mutex) to avoid
+the extra indentation (and below).
 
-...
+> > +		reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
+> > +		reg |= QCA8K_VTU_FUNC0_VALID | QCA8K_VTU_FUNC0_IVL_EN;
+> > +		reg &= ~(3 << QCA8K_VTU_FUNC0_EG_MODE_S(port));
+> > +		if (tagged)
+> > +			reg |= QCA8K_VTU_FUNC0_EG_MODE_TAG <<
+> > +					QCA8K_VTU_FUNC0_EG_MODE_S(port);
+> > +		else
+> > +			reg |= QCA8K_VTU_FUNC0_EG_MODE_UNTAG <<
+> > +					QCA8K_VTU_FUNC0_EG_MODE_S(port);
 > > +
-> > +static int
-> > +qca8k_port_vlan_prepare(struct dsa_switch *ds, int port,
-> > +			const struct switchdev_obj_port_vlan *vlan)
-> > +{
-> > +	if (!vlan->vid_begin)
-> > +		return -EOPNOTSUPP;
+> > +		qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
+> > +		ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
+> > +	}
+> > +	mutex_unlock(&priv->reg_mutex);
 > > +
-> > +	return 0;
+> > +	return ret;
 > > +}
 > > +
-> > +static void
-> > +qca8k_port_vlan_add(struct dsa_switch *ds, int port,
-> > +		    const struct switchdev_obj_port_vlan *vlan)
+> > +static int
+> > +qca8k_vlan_del(struct qca8k_priv *priv, u8 port, u16 vid)
 > > +{
-> > +	struct qca8k_priv *priv = ds->priv;
-> > +	bool untagged = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
-> > +	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
-> > +	u16 vid;
+> > +	u32 reg;
+> > +	u32 mask;
+> > +	int ret;
+> > +	int i;
+> > +	bool del;
 > > +
-> > +	for (vid = vlan->vid_begin; vid <= vlan->vid_end; ++vid)
-> > +		qca8k_vlan_add(priv, port, vid, !untagged);
+> > +	mutex_lock(&priv->reg_mutex);
+> > +	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
+> > +	if (ret >= 0) {
 > 
-> The and ignored here, so is there any point qca8k_vlan_add() returning
-> an error?  If it fails, we'll never know... there even seems to be no
-> diagnostic gets logged in the kernel message log.
-> 
-> If you decide to add some logging, be careful how you do it - userspace
-> could ask for vids 1..4095 to be added, and we wouldn't want the
-> possibility of 4094 error messages.
-> 
-> Another issue may be the time taken to process 4094 VIDs if
-> qca8k_busy_wait() has to wait for every one.
-
-I'll add a break out on error (and a dev_err) for this and the del case
-in v2.
+> Likewise
 
 J.
 
 -- 
-       Hell is other people.       |  .''`.  Debian GNU/Linux Developer
-                                   | : :' :  Happy to accept PGP signed
-                                   | `. `'   or encrypted mail - RSA
-                                   |   `-    key on the keyservers.
+"Editing plain text configuration files has never been the Unix way,
+and vi certainly isn't a standard unix tool." - mjg59, QOOC.
