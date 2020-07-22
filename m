@@ -2,261 +2,120 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2CE820781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A5C207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joY9I2AT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0v9IQWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgGVQJ3 (ORCPT
+        id S1727834AbgGVQLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        Wed, 22 Jul 2020 12:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgGVQJ2 (ORCPT
+        with ESMTP id S1726406AbgGVQLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:09:28 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1C2C0619DC;
-        Wed, 22 Jul 2020 09:09:28 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id bm28so2081330edb.2;
-        Wed, 22 Jul 2020 09:09:28 -0700 (PDT)
+        Wed, 22 Jul 2020 12:11:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8429AC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:11:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a9so1748903pjd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zoyELi16cUvbyGY2mXBhWNaZ9/6nrareVV6zGnAvnSQ=;
-        b=joY9I2ATz7qOoQQFlBV2rHB+EyovZlWNSrccYvhpPZQGZ5fmCzWYsVmD9ca6PW0pYJ
-         K8XTRuBqOExV2/gArGOzo9r488TYLIQNIutunj27QGIDrJhu0ymaaIzJtthRVG/d5iVb
-         9HhkOlRZpwyw/QJWjp3xpywQAsUEZi4UTPFmh3nXFxf/I61OPFY+a7oStJIQ0CZ7RBVg
-         fCZroDYaA/MELHSxJwsu1KayCo3pYl5guBs9mTcDgg3UJFf7DGT9NPkXjHed/ep+HBAn
-         +RzJGYaBuC4FrQSf1DSuNtxDrbhcpT3JohF286WydWNk2ZkaB807K6aS/ObbGOl6t+S3
-         ++og==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HmPcqdLvVGHN8YIZDSoWp5mmL8DNRYwFD2mWJlFG/CI=;
+        b=m0v9IQWnDgV4s6SMh/3HK0Ls3dL54sIPnN+m5UT2/hUC3PlDl2/W4kuw8mLT/+t/cN
+         HxiCHcfv8HDrIysntb62I552PqeuEOyH/S3SO3QBkcx+RYaeSULjwkP8arqM1QWO4wg1
+         E6yzW6xGFhKPhLOTimdH487g2u68ZJqeiWPUxM01HC06RbE1hniX0ZTXTdPWg2yufgjd
+         nLTIf5z1CQ9sfy3TvT/oebTz//xFOR4fVrxrSBEhCivva3v/3XBk4x9TSl5DGIdulDLH
+         BE6h9ocHdNRBxV2BbVliv5GN8cFfm7d+CBU5ngLDUJQnsAzFN2IEdQkyveZQvervZIHb
+         WyAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zoyELi16cUvbyGY2mXBhWNaZ9/6nrareVV6zGnAvnSQ=;
-        b=fwXkL7XXss6EbTO70Hlo7+QO9Auucn5vtLVKMM0UsGgQDc6NuU3t7ZgssPx/l4mvZ+
-         0vRjNPFkONQKnXNbXzmm6ji4b6J/IivjsKWf9UjAlYESajtn3rw3y3QYpgIAv8KhywA3
-         tKUJG288fmqJ4616QuDE86fQv3Zg5IY1ondauTvLeSMeys22RJRoX/Cix/O9rij7AoKm
-         Lu0tzC/KzODqwEu8gEg2BMXrwv4XPSCSD3U5jFgvTjKhGiamf1txRI9aCBpAysiynViP
-         tadsBUpLMzei5eYXTcVKrP/p+39Blt11Orjxm2iYCQyIZvGi3zbtm4s7KHIGYzslnMty
-         If/A==
-X-Gm-Message-State: AOAM533SBWN/dlT/Nz04Mt9pSvtgr/BxdfoGqEDrdrtXf5RCSPBnpByk
-        q/ENssxyq1n+k8yyrr+1Zbt7t1uqcWU=
-X-Google-Smtp-Source: ABdhPJzPO/V2uw0v1Lu2o6aHQ8SfqBtMjCtG5dE9CLpZNRR5JBJZ5jRRPA4lwRa3985cDvOmZ5h2Pw==
-X-Received: by 2002:a50:cd1e:: with SMTP id z30mr183189edi.364.1595434166675;
-        Wed, 22 Jul 2020 09:09:26 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id lv17sm70523ejb.56.2020.07.22.09.09.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HmPcqdLvVGHN8YIZDSoWp5mmL8DNRYwFD2mWJlFG/CI=;
+        b=dfp/TUkpVg08vGDPv7LGH3PWvP03v4O17fHMSc//xw3UxdUCR3bvgrZuezXpMmbtlk
+         GXBO7qXbeS0ZXAB6Fv9Wj5XyFD2Vn23CLe+DvxS9oT6EI4j4Cikqr9vdEazK1KFxgqK6
+         T+V3HHsnumPRx601b5/hxlCD2/BKDmPWErIERwuoL4cMWSMcauNUfKy4hf3voN53PIyh
+         VcV74mf975SBorSbbg9e8ouFeWe/59xAAaqzLK9DJf+hs6mbdMFAyokJNtohPbWpPGCI
+         1YK0HSLBUMFDzb+tTO9wKIX1zn7SRcUZSyUAtTWOXaZbNiqmlc9CcSA+aNJT401cnk+G
+         aSpg==
+X-Gm-Message-State: AOAM533bQvx4UQQlSEWrksbpoBTED3ExTQ16bc52w9fykZv6If1fB6cm
+        DZ0gBcL8Pe4XsRjdvxTfXA0pZNSQa44=
+X-Google-Smtp-Source: ABdhPJzbx4BjNV5Obyp/YLufMMjsWtKMTtCF6Df/GgQvhyi0ZF27dT0hVdtJ2eX5wQF9bVXuMITvpw==
+X-Received: by 2002:a17:902:b084:: with SMTP id p4mr213677plr.58.1595434261973;
+        Wed, 22 Jul 2020 09:11:01 -0700 (PDT)
+Received: from thinkpad.teksavvy.com ([69.172.171.109])
+        by smtp.gmail.com with ESMTPSA id 21sm37393pfu.124.2020.07.22.09.11.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 09:09:25 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH 06/10] media: uapi: h264: Cleanup DPB entry interface
-Date:   Wed, 22 Jul 2020 18:09:24 +0200
-Message-ID: <2192247.mDtJn7f4FH@jernej-laptop>
-In-Reply-To: <20200715202233.185680-7-ezequiel@collabora.com>
-References: <20200715202233.185680-1-ezequiel@collabora.com> <20200715202233.185680-7-ezequiel@collabora.com>
+        Wed, 22 Jul 2020 09:11:01 -0700 (PDT)
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Rustam Kovhaev <rkovhaev@gmail.com>
+Subject: [PATCH] staging: wlan-ng: properly check endpoint types
+Date:   Wed, 22 Jul 2020 09:10:52 -0700
+Message-Id: <20200722161052.999754-1-rkovhaev@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+As syzkaller detected, wlan-ng driver does not do sanity check of
+endpoints in prism2sta_probe_usb(), add check for xfer direction and type
 
-Dne sreda, 15. julij 2020 ob 22:22:29 CEST je Ezequiel Garcia napisal(a):
-> As discussed recently, the current interface for the
-> Decoded Picture Buffer is not enough to properly
-> support field coding.
-> 
-> This commit introduces enough semantics to support
-> frame and field coding, and to signal how DPB entries
-> are "used for reference".
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  .../media/v4l/ext-ctrls-codec.rst             | 46 ++++++++++++-------
->  drivers/media/v4l2-core/v4l2-h264.c           |  4 +-
->  drivers/staging/media/rkvdec/rkvdec-h264.c    |  8 ++--
->  include/media/h264-ctrls.h                    |  8 +++-
->  4 files changed, 42 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst index
-> dd8e5a2e8986..46d4c8c6ad47 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -2058,10 +2058,35 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> * - __s32
->        - ``bottom_field_order_cnt``
->        -
-> +    * - enum :c:type:`v4l2_h264_dpb_reference`
-> +      - ``reference``
-> +      - Specifies how the DPB entry is referenced.
->      * - __u32
->        - ``flags``
->        - See :ref:`DPB Entry Flags <h264_dpb_flags>`
-> 
-> +.. c:type:: v4l2_h264_dpb_reference
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - ``V4L2_H264_DPB_TOP_REF``
-> +      - 0x1
-> +      - The top field in field pair is used for
-> +        short-term reference.
-> +    * - ``V4L2_H264_DPB_BOTTOM_REF``
-> +      - 0x2
-> +      - The bottom field in field pair is used for
-> +        short-term reference.
-> +    * - ``V4L2_H264_DPB_FRAME_REF``
-> +      - 0x3
-> +      - The frame (or the top/bottom fields, if it's a field pair)
-> +        is used for short-term reference.
-> +
->  .. _h264_dpb_flags:
-> 
->  ``DPB Entries Flags``
-> @@ -2075,29 +2100,16 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> 
->      * - ``V4L2_H264_DPB_ENTRY_FLAG_VALID``
->        - 0x00000001
-> -      - The DPB entry is valid and should be considered
-> +      - The DPB entry is valid (non-empty) and should be considered.
->      * - ``V4L2_H264_DPB_ENTRY_FLAG_ACTIVE``
+Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+---
+ drivers/staging/wlan-ng/prism2usb.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-I'm still not sure that we actually need both flags. Technically, if entry is 
-not used for reference then doesn't need to be present. Am I missing 
-something?
-
-Best regards,
-Jernej
-
->        - 0x00000002
-> -      - The DPB entry is currently being used as a reference frame
-> +      - The DPB entry is used for reference.
->      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
->        - 0x00000004
-> -      - The DPB entry is a long term reference frame
-> +      - The DPB entry is used for long-term reference.
->      * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD``
->        - 0x00000008
-> -      - The DPB entry is a field reference, which means only one of the
-> field -        will be used when decoding the new frame/field. When not set
-> the DPB -        entry is a frame reference (both fields will be used).
-> Note that this -        flag does not say anything about the number of
-> fields contained in the -        reference frame, it just describes the one
-> used to decode the new -        field/frame
-> -    * - ``V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD``
-> -      - 0x00000010
-> -      - The DPB entry is a bottom field reference (only the bottom field of
-> the -        reference frame is needed to decode the new frame/field). Only
-> valid if -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set. When
-> -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set but
-> -        V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD is not, that means the
-> -        DPB entry is a top field reference
-> +      - The DPB entry is a single field or a complementary field pair.
-> 
->  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
->      Specifies the decoding mode to use. Currently exposes slice-based and
-> diff --git a/drivers/media/v4l2-core/v4l2-h264.c
-> b/drivers/media/v4l2-core/v4l2-h264.c index edf6225f0522..306a51683606
-> 100644
-> --- a/drivers/media/v4l2-core/v4l2-h264.c
-> +++ b/drivers/media/v4l2-core/v4l2-h264.c
-> @@ -66,10 +66,10 @@ v4l2_h264_init_reflist_builder(struct
-> v4l2_h264_reflist_builder *b, else
->  			b->refs[i].frame_num = dpb[i].frame_num;
-> 
-> -		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-> +		if (dpb[i].reference & V4L2_H264_DPB_FRAME_REF)
->  			pic_order_count = 
-min(dpb[i].top_field_order_cnt,
->  					      
-dpb[i].bottom_field_order_cnt);
-> -		else if (dpb[i].flags & 
-V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-> +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
->  			pic_order_count = 
-dpb[i].bottom_field_order_cnt;
->  		else
->  			pic_order_count = dpb[i].top_field_order_cnt;
-> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> b/drivers/staging/media/rkvdec/rkvdec-h264.c index
-> 7b66e2743a4f..57539c630422 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-> @@ -953,11 +953,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
->  			     RKVDEC_COLMV_USED_FLAG_REF;
-> 
->  		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-> -			refer_addr |= RKVDEC_TOPFIELD_USED_REF |
-> -				      RKVDEC_BOTFIELD_USED_REF;
-> -		else if (dpb[i].flags & 
-V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-> +			refer_addr |= RKVDEC_FIELD_REF;
-> +
-> +		if (dpb[i].reference & V4L2_H264_DPB_TOP_REF)
->  			refer_addr |= RKVDEC_BOTFIELD_USED_REF;
-> -		else
-> +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
->  			refer_addr |= RKVDEC_TOPFIELD_USED_REF;
-> 
->  		writel_relaxed(dpb[i].top_field_order_cnt,
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index 620ee8863d74..52f3976b986c 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -202,7 +202,12 @@ struct v4l2_ctrl_h264_slice_params {
->  #define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
->  #define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
->  #define V4L2_H264_DPB_ENTRY_FLAG_FIELD		0x08
-> -#define V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD	0x10
-> +
-> +enum v4l2_h264_dpb_reference {
-> +	V4L2_H264_DPB_TOP_REF = 0x1,
-> +	V4L2_H264_DPB_BOTTOM_REF = 0x2,
-> +	V4L2_H264_DPB_FRAME_REF = 0x3,
-> +};
-> 
->  struct v4l2_h264_dpb_entry {
->  	__u64 reference_ts;
-> @@ -211,6 +216,7 @@ struct v4l2_h264_dpb_entry {
->  	/* Note that field is indicated by v4l2_buffer.field */
->  	__s32 top_field_order_cnt;
->  	__s32 bottom_field_order_cnt;
-> +	enum v4l2_h264_dpb_reference reference;
->  	__u32 flags; /* V4L2_H264_DPB_ENTRY_FLAG_* */
->  };
-
-
-
+diff --git a/drivers/staging/wlan-ng/prism2usb.c b/drivers/staging/wlan-ng/prism2usb.c
+index 4689b2170e4f..456603fd26c0 100644
+--- a/drivers/staging/wlan-ng/prism2usb.c
++++ b/drivers/staging/wlan-ng/prism2usb.c
+@@ -61,11 +61,25 @@ static int prism2sta_probe_usb(struct usb_interface *interface,
+ 			       const struct usb_device_id *id)
+ {
+ 	struct usb_device *dev;
+-
++	const struct usb_endpoint_descriptor *epd;
++	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct wlandevice *wlandev = NULL;
+ 	struct hfa384x *hw = NULL;
+ 	int result = 0;
+ 
++	if (iface_desc->desc.bNumEndpoints != 2) {
++		result = -ENODEV;
++		goto failed;
++	}
++
++	result = -EINVAL;
++	epd = &iface_desc->endpoint[1].desc;
++	if (!usb_endpoint_is_bulk_in(epd))
++		goto failed;
++	epd = &iface_desc->endpoint[2].desc;
++	if (!usb_endpoint_is_bulk_out(epd))
++		goto failed;
++
+ 	dev = interface_to_usbdev(interface);
+ 	wlandev = create_wlan();
+ 	if (!wlandev) {
+-- 
+2.27.0
 
