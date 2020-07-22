@@ -2,82 +2,99 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4426C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E80C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AC120787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:59:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hCj36RiE"
+	by mail.kernel.org (Postfix) with ESMTP id CC26F20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbgGVB7f (ORCPT
+        id S1731713AbgGVCD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 21:59:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:29639 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731621AbgGVB7f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 21:59:35 -0400
-X-UUID: 507314be90494080be33d838767b4236-20200722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=HBs3aJUcIVxX1irCDgPsr1t6Sr5uliFctbO3YQ/k1Z0=;
-        b=hCj36RiEwIWbCdUWFFXm6ZVLELzbf7n6NNUclkHRzM6SZFmO5xaTMdJxTgH3hLLiYPHydUdkMURVM7mxcweXJ15cclEAPYZB8931jNp9Zk48q37kGzSza8GfXZyGpQfmbYCkcZP9UpBjAu9KHYv7wuKnOT8LQ+5yOmWozy6OoB0=;
-X-UUID: 507314be90494080be33d838767b4236-20200722
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1814161564; Wed, 22 Jul 2020 09:59:31 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 22 Jul 2020 09:59:29 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 09:59:29 +0800
-Message-ID: <1595383170.14937.2.camel@mtkswgap22>
-Subject: Re: [PATCH v2] usb: gadget: configfs: Fix use-after-free issue with
- udc_name
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Eddie Hung <eddie.hung@mediatek.com>, <stable@vger.kernel.org>,
-        "Mediatek WSD Upstream" <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Date:   Wed, 22 Jul 2020 09:59:30 +0800
-In-Reply-To: <20200721113353.GA1686460@kroah.com>
-References: <1594881666-8843-1-git-send-email-macpaul.lin@mediatek.com>
-         <1595040303-23046-1-git-send-email-macpaul.lin@mediatek.com>
-         <1595041133.23887.4.camel@mtkswgap22> <20200721113353.GA1686460@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 21 Jul 2020 22:03:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38092 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731614AbgGVCD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:03:27 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9E13415924246FF15238;
+        Wed, 22 Jul 2020 09:56:45 +0800 (CST)
+Received: from [10.174.178.63] (10.174.178.63) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Jul 2020 09:56:39 +0800
+Subject: Re: [PATCH] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
+To:     Yang Yingliang <yangyingliang@huawei.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <jslaby@suse.com>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>
+References: <20200721143852.4058352-1-yangyingliang@huawei.com>
+From:   "liwei (GF)" <liwei391@huawei.com>
+Message-ID: <c56e0ecc-275c-2cd6-4f9b-8ae37656ab5b@huawei.com>
+Date:   Wed, 22 Jul 2020 09:56:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200721143852.4058352-1-yangyingliang@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.63]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTIxIGF0IDEzOjMzICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
-dGU6DQo+IE9uIFNhdCwgSnVsIDE4LCAyMDIwIGF0IDEwOjU4OjUzQU0gKzA4MDAsIE1hY3BhdWwg
-TGluIHdyb3RlOg0KPiA+IE9uIFNhdCwgMjAyMC0wNy0xOCBhdCAxMDo0NSArMDgwMCwgTWFjcGF1
-bCBMaW4gd3JvdGU6DQo+ID4gPiBGcm9tOiBFZGRpZSBIdW5nIDxlZGRpZS5odW5nQG1lZGlhdGVr
-LmNvbT4NCj4gPiA+IA0KPiA+IA0KPiA+IFdlbGwsIGl0J3Mgc3RyYW5nZSwgSSBzaW1wbHkgcmVw
-bGFjZWQgdGhlIHVwbG9hZGVyJ3MgbmFtZSB0byBteQ0KPiA+IGNvbGxlYWd1ZSwgZ2l0IHNlbmQt
-ZW1haWwgcG9wIHVwIHRoaXMgbGluZSBhdXRvbWF0aWNhbGx5Lg0KPiA+IA0KPiA+IFNob3VsZG4n
-dCBJIGRvIHRoYXQga2luZCBvZiBjaGFuZ2UuIEl0IGRpZCBub3QgaGFwcGVuZWQgYmVmb3JlLg0K
-PiA+IERvIEkgbmVlZCB0byBjaGFuZ2UgaXQgYmFjayBhbmQgdXBkYXRlIHBhdGNoIHYzPw0KPiAN
-Cj4gV2hvIGlzIHRoZSByZWFsIGF1dGhvciBvZiB0aGlzLCBFZGRpZSBvciB5b3U/ICBJZiBFZGRp
-ZSwgdGhpcyBpcw0KPiBjb3JyZWN0LCBpZiB5b3UsIGl0IGlzIG5vdC4NCj4gDQo+IHRoYW5rcywN
-Cj4gDQo+IGdyZWcgay1oDQoNCkl0IGlzIEVkZGllISBJIGp1c3QgY2hhbmdlZCB0aGUgdXBsb2Fk
-ZXIgdG8gdGhlIGNvcnJlY3QgYXV0aG9yIGZyb20gbXkNCndvcmtpbmcgdHJlZSENClRoYW5rcyEN
-Cg0KUmVnYXJkcywNCk1hY3BhdWwgTGluDQoNCg==
+Hi Yingliang,
 
+On 2020/7/21 22:38, Yang Yingliang wrote:
+(SNIP)
+> 
+> SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
+> serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
+> so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
+> Fix this problem by calling serial8250_set_defaults() after init uart port.
+> 
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/tty/serial/8250/8250_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+> index fc118f649887..cae61d1ebec5 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -524,6 +524,7 @@ static void __init serial8250_isa_init_ports(void)
+>  		 */
+>  		up->mcr_mask = ~ALPHA_KLUDGE_MCR;
+>  		up->mcr_force = ALPHA_KLUDGE_MCR;
+> +		serial8250_set_defaults(up);
+
+That is really a good catch, but this modification looks not good to me.
+
+First, serial8250_set_defaults()'s parameter 'up' updated in the loop below is used to
+lead to different branch in this function. So that the logic is broken.
+
+Second, up->port.iobase and up->port.iotype are both initialized to 0, so the 'serial_in'
+and 'serial_out' will be assigned to the ops for IO space with port 0 here, i don't think
+that is correct.
+
+>  	}
+>  
+>  	/* chain base port ops to support Remote Supervisor Adapter */
+> @@ -547,7 +548,6 @@ static void __init serial8250_isa_init_ports(void)
+>  		port->membase  = old_serial_port[i].iomem_base;
+>  		port->iotype   = old_serial_port[i].io_type;
+>  		port->regshift = old_serial_port[i].iomem_reg_shift;
+> -		serial8250_set_defaults(up);
+>  
+>  		port->irqflags |= irqflag;
+>  		if (serial8250_isa_config != NULL)
+> 
+
+
+Thanks,
+Wei
