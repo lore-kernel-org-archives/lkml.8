@@ -2,129 +2,157 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF51EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA33C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C507920717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPRuwLr3"
+	by mail.kernel.org (Postfix) with ESMTP id 431412084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbgGVRza (ORCPT
+        id S1726349AbgGVSC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVRz3 (ORCPT
+        Wed, 22 Jul 2020 14:02:26 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:43732 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgGVSCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:55:29 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F85C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:55:29 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id f12so3165587eja.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v6guxX6mZtix0UN5UXZjDkdDZ88VY9pbVBPWoe8hGYQ=;
-        b=jPRuwLr32SMDzzTNsRbghRPMenaWVD+B/SVzZF1Uc1Llsq/ZIivz/T2o5NrbEYVBeE
-         80cewu8Dm2oDPeU2T5l8KbRX5uCRRPNXKGZe76hTgXrlYJ4elRmCeqOka6AyaKkp+a7s
-         tnk/332zp8t1AETZ0FjTRzFOtOuc0geYlT+Ui0cQOsKgBbPK877a7fzOmuv04SvVY9Pu
-         +blOv/fx0pZSJyb9xbRMaNxgo93g9vImKoXda8tZHsytWfDipNMj8tq3VHHssp6jgGAj
-         GBl2XSguaL63ZfAPPVPBL2RhYT6Zk1UWJ/FvurSAG62Qi/1i4ReuK4AkuI7H4wYv56hZ
-         YOsw==
+        Wed, 22 Jul 2020 14:02:24 -0400
+Received: by mail-il1-f198.google.com with SMTP id y13so1628193ila.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:02:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v6guxX6mZtix0UN5UXZjDkdDZ88VY9pbVBPWoe8hGYQ=;
-        b=RQCVvWOXTvshBTBK8xHa28pjMKrPOTJ6+/UgPnnaiVphWq+mFS8QPMWJrbYxaCeNbi
-         3I5Vix8l9pCLheyY/YZBaazZ/Vcko2M5dmn5LOTiwp3onVGi4UraNiOWYe7xopTKBkSq
-         eOPQQuRK1ZDXOuRStegdboIbw3wBOZKipFRcvSA9hD5CXD1BOnv0TNc1Rpbh+QKOgFxm
-         6t/SjDKDvHb31LbOiryazYdqtrGKmyW03++N6C+hrUFRctJVy7y+Kscp0L03Myxjim/E
-         PYVrjrZmY0BxodiTkbUstUkCtFhJQixFtsZviWwKSsurD0y/mdcFP11IucDO6FStPmZ0
-         /IbQ==
-X-Gm-Message-State: AOAM5318yaEOyjV5+c40s3K6926I61U3Lp7zQ7yuP/l/Zv3j4mwQ/rwm
-        gR2rMEw4V5zK5/XnvoHNLSxlz/AsADmATGKPb3ofI+fX
-X-Google-Smtp-Source: ABdhPJzQHgTVTJmsdSnHKQg+hRAmObEtDQPCwtFEQ4cKuewxqthv0FypycyZ0js2NzGr+FeBDN0d6aQyo6ktu11WGNc=
-X-Received: by 2002:a17:907:2058:: with SMTP id pg24mr741268ejb.79.1595440528090;
- Wed, 22 Jul 2020 10:55:28 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=2T5Kb68mks66WlbHOKiIVPF5/NI+LFYplKLylfQLPMg=;
+        b=fu60e40gn0xgqw/CwnSTum1fGV0ktI3o1+sW8JUCH1xKzy8H7jxFobClH0GzQvwoVd
+         IkfFDlsKnpDf7k3joYaiB2znjSGv29v4QPjIOPEpjpWFtPn1gyyQ3kIsdwLzS6Sj/XV2
+         S4y+zB/jpKCMFArv6QMs1DhV4MdPtCEsEJSesPyRoVZrvURAfjvmxOLtG+C/8fubhzNi
+         TZUIOBhy/MpSjqrlBFOasIJfI7LfYiReIjLDC73GTpMrlmkbDm2AjSSfVFNUpUbYGVD6
+         lhJIb0Nvxkj6FXuIcQHeGl9ZFv3v2WeAof1xanyebLN/HKYQRYczpo+4L3bvw/qrfrH5
+         s2Vw==
+X-Gm-Message-State: AOAM533H19EgVtF9Q2YO6SiOkSipeUx+8khn9LyZGXyr2xqX+9+u+t/x
+        Z79bn52iO4dAFFaY6ykHSw2k8wg8G+9KMOy8ug17aDz6vC0r
+X-Google-Smtp-Source: ABdhPJxBpQkG+vJCJ7627aQSU3pC+nNz5XSZHtWNWQHjaysn3Ccg/u8PLQpKeRvINe5LYicdb9S4dYRlUKJ5VJkNepM8IQrCHDyA
 MIME-Version: 1.0
-References: <20200722121439.44328-1-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20200722121439.44328-1-kirill.shutemov@linux.intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 22 Jul 2020 10:54:41 -0700
-Message-ID: <CAHbLzkpYxxO=p82upzjRBW5eD0iwMRC=_9KheiRP54MHwaAGvg@mail.gmail.com>
-Subject: Re: [PATCH] khugepaged: Fix null-pointer dereference due to race
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com
+X-Received: by 2002:a6b:f911:: with SMTP id j17mr930937iog.96.1595440943469;
+ Wed, 22 Jul 2020 11:02:23 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 11:02:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b217d105ab0b8ae4@google.com>
+Subject: INFO: rcu detected stall in seq_read (2)
+From:   syzbot <syzbot+c28b5fee66fd3b7f766e@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org, corbet@lwn.net,
+        davem@davemloft.net, fweisbec@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        mingo@kernel.org, netdev@vger.kernel.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vasundhara-v.volam@broadcom.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 5:14 AM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
->
-> khugepaged has to drop mmap lock several times while collapsing a page.
-> The situation can change while the lock is dropped and we need to
-> re-validate that the VMA is still in place and the PMD is still subject
-> for collapse.
->
-> But we miss one corner case: while collapsing an anonymous pages the VMA
-> could be replaced with file VMA. If the file VMA doesn't have any
-> private pages we get NULL pointer dereference:
->
->         general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
->         KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
->         anon_vma_lock_write include/linux/rmap.h:120 [inline]
->         collapse_huge_page mm/khugepaged.c:1110 [inline]
->         khugepaged_scan_pmd mm/khugepaged.c:1349 [inline]
->         khugepaged_scan_mm_slot mm/khugepaged.c:2110 [inline]
->         khugepaged_do_scan mm/khugepaged.c:2193 [inline]
->         khugepaged+0x3bba/0x5a10 mm/khugepaged.c:2238
->
-> The fix is to make sure that the VMA is anonymous in
-> hugepage_vma_revalidate(). The helper is only used for collapsing
-> anonymous pages.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-> Reported-by: syzbot+ed318e8b790ca72c5ad0@syzkaller.appspotmail.com
+Hello,
 
-Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+syzbot found the following issue on:
 
-I think this is worth backporting to stable as well.
+HEAD commit:    4fa640dc Merge tag 'vfio-v5.8-rc7' of git://github.com/awi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=145cac30900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+dashboard link: https://syzkaller.appspot.com/bug?extid=c28b5fee66fd3b7f766e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e23ac8900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1198c440900000
 
-> ---
->  mm/khugepaged.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b043c40a21d4..700f5160f3e4 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -958,6 +958,9 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->                 return SCAN_ADDRESS_RANGE;
->         if (!hugepage_vma_check(vma, vma->vm_flags))
->                 return SCAN_VMA_CHECK;
-> +       /* Anon VMA expected */
-> +       if (!vma->anon_vma || vma->vm_ops)
-> +               return SCAN_VMA_CHECK;
->         return 0;
->  }
->
-> --
-> 2.26.2
->
->
+The issue was bisected to:
+
+commit 53e233ea2fa9fa7e2405e95070981f327d90e519
+Author: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Date:   Thu Oct 4 05:43:52 2018 +0000
+
+    devlink: Add Documentation/networking/devlink-params-bnxt.txt
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e22b94900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=17e22b94900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e22b94900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c28b5fee66fd3b7f766e@syzkaller.appspotmail.com
+Fixes: 53e233ea2fa9 ("devlink: Add Documentation/networking/devlink-params-bnxt.txt")
+
+hrtimer: interrupt took 6305559 ns
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	1-...!: (1 GPs behind) idle=91e/1/0x4000000000000000 softirq=10105/10107 fqs=1 
+	(t=18319 jiffies g=8905 q=457)
+NMI backtrace for cpu 1
+CPU: 1 PID: 4008 Comm: systemd-journal Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+ rcu_dump_cpu_stacks+0x194/0x1cf kernel/rcu/tree_stall.h:320
+ print_cpu_stall kernel/rcu/tree_stall.h:553 [inline]
+ check_cpu_stall kernel/rcu/tree_stall.h:627 [inline]
+ rcu_pending kernel/rcu/tree.c:3489 [inline]
+ rcu_sched_clock_irq.cold+0x5b3/0xccc kernel/rcu/tree.c:2504
+ update_process_times+0x25/0x60 kernel/time/timer.c:1737
+ tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
+ tick_sched_timer+0x108/0x290 kernel/time/tick-sched.c:1320
+ __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+ __hrtimer_run_queues+0x1d5/0xfc0 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+ __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
+RIP: 0010:format_decode+0x0/0xad0 lib/vsprintf.c:2329
+Code: c7 c7 10 05 af 8a be 10 00 00 00 e8 5a c3 46 00 48 c7 c7 20 78 0d 8a e9 6e f2 e2 fd 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 <41> 57 41 56 41 55 41 54 55 48 89 f5 53 48 bb 00 00 00 00 00 fc ff
+RSP: 0018:ffffc90001077a10 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffff83b0a497
+RDX: ffff888093224040 RSI: ffffc90001077a80 RDI: ffffffff884e6293
+RBP: ffffffff884e6293 R08: 0000000000000001 R09: ffff8880952a63d1
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880952a63d2
+R13: ffffffff884e6293 R14: 0000000000000025 R15: ffffc90001077b30
+ vsnprintf+0x155/0x14f0 lib/vsprintf.c:2572
+ seq_vprintf fs/seq_file.c:379 [inline]
+ seq_printf+0x195/0x240 fs/seq_file.c:394
+ proc_pid_status+0x1c6d/0x24b0 fs/proc/array.c:424
+ proc_single_show+0x116/0x1e0 fs/proc/base.c:766
+ seq_read+0x432/0x1070 fs/seq_file.c:208
+ vfs_read+0x1df/0x520 fs/read_write.c:479
+ ksys_read+0x12d/0x250 fs/read_write.c:607
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7f0fc43d9910
+Code: Bad RIP value.
+RSP: 002b:00007ffdcb193978 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 000055b1476b96f0 RCX: 00007f0fc43d9910
+RDX: 0000000000000800 RSI: 000055b1476b8b00 RDI: 0000000000000013
+RBP: 00007f0fc4694440 R08: 00007f0fc4697fc8 R09: 0000000000000410
+R10: 000055b1476b96f0 R11: 0000000000000246 R12: 0000000000000800
+R13: 0000000000000d68 R14: 000055b1476b8b00 R15: 00007f0fc4693900
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
