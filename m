@@ -2,203 +2,283 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3E0C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88726C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5B022B45
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594372086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bDvwaPrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733123AbgGVXU2 (ORCPT
+        id S1733146AbgGVXUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:20:28 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:34279 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726447AbgGVXU1 (ORCPT
+        Wed, 22 Jul 2020 19:20:36 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.80]:21102 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733125AbgGVXUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:20:27 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jyO2A-000cv0-LP; Thu, 23 Jul 2020 01:20:22 +0200
-Received: from p57bd9e19.dip0.t-ipconnect.de ([87.189.158.25] helo=[192.168.178.139])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jyO2A-002Xd0-EP; Thu, 23 Jul 2020 01:20:22 +0200
-Subject: Re: [PATCH 3/4] sh: Add SECCOMP_FILTER
-To:     Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-References: <20200722231322.419642-1-kernel@mkarcher.dialup.fu-berlin.de>
- <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <77da0625-b4b3-78ca-b540-208b7889bd75@physik.fu-berlin.de>
-Date:   Thu, 23 Jul 2020 01:20:21 +0200
+        Wed, 22 Jul 2020 19:20:35 -0400
+X-Greylist: delayed 1457 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Jul 2020 19:20:33 EDT
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 021E713C460
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 17:56:14 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id yNenjKktCzOauyNenj8cyo; Wed, 22 Jul 2020 17:56:13 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=eIzKJF8jNji+BynBmA3f+h/SU/2RQ4nZCvi7qumLhJQ=; b=bDvwaPrQvUsed6SrcORIS7JSCq
+        DQ84Mvaxim5ENYjs5h/qH1F7kLISvdrCvMUu/eQA+lCkPpJTj45/5jRCb51nlP4Ti+uLVI34tD7Fz
+        NrsMV8l3upYsKq4f+CtMmrMqyldRGbsZjdgBgjfv3KThJ3owYodnLsbQ30i5VqfLZQDl4nfc2k0Sf
+        hh9g+WNdZuEBoHTgTGCpShsTZ9yxXeiINhBsvm39eljzNMOvQDYC7TDyHQJo0QfdmWk5h6/xSeabc
+        sUfhaHzPr4CZHua77HXQRb1DCB4W/DeMel6EMtx5S4FLDsPEhudvl1o5VPIRLnSDP+mpYtbV0sUFV
+        Tz5ib43Q==;
+Received: from [201.162.161.222] (port=56764 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jyNem-002nvm-JK; Wed, 22 Jul 2020 17:56:13 -0500
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20200714214516.GA1040@embeddedor>
+ <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
+ <3cac21c8798b48bdb412a5504126489f@intel.com>
+ <b79bbb51-50e4-6437-b485-eaecdb3fa18e@embeddedor.com>
+ <071940a8c76c4652b4fd58195719c471@intel.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzStHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvYXJzQGtlcm5lbC5vcmc+wsGrBBMBCAA+FiEEkmRahXBSurMI
+ g1YvRwW0y0cG2zEFAl6zFvQCGyMFCQlmAYAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AAIQkQ
+ RwW0y0cG2zEWIQSSZFqFcFK6swiDVi9HBbTLRwbbMZsEEACWjJyXLjtTAF21Vuf1VDoGzitP
+ oE69rq9UhXIGR+e0KACyIFoB9ibG/1j/ESMa0RPSwLpJDLgfvi/I18H/9cKtdo2uz0XNbDT8
+ i3llIu0b43nzGIDzRudINBXC8Coeob+hrp/MMZueyzt0CUoAnY4XqpHQbQsTfTrpFeHT02Qz
+ ITw6kTSmK7dNbJj2naH2vSrU11qGdU7aFzI7jnVvGgv4NVQLPxm/t4jTG1o+P1Xk4N6vKafP
+ zqzkxj99JrUAPt+LyPS2VpNvmbSNq85PkQ9gpeTHpkio/D9SKsMW62njITPgy6M8TFAmx8JF
+ ZAI6k8l1eU29F274WnlQ6ZokkJoNctwHa+88euWKHWUDolCmQpegJJ8932www83GLn1mdUZn
+ NsymjFSdMWE+y8apWaV9QsDOKWf7pY2uBuE6GMPRhX7e7h5oQwa1lYeO2L9LTDeXkEOJe+hE
+ qQdEEvkC/nok0eoRlBlZh433DQlv4+IvSsfN/uWld2TuQFyjDCLIm1CPRfe7z0TwiCM27F+O
+ lHnUspCFSgpnrxqNH6CM4aj1EF4fEX+ZyknTSrKL9BGZ/qRz7Xe9ikU2/7M1ov6rOXCI4NR9
+ THsNax6etxCBMzZs2bdMHMcajP5XdRsOIARuN08ytRjDolR2r8SkTN2YMwxodxNWWDC3V8X2
+ RHZ4UwQw487BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJBH1AAh8tq2ULl
+ 7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0DbnWSOrG7z9H
+ IZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo5NwYiwS0lGis
+ LTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOPotJTApqGBq80
+ X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfFl5qH5RFY/qVn
+ 3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpDjKxY/HBUSmaE
+ 9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+ezS/pzC/YTzAv
+ CWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQI6Zk91jbx96n
+ rdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqozol6ioMHMb+In
+ rHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcAEQEAAcLBZQQY
+ AQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QSUMebQRFjKavw
+ XB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sdXvUjUocKgUQq
+ 6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4WrZGh/1hAYw4
+ ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVnimua0OpqRXhC
+ rEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfgfBNOb1p1jVnT
+ 2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF8ieyHVq3qatJ
+ 9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDCORYf5kW61fcr
+ HEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86YJWH93PN+ZUh
+ 6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
+ rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
+ AP7RWS474w==
+Subject: Re: [PATCH v2] mei: Avoid the use of one-element arrays
+Message-ID: <6e50fb93-8130-766f-8688-2a07a1744701@embeddedor.com>
+Date:   Wed, 22 Jul 2020 18:01:54 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
+In-Reply-To: <071940a8c76c4652b4fd58195719c471@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.158.25
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.161.222
+X-Source-L: No
+X-Exim-ID: 1jyNem-002nvm-JK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.161.222]:56764
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 1:13 AM, Michael Karcher wrote:
-> Port sh to use the new SECCOMP_FILTER code.
+
+
+On 7/22/20 17:40, Winkler, Tomas wrote:
+>>
+>> Hi Tomas,
+>>
+>> Please, see my comments below...
+>>
+>> On 7/22/20 14:04, Winkler, Tomas wrote:
+>>>
+>>>>
+>>>> Hi all,
+>>>>
+>>>> Friendly ping: who can take this? :)
+>>>>
+>>>> Thanks
+>>>> --
+>>>> Gustavo
+>>>>
+>>>> On 7/14/20 16:45, Gustavo A. R. Silva wrote:
+>>>>> One-element arrays are being deprecated[1]. Replace the one-element
+>>>>> arrays with a simple value type u8 reserved, once this is just a
+>>>>> placeholder for alignment.
+>>>>>
+>>>>> Also, while there, use the preferred form for passing a size of a struct.
+>>>>> The alternative form where struct name is spelled out hurts
+>>>>> readability and introduces an opportunity for a bug when the
+>>>>> variable type is changed but the corresponding sizeof that is passed
+>>>>> as argument is
+>>>> not.
+>>>>>
+>>>>> [1] https://github.com/KSPP/linux/issues/79
+>>>>>
+>>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>>  - Use a more concise changelog text.
+>>>>>
+>>>>>  drivers/misc/mei/hbm.c | 4 ++--
+>>>>>  drivers/misc/mei/hw.h  | 6 +++---
+>>>>>  2 files changed, 5 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/misc/mei/hbm.c b/drivers/misc/mei/hbm.c index
+>>>>> a44094cdbc36..f020d5594154 100644
+>>>>> --- a/drivers/misc/mei/hbm.c
+>>>>> +++ b/drivers/misc/mei/hbm.c
+>>>>> @@ -408,14 +408,14 @@ static int mei_hbm_add_cl_resp(struct
+>>>>> mei_device *dev, u8 addr, u8 status)  {
+>>>>>  	struct mei_msg_hdr mei_hdr;
+>>>>>  	struct hbm_add_client_response resp;
+>>>>> -	const size_t len = sizeof(struct hbm_add_client_response);
+>>>>> +	const size_t len = sizeof(resp);
+>>>>>  	int ret;
+>>>>>
+>>>>>  	dev_dbg(dev->dev, "adding client response\n");
+>>>>>
+>>>>>  	mei_hbm_hdr(&mei_hdr, len);
+>>>>>
+>>>>> -	memset(&resp, 0, sizeof(struct hbm_add_client_response));
+>>>>> +	memset(&resp, 0, len);
+>>>>>  	resp.hbm_cmd = MEI_HBM_ADD_CLIENT_RES_CMD;
+>>>>>  	resp.me_addr = addr;
+>>>>>  	resp.status  = status;
+>>>
+>>> This should be probably in a different patch it's not related to the second
+>> part.
 > 
-> Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-> ---
->  arch/sh/Kconfig                               | 1 +
->  arch/sh/kernel/entry-common.S                 | 2 ++
->  arch/sh/kernel/ptrace_32.c                    | 5 +++--
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 8 +++++++-
->  4 files changed, 13 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 32d959849df9..10b510c16841 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -27,6 +27,7 @@ config SUPERH
->  	select GENERIC_SMP_IDLE_THREAD
->  	select GUP_GET_PTE_LOW_HIGH if X2TLB
->  	select HAVE_ARCH_AUDITSYSCALL
-> +	select HAVE_ARCH_SECCOMP_FILTER
->  	select HAVE_ARCH_KGDB
->  	select HAVE_ARCH_TRACEHOOK
->  	select HAVE_DEBUG_BUGVERBOSE
-> diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-> index c4d88d61890d..ad963104d22d 100644
-> --- a/arch/sh/kernel/entry-common.S
-> +++ b/arch/sh/kernel/entry-common.S
-> @@ -368,6 +368,8 @@ syscall_trace_entry:
->  	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
->  	jsr	@r11	    	! superior (will chomp R[0-7])
->  	 nop
-> +	cmp/eq	#-1, r0
-> +	bt	syscall_exit
->  	mov.l	r0, @(OFF_R0,r15)	! Save return value
->  	!			Reload R0-R4 from kernel stack, where the
->  	!   	    	    	parent may have modified them using
-> diff --git a/arch/sh/kernel/ptrace_32.c b/arch/sh/kernel/ptrace_32.c
-> index 64bfb714943e..25ccfbd02bfa 100644
-> --- a/arch/sh/kernel/ptrace_32.c
-> +++ b/arch/sh/kernel/ptrace_32.c
-> @@ -485,8 +485,6 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
->  {
->  	long ret = 0;
->  
-> -	secure_computing_strict(regs->regs[0]);
-> -
->  	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
->  	    tracehook_report_syscall_entry(regs))
->  		/*
-> @@ -496,6 +494,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
->  		 */
->  		ret = -1L;
->  
-> +	if (secure_computing() == -1)
-> +		return -1;
-> +
->  	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
->  		trace_sys_enter(regs, regs->regs[0]);
->  
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index 252140a52553..6eb21685c88f 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -122,6 +122,8 @@ struct seccomp_data {
->  #  define __NR_seccomp 358
->  # elif defined(__s390__)
->  #  define __NR_seccomp 348
-> +# elif defined(__sh__)
-> +#  define __NR_seccomp 372
->  # else
->  #  warning "seccomp syscall number unknown for this architecture"
->  #  define __NR_seccomp 0xffff
-> @@ -1622,6 +1624,10 @@ TEST_F(TRACE_poke, getpid_runs_normally)
->  # define SYSCALL_SYSCALL_NUM regs[4]
->  # define SYSCALL_RET	regs[2]
->  # define SYSCALL_NUM_RET_SHARE_REG
-> +#elif defined(__sh__)
-> +# define ARCH_REGS	struct pt_regs
-> +# define SYSCALL_NUM	gpr[3]
-> +# define SYSCALL_RET	gpr[0]
->  #else
->  # error "Do not know how to find your architecture's registers and syscalls"
->  #endif
-> @@ -1693,7 +1699,7 @@ void change_syscall(struct __test_metadata *_metadata,
->  	EXPECT_EQ(0, ret) {}
->  
->  #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
-> -	defined(__s390__) || defined(__hppa__) || defined(__riscv)
-> +	defined(__s390__) || defined(__hppa__) || defined(__riscv) || defined(__sh__)
->  	{
->  		regs.SYSCALL_NUM = syscall;
->  	}
+> Frankly I will post other version of this that cleans the whole file. 
 > 
 
-Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Sounds good. :)
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+>>>
+>>>>> diff --git a/drivers/misc/mei/hw.h b/drivers/misc/mei/hw.h index
+>>>>> b1a8d5ec88b3..8c0297f0e7f3 100644
+>>>>> --- a/drivers/misc/mei/hw.h
+>>>>> +++ b/drivers/misc/mei/hw.h
+>>> I have second thoughts of this part as all reserved fields in this
+>>> file are of form u8 reserved[X], so we will lose that uniformity with
+>>> this change, you have to look at the file as whole not just at the patch.  So I
+>> prefer we drop that part of the patch.
+>>>
+>>
+>> This is actually the main point of this patch: the removal of one-element
+>> arrays.
+>> And yeah, every place in the kernel that uses the form that you mention will
+>> see it's uniformity slightly modified, and that's for a good cause: the removal
+>> of one-element arrays, so we can enable bounds checking.
+> 
+> I was going over https://github.com/KSPP/linux/issues/79, I'm not sure this all related  to flexible arrays,
+
+I've opened a new issue for this:
+
+https://github.com/KSPP/linux/issues/86
+
+And I'm already including the link above in these sorts
+of patches; please, see:
+
+https://lore.kernel.org/lkml/20200717215500.GA13910@embeddedor/
+
+> those are just reserved struct members. So because it's hard to identify a legitimate usage of single element arrays
+> we are going to kill them all? It's more esthetic / readability issue here but there might be some legit use case for one element array, no?
+> 
+
+The code is continuously evolving and, if a one-element array is not intended
+to be used as a variable-length array at all, I frankly cannot think of any another
+use that is not merely esthetic/readability. :)
+
+Thanks
+--
+Gustavo
+
+> 
+>>
+>> Thanks
+>> --
+>> Gustavo
+>>
+>>>>> @@ -346,13 +346,13 @@ struct hbm_add_client_request {
+>>>>>   * @hbm_cmd: bus message command header
+>>>>>   * @me_addr: address of the client in ME
+>>>>>   * @status: if HBMS_SUCCESS then the client can now accept
+>> connections.
+>>>>> - * @reserved: reserved
+>>>>> + * @reserved: reserved for alignment.
+>>>>>   */
+>>>>>  struct hbm_add_client_response {
+>>>>>  	u8 hbm_cmd;
+>>>>>  	u8 me_addr;
+>>>>>  	u8 status;
+>>>>> -	u8 reserved[1];
+>>>>> +	u8 reserved;
+>>>>>  } __packed;
+>>>>>
+>>>>>  /**
+>>>>> @@ -461,7 +461,7 @@ struct hbm_notification {
+>>>>>  	u8 hbm_cmd;
+>>>>>  	u8 me_addr;
+>>>>>  	u8 host_addr;
+>>>>> -	u8 reserved[1];
+>>>>> +	u8 reserved;
+>>>>>  } __packed;
+>>>>>
+>>>>>  /**
+>>>>>
