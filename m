@@ -2,111 +2,110 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C0C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC6B22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="fhWMlcxq"
+	by mail.kernel.org (Postfix) with ESMTP id 17B5D22B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595457022;
+	bh=I7/YIfdAMV3E37NnGmsLOOWx8Y9KsMdASXp+fIuCB6Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xUc7/5h4e6EtBmvT99+a8CJyvUZrQc96J2IyXcHuSzFSgQF2j0FmPdReqyTJlJ2h/
+	 GOZv/xX7w40B32/oWn/apElPF0TmhRGs0F/D21Tp7l1sYi+AOmwvkZBXGQNekFbJFM
+	 TxyZ1fDbRdZyBpuxR+V/TuDcUx/sP/yoC1prH3jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732511AbgGVW3U (ORCPT
+        id S1732978AbgGVWaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgGVW3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:29:19 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D3BC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:29:18 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id x9so1827020ybd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hDU5F+lKnx2jbAbcQ8EdWpqtNDoD+1zrWyM5bAIpN5w=;
-        b=fhWMlcxqko5jvxwun7u9Uh71irn2Il2ZaOvNhovugAKiQoGmJ9IDiPrToHA8cjDMRu
-         x1VrYa/E0VvPZoA+NaZhZXbLqncS8YhFZHpYr0fz0yhxXm9p5ySMNW38C59WR90QeHIN
-         kWZ4lbpJlxdBM/tAzlp6Aj4Twlsi8M1xoZanH3IeoZa029h5A781Eq8/2XYuLuPXNnUZ
-         r/RdyDA+lFa6N7kQAAG4rnbsYAyFVjv9fgJaUVY06JmjP2AsOflm13HWTc3BgsiQLiG/
-         t3SwYffYY1obba81noPsvPY03PPzwOCaRAq0ZEtJmkURsIdWLd/Lf5moo2ds+3peAf40
-         Zsqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hDU5F+lKnx2jbAbcQ8EdWpqtNDoD+1zrWyM5bAIpN5w=;
-        b=EgZ+4gCtV4RmLY2vMysFs0CZ4OtweDfJpr9bXRR0W48WTQCutJHVhgLbdnr4Svt3Ww
-         GJtug6WjD/WEc7nPdJImSqVZI2CmY059ZHuP6SrBn12tznb61plHYa/Zi/OgUVvAMjfI
-         8Uwlu74jmivnOd2sZLyPpHZR6Lz8JnLd0NbL0orHhtJ/Htqu+OIbnIG7r2K16JdkaUbY
-         2RD7RWRvlbM/9K8nOAk0nFP5F475YnBplRZxymAEEqLO6ri2HfXzNHT5JshhWYjuqi0P
-         V8psdtivxSz//dxqdB+F3wS8TAaN2sHtlqkSWOeVCbO1a0rN/qaH5KzO56Lb9U/iFUXf
-         JQBA==
-X-Gm-Message-State: AOAM533b0+QJwQ9plYAA/nQY+SGRUZVkQrW7uLngdxmcULxZx489+DfL
-        hZIRmiCH8fFh4WDG8MNlWYb8vP3C/OCuYKpb2vMSdw==
-X-Google-Smtp-Source: ABdhPJyLKRl2cLOz/lGg7WJPCuMu3otLZQXrSRuCWupUdKjm0eoPDEEAPrS2s+m18HN0tAIQub01+IJfHDQ0XRTs6cM=
-X-Received: by 2002:a25:ae01:: with SMTP id a1mr2350192ybj.119.1595456957139;
- Wed, 22 Jul 2020 15:29:17 -0700 (PDT)
+        Wed, 22 Jul 2020 18:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728607AbgGVWaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 18:30:20 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB74622B47;
+        Wed, 22 Jul 2020 22:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595457020;
+        bh=I7/YIfdAMV3E37NnGmsLOOWx8Y9KsMdASXp+fIuCB6Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FAbkgy6sdytJTU9IpGYQFy7pAkblb4fmUS8GeRdQobkppbe5HQIrBbeJzJayZak5C
+         d7sO+DFy+vfJNPDZJhdWaE1DKWIxJqRg1CQ/PT5Baxx5rBP3ke+h7YVK9UPNCBXc1Z
+         1sEZPtWHIJ9knZnQWkIXTh2Zerhysm6OmYirf0Wk=
+Received: by mail-oi1-f171.google.com with SMTP id k22so3324389oib.0;
+        Wed, 22 Jul 2020 15:30:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532NU+ZpvnrhEuQQ/3xJmGCYq7s7PicredcoK5cIHNqmLZzNUfM1
+        DrZ9OrfvhLI6f20KIZDoFDGGcsofydUy/rGK5w==
+X-Google-Smtp-Source: ABdhPJyNc7J2Ie/GaUmdtczDpk4TzTx1BaMfBmYiKRVYAxHqT4jh1z08pTVv5GVCvdyCO3JGH5yTevtghczkpAcneRg=
+X-Received: by 2002:aca:4844:: with SMTP id v65mr1605683oia.152.1595457019133;
+ Wed, 22 Jul 2020 15:30:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721174654.72132-1-vitor@massaru.org> <202007211207.5BAA9D8D@keescook>
- <CADQ6JjU8rX2F_iBqth3u0EiA+CBgz4H+YL_-nbQ_cojYeLFXKQ@mail.gmail.com>
- <202007211911.666E080@keescook> <CADQ6JjUgVXBfHfb=V2ajwm=rHi12rxiqEtpivjY03xZbp6k7wg@mail.gmail.com>
- <202007221244.4E3C9E45@keescook>
-In-Reply-To: <202007221244.4E3C9E45@keescook>
-From:   Vitor Massaru Iha <vitor@massaru.org>
-Date:   Wed, 22 Jul 2020 19:28:41 -0300
-Message-ID: <CADQ6JjV8cXsEKX-Yn2udhnZgJQWkbtS4XL+yaRzfydaWV5EbSQ@mail.gmail.com>
-Subject: Re: [PATCH v3] lib: Convert test_user_copy to KUnit test
-To:     Kees Cook <keescook@chromium.org>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200722110317.4744-1-kishon@ti.com> <20200722110317.4744-2-kishon@ti.com>
+In-Reply-To: <20200722110317.4744-2-kishon@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 22 Jul 2020 16:30:07 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLVnWruxyavw_nRCorXQ2JGihjvMZffqniq8jPaRYPYTA@mail.gmail.com>
+Message-ID: <CAL_JsqLVnWruxyavw_nRCorXQ2JGihjvMZffqniq8jPaRYPYTA@mail.gmail.com>
+Subject: Re: [PATCH v8 01/15] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 4:45 PM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Jul 22, 2020 at 5:03 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> On Wed, Jul 22, 2020 at 03:29:27PM -0300, Vitor Massaru Iha wrote:
-> > On Tue, Jul 21, 2020 at 11:12 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Tue, Jul 21, 2020 at 07:19:12PM -0300, Vitor Massaru Iha wrote:
-> > > > When you talk about end-of-test summary, is it what is written in
-> > > > dmesg and not the kunit-tool?
-> > >
-> > > Right, if I build this as a module and do "modprobe user_copy_kunit",
-> > > what will show up in dmesg?
-> >
-> > No, It doesn't. I'll put the messages again.
+> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+> property to configure the number of bits passed through from PCIe
+> address to internal address in Inbound Address Translation register.
+> This only used the NO MATCH BAR.
 >
-> Would it be possible to add that behavior to the core KUnit output? Then
-> all module-based tests would include a summary line?
-
-Nowadays with modprobe this is shown, is it necessary to add anything else?
-
-root@(none):/# modprobe user_copy_kunit
-TAP version 14
-    # Subtest: user_copy
-    1..1
-random: fast init done
-    ok 1 - user_copy_test
-ok 1 - user_copy
-root@(none):/#
-
+> However standard PCI dt-binding already defines "dma-ranges" to
+> describe the address ranges accessible by PCIe controller. Add support
+> in Cadence PCIe host driver to parse dma-ranges and configure the
+> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
+> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB.
 >
-> --
-> Kees Cook
+> This adds support to take the next biggest region in "dma-ranges" and
+> find the smallest BAR that each of the regions fit in and if there is
+> no BAR big enough to hold the region, split the region to see if it can
+> be fitted using multiple BARs.
+>
+> "dma-ranges" of J721E will be
+> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
+> Since there is no BAR which can hold 2^48 size, NO_MATCH_BAR will be
+> used here.
+>
+> Legacy device tree binding compatibility is maintained by retaining
+> support for "cdns,no-bar-match-nbits".
+>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> Changes from [1]
+> 1) Use list_sort() for sorting the address ranges by size
+> 2) Clear CDNS_PCIE_LM_RC_BAR_CFG register before configuring them
+>
+> [1] -> http://lore.kernel.org/r/20200521080153.5902-1-kishon@ti.com
+>  .../controller/cadence/pcie-cadence-host.c    | 251 +++++++++++++++++-
+>  drivers/pci/controller/cadence/pcie-cadence.h |  28 +-
+>  2 files changed, 262 insertions(+), 17 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
