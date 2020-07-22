@@ -2,183 +2,224 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78091C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6D1207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52114207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Dhzz+EhD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ezdkH8uT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgGVReA (ORCPT
+        id S1730585AbgGVRdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:34:00 -0400
-Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:3044
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726157AbgGVRd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:33:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EkfwiTYWjhyE/txmZSUkFakhidmtEZLQ6h+u2QdNk9WJXOkwSOvnrOg8DVko4K2+ZHdn4wSsHLsgB3UDvvSIPlCujlKyp+Hm1Pw8GsXG30SMlIdyzK0fy8Fq5+Bne4iUqFvupf5t9pE8F9OHg0jdN1pKoQGh0N9L5KLFvbfF+3uZlUIX/IwuV6w8pom3ijGCmA/12X+j5SvRrHdiKsg6YG0uUjr+bfVzpILP5GpYZ9Pw3Wql4utCu/HoJzHsGnHwgc9Kbyo7R00efQQSSeXE8IBVmQaHGnu3jaD6UCMX3UeC/PlC4wzKoL2oCRp053Qa+bxx4GHIHSrexTgC03/ztA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QK/aQQ5KfghiBYIGS5RXIXFP5KCX3wzUdti86edAXAg=;
- b=k/yPb0fwFs/nFUGx1AUy3xe4DIylPpIeV90Ch9Ct/b71bIzlli7FJNelpU/mc7iwkhM49lpmuLfIE0nzJ06VMwgABhX9HyXua6U9PSaHUqB/qRiI2Pn66480E9U1QYtUZL3tfvSFKh5Iy64cAMfhezhlnsFYto+E49nvSWJeKSpwwiGC6K4hNSX18WkrFJXvxESQqzHlXmQu5ktJu7gUwGDeBy9mBO/GPBwPbWhIAhg+jI3MR1BbtxgSSgd9zxGu45k2j1PYxcgxdhpLn6o8ekwSBmt20LeaQQyFtXf8zHXMHDJktA97XLe4TbR7wBPClTC0yNjLmwCGFv3jwYugzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QK/aQQ5KfghiBYIGS5RXIXFP5KCX3wzUdti86edAXAg=;
- b=Dhzz+EhDnLX0c78OVVVwZ+rMQp5wzq594ASGOu7A3b4Z96cDhbFfCN/RiBd7qOXLgVQX8ToRHQo7mcWX1V/F4qmgBXjdHujnJKxaRuRc1GJGXA1uXX4JMgGJwTXRrNTJJCZiFtDZQxhbr3xhc6vy2TfShoRCJDBNTKpJJpve7hc=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from DB7PR05MB4138.eurprd05.prod.outlook.com (2603:10a6:5:23::16) by
- DB8PR05MB6665.eurprd05.prod.outlook.com (2603:10a6:10:142::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.22; Wed, 22 Jul 2020 17:33:53 +0000
-Received: from DB7PR05MB4138.eurprd05.prod.outlook.com
- ([fe80::4025:1579:1d10:fd4d]) by DB7PR05MB4138.eurprd05.prod.outlook.com
- ([fe80::4025:1579:1d10:fd4d%7]) with mapi id 15.20.3216.022; Wed, 22 Jul 2020
- 17:33:53 +0000
-Date:   Wed, 22 Jul 2020 14:33:48 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Dey, Megha" <megha.dey@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC v2 03/18] irq/dev-msi: Create IR-DEV-MSI irq domain
-Message-ID: <20200722173348.GK2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
- <20200721162104.GB2021248@mellanox.com>
- <84fd4ae2-e7ee-4f9d-7686-6a034f3e2614@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84fd4ae2-e7ee-4f9d-7686-6a034f3e2614@intel.com>
-X-ClientProxiedBy: YT1PR01CA0142.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::21) To DB7PR05MB4138.eurprd05.prod.outlook.com
- (2603:10a6:5:23::16)
+        Wed, 22 Jul 2020 13:33:31 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:13011 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728511AbgGVRda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:33:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595439209; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=RLU97VPwbcjVpG9YS+DY2JZ9ZOWhHWhYKxgSJC3rnSc=; b=ezdkH8uTLW2K0oaG8P05UVEfYpWvNzLoUSRwTPP1WC6yxoSjvyKk0WNOpT5OMrmdMo1VQaS+
+ NYuxNw3i25sxY0T2PKlJofBgxWIS6bRpw46zcfsKN3vetgvuLNxzSJer6riUL3Tfq0bGF+S1
+ uCvHHLZklkd7oZ8ISf1cSSa1esU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5f1878507c8ca473a87f4114 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 22 Jul 2020 17:33:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1A3B5C43395; Wed, 22 Jul 2020 17:33:04 +0000 (UTC)
+Received: from [192.168.1.10] (cpe-70-95-5-60.san.res.rr.com [70.95.5.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sidgup)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C316C433C9;
+        Wed, 22 Jul 2020 17:33:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C316C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
+Subject: Re: [PATCH v4 1/2] remoteproc: Add remoteproc character device
+ interface
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, ohad@wizery.com, corbet@lwn.net,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org,
+        linux-doc@vger.kernel.org
+References: <1594148870-27276-1-git-send-email-sidgup@codeaurora.org>
+ <1594148870-27276-2-git-send-email-sidgup@codeaurora.org>
+ <20200715201839.GA3204081@xps15> <20200715215149.GA3267350@xps15>
+ <81d7514c-727e-b4dc-e4ac-74a25966ccaf@codeaurora.org>
+ <20200721205635.GM2922385@builder.lan> <20200722171841.GA1268891@xps15>
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+Message-ID: <415eb089-4a45-96e9-1816-88ba9c9be9aa@codeaurora.org>
+Date:   Wed, 22 Jul 2020 10:33:01 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by YT1PR01CA0142.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Wed, 22 Jul 2020 17:33:53 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jyIcm-00E0df-PO; Wed, 22 Jul 2020 14:33:48 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9bd56ec5-b6ba-4c5c-a5e0-08d82e65672c
-X-MS-TrafficTypeDiagnostic: DB8PR05MB6665:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR05MB666598F4D8823851EF4A7F02CF790@DB8PR05MB6665.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zzTL9rpKq886d4sS75g0m65pWKOk3wbbdmJopoyr6nm/Zii93mVqLjMZMD42JtO3Kx6AJF+YOLwYOMSiDhYHeWgzcZKk0T5yFvP5/lN1FSjE9TdylpX+prGr4lFuMBGafaOWglmec7zOSLkrVk6qIYl/5KDOXP2yAKbGrMG4tboSWlWIsp1X0+7/uDwrl+VMwQu5fY9Y16MRo4Ji2cZc2fNUI8AZ3MQ74nEyXDX5DAeZy59nHx6eH9/nGt1zIjlXlASb4sHDmK5saW0JNWSEl293/w/2VgIA2fmNoYh3ycEid5OoXX6kiP+g5zSsLWee
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR05MB4138.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(396003)(346002)(366004)(36756003)(426003)(7406005)(8936002)(86362001)(33656002)(478600001)(7416002)(8676002)(53546011)(4326008)(5660300002)(186003)(83380400001)(2906002)(26005)(6916009)(9786002)(9746002)(316002)(66946007)(66476007)(66556008)(2616005)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: bDY4fLXCzs+XRAXXjiY+E7u4NShSjmUvXeCCjhWvZU74uU50+9hO0XHCldas08ObPOCQYFwGT4SgEie1JLm/4P/OeZkbIDMzAJHFXq56OBZA1yK0tUDTZx4oR0r5I3t+vGhGEEVcvErlGMrGGGeho0rPi58jNjXvwyXY7cKMTuP9EGidVUeXas+4h53EwMpGMlZBbAJcQSDPgYdEqKcGNT5WQwXs9t7zCBjAIX43/vwtcyrTxCOUlgKovws55Bj/MplX5AuiLuBmHN5dItpk17rfpIYwaOVO2pQE4ni1sLzhZKsuRx+kbFznssM/B27PPpYkNcwq9TAkg84SY/6hnhrucIgWcfS5Cw7IO8dx6q/BAOX414isoTLr0TzDjzDE30qV4vkCEKZ8OyluYRGDu3o4A3XVezdJGpKl9DmQGP+f6I9W6ORXMuGu0YiQLYMbaSkLmT+qQ+5g2ASEIZH8QLccaAhiKsyaWEojY/N1fLI=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bd56ec5-b6ba-4c5c-a5e0-08d82e65672c
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR05MB4138.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 17:33:53.1828
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nXAuRvREi9c0Oak/Tqo+b/TZD9d6SHP3WF9qJ49Vfy/v+yl4IvFY2O685EdspaSCj1aOnu7fXxm1VgegHzXioA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB6665
+In-Reply-To: <20200722171841.GA1268891@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:03:45AM -0700, Dey, Megha wrote:
-> Hi Dan,
-> 
-> On 7/21/2020 9:21 AM, Jason Gunthorpe wrote:
-> > On Tue, Jul 21, 2020 at 09:02:35AM -0700, Dave Jiang wrote:
-> > > From: Megha Dey <megha.dey@intel.com>
-> > > 
-> > > When DEV_MSI is enabled, the dev_msi_default_domain is updated to the
-> > > base DEV-MSI irq  domain. If interrupt remapping is enabled, we create
-> > > a new IR-DEV-MSI irq domain and update the dev_msi_default domain to
-> > > the same.
-> > > 
-> > > For X86, introduce a new irq_alloc_type which will be used by the
-> > > interrupt remapping driver.
-> > 
-> > Why? Shouldn't this by symmetrical with normal MSI? Does MSI do this?
-> 
-> Since I am introducing the new dev msi domain for the case when IR_REMAP is
-> turned on, I have introduced the new type in this patch.
+
+On 7/22/2020 10:18 AM, Mathieu Poirier wrote:
+> On Tue, Jul 21, 2020 at 01:56:35PM -0700, Bjorn Andersson wrote:
+>> On Tue 21 Jul 12:16 PDT 2020, Siddharth Gupta wrote:
+>>> On 7/15/2020 2:51 PM, Mathieu Poirier wrote:
+>>>> On Wed, Jul 15, 2020 at 02:18:39PM -0600, Mathieu Poirier wrote:
+>>>>> On Tue, Jul 07, 2020 at 12:07:49PM -0700, Siddharth Gupta wrote:
+>> [..]
+>>>>>> diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
+>> [..]
+>>>>>> +int rproc_char_device_add(struct rproc *rproc)
+>>>>>> +{
+>>>>>> +	int ret;
+>>>>>> +	dev_t cdevt;
+>>>>>> +
+>>>>>> +	cdev_init(&rproc->char_dev, &rproc_fops);
+>>>>>> +	rproc->char_dev.owner = THIS_MODULE;
+>>>>>> +
+>>>>>> +	cdevt = MKDEV(rproc_major, rproc->index);
+>>>>>> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+>>>> Trying this patchset on my side gave me the following splat[1].  After finding
+>>>> the root case I can't understand how you haven't see it on your side when you
+>>>> tested the feature.
+>>>>
+>>>> [1]. https://pastebin.com/aYTUUCdQ
+>> Mathieu, I've looked at this back and forth. Afaict this implies that
+>> rproc_major is still 0. Could it be that either alloc_chrdev_region()
+>> failed or somehow has yet to be called when you hit this point?
+> That is exacly what I thought when I first stumbled on this but instrumenting
+> the code showed otherwise.
 >
-> MSI/MSIX have their own irq alloc types which are also only used by the
-> intel remapping driver..
+> After function rproc_init_cdev() has been called @rproc_major contains the
+> dynamically allocated major number in the upper 12 bits and the base minor
+> number in the lower 20 bits.
 >
-> > 
-> > I would have thought you'd want to switch to this remapping mode as
-> > part of vfio or something like current cases.
-> 
-> Can you let me know what current case you are referring to?
+> In rproc_char_device_add() we find this line:
+>
+>          cdevt = MKDEV(rproc_major, rproc->index);
+>
+> Macro MKDEV() builds a device number by shifting @rproc_major by 20 bits to the
+> left and OR'ing that with @rproc->index.  But the device's major number is
+> already occupying the upper 12bits, so shifthing another 20 bits to the left
+> makes the major portion of the device number '0'.  That is causing cdev_add() to
+> complain bitterly.
+>
+> The right way to do this is:
+>
+>          cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
+>
+> Once I found the problem I thought about 32/64 bit issues.  Since Siddharth is
+> using a 64bit application processor shifting another 20 bits would still have
+> yielded a non-zero value.  But that can't be since dev_t is a u32 in
+> linux/types.h.
+>
+> As such I can't see how it is possible to not hit that problem on a 64bit
+> platform.
+Hey Mathieu,
 
-My mistake, I see Intel unconditionally globally enables IR, so this
-seems consistent with Intel's MSI
+I just checked my testing tree for our devices and realized that I have 
+an older version
+of the patch. Hence I was unable to reproduce the error. I will fix this 
+problem, and
+send out a new patchset today.
 
-> > > +struct irq_domain *create_remap_dev_msi_irq_domain(struct irq_domain *parent,
-> > > +						   const char *name)
-> > > +{
-> > > +	struct fwnode_handle *fn;
-> > > +	struct irq_domain *domain;
-> > > +
-> > > +	fn = irq_domain_alloc_named_fwnode(name);
-> > > +	if (!fn)
-> > > +		return NULL;
-> > > +
-> > > +	domain = msi_create_irq_domain(fn, &dev_msi_ir_domain_info, parent);
-> > > +	if (!domain) {
-> > > +		pr_warn("failed to initialize irqdomain for IR-DEV-MSI.\n");
-> > > +		return ERR_PTR(-ENXIO);
-> > > +	}
-> > > +
-> > > +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
-> > > +
-> > > +	if (!dev_msi_default_domain)
-> > > +		dev_msi_default_domain = domain;
-> > > +
-> > > +	return domain;
-> > > +}
-> > 
-> > What about this code creates a "remap" ? ie why is the function called
-> > "create_remap" ?
-> 
-> Well, this function creates a new domain for the case when IR_REMAP is
-> enabled, hence I called it create_remap...
+Sorry about this error!
 
-This looks like it just creates a new domain - the thing that makes it
-remapping is the caller putting it under the ir_domain - so this code
-here in base shouldn't have the word 'remap' in it, this is just
-creating a generic domain.
-
-It also kinda looks like create_dev_msi_domain() can just call the
-above directly instead of duplicating everything - eg why do we need
-two identical dev_msi_ir_controller vs dev_msi_controller just to have
-the irq_set_vcpu_affinity difference?
-
-Jason
+Thanks,
+Sid
+>>> Hey Mathieu,
+>>>
+>>> We aren't able to reproduce the error that you are seeing, the splat is
+>>> coming
+>>> from the check for whiteout device[1] - which shouldn't happen because of
+>>> the
+>>> find_dynamic_major call[2], right?
+>>>
+>>> We are successfully seeing all our character device files and able to
+>>> successfully boot remoteprocs. From what I read and understood about
+>>> whiteout
+>>> devices they will be hidden in the fs.
+>>>
+>>> Could you provide more details about your configuration and testing?
+>>>
+>>> [1]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486
+>>> <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123>
+>>> [2]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123
+>>>
+>>> <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486>
+>>>>>> +	if (ret < 0)
+>>>>>> +		goto out;
+>>>>>> +
+>>>>>> +	rproc->dev.devt = cdevt;
+>>>>>> +out:
+>>>>>> +	return ret;
+>>>>>> +}
+>>>>>> +
+>>>>>> +void rproc_char_device_remove(struct rproc *rproc)
+>>>>>> +{
+>>>>>> +	__unregister_chrdev(rproc_major, rproc->index, 1, "remoteproc");
+>>>>>> +}
+>>>>>> +
+>>>>>> +void __init rproc_init_cdev(void)
+>>>>>> +{
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "remoteproc");
+>>>>>> +	if (ret < 0)
+>>>>>> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+>>>>>> +}
+>>>>>> +
+>>>>>> +void __exit rproc_exit_cdev(void)
+>>>>>> +{
+>>>>>> +	unregister_chrdev_region(MKDEV(rproc_major, 0), NUM_RPROC_DEVICES);
+>>>>> Please go back to the comment I made on this during my last review and respin.
+>>>> After digging in the code while debugging the above problem, I don't see how
+>>>> unregistering the chrdev region the way it is done here would have worked.
+>>> Since this is compiled statically and not built as a module, we will never
+>>> exercise the code path, so I will remove it in the next patchset.
+>>>
+>> You're right Siddharth, since we changed CONFIG_REMOTEPROC to bool it's no longer
+>> possible to hit remoteproc_exit(), so you can omit this function
+>> entirely. (And we should clean up the rest of that as well)
+>>
+>> [..]
+>>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>> [..]
+>>>>>> @@ -488,6 +489,8 @@ struct rproc_dump_segment {
+>>>>>>     * @auto_boot: flag to indicate if remote processor should be auto-started
+>>>>>>     * @dump_segments: list of segments in the firmware
+>>>>>>     * @nb_vdev: number of vdev currently handled by rproc
+>>>>>> + * @char_dev: character device of the rproc
+>>>>>> + * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
+>>>>>>     */
+>>>>>>    struct rproc {
+>>>>>>    	struct list_head node;
+>>>>>> @@ -523,6 +526,8 @@ struct rproc {
+>>>>>>    	int nb_vdev;
+>>>>>>    	u8 elf_class;
+>>>>>>    	u16 elf_machine;
+>>>>>> +	struct cdev char_dev;
+>> As stated privately, I assumed based on this name that this is a struct
+>> device related to that character device. So please rename this cdev to
+>> save me from doing this mistake again.
+>>
+>> Thanks,
+>> Bjorn
