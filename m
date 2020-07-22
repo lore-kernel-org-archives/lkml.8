@@ -2,79 +2,99 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2158C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77E3B206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R9nzzvmI"
+	by mail.kernel.org (Postfix) with ESMTP id 2E2E7207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgGVQfs (ORCPT
+        id S1729201AbgGVQgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVQfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:35:48 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FFBC0619DC;
-        Wed, 22 Jul 2020 09:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=5XZN44V6CF32fCmbu6lN9a7A+gJGo7nDxcGvT72Gh9Q=; b=R9nzzvmIS+N0vrYDloMBSCBYaj
-        THJs3mLaZ4vD8p/YZNaKSeo8B0l6g69cdikZ5e4hzc9JcOFXBLrj8H4f1IM7iqbB0MO0fLOdIDZyT
-        YwqozO+H84qg0S6WYJ4NqKDDBPD2id9gqNI64bdk9scHdmf846NSW4vBoJZO9WAP82XYUWJkRyITP
-        4Y3FA9gM5aCCU+hDyHrDjqlSjt3zEfy1wYlbGoXdYl2t2ZficHKqHaBr40Ir2h1t5W2M6nXhP40nC
-        xyeCyjfxhQD2sCkqyeGB0biqA3rHF6pE+TeVRwgxvKJFFdgwkmntKlmHPEIXj9ifwgm+ZnYGUEDkD
-        sor7GMlQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyHiW-0000XQ-MQ; Wed, 22 Jul 2020 16:35:41 +0000
-Subject: Re: linux-next: Tree for Jul 22 (drivers/net/vrf)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Ahern <dsahern@kernel.org>,
-        Shrijeet Mukherjee <shrijeet@gmail.com>,
-        David Miller <davem@davemloft.net>
-References: <20200722231640.3dae04cd@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e1fc4765-db64-2876-2f3c-857c45d4fb45@infradead.org>
-Date:   Wed, 22 Jul 2020 09:35:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 12:36:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbgGVQgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:36:54 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23557206C1;
+        Wed, 22 Jul 2020 16:36:53 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 17:36:50 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     gregory.herrero@oracle.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] recordmcount: only record relocation of type
+ R_AARCH64_CALL26 on arm64.
+Message-ID: <20200722163650.GI27540@gaia>
+References: <20200717143338.19302-1-gregory.herrero@oracle.com>
+ <20200717133003.025f2096@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200722231640.3dae04cd@canb.auug.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717133003.025f2096@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/20 6:16 AM, Stephen Rothwell wrote:
-> Hi all,
+On Fri, Jul 17, 2020 at 01:30:03PM -0400, Steven Rostedt wrote:
+> On Fri, 17 Jul 2020 16:33:38 +0200
+> gregory.herrero@oracle.com wrote:
+> > From: Gregory Herrero <gregory.herrero@oracle.com>
+> > Currently, if a section has a relocation to '_mcount' symbol, a new
+> > __mcount_loc entry will be added whatever the relocation type is.
+> > This is problematic when a relocation to '_mcount' is in the middle of a
+> > section and is not a call for ftrace use.
+> > 
+> > Such relocation could be generated with below code for example:
+> >     bool is_mcount(unsigned long addr)
+> >     {
+> >         return (target == (unsigned long) &_mcount);
+> >     }
+> > 
+> > With this snippet of code, ftrace will try to patch the mcount location
+> > generated by this code on module load and fail with:
+> > 
+> >     Call trace:
+> >      ftrace_bug+0xa0/0x28c
+> >      ftrace_process_locs+0x2f4/0x430
+> >      ftrace_module_init+0x30/0x38
+> >      load_module+0x14f0/0x1e78
+> >      __do_sys_finit_module+0x100/0x11c
+> >      __arm64_sys_finit_module+0x28/0x34
+> >      el0_svc_common+0x88/0x194
+> >      el0_svc_handler+0x38/0x8c
+> >      el0_svc+0x8/0xc
+> >     ---[ end trace d828d06b36ad9d59 ]---
+> >     ftrace failed to modify
+> >     [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
+> >      actual:   66:a9:3c:90
+> >     Initializing ftrace call sites
+> >     ftrace record flags: 2000000
+> >      (0)
+> >     expected tramp: ffffa2dc6cf66724
+> > 
+> > So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
+> > recordmcount.
 > 
-> Changes since 20200721:
+> I'd rather have this go through the arm64 tree, as they can test it
+> better than I can.
 > 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-on i386:
-when CONFIG_SYSCTL is not set/enabled:
+Thanks Steve.
 
-ERROR: modpost: "sysctl_vals" [drivers/net/vrf.ko] undefined!
+> > Fixes: ed60453fa8f8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
 
+This Fixes tag looks wrong. The above commit was for arm32.
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Catalin
