@@ -2,125 +2,175 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9383AC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DCCC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D99E2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C22C2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GPVhp3NG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/tlrbNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733034AbgGVWBZ (ORCPT
+        id S1733049AbgGVWB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
+        Wed, 22 Jul 2020 18:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbgGVWBY (ORCPT
+        with ESMTP id S1728198AbgGVWB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:01:24 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D2FC0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:01:24 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d7so1634809plq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:01:24 -0700 (PDT)
+        Wed, 22 Jul 2020 18:01:56 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0242EC0619DC;
+        Wed, 22 Jul 2020 15:01:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q17so1640109pls.9;
+        Wed, 22 Jul 2020 15:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kf4G9OecuatMPdQAajjbtHZg6Z4TN34pDB2QVj3Jfws=;
-        b=GPVhp3NGJ19wf1ctURm4g+w3dBSbio1bGMroejrll7ayIS2Q6mitp1XXu92TJA2Jgj
-         IN1hNbxl8IeAKe2gdCvYw4pNo6F0E/bMfhMfz7kJzxFdImVkqUM4CCuKZ32g7HBylXO5
-         NgOlYSDD0SRuMJy60oyVH0BTPnJ0vphFIOFoM=
+        bh=nfmyBUAQL76p5vvykk7yec7Gv8UDJNvuxOk2+zdUHgY=;
+        b=V/tlrbNoym0WHCnEm9sclnQ0lEv7YVD4Fmzze6z8Sk7VSx8Exhnrp0Z+qJ3ylnsMK3
+         vl9X/yjds5wUdVujgEpopAtqG3yNvHqOyW3Og7IB0TSaqvtY8jhJhiuC4AyeIkD40F3W
+         jD6yGDSWih/aw0ERZ3aE02RFaNfWNdXYhUBkp7fRhGw16olrb/vF+dFDPZ4Sgls/BIfP
+         aZqizXiQV/3J+TzlHNBVotiRy7GVD0FFP/NVFN8bxsXJjVT5beYIH5IwOHzOaEPdgH1c
+         fx/wYQF+I4UOtdrNKmsq4RNuQDs0NOE6K/gxCZSFnYa/XFjBQ9ADZQi9gc0HYas+XHxd
+         0iFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kf4G9OecuatMPdQAajjbtHZg6Z4TN34pDB2QVj3Jfws=;
-        b=LWnZCO4wr3s7S9N9LRTiWgDDKi0hPsRiYQ/tGhjuIKYnT07C6z5v5mpR70i4QkI5HT
-         5mXZUOiSG16EAgwo+z0ob1uqs8P/AVJA2BV4fV/KPjW0lauKcod0lgWfS4VD/lLCS4im
-         s5QpQ1rhC0L7GCEDhP6NmZOwcmfbki+0DZ6osKNVqcZJvs60HCJawdpKUi40LpXYEQCq
-         y0lQwwrg22Bs3m/riHm5lRxGRG/c1g8UJLNs/OWnmOFHU+KND/ksNCMfNNq4qgLEV34z
-         wux/TVR6UkH/PnZlbV+94iV+Auzb3/DOgT/CR86GCNGDWm8cRiBjjj0npgO/Dd3IRLiC
-         9b0w==
-X-Gm-Message-State: AOAM533HRNKOSMCasMFvptsZemMMItbvHnGv/UqyUlNm+B+CZ450IPsf
-        dCpggiK9Asuto5DItfYYrkoFzQ==
-X-Google-Smtp-Source: ABdhPJycqu6mq0CFbV5ri7ojMQiC9BlaOqdNq6tqaC5IOPjIpz1Or40LqD5+CBCdwb8DcHUtsvqq/Q==
-X-Received: by 2002:a17:902:bd47:: with SMTP id b7mr1342798plx.144.1595455283992;
-        Wed, 22 Jul 2020 15:01:23 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id g7sm562035pfh.210.2020.07.22.15.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 15:01:23 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Wolfram Sang <wsa@the-dreams.de>, msavaliy@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: qcom-geni-se: Don't use relaxed writes when writing commands
-Date:   Wed, 22 Jul 2020 15:01:20 -0700
-Message-Id: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nfmyBUAQL76p5vvykk7yec7Gv8UDJNvuxOk2+zdUHgY=;
+        b=bxkf34zVhpElV9kVRI19rYAJ1qpr5AX8fNvvYubTmF9sSJPuau3OTOizduH0c/tVVL
+         20AGutg5TuhBbVglHsHf64b+wjSmhqPh7nRzXr3pCIvzqzGx4U0CVgPaOfynsPASpawm
+         7swCo51vy0zOFz1rLjdIiGtxA825NC7hFB/W5eV5q25+o5kF9oWT55eAlu29ogEoAJQV
+         T0nRim9RrnrpgHvPyGniJh0cTbezWNr8jRNOor+t/6pm2AXt75g/PXNviPlOPR+2g9Ux
+         VgUvnaBGQO8N1yrDw5Ol+IMCW+R3civvO2BfIDBtFrl9bGcgEmIF2Ce3BnHs4Hc3zGDm
+         MHzg==
+X-Gm-Message-State: AOAM533AYmfcvB0O4kj9fxkk3/RGJ1s19aN+uLLLuKN8ClGywhnze2eU
+        sw4MGRGLQMXu8v99NB3+sYg=
+X-Google-Smtp-Source: ABdhPJyaLrYut3AxfoVCwPwwSpHlRUyZNYiYZ2GtKKBBhH1njkCyDVQNvoaxeB1RgItgL7tJYA/OmQ==
+X-Received: by 2002:a17:90a:2a4d:: with SMTP id d13mr1271253pjg.195.1595455315497;
+        Wed, 22 Jul 2020 15:01:55 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n15sm691052pjf.12.2020.07.22.15.01.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 15:01:54 -0700 (PDT)
+Subject: Re: [PATCH v2 4/4] platform/chrome: cros_ec_proto: Convert EC error
+ codes to Linux error codes
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Aseda Aboagye <aaboagye@chromium.org>
+References: <20200720202243.180230-1-linux@roeck-us.net>
+ <20200720202243.180230-5-linux@roeck-us.net>
+ <401aec54-ff21-7e0f-85dc-e32435df2672@collabora.com>
+ <20200721142320.GA20067@roeck-us.net> <20200722215220.GA2137556@google.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <53ab8a45-088d-c7d4-c7c4-46a5aae8f8c9@roeck-us.net>
+Date:   Wed, 22 Jul 2020 15:01:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200722215220.GA2137556@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Writing the command is the final step in kicking off a transfer.
-Let's use writel() to ensure that any other memory accesses are done
-before the command kicks off.  It's expected that this is mostly
-relevant if we're in DMA mode but since it doesn't appear to regress
-performance in a measurable way [1] even in PIO mode and it's easier
-to reason about then let's just always use it.
+On 7/22/20 2:52 PM, Brian Norris wrote:
+> + drinkcat, aseda
+> 
+> On Tue, Jul 21, 2020 at 07:23:20AM -0700, Guenter Roeck wrote:
+>> On Tue, Jul 21, 2020 at 01:29:01PM +0200, Enric Balletbo i Serra wrote:
+>>> On 20/7/20 22:22, Guenter Roeck wrote:
+>>>> +	[EC_RES_INVALID_HEADER_VERSION] = -EBADMSG,
+>>
+>> Any idea for EC_RES_INVALID_HEADER_VERSION ? I am not entirely happy
+>> with -EBADMSG: the error is distinctly different to CRC errors.
+>> EPROTONOSUPPORT as well, maybe, or something else ?
+> 
+> FWIW, these (INVALID_HEADER_VERSION, INVALID_HEADER_CRC,
+> INVALID_DATA_CRC) aren't actually used on any firmware yet. This has
+> been open forever:
+> https://crbug.com/787159
+> Added here:
+> https://chromium-review.googlesource.com/c/chromiumos/platform/ec/+/780452/
+> 
+> Unfortunately, the linked design doc (still in draft) is not public.
+> 
+> My understanding is that while they're not all exactly the same (CRC is
+> different than the others), they are all still supposed to represent
+> "corrupt request [from the Application Processor]". EBADMSG seems good
+> enough to me.
+> 
 
-NOTE: this patch came about due to code inspection.  No actual
-problems were observed that this patch fixes.
+SGTM, and make sense.
 
-[1] Tested by timing "flashrom -p ec" on a Chromebook which stresses
-GENI SPI a lot.
+Thanks,
+Guenter
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- include/linux/qcom-geni-se.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-index dd464943f717..f50c73be1428 100644
---- a/include/linux/qcom-geni-se.h
-+++ b/include/linux/qcom-geni-se.h
-@@ -262,7 +262,7 @@ static inline void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
- 	u32 m_cmd;
- 
- 	m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
--	writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
-+	writel(m_cmd, se->base + SE_GENI_M_CMD0);
- }
- 
- /**
-@@ -282,7 +282,7 @@ static inline void geni_se_setup_s_cmd(struct geni_se *se, u32 cmd, u32 params)
- 	s_cmd &= ~(S_OPCODE_MSK | S_PARAMS_MSK);
- 	s_cmd |= (cmd << S_OPCODE_SHFT);
- 	s_cmd |= (params & S_PARAMS_MSK);
--	writel_relaxed(s_cmd, se->base + SE_GENI_S_CMD0);
-+	writel(s_cmd, se->base + SE_GENI_S_CMD0);
- }
- 
- /**
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+> Brian
+> 
+> P.S. for those added late -- you can grab the whole thread from here:
+> https://lore.kernel.org/lkml/20200720202243.180230-1-linux@roeck-us.net/
+> or in mbox form:
+> https://lore.kernel.org/lkml/20200720202243.180230-1-linux@roeck-us.net/t.mbox.gz
+> 
 
