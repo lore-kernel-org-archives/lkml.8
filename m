@@ -2,110 +2,94 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71E7C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B78C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDC32073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VUk00Yb4"
+	by mail.kernel.org (Postfix) with ESMTP id CD5EC207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595388198;
+	bh=uM6fyj+PQ5qOmnVhpZd9ufFET3RZbSsFk/iuwvXvJBw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qQT4QOJkR5yDBdsz/cyjijSzCSVy/L9aZ2GJ0ulZWCphIqrZGfny3TChGrJAN9PZm
+	 oW4PVWsamDBFqFmFcD7S56lz7sAhIQDGnfsBkSVi8cSjv4d6lun7U/LtjqTxxmtKUG
+	 KkhQP3OfQ4ppVx6+HR5YS4u5YXtd5EKQSEJBVWlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731946AbgGVDVt (ORCPT
+        id S1731952AbgGVDXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:21:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:57315 "EHLO ozlabs.org"
+        Tue, 21 Jul 2020 23:23:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731781AbgGVDVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:21:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1731781AbgGVDXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 23:23:15 -0400
+Received: from embeddedor (unknown [201.162.241.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBLNT1JL4z9sR4;
-        Wed, 22 Jul 2020 13:21:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595388106;
-        bh=3HgY+CC86GTCRa19jhzQ4AK/8XRnemvEEJxm4cO6zVw=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 216B42073A;
+        Wed, 22 Jul 2020 03:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595388195;
+        bh=uM6fyj+PQ5qOmnVhpZd9ufFET3RZbSsFk/iuwvXvJBw=;
         h=Date:From:To:Cc:Subject:From;
-        b=VUk00Yb4MHAp87ARMBZvs5vI5Vlq2UcH17ACTPqxb31FTcB/ydb9/fSkV9pPgOlll
-         N+yFteQkWjg3LKc4WiiwyaChAZATam9Ar4rpC6AAfki3f5OZTWsPflcAOsyr56c4J4
-         MyRVDPD5+q2dZWMq2XYify4L+QMjcBgRCDvSpLVL9Qrl2kkB5LW+nGMSX5wu5yTMvx
-         wlRLrUmyW8oPUPGXlhMQjlnaTopbvjnLCQa+MfuFRqI0M/dWspz4vmFTfNIWrL7xV4
-         efWFSA1YqdBYLS3jjCBhcvYVA2JK91qUCm3Vjt5TtZ0EKOVMrXfAyr3BH1KxXqLUiy
-         dyku0KuCl2q7Q==
-Date:   Wed, 22 Jul 2020 13:21:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Subject: linux-next: manual merge of the bpf-next tree with the net tree
-Message-ID: <20200722132143.700a5ccc@canb.auug.org.au>
+        b=bTpAYBskiiDA2AEnBpXKU9F74egBStaz5fCX4tMbBPOJ9qqY9Vwjon9V/kbGodXrh
+         TGKa2xmqZ5bgYJf4XSxmAaspA1fZLcmO/3fPQwF8+kvmg0v8tw6ywcap/h5mMXTHYj
+         Syx2lWVUH7S8Cp9pIWNBAylQJjUG/KMGUb40dVD8=
+Date:   Tue, 21 Jul 2020 22:28:51 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
+Message-ID: <20200722032851.GA4251@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/c_FeKRWTIj38lYfkiotFdSP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/c_FeKRWTIj38lYfkiotFdSP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Hi all,
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Today's linux-next merge of the bpf-next tree got conflicts in:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update URL. Use proper URL to Linux v5.7 documentation.
+ - Add Geert's Reviewed-by tag.
+ - Update changelog text.
 
-  net/ipv4/udp.c
-  net/ipv6/udp.c
+ drivers/pci/controller/pci-rcar-gen2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-between commit:
+diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
+index 326171cb1a97..2ec7093a7588 100644
+--- a/drivers/pci/controller/pci-rcar-gen2.c
++++ b/drivers/pci/controller/pci-rcar-gen2.c
+@@ -228,7 +228,7 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
+ 		pr_warn("unknown window size %ld - defaulting to 256M\n",
+ 			priv->window_size);
+ 		priv->window_size = SZ_256M;
+-		/* fall-through */
++		fallthrough;
+ 	case SZ_256M:
+ 		val |= RCAR_USBCTR_PCIAHB_WIN1_256M;
+ 		break;
+-- 
+2.27.0
 
-  efc6b6f6c311 ("udp: Improve load balancing for SO_REUSEPORT.")
-
-from the net tree and commits:
-
-  7629c73a1466 ("udp: Extract helper for selecting socket from reuseport gr=
-oup")
-  2a08748cd384 ("udp6: Extract helper for selecting socket from reuseport g=
-roup")
-
-from the bpf-next tree.
-
-I fixed it up (I wasn't sure how to proceed, so I used the latter
-version) and can carry the fix as necessary. This is now fixed as far
-as linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/c_FeKRWTIj38lYfkiotFdSP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8XsMcACgkQAVBC80lX
-0GwE+Qf/a1w9/8mTXdOgf7C2LCQmVqsW+ZMzEldYYnotELRdB+IIV9q0egilu73h
-SGg9if0oa/20sPA3Dy3YTMGB07swC4Moc7yxgKTuKjvA43ppf7SY1XZJrvBxEFgT
-QhMlzjb2kmvUTG9hhMDVneGBK6znTlFmmtb8jxwQ/eD7/aLnoNZnRysf2j6PWWgI
-jpXMcDdSyTL+rB4L54aOP2z1Hts2chWU3uNO136O9T8Z8tA5bgs+KPdW+uLUBFmz
-Ol5SEI5S/w5hCbjzqmgOX+kFN6yBkiJWlMvGnKb1tK6ukpDpH8duo8aPrCpLe6/k
-uhTUOegwz8z3CgV/BygFXNQ0Rrxt+w==
-=Znn8
------END PGP SIGNATURE-----
-
---Sig_/c_FeKRWTIj38lYfkiotFdSP--
