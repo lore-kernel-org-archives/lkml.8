@@ -2,44 +2,61 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C50C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 456E2206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40CA20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595415331;
+	bh=M2x96i5KaNWg2BOe51Db2AB9asUsaUmui/319W5e/u8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xZ2jLARdRlyeX/967hhv+Vu9X9RmhTQjWKeUKlXPl72j0wH5mkoyxWwcy9VShPVK4
+	 jozWLTFUEYr/HOU2nGFGPLKzKB37yqR5JWZQjxmq6/ECnjvAC2jtliUxDUGZItKqkV
+	 egt671fhAA6+j5jIWoYdGQyFjrr341mNm0rLfKAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGVKxF (ORCPT
+        id S1729108AbgGVKza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:53:05 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43056 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgGVKxE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:53:04 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9A2CE1C0BDA; Wed, 22 Jul 2020 12:53:02 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 12:52:47 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 094/133] USB: serial: iuu_phoenix: fix memory
- corruption
-Message-ID: <20200722105247.GA19938@duo.ucw.cz>
-References: <20200720152803.732195882@linuxfoundation.org>
- <20200720152808.264804020@linuxfoundation.org>
- <20200721113259.GB17778@duo.ucw.cz>
- <20200721115449.GE3634@localhost>
+        Wed, 22 Jul 2020 06:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728171AbgGVKz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:55:28 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8F15206F5;
+        Wed, 22 Jul 2020 10:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595415327;
+        bh=M2x96i5KaNWg2BOe51Db2AB9asUsaUmui/319W5e/u8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dELiU8CPE9hqRVfSPybQBVNB884h/qxqQJlJuvlEf7JHtUl1yPoVMaW3MnyuyN0Nm
+         XvX1KTLSrKxItM8phvuUWdj077x0beca7IZbfZ39z9fH/Q2ALVNxkQv76HrXC5A4Tb
+         Lybr6y38aUQnXP1oTHZeYYcMUCPXXHN/lnOU9+Nc=
+Date:   Wed, 22 Jul 2020 12:55:24 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     gregory.clement@bootlin.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 13/16] dt-bindings: i2c: mv64xxx: Add compatible for
+ the A100 i2c node.
+Message-ID: <20200722105524.GO1030@ninjato>
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HFD/Dq8JdnjNvyuv"
 Content-Disposition: inline
-In-Reply-To: <20200721115449.GE3634@localhost>
+In-Reply-To: <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -47,63 +64,40 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---sm4nu43k4a2Rpi4c
+--HFD/Dq8JdnjNvyuv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> > > commit e7b931bee739e8a77ae216e613d3b99342b6dec0 upstream.
-> > >=20
-> > > The driver would happily overwrite its write buffer with user data in
-> > > 256 byte increments due to a removed buffer-space sanity check.
-> >=20
-> > > +++ b/drivers/usb/serial/iuu_phoenix.c
-> > > @@ -697,14 +697,16 @@ static int iuu_uart_write(struct tty_str
-> > >  	struct iuu_private *priv =3D usb_get_serial_port_data(port);
-> > >  	unsigned long flags;
-> > > =20
-> > > -	if (count > 256)
-> > > -		return -ENOMEM;
-> > > -
-> > >  	spin_lock_irqsave(&priv->lock, flags);
-> > > =20
-> > > +	count =3D min(count, 256 - priv->writelen);
-> > > +	if (count =3D=3D 0)
-> > > +		goto out;
-> > > +
-> > >  	/* fill the buffer */
-> > >  	memcpy(priv->writebuf + priv->writelen, buf, count);
-> > >  	priv->writelen +=3D count;
-> > > +out:
-> > >  	spin_unlock_irqrestore(&priv->lock, flags);
-> > > =20
-> > >  	return count;
-> >=20
-> > Ok, so... goto and label is unneccessary, memcpy will do the right
-> > thing with count =3D=3D 0.
+On Tue, Jul 14, 2020 at 03:18:39PM +0800, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> That's generally too subtle. Better to clearly mark the error/exception
-> path.
+> Allwinner A100 have a mv64xxx i2c interface available to be used.
+>=20
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-We usually avoid subtle code by introducing comments, not by
-introducing extra (and confusing) code that can not be optimized out.
+Applied to for-next, thanks!
 
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
---sm4nu43k4a2Rpi4c
+--HFD/Dq8JdnjNvyuv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxgafwAKCRAw5/Bqldv6
-8qu/AJ449a0kwPR+rFOa26YCeoKPd5NojQCgoXUShrwTAPQZj8w5iUht1XshuNI=
-=r5MQ
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YGxwACgkQFA3kzBSg
+KbZ5QRAAi3zqkJXhL6j4BS1FZDrdNLKvyyxGd80R/X2rplKFshFPBu2dnjdSolJG
+efmbYtvEQN53OHkeBWxj9/TuNP6Pkok5yODeqKGZvTIVUHNjNP/d36cJry3P1uaC
+hmtlYJlzXDybuKvGoN8Zt78ERnA5KkPBf12p9sg4mJ3llaZwm/TWJDGfiGDYWZOz
+DWzb16NLy4W0QgHXXODd4GXLfq5uGf+kwosyHU8dlc6iMS1zTOEO2UPnb7nVAFKx
+qCbh4Kp+Yg5TXEJsCIhbWpmZ4/j/eIU8A9+N5Gtx8kEERfLoNg8yLcdP1M1Kh510
+WV4ngYtpiKaoD1rm4K+wVKA7K3Cg0KeCj1qxc0zFzEmpFHhfpPBg/4YbgYpYM7D1
+gTltn2d3TDGPMRSgELE+fzt7ir1YGCeHMZIsbyq/OaBHhLh9Y8dFAqcJfMIiLm11
+nSwCLXsEcCvrClyNwMF5JyblG8cjfdnAMXcVKd+lWoUEdadONK4yaC/39wUZCOdp
+Dw6U5/X/LqBAn0BIv7i237b5jNNnNRxLz5Jixgvw8hYPymhUjsMZXzlDB5ZwRxPD
+Q1CC2QP56n7h3oeXa5yvc6aYhrqwQuErxhWsBqFOeZ6L0lnB+lsrfkccyh/Jh+Zn
+VobysQnU0Hkznp2B7Ylcgcj8a96KBowvhcDnTFM90mo3y19jB14=
+=ZObD
 -----END PGP SIGNATURE-----
 
---sm4nu43k4a2Rpi4c--
+--HFD/Dq8JdnjNvyuv--
