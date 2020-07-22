@@ -2,109 +2,165 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D124CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C74FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0DF20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595414493;
-	bh=ALDy45uCdZe3Ayi9GNp5dgiErhBW4lkKC52BVf5tDXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pyZcGtWjIx1Nmnsxm+5NnyYb0A4DuIGCmUs/zSjOIRrvyP+VH49oXcsDwpHUqJDfj
-	 zEwok4nmTKLwfdHz00EI8rDWoPllMZouhztAWLWap9l4aWC2P0BWu5rdSsoZx7TZXb
-	 H9cHTveL3Z2GGDuCgiLI4Bv9/ESOC3pwNzvhPfho=
+	by mail.kernel.org (Postfix) with ESMTP id 5217A2065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgGVKlc (ORCPT
+        id S1726653AbgGVKnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgGVKlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:41:31 -0400
-Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C8B2065E;
-        Wed, 22 Jul 2020 10:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595414490;
-        bh=ALDy45uCdZe3Ayi9GNp5dgiErhBW4lkKC52BVf5tDXY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cQ4AmN8uaWfnEgeWwL2absr7V4VQ2TdebuVBocFbptouvLILfg+7HIN1IR6AA9t1B
-         yDRUcNmKpM3vP9KQkui6NnL3rhZ0s+FmnQMz/zxHw/Hc1PqDUCs6EtYhNU2hVpVx6L
-         qtCWLbkSZ1J4S+N7EhvE8AJQ1XFPZFkMl5SFez9U=
-Date:   Wed, 22 Jul 2020 12:41:28 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
-Message-ID: <20200722104128.GK1030@ninjato>
-References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
- <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+        Wed, 22 Jul 2020 06:43:53 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2506 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725878AbgGVKnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:43:52 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id BAE55E9CEA3A9EC41344;
+        Wed, 22 Jul 2020 11:43:49 +0100 (IST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.80.253) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Wed, 22 Jul 2020 11:43:49 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
+        <lenb@kernel.org>, <tony.luck@intel.com>,
+        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
+        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
+        <jroedel@suse.de>
+CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
+Subject: [PATCH v13 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Wed, 22 Jul 2020 11:39:50 +0100
+Message-ID: <20200722103952.1009-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LHvWgpbS7VDUdu2f"
-Content-Disposition: inline
-In-Reply-To: <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.80.253]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml715-chm.china.huawei.com (10.201.108.66)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CPER records describing a firmware-first error are identified by GUID.
+The ghes driver currently logs, but ignores any unknown CPER records.
+This prevents describing errors that can't be represented by a standard
+entry, that would otherwise allow a driver to recover from an error.
+The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+version 2.8).
 
---LHvWgpbS7VDUdu2f
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+patch set
+1. add a notifier chain for these non-standard/vendor-records
+   in the ghes driver.
+
+2. add a driver to handle HiSilicon HIP PCIe controller's errors.
+   
+Changes:
+
+V13:
+1. Following changes in the HIP PCIe error handling driver.
+1.1 Add Bjorn's acked-by.
+1.2. Address the comments and macros order Bjorn mentioned.
+     Fix the words in the commit.
+
+V12:
+1. Changed the Signed-off-by tag to Co-developed-by tag in the patch
+   "ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records"
+
+V11:
+1. Following modifications made by James Morse in the APEI patch
+   for the vendor error record.
+   - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+   
+2. Changes in the HIP PCIe error handling driver
+   for the comments by Andy Shevchenko.
+
+V10:
+1. Changes for Bjorn's comments on HIP PCIe error handler driver
+   and APEI patch.
+   
+2. Changes in the HIP PCIe error handler driver
+   for the feedbacks by Andy Shevchenko.
+   
+V9:
+1. Fixed 2 improvements suggested by the kbuild test robot. 
+1.1 Change ghes_gdata_pool_init() as static function.
+1.2. Removed using buffer to store the error data for
+     logging in the hisi_pcie_handle_error()
+
+V8:
+1. Removed reporting the standard errors through the interface
+   because of the conflict with the recent patches in the
+   memory error handling path.
+2. Fix comments by Dan Carpenter.
+   
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
+
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 |  63 +++++
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  27 ++
+ 5 files changed, 426 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
 
 
-> > +	synchronize_irq(iproc_i2c->irq);
->=20
-> If one takes a look at the I2C slave ISR routine, there are places where
-> IRQ can be re-enabled in the ISR itself. What happens after we mask all
-> slave interrupt and when 'synchronize_irq' is called, which I suppose is
-> meant to wait for inflight interrupt to finish where there's a chance
-> the interrupt can be re-enable again? How is one supposed to deal with th=
-at?
-
-I encountered the same problem with the i2c-rcar driver before I left
-for my holidays.
-
-> > +	iproc_i2c->slave =3D NULL;
-> > +
-> >  	/* Erase the slave address programmed */
-> >  	tmp =3D iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
-> >  	tmp &=3D ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
-> >=20
-
---LHvWgpbS7VDUdu2f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YF9cACgkQFA3kzBSg
-Kba6cQ//fw45mvFWfHa/AsTWYtBZPnPvi5JJhzzrCqP+3q3bs6ewwzjoCrqGZXyI
-KhIJKqbPFhwQOA2mjEbbioPcCJ4Z71mtq0s1IblmUlSL6NzMb0hgMBgdVYKmuEBE
-27AwTz6oUzulBfejYPPo9LxVsmY+ZiNA6m6uOhhqkp/SKNbye9Tdy1ZnxwTLmwFV
-dXGqEyQoxQK+LBtuzpSCsg/Z1/PYJAM41Ya+F+PZhy616Hkn8f3iW2rYez+oejpc
-HjLRER6TLNRewsytxMKGae4AsjA04JQ6PtHfMMrfGdq5WNPY12otZKDx1w6jYC3e
-WljQUBdNiD7G3EquvDGyG4KOWub1NhNXMk/RrMsgAqOhH6ErbqwJJYRZpy/7UCao
-MYI9cXa93Qfq1LHNGZcrRFaw5pIja8VAD0MKhJG+vtooi5ZTiFdcsUqece2CzoMZ
-Dz3WzvDlJOi7CLQEBDng5YmrHO+GrAZNbkcf6SApjss8FGy+qhjx9vasHXkKG6ca
-blgY9qHThn5vWYwJ/xe1n6lJywKnSek7EkhkjGqWf8tmww766gQ2fcowSmoGJcdD
-gQhq2EZYqhNKeLnL0U2D3t+szaunbbOISNHeyw/E2XI5BtC+knliWe6kaOu3tBKG
-xYypzgHmeNzQisBDx3nQV7tnMGkQKrGt0hBAdAGM21lHJmgDtb4=
-=5q5r
------END PGP SIGNATURE-----
-
---LHvWgpbS7VDUdu2f--
