@@ -2,99 +2,105 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83604C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B83320714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mce3UA+b"
+	by mail.kernel.org (Postfix) with ESMTP id 4E5DE20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595411875;
+	bh=Ac2zSfnLK6EdjtxqVu1WgVKMMw2MnwHoF9j9QNHNO7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KMk0Cv5zpxS0wn9lxKkbMFI5T7Ui/uMVQXJ5RjWeKUIK5oxD9cfvhQENLzGhMf56R
+	 rZbEJfVc9bUoCRCqB2YWtG0aAG7zt/xDEzAAdU5S4vpniTaAu17SidCw1m1ytQZhiO
+	 fZe00tKZ+h5M6UMyorqlaDD59IRUgj4j2j1zqC4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbgGVJ4v (ORCPT
+        id S1731575AbgGVJ5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGVJ4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:56:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF842C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:56:50 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f2so1269352wrp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0xnQ/4hQ2Xpb1P3P7eG0JudBdmWStFiMCuMdD4rUBv8=;
-        b=Mce3UA+bY7rBT9FL+oxnaddk0ue9EKfxXahp/1NiIBjGDDy/qJ/1OkOG+4y2+BO0nD
-         I75Lc15Vf7mgq+pqs3h8apWlzK0eMeFZMlOlaXrts74ddZcD/LdS0GQXcVt5ef8lMS6D
-         KpsOAiDvs7S6aGdhYgXTKBORSCs8UDip6SmUcswsK6JpR2M0H745/CQcxpK9FFp5VyCw
-         aLRXsvLshoz537ybDpJ/ScfR8xWMj9jzh4pTl5Vc5/u3yeu+u2nDoTHH1QFmxmedOz2z
-         Brsk/+l4vyO9nbVDonUKIGXn6UOw1WAy69soipR5W/EGJH0YIx/gOGreqt7QWelm66Zc
-         JS+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0xnQ/4hQ2Xpb1P3P7eG0JudBdmWStFiMCuMdD4rUBv8=;
-        b=YJAHgodCuuAObqpeOUPv4eF72T/fTDbqjgbrN8dR5mtIUUu4cKGoF3uCCwJDvisBUl
-         uSE1C3ucIaLDAYrrg9crR/UpXFHtvNJZCOESGfY0jH6z7StUwT21/X81ulP3ENBCLcym
-         flOI3WDDeWVN/9xbwcw18y1brjS7qb//4RrI7AX0NokcY7qoZXlAr9mDJi0I108yjEfj
-         NCUO3LsxJssHnlNnF2/ucZHhDfbE32ATQWWHVAKSl4IH+JSVmhWqSYesoja3BlAoVUJa
-         RykRS9W7qpZ3T4SvshtlZF9YYPXk4vOdotVxhXBJm4RWSfQE7heFVVCAD3doHZco9SAv
-         0psA==
-X-Gm-Message-State: AOAM531CzGkzDtK315XYTx+j7fsid3qDEJoQW1W46VpD3v/zoIHT6GAA
-        s5scWFdEdO+6EnaSpWuPkVxB7A==
-X-Google-Smtp-Source: ABdhPJwARd6rDJnGgGWAfHD4Lty5BptW2nH6HgW896WzFmKMP2SqPRp1isXAIV3ddTfpCCvsd3tI0Q==
-X-Received: by 2002:adf:9ed4:: with SMTP id b20mr5923702wrf.206.1595411809624;
-        Wed, 22 Jul 2020 02:56:49 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id a134sm7704101wmd.17.2020.07.22.02.56.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 02:56:49 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 10:56:47 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     linux-kernel@vger.kernel.org, phh@phh.me, stefan@agner.ch,
-        b.galvani@gmail.com
-Subject: Re: [PATCH] mfd: rn5t618: Fix caching of battery related registers
-Message-ID: <20200722095647.GM621928@dell>
-References: <20200717210002.27366-1-andreas@kemnade.info>
+        Wed, 22 Jul 2020 05:57:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726153AbgGVJ5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:57:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84C4220714;
+        Wed, 22 Jul 2020 09:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595411873;
+        bh=Ac2zSfnLK6EdjtxqVu1WgVKMMw2MnwHoF9j9QNHNO7g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=abKrNRxXeuctelcKVMQbIUVI1Fxcf2Kts4FdVgofW1X77fDquvE4r9eZGe7/KBJsb
+         DotcyKDC//m8E2dWye8Sa6UoTEfBk+ehLisu8oOYbqRPDppbhrS835EBNvvSs5dfVa
+         doYjLbY6XAMppyxD6z7vZ1B8qgDfDDKM4B3MMqRk=
+Date:   Wed, 22 Jul 2020 11:57:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        David Duncan <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>, Karen Noel <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com, Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH v5 01/18] nitro_enclaves: Add ioctl interface definition
+Message-ID: <20200722095759.GA2817347@kroah.com>
+References: <20200715194540.45532-1-andraprs@amazon.com>
+ <20200715194540.45532-2-andraprs@amazon.com>
+ <20200721121225.GA1855212@kroah.com>
+ <5dad638c-0ef3-9d16-818c-54e1556d8fc8@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200717210002.27366-1-andreas@kemnade.info>
+In-Reply-To: <5dad638c-0ef3-9d16-818c-54e1556d8fc8@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020, Andreas Kemnade wrote:
-
-> Battery status changes dynamically, so the corresponding registers
-> need to be considered volatile. Affected registers are:
-> - fuel gauge
-> - battery status
-> - battery interrupt
+On Wed, Jul 22, 2020 at 11:27:29AM +0300, Paraschiv, Andra-Irina wrote:
+> > > +#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
+> > > +#define _UAPI_LINUX_NITRO_ENCLAVES_H_
+> > > +
+> > > +#include <linux/types.h>
+> > > +
+> > > +/* Nitro Enclaves (NE) Kernel Driver Interface */
+> > > +
+> > > +#define NE_API_VERSION (1)
+> > Why do you need this version?  It shouldn't be needed, right?
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  drivers/mfd/rn5t618.c | 3 +++
->  1 file changed, 3 insertions(+)
+> The version is used as a way for the user space tooling to sync on the
+> features set provided by the driver e.g. in case an older version of the
+> driver is available on the system and the user space tooling expects a set
+> of features that is not included in that driver version.
 
-Applied, thanks.
+That is guaranteed to get out of sync instantly with different distro
+kernels backporting random things, combined with stable kernel patch
+updates and the like.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Just use the normal api interfaces instead, don't try to "version"
+anything, it will not work, trust us :)
+
+If an ioctl returns -ENOTTY then hey, it's not present and your
+userspace code can handle it that way.
+
+thanks,
+
+greg k-h
