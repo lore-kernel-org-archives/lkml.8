@@ -2,83 +2,115 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581DCC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A442077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BF220787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:51:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcLf9txT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731022AbgGVIur (ORCPT
+        id S1731128AbgGVIvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:50:47 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:40495 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgGVIur (ORCPT
+        Wed, 22 Jul 2020 04:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgGVIvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:50:47 -0400
-X-Greylist: delayed 2814 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Jul 2020 04:50:47 EDT
-Received: from TWHMLLG3.macronix.com (localhost [127.0.0.2] (may be forged))
-        by TWHMLLG3.macronix.com with ESMTP id 06M83qEr003038
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:03:52 +0800 (GMT-8)
-        (envelope-from ycllin@mxic.com.tw)
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id 06M83Cpj002700;
-        Wed, 22 Jul 2020 16:03:26 +0800 (GMT-8)
-        (envelope-from ycllin@mxic.com.tw)
-From:   YouChing Lin <ycllin@mxic.com.tw>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        juliensu@mxic.com.tw, YouChing Lin <ycllin@mxic.com.tw>
-Subject: [PATCH 1/2] mtd: spinand: macronix: Add support for MX31LF1GE4BC
-Date:   Wed, 22 Jul 2020 16:02:57 +0800
-Message-Id: <1595404978-31079-2-git-send-email-ycllin@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1595404978-31079-1-git-send-email-ycllin@mxic.com.tw>
-References: <1595404978-31079-1-git-send-email-ycllin@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com 06M83Cpj002700
+        Wed, 22 Jul 2020 04:51:05 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECC1C0619DC;
+        Wed, 22 Jul 2020 01:51:05 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z3so812407pfn.12;
+        Wed, 22 Jul 2020 01:51:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e3OT5w6u3rxG/3iZ+MykAHqpmEMoLtEmtYfcFs2OdbA=;
+        b=lcLf9txTrjt7hKVxP5gHCuyjkEz9RmBIC+LvPgKzvRZtnViz4NLCU3lgBmESF6zSjc
+         twIU4avgtOsb4uzfw/cV1b45Ua8JmLeshTj82RnoEUUjxtLgNRG6aMLi3AAfOwptrda4
+         G9mAphyqrGUDorRoYnQYEsm3QHhGkO3u1bnmADdhMeik3sp4FMM5jzojAEjucUmeErg/
+         euMtXXkvYwV7auGAhJ9WPNDR0Wzcv/XFJ+tPA5rXnKgiyd8iv9wR157pAL+f/s7g5u2A
+         p1E+0QX5TAM7MeInLS5d0nuLTtJkOgAyg/jds9ZS/+P6aTfL33oMH6DMytNz6FztY0/2
+         AizA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3OT5w6u3rxG/3iZ+MykAHqpmEMoLtEmtYfcFs2OdbA=;
+        b=cb5fZJEwW9fnvcPWrn8hHfxwG+MicK1m8zdj225DIvDQKh6r8kNb+ptEgKS6LZnAks
+         GU66ydJAhk+FsnDAsH/eT5aiGg1I/Z+x+dsy86PMHoPj9Uj0V+BvVsWy8doDicWG2YSF
+         cIQxcXNCDKNakd2Eso9YcFDsfEAjh7ay1q5eQNXohVLEfmWh94asHJS2Wd+6jvycqXrR
+         JGrptZE1ee9WX3CTXcv7auqOh/xIYtk91K7+1o9Rz84z+FLWzNJXWCyEVwCdgCjagaOP
+         1ZpbcEm9rHV/1CHN4G/Hvx1QbqDUw0hErCoUUppzYy6ZD/foz+MN8Shr33XBVC/p8QSh
+         vg/w==
+X-Gm-Message-State: AOAM5310DpcC5rThI4W4LDhMw2hRKmBidf6AV8KbUHfZWweuGp6t4zVy
+        Vp9Z61Di6u1edf2437r8u4w6N1fAcc50g7sBGag=
+X-Google-Smtp-Source: ABdhPJwk8TMBoOfP/mmDUdNAvHRR4uQdqWvutrkzEuwfNgqWTzOS/6FZqp9RGt9Ld4mrxIwr7V5Ox0PodZaH1uJk7tI=
+X-Received: by 2002:a62:7657:: with SMTP id r84mr26903497pfc.130.1595407864704;
+ Wed, 22 Jul 2020 01:51:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200721222851.2075891-1-drew@beagleboard.org> <CAHp75Vd35n0=hB-K3WjUXD3HPNt6F=MHNafNY55NGfb5ahvLSA@mail.gmail.com>
+In-Reply-To: <CAHp75Vd35n0=hB-K3WjUXD3HPNt6F=MHNafNY55NGfb5ahvLSA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Jul 2020 11:50:50 +0300
+Message-ID: <CAHp75VeXiir4BYFTd3YrseExnLPg4MfD69koTkqf4_TKp7dsBQ@mail.gmail.com>
+Subject: Re: [PATCH v4] pinctrl: core: print gpio in pins debugfs file
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Macronix MX31LF1GE4BC is a 3V, 1Gbit (128MB) serial
-NAND flash device.
+On Wed, Jul 22, 2020 at 11:48 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Jul 22, 2020 at 1:29 AM Drew Fustini <drew@beagleboard.org> wrote:
+> >
+> > If there is a gpio range mapping for the pin, then print out the gpio
+> > chip and line index for the pin in the debugfs 'pins' file with the
+> > format: "[line-index]:[gpio-label]"
+> >
+> > Here is an example output on the BeagleBoard.org PocketBeagle (AM3358):
+> > /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
+> >
+> > pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
+> > pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
+> > pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
+> > pin 28 (PIN28) 0:N/A 44e10870 00000036 pinctrl-single
+> > pin 29 (PIN29) 0:N/A 44e10874 00000006 pinctrl-single
 
-Validated by read, erase, read back, write and read back
-on Xilinx Zynq PicoZed FPGA board which included
-Macronix SPI Host (driver/spi/spi-mxic.c).
+Though one more nit, I have just realized, perhaps '0:?' would be
+better, because GPIO library uses '?' in cases of unknown labels or
+so.
+I guess no need to resend (but if you wish you may do, with my tag
+included) and we may wait for Linus and Bart to comment.
 
-Signed-off-by: YouChing Lin <ycllin@mxic.com.tw>
----
- drivers/mtd/nand/spi/macronix.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> > pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
+> > pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
+> > pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
+> > pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
+> > pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
+> > pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
+> >
+>
+> This variant looks good enough to me, thanks! FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-index 0f900f3..c9aa9f4 100644
---- a/drivers/mtd/nand/spi/macronix.c
-+++ b/drivers/mtd/nand/spi/macronix.c
-@@ -118,6 +118,16 @@ static int mx35lf1ge4ab_ecc_get_status(struct spinand_device *spinand,
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+	SPINAND_INFO("MX31LF1GE4BC",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x1e),
-+		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0 /*SPINAND_HAS_QE_BIT*/,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
- };
- 
- static const struct spinand_manufacturer_ops macronix_spinand_manuf_ops = {
+
 -- 
-1.9.1
-
+With Best Regards,
+Andy Shevchenko
