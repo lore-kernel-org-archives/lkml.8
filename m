@@ -2,125 +2,164 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F05C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 904FB206F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yj123Sok"
+	by mail.kernel.org (Postfix) with ESMTP id 7C73C20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:18:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595377118;
+	bh=VJtScx2bVukP/mlcrClwkoR4ksqhOSgVTh+yFH7IWqM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xxnVWQv9YqoMOwXft4XxpE4763zVRy2ioCLYUXsI+mp/LHMf1VvxRWY4F/LjCBCpO
+	 HvqS98UqNzhZVJOHby0lZjMSi64IhxIvqjDDdWAod68IJl5Szdy8C7xcUUZjGYedf8
+	 FZSDCbDwmVNRy7rkpgE0DEZYRgtmjBxcxdApSMCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbgGVAPc (ORCPT
+        id S1730191AbgGVASh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:15:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55470 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728333AbgGVAPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:15:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595376929;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=yb1tjJbEhpJuclMtgMyLcW78ZZjdWCXvTbVarsTz3+0=;
-        b=Yj123Sok+610q2ebT/Z1KFW3ydRsbRn7LGW0+Nap333hBq/ZcVGzqnvZK2uR7xp679s9Ib
-        TM/m/qd4HApYBl0Bimfck2tYpQKjCm75Ku4juXKW+oJ6j75c0BmnVQ6ic+4sAJV5il7EmP
-        WtzOQaF9vfmx5DWyocXIwgR2oInNVQw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-WQwzR4y3OA-26v9M2oWiOw-1; Tue, 21 Jul 2020 20:15:26 -0400
-X-MC-Unique: WQwzR4y3OA-26v9M2oWiOw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 21 Jul 2020 20:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbgGVASg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 20:18:36 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 881FC1902EA2;
-        Wed, 22 Jul 2020 00:15:25 +0000 (UTC)
-Received: from pc-72.home.com (unknown [10.40.192.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CB606FECD;
-        Wed, 22 Jul 2020 00:15:16 +0000 (UTC)
-From:   Julia Suvorova <jusual@redhat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Julia Suvorova <jusual@redhat.com>
-Subject: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-Date:   Wed, 22 Jul 2020 02:15:13 +0200
-Message-Id: <20200722001513.298315-1-jusual@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D5F206F2;
+        Wed, 22 Jul 2020 00:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595377116;
+        bh=VJtScx2bVukP/mlcrClwkoR4ksqhOSgVTh+yFH7IWqM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=q/rbNlzMTu2d7h5yLJQ8MI4vWYi2LX7ozhDoYhAUPEoDZ8904PyP/6DGkZPlaa7h+
+         o8Fhe9tLoc59rwBt81rS8ZNb2x+kajIYiSDt6wqdK85Qfy3Jg1VyVaAQUbxbsTZyIp
+         xLurlKmXOP87yAI9egGiQP25yNvM/MDfjaezUFq0=
+Date:   Tue, 21 Jul 2020 17:18:34 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+cc:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
+        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@kernel.crashing.org
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend
+ mode
+In-Reply-To: <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
+Message-ID: <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
+References: <cover.1593665947.git.anchalag@amazon.com> <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com> <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com> <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com> <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com> <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com> <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: multipart/mixed; BOUNDARY="8323329-219213542-1595374972=:17562"
+Content-ID: <alpine.DEB.2.21.2007211643430.17562@sstabellini-ThinkPad-T480s>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Scanning for PCI devices at boot takes a long time for KVM guests. It
-can be reduced if KVM will handle all configuration space accesses for
-non-existent devices without going to userspace [1]. But for this to
-work, all accesses must go through MMCONFIG.
-This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-guests making MMCONFIG the default access method.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-[1] https://lkml.org/lkml/2020/5/14/936
+--8323329-219213542-1595374972=:17562
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.DEB.2.21.2007211643431.17562@sstabellini-ThinkPad-T480s>
 
-Signed-off-by: Julia Suvorova <jusual@redhat.com>
----
- arch/x86/pci/direct.c      | 5 +++++
- arch/x86/pci/mmconfig_64.c | 3 +++
- 2 files changed, 8 insertions(+)
+On Tue, 21 Jul 2020, Boris Ostrovsky wrote:
+> >>>>>> +static int xen_setup_pm_notifier(void)
+> >>>>>> +{
+> >>>>>> +     if (!xen_hvm_domain())
+> >>>>>> +             return -ENODEV;
+> >>>>>>
+> >>>>>> I forgot --- what did we decide about non-x86 (i.e. ARM)?
+> >>>>> It would be great to support that however, its  out of
+> >>>>> scope for this patch set.
+> >>>>> I’ll be happy to discuss it separately.
+> >>>>
+> >>>> I wasn't implying that this *should* work on ARM but rather whether this
+> >>>> will break ARM somehow (because xen_hvm_domain() is true there).
+> >>>>
+> >>>>
+> >>> Ok makes sense. TBH, I haven't tested this part of code on ARM and the series
+> >>> was only support x86 guests hibernation.
+> >>> Moreover, this notifier is there to distinguish between 2 PM
+> >>> events PM SUSPEND and PM hibernation. Now since we only care about PM
+> >>> HIBERNATION I may just remove this code and rely on "SHUTDOWN_SUSPEND" state.
+> >>> However, I may have to fix other patches in the series where this check may
+> >>> appear and cater it only for x86 right?
+> >>
+> >>
+> >> I don't know what would happen if ARM guest tries to handle hibernation
+> >> callbacks. The only ones that you are introducing are in block and net
+> >> fronts and that's arch-independent.
+> >>
+> >>
+> >> You do add a bunch of x86-specific code though (syscore ops), would
+> >> something similar be needed for ARM?
+> >>
+> >>
+> > I don't expect this to work out of the box on ARM. To start with something
+> > similar will be needed for ARM too.
+> > We may still want to keep the driver code as-is.
+> > 
+> > I understand the concern here wrt ARM, however, currently the support is only
+> > proposed for x86 guests here and similar work could be carried out for ARM.
+> > Also, if regular hibernation works correctly on arm, then all is needed is to
+> > fix Xen side of things.
+> > 
+> > I am not sure what could be done to achieve any assurances on arm side as far as
+> > this series is concerned.
 
-diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
-index a51074c55982..8ff6b65d8f48 100644
---- a/arch/x86/pci/direct.c
-+++ b/arch/x86/pci/direct.c
-@@ -6,6 +6,7 @@
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/dmi.h>
-+#include <linux/kvm_para.h>
- #include <asm/pci_x86.h>
+Just to clarify: new features don't need to work on ARM or cause any
+addition efforts to you to make them work on ARM. The patch series only
+needs not to break existing code paths (on ARM and any other platforms).
+It should also not make it overly difficult to implement the ARM side of
+things (if there is one) at some point in the future.
+
+FYI drivers/xen/manage.c is compiled and working on ARM today, however
+Xen suspend/resume is not supported. I don't know for sure if
+guest-initiated hibernation works because I have not tested it.
+
+
  
- /*
-@@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
- {
- 	if (type == 0)
- 		return;
-+
-+	if (raw_pci_ext_ops && kvm_para_available())
-+		return;
-+
- 	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
- 		 type);
- 	if (type == 1) {
-diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
-index 0c7b6e66c644..9eb772821766 100644
---- a/arch/x86/pci/mmconfig_64.c
-+++ b/arch/x86/pci/mmconfig_64.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/acpi.h>
- #include <linux/bitmap.h>
-+#include <linux/kvm_para.h>
- #include <linux/rcupdate.h>
- #include <asm/e820/api.h>
- #include <asm/pci_x86.h>
-@@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
- 		}
- 
- 	raw_pci_ext_ops = &pci_mmcfg;
-+	if (kvm_para_available())
-+		raw_pci_ops = &pci_mmcfg;
- 
- 	return 1;
- }
--- 
-2.25.4
+> If you are not sure what the effects are (or sure that it won't work) on
+> ARM then I'd add IS_ENABLED(CONFIG_X86) check, i.e.
+> 
+> 
+> if (!IS_ENABLED(CONFIG_X86) || !xen_hvm_domain())
+> 	return -ENODEV;
 
+That is a good principle to have and thanks for suggesting it. However,
+in this specific case there is nothing in this patch that doesn't work
+on ARM. From an ARM perspective I think we should enable it and
+&xen_pm_notifier_block should be registered.
+
+Given that all guests are HVM guests on ARM, it should work fine as is.
+
+
+I gave a quick look at the rest of the series and everything looks fine
+to me from an ARM perspective. I cannot imaging that the new freeze,
+thaw, and restore callbacks for net and block are going to cause any
+trouble on ARM. The two main x86-specific functions are
+xen_syscore_suspend/resume and they look trivial to implement on ARM (in
+the sense that they are likely going to look exactly the same.)
+
+
+One question for Anchal: what's going to happen if you trigger a
+hibernation, you have the new callbacks, but you are missing
+xen_syscore_suspend/resume?
+
+Is it any worse than not having the new freeze, thaw and restore
+callbacks at all and try to do a hibernation?
+--8323329-219213542-1595374972=:17562--
