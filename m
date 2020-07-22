@@ -2,155 +2,90 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE5EC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3600A20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CDE9207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595443103;
+	bh=C41NSdvixYNpy8FAlvuQ8aWZEgzephgAUoyXiR9BvKM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=y5QMaw9aozvhX0aLAkZfEeAlzft1DeLCsGJkc5dcdanr+5+B12V6h6lllqCHrDlDw
+	 AUVljlWVAlDIVlT3kInUYJ46J9U9jtQGidabfp+nqxoSQ1BhCP5fN7WMKLSNJ8twTt
+	 Nrsye+LzSKB5tJfZf9aBakQ8AIndst5QVj+MjRsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732177AbgGVSg2 (ORCPT
+        id S1732277AbgGVSiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgGVSg1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:36:27 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF9DC0619DC;
-        Wed, 22 Jul 2020 11:36:27 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 247A0BDF0B;
-        Wed, 22 Jul 2020 18:36:21 +0000 (UTC)
-Subject: Re: [PATCH for v5.9] mfd: Replace HTTP links with HTTPS ones
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh@kernel.org>
-Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, tony@atomide.com, devicetree@vger.kernel.org
-References: <20200719195613.61458-1-grandmaster@al2klimov.de>
- <20200721161028.GA389086@bogus> <20200722065429.GI621928@dell>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <df4b92a2-0c19-ca0e-7967-4ec059196835@al2klimov.de>
-Date:   Wed, 22 Jul 2020 20:36:19 +0200
+        Wed, 22 Jul 2020 14:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbgGVSiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:38:21 -0400
+Received: from embeddedor (unknown [201.166.157.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAEB20781;
+        Wed, 22 Jul 2020 18:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595443101;
+        bh=C41NSdvixYNpy8FAlvuQ8aWZEgzephgAUoyXiR9BvKM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=N4yhV4EF87gDubIEadGRCHul8bJEx5mNHqryX/eg1UN4qiZwL9eNPb6hXHYc+IqIY
+         ry2SUoDQqAVLGiOuhIMgtBv5AmUBHyhaHG/RJLC7AFQKt6/WScEDkpl2BGb9MqejHm
+         d4RUMlU17QAu1VyCz1+33X8gDMewdgIslTXho8DQ=
+Date:   Wed, 22 Jul 2020 13:43:58 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] tg3: Avoid the use of one-element array
+Message-ID: <20200722184358.GA15694@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200722065429.GI621928@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+One-element arrays are being deprecated[1]. Replace the one-element
+array with a simple value type 'u32 reserved2'[2], once it seems
+this is just a placeholder for alignment.
 
+[1] https://github.com/KSPP/linux/issues/79
+[2] https://github.com/KSPP/linux/issues/86
 
-Am 22.07.20 um 08:54 schrieb Lee Jones:
-> On Tue, 21 Jul 2020, Rob Herring wrote:
-> 
->> On Sun, 19 Jul 2020 21:56:13 +0200, Alexander A. Klimov wrote:
->>> Rationale:
->>> Reduces attack surface on kernel devs opening the links for MITM
->>> as HTTPS traffic is much harder to manipulate.
->>>
->>> Deterministic algorithm:
->>> For each file:
->>>    If not .svg:
->>>      For each line:
->>>        If doesn't contain `\bxmlns\b`:
->>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->>>              If both the HTTP and HTTPS versions
->>>              return 200 OK and serve the same content:
->>>                Replace HTTP with HTTPS.
->>>
->>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->>> ---
->>>   Continuing my work started at 93431e0607e5.
->>>   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->>>   (Actually letting a shell for loop submit all this stuff for me.)
-> 
-> I'm guessing something went wrong with your submission, as Rob's reply
-> is the first time I saw this patch.  Did your bot send it to me?
-Yes,
-https://lore.kernel.org/lkml/20200719195613.61458-1-grandmaster@al2klimov.de/
+Tested-by: kernel test robot <lkp@intel.com>
+Link: https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/0-day/tg3-20200718.md
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/broadcom/tg3.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> You really should be fully reviewing anything that gets sent to the
-> MLs.  "Sorry, I didn't send it, my bot did" is not an acceptable
-> excuse for inadequacies.
-See this as an excuse for not stopping sending on demand (if any), not 
-for invalid To:.
-Whoever's (not) in To: of auto-submitted patches would also (not) be 
-there on manual submission because the bot just emulates myself:
+diff --git a/drivers/net/ethernet/broadcom/tg3.h b/drivers/net/ethernet/broadcom/tg3.h
+index 6953d0546acb..1000c894064f 100644
+--- a/drivers/net/ethernet/broadcom/tg3.h
++++ b/drivers/net/ethernet/broadcom/tg3.h
+@@ -2847,7 +2847,7 @@ struct tg3_ocir {
+ 	u32				port1_flags;
+ 	u32				port2_flags;
+ 	u32				port3_flags;
+-	u32				reserved2[1];
++	u32				reserved2;
+ };
+ 
+ 
+-- 
+2.27.0
 
-
-➜  linux git:(master) cat submit.sh
-#!/bin/bash
-set -exo pipefail
-
-if [ "$(perl scripts/get_maintainer.pl --nogit{,-fallback} --nol "$1" 
-|wc -l)" -eq 0 ]; then
-         GCP=--git-chief-penguins
-else
-         GCP=''
-fi
-
-git send-email --confirm=never "--to=$(
-         perl scripts/get_maintainer.pl $GCP --norolestats "$1" |\
-         perl -pe 'if (/<(.+?)>/) { $_ = "$1\n" }' |\
-         tr \\n , |\
-         perl -pe 's/,$//'
-)" "$@"
-
-> 
->>>   If there are any URLs to be removed completely
->>>   or at least not (just) HTTPSified:
->>>   Just clearly say so and I'll *undo my change*.
->>>   See also: https://lkml.org/lkml/2020/6/27/64
->>>
->>>   If there are any valid, but yet not changed URLs:
->>>   See: https://lkml.org/lkml/2020/6/26/837
->>>
->>>   If you apply the patch, please let me know.
->>>
->>>   Sorry again to all maintainers who complained about subject lines.
->>>   Now I realized that you want an actually perfect prefixes,
->>>   not just subsystem ones.
->>>   I tried my best...
->>>   And yes, *I could* (at least half-)automate it.
->>>   Impossible is nothing! :)
->>>
->>>
->>>   Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
->>>   drivers/mfd/hi6421-pmic-core.c                       | 2 +-
->>>   drivers/mfd/lp873x.c                                 | 2 +-
->>>   drivers/mfd/lp87565.c                                | 2 +-
->>>   drivers/mfd/omap-usb-host.c                          | 2 +-
->>>   drivers/mfd/omap-usb-tll.c                           | 2 +-
->>>   drivers/mfd/smsc-ece1099.c                           | 2 +-
->>>   drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
->>>   drivers/mfd/tps65086.c                               | 2 +-
->>>   drivers/mfd/tps65217.c                               | 2 +-
->>>   drivers/mfd/tps65218.c                               | 2 +-
->>>   drivers/mfd/tps65912-core.c                          | 2 +-
->>>   drivers/mfd/tps65912-i2c.c                           | 2 +-
->>>   drivers/mfd/tps65912-spi.c                           | 2 +-
->>>   include/linux/mfd/hi6421-pmic.h                      | 2 +-
->>>   include/linux/mfd/lp873x.h                           | 2 +-
->>>   include/linux/mfd/lp87565.h                          | 2 +-
->>>   include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
->>>   include/linux/mfd/tps65086.h                         | 2 +-
->>>   include/linux/mfd/tps65217.h                         | 2 +-
->>>   include/linux/mfd/tps65218.h                         | 2 +-
->>>   include/linux/mfd/tps65912.h                         | 2 +-
->>>   22 files changed, 22 insertions(+), 22 deletions(-)
->>>
->>
->> Acked-by: Rob Herring <robh@kernel.org>
-> 
