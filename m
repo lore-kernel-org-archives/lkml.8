@@ -2,186 +2,173 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E66C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4C4A2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2462071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sOCR163h"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Xp4AdyKS";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="e09a3zWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732613AbgGVOq4 (ORCPT
+        id S1732638AbgGVOrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbgGVOqz (ORCPT
+        Wed, 22 Jul 2020 10:47:52 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:26294 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728405AbgGVOrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:46:55 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F09C0619DC;
-        Wed, 22 Jul 2020 07:46:54 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id b30so1446970lfj.12;
-        Wed, 22 Jul 2020 07:46:54 -0700 (PDT)
+        Wed, 22 Jul 2020 10:47:51 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MEkh8m016190;
+        Wed, 22 Jul 2020 07:47:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=p6bTuXQ7WRxMymEyANQpDO/i/w9XN7WepnoSu9OWtzw=;
+ b=Xp4AdyKSekCrbtf9J61nh0nsndUJ3FvUw8wtK8lJdqHtXLjgaxv19G8KJYVCSWQfXSt7
+ Ic6/aF/29rEGZ1Hma/Q77okVgMbfSZ92Ppf9Lpq3Qvjj24rlcR+IpH50bCTS9CoQFHKD
+ VW4J7nbBYCmmqIN9CV5V337hvnM6VsiZ/cLsxEXEPnP64lzCuH3OE3uxmFUMFrsmB7bF
+ oWpzT9QGwenyhq1Sbd+l0o/UaNhgVzBzRPTWuDdobxlCNcJBEzZij+MvkmusqoIKqFaV
+ +icActqyHLIQMn+o0PYsaJiN09sU5aOKt7PElNGKa4pondBG3ltrNkgrP7G/WMw1/Eo0 yA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32bxens6g6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 07:47:14 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 07:47:13 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
+ by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 07:47:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=minH2iIryoKS0Dyq4fnC66xXcwHwSeDLMPnQ/7yI2EM0la+ePJAOjYxRLCQHWEKyAtNDKxUCIeCk01Klz++/pOqgj/csNvZYBE6TqK9jMJadcsc27GIOHJWlZ9ew8+0GjFkQ/FtOulpv54wbzTrr8Jm2OEiNSySNfXJ6K5CYLSVpvrQuyWvLh75SP5idzLp1hxOsYjeFmzQCMJ/4xhr+KCLEXj2tqY21weSSfTW65kWWHxMS+H9L7oP56snYsEpv05umDAz+VrWmXVdSf6z0rLn6864/Dv/hJDATQ9ob/nG8Jd3KQl839WM2EosgAlNZeb96PMWaHlRI/l34Chc26Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p6bTuXQ7WRxMymEyANQpDO/i/w9XN7WepnoSu9OWtzw=;
+ b=E08oxM6BDkajx410Ryg/CsfUUoV925GFDxFFeH8vnSPp4KfCPrpBP6FmhlR7I6Z7uoCYL4zFaMOm5RrmgRDFUjvcIJDLVmkbjdP4e85YaD/hSFYh8707Dl7w2/ycpZIJXjGYzXBPfj1vPkpmZA6dCQ7TXZBv+d6xJmPT4El5dh/CVw49PxCYRu1EBrWrVGkU0EX8NQK5z6ZdkyPj66z6BGAqT7L/u2bPp+/8F8N21Qf8e/geMGU9sQc5UGeLxsaGXl7asM9skXGC+nSnugVBeCHBD5lEWPqwWjVdmkjCoQ74fkph1HR6OFmXW6WwCQ9ylJWfi8F/IwBFSMOjsVcNlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TVu/LI2N6KjhRfUYHtf/QTFZiqGywXKysbHiZ/4CqV4=;
-        b=sOCR163hQmJE/4aH9VZ+XwiCgKXlRUjSQ7mbw15YaRQWekqSD9FcQs2Ta9UBxPnOrx
-         V19sDsybrMs6nhJCa47wb4iofxnTV7EeAjski3Z5K72Yg/vmVw3ocBlaWc12ufhhPryi
-         Wu/gs0MK9sWqo+EBQi5Fyr/+1VJxz+4Km4BMPh+Kkxv3F9OtZGY8LubodzCAYV3qKODB
-         cJR6vpq1I768jGmg4fTKQRXHok2axTvQ9VrEHzcE7J58pQoEFnKMDAwyThYvCfpyocxM
-         iAZ39ol8JeGTcg15jzfPHe8L0XED7+uI6MkOYINglPAAKHnV5zhofw8k16QS90G2chRg
-         ITgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TVu/LI2N6KjhRfUYHtf/QTFZiqGywXKysbHiZ/4CqV4=;
-        b=TXKtZqFHdLTMeSnqas9QY9G/E9/PUMdHIFYWOXol+2u+rFuPxsVLUFNBQ5Jxua7kjG
-         iPVS19V/wBdBHi6DZHxxswWyRe8lxRriLcR0csUBdRKpVwybsV3kpxQ7LzZW3d0tBPHE
-         7hK8137m6jPjxQoL5jEk1Kb21+OUwARQXEk8DKpEybPQTFwmo26ujz/ttAAdbY77+LI3
-         ckltluThogFX4Y7NUx8q/n1sKW2fCN3cm5pNhFuu11V+uTpM0mRHZioOCLlZmg3NTpt6
-         2ASjkyWlQJSfjn9/bcFxrIRK2br/T/zyYCdSeWWzDuxaZ0YuIw69zI8+ohyv3itv+33U
-         834w==
-X-Gm-Message-State: AOAM532mxQaHDwbiQw5b3TjmH5sW1I0/77XUo+hg0IsKSaLdFfTxafTK
-        UPdd815aFX8qXTl2iCCWVt0=
-X-Google-Smtp-Source: ABdhPJwYUrdL06yBeBKOEByDuIQ61BmRSEuCjsNXlWenB+rYxou59KNEWitBhqSYmDrvJIMayLsrzw==
-X-Received: by 2002:a19:4183:: with SMTP id o125mr8317894lfa.181.1595429213366;
-        Wed, 22 Jul 2020 07:46:53 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id r14sm4825068lfe.29.2020.07.22.07.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 07:46:52 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 22 Jul 2020 16:46:50 +0200
-To:     akpm@linux-foundation.org, Qian Cai <cai@lca.pw>
-Cc:     Uladzislau Rezki <urezki@gmail.com>, akpm@linux-foundation.org,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-        mingo@redhat.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        x86@kernel.org, sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        lpf.vector@gmail.com
-Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
-Message-ID: <20200722144650.GA19628@pc636>
-References: <000000000000588c2c05aa156b2b@google.com>
- <0000000000003cdc6c05aae24652@google.com>
- <20200720200618.GA9501@pc636>
- <20200722142759.GB4041@lca.pw>
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p6bTuXQ7WRxMymEyANQpDO/i/w9XN7WepnoSu9OWtzw=;
+ b=e09a3zWa7FifCaD68AlZgDONLej14Is8RBLJT5gBo2fCC1I5eIKCUR7W2cfpbOnLdhiEfTeKd00HY3DfJueU3kFHWjaIFnJZHOCl8q92R8JeURIZrwQSqAnj9HFlj4wSbEflG3Q4ImwU1BnqmwEwXKaws729Fyd5IUgoHaXsY6A=
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com (2603:10b6:907:3::11)
+ by MW2PR18MB2091.namprd18.prod.outlook.com (2603:10b6:907:2::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 22 Jul
+ 2020 14:47:11 +0000
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32]) by MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32%4]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 14:47:11 +0000
+From:   Alex Belits <abelits@marvell.com>
+To:     "frederic@kernel.org" <frederic@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+CC:     Prasun Kapoor <pkapoor@marvell.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: [PATCH v4 01/13] task_isolation: vmstat: add quiet_vmstat_sync
+ function
+Thread-Topic: [PATCH v4 01/13] task_isolation: vmstat: add quiet_vmstat_sync
+ function
+Thread-Index: AQHWYDb7+u4pW/dIVkegDrd39Y9d0w==
+Date:   Wed, 22 Jul 2020 14:47:11 +0000
+Message-ID: <f98f80b3da7e0b8c2b8719c33516e034e47b1807.camel@marvell.com>
+References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+In-Reply-To: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [173.228.7.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cc92bc9e-2e9f-4274-6198-08d82e4e1dfc
+x-ms-traffictypediagnostic: MW2PR18MB2091:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR18MB2091B677C83D5046BDEE249EBC790@MW2PR18MB2091.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1186;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iRCgcY9bBZrb3uXCU7/3qjjkoyJxo6NBMc+5CcH5lib8SezunaMZ/RihX3RjJU5dQ4/4xbvkJUkPFq4LLSdChoMitxZn/nb621mve7HvUwQSjX3Gk0ucr4VWv9NlhPgOpCsUhY+SpsfBlsXe8XMUHc7zRi+iWMiNQN5X5n9fXufugrqGKBWvzKf9TCG98yHpb8J01Wj8nbBUFU2j6tVU0JKs/2lV9fc4v6jKV+QDMSwKP4KAgUQseYu7ixqCOvK2KaN/zMKKOUUot564QGqElFx9voUuw37+moN8FePrPmK/JbF9kXYCTMDsum21B1GqorUT914FWbyZTAGvN/8CXg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2267.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(366004)(396003)(136003)(376002)(8676002)(76116006)(91956017)(110136005)(66946007)(66446008)(64756008)(66556008)(66476007)(316002)(2906002)(6512007)(54906003)(6486002)(7416002)(478600001)(5660300002)(186003)(71200400001)(36756003)(2616005)(86362001)(4326008)(26005)(8936002)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: M606+b3D8umwEBn+jJEZ/QhSWlYeZhoSO0zJjbGhs3X9vr70DpnJemjjkgscJYWv/pVj9+mXz+bzMNdmK5JP4qA2OVdQfmnoqPNUPV+zBi9jrIGJPp62wr7oelUHOF8uhe0u/8sfqH3VDanqoV42lBeTZHmG94ZreLxAdYMyjmv/xro7OOE6PG7R4qfVWrhzcjJOgY0N9lol4wNoeyAFXFgLr01xmVii1zcxJ79NizNrj1ec3Kj/ToXgRaa4wAxaN4zca1rwtwKAbCNd8snOWbU9GeH/kbgpkWHtwIVEwD+o9CvDPCYA08vSUrzfc80uma/ZKrQl7fWMUdps6ORiNT+YqNIXHVClLuJ3BiX2DjnxKhLl7O49ftWc7zh3xA6T41jjkkCYKfqH87lGgppBu3v7ok6ADd317aMgL57wasVfkb60LZcqNyZh2B/O1bh9EUFMA9HKaeescjxkdOL2FLhBhljuVg9vTKaAinoxzyI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <71C0964DB92C2640A8A3A33709BD1768@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722142759.GB4041@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2267.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc92bc9e-2e9f-4274-6198-08d82e4e1dfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 14:47:11.6802
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EvfeeOPdAM9BpPxupbER8m5ewzrOU64HzuC0EwxrUiqn40lUn9OxeuMvczerSNVaOktWvplGZCG5dHTxhJhA0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR18MB2091
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_09:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > syzbot has found a reproducer for the following issue on:
-> > > 
-> > > HEAD commit:    ab8be66e Add linux-next specific files for 20200720
-> > > git tree:       linux-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=161a0cc8900000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c4bf77d63d0cf88c
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=5f326d255ca648131f87
-> > > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151192bb100000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d7a873100000
-> > > 
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+5f326d255ca648131f87@syzkaller.appspotmail.com
-> > > 
-> > > ------------[ cut here ]------------
-> > > kernel BUG at mm/vmalloc.c:3089!
-> > > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> > > CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc6-next-20200720-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > Workqueue: events pcpu_balance_workfn
-> > > RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
-> > > RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
-> > > RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
-> > > Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
-> > > RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
-> > > RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
-> > > RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
-> > > RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
-> > > R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
-> > > R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
-> > > FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > Call Trace:
-> > >  pcpu_destroy_chunk mm/percpu-vm.c:366 [inline]
-> > >  __pcpu_balance_workfn mm/percpu.c:1982 [inline]
-> > >  pcpu_balance_workfn+0x8b3/0x1310 mm/percpu.c:2069
-> > >  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
-> > >  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-> > >  kthread+0x3b5/0x4a0 kernel/kthread.c:292
-> > >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-> > > Modules linked in:
-> > > ---[ end trace 6a2e56ec52e1f480 ]---
-> > > RIP: 0010:free_vm_area mm/vmalloc.c:3089 [inline]
-> > > RIP: 0010:free_vm_area mm/vmalloc.c:3085 [inline]
-> > > RIP: 0010:pcpu_free_vm_areas+0x96/0xc0 mm/vmalloc.c:3432
-> > > Code: 75 48 48 8b 2b 48 8d 7d 08 48 89 f8 48 c1 e8 03 42 80 3c 30 00 75 2c 48 8b 7d 08 e8 c4 c8 ff ff 48 39 c5 74 a5 e8 ea c3 c9 ff <0f> 0b e8 e3 c3 c9 ff 4c 89 ff 5b 5d 41 5c 41 5d 41 5e 41 5f e9 71
-> > > RSP: 0018:ffffc90000d2fba8 EFLAGS: 00010293
-> > > RAX: 0000000000000000 RBX: ffff8880a801be00 RCX: 0000000000000000
-> > > RDX: ffff8880a95fa300 RSI: ffffffff81aa7c76 RDI: 0000000000000001
-> > > RBP: ffff8880a2b38180 R08: 0000000000000000 R09: ffffffff89cfecc3
-> > > R10: fffffbfff139fd98 R11: 0000000000000000 R12: 0000000000000000
-> > > R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880a801be00
-> > > FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00000000004c8e48 CR3: 00000000a4c08000 CR4: 00000000001506f0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > 
-> > That is because of below revert:
-> > 
-> > <snip>
-> > commit bdbfb1d52d5e576c1d275fd8ab59b677011229e8
-> > Author: Ingo Molnar <mingo@kernel.org>
-> > Date:   Sun Jun 7 21:12:51 2020 +0200
-> > 
-> >     Revert "mm/vmalloc: modify struct vmap_area to reduce its size"
-> >     
-> >     This reverts commit 688fcbfc06e4fdfbb7e1d5a942a1460fe6379d2d.
-> >     
-> >     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> >     
-> >     Conflicts:
-> >             mm/vmalloc.c
-> > <snip>
-> > 
-> > I can check further, but it can be it was not correctly reverted,
-> > because everything should work just fine even with the revert,
-> > though i i do not understand a reason of reverting.
-> 
-> Vlad, how sure are you about this? We also start to trigger this now on
-> linux-next, but the reverting patch surely looks like doggy without any useful
-> information in the commit description.
->
-Hello, Andrew, Qian.
-
-I am not aware of reason of the revert, though i tried to get through Ingo.
-I can send out a patch that fixes the revert. Another option to drop the
-revert, but it is up to Andrew and Ingo.
-
-Andrew, could you please comment on?
-
-Thank you in advance!
-
---
-Vlad Rezki
+SW4gY29tbWl0IGYwMWYxN2QzNzA1YiAoIm1tLCB2bXN0YXQ6IG1ha2UgcXVpZXRfdm1zdGF0IGxp
+Z2h0ZXIiKQ0KdGhlIHF1aWV0X3Ztc3RhdCgpIGZ1bmN0aW9uIGJlY2FtZSBhc3luY2hyb25vdXMs
+IGluIHRoZSBzZW5zZSB0aGF0DQp0aGUgdm1zdGF0IHdvcmsgd2FzIHN0aWxsIHNjaGVkdWxlZCB0
+byBydW4gb24gdGhlIGNvcmUgd2hlbiB0aGUNCmZ1bmN0aW9uIHJldHVybmVkLiAgRm9yIHRhc2sg
+aXNvbGF0aW9uLCB3ZSBuZWVkIGEgc3luY2hyb25vdXMNCnZlcnNpb24gb2YgdGhlIGZ1bmN0aW9u
+IHRoYXQgZ3VhcmFudGVlcyB0aGF0IHRoZSB2bXN0YXQgd29ya2VyDQp3aWxsIG5vdCBydW4gb24g
+dGhlIGNvcmUgb24gcmV0dXJuIGZyb20gdGhlIGZ1bmN0aW9uLiAgQWRkIGENCnF1aWV0X3Ztc3Rh
+dF9zeW5jKCkgZnVuY3Rpb24gd2l0aCB0aGF0IHNlbWFudGljLg0KDQpTaWduZWQtb2ZmLWJ5OiBD
+aHJpcyBNZXRjYWxmIDxjbWV0Y2FsZkBtZWxsYW5veC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBBbGV4
+IEJlbGl0cyA8YWJlbGl0c0BtYXJ2ZWxsLmNvbT4NCi0tLQ0KIGluY2x1ZGUvbGludXgvdm1zdGF0
+LmggfCAyICsrDQogbW0vdm1zdGF0LmMgICAgICAgICAgICB8IDkgKysrKysrKysrDQogMiBmaWxl
+cyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4
+L3Ztc3RhdC5oIGIvaW5jbHVkZS9saW51eC92bXN0YXQuaA0KaW5kZXggYWE5NjEwODhjNTUxLi5k
+ZWQxNmRmZDIxZmEgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L3Ztc3RhdC5oDQorKysgYi9p
+bmNsdWRlL2xpbnV4L3Ztc3RhdC5oDQpAQCAtMjcyLDYgKzI3Miw3IEBAIGV4dGVybiB2b2lkIF9f
+ZGVjX3pvbmVfc3RhdGUoc3RydWN0IHpvbmUgKiwgZW51bQ0Kem9uZV9zdGF0X2l0ZW0pOw0KIGV4
+dGVybiB2b2lkIF9fZGVjX25vZGVfc3RhdGUoc3RydWN0IHBnbGlzdF9kYXRhICosIGVudW0NCm5v
+ZGVfc3RhdF9pdGVtKTsNCiANCiB2b2lkIHF1aWV0X3Ztc3RhdCh2b2lkKTsNCit2b2lkIHF1aWV0
+X3Ztc3RhdF9zeW5jKHZvaWQpOw0KIHZvaWQgY3B1X3ZtX3N0YXRzX2ZvbGQoaW50IGNwdSk7DQog
+dm9pZCByZWZyZXNoX3pvbmVfc3RhdF90aHJlc2hvbGRzKHZvaWQpOw0KIA0KQEAgLTM3NCw2ICsz
+NzUsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgX19kZWNfbm9kZV9wYWdlX3N0YXRlKHN0cnVjdA0K
+cGFnZSAqcGFnZSwNCiBzdGF0aWMgaW5saW5lIHZvaWQgcmVmcmVzaF96b25lX3N0YXRfdGhyZXNo
+b2xkcyh2b2lkKSB7IH0NCiBzdGF0aWMgaW5saW5lIHZvaWQgY3B1X3ZtX3N0YXRzX2ZvbGQoaW50
+IGNwdSkgeyB9DQogc3RhdGljIGlubGluZSB2b2lkIHF1aWV0X3Ztc3RhdCh2b2lkKSB7IH0NCitz
+dGF0aWMgaW5saW5lIHZvaWQgcXVpZXRfdm1zdGF0X3N5bmModm9pZCkgeyB9DQogDQogc3RhdGlj
+IGlubGluZSB2b2lkIGRyYWluX3pvbmVzdGF0KHN0cnVjdCB6b25lICp6b25lLA0KIAkJCXN0cnVj
+dCBwZXJfY3B1X3BhZ2VzZXQgKnBzZXQpIHsgfQ0KZGlmZiAtLWdpdCBhL21tL3Ztc3RhdC5jIGIv
+bW0vdm1zdGF0LmMNCmluZGV4IDNmYjIzYTIxZjZkZC4uOTM1MzRmODUzN2NhIDEwMDY0NA0KLS0t
+IGEvbW0vdm1zdGF0LmMNCisrKyBiL21tL3Ztc3RhdC5jDQpAQCAtMTg4OSw2ICsxODg5LDE1IEBA
+IHZvaWQgcXVpZXRfdm1zdGF0KHZvaWQpDQogCXJlZnJlc2hfY3B1X3ZtX3N0YXRzKGZhbHNlKTsN
+CiB9DQogDQorLyoNCisgKiBTeW5jaHJvbm91c2x5IHF1aWV0IHZtc3RhdCBzbyB0aGUgd29yayBp
+cyBndWFyYW50ZWVkIG5vdCB0byBydW4gb24NCnJldHVybi4NCisgKi8NCit2b2lkIHF1aWV0X3Zt
+c3RhdF9zeW5jKHZvaWQpDQorew0KKwljYW5jZWxfZGVsYXllZF93b3JrX3N5bmModGhpc19jcHVf
+cHRyKCZ2bXN0YXRfd29yaykpOw0KKwlyZWZyZXNoX2NwdV92bV9zdGF0cyhmYWxzZSk7DQorfQ0K
+Kw0KIC8qDQogICogU2hlcGhlcmQgd29ya2VyIHRocmVhZCB0aGF0IGNoZWNrcyB0aGUNCiAgKiBk
+aWZmZXJlbnRpYWxzIG9mIHByb2Nlc3NvcnMgdGhhdCBoYXZlIHRoZWlyIHdvcmtlcg0KLS0gDQoy
+LjI2LjINCg0K
