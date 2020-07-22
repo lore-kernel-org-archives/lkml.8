@@ -2,110 +2,98 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10754C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942C9C43446
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA512206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B45207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595415937;
-	bh=iq6Vo6z/msbmEzHVNxTFhtS1vmtzmjZS4VrDHaSBsI8=;
+	s=default; t=1595415972;
+	bh=ARlS4N0DZhXw5wn7LbL38sX1R2IWMLKLACGk0leo0Dk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZVHIlkE270Kt6IAqkBSdb26QLLb59i8jFHZt+LUroeA4G0xEFaSuQKPr+GAP+gSVQ
-	 Z3neeNB+nU978Yuxx/GtrVbf4iyVIW1R8HvMeDBcgpadkHjJIqvjZLn8l3kd/qBfep
-	 1gPa0kRrO/c/grmG6jB4Eys87BxptgWedqNt8iyQ=
+	b=OsU5vpoTyEeDue8zTnJRaLP+1WpbHHfB4TSgsRnc1l3bNh/hlfoshKEFu9YOa8p57
+	 HpV/ZFKc4zIVHvxTvTsTxGTv5EoODai58oi4cgOSaLfjkyh93s07Jmx/IcktC8mgtO
+	 cuYn8YF3v54gUP3e+alj2ayBV7LTdgJTFhkUgbXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbgGVLFh (ORCPT
+        id S1730980AbgGVLGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:05:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45347 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgGVLFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:05:36 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r19so1983098ljn.12;
-        Wed, 22 Jul 2020 04:05:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iq6Vo6z/msbmEzHVNxTFhtS1vmtzmjZS4VrDHaSBsI8=;
-        b=VGNwks4Q5LLUgY5NSbq/oUgps7plKGtK9PWKdZkMblpP/gopqNIUJgy664G/gUQGs1
-         i6+gS1Fgfxk+9jpjUX4s5uqMnpuhfYT0AhS1T73z+HXjHTkJeS9DrT9tSINt8PHEzQJL
-         TOAcjb+K8xMCirD1wqrD9UVtbmHO9H4hirWv+WB0VcV2bRXzplD08ykBF0pkeuJ1hZE+
-         unrO4zG9gnHlql9lOvB8IvRnMK3b9HOW4LnRKwFvMZSGfhUGdBF2GjakyWI9jzAozoju
-         /Efh1JMx1e6ubhoaCSKQ8FtoYGgpNO/NccbUxE9JrnIF3vySURUjZGszJ7cYA4t4Aep6
-         u5yA==
-X-Gm-Message-State: AOAM5339if3dNF1SX3EZPLgVNhhkycmZwXDU85cMWabtriRXL776vNFG
-        HnBuHhecM/9458ap7rA1TYtsqiVs
-X-Google-Smtp-Source: ABdhPJwMEu36zrem3wuSdeeZGqlZLf4Zh/Yl/jxyjW70gHv4UmxoNS0fUrbsPqbfZ9OvAbe+MCNDQw==
-X-Received: by 2002:a2e:8043:: with SMTP id p3mr15580077ljg.469.1595415934020;
-        Wed, 22 Jul 2020 04:05:34 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id m1sm7928782lfa.22.2020.07.22.04.05.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 04:05:33 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jyCYy-0004Jt-NZ; Wed, 22 Jul 2020 13:05:28 +0200
-Date:   Wed, 22 Jul 2020 13:05:28 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 094/133] USB: serial: iuu_phoenix: fix memory
- corruption
-Message-ID: <20200722110528.GK3634@localhost>
-References: <20200720152803.732195882@linuxfoundation.org>
- <20200720152808.264804020@linuxfoundation.org>
- <20200721113259.GB17778@duo.ucw.cz>
- <20200721115449.GE3634@localhost>
- <20200722105247.GA19938@duo.ucw.cz>
+        Wed, 22 Jul 2020 07:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726153AbgGVLGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 07:06:10 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E50EA206F5;
+        Wed, 22 Jul 2020 11:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595415970;
+        bh=ARlS4N0DZhXw5wn7LbL38sX1R2IWMLKLACGk0leo0Dk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SW3tnXE0YH4u8/RbLrHGYITRjEP2OvjI8Y6r+CECWSsE2frVy6FA99gpHQWH8Pnly
+         qFBt3bFGb0YqyP/6REGRAhYKRQYAIIGSsoGtSvfAAZl7aE1ymEpns2yL+lZ79QGRz8
+         tMyuekCdaBCqC5YSNBCFWMTp6nhDTAIux7ty3m2U=
+Date:   Wed, 22 Jul 2020 13:06:07 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Saheed Bolarinwa <refactormyself@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.de>, helgaas@kernel.org,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH 14/35] i2c/busses: Change PCIBIOS_SUCCESSFUL to 0
+Message-ID: <20200722110607.GQ1030@ninjato>
+References: <20200713122247.10985-1-refactormyself@gmail.com>
+ <20200713122247.10985-15-refactormyself@gmail.com>
+ <20200717165820.6b5318ad@endymion>
+ <44eecce1-7c2d-32c8-865e-e80aa6c3a891@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ieNMXl1Fr3cevapt"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gblAvmLjk8yGG9If"
 Content-Disposition: inline
-In-Reply-To: <20200722105247.GA19938@duo.ucw.cz>
+In-Reply-To: <44eecce1-7c2d-32c8-865e-e80aa6c3a891@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ieNMXl1Fr3cevapt
+--gblAvmLjk8yGG9If
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 22, 2020 at 12:52:47PM +0200, Pavel Machek wrote:
 
-> > > Ok, so... goto and label is unneccessary, memcpy will do the right
-> > > thing with count =3D=3D 0.
-> >=20
-> > That's generally too subtle. Better to clearly mark the error/exception
-> > path.
->=20
-> We usually avoid subtle code by introducing comments, not by
-> introducing extra (and confusing) code that can not be optimized out.
+> Sorry about that, lessons learnt.
 
-It's not confusing at all. Just drop it.
+I'll mark the I2C patches as RFC for me. If you resend them, please
+mention if I should pick them or if the series shall go in via some
+other tree.
 
-Johan
 
---ieNMXl1Fr3cevapt
+--gblAvmLjk8yGG9If
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQQHbPq+cpGvN/peuzMLxc3C7H1lCAUCXxgddQAKCRALxc3C7H1l
-CNa3AQC+tA4tIat9SaMvrMWsbczEVWEDPq8NTqDXoQ+Uvy8mFQEAl6BAfr9JiEgC
-JsK3h09zUKBjvsUX7scnVWou48p3NQM=
-=uEXj
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YHZ8ACgkQFA3kzBSg
+KbaHQA//aXOYFUQm5LQqx3QQs6hscikHJBSVB6obrf87sSLtvV5ouvLY8TGCee6u
+cDiLMk+rsy1MEMmnzVCViiRNNn1D0idIGW/FIVvoOx5SPtX8xWr9N1Z8OnXj5IAc
+ktdKdMcuOIiDMMbkqyD7PoOweQcaS1bm34KmBvQvWE8fBmjhi19V9zgbhAYSLfw3
+/NqpkSIbiLa0sll/mY594RFUtPE+Xx4ruQO/P1z7PqmZ3wg6VAO+vFGYFznIombR
+fD9EpfRP5T2M4IeyRoQ/svX18l7/5gnIF/oebMZ7VMe6JJB3PldttuwyPprNw9G7
+6oOEz7eJpEEzdGTUpLeZg/bkyrMuq+w0x1kmS5mK8yN6ifJr+LoJxobZnkbK8ML4
+nxen3vRmHdG3NDlpiRuTXWj66ynk1Q8MtfXh1juEX3i3xmEdLMYensQtoQKaFQTo
+nb3N6PfrgPkVy5OyF0jt5OvBkQJKzqMH2PaTO+8gIg4+Io2fBLSRIKz5EgF3Dqp8
+KlmF5sH+Z3PqKtrAavMakYO/0ouzWAbzM7JC8O3B/i+BD444F+i2Hw3fuFpTR0Yw
+Wm+iDrUJoKdgyOSUBFASM9bmmvOM0zakfzPCQPFuVEDJAMz2YCvdknaOMDW8Twy9
+zZfEblQF9CrzE7wglCe9k+o9BOSKcJ7NnW4Ppp7TqOLiA2Z1q5c=
+=uCs9
 -----END PGP SIGNATURE-----
 
---ieNMXl1Fr3cevapt--
+--gblAvmLjk8yGG9If--
