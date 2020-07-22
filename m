@@ -2,249 +2,190 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F734C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B11C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12EBB20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703F220729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:52:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.jp header.i=@amazon.co.jp header.b="HsfQOyNJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErPraso6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732689AbgGVOw1 (ORCPT
+        id S1732764AbgGVOwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:52:27 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:65359 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730346AbgGVOw1 (ORCPT
+        Wed, 22 Jul 2020 10:52:45 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45445 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732699AbgGVOwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.jp; i=@amazon.co.jp; q=dns/txt;
-  s=amazon201209; t=1595429547; x=1626965547;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=+omhnPDjGYNd4Aearh2KyiqpdHXwk+4wB4wi06Z0vyc=;
-  b=HsfQOyNJwjNhekCIKrBeZBldJ06xUeeLGNEzX/q5jwZ5XRfQVelRlZle
-   tQ23TunSwxuuj6LJrd7gz9jD4fmpnpEVPaXmgZ9olZVXcHYscFCmZ/yC9
-   QNm2hSIJnNSzjom9qFwycbinC8ChThk7/ZE9hWCc4/4Hmo7qv4v2hMuBF
-   I=;
-IronPort-SDR: je7CCMBZRTnBiWsrQdDcOiwQ4IcE7geaSNzeudp/9vT99k5lvGkQPOBXGXhXdJqU9L8uD6l3ot
- AlU8QQnmv5GA==
-X-IronPort-AV: E=Sophos;i="5.75,383,1589241600"; 
-   d="scan'208";a="53764065"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Jul 2020 14:42:24 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 0F8EEA411A;
-        Wed, 22 Jul 2020 14:42:23 +0000 (UTC)
-Received: from EX13D04ANC001.ant.amazon.com (10.43.157.89) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 14:42:22 +0000
-Received: from 38f9d3582de7.ant.amazon.com (10.43.161.34) by
- EX13D04ANC001.ant.amazon.com (10.43.157.89) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 14:42:17 +0000
-From:   Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-To:     <jakub@cloudflare.com>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <davem@davemloft.net>,
-        <kernel-team@cloudflare.com>, <kuniyu@amazon.co.jp>,
-        <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <sfr@canb.auug.org.au>,
-        <willemb@google.com>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the net tree
-Date:   Wed, 22 Jul 2020 23:42:12 +0900
-Message-ID: <20200722144212.27106-1-kuniyu@amazon.co.jp>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
-In-Reply-To: <87wo2vwxq6.fsf@cloudflare.com>
-References: <87wo2vwxq6.fsf@cloudflare.com>
+        Wed, 22 Jul 2020 10:52:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595429562;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0s28z06jG0fWNYzLWpKidzlLlRizuZvY9LgUiS8V65o=;
+        b=ErPraso6Ga0YX5oEANT77iOcfyLOzTBDbxRKfa8cJmQExi8avULVYVunxerXtLYDFyzl3H
+        mth3+G8k3BBZXrlOE5ILPbWLEkZ+7fcl6i9pnq9nqGoNdtOPC/MYlUEGfi/sA923HnH8n+
+        6H2nJ/rLouuDA7CTxc/epr6uMySZr7E=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-8Tfs_p2cNNiRVBS3TnlzkQ-1; Wed, 22 Jul 2020 10:52:38 -0400
+X-MC-Unique: 8Tfs_p2cNNiRVBS3TnlzkQ-1
+Received: by mail-io1-f72.google.com with SMTP id l18so1970804ion.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 07:52:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0s28z06jG0fWNYzLWpKidzlLlRizuZvY9LgUiS8V65o=;
+        b=ZSBku+7EI/b/yL1eorT6MpXggY+IMLmP/06RhCE1QFVgI7oNnTbCDGsW5vh7HZK1bw
+         Eg3+LgoI1BGZdTTwKTRPr94xHwy5KnjMbB8xbMztgbq3QA0dP9iKwr7EPyKuVa3XjEKh
+         sVPTbW8jI+krHqtuSneWIYWDJ2B2NQzIvUByj6rDqn7j/l9Rmutaup1j+2sNEuiwBUW3
+         hKiKFWaHplwJsJ19ZU8RqGvAfc42AJrVYI1KBFcURCQ8FtpZMh2hpOoz/lMzjFaF27r3
+         wIQaA3XFz3oBSXqMpFMyAdn3vIEHp72Ey+OjEcdYsA21zCoHc4Fl2Nop3YHB0SzJRXyv
+         v3vw==
+X-Gm-Message-State: AOAM533zCOdn6rL/I+3dr8Q2BunTnsfoML/iQP1PeQ0SCLVf0Jrr+LXv
+        ewWmheVR2N84nYphGtVjnae7T6KdrkCs05XRcdGbmL08fLkcEbCyAfk7+aEOmgIF4t6WvGhwkLz
+        T/UDcTQvjSf56REacGx0FKMJPkPnCZL1sNPUWUgGW
+X-Received: by 2002:a05:6638:519:: with SMTP id i25mr36391247jar.99.1595429557975;
+        Wed, 22 Jul 2020 07:52:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/mkKoHrVRoTH0p1AXihXM+dsrCmS/FbLb9LnEV8KCoL7fZKn7E5Nmh+KoAwY75TVuAxoFW1zvneFYLkM550w=
+X-Received: by 2002:a05:6638:519:: with SMTP id i25mr36391213jar.99.1595429557600;
+ Wed, 22 Jul 2020 07:52:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D05UWC004.ant.amazon.com (10.43.162.223) To
- EX13D04ANC001.ant.amazon.com (10.43.157.89)
+References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
+ <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
+ <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
+ <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
+ <20200305035329.GD4433@MiWiFi-R3L-srv> <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
+ <20200306093829.GA27711@MiWiFi-R3L-srv>
+In-Reply-To: <20200306093829.GA27711@MiWiFi-R3L-srv>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Wed, 22 Jul 2020 22:52:26 +0800
+Message-ID: <CACPcB9cpEX-uYeTp7DVEXtwDRWBCTVoPCB4dxPbyq1sDeixP_w@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>, jroedel@suse.de,
+        Myron Stowe <myron.stowe@redhat.com>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Wright <rwright@hpe.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Dave Young <dyoung@redhat.com>,
+        Khalid Aziz <khalid@gonehiking.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-Date:   Wed, 22 Jul 2020 14:17:05 +0200
-> On Wed, Jul 22, 2020 at 05:21 AM CEST, Stephen Rothwell wrote:
-> > Hi all,
+On Fri, Mar 6, 2020 at 5:38 PM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 03/04/20 at 08:53pm, Deepa Dinamani wrote:
+> > On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
+> > >
+> > > +Joerg to CC.
+> > >
+> > > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
+> > > > I looked at this some more. Looks like we do not clear irqs when we do
+> > > > a kexec reboot. And, the bootup code maintains the same table for the
+> > > > kexec-ed kernel. I'm looking at the following code in
+> > >
+> > > I guess you are talking about kdump reboot here, right? Kexec and kdump
+> > > boot take the similar mechanism, but differ a little.
 > >
-> > Today's linux-next merge of the bpf-next tree got conflicts in:
+> > Right I meant kdump kernel here. And, clearly the is_kdump_kernel() case below.
 > >
-> >   net/ipv4/udp.c
-> >   net/ipv6/udp.c
+> > >
+> > > > intel_irq_remapping.c:
+> > > >
+> > > >         if (ir_pre_enabled(iommu)) {
+> > > >                 if (!is_kdump_kernel()) {
+> > > >                         pr_warn("IRQ remapping was enabled on %s but
+> > > > we are not in kdump mode\n",
+> > > >                                 iommu->name);
+> > > >                         clear_ir_pre_enabled(iommu);
+> > > >                         iommu_disable_irq_remapping(iommu);
+> > > >                 } else if (iommu_load_old_irte(iommu))
+> > >
+> > > Here, it's for kdump kernel to copy old ir table from 1st kernel.
 > >
-> > between commit:
+> > Correct.
 > >
-> >   efc6b6f6c311 ("udp: Improve load balancing for SO_REUSEPORT.")
+> > > >                         pr_err("Failed to copy IR table for %s from
+> > > > previous kernel\n",
+> > > >                                iommu->name);
+> > > >                 else
+> > > >                         pr_info("Copied IR table for %s from previous kernel\n",
+> > > >                                 iommu->name);
+> > > >         }
+> > > >
+> > > > Would cleaning the interrupts(like in the non kdump path above) just
+> > > > before shutdown help here? This should clear the interrupts enabled
+> > > > for all the devices in the current kernel. So when kdump kernel
+> > > > starts, it starts clean. This should probably help block out the
+> > > > interrupts from a device that does not have a driver.
+> > >
+> > > I think stopping those devices out of control from continue sending
+> > > interrupts is a good idea. While not sure if only clearing the interrupt
+> > > will be enough. Those devices which will be initialized by their driver
+> > > will brake, but devices which drivers are not loaded into kdump kernel
+> > > may continue acting. Even though interrupts are cleaning at this time,
+> > > the on-flight DMA could continue triggerring interrupt since the ir
+> > > table and iopage table are rebuilt.
 > >
-> > from the net tree and commits:
+> > This should be handled by the IOMMU, right? And, hence you are getting
+> > UR. This seems like the correct execution flow to me.
+>
+> Sorry for late reply.
+> Yes, this is initializing IOMMU device.
+>
 > >
-> >   7629c73a1466 ("udp: Extract helper for selecting socket from reuseport group")
-> >   2a08748cd384 ("udp6: Extract helper for selecting socket from reuseport group")
+> > Anyway, you could just test this theory by removing the
+> > is_kdump_kernel() check above and see if it solves your problem.
+> > Obviously, check the VT-d spec to figure out the exact sequence to
+> > turn off the IR.
+>
+> OK, I will talk to Kairui and get a machine to test it. Thanks for your
+> nice idea, if you have a draft patch, we are happy to test it.
+>
 > >
-> > from the bpf-next tree.
-> >
-> > I fixed it up (I wasn't sure how to proceed, so I used the latter
-> > version) and can carry the fix as necessary. This is now fixed as far
-> > as linux-next is concerned, but any non trivial conflicts should be
-> > mentioned to your upstream maintainer when your tree is submitted for
-> > merging.  You may also want to consider cooperating with the maintainer
-> > of the conflicting tree to minimise any particularly complex conflicts.
-> 
-> This one is a bit tricky.
-> 
-> Looking at how code in udp[46]_lib_lookup2 evolved, first:
-> 
->   acdcecc61285 ("udp: correct reuseport selection with connected sockets")
-> 
-> 1) exluded connected UDP sockets from reuseport group during lookup, and
-> 2) limited fast reuseport return to groups with no connected sockets,
-> 
-> The second change had an uninteded side-effect of discarding reuseport
-> socket selection when reuseport group contained connected sockets.
-> 
-> Then, recent
-> 
->   efc6b6f6c311 ("udp: Improve load balancing for SO_REUSEPORT.")
-> 
-> rectified it by recording reuseport socket selection as lookup result
-> candidate, in case fast reuseport return did not happen because
-> reuseport group had connected sockets.
-> 
-> I belive that changes in commit efc6b6f6c311 can be rewritten as below
-> to the same effect, by realizing that we are always setting the 'result'
-> if 'score > badness'. Either to what reuseport_select_sock() returned or
-> to 'sk' that scored higher than current 'badness' threshold.
+> > Note that the device that is causing the problem here is a legit
+> > device. We want to have interrupts from devices we don't know about
+> > blocked anyway because we can have compromised firmware/ devices that
+> > could cause a DoS attack. So blocking the unwanted interrupts seems
+> > like the right thing to do here.
+>
+> Kairui said it's a device which driver is not loaded in kdump kernel
+> because it's not needed by kdump. We try to only load kernel modules
+> which are needed, e.g one device is the dump target, its driver has to
+> be loaded in. In this case, the device is more like a out of control
+> device to kdump kernel.
+>
 
-Good point!
-It looks good to me.
+Hi Bao, Deepa, sorry for this very late response. The test machine was
+not available for sometime, and I restarted to work on this problem.
 
+For the workaround mention by Deepa (by remote the is_kdump_kernel()
+check), it didn't work, the machine still hangs upon shutdown.
+The devices that were left in an unknown state and sending interrupt
+could be a problem, but it's irrelevant to this hanging problem.
 
-> ---8<---
-> static struct sock *udp4_lib_lookup2(struct net *net,
-> 				     __be32 saddr, __be16 sport,
-> 				     __be32 daddr, unsigned int hnum,
-> 				     int dif, int sdif,
-> 				     struct udp_hslot *hslot2,
-> 				     struct sk_buff *skb)
-> {
-> 	struct sock *sk, *result;
-> 	int score, badness;
-> 	u32 hash = 0;
-> 
-> 	result = NULL;
-> 	badness = 0;
-> 	udp_portaddr_for_each_entry_rcu(sk, &hslot2->head) {
-> 		score = compute_score(sk, net, saddr, sport,
-> 				      daddr, hnum, dif, sdif);
-> 		if (score > badness) {
-> 			result = NULL;
-> 			if (sk->sk_reuseport &&
-> 			    sk->sk_state != TCP_ESTABLISHED) {
-> 				hash = udp_ehashfn(net, daddr, hnum,
-> 						   saddr, sport);
-> 				result = reuseport_select_sock(sk, hash, skb,
-> 							       sizeof(struct udphdr));
-> 				if (result && !reuseport_has_conns(sk, false))
-> 					return result;
-> 			}
-> 			if (!result)
-> 				result = sk;
-> 			badness = score;
-> 		}
-> 	}
-> 	return result;
-> }
-> ---8<---
-> 
-> From there, it is now easier to resolve the conflict with
-> 
->   7629c73a1466 ("udp: Extract helper for selecting socket from reuseport group")
->   2a08748cd384 ("udp6: Extract helper for selecting socket from reuseport group")
-> 
-> which extract the 'if (sk->sk_reuseport && sk->sk_state !=
-> TCP_ESTABLISHED)' block into a helper called lookup_reuseport().
-> 
-> To merge the two, we need to pull the reuseport_has_conns() check up
-> from lookup_reuseport() and back into udp[46]_lib_lookup2(), because now
-> we want to record reuseport socket selection even if reuseport group has
-> connections.
-> 
-> The only other call site of lookup_reuseport() is in
-> udp[46]_lookup_run_bpf(). We don't want to discard the reuseport
-> selected socket if group has connections there either, so no changes are
-> needed. And, now that I think about it, the current behavior in
-> udp[46]_lookup_run_bpf() is not right.
-> 
-> The end result for udp4 will look like:
-> 
-> ---8<---
-> static inline struct sock *lookup_reuseport(struct net *net, struct sock *sk,
-> 					    struct sk_buff *skb,
-> 					    __be32 saddr, __be16 sport,
-> 					    __be32 daddr, unsigned short hnum)
-> {
-> 	struct sock *reuse_sk = NULL;
-> 	u32 hash;
-> 
-> 	if (sk->sk_reuseport && sk->sk_state != TCP_ESTABLISHED) {
-> 		hash = udp_ehashfn(net, daddr, hnum, saddr, sport);
-> 		reuse_sk = reuseport_select_sock(sk, hash, skb,
-> 						 sizeof(struct udphdr));
-> 	}
-> 	return reuse_sk;
-> }
-> 
-> /* called with rcu_read_lock() */
-> static struct sock *udp4_lib_lookup2(struct net *net,
-> 				     __be32 saddr, __be16 sport,
-> 				     __be32 daddr, unsigned int hnum,
-> 				     int dif, int sdif,
-> 				     struct udp_hslot *hslot2,
-> 				     struct sk_buff *skb)
-> {
-> 	struct sock *sk, *result;
-> 	int score, badness;
-> 
-> 	result = NULL;
-> 	badness = 0;
-> 	udp_portaddr_for_each_entry_rcu(sk, &hslot2->head) {
-> 		score = compute_score(sk, net, saddr, sport,
-> 				      daddr, hnum, dif, sdif);
-> 		if (score > badness) {
-> 			result = lookup_reuseport(net, sk, skb,
-> 						  saddr, sport, daddr, hnum);
-> 			if (result && !reuseport_has_conns(sk, false))
-> 				return result;
-> 			if (!result)
-> 				result = sk;
-> 			badness = score;
-> 		}
-> 	}
-> 	return result;
-> }
-> ---8<---
-> 
-> I will submit a patch that pulls the reuseport_has_conns() check from
-> lookup_reuseport() to bpf-next. That should bring the two sides of the
-> merge closer. Please let me know if I can help in any other way.
-> 
-> Also, please take a look at the 3-way diff below from my attempt to
-> merge net tree into bpf-next tree taking the described approach.
-> 
-> Thanks,
-> -jkbs
+I think I didn't make one thing clear, The PCI UR error never arrives
+in kernel, it's the iLo BMC on that HPE machine caught the error, and
+send kernel an NMI. kernel is panicked by NMI, I'm still trying to
+figure out why the NMI hanged kernel, even with panic=-1,
+panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
+NMI by shutdown the devices in right order, that's also a solution.
 
-Can I submit a patch to net tree that rewrites udp[46]_lib_lookup2() to
-use only 'result' ?
-
+--
 Best Regards,
-Kuniyuki
+Kairui Song
+
