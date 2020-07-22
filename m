@@ -2,169 +2,136 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EF9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1DCB20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5190920787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="zC/nKfBr"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FQD+HP7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbgGVM3X (ORCPT
+        id S1732228AbgGVMdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgGVM3X (ORCPT
+        Wed, 22 Jul 2020 08:33:01 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54298 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726768AbgGVMdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:29:23 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BE8C0619DE
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 184so1834581wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
-        b=zC/nKfBrLXsHpRuQ+z39G/DxnJ20Yqs3ARHl1smLLddGrYhyVPM+tVH/F8sCbehehy
-         NeEBI58h3Xfba84vb/G+9dE5iq71Gnujv/m8UQqkMiHLxzBp4MKirflIDr112hSHTETp
-         Vmob1UjeZ7Gkn/OQUVmjW9Y38c4fwJD3STIz2bxxt7N6BxSgBv6HBn68j1VE8DhbUfbG
-         rzWEkTEb0OWVATuL/3E5XiXv/bJ475I0BU4estyhRlYhXTaC5AL2eP7xRDI9wBk8qSK8
-         315/yM5zg96U/mQJ4MbGWTR2IDlM/eSIFXk8zgshjkPRzu1tHCDZNygJboH6VLVQtJU6
-         tFnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
-        b=XkRjmdQiiziJvyAVTsHLUsXa4P79HlM1B8EWPB/+Imnb758BQ+rBE7bCozDSf13tfQ
-         Af6Dgkxb+2c4WPP29x5/4lg6jDW3coKMQdsoI4FYpIXlvOokgTu/B4ZybuCl6OhzH6Oo
-         Varl/JP+nBzVoJmNJxUkoCYzvFJTdmzXrczQwoQEb96kjuSNIR1fKYkFu1JgAD8nWcbQ
-         BJpKIsaDtPCqWMNoXdwvXs+uAZATRDpJsAX9ne8iQvg+Ge9MAGeeTmAVT3SyPCY4ziVY
-         MKZE2i6BigOm+kWOl5QOYK0u7l1UTvb+gWBZxhqE4ob+yDEKWmrCN2vsArIl4Qm+BawP
-         3U9w==
-X-Gm-Message-State: AOAM530g0YDJO1lktNmABl9WAiNrpFw8Rw8l941FbYvz4KkW58ARD0N+
-        MmC8S6oCE6x6fIQZO4j6NLCUog==
-X-Google-Smtp-Source: ABdhPJza2fPEqYYKevpudtxYAEP4TkXuRkD+NMrK9DYbGa9mewMaSnuJMSk2BAeUfX481vQhspXfaw==
-X-Received: by 2002:a1c:a181:: with SMTP id k123mr8514433wme.172.1595420961581;
-        Wed, 22 Jul 2020 05:29:21 -0700 (PDT)
-Received: from localhost.localdomain (172.red-80-27-177.dynamicip.rima-tde.net. [80.27.177.172])
-        by smtp.gmail.com with ESMTPSA id k131sm7728855wmb.36.2020.07.22.05.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 05:29:19 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v5] pinctrl: core: print gpio in pins debugfs file
-Date:   Wed, 22 Jul 2020 14:27:52 +0200
-Message-Id: <20200722122751.266440-1-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 22 Jul 2020 08:33:00 -0400
+X-UUID: 81ed6e2d5e034e9f85fc5e5db346e2cb-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=aLmjvIyF1BWzJBOgWkh6tBLLu/lhJMxA+h9rtJu6iXU=;
+        b=FQD+HP7V+EniNyuj6nqp4/75FuRgjGFkDq5A21goXLmOCb+whRBbPgunGVc6uNtzDEkhORw8c0qGhVVrkr/zyX/Divlf1aF0+uFYlVjOTEo1v5VgTcdnFcDhFvC5eEp9BFx86+ei/z7Vh1+G7P+5B/afX0mnUydoHkpYo8t5EIk=;
+X-UUID: 81ed6e2d5e034e9f85fc5e5db346e2cb-20200722
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 10683494; Wed, 22 Jul 2020 20:32:57 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 20:32:54 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 20:32:54 +0800
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     <wsa@the-dreams.de>
+CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
+        <qii.wang@mediatek.com>, <qiangming.xia@mediatek.com>
+Subject: [PATCH 1/4] i2c: mediatek: Add apdma sync in i2c driver
+Date:   Wed, 22 Jul 2020 20:31:43 +0800
+Message-ID: <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
+References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there is a gpio range mapping for the pin, then print out the gpio
-chip and line index for the pin in the debugfs 'pins' file with the
-format: "[line-index]:[gpio-label]"
-
-Here is example output on the BeagleBoard.org PocketBeagle (AM3358):
-/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
-
-pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
-pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
-pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
-pin 28 (PIN28) 0:? 44e10870 00000036 pinctrl-single
-pin 29 (PIN29) 0:? 44e10874 00000006 pinctrl-single
-pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
-pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
-pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
-pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
-pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
-pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
-
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Suggested-by: Tony Lindgren <tony@atomide.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/pinctrl/core.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-v4 changes:
-- Andy suggested '0:?' would be better because GPIO library uses '?' in
-  cases of unknown labels 
-
-v3 changes:
-- gpio column is now gpiochip label and line index
-
-v2 changes:
-- print 'NA' if pin does not have a GPIO number
-- change gpio_num from unsigned to unsigned int per checkpatch
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 821242bb4b16..02a4cc3b60c8 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -27,6 +27,7 @@
- #include <linux/pinctrl/machine.h>
- 
- #ifdef CONFIG_GPIOLIB
-+#include "../gpio/gpiolib.h"
- #include <asm-generic/gpio.h>
- #endif
- 
-@@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 	struct pinctrl_dev *pctldev = s->private;
- 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 	unsigned i, pin;
-+	struct pinctrl_gpio_range *range;
-+	unsigned int gpio_num;
-+	struct gpio_chip *chip;
- 
- 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
- 
-@@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 
- 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
- 
-+#ifdef CONFIG_GPIOLIB
-+		gpio_num = 0;
-+		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-+			if ((pin >= range->pin_base) &&
-+			    (pin < (range->pin_base + range->npins))) {
-+				gpio_num = range->base + (pin - range->pin_base);
-+				break;
-+			}
-+		}
-+		chip = gpio_to_chip(gpio_num);
-+		if (chip && chip->gpiodev && chip->gpiodev->base)
-+			seq_printf(s, "%u:%s ", gpio_num -
-+				chip->gpiodev->base, chip->label);
-+		else
-+			seq_puts(s, "0:? ");
-+#endif
-+
- 		/* Driver-specific info per pin */
- 		if (ops->pin_dbg_show)
- 			ops->pin_dbg_show(pctldev, s, pin);
--- 
-2.25.1
+V2l0aCB0aGUgYXBkbWEgcmVtb3ZlIGhhbmQtc2hha2Ugc2lnbmFsLCBpdCBuZWVkIHRvIGtlZXAg
+aTJjIGFuZA0KYXBkbWEgaW4gc3luYyBtYW51YWxseS4NCg0KU2lnbmVkLW9mZi1ieTogUWlpIFdh
+bmcgPHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMt
+bXQ2NXh4LmMgfCAyMyArKysrKysrKysrKysrKysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAy
+MCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
+MmMvYnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMN
+CmluZGV4IGRlZWY2OWUuLmU2Yjk4NGEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMv
+aTJjLW10NjV4eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQpAQCAt
+NDgsNiArNDgsOSBAQA0KIA0KICNkZWZpbmUgSTJDX0RNQV9DT05fVFgJCQkweDAwMDANCiAjZGVm
+aW5lIEkyQ19ETUFfQ09OX1JYCQkJMHgwMDAxDQorI2RlZmluZSBJMkNfRE1BX0FTWU5DX01PREUJ
+CTB4MDAwNA0KKyNkZWZpbmUgSTJDX0RNQV9TS0lQX0NPTkZJRwkJMHgwMDEwDQorI2RlZmluZSBJ
+MkNfRE1BX0RJUl9DSEFOR0UJCTB4MDIwMA0KICNkZWZpbmUgSTJDX0RNQV9TVEFSVF9FTgkJMHgw
+MDAxDQogI2RlZmluZSBJMkNfRE1BX0lOVF9GTEFHX05PTkUJCTB4MDAwMA0KICNkZWZpbmUgSTJD
+X0RNQV9DTFJfRkxBRwkJMHgwMDAwDQpAQCAtMjA1LDYgKzIwOCw3IEBAIHN0cnVjdCBtdGtfaTJj
+X2NvbXBhdGlibGUgew0KIAl1bnNpZ25lZCBjaGFyIHRpbWluZ19hZGp1c3Q6IDE7DQogCXVuc2ln
+bmVkIGNoYXIgZG1hX3N5bmM6IDE7DQogCXVuc2lnbmVkIGNoYXIgbHRpbWluZ19hZGp1c3Q6IDE7
+DQorCXVuc2lnbmVkIGNoYXIgYXBkbWFfc3luYzogMTsNCiB9Ow0KIA0KIHN0cnVjdCBtdGtfaTJj
+X2FjX3RpbWluZyB7DQpAQCAtMzExLDYgKzMxNSw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMg
+ew0KIAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2Fk
+anVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10NjU3N19jb21wYXQgPSB7DQpAQCAtMzI0LDYgKzMyOSw3
+IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5k
+bWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwN
+CiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10NjU4OV9j
+b21wYXQgPSB7DQpAQCAtMzM3LDYgKzM0Myw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0K
+IAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVz
+dCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+bXRrX2kyY19jb21wYXRpYmxlIG10NzYyMl9jb21wYXQgPSB7DQpAQCAtMzUwLDYgKzM1Nyw3IEBA
+IHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFf
+c3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9
+Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10ODE3M19jb21w
+YXQgPSB7DQpAQCAtMzYyLDYgKzM3MCw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAku
+dGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9
+IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRr
+X2kyY19jb21wYXRpYmxlIG10ODE4M19jb21wYXQgPSB7DQpAQCAtMzc1LDYgKzM4NCw3IEBAIHN0
+cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3lu
+YyA9IDEsDQogCS5sdGltaW5nX2FkanVzdCA9IDEsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0K
+IA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19pMmNfb2ZfbWF0Y2hbXSA9
+IHsNCkBAIC03OTgsNiArODA4LDcgQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0
+cnVjdCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAl1MTYgc3RhcnRfcmVn
+Ow0KIAl1MTYgY29udHJvbF9yZWc7DQogCXUxNiByZXN0YXJ0X2ZsYWcgPSAwOw0KKwl1MTYgZG1h
+X3N5bmMgPSAwOw0KIAl1MzIgcmVnXzRnX21vZGU7DQogCXU4ICpkbWFfcmRfYnVmID0gTlVMTDsN
+CiAJdTggKmRtYV93cl9idWYgPSBOVUxMOw0KQEAgLTg1MSwxMCArODYyLDE2IEBAIHN0YXRpYyBp
+bnQgbXRrX2kyY19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21z
+ZyAqbXNncywNCiAJCW10a19pMmNfd3JpdGV3KGkyYywgbnVtLCBPRkZTRVRfVFJBTlNBQ19MRU4p
+Ow0KIAl9DQogDQorCWlmIChpMmMtPmRldl9jb21wLT5hcGRtYV9zeW5jKSB7DQorCQlkbWFfc3lu
+YyA9IEkyQ19ETUFfU0tJUF9DT05GSUcgfCBJMkNfRE1BX0FTWU5DX01PREU7DQorCQlpZiAoaTJj
+LT5vcCA9PSBJMkNfTUFTVEVSX1dSUkQpDQorCQkJZG1hX3N5bmMgfD0gSTJDX0RNQV9ESVJfQ0hB
+TkdFOw0KKwl9DQorDQogCS8qIFByZXBhcmUgYnVmZmVyIGRhdGEgdG8gc3RhcnQgdHJhbnNmZXIg
+Ki8NCiAJaWYgKGkyYy0+b3AgPT0gSTJDX01BU1RFUl9SRCkgew0KIAkJd3JpdGVsKEkyQ19ETUFf
+SU5UX0ZMQUdfTk9ORSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9JTlRfRkxBRyk7DQotCQl3cml0
+ZWwoSTJDX0RNQV9DT05fUlgsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsNCisJCXdyaXRl
+bChJMkNfRE1BX0NPTl9SWCB8IGRtYV9zeW5jLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7
+DQogDQogCQlkbWFfcmRfYnVmID0gaTJjX2dldF9kbWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0K
+IAkJaWYgKCFkbWFfcmRfYnVmKQ0KQEAgLTg3Nyw3ICs4OTQsNyBAQCBzdGF0aWMgaW50IG10a19p
+MmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1zZ3Ms
+DQogCQl3cml0ZWwobXNncy0+bGVuLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX1JYX0xFTik7DQog
+CX0gZWxzZSBpZiAoaTJjLT5vcCA9PSBJMkNfTUFTVEVSX1dSKSB7DQogCQl3cml0ZWwoSTJDX0RN
+QV9JTlRfRkxBR19OT05FLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0lOVF9GTEFHKTsNCi0JCXdy
+aXRlbChJMkNfRE1BX0NPTl9UWCwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9DT04pOw0KKwkJd3Jp
+dGVsKEkyQ19ETUFfQ09OX1RYIHwgZG1hX3N5bmMsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09O
+KTsNCiANCiAJCWRtYV93cl9idWYgPSBpMmNfZ2V0X2RtYV9zYWZlX21zZ19idWYobXNncywgMSk7
+DQogCQlpZiAoIWRtYV93cl9idWYpDQpAQCAtOTAwLDcgKzkxNyw3IEBAIHN0YXRpYyBpbnQgbXRr
+X2kyY19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNn
+cywNCiAJCXdyaXRlbChtc2dzLT5sZW4sIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfTEVOKTsN
+CiAJfSBlbHNlIHsNCiAJCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNlICsg
+T0ZGU0VUX0lOVF9GTEFHKTsNCi0JCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFi
+YXNlICsgT0ZGU0VUX0NPTik7DQorCQl3cml0ZWwoSTJDX0RNQV9DTFJfRkxBRyB8IGRtYV9zeW5j
+LCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQogDQogCQlkbWFfd3JfYnVmID0gaTJjX2dl
+dF9kbWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0KIAkJaWYgKCFkbWFfd3JfYnVmKQ0KLS0gDQox
+LjkuMQ0K
 
