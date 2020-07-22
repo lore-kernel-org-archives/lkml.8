@@ -2,138 +2,288 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BBDC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E205CC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F3F22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D6920825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="nwLk46lX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNcHQkH9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R95Uuopz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbgGVWL1 (ORCPT
+        id S1733121AbgGVWLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:11:27 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:27186 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726642AbgGVWLY (ORCPT
+        Wed, 22 Jul 2020 18:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733097AbgGVWL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:24 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6v1c019879;
-        Wed, 22 Jul 2020 15:11:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0818; bh=Il19awlAmG29fp9AVrUyzNFznr1q+S/tbnyiY1K3Rwk=;
- b=nwLk46lXISSnTe9yw+UAqUc7uD/CJThoXOo/FChbbniLP1icXDoqKgs6fZIKJDFdze+P
- j3CMQbdS49rJVh+9g5unHPQ8JwzNzX9/sCGs4SFx73jHQFQPuvSWDRLF1/Uh9xzf87z2
- vO7aJqIc1eauq9sCU7guCsRICMRwI91YjfScFiQiLyROjN9TU/4RWanxBDANjLQfcnl5
- pXFgZlUdhZ5qXTtfka1YyYebvVrS+31q6lipv0Y0Bb854eDFCj9Bfd3qNXmybzVCIVbt
- oUz7vACq81+r8Ih+TtlmQUIpYhFoR/JYqRBLY/jopgSZOKwKbQy5yPwUTs1FjQ8W56Tj tA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkt0hw-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 15:11:08 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:05 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 15:11:05 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id C997E3F703F;
-        Wed, 22 Jul 2020 15:10:57 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 00/15] qed, qede: improve chain API and add XDP_REDIRECT support
-Date:   Thu, 23 Jul 2020 01:10:30 +0300
-Message-ID: <20200722221045.5436-1-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 22 Jul 2020 18:11:29 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E067AC0619DC;
+        Wed, 22 Jul 2020 15:11:28 -0700 (PDT)
+Message-Id: <20200722220519.723703209@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=ZZbyw5QQ8RBbkMh3Ii7FAnR5/uy8S1pCzgGYtcqSdoM=;
+        b=YNcHQkH9vF1atLHi8actDlRiKMpwqoTWAhSOH/azYi/J6x7371vn1aqUoi4hoGlJxj3AVI
+        TjgfFCCrEq2883Cjfm8lF+NatGlmP7wUXcEUXbiiOD381BxgusvFBEZvj8sQdL+mDbaLGC
+        m2+rwYKP1OJQpOzeH6eB/OhMV7WUG/iqdFfJU1b1adyJRCHGbDpI5qRhDDj98L0NddnQd3
+        jj+XkCdKaPdaj0QgVimYFbVVwFL9kB85A3ZhMP3vssHLcXffwYUw025RsL1ZrWzO4HhNQV
+        bHMiJ/zsihnIrv6exiI64AsnbdH+1GRlOySdzRU14Fs+U+FRN/7WEWJC0uJgkw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=ZZbyw5QQ8RBbkMh3Ii7FAnR5/uy8S1pCzgGYtcqSdoM=;
+        b=R95Uuopz48Dd2zjtc50LTq4ROWEI5XupdtYJ1uQy9mfLfIJHyqMmbDacIK6XjYl/tcAj3T
+        uGHO9KMTnIDGk6Aw==
+Date:   Wed, 22 Jul 2020 23:59:58 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V5 04/15] entry: Provide generic interrupt entry/exit code
+References: <20200722215954.464281930@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds missing XDP_REDIRECT case handling in QLogic Everest
-Ethernet driver with all necessary prerequisites and ops.
-QEDE Tx relies heavily on chain API, so make sure it is in its best
-at first.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-v2 (from [1]):
- - add missing includes to #003 to pass the build on Alpha;
- - no functional changes.
+Like the syscall entry/exit code interrupt/exception entry after the real
+low level ASM bits should not be different accross architectures.
 
-[1] https://lore.kernel.org/netdev/20200722155349.747-1-alobakin@marvell.com/
+Provide a generic version based on the x86 code.
 
-Alexander Lobakin (15):
-  qed: reformat "qed_chain.h" a bit
-  qed: reformat Makefile
-  qed: move chain methods to a separate file
-  qed: prevent possible double-frees of the chains
-  qed: sanitize PBL chains allocation
-  qed: move chain initialization inlines next to allocation functions
-  qed: simplify initialization of the chains with an external PBL
-  qed: simplify chain allocation with init params struct
-  qed: add support for different page sizes for chains
-  qed: optimize common chain accessors
-  qed: introduce qed_chain_get_elem_used{,u32}()
-  qede: reformat several structures in "qede.h"
-  qede: reformat net_device_ops declarations
-  qede: refactor XDP Tx processing
-  qede: add .ndo_xdp_xmit() and XDP_REDIRECT support
+irqentry_enter() is called after the low level entry code and
+irqentry_exit() must be invoked right before returning to the low level
+code which just contains the actual return logic. The code before
+irqentry_enter() and irqentry_exit() must not be instrumented. Code after
+irqentry_enter() and before irqentry_exit() can be instrumented.
 
- drivers/infiniband/hw/qedr/main.c             |  20 +-
- drivers/infiniband/hw/qedr/verbs.c            |  97 ++---
- drivers/net/ethernet/qlogic/qed/Makefile      |  37 +-
- drivers/net/ethernet/qlogic/qed/qed_chain.c   | 369 ++++++++++++++++++
- drivers/net/ethernet/qlogic/qed/qed_dev.c     | 273 -------------
- drivers/net/ethernet/qlogic/qed/qed_dev_api.h |  32 +-
- drivers/net/ethernet/qlogic/qed/qed_iscsi.c   |  39 +-
- drivers/net/ethernet/qlogic/qed/qed_ll2.c     |  44 ++-
- .../net/ethernet/qlogic/qed/qed_sp_commands.c |   4 +-
- drivers/net/ethernet/qlogic/qed/qed_spq.c     |  90 +++--
- drivers/net/ethernet/qlogic/qede/qede.h       | 175 +++++----
- drivers/net/ethernet/qlogic/qede/qede_fp.c    | 174 ++++++---
- drivers/net/ethernet/qlogic/qede/qede_main.c  | 185 +++++----
- include/linux/qed/qed_chain.h                 | 328 ++++++----------
- include/linux/qed/qed_if.h                    |   9 +-
- 15 files changed, 1018 insertions(+), 858 deletions(-)
- create mode 100644 drivers/net/ethernet/qlogic/qed/qed_chain.c
+irqentry_enter() invokes irqentry_enter_from_user_mode() if the
+interrupt/exception came from user mode. If if entered from kernel mode it
+handles the kernel mode variant of establishing state for lockdep, RCU and
+tracing depending on the kernel context it interrupted (idle, non-idle).
 
---
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Netdev folks, could you please take the entire series through your tree
-after the necessary acks and reviews? Patches 8-9 also touch qedr driver
-under rdma tree, but these changes can't be separated as it would break
-incremental buildability and bisecting.
+---
+ include/linux/entry-common.h |   62 ++++++++++++++++++++++
+ kernel/entry/common.c        |  117 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 179 insertions(+)
 
--- 
-2.25.1
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -307,4 +307,66 @@ void irqentry_enter_from_user_mode(struc
+  */
+ void irqentry_exit_to_user_mode(struct pt_regs *regs);
+ 
++#ifndef irqentry_state
++typedef struct irqentry_state {
++	bool	exit_rcu;
++} irqentry_state_t;
++#endif
++
++/**
++ * irqentry_enter - Handle state tracking on ordinary interrupt entries
++ * @regs:	Pointer to pt_regs of interrupted context
++ *
++ * Invokes:
++ *  - lockdep irqflag state tracking as low level ASM entry disabled
++ *    interrupts.
++ *
++ *  - Context tracking if the exception hit user mode.
++ *
++ *  - The hardirq tracer to keep the state consistent as low level ASM
++ *    entry disabled interrupts.
++ *
++ * As a precondition, this requires that the entry came from user mode,
++ * idle, or a kernel context in which RCU is watching.
++ *
++ * For kernel mode entries RCU handling is done conditional. If RCU is
++ * watching then the only RCU requirement is to check whether the tick has
++ * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
++ * invoked on entry and rcu_irq_exit() on exit.
++ *
++ * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
++ * solves the problem of kernel mode pagefaults which can schedule, which
++ * is not possible after invoking rcu_irq_enter() without undoing it.
++ *
++ * For user mode entries irqentry_enter_from_user_mode() is invoked to
++ * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
++ * would not be possible.
++ *
++ * Returns: An opaque object that must be passed to idtentry_exit()
++ */
++irqentry_state_t noinstr irqentry_enter(struct pt_regs *regs);
++
++/**
++ * irqentry_exit_cond_resched - Conditionally reschedule on return from interrupt
++ *
++ * Conditional reschedule with additional sanity checks.
++ */
++void irqentry_exit_cond_resched(void);
++
++/**
++ * irqentry_exit - Handle return from exception that used irqentry_enter()
++ * @regs:	Pointer to pt_regs (exception entry regs)
++ * @state:	Return value from matching call to irqentry_enter()
++ *
++ * Depending on the return target (kernel/user) this runs the necessary
++ * preemption and work checks if possible and reguired and returns to
++ * the caller with interrupts disabled and no further work pending.
++ *
++ * This is the last action before returning to the low level ASM code which
++ * just needs to return to the appropriate context.
++ *
++ * Counterpart to irqentry_enter().
++ */
++void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state);
++
+ #endif
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -255,3 +255,120 @@ noinstr void irqentry_exit_to_user_mode(
+ 	instrumentation_end();
+ 	exit_to_user_mode();
+ }
++
++irqentry_state_t noinstr irqentry_enter(struct pt_regs *regs)
++{
++	irqentry_state_t ret = {
++		.exit_rcu = false,
++	};
++
++	if (user_mode(regs)) {
++		irqentry_enter_from_user_mode(regs);
++		return ret;
++	}
++
++	/*
++	 * If this entry hit the idle task invoke rcu_irq_enter() whether
++	 * RCU is watching or not.
++	 *
++	 * Interupts can nest when the first interrupt invokes softirq
++	 * processing on return which enables interrupts.
++	 *
++	 * Scheduler ticks in the idle task can mark quiescent state and
++	 * terminate a grace period, if and only if the timer interrupt is
++	 * not nested into another interrupt.
++	 *
++	 * Checking for __rcu_is_watching() here would prevent the nesting
++	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
++	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
++	 * assume that it is the first interupt and eventually claim
++	 * quiescient state and end grace periods prematurely.
++	 *
++	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
++	 * consistent.
++	 *
++	 * TINY_RCU does not support EQS, so let the compiler eliminate
++	 * this part when enabled.
++	 */
++	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
++		/*
++		 * If RCU is not watching then the same careful
++		 * sequence vs. lockdep and tracing is required
++		 * as in irq_enter_from_user_mode().
++		 */
++		lockdep_hardirqs_off(CALLER_ADDR0);
++		rcu_irq_enter();
++		instrumentation_begin();
++		trace_hardirqs_off_finish();
++		instrumentation_end();
++
++		ret.exit_rcu = true;
++		return ret;
++	}
++
++	/*
++	 * If RCU is watching then RCU only wants to check whether it needs
++	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
++	 * already contains a warning when RCU is not watching, so no point
++	 * in having another one here.
++	 */
++	instrumentation_begin();
++	rcu_irq_enter_check_tick();
++	/* Use the combo lockdep/tracing function */
++	trace_hardirqs_off();
++	instrumentation_end();
++
++	return ret;
++}
++
++void irqentry_exit_cond_resched(void)
++{
++	if (!preempt_count()) {
++		/* Sanity check RCU and thread stack */
++		rcu_irq_exit_check_preempt();
++		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
++			WARN_ON_ONCE(!on_thread_stack());
++		if (need_resched())
++			preempt_schedule_irq();
++	}
++}
++
++void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state)
++{
++	lockdep_assert_irqs_disabled();
++
++	/* Check whether this returns to user mode */
++	if (user_mode(regs)) {
++		irqentry_exit_to_user_mode(regs);
++	} else if (!regs_irqs_disabled(regs)) {
++		/*
++		 * If RCU was not watching on entry this needs to be done
++		 * carefully and needs the same ordering of lockdep/tracing
++		 * and RCU as the return to user mode path.
++		 */
++		if (state.exit_rcu) {
++			instrumentation_begin();
++			/* Tell the tracer that IRET will enable interrupts */
++			trace_hardirqs_on_prepare();
++			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++			instrumentation_end();
++			rcu_irq_exit();
++			lockdep_hardirqs_on(CALLER_ADDR0);
++			return;
++		}
++
++		instrumentation_begin();
++		if (IS_ENABLED(CONFIG_PREEMPTION))
++			irqentry_exit_cond_resched();
++		/* Covers both tracing and lockdep */
++		trace_hardirqs_on();
++		instrumentation_end();
++	} else {
++		/*
++		 * IRQ flags state is correct already. Just tell RCU if it
++		 * was not watching on entry.
++		 */
++		if (state.exit_rcu)
++			rcu_irq_exit();
++	}
++}
+
 
