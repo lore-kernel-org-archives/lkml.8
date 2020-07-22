@@ -2,147 +2,132 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82112C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB3C207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58983206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Gug+wemw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8cNJ88H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbgGVQz0 (ORCPT
+        id S1729493AbgGVRCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgGVQzZ (ORCPT
+        Wed, 22 Jul 2020 13:02:20 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30418 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgGVRCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:55:25 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F3BC0619E0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:55:25 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so2601458wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=W/L5P6Wi4l5w5E61NWRVDyen6nCeOgGhib6kkyx3xg4=;
-        b=Gug+wemwkv5z2RLWjjalbOFEuEkFtC0ykSLnBs/RB/j5fl8oDtHwbf+UvDFuur5oO2
-         iOxEehek0b8oyIZ2hfEEuDtjBhX/77LZob3QNQQLJDNbWXwOq6ZB5E/tOFChQdPhYn/x
-         md2N62uo++EmN2+MfnhZRE3dhfxo1FTGCuV6E=
+        Wed, 22 Jul 2020 13:02:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595437337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kbVInIg0O9sB9/rV79n2+MQeF/xVnND4ezNrHJWAuNU=;
+        b=H8cNJ88HbymjGnpApfZHmlCLXzgAMROLrAGvjiXx25OQAk/V1i1eRD8Q80KMK+t3PJbWKM
+        EYdDiwGIpekNa/Kx0Yzklr3txD6Vhx7uZIRDk209D+ivCyYIkUiQMoyyuFpi0GKOS1Nq3/
+        kxG1Ozzzund8XRKvsFXyPF33q2/h8IY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-cRe68L73P6mawcl59-jCBA-1; Wed, 22 Jul 2020 13:02:13 -0400
+X-MC-Unique: cRe68L73P6mawcl59-jCBA-1
+Received: by mail-ej1-f72.google.com with SMTP id x15so1239166ejj.23
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 10:02:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=W/L5P6Wi4l5w5E61NWRVDyen6nCeOgGhib6kkyx3xg4=;
-        b=A0fxsiJ3RVj7XsjD+EB1loHOWJjRzjGnTJYsnRsPkuIqmoCII//G90v8zxT7NhrjwP
-         uYow7LTzfbGjQG6dAtCBEGvWU/eLCocILuE6QrXzcQsSXobK5psI7VY2IPIfeJO9y05R
-         K+SkLhCgXrOnfqls7214PQx6nstvCMkQCnWjzCzN/CNGUmTyRCt+aQFwqMcyCAWvUbdh
-         QEGQv8VhvYQj9bEQUolQQjUxHIx0C7xVAUvs1HdoEpbXDY83DN6xNVSmr9U3hDNhaznt
-         lJNNv1bXOdsM5LNPD1IQypZyyOXZrdW1ikjqWuNq/c2jgui5n2fjIIqfMMfLQ1nVrDYY
-         DqZQ==
-X-Gm-Message-State: AOAM532bzwEmyKCOBl57LqI6LFa/ZpAsQlaC7m4yozmWnDRQ2r5tum7n
-        Owixgrou98XXjeDrO1yCntJMig==
-X-Google-Smtp-Source: ABdhPJwhuP7o3LsaaCn1Ff99xaHdCwRo78eNMDryKf/WrKKuGYq+hmYdzoXUSDl/VoQeJyZLAkOkSg==
-X-Received: by 2002:adf:fd4e:: with SMTP id h14mr434451wrs.251.1595436923597;
-        Wed, 22 Jul 2020 09:55:23 -0700 (PDT)
-Received: from [10.136.8.242] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id j8sm565902wrd.85.2020.07.22.09.55.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 09:55:22 -0700 (PDT)
-Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
-From:   Ray Jui <ray.jui@broadcom.com>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
- <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
- <20200722104128.GK1030@ninjato>
- <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
-Message-ID: <0995d57c-890c-cdd3-7ddf-ece6bc454528@broadcom.com>
-Date:   Wed, 22 Jul 2020 09:55:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=kbVInIg0O9sB9/rV79n2+MQeF/xVnND4ezNrHJWAuNU=;
+        b=gF0Ol1ypUQOgdmHWcbjLkWj7Yc+hm+v7ieprk6WkPwSjEw+WUIFIxsOXfGKwDzszoO
+         yYXlZQagsJ1bCTUWkDQqtQOxtMSbAkp78exX6MNX5kJqm2siCt1Oxf1WfpF2xKuGbaI+
+         eqH/c79vXkzPjDSYRSqddeaVN2e4TYLzuQQ1nzp0jocDdny1+Ut/HeEvm07lc5TSDV/U
+         SFfwDWBFARzd+gQn+KEcDFgvhTA040/46qDyF/ltdajx6T2qJIQ5fYFyWziWuj9GIIa6
+         m2k8Yq7sDzPijgURf6PfHPW7/nmyG/IRSwLoZkrt3SAZ0QITHT+2TUnPu3DpH1QZyJ37
+         2yDg==
+X-Gm-Message-State: AOAM532HpaQbDl6enOTujKLY49lLv4z9dwppFXOJZXVEcN3VVT8+UR5n
+        b7giOmvtAn+p0r4y12Wm7X5luns1vsfS2yKmbYdt59gg36Oa5IFqAgYBDJkT6DMXlD8NEd1chFi
+        MRP93eew235iQZOXSOeuhQl9w
+X-Received: by 2002:a05:6402:c83:: with SMTP id cm3mr374612edb.307.1595437331669;
+        Wed, 22 Jul 2020 10:02:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz94j8HcWYcquzCOKto29+28RpeYYe5s5ZRTcFELIy0kjd1eezYC15hqN13fTOfh2pm35iWlw==
+X-Received: by 2002:a05:6402:c83:: with SMTP id cm3mr374579edb.307.1595437331400;
+        Wed, 22 Jul 2020 10:02:11 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id sa10sm151309ejb.79.2020.07.22.10.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 10:02:10 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] KVM: nSVM: Correctly set the shadow NPT root level in its MMU role
+In-Reply-To: <20200716034122.5998-2-sean.j.christopherson@intel.com>
+References: <20200716034122.5998-1-sean.j.christopherson@intel.com> <20200716034122.5998-2-sean.j.christopherson@intel.com>
+Date:   Wed, 22 Jul 2020 19:02:08 +0200
+Message-ID: <877duvpjov.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
+> Move the initialization of shadow NPT MMU's shadow_root_level into
+> kvm_init_shadow_npt_mmu() and explicitly set the level in the shadow NPT
+> MMU's role to be the TDP level.  This ensures the role and MMU levels
+> are synchronized and also initialized before __kvm_mmu_new_pgd(), which
+> consumes the level when attempting a fast PGD switch.
+>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Fixes: 9fa72119b24db ("kvm: x86: Introduce kvm_mmu_calc_root_page_role()")
+> Fixes: a506fdd223426 ("KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest switch")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c    | 3 +++
+>  arch/x86/kvm/svm/nested.c | 1 -
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 77810ce66bdb4..678b6209dad50 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4963,6 +4963,9 @@ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer,
+>  	union kvm_mmu_role new_role =
+>  		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+>  
+> +	new_role.base.level = vcpu->arch.tdp_level;
+> +	context->shadow_root_level = new_role.base.level;
+> +
+>  	__kvm_mmu_new_pgd(vcpu, nested_cr3, new_role.base, false, false);
+>  
+>  	if (new_role.as_u64 != context->mmu_role.as_u64)
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 61378a3c2ce44..fb68467e60496 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -85,7 +85,6 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
+>  	vcpu->arch.mmu->get_guest_pgd     = nested_svm_get_tdp_cr3;
+>  	vcpu->arch.mmu->get_pdptr         = nested_svm_get_tdp_pdptr;
+>  	vcpu->arch.mmu->inject_page_fault = nested_svm_inject_npf_exit;
+> -	vcpu->arch.mmu->shadow_root_level = vcpu->arch.tdp_level;
+>  	reset_shadow_zero_bits_mask(vcpu, vcpu->arch.mmu);
+>  	vcpu->arch.walk_mmu              = &vcpu->arch.nested_mmu;
+>  }
 
-On 7/22/2020 8:51 AM, Ray Jui wrote:
-> 
-> On 7/22/2020 3:41 AM, Wolfram Sang wrote:
->>
->>>> +	synchronize_irq(iproc_i2c->irq);
->>>
->>> If one takes a look at the I2C slave ISR routine, there are places where
->>> IRQ can be re-enabled in the ISR itself. What happens after we mask all
->>> slave interrupt and when 'synchronize_irq' is called, which I suppose is
->>> meant to wait for inflight interrupt to finish where there's a chance
->>> the interrupt can be re-enable again? How is one supposed to deal with that?
->>
->> I encountered the same problem with the i2c-rcar driver before I left
->> for my holidays.
->>
-> 
-> I think the following sequence needs to be implemented to make this
-> safe, i.e., after 'synchronize_irq', no further slave interrupt will be
-> fired.
-> 
-> In 'bcm_iproc_i2c_unreg_slave':
-> 
-> 1. Set an atomic variable 'unreg_slave' (I'm bad in names so please come
-> up with a better name than this)
-> 
-> 2. Disable all slave interrupts
+FWIW,
 
-Actually, thinking about it more, 1. and 2. here need to be an atomic
-operation so it needs to be wrapped by a spin lock/unlock (and it is
-safe to do so here before calling synchronize_irq below).
+Reviewed-and-tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Same applies to the two read-modify-write sequneces to enable some of
-the slave interrupts in the 'bcm_iproc_i2c_slave_isr' routine.
+-- 
+Vitaly
 
-> 
-> 3. synchronize_irq
-> 
-> 4. Set slave to NULL
-> 
-> 5. Erase slave addresses
-> 
-> In the ISR routine, it should always check against 'unreg_slave' before
-> enabling any slave interrupt. If 'unreg_slave' is set, no slave
-> interrupt should be re-enabled from within the ISR.
-> 
-> I think the above sequence can ensure no further slave interrupt after
-> 'synchronize_irq'. I suggested using an atomic variable instead of
-> variable + spinlock due to the way how sync irq works, i.e., "If you use
-> this function while holding a resource the IRQ handler may need you will
-> deadlock.".
-> 
-> Thanks,
-> 
-> Ray
-> 
->>>> +	iproc_i2c->slave = NULL;
->>>> +
->>>>  	/* Erase the slave address programmed */
->>>>  	tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
->>>>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
->>>>
