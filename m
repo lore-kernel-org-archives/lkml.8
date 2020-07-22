@@ -2,102 +2,116 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBCFC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F3720787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E7C20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595439614;
+	bh=lTXgEZOM6WAmbI17kym6nz1GakVkLb7xxhXhP7EnIE0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=TbrAoro5aeJ2V+Tk0TuOIqtDxDhXYG+u8kZb8H8lOkxiHRpR0Rh49xrSkmUdGx3Nf
+	 ZTjdU5QwoYV8I4bgbUK59QWs2ss7ZPN2ytOkLzgm5mQtK3AJNY0oHS4gfApz7Klj9N
+	 f8Dhnz1qc2M1ZoyHp50cmFgd7s4P4nlh9hOeXrOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgGVRjL (ORCPT
+        id S1730870AbgGVRkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgGVRjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:39:10 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 790B5C0619DC;
-        Wed, 22 Jul 2020 10:39:10 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyIhr-000Qcs-Cu; Wed, 22 Jul 2020 17:39:03 +0000
-Date:   Wed, 22 Jul 2020 18:39:03 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Message-ID: <20200722173903.GG2786714@ZenIV.linux.org.uk>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
- <20200722144213.GE2786714@ZenIV.linux.org.uk>
- <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
- <20200722155452.GF2786714@ZenIV.linux.org.uk>
- <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
+        Wed, 22 Jul 2020 13:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgGVRkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:40:11 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E37A520787;
+        Wed, 22 Jul 2020 17:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595439611;
+        bh=lTXgEZOM6WAmbI17kym6nz1GakVkLb7xxhXhP7EnIE0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n5mWjM7/mkPPImvbpjDzNnrzgATHcFcYy651epkQHwXL39Ldnc0oR52J22knvfgxM
+         dxTlKRNbXzZ3wdzca6w1idgUgH4+P85bwMJsDKJPLYAOhdfuhZbJqKx5VEKUZNZ4l3
+         DsMVEmM1qTXCln9/LKkKVgbpr4uwPEc0NnkCrN/4=
+Date:   Wed, 22 Jul 2020 12:40:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Hancock <hancockrwd@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI
+ bridge
+Message-ID: <20200722174009.GA1291928@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
+In-Reply-To: <20200722021803.17958-1-hancockrwd@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 04:17:02PM +0000, David Laight wrote:
-> > David, do you *ever* bother to RTFS?  I mean, competent supercilious twits
-> > are annoying, but at least with those you can generally assume that what
-> > they say makes sense and has some relation to reality.  You, OTOH, keep
-> > spewing utter bollocks, without ever lowering yourself to checking if your
-> > guesses have anything to do with the reality.  With supercilious twit part
-> > proudly on the display - you do speak with confidence, and the way you
-> > dispense the oh-so-valuable advice to everyone around...
+[+cc Puranjay]
+
+On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
+> Recently ASPM handling was changed to no longer disable ASPM on all
+> PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
+> devices don't seem to function properly with ASPM enabled, as they
+> cause the parent PCIe root port to cause repeated AER timeout errors.
+> In addition to flooding the kernel log, this also causes the machine
+> to wake up immediately after suspend is initiated.
+
+Hi Robert, thanks a lot for the report of this problem
+(https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
+and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
+
+I'm pretty sure Linux ASPM support is missing some things.  This
+problem might be a hardware problem where a quirk is the right
+solution, but it could also be that it's a result of a Linux defect
+that we should fix.
+
+Could you collect the dmesg log and "sudo lspci -vvxxxx" output
+somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
+whether this L1 PM substates are enabled on this link, and whether
+that's configured correctly.
+
+> Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
+> ---
+>  drivers/pci/quirks.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> Yes, I do look at the code.
-> I've actually spent a lot of time looking at the x86 checksum code.
-> I've posted a patch for a version that is about twice as fast as the
-> current one on a large range of x86 cpus.
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 812bfc32ecb8..e5713114f2ab 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2330,6 +2330,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
+>  
+> +static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
+> +{
+> +	pci_info(dev, "Disabling ASPM L0s/L1\n");
+> +	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
+> +}
+> +
+> +/*
+> + * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
+> + * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected,
+> + * disable both L0s and L1 for now to be safe.
+> + */
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
+> +
+>  /*
+>   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+>   * Link bit cleared after starting the link retrain process to allow this
+> -- 
+> 2.26.2
 > 
-> Possibly I meant the 32bit reduction inside csum_add()
-> rather than what csum_fold() does.
-
-Really?
-static inline unsigned add32_with_carry(unsigned a, unsigned b)
-{  
-        asm("addl %2,%0\n\t"
-            "adcl $0,%0"
-            : "=r" (a)
-            : "0" (a), "rm" (b));
-        return a;
-}
-static inline __wsum csum_add(__wsum csum, __wsum addend)
-{
-        return (__force __wsum)add32_with_carry((__force unsigned)csum,
-                                                (__force unsigned)addend);
-}
-
-I would love to see your patch, anyway, along with the testcases and performance
-comparison.
-
-> Having worked on the internals of SYSV, NetBSD and Linux I probably
-> forget the exact names for a few things.
-
-That's usually dealt with by a few minutes with grep and vi...
-
-> The brain can only hold so much information.
-
-Bravo.  "I can't be arsed to check anything" spun into the claim of one's
-superior experience.
-
-What it means in practice is that your output is so much garbage that _might_
-be untangled into something meaningful if the reader manages to guess the
-substitutions.  Provided that the reconstruction won't not turn out to be
-a composite of things applying to different versions of different kernels,
-not being valid for any of those, that is...
