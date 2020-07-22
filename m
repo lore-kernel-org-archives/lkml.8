@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81348C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD4BC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E33820792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6571A20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uEFqCD7B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tn4xalF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgGVG03 (ORCPT
+        id S1729164AbgGVG0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:26:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        Wed, 22 Jul 2020 02:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVG0Z (ORCPT
+        with ESMTP id S1728871AbgGVG02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:26:25 -0400
+        Wed, 22 Jul 2020 02:26:28 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E351C061794;
-        Tue, 21 Jul 2020 23:26:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8625C061794;
+        Tue, 21 Jul 2020 23:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=bUYYhGUygoqWMKKuho81ixqziKjBSgraLpIlc+nIh5c=; b=uEFqCD7B3H4B3UtE7iHzIIYryx
-        WwyoYXlyIGrJLFhqj2zal8w4lRDiuTCEaWUPozkaTptpeDskI7AylNYAmnHGmypRq2lqQLy/Ivn7k
-        J/40RAGwged0+YZYjvGJoUPjOuR+E5Nm5SIemukVhG1QbLgA3g+fnZfRf4RW2gFLg3f8qYMmkcK9z
-        dxHfldVIXyR+ONHj4Tmsysogs8B/B8J3zk95bj7JuBi72xwfqJ0wYGroh3ahPF1BTKv1AuQl1VePt
-        QtkkeuVPTA9STXd9Ax8LFqFf/G7F5sth6X371lU1IzL7+5bGDcxvp5Dx6c+auGyu4np3uPVtbrzAe
-        0pAeS8YA==;
+        bh=toLJ0vqGJpB+m2DWzx8OUV3mzNvbIyso0hs1e0NzMQw=; b=Tn4xalF1YN7Wqp1NXQJpA/hlZ3
+        Zzeym0fSToI0ZjtblIQF0KaR8LI/0QKwnX317OWhJ4RanjyvysIbdqI0KEXF4q9cdGzPwj8fs+ft9
+        C6M4D+H0TBRp0o6dYj8TwKrHaf5XOhXj+8e9RcuISGAUSLHAkBYcWdvL4Vy14GO3fI/Bq3XgHW1xo
+        3YDKwttuYSv4GlmUbJUyoOWATp5d4Hb8TuN1sOYwHIl2jcXF11h/9Vl8LfXE3faJ8dJY0Bu5m6We5
+        Bsojk10wIqdaLJmYRWg3Fa/bZBTq9m0Z+VZ6ls1UGmgfGGrNwdefM52lMe0Xd5NkLZOPrEXfOdYHE
+        3WaQDsUw==;
 Received: from [2001:4bb8:18c:2acc:e75:d48f:65ef:e944] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jy8Ch-0004ln-Kd; Wed, 22 Jul 2020 06:26:15 +0000
+        id 1jy8Cp-0004m8-AG; Wed, 22 Jul 2020 06:26:20 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
@@ -49,9 +49,9 @@ Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
         drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         cgroups@vger.kernel.org
-Subject: [PATCH 01/14] fs: remove the unused SB_I_MULTIROOT flag
-Date:   Wed, 22 Jul 2020 08:25:39 +0200
-Message-Id: <20200722062552.212200-2-hch@lst.de>
+Subject: [PATCH 03/14] drbd: remove RB_CONGESTED_REMOTE
+Date:   Wed, 22 Jul 2020 08:25:41 +0200
+Message-Id: <20200722062552.212200-4-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200722062552.212200-1-hch@lst.de>
 References: <20200722062552.212200-1-hch@lst.de>
@@ -63,39 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This case isn't ever used.
+
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/namei.c         | 4 ++--
- include/linux/fs.h | 1 -
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/block/drbd/drbd_req.c | 4 ----
+ include/linux/drbd.h          | 1 -
+ 2 files changed, 5 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 72d4219c93acb7..e9ff0d54a110a7 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -568,8 +568,8 @@ static bool path_connected(struct vfsmount *mnt, struct dentry *dentry)
+diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
+index 674be09b2da94a..4d944f2eb56efa 100644
+--- a/drivers/block/drbd/drbd_req.c
++++ b/drivers/block/drbd/drbd_req.c
+@@ -901,13 +901,9 @@ static bool drbd_may_do_local_read(struct drbd_device *device, sector_t sector,
+ static bool remote_due_to_read_balancing(struct drbd_device *device, sector_t sector,
+ 		enum drbd_read_balancing rbm)
  {
- 	struct super_block *sb = mnt->mnt_sb;
+-	struct backing_dev_info *bdi;
+ 	int stripe_shift;
  
--	/* Bind mounts and multi-root filesystems can have disconnected paths */
--	if (!(sb->s_iflags & SB_I_MULTIROOT) && (mnt->mnt_root == sb->s_root))
-+	/* Bind mounts can have disconnected paths */
-+	if (mnt->mnt_root == sb->s_root)
- 		return true;
- 
- 	return is_subdir(dentry, mnt->mnt_root);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 41cd993ec0f686..236543605dd118 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1366,7 +1366,6 @@ extern int send_sigurg(struct fown_struct *fown);
- #define SB_I_CGROUPWB	0x00000001	/* cgroup-aware writeback enabled */
- #define SB_I_NOEXEC	0x00000002	/* Ignore executables on this fs */
- #define SB_I_NODEV	0x00000004	/* Ignore devices on this fs */
--#define SB_I_MULTIROOT	0x00000008	/* Multiple roots to the dentry tree */
- 
- /* sb->s_iflags to limit user namespace mounts */
- #define SB_I_USERNS_VISIBLE		0x00000010 /* fstype already mounted */
+ 	switch (rbm) {
+-	case RB_CONGESTED_REMOTE:
+-		bdi = device->ldev->backing_bdev->bd_disk->queue->backing_dev_info;
+-		return bdi_read_congested(bdi);
+ 	case RB_LEAST_PENDING:
+ 		return atomic_read(&device->local_cnt) >
+ 			atomic_read(&device->ap_pending_cnt) + atomic_read(&device->rs_pending_cnt);
+diff --git a/include/linux/drbd.h b/include/linux/drbd.h
+index 5755537b51b114..6a8286132751df 100644
+--- a/include/linux/drbd.h
++++ b/include/linux/drbd.h
+@@ -94,7 +94,6 @@ enum drbd_read_balancing {
+ 	RB_PREFER_REMOTE,
+ 	RB_ROUND_ROBIN,
+ 	RB_LEAST_PENDING,
+-	RB_CONGESTED_REMOTE,
+ 	RB_32K_STRIPING,
+ 	RB_64K_STRIPING,
+ 	RB_128K_STRIPING,
 -- 
 2.27.0
 
