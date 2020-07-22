@@ -2,107 +2,121 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2286C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28AD120657
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="NB2HPYMm"
+	by mail.kernel.org (Postfix) with ESMTP id 955BB20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732438AbgGVNAg (ORCPT
+        id S1732449AbgGVNAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37828 "EHLO
+        Wed, 22 Jul 2020 09:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732358AbgGVNAf (ORCPT
+        with ESMTP id S1726525AbgGVNAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 09:00:35 -0400
-X-Greylist: delayed 1950 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Jul 2020 06:00:35 PDT
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5C1C0619DE;
-        Wed, 22 Jul 2020 06:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=prNWsm46MYcgDtF/dzb/PV+sMw8upY2psw9wWRZWqcI=; b=NB2HPYMmdJy+KZFhb6tZrL59Yo
-        7izifHabhNyYMENKlDc55MGN3ydhf0DG33W7CslQ5mYRPuN92srZQ88+zwvx0o/6yAmDoD9gAgwLB
-        g5Ti5a/oZ0mS4aG5bqGVETB+dpfolCabdG9IqKB7Ns/0I+c+APmHZB+xk2TR30wxnz+o=;
-Received: from p54ae9e66.dip0.t-ipconnect.de ([84.174.158.102] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jyEMJ-0002Tw-1j; Wed, 22 Jul 2020 15:00:31 +0200
-Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Rajkumar Manoharan <rmanohar@codeaurora.org>,
-        Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        dianders@chromium.org, evgreen@chromium.org
-References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
- <1595351666-28193-3-git-send-email-pillair@codeaurora.org>
- <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
- <d79ae05e-e75a-de2f-f2e3-bc73637e1501@nbd.name>
- <04d7301d5ad7555a0377c7df530ad8522fc00f77.camel@sipsolutions.net>
-From:   Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <1f2726ff-8ba9-5278-0ec6-b80be475ea98@nbd.name>
-Date:   Wed, 22 Jul 2020 15:00:30 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A38C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 06:00:35 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jyEMF-0007sw-P8; Wed, 22 Jul 2020 15:00:27 +0200
+Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jyEMD-0002xc-D3; Wed, 22 Jul 2020 15:00:25 +0200
+Date:   Wed, 22 Jul 2020 15:00:25 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] media: allegro: fix potential null dereference on
+ header
+Message-ID: <20200722130025.GA21264@pengutronix.de>
+Mail-Followup-To: Michael Tretter <m.tretter@pengutronix.de>,
+        Colin King <colin.king@canonical.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200720163804.340047-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <04d7301d5ad7555a0377c7df530ad8522fc00f77.camel@sipsolutions.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200720163804.340047-1-colin.king@canonical.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:53:31 up 153 days, 20:24, 131 users,  load average: 0.03, 0.11,
+ 0.09
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-22 14:55, Johannes Berg wrote:
-> On Wed, 2020-07-22 at 14:27 +0200, Felix Fietkau wrote:
+On Mon, 20 Jul 2020 17:38:04 +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
->> I'm considering testing a different approach (with mt76 initially):
->> - Add a mac80211 rx function that puts processed skbs into a list
->> instead of handing them to the network stack directly.
+> The pointer header is an alias to msg and msg is being null checked.
+> However, if msg is null then header is also null and this can lead to
+> a null pointer dereference on the assignment type = header->type. Fix
+> this by only dereferencing header after the null check on msg.
 > 
-> Would this be *after* all the mac80211 processing, i.e. in place of the
-> rx-up-to-stack?
-Yes, it would run all the rx handlers normally and then put the
-resulting skbs into a list instead of calling netif_receive_skb or
-napi_gro_frags.
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 3de16839669f ("media: allegro: add explicit mail encoding and decoding")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/staging/media/allegro-dvt/allegro-mail.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/allegro-dvt/allegro-mail.c b/drivers/staging/media/allegro-dvt/allegro-mail.c
+> index 4ac65de12463..4496e2a4da5c 100644
+> --- a/drivers/staging/media/allegro-dvt/allegro-mail.c
+> +++ b/drivers/staging/media/allegro-dvt/allegro-mail.c
+> @@ -462,12 +462,14 @@ allegro_dec_encode_frame(struct mcu_msg_encode_frame_response *msg, u32 *src)
+>  ssize_t allegro_encode_mail(u32 *dst, void *msg)
+>  {
+>  	const struct mcu_msg_header *header = msg;
+> -	enum mcu_msg_type type = header->type;
+> +	enum mcu_msg_type type;
+>  	ssize_t size;
+>  
+>  	if (!msg || !dst)
+>  		return -EINVAL;
+>  
+> +	type = header->type;
 
-- Felix
+type is only used in the switch statement right below the assignment. Thus,
+you could remove the local variable and directly use header->type in the
+switch.
+
+Michael
+
+> +
+>  	switch (type) {
+>  	case MCU_MSG_TYPE_INIT:
+>  		size = allegro_enc_init(&dst[1], msg);
+> -- 
+> 2.27.0
+> 
+> 
