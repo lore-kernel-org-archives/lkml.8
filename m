@@ -2,209 +2,88 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09390C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1200AC43446
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D882022CAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="K6stivlB"
+	by mail.kernel.org (Postfix) with ESMTP id E018E22CF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733120AbgGVPzw (ORCPT
+        id S1733131AbgGVPzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:55:52 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:34256 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733070AbgGVPzt (ORCPT
+        Wed, 22 Jul 2020 11:55:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35704 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733113AbgGVPzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:55:49 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MFUJuo010156;
-        Wed, 22 Jul 2020 08:55:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=YdH18anOnOfotz7dCcu2Qk951gXqE+vLtMEFYOTUaAo=;
- b=K6stivlBJA9ez5HIR0uBC4lker25XNBaKRWPCUEDkcJlJnkmfW8XIcsdD2pnPjRFwzkN
- R9pQYcT0OnuZdPUE7cWOruRmxUOHu4UZos7h7F1EBq0AXuZ3vlME/AhBG+5bDNiCxyru
- tUVdmQu9u69fMi0gUXnqyJErysXDcKZVXCMex1/5XP1jjXnXHdZubDM4CI/kPXUzupBi
- ogrOCwCYuEzHHGRe+BDcxtHHCx/r+UfmgWroO/R/sMbySWEMt7fmiiNjoN2phGLRIEDd
- iYswtPli3j0j1gxBsAEqJfYXAgPIR3OzYeXxoXOSRHQ0QPe/OeYFDC75Jn9U/7Y+IiU0 iw== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32bxensft2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 08:55:34 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 08:55:32 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 08:55:33 -0700
-Received: from NN-LT0049.marvell.com (unknown [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 45AD23F7040;
-        Wed, 22 Jul 2020 08:55:27 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 10/15] qed: optimize common chain accessors
-Date:   Wed, 22 Jul 2020 18:53:44 +0300
-Message-ID: <20200722155349.747-11-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722155349.747-1-alobakin@marvell.com>
-References: <20200722155349.747-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 11:55:52 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 5FABE2976FD
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
+        eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
+        robin.murphy@arm.com
+Subject: [PATCH v5 1/9] media: staging: dt-bindings: rkisp1: add missing required nodes
+Date:   Wed, 22 Jul 2020 12:55:25 -0300
+Message-Id: <20200722155533.252844-2-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
+References: <20200722155533.252844-1-helen.koike@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_09:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Constify chain pointers and refactor qed_chain_get_elem_left{,u32}() a bit.
+Add missing required nodes in json-schema yaml file for
+Rockchip ISP1 dt-bindings.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- include/linux/qed/qed_chain.h | 60 +++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 8a96c361cc19..434479e2ab65 100644
---- a/include/linux/qed/qed_chain.h
-+++ b/include/linux/qed/qed_chain.h
-@@ -182,73 +182,79 @@ struct qed_chain_init_params {
- 	((p)->cnt_type == QED_CHAIN_CNT_TYPE_U32)
+Changes in v2:
+- New patch in the series
+---
+ .../devicetree/bindings/media/rockchip-isp1.yaml          | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index af246b71eac6b..a77b6ec500c95 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -94,11 +94,19 @@ properties:
  
- /* Accessors */
--static inline u16 qed_chain_get_prod_idx(struct qed_chain *p_chain)
+               remote-endpoint: true
+ 
++        required:
++          - reg
++          - "#address-cells"
++          - "#size-cells"
 +
-+static inline u16 qed_chain_get_prod_idx(const struct qed_chain *chain)
-+{
-+	return chain->u.chain16.prod_idx;
-+}
-+
-+static inline u16 qed_chain_get_cons_idx(const struct qed_chain *chain)
- {
--	return p_chain->u.chain16.prod_idx;
-+	return chain->u.chain16.cons_idx;
- }
+     required:
++      - "#address-cells"
++      - "#size-cells"
+       - port@0
  
--static inline u16 qed_chain_get_cons_idx(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_prod_idx_u32(const struct qed_chain *chain)
- {
--	return p_chain->u.chain16.cons_idx;
-+	return chain->u.chain32.prod_idx;
- }
- 
--static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_cons_idx_u32(const struct qed_chain *chain)
- {
--	return p_chain->u.chain32.cons_idx;
-+	return chain->u.chain32.cons_idx;
- }
- 
--static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
-+static inline u16 qed_chain_get_elem_left(const struct qed_chain *chain)
- {
--	u16 elem_per_page = p_chain->elem_per_page;
--	u32 prod = p_chain->u.chain16.prod_idx;
--	u32 cons = p_chain->u.chain16.cons_idx;
-+	u32 prod = qed_chain_get_prod_idx(chain);
-+	u32 cons = qed_chain_get_cons_idx(chain);
-+	u16 elem_per_page = chain->elem_per_page;
- 	u16 used;
- 
- 	if (prod < cons)
- 		prod += (u32)U16_MAX + 1;
- 
- 	used = (u16)(prod - cons);
--	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
--		used -= prod / elem_per_page - cons / elem_per_page;
-+	if (chain->mode == QED_CHAIN_MODE_NEXT_PTR)
-+		used -= (u16)(prod / elem_per_page - cons / elem_per_page);
- 
--	return (u16)(p_chain->capacity - used);
-+	return (u16)(chain->capacity - used);
- }
- 
--static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_elem_left_u32(const struct qed_chain *chain)
- {
--	u16 elem_per_page = p_chain->elem_per_page;
--	u64 prod = p_chain->u.chain32.prod_idx;
--	u64 cons = p_chain->u.chain32.cons_idx;
-+	u64 prod = qed_chain_get_prod_idx_u32(chain);
-+	u64 cons = qed_chain_get_cons_idx_u32(chain);
-+	u16 elem_per_page = chain->elem_per_page;
- 	u32 used;
- 
- 	if (prod < cons)
- 		prod += (u64)U32_MAX + 1;
- 
- 	used = (u32)(prod - cons);
--	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
-+	if (chain->mode == QED_CHAIN_MODE_NEXT_PTR)
- 		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
- 
--	return p_chain->capacity - used;
-+	return chain->capacity - used;
- }
- 
--static inline u16 qed_chain_get_usable_per_page(struct qed_chain *p_chain)
-+static inline u16 qed_chain_get_usable_per_page(const struct qed_chain *chain)
- {
--	return p_chain->usable_per_page;
-+	return chain->usable_per_page;
- }
- 
--static inline u8 qed_chain_get_unusable_per_page(struct qed_chain *p_chain)
-+static inline u8 qed_chain_get_unusable_per_page(const struct qed_chain *chain)
- {
--	return p_chain->elem_unusable;
-+	return chain->elem_unusable;
- }
- 
--static inline u32 qed_chain_get_page_cnt(struct qed_chain *p_chain)
-+static inline u32 qed_chain_get_page_cnt(const struct qed_chain *chain)
- {
--	return p_chain->page_cnt;
-+	return chain->page_cnt;
- }
- 
--static inline dma_addr_t qed_chain_get_pbl_phys(struct qed_chain *p_chain)
-+static inline dma_addr_t qed_chain_get_pbl_phys(const struct qed_chain *chain)
- {
--	return p_chain->pbl_sp.table_phys;
-+	return chain->pbl_sp.table_phys;
- }
- 
- /**
+ required:
+   - compatible
++  - reg
+   - interrupts
+   - clocks
+   - clock-names
 -- 
-2.25.1
+2.28.0.rc1
 
