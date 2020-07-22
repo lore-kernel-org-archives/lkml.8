@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312B1C433F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3618C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143E120787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F22D20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbgGVMP0 (ORCPT
+        id S1732307AbgGVMPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:15:26 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55454 "EHLO inva020.nxp.com"
+        Wed, 22 Jul 2020 08:15:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51484 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVMPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:15:13 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0053E1A0A71;
+        id S1732246AbgGVMPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:15:14 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CCC3F200903;
         Wed, 22 Jul 2020 14:15:12 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E861E1A0A6B;
-        Wed, 22 Jul 2020 14:15:11 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CA4A2200926;
+        Wed, 22 Jul 2020 14:15:12 +0200 (CEST)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 875F1202AC;
-        Wed, 22 Jul 2020 14:15:11 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 67AC1202AC;
+        Wed, 22 Jul 2020 14:15:12 +0200 (CEST)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -37,9 +37,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Dan Douglass <dan.douglass@nxp.com>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH 3/7] crypto: caam/qi2 - create ahash shared descriptors only once
-Date:   Wed, 22 Jul 2020 15:14:54 +0300
-Message-Id: <20200722121458.8478-4-horia.geanta@nxp.com>
+Subject: [PATCH 5/7] crypto: caam/jr - remove incorrect reference to caam_jr_register()
+Date:   Wed, 22 Jul 2020 15:14:56 +0300
+Message-Id: <20200722121458.8478-6-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722121458.8478-1-horia.geanta@nxp.com>
 References: <20200722121458.8478-1-horia.geanta@nxp.com>
@@ -52,39 +52,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For keyed hash algorithms, shared descriptors are currently generated
-twice:
--at tfm initialization time, in cra_init() callback
--in setkey() callback
+From: Dan Douglass <dan.douglass@nxp.com>
 
-Since it's mandatory to call setkey() for keyed algorithms, drop the
-generation in cra_init().
+caam_jr_register() function is no longer part of the driver since
+commit 6dad41158db6 ("crypto: caam - Remove unused functions from Job Ring")
 
-This is similar to the change in caamhash (caam/jr top-level library)
-commit 9a2537d0ebc9 ("crypto: caam - create ahash shared descriptors only once")
+This patch removes a comment referencing the function.
 
+Signed-off-by: Dan Douglass <dan.douglass@nxp.com>
 Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- drivers/crypto/caam/caamalg_qi2.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/crypto/caam/jr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 811d34eee4f2..1e901344db67 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -4500,7 +4500,11 @@ static int caam_hash_cra_init(struct crypto_tfm *tfm)
- 	crypto_ahash_set_reqsize(__crypto_ahash_cast(tfm),
- 				 sizeof(struct caam_hash_state));
- 
--	return ahash_set_sh_desc(ahash);
-+	/*
-+	 * For keyed hash algorithms shared descriptors
-+	 * will be created later in setkey() callback
-+	 */
-+	return alg->setkey ? 0 : ahash_set_sh_desc(ahash);
- }
- 
- static void caam_hash_cra_exit(struct crypto_tfm *tfm)
+diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+index 4af22e7ceb4f..bf6b03b17251 100644
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -339,8 +339,7 @@ EXPORT_SYMBOL(caam_jr_free);
+  * caam_jr_enqueue() - Enqueue a job descriptor head. Returns -EINPROGRESS
+  * if OK, -ENOSPC if the queue is full, -EIO if it cannot map the caller's
+  * descriptor.
+- * @dev:  device of the job ring to be used. This device should have
+- *        been assigned prior by caam_jr_register().
++ * @dev:  struct device of the job ring to be used
+  * @desc: points to a job descriptor that execute our request. All
+  *        descriptors (and all referenced data) must be in a DMAable
+  *        region, and all data references must be physical addresses
 -- 
 2.17.1
 
