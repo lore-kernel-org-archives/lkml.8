@@ -2,161 +2,161 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C97C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683C1C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D229420792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E7220792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="srkmkvhD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TI6grtPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731974AbgGVDzp (ORCPT
+        id S1731989AbgGVD4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38378 "EHLO
+        Tue, 21 Jul 2020 23:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731856AbgGVDzp (ORCPT
+        with ESMTP id S1731920AbgGVD4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:55:45 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CEAC0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so480830wrl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
+        Tue, 21 Jul 2020 23:56:22 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF2EC0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:56:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id t11so468313pfq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
-        b=srkmkvhDKIkC7xQ+Erl9q+ptkCX3zSzRoCdUCdYWrtYxQgtdnbMIebHVIlnrXMuECG
-         SlRnahF0UnWTSTGwaOSTKHTlLgKzRoMS0IW5PLwk/089WiaVhC7HDzMEs3HeK6eRkrE0
-         ATmz2QKDy/y/DlIo+2cwk3NtTspyqAwzk7fP+H1sKOpzTaKI5x/kdGVgh0GHGQ9wZTdU
-         wAp87P7cDy9vH2Dz8YnBjmaA4+fff3ouquN8cIASp9+HDaaGgv1Xv2Bb5Mm16InXgdJ+
-         qMObXjMx+gTN/PngzgaIdoYF6LTreTu6hcGLIuU97b5KBh8+HWF/4R3FztO8TKb+hE0H
-         SKow==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eocmnDIsQLfevW1nQrEzuqjG8rUX3ygxa1czr+P2gmM=;
+        b=TI6grtPKFFAbd5jxTwUjjnzEFinPbwpMNEo11SKc2mYL6DD7emvsK1cLuMTc8516xv
+         Ne1q/n2DwtDGb9PQrePzYtMrzeldMxy7T8Mnq2o2s7/YUhEKn5FNwNo8Q7/p6wzyFyy1
+         eCDzDFcZe1tGeMY9FQT9Yu/PwG2w0p+KtUYQyOjGiKmeoE13kgZnLpnARa8wefs9qC4j
+         LbGN8tQN/0wwo+NrlxEzflKqwwO+oklwCQ6tXBB3vvCIfpjG1Qi0jPkQxppiyOLy/sXy
+         BFUN5FuUFf7P3DcLvPNxa7GyfC8a1WCC1iOda2F32hdJ3nOrI/S12pcYWhuBHPhWJtSF
+         NTJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
-        b=CXWTWZS0GrSvCuVMmrfmp/NkxBSQKE6puZRGt3pUfSBDVzQ6bSiJwRv5dgWM9qiy5l
-         IqlPP3P6QQ+WBweoBfOoQg8a9BdhB+dusqjBpVboeg08ueAoywLvGDrSoCafaeEPJ9Ej
-         kqE0t0XnCvLOMBGasqQpRtc98Gik+fuh4M9cYkbuEcsAcPvrZG0DaKNPF2ZaUfvINNJo
-         1zVQsFZMEYFOXya5S4qmxmhuZNaXcajyuW5CX4JMS0xR1HPK8aGwSnOBL1mrK+iLkDNY
-         yHWY/yd7shS29ZN6J4jt3RBLdQVQFMGfQuLOL/RaoRWnvTLz6jHcBG/9qlrnvqdrK0iS
-         Qwag==
-X-Gm-Message-State: AOAM530xmb97FkuwEbSdL7NpPCxa02WGJsYRZIK9B/WlGKWylM8BlkKZ
-        CC24MgDUOGDwOgxdsYUrgKPwWxcVS5np9A792Y8dig==
-X-Google-Smtp-Source: ABdhPJwviiRhh8Ew5FwFPWSNY3nE65EKkh19UnrCdWqhsEpXCx9HCf/vqo6H6vcfqlvdohr7KotRJueK95xx91UgOUU=
-X-Received: by 2002:adf:f247:: with SMTP id b7mr13963465wrp.128.1595390143363;
- Tue, 21 Jul 2020 20:55:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eocmnDIsQLfevW1nQrEzuqjG8rUX3ygxa1czr+P2gmM=;
+        b=aN03PezwVpBBFAf7L+XZdYWeOyamfQrDEwNnj5fxXhFdXAVbhme1BAAim6EXDBTcVa
+         ZBI5psZ2G9J6841Gyk3ydEJyZ06B7wC4ke/UTSfmQ8BIvR3KUgHAaxEJFGsAy0pH0wi8
+         rBioduFi+dIQOAsEZWYshbu9f4Nrl6AJeDhmJtgeuhrp8ygvMPfDbpfhDPhEArtAGI1k
+         goyuwC2C1x/BphFQVLsoEGjM2kGbyzIu3gV9UN9B8YN+x911jUFDxbzIxzM0gi6hzH4Z
+         faR9bJH5ojS5C9aY6hmBIF3vVDbEWFGfF6IVsFyC7yke3GQ3jUXw+wvRvfI8Oarwp/WF
+         X7xg==
+X-Gm-Message-State: AOAM5317G6euAaokftO45wKlajasS2phPyr3av21JMI30CcuU5/6Wh50
+        zZ+Cx7WutMyr0ht850/aW1hL4A==
+X-Google-Smtp-Source: ABdhPJwejzId9c6+xg8NWwUEGs51S8vMOaY1Z1gQDLh5jElHYxI3WwTJQ6RdiKmoi6Cph1s04ez8sg==
+X-Received: by 2002:a05:6a00:5c:: with SMTP id i28mr27768787pfk.274.1595390181536;
+        Tue, 21 Jul 2020 20:56:21 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r6sm19592723pgn.65.2020.07.21.20.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 20:56:20 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 20:54:27 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, ohad@wizery.com
+Subject: Re: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: Add modem debug policy
+ support
+Message-ID: <20200722035427.GQ388985@builder.lan>
+References: <20200721112935.25716-1-sibis@codeaurora.org>
+ <20200721112935.25716-2-sibis@codeaurora.org>
 MIME-Version: 1.0
-References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
- <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
- <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com> <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
-In-Reply-To: <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 22 Jul 2020 09:25:31 +0530
-Message-ID: <CAAhSdy1Dx+oP0guRGvCFa61gL93R+pcQDYLdMpo+LaOjA5tvBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Sean Anderson <seanga2@gmail.com>
-Cc:     Atish Patra <atishp@atishpatra.org>, devicetree@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        Anup Patel <anup.patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721112935.25716-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 5:48 PM Sean Anderson <seanga2@gmail.com> wrote:
->
-> On 7/20/20 9:15 PM, Atish Patra wrote:
-> > On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
-> >>
-> >> We add DT bindings documentation for CLINT device.
-> >>
-> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> >> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> >> ---
-> >>  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
-> >>  1 file changed, 58 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >> new file mode 100644
-> >> index 000000000000..8ad115611860
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >> @@ -0,0 +1,58 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: SiFive Core Local Interruptor
-> >> +
-> >> +maintainers:
-> >> +  - Palmer Dabbelt <palmer@dabbelt.com>
-> >> +  - Anup Patel <anup.patel@wdc.com>
-> >> +
-> >> +description:
-> >> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
-> >> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
-> >> +  interrupts. It directly connects to the timer and inter-processor interrupt
-> >> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
-> >> +  interrupt controller is the parent interrupt controller for CLINT device.
-> >> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
-> >> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
-> >> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    items:
-> >> +      - const: sifive,clint0
-> >> +      - const: sifive,fu540-c000-clint
-> >> +
-> >> +    description:
-> >> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
-> >> +      Supported compatible strings are -
-> >> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
-> >> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
-> >> +      CLINT v0 IP block with no chip integration tweaks.
-> >> +      Please refer to sifive-blocks-ip-versioning.txt for details
-> >> +
-> >
-> > As the DT binding suggests that the clint device should be named as "sifive,**",
-> > I think we should change the DT property in kendryte dts as well.
->
-> The kendryte device is based on Rocket Chip, not any SiFive IP/device.
-> If anything, the general binding should be "chipsalliance,clint" and the
-> specific bindings should be "sifive,clint" and "kendryte,clint" (or
-> "canaan,clint").
+On Tue 21 Jul 04:29 PDT 2020, Sibi Sankar wrote:
 
-AFAIK, Palmer clearly mentioned in previous discussion that CLINT
-spec is still owned by SiFive. No matter who implements CLINT device
-in their SOC, we will need one compatible string to represent the
-spec version (i.e. "sifive,clint0") and another compatible representing
-specific implementation (for kendryte this can be "kendryte,k210-clint").
+> Add modem debug policy support which will enable coredumps and live
+> debug support when the msadp firmware is present on secure devices.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+> 
+> v2:
+>  * Use request_firmware_direct [Bjorn]
+>  * Use Bjorn's template to show if debug policy is present
+>  * Add size check to prevent memcpy out of bounds [Bjorn]
+> 
+>  drivers/remoteproc/qcom_q6v5_mss.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 0b6f260eb5349..49cd16e050533 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -189,6 +189,7 @@ struct q6v5 {
+>  	phys_addr_t mba_phys;
+>  	void *mba_region;
+>  	size_t mba_size;
+> +	size_t dp_size;
+>  
+>  	phys_addr_t mpss_phys;
+>  	phys_addr_t mpss_reloc;
+> @@ -408,6 +409,14 @@ static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
+>  static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>  	struct q6v5 *qproc = rproc->priv;
+> +	const struct firmware *dp_fw;
+> +
+> +	if (!request_firmware_direct(&dp_fw, "msadp", qproc->dev) && fw->size <= SZ_1M &&
+> +	    (SZ_1M + dp_fw->size) <= qproc->mba_size) {
+> +		memcpy(qproc->mba_region + SZ_1M, dp_fw->data, dp_fw->size);
+> +		qproc->dp_size = dp_fw->size;
+> +		release_firmware(dp_fw);
+
+If request_firmware_direct() succeeds, but return a firmware blob bigger
+than mba_size - SZ_1M you won't get here and will end up leaking dp_fw.
+
+Additionally, there really isn't a need for requesting the firmware in
+the first place if fw->size > SZ_1M.
+
+So I think it's better if you break this out in it's own function where
+you don't need to squeeze everything into one or two conditionals.
 
 Regards,
-Anup
+Bjorn
+
+> +	}
+>  
+>  	memcpy(qproc->mba_region, fw->data, fw->size);
+>  
+> @@ -896,6 +905,10 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>  	}
+>  
+>  	writel(qproc->mba_phys, qproc->rmb_base + RMB_MBA_IMAGE_REG);
+> +	if (qproc->dp_size) {
+> +		writel(qproc->mba_phys + SZ_1M, qproc->rmb_base + RMB_PMI_CODE_START_REG);
+> +		writel(qproc->dp_size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+> +	}
+>  
+>  	ret = q6v5proc_reset(qproc);
+>  	if (ret)
+> @@ -1257,7 +1270,8 @@ static int q6v5_start(struct rproc *rproc)
+>  	if (ret)
+>  		return ret;
+>  
+> -	dev_info(qproc->dev, "MBA booted, loading mpss\n");
+> +	dev_info(qproc->dev, "MBA booted with%s debug policy, loading mpss\n",
+> +		 qproc->dp_size ? "" : "out");
+>  
+>  	ret = q6v5_mpss_load(qproc);
+>  	if (ret)
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
