@@ -2,115 +2,96 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DE5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF85C2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s87Z385h"
+	by mail.kernel.org (Postfix) with ESMTP id 3694F20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:53:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbgGVIxM (ORCPT
+        id S1730856AbgGVIxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgGVIxL (ORCPT
+        Wed, 22 Jul 2020 04:53:53 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:45061 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgGVIxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:53:11 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E50AC0619DC;
-        Wed, 22 Jul 2020 01:53:11 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k1so818346pjt.5;
-        Wed, 22 Jul 2020 01:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ka/5B4XRoVBmAt67iPN2Z7sgxTFm48YODme+2RimFZE=;
-        b=s87Z385hZ5l+b/oIspabCEyqUEkKhQIX9Wi1g6CN5r/JNB/21zVc6tOvcl0oGU/2TD
-         Z8kDRye9okGm1naX3gouEQEEga5gL+JG7U8E2PPOEMmkg38RmacKXJzdIziq3/6wGIrr
-         Aoe+msfaONNAq1j2rjQrUcNp3aruR7G6Wv0ucg1o9NOpdcZRR58lef0jE9Fz26orzynH
-         /5Coy0NXwu9cFTmSNNEYEjU0DA1YdXG9+ixBE6Vj6jo8iSSsecFsz1xomgrxa4VhSDF8
-         t92CIABEwTp+IxUgBDPme+XbXH4Ig8z+8Y5Q7Nqjr2CqsEXwjOemP4xa+ccigTddWaXY
-         SD2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ka/5B4XRoVBmAt67iPN2Z7sgxTFm48YODme+2RimFZE=;
-        b=EpD8P3WsOKKfzB/Pc2RsNbZiViTCWLwNTHwR69OFurIVMuKFqJs3zYBvJS2qh9gPIA
-         705DgoOFW8rQjYgZp4uxm+i1MQnQypEuW7oJiAii86hLdoeCjvkPelcXwd3F7r6D+ICb
-         bpdmjh7TTnFByI1V8cQ3GUmCIP/npgFOUbEGrhdlC6wBvh9z7P1roa3BiN0BwYhP1c0p
-         ym6teo3l+7I2LiY1DaDkDFCen3ciw3WfwfHgs53JNA1KTCDCyY9hp7CAM6yOWSKgE2AE
-         Rrc/EfZmCG3zm7f735BPD0ViUeIDv5+WbN/r5ukgT/L/u4eIkxT+fnj6dwRLvQuW4a1s
-         Bgyg==
-X-Gm-Message-State: AOAM530pNDAPhgyyBRFb1SqxUFNV4dBzRpcxqWz+eRL1cPhTQUFQlwFH
-        MkL4pul2Qs10iJ8qkJlIPSfH7LK+Fb8JMWlq1F0+fvXJ
-X-Google-Smtp-Source: ABdhPJxz0ZAJ0aHy5furHHpzY9F5tAklILXmF9Mb3Ra2G6CiJicgkp19/NfrXFg7rW6Ht6NEGCeYyxG8FMpQUaTeEOY=
-X-Received: by 2002:a17:902:9a4b:: with SMTP id x11mr25751245plv.255.1595407990982;
- Wed, 22 Jul 2020 01:53:10 -0700 (PDT)
+        Wed, 22 Jul 2020 04:53:53 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 06M8rcie010699
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 01:53:38 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Jul 2020 01:53:37 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/dmapool.c: add lock protect in dma_pool_destroy
+Date:   Wed, 22 Jul 2020 17:05:16 +0800
+Message-ID: <20200722090516.28829-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200721233814.GA3058@embeddedor>
-In-Reply-To: <20200721233814.GA3058@embeddedor>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Jul 2020 11:52:56 +0300
-Message-ID: <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
-Subject: Re: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 2:48 AM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+When traversing "pool->page" linked list, to prevent possible
+other path operations this list, causing it to be destroyed, we
+should add lock protect for this list in dma_pool_destroy func.
 
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ mm/dmapool.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-
-Perhaps you may do it as Link: tag?
-
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/i2c/busses/i2c-designware-pcidrv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
-> index 8522134f9ea9..55c83a7a24f3 100644
-> --- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-> @@ -90,7 +90,7 @@ static int mfld_setup(struct pci_dev *pdev, struct dw_pci_controller *c)
->         switch (pdev->device) {
->         case 0x0817:
->                 dev->timings.bus_freq_hz = I2C_MAX_STANDARD_MODE_FREQ;
-> -               /* fall through */
-> +               fallthrough;
->         case 0x0818:
->         case 0x0819:
->                 c->bus_num = pdev->device - 0x817 + 3;
-> --
-> 2.27.0
->
-
-
+diff --git a/mm/dmapool.c b/mm/dmapool.c
+index f9fb9bbd733e..f7375b25af6c 100644
+--- a/mm/dmapool.c
++++ b/mm/dmapool.c
+@@ -267,6 +267,9 @@ static void pool_free_page(struct dma_pool *pool, struct dma_page *page)
+ void dma_pool_destroy(struct dma_pool *pool)
+ {
+ 	bool empty = false;
++	LIST_HEAD(discard);
++	struct dma_page *page,*h;
++	unsigned long flags;
+ 
+ 	if (unlikely(!pool))
+ 		return;
+@@ -281,8 +284,8 @@ void dma_pool_destroy(struct dma_pool *pool)
+ 		device_remove_file(pool->dev, &dev_attr_pools);
+ 	mutex_unlock(&pools_reg_lock);
+ 
++	spin_lock_irqsave(&pool->lock, flags);
+ 	while (!list_empty(&pool->page_list)) {
+-		struct dma_page *page;
+ 		page = list_entry(pool->page_list.next,
+ 				  struct dma_page, page_list);
+ 		if (is_page_busy(page)) {
+@@ -297,8 +300,12 @@ void dma_pool_destroy(struct dma_pool *pool)
+ 			list_del(&page->page_list);
+ 			kfree(page);
+ 		} else
+-			pool_free_page(pool, page);
++			list_move(&page->page_list, &discard);
+ 	}
++	spin_unlock_irqrestore(&pool->lock, flags);
++
++	list_for_each_entry_safe(page, h, &discard, page_list)
++		pool_free_page(pool, page);
+ 
+ 	kfree(pool);
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2
+
