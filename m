@@ -2,158 +2,166 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE59C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E379C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78BD20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B44B2080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="EVJa0A16";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="hk9Mbd9c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyQPpi/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732802AbgGVO6D (ORCPT
+        id S1732750AbgGVO6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:58:03 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:31122 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730382AbgGVO6C (ORCPT
+        Wed, 22 Jul 2020 10:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729642AbgGVO6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:58:02 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MEml23012168;
-        Wed, 22 Jul 2020 07:57:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=39S4vVNIusSsi2LuvNZmhBBhMhNTv0T4UrDYfmP6564=;
- b=EVJa0A16lfuFUlWKLZwXw+n8R881k/ZS22EehTrvAnPM66x6SDId+O0ZbNDXSmi0+T/0
- B757ZJwzBlKBCttui7WlyVvARBC7lrNUCEbfRcDKrXist3L4yVRGDhUz2q7XpDdZTbUi
- LH1FkhAETb7mfolgyHqVT5LNvd5hQZLuHe7l1jSGbd2q70wfiZEa/myKJJg10qCTVZQN
- R3Z2JyKusEtFW2a4DmD/ai7dXbzGnY5Z6eNeYvqm2BptvjP0nYM8PObbV9CglArzVxu/
- n4M0gyQCBnsoRDSQWlbTcNl/4X8dDFwlZSfA70nrjXSoKvDQK5T8qk5cKPxxB+wFkjBj pw== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkrbpe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:57:36 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 07:57:34 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
- by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 07:57:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tu4VdwZldBfUismKGfeOqVVBE1uc0BQl4NeXvxy/Aa8/eHi5efGhG7zKLvmEbOrFtTcKR4zT97RBX5jmV7UgRsVUz6U8hN+fnJUW1YN6Lkicuv0+K05S5qTLvfB1WtTIJmYkBF7SVYwaoKHVDevmiKWDa5kCLzNN8qeZ0KkyPf9uPX0GOxCYdFZ0rL6YR88go3H8SRkvpJ0DIwIKJgQumDo+OOeRTN6ih6kDQLQltdlj22i5KKh7/pzBQuP90Vj0yWLAnjKvwzEmAJZga42BqoanQM2Ie8lJ74sMFv0tT08zzjTMXKdqd3GVTiD6W70T272U8u6D67tNaXll0BDwww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=39S4vVNIusSsi2LuvNZmhBBhMhNTv0T4UrDYfmP6564=;
- b=BDCt/f2IbSIw4jmK1W6+I8fadY3RDlv9TYDWAIRJ7MKjRB+yDmQ6vPnuLItVvQN51GTqat8DwBS6V0ZNIX6TXUNj8yvW/oWoanfmwvNknE0ugHHUauT3iCiL0ZaGz6FEtk9fTEm72C8EFwvddJuRii9gLlAUkkBnna0OHYqo/hRFXjo2IucoEqBMM5j2yYDCBxPIDVcrR3TUUcthZgAiS8ujrUheuiCKhdPwQ098ZlQc0+vUhmiyCnOSlPtviNcPvJc9zcM0aAH2NlIKiFIlQc277pw3e5kw1AFwWXzgWM3se35ql3a3NfhIiOzj/jZtxDli8kZ2XQUCmeQJnuSJug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Wed, 22 Jul 2020 10:58:24 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8987FC0619DC;
+        Wed, 22 Jul 2020 07:58:24 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n5so1396900pgf.7;
+        Wed, 22 Jul 2020 07:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=39S4vVNIusSsi2LuvNZmhBBhMhNTv0T4UrDYfmP6564=;
- b=hk9Mbd9ca2K2qL1TZ55BgoIt9eD590LWokURNZkJ27imn4sFtN8H6utPmotL8ape1eojbbKqhpkiH97mbgRhqGgosYrv89KkJ/aICop50lttnoMeIRxO6RRpyFVahb6hofN3IBUTbkSLcyVcuQm85GPFDHh080IoJzZkJMNl87I=
-Received: from MW2PR18MB2267.namprd18.prod.outlook.com (2603:10b6:907:3::11)
- by MW2PR18MB2156.namprd18.prod.outlook.com (2603:10b6:907:a::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Wed, 22 Jul
- 2020 14:57:33 +0000
-Received: from MW2PR18MB2267.namprd18.prod.outlook.com
- ([fe80::b9a6:a3f2:2263:dc32]) by MW2PR18MB2267.namprd18.prod.outlook.com
- ([fe80::b9a6:a3f2:2263:dc32%4]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
- 14:57:33 +0000
-From:   Alex Belits <abelits@marvell.com>
-To:     "frederic@kernel.org" <frederic@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC:     Prasun Kapoor <pkapoor@marvell.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: [PATCH v4 10/13] task_isolation: don't interrupt CPUs with
- tick_nohz_full_kick_cpu()
-Thread-Topic: [PATCH v4 10/13] task_isolation: don't interrupt CPUs with
- tick_nohz_full_kick_cpu()
-Thread-Index: AQHWYDhuh3VfINlM20KwSBz5WuaF0Q==
-Date:   Wed, 22 Jul 2020 14:57:33 +0000
-Message-ID: <5acf7502c071c0d1365ba5e5940e003a7da6521f.camel@marvell.com>
-References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
-In-Reply-To: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=marvell.com;
-x-originating-ip: [173.228.7.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 60530ab6-8501-4f78-a3db-08d82e4f90c8
-x-ms-traffictypediagnostic: MW2PR18MB2156:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR18MB21569041D9529EFD3BAAA03FBC790@MW2PR18MB2156.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kAcENqRTVC5LJDNWTFi0gJmqH2I+N5X/pfX1V9oBWY4/qyx7ShZZPp5Dc/7ZIfLdcXeCQk2sxHyi7MsmO3DOlAhXRtgug7/EwIVwIxWPB0Or+BHjY0GbOVv3rJXlsFLnQn8iBomnc6kszGA9291xRqBV+SNEN958jtLcVIKkjWWZJ5ir2FVeRSRoJjuZv0Cub7G6iOVGhmPfTH3gh/HrVdfswglAzLCWWGu6W2f4c/H+btRK2P7LqmJu0mR2UNIS27TlGDqVY2eKvJFNJyH/xGOHDXF0YRtKsVu0BuXx9P78Tm8MMjWgwCTFA+tMDvsBAjLJUJYkG+fipYcaboYBnw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2267.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(396003)(136003)(346002)(4744005)(110136005)(6486002)(2906002)(6506007)(54906003)(66476007)(478600001)(6512007)(8936002)(2616005)(8676002)(316002)(4326008)(66946007)(186003)(64756008)(86362001)(83380400001)(76116006)(91956017)(5660300002)(66446008)(36756003)(66556008)(26005)(71200400001)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hswFjFfQgQYiuGRCvgk40lPngN77FXIzxt8LURz8O65T+1PLG18Uk5zwZ8uvbF7Ik6iW8iwFxbooCp4hpDjR74dnQdtmSoIMz6cUUZl1EfByxnX/3QQ7eFJtQs0f4LAvSr4rZdSPJ+ZIVIngMoY62TH41L2XdsDRPVV9Beuep4CcH/L5M7uvtLUSLsRisW9rZ8UPjQgtqG/r3u2Dep3pvvPKkpI3fPAr6bI9ytvP7A/L8ognHyFMCtLV0S/s7XQYo2tFWi7wprYtipWgug5/y2oB0qVbLrfhpcaSs3SO7+QA4ZVv6xHKGQQUcuNtHDTKDp6yH6XrS5xHcHSWq9/yjHT+ak+P/Z2KWJWfFCBpdSCggpWm4GxGQ2NKGfJSCmW35Mo45a/+g/KhgQj22OkYQTuIHxj4CH/Jkv95prSKWmiWmlVjrgErrv1Ix8n23tnA9kemjK/Xz7brdP5HqKK0I9Ngn5XmS+yfBqy0bPovHQu4PRnnXF1V/haa7ZHWfARE
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3D078BC1A3E6A443A62F85A300A63A00@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rgu9zeGviejGy94qeYWhRJ1bbRjnbZasOXc4G8oQ1bI=;
+        b=tyQPpi/zMyDRImS8JXG4zlQJED6yn6PwaRxs8995TCC6A+iil5qrCnXX4Fj+t3+yD9
+         tVSXtpTQWkDz2Zs6efB0LcsXvVty8E+TsZIfHIRqMs2tzGiWYNYyIc07GYRqlpZouc/a
+         +ZtxF4VaWQ8anTj2KdsKEB6IPj+GiOo6GDCoVEWCSCZIKNoZw0h9X+f4zL6QoqH4dXuS
+         B44wX/XCODUThAUuAaYBLADtPsPLpdVxrLJQcZfwIi8GbK6acU/3gj58sCJgTcWhQG7X
+         IxXbM5BjZ3iMHTZS6++VWR+9XPIEIWhXz2ooyarBX3xzF8qJG4tERlHYZ0tkt+N1DOhm
+         q5dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rgu9zeGviejGy94qeYWhRJ1bbRjnbZasOXc4G8oQ1bI=;
+        b=cWyvBia9gM/EB44a0n5EWaT86Y9Gzi4hxuL683ctLqJzpRPzQRAvUkmwbXQk2v8k1m
+         /BRD2tUL+N9luBlwKxLltkhzEfrWgnJ42yQM3g/aloidCrTBndMUot5Y2842Z20qMRTK
+         dLoe3xrIoKXlveHG5u2Q2Fq0PzHFFUdztac2m5gz7AFpa2t0EahNE+sLhuBYOD4s/w7+
+         UiZ05K6WJLa1QBtDGLLxGFi4DCQUY9PWLlbmAuZosPqDSWJi9F7Y1mzAocr1T57IEn0G
+         fVgOwbAhV2UYVgh9cUgAmkfs1VdmYGPI5A7Ex460u2fxrhoVQ95sOJ26malXi05UFWeq
+         pExA==
+X-Gm-Message-State: AOAM5317lc+d/ZBj0OFV7GmUOsb6dt5uDuS7HLhnkdrKZP619JBOLHC8
+        yLDQ3fEce39qU3xaqgn/6FnrcFPgtW09+w==
+X-Google-Smtp-Source: ABdhPJzjePhzyy8eV1LUj5gRxYGGMT6XU0BUo1Div4o1tRdGISWYu2QSSURGA9LTku1A89w5S74AFQ==
+X-Received: by 2002:a63:be4e:: with SMTP id g14mr215565pgo.193.1595429903995;
+        Wed, 22 Jul 2020 07:58:23 -0700 (PDT)
+Received: from rahulg-ThinkPad-T450 ([122.175.125.202])
+        by smtp.gmail.com with ESMTPSA id j5sm216214pgi.42.2020.07.22.07.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 07:58:23 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 20:28:19 +0530
+From:   Rahul Gottipati <rahul.blr97@gmail.com>
+To:     mchehab@kernel.org
+Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/2] media: atomisp: Fix coding style issue - correct
+ multiline comments
+Message-ID: <f7973bfc099576423553660313cb5a3f7f28529f.1595429109.git.rahul.blr97@gmail.com>
+References: <cover.1595429109.git.rahul.blr97@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2267.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60530ab6-8501-4f78-a3db-08d82e4f90c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 14:57:33.8038
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: k1ncmc415f4yR0Orvm+hvx+HAnxoA9diUWrhilJ909VBki5tlOwBAVbVp/a0GwtRS+kh0xjjeGfj2mUUSdno+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR18MB2156
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_08:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1595429109.git.rahul.blr97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWXVyaSBOb3JvdiA8eW5vcm92QG1hcnZlbGwuY29tPg0KDQpGb3Igbm9oel9mdWxsIENQ
-VXMgdGhlIGRlc2lyYWJsZSBiZWhhdmlvciBpcyB0byByZWNlaXZlIGludGVycnVwdHMNCmdlbmVy
-YXRlZCBieSB0aWNrX25vaHpfZnVsbF9raWNrX2NwdSgpLiBCdXQgZm9yIGhhcmQgaXNvbGF0aW9u
-IGl0J3MNCm9idmlvdXNseSBub3QgZGVzaXJhYmxlIGJlY2F1c2UgaXQgYnJlYWtzIGlzb2xhdGlv
-bi4NCg0KVGhpcyBwYXRjaCBhZGRzIGNoZWNrIGZvciBpdC4NCg0KU2lnbmVkLW9mZi1ieTogWXVy
-aSBOb3JvdiA8eW5vcm92QG1hcnZlbGwuY29tPg0KW2FiZWxpdHNAbWFydmVsbC5jb206IHVwZGF0
-ZWQsIG9ubHkgZXhjbHVkZSBDUFVzIHJ1bm5pbmcgaXNvbGF0ZWQgdGFza3NdDQpTaWduZWQtb2Zm
-LWJ5OiBBbGV4IEJlbGl0cyA8YWJlbGl0c0BtYXJ2ZWxsLmNvbT4NCi0tLQ0KIGtlcm5lbC90aW1l
-L3RpY2stc2NoZWQuYyB8IDQgKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2tlcm5lbC90aW1lL3RpY2stc2NoZWQuYyBi
-L2tlcm5lbC90aW1lL3RpY2stc2NoZWQuYw0KaW5kZXggNmU0Y2Q4NDU5ZjA1Li4yZjgyYTZkYWY4
-ZmMgMTAwNjQ0DQotLS0gYS9rZXJuZWwvdGltZS90aWNrLXNjaGVkLmMNCisrKyBiL2tlcm5lbC90
-aW1lL3RpY2stc2NoZWQuYw0KQEAgLTIwLDYgKzIwLDcgQEANCiAjaW5jbHVkZSA8bGludXgvc2No
-ZWQvY2xvY2suaD4NCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvc3RhdC5oPg0KICNpbmNsdWRlIDxs
-aW51eC9zY2hlZC9ub2h6Lmg+DQorI2luY2x1ZGUgPGxpbnV4L2lzb2xhdGlvbi5oPg0KICNpbmNs
-dWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSA8bGludXgvaXJxX3dvcmsuaD4NCiAjaW5j
-bHVkZSA8bGludXgvcG9zaXgtdGltZXJzLmg+DQpAQCAtMjY4LDcgKzI2OSw4IEBAIHN0YXRpYyB2
-b2lkIHRpY2tfbm9oel9mdWxsX2tpY2sodm9pZCkNCiAgKi8NCiB2b2lkIHRpY2tfbm9oel9mdWxs
-X2tpY2tfY3B1KGludCBjcHUpDQogew0KLQlpZiAoIXRpY2tfbm9oel9mdWxsX2NwdShjcHUpKQ0K
-KwlzbXBfcm1iKCk7DQorCWlmICghdGlja19ub2h6X2Z1bGxfY3B1KGNwdSkgfHwgdGFza19pc29s
-YXRpb25fb25fY3B1KGNwdSkpDQogCQlyZXR1cm47DQogDQogCWlycV93b3JrX3F1ZXVlX29uKCZw
-ZXJfY3B1KG5vaHpfZnVsbF9raWNrX3dvcmssIGNwdSksIGNwdSk7DQotLSANCjIuMjYuMg0KDQo=
+This fixes some coding style issues of multiline comments to
+correct a few checkpatch.pl warnings.
+
+Signed-off-by: Rahul Gottipati <rahul.blr97@gmail.com>
+---
+
+Changes in v3:
+	Made changes to keep first line blank in multiline comments.
+Changes in v2:
+	Distributed changes across 2 patches instead of the previous 1.
+
+ .../staging/media/atomisp/pci/atomisp_ioctl.c | 26 ++++++++++++-------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+index 4fc4bdd85ce0..3d609753e0af 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+@@ -1275,13 +1275,15 @@ static int atomisp_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+ 		}
+ 	}
+ 
+-	/* Workaround: Due to the design of HALv3,
++	/*
++	 * Workaround: Due to the design of HALv3,
+ 	 * sometimes in ZSL or SDV mode HAL needs to
+ 	 * capture multiple images within one streaming cycle.
+ 	 * But the capture number cannot be determined by HAL.
+ 	 * So HAL only sets the capture number to be 1 and queue multiple
+ 	 * buffers. Atomisp driver needs to check this case and re-trigger
+-	 * CSS to do capture when new buffer is queued. */
++	 * CSS to do capture when new buffer is queued.
++	 */
+ 	if (asd->continuous_mode->val &&
+ 	    atomisp_subdev_source_pad(vdev)
+ 	    == ATOMISP_SUBDEV_PAD_SOURCE_CAPTURE &&
+@@ -1806,7 +1808,7 @@ static int atomisp_streamon(struct file *file, void *fh,
+ 		/*
+ 		 * set freq to max when streaming count > 1 which indicate
+ 		 * dual camera would run
+-		*/
++		 */
+ 		if (atomisp_streaming_count(isp) > 1) {
+ 			if (atomisp_freq_scaling(isp,
+ 						 ATOMISP_DFS_MODE_MAX, false) < 0)
+@@ -2437,8 +2439,10 @@ static int atomisp_g_ext_ctrls(struct file *file, void *fh,
+ 	struct v4l2_control ctrl;
+ 	int i, ret = 0;
+ 
+-	/* input_lock is not need for the Camera related IOCTLs
+-	 * The input_lock downgrade the FPS of 3A*/
++	/*
++	 * input_lock is not need for the Camera related IOCTLs
++	 * The input_lock downgrade the FPS of 3A
++	 */
+ 	ret = atomisp_camera_g_ext_ctrls(file, fh, c);
+ 	if (ret != -EINVAL)
+ 		return ret;
+@@ -2520,8 +2524,10 @@ static int atomisp_camera_s_ext_ctrls(struct file *file, void *fh,
+ 				ret =
+ 				    v4l2_s_ctrl(NULL, isp->flash->ctrl_handler,
+ 						&ctrl);
+-				/* When flash mode is changed we need to reset
+-				 * flash state */
++				/*
++				 * When flash mode is changed we need to reset
++				 * flash state
++				 */
+ 				if (ctrl.id == V4L2_CID_FLASH_MODE) {
+ 					asd->params.flash_state =
+ 					    ATOMISP_FLASH_IDLE;
+@@ -2559,8 +2565,10 @@ static int atomisp_s_ext_ctrls(struct file *file, void *fh,
+ 	struct v4l2_control ctrl;
+ 	int i, ret = 0;
+ 
+-	/* input_lock is not need for the Camera related IOCTLs
+-	 * The input_lock downgrade the FPS of 3A*/
++	/*
++	 * input_lock is not need for the Camera related IOCTLs
++	 * The input_lock downgrade the FPS of 3A
++	 */
+ 	ret = atomisp_camera_s_ext_ctrls(file, fh, c);
+ 	if (ret != -EINVAL)
+ 		return ret;
+-- 
+2.25.1
+
