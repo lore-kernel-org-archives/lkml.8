@@ -2,171 +2,169 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A66C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 129B4206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF3A2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J8nGwE8Z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tMUtattn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZCpyLTN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731665AbgGVWAc (ORCPT
+        id S1732989AbgGVWBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729684AbgGVWAa (ORCPT
+        Wed, 22 Jul 2020 18:01:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52416 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730258AbgGVWBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:00:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D88C0619E2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:00:29 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f16so2096181pjt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N8+S2bs/z4ong2YrfE5GwRztsvmrOV1x6iJptONruQ0=;
-        b=J8nGwE8Z6AcRTaG73HoFvoUiIYSNEt7re2zANYCmw5IQOU7tN6t8rgdNm/mCE7mulD
-         2DqGU0X4O5Fxqm6nc1MusIKF/IPRHB1DME6QXlO0DxV6HdW+kjuX7WZ8rTD28AR1YBDb
-         XwFB/CcyJ65OruUfOL8Dv8PHJcs54lVFMKPH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N8+S2bs/z4ong2YrfE5GwRztsvmrOV1x6iJptONruQ0=;
-        b=LTmqeKT+rw3P+k27OPl0PqnpbqAONTorIgamk/3yJcvE3IGyskalx+nkCMRUP55X3D
-         CwZZFbgTR8qyRIeqadrZEaeHV+JU1Pf1AQg+Vqkl9zm42kC+vma/IC9H+yinLRGagJtF
-         hQJyymM3xVh0aS0fKy9eZcvkEq8Ol6PKzozFD/Rb1ybjy48F3HtFA6PJQQ+5tfAzWJy+
-         p4f1GfTzn72zb704Ce6vGv5q0+9SVAY7KV6xTxx8m/2kcyPox9G954MTlNzhWVdVNE5O
-         TfD80LS7UzrZ3+KOLt/wynAZ51YGZuHoj4zHKPBDQaLha8A2flEK0ypkniCVdcif+dIW
-         sing==
-X-Gm-Message-State: AOAM532PEV+p3XBkczBXn3pUbNZrifzwMxWibJP6kJ6xjUkf547c7cG3
-        pT5SDUpgoPyEpikZXQhNVpXlZA==
-X-Google-Smtp-Source: ABdhPJy2c6o/MRrkKFm8aPWmkth//QhJMrLmzY21twfgd+iLnkoZPn9A4WSB+3YAdPMnaGK6BeC/mQ==
-X-Received: by 2002:a17:90b:f16:: with SMTP id br22mr1417424pjb.170.1595455228985;
-        Wed, 22 Jul 2020 15:00:28 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id kx3sm641235pjb.32.2020.07.22.15.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 15:00:28 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     swboyd@chromium.org, msavaliy@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] i2c: i2c-qcom-geni: Fix DMA transfer race
-Date:   Wed, 22 Jul 2020 15:00:21 -0700
-Message-Id: <20200722145948.v2.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        Wed, 22 Jul 2020 18:01:12 -0400
+Date:   Wed, 22 Jul 2020 22:01:09 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455270;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8ZqBD0H1LWlJxsQ61ALlfHIsDMsog0tR1YbzLAy24MU=;
+        b=tMUtattnLiy/f81y1b9WlqyqgmeJCvL+wuy/O2YPg3jOSStlP6SzqdNXSGMqgPu3ik1jhI
+        34k/04qha7opJcq0LWQHZAz9HmjzCHC39BGJnZ9UThwXzEODvaqWSDwjowkn2Kp3y+3L/M
+        tprMQFhiXKlom/VI543UznhKGDLKm48yh/TXRHoQ/9wkONZIhPVHkK2gVNStexkEId+qEK
+        i+zrNj6/JSr+SCMDoEojhSYC6vrRcDmKRwcupTPbI3CU4PuLsmuPI0efYHSF0RE6up1U+8
+        LGU5JJrJjmNMXlzm/TDy+mWuDr/94vcn3z+t16naQ53JqlkBu84txBGpPJ1znw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455270;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8ZqBD0H1LWlJxsQ61ALlfHIsDMsog0tR1YbzLAy24MU=;
+        b=ZCpyLTN2StsvsyvGJKpOHRg8gPsy1ExlMOWZnldTaXWI1YGAepurM6UpN+JoJQoITe/2iF
+        5Lq4Uz/Wq3g7RJBw==
+From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/dumpstack: Add log_lvl to show_iret_regs()
+Cc:     Dmitry Safonov <dima@arista.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200629144847.492794-2-dima@arista.com>
+References: <20200629144847.492794-2-dima@arista.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159545526999.4006.11438373366826140681.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I have KASAN enabled on my kernel and I start stressing the
-touchscreen my system tends to hang.  The touchscreen is one of the
-only things that does a lot of big i2c transfers and ends up hitting
-the DMA paths in the geni i2c driver.  It appears that KASAN adds
-enough delay in my system to tickle a race condition in the DMA setup
-code.
+The following commit has been merged into the x86/core branch of tip:
 
-When the system hangs, I found that it was running the geni_i2c_irq()
-over and over again.  It had these:
+Commit-ID:     fd07f802a70935fbbfb9cc2d11e1d8ac95f28e44
+Gitweb:        https://git.kernel.org/tip/fd07f802a70935fbbfb9cc2d11e1d8ac95f28e44
+Author:        Dmitry Safonov <dima@arista.com>
+AuthorDate:    Mon, 29 Jun 2020 15:48:45 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 22 Jul 2020 23:56:53 +02:00
 
-m_stat   = 0x04000080
-rx_st    = 0x30000011
-dm_tx_st = 0x00000000
-dm_rx_st = 0x00000000
-dma      = 0x00000001
+x86/dumpstack: Add log_lvl to show_iret_regs()
 
-Notably we're in DMA mode but are getting M_RX_IRQ_EN and
-M_RX_FIFO_WATERMARK_EN over and over again.
+show_trace_log_lvl() provides x86 platform-specific way to unwind
+backtrace with a given log level. Unfortunately, registers dump(s) are
+not printed with the same log level - instead, KERN_DEFAULT is always
+used.
 
-Putting some traces in geni_i2c_rx_one_msg() showed that when we
-failed we were getting to the start of geni_i2c_rx_one_msg() but were
-never executing geni_se_rx_dma_prep().
+Arista's switches uses quite common setup with rsyslog, where only
+urgent messages goes to console (console_log_level=KERN_ERR), everything
+else goes into /var/log/ as the console baud-rate often is indecently
+slow (9600 bps).
 
-I believe that the problem here is that we are starting the geni
-command before we run geni_se_rx_dma_prep().  If a transfer makes it
-far enough before we do that then we get into the state I have
-observed.  Let's change the order, which seems to work fine.
+Backtrace dumps without registers printed have proven to be as useful as
+morning standups. Furthermore, in order to introduce KERN_UNSUPPRESSED
+(which I believe is still the most elegant way to fix raciness of sysrq[1])
+the log level should be passed down the stack to register dumping
+functions. Besides, there is a potential use-case for printing traces
+with KERN_DEBUG level [2] (where registers dump shouldn't appear with
+higher log level).
 
-Although problems were seen on the RX path, code inspection suggests
-that the TX should be changed too.  Change it as well.
+Add log_lvl parameter to show_iret_regs() as a preparation to add it
+to __show_regs() and show_regs_if_on_stack().
 
-Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C controller")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/
+[2]: https://lore.kernel.org/linux-doc/20190724170249.9644-1-dima@arista.com/
+
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Petr Mladek <pmladek@suse.com>
+Link: https://lkml.kernel.org/r/20200629144847.492794-2-dima@arista.com
+
 ---
-Even though this patch is slightly different than v1 I have kept tags.
-Hopefully this is OK.
+ arch/x86/include/asm/kdebug.h | 2 +-
+ arch/x86/kernel/dumpstack.c   | 8 ++++----
+ arch/x86/kernel/process_64.c  | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Changes in v2:
-- Fix both TX and RX.
-- Only move the setting up of the command, not the set of the length.
-
- drivers/i2c/busses/i2c-qcom-geni.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 18d1e4fd4cf3..7f130829bf01 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -367,7 +367,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		geni_se_select_mode(se, GENI_SE_FIFO);
+diff --git a/arch/x86/include/asm/kdebug.h b/arch/x86/include/asm/kdebug.h
+index 247ab14..da024bb 100644
+--- a/arch/x86/include/asm/kdebug.h
++++ b/arch/x86/include/asm/kdebug.h
+@@ -37,7 +37,7 @@ void die_addr(const char *str, struct pt_regs *regs, long err, long gp_addr);
+ extern int __must_check __die(const char *, struct pt_regs *, long);
+ extern void show_stack_regs(struct pt_regs *regs);
+ extern void __show_regs(struct pt_regs *regs, enum show_regs_mode);
+-extern void show_iret_regs(struct pt_regs *regs);
++extern void show_iret_regs(struct pt_regs *regs, const char *log_lvl);
+ extern unsigned long oops_begin(void);
+ extern void oops_end(unsigned long, struct pt_regs *, int signr);
  
- 	writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
--	geni_se_setup_m_cmd(se, I2C_READ, m_param);
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index b037cfa..c36d629 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -126,10 +126,10 @@ void show_ip(struct pt_regs *regs, const char *loglvl)
+ 	show_opcodes(regs, loglvl);
+ }
  
- 	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
- 		geni_se_select_mode(se, GENI_SE_FIFO);
-@@ -375,6 +374,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		dma_buf = NULL;
+-void show_iret_regs(struct pt_regs *regs)
++void show_iret_regs(struct pt_regs *regs, const char *log_lvl)
+ {
+-	show_ip(regs, KERN_DEFAULT);
+-	printk(KERN_DEFAULT "RSP: %04x:%016lx EFLAGS: %08lx", (int)regs->ss,
++	show_ip(regs, log_lvl);
++	printk("%sRSP: %04x:%016lx EFLAGS: %08lx", log_lvl, (int)regs->ss,
+ 		regs->sp, regs->flags);
+ }
+ 
+@@ -155,7 +155,7 @@ static void show_regs_if_on_stack(struct stack_info *info, struct pt_regs *regs,
+ 		 * full pt_regs might not have been saved yet.  In that case
+ 		 * just print the iret frame.
+ 		 */
+-		show_iret_regs(regs);
++		show_iret_regs(regs, KERN_DEFAULT);
  	}
+ }
  
-+	geni_se_setup_m_cmd(se, I2C_READ, m_param);
-+
- 	time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
- 	if (!time_left)
- 		geni_i2c_abort_xfer(gi2c);
-@@ -408,7 +409,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		geni_se_select_mode(se, GENI_SE_FIFO);
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 9a97415..09bcb29 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -69,7 +69,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode)
+ 	unsigned int fsindex, gsindex;
+ 	unsigned int ds, es;
  
- 	writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
--	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+-	show_iret_regs(regs);
++	show_iret_regs(regs, KERN_DEFAULT);
  
- 	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
- 		geni_se_select_mode(se, GENI_SE_FIFO);
-@@ -416,6 +416,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		dma_buf = NULL;
- 	}
- 
-+	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
-+
- 	if (!dma_buf) /* Get FIFO IRQ */
- 		writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
- 
--- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+ 	if (regs->orig_ax != -1)
+ 		pr_cont(" ORIG_RAX: %016lx\n", regs->orig_ax);
