@@ -2,219 +2,341 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01632C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEFE207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FE0206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EGqj1zBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgGVFsl (ORCPT
+        id S1728041AbgGVFpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:48:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3598 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726696AbgGVFsk (ORCPT
+        Wed, 22 Jul 2020 01:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgGVFpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:48:40 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M5WOY3004944;
-        Wed, 22 Jul 2020 01:48:28 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vve1np-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 01:48:28 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M5ZF1K012186;
-        Wed, 22 Jul 2020 01:48:28 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vve1ne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 01:48:28 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M5k5Wb022676;
-        Wed, 22 Jul 2020 05:48:27 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04dal.us.ibm.com with ESMTP id 32d5dq7g4r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 05:48:27 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M5mP5H48496980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 05:48:25 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E41B124054;
-        Wed, 22 Jul 2020 05:48:25 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9A28124052;
-        Wed, 22 Jul 2020 05:48:24 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.82.72])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jul 2020 05:48:24 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 101B02E3C48; Wed, 22 Jul 2020 11:18:20 +0530 (IST)
-Date:   Wed, 22 Jul 2020 11:18:19 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <michaele@au1.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Nick Piggin <npiggin@au1.ibm.com>,
-        Oliver OHalloran <oliveroh@au1.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@linux.ibm.com>,
-        Anton Blanchard <anton@au1.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v2 02/10] powerpc/smp: Merge Power9 topology with Power
- topology
-Message-ID: <20200722054819.GB31038@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
- <20200721113814.32284-3-srikar@linux.vnet.ibm.com>
+        Wed, 22 Jul 2020 01:45:18 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D575C0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:45:18 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z3so577345pfn.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HjveECGjE3OoKFqTWNIsemnU4Ra081f5febv5hO4Ml8=;
+        b=EGqj1zBx1inUAM3XI9KoZrVm+Npz0rN892Sx/ndQFEAMwXFJXlb7tKvSIwdL9jBdSy
+         yR3D3wtxizHeqV6S4pTMowuDA8It3LU25FqQ2WnpC0CFjL21KLbYg+9eIRIAQGX8houw
+         JuzbOsO8npSZzv66JkpaziXuq3KbYKhu/uNmUbrwqkc//bYcUw/VeHmQ3yvUQQYlMIWY
+         MG/4Prb43I3DEtnv24zrljKT1ZBHqRs5+aWlcwTbp4F3z0hNG3ckYBUdck+oam3eUJsV
+         6qsM2nQZCOp9jOdZ3LTmZrnl1/NjE6PDf8fT1DpPRIX49pxAECN5uD4s+PXl7zyN0Bp+
+         /1cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HjveECGjE3OoKFqTWNIsemnU4Ra081f5febv5hO4Ml8=;
+        b=nuV26HFsaETRjSulyxDhYkByf2Wf6UdwSeo2fbGqFow9ZuugBYZhB73DJs2IdpYMqc
+         JrIGc7dHYMGoTXTbRcb8BYf4WaoYboGh3wgPpHnoLj1Xv0yBkj5uEk0x96ADHlfOYQJI
+         imbxAhhjaKBziIUAiNQ8pNuvGpUHHOIk1VVa/qBMtjKi9AkB2oXtbPYK1CbGijcAK2le
+         YHrxsJrIetzw+u8t3z42aix9RNLhgeNUuyzw7uGPT/1bPS035w8yzdtC04EMc9PkXkAh
+         LzJgPmyOsFvENlm/Lp6lJPQH3h1Dc6zyRCrL1Xb6UkmuRMDS1/YkGSqEPIO31fXr3uj3
+         Xv4Q==
+X-Gm-Message-State: AOAM530BFgKbzWHgx5gGjxH5x9I506F3IRQhDC46QDs960w7kifrkwEo
+        46zNb7ngO659ekhl9/Vu3ulNCQ==
+X-Google-Smtp-Source: ABdhPJwPzhH3TEWEpcvxEX8aRBA3QMLWIri07NH/ccuSeJUtj3rZsXy4xWDOjyQTuRScl0pXwyQqIg==
+X-Received: by 2002:a63:6e0e:: with SMTP id j14mr24503833pgc.384.1595396717768;
+        Tue, 21 Jul 2020 22:45:17 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
+        by smtp.gmail.com with ESMTPSA id mv6sm4869305pjb.57.2020.07.21.22.45.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 22:45:17 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 22:45:14 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jian Cai <jiancai@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        stable <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v3] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang
+ cross compilation
+Message-ID: <20200722054514.q5fg5dbduq5skwlg@google.com>
+References: <20200721173125.1273884-1-maskray@google.com>
+ <CAK7LNARjOjr2wSD_iM6yNSZpSGEWrkZZuWKCgCqOrYcA29+LBA@mail.gmail.com>
+ <20200722001424.qor3up6357jjsbia@google.com>
+ <CAK7LNAQtqdTi49cYL0zVWdqPV2QEsgN+2AACALumanu9L=OuGg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200721113814.32284-3-srikar@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_02:2020-07-21,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007220036
+In-Reply-To: <CAK7LNAQtqdTi49cYL0zVWdqPV2QEsgN+2AACALumanu9L=OuGg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 05:08:06PM +0530, Srikar Dronamraju wrote:
-> A new sched_domain_topology_level was added just for Power9. However the
-> same can be achieved by merging powerpc_topology with power9_topology
-> and makes the code more simpler especially when adding a new sched
-> domain.
-> 
-> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Cc: Michael Ellerman <michaele@au1.ibm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Nick Piggin <npiggin@au1.ibm.com>
-> Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Michael Neuling <mikey@linux.ibm.com>
-> Cc: Anton Blanchard <anton@au1.ibm.com>
-> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-> Cc: Jordan Niethe <jniethe5@gmail.com>
-> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> ---
-> Changelog v1 -> v2:
-> powerpc/smp: Merge Power9 topology with Power topology
-> 	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
-> 	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
-> 
->  arch/powerpc/kernel/smp.c | 33 ++++++++++-----------------------
->  1 file changed, 10 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 680c0edcc59d..0e0b118d9b6e 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -1315,7 +1315,7 @@ int setup_profiling_timer(unsigned int multiplier)
->  }
-> 
->  #ifdef CONFIG_SCHED_SMT
-> -/* cpumask of CPUs with asymetric SMT dependancy */
-> +/* cpumask of CPUs with asymmetric SMT dependency */
->  static int powerpc_smt_flags(void)
->  {
->  	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
-> @@ -1328,14 +1328,6 @@ static int powerpc_smt_flags(void)
->  }
->  #endif
-> 
-> -static struct sched_domain_topology_level powerpc_topology[] = {
-> -#ifdef CONFIG_SCHED_SMT
-> -	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
-> -#endif
-> -	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
-> -	{ NULL, },
-> -};
-> -
->  /*
->   * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
->   * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-> @@ -1353,7 +1345,13 @@ static int powerpc_shared_cache_flags(void)
->   */
->  static const struct cpumask *shared_cache_mask(int cpu)
->  {
-> -	return cpu_l2_cache_mask(cpu);
-> +	if (shared_caches)
-> +		return cpu_l2_cache_mask(cpu);
-> +
-> +	if (has_big_cores)
-> +		return cpu_smallcore_mask(cpu);
-> +
-> +	return per_cpu(cpu_sibling_map, cpu);
->  }
+On 2020-07-22, Masahiro Yamada wrote:
+>On Wed, Jul 22, 2020 at 9:14 AM Fangrui Song <maskray@google.com> wrote:
+>>
+>> On 2020-07-22, Masahiro Yamada wrote:
+>> >On Wed, Jul 22, 2020 at 2:31 AM 'Fangrui Song' via Clang Built Linux
+>> ><clang-built-linux@googlegroups.com> wrote:
+>> >>
+>> >> When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
+>> >> $(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
+>> >> GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
+>> >> /usr/bin/ and Clang as of 11 will search for both
+>> >> $(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+>> >>
+>> >> GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
+>> >> $(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
+>> >> $(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+>> >>
+>> >> To better model how GCC's -B/--prefix takes in effect in practice, newer
+>> >> Clang (since
+>> >> https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
+>> >> only searches for $(prefix)$needle. Currently it will find /usr/bin/as
+>> >> instead of /usr/bin/aarch64-linux-gnu-as.
+>> >>
+>> >> Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+>> >> (/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
+>> >> appropriate cross compiling GNU as (when -no-integrated-as is in
+>> >> effect).
+>> >>
+>> >> Cc: stable@vger.kernel.org
+>> >> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+>> >> Signed-off-by: Fangrui Song <maskray@google.com>
+>> >> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>> >> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+>> >> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+>> >> Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+>> >> ---
+>> >> Changes in v2:
+>> >> * Updated description to add tags and the llvm-project commit link.
+>> >> * Fixed a typo.
+>> >>
+>> >> Changes in v3:
+>> >> * Add Cc: stable@vger.kernel.org
+>> >> ---
+>> >>  Makefile | 2 +-
+>> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/Makefile b/Makefile
+>> >> index 0b5f8538bde5..3ac83e375b61 100644
+>> >> --- a/Makefile
+>> >> +++ b/Makefile
+>> >> @@ -567,7 +567,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+>> >>  ifneq ($(CROSS_COMPILE),)
+>> >>  CLANG_FLAGS    += --target=$(notdir $(CROSS_COMPILE:%-=%))
+>> >>  GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+>> >> -CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)
+>> >> +CLANG_FLAGS    += --prefix=$(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)
+>> >
+>> >
+>> >
+>> >CROSS_COMPILE may contain the directory path
+>> >to the cross toolchains.
+>> >
+>> >
+>> >For example, I use aarch64-linux-gnu-*
+>> >installed in
+>> >/home/masahiro/tools/aarch64-linaro-7.5/bin
+>> >
+>> >
+>> >
+>> >Basically, there are two ways to use it.
+>> >
+>> >[1]
+>> >PATH=$PATH:/home/masahiro/tools/aarch64-linaro-7.5/bin
+>> >CROSS_COMPILE=aarch64-linux-gnu-
+>> >
+>> >
+>> >[2]
+>> >Without setting PATH,
+>> >CROSS_COMPILE=~/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+>> >
+>> >
+>> >
+>> >I usually do [2] (and so does intel's 0day bot).
+>> >
+>> >
+>> >
+>> >This patch works for the use-case [1]
+>> >but if I do [2], --prefix is set to a strange path:
+>> >
+>> >--prefix=/home/masahiro/tools/aarch64-linaro-7.5/bin//home/masahiro/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-
+>>
+>> Thanks. I did not know the use-case [2].
+>> This explains why there is a `$(notdir ...)` in
+>> `CLANG_FLAGS     += --target=$(notdir $(CROSS_COMPILE:%-=%))`
+>>
+>>
+>> >
+>> >
+>> >Interestingly, the build is still successful.
+>> >Presumably Clang searches for more paths
+>> >when $(prefix)$needle is not found ?
+>>
+>> The priority order is:
+>>
+>> -B(--prefix), COMPILER_PATH, detected gcc-cross paths
+>>
+>> (In GCC, -B paths get prepended to the COMPILER_PATH list. Clang<=11 incorrectly
+>> adds -B to the COMPILER_PATH list. I have fixed it for 12.0.0)
+>>
+>> If -B fails, the detected gcc-cross paths may still be able to find
+>> /usr/bin/aarch64-linux-gnu-
+>>
+>> For example, on my machine (a variant of Debian testing), Clang finds
+>> $(realpath
+>> /usr/lib/gcc-cross/aarch64-linux-gnu/9/../../../../aarch64-linux-gnu/bin/as),
+>> which is /usr/bin/aarch64-linux-gnu-as
+>>
+>> >
+>> >I applied your patch and added -v option
+>> >to see which assembler was internally invoked:
+>> >
+>> > "/home/masahiro/tools/aarch64-linaro-7.5/lib/gcc/aarch64-linux-gnu/7.5.0/../../../../aarch64-linux-gnu/bin/as"
+>> >-EL -I ./arch/arm64/include -I ./arch/arm64/include/generated -I
+>> >./include -I ./arch/arm64/include/uapi -I
+>> >./arch/arm64/include/generated/uapi -I ./include/uapi -I
+>> >./include/generated/uapi -o kernel/smp.o /tmp/smp-2ec2c7.s
+>> >
+>> >
+>> >Ok, it looks like Clang found an alternative path
+>> >to the correct 'as'.
+>> >
+>> >
+>> >
+>> >
+>> >But, to keep the original behavior for both [1] and [2],
+>> >how about this?
+>> >
+>> >CLANG_FLAGS += --prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
+>> >
+>> >
+>> >
+>> >Then, I can get this:
+>> >
+>> > "/home/masahiro/tools/aarch64-linaro-7.5/bin/aarch64-linux-gnu-as"
+>> >-EL -I ./arch/arm64/include -I ./arch/arm64/include/generated -I
+>> >./include -I ./arch/arm64/include/uapi -I
+>> >./arch/arm64/include/generated/uapi -I ./include/uapi -I
+>> >./include/generated/uapi -o kernel/smp.o /tmp/smp-16d76f.s
+>>
+>> This looks good.
+>>
+>> Agreed that `--prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))` should work for both [1] and [2].
+>>
+>> Shall I send a v4? Or you are kind enough that you'll just add your Signed-off-by: tag
+>> and fix that for me? :)
+>>
+>
+>I fixed it up and applied to linux-kbuild/fixes.
+>Thanks.
 
+Thanks!
 
-It might be helpful to enumerate the consequences of this change:
+The description 'Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE)'
+should probably be fixed to say '$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))'
 
-With this patch, on POWER7 and POWER8
+>While I am here, could you teach me a bit more?
+>
+>
+>The top Makefile sets the following option as well:
+>
+>CLANG_GCC_TC    := --gcc-toolchain=$(GCC_TOOLCHAIN)
+>
+>
+>
+>I checked the manual:
+>https://clang.llvm.org/docs/ClangCommandLineReference.html
+>
+>
+>  -B<dir>, --prefix <arg>, --prefix=<arg>
+>  Add <dir> to search path for binaries and object files used implicitly
+>
+>  --gcc-toolchain=<arg>, -gcc-toolchain <arg>
+>  Use the gcc toolchain at the given directory
+>
+>
+>
+>
+>It is not clear to me
+>how they work differently when
+>clang searches for toolchains.
+>
+>
+>
+>
+>If I delete --gcc-toolchain from the top Makefile,
+>clang fails to link standalone programs
+>because it wrongly invokes /usr/bin/ld
+>instead of aarch64-linux-gnu-ld.
+>
+>
+>Does Clang search for gnu assembler
+>based on --prefix option?
+>
+>And, searches for a linker
+>based on --gcc-toolchain ?
+>
+>
+>
+>-- 
+>Best Regards
+>Masahiro Yamada
 
-   SMT and CACHE domains' cpumasks will both be
-   per_cpu(cpu_sibling_map, cpu).
+While GCC seems to encourage distributions to apply various environment
+settings, Clang encourages downstream users to contribute their
+configurations to the upstream clangDriver library... So, clang works
+seemingly on many operating systems and many distributions without much
+additional customization, but the host/target environment detection code
+is very messy.
 
-   On POWER7 SMT level flags has the following
-   (SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES | SD_ASYM_PACKING)
+Freestanding builds (if you use integrated assembler/LLD) do not need --gcc-toolchain.
 
-   On POWER8 SMT level flags has the following
-   (SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES).
+-fhosted builds need --gcc-toolchain to reuse libstdc++ include paths
+and runtime libraries (crt1.o libgcc.a libgcc_s.so.1 etc).
+I think on most Linux distributions, with distribution shipped GCC
+packages, the only meaningful value is --gcc-toolchain=/usr
 
-   On both POWER7 and POWER8, CACHE level flags only has
-   SD_SHARE_PKG_RESOURCES
+Clang will find 'lib' or 'lib64' under --gcc-toolchain= (e.g. /usr/lib),
+then locate common cross-compiling GCC installations (e.g. /usr/lib +
+gcc-cross/aarch-linux-gnu (Debian uses gcc-cross/), or just /usr/lib +
+gcc/aarch-linux-gnu). You can see that with an incorrect --gcc-toolchain=/ (or some other arbitrary path):
+(https://github.com/llvm/llvm-project/blob/master/clang/lib/Driver/ToolChains/Gnu.cpp#L1903 )
 
-   Thus, on both POWER7 and POWER8, since the SMT and CACHE cpumasks
-   are the same and since CACHE has no additional flags which SMT does
-   not, the parent domain CACHE will be degenerated.
+* `clang -v` does not print `Found candidate GCC installation: `
+* There is no libstdc++ search path in `#include <...> search starts here:` for a C++ compile
+* In the linking stage, ld reports a number of issues like 'cannot find crt1.o'
 
-   Hence we will have SMT --> DIE --> NUMA as before without the
-   patch. So the patch introduces no behavioural change. Only change
-   is an additional degeneration of the CACHE domain.
+When --gcc-toolchain is not specified, in many cases Clang can guess the
+correct value (usually /usr). So clang++ --target=aarch64-linux-gnu works just fine.
 
-On POWER9 : Baremetal.
-   SMT level cpumask = per_cpu(cpu_sibling_map, cpu)
+(As you can see from the code, the code --gcc-toolchain= is tangled with
+environment detection, which is ugly: specifying a wrong --gcc-toolchain= can remove a lot of file stats...
+You can find that the number of syscalls changes with different --gcc-toolchain: `strace -fe file clang`)
 
-   Since the caches are shared for a pair of two cores,
-   CACHE level cpumask = cpu_l2_cache_mask(cpu)
-
-   Thus, we will have SMT --> CACHE --> DIE --> NUMA as before.  No
-   behavioural change.
-
-On POWER9 : LPAR
-   SMT level cpumask = cpu_smallcore_mask(cpu).
-
-   Since the caches are shared,
-   CACHE level cpumask = cpu_l2_cache_mask(cpu).
-
-   Thus, we will have SMT --> CACHE --> DIE --> NUMA as before.  Again
-   no change in behaviour.
-
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
---
-Thanks and Regards
-gautham.
+External programs like 'as' and 'ld' use the bin/ directory somewhere
+relative to the GCC installation directory (they are appended to getProgramPaths).
+clang::driver::Driver::GetProgramPath locates these programs.
+https://github.com/llvm/llvm-project/blob/master/clang/lib/Driver/ToolChains/Gnu.cpp#L1903
+As you see from the code, -B and COMPILER_PATH take precedence over
+getProgramPaths.
+You can print the 'programs' path with `clang --print-search-dirs [--target=...] [-B...] [--gcc-toolchain=...]`
+Latest clang will be closer to GCC.
