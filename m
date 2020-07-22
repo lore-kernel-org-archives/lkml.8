@@ -2,361 +2,148 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C121C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AAAC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10DEE20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1027A20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="j3VjI31l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fYByS9hO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YOnvBuRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgGVVzh (ORCPT
+        id S1733003AbgGVVzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:55:37 -0400
-Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:50529
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726685AbgGVVzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:55:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h46WKeqa+QybwxJKoG6DVZBB4B2HTlo/2TuVCmhZ4/cKdLVAu4jGRFS0kIbdQSMpbKzn0ywZRBwd6I4JvTV5Pth5kZBHL+hSk1X6VbLkW+nw1/hN9b64IFadfXIwulhRShQGcRBtt32Poy6Noe21DjKfpiGYXne4tiJ6i4HE1C+GoZESUUy7k+SfJbYgvMvdKAmKprNIOYIUaUENu35JKr70LEH3x/bWH9IFx/7z27A+7v1m8zm9q1St0EQpPt4IM584PHrZQFHlBt3sHvA1ACqWHkzxxY+YkstLi41/WIJFlBWV7gPRtcGWRBSHpPH+WNyIH5qVSzQiKXKhbUifJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BlGZjebzE57gHn+5sKfurMuK0R7344ncjIYBc5Vk4Ok=;
- b=jb+CHsB6GxvS8tYdU8GzK5GjCVMmG5K7aqL+ruEAKiGRdAf5N5QRTclU4eaoOe7YsCogQpVXwpzqL4bZgZLOIwhFpEWRsALuNMYpjqLn+7YYdiJ7J2T/CPVGh/gAhDjfAnDxG/VsVCuIIfUfSWSZHvJR4HKPM87RGzMEIuX+1mnYKsat2Bp3/Bw0BiWsLWOTMifbTJx2rb47sFs9QZGwBYrzw7PzOD331qpmpCtkIdT4edp4cwicfWbX1s6NZhfxzmKwnkGzrxlBqnxHhzsI+XZbhduX5k+e6i51/ZIhH8NSPDRy0CdanfIOKRDzuAcQt+GSGwMplaRfPTYSMnnkLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BlGZjebzE57gHn+5sKfurMuK0R7344ncjIYBc5Vk4Ok=;
- b=j3VjI31lDX8r9KFH0giQHepHU5NI9fvtutYVmXpMW+XXPweLCmf3iNyfXX0wGhyaYTYdbYsHzVkbeCqdOCR8ZTXwnKVlGdQ5f0YenfENXw8ISOIMvQvbfhm8Baf0QJ9VGSZ1d5LqRsCC4532WFCy+SYl0kPEb4/pR7QpactO+GQ=
-Authentication-Results: jms.id.au; dkim=none (message not signed)
- header.d=none;jms.id.au; dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB4582.namprd12.prod.outlook.com (2603:10b6:208:26b::18)
- by MN2PR12MB3917.namprd12.prod.outlook.com (2603:10b6:208:166::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 22 Jul
- 2020 21:55:32 +0000
-Received: from MN2PR12MB4582.namprd12.prod.outlook.com
- ([fe80::7d2d:b00b:bac4:a66b]) by MN2PR12MB4582.namprd12.prod.outlook.com
- ([fe80::7d2d:b00b:bac4:a66b%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
- 21:55:32 +0000
-From:   Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-To:     joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, robh+dt@kernel.org
-Cc:     Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-Subject: [PATCH v2 1/1] ARM:dts:aspeed: Initial device tree for AMD EthanolX
-Date:   Wed, 22 Jul 2020 16:55:06 -0500
-Message-Id: <20200722215506.5984-1-supreeth.venkatesh@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0701CA0002.namprd07.prod.outlook.com
- (2603:10b6:803:28::12) To MN2PR12MB4582.namprd12.prod.outlook.com
- (2603:10b6:208:26b::18)
+        Wed, 22 Jul 2020 17:55:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbgGVVzi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:55:38 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3536FC0619DC;
+        Wed, 22 Jul 2020 14:55:38 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 21:55:35 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595454936;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W47gSk60h1O07w6cMt6J3jJDxvcjGHZE5w0sslJgfkY=;
+        b=fYByS9hOO2durPCidnloZMVzV7T8PkyI+LJQ1MkQ8UXYc1OCTDxCe3F7znvQ/gmP3bgM7a
+        zUrn7OyGNUjqygyqmyvUjSidRwN2IRFB1FqLHnBnejIgGNNv4NxW40ua40oA48tAB2RvWB
+        ZYOLKHXS4N3hN22YpPFmPmbPqxpQve1E3idMyfyD8vYO8BOJDQcNPuY05rgjTWMvkJJV9A
+        tek5jIc63HZ2JLs/1EqPC3nJ6mWUMNsO0rpM26l4nf2IS2U1W53x8Ar8MIwAl5nP5zvYoT
+        EOvDVYZFzb7EM/4NBKZCv3NNkbn3UXyckVelGGYkYGSCfYAtnjGHn7998zYiLg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595454936;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W47gSk60h1O07w6cMt6J3jJDxvcjGHZE5w0sslJgfkY=;
+        b=YOnvBuRX+ZUyFHUFNl2XxuQfnm9mkRcZFdIR5nJ4yUiNQW9WwPAsJnuBw4mSAv81jCaCEX
+        Qx9fJBaIepBYd8Bw==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/dumpstack: Dump user space code correctly again
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <87h7tz306w.fsf@nanos.tec.linutronix.de>
+References: <87h7tz306w.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from BMCDEV-02.amd.com (165.204.78.1) by SN4PR0701CA0002.namprd07.prod.outlook.com (2603:10b6:803:28::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Wed, 22 Jul 2020 21:55:30 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 67349b89-ce61-402c-a4e6-08d82e89f466
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3917:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3917A9BF810DF4D7C05DC3D696790@MN2PR12MB3917.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZsaBwO9tFu80ZHjB0xsXvCZXInGxl0nBTeQuWRdqQ1KL8cNcYlfF1sSo+4nBz7jtTCWtQQ6rU9ekH7H23cJ3t8/cq4vwVNYfq7pRlu7p/vbbjIrumwDpnABi8CTA07/YGT3JL6iHjaAik4N7GRhPF5s3VCuQiPIL9EDD9oKDPSCqI2vIcNOP/etny2Rdh+n4NnoP4+zWCGuOwAdoDJH2sb0PgmdiYJ0CTU3/alP/db1GfZSNpDrQHyUBApuenXYjZydt9AaK9KGowCbELMiMO8o9CFXgKwQYRIcCmeswYsbvSYLQvLe1fSzwa4RFkWUGSSmGgUy9IQXgksu9FOm5sw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4582.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(8676002)(478600001)(36756003)(186003)(66556008)(6486002)(7696005)(44832011)(66476007)(52116002)(83380400001)(66946007)(16526019)(6666004)(2616005)(316002)(26005)(956004)(8936002)(5660300002)(1076003)(4326008)(2906002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: /VrQ9RWC/f+pC+21P40CKTfnhMYrV2IFzJkKQrHnujhConufO2in+3MQ8S1P7CDxNbS1sAzMaW1GUQ0eA/sHiVKGZwoQp5hM7kkgFmqnizmDUpecm8sgjLPZwDxlM5xXnsJtfIxfM5JxacKisGYd/pShOe0eV1hX+86ygArFpCUUkMrF4X8vJhLZMFSNVyqNyNnxDBfj84BrUELfldXuthREGzJR/m44b+KPqT9eyLVV4QD5B+/nEUachmf+klHYc7f6W8iaC17Rt1uKwQuaZcxa0hcrG7o5oRAkhwuPQ1RtBaOt/r8dmN+Bjvd9/XJD1sOnYTyeJ7sGclk23AmpX6tUXA2HTJhfAPAVHshSzjppc6rb9IwI0zntGqeGWITj2sDG2PaTUWDsG4bCuOz+MTl5UNOufnHEHUmbuxW3MrnsUqH+Hl7n0txLgyNdHpditCZ9Rnr3bxaWWaz8Mu4TKFp96fWQfIbKKVEcLFpxVYU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67349b89-ce61-402c-a4e6-08d82e89f466
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4582.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 21:55:31.9894
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lRwILJdWd74pFCSnRnj2Giis/1tcq4/SjqvqnljNc1SozvSDAEmF3TlHownd3qNlIty+K3GunLcj/Ke+XbuqFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3917
+Message-ID: <159545493541.4006.6455328632471771109.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initial introduction of AMD EthanolX platform equipped with an
-Aspeed ast2500 BMC manufactured by AMD.
+The following commit has been merged into the x86/urgent branch of tip:
 
-AMD EthanolX platform is an AMD customer reference board with an
-Aspeed ast2500 BMC manufactured by AMD.
-This adds AMD EthanolX device tree file including the flash layout
-used by EthanolX BMC machines.
+Commit-ID:     d181d2da0141371bbc360eaea78719203e165e1c
+Gitweb:        https://git.kernel.org/tip/d181d2da0141371bbc360eaea78719203e165e1c
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 22 Jul 2020 10:39:54 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 22 Jul 2020 23:47:48 +02:00
 
-This also adds an entry of AMD EthanolX device tree file in Makefile.
+x86/dumpstack: Dump user space code correctly again
 
-Signed-off-by: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+H.J. reported that post 5.7 a segfault of a user space task does not longer
+dump the Code bytes when /proc/sys/debug/exception-trace is enabled. It
+prints 'Code: Bad RIP value.' instead.
+
+This was broken by a recent change which made probe_kernel_read() reject
+non-kernel addresses.
+
+Update show_opcodes() so it retrieves user space opcodes via
+copy_from_user_nmi().
+
+Fixes: 98a23609b103 ("maccess: always use strict semantics for probe_kernel_read")
+Reported-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87h7tz306w.fsf@nanos.tec.linutronix.de
+
 ---
-Changes since v1:
-* Addressed review comment regarding SPDX License Identifier
-* Added I2c0 and I2c1 which cater to AMD's APML Interface
----
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts | 221 ++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+ arch/x86/kernel/dumpstack.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6dfdf73e66b..55ed881d2ebc 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1281,6 +1281,7 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
- dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-ast2500-evb.dtb \
- 	aspeed-ast2600-evb.dtb \
-+	aspeed-bmc-amd-ethanolx.dtb \
- 	aspeed-bmc-arm-centriq2400-rep.dtb \
- 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
- 	aspeed-bmc-facebook-cmm.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
-new file mode 100644
-index 000000000000..3d67fa31a3ab
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2020 AMD Inc.
-+// Author: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-+/dts-v1/;
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index b037cfa..7401cc1 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -71,6 +71,22 @@ static void printk_stack_address(unsigned long address, int reliable,
+ 	printk("%s %s%pB\n", log_lvl, reliable ? "" : "? ", (void *)address);
+ }
+ 
++static int copy_code(struct pt_regs *regs, u8 *buf, unsigned long src,
++		     unsigned int nbytes)
++{
++	if (!user_mode(regs))
++		return copy_from_kernel_nofault(buf, (u8 *)src, nbytes);
 +
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
++	/*
++	 * Make sure userspace isn't trying to trick us into dumping kernel
++	 * memory by pointing the userspace instruction pointer at it.
++	 */
++	if (__chk_range_not_ok(src, nbytes, TASK_SIZE_MAX))
++		return -EINVAL;
 +
-+/ {
-+	model = "AMD EthanolX BMC";
-+	compatible = "amd,ethanolx-bmc", "aspeed,ast2500";
++	return copy_from_user_nmi(buf, (void __user *)src, nbytes);
++}
 +
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+	aliases {
-+		serial0 = &uart1;
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		fault {
-+			gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		identify {
-+			gpios = <&gpio ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>, <&adc 4>;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
-+		 <&syscon ASPEED_CLK_MAC1RCLK>;
-+	clock-names = "MACCLK", "RCLK";
-+};
-+
-+&uart1 {
-+	//Host Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart5 {
-+	//BMC Console
-+	status = "okay";
-+};
-+
-+&adc {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+		     &pinctrl_adc1_default
-+		     &pinctrl_adc2_default
-+		     &pinctrl_adc3_default
-+		     &pinctrl_adc4_default>;
-+};
-+
-+//APML for P0
-+&i2c0 {
-+	reg = <0x80 0x40>;
-+	status = "okay";
-+};
-+
-+//APML for P1
-+&i2c1 {
-+	reg = <0xc0 0x40>;
-+	status = "okay";
-+};
-+
-+// Thermal Sensors
-+&i2c7 {
-+	status = "okay";
-+
-+	lm75a@48 {
-+		compatible = "national,lm75a";
-+		reg = <0x48>;
-+	};
-+
-+	lm75a@49 {
-+		compatible = "national,lm75a";
-+		reg = <0x49>;
-+	};
-+
-+	lm75a@4a {
-+		compatible = "national,lm75a";
-+		reg = <0x4a>;
-+	};
-+
-+	lm75a@4b {
-+		compatible = "national,lm75a";
-+		reg = <0x4b>;
-+	};
-+
-+	lm75a@4c {
-+		compatible = "national,lm75a";
-+		reg = <0x4c>;
-+	};
-+
-+	lm75a@4d {
-+		compatible = "national,lm75a";
-+		reg = <0x4d>;
-+	};
-+
-+	lm75a@4e {
-+		compatible = "national,lm75a";
-+		reg = <0x4e>;
-+	};
-+
-+	lm75a@4f {
-+		compatible = "national,lm75a";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&kcs1 {
-+	status = "okay";
-+	kcs_addr = <0x60>;
-+};
-+
-+&kcs2 {
-+	status = "okay";
-+	kcs_addr = <0x62>;
-+};
-+
-+&kcs4 {
-+	status = "okay";
-+	kcs_addr = <0x97DE>;
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&lpc_ctrl {
-+	//Enable lpc clock
-+	status = "okay";
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default
-+	&pinctrl_pwm1_default
-+	&pinctrl_pwm2_default
-+	&pinctrl_pwm3_default
-+	&pinctrl_pwm4_default
-+	&pinctrl_pwm5_default
-+	&pinctrl_pwm6_default
-+	&pinctrl_pwm7_default>;
-+
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+
-+	fan@2 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+
-+	fan@3 {
-+		reg = <0x03>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
-+	};
-+
-+	fan@4 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
-+	};
-+
-+	fan@5 {
-+		reg = <0x05>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
-+	};
-+
-+	fan@6 {
-+		reg = <0x06>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
-+	};
-+
-+	fan@7 {
-+		reg = <0x07>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
-+	};
-+};
-+
-+
-+
--- 
-2.17.1
-
+ /*
+  * There are a couple of reasons for the 2/3rd prologue, courtesy of Linus:
+  *
+@@ -97,17 +113,8 @@ void show_opcodes(struct pt_regs *regs, const char *loglvl)
+ #define OPCODE_BUFSIZE (PROLOGUE_SIZE + 1 + EPILOGUE_SIZE)
+ 	u8 opcodes[OPCODE_BUFSIZE];
+ 	unsigned long prologue = regs->ip - PROLOGUE_SIZE;
+-	bool bad_ip;
+-
+-	/*
+-	 * Make sure userspace isn't trying to trick us into dumping kernel
+-	 * memory by pointing the userspace instruction pointer at it.
+-	 */
+-	bad_ip = user_mode(regs) &&
+-		__chk_range_not_ok(prologue, OPCODE_BUFSIZE, TASK_SIZE_MAX);
+ 
+-	if (bad_ip || copy_from_kernel_nofault(opcodes, (u8 *)prologue,
+-					OPCODE_BUFSIZE)) {
++	if (copy_code(regs, opcodes, prologue, sizeof(opcodes))) {
+ 		printk("%sCode: Bad RIP value.\n", loglvl);
+ 	} else {
+ 		printk("%sCode: %" __stringify(PROLOGUE_SIZE) "ph <%02x> %"
