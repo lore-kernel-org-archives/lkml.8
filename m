@@ -2,146 +2,437 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51355C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FBA20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:51:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kfhvgLnn"
+	by mail.kernel.org (Postfix) with ESMTP id AA08620781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595443960;
+	bh=FPxSpKpKON0b+S4glI2HugdnHIUjlqik6a0zQBliqJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AaBOdvvIZTPMpJtDU8XHPhNBs7tEQzGz2AjAbvgSzfFNkk6tDMTq0yGWz7UNosZ3S
+	 KjtzryO9+kHeQfirJknpkXZ17bka8yCjIh8CtLPFJqEcOCgKx9MMGsrdr1lUSc7d4A
+	 pMrcPqh+ost7C8J4oHy+ctphruT7y4S3ufScx4+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732671AbgGVSvn (ORCPT
+        id S1732573AbgGVSwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:51:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46024 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgGVSvm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:51:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06MIhL3E130198;
-        Wed, 22 Jul 2020 18:50:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=C/y7nOWN2zZL8t7wViPxEtK7Dpw4bYa251sNZduPTUI=;
- b=kfhvgLnnRnVduoCN7BiAlRJeiFcydBpsKpk3H3LvTTQL0V/Xjuc7F+MYz8Qtg9FvrR72
- 01AuL4uqCujMX9h0uNuhfLP/vi0mIybit3wj1/dWwtuMC/Qn41ZnHwpq8Ii5kpmSVxrP
- vHy7wwTEUuoUAW+qup38aSeAJEn1ClbMjgYJ8nyDn8/2G39amkB6DTV65TywLTyishla
- LLz6eO3M2yrtis/aybW5mKqYNw9W7uypLsb6M3W1d1k8e05I4cUCXzdHoxXRgd/tf5eF
- 8UJPzzpztOJU5rOe7Xvuy9dLSd0oSqoTj4s4ZLaOxs1TRcbMMBdu7MJtJo8OdjhbvnX8 Uw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 32d6kssbxh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 18:50:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06MIi6nW167531;
-        Wed, 22 Jul 2020 18:50:53 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32eq20erpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 18:50:52 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06MIopgc012980;
-        Wed, 22 Jul 2020 18:50:51 GMT
-Received: from localhost (/10.175.216.251)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Jul 2020 11:50:51 -0700
-Date:   Wed, 22 Jul 2020 20:50:47 +0200
-From:   Gregory Herrero <gregory.herrero@oracle.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] recordmcount: only record relocation of type
- R_AARCH64_CALL26 on arm64.
-Message-ID: <20200722185047.GW17377@ltoracle>
-References: <20200717143338.19302-1-gregory.herrero@oracle.com>
- <20200717133003.025f2096@oasis.local.home>
- <20200722163650.GI27540@gaia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722163650.GI27540@gaia>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9690 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0
- malwarescore=0 mlxscore=0 phishscore=0 bulkscore=0 adultscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007220119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9690 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
- bulkscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007220119
+        Wed, 22 Jul 2020 14:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgGVSwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:52:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF2120717;
+        Wed, 22 Jul 2020 18:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595443957;
+        bh=FPxSpKpKON0b+S4glI2HugdnHIUjlqik6a0zQBliqJQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VKnDGILvyAgAs1t6RYrbguxlLdYNynSZSDgQ2OklWkoNEdswWiSNFoDBixsLOXPC3
+         qcYp5CGlpwojj6Mr+eoBVEwxQ0qU7dhIsHIpwLVjh79IfiqdbM4KEDLPXAy37IOFm6
+         TjvAnuTABH8Yct7dulHI7CEFgPv4oeKcOA25sqHI=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jyJr1-00E3a3-OY; Wed, 22 Jul 2020 19:52:35 +0100
+Date:   Wed, 22 Jul 2020 19:52:33 +0100
+Message-ID: <878sfbxtzi.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, megha.dey@intel.com, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+        <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: dave.jiang@intel.com, vkoul@kernel.org, megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com, kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com, dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com, yan.y.zhao@linux.intel.com, pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 05:36:50PM +0100, Catalin Marinas wrote:
-> On Fri, Jul 17, 2020 at 01:30:03PM -0400, Steven Rostedt wrote:
-> > On Fri, 17 Jul 2020 16:33:38 +0200
-> > gregory.herrero@oracle.com wrote:
-> > > From: Gregory Herrero <gregory.herrero@oracle.com>
-> > > Currently, if a section has a relocation to '_mcount' symbol, a new
-> > > __mcount_loc entry will be added whatever the relocation type is.
-> > > This is problematic when a relocation to '_mcount' is in the middle of a
-> > > section and is not a call for ftrace use.
-> > > 
-> > > Such relocation could be generated with below code for example:
-> > >     bool is_mcount(unsigned long addr)
-> > >     {
-> > >         return (target == (unsigned long) &_mcount);
-> > >     }
-> > > 
-> > > With this snippet of code, ftrace will try to patch the mcount location
-> > > generated by this code on module load and fail with:
-> > > 
-> > >     Call trace:
-> > >      ftrace_bug+0xa0/0x28c
-> > >      ftrace_process_locs+0x2f4/0x430
-> > >      ftrace_module_init+0x30/0x38
-> > >      load_module+0x14f0/0x1e78
-> > >      __do_sys_finit_module+0x100/0x11c
-> > >      __arm64_sys_finit_module+0x28/0x34
-> > >      el0_svc_common+0x88/0x194
-> > >      el0_svc_handler+0x38/0x8c
-> > >      el0_svc+0x8/0xc
-> > >     ---[ end trace d828d06b36ad9d59 ]---
-> > >     ftrace failed to modify
-> > >     [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
-> > >      actual:   66:a9:3c:90
-> > >     Initializing ftrace call sites
-> > >     ftrace record flags: 2000000
-> > >      (0)
-> > >     expected tramp: ffffa2dc6cf66724
-> > > 
-> > > So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
-> > > recordmcount.
-> > 
-> > I'd rather have this go through the arm64 tree, as they can test it
-> > better than I can.
-> > 
-> > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> Thanks Steve.
-> 
-> > > Fixes: ed60453fa8f8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
-> 
-> This Fixes tag looks wrong. The above commit was for arm32.
-> 
-Thanks for catching this.
-It should be as below instead:
+On Tue, 21 Jul 2020 17:02:28 +0100,
+Dave Jiang <dave.jiang@intel.com> wrote:
+>=20
+> From: Megha Dey <megha.dey@intel.com>
+>=20
+> Add support for the creation of a new DEV_MSI irq domain. It creates a
+> new irq chip associated with the DEV_MSI domain and adds the necessary
+> domain operations to it.
+>=20
+> Add a new config option DEV_MSI which must be enabled by any
+> driver that wants to support device-specific message-signaled-interrupts
+> outside of PCI-MSI(-X).
 
-  Fixes: af64d2aa872a ("ftrace: Add arm64 support to recordmcount")
+Which is exactly what platform-MSI already does. Why do we need
+something else?
 
-Should I send a V2?
+>=20
+> Lastly, add device specific mask/unmask callbacks in addition to a write
+> function to the platform_msi_ops.
+>=20
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Megha Dey <megha.dey@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  arch/x86/include/asm/hw_irq.h |    5 ++
+>  drivers/base/Kconfig          |    7 +++
+>  drivers/base/Makefile         |    1=20
+>  drivers/base/dev-msi.c        |   95 +++++++++++++++++++++++++++++++++++=
+++++++
+>  drivers/base/platform-msi.c   |   45 +++++++++++++------
+>  drivers/base/platform-msi.h   |   23 ++++++++++
+>  include/linux/msi.h           |    8 +++
+>  7 files changed, 168 insertions(+), 16 deletions(-)
+>  create mode 100644 drivers/base/dev-msi.c
+>  create mode 100644 drivers/base/platform-msi.h
+>=20
+> diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
+> index 74c12437401e..8ecd7570589d 100644
+> --- a/arch/x86/include/asm/hw_irq.h
+> +++ b/arch/x86/include/asm/hw_irq.h
+> @@ -61,6 +61,11 @@ struct irq_alloc_info {
+>  			irq_hw_number_t	msi_hwirq;
+>  		};
+>  #endif
+> +#ifdef CONFIG_DEV_MSI
+> +		struct {
+> +			irq_hw_number_t hwirq;
+> +		};
+> +#endif
+>  #ifdef	CONFIG_X86_IO_APIC
+>  		struct {
+>  			int		ioapic_id;
+> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> index 8d7001712062..f00901bac056 100644
+> --- a/drivers/base/Kconfig
+> +++ b/drivers/base/Kconfig
+> @@ -210,4 +210,11 @@ config GENERIC_ARCH_TOPOLOGY
+>  	  appropriate scaling, sysfs interface for reading capacity values at
+>  	  runtime.
+> =20
+> +config DEV_MSI
+> +	bool "Device Specific Interrupt Messages"
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	select GENERIC_MSI_IRQ_DOMAIN
+> +	help
+> +	  Allow device drivers to generate device-specific interrupt messages
+> +	  for devices independent of PCI MSI/-X.
+>  endmenu
+> diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> index 157452080f3d..ca1e4d39164e 100644
+> --- a/drivers/base/Makefile
+> +++ b/drivers/base/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_REGMAP)	+=3D regmap/
+>  obj-$(CONFIG_SOC_BUS) +=3D soc.o
+>  obj-$(CONFIG_PINCTRL) +=3D pinctrl.o
+>  obj-$(CONFIG_DEV_COREDUMP) +=3D devcoredump.o
+> +obj-$(CONFIG_DEV_MSI) +=3D dev-msi.o
+>  obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) +=3D platform-msi.o
+>  obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) +=3D arch_topology.o
+> =20
+> diff --git a/drivers/base/dev-msi.c b/drivers/base/dev-msi.c
+> new file mode 100644
+> index 000000000000..240ccc353933
+> --- /dev/null
+> +++ b/drivers/base/dev-msi.c
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright =C2=A9 2020 Intel Corporation.
+> + *
+> + * Author: Megha Dey <megha.dey@intel.com>
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/msi.h>
+> +#include "platform-msi.h"
+> +
+> +struct irq_domain *dev_msi_default_domain;
+> +
+> +static irq_hw_number_t dev_msi_get_hwirq(struct msi_domain_info *info,
+> +					 msi_alloc_info_t *arg)
+> +{
+> +	return arg->hwirq;
+> +}
+> +
+> +static irq_hw_number_t dev_msi_calc_hwirq(struct msi_desc *desc)
+> +{
+> +	u32 devid;
+> +
+> +	devid =3D desc->platform.msi_priv_data->devid;
+> +
+> +	return (devid << (32 - DEV_ID_SHIFT)) | desc->platform.msi_index;
+> +}
+> +
+> +static void dev_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *des=
+c)
+> +{
+> +	arg->hwirq =3D dev_msi_calc_hwirq(desc);
+> +}
+> +
+> +static int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +			   int nvec, msi_alloc_info_t *arg)
+> +{
+> +	memset(arg, 0, sizeof(*arg));
+> +
+> +	return 0;
+> +}
+> +
+> +static struct msi_domain_ops dev_msi_domain_ops =3D {
+> +	.get_hwirq      =3D dev_msi_get_hwirq,
+> +	.set_desc       =3D dev_msi_set_desc,
+> +	.msi_prepare	=3D dev_msi_prepare,
+> +};
+> +
+> +static struct irq_chip dev_msi_controller =3D {
+> +	.name                   =3D "DEV-MSI",
+> +	.irq_unmask             =3D platform_msi_unmask_irq,
+> +	.irq_mask               =3D platform_msi_mask_irq,
+
+This seems pretty odd, see below.
+
+> +	.irq_write_msi_msg      =3D platform_msi_write_msg,
+> +	.irq_ack                =3D irq_chip_ack_parent,
+> +	.irq_retrigger          =3D irq_chip_retrigger_hierarchy,
+> +	.flags                  =3D IRQCHIP_SKIP_SET_WAKE,
+> +};
+> +
+> +static struct msi_domain_info dev_msi_domain_info =3D {
+> +	.flags          =3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OP=
+S,
+> +	.ops            =3D &dev_msi_domain_ops,
+> +	.chip           =3D &dev_msi_controller,
+> +	.handler        =3D handle_edge_irq,
+> +	.handler_name   =3D "edge",
+> +};
+> +
+> +static int __init create_dev_msi_domain(void)
+> +{
+> +	struct irq_domain *parent =3D NULL;
+> +	struct fwnode_handle *fn;
+> +
+> +	/*
+> +	 * Modern code should never have to use irq_get_default_host. But since
+> +	 * dev-msi is invisible to DT/ACPI, this is an exception case.
+> +	 */
+> +	parent =3D irq_get_default_host();
+
+Really? How is it going to work once you have devices sending their
+MSIs to two different downstream blocks? This looks rather short-sighted.
+
+> +	if (!parent)
+> +		return -ENXIO;
+> +
+> +	fn =3D irq_domain_alloc_named_fwnode("DEV_MSI");
+> +	if (!fn)
+> +		return -ENXIO;
+> +
+> +	dev_msi_default_domain =3D msi_create_irq_domain(fn, &dev_msi_domain_in=
+fo, parent);
+> +	if (!dev_msi_default_domain) {
+> +		pr_warn("failed to initialize irqdomain for DEV-MSI.\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	irq_domain_update_bus_token(dev_msi_default_domain, DOMAIN_BUS_PLATFORM=
+_MSI);
+> +	irq_domain_free_fwnode(fn);
+> +
+> +	return 0;
+> +}
+> +device_initcall(create_dev_msi_domain);
+> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+> index 9d94cd699468..5e1f210d65ee 100644
+> --- a/drivers/base/platform-msi.c
+> +++ b/drivers/base/platform-msi.c
+> @@ -12,21 +12,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/msi.h>
+>  #include <linux/slab.h>
+> -
+> -#define DEV_ID_SHIFT	21
+> -#define MAX_DEV_MSIS	(1 << (32 - DEV_ID_SHIFT))
+> -
+> -/*
+> - * Internal data structure containing a (made up, but unique) devid
+> - * and the platform-msi ops
+> - */
+> -struct platform_msi_priv_data {
+> -	struct device			*dev;
+> -	void				*host_data;
+> -	msi_alloc_info_t		arg;
+> -	const struct platform_msi_ops	*ops;
+> -	int				devid;
+> -};
+> +#include "platform-msi.h"
+> =20
+>  /* The devid allocator */
+>  static DEFINE_IDA(platform_msi_devid_ida);
+> @@ -76,7 +62,7 @@ static void platform_msi_update_dom_ops(struct msi_doma=
+in_info *info)
+>  		ops->set_desc =3D platform_msi_set_desc;
+>  }
+> =20
+> -static void platform_msi_write_msg(struct irq_data *data, struct msi_msg=
+ *msg)
+> +void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
+
+It really begs the question: Why are you inventing a whole new
+"DEV-MSI" when this really is platform-MSI?
+
+>  {
+>  	struct msi_desc *desc =3D irq_data_get_msi_desc(data);
+>  	struct platform_msi_priv_data *priv_data;
+> @@ -86,6 +72,33 @@ static void platform_msi_write_msg(struct irq_data *da=
+ta, struct msi_msg *msg)
+>  	priv_data->ops->write_msg(desc, msg);
+>  }
+> =20
+> +static void __platform_msi_desc_mask_unmask_irq(struct msi_desc *desc, u=
+32 mask)
+> +{
+> +	const struct platform_msi_ops *ops;
+> +
+> +	ops =3D desc->platform.msi_priv_data->ops;
+> +	if (!ops)
+> +		return;
+> +
+> +	if (mask) {
+> +		if (ops->irq_mask)
+> +			ops->irq_mask(desc);
+> +	} else {
+> +		if (ops->irq_unmask)
+> +			ops->irq_unmask(desc);
+> +	}
+> +}
+> +
+> +void platform_msi_mask_irq(struct irq_data *data)
+> +{
+> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 1);
+> +}
+> +
+> +void platform_msi_unmask_irq(struct irq_data *data)
+> +{
+> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 0);
+> +}
+> +
+
+I don't immediately get why you have this code at the platform MSI
+level. Until now, we only had the programming of the message into the
+end-point, which is a device-specific action (and the whole reason why
+this silly platform MSI exists).
+
+On the other hand, masking an interrupt is an irqchip operation, and
+only concerns the irqchip level. Here, you seem to be making it an
+end-point operation, which doesn't really make sense to me. Or is this
+device its own interrupt controller as well? That would be extremely
+surprising, and I'd expect some block downstream of the device to be
+able to control the masking of the interrupt.
+
+>  static void platform_msi_update_chip_ops(struct msi_domain_info *info)
+>  {
+>  	struct irq_chip *chip =3D info->chip;
+> diff --git a/drivers/base/platform-msi.h b/drivers/base/platform-msi.h
+> new file mode 100644
+> index 000000000000..1de8c2874218
+> --- /dev/null
+> +++ b/drivers/base/platform-msi.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright =C2=A9 2020 Intel Corporation.
+> + *
+> + * Author: Megha Dey <megha.dey@intel.com>
+> + */
+
+Or not. You are merely moving existing code, not authoring it. Either
+keep the original copyright attribution, or drop this mention
+altogether.
+
+> +
+> +#include <linux/msi.h>
+> +
+> +#define DEV_ID_SHIFT    21
+> +#define MAX_DEV_MSIS	(1 << (32 - DEV_ID_SHIFT))
+> +
+> +/*
+> + * Data structure containing a (made up, but unique) devid
+> + * and the platform-msi ops.
+> + */
+> +struct platform_msi_priv_data {
+> +	struct device			*dev;
+> +	void				*host_data;
+> +	msi_alloc_info_t		arg;
+> +	const struct platform_msi_ops	*ops;
+> +	int				devid;
+> +};
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 7f6a8eb51aca..1da97f905720 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -323,9 +323,13 @@ enum {
+> =20
+>  /*
+>   * platform_msi_ops - Callbacks for platform MSI ops
+> + * @irq_mask:   mask an interrupt source
+> + * @irq_unmask: unmask an interrupt source
+>   * @write_msg:	write message content
+>   */
+>  struct platform_msi_ops {
+> +	unsigned int            (*irq_mask)(struct msi_desc *desc);
+> +	unsigned int            (*irq_unmask)(struct msi_desc *desc);
+>  	irq_write_msi_msg_t	write_msg;
+>  };
+> =20
+> @@ -370,6 +374,10 @@ int platform_msi_domain_alloc(struct irq_domain *dom=
+ain, unsigned int virq,
+>  void platform_msi_domain_free(struct irq_domain *domain, unsigned int vi=
+rq,
+>  			      unsigned int nvec);
+>  void *platform_msi_get_host_data(struct irq_domain *domain);
+> +
+> +void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg);
+> +void platform_msi_unmask_irq(struct irq_data *data);
+> +void platform_msi_mask_irq(struct irq_data *data);
+>  #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
+> =20
+>  #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
+>=20
+>=20
 
 Thanks,
-Greg
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
