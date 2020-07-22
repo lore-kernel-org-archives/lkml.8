@@ -2,92 +2,80 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F9EC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02212C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5A622C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0B4206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbgGVJZR (ORCPT
+        id S1730422AbgGVJbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:25:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38606 "EHLO mga02.intel.com"
+        Wed, 22 Jul 2020 05:31:06 -0400
+Received: from elvis.franken.de ([193.175.24.41]:45216 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgGVJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:25:17 -0400
-IronPort-SDR: Dshz7hZBMcK5ovvd5kpPK2lqAxj1reEwpKgp5MjGVd6KdbM0Akd0tbIDAkqDGfclx1k4/VlWsQ
- oW+gLujTXGxw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="138378835"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="138378835"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 02:25:11 -0700
-IronPort-SDR: EOpJ7Pi5GhJPrVgrFw+6krLmQuyu24P0i+zE7fQ4EyQQ6sxaEeWwzgKFc7MI/TqfL3+fxGXL1t
- KVkLOW1mG4Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="392625020"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Jul 2020 02:25:08 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 22 Jul 2020 12:25:07 +0300
-Date:   Wed, 22 Jul 2020 12:25:07 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Patrick Volkerding <volkerdi@gmail.com>
-Cc:     Lyude Paul <lyude@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-Message-ID: <20200722092507.GC5180@lahna.fi.intel.com>
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520>
- <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
- <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
- <20200721122247.GI5180@lahna.fi.intel.com>
- <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
- <20200721152737.GS5180@lahna.fi.intel.com>
- <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
+        id S1726147AbgGVJbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:31:06 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jyB5X-0000cS-00; Wed, 22 Jul 2020 11:30:59 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 09649C0873; Wed, 22 Jul 2020 11:30:24 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 11:30:23 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+Message-ID: <20200722093023.GA8813@alpha.franken.de>
+References: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
+ <20200721141742.996350-4-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200721141742.996350-4-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 01:37:12PM -0500, Patrick Volkerding wrote:
-> On 7/21/20 10:27 AM, Mika Westerberg wrote:
-> > On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
-> >> Sure thing. Also, feel free to let me know if you'd like access to one of the
-> >> systems we saw breaking with this patch - I'm fairly sure I've got one of them
-> >> locally at my apartment and don't mind setting up AMT/KVM/SSH
-> > Probably no need for remote access (thanks for the offer, though). I
-> > attached a test patch to the bug report:
-> >
-> >   https://bugzilla.kernel.org/show_bug.cgi?id=208597
-> >
-> > that tries to work it around (based on the ->pm_cap == 0). I wonder if
-> > anyone would have time to try it out.
+On Tue, Jul 21, 2020 at 10:17:31PM +0800, Jiaxun Yang wrote:
+> It can be very big on LS7A PCH systems.
 > 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/include/asm/io.h                     | 3 ++-
+>  arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> Hi Mika,
-> 
-> I can confirm that this patch applied to 5.4.52 fixes the issue with
-> hybrid graphics on the Thinkpad X1 Extreme gen2.
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 346fffd9e972..0072489325fa 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -50,8 +50,9 @@
+>  # define __relaxed_ioswabq ioswabq
+>  
+>  /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
+> -
+> +#ifndef IO_SPACE_LIMIT
+>  #define IO_SPACE_LIMIT 0xffff
+> +#endif
 
-Great, thanks for testing!
+please move this to include/asm/mach-generic/spaces.h
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
