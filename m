@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5712C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A73C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA3A420787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAA82077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgGVJiq (ORCPT
+        id S1731584AbgGVJik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:38:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:53058 "EHLO foss.arm.com"
+        Wed, 22 Jul 2020 05:38:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:53016 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgGVJip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:38:45 -0400
+        id S1726147AbgGVJij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:38:39 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C041E101E;
-        Wed, 22 Jul 2020 02:38:44 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48B021045;
+        Wed, 22 Jul 2020 02:38:39 -0700 (PDT)
 Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1CBE23F66F;
-        Wed, 22 Jul 2020 02:38:43 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D0C23F66F;
+        Wed, 22 Jul 2020 02:38:37 -0700 (PDT)
 From:   Ionela Voinescu <ionela.voinescu@arm.com>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
         dietmar.eggemann@arm.com, catalin.marinas@arm.com,
@@ -33,9 +33,9 @@ To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
 Cc:     mingo@redhat.com, peterz@infradead.org, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         ionela.voinescu@arm.com
-Subject: [PATCH v2 4/7] cpufreq: report whether cpufreq supports Frequency Invariance (FI)
-Date:   Wed, 22 Jul 2020 10:37:29 +0100
-Message-Id: <20200722093732.14297-5-ionela.voinescu@arm.com>
+Subject: [PATCH v2 2/7] cpufreq: set invariance scale factor on transition end
+Date:   Wed, 22 Jul 2020 10:37:27 +0100
+Message-Id: <20200722093732.14297-3-ionela.voinescu@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722093732.14297-1-ionela.voinescu@arm.com>
 References: <20200722093732.14297-1-ionela.voinescu@arm.com>
@@ -44,121 +44,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the update of the FI scale factor is done in cpufreq core for
-selected functions - target(), target_index() and fast_switch(),
-we can provide feedback to the task scheduler and architecture code
-on whether cpufreq supports FI.
+While the move of the invariance setter calls (arch_set_freq_scale())
+from cpufreq drivers to cpufreq core maintained the previous
+functionality for existing drivers that use target_index() and
+fast_switch() for frequency switching, it also gives the possibility
+of adding support for users of the target() callback, which is exploited
+here.
 
-For this purpose, provide error and debug messages, together with an
-external function to expose whether the cpufreq drivers support FI, by
-using a static key.
+To be noted that the target() callback has been flagged as deprecated
+since:
 
-The logic behind the enablement of cpufreq-based invariance is as
-follows:
- - cpufreq-based invariance is disabled by default
- - cpufreq-based invariance is enabled if any of the callbacks
-   above is implemented while the unsupported setpolicy() is not
- - if enabled, cpufreq-based invariance will be disabled during the
-   call of the default arch_set_freq_scale() function which does
-   not set a scale factor.
+commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+
+It also doesn't have that many users:
+
+  cpufreq-nforce2.c:371:2:      .target = nforce2_target,
+  cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
+  gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
+  pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
+
+Similarly to the path taken for target_index() calls in the cpufreq core
+during a frequency change, all of the drivers above will mark the end of a
+frequency change by a call to cpufreq_freq_transition_end().
+
+Therefore, cpufreq_freq_transition_end() can be used as the location for
+the arch_set_freq_scale() call to potentially inform the scheduler of the
+frequency change.
+
+This change maintains the previous functionality for the drivers that
+implement the target_index() callback, while also adding support for the
+few drivers that implement the deprecated target() callback.
+
+Two notes are worthwhile here:
+ - In __target_index(), cpufreq_freq_transition_end() is called only for
+   drivers that have synchronous notifications enabled. There is only one
+   driver that disables them,
+
+   drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
+
+   which is deprecated.
+
+ - Despite marking a successful frequency change, many cpufreq drivers
+   will populate the new policy->cur with the new requested frequency,
+   although this might not be the one granted by the hardware.
+
+   Therefore, the call to arch_set_freq_scale() is a "best effort" one,
+   and it is up to the architecture if the new frequency is used in the
+   new frequency scale factor setting or eventually used by the scheduler.
+   The architecture is in a better position to decide if it has better
+   methods to obtain more accurate information regarding the current
+   frequency (for example the use of counters).
 
 Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
 Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/cpufreq/cpufreq.c | 28 ++++++++++++++++++++++++++++
- include/linux/cpufreq.h   |  5 +++++
- 2 files changed, 33 insertions(+)
+ drivers/cpufreq/cpufreq.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 3497c1cd6818..1d0b046fe8e9 100644
+index bac4101546db..3497c1cd6818 100644
 --- a/drivers/cpufreq/cpufreq.c
 +++ b/drivers/cpufreq/cpufreq.c
-@@ -61,6 +61,9 @@ static struct cpufreq_driver *cpufreq_driver;
- static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
- static DEFINE_RWLOCK(cpufreq_driver_lock);
+@@ -448,6 +448,10 @@ void cpufreq_freq_transition_end(struct cpufreq_policy *policy,
  
-+/* Mark support for the scheduler's frequency invariance engine */
-+static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
-+
- /* Flag to suspend/resume CPUFreq governors */
- static bool cpufreq_suspended;
+ 	cpufreq_notify_post_transition(policy, freqs, transition_failed);
  
-@@ -69,6 +72,25 @@ static inline bool has_target(void)
- 	return cpufreq_driver->target_index || cpufreq_driver->target;
- }
++	arch_set_freq_scale(policy->related_cpus,
++			    policy->cur,
++			    policy->cpuinfo.max_freq);
++
+ 	policy->transition_ongoing = false;
+ 	policy->transition_task = NULL;
  
-+static inline
-+void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
-+{
-+	if ((driver->target || driver->target_index || driver->fast_switch) &&
-+	    !driver->setpolicy) {
-+
-+		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
-+		pr_debug("%s: Driver %s can provide frequency invariance.",
-+			 __func__, driver->name);
-+	} else
-+		pr_err("%s: Driver %s cannot provide frequency invariance.",
-+		__func__, driver->name);
-+}
-+
-+bool cpufreq_sets_freq_scale(void)
-+{
-+	return static_branch_likely(&cpufreq_set_freq_scale);
-+}
-+
- /* internal prototypes */
- static unsigned int __cpufreq_get(struct cpufreq_policy *policy);
- static int cpufreq_init_governor(struct cpufreq_policy *policy);
-@@ -159,6 +181,9 @@ EXPORT_SYMBOL_GPL(get_cpu_idle_time);
- __weak void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
- 		unsigned long max_freq)
+@@ -2159,7 +2163,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
+ 			    unsigned int relation)
  {
-+	if (cpufreq_sets_freq_scale())
-+		static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
-+
+ 	unsigned int old_target_freq = target_freq;
+-	int index, retval;
++	int index;
+ 
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
+@@ -2190,14 +2194,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
+ 
+ 	index = cpufreq_frequency_table_target(policy, target_freq, relation);
+ 
+-	retval = __target_index(policy, index);
+-
+-	if (!retval)
+-		arch_set_freq_scale(policy->related_cpus,
+-				    policy->freq_table[index].frequency,
+-				    policy->cpuinfo.max_freq);
+-
+-	return retval;
++	return __target_index(policy, index);
  }
- EXPORT_SYMBOL_GPL(arch_set_freq_scale);
- 
-@@ -2722,6 +2747,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	cpufreq_driver = driver_data;
- 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
- 
-+	enable_cpufreq_freq_invariance(cpufreq_driver);
-+
- 	if (driver_data->setpolicy)
- 		driver_data->flags |= CPUFREQ_CONST_LOOPS;
- 
-@@ -2791,6 +2818,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
- 	cpus_read_lock();
- 	subsys_interface_unregister(&cpufreq_interface);
- 	remove_boost_sysfs_file();
-+	static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
- 	cpuhp_remove_state_nocalls_cpuslocked(hp_online);
- 
- 	write_lock_irqsave(&cpufreq_driver_lock, flags);
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index e62b022cb07e..f81215ad76f1 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -217,6 +217,7 @@ void refresh_frequency_limits(struct cpufreq_policy *policy);
- void cpufreq_update_policy(unsigned int cpu);
- void cpufreq_update_limits(unsigned int cpu);
- bool have_governor_per_policy(void);
-+bool cpufreq_sets_freq_scale(void);
- struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
- void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
- void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
-@@ -237,6 +238,10 @@ static inline unsigned int cpufreq_get_hw_max_freq(unsigned int cpu)
- {
- 	return 0;
- }
-+static inline bool cpufreq_sets_freq_scale(void)
-+{
-+	return false;
-+}
- static inline void disable_cpufreq(void) { }
- #endif
+ EXPORT_SYMBOL_GPL(__cpufreq_driver_target);
  
 -- 
 2.17.1
