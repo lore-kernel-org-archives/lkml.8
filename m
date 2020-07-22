@@ -2,97 +2,134 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 637B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5881C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345DA20792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F61A20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:11:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b8dBzOj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbgGVJGH (ORCPT
+        id S1728852AbgGVJLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:06:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51994 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726821AbgGVJGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:06:03 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DFF3E3682621332C239E;
-        Wed, 22 Jul 2020 17:05:59 +0800 (CST)
-Received: from huawei.com (10.69.192.56) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
- 17:05:52 +0800
-From:   Luo Jiaxing <luojiaxing@huawei.com>
-To:     <martin.petersen@oracle.com>, <jejb@linux.ibm.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <john.garry@huawei.com>, <yanaijie@huawei.com>,
-        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
-        <linuxarm@huawei.com>
-Subject: [PATCH v1 2/2] {topost} scsi: libsas: check link status at ATA prereset() ops
-Date:   Wed, 22 Jul 2020 17:04:03 +0800
-Message-ID: <1595408643-63011-3-git-send-email-luojiaxing@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595408643-63011-1-git-send-email-luojiaxing@huawei.com>
-References: <1595408643-63011-1-git-send-email-luojiaxing@huawei.com>
+        Wed, 22 Jul 2020 05:11:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31015 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726147AbgGVJLm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:11:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595409100;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NzcEIWaSLdd63tVnMlQ4l8CfKkfEyUhff3HORkpk1pw=;
+        b=b8dBzOj024FywY5Penqxp9mkStAXHSUSvE0NXHrAhTSsV6PWTD8143jgEO36fVYNYozMUl
+        0+u20vnIhrZUqhVffNNVe8BMhW/mu8GqGpNzjqujDPDflU+8UdT6Xnh3mPwUmQoQwb0rch
+        W1HFKDXUNYtlRxvdwMabiI8Vu9wtORQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-W9xiyZCdNjaZWfNh6eB9Eg-1; Wed, 22 Jul 2020 05:11:36 -0400
+X-MC-Unique: W9xiyZCdNjaZWfNh6eB9Eg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1173C746E;
+        Wed, 22 Jul 2020 09:11:33 +0000 (UTC)
+Received: from fedora-32-enviroment (unknown [10.35.206.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 477AC5C1C3;
+        Wed, 22 Jul 2020 09:11:18 +0000 (UTC)
+Message-ID: <f16aba1020019530564f0869a67951282104a5d2.camel@redhat.com>
+Subject: Re: [PATCH 02/10] block: virtio-blk: check logical block size
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        "open list:SCSI CDROM DRIVER" <linux-scsi@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "open list:SONY MEMORYSTICK SUBSYSTEM" <linux-mmc@vger.kernel.org>,
+        Satya Tangirala <satyat@google.com>,
+        "open list:NETWORK BLOCK DEVICE (NBD)" <nbd@other.debian.org>,
+        Hou Tao <houtao1@huawei.com>, Jens Axboe <axboe@fb.com>,
+        "open list:VIRTIO CORE AND NET DRIVERS" 
+        <virtualization@lists.linux-foundation.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Alex Dubov <oakad@yahoo.com>
+Date:   Wed, 22 Jul 2020 12:11:17 +0300
+In-Reply-To: <yq1zh7sfedj.fsf@ca-mkp.ca.oracle.com>
+References: <20200721105239.8270-1-mlevitsk@redhat.com>
+         <20200721105239.8270-3-mlevitsk@redhat.com> <20200721151437.GB10620@lst.de>
+         <yq1zh7sfedj.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We found out that libata will retry reset even if SATA disk is unpluged. We
-should report offline to libata to avoid meaningless reset on the disk.
-Libata provide an ops of prereset() for this purpose, it was called by
-ata_eh_reset() only and used to decide whether to skip reset base on the
-return value of it.
+On Tue, 2020-07-21 at 22:55 -0400, Martin K. Petersen wrote:
+> Christoph,
+> 
+> > Hmm, I wonder if we should simply add the check and warning to
+> > blk_queue_logical_block_size and add an error in that case.  Then
+> > drivers only have to check the error return, which might add a lot
+> > less boiler plate code.
+> 
+> Yep, I agree.
+> 
 
-We check status of phy and disk at prereset(). If disk is already offline
-or phy is disabled, we return -ENOENT to libata to skip disk reset.
+I also agree that this would be cleaner (I actually tried to implement
+this the way you suggest), but let me explain my reasoning for doing it
+this way.
 
-As prereset() should be best-effort, we should continue to try disk reset
-beyond the situation we mentioned before.
+The problem is that most current users of blk_queue_logical_block_size
+(43 uses in the tree, out of which only 9 use constant block size) check
+for the block size relatively early, often store it in some internal
+struct etc, prior to calling blk_queue_logical_block_size thus making
+them only to rely on blk_queue_logical_block_size as the check for 
+block size validity will need non-trivial changes in their code.
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/libsas/sas_ata.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Instead of this adding blk_is_valid_logical_block_size allowed me
+to trivially convert most of the uses.
 
-diff --git a/drivers/scsi/libsas/sas_ata.c b/drivers/scsi/libsas/sas_ata.c
-index a7d16d2..1b93332 100644
---- a/drivers/scsi/libsas/sas_ata.c
-+++ b/drivers/scsi/libsas/sas_ata.c
-@@ -507,8 +507,22 @@ void sas_ata_end_eh(struct ata_port *ap)
- 	spin_unlock_irqrestore(&ha->lock, flags);
- }
- 
-+static int sas_ata_prereset(struct ata_link *link, unsigned long deadline)
-+{
-+	struct ata_port *ap = link->ap;
-+	struct domain_device *dev = ap->private_data;
-+	struct sas_phy *local_phy = sas_get_local_phy(dev);
-+	int res = 0;
-+
-+	if (!local_phy->enabled || test_bit(SAS_DEV_GONE, &dev->state))
-+		res = -ENOENT;
-+	sas_put_local_phy(local_phy);
-+
-+	return res;
-+}
-+
- static struct ata_port_operations sas_sata_ops = {
--	.prereset		= ata_std_prereset,
-+	.prereset		= sas_ata_prereset,
- 	.hardreset		= sas_ata_hard_reset,
- 	.error_handler		= ata_std_error_handler,
- 	.post_internal_cmd	= sas_ata_post_internal,
--- 
-2.7.4
+For RFC I converted only some drivers that I am more familiar with
+and/or can test but I can remove the driver's own checks in most other
+drivers with low chance of introducing a bug, even if I can't test the
+driver.
+
+What do you think?
+
+I can also both make blk_queue_logical_block_size return an error value,
+and have blk_is_valid_logical_block_size and use either of these checks,
+depending on the driver with eventual goal of un-exporting
+blk_is_valid_logical_block_size.
+
+Also note that I did add WARN_ON to blk_queue_logical_block_size.
+
+Best regards,
+	Maxim Levitsky
 
