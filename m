@@ -2,386 +2,108 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E18C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2114920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456E2206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgGVKpn (ORCPT
+        id S1726989AbgGVKxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:45:43 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:37001 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgGVKpl (ORCPT
+        Wed, 22 Jul 2020 06:53:05 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:43056 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgGVKxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:45:41 -0400
-Received: from localhost.localdomain ([93.23.199.134])
-        by mwinf5d52 with ME
-        id 6Alb2300F2uUVcV03Alca2; Wed, 22 Jul 2020 12:45:37 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 22 Jul 2020 12:45:37 +0200
-X-ME-IP: 93.23.199.134
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     mcgrof@kernel.org, kvalo@codeaurora.org, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] prism54: switch from 'pci_' to 'dma_' API
-Date:   Wed, 22 Jul 2020 12:45:34 +0200
-Message-Id: <20200722104534.30760-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Wed, 22 Jul 2020 06:53:04 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9A2CE1C0BDA; Wed, 22 Jul 2020 12:53:02 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 12:52:47 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 094/133] USB: serial: iuu_phoenix: fix memory
+ corruption
+Message-ID: <20200722105247.GA19938@duo.ucw.cz>
+References: <20200720152803.732195882@linuxfoundation.org>
+ <20200720152808.264804020@linuxfoundation.org>
+ <20200721113259.GB17778@duo.ucw.cz>
+ <20200721115449.GE3634@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
+In-Reply-To: <20200721115449.GE3634@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When memory is allocated in 'islpci_alloc_memory()' (islpci_dev.c),
-GFP_KERNEL can be used because it is only called from a probe function
-and no spin_lock is taken in the between.
+Hi!
 
-The call chain is:
-   prism54_probe                   (probe function, in 'islpci_hotplug.c')
-      --> islpci_setup             (in 'islpci_dev.c')
-         --> islpci_alloc_memory   (in 'islpci_dev.c')
+> > > commit e7b931bee739e8a77ae216e613d3b99342b6dec0 upstream.
+> > >=20
+> > > The driver would happily overwrite its write buffer with user data in
+> > > 256 byte increments due to a removed buffer-space sanity check.
+> >=20
+> > > +++ b/drivers/usb/serial/iuu_phoenix.c
+> > > @@ -697,14 +697,16 @@ static int iuu_uart_write(struct tty_str
+> > >  	struct iuu_private *priv =3D usb_get_serial_port_data(port);
+> > >  	unsigned long flags;
+> > > =20
+> > > -	if (count > 256)
+> > > -		return -ENOMEM;
+> > > -
+> > >  	spin_lock_irqsave(&priv->lock, flags);
+> > > =20
+> > > +	count =3D min(count, 256 - priv->writelen);
+> > > +	if (count =3D=3D 0)
+> > > +		goto out;
+> > > +
+> > >  	/* fill the buffer */
+> > >  	memcpy(priv->writebuf + priv->writelen, buf, count);
+> > >  	priv->writelen +=3D count;
+> > > +out:
+> > >  	spin_unlock_irqrestore(&priv->lock, flags);
+> > > =20
+> > >  	return count;
+> >=20
+> > Ok, so... goto and label is unneccessary, memcpy will do the right
+> > thing with count =3D=3D 0.
+>=20
+> That's generally too subtle. Better to clearly mark the error/exception
+> path.
 
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
+We usually avoid subtle code by introducing comments, not by
+introducing extra (and confusing) code that can not be optimized out.
 
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
+Best regards,
+								Pavel
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
 
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
+-----BEGIN PGP SIGNATURE-----
 
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxgafwAKCRAw5/Bqldv6
+8qu/AJ449a0kwPR+rFOa26YCeoKPd5NojQCgoXUShrwTAPQZj8w5iUht1XshuNI=
+=r5MQ
+-----END PGP SIGNATURE-----
 
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- .../wireless/intersil/prism54/islpci_dev.c    | 30 +++++++++----------
- .../wireless/intersil/prism54/islpci_eth.c    | 24 +++++++--------
- .../intersil/prism54/islpci_hotplug.c         |  2 +-
- .../wireless/intersil/prism54/islpci_mgt.c    | 21 ++++++-------
- 4 files changed, 36 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/net/wireless/intersil/prism54/islpci_dev.c b/drivers/net/wireless/intersil/prism54/islpci_dev.c
-index a9bae69222dc..efd64e555bb5 100644
---- a/drivers/net/wireless/intersil/prism54/islpci_dev.c
-+++ b/drivers/net/wireless/intersil/prism54/islpci_dev.c
-@@ -636,10 +636,10 @@ islpci_alloc_memory(islpci_private *priv)
- 	 */
- 
- 	/* perform the allocation */
--	priv->driver_mem_address = pci_alloc_consistent(priv->pdev,
--							HOST_MEM_BLOCK,
--							&priv->
--							device_host_address);
-+	priv->driver_mem_address = dma_alloc_coherent(&priv->pdev->dev,
-+						      HOST_MEM_BLOCK,
-+						      &priv->device_host_address,
-+						      GFP_KERNEL);
- 
- 	if (!priv->driver_mem_address) {
- 		/* error allocating the block of PCI memory */
-@@ -692,11 +692,9 @@ islpci_alloc_memory(islpci_private *priv)
- 
- 		/* map the allocated skb data area to pci */
- 		priv->pci_map_rx_address[counter] =
--		    pci_map_single(priv->pdev, (void *) skb->data,
--				   MAX_FRAGMENT_SIZE_RX + 2,
--				   PCI_DMA_FROMDEVICE);
--		if (pci_dma_mapping_error(priv->pdev,
--					  priv->pci_map_rx_address[counter])) {
-+		    dma_map_single(&priv->pdev->dev, (void *)skb->data,
-+				   MAX_FRAGMENT_SIZE_RX + 2, DMA_FROM_DEVICE);
-+		if (dma_mapping_error(&priv->pdev->dev, priv->pci_map_rx_address[counter])) {
- 			priv->pci_map_rx_address[counter] = 0;
- 			/* error mapping the buffer to device
- 			   accessible memory address */
-@@ -727,9 +725,9 @@ islpci_free_memory(islpci_private *priv)
- 
- 	/* free consistent DMA area... */
- 	if (priv->driver_mem_address)
--		pci_free_consistent(priv->pdev, HOST_MEM_BLOCK,
--				    priv->driver_mem_address,
--				    priv->device_host_address);
-+		dma_free_coherent(&priv->pdev->dev, HOST_MEM_BLOCK,
-+				  priv->driver_mem_address,
-+				  priv->device_host_address);
- 
- 	/* clear some dangling pointers */
- 	priv->driver_mem_address = NULL;
-@@ -741,8 +739,8 @@ islpci_free_memory(islpci_private *priv)
-         for (counter = 0; counter < ISL38XX_CB_MGMT_QSIZE; counter++) {
- 		struct islpci_membuf *buf = &priv->mgmt_rx[counter];
- 		if (buf->pci_addr)
--			pci_unmap_single(priv->pdev, buf->pci_addr,
--					 buf->size, PCI_DMA_FROMDEVICE);
-+			dma_unmap_single(&priv->pdev->dev, buf->pci_addr,
-+					 buf->size, DMA_FROM_DEVICE);
- 		buf->pci_addr = 0;
- 		kfree(buf->mem);
- 		buf->size = 0;
-@@ -752,10 +750,10 @@ islpci_free_memory(islpci_private *priv)
- 	/* clean up data rx buffers */
- 	for (counter = 0; counter < ISL38XX_CB_RX_QSIZE; counter++) {
- 		if (priv->pci_map_rx_address[counter])
--			pci_unmap_single(priv->pdev,
-+			dma_unmap_single(&priv->pdev->dev,
- 					 priv->pci_map_rx_address[counter],
- 					 MAX_FRAGMENT_SIZE_RX + 2,
--					 PCI_DMA_FROMDEVICE);
-+					 DMA_FROM_DEVICE);
- 		priv->pci_map_rx_address[counter] = 0;
- 
- 		if (priv->data_low_rx[counter])
-diff --git a/drivers/net/wireless/intersil/prism54/islpci_eth.c b/drivers/net/wireless/intersil/prism54/islpci_eth.c
-index 8d680250a281..74dd65716afd 100644
---- a/drivers/net/wireless/intersil/prism54/islpci_eth.c
-+++ b/drivers/net/wireless/intersil/prism54/islpci_eth.c
-@@ -50,9 +50,9 @@ islpci_eth_cleanup_transmit(islpci_private *priv,
- 			      skb, skb->data, skb->len, skb->truesize);
- #endif
- 
--			pci_unmap_single(priv->pdev,
-+			dma_unmap_single(&priv->pdev->dev,
- 					 priv->pci_map_tx_address[index],
--					 skb->len, PCI_DMA_TODEVICE);
-+					 skb->len, DMA_TO_DEVICE);
- 			dev_kfree_skb_irq(skb);
- 			skb = NULL;
- 		}
-@@ -176,10 +176,9 @@ islpci_eth_transmit(struct sk_buff *skb, struct net_device *ndev)
- #endif
- 
- 	/* map the skb buffer to pci memory for DMA operation */
--	pci_map_address = pci_map_single(priv->pdev,
--					 (void *) skb->data, skb->len,
--					 PCI_DMA_TODEVICE);
--	if (pci_dma_mapping_error(priv->pdev, pci_map_address)) {
-+	pci_map_address = dma_map_single(&priv->pdev->dev, (void *)skb->data,
-+					 skb->len, DMA_TO_DEVICE);
-+	if (dma_mapping_error(&priv->pdev->dev, pci_map_address)) {
- 		printk(KERN_WARNING "%s: cannot map buffer to PCI\n",
- 		       ndev->name);
- 		goto drop_free;
-@@ -323,9 +322,8 @@ islpci_eth_receive(islpci_private *priv)
- #endif
- 
- 	/* delete the streaming DMA mapping before processing the skb */
--	pci_unmap_single(priv->pdev,
--			 priv->pci_map_rx_address[index],
--			 MAX_FRAGMENT_SIZE_RX + 2, PCI_DMA_FROMDEVICE);
-+	dma_unmap_single(&priv->pdev->dev, priv->pci_map_rx_address[index],
-+			 MAX_FRAGMENT_SIZE_RX + 2, DMA_FROM_DEVICE);
- 
- 	/* update the skb structure and align the buffer */
- 	skb_put(skb, size);
-@@ -431,11 +429,9 @@ islpci_eth_receive(islpci_private *priv)
- 
- 		/* set the streaming DMA mapping for proper PCI bus operation */
- 		priv->pci_map_rx_address[index] =
--		    pci_map_single(priv->pdev, (void *) skb->data,
--				   MAX_FRAGMENT_SIZE_RX + 2,
--				   PCI_DMA_FROMDEVICE);
--		if (pci_dma_mapping_error(priv->pdev,
--					  priv->pci_map_rx_address[index])) {
-+		    dma_map_single(&priv->pdev->dev, (void *)skb->data,
-+				   MAX_FRAGMENT_SIZE_RX + 2, DMA_FROM_DEVICE);
-+		if (dma_mapping_error(&priv->pdev->dev, priv->pci_map_rx_address[index])) {
- 			/* error mapping the buffer to device accessible memory address */
- 			DEBUG(SHOW_ERROR_MESSAGES,
- 			      "Error mapping DMA address\n");
-diff --git a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-index 20291c0d962d..a8835c4507d9 100644
---- a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-+++ b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-@@ -106,7 +106,7 @@ prism54_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	}
- 
- 	/* enable PCI DMA */
--	if (pci_set_dma_mask(pdev, DMA_BIT_MASK(32))) {
-+	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(32))) {
- 		printk(KERN_ERR "%s: 32-bit PCI DMA not supported", DRV_NAME);
- 		goto do_pci_disable_device;
-         }
-diff --git a/drivers/net/wireless/intersil/prism54/islpci_mgt.c b/drivers/net/wireless/intersil/prism54/islpci_mgt.c
-index e336eb106429..0c7fb76c7d1c 100644
---- a/drivers/net/wireless/intersil/prism54/islpci_mgt.c
-+++ b/drivers/net/wireless/intersil/prism54/islpci_mgt.c
-@@ -115,10 +115,11 @@ islpci_mgmt_rx_fill(struct net_device *ndev)
- 			buf->size = MGMT_FRAME_SIZE;
- 		}
- 		if (buf->pci_addr == 0) {
--			buf->pci_addr = pci_map_single(priv->pdev, buf->mem,
-+			buf->pci_addr = dma_map_single(&priv->pdev->dev,
-+						       buf->mem,
- 						       MGMT_FRAME_SIZE,
--						       PCI_DMA_FROMDEVICE);
--			if (pci_dma_mapping_error(priv->pdev, buf->pci_addr)) {
-+						       DMA_FROM_DEVICE);
-+			if (dma_mapping_error(&priv->pdev->dev, buf->pci_addr)) {
- 				printk(KERN_WARNING
- 				       "Failed to make memory DMA'able.\n");
- 				return -ENOMEM;
-@@ -203,9 +204,9 @@ islpci_mgt_transmit(struct net_device *ndev, int operation, unsigned long oid,
- #endif
- 
- 	err = -ENOMEM;
--	buf.pci_addr = pci_map_single(priv->pdev, buf.mem, frag_len,
--				      PCI_DMA_TODEVICE);
--	if (pci_dma_mapping_error(priv->pdev, buf.pci_addr)) {
-+	buf.pci_addr = dma_map_single(&priv->pdev->dev, buf.mem, frag_len,
-+				      DMA_TO_DEVICE);
-+	if (dma_mapping_error(&priv->pdev->dev, buf.pci_addr)) {
- 		printk(KERN_WARNING "%s: cannot map PCI memory for mgmt\n",
- 		       ndev->name);
- 		goto error_free;
-@@ -302,8 +303,8 @@ islpci_mgt_receive(struct net_device *ndev)
- 		}
- 
- 		/* Ensure the results of device DMA are visible to the CPU. */
--		pci_dma_sync_single_for_cpu(priv->pdev, buf->pci_addr,
--					    buf->size, PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_cpu(&priv->pdev->dev, buf->pci_addr,
-+					buf->size, DMA_FROM_DEVICE);
- 
- 		/* Perform endianess conversion for PIMFOR header in-place. */
- 		header = pimfor_decode_header(buf->mem, frag_len);
-@@ -414,8 +415,8 @@ islpci_mgt_cleanup_transmit(struct net_device *ndev)
- 	for (; priv->index_mgmt_tx < curr_frag; priv->index_mgmt_tx++) {
- 		int index = priv->index_mgmt_tx % ISL38XX_CB_MGMT_QSIZE;
- 		struct islpci_membuf *buf = &priv->mgmt_tx[index];
--		pci_unmap_single(priv->pdev, buf->pci_addr, buf->size,
--				 PCI_DMA_TODEVICE);
-+		dma_unmap_single(&priv->pdev->dev, buf->pci_addr, buf->size,
-+				 DMA_TO_DEVICE);
- 		buf->pci_addr = 0;
- 		kfree(buf->mem);
- 		buf->mem = NULL;
--- 
-2.25.1
-
+--sm4nu43k4a2Rpi4c--
