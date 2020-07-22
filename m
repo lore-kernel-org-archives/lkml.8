@@ -2,140 +2,85 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AF2C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFEE5207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:20:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="drGfHuME"
+	by mail.kernel.org (Postfix) with ESMTP id 4A4D820729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgGVLUA (ORCPT
+        id S1726941AbgGVLPr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgGVLT7 (ORCPT
+        Wed, 22 Jul 2020 07:15:47 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:39752 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgGVLPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:19:59 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2449C0619DC;
-        Wed, 22 Jul 2020 04:19:58 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 66B4CAE6;
-        Wed, 22 Jul 2020 13:19:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595416797;
-        bh=9bheVS99DQaRwwdpBomM0E03oIp9aDYofl6Bxy+lGec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=drGfHuMEbciHC9WdUPfke/cq1AfJNe3AVSCs8hCTL+8FLoq4KrkzUo2p+hIruq9iB
-         cvlqu8xThmZpjCEkJ8vm04n8/Tx+cnT/p5abshMMLD7TRk33ni6zZLe4uaNJ4dEJ90
-         Eto05h81Je5fIN0sBFgs3BFkqJOUYiH7bV7zjo6U=
-Date:   Wed, 22 Jul 2020 14:19:52 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH for v5.9] media: omap: Replace HTTP links with HTTPS ones
-Message-ID: <20200722111952.GC5833@pendragon.ideasonboard.com>
-References: <20200719112133.58236-1-grandmaster@al2klimov.de>
+        Wed, 22 Jul 2020 07:15:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 319D462D8C69;
+        Wed, 22 Jul 2020 13:15:44 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Zc9TNu-wkYTl; Wed, 22 Jul 2020 13:15:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 9006B62D8C68;
+        Wed, 22 Jul 2020 13:15:43 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Ze2yEkGTJ1nH; Wed, 22 Jul 2020 13:15:43 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 5BAE56071A74;
+        Wed, 22 Jul 2020 13:15:43 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 13:15:43 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     hch <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, cgroups@vger.kernel.org
+Message-ID: <1212963412.160863.1595416543195.JavaMail.zimbra@nod.at>
+In-Reply-To: <20200722062552.212200-5-hch@lst.de>
+References: <20200722062552.212200-1-hch@lst.de> <20200722062552.212200-5-hch@lst.de>
+Subject: Re: [PATCH 04/14] bdi: initialize ->ra_pages in bdi_init
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200719112133.58236-1-grandmaster@al2klimov.de>
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: initialize ->ra_pages in bdi_init
+Thread-Index: SEPLczWq50DYtFrGpPhckNZ8Awj6bw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
-
-Thank you for the patch.
-
-On Sun, Jul 19, 2020 at 01:21:33PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+----- Ursprüngliche Mail -----
+> Set up a readahead size by default, as very few users have a good
+> reason to change it.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-I expect Sakari to take this patch in his tree when he will be back from
-vacation at the end of the month.
-
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  drivers/media/platform/omap3isp/isp.c | 2 +-
->  drivers/staging/media/omap4iss/iss.c  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-> index b91e472ee764..74fa67082e09 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -142,7 +142,7 @@ static struct isp_reg isp_reg_list[] = {
->   * readback the same register, in this case the revision register.
->   *
->   * See this link for reference:
-> - *   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
-> + *   https://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
->   */
->  void omap3isp_flush(struct isp_device *isp)
->  {
-> diff --git a/drivers/staging/media/omap4iss/iss.c b/drivers/staging/media/omap4iss/iss.c
-> index 6fb60b58447a..e06ea7ea1e50 100644
-> --- a/drivers/staging/media/omap4iss/iss.c
-> +++ b/drivers/staging/media/omap4iss/iss.c
-> @@ -55,7 +55,7 @@ static void iss_print_status(struct iss_device *iss)
->   * readback the same register, in this case the revision register.
->   *
->   * See this link for reference:
-> - *   http://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
-> + *   https://www.mail-archive.com/linux-omap@vger.kernel.org/msg08149.html
->   */
->  static void omap4iss_flush(struct iss_device *iss)
->  {
+> block/blk-core.c      | 1 -
+> drivers/mtd/mtdcore.c | 1 +
+> fs/9p/vfs_super.c     | 4 ++--
+> fs/afs/super.c        | 1 -
+> fs/btrfs/disk-io.c    | 1 -
+> fs/fuse/inode.c       | 1 -
+> fs/nfs/super.c        | 9 +--------
+> fs/ubifs/super.c      | 1 +
 
--- 
-Regards,
+For ubifs and mtd:
 
-Laurent Pinchart
+Acked-by: Richard Weinberger <richard@nod.at>
+
+Thanks,
+//richard
