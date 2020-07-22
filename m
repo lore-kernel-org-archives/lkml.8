@@ -2,116 +2,182 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBCFC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A17C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27E7C20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595439614;
-	bh=lTXgEZOM6WAmbI17kym6nz1GakVkLb7xxhXhP7EnIE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=TbrAoro5aeJ2V+Tk0TuOIqtDxDhXYG+u8kZb8H8lOkxiHRpR0Rh49xrSkmUdGx3Nf
-	 ZTjdU5QwoYV8I4bgbUK59QWs2ss7ZPN2ytOkLzgm5mQtK3AJNY0oHS4gfApz7Klj9N
-	 f8Dhnz1qc2M1ZoyHp50cmFgd7s4P4nlh9hOeXrOw=
+	by mail.kernel.org (Postfix) with ESMTP id 1CDA920787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbgGVRkN (ORCPT
+        id S1728780AbgGVRmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:40:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgGVRkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:40:11 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E37A520787;
-        Wed, 22 Jul 2020 17:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595439611;
-        bh=lTXgEZOM6WAmbI17kym6nz1GakVkLb7xxhXhP7EnIE0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n5mWjM7/mkPPImvbpjDzNnrzgATHcFcYy651epkQHwXL39Ldnc0oR52J22knvfgxM
-         dxTlKRNbXzZ3wdzca6w1idgUgH4+P85bwMJsDKJPLYAOhdfuhZbJqKx5VEKUZNZ4l3
-         DsMVEmM1qTXCln9/LKkKVgbpr4uwPEc0NnkCrN/4=
-Date:   Wed, 22 Jul 2020 12:40:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Hancock <hancockrwd@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI
- bridge
-Message-ID: <20200722174009.GA1291928@bjorn-Precision-5520>
+        Wed, 22 Jul 2020 13:42:38 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:33245 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgGVRmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:42:38 -0400
+Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06MHgK4s032158;
+        Thu, 23 Jul 2020 02:42:20 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
+ Thu, 23 Jul 2020 02:42:20 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
+Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06MHgGAM032144
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 23 Jul 2020 02:42:20 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] dt-bindings: sound: convert ROHM BD28623 amplifier binding to yaml
+Date:   Thu, 23 Jul 2020 02:42:15 +0900
+Message-Id: <20200722174215.988974-1-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722021803.17958-1-hancockrwd@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Puranjay]
+This patch converts ROHM BD28623UMV class D speaker amplifier binding
+to DT schema.
 
-On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
-> Recently ASPM handling was changed to no longer disable ASPM on all
-> PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
-> devices don't seem to function properly with ASPM enabled, as they
-> cause the parent PCIe root port to cause repeated AER timeout errors.
-> In addition to flooding the kernel log, this also causes the machine
-> to wake up immediately after suspend is initiated.
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Hi Robert, thanks a lot for the report of this problem
-(https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
-and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
+---
 
-I'm pretty sure Linux ASPM support is missing some things.  This
-problem might be a hardware problem where a quirk is the right
-solution, but it could also be that it's a result of a Linux defect
-that we should fix.
+Changes in v2:
+  - add additionalProperties:false
+  - add Rob's Reviewed-by
+---
+ .../bindings/sound/rohm,bd28623.txt           | 29 --------
+ .../bindings/sound/rohm,bd28623.yaml          | 67 +++++++++++++++++++
+ 2 files changed, 67 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/rohm,bd28623.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
 
-Could you collect the dmesg log and "sudo lspci -vvxxxx" output
-somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
-whether this L1 PM substates are enabled on this link, and whether
-that's configured correctly.
+diff --git a/Documentation/devicetree/bindings/sound/rohm,bd28623.txt b/Documentation/devicetree/bindings/sound/rohm,bd28623.txt
+deleted file mode 100644
+index d84557c2686e..000000000000
+--- a/Documentation/devicetree/bindings/sound/rohm,bd28623.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-ROHM BD28623MUV Class D speaker amplifier for digital input
+-
+-This codec does not have any control buses such as I2C, it detect format and
+-rate of I2S signal automatically. It has two signals that can be connected
+-to GPIOs: reset and mute.
+-
+-Required properties:
+-- compatible      : should be "rohm,bd28623"
+-- #sound-dai-cells: should be 0.
+-- VCCA-supply     : regulator phandle for the VCCA supply
+-- VCCP1-supply    : regulator phandle for the VCCP1 supply
+-- VCCP2-supply    : regulator phandle for the VCCP2 supply
+-
+-Optional properties:
+-- reset-gpios     : GPIO specifier for the active low reset line
+-- mute-gpios      : GPIO specifier for the active low mute line
+-
+-Example:
+-
+-	codec {
+-		compatible = "rohm,bd28623";
+-		#sound-dai-cells = <0>;
+-
+-		VCCA-supply = <&vcc_reg>;
+-		VCCP1-supply = <&vcc_reg>;
+-		VCCP2-supply = <&vcc_reg>;
+-		reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
+-		mute-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
+-	};
+diff --git a/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml b/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
+new file mode 100644
+index 000000000000..859ce64da152
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rohm,bd28623.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/rohm,bd28623.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD28623MUV Class D speaker amplifier for digital input
++
++description:
++  This codec does not have any control buses such as I2C, it detect
++  format and rate of I2S signal automatically. It has two signals
++  that can be connected to GPIOs reset and mute.
++
++maintainers:
++  - Katsuhiro Suzuki <katsuhiro@katsuster.net>
++
++properties:
++  compatible:
++    const: rohm,bd28623
++
++  "#sound-dai-cells":
++    const: 0
++
++  VCCA-supply:
++    description:
++      regulator phandle for the VCCA (for analog) power supply
++
++  VCCP1-supply:
++    description:
++      regulator phandle for the VCCP1 (for ch1) power supply
++
++  VCCP2-supply:
++    description:
++      regulator phandle for the VCCP2 (for ch2) power supply
++
++  reset-gpios:
++    maxItems: 1
++    description:
++      GPIO specifier for the active low reset line
++
++  mute-gpios:
++    maxItems: 1
++    description:
++      GPIO specifier for the active low mute line
++
++required:
++  - compatible
++  - VCCA-supply
++  - VCCP1-supply
++  - VCCP2-supply
++  - "#sound-dai-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    codec {
++      compatible = "rohm,bd28623";
++      #sound-dai-cells = <0>;
++
++      VCCA-supply = <&vcc_reg>;
++      VCCP1-supply = <&vcc_reg>;
++      VCCP2-supply = <&vcc_reg>;
++      reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>;
++      mute-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
++    };
+-- 
+2.27.0
 
-> Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
-> ---
->  drivers/pci/quirks.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 812bfc32ecb8..e5713114f2ab 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2330,6 +2330,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
->  
-> +static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-> +{
-> +	pci_info(dev, "Disabling ASPM L0s/L1\n");
-> +	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-> +}
-> +
-> +/*
-> + * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
-> + * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected,
-> + * disable both L0s and L1 for now to be safe.
-> + */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-> +
->  /*
->   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->   * Link bit cleared after starting the link retrain process to allow this
-> -- 
-> 2.26.2
-> 
