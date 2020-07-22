@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BEAC433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D85C433F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E653920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D663206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jjalxO1u"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WVlLlgHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731990AbgGVLDs (ORCPT
+        id S1732129AbgGVLD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:03:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56238 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGVLDp (ORCPT
+        Wed, 22 Jul 2020 07:03:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39042 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgGVLD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:03:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3Y4v072362;
-        Wed, 22 Jul 2020 06:03:34 -0500
+        Wed, 22 Jul 2020 07:03:56 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3kXL070467;
+        Wed, 22 Jul 2020 06:03:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595415814;
-        bh=w0kKvgPWtxpR8/SJqvDyB4niiNZZhzWW1VwYSFg/2R8=;
+        s=ti-com-17Q1; t=1595415826;
+        bh=CWIKltqarvAYPvUpTOXv+9gnETqUvut1kE2gYgu5r3Y=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jjalxO1usBxIfW8F6Bho+AhYHdORJ2k6jsn5x4xrN5p+SWR/vrKhOscARd0U5x8aX
-         VqzySlD8CYe/6xPHi5/uGjR7tmX/zNoWRC1qSKgHIxuQcAkQRRIvlaaNF0GyJq211f
-         lPNJxrhKRu1A2BhwdvMhoCAzlm8jAYcL6YScurIU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3Ywm051615;
-        Wed, 22 Jul 2020 06:03:34 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        b=WVlLlgHZwSLmqulvzYYYbqtc9qPWVRwK4YiltrUMoSQh60Pca8RUYh9OwQmIsRG1i
+         tmdpkIb7CXgP9zy2ZBjPGsYbCCRPfaLimGvkrAjZbb53fwvyHPapYlu2a5q5fyw37s
+         nAzcQWWokWEzVmp8wYQvY85H7nbTnnYeMEWHy1wg=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MB3k3Q005837
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 06:03:46 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 06:03:34 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 06:03:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 06:03:34 -0500
+ Frontend Transport; Wed, 22 Jul 2020 06:03:45 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFb078616;
-        Wed, 22 Jul 2020 06:03:30 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFe078616;
+        Wed, 22 Jul 2020 06:03:42 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -58,9 +59,9 @@ CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v8 03/15] linux/kernel.h: Add PTR_ALIGN_DOWN macro
-Date:   Wed, 22 Jul 2020 16:33:05 +0530
-Message-ID: <20200722110317.4744-4-kishon@ti.com>
+Subject: [PATCH v8 06/15] PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+Date:   Wed, 22 Jul 2020 16:33:08 +0530
+Message-ID: <20200722110317.4744-7-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722110317.4744-1-kishon@ti.com>
 References: <20200722110317.4744-1-kishon@ti.com>
@@ -72,28 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a macro for aligning down a pointer. This is useful to get an
-aligned register address when a device allows only word access and
-doesn't allow half word or byte access.
+Certain platforms like TI's J721E allows only 32-bit configuration
+space access. In such cases pci_generic_config_read and
+pci_generic_config_write cannot be used. Add support in Cadence core
+to let pci_host_bridge have custom pci_ops.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- include/linux/kernel.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 82d91547d122..7339a00c895e 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -34,6 +34,7 @@
- #define ALIGN_DOWN(x, a)	__ALIGN_KERNEL((x) - ((a) - 1), (a))
- #define __ALIGN_MASK(x, mask)	__ALIGN_KERNEL_MASK((x), (mask))
- #define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
-+#define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
- #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index de02fadc4809..a8303258874c 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -505,7 +505,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	list_splice_init(&resources, &bridge->windows);
+ 	bridge->dev.parent = dev;
+ 	bridge->busnr = pcie->bus;
+-	bridge->ops = &cdns_pcie_host_ops;
++	if (!bridge->ops)
++		bridge->ops = &cdns_pcie_host_ops;
+ 	bridge->map_irq = of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq = pci_common_swizzle;
  
- /* generic data direction definitions */
 -- 
 2.17.1
 
