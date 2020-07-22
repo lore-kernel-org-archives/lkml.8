@@ -2,102 +2,111 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3DA20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R9y8+MKx"
+	by mail.kernel.org (Postfix) with ESMTP id 223B820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731795AbgGVJza (ORCPT
+        id S1731838AbgGVJzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgGVJz3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:55:29 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6FFC0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:55:29 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a15so1256418wrh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=kxSvJk8PPx85/FfqsccMmNMJL7JRomVt0OX9zD7tg3k=;
-        b=R9y8+MKxhAGY+kSUmAdhrWM4yqyhfwT6dhGHfhkKsZeX7vXNAGA8IFPEl1hXUrfYD4
-         WsDhPNz8WK1FByKUdXLD3XxoSgmLfu4rOop0ST/BnN4Ytd3dauao8CEHgdX5UzYjwK/X
-         0ou3iRXjpIlPMdkAf3vMYpORaMFboFwB/giYGmeEa1bU/1UbksdzVuU1ewk8d4e+Df6j
-         bv47KEvHL0jglmiyj2WDIOdv28hLuXxtp5Pri7uI4pBbLuluEyCqagl7ut7mKOfKWeBV
-         DHCEOLPNHTrDg7Eh8iXnNgwb1D3nSG3VjJhftF5m6n/pxykenWUmFTBPkROev4PIyCs/
-         tDTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=kxSvJk8PPx85/FfqsccMmNMJL7JRomVt0OX9zD7tg3k=;
-        b=N0I3M1GFfux+m8wHjSGXHEqvmFts6VvBwu+roqYhGuphHe1uSinnPtuvLarJGXi0vG
-         xwWhfEl+tpcwfHAlyKFsrDR3y2B1b6I+r6KThsW+iT/hKKWPC1L+/tfPQWt9a8cOIP8c
-         WBE9SwSd/FC7GeX4LE9dNOFsZyuzshQ1l4ZRjQ6Zebv8eoecJV6onp0vUnZogI9qMAZG
-         uMOpX/LbcKvXTV9BPf6kBtfXks5EaJ619GxPpkiTHtWoI2orNkQYUVW8Ayl38eN/5x7E
-         iV7dJh2XCc80BZ2fPy9pbTGFPN9TOqojb7ugmVsGSLR9PTJ7RU1fXgga0aIC03jbi4pI
-         V5Jw==
-X-Gm-Message-State: AOAM533BVsiG7a+hIOD6N6eBXblvkowaR/naNC2MCnKrrr4Y4UIe+n3H
-        c1680sAZiA26UYhKDj12FrFNMA==
-X-Google-Smtp-Source: ABdhPJweVofYVl95BVJfDYpC0Nne2OWxwglmHkb5eMKOIUPDke+KD6Nb8Iif50Xf2/ZdtjhLxj3gIw==
-X-Received: by 2002:adf:ee06:: with SMTP id y6mr10430631wrn.225.1595411728204;
-        Wed, 22 Jul 2020 02:55:28 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id w7sm6733476wmc.32.2020.07.22.02.55.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 02:55:27 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 10:55:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] MFD: max77693-private.h: drop a duplicated word
-Message-ID: <20200722095525.GL621928@dell>
-References: <20200719002931.20571-1-rdunlap@infradead.org>
+        Wed, 22 Jul 2020 05:55:33 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8352 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727819AbgGVJzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:55:33 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 760F26FDE627CFC50EAB;
+        Wed, 22 Jul 2020 17:55:28 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Jul 2020 17:55:17 +0800
+From:   Hanjun Guo <guohanjun@huawei.com>
+To:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     <linux-kernel@vger.kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+Subject: [PATCH] drm/amdkfd: Put ACPI table after using it
+Date:   Wed, 22 Jul 2020 17:48:28 +0800
+Message-ID: <1595411308-15654-1-git-send-email-guohanjun@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200719002931.20571-1-rdunlap@infradead.org>
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020, Randy Dunlap wrote:
+The acpi_get_table() should be coupled with acpi_put_table() if
+the mapped table is not used at runtime to release the table
+mapping.
 
-> Drop the repeated word "in" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> ---
->  include/linux/mfd/max77693-private.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+In kfd_create_crat_image_acpi(), crat_table is copied to pcrat_image,
+and in kfd_create_vcrat_image_cpu(), the acpi_table is only used to
+get the OEM info, so those table mappings need to be release after
+using it.
 
-Fixed up the subject line for you.
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-Applied, thanks.
-
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+index 1009a3b..d378e61 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+@@ -756,6 +756,7 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
+ 	struct acpi_table_header *crat_table;
+ 	acpi_status status;
+ 	void *pcrat_image;
++	int rc = 0;
+ 
+ 	if (!crat_image)
+ 		return -EINVAL;
+@@ -776,17 +777,21 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
+ 
+ 	if (ignore_crat) {
+ 		pr_info("CRAT table disabled by module option\n");
+-		return -ENODATA;
++		rc = -ENODATA;
++		goto out;
+ 	}
+ 
+ 	pcrat_image = kmemdup(crat_table, crat_table->length, GFP_KERNEL);
+-	if (!pcrat_image)
+-		return -ENOMEM;
++	if (!pcrat_image) {
++		rc = -ENOMEM;
++		goto out;
++	}
+ 
+ 	*crat_image = pcrat_image;
+ 	*size = crat_table->length;
+-
+-	return 0;
++out:
++	acpi_put_table(crat_table);
++	return rc;
+ }
+ 
+ /* Memory required to create Virtual CRAT.
+@@ -970,6 +975,7 @@ static int kfd_create_vcrat_image_cpu(void *pcrat_image, size_t *size)
+ 				CRAT_OEMID_LENGTH);
+ 		memcpy(crat_table->oem_table_id, acpi_table->oem_table_id,
+ 				CRAT_OEMTABLEID_LENGTH);
++		acpi_put_table(acpi_table);
+ 	}
+ 	crat_table->total_entries = 0;
+ 	crat_table->num_domains = 0;
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.7.12.4
+
