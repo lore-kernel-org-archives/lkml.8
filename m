@@ -8,68 +8,69 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0464C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C966C433FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5F9206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C51207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fARYP1yx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4T9yBfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbgGVRIP (ORCPT
+        id S1732130AbgGVRIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
+        Wed, 22 Jul 2020 13:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732010AbgGVRIL (ORCPT
+        with ESMTP id S1728780AbgGVRIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:08:11 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF64BC0619DC;
-        Wed, 22 Jul 2020 10:08:10 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so4781169wmc.1;
-        Wed, 22 Jul 2020 10:08:10 -0700 (PDT)
+        Wed, 22 Jul 2020 13:08:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB8D4C0619DC;
+        Wed, 22 Jul 2020 10:08:12 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y3so2626675wrl.4;
+        Wed, 22 Jul 2020 10:08:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mj2d0jlZHTrTuhnFNCC1PkNjdWcEHuG1YHIYu31J1mI=;
-        b=fARYP1yxhLR7Wx3So2ItMo9bgxIUxzOu2IYsDAmgR2uypbp/Rb0dx9rzKOe+0eknHF
-         EB31Ayz5u36CmiAQEfZ4Sob4bSBNZF3010b09opdwt7S+1KyLmg5+lpBJP54BgexHjWe
-         HyujqJCaxBt9WTqTJFoBjermvsoNaDwIzXpOedlbHxqSbpgH07jFOMy/fAYxwVqLIK7m
-         5q54HdymeuYuC4uSXV8yv9/GtFxtvFNto8ov5xNMgkSIkeySvHAgSbszYKhTKEbzF6lo
-         FmYC5+gOM5DmHKNtY3C3T7JjShmlh6tfe5Tmw/EvQTso58+ndzdrrL/jdVkn5FCHC7pZ
-         5h7w==
+        bh=KBryyAOXlIEM72mjj0Ie/wtlsW0303YjImjOaYxqFM8=;
+        b=U4T9yBfN/KiRrtZOD5RskdJoL/IGZtn1OvZEOq3koDtpOobOycG1IXWQaDfZXdi6su
+         QOuiucxfmK0PYDZLlgaNXlhJpZ783tRGRGNhPKgffGw0srR6uaLOeCUbnqJx+3mgkDhK
+         jcxpFYtEjJoSMKQDISeVOLEsL56sSTmEZqEjcCSfo22kLtc4KjksPc3jzoG2cA3UEfhh
+         p0bdNWTS//HDqst/j3vnbS86idF3NiI9uN63czNaOpk8Fi4qp2ZsZlctRKT5/m3RkYFy
+         bAlWTf3zwjhXJix7VRvvi68WHYUuZEbtmVeD64uHRkLPVPm0mXj96GFm1tZoVYB1nwUb
+         a6eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=mj2d0jlZHTrTuhnFNCC1PkNjdWcEHuG1YHIYu31J1mI=;
-        b=jA3/hDy7uOhUU3d0ruGAXLtpeIvQDB4We88d9WEwW2kM2wju4GA9CBvlVqEey0RLwO
-         2OBfN0BSwdtDn2Pew+UmsZPScDTj7uNCH9/KjLlHEeK++UJSsnZiBUhOKc7h8aDL68PI
-         J7QuMuaVUkS0+g60I6Qxyq1YQAg18n6GrILLg39zrBIitEnfLjuliRdcHJ5KdgeP8oAB
-         cgmMV6gOHSzRhxRHXK80GRpUOkRvaIOmyo7BQjuP0VvhjZnj/3cwg58rttTMiNVIJAYe
-         UKahhYxeqdXF2lUmI4A/ugIdc4knU2fUHI9yX0leclYHDMngF1gQKPn2SOUDmH6mpiAx
-         GRhA==
-X-Gm-Message-State: AOAM531a+pxyuwT8iG0mScxiTU2yEwhtNqBZmxLFBlQ8uSzGuEqAYIdz
-        +7+ww6g+wulfHODguZk/b9Z2xRZy
-X-Google-Smtp-Source: ABdhPJyUtjPjtTc2vJEa6UaxSVqCi95SwQq/fUq7rR10npA0rpc7puaE+RzXGePMIwq2cd+ozKS5nw==
-X-Received: by 2002:a7b:cb92:: with SMTP id m18mr548766wmi.94.1595437689204;
-        Wed, 22 Jul 2020 10:08:09 -0700 (PDT)
+        bh=KBryyAOXlIEM72mjj0Ie/wtlsW0303YjImjOaYxqFM8=;
+        b=t0RZwTHRpNLQK5D4vqRTAF6ntF3C9SG9D2GA7lbup68VZTafE/LKgf9YXLRq951swG
+         b9sUzWSlmEUH9tFSkG+h86e2r2S5jEW1Fhi8x+wS/vjl/rr1lVWgB3QMVCA8U6VFdcNX
+         yb7AC6phApzaO3/LmUL1UbbzwutOc8kyaH6J8fZRw0ucZFdL5Z3ilFqvZCKjanvJH0j3
+         SNPKBCcgxmw4Co0ImF+0Qj9TqmqjWEOl8MXVCxKqjGY7ZCCyUdk3yGKdNa6iBd6Fv9Xb
+         PV0jzoVxgc48O2cXlilZ6fN9Oq781PFZfDFILO9TYzr+jYyz8qIOTLi61vR9JOjgRPlW
+         NmIA==
+X-Gm-Message-State: AOAM533MXZPz5/t9Vb+GAgYfQ+tfihurHxDfFr59y8oNm53WARbroZSA
+        9wF/Gr5JjCW/vqvPlYTrEaoI/6CC
+X-Google-Smtp-Source: ABdhPJza494HfVbClB6Vrv/wo9nx4caRRfzl3QhiCCUkTA+6OJCw83nMMaBdr46d3fLnoqaIkKrX0g==
+X-Received: by 2002:a5d:4a45:: with SMTP id v5mr497954wrs.228.1595437691173;
+        Wed, 22 Jul 2020 10:08:11 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id 133sm392960wme.5.2020.07.22.10.08.07
+        by smtp.gmail.com with ESMTPSA id 133sm392960wme.5.2020.07.22.10.08.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 10:08:08 -0700 (PDT)
+        Wed, 22 Jul 2020 10:08:10 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+Cc:     Danesh Petigara <danesh.petigara@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
         Felipe Balbi <balbi@kernel.org>,
         Florian Fainelli <florian.fainelli@broadcom.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Sasi Kumar <sasi.kumar@broadcom.com>
-Subject: [PATCH v3 5/7] usb: bdc: driver runs out of buffer descriptors on large ADB transfers
-Date:   Wed, 22 Jul 2020 13:07:44 -0400
-Message-Id: <20200722170746.5222-6-alcooperx@gmail.com>
+Subject: [PATCH v3 6/7] usb: bdc: Halt controller on suspend
+Date:   Wed, 22 Jul 2020 13:07:45 -0400
+Message-Id: <20200722170746.5222-7-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722170746.5222-1-alcooperx@gmail.com>
 References: <20200722170746.5222-1-alcooperx@gmail.com>
@@ -78,33 +79,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Version v1.0.40 of the Android host ADB software increased maximum
-transfer sizes from 256K to 1M. Since the STB ADB gadget driver
-requests only 16K at a time, the BDC driver ran out of buffer
-descriptors (BDs) if the queuing happens faster than the incoming
-16K transfers. This issue is fixed by doubling the number of BDs
-that can be queued so that the entire 1M request can be queued
-without running out of buffers.
+From: Danesh Petigara <danesh.petigara@broadcom.com>
 
+GISB bus error kernel panics have been observed during S2 transition
+tests on the 7271t platform. The errors are a result of the BDC
+interrupt handler trying to access BDC register space after the
+system's suspend callbacks have completed.
+
+Adding a suspend hook to the BDC driver that halts the controller before
+S2 entry thus preventing unwanted access to the BDC register space during
+this transition.
+
+Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc.h b/drivers/usb/gadget/udc/bdc/bdc.h
-index 6e1e881dc51e..ac75e25c3b6a 100644
---- a/drivers/usb/gadget/udc/bdc/bdc.h
-+++ b/drivers/usb/gadget/udc/bdc/bdc.h
-@@ -44,7 +44,7 @@
- #define NUM_SR_ENTRIES	64
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 2c2f7aef7ba7..c1650247ea39 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -607,9 +607,14 @@ static int bdc_remove(struct platform_device *pdev)
+ static int bdc_suspend(struct device *dev)
+ {
+ 	struct bdc *bdc = dev_get_drvdata(dev);
++	int ret;
  
- /* Num of bds per table */
--#define NUM_BDS_PER_TABLE	32
-+#define NUM_BDS_PER_TABLE	64
+-	clk_disable_unprepare(bdc->clk);
+-	return 0;
++	/* Halt the controller */
++	ret = bdc_stop(bdc);
++	if (!ret)
++		clk_disable_unprepare(bdc->clk);
++
++	return ret;
+ }
  
- /* Num of tables in bd list for control,bulk and Int ep */
- #define NUM_TABLES	2
+ static int bdc_resume(struct device *dev)
 -- 
 2.17.1
 
