@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AAAC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F59C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1027A20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D177322B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fYByS9hO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YOnvBuRX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3lMKpZG/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kjsOPflk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733003AbgGVVzl (ORCPT
+        id S1732952AbgGVVzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
+        Wed, 22 Jul 2020 17:55:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgGVVzi (ORCPT
+        with ESMTP id S1730938AbgGVVzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:55:38 -0400
+        Wed, 22 Jul 2020 17:55:39 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3536FC0619DC;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D7AC0619DC;
         Wed, 22 Jul 2020 14:55:38 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 21:55:35 -0000
+Date:   Wed, 22 Jul 2020 21:55:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595454936;
+        s=2020; t=1595454937;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=W47gSk60h1O07w6cMt6J3jJDxvcjGHZE5w0sslJgfkY=;
-        b=fYByS9hOO2durPCidnloZMVzV7T8PkyI+LJQ1MkQ8UXYc1OCTDxCe3F7znvQ/gmP3bgM7a
-        zUrn7OyGNUjqygyqmyvUjSidRwN2IRFB1FqLHnBnejIgGNNv4NxW40ua40oA48tAB2RvWB
-        ZYOLKHXS4N3hN22YpPFmPmbPqxpQve1E3idMyfyD8vYO8BOJDQcNPuY05rgjTWMvkJJV9A
-        tek5jIc63HZ2JLs/1EqPC3nJ6mWUMNsO0rpM26l4nf2IS2U1W53x8Ar8MIwAl5nP5zvYoT
-        EOvDVYZFzb7EM/4NBKZCv3NNkbn3UXyckVelGGYkYGSCfYAtnjGHn7998zYiLg==
+        bh=sMB1u185xELWvtA2XnvmJscfBxUyPz4bqw9RjDthIVI=;
+        b=3lMKpZG/UiGjsx6/N2dDssrsL3jVrUs5qDF+6q/Iq0Cm3o1RosA0QOaVUAlIcyF/pAwgAO
+        jkezdH+vDeQjqCNHcvkdnctyhKq4Cs8H8goD4QGPWtGrq2Fa+126zRppfOfPOCmjZDpXCM
+        ZOM5CCyShZJvxfdW+i73q9EQTUTEFBZP9KShreZWtYQ7AzLdyqICDNbfzjudiRdOuVd0zH
+        IdAD0xuoimVXcgDz8aVzeYNyrpCfsF1u0dMUvss9FVr+6eDIXa4zFaXlAg6Km2oUTKnt6N
+        eNCcq7Oo+YVRHzISOsU0zKMaJ0MA/rC2ZtlwXUKH/i5sfksjAePvh5mvuwrlpQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595454936;
+        s=2020e; t=1595454937;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=W47gSk60h1O07w6cMt6J3jJDxvcjGHZE5w0sslJgfkY=;
-        b=YOnvBuRX+ZUyFHUFNl2XxuQfnm9mkRcZFdIR5nJ4yUiNQW9WwPAsJnuBw4mSAv81jCaCEX
-        Qx9fJBaIepBYd8Bw==
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+        bh=sMB1u185xELWvtA2XnvmJscfBxUyPz4bqw9RjDthIVI=;
+        b=kjsOPflk0wpTa2tK3KGbDlupC+qxx5K7elor+2bG1p4fBKoX0NIC1D+KtjrC17/ldRPPs2
+        yaoopoiR6+Gh6UAg==
+From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/dumpstack: Dump user space code correctly again
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+Subject: [tip: x86/urgent] x86/unwind/orc: Fix ORC for newly forked tasks
+Cc:     Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87h7tz306w.fsf@nanos.tec.linutronix.de>
-References: <87h7tz306w.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com>
+References: <f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Message-ID: <159545493541.4006.6455328632471771109.tip-bot2@tip-bot2>
+Message-ID: <159545493667.4006.9690401904155723707.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,77 +74,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     d181d2da0141371bbc360eaea78719203e165e1c
-Gitweb:        https://git.kernel.org/tip/d181d2da0141371bbc360eaea78719203e165e1c
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 22 Jul 2020 10:39:54 +02:00
+Commit-ID:     372a8eaa05998cd45b3417d0e0ffd3a70978211a
+Gitweb:        https://git.kernel.org/tip/372a8eaa05998cd45b3417d0e0ffd3a70978211a
+Author:        Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate:    Fri, 17 Jul 2020 09:04:25 -05:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 22 Jul 2020 23:47:48 +02:00
+CommitterDate: Wed, 22 Jul 2020 23:47:47 +02:00
 
-x86/dumpstack: Dump user space code correctly again
+x86/unwind/orc: Fix ORC for newly forked tasks
 
-H.J. reported that post 5.7 a segfault of a user space task does not longer
-dump the Code bytes when /proc/sys/debug/exception-trace is enabled. It
-prints 'Code: Bad RIP value.' instead.
+The ORC unwinder fails to unwind newly forked tasks which haven't yet
+run on the CPU.  It correctly reads the 'ret_from_fork' instruction
+pointer from the stack, but it incorrectly interprets that value as a
+call stack address rather than a "signal" one, so the address gets
+incorrectly decremented in the call to orc_find(), resulting in bad ORC
+data.
 
-This was broken by a recent change which made probe_kernel_read() reject
-non-kernel addresses.
+Fix it by forcing 'ret_from_fork' frames to be signal frames.
 
-Update show_opcodes() so it retrieves user space opcodes via
-copy_from_user_nmi().
-
-Fixes: 98a23609b103 ("maccess: always use strict semantics for probe_kernel_read")
-Reported-by: H.J. Lu <hjl.tools@gmail.com>
+Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87h7tz306w.fsf@nanos.tec.linutronix.de
+Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
 
 ---
- arch/x86/kernel/dumpstack.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ arch/x86/kernel/unwind_orc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index b037cfa..7401cc1 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -71,6 +71,22 @@ static void printk_stack_address(unsigned long address, int reliable,
- 	printk("%s %s%pB\n", log_lvl, reliable ? "" : "? ", (void *)address);
- }
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 7f969b2..ec88bbe 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -440,8 +440,11 @@ bool unwind_next_frame(struct unwind_state *state)
+ 	/*
+ 	 * Find the orc_entry associated with the text address.
+ 	 *
+-	 * Decrement call return addresses by one so they work for sibling
+-	 * calls and calls to noreturn functions.
++	 * For a call frame (as opposed to a signal frame), state->ip points to
++	 * the instruction after the call.  That instruction's stack layout
++	 * could be different from the call instruction's layout, for example
++	 * if the call was to a noreturn function.  So get the ORC data for the
++	 * call instruction itself.
+ 	 */
+ 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
+ 	if (!orc) {
+@@ -662,6 +665,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		state->sp = task->thread.sp;
+ 		state->bp = READ_ONCE_NOCHECK(frame->bp);
+ 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
++		state->signal = (void *)state->ip == ret_from_fork;
+ 	}
  
-+static int copy_code(struct pt_regs *regs, u8 *buf, unsigned long src,
-+		     unsigned int nbytes)
-+{
-+	if (!user_mode(regs))
-+		return copy_from_kernel_nofault(buf, (u8 *)src, nbytes);
-+
-+	/*
-+	 * Make sure userspace isn't trying to trick us into dumping kernel
-+	 * memory by pointing the userspace instruction pointer at it.
-+	 */
-+	if (__chk_range_not_ok(src, nbytes, TASK_SIZE_MAX))
-+		return -EINVAL;
-+
-+	return copy_from_user_nmi(buf, (void __user *)src, nbytes);
-+}
-+
- /*
-  * There are a couple of reasons for the 2/3rd prologue, courtesy of Linus:
-  *
-@@ -97,17 +113,8 @@ void show_opcodes(struct pt_regs *regs, const char *loglvl)
- #define OPCODE_BUFSIZE (PROLOGUE_SIZE + 1 + EPILOGUE_SIZE)
- 	u8 opcodes[OPCODE_BUFSIZE];
- 	unsigned long prologue = regs->ip - PROLOGUE_SIZE;
--	bool bad_ip;
--
--	/*
--	 * Make sure userspace isn't trying to trick us into dumping kernel
--	 * memory by pointing the userspace instruction pointer at it.
--	 */
--	bad_ip = user_mode(regs) &&
--		__chk_range_not_ok(prologue, OPCODE_BUFSIZE, TASK_SIZE_MAX);
- 
--	if (bad_ip || copy_from_kernel_nofault(opcodes, (u8 *)prologue,
--					OPCODE_BUFSIZE)) {
-+	if (copy_code(regs, opcodes, prologue, sizeof(opcodes))) {
- 		printk("%sCode: Bad RIP value.\n", loglvl);
- 	} else {
- 		printk("%sCode: %" __stringify(PROLOGUE_SIZE) "ph <%02x> %"
+ 	if (get_stack_info((unsigned long *)state->sp, state->task,
