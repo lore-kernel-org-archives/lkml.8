@@ -2,95 +2,118 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E4CC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED7A22C9D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48412068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:46:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OCbuN3xB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731549AbgGVJp1 (ORCPT
+        id S1731604AbgGVJqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:45:27 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34649 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728599AbgGVJp1 (ORCPT
+        Wed, 22 Jul 2020 05:46:11 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34504 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729864AbgGVJqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:45:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-100-hJ4njsgnPBGouKXOpXFVQg-1; Wed, 22 Jul 2020 10:45:24 +0100
-X-MC-Unique: hJ4njsgnPBGouKXOpXFVQg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 10:45:23 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 22 Jul 2020 10:45:23 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Index: AQHWX6FKV5/AXh1RK02Ltj+ZPvbZjKkTV60Q
-Date:   Wed, 22 Jul 2020 09:45:23 +0000
-Message-ID: <773d830b89814ab8a92dc892ec6e65e2@AcuMS.aculab.com>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <CAHk-=wiYS3sHp9bvRn3KmkFKnK-Pb0ksL+-gRRHLK_ZjJqQf=w@mail.gmail.com>
-In-Reply-To: <CAHk-=wiYS3sHp9bvRn3KmkFKnK-Pb0ksL+-gRRHLK_ZjJqQf=w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 22 Jul 2020 05:46:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595411169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=MBPzayyDDaE0GAZE66kREJVgIDaMwKB4hXq7u7LMzPg=;
+        b=OCbuN3xBuKgGv0rEWwCeavFtqddv5NTBHfLqOeUYTzh9UmnLYjjb8+cp9TBHbzhT4ZjrRS
+        VE8mtAZhW3QLKrWLFjcP+OpPORoR21YLbkv2Cx5YUL7WnMeGDNt2m94SY1w9o+OUR8rZtG
+        E9kXnH5vD2HySFWN9qr7sp1TdAvH9pg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-447-Qbgut7EmOUKmHE08V_x4SA-1; Wed, 22 Jul 2020 05:46:05 -0400
+X-MC-Unique: Qbgut7EmOUKmHE08V_x4SA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F13CE100CCC0;
+        Wed, 22 Jul 2020 09:46:03 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-254.ams2.redhat.com [10.36.113.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 79D355D9DC;
+        Wed, 22 Jul 2020 09:45:59 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH v2 0/9] s390: implement and optimize vmemmap_free()
+Date:   Wed, 22 Jul 2020 11:45:49 +0200
+Message-Id: <20200722094558.9828-1-david@redhat.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjEgSnVseSAyMDIwIDIxOjU1DQo+IE9uIFR1
-ZSwgSnVsIDIxLCAyMDIwIGF0IDE6MjUgUE0gQWwgVmlybyA8dmlyb0B6ZW5pdi5saW51eC5vcmcu
-dWs+IHdyb3RlOg0KPiA+DQo+ID4gUHJlcGFyYXRpb24gZm9yIHRoZSBjaGFuZ2Ugb2YgY2FsbGlu
-ZyBjb252ZW50aW9uczsgcmlnaHQgbm93IGFsbA0KPiA+IGNhbGxlcnMgcGFzcyAwIGFzIGluaXRp
-YWwgc3VtLiAgUGFzc2luZyAweGZmZmZmZmZmIGluc3RlYWQgeWllbGRzDQo+ID4gdGhlIHZhbHVl
-cyBjb21wYXJhYmxlIG1vZCAweGZmZmYgYW5kIGd1YXJhbnRlZXMgdGhhdCAwIHdpbGwgbm90DQo+
-ID4gYmUgcmV0dXJuZWQgb24gc3VjY2Vzcy4NCj4gDQo+IFRoaXMgc2VlbXMgZGFuZ2Vyb3VzIHRv
-IG1lLg0KPiANCj4gTWF5YmUgc29tZSBpbXBsZW1lbnRhdGlvbiBkZXBlbmRzIG9uIHRoZSBmYWN0
-IHRoYXQgdGhleSBhY3R1YWxseSBkbw0KPiB0aGUgY3N1bSAxNiBiaXRzIGF0IGEgdGltZSwgYW5k
-IG5ldmVyIHNlZSBhbiBvdmVyZmxvdyBpbiAiaW50IiwNCj4gYmVjYXVzZSB0aGV5IGtlZXAgZm9s
-ZGluZyB0aGluZ3MuDQo+IA0KPiBZb3Ugbm93IGJyZWFrIHRoYXQgYXNzdW1wdGlvbiwgYW5kIGdp
-dmUgaXQgYW4gaW5pdGlhbCB2YWx1ZSB0aGF0IHRoZQ0KPiBjc3VtIGNvZGUgaXRzZWxmIHdvdWxk
-IG5ldmVyIGdlbmVyYXRlLCBhbmQgd291bGRuJ3QgaGFuZGxlIHJpZ2h0Lg0KPiANCj4gQnV0IEkg
-ZGlkbid0IGNoZWNrLiBNYXliZSB3ZSBkb24ndCBoYXZlIGFueXRoaW5nIHRoYXQgc3R1cGlkIGlu
-IHRoZSBrZXJuZWwuDQoNCkl0IGlzbid0IG5lY2Vzc2FyaWx5IHN0dXBpZCA6LSkNCkEgNjRiaXQg
-c3VtIGNhbiBiZSByZWR1Y2VkIHRvIDE2Yml0cyB1c2luZyBzaGlmdHMgYW5kIGFkZHMNCihhcyB1
-cyB1c3VhbGx5IGRvbmUpIG9mIHVzaW5nICdzdW0gJSAweGZmZmYnLg0KUHJvdmlkZWQgdGhlIGNv
-bXBpbGVyIHVzZXMgJ211bHRpcGx5IGJ5IHJlY2lwcm9jYWwnIHRoZSBjb2RlDQppc24ndCB0aGF0
-IGJhZCAtIGl0IG1pZ2h0IGV2ZW4gYmUgZGlmZmljdWx0IHRvIHNheSB3aGljaCBpcyBmYXN0ZXIu
-DQpIb3dldmVyIHRoYXQgbWFrZXMgdGhlIG91dHB1dCBkb21haW4gMC4uZmZmZSBub3QgMS4uZmZm
-Zi4NCg0KVGhlIGNoZWNrc3VtIGdlbmVyYXRpb24gY29kZSByZWFsbHkgbmVlZHMgdG8ga25vdyB3
-aGljaCBpcyB1c2VkLg0KU28gaXQgaXMgYmVzdCBuZXZlciB0byB1c2UgdGhlICUgdmVyc2lvbi4N
-CklmIHRoZSBzdW0gaXMga25vd24gdG8gYmUgMS4uMHhmZmZmIHRoZW4gYWZ0ZXIgaW52ZXJzaW9u
-IGl0IGlzDQowLi5mZmZlIGJ1dCB0aGUgcmVxdWlyZWQgZG9tYWluIGlzIDEuLmZmZmYuDQpUaGlz
-IGNhbiBiZSBmaXhlZCBieSBhZGRpbmcgMSAtIHByb3ZpZGVkIGEgY29tcGVuc2F0aW5nIDEgaXMN
-CmFkZGVkIGluIGJlZm9yZSB0aGUgaW52ZXJzaW9uLg0KVGhlIGVhc3kgcGxhY2UgdG8gZG8gdGhp
-cyBpcyB0byBmZWVkIDEgKG5vdCAwIG9yIH4wKSBpbnRvIHRoZQ0KZmlyc3QgY2hlY2tzdW0gYmxv
-Y2suDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
-Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
-biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+This series is based on the latest s390/features branch [1]. It
+consolidates vmem_add_range(), vmem_remove_range(), and vmemmap_populate()
+into a single, recursive page table walker. It then implements
+vmemmap_free() and optimizes it by
+- Freeing empty page tables (also done for vmem_remove_range()).
+- Handling cases where the vmemmap of a section does not fill huge pages
+  completely (e.g., sizeof(struct page) == 56).
+
+vmemmap_free() is currently never used, unless adiing standby memory fails
+(unlikely). This is relevant for virtio-mem, which adds/removes memory
+in memory block/section granularity (always removes memory in the same
+granularity it added it).
+
+I gave this a proper test with my virtio-mem prototype (which I will share
+in the near future), both with 56 byte memmap per page and 64 byte memmap
+per page, with and without huge page support. In both cases, removing
+memory (routed through arch_remove_memory()) will result in
+- all populated vmemmap pages to get removed/freed
+- all applicable page tables for the vmemmap getting removed/freed
+- all applicable page tables for the idendity mapping getting removed/freed
+Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
+environments.
+
+This is the basis for real memory hotunplug support for s390x and should
+complete my journey to s390x vmem/vmemmap code for now
+
+What needs double-checking is tlb flushing. AFAIKS, as there are no valid
+accesses, doing a single range flush at the end is sufficient, both when
+removing vmemmap pages and the idendity mapping.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features
+
+v1 -> v2:
+- Convert to a single page table walker named "modify_pagetable()", with
+  two helper functions "add_pagetable()" and "remove_pagetable().
+
+David Hildenbrand (9):
+  s390/vmem: rename vmem_add_mem() to vmem_add_range()
+  s390/vmem: consolidate vmem_add_range() and vmem_remove_range()
+  s390/vmemmap: extend modify_pagetable() to handle vmemmap
+  s390/vmemmap: cleanup when vmemmap_populate() fails
+  s390/vmemmap: take the vmem_mutex when populating/freeing
+  s390/vmem: cleanup empty page tables
+  s390/vmemmap: fallback to PTEs if mapping large PMD fails
+  s390/vmemmap: remember unused sub-pmd ranges
+  s390/vmemmap: avoid memset(PAGE_UNUSED) when adding consecutive
+    sections
+
+ arch/s390/mm/vmem.c | 637 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 442 insertions(+), 195 deletions(-)
+
+-- 
+2.26.2
 
