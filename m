@@ -2,122 +2,104 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA30C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD0F620714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A9A206F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 00:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oD8YLncu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vdHaaaa9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgGVAFZ (ORCPT
+        id S1728155AbgGVAJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:05:25 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46604 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgGVAFZ (ORCPT
+        Tue, 21 Jul 2020 20:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgGVAJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 20:05:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06M05DNQ130836;
-        Tue, 21 Jul 2020 19:05:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595376313;
-        bh=BaVl8BMz9uCrVtWj8q6K5EptiOMW/J/P4Io6v+g3r48=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oD8YLncuwpqLVfP44aad7yVfnnIbBiWWZQDlL+0IbEHVFexNY88DyDBtIKnkoBuc3
-         B9iTHy/zDVPctK+VYwk96rpNScnZVcPiF3nf5lTInI81JWFnDsMWDOmC/LNt+3yNQx
-         uKy7CNAlsmTxJqCJw0QMrYBMty7MFjOQhzzRJkmA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06M05D0m058564
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 19:05:13 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 19:05:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 19:05:13 -0500
-Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06M05DVv046850;
-        Tue, 21 Jul 2020 19:05:13 -0500
-Subject: Re: [PATCH v31 03/12] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200716182007.18389-1-dmurphy@ti.com>
- <20200716182007.18389-4-dmurphy@ti.com> <20200721210724.GD5966@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <59d0a02c-cfae-1170-728d-2ae332a81f6e@ti.com>
-Date:   Tue, 21 Jul 2020 19:05:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 20:09:31 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B95FC0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:09:30 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id u6so67161uau.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 17:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mK85RUGmwRYffliq+MRSbfx2SUtfwZmJnFiHDQarqLA=;
+        b=vdHaaaa9IE2S38rf1OOdBGMCtcqKWiiXSSoVcwkPuAA/Op7k48Xcv5bIHUGHrNaSO+
+         /EoDVOzVWw/2+fyMgxyh4ZHq/JGxvQAckTOQKU/CCZTN4zMs+UJYqaoIkXVU1aZZ0hDF
+         /iya58oVKtmixWpxPy0oyt5p2E98nDspu/ULCEbd0lE95lR/cQId1MURVaH9c+R5MSuq
+         MfQMswQfTa8am4zkexMwcDniT3sQgxtnAp7DQCK9o96gXD9gDtJi/U1xdPnf2+ShZ1r0
+         zBvH4PilGuGoTO6TStVIxyq+/V6KGki/CBSPyF5XRTtY9q+wyTIAemS6kjc3VSj3K7Bn
+         NQ6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mK85RUGmwRYffliq+MRSbfx2SUtfwZmJnFiHDQarqLA=;
+        b=FZ7Y7DgOHu8wXNTSe5QYsPyKi2RPkZfu+OWRkqsjTVJaE5RW5widBWbXHhSLgadi8t
+         05aAceGhs1Q+28b4kWWH6syHFGmZCWFXb1wNYS39DeZKolDya6D8elhGdNf9Iuo3PDh9
+         CFQCjnIh9GDfQpQkMMjRCeT3toe6KBoaIHSrSyYeQx7oB2yrKq3Ax6YSYQH/5z3C5wP8
+         Pzcx2sfqzshg9R4x+H/4ofOVHOsWGj9yzInJK9yflRAoG1cwfF/3HGNmWljVtCLJeB19
+         G+XVlv2xBxKxrIWh0eDQglezf02ESurhl1mB7EZGV6//l7MD7p9D3K5ZHdz7aO9G+qgB
+         2rLg==
+X-Gm-Message-State: AOAM530RZ9hllZyZgJr48B1EYb+qmkQVSYZw8ps95jCcZbFjkWr67qZ/
+        LzYGT/OGmxFaH2VrTqBELwHWbr0jkkHt0kSF+mMucg==
+X-Google-Smtp-Source: ABdhPJx6Jec9MJG+B1or+S03mhb/8U2LGhCRDecxPuzNvED8pDeuKCizZaXpCWHX7Dv3A6yU5IdcVtZJ30CJ7grHfYU=
+X-Received: by 2002:ab0:7182:: with SMTP id l2mr22366441uao.13.1595376569751;
+ Tue, 21 Jul 2020 17:09:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721210724.GD5966@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200714161203.31879-1-yanfei.xu@windriver.com>
+ <e3cbdb26-9bfb-55e7-c9a7-deb7f8831754@windriver.com> <20200719165746.GJ2786714@ZenIV.linux.org.uk>
+ <021ffaaa-daa4-8d80-c5bd-3a6c816d4703@windriver.com>
+In-Reply-To: <021ffaaa-daa4-8d80-c5bd-3a6c816d4703@windriver.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 21 Jul 2020 17:09:18 -0700
+Message-ID: <CAJuCfpHUcnEr1duHDjWTRDhpscE6=FWKvjid1eWiMObYY0bL4A@mail.gmail.com>
+Subject: Re: [PATCH] userfaultfd: avoid the duplicated release for userfaultfd_ctx
+To:     "Xu, Yanfei" <yanfei.xu@windriver.com>,
+        Lokesh Gidra <lokeshgidra@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 7/21/20 4:07 PM, Pavel Machek wrote:
-> On Thu 2020-07-16 13:19:58, Dan Murphy wrote:
->> Introduce the LP5036/30/24/18/12/9 RGB LED driver.
->> The difference in these parts are the number of
->> LED outputs where the:
->>
->> LP5036 can control 36 LEDs
->> LP5030 can control 30 LEDs
->> LP5024 can control 24 LEDs
->> LP5018 can control 18 LEDs
->> LP5012 can control 12 LEDs
->> LP5009 can control 9 LEDs
->>
->> The device has the ability to group LED output into control banks
->> so that multiple LED banks can be controlled with the same mixing and
->> brightness.  Inversely the LEDs can also be controlled independently.
->>
->> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> +/*
->> + * struct lp50xx_chip_info -
->> + * @num_leds: number of LED outputs available on the device
->> + * @led_brightness0_reg: first brightness register of the device
->> + * @mix_out0_reg: first color mix register of the device
->> + * @bank_brt_reg: bank brightness register
->> + * @bank_mix_reg: color mix register
->> + * @reset_reg: device reset register
->> + */
-> Should have /** if this is kerneldoc.
+On Sun, Jul 19, 2020 at 6:34 PM Xu, Yanfei <yanfei.xu@windriver.com> wrote:
 >
->> +		init_data.fwnode = child;
->> +		num_colors = 0;
->> +
->> +		/* There are only 3 LEDs per module otherwise they should be
->> +		 * banked which also is presented as 3 LEDs
->> +		 */
-> This is not usual comment style for kernel. (And add . at end of
-> sentence).
+>
+>
+> On 7/20/20 12:57 AM, Al Viro wrote:
+> > On Sun, Jul 19, 2020 at 09:58:34PM +0800, Xu, Yanfei wrote:
+> >> ping Al Viro
+> >>
+> >> Could you please help to review this patch? Thanks a lot.
+> >
+> > That's -next, right?  As for the patch itself...  Frankly,
+> Yes, it's -next.
+> > Daniel's patch looks seriously wrong.
+> Get it.
+>
+> Regards,
+> Yanfei
+> >       * why has O_CLOEXEC been quietly smuggled in?  It's
+> > a userland ABI change, for fsck sake...
+> >       * the double-put you've spotted
+> >       * the whole out: thing - just make it
+> >       if (IS_ERR(file)) {
+> >               userfaultfd_ctx_put(ctx);
+> >               return PTR_ERR(file);
+> >       }
+> >       and be done with that.
+> >
 
-I will fix both.
-
-Dan
-
-
-> Best regards,
-> 									Pavel
+Adding Lokesh to take a look.
