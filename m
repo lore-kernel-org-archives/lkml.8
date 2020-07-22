@@ -2,85 +2,88 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F24C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE717206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFBF20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgGVIFf (ORCPT
+        id S1729052AbgGVIGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:05:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41976 "EHLO mx2.suse.de"
+        Wed, 22 Jul 2020 04:06:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:55384 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbgGVIFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:05:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0EB4CAFE8;
-        Wed, 22 Jul 2020 08:05:41 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 10:05:30 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Mike Stunes <mstunes@vmware.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
+        id S1727034AbgGVIGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:06:54 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2A1836736F; Wed, 22 Jul 2020 10:06:47 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 10:06:46 +0200
+From:   'Christoph Hellwig' <hch@lst.de>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Christoph Hellwig' <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
-Message-ID: <20200722080530.GH6132@suse.de>
-References: <20200714120917.11253-1-joro@8bytes.org>
- <20200714120917.11253-52-joro@8bytes.org>
- <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: Re: get rid of the address_space override in setsockopt
+Message-ID: <20200722080646.GA26864@lst.de>
+References: <20200720124737.118617-1-hch@lst.de> <60c52e31e9f240718fcda0dd5c2faeca@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <60c52e31e9f240718fcda0dd5c2faeca@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hmm, I have a theory ...
-
-On Tue, Jul 21, 2020 at 09:01:44PM +0000, Mike Stunes wrote:
-> If I remove the call to probe_roms from setup_arch, or remove the calls to romchecksum from probe_roms, this kernel boots normally.
+On Tue, Jul 21, 2020 at 09:38:23AM +0000, David Laight wrote:
+> From: Christoph Hellwig
+> > Sent: 20 July 2020 13:47
+> >
+> > setsockopt is the last place in architecture-independ code that still
+> > uses set_fs to force the uaccess routines to operate on kernel pointers.
+> > 
+> > This series adds a new sockptr_t type that can contained either a kernel
+> > or user pointer, and which has accessors that do the right thing, and
+> > then uses it for setsockopt, starting by refactoring some low-level
+> > helpers and moving them over to it before finally doing the main
+> > setsockopt method.
 > 
-> Please let me know of other tests I should run or data that I can collect. Thanks!
+> Are you planning to make the equivalent change to getsockopt()?
 
-... can you please try the attached diff?
-
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 251d0aabc55a..e1fea7a38019 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -389,7 +389,8 @@ static bool vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- 	pgd_t *pgd;
- 	pte_t *pte;
- 
--	pgd = pgd_offset(current->active_mm, va);
-+	pgd = __va(read_cr3_pa());
-+	pgd = &pgd[pgd_index(va)];
- 	pte = lookup_address_in_pgd(pgd, va, &level);
- 	if (!pte) {
- 		ctxt->fi.vector     = X86_TRAP_PF;
+No.  Only setsockopt can be fed kernel addresses from bpf-cgroup.
+There is no point in complicating the read side interface when it
+doesn't have that problem.
