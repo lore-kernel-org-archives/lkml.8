@@ -2,120 +2,90 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D24C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 501DF207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qAxVGgyd"
+	by mail.kernel.org (Postfix) with ESMTP id 702D020717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbgGVJEF (ORCPT
+        id S1731039AbgGVJEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVJED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:04:03 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907F8C0619DC;
-        Wed, 22 Jul 2020 02:04:03 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id y9so270321oot.9;
-        Wed, 22 Jul 2020 02:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zxpuzEB9KMj0t9s7OpDkA/XsxcLlP2L79Bj3H31wGQg=;
-        b=qAxVGgydjt7gac3OWXNzknnBRu/Ayp4cFle9nv2nEPqB5M5+vdb0v3MDGbQ06e+7ay
-         b0TzDGT/L02h91uiZTDfpT+t8IGImRvqqRI6REKGm2NO2yM8pg5bu2/WMEPANPwESafj
-         NsfMyrZBjDtNsro5JfsYKKqZTaqDSpaj89xS8AHgBem4i5Ui7goYOUnYHn6X9Bxglawa
-         u3sQ0Cm74g2yY2Ik9zKg5Xz5etuPnsqFdCkdhqatBU+DL04f3Ui0HP96+t4hi5KGx9PQ
-         dGUTetX4hzJgJdDQBbmcRkvGE/hY25XhaSTujaxIV3M7KqqZDEP9L7DCYm2/ihxJjhq5
-         l1cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zxpuzEB9KMj0t9s7OpDkA/XsxcLlP2L79Bj3H31wGQg=;
-        b=nqMUjMEwwG3dP4pAofXgB0PP/z1wLsoga6I9UHooDg1004GGZij/7/Ji7Q/zUE2FfC
-         VZMNEMw75F9S2q6Xcd4jvuqm7MAX4qDp9Ftq391zw54hTtv+T+pu16iy4wpY0rrU2liG
-         k3gFA6iawigs0bZweXf25eyXkSIWz1qSSACJWyMx+gwICNkXWipTDxKM/P6yEQQICLNG
-         y6lgj7Ix9hEPJlkUEHxZPtUx6e2vzqUZTqcF0xESwjLHtlYyU4ZJhG0n8VjdMOUk7J5v
-         gH7ys/56yRTL1NFG5OybAz2ixhf0a8oAjn0Hb+wDAz0Vde64V9i0HsBbP5zYdFIWDyEO
-         SHmA==
-X-Gm-Message-State: AOAM532w5mY3n9xgwia5WJ/8Kk8B+vkXCkoztY+VmKkqUEW2QxQNqX8D
-        mmOgXHIInoRWzb3/082ECAxGVhCzvjNstGQsWW4=
-X-Google-Smtp-Source: ABdhPJyvkWCP9ZAp2wHyowUwbZiqTpOrvwaJyTM71SEZs7Fadah0GjZv4QqaCe1IG4/I4xEhqsLD0r+pvHu/A3NxZFs=
-X-Received: by 2002:a4a:4cc1:: with SMTP id a184mr27367539oob.62.1595408642769;
- Wed, 22 Jul 2020 02:04:02 -0700 (PDT)
+        Wed, 22 Jul 2020 05:04:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57108 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728360AbgGVJEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:04:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 75BEDAF16;
+        Wed, 22 Jul 2020 09:04:52 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 11:04:42 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Erdem Aktas <erdemaktas@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v4 00/75] x86: SEV-ES Guest Support
+Message-ID: <20200722090442.GI6132@suse.de>
+References: <20200714120917.11253-1-joro@8bytes.org>
+ <20200715092456.GE10769@hirez.programming.kicks-ass.net>
+ <20200715093426.GK16200@suse.de>
+ <20200715095556.GI10769@hirez.programming.kicks-ass.net>
+ <20200715101034.GM16200@suse.de>
+ <CAAYXXYxJf8sr6fvbZK=t6o_to4Ov_yvZ91Hf6ZqQ-_i-HKO2VA@mail.gmail.com>
+ <20200721124957.GD6132@suse.de>
+ <CAAYXXYwVV_g8pGL52W9vxkgdNxg1dNKq_OBsXKZ_QizdXiTx2g@mail.gmail.com>
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200722085849.GF1030@ninjato> <20200722090017.GG1030@ninjato>
-In-Reply-To: <20200722090017.GG1030@ninjato>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 22 Jul 2020 10:03:36 +0100
-Message-ID: <CA+V-a8vtCBYsDE2Tw4f-FgvfuZ3RUUNwEvfrbq-sv2+4H6VxNw@mail.gmail.com>
-Subject: Re: [PATCH 02/20] arm64: dts: renesas: r8a774e1: Add PCIe device nodes
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAYXXYwVV_g8pGL52W9vxkgdNxg1dNKq_OBsXKZ_QizdXiTx2g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+Hi Erdem,
 
-On Wed, Jul 22, 2020 at 10:00 AM Wolfram Sang <wsa@kernel.org> wrote:
->
-> On Wed, Jul 22, 2020 at 10:58:49AM +0200, Wolfram Sang wrote:
-> > On Thu, Jul 16, 2020 at 06:18:17PM +0100, Lad Prabhakar wrote:
-> > > Add PCIe{0,1} device nodes for R8A774E1 SoC.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Hmm, doesn't apply on top of 5.8-rc6 for me. Is there a branch to pull
-> > for easier review?
->
-> My fault, I missed the first series. Please note such dependencies in
-> the cover letter.
->
-I didn't mention as they were already applied to Geert's tree [1]
+On Tue, Jul 21, 2020 at 09:48:51AM -0700, Erdem Aktas wrote:
+> Yes, I am using OVMF with SEV-ES (sev-es-v12 patches applied). I am
+> running Ubuntu 18.04 distro. My grub target is x86_64-efi. I also
+> tried installing the grub-efi-amd64 package. In all cases, the grub is
+> running in 64bit but enters the startup_32 in 32 bit mode. I think
+> there should be a 32bit #VC handler just something very similar in the
+> OVMF patches to handle the cpuid when the CPU is still in 32bit mode.
+> As it is now, it will be a huge problem to support different distro images.
+> I wonder if I am the only one having this problem.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git/log/?h=renesas-arm-dt-for-v5.9
+I havn't heard from anyone else that the startup_32 boot-path is being
+used for SEV-ES. What OVMF binary do you use for your guest?
 
-Cheers,
---Prabhakar
+In general it is not that difficult to support that boot-path too, but
+I'd like to keep that as a future addition, as the patch-set is already
+quite large. In the startup_32 path there is already a GDT set up, so
+whats needed is an IDT and a 32-bit #VC handler using the MRS-based
+protocol (and hoping that there will only be CPUID intercepts until it
+reaches long-mode).
+
+Regards,
+
+	Joerg
+
