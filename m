@@ -3,77 +3,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDAFC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A5320709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD3220729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbgGVOOr (ORCPT
+        id S1732367AbgGVOO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:14:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:23142 "EHLO mga18.intel.com"
+        Wed, 22 Jul 2020 10:14:56 -0400
+Received: from 8bytes.org ([81.169.241.247]:58728 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgGVOOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:14:44 -0400
-IronPort-SDR: 6/HXe+MVhu6kwAKLQWfrR5xAI7WRAbXsBvTMAjdu8nU4yymFw2A/3ktVfzYCZZE7A8eVxuh441
- lOka8tv552+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="137836566"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="137836566"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 07:14:43 -0700
-IronPort-SDR: TwU9st3SfjJIJdrXID4JCICd1AGfD3MEjEoDRt2kGhUOWFppOiRoiZZlCdP4IBZp2KJGOwsr29
- QQ+GKE1V5eyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="432390891"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by orsmga004.jf.intel.com with ESMTP; 22 Jul 2020 07:14:42 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH] MAINTAINERS: altera: change maintainer for Altera drivers
-To:     Greg KH <gregkh@linuxfoundation.org>, richard.gong@linux.intel.com
-Cc:     mchehab+huawei@kernel.org, davem@davemloft.net, robh@kernel.org,
-        linux-kernel@vger.kernel.org, Richard Gong <richard.gong@intel.com>
-References: <1595426980-32062-1-git-send-email-richard.gong@linux.intel.com>
- <20200722140831.GB3755463@kroah.com>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <de3709c8-e341-3f11-e182-721d596bf563@linux.intel.com>
-Date:   Wed, 22 Jul 2020 09:14:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726003AbgGVOO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:14:56 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 204A0367; Wed, 22 Jul 2020 16:14:55 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 16:14:53 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Hulk Robot <hulkci@huawei.com>, Eric Auger <eric.auger@redhat.com>,
+        Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] iommu: Make some functions static
+Message-ID: <20200722141453.GL27672@8bytes.org>
+References: <20200713142542.50294-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200722140831.GB3755463@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713142542.50294-1-weiyongjun1@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/20 9:08 AM, Greg KH wrote:
-> On Wed, Jul 22, 2020 at 09:09:40AM -0500, richard.gong@linux.intel.com wrote:
->> From: Richard Gong <richard.gong@intel.com>
->>
->> Thor is moving to a new position and I will take over the maintainership.
->> Add myself as maintainer for 3 Altera drivers below:
->> 1. Altera I2C driver
->> 2. Altera System Manager driver
->> 3. Altera System Resource driver
->>
->> Signed-off-by: Richard Gong <richard.gong@intel.com>
+On Mon, Jul 13, 2020 at 10:25:42PM +0800, Wei Yongjun wrote:
+> The sparse tool complains as follows:
 > 
-> No ack from Thor?
+> drivers/iommu/iommu.c:386:5: warning:
+>  symbol 'iommu_insert_resv_region' was not declared. Should it be static?
+> drivers/iommu/iommu.c:2182:5: warning:
+>  symbol '__iommu_map' was not declared. Should it be static?
 > 
-> :(
+> Those functions are not used outside of iommu.c, so mark them static.
 > 
-I was too slow... :)
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  drivers/iommu/iommu.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Applied, thanks.
+
