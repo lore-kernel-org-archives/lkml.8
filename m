@@ -2,124 +2,128 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A130C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8A220781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:47:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRH6zfCJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0347420737
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732457AbgGVSrR (ORCPT
+        id S1731219AbgGVSsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:47:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgGVSrQ (ORCPT
+        Wed, 22 Jul 2020 14:48:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47464 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgGVSsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:47:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D79CC0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:47:15 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a14so2888021wra.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9uIMnNiW1J/fPcTrkBy02J2f4zbMTNbT/H46HboavW0=;
-        b=MRH6zfCJDTuWzbHixxBHkUtlOfZcOoyaP5qWJeYl/Y1ydjc57lVUt15/Z3rNPFOM+Q
-         eXhkDkS0tbDYbGmgk8fEVeOcibbTwXF0hUtDZ5uYZJ62pOmZSrFdfI/AWl9GzDgCywDV
-         iGqMiHeRbNf1fqCXtmzFXdJnHaPmkbK/aa5MquDlKt0K0OO1546+odLXa1bXZCmJaOlY
-         Q8TVlYjYa64EETTLNI2kPk11umtXwq1ZKw83jM1kdkjH8XYfj9bQDHvl+tL7mDHRArV7
-         Gg6sMpvQKCvSrrUWRN1poYxCDFFn2V7ET7nKnyoquU4C163Hn3qRellu6eWHCNuUUACd
-         QesQ==
+        Wed, 22 Jul 2020 14:48:47 -0400
+Received: from mail-wm1-f69.google.com ([209.85.128.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jyJnI-0003lc-N5
+        for linux-kernel@vger.kernel.org; Wed, 22 Jul 2020 18:48:44 +0000
+Received: by mail-wm1-f69.google.com with SMTP id x8so840925wmk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:48:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9uIMnNiW1J/fPcTrkBy02J2f4zbMTNbT/H46HboavW0=;
-        b=pdx025ajTywS8yUC6iQv8BGZspKNa4yOzNVJ+rF2omHKBXAz96pRmI2KB5ZTRRJsvE
-         CZXqkTqPz8o17uzEz5k/R1wi386OhdYp8Tkemm4jPrK8oyWnFs++yGkUNmyWG957ZSCh
-         dlF+LNGmZJq3ynRkAr1nRMVfarUpi/BgsnbcQbF/wzcvTl4yFTMrXxFLioUVAyyuPY/P
-         lCo0zB5GcaSITUojR9fe6OsIECvazVPYoPxSBEi8FuXJZOnCvvy0JAFxvM5ssEp7f+ym
-         QUUTuJeKUBn1ZabVqVlJPQCBIZQ+pubvVpibJtqMNXlVTXs3w3pGbYyJGiJsS/omzG/6
-         MBZQ==
-X-Gm-Message-State: AOAM532KJd2a4hWo8+BfoGzorNW44klIc9ogwcSJPdLNzomye1clMKvZ
-        uyM/aoSVudktJetS8OTgvUPiZg==
-X-Google-Smtp-Source: ABdhPJxtohXqDYKUnUrficjmG8NBPqZ8wqdKCOq3VgpWcXwuze5DIM+i6c7rpgpveF9E0C2ZYuoOGA==
-X-Received: by 2002:adf:df89:: with SMTP id z9mr746733wrl.395.1595443634012;
-        Wed, 22 Jul 2020 11:47:14 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id y11sm899839wrs.80.2020.07.22.11.47.12
+         :mime-version:content-disposition:in-reply-to;
+        bh=Fj5tDWbuTCkQYGvkoKjLGsFFqP8S1vhifunocsfi/nc=;
+        b=Ox/qmvrNnQukwiYQRjKfFc58Sn1JzdCs+NGuQd8P9q9+Pz1K0lxMROUuAkUS0M1qUK
+         E3ENbuBfrWBL7DO0tLs5UCwM2+X552sDukTQsWvRdB2wzFpNQ8YiN0H0d68LXrcvl9EN
+         BS1LqA79Y8i0a1NYqFmah0vXrV2vDij3dyWvuJvZdhbqc8Zwuwxiq8g29vdkvfUEGX/s
+         s1wLoQWr99ly2S6R6rwNKxsYjbEnWY+DKiAUzR2uNDLWrbl65+olzz9JUDgMU5SbE0o7
+         xg+Hyjk9Yb/FagWpxikw4DuqUADVmgYjJAvbK+SKjZQAv2qf6T11jzIxMSPQ9Z5uUdqr
+         65uQ==
+X-Gm-Message-State: AOAM533IaDz8m56T5IFkR65m4MiO7oLFiQf1lkYwlCJCMxMKRrgyOV2s
+        qpZ+Ygb4rSrcFRYjiLBeCef5lKH9QSw0neWBUk+M+2Zl7Mal352r12g2qBK4X+VHWw+JS9ny29e
+        EN737YKLGAihrpc/47bd9mVka3xIIN+d/N7zcIliLpg==
+X-Received: by 2002:a5d:618e:: with SMTP id j14mr833271wru.374.1595443723932;
+        Wed, 22 Jul 2020 11:48:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzytXJUXfcX9B33Jr71K2LtPXENOHJpSoG9eDG9+VXh+mjmyECJNZvvX84HgMJ04WXaI5eorg==
+X-Received: by 2002:a5d:618e:: with SMTP id j14mr833244wru.374.1595443723488;
+        Wed, 22 Jul 2020 11:48:43 -0700 (PDT)
+Received: from localhost (host-87-11-131-192.retail.telecomitalia.it. [87.11.131.192])
+        by smtp.gmail.com with ESMTPSA id z63sm725561wmb.2.2020.07.22.11.48.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 11:47:13 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 19:47:11 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Rob Herring <robh@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, tony@atomide.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH for v5.9] mfd: Replace HTTP links with HTTPS ones
-Message-ID: <20200722184711.GI3533@dell>
-References: <20200719195613.61458-1-grandmaster@al2klimov.de>
- <20200721161028.GA389086@bogus>
- <20200722065429.GI621928@dell>
- <df4b92a2-0c19-ca0e-7967-4ec059196835@al2klimov.de>
+        Wed, 22 Jul 2020 11:48:42 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 20:48:41 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: swap: do not wait for lock_page() in
+ unuse_pte_range()
+Message-ID: <20200722184841.GC841369@xps-13>
+References: <20200722174436.GB841369@xps-13>
+ <20200722180425.GP15516@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <df4b92a2-0c19-ca0e-7967-4ec059196835@al2klimov.de>
+In-Reply-To: <20200722180425.GP15516@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020, Alexander A. Klimov wrote:
-
-> 
-> 
-> Am 22.07.20 um 08:54 schrieb Lee Jones:
-> > On Tue, 21 Jul 2020, Rob Herring wrote:
+On Wed, Jul 22, 2020 at 07:04:25PM +0100, Matthew Wilcox wrote:
+> On Wed, Jul 22, 2020 at 07:44:36PM +0200, Andrea Righi wrote:
+> > Waiting for lock_page() with mm->mmap_sem held in unuse_pte_range() can
+> > lead to stalls while running swapoff (i.e., not being able to ssh into
+> > the system, inability to execute simple commands like 'ps', etc.).
 > > 
-> > > On Sun, 19 Jul 2020 21:56:13 +0200, Alexander A. Klimov wrote:
-> > > > Rationale:
-> > > > Reduces attack surface on kernel devs opening the links for MITM
-> > > > as HTTPS traffic is much harder to manipulate.
-> > > > 
-> > > > Deterministic algorithm:
-> > > > For each file:
-> > > >    If not .svg:
-> > > >      For each line:
-> > > >        If doesn't contain `\bxmlns\b`:
-> > > >          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> > > > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> > > >              If both the HTTP and HTTPS versions
-> > > >              return 200 OK and serve the same content:
-> > > >                Replace HTTP with HTTPS.
-> > > > 
-> > > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> > > > ---
-> > > >   Continuing my work started at 93431e0607e5.
-> > > >   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> > > >   (Actually letting a shell for loop submit all this stuff for me.)
-> > 
-> > I'm guessing something went wrong with your submission, as Rob's reply
-> > is the first time I saw this patch.  Did your bot send it to me?
-> Yes,
-> https://lore.kernel.org/lkml/20200719195613.61458-1-grandmaster@al2klimov.de/
+> > Replace lock_page() with trylock_page() and release mm->mmap_sem if we
+> > fail to lock it, giving other tasks a chance to continue and prevent
+> > the stall.
+> 
+> I think you've removed the warning at the expense of turning a stall
+> into a potential livelock.
+> 
+> > @@ -1977,7 +1977,11 @@ static int unuse_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+> >  			return -ENOMEM;
+> >  		}
+> >  
+> > -		lock_page(page);
+> > +		if (!trylock_page(page)) {
+> > +			ret = -EAGAIN;
+> > +			put_page(page);
+> > +			goto out;
+> > +		}
+> 
+> If you look at the patterns we have elsewhere in the MM for doing
+> this kind of thing (eg truncate_inode_pages_range()), we iterate over the
+> entire range, take care of the easy cases, then go back and deal with the
+> hard cases later.
+> 
+> So that would argue for skipping any page that we can't trylock, but
+> continue over at least the VMA, and quite possibly the entire MM until
+> we're convinced that we have unused all of the required pages.
+> 
+> Another thing we could do is drop the MM semaphore _here_, sleep on this
+> page until it's unlocked, then go around again.
+> 
+> 		if (!trylock_page(page)) {
+> 			mmap_read_unlock(mm);
+> 			lock_page(page);
+> 			unlock_page(page);
+> 			put_page(page);
+> 			ret = -EAGAIN;
+> 			goto out;
+> 		}
+> 
+> (I haven't checked the call paths; maybe you can't do this because
+> sometimes it's called with the mmap sem held for write)
+> 
+> Also, if we're trying to scale this better, there are some fun
+> workloads where readers block writers who block subsequent readers
+> and we shouldn't wait for I/O in swapin_readahead().  See patches like
+> 6b4c9f4469819a0c1a38a0a4541337e0f9bf6c11 for more on this kind of thing.
 
-Could you [RESEND] it please.  It doesn't appear to be in my Inbox.
+Thanks for the review, Matthew. I'll see if I can find a better solution
+following your useful hints!
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-Andrea
