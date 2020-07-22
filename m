@@ -2,85 +2,89 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7423F207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wTi597w8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rzdia+Of"
+	by mail.kernel.org (Postfix) with ESMTP id 52257206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbgGVSZ6 (ORCPT
+        id S1731979AbgGVS1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:25:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51176 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVSZ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:25:58 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595442356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=De2Oo3WYSjxDYyxtzHkgNAFZFz1uqYilAgoG2Mi1/0E=;
-        b=wTi597w8/WAvYo6fRhtK8Csx9AtQpbzEmpgE3ZBRJ9pE/j2ad+0y5sTi0vRAghKFrxVejv
-        EpcFdThV2BtJrR/Gf/tlO7DUSE4/2+wnqa6iCfEIyHY0yDh9QnXo5ZBOj64gGsX6qKsPkd
-        8ZzWGZ5VrSiVViESnb4dXPf0P6vk+RTYWNZum31cPDhAQsSlZgNQW4wDP82kQf/bUZutwN
-        so3gzqknEwCf/CFXSRbqx9VmYjIi49DyJpDeLcQdHTL3H4Zh9V/Vuco21Cem5ntUFIDcH4
-        DFuwT5YrOXYcUyvpd17rnlvGAaFdbIE9Q4FvGjV8h/4LrIVkhQ64CyufKz2ZOg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595442356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=De2Oo3WYSjxDYyxtzHkgNAFZFz1uqYilAgoG2Mi1/0E=;
-        b=rzdia+Of0BW+JLmcJkwDHHcZakCXbL4PaRIYIuDNTEyyNIpL5hKfZCt7BOCx58Zq7T0/9t
-        yJk/QNK9n7b1XmCA==
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V4 10/15] x86/entry: Use generic syscall entry function
-In-Reply-To: <202007211440.BEF76E2@keescook>
-References: <20200721105706.030914876@linutronix.de> <20200721110809.325060396@linutronix.de> <202007211440.BEF76E2@keescook>
-Date:   Wed, 22 Jul 2020 20:25:55 +0200
-Message-ID: <87wo2vz9sc.fsf@nanos.tec.linutronix.de>
+        Wed, 22 Jul 2020 14:27:03 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:47192 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgGVS1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:27:02 -0400
+Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jyJSB-0005E0-6A; Wed, 22 Jul 2020 20:26:55 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Elaine Zhang <zhangqing@rock-chips.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xxx@rock-chips.com,
+        xf@rock-chips.com, huangtao@rock-chips.com,
+        kever.yang@rock-chips.com
+Subject: Re: [PATCH v1] clk: Export __clk_lookup()
+Date:   Wed, 22 Jul 2020 20:26:50 +0200
+Message-ID: <14639646.VOZsFJ8Tpa@phil>
+In-Reply-To: <20200722023230.10826-1-zhangqing@rock-chips.com>
+References: <20200722023230.10826-1-zhangqing@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees,
+Hi Elaine,
 
-Kees Cook <keescook@chromium.org> writes:
-> On Tue, Jul 21, 2020 at 12:57:16PM +0200, Thomas Gleixner wrote:
->
-> This doesn't look very expensive, and they certain indicate really bad
-> conditions. Does this need to be behind a CONFIG? (Whatever the answer,
-> we can probably make those changes in a later series -- some of these
-> also look not arch-specific...)
+Am Mittwoch, 22. Juli 2020, 04:32:30 CEST schrieb Elaine Zhang:
+> Export __clk_lookup() to support user built as module.
+> 
+> ERROR:
+> drivers/clk/rockchip/clk.ko: In function
+> `rockchip_clk_protect_critical':
+> drivers/clk/rockchip/clk.c:741:
+> undefined reference to `__clk_lookup'
 
-The most expensive part is native_save_flags(). The extra branches could
-be visible in benchmarks, but its a good question whether this should be
-just enabled.
+can you elaborate a bit more on why this would be needed?
 
-I just keep it as is for now as I would need to make the flags and the
-on_thread_stack() part x86 specific anyway, but yes we can revisit that
-once we agreed on the general direction of this.
+Because right now the Rockchip clocks are of course built into
+the main kernel image (especially due to them being needed during early
+boot) and __clk_lookup actually is a pretty deep part of the clock-
+framework itself, as probably also denoted by the "__" in the function
+name.
 
-Thanks,
 
-        tglx
+Heiko
+
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  drivers/clk/clk.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 3f588ed06ce3..600284fbb257 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -618,6 +618,7 @@ struct clk *__clk_lookup(const char *name)
+>  
+>  	return !core ? NULL : core->hw->clk;
+>  }
+> +EXPORT_SYMBOL_GPL(__clk_lookup);
+>  
+>  static void clk_core_get_boundaries(struct clk_core *core,
+>  				    unsigned long *min_rate,
+> 
+
+
+
+
