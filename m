@@ -2,94 +2,223 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D070C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675B320792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:21:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qBWKXhuB"
+	by mail.kernel.org (Postfix) with ESMTP id 8EECC20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgGVGVh (ORCPT
+        id S1728626AbgGVGVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgGVGVf (ORCPT
+        Wed, 22 Jul 2020 02:21:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24068 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727929AbgGVGVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:21:35 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CC8C0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:21:35 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so710348wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BAzrsApk4VDHwo72IBIJNtqOrqLOrpegciq43liSn5w=;
-        b=qBWKXhuBxi4P7/ALiJhnN0/3BOb4QCSz/f3nOTO8A+Fr9K/geRWYwDfMVEIdPcLPrr
-         G+qKk0mI9DXgdJ5XsxVrHslDFH9Kptsc+1985V9JQR33yZHRD+Sh4g/uE/kAyDVfsuPk
-         kffk+OsBK+RYUlneEpTzwJXSUYMqIs1TYVymaY5gcljFptTSy5Y1/FFMKZtUJ0krvk1m
-         1+eeQ+dUz+a0Gz74wHcA0Rv3rx9sK0npYfrqUIq/IwRhcQDt1FBnW2VsoMRe+aH2gVLd
-         zPP6D4Mrt6Op/g6d1jvLt+LzkCexsrSVwrUDJUDo2zSWt9bxv2gOblwlOoKqRiCLXxrh
-         uH6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BAzrsApk4VDHwo72IBIJNtqOrqLOrpegciq43liSn5w=;
-        b=ozpYchej34GBdLOdJktjcffKInKgVrxaIHiKt5gtBp1rXjj0mE6YCb1+hzp1TlG/nz
-         4Y2STnUz4gx1i6iODnNtPvNoOuYMOGLT7uWwC1WKRo+0wbZywOqXnE9wWUE0iWHWnNrh
-         BGGSPH+Af3UR3Ya+QUqDn2x7w0qCaNIvWOgzn2fnkSx9rS7alhWqEEdNXrsUhlK2VNM8
-         e/XOQWK/xcplB1msPr9ZtZoZW07pMtHM0QJ+iDx9QX/CAE003P/Kp3Q/UAAsLbI54GTT
-         m7rUoSgKk2H3Lfs3Ja0lYfwto42EFjl5uuuAvb7SgZ4OD9WV5VX+7VJVgwD69ufZRKRQ
-         MR7A==
-X-Gm-Message-State: AOAM530/BQFrp2VQfznC6mqY2zx+1/WZRU9z4CXLWmrbSsABeOR3G/Cm
-        iFVy1jf4cxv6tYh27Cc+D50CoA==
-X-Google-Smtp-Source: ABdhPJwuEjzYobRCatFsIux9YRMMuoKkRkV6U/KMc5KHMCsjUCPkOux1K3X1tnegkZe15mFE/NVfFA==
-X-Received: by 2002:a5d:634e:: with SMTP id b14mr31237364wrw.423.1595398893567;
-        Tue, 21 Jul 2020 23:21:33 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
-        by smtp.googlemail.com with ESMTPSA id y11sm24709367wrs.80.2020.07.21.23.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 23:21:32 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 08:21:31 +0200
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 16/17] crypto: sun8i-ce: fix comparison of integer
- expressions of different signedness
-Message-ID: <20200722062131.GA24080@Red>
-References: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
- <1595358391-34525-17-git-send-email-clabbe@baylibre.com>
- <11ac49bc33546ef9ebc4120878206bd882667d8a.camel@perches.com>
+        Wed, 22 Jul 2020 02:21:33 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M61rdi161127;
+        Wed, 22 Jul 2020 02:21:23 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrf16h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 02:21:23 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06M6GvGL012016;
+        Wed, 22 Jul 2020 02:21:23 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1vrf16a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 02:21:23 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M6K4cL030774;
+        Wed, 22 Jul 2020 06:21:22 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04dal.us.ibm.com with ESMTP id 32d5dq7qcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 06:21:22 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M6LKCD33030484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 06:21:20 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E228C6A04F;
+        Wed, 22 Jul 2020 06:21:19 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2FA306A04D;
+        Wed, 22 Jul 2020 06:21:19 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.82.72])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Jul 2020 06:21:19 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id A1BEA2E48D7; Wed, 22 Jul 2020 11:51:14 +0530 (IST)
+Date:   Wed, 22 Jul 2020 11:51:14 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <michaele@au1.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v2 05/10] powerpc/smp: Dont assume l2-cache to be
+ superset of sibling
+Message-ID: <20200722062114.GD31038@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+ <20200721113814.32284-6-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <11ac49bc33546ef9ebc4120878206bd882667d8a.camel@perches.com>
+In-Reply-To: <20200721113814.32284-6-srikar@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_02:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007220040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 02:32:15PM -0700, Joe Perches wrote:
-> On Tue, 2020-07-21 at 19:06 +0000, Corentin Labbe wrote:
-> > This patch fixes the warning:
-> > warning: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Wsign-compare]
-> 
-> I think these do not really need conversion.
-> Are these useful compiler warnings ?
-> 
+Hi Srikar,
 
-Since ARRAY_SIZE(ce_algs) will never greater than MAX(int), the conversion does not fix a bug.
-But at least the code is more proper.
-So I think the patch is still usefull.
+On Tue, Jul 21, 2020 at 05:08:09PM +0530, Srikar Dronamraju wrote:
+> Current code assumes that cpumask of cpus sharing a l2-cache mask will
+> always be a superset of cpu_sibling_mask.
+> 
+> Lets stop that assumption. cpu_l2_cache_mask is a superset of
+> cpu_sibling_mask if and only if shared_caches is set.
+> 
+> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: Michael Ellerman <michaele@au1.ibm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Nick Piggin <npiggin@au1.ibm.com>
+> Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Michael Neuling <mikey@linux.ibm.com>
+> Cc: Anton Blanchard <anton@au1.ibm.com>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+> Cc: Jordan Niethe <jniethe5@gmail.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+> Changelog v1 -> v2:
+> powerpc/smp: Dont assume l2-cache to be superset of sibling
+> 	Set cpumask after verifying l2-cache. (Gautham)
+> 
+>  arch/powerpc/kernel/smp.c | 28 +++++++++++++++-------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index 72f16dc0cb26..57468877499a 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -1196,6 +1196,7 @@ static bool update_mask_by_l2(int cpu, struct cpumask *(*mask_fn)(int))
+>  	if (!l2_cache)
+>  		return false;
+> 
+> +	cpumask_set_cpu(cpu, mask_fn(cpu));
 
+
+Ok, we need to do this because "cpu" is not yet set in the
+cpu_online_mask. Prior to your patch the "cpu" was getting set in
+cpu_l2_cache_map(cpu) as a side-effect of the code that is removed in
+the patch.
+
+
+>  	for_each_cpu(i, cpu_online_mask) {
+>  		/*
+>  		 * when updating the marks the current CPU has not been marked
+> @@ -1278,29 +1279,30 @@ static void add_cpu_to_masks(int cpu)
+>  	 * add it to it's own thread sibling mask.
+>  	 */
+>  	cpumask_set_cpu(cpu, cpu_sibling_mask(cpu));
+> +	cpumask_set_cpu(cpu, cpu_core_mask(cpu));
+> 
+>  	for (i = first_thread; i < first_thread + threads_per_core; i++)
+>  		if (cpu_online(i))
+>  			set_cpus_related(i, cpu, cpu_sibling_mask);
+> 
+>  	add_cpu_to_smallcore_masks(cpu);
+> -	/*
+> -	 * Copy the thread sibling mask into the cache sibling mask
+> -	 * and mark any CPUs that share an L2 with this CPU.
+> -	 */
+> -	for_each_cpu(i, cpu_sibling_mask(cpu))
+> -		set_cpus_related(cpu, i, cpu_l2_cache_mask);
+>  	update_mask_by_l2(cpu, cpu_l2_cache_mask);
+> 
+> -	/*
+> -	 * Copy the cache sibling mask into core sibling mask and mark
+> -	 * any CPUs on the same chip as this CPU.
+> -	 */
+> -	for_each_cpu(i, cpu_l2_cache_mask(cpu))
+> -		set_cpus_related(cpu, i, cpu_core_mask);
+> +	if (pkg_id == -1) {
+
+I suppose this "if" condition is an optimization, since if pkg_id != -1,
+we anyway set these CPUs in the cpu_core_mask below.
+
+However...
+
+> +		struct cpumask *(*mask)(int) = cpu_sibling_mask;
+> +
+> +		/*
+> +		 * Copy the sibling mask into core sibling mask and
+> +		 * mark any CPUs on the same chip as this CPU.
+> +		 */
+> +		if (shared_caches)
+> +			mask = cpu_l2_cache_mask;
+> +
+> +		for_each_cpu(i, mask(cpu))
+> +			set_cpus_related(cpu, i, cpu_core_mask);
+> 
+> -	if (pkg_id == -1)
+>  		return;
+> +	}
+
+
+... since "cpu" is not yet set in the cpu_online_mask, do we not miss setting
+"cpu" in the cpu_core_mask(cpu) in the for-loop below ?
+
+
+> 
+>  	for_each_cpu(i, cpu_online_mask)
+>  		if (get_physical_package_id(i) == pkg_id)
+
+
+Before this patch it was unconditionally getting set in
+cpu_core_mask(cpu) because of the fact that it was set in
+cpu_l2_cache_mask(cpu) and we were unconditionally setting all the
+CPUs in cpu_l2_cache_mask(cpu) in cpu_core_mask(cpu).
+
+What am I missing ?
+
+> -- 
+> 2.17.1
+>
+
+--
+Thanks and Regards
+gautham.
