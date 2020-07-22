@@ -7,35 +7,36 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A73C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA32EC433F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAA82077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC442077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgGVJik (ORCPT
+        id S1731755AbgGVJi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:38:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:53016 "EHLO foss.arm.com"
+        Wed, 22 Jul 2020 05:38:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:53116 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgGVJij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:38:39 -0400
+        id S1726147AbgGVJiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:38:55 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48B021045;
-        Wed, 22 Jul 2020 02:38:39 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CDA11045;
+        Wed, 22 Jul 2020 02:38:54 -0700 (PDT)
 Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D0C23F66F;
-        Wed, 22 Jul 2020 02:38:37 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B76023F66F;
+        Wed, 22 Jul 2020 02:38:52 -0700 (PDT)
 From:   Ionela Voinescu <ionela.voinescu@arm.com>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
         dietmar.eggemann@arm.com, catalin.marinas@arm.com,
         sudeep.holla@arm.com, will@kernel.org, linux@armlinux.org.uk
 Cc:     mingo@redhat.com, peterz@infradead.org, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ionela.voinescu@arm.com
-Subject: [PATCH v2 2/7] cpufreq: set invariance scale factor on transition end
-Date:   Wed, 22 Jul 2020 10:37:27 +0100
-Message-Id: <20200722093732.14297-3-ionela.voinescu@arm.com>
+        ionela.voinescu@arm.com,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH v2 7/7] cpufreq: make schedutil the default for arm and arm64
+Date:   Wed, 22 Jul 2020 10:37:32 +0100
+Message-Id: <20200722093732.14297-8-ionela.voinescu@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722093732.14297-1-ionela.voinescu@arm.com>
 References: <20200722093732.14297-1-ionela.voinescu@arm.com>
@@ -44,104 +45,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the move of the invariance setter calls (arch_set_freq_scale())
-from cpufreq drivers to cpufreq core maintained the previous
-functionality for existing drivers that use target_index() and
-fast_switch() for frequency switching, it also gives the possibility
-of adding support for users of the target() callback, which is exploited
-here.
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-To be noted that the target() callback has been flagged as deprecated
-since:
+schedutil is already a hard-requirement for EAS, which has lead to making
+it default on arm (when CONFIG_BIG_LITTLE), see:
 
-commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+  commit 8fdcca8e254a ("cpufreq: Select schedutil when using big.LITTLE")
 
-It also doesn't have that many users:
+One thing worth pointing out is that schedutil isn't only relevant for
+asymmetric CPU capacity systems; for instance, schedutil is the only
+governor that honours util-clamp performance requests. Another good example
+of this is x86 switching to using it by default in:
 
-  cpufreq-nforce2.c:371:2:      .target = nforce2_target,
-  cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
-  gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
-  pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
+  commit a00ec3874e7d ("cpufreq: intel_pstate: Select schedutil as the default governor")
 
-Similarly to the path taken for target_index() calls in the cpufreq core
-during a frequency change, all of the drivers above will mark the end of a
-frequency change by a call to cpufreq_freq_transition_end().
+Arguably it should be made the default for all architectures, but it seems
+better to wait for them to also gain frequency invariance powers. Make it
+the default for arm && arm64 for now.
 
-Therefore, cpufreq_freq_transition_end() can be used as the location for
-the arch_set_freq_scale() call to potentially inform the scheduler of the
-frequency change.
-
-This change maintains the previous functionality for the drivers that
-implement the target_index() callback, while also adding support for the
-few drivers that implement the deprecated target() callback.
-
-Two notes are worthwhile here:
- - In __target_index(), cpufreq_freq_transition_end() is called only for
-   drivers that have synchronous notifications enabled. There is only one
-   driver that disables them,
-
-   drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
-
-   which is deprecated.
-
- - Despite marking a successful frequency change, many cpufreq drivers
-   will populate the new policy->cur with the new requested frequency,
-   although this might not be the one granted by the hardware.
-
-   Therefore, the call to arch_set_freq_scale() is a "best effort" one,
-   and it is up to the architecture if the new frequency is used in the
-   new frequency scale factor setting or eventually used by the scheduler.
-   The architecture is in a better position to decide if it has better
-   methods to obtain more accurate information regarding the current
-   frequency (for example the use of counters).
-
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
 Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/cpufreq/cpufreq.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/cpufreq/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index bac4101546db..3497c1cd6818 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -448,6 +448,10 @@ void cpufreq_freq_transition_end(struct cpufreq_policy *policy,
- 
- 	cpufreq_notify_post_transition(policy, freqs, transition_failed);
- 
-+	arch_set_freq_scale(policy->related_cpus,
-+			    policy->cur,
-+			    policy->cpuinfo.max_freq);
-+
- 	policy->transition_ongoing = false;
- 	policy->transition_task = NULL;
- 
-@@ -2159,7 +2163,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
- 			    unsigned int relation)
- {
- 	unsigned int old_target_freq = target_freq;
--	int index, retval;
-+	int index;
- 
- 	if (cpufreq_disabled())
- 		return -ENODEV;
-@@ -2190,14 +2194,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
- 
- 	index = cpufreq_frequency_table_target(policy, target_freq, relation);
- 
--	retval = __target_index(policy, index);
--
--	if (!retval)
--		arch_set_freq_scale(policy->related_cpus,
--				    policy->freq_table[index].frequency,
--				    policy->cpuinfo.max_freq);
--
--	return retval;
-+	return __target_index(policy, index);
- }
- EXPORT_SYMBOL_GPL(__cpufreq_driver_target);
- 
+diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+index e91750132552..2c7171e0b001 100644
+--- a/drivers/cpufreq/Kconfig
++++ b/drivers/cpufreq/Kconfig
+@@ -37,7 +37,7 @@ config CPU_FREQ_STAT
+ choice
+ 	prompt "Default CPUFreq governor"
+ 	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1100_CPUFREQ || ARM_SA1110_CPUFREQ
+-	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if BIG_LITTLE
++	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if ARM64 || ARM
+ 	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL if X86_INTEL_PSTATE && SMP
+ 	default CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+ 	help
 -- 
 2.17.1
 
