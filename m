@@ -2,143 +2,104 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E9AC433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77292C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D281E208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5430320792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x6mG0UxU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEUQNOgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgGVFfC (ORCPT
+        id S1727969AbgGVFlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53664 "EHLO
+        Wed, 22 Jul 2020 01:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbgGVFe6 (ORCPT
+        with ESMTP id S1726696AbgGVFlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:34:58 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6466EC0619DC
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:34:58 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l63so580152pge.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:34:58 -0700 (PDT)
+        Wed, 22 Jul 2020 01:41:49 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A92C061794;
+        Tue, 21 Jul 2020 22:41:48 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id o22so579663pjw.2;
+        Tue, 21 Jul 2020 22:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PmIwK4uHHxiwR6vWkfEn+UVqSIx9AzZysrf8JFFSTH0=;
-        b=x6mG0UxUYRnEEGsc/Q2cDlHN/Tuf3fHpzAp6uBD8RQniav+BShOs2iQP5UR0ISQ321
-         yMuXUrtUUJDDMxBVbm/QC3Zsc9CkyFqF7BHe/TNA2t9Ih/h4ghi/7nsfNdXALgSziOT4
-         i1KbsnMRS74/4aiJbA2vaBss0IdIkd+yoesbos7irAM0IX8RymW10ex1zyhBswuQKsMJ
-         pAJL57wDLxp7fPWBEhROZHb4I8tlDO28nCa1Xh0DqWDN94VvD0gz9hyBf+rY8qYsr12p
-         tiDMzY4UbobhT3mqQhQZ5l7vOn0+l8+gaciicSZJmKQGDMZIqSYYM7UlWzfs10QCn/bk
-         W3eQ==
+         :content-disposition:in-reply-to;
+        bh=JOXcjH3Ds2znsGQsPtT2U0WmJsXIq3lc+gYn1wfYnuU=;
+        b=dEUQNOgGUrX8oVxReZCZ/tx5vnWEETp9edbUaud/VSlLiopK4JeDzocnvain0FsLMw
+         7PICdvOjUghPVTCW0qjN7n6SnZ2H5nN1HMvs9uDK+IXA85ET0oBW15K8tQX8j6o617pN
+         q+l75VjFGRhh/avhzCvbSqMXcuvtlbi3DMXeui18+MwYxPLsjtIX2AZUZJiOAE/9flCV
+         ea2Fhc2rKiCCf9XkPrhipvLf0Mgp4dryjrLrNufZYZ0rIbtgYRwukhkD6F9yssQLC+fk
+         WRh6Y5nrhcl9JFV3K3uPb9dVFzvSPLWAr6x/D7HTFWahFrwb9QZUZWXQW/5qLx4TRohI
+         fmGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PmIwK4uHHxiwR6vWkfEn+UVqSIx9AzZysrf8JFFSTH0=;
-        b=re34cmFQJBiyxwetc0N5WZ1GRr3hbisG0yZBV8aH1A3DbClkms+oEh94FPJjVxCulv
-         XeO23fcCYhzQ730eOE+xVYHp/yB0uTDOeHlmMkv8rAnGEVn5/tkLnPBb+pbj7xYClqoz
-         W3HAUlGzElGTr6h6OBljiTgsUbkwzPCtmQVJtLIaERqyzffBeWI5RKj319+n2Nw6GoqT
-         uc4wS+xHafvDMOzxLhvQhVhd1LCAtEU1NEoRTp3SkRZAEx9LuFlUNwl5yFnNIz1+2y0e
-         uMyqdw+y9rWK20+fSzfAjHv2dJSjhCMpC7OfdZsoCxBL4fpJ+3yCmwjXGFruOJWNjGls
-         Mmcg==
-X-Gm-Message-State: AOAM531WBsvH2LKMdnjxWseTq8lTg5l49aqnf9Fw4YcZp0mj259bmFs3
-        MF510I6IEsASj1Kuey0+efy690SCWzo=
-X-Google-Smtp-Source: ABdhPJxPmJgxOvlVvy+R9CPXupEfLpDpw2rAzf849OvVpE62QHXdQnC/+UvCAC+w7rdW5+ZAqB5lrA==
-X-Received: by 2002:a65:6916:: with SMTP id s22mr26088099pgq.128.1595396097809;
-        Tue, 21 Jul 2020 22:34:57 -0700 (PDT)
-Received: from localhost ([182.77.116.224])
-        by smtp.gmail.com with ESMTPSA id 137sm20210432pgg.72.2020.07.21.22.34.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jul 2020 22:34:56 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 11:04:53 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Finley Xiao <finley.xiao@rock-chips.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 4.19 123/133] thermal/drivers/cpufreq_cooling: Fix wrong
- frequency converted from power
-Message-ID: <20200722053453.xmfcezyiabz2e2dd@vireshk-mac-ubuntu>
-References: <20200720152803.732195882@linuxfoundation.org>
- <20200720152809.664822211@linuxfoundation.org>
- <20200721114344.GC17778@duo.ucw.cz>
+         :mime-version:content-disposition:in-reply-to;
+        bh=JOXcjH3Ds2znsGQsPtT2U0WmJsXIq3lc+gYn1wfYnuU=;
+        b=uH0Yaikdy5yTVcvHRWVq4LPlk17Z/mc+iAZo4a9tkefIyHCi6qS3v86+0hSWv4kTqE
+         Wh4OFI8Ly4S4pj9xSRUPBUC7kLXRlgA3NB/PW+pKUHqL4vaNhw4duf8H3PRHky+A+8Io
+         NkgOlWJ85LoL8tZFiOCAPy5Km+G7qiLSSXwasjdcqyl4r/jUD3FP26SSpTgoohClTPXK
+         RWd0nXlw68oE3Flz7AciFyK4aaBdiYN8wIaEVue+L+gu5lu28AZTo+boyuIcbvdQJRbG
+         HTYEs8Xtp9HWZVVzu7swCspr6FO0yxjoM4Xel7Ti88ooEkLmp5lmmp6tg9/8OJBXp9fH
+         7BuQ==
+X-Gm-Message-State: AOAM531PQunOIab32ET/EYs2RtrCn0RZICuofunhWuASlJYauchVCe5P
+        kLJrKAFF17zoz7CfzuROGHY=
+X-Google-Smtp-Source: ABdhPJwyZCXr57OI4rRNX0FltpSSmzGxpQFnQXUcYXlI0UFD0tljQn5BhDndhCziMb1aAG5xOB3eAQ==
+X-Received: by 2002:a17:902:684e:: with SMTP id f14mr26597687pln.166.1595396508374;
+        Tue, 21 Jul 2020 22:41:48 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id d16sm22280079pfo.156.2020.07.21.22.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 22:41:47 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 22:41:44 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        linux-input@vger.kernel.org,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
+ new Lenovo Thinkpads
+Message-ID: <20200722054144.GQ1665100@dtor-ws>
+References: <20200717114155.56222-1-hdegoede@redhat.com>
+ <20200719225649.GA4341@khazad-dum.debian.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721114344.GC17778@duo.ucw.cz>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200719225649.GA4341@khazad-dum.debian.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-07-20, 13:43, Pavel Machek wrote:
-> On Mon 2020-07-20 17:37:50, Greg Kroah-Hartman wrote:
-> > From: Finley Xiao <finley.xiao@rock-chips.com>
-> > 
-> > commit 371a3bc79c11b707d7a1b7a2c938dc3cc042fffb upstream.
-> > 
-> > The function cpu_power_to_freq is used to find a frequency and set the
-> > cooling device to consume at most the power to be converted. For example,
-> > if the power to be converted is 80mW, and the em table is as follow.
-> > struct em_cap_state table[] = {
-> > 	/* KHz     mW */
-> > 	{ 1008000, 36, 0 },
-> > 	{ 1200000, 49, 0 },
-> > 	{ 1296000, 59, 0 },
-> > 	{ 1416000, 72, 0 },
-> > 	{ 1512000, 86, 0 },
-> > };
-> > The target frequency should be 1416000KHz, not 1512000KHz.
-> > 
-> > Fixes: 349d39dc5739 ("thermal: cpu_cooling: merge frequency and power tables")
+On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
+> On Fri, 17 Jul 2020, Hans de Goede wrote:
+> > This is a simple patch-series adding support for 3 new hotkeys found
+> > on various new Lenovo Thinkpad models.
 > 
-> Wow, this is completely different from the upstream patch.
-
-Right, I have mentioned this in the patch I sent for stable.
-
-https://lore.kernel.org/lkml/bc3978d0b7472c140e4d87f61138168a2a7b995c.1594194577.git.viresh.kumar@linaro.org/
-
-> There the
-> loops goes down, not up. The code does not match the changelog here.
-
-Yes, the order is different in earlier kernels but I would say that
-the changelog still matches as it doesn't necessarily talks about any
-ordering here.
-
-> > --- a/drivers/thermal/cpu_cooling.c
-> > +++ b/drivers/thermal/cpu_cooling.c
-> > @@ -278,11 +278,11 @@ static u32 cpu_power_to_freq(struct cpuf
-> >  	int i;
-> >  	struct freq_table *freq_table = cpufreq_cdev->freq_table;
-> >  
-> > -	for (i = 1; i <= cpufreq_cdev->max_level; i++)
-> > -		if (power > freq_table[i].power)
-> > +	for (i = 0; i < cpufreq_cdev->max_level; i++)
-> > +		if (power >= freq_table[i].power)
-> >  			break;
-> >  
-> > -	return freq_table[i - 1].frequency;
-> > +	return freq_table[i].frequency;
-> >  }
+> For all three patches, pending an ack for the new keycodes by the input
+> maintainers:
 > 
-> 
-> Something is very wrong here, if table is sorted like described in the
-> changelog, it will always break at i==0 or i==1... not working at all
-> in the old or the new version.
+> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-As I understand from the other email you sent, this works fine now.
-Right ?
+Do you want me to merge all 3 through input tree?
+
+Thanks.
+
 -- 
-viresh
+Dmitry
