@@ -2,169 +2,102 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B314B207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01696207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LMrqXZVL"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZNbOB3B3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgGVESG (ORCPT
+        id S1726501AbgGVETY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 00:18:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:31197 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbgGVESG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 00:18:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595391485; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=HflwZjnZ8ak7CEDTpPjoblMd8cEwbvkkZamXydjOQKM=;
- b=LMrqXZVLzYapDNUg+L3SRdVMpufHTxvWBwgQO3xxSrHyqr1GqjQSnzr9t/2QzD8W2SGh/Rxk
- wU1y+BJ23Ga4gbGTUKd9gUcImxaFYvUDc0KrvfR+OI29FolbTQclT8tujGRKdOIsjjabt3pR
- mFtvESnd5FlhPc8lKSBoZD8rr5M=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f17bdfd3dbcb593a9707218 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 22 Jul 2020 04:18:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8E05EC433C6; Wed, 22 Jul 2020 04:18:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF0E4C433C9;
-        Wed, 22 Jul 2020 04:18:03 +0000 (UTC)
+        Wed, 22 Jul 2020 00:19:24 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44120 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgGVETX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 00:19:23 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2D0B98066C;
+        Wed, 22 Jul 2020 16:19:20 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595391560;
+        bh=Hh7WNPsS5JoNma82bp0sTkdc+G0ymDb0dhl+iwohdbQ=;
+        h=From:To:CC:Subject:Date;
+        b=ZNbOB3B3tfaoK2Z+WUEewc17Ubd7yZ79hqKAjhMom5cOijH67z8sd2ZCUINsj9hyc
+         ++B20P0EGtYvmhPJvG7xAZp9LazveCl5qOO94F+0dItW3aWAm9m1GWLDMgG67MrjK1
+         UEu13+K7Ub8U9bFpwxdedce0Pbh0ZAmqz1PVnKP1dE9yMweKu/QMI8Ij3Lj4Cye4I2
+         mm+feZzxBDXnw4+qkZ1G/3rAfRzzwGxLNPOnv7ZE4WorKaVsEJLsYIuqVcmodIOvnx
+         fyrWdSMsmh4hnR0RkneNtkmxl+kDht82xn/6q0IWdE4jtG+Q7kFBkYS9Kcd6jb37nw
+         4dm9d8w7ijH9A==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f17be480000>; Wed, 22 Jul 2020 16:19:20 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 22 Jul 2020 16:19:16 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 22 Jul 2020 16:19:16 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: OF: Can't handle multiple dma-ranges with different offsets
+Thread-Topic: Can't handle multiple dma-ranges with different offsets
+Thread-Index: AQHWX99COSKGYTheAUmvWcrnzVaQaw==
+Date:   Wed, 22 Jul 2020 04:19:15 +0000
+Message-ID: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <38888D739A91544DBDA7EBEF6B8183B7@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jul 2020 09:48:03 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        evgreen@chromium.org, ohad@wizery.com,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] remoteproc: qcom_q6v5_mss: Add modem debug policy
- support
-In-Reply-To: <20200722035427.GQ388985@builder.lan>
-References: <20200721112935.25716-1-sibis@codeaurora.org>
- <20200721112935.25716-2-sibis@codeaurora.org>
- <20200722035427.GQ388985@builder.lan>
-Message-ID: <bc9af3437b823d9acbfebdeeffdad04c@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-22 09:24, Bjorn Andersson wrote:
-> On Tue 21 Jul 04:29 PDT 2020, Sibi Sankar wrote:
-> 
->> Add modem debug policy support which will enable coredumps and live
->> debug support when the msadp firmware is present on secure devices.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->> 
->> v2:
->>  * Use request_firmware_direct [Bjorn]
->>  * Use Bjorn's template to show if debug policy is present
->>  * Add size check to prevent memcpy out of bounds [Bjorn]
->> 
->>  drivers/remoteproc/qcom_q6v5_mss.c | 16 +++++++++++++++-
->>  1 file changed, 15 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c 
->> b/drivers/remoteproc/qcom_q6v5_mss.c
->> index 0b6f260eb5349..49cd16e050533 100644
->> --- a/drivers/remoteproc/qcom_q6v5_mss.c
->> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
->> @@ -189,6 +189,7 @@ struct q6v5 {
->>  	phys_addr_t mba_phys;
->>  	void *mba_region;
->>  	size_t mba_size;
->> +	size_t dp_size;
->> 
->>  	phys_addr_t mpss_phys;
->>  	phys_addr_t mpss_reloc;
->> @@ -408,6 +409,14 @@ static int q6v5_xfer_mem_ownership(struct q6v5 
->> *qproc, int *current_perm,
->>  static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->>  {
->>  	struct q6v5 *qproc = rproc->priv;
->> +	const struct firmware *dp_fw;
->> +
->> +	if (!request_firmware_direct(&dp_fw, "msadp", qproc->dev) && 
->> fw->size <= SZ_1M &&
->> +	    (SZ_1M + dp_fw->size) <= qproc->mba_size) {
->> +		memcpy(qproc->mba_region + SZ_1M, dp_fw->data, dp_fw->size);
->> +		qproc->dp_size = dp_fw->size;
->> +		release_firmware(dp_fw);
-> 
-> If request_firmware_direct() succeeds, but return a firmware blob 
-> bigger
-> than mba_size - SZ_1M you won't get here and will end up leaking dp_fw.
-> 
-> Additionally, there really isn't a need for requesting the firmware in
-> the first place if fw->size > SZ_1M.
-> 
-> So I think it's better if you break this out in it's own function where
-> you don't need to squeeze everything into one or two conditionals.
-
-I'll fix dp_fw leak and move it
-to a new func. Thanks for the
-review.
-
-> 
-> Regards,
-> Bjorn
-> 
->> +	}
->> 
->>  	memcpy(qproc->mba_region, fw->data, fw->size);
->> 
->> @@ -896,6 +905,10 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->>  	}
->> 
->>  	writel(qproc->mba_phys, qproc->rmb_base + RMB_MBA_IMAGE_REG);
->> +	if (qproc->dp_size) {
->> +		writel(qproc->mba_phys + SZ_1M, qproc->rmb_base + 
->> RMB_PMI_CODE_START_REG);
->> +		writel(qproc->dp_size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
->> +	}
->> 
->>  	ret = q6v5proc_reset(qproc);
->>  	if (ret)
->> @@ -1257,7 +1270,8 @@ static int q6v5_start(struct rproc *rproc)
->>  	if (ret)
->>  		return ret;
->> 
->> -	dev_info(qproc->dev, "MBA booted, loading mpss\n");
->> +	dev_info(qproc->dev, "MBA booted with%s debug policy, loading 
->> mpss\n",
->> +		 qproc->dp_size ? "" : "out");
->> 
->>  	ret = q6v5_mpss_load(qproc);
->>  	if (ret)
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+SGksDQoNCkkndmUganVzdCBmaXJlZCB1cCBsaW51eCBrZXJuZWwgdjUuNyBvbiBhIHAyMDQwIGJh
+c2VkIHN5c3RlbSBhbmQgSSdtIA0KZ2V0dGluZyB0aGUgZm9sbG93aW5nIG5ldyB3YXJuaW5nDQoN
+Ck9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZz
+ZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyMDIwMDApDQpPRjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxl
+IGRtYS1yYW5nZXMgd2l0aCBkaWZmZXJlbnQgb2Zmc2V0cyBvbiANCm5vZGUoL3BjaWVAZmZlMjAy
+MDAwKQ0KDQpUaGUgd2FybmluZyBpdHNlbGYgd2FzIGFkZGVkIGluIGNvbW1pdCA5ZDU1YmViZDk4
+MTYgKCJvZi9hZGRyZXNzOiANClN1cHBvcnQgbXVsdGlwbGUgJ2RtYS1yYW5nZXMnIGVudHJpZXMi
+KSBidXQgSSBnYXRoZXIgaXQncyBwb2ludGluZyBvdXQgDQpzb21ldGhpbmcgYWJvdXQgdGhlIGR0
+cy4gTXkgYm9hcmRzIGR0cyBpcyBiYXNlZCBoZWF2aWx5IG9uIHAyMDQxcmRiLmR0cyANCmFuZCB0
+aGUgcmVsZXZhbnQgcGNpMiBzZWN0aW9uIGlzIGlkZW50aWNhbCAocmVwcm9kdWNlZCBiZWxvdyBm
+b3IgcmVmZXJlbmNlKS4NCg0KIMKgwqDCoCBwY2kyOiBwY2llQGZmZTIwMjAwMCB7DQogwqDCoMKg
+IMKgwqDCoCByZWcgPSA8MHhmIDB4ZmUyMDIwMDAgMCAweDEwMDA+Ow0KIMKgwqDCoCDCoMKgwqAg
+cmFuZ2VzID0gPDB4MDIwMDAwMDAgMCAweGUwMDAwMDAwIDB4YyAweDQwMDAwMDAwIDAgMHgyMDAw
+MDAwMA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDB4MDEwMDAwMDAgMCAweDAwMDAwMDAwIDB4
+ZiAweGY4MDIwMDAwIDAgMHgwMDAxMDAwMD47DQogwqDCoMKgIMKgwqDCoCBwY2llQDAgew0KIMKg
+wqDCoCDCoMKgwqAgwqDCoMKgIHJhbmdlcyA9IDwweDAyMDAwMDAwIDAgMHhlMDAwMDAwMA0KIMKg
+wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAweDAyMDAwMDAwIDAgMHhlMDAwMDAwMA0KIMKg
+wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MjAwMDAwMDANCg0KIMKgwqDCoCDCoMKg
+wqAgwqDCoMKgIMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KIMKgwqDCoCDCoMKg
+wqAgwqDCoMKgIMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KIMKgwqDCoCDCoMKg
+wqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MDAwMTAwMDA+Ow0KIMKgwqDCoCDCoMKgwqAgfTsNCiDC
+oMKgwqAgfTsNCg0KSSBoYXZlbid0IG5vdGljZWQgYW55IGlsbCBlZmZlY3QgKGFzaWRlIGZyb20g
+dGhlIHNjYXJ5IG1lc3NhZ2UpLiBJJ20gbm90IA0Kc3VyZSBpZiB0aGVyZSdzIHNvbWV0aGluZyBt
+aXNzaW5nIGluIHRoZSBkdHMgb3IgaW4gdGhlIGNvZGUgdGhhdCBjaGVja3MgDQp0aGUgcmFuZ2Vz
+LiBBbnkgZ3VpZGFuY2Ugd291bGQgYmUgYXBwcmVjaWF0ZWQuDQoNClRoYW5rcywNCkNocmlzDQo=
