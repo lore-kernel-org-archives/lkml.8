@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A2EC433FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF7AC433F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970DF207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E541207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:24:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0fnGmpq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPgnN6dr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732398AbgGVRYw (ORCPT
+        id S1732380AbgGVRYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51054 "EHLO
+        Wed, 22 Jul 2020 13:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732022AbgGVRYq (ORCPT
+        with ESMTP id S1731775AbgGVRYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:24:46 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2F3C0619E1;
-        Wed, 22 Jul 2020 10:24:46 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d18so2245518edv.6;
-        Wed, 22 Jul 2020 10:24:46 -0700 (PDT)
+        Wed, 22 Jul 2020 13:24:44 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91A3C0619DC;
+        Wed, 22 Jul 2020 10:24:43 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id w6so3075059ejq.6;
+        Wed, 22 Jul 2020 10:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IwiK0U+Dhjv5R+D7L68/33/y00cq8SjNmUGfjDZfVnI=;
-        b=d0fnGmpqyawQ6ZYxmbsWP6gl4hH8VZ6oUxfyea9jfSgAlL1mLymyW1fokoRJvAxg+H
-         nlvajnhjmIzmBmnwyvX5fIjTcEWEPB4zIn0sYqns8vUqTWhFpX9fkQV21VFg7foAKeJm
-         KLb48FjP3k9d5Q6Bq0GxgeCjC04cq0vnYj/KDJP94v7UEGtsQdSIaLDi3vOQlC5aVhEV
-         qFj9sYBIjqlkHNfabEpR2Yp6ukw/GsWQfMrQHeUwKFlbmgdWiKpyQMmbC2CWDrSEVp+M
-         zMyn/VPPsXBwVsmG+3TBI6HR3KTrdmUNyXEaSut29/0TdDxDrCyqwPa9oGLlBijDxvnA
-         omsQ==
+        bh=DhWfch+PbL1rQUKAB1Yk9Mz5NfmZT5/0+GFbc58nQRA=;
+        b=JPgnN6drMAWSqcalRvAHbi0jprbFBhTZt1Fn+Up3YHmEI9TXEVsbihS5m2v2jujTKi
+         th+lqbLKWG8TJ9CK6MfNGiug1PEN44TkCOkoClPK/KoD1Cqe/ML8+pjQth/jdEGj+0s1
+         AY0Mw4qCAXD87ReSQhInThTLddZMtBMGwtjqbnNeNy/GVDzQ4itqL74NXieTbN2AFm1C
+         q+KKie38osW0q36ugZHVa8jtjoyRwyFmjoGPS564y8uHeU+WRIb+ARpMl2n/VqNZflml
+         12WXUwRj/OS8cLeEaOhl4UdhyKWuDrMkX+VVl0WZavZNQle66LP+ClKDqvc2MEijcLrM
+         7gOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IwiK0U+Dhjv5R+D7L68/33/y00cq8SjNmUGfjDZfVnI=;
-        b=E5mu/xmy1omN0iNebeoETrWOREbhgh7iW7QIvrAHMElxpWM3o/g0SNIXJVRASDaMsP
-         mXHMpgVuvVVOqwQxifRlG5Uu+yzeIrhUtocLsmZZPNJgaD8NZkgWWb8+aeacs/RHeUsq
-         7lcw6fQ4UmNBkW6gWVmH7dDMlsk5gC9OOiOwsYIY2TX0zfdM5sTxDcwgAZUpTQOoA6OM
-         yilwWYfqn41qEj2YQhyXH09k4UCg1fmqxBMZm7F/+Z3g/pQheSWlLGLg/JMRSB7MFTrx
-         JOo8guWORMpbVyU1enZKITCyArVURmsv9vvSINarXekWlE1h6TzaaBXLZWhX2/mys5Pt
-         VC+w==
-X-Gm-Message-State: AOAM5307h4zdTF33Y9aBDiX5Mw0QEcvquW7XltEfmtaxCoKPHaO7gFTk
-        H+pAIW8p0qvg1RJw5KZt79I=
-X-Google-Smtp-Source: ABdhPJwN32en1tjwVds6TL6SW0e/xdD/1wt15akze77kDflk28RHrFyCzGDTRIFEKftNULw8jz/XBQ==
-X-Received: by 2002:a50:d55b:: with SMTP id f27mr514751edj.312.1595438684854;
-        Wed, 22 Jul 2020 10:24:44 -0700 (PDT)
+        bh=DhWfch+PbL1rQUKAB1Yk9Mz5NfmZT5/0+GFbc58nQRA=;
+        b=NUe/6hF4jFOLArLYdPNcEG1Tp45VmsGSoZiv1d0ABZsProAZl+vbYY/kmsp9WoHqUD
+         Yiz4P0kBjFc73n4KouTTquCokgg055xTbzwQ6pha1Jk9zibDXjRhzpmnXdlaNtk1eOeL
+         3LO7tK3Fy7YGw5GZ/2vwcIO8g0O5Aue1aVbn/sz96IG0/3QB0i0xQF5i0y6LGnnw3Fji
+         tMOjqKphCmPcGMY8bD0PWvfcNqSFWIDGWcSi0BArzwsUlFKOi/nwkOWPAllTl9+OS+gH
+         cSkeZULdWyUy/aaJzSGOaXGGNnoNqeTCtsKYWE16PRHVG3oXGIS6IlS1UuWUBsctnIca
+         BlWw==
+X-Gm-Message-State: AOAM530UVF+A07JWMKWMd7RaqSgFvNeOkk1pehpKkMfydDskGdB+kkNb
+        dSR8mEs42AtUGtS5bYUSt9Q=
+X-Google-Smtp-Source: ABdhPJwYA3wRe1o4pTeacQVi3bgm1z+xiH580Qd8+l/C/geLfJNkokneg3yRCMBmAP0GNjMZ2wgNiw==
+X-Received: by 2002:a17:906:a253:: with SMTP id bi19mr588879ejb.338.1595438682371;
+        Wed, 22 Jul 2020 10:24:42 -0700 (PDT)
 Received: from localhost.localdomain ([188.25.219.134])
-        by smtp.gmail.com with ESMTPSA id bt26sm311517edb.17.2020.07.22.10.24.43
+        by smtp.gmail.com with ESMTPSA id bt26sm311517edb.17.2020.07.22.10.24.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 10:24:44 -0700 (PDT)
+        Wed, 22 Jul 2020 10:24:41 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     robh+dt@kernel.org, shawnguo@kernel.org, mpe@ellerman.id.au,
         devicetree@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     benh@kernel.crashing.org, paulus@samba.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, madalin.bucur@oss.nxp.com,
         radu-andrei.bulie@nxp.com, fido_max@inbox.ru
-Subject: [PATCH devicetree 4/4] powerpc: dts: t1040rdb: add ports for Seville Ethernet switch
-Date:   Wed, 22 Jul 2020 20:24:22 +0300
-Message-Id: <20200722172422.2590489-5-olteanv@gmail.com>
+Subject: [PATCH devicetree 2/4] powerpc: dts: t1040: label the 2 MDIO controllers
+Date:   Wed, 22 Jul 2020 20:24:20 +0300
+Message-Id: <20200722172422.2590489-3-olteanv@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200722172422.2590489-1-olteanv@gmail.com>
 References: <20200722172422.2590489-1-olteanv@gmail.com>
@@ -80,138 +80,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the network interface names for the switch ports and hook them up
-to the 2 QSGMII PHYs that are onboard.
-
-A conscious decision was taken to go along with the numbers that are
-written on the front panel of the board and not with the hardware
-numbers of the switch chip ports. The 2 are shifted by 4.
+In preparation of referencing the MDIO nodes from board DTS files (so
+that we can add PHY nodes easier), add labels to mdio0 and mdio1.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- arch/powerpc/boot/dts/fsl/t1040rdb.dts | 111 +++++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+ arch/powerpc/boot/dts/fsl/t1040si-post.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1040rdb.dts b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-index 40d7126dbe90..28ee06a1706d 100644
---- a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-@@ -75,4 +75,115 @@ &mdio0 {
- 	phy_sgmii_2: ethernet-phy@3 {
- 		reg = <0x3>;
+diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+index 4af856dcc6a3..e1b138b3c714 100644
+--- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+@@ -620,11 +620,11 @@ enet3: ethernet@e6000 {
+ 		enet4: ethernet@e8000 {
+ 		};
+ 
+-		mdio@fc000 {
++		mdio0: mdio@fc000 {
+ 			interrupts = <100 1 0 0>;
+ 		};
+ 
+-		mdio@fd000 {
++		mdio1: mdio@fd000 {
+ 			status = "disabled";
+ 		};
  	};
-+
-+	/* VSC8514 QSGMII PHY */
-+	phy_qsgmii_0: ethernet-phy@4 {
-+		reg = <0x4>;
-+	};
-+
-+	phy_qsgmii_1: ethernet-phy@5 {
-+		reg = <0x5>;
-+	};
-+
-+	phy_qsgmii_2: ethernet-phy@6 {
-+		reg = <0x6>;
-+	};
-+
-+	phy_qsgmii_3: ethernet-phy@7 {
-+		reg = <0x7>;
-+	};
-+
-+	/* VSC8514 QSGMII PHY */
-+	phy_qsgmii_4: ethernet-phy@8 {
-+		reg = <0x8>;
-+	};
-+
-+	phy_qsgmii_5: ethernet-phy@9 {
-+		reg = <0x9>;
-+	};
-+
-+	phy_qsgmii_6: ethernet-phy@a {
-+		reg = <0xa>;
-+	};
-+
-+	phy_qsgmii_7: ethernet-phy@b {
-+		reg = <0xb>;
-+	};
-+};
-+
-+&seville_port0 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_0>;
-+	phy-mode = "qsgmii";
-+	/* ETH4 written on chassis */
-+	label = "swp4";
-+	status = "okay";
-+};
-+
-+&seville_port1 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_1>;
-+	phy-mode = "qsgmii";
-+	/* ETH5 written on chassis */
-+	label = "swp5";
-+	status = "okay";
-+};
-+
-+&seville_port2 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_2>;
-+	phy-mode = "qsgmii";
-+	/* ETH6 written on chassis */
-+	label = "swp6";
-+	status = "okay";
-+};
-+
-+&seville_port3 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_3>;
-+	phy-mode = "qsgmii";
-+	/* ETH7 written on chassis */
-+	label = "swp7";
-+	status = "okay";
-+};
-+
-+&seville_port4 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_4>;
-+	phy-mode = "qsgmii";
-+	/* ETH8 written on chassis */
-+	label = "swp8";
-+	status = "okay";
-+};
-+
-+&seville_port5 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_5>;
-+	phy-mode = "qsgmii";
-+	/* ETH9 written on chassis */
-+	label = "swp9";
-+	status = "okay";
-+};
-+
-+&seville_port6 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_6>;
-+	phy-mode = "qsgmii";
-+	/* ETH10 written on chassis */
-+	label = "swp10";
-+	status = "okay";
-+};
-+
-+&seville_port7 {
-+	managed = "in-band-status";
-+	phy-handle = <&phy_qsgmii_7>;
-+	phy-mode = "qsgmii";
-+	/* ETH11 written on chassis */
-+	label = "swp11";
-+	status = "okay";
-+};
-+
-+&seville_port8 {
-+	ethernet = <&enet0>;
-+	status = "okay";
- };
 -- 
 2.25.1
 
