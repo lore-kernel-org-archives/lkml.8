@@ -2,170 +2,349 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F971C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F8920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1364E207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="SG5Xm6Vc";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hl2XJLBL"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="XlgcqI4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGVF5v (ORCPT
+        id S1728179AbgGVF55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:57:51 -0400
-Received: from relay3.mymailcheap.com ([217.182.119.157]:57325 "EHLO
-        relay3.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbgGVF5u (ORCPT
+        Wed, 22 Jul 2020 01:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbgGVF5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:57:50 -0400
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id 73DB23ECDF;
-        Wed, 22 Jul 2020 07:57:47 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id 9EDF42A3B7;
-        Wed, 22 Jul 2020 01:57:46 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595397466;
-        bh=GJoB7Hu1HHYwLx+18m5vh2TqCsCvOamF2pFuHKFNT7Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SG5Xm6VchAkjw/SYaCkgiNtbs0tuZAdlfUhLTud/L4U6vi1LIOfqqmgzlqEmaPEwc
-         UX3FRXLO7FC37co1kMHNECHLJG/U9DocJJ3Vmsr1/h681Dide6GYcrJtRx0OL6KeYc
-         QtrZYozDNR0dY0idaLEjSPjXVpSFBm9cCzL0Zqss=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hcoPqqim3Gns; Wed, 22 Jul 2020 01:57:44 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Wed, 22 Jul 2020 01:57:44 -0400 (EDT)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id E68044083C;
-        Wed, 22 Jul 2020 05:57:40 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="hl2XJLBL";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [210.140.199.71])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6D24F4083C;
-        Wed, 22 Jul 2020 05:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1595397456;
-        bh=GJoB7Hu1HHYwLx+18m5vh2TqCsCvOamF2pFuHKFNT7Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hl2XJLBLMvj8A0Wa+uCdDHB6Tpfp9pkthBN2FcPis0CQT5TU++MevcZzo9mOx5JfI
-         kbancRKEkJDtDxtOVt8wHLZzWquf/iPJZcI1LJc9RERmZ+PII7u2i4o1xtjB+sTp04
-         9vz8vnUhe7nMQQ6q9MHGysLlQk06saH6LYygj1Rs=
-Subject: Re: [PATCH v2 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-To:     linux-mips@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
- <20200721141742.996350-4-jiaxun.yang@flygoat.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <004c3248-95f6-03ef-1d39-956794a844a7@flygoat.com>
-Date:   Wed, 22 Jul 2020 13:57:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 01:57:55 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D36C061794;
+        Tue, 21 Jul 2020 22:57:55 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id h28so743912edz.0;
+        Tue, 21 Jul 2020 22:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7HyvRxIrXJ94hpJJ10KYHhFfMdEOmHA2GHT0K+5iUXk=;
+        b=XlgcqI4MvjemKHQVFDQvUzykkZRmP3lD/jG4aYdiM6hGOhyvXScttPI7hWy9rKRfuk
+         7J0QusowPX9dYB44LlAJBmavv5IOKWu71jWfGsTCuhQfavb8v/oc7Gq4CemDQBtbwA2A
+         uio4InFKyFHp+HAVNkP3Xk0qQQOfYwlexvZpY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7HyvRxIrXJ94hpJJ10KYHhFfMdEOmHA2GHT0K+5iUXk=;
+        b=ZhWXg9bMhlj92q3/SxMg5W8MoMWZZWGDfj9pdl1N6d/nPy7Jf/NCPVtxi0TVv1Eg9k
+         G86ZW2e/gfkzlgb1fmcm5PB/mTRg4f7xIO2cCuKuo5NnByRGuyOxDpz0PrrXoWVSdl1a
+         YzdyaGybvsKCGnPXQBQ24Q9gw016bzODPxxJok05rsyrHSrWPMhKz95ZRyF2+6AYgr8p
+         T55jjSddmFPQJhk8jCnv090R71sd5Vaj8KqsgPF3qdZzYlmyoZvV4odiq6Y5usMvGFzz
+         qpFOZNOvM/zaVnHQzGVhWx+yNfpcZ0CJrMsPO2UesFmCLpSffx4TmnSOLBSLl71v+OyI
+         TdxQ==
+X-Gm-Message-State: AOAM533ofpKW6Za+hpNOFRTh8Sq93rCW9w1ltkXzO+0Ah4O0/DQtMg2u
+        jejTfJxcFtpoA6FojXOLkHET9FXnyfok7JvyuQOpGs8vdkE=
+X-Google-Smtp-Source: ABdhPJyqwx7/7Ern/u8AfDOeaGdctpyl3n7V510LJKLg3E6NY/BORruzv1YBZDEOqkF3HbgrRGVMMg07hHLqxCPsRBY=
+X-Received: by 2002:a50:ee8a:: with SMTP id f10mr28623696edr.383.1595397473857;
+ Tue, 21 Jul 2020 22:57:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200721141742.996350-4-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: E68044083C
-X-Spamd-Result: default: False [1.40 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         FREEMAIL_CC(0.00)[kernel.org,alpha.franken.de,lemote.com,gmail.com,arndb.de,google.com,vger.kernel.org];
-         SUSPICIOUS_RECIPS(1.50)[];
-         RCVD_COUNT_TWO(0.00)[2]
-X-Rspamd-Server: mail20.mymailcheap.com
+References: <20200720160147.22339-1-supreeth.venkatesh@amd.com>
+In-Reply-To: <20200720160147.22339-1-supreeth.venkatesh@amd.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 22 Jul 2020 05:57:41 +0000
+Message-ID: <CACPK8XfBPb85uXyYiphD9uEUG6a+acAzEMAsfaenT3t0jqUWNw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] ARM:dts:aspeed: Initial device tree for AMD EthanolX
+To:     Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-ÔÚ 2020/7/21 ÏÂÎç10:17, Jiaxun Yang Ð´µÀ:
-> It can be very big on LS7A PCH systems.
+On Mon, 20 Jul 2020 at 16:02, Supreeth Venkatesh
+<supreeth.venkatesh@amd.com> wrote:
 >
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->   arch/mips/include/asm/io.h                     | 3 ++-
->   arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
->   2 files changed, 3 insertions(+), 3 deletions(-)
+> Initial introduction of AMD EthanolX platform equipped with an
+> Aspeed ast2500 BMC manufactured by AMD.
 >
-> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-> index 346fffd9e972..0072489325fa 100644
-> --- a/arch/mips/include/asm/io.h
-> +++ b/arch/mips/include/asm/io.h
-> @@ -50,8 +50,9 @@
->   # define __relaxed_ioswabq ioswabq
->   
->   /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
-> -
-> +#ifndef IO_SPACE_LIMIT
->   #define IO_SPACE_LIMIT 0xffff
-> +#endif
->   
->   /*
->    * On MIPS I/O ports are memory mapped, so we access them using normal
-> diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
-> index 3de0ac9d8829..fa5ea4ee8b6c 100644
-> --- a/arch/mips/include/asm/mach-loongson64/spaces.h
-> +++ b/arch/mips/include/asm/mach-loongson64/spaces.h
-> @@ -11,8 +11,7 @@
->   #define PCI_IOSIZE	SZ_16M
->   #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
->   
-> -/* Reserved at the start of PCI_IOBASE for legacy drivers */
-> -#define MMIO_LOWER_RESERVED	0x10000
-> +#define IO_SPACE_LIMIT  PCI_IOSIZE
-Oops, it should be (PCI_IOSIZE - 1), will fix in next revision.
+> AMD EthanolX platform is an AMD customer reference board with an
+> Aspeed ast2500 BMC manufactured by AMD.
+> This adds AMD EthanolX device tree file including the flash layout
+> used by EthanolX BMC machines.
+>
+> This also adds an entry of AMD EthanolX device tree file in Makefile.
+>
+> Signed-off-by: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
 
-Sorry for the noise.
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-Thanks.
+Looks good. One question about the licence.
 
-- Jiaxun
 
->   
->   #include <asm/mach-generic/spaces.h>
->   #endif
+> +++ b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: Apache-2.0
+> +// Copyright (c) 2020 AMD Inc.
+
+Can you have a read of the licence rules and add a preferred licence.
+The rules are here:
+
+ https://www.kernel.org/doc/html/latest/process/license-rules.html
+
+This very hacky one liner will give you an idea of common licences
+used by device trees:
+
+$ git grep -h SPDX -- arch/arm/boot/dts/ | cut -c3- |sort -b | uniq -c
+| sort -hr
+    579  SPDX-License-Identifier: GPL-2.0
+    305  SPDX-License-Identifier: GPL-2.0-only
+    222  SPDX-License-Identifier: GPL-2.0-or-later
+    188  SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+     91  SPDX-License-Identifier: GPL-2.0+
+     72  SPDX-License-Identifier: (GPL-2.0 OR MIT)
+     57  SPDX-License-Identifier: GPL-2.0+ OR MIT
+     46  SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+     38  SPDX-License-Identifier: GPL-2.0 OR X11
+     29  SPDX-License-Identifier: GPL-2.0 OR MIT
+     19  SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+     16  SPDX-License-Identifier: GPL-2.0-only */
+      6  SPDX-License-Identifier: ISC
+      5  SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+      4  SPDX-License-Identifier: (GPL-2.0+ OR X11)
+      4  SPDX-License-Identifier: (GPL-2.0 or MIT)
+      4  SPDX-License-Identifier: GPL-2.0 */
+      3  SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+      2  SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-3-Clause) */
+      2  SPDX-License-Identifier: GPL-2.0-or-later */
+      2  SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause
+      2  SPDX-License-Identifier: (GPL-2.0+)
+      2  SPDX-License-Identifier: (GPL-2.0)
+      2 SPDX-License-Identifier: GPL-2.0
+      1  SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
+      1  SPDX-License-Identifier:  GPL-2.0+
+      1 SPDX-License-Identifier: GPL-2.0+
+      1   SPDX-License-Identifier: BSD-3-Clause
+
+
+> +// Author: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+> +/dts-v1/;
+> +
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +
+> +/ {
+> +       model = "AMD EthanolX BMC";
+> +       compatible = "amd,ethanolx-bmc", "aspeed,ast2500";
+> +
+> +       memory@80000000 {
+> +               reg = <0x80000000 0x20000000>;
+> +       };
+> +       aliases {
+> +               serial0 = &uart1;
+> +               serial4 = &uart5;
+> +       };
+> +       chosen {
+> +               stdout-path = &uart5;
+> +               bootargs = "console=ttyS4,115200 earlyprintk";
+> +       };
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               fault {
+> +                       gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               identify {
+> +                       gpios = <&gpio ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
+> +               };
+> +       };
+> +       iio-hwmon {
+> +               compatible = "iio-hwmon";
+> +               io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>, <&adc 4>;
+> +       };
+> +};
+> +
+> +&fmc {
+> +       status = "okay";
+> +       flash@0 {
+> +               status = "okay";
+> +               m25p,fast-read;
+> +               #include "openbmc-flash-layout.dtsi"
+> +       };
+> +};
+> +
+> +
+> +&mac0 {
+> +       status = "okay";
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_rmii1_default>;
+> +       clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
+> +                <&syscon ASPEED_CLK_MAC1RCLK>;
+> +       clock-names = "MACCLK", "RCLK";
+> +};
+> +
+> +&uart1 {
+> +       //Host Console
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_txd1_default
+> +                    &pinctrl_rxd1_default>;
+> +};
+> +
+> +&uart5 {
+> +       //BMC Console
+> +       status = "okay";
+> +};
+> +
+> +&adc {
+> +       status = "okay";
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_adc0_default
+> +                    &pinctrl_adc1_default
+> +                    &pinctrl_adc2_default
+> +                    &pinctrl_adc3_default
+> +                    &pinctrl_adc4_default>;
+> +};
+> +
+> +// Thermal Sensors
+> +&i2c7 {
+> +       status = "okay";
+> +
+> +       lm75a@48 {
+> +               compatible = "national,lm75a";
+> +               reg = <0x48>;
+> +       };
+> +
+> +       lm75a@49 {
+> +               compatible = "national,lm75a";
+> +               reg = <0x49>;
+> +       };
+> +
+> +       lm75a@4a {
+> +               compatible = "national,lm75a";
+> +               reg = <0x4a>;
+> +       };
+> +
+> +       lm75a@4b {
+> +               compatible = "national,lm75a";
+> +               reg = <0x4b>;
+> +       };
+> +
+> +       lm75a@4c {
+> +               compatible = "national,lm75a";
+> +               reg = <0x4c>;
+> +       };
+> +
+> +       lm75a@4d {
+> +               compatible = "national,lm75a";
+> +               reg = <0x4d>;
+> +       };
+> +
+> +       lm75a@4e {
+> +               compatible = "national,lm75a";
+> +               reg = <0x4e>;
+> +       };
+> +
+> +       lm75a@4f {
+> +               compatible = "national,lm75a";
+> +               reg = <0x4f>;
+> +       };
+> +};
+> +
+> +&kcs1 {
+> +       status = "okay";
+> +       kcs_addr = <0x60>;
+> +};
+> +
+> +&kcs2 {
+> +       status = "okay";
+> +       kcs_addr = <0x62>;
+> +};
+> +
+> +&kcs4 {
+> +       status = "okay";
+> +       kcs_addr = <0x97DE>;
+> +};
+> +
+> +&lpc_snoop {
+> +       status = "okay";
+> +       snoop-ports = <0x80>;
+> +};
+> +
+> +&lpc_ctrl {
+> +       //Enable lpc clock
+> +       status = "okay";
+> +};
+> +
+> +&pwm_tacho {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_pwm0_default
+> +       &pinctrl_pwm1_default
+> +       &pinctrl_pwm2_default
+> +       &pinctrl_pwm3_default
+> +       &pinctrl_pwm4_default
+> +       &pinctrl_pwm5_default
+> +       &pinctrl_pwm6_default
+> +       &pinctrl_pwm7_default>;
+> +
+> +       fan@0 {
+> +               reg = <0x00>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+> +       };
+> +
+> +       fan@1 {
+> +               reg = <0x01>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
+> +       };
+> +
+> +       fan@2 {
+> +               reg = <0x02>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+> +       };
+> +
+> +       fan@3 {
+> +               reg = <0x03>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x03>;
+> +       };
+> +
+> +       fan@4 {
+> +               reg = <0x04>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x04>;
+> +       };
+> +
+> +       fan@5 {
+> +               reg = <0x05>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x05>;
+> +       };
+> +
+> +       fan@6 {
+> +               reg = <0x06>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x06>;
+> +       };
+> +
+> +       fan@7 {
+> +               reg = <0x07>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x07>;
+> +       };
+> +};
+> +
+> +
+> +
+> --
+> 2.17.1
+>
