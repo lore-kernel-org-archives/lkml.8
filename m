@@ -2,311 +2,511 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEE6C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF695C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE4B820825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C448520825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Yq9J8og9"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y8CYK3fY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HzmePeWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387605AbgGVWOD (ORCPT
+        id S1733189AbgGVWOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:14:03 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:15666 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733104AbgGVWLb (ORCPT
+        Wed, 22 Jul 2020 18:14:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52524 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733051AbgGVWL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:31 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM7112027569;
-        Wed, 22 Jul 2020 15:11:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=FhAggLZ0tLiue9xeV5tnAuoxZeC8O3N9g9v9jT+7MzA=;
- b=Yq9J8og9b0dzo+IWpNfWrK6a58sydhcZzodN706GFEVd5gNYcO7ccdw5BrNdv1VdNev3
- MScu+OIfg50epl7u1uuOqvYnyBwq8P0O3HqffjHQfBrUuW3WxL3/cYzWFCBFxFdLnCBd
- UxZbSz9DZ+9FHyxFLBIaDmyhgOd6nwTCaBzd3PJfmto1R0n377nwBRufiDUsaheEakKM
- vbHo5KkepCG3fPjioq78qTxnOVKtd8ieQs7aCPw+HmPJgRxwpAm6fjB6bofl5cEPy6Za
- /Jz9F0ey9xk9o4MxeO4j/odgedFN2x4AKYxP9+a6FPV0MfhFrwPVu8I3iCorzagJ/9lp oA== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 32bxentx65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 15:11:14 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:13 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:11:12 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 15:11:12 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id E55AE3F703F;
-        Wed, 22 Jul 2020 15:11:05 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 01/15] qed: reformat "qed_chain.h" a bit
-Date:   Thu, 23 Jul 2020 01:10:31 +0300
-Message-ID: <20200722221045.5436-2-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
-References: <20200722221045.5436-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 18:11:29 -0400
+Message-Id: <20200722220519.613977173@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=qMrWCOdzFDTQdPNMN6alJoGvVJ+C4B468DNRP31DK98=;
+        b=y8CYK3fYc0+k3iy1ypz74mqof25PzaMSLdAO1om9ROmo4g7DtFOMzhC79W5ibuX87IBJD/
+        aWRZz2cxVYeQ69EGk2tO4PFf+UTgDCfe0pgUGiwuW1VclJs6BE1jCx1tN9e+98Cx31d4i0
+        LjdwkJO9aPMiTydPF6jdKJa1O/8OVObhedHBUkdox9Oy6k1iuxCp8HcKBz39PcPygp4CH0
+        JrW2GPQjnZn91GNzeDK+A8HuCly3XXjkiCnlNDqt9YSfT0I6geSR4+vjMK/xkd+pnAJqMa
+        1Iz2QSkFLWD7jRfg4jqgaBXERqv89hlIYwMOFs/yVOCjnH5VXCUplXF+WxdV2Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=qMrWCOdzFDTQdPNMN6alJoGvVJ+C4B468DNRP31DK98=;
+        b=HzmePeWTY8WqN802lPUUPsaL/0HY+NrGzwuEmstiPs0MEMnHLp+j6ME00jvvAD+gZuTqex
+        bEVBjKdrpvFRROCQ==
+Date:   Wed, 22 Jul 2020 23:59:57 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V5 03/15] entry: Provide generic syscall exit function
+References: <20200722215954.464281930@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reformat structs and macros definitions a bit prior to making functional
-changes.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Like syscall entry all architectures have similar and pointlessly different
+code to handle pending work before returning from a syscall to user space.
+
+  1) One-time syscall exit work:
+      - rseq syscall exit
+      - audit
+      - syscall tracing
+      - tracehook (single stepping)
+
+  2) Preparatory work
+      - Exit to user mode loop (common TIF handling).
+      - Architecture specific one time work arch_exit_to_user_mode_prepare()
+      - Address limit and lockdep checks
+     
+  3) Final transition (lockdep, tracing, context tracking, RCU). Invokes
+     arch_exit_to_user_mode() to handle e.g. speculation mitigations
+
+Provide a generic version based on the x86 code which has all the RCU and
+instrumentation protections right.
+
+Provide a variant for interrupt return to user mode as well which shares
+the above #2 and #3 work items.
+
+After syscall_exit_to_user_mode() and irqentry_exit_to_user_mode() the
+architecture code just has to return to user space. The code after
+returning from these functions must not be instrumented.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 ---
- include/linux/qed/qed_chain.h | 126 ++++++++++++++++++----------------
- 1 file changed, 66 insertions(+), 60 deletions(-)
+V4: Remove _TIF_NOTIFY_RESUME dummy define as it is defined by all architectures
+    Remove the return value helper and use the existing regs_return_value()
+---
+ include/linux/entry-common.h |  189 +++++++++++++++++++++++++++++++++++++++++++
+ kernel/entry/common.c        |  169 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 358 insertions(+)
 
-diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 7071dc92b4e2..087073517c09 100644
---- a/include/linux/qed/qed_chain.h
-+++ b/include/linux/qed/qed_chain.h
-@@ -26,9 +26,9 @@ enum qed_chain_mode {
- };
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -29,6 +29,14 @@
+ # define _TIF_SYSCALL_AUDIT		(0)
+ #endif
  
- enum qed_chain_use_mode {
--	QED_CHAIN_USE_TO_PRODUCE,		/* Chain starts empty */
--	QED_CHAIN_USE_TO_CONSUME,		/* Chain starts full */
--	QED_CHAIN_USE_TO_CONSUME_PRODUCE,	/* Chain starts empty */
-+	QED_CHAIN_USE_TO_PRODUCE,			/* Chain starts empty */
-+	QED_CHAIN_USE_TO_CONSUME,			/* Chain starts full */
-+	QED_CHAIN_USE_TO_CONSUME_PRODUCE,		/* Chain starts empty */
- };
- 
- enum qed_chain_cnt_type {
-@@ -40,84 +40,86 @@ enum qed_chain_cnt_type {
- };
- 
- struct qed_chain_next {
--	struct regpair	next_phys;
--	void		*next_virt;
-+	struct regpair					next_phys;
-+	void						*next_virt;
- };
- 
- struct qed_chain_pbl_u16 {
--	u16 prod_page_idx;
--	u16 cons_page_idx;
-+	u16						prod_page_idx;
-+	u16						cons_page_idx;
- };
- 
- struct qed_chain_pbl_u32 {
--	u32 prod_page_idx;
--	u32 cons_page_idx;
-+	u32						prod_page_idx;
-+	u32						cons_page_idx;
- };
- 
- struct qed_chain_ext_pbl {
--	dma_addr_t p_pbl_phys;
--	void *p_pbl_virt;
-+	dma_addr_t					p_pbl_phys;
-+	void						*p_pbl_virt;
- };
- 
- struct qed_chain_u16 {
- 	/* Cyclic index of next element to produce/consme */
--	u16 prod_idx;
--	u16 cons_idx;
-+	u16						prod_idx;
-+	u16						cons_idx;
- };
- 
- struct qed_chain_u32 {
- 	/* Cyclic index of next element to produce/consme */
--	u32 prod_idx;
--	u32 cons_idx;
-+	u32						prod_idx;
-+	u32						cons_idx;
- };
- 
- struct addr_tbl_entry {
--	void *virt_addr;
--	dma_addr_t dma_map;
-+	void						*virt_addr;
-+	dma_addr_t					dma_map;
- };
- 
- struct qed_chain {
--	/* fastpath portion of the chain - required for commands such
-+	/* Fastpath portion of the chain - required for commands such
- 	 * as produce / consume.
- 	 */
++#ifndef _TIF_PATCH_PENDING
++# define _TIF_PATCH_PENDING		(0)
++#endif
 +
- 	/* Point to next element to produce/consume */
--	void *p_prod_elem;
--	void *p_cons_elem;
-+	void						*p_prod_elem;
-+	void						*p_cons_elem;
- 
- 	/* Fastpath portions of the PBL [if exists] */
++#ifndef _TIF_UPROBE
++# define _TIF_UPROBE			(0)
++#endif
 +
- 	struct {
- 		/* Table for keeping the virtual and physical addresses of the
- 		 * chain pages, respectively to the physical addresses
- 		 * in the pbl table.
- 		 */
--		struct addr_tbl_entry *pp_addr_tbl;
-+		struct addr_tbl_entry			*pp_addr_tbl;
+ /*
+  * TIF flags handled in syscall_enter_from_usermode()
+  */
+@@ -41,6 +49,29 @@
+ 	 _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_EMU |			\
+ 	 ARCH_SYSCALL_ENTER_WORK)
  
- 		union {
--			struct qed_chain_pbl_u16 u16;
--			struct qed_chain_pbl_u32 u32;
--		} c;
--	} pbl;
-+			struct qed_chain_pbl_u16	u16;
-+			struct qed_chain_pbl_u32	u32;
-+		}					c;
-+	}						pbl;
- 
- 	union {
--		struct qed_chain_u16 chain16;
--		struct qed_chain_u32 chain32;
--	} u;
-+		struct qed_chain_u16			chain16;
-+		struct qed_chain_u32			chain32;
-+	}						u;
- 
- 	/* Capacity counts only usable elements */
--	u32 capacity;
--	u32 page_cnt;
-+	u32						capacity;
-+	u32						page_cnt;
- 
--	enum qed_chain_mode mode;
-+	enum qed_chain_mode				mode;
- 
- 	/* Elements information for fast calculations */
--	u16 elem_per_page;
--	u16 elem_per_page_mask;
--	u16 elem_size;
--	u16 next_page_mask;
--	u16 usable_per_page;
--	u8 elem_unusable;
-+	u16						elem_per_page;
-+	u16						elem_per_page_mask;
-+	u16						elem_size;
-+	u16						next_page_mask;
-+	u16						usable_per_page;
-+	u8						elem_unusable;
- 
--	u8 cnt_type;
-+	u8						cnt_type;
- 
- 	/* Slowpath of the chain - required for initialization and destruction,
- 	 * but isn't involved in regular functionality.
-@@ -125,43 +127,47 @@ struct qed_chain {
- 
- 	/* Base address of a pre-allocated buffer for pbl */
- 	struct {
--		dma_addr_t p_phys_table;
--		void *p_virt_table;
--	} pbl_sp;
-+		dma_addr_t				p_phys_table;
-+		void					*p_virt_table;
-+	}						pbl_sp;
- 
- 	/* Address of first page of the chain - the address is required
- 	 * for fastpath operation [consume/produce] but only for the SINGLE
- 	 * flavour which isn't considered fastpath [== SPQ].
- 	 */
--	void *p_virt_addr;
--	dma_addr_t p_phys_addr;
-+	void						*p_virt_addr;
-+	dma_addr_t					p_phys_addr;
- 
- 	/* Total number of elements [for entire chain] */
--	u32 size;
-+	u32						size;
- 
--	u8 intended_use;
-+	u8						intended_use;
- 
--	bool b_external_pbl;
-+	bool						b_external_pbl;
- };
- 
--#define QED_CHAIN_PBL_ENTRY_SIZE        (8)
--#define QED_CHAIN_PAGE_SIZE             (0x1000)
--#define ELEMS_PER_PAGE(elem_size)       (QED_CHAIN_PAGE_SIZE / (elem_size))
-+#define QED_CHAIN_PBL_ENTRY_SIZE			8
-+#define QED_CHAIN_PAGE_SIZE				0x1000
++/*
++ * TIF flags handled in syscall_exit_to_user_mode()
++ */
++#ifndef ARCH_SYSCALL_EXIT_WORK
++# define ARCH_SYSCALL_EXIT_WORK		(0)
++#endif
 +
-+#define ELEMS_PER_PAGE(elem_size)					     \
-+	(QED_CHAIN_PAGE_SIZE / (elem_size))
++#define SYSCALL_EXIT_WORK						\
++	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT |			\
++	 _TIF_SYSCALL_TRACEPOINT | ARCH_SYSCALL_EXIT_WORK)
++
++/*
++ * TIF flags handled in exit_to_user_mode_loop()
++ */
++#ifndef ARCH_EXIT_TO_USER_MODE_WORK
++# define ARCH_EXIT_TO_USER_MODE_WORK		(0)
++#endif
++
++#define EXIT_TO_USER_MODE_WORK						\
++	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |		\
++	 _TIF_NEED_RESCHED | _TIF_PATCH_PENDING |			\
++	 ARCH_EXIT_TO_USER_MODE_WORK)
++
+ /**
+  * arch_check_user_regs - Architecture specific sanity check for user mode regs
+  * @regs:	Pointer to currents pt_regs
+@@ -106,6 +137,149 @@ static inline __must_check int arch_sysc
+ long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall);
  
--#define UNUSABLE_ELEMS_PER_PAGE(elem_size, mode)	 \
--	(((mode) == QED_CHAIN_MODE_NEXT_PTR) ?		 \
--	 (u8)(1 + ((sizeof(struct qed_chain_next) - 1) / \
--		   (elem_size))) : 0)
-+#define UNUSABLE_ELEMS_PER_PAGE(elem_size, mode)			     \
-+	(((mode) == QED_CHAIN_MODE_NEXT_PTR) ?				     \
-+	 (u8)(1 + ((sizeof(struct qed_chain_next) - 1) / (elem_size))) :     \
-+	 0)
+ /**
++ * local_irq_enable_exit_to_user - Exit to user variant of local_irq_enable()
++ * @ti_work:	Cached TIF flags gathered with interrupts disabled
++ *
++ * Defaults to local_irq_enable(). Can be supplied by architecture specific
++ * code.
++ */
++static inline void local_irq_enable_exit_to_user(unsigned long ti_work);
++
++#ifndef local_irq_enable_exit_to_user
++static inline void local_irq_enable_exit_to_user(unsigned long ti_work)
++{
++	local_irq_enable();
++}
++#endif
++
++/**
++ * local_irq_disable_exit_to_user - Exit to user variant of local_irq_disable()
++ *
++ * Defaults to local_irq_disable(). Can be supplied by architecture specific
++ * code.
++ */
++static inline void local_irq_disable_exit_to_user(void);
++
++#ifndef local_irq_disable_exit_to_user
++static inline void local_irq_disable_exit_to_user(void)
++{
++	local_irq_disable();
++}
++#endif
++
++/**
++ * arch_exit_to_user_mode_work - Architecture specific TIF work for exit
++ *				 to user mode.
++ * @regs:	Pointer to currents pt_regs
++ * @ti_work:	Cached TIF flags gathered with interrupts disabled
++ *
++ * Invoked from exit_to_user_mode_loop() with interrupt enabled
++ *
++ * Defaults to NOOP. Can be supplied by architecture specific code.
++ */
++static inline void arch_exit_to_user_mode_work(struct pt_regs *regs,
++					       unsigned long ti_work);
++
++#ifndef arch_exit_to_user_mode_work
++static inline void arch_exit_to_user_mode_work(struct pt_regs *regs,
++					       unsigned long ti_work)
++{
++}
++#endif
++
++/**
++ * arch_exit_to_user_mode_prepare - Architecture specific preparation for
++ *				    exit to user mode.
++ * @regs:	Pointer to currents pt_regs
++ * @ti_work:	Cached TIF flags gathered with interrupts disabled
++ *
++ * Invoked from exit_to_user_mode_prepare() with interrupt disabled as the last
++ * function before return. Defaults to NOOP.
++ */
++static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
++						  unsigned long ti_work);
++
++#ifndef arch_exit_to_user_mode_prepare
++static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
++						  unsigned long ti_work)
++{
++}
++#endif
++
++/**
++ * arch_exit_to_user_mode - Architecture specific final work before
++ *			    exit to user mode.
++ *
++ * Invoked from exit_to_user_mode() with interrupt disabled as the last
++ * function before return. Defaults to NOOP.
++ *
++ * This needs to be __always_inline because it is non-instrumentable code
++ * invoked after context tracking switched to user mode.
++ *
++ * An architecture implementation must not do anything complex, no locking
++ * etc. The main purpose is for speculation mitigations.
++ */
++static __always_inline void arch_exit_to_user_mode(void);
++
++#ifndef arch_exit_to_user_mode
++static __always_inline void arch_exit_to_user_mode(void) { }
++#endif
++
++/**
++ * arch_do_signal -  Architecture specific signal delivery function
++ * @regs:	Pointer to currents pt_regs
++ *
++ * Invoked from exit_to_user_mode_loop().
++ */
++void arch_do_signal(struct pt_regs *regs);
++
++/**
++ * arch_syscall_exit_tracehook - Wrapper around tracehook_report_syscall_exit()
++ * @regs:	Pointer to currents pt_regs
++ * @step:	Indicator for single step
++ *
++ * Defaults to tracehook_report_syscall_exit(). Can be replaced by
++ * architecture specific code.
++ *
++ * Invoked from syscall_exit_to_user_mode()
++ */
++static inline void arch_syscall_exit_tracehook(struct pt_regs *regs, bool step);
++
++#ifndef arch_syscall_exit_tracehook
++static inline void arch_syscall_exit_tracehook(struct pt_regs *regs, bool step)
++{
++	tracehook_report_syscall_exit(regs, step);
++}
++#endif
++
++/**
++ * syscall_exit_to_user_mode - Handle work before returning to user mode
++ * @regs:	Pointer to currents pt_regs
++ *
++ * Invoked with interrupts enabled and fully valid regs. Returns with all
++ * work handled, interrupts disabled such that the caller can immediately
++ * switch to user mode. Called from architecture specific syscall and ret
++ * from fork code.
++ *
++ * The call order is:
++ *  1) One-time syscall exit work:
++ *	- rseq syscall exit
++ *      - audit
++ *	- syscall tracing
++ *	- tracehook (single stepping)
++ *
++ *  2) Preparatory work
++ *	- Exit to user mode loop (common TIF handling). Invokes
++ *	  arch_exit_to_user_mode_work() for architecture specific TIF work
++ *	- Architecture specific one time work arch_exit_to_user_mode_prepare()
++ *	- Address limit and lockdep checks
++ *
++ *  3) Final transition (lockdep, tracing, context tracking, RCU). Invokes
++ *     arch_exit_to_user_mode() to handle e.g. speculation mitigations
++ */
++void syscall_exit_to_user_mode(struct pt_regs *regs);
++
++/**
+  * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
+  * @regs:	Pointer to currents pt_regs
+  *
+@@ -118,4 +292,19 @@ long syscall_enter_from_user_mode(struct
+  */
+ void irqentry_enter_from_user_mode(struct pt_regs *regs);
  
--#define USABLE_ELEMS_PER_PAGE(elem_size, mode) \
--	((u32)(ELEMS_PER_PAGE(elem_size) -     \
--	       UNUSABLE_ELEMS_PER_PAGE(elem_size, mode)))
-+#define USABLE_ELEMS_PER_PAGE(elem_size, mode)				     \
-+	((u32)(ELEMS_PER_PAGE(elem_size) -				     \
-+	       UNUSABLE_ELEMS_PER_PAGE((elem_size), (mode))))
++/**
++ * irqentry_exit_to_user_mode - Interrupt exit work
++ * @regs:	Pointer to current's pt_regs
++ *
++ * Invoked with interrupts disbled and fully valid regs. Returns with all
++ * work handled, interrupts disabled such that the caller can immediately
++ * switch to user mode. Called from architecture specific interrupt
++ * handling code.
++ *
++ * The call order is #2 and #3 as described in syscall_exit_to_user_mode().
++ * Interrupt exit is not invoking #1 which is the syscall specific one time
++ * work.
++ */
++void irqentry_exit_to_user_mode(struct pt_regs *regs);
++
+ #endif
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -2,6 +2,8 @@
  
--#define QED_CHAIN_PAGE_CNT(elem_cnt, elem_size, mode) \
--	DIV_ROUND_UP(elem_cnt, USABLE_ELEMS_PER_PAGE(elem_size, mode))
-+#define QED_CHAIN_PAGE_CNT(elem_cnt, elem_size, mode)			     \
-+	DIV_ROUND_UP((elem_cnt), USABLE_ELEMS_PER_PAGE((elem_size), (mode)))
+ #include <linux/context_tracking.h>
+ #include <linux/entry-common.h>
++#include <linux/livepatch.h>
++#include <linux/audit.h>
  
--#define is_chain_u16(p) ((p)->cnt_type == QED_CHAIN_CNT_TYPE_U16)
--#define is_chain_u32(p) ((p)->cnt_type == QED_CHAIN_CNT_TYPE_U32)
-+#define is_chain_u16(p)							     \
-+	((p)->cnt_type == QED_CHAIN_CNT_TYPE_U16)
-+#define is_chain_u32(p)							     \
-+	((p)->cnt_type == QED_CHAIN_CNT_TYPE_U32)
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/syscalls.h>
+@@ -82,7 +84,174 @@ noinstr long syscall_enter_from_user_mod
+ 	return syscall;
+ }
  
- /* Accessors */
- static inline u16 qed_chain_get_prod_idx(struct qed_chain *p_chain)
--- 
-2.25.1
++/**
++ * exit_to_user_mode - Fixup state when exiting to user mode
++ *
++ * Syscall/interupt exit enables interrupts, but the kernel state is
++ * interrupts disabled when this is invoked. Also tell RCU about it.
++ *
++ * 1) Trace interrupts on state
++ * 2) Invoke context tracking if enabled to adjust RCU state
++ * 3) Invoke architecture specific last minute exit code, e.g. speculation
++ *    mitigations, etc.
++ * 4) Tell lockdep that interrupts are enabled
++ */
++static __always_inline void exit_to_user_mode(void)
++{
++	instrumentation_begin();
++	trace_hardirqs_on_prepare();
++	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++	instrumentation_end();
++
++	user_enter_irqoff();
++	arch_exit_to_user_mode();
++	lockdep_hardirqs_on(CALLER_ADDR0);
++}
++
++/* Workaround to allow gradual conversion of architecture code */
++void __weak arch_do_signal(struct pt_regs *regs) { }
++
++static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
++					    unsigned long ti_work)
++{
++	/*
++	 * Before returning to user space ensure that all pending work
++	 * items have been completed.
++	 */
++	while (ti_work & EXIT_TO_USER_MODE_WORK) {
++
++		local_irq_enable_exit_to_user(ti_work);
++
++		if (ti_work & _TIF_NEED_RESCHED)
++			schedule();
++
++		if (ti_work & _TIF_UPROBE)
++			uprobe_notify_resume(regs);
++
++		if (ti_work & _TIF_PATCH_PENDING)
++			klp_update_patch_state(current);
++
++		if (ti_work & _TIF_SIGPENDING)
++			arch_do_signal(regs);
++
++		if (ti_work & _TIF_NOTIFY_RESUME) {
++			clear_thread_flag(TIF_NOTIFY_RESUME);
++			tracehook_notify_resume(regs);
++			rseq_handle_notify_resume(NULL, regs);
++		}
++
++		/* Architecture specific TIF work */
++		arch_exit_to_user_mode_work(regs, ti_work);
++
++		/*
++		 * Disable interrupts and reevaluate the work flags as they
++		 * might have changed while interrupts and preemption was
++		 * enabled above.
++		 */
++		local_irq_disable_exit_to_user();
++		ti_work = READ_ONCE(current_thread_info()->flags);
++	}
++
++	/* Return the latest work state for arch_exit_to_user_mode() */
++	return ti_work;
++}
++
++static void exit_to_user_mode_prepare(struct pt_regs *regs)
++{
++	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
++
++	lockdep_assert_irqs_disabled();
++
++	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
++		ti_work = exit_to_user_mode_loop(regs, ti_work);
++
++	arch_exit_to_user_mode_prepare(regs, ti_work);
++
++	/* Ensure that the address limit is intact and no locks are held */
++	addr_limit_user_check();
++	lockdep_assert_irqs_disabled();
++	lockdep_sys_exit();
++}
++
++#ifndef _TIF_SINGLESTEP
++static inline bool report_single_step(unsigned long ti_work)
++{
++	return false;
++}
++#else
++/*
++ * If TIF_SYSCALL_EMU is set, then the only reason to report is when
++ * TIF_SINGLESTEP is set (i.e. PTRACE_SYSEMU_SINGLESTEP).  This syscall
++ * instruction has been already reported in syscall_enter_from_usermode().
++ */
++#define SYSEMU_STEP	(_TIF_SINGLESTEP | _TIF_SYSCALL_EMU)
++
++static inline bool report_single_step(unsigned long ti_work)
++{
++	return (ti_work & SYSEMU_STEP) == _TIF_SINGLESTEP;
++}
++#endif
++
++static void syscall_exit_work(struct pt_regs *regs, unsigned long ti_work)
++{
++	bool step;
++
++	audit_syscall_exit(regs);
++
++	if (ti_work & _TIF_SYSCALL_TRACEPOINT)
++		trace_sys_exit(regs, syscall_get_return_value(current, regs));
++
++	step = report_single_step(ti_work);
++	if (step || ti_work & _TIF_SYSCALL_TRACE)
++		arch_syscall_exit_tracehook(regs, step);
++}
++
++/*
++ * Syscall specific exit to user mode preparation. Runs with interrupts
++ * enabled.
++ */
++static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
++{
++	u32 cached_flags = READ_ONCE(current_thread_info()->flags);
++	unsigned long nr = syscall_get_nr(current, regs);
++
++	CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
++
++	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
++		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
++			local_irq_enable();
++	}
++
++	rseq_syscall(regs);
++
++	/*
++	 * Do one-time syscall specific work. If these work items are
++	 * enabled, we want to run them exactly once per syscall exit with
++	 * interrupts enabled.
++	 */
++	if (unlikely(cached_flags & SYSCALL_EXIT_WORK))
++		syscall_exit_work(regs, cached_flags);
++}
++
++__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
++{
++	instrumentation_begin();
++	syscall_exit_to_user_mode_prepare(regs);
++	local_irq_disable_exit_to_user();
++	exit_to_user_mode_prepare(regs);
++	instrumentation_end();
++	exit_to_user_mode();
++}
++
+ noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
+ {
+ 	enter_from_user_mode(regs);
+ }
++
++noinstr void irqentry_exit_to_user_mode(struct pt_regs *regs)
++{
++	instrumentation_begin();
++	exit_to_user_mode_prepare(regs);
++	instrumentation_end();
++	exit_to_user_mode();
++}
+
 
