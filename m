@@ -2,93 +2,127 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A380C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0572D2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595434920;
-	bh=NnybZoElq3+0KYwoEu4w7pBb4jnYvQOexyS5ysvraSE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2h7vA9Gz4FyQ4axvv8GDvXDDnJkHXpa5hwxkaorHISxG7SqDbZR2aT+hI+R55GuiI
-	 DkJsY+smWS5MzEfZc8CCDZMl9GB3/TRSnEYCTLBuABJioVQFIiuBfE4v9IhmKW7uyD
-	 q+XjxzKxK5OSC16Kmusnkgxa6FUQi5m1Gn+mm+64=
+	by mail.kernel.org (Postfix) with ESMTP id D1D9F2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:27:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ra98AzIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbgGVQV6 (ORCPT
+        id S1728135AbgGVQ1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:21:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbgGVQV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:21:57 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D56A722C9E
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 16:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595434917;
-        bh=NnybZoElq3+0KYwoEu4w7pBb4jnYvQOexyS5ysvraSE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UcMcUqZGs3A/zHint+yQtia7Uf3Fb8yRh4OyYW73633eFDF8vcz9eD7uDnKQ/c0cu
-         yoA7jR0qN1gN5YgaAVpozWehWHO7y/XScv8pB/dupzQgn5vR4+tU+XPdcM9ijeUk8u
-         8oa5kAzlA1/+LXQc6uLgnZdv5H6c3AhKs2JE2T38=
-Received: by mail-wr1-f52.google.com with SMTP id f18so2507649wrs.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:21:56 -0700 (PDT)
-X-Gm-Message-State: AOAM530GTQAXsTKD97kcWG6T7ZgohBvvG0lZljtspxQN9uKM4FGegVup
-        xDVyKVEJUv9IlKPCMBGYmctVgbqsVdBnplOFAzNxcA==
-X-Google-Smtp-Source: ABdhPJyEetM5mfaR+krsbN1VbThAmtrGRoGcIADpoq0lN9rBpz6OtbXdH4MYYDkEz8tY7NVo/wEe+Jv+iOx79Efg25I=
-X-Received: by 2002:adf:e482:: with SMTP id i2mr296828wrm.75.1595434915303;
- Wed, 22 Jul 2020 09:21:55 -0700 (PDT)
+        Wed, 22 Jul 2020 12:27:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbgGVQ06 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:26:58 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECC6C0619E3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:26:57 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id h16so1801412ilj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2kHXQvVGBuGkaVHirVH2ldXpqiigd2kMJlKCki7PqMg=;
+        b=ra98AzIYvVtLIKFmQ0582LpmVzZLDFtXPiDLxSIB7SoDAYKfzHUmecVZxZuP/M6Pvb
+         fDufO1C+Q4FiAbYniw6ePsXq6IniiF94IvlcqmWtmSWtqcN5EqOCbg+nsxHw7v2/BzpD
+         yqdQ4eKGDs88B1pTQ+/lVZ3atNYajhFCrKFlxc6iGCv2w9U5QibkcB5fjdiaYFspwg/7
+         DUAeDu27aJnyG2kaxKFRHFuV9pRJvCocGy9/pSs9I4O2w31H+artkiu+wABWqj20BtFU
+         4mfkDrAHear+tV6pm6mm5Q1TEtNXZAq/Blh918qa8SfTMXEI9nUlQIkjpdOHfrsto+Ju
+         hfqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2kHXQvVGBuGkaVHirVH2ldXpqiigd2kMJlKCki7PqMg=;
+        b=LbpEJ1DsLriK2EAnuqdnVMPpna/noGn9EMbhQ0kAqH/7aberHz4Vh/EB+JQZovLATA
+         kdMiXjP/FbJ1Wles6chodS3UCYu2fjkfF+z9FFV5sNuUfmQDm73TLigHMDYyvpwgMOIr
+         uvwMHdJF6K4h0HVLIRx7bNOoURMhnd6EAILGO6BxBL6E86BItvVcFxZBfJ02V2ssBPfN
+         sO/Jb9+81Z17J+x2/TV6yeADN+8r+q8l2CBgCY0Mqhphx1PXPV8Nj3Q41K2jK1tk8QyL
+         HB91PCahzhok0fUue7pTUg6/Fcst2JDO1ebax2St+lH4tw82BMq0abQxEgXKD6z5SuuF
+         s3mQ==
+X-Gm-Message-State: AOAM530603fvJ/RZSK++nlpQBBI7EHDQAk3KgEVt97TKBq9q3Ny+6Ar3
+        F75O0qz8TRHwoIolczSyK9ywmP+6AVdWSBdQRqgoig==
+X-Google-Smtp-Source: ABdhPJzNeJo6F0VTZ0S6U9fuGWdBKZjH6dGksbNLyWqgmXOtrkpA/UinCG7oju3HCUHK5DY6DzL72Fr4547fWGtbqgk=
+X-Received: by 2002:a05:6e02:1253:: with SMTP id j19mr673988ilq.145.1595435216934;
+ Wed, 22 Jul 2020 09:26:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com>
-In-Reply-To: <20200717072056.73134-18-ira.weiny@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 22 Jul 2020 09:21:43 -0700
-X-Gmail-Original-Message-ID: <CALCETrVe1i5JdyzD_BcctxQJn+ZE3T38EFPgjxN1F577M36g+w@mail.gmail.com>
-Message-ID: <CALCETrVe1i5JdyzD_BcctxQJn+ZE3T38EFPgjxN1F577M36g+w@mail.gmail.com>
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
-To:     Weiny Ira <ira.weiny@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+References: <20200722062552.212200-1-hch@lst.de> <20200722062552.212200-12-hch@lst.de>
+In-Reply-To: <20200722062552.212200-12-hch@lst.de>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 22 Jul 2020 09:26:45 -0700
+Message-ID: <CALvZod6zF7Ak8KWf4dq0pEF2ty7JN_SyNE7PxLjrfF+EuDbZ2w@mail.gmail.com>
+Subject: Re: [PATCH 11/14] mm: use SWP_SYNCHRONOUS_IO more intelligently
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, drbd-dev@lists.linbit.com,
+        linux-raid@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:21 AM <ira.weiny@intel.com> wrote:
+On Tue, Jul 21, 2020 at 11:27 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> From: Ira Weiny <ira.weiny@intel.com>
+> There is no point in trying to call bdev_read_page if SWP_SYNCHRONOUS_IO
+> is not set, as the device won't support it.
 >
-> The PKRS MSR is not managed by XSAVE.  It is already preserved through a
-> context switch but this support leaves exception handling code open to
-> memory accesses which the interrupted process has allowed.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  mm/page_io.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
 >
-> Close this hole by preserve the current task's PKRS MSR, reset the PKRS
-> MSR value on exception entry, and then restore the state on exception
-> exit.
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index ccda7679008851..442061348dfb26 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -403,15 +403,17 @@ int swap_readpage(struct page *page, bool synchronous)
+>                 goto out;
+>         }
+>
+> -       ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> -       if (!ret) {
+> -               if (trylock_page(page)) {
+> -                       swap_slot_free_notify(page);
+> -                       unlock_page(page);
+> -               }
+> +       if (sis->flags & SWP_SYNCHRONOUS_IO) {
+> +               ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+> +               if (ret) {
 
-Should this live in pt_regs?
+!ret
 
---Andy
+> +                       if (trylock_page(page)) {
+> +                               swap_slot_free_notify(page);
+> +                               unlock_page(page);
+> +                       }
+>
+> -               count_vm_event(PSWPIN);
+> -               goto out;
+> +                       count_vm_event(PSWPIN);
+> +                       goto out;
+> +               }
+>         }
+>
+>         ret = 0;
+> --
+> 2.27.0
+>
