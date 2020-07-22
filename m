@@ -2,130 +2,169 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EF9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38CC20729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DCB20729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="uklxvUXg"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="zC/nKfBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbgGVM2H (ORCPT
+        id S1732266AbgGVM3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:28:07 -0400
-Received: from nbd.name ([46.4.11.11]:58696 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVM2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6Um3eY46ty5qgGLen9Kr+bicC/xmnrvjDfLiPTMsjio=; b=uklxvUXge7GMFuZwK4H9WE+O66
-        RQ+ThpBVTSjmtykruBKWysb3Su3UZ8z/4h7XF30/t8QxvPPblX6ZmcY9ccJOXCeh++jVnT4X9lFFr
-        KmXcj7hpbwHlFuHsT4fbNimA0K81F+gr1nKyK0kJD+2H7GLexfrg8dJwsEaZSqF0EY5Y=;
-Received: from p54ae9e66.dip0.t-ipconnect.de ([84.174.158.102] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jyDqZ-0000Z3-VP; Wed, 22 Jul 2020 14:27:44 +0200
-Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
-To:     Rajkumar Manoharan <rmanohar@codeaurora.org>,
-        Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
-        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org
-References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
- <1595351666-28193-3-git-send-email-pillair@codeaurora.org>
- <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
-From:   Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <d79ae05e-e75a-de2f-f2e3-bc73637e1501@nbd.name>
-Date:   Wed, 22 Jul 2020 14:27:42 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Wed, 22 Jul 2020 08:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbgGVM3X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:29:23 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BE8C0619DE
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 184so1834581wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 05:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
+        b=zC/nKfBrLXsHpRuQ+z39G/DxnJ20Yqs3ARHl1smLLddGrYhyVPM+tVH/F8sCbehehy
+         NeEBI58h3Xfba84vb/G+9dE5iq71Gnujv/m8UQqkMiHLxzBp4MKirflIDr112hSHTETp
+         Vmob1UjeZ7Gkn/OQUVmjW9Y38c4fwJD3STIz2bxxt7N6BxSgBv6HBn68j1VE8DhbUfbG
+         rzWEkTEb0OWVATuL/3E5XiXv/bJ475I0BU4estyhRlYhXTaC5AL2eP7xRDI9wBk8qSK8
+         315/yM5zg96U/mQJ4MbGWTR2IDlM/eSIFXk8zgshjkPRzu1tHCDZNygJboH6VLVQtJU6
+         tFnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W91rvFokifCVPR+o198v06eVGGt939fjm12mG9mSyHI=;
+        b=XkRjmdQiiziJvyAVTsHLUsXa4P79HlM1B8EWPB/+Imnb758BQ+rBE7bCozDSf13tfQ
+         Af6Dgkxb+2c4WPP29x5/4lg6jDW3coKMQdsoI4FYpIXlvOokgTu/B4ZybuCl6OhzH6Oo
+         Varl/JP+nBzVoJmNJxUkoCYzvFJTdmzXrczQwoQEb96kjuSNIR1fKYkFu1JgAD8nWcbQ
+         BJpKIsaDtPCqWMNoXdwvXs+uAZATRDpJsAX9ne8iQvg+Ge9MAGeeTmAVT3SyPCY4ziVY
+         MKZE2i6BigOm+kWOl5QOYK0u7l1UTvb+gWBZxhqE4ob+yDEKWmrCN2vsArIl4Qm+BawP
+         3U9w==
+X-Gm-Message-State: AOAM530g0YDJO1lktNmABl9WAiNrpFw8Rw8l941FbYvz4KkW58ARD0N+
+        MmC8S6oCE6x6fIQZO4j6NLCUog==
+X-Google-Smtp-Source: ABdhPJza2fPEqYYKevpudtxYAEP4TkXuRkD+NMrK9DYbGa9mewMaSnuJMSk2BAeUfX481vQhspXfaw==
+X-Received: by 2002:a1c:a181:: with SMTP id k123mr8514433wme.172.1595420961581;
+        Wed, 22 Jul 2020 05:29:21 -0700 (PDT)
+Received: from localhost.localdomain (172.red-80-27-177.dynamicip.rima-tde.net. [80.27.177.172])
+        by smtp.gmail.com with ESMTPSA id k131sm7728855wmb.36.2020.07.22.05.29.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 05:29:19 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v5] pinctrl: core: print gpio in pins debugfs file
+Date:   Wed, 22 Jul 2020 14:27:52 +0200
+Message-Id: <20200722122751.266440-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-21 23:53, Rajkumar Manoharan wrote:
-> On 2020-07-21 10:14, Rakesh Pillai wrote:
->> NAPI instance gets scheduled on a CPU core on which
->> the IRQ was triggered. The processing of rx packets
->> can be CPU intensive and since NAPI cannot be moved
->> to a different CPU core, to get better performance,
->> its better to move the gist of rx packet processing
->> in a high priority thread.
->> 
->> Add the init/deinit part for a thread to process the
->> receive packets.
->> 
-> IMHO this defeat the whole purpose of NAPI. Originally in ath10k
-> irq processing happened in tasklet (high priority) context which in
-> turn push more data to net core even though net is unable to process
-> driver data as both happen in different context (fast producer - slow 
-> consumer)
-> issue. Why can't CPU governor schedule the interrupts in less loaded CPU 
-> core?
-> Otherwise you can play with different RPS and affinity settings to meet 
-> your
-> requirement.
-> 
-> IMO introducing high priority tasklets/threads is not viable solution.
-I'm beginning to think that the main problem with NAPI here is that the
-work done by poll functions on 802.11 drivers is significantly more CPU
-intensive compared to ethernet drivers, possibly more than what NAPI was
-designed for.
+If there is a gpio range mapping for the pin, then print out the gpio
+chip and line index for the pin in the debugfs 'pins' file with the
+format: "[line-index]:[gpio-label]"
 
-I'm considering testing a different approach (with mt76 initially):
-- Add a mac80211 rx function that puts processed skbs into a list
-instead of handing them to the network stack directly.
-- Move all rx processing to a high priority thread, keep a driver
-internal queue for fully processed packets.
-- Schedule NAPI poll on completion.
-- NAPI poll function pulls from the internal queue and passes to the
-network stack.
+Here is example output on the BeagleBoard.org PocketBeagle (AM3358):
+/sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
 
-With this approach, the network stack retains some control over the
-processing rate of rx packets, while the scheduler can move the CPU
-intensive processing around to where it fits best.
+pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
+pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
+pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
+pin 28 (PIN28) 0:? 44e10870 00000036 pinctrl-single
+pin 29 (PIN29) 0:? 44e10874 00000006 pinctrl-single
+pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
+pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
+pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
+pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
+pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
+pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
 
-What do you think?
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ drivers/pinctrl/core.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-- Felix
+v4 changes:
+- Andy suggested '0:?' would be better because GPIO library uses '?' in
+  cases of unknown labels 
+
+v3 changes:
+- gpio column is now gpiochip label and line index
+
+v2 changes:
+- print 'NA' if pin does not have a GPIO number
+- change gpio_num from unsigned to unsigned int per checkpatch
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 821242bb4b16..02a4cc3b60c8 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -27,6 +27,7 @@
+ #include <linux/pinctrl/machine.h>
+ 
+ #ifdef CONFIG_GPIOLIB
++#include "../gpio/gpiolib.h"
+ #include <asm-generic/gpio.h>
+ #endif
+ 
+@@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 	struct pinctrl_dev *pctldev = s->private;
+ 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 	unsigned i, pin;
++	struct pinctrl_gpio_range *range;
++	unsigned int gpio_num;
++	struct gpio_chip *chip;
+ 
+ 	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
+ 
+@@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 
+ 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+ 
++#ifdef CONFIG_GPIOLIB
++		gpio_num = 0;
++		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
++			if ((pin >= range->pin_base) &&
++			    (pin < (range->pin_base + range->npins))) {
++				gpio_num = range->base + (pin - range->pin_base);
++				break;
++			}
++		}
++		chip = gpio_to_chip(gpio_num);
++		if (chip && chip->gpiodev && chip->gpiodev->base)
++			seq_printf(s, "%u:%s ", gpio_num -
++				chip->gpiodev->base, chip->label);
++		else
++			seq_puts(s, "0:? ");
++#endif
++
+ 		/* Driver-specific info per pin */
+ 		if (ops->pin_dbg_show)
+ 			ops->pin_dbg_show(pctldev, s, pin);
+-- 
+2.25.1
+
