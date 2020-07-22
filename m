@@ -2,81 +2,70 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0981EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9101C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D114B20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD2D22482
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 19:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbgGVTU4 (ORCPT
+        id S1732841AbgGVTV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 15:20:56 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:33340 "EHLO smtp.al2klimov.de"
+        Wed, 22 Jul 2020 15:21:26 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:47724 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbgGVTU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 15:20:56 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id C10D9BDF0A;
-        Wed, 22 Jul 2020 19:20:52 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     linux@armlinux.org.uk, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH v2] ARM: STM32: Replace HTTP links with HTTPS ones
-Date:   Wed, 22 Jul 2020 21:20:46 +0200
-Message-Id: <20200722192046.69334-1-grandmaster@al2klimov.de>
-In-Reply-To: <55c95208-de0f-b2d3-c20c-d19f3ce34e2a@st.com>
-References: <55c95208-de0f-b2d3-c20c-d19f3ce34e2a@st.com>
+        id S1726564AbgGVTVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 15:21:24 -0400
+Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jyKIr-0005Ud-74; Wed, 22 Jul 2020 21:21:21 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        linux-rockchip@lists.infradead.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Trimarchi <michael@amarulasolutions.com>
+Subject: Re: [PATCH 1/3] ARM: dts: rockchip: Add USB for RockPI N8/N10
+Date:   Wed, 22 Jul 2020 21:21:05 +0200
+Message-Id: <159544564767.763387.9815839004542852680.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200720110230.367985-1-jagan@amarulasolutions.com>
+References: <20200720110230.367985-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, 20 Jul 2020 16:32:28 +0530, Jagan Teki wrote:
+> Radxa dalang carrier board has 2x USB 2.0 and 1x USB 3.0
+> ports.
+> 
+> This patch adds support to enable all these USB ports for
+> N10 and N8 combinations SBCs.
+> 
+> Note that the USB 3.0 port on RockPI N8 combination works
+> as USB 2.0 OTG since it is driven from RK3288.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Applied, thanks!
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- v2: Undone crypto changes.
+[1/3] ARM: dts: rockchip: Add USB for RockPI N8/N10
+      commit: 417b188a985d3557b0ecb5623b27bd9843f03aec
+[2/3] ARM: dts: rockchip: Add HDMI out for RockPI N8/N10
+      commit: d0cb2f30e7c033f0a8bbe98ec73dbc1db4788942
+[3/3] arm64: dts: rockchip: Add PCIe for RockPI N10
+      commit: 93ca8ac2e8fcea6feb02a40edd2334144b62fc6e
 
- arch/arm/mach-stm32/Makefile.boot | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-stm32/Makefile.boot b/arch/arm/mach-stm32/Makefile.boot
-index cec195d4fcba..5dde7328a7a9 100644
---- a/arch/arm/mach-stm32/Makefile.boot
-+++ b/arch/arm/mach-stm32/Makefile.boot
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- # Empty file waiting for deletion once Makefile.boot isn't needed any more.
- # Patch waits for application at
--# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
-+# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7889/1 .
+Best regards,
 -- 
-2.27.0
-
+Heiko Stuebner <heiko@sntech.de>
