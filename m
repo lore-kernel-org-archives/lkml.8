@@ -2,122 +2,129 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5748FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F492C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339F72065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9232065E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UR57oAWl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0KnHUnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGVKiS (ORCPT
+        id S1726618AbgGVKjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44064 "EHLO
+        Wed, 22 Jul 2020 06:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgGVKiR (ORCPT
+        with ESMTP id S1725847AbgGVKjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:38:17 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BAEC0619DC;
-        Wed, 22 Jul 2020 03:38:17 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBX462F1dz9sRN;
-        Wed, 22 Jul 2020 20:38:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595414295;
-        bh=G2OKpMJf7TXN0BgliBx+hmCERlwb78Kx6qogY3MuDZg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UR57oAWlbpnGN2Ld2CpEvv6NySO8xFLdNykZqwa8kCFqJsfYRvi4QH9krVs0FmM+5
-         tvQ7I76bAKrNFAPzBW90g5xLm5kUNt9ghYkXtppSnyQjh6QnvHtuorpF+EQ56Zuqfz
-         Zft+IEmBecw0oWkgtXBPnCIaFN0VYGvMGIA9Qv8WEtlNl3sUccn2K9+9vRcwHjppSF
-         jtxTN+3gwV45HHAXF/of/n3SPKADUGYGwpsrmBwk3ni4C4G3ncOF5CfB/BmexnAD8i
-         lxkwMNmH6ZnOrCUNHr3PXHSK3NG+F4TeVKcz0ePhee8pXBOE6C2u2xPBj9HLTcrnyt
-         rqYSOhEL15Jeg==
-Date:   Wed, 22 Jul 2020 20:38:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>,
-        Rich Felker <dalias@libc.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the pidfd tree with the sh tree
-Message-ID: <20200722203812.6ca23e0d@canb.auug.org.au>
+        Wed, 22 Jul 2020 06:39:02 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 804BCC0619DC;
+        Wed, 22 Jul 2020 03:39:02 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f1so851919wro.2;
+        Wed, 22 Jul 2020 03:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ITeNa3BddWkWg1sCq5YZx4M2tUONfLIipafvxs1VxQc=;
+        b=n0KnHUnFLh8ve9V6D+dpbF/RXarLay2T1FnkRY8aIleKNbJnMeU9NVPDxhDfj++CFw
+         OVz/Tceu1VUJJEqJw+lbrIa3A8k8o4c/pa9BQKdxlChPGEJ8YNeEN3ZNOlPLQLFJZ88T
+         fdnjBcS/tor9pw19QZI3Yz32IEBj+aMVUo+tJCLTyzXySQds07hGaRcGI2kV/Qn6yJ0O
+         w5FFzz050DBXrYURhLbVQzcnMP3n6/a5IkJmivHbTZpYOfMU4AxjKLeDDRmDZyaQq8Uk
+         zBiWYk2lzk9ooLw5LH0MAa0oh6lIhmocxUDrFU9XjJcWBRbhNOG14Q1zpWYGMPiEycwS
+         yQ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ITeNa3BddWkWg1sCq5YZx4M2tUONfLIipafvxs1VxQc=;
+        b=Yu/7x30h5kZABO1RkWBWfgXYzxvugD+DKhEw5EINOtL/7aqSVSH97d37s/qNSzFHaT
+         Ska2qanIiCRj/0LZ86znxCvXgHptlRiNhpmSDWdZufoH13UqELVhXjzd9QX+237OvCaJ
+         dtvuhQ4hps01WjE08eSQ4sOfJVTXOLuBVqH4WWvmOymkg0tlFXgfr2KlocXVt4RtVcxs
+         Lhy7oERKgtJZXnR3XID33zIxwIkKyafVcaaSV0qx0gJEW2Nm7013//gWceYYwKHm9oPt
+         2ynRTkg9f5Au1CyuwGT/YB6STNsQIu5+j3b3ZfWptFijYFhM5JVhVGpXzdwmONXwP+44
+         pN5Q==
+X-Gm-Message-State: AOAM530KG04YSF+KW31+rgqmv8ZD/sfSF+dSIDKQCH17R8FNyDIW+U6d
+        V4E8yrM8ZLC54MffYVTSP1Y=
+X-Google-Smtp-Source: ABdhPJwPB+DNdESb0CiW7c2gGxsBfsnvTy9nDsGNJjwB0czwP+nFniFmLYrTIsBgp7yUsAykIuCI9A==
+X-Received: by 2002:adf:80c7:: with SMTP id 65mr31200396wrl.246.1595414341264;
+        Wed, 22 Jul 2020 03:39:01 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id z16sm40020579wrr.35.2020.07.22.03.38.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 03:39:00 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] spi: mediatek: add spi support for mt8192 IC
+To:     lei liu <leilk.liu@mediatek.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+References: <20200721122436.31544-1-leilk.liu@mediatek.com>
+ <20200721122436.31544-2-leilk.liu@mediatek.com>
+ <27e48721-5e54-6947-cd8f-669f4da34c4d@gmail.com>
+ <1595407127.31408.3.camel@mhfsdcap03>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <e2736fea-748a-3359-ff04-3669103ec301@gmail.com>
+Date:   Wed, 22 Jul 2020 12:38:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/x+W3LsrrrKSHka0rbOzRN/w";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1595407127.31408.3.camel@mhfsdcap03>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/x+W3LsrrrKSHka0rbOzRN/w
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the pidfd tree got a conflict in:
+On 22/07/2020 10:38, lei liu wrote:
+> On Wed, 2020-07-22 at 00:44 +0200, Matthias Brugger wrote:
+>>
+>> On 21/07/2020 14:24, Leilk Liu wrote:
+>>> From: "leilk.liu" <leilk.liu@mediatek.com>
+>>>
+>>> This patch add spi support for mt8192 IC.
+>>>
+>>> Signed-off-by: leilk.liu <leilk.liu@mediatek.com>
+>>> ---
+>>>    drivers/spi/spi-mt65xx.c | 3 +++
+>>>    1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+>>> index 6783e12c40c2..3d0d69fe0c69 100644
+>>> --- a/drivers/spi/spi-mt65xx.c
+>>> +++ b/drivers/spi/spi-mt65xx.c
+>>> @@ -170,6 +170,9 @@ static const struct of_device_id mtk_spi_of_match[] = {
+>>>    	{ .compatible = "mediatek,mt8183-spi",
+>>>    		.data = (void *)&mt8183_compat,
+>>>    	},
+>>> +	{ .compatible = "mediatek,mt8192-spi",
+>>> +		.data = (void *)&mt6765_compat,
+>>> +	},
+>>
+>> That's not needed. We will use the fallback compatible which is
+>> "mediatek,mt6765-spi" which will take the correct DT data. If in the future we
+>> realize that mt8192 has a difference in the HW we can add the compatible.
+>> Otherwise with the binding description we should be fine
+>>
+> So you mean that only the following binding patch is needed?
+> [PATCH v2 1/2] dt-bindings: spi: update bindings for MT8192 SoC
+> 
 
-  arch/um/Kconfig
+Yes, exactly.
 
-between commit:
-
-  5c77ba8aa183 ("dma-mapping: consolidate the NO_DMA definition in kernel/d=
-ma/Kconfig")
-
-from the sh tree and commit:
-
-  140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
-
-from the pidfd tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/um/Kconfig
-index 32c1d1945033,ef69be17ff70..000000000000
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@@ -14,8 -14,6 +14,7 @@@ config UM
-  	select HAVE_FUTEX_CMPXCHG if FUTEX
-  	select HAVE_DEBUG_KMEMLEAK
-  	select HAVE_DEBUG_BUGVERBOSE
-- 	select HAVE_COPY_THREAD_TLS
- +	select NO_DMA
-  	select GENERIC_IRQ_SHOW
-  	select GENERIC_CPU_DEVICES
-  	select GENERIC_CLOCKEVENTS
-
---Sig_/x+W3LsrrrKSHka0rbOzRN/w
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8YFxQACgkQAVBC80lX
-0Gx5dAf8C7VOAxe/6DdQQs2IEa25H7OLYt2wqVyWmPLTOPq5qXMDvfw/gN7jAJAj
-B4579sHxl5za29HNp8fdDz3o07jB638irPa8LpmAM0xn+MqbZPA2lQHyEViuq6TX
-bzu4M+Yj3NjstAG2iGMcK/PdG3pyVEtdpDBaFFsKChbmGTqTbRBh9ykuQ8NixSEn
-OK+HSuYlNoajCo8EP8DfcY+YJFeKuQ+pMCRfutNQxOluGqLqGcMBK1c8pqW0zisN
-tLch/vy+kh6HA23JiVBY1hPQyQEa01Q+uTTyjhxKskBeJ0JpBax2PKaZQM6oWZ92
-zRaSXKlruT9B8U/FMLWchbiMXz6WSQ==
-=BfZj
------END PGP SIGNATURE-----
-
---Sig_/x+W3LsrrrKSHka0rbOzRN/w--
+Regards,
+Matthias
