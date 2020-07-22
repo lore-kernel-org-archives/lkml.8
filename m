@@ -2,127 +2,102 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5148C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1E32065E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AKHegjcW"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1CB20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbgGVKgh (ORCPT
+        id S1731489AbgGVKhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:36:37 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:38252 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGVKgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595414197; x=1626950197;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=bAMQ4NIzCVkNjI66avrrcftODz28EEl2fZZx11uJRrg=;
-  b=AKHegjcWd2tagC45bh8teNkiFCmkU/Jklh+F1kZ4wfxczbn3pK/+ZV9x
-   4VCQ4+QMzU0NP4Mq+9ecgdOwbbUDW59kWVihiya1UP4lFbXFJ7gWNtfIE
-   E4XORBc9+lGjCchfjnoAXqwG7qPstJRCVCfB8nD55NqffKfxBIVhHXt/f
-   o=;
-IronPort-SDR: UXO/LAA2bMcCDj5NDYikzPWv5PIIT4wczcfQLp70E9yZ7hjXZWQzoyxbzXRw0yTIflT7zLu24o
- i2Q49bQoQtvQ==
-X-IronPort-AV: E=Sophos;i="5.75,381,1589241600"; 
-   d="scan'208";a="43322491"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 Jul 2020 10:36:36 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id 45136A394A;
-        Wed, 22 Jul 2020 10:36:33 +0000 (UTC)
-Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 10:36:32 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 10:36:17 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <benh@kernel.crashing.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <david@redhat.com>, <dwmw@amazon.com>, <foersleo@amazon.de>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
-        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v18 09/14] mm/damon: Implement a debugfs interface
-Date:   Wed, 22 Jul 2020 12:36:01 +0200
-Message-ID: <20200722103601.27454-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200713084144.4430-10-sjpark@amazon.com>
+        Wed, 22 Jul 2020 06:37:05 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:40910 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726153AbgGVKhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 06:37:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 161552018D;
+        Wed, 22 Jul 2020 12:37:02 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AZz90R83hv-J; Wed, 22 Jul 2020 12:37:01 +0200 (CEST)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 9E18C20185;
+        Wed, 22 Jul 2020 12:37:01 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ mail-essen-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Wed, 22 Jul 2020 12:37:01 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 22 Jul
+ 2020 12:37:01 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id D2240318471A;
+ Wed, 22 Jul 2020 12:37:00 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 12:37:00 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Mark Salyzyn <salyzyn@android.com>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-team@android.com>,
+        <netdev@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: af_key: pfkey_dump needs parameter validation
+Message-ID: <20200722103700.GP20687@gauss3.secunet.de>
+References: <20200721132358.966099-1-salyzyn@android.com>
+ <20200722093318.GO20687@gauss3.secunet.de>
+ <2ae16588-2972-a797-9310-4f9d56b7348b@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D03UWA004.ant.amazon.com (10.43.160.250) To
- EX13D31EUA004.ant.amazon.com (10.43.165.161)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2ae16588-2972-a797-9310-4f9d56b7348b@android.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 10:41:39 +0200 SeongJae Park <sjpark@amazon.com> wrote:
-
-> From: SeongJae Park <sjpark@amazon.de>
+On Wed, Jul 22, 2020 at 03:20:59AM -0700, Mark Salyzyn wrote:
+> On 7/22/20 2:33 AM, Steffen Klassert wrote:
+> > On Tue, Jul 21, 2020 at 06:23:54AM -0700, Mark Salyzyn wrote:
+> > > In pfkey_dump() dplen and splen can both be specified to access the
+> > > xfrm_address_t structure out of bounds in__xfrm_state_filter_match()
+> > > when it calls addr_match() with the indexes.  Return EINVAL if either
+> > > are out of range.
+> > > 
+> > > Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> > > Cc: netdev@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: kernel-team@android.com
+> > > ---
+> > > Should be back ported to the stable queues because this is a out of
+> > > bounds access.
+> > Please do a v2 and add a proper 'Fixes' tag if this is a fix that
+> > needs to be backported.
+> > 
+> > Thanks!
 > 
-> This commit implements a debugfs interface for DAMON.  It works for the
-> virtual address spaces monitoring.
+> Confused because this code was never right? From 2008 there was a rewrite
+> that instantiated this fragment of code so that it could handle
+> continuations for overloaded receive queues, but it was not right before the
+> adjustment.
 > 
-[...]
-> +/*
-> + * Converts a string into an array of unsigned long integers
-> + *
-> + * Returns an array of unsigned long integers if the conversion success, or
-> + * NULL otherwise.
-> + */
-> +static int *str_to_pids(const char *str, ssize_t len, ssize_t *nr_pids)
-> +{
-> +	int *pids;
-> +	const int max_nr_pids = 32;
-> +	int pid;
-> +	int pos = 0, parsed, ret;
-> +
-> +	*nr_pids = 0;
-> +	pids = kmalloc_array(max_nr_pids, sizeof(pid), GFP_KERNEL);
-> +	if (!pids)
-> +		return NULL;
-> +	while (*nr_pids < max_nr_pids && pos < len) {
-> +		ret = sscanf(&str[pos], "%d%n", &pid, &parsed);
-> +		pos += parsed;
-> +		if (ret != 1)
-> +			break;
-> +		pids[*nr_pids] = pid;
-> +		*nr_pids += 1;
-> +	}
-> +	if (*nr_pids == 0) {
-> +		kfree(pids);
-> +		pids = NULL;
-> +	}
+> Fixes: 83321d6b9872b94604e481a79dc2c8acbe4ece31 ("[AF_KEY]: Dump SA/SP
+> entries non-atomically")
+> 
+> that is reaching back more than 12 years and the blame is poorly aimed
+> AFAIK.
 
-Hmm, this means debugfs users cannot make 'target_ids' empty again.  I will fix
-this in the next spin.
+This is just that the stable team knows how far they need to backport
+it. If this was never right, then the initial git commit is the right
+one for the fixes tag e.g. 'Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")'
 
-
-Thanks,
-SeongJae Park
