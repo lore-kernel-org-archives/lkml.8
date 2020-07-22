@@ -2,91 +2,161 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C97C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2703920792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D229420792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="teU76l4o"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="srkmkvhD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbgGVDyK (ORCPT
+        id S1731974AbgGVDzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38122 "EHLO
+        Tue, 21 Jul 2020 23:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731793AbgGVDyJ (ORCPT
+        with ESMTP id S1731856AbgGVDzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:54:09 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53D9C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:54:09 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id p1so305979pls.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:54:09 -0700 (PDT)
+        Tue, 21 Jul 2020 23:55:45 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CEAC0619DB
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id y3so480830wrl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Kv16/ZtjvsqzwhA67RXGlNKlymdPTZgYcbB4t9a+XQQ=;
-        b=teU76l4onNGxGGAkHnfmRlYyyoNjrAl9sepXE+/Q09UB3kodYSezX/yBSJS+QYvmNa
-         rveHjIAqpceNwjoChgvGHRZc/hnLc9EB7NI7dtGueridPlvY10dO856x0XkjS7tWECEE
-         tVH7ySR5EdkQQtKFM62MYFe0IgX4VMKj2lpFGVI9keCTmxOTfV65woEDPjrsPLkvR5LJ
-         x+FvkLyBB9D4Mw03wpJH6B+05Otq8WappntG5IUU2LIcCjclzqC8nJsEtGJkxPMhjFkG
-         VoEhVcA/8PfcbbNxQYhyg0EcdY/nqDwa2oOpkh6w16ESpfoybMuLkNtPcJK5rM9EclS1
-         yMmg==
+        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
+        b=srkmkvhDKIkC7xQ+Erl9q+ptkCX3zSzRoCdUCdYWrtYxQgtdnbMIebHVIlnrXMuECG
+         SlRnahF0UnWTSTGwaOSTKHTlLgKzRoMS0IW5PLwk/089WiaVhC7HDzMEs3HeK6eRkrE0
+         ATmz2QKDy/y/DlIo+2cwk3NtTspyqAwzk7fP+H1sKOpzTaKI5x/kdGVgh0GHGQ9wZTdU
+         wAp87P7cDy9vH2Dz8YnBjmaA4+fff3ouquN8cIASp9+HDaaGgv1Xv2Bb5Mm16InXgdJ+
+         qMObXjMx+gTN/PngzgaIdoYF6LTreTu6hcGLIuU97b5KBh8+HWF/4R3FztO8TKb+hE0H
+         SKow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Kv16/ZtjvsqzwhA67RXGlNKlymdPTZgYcbB4t9a+XQQ=;
-        b=mNIgvyJcv3dmQV7NLE1Q7uI+wgtWC8PH1uPCveFDrR3ZoWs0/d2fX2HOF7o1BFBc0t
-         v2huT6i20+fdinlmcLtGpeQkdpjjEHDYSGUaDrahxR1aRKGFPYXfVbR4GFtIJDEXvbY3
-         ShkvXsQEw7K0apDqLEKfYbSDKVOR6HgB2QAtnljlwtnnyHdzbcNdc9cfS559+xeohv+3
-         HIQ7ZLnDAKaXqpNVPecXojFWFm99sv8dtKx0VyS6BTUSqN/orQ9+LvFvUhbRgjc6nAOu
-         W57ADDdFmMOng6G/IG0ko+4pTGkXflD9/7fvbpY/33cy5swjC2HP8eeGiNuDniqHxl01
-         2IXw==
-X-Gm-Message-State: AOAM5315QXBrlX9SSoN4ZnT3LF1bxuTx5rzV43rwlFlRSc2bu6v3x0Oz
-        QIswX/3KBI/rO8OwmLuylAObcin0ph4XJ3r/CaA=
-X-Google-Smtp-Source: ABdhPJwLXKXlBkbUAozr7t276aXIY29yYGr0q6JEskKQGLgYu10nsGdUytlaq69xIjhcH2qrdUFm/wzJ96H8ikmYiS4=
-X-Received: by 2002:a17:90b:1045:: with SMTP id gq5mr8043357pjb.30.1595390049137;
- Tue, 21 Jul 2020 20:54:09 -0700 (PDT)
+        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
+        b=CXWTWZS0GrSvCuVMmrfmp/NkxBSQKE6puZRGt3pUfSBDVzQ6bSiJwRv5dgWM9qiy5l
+         IqlPP3P6QQ+WBweoBfOoQg8a9BdhB+dusqjBpVboeg08ueAoywLvGDrSoCafaeEPJ9Ej
+         kqE0t0XnCvLOMBGasqQpRtc98Gik+fuh4M9cYkbuEcsAcPvrZG0DaKNPF2ZaUfvINNJo
+         1zVQsFZMEYFOXya5S4qmxmhuZNaXcajyuW5CX4JMS0xR1HPK8aGwSnOBL1mrK+iLkDNY
+         yHWY/yd7shS29ZN6J4jt3RBLdQVQFMGfQuLOL/RaoRWnvTLz6jHcBG/9qlrnvqdrK0iS
+         Qwag==
+X-Gm-Message-State: AOAM530xmb97FkuwEbSdL7NpPCxa02WGJsYRZIK9B/WlGKWylM8BlkKZ
+        CC24MgDUOGDwOgxdsYUrgKPwWxcVS5np9A792Y8dig==
+X-Google-Smtp-Source: ABdhPJwviiRhh8Ew5FwFPWSNY3nE65EKkh19UnrCdWqhsEpXCx9HCf/vqo6H6vcfqlvdohr7KotRJueK95xx91UgOUU=
+X-Received: by 2002:adf:f247:: with SMTP id b7mr13963465wrp.128.1595390143363;
+ Tue, 21 Jul 2020 20:55:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721220035.32584-1-jcmvbkbc@gmail.com> <20200721230426.GC2786714@ZenIV.linux.org.uk>
-In-Reply-To: <20200721230426.GC2786714@ZenIV.linux.org.uk>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Tue, 21 Jul 2020 20:53:57 -0700
-Message-ID: <CAMo8BfJeM0_MHcZWc4aZs0XVv9XH3vXwpiU0xjmU1G24fXV4tw@mail.gmail.com>
-Subject: Re: [PATCH] xtensa: fix access check in csum_and_copy_from_user
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
+ <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
+ <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com> <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
+In-Reply-To: <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 22 Jul 2020 09:25:31 +0530
+Message-ID: <CAAhSdy1Dx+oP0guRGvCFa61gL93R+pcQDYLdMpo+LaOjA5tvBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
+To:     Sean Anderson <seanga2@gmail.com>
+Cc:     Atish Patra <atishp@atishpatra.org>, devicetree@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Emil Renner Berhing <kernel@esmil.dk>,
+        Anup Patel <anup.patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 4:04 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Tue, Jul 21, 2020 at 5:48 PM Sean Anderson <seanga2@gmail.com> wrote:
 >
-> On Tue, Jul 21, 2020 at 03:00:35PM -0700, Max Filippov wrote:
-> > Commit d341659f470b ("xtensa: switch to providing
-> > csum_and_copy_from_user()") introduced access check, but incorrectly
-> > tested dst instead of src.
-> > Fix access_ok argument in csum_and_copy_from_user.
+> On 7/20/20 9:15 PM, Atish Patra wrote:
+> > On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
+> >>
+> >> We add DT bindings documentation for CLINT device.
+> >>
+> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> >> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> >> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> >> ---
+> >>  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
+> >>  1 file changed, 58 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >> new file mode 100644
+> >> index 000000000000..8ad115611860
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >> @@ -0,0 +1,58 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: SiFive Core Local Interruptor
+> >> +
+> >> +maintainers:
+> >> +  - Palmer Dabbelt <palmer@dabbelt.com>
+> >> +  - Anup Patel <anup.patel@wdc.com>
+> >> +
+> >> +description:
+> >> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
+> >> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
+> >> +  interrupts. It directly connects to the timer and inter-processor interrupt
+> >> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
+> >> +  interrupt controller is the parent interrupt controller for CLINT device.
+> >> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
+> >> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
+> >> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: sifive,clint0
+> >> +      - const: sifive,fu540-c000-clint
+> >> +
+> >> +    description:
+> >> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
+> >> +      Supported compatible strings are -
+> >> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
+> >> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
+> >> +      CLINT v0 IP block with no chip integration tweaks.
+> >> +      Please refer to sifive-blocks-ip-versioning.txt for details
+> >> +
+> >
+> > As the DT binding suggests that the clint device should be named as "sifive,**",
+> > I think we should change the DT property in kendryte dts as well.
 >
-> Applied, with apologies...  Which tree do you want it to go through?
-> I'm dropping it into vfs.git#fixes, will send to Linus unless you
-> prefer it to go some other way...
+> The kendryte device is based on Rocket Chip, not any SiFive IP/device.
+> If anything, the general binding should be "chipsalliance,clint" and the
+> specific bindings should be "sifive,clint" and "kendryte,clint" (or
+> "canaan,clint").
 
-NP. Anything that will go into 5.8 is good.
+AFAIK, Palmer clearly mentioned in previous discussion that CLINT
+spec is still owned by SiFive. No matter who implements CLINT device
+in their SOC, we will need one compatible string to represent the
+spec version (i.e. "sifive,clint0") and another compatible representing
+specific implementation (for kendryte this can be "kendryte,k210-clint").
 
--- 
-Thanks.
--- Max
+Regards,
+Anup
