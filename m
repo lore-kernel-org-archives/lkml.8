@@ -2,224 +2,148 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78091C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CDCC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52114207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:33:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ezdkH8uT"
+	by mail.kernel.org (Postfix) with ESMTP id BA7DA207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgGVRdb (ORCPT
+        id S1729064AbgGVRem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:33:31 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13011 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgGVRda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:33:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595439209; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=RLU97VPwbcjVpG9YS+DY2JZ9ZOWhHWhYKxgSJC3rnSc=; b=ezdkH8uTLW2K0oaG8P05UVEfYpWvNzLoUSRwTPP1WC6yxoSjvyKk0WNOpT5OMrmdMo1VQaS+
- NYuxNw3i25sxY0T2PKlJofBgxWIS6bRpw46zcfsKN3vetgvuLNxzSJer6riUL3Tfq0bGF+S1
- uCvHHLZklkd7oZ8ISf1cSSa1esU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5f1878507c8ca473a87f4114 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 22 Jul 2020 17:33:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1A3B5C43395; Wed, 22 Jul 2020 17:33:04 +0000 (UTC)
-Received: from [192.168.1.10] (cpe-70-95-5-60.san.res.rr.com [70.95.5.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sidgup)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C316C433C9;
-        Wed, 22 Jul 2020 17:33:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C316C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
-Subject: Re: [PATCH v4 1/2] remoteproc: Add remoteproc character device
- interface
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, ohad@wizery.com, corbet@lwn.net,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org,
-        linux-doc@vger.kernel.org
-References: <1594148870-27276-1-git-send-email-sidgup@codeaurora.org>
- <1594148870-27276-2-git-send-email-sidgup@codeaurora.org>
- <20200715201839.GA3204081@xps15> <20200715215149.GA3267350@xps15>
- <81d7514c-727e-b4dc-e4ac-74a25966ccaf@codeaurora.org>
- <20200721205635.GM2922385@builder.lan> <20200722171841.GA1268891@xps15>
-From:   Siddharth Gupta <sidgup@codeaurora.org>
-Message-ID: <415eb089-4a45-96e9-1816-88ba9c9be9aa@codeaurora.org>
-Date:   Wed, 22 Jul 2020 10:33:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 22 Jul 2020 13:34:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17782 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726157AbgGVRem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:34:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MHVZgp184421;
+        Wed, 22 Jul 2020 13:33:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1x8b71f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 13:33:10 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06MHX9sL188302;
+        Wed, 22 Jul 2020 13:33:09 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1x8b70v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 13:33:09 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06MHLpNn018393;
+        Wed, 22 Jul 2020 17:33:07 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 32brbh56as-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 17:33:07 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06MHX4Zi52494452
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 17:33:04 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB864A4057;
+        Wed, 22 Jul 2020 17:33:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27D58A4040;
+        Wed, 22 Jul 2020 17:33:01 +0000 (GMT)
+Received: from [9.85.73.85] (unknown [9.85.73.85])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Jul 2020 17:33:00 +0000 (GMT)
+Subject: Re: [PATCH v4 07/12] ppc64/kexec_file: add support to relocate
+ purgatory
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
+ <159524956457.20855.12480643681198700190.stgit@hbathini.in.ibm.com>
+ <871rl4rxao.fsf@mpe.ellerman.id.au>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <2037fa32-28be-5995-1c22-c8b01cafe088@linux.ibm.com>
+Date:   Wed, 22 Jul 2020 23:03:00 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200722171841.GA1268891@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <871rl4rxao.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_10:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ impostorscore=0 spamscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 suspectscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 7/22/2020 10:18 AM, Mathieu Poirier wrote:
-> On Tue, Jul 21, 2020 at 01:56:35PM -0700, Bjorn Andersson wrote:
->> On Tue 21 Jul 12:16 PDT 2020, Siddharth Gupta wrote:
->>> On 7/15/2020 2:51 PM, Mathieu Poirier wrote:
->>>> On Wed, Jul 15, 2020 at 02:18:39PM -0600, Mathieu Poirier wrote:
->>>>> On Tue, Jul 07, 2020 at 12:07:49PM -0700, Siddharth Gupta wrote:
->> [..]
->>>>>> diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
->> [..]
->>>>>> +int rproc_char_device_add(struct rproc *rproc)
->>>>>> +{
->>>>>> +	int ret;
->>>>>> +	dev_t cdevt;
->>>>>> +
->>>>>> +	cdev_init(&rproc->char_dev, &rproc_fops);
->>>>>> +	rproc->char_dev.owner = THIS_MODULE;
->>>>>> +
->>>>>> +	cdevt = MKDEV(rproc_major, rproc->index);
->>>>>> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
->>>> Trying this patchset on my side gave me the following splat[1].  After finding
->>>> the root case I can't understand how you haven't see it on your side when you
->>>> tested the feature.
->>>>
->>>> [1]. https://pastebin.com/aYTUUCdQ
->> Mathieu, I've looked at this back and forth. Afaict this implies that
->> rproc_major is still 0. Could it be that either alloc_chrdev_region()
->> failed or somehow has yet to be called when you hit this point?
-> That is exacly what I thought when I first stumbled on this but instrumenting
-> the code showed otherwise.
->
-> After function rproc_init_cdev() has been called @rproc_major contains the
-> dynamically allocated major number in the upper 12 bits and the base minor
-> number in the lower 20 bits.
->
-> In rproc_char_device_add() we find this line:
->
->          cdevt = MKDEV(rproc_major, rproc->index);
->
-> Macro MKDEV() builds a device number by shifting @rproc_major by 20 bits to the
-> left and OR'ing that with @rproc->index.  But the device's major number is
-> already occupying the upper 12bits, so shifthing another 20 bits to the left
-> makes the major portion of the device number '0'.  That is causing cdev_add() to
-> complain bitterly.
->
-> The right way to do this is:
->
->          cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
->
-> Once I found the problem I thought about 32/64 bit issues.  Since Siddharth is
-> using a 64bit application processor shifting another 20 bits would still have
-> yielded a non-zero value.  But that can't be since dev_t is a u32 in
-> linux/types.h.
->
-> As such I can't see how it is possible to not hit that problem on a 64bit
-> platform.
-Hey Mathieu,
 
-I just checked my testing tree for our devices and realized that I have 
-an older version
-of the patch. Hence I was unable to reproduce the error. I will fix this 
-problem, and
-send out a new patchset today.
-
-Sorry about this error!
-
-Thanks,
-Sid
->>> Hey Mathieu,
->>>
->>> We aren't able to reproduce the error that you are seeing, the splat is
->>> coming
->>> from the check for whiteout device[1] - which shouldn't happen because of
->>> the
->>> find_dynamic_major call[2], right?
->>>
->>> We are successfully seeing all our character device files and able to
->>> successfully boot remoteprocs. From what I read and understood about
->>> whiteout
->>> devices they will be hidden in the fs.
->>>
->>> Could you provide more details about your configuration and testing?
->>>
->>> [1]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486
->>> <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123>
->>> [2]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123
->>>
->>> <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486>
->>>>>> +	if (ret < 0)
->>>>>> +		goto out;
->>>>>> +
->>>>>> +	rproc->dev.devt = cdevt;
->>>>>> +out:
->>>>>> +	return ret;
->>>>>> +}
->>>>>> +
->>>>>> +void rproc_char_device_remove(struct rproc *rproc)
->>>>>> +{
->>>>>> +	__unregister_chrdev(rproc_major, rproc->index, 1, "remoteproc");
->>>>>> +}
->>>>>> +
->>>>>> +void __init rproc_init_cdev(void)
->>>>>> +{
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "remoteproc");
->>>>>> +	if (ret < 0)
->>>>>> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
->>>>>> +}
->>>>>> +
->>>>>> +void __exit rproc_exit_cdev(void)
->>>>>> +{
->>>>>> +	unregister_chrdev_region(MKDEV(rproc_major, 0), NUM_RPROC_DEVICES);
->>>>> Please go back to the comment I made on this during my last review and respin.
->>>> After digging in the code while debugging the above problem, I don't see how
->>>> unregistering the chrdev region the way it is done here would have worked.
->>> Since this is compiled statically and not built as a module, we will never
->>> exercise the code path, so I will remove it in the next patchset.
->>>
->> You're right Siddharth, since we changed CONFIG_REMOTEPROC to bool it's no longer
->> possible to hit remoteproc_exit(), so you can omit this function
->> entirely. (And we should clean up the rest of that as well)
+On 22/07/20 9:55 am, Michael Ellerman wrote:
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> Right now purgatory implementation is only minimal. But if purgatory
+>> code is to be enhanced to copy memory to the backup region and verify
+>> sha256 digest, relocations may have to be applied to the purgatory.
+>> So, add support to relocate purgatory in kexec_file_load system call
+>> by setting up TOC pointer and applying RELA relocations as needed.
 >>
->> [..]
->>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> [..]
->>>>>> @@ -488,6 +489,8 @@ struct rproc_dump_segment {
->>>>>>     * @auto_boot: flag to indicate if remote processor should be auto-started
->>>>>>     * @dump_segments: list of segments in the firmware
->>>>>>     * @nb_vdev: number of vdev currently handled by rproc
->>>>>> + * @char_dev: character device of the rproc
->>>>>> + * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
->>>>>>     */
->>>>>>    struct rproc {
->>>>>>    	struct list_head node;
->>>>>> @@ -523,6 +526,8 @@ struct rproc {
->>>>>>    	int nb_vdev;
->>>>>>    	u8 elf_class;
->>>>>>    	u16 elf_machine;
->>>>>> +	struct cdev char_dev;
->> As stated privately, I assumed based on this name that this is a struct
->> device related to that character device. So please rename this cdev to
->> save me from doing this mistake again.
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> [lkp: In v1, 'struct mem_sym' was declared in parameter list]
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>> ---
 >>
->> Thanks,
->> Bjorn
+>> * Michael, can you share your opinion on the below:
+>>     - https://lore.kernel.org/patchwork/patch/1272027/
+>>     - My intention in cover note.
+> 
+> It seems like a lot of complexity for little benefit.
+> 
+> AFAICS your final purgatory_64.c is only 36 lines, and all it does is a
+> single (open coded) memcpy().
+> 
+> It seems like we could write that in not many more lines of assembler
+> and avoid all this code.
+
+Hi Michael,
+
+I am not sure if you would agree with me on this, but I am looking at the
+purgatory code as work in progress. As mentioned in the cover note, I intend
+to add log messaging, sha256 verification into purgatory. And also change it
+to position independent executable after moving common purgatory code (sha256
+verification) to arch-independent code.
+
+When I initially took this up, I wanted to add all the above changes too, but
+cut down on it, in the interest of time, first to get kdump (kexec -s -p)
+working in v5.9 merge window.
+
+But as the logic in patches 07/12 & 08/12 has been tested in kexec-tools code
+a lot of times and there are unlikely to be any changes to them except for
+__kexec_do_relocs() function (afaics), when -PIE would be used, I submitted them.
+With patch 09/12, I tried for a change that uses relocations while is minimal
+for now.
+
+Would you prefer it to be absolutely minimal by dropping patches 7 & 8 for
+now and writing the backup data copy code in assembler?
+
+Thanks
+Hari
