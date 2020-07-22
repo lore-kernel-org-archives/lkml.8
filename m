@@ -2,89 +2,99 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98905C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ED4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1FA2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dwLHhZb8"
+	by mail.kernel.org (Postfix) with ESMTP id 697272071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732504AbgGVN6M (ORCPT
+        id S1732460AbgGVNzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgGVN6M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:58:12 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC22C0619DC;
-        Wed, 22 Jul 2020 06:58:11 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBcVk14RJz9sRN;
-        Wed, 22 Jul 2020 23:58:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595426287;
-        bh=Ar/36BU5b1JALnEh8D2rR9Sczsbb2i7m/hyLGbACMRo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dwLHhZb8eCxuBAvtFkGsbJbzibH6zu5Gpgaw3B9sZLsQyOqPK6zt6iLiiKdWUxLWT
-         BBTCKLyYxL/uOH52UlO/WdjK8Drk2GC9AWTxAXMEa5l5TUj7iid8mnGjpuq4ymByqS
-         FyRXtezr56rh4mbL6E827aymMtQmnH/+wvY5gmMVkqpFZzQhdpx9g0yxNLFE1Cgrqw
-         ovUXZQe388Xw0lx3183WXkrz8k2T9w/nRP5TvIzWEQJFcK0tw6aKIv4rT6hAjA128N
-         32ZLOxsWT98Fem8WSVq3omr19VjxMfw88qvzgj+Myig6ygUNnO6jIdqQGNIeW5zqnk
-         /J5W3XQyZLQpg==
-Date:   Wed, 22 Jul 2020 23:58:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: linux-next: interesting merge in the zonefs tree
-Message-ID: <20200722235802.1f01457e@canb.auug.org.au>
+        Wed, 22 Jul 2020 09:55:18 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24151 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbgGVNzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:55:17 -0400
+IronPort-SDR: ljqY8jS4YnEeWEQMprnE9BnmjaQA1dfOCY71bjBCQAQU1EjC/fhEKYr0Pj0bL++akrMNotICr1
+ jtopCHFCSKow==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="149493079"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="149493079"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 06:55:15 -0700
+IronPort-SDR: jaeDV14yHjeJq0Sf7csJi2SVEVfCUprwvqIlgp6j77nxU/vKzFWvgMMRCU5OrSSCncjQheKmrd
+ XB6LJIKKUH5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="328216742"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by orsmga007.jf.intel.com with ESMTP; 22 Jul 2020 06:55:07 -0700
+From:   richard.gong@linux.intel.com
+To:     mchehab+huawei@kernel.org, davem@davemloft.net, robh@kernel.org,
+        gregkh@linuxfoundation.org, thor.thayer@linux.intel.com,
+        linux-kernel@vger.kernel.org
+Cc:     richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
+Subject: [PATCH] MAINTAINERS: altera: change maintainer for Altera drivers
+Date:   Wed, 22 Jul 2020 09:09:40 -0500
+Message-Id: <1595426980-32062-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8q6A2uYfujIo74WNTDp2wUk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8q6A2uYfujIo74WNTDp2wUk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Richard Gong <richard.gong@intel.com>
 
-Hi all,
+Thor is moving to a new position and I will take over the maintainership.
+Add myself as maintainer for 3 Altera drivers below:
+1. Altera I2C driver
+2. Altera System Manager driver
+3. Altera System Resource driver
 
-It looks an old version of the block tree has been merged into the
-zonefs tree.  Is that deliberate?  Other trees should not be merged unless
-they are guaranteed not to be rebased (which is what has happened here).
+Signed-off-by: Richard Gong <richard.gong@intel.com>
+---
+ MAINTAINERS | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b4a43a9..d87a307 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -750,7 +750,7 @@ R:	Pali Rohár <pali@kernel.org>
+ F:	drivers/input/mouse/alps.*
+ 
+ ALTERA I2C CONTROLLER DRIVER
+-M:	Thor Thayer <thor.thayer@linux.intel.com>
++M:	Richard Gong <richard.gong@linux.intel.com>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/i2c/i2c-altera.txt
+ F:	drivers/i2c/busses/i2c-altera.c
+@@ -767,13 +767,13 @@ S:	Maintained
+ F:	drivers/gpio/gpio-altera.c
+ 
+ ALTERA SYSTEM MANAGER DRIVER
+-M:	Thor Thayer <thor.thayer@linux.intel.com>
++M:	Richard Gong <richard.gong@linux.intel.com>
+ S:	Maintained
+ F:	drivers/mfd/altera-sysmgr.c
+ F:	include/linux/mfd/altera-sysmgr.h
+ 
+ ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
+-M:	Thor Thayer <thor.thayer@linux.intel.com>
++M:	Richard Gong <richard.gong@linux.intel.com>
+ S:	Maintained
+ F:	drivers/gpio/gpio-altera-a10sr.c
+ F:	drivers/mfd/altera-a10sr.c
+-- 
+2.7.4
 
---Sig_/8q6A2uYfujIo74WNTDp2wUk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8YReoACgkQAVBC80lX
-0Gzoegf8CCylamuV5sAnrasN7luW2oMHGcj6zHPVHATfi8Rl2Xlcx3LL4cPK8/U3
-5aErb0b0gtgXTZBiC9SGu0kk9T1WKSgYKNb+cnX5MfW3MEu9/kamlZf3s+qVYUQD
-Ct5oSukAsmgjtFXBXNkLUfixZ1LObEM9OxsqhWpSyBlc4vrycUBLxigIEq4rkNhl
-K8RSBcLT4j0hnM1QcT5GzveHLQtqjVloqKaa6qkmCNmxnCCwt5hGnb8VOp02cIOi
-/gi06yFmDBfCMdzoenWZer2ZXf4hCar5fkU2OrScYkG/IETCOu3jwtMb0n0pzE7o
-OjUjEsOi8noD84QrSixC3Bcb9qMduw==
-=rz6a
------END PGP SIGNATURE-----
-
---Sig_/8q6A2uYfujIo74WNTDp2wUk--
