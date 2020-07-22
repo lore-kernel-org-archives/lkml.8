@@ -3,202 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148BDC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB4FB207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595424697;
-	bh=G+K3d514kcxDDUU/TieFP3V0nSBRnKLAgwKlg3nKpOE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jNHTpCRIBsyZ+GBTjMr0Tcw/st7O6HJaP+l5aP1NS45brgW/91qduNAdUpgPzWTPm
-	 aYMKYeBPTYV8P7EgqH6JLWGUbGHf4tJr53pQ8H1dvgw+DWCGt75UK9VSXv6u+XTU69
-	 O00PK7FU0ZH22KxQ3+1a6Pgo88p2NDitN5FjK484=
+	by mail.kernel.org (Postfix) with ESMTP id 8348D20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M17jaN2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732368AbgGVNbg (ORCPT
+        id S1732421AbgGVNcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgGVNbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:31:34 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB11207BB;
-        Wed, 22 Jul 2020 13:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595424694;
-        bh=G+K3d514kcxDDUU/TieFP3V0nSBRnKLAgwKlg3nKpOE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qtqVsywTdyKY0aLtGD7JuZ+qcoKUwI4hl8trE9CPPMhV3qlgTpMTYLvs5Y0jeTGlC
-         k0g/7b8jeMzwqCY/GM+3WrGj7wo7qTagwHXLA/K2A/8jK92j0czE+TPYj2Q5QECoy6
-         NWp9gVuH6gKeb6Zr8H5ZHawpEr1CELbE85dKoCa0=
-Received: by mail-lj1-f171.google.com with SMTP id j11so2493100ljo.7;
-        Wed, 22 Jul 2020 06:31:33 -0700 (PDT)
-X-Gm-Message-State: AOAM5330qKK8C5u0YX2Vy55LFXtHLxB1M63VSE08R/c64OWnfIG14fzw
-        Wh2LHfI8cZr5Qu0OXm2Tgz4ADQKb976rF2TgHLs=
-X-Google-Smtp-Source: ABdhPJw7AlCg8zPFdGB7cfoEAZq9U0346rr0bSMhuJZm/pzQsspB7CrpgTev9f3U1nbJZCYRWvKZKCFQWwq0czTvfzQ=
-X-Received: by 2002:a2e:b0ed:: with SMTP id h13mr14060325ljl.250.1595424692019;
- Wed, 22 Jul 2020 06:31:32 -0700 (PDT)
+        Wed, 22 Jul 2020 09:32:36 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45358 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgGVNcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:32:35 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06MDBLs6026245;
+        Wed, 22 Jul 2020 13:27:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=SGDxiMkv+K/gRs79Axes9Aq4nm/uxe/9Z6BhER1gB0Q=;
+ b=M17jaN2xoPQjyzcbNIh3EyAt4L6vYmmCoIqfNEMXNxXt0vzVBRus39mqoBEim2QS4gl0
+ ZEADhZS2JBt2F7fKfyR+8i2sOHwxVi7BaCCMheuAGRRXQqWB1nWcDgM5X14uo35sG05r
+ zlijQgQbwaef/JC4O3F/g7yEqPNfaQNKx2aCWkHFu1gDe7esOn1Gkr3dq25D71GBzEPQ
+ 6KS+bJgLAQJnq85Fp3AC5Jeo7nvKeGNeWXiAf1kbeFGXNrLprBeiotYq1hiftxnJR1QC
+ wkrlIGy9zAxq9hiRWdKeuXUijIaHYeH2b6QaPXkn5408mQU4LsrY4KDUVXU+jmFwIFfa Ug== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 32bs1mk8c3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 13:27:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06MDPlCB151849;
+        Wed, 22 Jul 2020 13:27:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32epb584vv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 13:27:16 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06MDRBYJ029023;
+        Wed, 22 Jul 2020 13:27:11 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Jul 2020 13:27:11 +0000
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Subject: Re: [PATCH v6 0/5] scsi: ufs: Add Host Performance Booster Support
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1blk7g1jd.fsf@ca-mkp.ca.oracle.com>
+References: <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p8>
+        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+        <20200722063937.GA21117@infradead.org>
+Date:   Wed, 22 Jul 2020 09:27:07 -0400
+In-Reply-To: <20200722063937.GA21117@infradead.org> (Christoph Hellwig's
+        message of "Wed, 22 Jul 2020 07:39:37 +0100")
 MIME-Version: 1.0
-References: <1594683562-68149-1-git-send-email-guoren@kernel.org>
- <1594683562-68149-7-git-send-email-guoren@kernel.org> <20200714203757.512ce7fb5fa61a88b1dbb2f3@kernel.org>
- <CAJF2gTSMUnHfv3GLj_TGT2dJkKq2zbEsnbPKREiq5i6PPjyTBg@mail.gmail.com> <20200721222701.3074315f6a9f6c42c5963f40@kernel.org>
-In-Reply-To: <20200721222701.3074315f6a9f6c42c5963f40@kernel.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 22 Jul 2020 21:31:20 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTR4319vMy9hStLeR3+42WG4opnsZTaGdN__Bm23VCHjBg@mail.gmail.com>
-Message-ID: <CAJF2gTR4319vMy9hStLeR3+42WG4opnsZTaGdN__Bm23VCHjBg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] riscv: Add KPROBES_ON_FTRACE supported
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Zong Li <zong.li@sifive.com>,
-        =?UTF-8?Q?Patrick_St=C3=A4hlin?= <me@packi.ch>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Pekka Enberg <penberg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9689 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ suspectscore=1 spamscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9689 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007220097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
 
-Current riscv ftrace_caller utilize fp(s0) - 8 in stack to get ra of
-function, eg:
-foo:
-   2bb0:       7119                    addi    sp,sp,-128
-    2bb2:       f8a2                    sd      s0,112(sp)
-    2bb4:       fc86                    sd      ra,120(sp)
-...
-    2bc4:       0100                    addi    s0,sp,128
-...
-0000000000002bca <.LVL828>:
-    2bca:       00000097                auipc   ra,0x0
-    2bce:       000080e7                jalr    ra # 2bca <.LVL828> //_mcou=
-nt
+Christoph,
 
-So just put two nops before prologue of function isn't enough, because
-riscv don't like arm64 which could use x9-x18 reserved regs to pass
-ra(x30).
-    | mov       x9, x30
-    | bl        <ftrace-entry>
-If the benefit is just making a kprobe on function symbol address to
-prevent disassembling, I'll delay this feature.
-
-
-I also have a look at HAVE_FENTRY & HAVE_NOP_MCOUNT. Seems it just
-avoid using scripts/recordmcount.pl script and directly generate nops
-for _mcount.
-It's different from -fpatchable-function-entry=3D2 which generating nops
-before function prologue in arm64, isn't it?
-
-On Tue, Jul 21, 2020 at 9:27 PM Masami Hiramatsu <mhiramat@kernel.org> wrot=
-e:
+> As this monster seesm to come back again and again let me re-iterate
+> my statement:
 >
-> On Wed, 15 Jul 2020 00:24:54 +0800
-> Guo Ren <guoren@kernel.org> wrote:
->
-> > Thx Masami,
-> >
-> > On Tue, Jul 14, 2020 at 7:38 PM Masami Hiramatsu <mhiramat@kernel.org> =
-wrote:
-> > >
-> > > On Mon, 13 Jul 2020 23:39:21 +0000
-> > > guoren@kernel.org wrote:
-> > >
-> > > > From: Guo Ren <guoren@linux.alibaba.com>
-> > > >
-> > > > This patch adds support for kprobes on ftrace call sites to avoids
-> > > > much of the overhead with regular kprobes. Try it with simple
-> > > > steps:
-> > > >
-> > > > 1. Get _do_fork ftrace call site.
-> > > > Dump of assembler code for function _do_fork:
-> > > >    0xffffffe00020af64 <+0>:     addi    sp,sp,-128
-> > > >    0xffffffe00020af66 <+2>:     sd      s0,112(sp)
-> > > >    0xffffffe00020af68 <+4>:     sd      ra,120(sp)
-> > > >    0xffffffe00020af6a <+6>:     addi    s0,sp,128
-> > > >    0xffffffe00020af6c <+8>:     sd      s1,104(sp)
-> > > >    0xffffffe00020af6e <+10>:    sd      s2,96(sp)
-> > > >    0xffffffe00020af70 <+12>:    sd      s3,88(sp)
-> > > >    0xffffffe00020af72 <+14>:    sd      s4,80(sp)
-> > > >    0xffffffe00020af74 <+16>:    sd      s5,72(sp)
-> > > >    0xffffffe00020af76 <+18>:    sd      s6,64(sp)
-> > > >    0xffffffe00020af78 <+20>:    sd      s7,56(sp)
-> > > >    0xffffffe00020af7a <+22>:    mv      s4,a0
-> > > >    0xffffffe00020af7c <+24>:    mv      a0,ra
-> > > >    0xffffffe00020af7e <+26>:    nop   <<<<<<<< here!
-> > > >    0xffffffe00020af82 <+30>:    nop
-> > > >    0xffffffe00020af86 <+34>:    ld      s3,0(s4)
-> > > >
-> > > > 2. Set _do_fork+26 as the kprobe.
-> > > >   echo 'p:myprobe _do_fork+26 dfd=3D%a0 filename=3D%a1 flags=3D%a2 =
-mode=3D+4($stack)' > /sys/kernel/debug/tracing/kprobe_events
-> > > >   echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
-> > > >   cat /sys/kernel/debug/tracing/trace
-> > > >   tracer: nop
-> > > >
-> > > >   entries-in-buffer/entries-written: 3/3   #P:1
-> > > >
-> > > >                                _-----=3D> irqs-off
-> > > >                               / _----=3D> need-resched
-> > > >                              | / _---=3D> hardirq/softirq
-> > > >                              || / _--=3D> preempt-depth
-> > > >                              ||| /     delay
-> > > >             TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-> > > >                | |       |   ||||       |         |
-> > > >               sh-87    [000] ....   551.557031: myprobe: (_do_fork+=
-0x1a/0x2e6) dfd=3D0xffffffe00020af7e filename=3D0xffffffe00020b34e flags=3D=
-0xffffffe00101e7c0 mode=3D0x20af86ffffffe0
-> > > >
-> > > >   cat /sys/kernel/debug/kprobes/list
-> > > > ffffffe00020af7e  k  _do_fork+0x1a    [FTRACE]
-> > > >                                        ^^^^^^
-> > >
-> > > Hmm, this seems fentry is not supported on RISC-V yet. But anyway,
-> > > it will be useful for users (if they can find the offset).
-> >
-> > Seems only x86 & =E2=AC=86=EF=B8=8F90 use fentry=EF=BC=8Ccan you elabor=
-ate more about fentry's
-> > benefit and how the user could set kprobe on ftrace call site without
-> > disassemble?
->
-> On x86, the fentry replaces the mcount with just one call instruction, wi=
-thout
-> saving any arguments. This means all probes which are puts on the address=
- of
-> target symbol, are automatically using ftrace. IOW, all probes on _do_for=
-k+0
-> will use ftrace. We don't need any disassembling.
->
-> I think if RISC-V already support "-fpatchable-function-entry=3D2" option=
- on
-> GCC, you can easily enable it as same as arm64. See https://lkml.org/lkml=
-/2019/6/18/648
->
-> Thank you,
->
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
+> I do not think Linux should support a broken standards extensions that
+> creates a huge share state between the Linux initator and the target
+> device like this with all its associated problems.
 
+I spent a couple of hours looking at this series again last night. And
+while the code has improved, I do remain concerned about the general
+concept.
 
+I understand how caching the FTL in host memory can improve performance
+from a theoretical perspective. However, I am not sure how much a
+difference this is going to make outside of synthetic benchmarks. What
+are the workloads that keep reading the same blocks from media? Or does
+the performance improvement exclusively come from the second order
+pre-fetching effect for larger I/Os? If so, why is the device's internal
+L2P SRAM cache ineffective at handling that case?
 
---=20
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+-- 
+Martin K. Petersen	Oracle Linux Engineering
