@@ -2,92 +2,157 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD5DC433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59976C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB40207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CA620717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:09:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbgGVIHb (ORCPT
+        id S1728220AbgGVIJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:07:31 -0400
-Received: from verein.lst.de ([213.95.11.211]:55401 "EHLO verein.lst.de"
+        Wed, 22 Jul 2020 04:09:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45178 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbgGVIHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:07:30 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2537A6736F; Wed, 22 Jul 2020 10:07:25 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 10:07:24 +0200
-From:   'Christoph Hellwig' <hch@lst.de>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Christoph Hellwig' <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: Re: get rid of the address_space override in setsockopt
-Message-ID: <20200722080724.GB26864@lst.de>
-References: <20200720124737.118617-1-hch@lst.de> <ae6a743aaea3406596dbc89e332b6b3e@AcuMS.aculab.com>
+        id S1726141AbgGVIJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:09:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E65E5AFEA;
+        Wed, 22 Jul 2020 08:09:07 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae6a743aaea3406596dbc89e332b6b3e@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 22 Jul 2020 10:08:59 +0200
+From:   osalvador@suse.de
+To:     =?UTF-8?Q?HORIGUCHI_NAOYA=28=E5=A0=80=E5=8F=A3=E3=80=80=E7=9B=B4?=
+         =?UTF-8?Q?=E4=B9=9F=29?= <naoya.horiguchi@nec.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <MHocko@suse.com>,
+        linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
+        aneesh.kumar@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        Oscar Salvador <OSalvador@suse.com>
+Subject: Re: [PATCH v4 12/15] mm,hwpoison: Rework soft offline for in-use
+ pages
+In-Reply-To: <c19693eb3600832976f44ffa746a263a@suse.de>
+References: <20200716123810.25292-1-osalvador@suse.de>
+ <20200716123810.25292-13-osalvador@suse.de>
+ <f7387d64d0024d15a1bc821a8e19b8f0@DB7PR04MB5180.eurprd04.prod.outlook.com>
+ <c19693eb3600832976f44ffa746a263a@suse.de>
+User-Agent: Roundcube Webmail
+Message-ID: <3b2231bf69133bb7bb8936c74b4e9c9f@suse.de>
+X-Sender: osalvador@suse.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:26:58AM +0000, David Laight wrote:
-> From: Christoph Hellwig
-> > Sent: 20 July 2020 13:47
-> > 
-> > setsockopt is the last place in architecture-independ code that still
-> > uses set_fs to force the uaccess routines to operate on kernel pointers.
-> > 
-> > This series adds a new sockptr_t type that can contained either a kernel
-> > or user pointer, and which has accessors that do the right thing, and
-> > then uses it for setsockopt, starting by refactoring some low-level
-> > helpers and moving them over to it before finally doing the main
-> > setsockopt method.
+On 2020-07-20 10:27, osalvador@suse.de wrote:
+> On 2020-07-17 08:55, HORIGUCHI NAOYA wrote:
+>> I ran Quan Cai's test program (https://github.com/cailca/linux-mm) on 
+>> a
+>> small (4GB memory) VM, and weiredly found that (1) the target 
+>> hugepages
+>> are not always dissolved and (2) dissovled hugetpages are still 
+>> counted
+>> in "HugePages_Total:". See below:
+>> 
+>>     $ ./random 1
+>>     - start: migrate_huge_offline
+>>     - use NUMA nodes 0,1.
+>>     - mmap and free 8388608 bytes hugepages on node 0
+>>     - mmap and free 8388608 bytes hugepages on node 1
+>>     madvise: Cannot allocate memory
+>> 
+>>     $ cat /proc/meminfo
+>>     MemTotal:        4026772 kB
+>>     MemFree:          976300 kB
+>>     MemAvailable:     892840 kB
+>>     Buffers:           20936 kB
+>>     Cached:            99768 kB
+>>     SwapCached:         5904 kB
+>>     Active:            84332 kB
+>>     Inactive:         116328 kB
+>>     Active(anon):      27944 kB
+>>     Inactive(anon):    68524 kB
+>>     Active(file):      56388 kB
+>>     Inactive(file):    47804 kB
+>>     Unevictable:        7532 kB
+>>     Mlocked:               0 kB
+>>     SwapTotal:       2621436 kB
+>>     SwapFree:        2609844 kB
+>>     Dirty:                56 kB
+>>     Writeback:             0 kB
+>>     AnonPages:         81764 kB
+>>     Mapped:            54348 kB
+>>     Shmem:              8948 kB
+>>     KReclaimable:      22744 kB
+>>     Slab:              52056 kB
+>>     SReclaimable:      22744 kB
+>>     SUnreclaim:        29312 kB
+>>     KernelStack:        3888 kB
+>>     PageTables:         2804 kB
+>>     NFS_Unstable:          0 kB
+>>     Bounce:                0 kB
+>>     WritebackTmp:          0 kB
+>>     CommitLimit:     3260612 kB
+>>     Committed_AS:     828196 kB
+>>     VmallocTotal:   34359738367 kB
+>>     VmallocUsed:       19260 kB
+>>     VmallocChunk:          0 kB
+>>     Percpu:             5120 kB
+>>     HardwareCorrupted:  5368 kB
+>>     AnonHugePages:     18432 kB
+>>     ShmemHugePages:        0 kB
+>>     ShmemPmdMapped:        0 kB
+>>     FileHugePages:         0 kB
+>>     FilePmdMapped:         0 kB
+>>     CmaTotal:              0 kB
+>>     CmaFree:               0 kB
+>>     HugePages_Total:    1342     // still counted as hugetlb pages.
+>>     HugePages_Free:        0     // all hugepage are still allocated
+>> (or leaked?)
+>>     HugePages_Rsvd:        0
+>>     HugePages_Surp:      762     // some are counted in surplus.
+>>     Hugepagesize:       2048 kB
+>>     Hugetlb:         2748416 kB
+>>     DirectMap4k:      112480 kB
+>>     DirectMap2M:     4081664 kB
+>> 
+>> 
+>>     $ page-types -b hwpoison
+>>                  flags      page-count       MB  symbolic-flags
+>>              long-symbolic-flags
+>>     0x0000000000080008             421        1
+>> ___U_______________X_______________________      uptodate,hwpoison
+>>     0x00000000000a8018               1        0
+>> ___UD__________H_G_X_______________________
+>> uptodate,dirty,compound_head,huge,hwpoison
+>>     0x00000000000a801c             920        3
+>> __RUD__________H_G_X_______________________
+>> referenced,uptodate,dirty,compound_head,huge,hwpoison
+>>                  total            1342        5
+>> 
+>> This means that some hugepages are dissolved, but the others not,
+>> maybe which is not desirable.
+>> I'll dig this more later but just let me share at first.
+>> 
+>> A few minor comment below ...
 > 
-> Another 'gotcha' ...
 > 
-> On an least some architectures (possibly only m68k) IIRC all structures
-> are actually passed by reference.
-> (This used to be true for sparc - but it may have changed in the
-> last 30 years.)
+> Uhm, weird.
+> 
+> I will be taking a look today.
 
-Tough luck for ABIs wit suboptimal calling conventions.  At least we can
-do the right thing for those that do not have the problem.
+After some digging up I __think__ I found the problem.
+I will try to fix it up and I will be running tests.
+
+I might reach out to you once I am done because I remember you had a 
+test-suite that worked quite well, so you can give it a spin there.
+
+Thanks
+
+
