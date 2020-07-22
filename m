@@ -2,113 +2,73 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B74C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E8C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEC420792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595383882;
-	bh=h159DtF8H/HlBrBOihL3MSedIBpWWvld7e60yiwJG7o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L+cnvQWf3fk/m6DirZTKWUG1/OpzCLr9HHGoj9lSPsKMttqEPd1hmt7Lo2ruHAciE
-	 fiwdiTPXpqHbSpilyuixcmQN7iMj/9+g4VvtUhvuaX64K4s65xdKAp6jlI6OhRxzq3
-	 sVGs3rBOgwaM0MAQ2gRTmUiARIS808cO67GXUgoo=
+	by mail.kernel.org (Postfix) with ESMTP id 43028207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731801AbgGVCLV (ORCPT
+        id S1731813AbgGVCMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:11:21 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:32111 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731621AbgGVCLU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:11:20 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 06M2AmTB032054;
-        Wed, 22 Jul 2020 11:10:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 06M2AmTB032054
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595383849;
-        bh=Aih6VBubiSXnprivmgnxaVTSC58fZZfIbh+5AaCTBIM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EK80SaE1oXZzPoKURYSTxTH+hxVXKvKr12Tsuy/FX5trsgAahkshxC3XvvjFV8sKp
-         kvotbDYshJF+qwdVkQQYifZ3+p5XbQPCpf7NpGo6h/4SAC4fDPF0PE7zVmWgGQMSC5
-         0m3wOAfD08HO837L/IdMOPyCR2dKjbl3qXPXwhL5F0NcX88G6GCXNdaRnxw3rmBmWQ
-         0lpwHzpXbHChzvgzNs9gUkl7CDhLTAd2xKp4S7Wkpizq8GR3wjLLfzLcwl7EVGVrXO
-         PQ9Ye5lj1XuTXoMaojlnlT72b0Qcj48tzNwqpLcZdjIYZEGDOIjehke/+UON54o26F
-         j1ed1QcFQuTWg==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id m6so308180vsl.12;
-        Tue, 21 Jul 2020 19:10:49 -0700 (PDT)
-X-Gm-Message-State: AOAM532hd9TXd3U8NO2/v9pvDAN9mdt0OZd3LJx5Zq7WAOv5BRj84pde
-        7NZZ1/ng5/lcAMkqR1JZfeK2M8EM97RlQlziUfo=
-X-Google-Smtp-Source: ABdhPJxePnkwQjGrTtR0b/vKzaaoGDrx5Lo9YH6/7fWyDIDmz0k8/gl81kgwfi+UC9Pxo7G80Dx5Q555MuZEA4oNWjo=
-X-Received: by 2002:a67:2e4d:: with SMTP id u74mr21559012vsu.215.1595383847947;
- Tue, 21 Jul 2020 19:10:47 -0700 (PDT)
+        Tue, 21 Jul 2020 22:12:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50846 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731621AbgGVCMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:12:00 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EA8AC2BF1FBB69F44CA1;
+        Wed, 22 Jul 2020 10:11:58 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Jul 2020
+ 10:11:56 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <aelior@marvell.com>, <GR-everest-linux-l2@marvell.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: qed: Remove unneeded cast from memory allocation
+Date:   Wed, 22 Jul 2020 10:10:27 +0800
+Message-ID: <20200722021027.12797-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200707092117.963394-1-masahiroy@kernel.org> <20200707092117.963394-2-masahiroy@kernel.org>
- <20200708065223.GA11164@alley> <20200708092324.GA4751@alley>
-In-Reply-To: <20200708092324.GA4751@alley>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jul 2020 11:10:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARFTzfx772bTUnLxbN9pwyX3=H284cg-YWKc3YUY9_8KA@mail.gmail.com>
-Message-ID: <CAK7LNARFTzfx772bTUnLxbN9pwyX3=H284cg-YWKc3YUY9_8KA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kbuild: trace functions in subdirectories of lib/
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Haren Myneni <haren@us.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Tal Gilboa <talgi@mellanox.com>, kunit-dev@googlegroups.com,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 6:23 PM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Wed 2020-07-08 08:52:23, Petr Mladek wrote:
-> >
-> > PS: BTW: The livepatch selftests fail in Linus's master now. But it
-> > seems to be for another reason. I am going to dig into it.
->
-> JFYI, the livepatch selftests are actually working. I have messed
-> the testing here. I am sorry for the noise.
->
-> Best Regards,
-> Petr
+Remove casting the values returned by memory allocation function.
 
-No worry, thank you for testing this patch.
+Coccinelle emits WARNING: casting value returned by memory allocation
+unction to (struct roce_destroy_qp_req_output_params *) is useless.
 
+This issue was detected by using the Coccinelle software.
 
-I deleted the following two lines,
-otherwise $(CC_FLAGS_FTRACE) would be added twice.
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/net/ethernet/qlogic/qed/qed_roce.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-# Target modules to be livepatched require CC_FLAGS_FTRACE
-CFLAGS_test_klp_callbacks_busy.o       += $(CC_FLAGS_FTRACE)
-CFLAGS_test_klp_callbacks_mod.o                += $(CC_FLAGS_FTRACE)
-
-
-
-
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+index a1423ec0edf7..f16a157bb95a 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+@@ -757,8 +757,7 @@ static int qed_roce_sp_destroy_qp_requester(struct qed_hwfn *p_hwfn,
+ 	if (!qp->req_offloaded)
+ 		return 0;
+ 
+-	p_ramrod_res = (struct roce_destroy_qp_req_output_params *)
+-		       dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
++	p_ramrod_res = dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
+ 					  sizeof(*p_ramrod_res),
+ 					  &ramrod_res_phys, GFP_KERNEL);
+ 	if (!p_ramrod_res) {
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
