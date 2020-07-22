@@ -2,69 +2,127 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DCBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6765F20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B98207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 02:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgGVCWP (ORCPT
+        id S1731730AbgGVC3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 22:22:15 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:41780 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731595AbgGVCWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 22:22:15 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06M2LIGX018560
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 21 Jul 2020 21:21:25 -0500
-Message-ID: <bb461dde0df3eaf0bed949eebf0657b227431bb3.camel@kernel.crashing.org>
-Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     alex@ghiti.fr, mpe@ellerman.id.au, paulus@samba.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Date:   Wed, 22 Jul 2020 12:21:16 +1000
-In-Reply-To: <mhng-cd9a74ea-2edf-47e4-aade-b090f1a069f1@palmerdabbelt-glaptop1>
-References: <mhng-cd9a74ea-2edf-47e4-aade-b090f1a069f1@palmerdabbelt-glaptop1>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+        Tue, 21 Jul 2020 22:29:40 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:64449 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731595AbgGVC3k (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 22:29:40 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jul 2020 22:29:38 EDT
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="36533941"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 22 Jul 2020 10:19:36 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(139077:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Wed, 22 Jul 2020 10:19:34 +0800 (CST)
+Received: from 192.168.33.57
+        by webmail.emc.com.tw with Mail2000 ESMTP Server V7.00(2477:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Wed, 22 Jul 2020 10:19:33 +0800 (CST)
+From:   "Dave.Wang" <dave.wang@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
+Cc:     <Linux-input@vger.kernel.org>, <Linux-kernel@vger.kernel.org>,
+        <phoenix@emc.com.tw>, <josh.chen@emc.com.tw>,
+        <jingle.wu@emc.com.tw>, <kai.heng.feng@canonical.com>
+References: <20191209111107.32239-1-dave.wang@emc.com.tw> <20200721161236.GI1665100@dtor-ws>
+In-Reply-To: <20200721161236.GI1665100@dtor-ws>
+Subject: RE: [PATCH 1/3] Input: elan_i2c - Do no operation for elan_smbus_set_mode function
+Date:   Wed, 22 Jul 2020 10:19:33 +0800
+Message-ID: <002601d65fce$8a0148d0$9e03da70$@emc.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQKMobxR7qDwdRZsC9ditFT1DgHVnAJCKYzFp5RE3UA=
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDYxMjlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1jNzQ1ODM0Mi1jYmMxLTExZWEtYWE4Yy04OGQ3ZjY1NjczMzBcYW1lLXRlc3RcYzc0NTgzNDMtY2JjMS0xMWVhLWFhOGMtODhkN2Y2NTY3MzMwYm9keS50eHQiIHN6PSIyNDMwIiB0PSIxMzIzOTg1Nzk3MzEyNzIyMzUiIGg9IjNHWVo1d1lBSHpXRHEvZk1ZN0pOb3ljV3pWTT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 16:48 -0700, Palmer Dabbelt wrote:
-> > Why ? Branch distance limits ? You can't use trampolines ?
+Dear Dmitry,
+
+Are there devices that do not trigger errors?
+=> Yes, there exist devices that would act normally. However, our team
+cannot organize the rule to recognize which devices could trigger this
+command without error. 
+What I sure about is that some devices would get TP no function while
+triggering this command. 
+Besides, ABS mode had been set in P/S2 protocol, so there is no need to set
+ABS mode again in SMBUS driver. 
+
+How do we put SMbus devices into low power mode?
+=> As far as I am concerned, core.c only set the mode into ABS mode or
+ENABLE_CALIBRATE mode after updating firmware. 
+I don't know what or when to set SMbus devices into low power mode.
+
+Best regards,
+Dave
+
+-----Original Message-----
+From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com] 
+Sent: Wednesday, July 22, 2020 12:13 AM
+To: Dave Wang <dave.wang@emc.com.tw>
+Cc: Linux-input@vger.kernel.org; Linux-kernel@vger.kernel.org;
+phoenix@emc.com.tw; josh.chen@emc.com.tw; jingle.wu@emc.com.tw;
+kai.heng.feng@canonical.com
+Subject: Re: [PATCH 1/3] Input: elan_i2c - Do no operation for
+elan_smbus_set_mode function
+
+Hi Dave,
+
+On Mon, Dec 09, 2019 at 06:11:07AM -0500, Dave Wang wrote:
+> Some touchpads might get error while triggerring the set_mode command 
+> in SMBus interface. Do no operation for elan_smbus_set_mode function.
+
+Are there devices that do not trigger errors? How do we put SMbus devices
+into low power mode?
+
 > 
-> Nothing fundamental, it's just that we don't have a large code model in the C
-> compiler.  As a result all the global symbols are resolved as 32-bit
-> PC-relative accesses.  We could fix this with a fast large code model, but then
-> the kernel would need to relax global symbol references in modules and we don't
-> even do that for the simple code models we have now.  FWIW, some of the
-> proposed large code models are essentially just split-PLT/GOT and therefor
-> don't require relaxation, but at that point we're essentially PIC until we
-> have more that 2GiB of kernel text -- and even then, we keep all the
-> performance issues.
+> Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+> ---
+>  drivers/input/mouse/elan_i2c_smbus.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/mouse/elan_i2c_smbus.c 
+> b/drivers/input/mouse/elan_i2c_smbus.c
+> index 8c3185d54c73..bcb9ec4a7a6b 100644
+> --- a/drivers/input/mouse/elan_i2c_smbus.c
+> +++ b/drivers/input/mouse/elan_i2c_smbus.c
+> @@ -84,10 +84,7 @@ static int elan_smbus_initialize(struct i2c_client 
+> *client)
+>  
+>  static int elan_smbus_set_mode(struct i2c_client *client, u8 mode)  {
+> -	u8 cmd[4] = { 0x00, 0x07, 0x00, mode };
+> -
+> -	return i2c_smbus_write_block_data(client, ETP_SMBUS_IAP_CMD,
+> -					  sizeof(cmd), cmd);
+> +	return 0; /* A no-op */
+>  }
+>  
+>  static int elan_smbus_sleep_control(struct i2c_client *client, bool 
+> sleep)
+> --
+> 2.17.1
+> 
 
-My memory might be out of date but I *think* we do it on powerpc
-without going to a large code model, but just having the in-kernel
-linker insert trampolines.
+Thanks.
 
-Cheers,
-Ben.
-
+--
+Dmitry
 
