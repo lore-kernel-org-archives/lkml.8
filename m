@@ -2,101 +2,92 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E098FC43458
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DE8C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F0620787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q5FcEu85"
+	by mail.kernel.org (Postfix) with ESMTP id 1EDF720714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbgGVJqW (ORCPT
+        id S1731669AbgGVJrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:46:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30367 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731673AbgGVJqT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:46:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595411177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+W3E9XgHb0G6nVszkRK+6uLSR1+J1W6QhVtycYSbEnM=;
-        b=Q5FcEu85Q6u06iAFleGWIxzV+HdCQLfPGLnvUWCzjbzicA62lbsiigEwflXsuyiQy8LhGA
-        dOOKeXKk60uK7JwkMfqyX1Mim7jheveVXtMD6WqDtoiOv+8lcb5hkp1kX04xkShmhjrZIx
-        wcHUwrJoI42QfINaviNhpH4aletPvO4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-JEKjV4nNODe2wf8t2d3zAw-1; Wed, 22 Jul 2020 05:46:15 -0400
-X-MC-Unique: JEKjV4nNODe2wf8t2d3zAw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62261800460;
-        Wed, 22 Jul 2020 09:46:14 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-254.ams2.redhat.com [10.36.113.254])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B10BD5D9CA;
-        Wed, 22 Jul 2020 09:46:12 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: [PATCH v2 4/9] s390/vmemmap: cleanup when vmemmap_populate() fails
-Date:   Wed, 22 Jul 2020 11:45:53 +0200
-Message-Id: <20200722094558.9828-5-david@redhat.com>
-In-Reply-To: <20200722094558.9828-1-david@redhat.com>
-References: <20200722094558.9828-1-david@redhat.com>
+        Wed, 22 Jul 2020 05:47:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8351 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730142AbgGVJre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 05:47:34 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E06B03B132C9DC4F16B9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 17:47:30 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Jul 2020 17:47:23 +0800
+From:   Hanjun Guo <guohanjun@huawei.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, Hanjun Guo <guohanjun@huawei.com>
+Subject: [PATCH] mailbox: pcc: Put the PCCT table for error path
+Date:   Wed, 22 Jul 2020 17:40:40 +0800
+Message-ID: <1595410840-15231-1-git-send-email-guohanjun@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup what we partially added in case vmemmap_populate() fails. For
-vmem, this is already handled by vmem_add_mapping().
+The acpi_get_table() should be coupled with acpi_put_table() if
+the mapped table is not used at runtime to release the table
+mapping.
 
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+In acpi_pcc_probe(), the PCCT table entries will be used as private
+data for communication chan at runtime, but the table should be put
+for error path.
+
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
 ---
- arch/s390/mm/vmem.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mailbox/pcc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-index 43fe1e2eb90ea..be32a38bb91fd 100644
---- a/arch/s390/mm/vmem.c
-+++ b/arch/s390/mm/vmem.c
-@@ -332,8 +332,13 @@ static void vmem_remove_range(unsigned long start, unsigned long size)
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap)
- {
-+	int ret;
+diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
+index 8c7fac3..ef9ecd1 100644
+--- a/drivers/mailbox/pcc.c
++++ b/drivers/mailbox/pcc.c
+@@ -457,14 +457,17 @@ static int __init acpi_pcc_probe(void)
+ 			pr_warn("Error parsing PCC subspaces from PCCT\n");
+ 		else
+ 			pr_warn("Invalid PCCT: %d PCC subspaces\n", count);
+-		return -EINVAL;
 +
- 	/* We don't care about the node, just use NUMA_NO_NODE on allocations */
--	return add_pagetable(start, end, false);
-+	ret = add_pagetable(start, end, false);
-+	if (ret)
-+		remove_pagetable(start, end, false);
-+	return ret;
++		rc = -EINVAL;
++		goto err_put_pcct;
+ 	}
+ 
+ 	pcc_mbox_channels = kcalloc(count, sizeof(struct mbox_chan),
+ 				    GFP_KERNEL);
+ 	if (!pcc_mbox_channels) {
+ 		pr_err("Could not allocate space for PCC mbox channels\n");
+-		return -ENOMEM;
++		rc = -ENOMEM;
++		goto err_put_pcct;
+ 	}
+ 
+ 	pcc_doorbell_vaddr = kcalloc(count, sizeof(void *), GFP_KERNEL);
+@@ -535,6 +538,8 @@ static int __init acpi_pcc_probe(void)
+ 	kfree(pcc_doorbell_vaddr);
+ err_free_mbox:
+ 	kfree(pcc_mbox_channels);
++err_put_pcct:
++	acpi_put_table(pcct_tbl);
+ 	return rc;
  }
  
- void vmemmap_free(unsigned long start, unsigned long end,
 -- 
-2.26.2
+1.7.12.4
 
