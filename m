@@ -2,78 +2,129 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E86C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C29C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 496612071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605D52071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595426642;
+	bh=vD1NxW7kOLSfAbm298saG/wWrWb+LYxUbp9VvYPUJFQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fPYC4X0SvWSilbOwilKZ76aJKprMCpd9/6I+e+UCs+T2Ptdf2POy8097dGiRhdX0O
+	 1ExbiReeiXu9c0PTZHOi3HdyPqDlFdQhC8e6qeYTaSnyuDlBbklTQxhCqAQlAxf036
+	 d09FH1IgL1EHRV2kl+phlSQrsoUdrwlf2WmwDMHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgGVODo (ORCPT
+        id S1731186AbgGVOEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:03:44 -0400
-Received: from 8bytes.org ([81.169.241.247]:58666 "EHLO theia.8bytes.org"
+        Wed, 22 Jul 2020 10:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgGVODo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:03:44 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1D0C62C8; Wed, 22 Jul 2020 16:03:42 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 16:03:40 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH v6 01/12] iommu: Change type of pasid to u32
-Message-ID: <20200722140340.GJ27672@8bytes.org>
-References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
- <1594684087-61184-2-git-send-email-fenghua.yu@intel.com>
+        id S1726425AbgGVOEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:04:00 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 034D72071A;
+        Wed, 22 Jul 2020 14:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595426640;
+        bh=vD1NxW7kOLSfAbm298saG/wWrWb+LYxUbp9VvYPUJFQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IyArLE0g04QibcnJXV16X14S96h4RuAedeYcoITNUg8sNZjizaRMLkScMQVTVVd3W
+         W76oyKy37edCFFkO7lo7CfaHpJkt1B+y/U8ovnJqtDMxoOu54wpR+PUsSohTQ5iZDs
+         Wl37Q+dorI2AMVPkWHOStHy391/FfQB0wq/kVyiw=
+Date:   Wed, 22 Jul 2020 16:03:56 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Rahul Gottipati <rahul.blr97@gmail.com>
+Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] media: atomisp: Fix coding style issue - remove
+ beginning whitespaces
+Message-ID: <20200722160356.010a05df@coco.lan>
+In-Reply-To: <5b2242008c92871daa5bfb7c9c3cafbbf592228b.1595416585.git.rahul.blr97@gmail.com>
+References: <cover.1595416585.git.rahul.blr97@gmail.com>
+        <5b2242008c92871daa5bfb7c9c3cafbbf592228b.1595416585.git.rahul.blr97@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594684087-61184-2-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 04:47:56PM -0700, Fenghua Yu wrote:
-> PASID is defined as a few different types in iommu including "int",
-> "u32", and "unsigned int". To be consistent and to match with uapi
-> definitions, define PASID and its variations (e.g. max PASID) as "u32".
-> "u32" is also shorter and a little more explicit than "unsigned int".
+Em Wed, 22 Jul 2020 16:58:31 +0530
+Rahul Gottipati <rahul.blr97@gmail.com> escreveu:
+
+> This removes whitespaces at the beginning of a few lines to fix
+> some checkpatch.pl warnings.
 > 
-> No PASID type change in uapi although it defines PASID as __u64 in
-> some places.
+> Signed-off-by: Rahul Gottipati <rahul.blr97@gmail.com>
+> ---
+> Changes in v2:
+> 	Distributed changes across 2 patches instead of the previous 1
 > 
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+>  drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+> index 9404a678fa6f..9cdcbe774229 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+> @@ -512,7 +512,7 @@ const struct atomisp_format_bridge atomisp_output_fmts[] = {
+>  };
+>  
+>  const struct atomisp_format_bridge *atomisp_get_format_bridge(
+> -    unsigned int pixelformat)
+> +				unsigned int pixelformat)
 
-For the IOMMU parts:
+This is still a coding style violation, as:
 
-Acked-by: Joerg Roedel <jroedel@suse.de>
+1) the continuation line won't be aligned after the open parenthesis;
+2) the line will end with an open parenthesis.
 
+ A fix would be:
+
+	const struct atomisp_format_bridge *
+	atomisp_get_format_bridge(unsigned int pixelformat)
+
+The same applies to similar patterns.
+
+Yet, patches to atomisp have a high chance of having conflicts,
+and being rejected, as we're doing lots of non-aesthetic changes 
+on this driver.
+
+
+>  {
+>  	unsigned int i;
+>  
+> @@ -525,7 +525,7 @@ const struct atomisp_format_bridge *atomisp_get_format_bridge(
+>  }
+>  
+>  const struct atomisp_format_bridge *atomisp_get_format_bridge_from_mbus(
+> -    u32 mbus_code)
+> +				u32 mbus_code)
+>  {
+>  	unsigned int i;
+>  
+> @@ -607,7 +607,7 @@ static int atomisp_enum_input(struct file *file, void *fh,
+>  }
+>  
+>  static unsigned int atomisp_subdev_streaming_count(
+> -    struct atomisp_sub_device *asd)
+> +				struct atomisp_sub_device *asd)
+>  {
+>  	return asd->video_out_preview.capq.streaming
+>  	       + asd->video_out_capture.capq.streaming
+
+
+
+Thanks,
+Mauro
