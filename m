@@ -2,142 +2,123 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57398C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 330E7207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:34:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595406875;
-	bh=bBhVauzcDv+gdi7HS/M9GiiTKSQl50htelXyJHZUl4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1/HnCRUqg08obAznC2GjMGykHt+hpmXIPm9QU5mSIFP9GLCRrYgfDc5oBcq3s82nC
-	 uP0VIAjckzAnl9NkrTkK/rnpJwcyLTmf2QSxOqebTWpqmxPqVfzRrv3rOYr8cd1ZNo
-	 54RbL5YAMyy9WS8Ct8w+jI/zmJWv5o/Q/S2dmmwI=
+	by mail.kernel.org (Postfix) with ESMTP id 1268120787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:35:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzz9d3FL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgGVIee (ORCPT
+        id S1728962AbgGVIfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:34:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46944 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGVIed (ORCPT
+        Wed, 22 Jul 2020 04:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgGVIfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:34:33 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h19so1543930ljg.13;
-        Wed, 22 Jul 2020 01:34:31 -0700 (PDT)
+        Wed, 22 Jul 2020 04:35:01 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B419C0619DC;
+        Wed, 22 Jul 2020 01:35:01 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e8so814387pgc.5;
+        Wed, 22 Jul 2020 01:35:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=S5B0GVk1sEbUASjT4+xgZWsr7v8I6T3nqfWa5obXE9M=;
+        b=qzz9d3FLgW9eDvZozb1+QqmuacZbBMJUtVOb+ZnFDUVbj1aiDYQ2dEqp01X8FR0x76
+         uc7DYiPf58TvPP7LrFQc3XLcknbdMhMl4WvUEvji8G3t1NAF2S/m6zkZuJH7YYxIL16/
+         68SxxElSMctAqhqfcZ7y7OJCyE6g/LEWwAaI/Fixg7By1/6KGSCulpVDtMRdi1uWgvKG
+         isZb2a61iGeqsPvijKksv4uOf4lqnbUNEEx/2xony4xlHPYKVsnijadpTKAIaMxG2AZJ
+         SZg2yYbeels9SzuzOS7HTlEa6qeoGIgSoE9iJKsB6YoN8igRyZOG+r32j3vJTnE9fzRl
+         xXOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a320Kl5LlLOAYjeoIoCSr52bpOgO1xg6oWW0y+XyzMw=;
-        b=RW1QO2AgljyDHzHWSrSy+PzOsrEwS//NpMR/UWp20giKm3iN/75GmdEpAtwGJg0GV2
-         uHoabgJtLA9ajOttFxUoPv9BtSAoHDJE/RdjEPvT29Qj23c1/9Q63cbSMabCg620zvM6
-         rOtq+mp7+o5pqVX9AehRGhxtuF8cEVZp5qSLy/yWilBTLxrhDQe9W8Xi6ACUOx2olD5k
-         kVicebcX1KEuXl9uWsjHSq7PWOReXlbfmgufXQk4C6c8PZtGFq0zVlUH6xgWajZLrjyZ
-         5pOoUV6UDPTzXUqvoxoBuynPaZv57p6CdxNqiwEeCSI9fHLax87pL1vlLWjcsUaKSgLp
-         v8zw==
-X-Gm-Message-State: AOAM531BK8oQ2k7QGi8tzYUK3w2O88X+Lz7tJMBc5BDlwE1jGnGYf4rw
-        TV8iYuV3hunhpqzh01hcRbRSBwZY
-X-Google-Smtp-Source: ABdhPJyZVBEFI0bvjliXucRioA69zALGxm9a2TuCL16DZpKu64loQwYwFw8ndfYgVc8LlaM47TwOeA==
-X-Received: by 2002:a2e:9d86:: with SMTP id c6mr14184500ljj.418.1595406870872;
-        Wed, 22 Jul 2020 01:34:30 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id c27sm7530646lfm.56.2020.07.22.01.34.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=S5B0GVk1sEbUASjT4+xgZWsr7v8I6T3nqfWa5obXE9M=;
+        b=E6z7Wsglg7JqCw4WDcLya8DJvG1+iXHMz4ibb3W3W8df6uQkLyqpqKgzkwmu65Gk4z
+         cu69AsN9Lr4CMBNa4z4vUrraDDXlEOA94SajHYOKzGj/IrYJDKVxJqxBf4FI4bRz9VBM
+         RZRRZSszmLhgRcG5jqLQD/y39BJhb/S6iHMkVrgmInfG2WVVGNrxOcgx/wUOHQ84iyKd
+         1D8kqGxNvxUuRTyrGqzF0m8zuFKFxx2Y9FSM0ZJ1ZGaVlsmG6R6z0p+71t0k2/W1/EMe
+         MIGWzbsScNxs1s2g67FS/w4JN28GONpxCCl2hgLVCcvhPXMipFQ+URfiXGUEnhbyEU4O
+         PJEw==
+X-Gm-Message-State: AOAM532M+OmqcRDfbYQwDLMrQccu1JC/MilVd29R/T10DFs/0ubci7qK
+        RQsiRNRD6s+yVK97yapWDNg=
+X-Google-Smtp-Source: ABdhPJxW1giZd/2EieXhbK29tsVlNOYQs2kZciw/ydObd4eRPAb2i+Inq0D8ck6rN2S6QrVIV3yPIQ==
+X-Received: by 2002:a62:7845:: with SMTP id t66mr27743156pfc.5.1595406900728;
+        Wed, 22 Jul 2020 01:35:00 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.67])
+        by smtp.gmail.com with ESMTPSA id g13sm5777319pje.29.2020.07.22.01.34.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 01:34:29 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jyACn-0005S2-4r; Wed, 22 Jul 2020 10:34:25 +0200
-Date:   Wed, 22 Jul 2020 10:34:25 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kernel@pengutronix.de, Jiri Slaby <jslaby@suse.com>,
-        linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v7 3/3] leds: trigger: implement a tty trigger
-Message-ID: <20200722083425.GF3634@localhost>
-References: <20200707165958.16522-1-u.kleine-koenig@pengutronix.de>
- <20200707165958.16522-4-u.kleine-koenig@pengutronix.de>
- <20200714071355.GY3453@localhost>
- <20200721194815.mmkqccrkbgrly4xz@pengutronix.de>
+        Wed, 22 Jul 2020 01:35:00 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v3 0/3] block: use generic power management
+Date:   Wed, 22 Jul 2020 14:03:32 +0530
+Message-Id: <20200722083335.50068-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <ea5881cdfd4d612193feed646ce89f253a36db69.camel@wdc.com>
+References: <ea5881cdfd4d612193feed646ce89f253a36db69.camel@wdc.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CblX+4bnyfN0pR09"
-Content-Disposition: inline
-In-Reply-To: <20200721194815.mmkqccrkbgrly4xz@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linux Kernel Mentee: Remove Legacy Power Management.
 
---CblX+4bnyfN0pR09
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The purpose of this patch series is to upgrade power management in block
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
-On Tue, Jul 21, 2020 at 09:48:15PM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello Johan,
->=20
-> On Tue, Jul 14, 2020 at 09:13:55AM +0200, Johan Hovold wrote:
-> > On Tue, Jul 07, 2020 at 06:59:58PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > +	while (firstrun ||
-> > > +	       icount.rx !=3D trigger_data->rx ||
-> > > +	       icount.tx !=3D trigger_data->tx) {
-> > > +
-> > > +		led_set_brightness(trigger_data->led_cdev, LED_ON);
-> > > +
-> > > +		msleep(100);
-> > > +
-> > > +		led_set_brightness(trigger_data->led_cdev, LED_OFF);
-> > > +
-> > > +		trigger_data->rx =3D icount.rx;
-> > > +		trigger_data->tx =3D icount.tx;
-> > > +		firstrun =3D false;
-> > > +
-> > > +		ret =3D tty_get_icount(trigger_data->tty, &icount);
-> > > +		if (ret)
-> > > +			return;
-> > > +	}
-> >=20
-> > Haven't looked at the latest proposal in detail, but this looks broken
-> > as you can potentially loop indefinitely in a worker thread, and with no
-> > way to stop the trigger (delayed work).
->=20
-> I don't think that potentially looping indefinitely is a problem, but
-> indeed it should drop the lock during each iteration. Will think about
-> how to adapt.
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-You musn't queue work that can run for long on the global shared
-workqueue as it affects flushing:
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
 
-	* system_wq is the one used by schedule[_delayed]_work[_on]().
-	* Multi-CPU multi-threaded.  There are users which expect relatively
-	* short queue flush time.  Don't queue works which can run for too
-	* long.
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
 
-Work that potentially run indefinitely is an absolute no-no. :)
+All patches are compile-tested only.
 
-Johan
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
 
---CblX+4bnyfN0pR09
-Content-Type: application/pgp-signature; name="signature.asc"
+v3: v2 needed some changes in commit messages.
 
------BEGIN PGP SIGNATURE-----
+Vaibhav Gupta (3):
+  mtip32xx: use generic power management
+  rsxx: use generic power management
+  skd: use generic power management
 
-iHUEABYIAB0WIQQHbPq+cpGvN/peuzMLxc3C7H1lCAUCXxf6DgAKCRALxc3C7H1l
-CAKdAPwMLuzL36R91UerEvnH4zUtKfNS5jRfm18tpgXYHJMHygEArxfQACvPs6nx
-njUDzVBzoW1/YxY47dCsqRZ4zne/JAQ=
-=E/KR
------END PGP SIGNATURE-----
+ drivers/block/mtip32xx/mtip32xx.c | 54 +++++++------------------------
+ drivers/block/rsxx/core.c         |  9 ++++--
+ drivers/block/skd_main.c          | 30 +++++------------
+ 3 files changed, 27 insertions(+), 66 deletions(-)
 
---CblX+4bnyfN0pR09--
+-- 
+2.27.0
+
