@@ -2,64 +2,127 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D71C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDA420787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595443775;
-	bh=gO3cXOzvy7Hq12xriUJlLk8YeDSUw0K4gKPAY31EVvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WQ0R7mFpER3WtrjH4NUqKtrr4LTl5OQ0jO66h0OVRNF7i04qMt1LJs6v83RPY1RJY
-	 Xnhsqok/IH3+Qjc7PIl9gPrr52Kn26BTG511J38Lp2y+7EqKPUoy8u+d9cHzZ+aXKq
-	 ZhxYrrv+9EKXc47cRAzYvPHYbQSInIqNr0FJYs3w=
+	by mail.kernel.org (Postfix) with ESMTP id 40A1A20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VjW8M1Ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732420AbgGVSte (ORCPT
+        id S1732505AbgGVSu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731267AbgGVStb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:49:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 341D120737;
-        Wed, 22 Jul 2020 18:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595443770;
-        bh=gO3cXOzvy7Hq12xriUJlLk8YeDSUw0K4gKPAY31EVvU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zKmNT3LVGoJm6irB1/Z7Ez+GKGkn+3h7Hy+fkbvlJOrmU66C965ch3Amy8F6s6dAh
-         h0rm22i1E6GpdqviWExH9yw7iB32rx1YAVTlHQ2hXkgvHwg76hza6XLrfNGhv1BHFh
-         cd6QPXs9uv9UoVIR39dM6UEmT2K0Z2AKX5Sr79j4=
-Date:   Wed, 22 Jul 2020 20:49:35 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mei: Avoid the use of one-element arrays
-Message-ID: <20200722184935.GA581127@kroah.com>
-References: <20200714214516.GA1040@embeddedor>
- <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
+        Wed, 22 Jul 2020 14:50:59 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56260 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgGVSu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:50:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MIoAQA025624;
+        Wed, 22 Jul 2020 13:50:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595443810;
+        bh=9f2jGn0pD++9Yxca7x8BCShEMLB/gy2zylnc48q7auA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VjW8M1IjKgzniAsdheTN3EvjKM66h2tHKrVUv944qJgkr/UY13i828uajtF1NR75O
+         KbR+cWHsZO38WQ0ZfJ4r4Zg/OvezfxNhtk3p4rqD6AjodiMZo94TtIQzmWb3Fwxr4Q
+         +6djcYk0x2+Rp7tB7xewdbWJrQr4LecUGOStC+o8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MIoArG047101
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 13:50:10 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
+ Jul 2020 13:50:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 22 Jul 2020 13:50:10 -0500
+Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MIo91r100814;
+        Wed, 22 Jul 2020 13:50:09 -0500
+Subject: Re: [PATCH v2 2/2] ASoC: tas2562: Update shutdown GPIO property
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200722154706.9657-1-dmurphy@ti.com>
+ <20200722154706.9657-2-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <09f2076f-352f-cac2-030f-9f29a0add47e@ti.com>
+Date:   Wed, 22 Jul 2020 13:50:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5198b29f-2e62-4910-4a4d-52c7991915c5@embeddedor.com>
+In-Reply-To: <20200722154706.9657-2-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 01:27:10PM -0500, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping: who can take this? :)
+Hello
 
-I will, give me a chance...
+On 7/22/20 10:47 AM, Dan Murphy wrote:
+> Update the shutdown GPIO property to be shutdown from shut-down.
+>
+> Fixes: c173dba44c2d2 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>
+> v2 - Set sdz_gpio to NULL if gpio property not present.
+>
+>   sound/soc/codecs/tas2562.c | 21 +++++++++++++++++----
+>   1 file changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+> index e74628061040..8a53633a3853 100644
+> --- a/sound/soc/codecs/tas2562.c
+> +++ b/sound/soc/codecs/tas2562.c
+> @@ -680,12 +680,25 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
+>   	struct device *dev = tas2562->dev;
+>   	int ret = 0;
+>   
+> -	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
+> -						    GPIOD_OUT_HIGH);
+> +	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
+> +						      GPIOD_OUT_HIGH);
+>   	if (IS_ERR(tas2562->sdz_gpio)) {
+> -		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER) {
+> -			tas2562->sdz_gpio = NULL;
+> +		tas2562->sdz_gpio = NULL;
+
+This is incorrect.  We will never see EPROBE_DEFER since we cleared out 
+the gpio.  I need to revert this.
+
+Same for below.
+
+> +		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER)
+>   			return -EPROBE_DEFER;
+> +	}
+> +
+> +	/*
+> +	 * The shut-down property is deprecated but needs to be checked for
+> +	 * backwards compatibility.
+> +	 */
+> +	if (tas2562->sdz_gpio == NULL) {
+> +		tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
+> +							      GPIOD_OUT_HIGH);
+> +		if (IS_ERR(tas2562->sdz_gpio)) {
+> +			tas2562->sdz_gpio = NULL;
+
+Same comment as above
+
+Dan
+
