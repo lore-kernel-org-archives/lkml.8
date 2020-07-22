@@ -7,68 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB20C433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F18C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD914206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E28E206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 10:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQndCQjZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dU63nrG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbgGVKI3 (ORCPT
+        id S1732049AbgGVKIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39424 "EHLO
+        Wed, 22 Jul 2020 06:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731951AbgGVKIY (ORCPT
+        with ESMTP id S1732010AbgGVKI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:08:24 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072E6C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:24 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so1397033wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:23 -0700 (PDT)
+        Wed, 22 Jul 2020 06:08:28 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B9EC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:27 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so1430965wmo.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 03:08:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uGHjmL78xvZIJz6OG/invG6MWZVVGuSqNB1aBqUNcyQ=;
-        b=iQndCQjZM1UzNasxrkSkMyWJuTg0Jw/tz8bhdkbykHPY28ToyCgX8VCDAKHcdJUjrg
-         ZVN65NTQw3tV8i8iajPSEfHHsQg1IWlaghHMGZeI8IAtn4QxMpV5lztYaidTrepqlFCY
-         /I4CZsoau3UE/qYqbtgOFPWVZ6OBtU7MLfDtAqID706Lj9cV95zzDNLcSUbHAfye0eXa
-         q2V4XQQdanpq9RSfBmBEuaum53xnR0rFH4j3rQ6mcYkXSTI4CGFwl8qmW4L8Jsdhz/4p
-         epxLTdAZRdJQNYAmVgRnyPSSHQmiq/0QqvozsPwNaSpwnN9e3JIBh8c9O3UcKk9UD6UP
-         W4Hw==
+        bh=9gY9Xz1b3hxtJwHsxB5opm7y/1T5Sf2OUR7Nr1mwtjs=;
+        b=dU63nrG8GxOtfLcB/9q/SoMW237Sgf2oDNEAJ4G9kBmTWhK/l4eNxP5IVohk9oA554
+         3Rg5em++QvjT3ihAV+6fBNf36USInKU8hog7ZyzD2TbVheqFI00Y0Aap6y2+TSNRV1Zw
+         UaH59eJn4StncCzGD5h63tvJNINr3heiI04XN0Z3WSojSv2b0suSJmplx9A2GLA4gJaq
+         FheaCZc4Hdbj8tGOzEEmH5AzJV4/Q784WdibgehpGUCA4ReRbWD4NKme202MMjlmxO7B
+         I3hSNiqn2iJFuUcI33IH0QpcPuNV6qOJAHYzVXs4CKtp1DqDbRFlL0qrZ2vw29+zb6gX
+         DNJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uGHjmL78xvZIJz6OG/invG6MWZVVGuSqNB1aBqUNcyQ=;
-        b=DuTJk8MzYj3NC9h2iSigarqJCq9/mzjClOXZ5/VkpZIUcLJ5g+WmEAjucdYxZfnaKf
-         nGWrzcO4gPtGzocBywJdeGq68+YdxcwsuhdA2vvFZvJI1usuohxkd+y/QkrNjqiV0jnu
-         Dg1W4HlNzSVtnJrzYZwatWJ1Gr69cgp5AlVuh3Tn+acWE/R54TPTczJ68L5oXpkCmuLh
-         n11VYJPYK276Y68TUnW6rplNcGB8F3hgTmMzuQ23Yq2gZz/vMH0SthXZAdDAVHLzPuzU
-         Hxvka1O4ZCFRoKGI4aKqq8zJww+hBmBt7074uhOoV9A0qDv3SpOtQS+BbAa+XJj/6LpF
-         5cJg==
-X-Gm-Message-State: AOAM530uGiTgS2tIS1sJUVm1e3ugfSayB/gHrRqncNVad1mDb3qjdtkZ
-        Ku3ECtlZfzzcbG1HY+DvaHDB3Q==
-X-Google-Smtp-Source: ABdhPJxue4SgVAqGd6aSykrAYsc5VyYHjD6mZBd79aqf2kA8sX7BxOAPEtW8rMD4jMckanuPOTrGXg==
-X-Received: by 2002:a7b:c257:: with SMTP id b23mr1702526wmj.164.1595412501405;
-        Wed, 22 Jul 2020 03:08:21 -0700 (PDT)
+        bh=9gY9Xz1b3hxtJwHsxB5opm7y/1T5Sf2OUR7Nr1mwtjs=;
+        b=r2S8D0jHSDNYOk+66+9uydMpc0bMsW/NFz7d8ONKLPHI1wrIC2eK6gzcNOLzQL7+jP
+         MHZudcbeKg/Ltyeb1w3885EcB8f/Ky8ylfdCH33LlBf/drlI/aAo+gDpaOZ5y4Y+7Cyk
+         I7vND/pb/TJrDl0m9SpLlWB+0YvJGs2JIetZbfOEKPy3YYAL9zpwyL/m5Xdqup4BuuNS
+         qwA70a63Xz8I8cnreBQhmINfUDQUkCGNbzn9Qz3mL8D2CoO9OkaKD9ruSmayWcWL3k19
+         8yjZS1rDBEawmCc2YJsCaKFDT3zx7oS+pD0Dn1KCxldViy5UOd1O0x/pq/TnwA0qnS3T
+         z6Xg==
+X-Gm-Message-State: AOAM533MVKRIEYMJICWP4zkJtiz438ywxbQM7AzomE0YN5C6EIlPCS1f
+        /eosZ1oQs6p4hPSBA/1vu9eiBw==
+X-Google-Smtp-Source: ABdhPJwPBcg2OXIW9gKUFMZ4tq+/d9mc63cIXd6nJyJgTC/kVTlH98ykPtimCKP1IEmYSHE0+y/chQ==
+X-Received: by 2002:a05:600c:20d3:: with SMTP id y19mr8384930wmm.10.1595412506655;
+        Wed, 22 Jul 2020 03:08:26 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.20
+        by smtp.gmail.com with ESMTPSA id t13sm17098623wru.65.2020.07.22.03.08.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:08:20 -0700 (PDT)
+        Wed, 22 Jul 2020 03:08:26 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org,
-        Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh@kernel.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 10/14] dt-bindings: nvmem: Add properties needed for blowing fuses
-Date:   Wed, 22 Jul 2020 11:07:01 +0100
-Message-Id: <20200722100705.7772-11-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 14/14] nvmem: qcom-spmi-sdam: Enable multiple devices
+Date:   Wed, 22 Jul 2020 11:07:05 +0100
+Message-Id: <20200722100705.7772-15-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
 References: <20200722100705.7772-1-srinivas.kandagatla@linaro.org>
@@ -79,91 +77,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Kumar Bokka <rbokka@codeaurora.org>
+From: Guru Das Srinagesh <gurus@codeaurora.org>
 
-On some systems it's possible to actually blow the fuses in the qfprom
-from the kernel.  Add properties to support that.
+Using pdev->id as the nvmem's config ID (which, by default, is
+NVMEM_DEVID_NONE) prevents multiple instances of this driver from
+probing because of the following error:
 
-NOTE: Whether this is possible depends on the BIOS settings and
-whether the kernel has permissions here, so not all boards will be
-able to blow fuses in the kernel.
+  sysfs: cannot create duplicate filename '/bus/nvmem/devices/spmi_sdam'
 
-Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Use NVMEM_DEVID_AUTO as the NVMEM config ID to fix the issue.
+
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../bindings/nvmem/qcom,qfprom.yaml           | 50 ++++++++++++++++++-
- 1 file changed, 48 insertions(+), 2 deletions(-)
+ drivers/nvmem/qcom-spmi-sdam.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-index 39f97c1c83a4..d10a0cf91ba7 100644
---- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-@@ -17,8 +17,27 @@ properties:
-     const: qcom,qfprom
+diff --git a/drivers/nvmem/qcom-spmi-sdam.c b/drivers/nvmem/qcom-spmi-sdam.c
+index 8682cda448d6..a72704cd0468 100644
+--- a/drivers/nvmem/qcom-spmi-sdam.c
++++ b/drivers/nvmem/qcom-spmi-sdam.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2017 The Linux Foundation. All rights reserved.
++ * Copyright (c) 2017, 2020 The Linux Foundation. All rights reserved.
+  */
  
-   reg:
--    items:
--      - description: The corrected region.
-+    # If the QFPROM is read-only OS image then only the corrected region
-+    # needs to be provided.  If the QFPROM is writable then all 4 regions
-+    # must be provided.
-+    oneOf:
-+      - items:
-+          - description: The corrected region.
-+      - items:
-+          - description: The corrected region.
-+          - description: The raw region.
-+          - description: The config region.
-+          - description: The security control region.
-+
-+  # Clock must be provided if QFPROM is writable from the OS image.
-+  clocks:
-+    maxItems: 1
-+  clock-names:
-+    const: core
-+
-+  # Supply reference must be provided if QFPROM is writable from the OS image.
-+  vcc-supply:
-+    description: Our power supply.
+ #include <linux/device.h>
+@@ -141,7 +141,7 @@ static int sdam_probe(struct platform_device *pdev)
  
-   # Needed if any child nodes are present.
-   "#address-cells":
-@@ -31,6 +50,33 @@ required:
-    - reg
- 
- examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      efuse@784000 {
-+        compatible = "qcom,qfprom";
-+        reg = <0 0x00784000 0 0x8ff>,
-+              <0 0x00780000 0 0x7a0>,
-+              <0 0x00782000 0 0x100>,
-+              <0 0x00786000 0 0x1fff>;
-+        clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-+        clock-names = "core";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        vcc-supply = <&vreg_l11a_1p8>;
-+
-+        hstx-trim-primary@25b {
-+          reg = <0x25b 0x1>;
-+          bits = <1 3>;
-+        };
-+      };
-+    };
-+
-   - |
-     soc {
-       #address-cells = <2>;
+ 	sdam->sdam_config.dev = &pdev->dev;
+ 	sdam->sdam_config.name = "spmi_sdam";
+-	sdam->sdam_config.id = pdev->id;
++	sdam->sdam_config.id = NVMEM_DEVID_AUTO;
+ 	sdam->sdam_config.owner = THIS_MODULE,
+ 	sdam->sdam_config.stride = 1;
+ 	sdam->sdam_config.word_size = 1;
 -- 
 2.21.0
 
