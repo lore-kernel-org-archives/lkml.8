@@ -2,134 +2,129 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E15C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719FCC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA2820737
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524F220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PmbHpiOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732349AbgGVSnh (ORCPT
+        id S1732476AbgGVSo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:43:37 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35024 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgGVSng (ORCPT
+        Wed, 22 Jul 2020 14:44:57 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:15688 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726666AbgGVSo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:43:36 -0400
-Received: by mail-qk1-f193.google.com with SMTP id 11so3035916qkn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:43:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RZMnAY2w7Gsu1RJzqgpSuPL6qVRoQpQhZZvqs4rgs2Q=;
-        b=TTwSlw5jTkbU53PqRn1vDcGw2FqezkmcQxUSWwDVmP40ERvNl9L3BgV6P7+WiiPfrF
-         yT3Pk0eLVe5o9ZatJrnXpZTETf5ChW8plGQzOEzsAgAhsJXfUYlPcoABhUw1U4J+foJX
-         Xb9k1Itcgj8vLhCaKCHq9CXDCe7qoSC+colhTOCyA2JF9w2Gk/IY5NMHkRfZV/Xon/sM
-         Z7YlGMcxvVdmiM7rHdUEcXO4K3sT2nldcRqSLdyjlDNVf+3XHjLphjp/4yo351aLeD1t
-         iiVTHuTeZLrLPU7QPoUOsOgVQrCPr0bLfuNj+Nb4ItASoT8X5Zo7uAjy1mlaOpTUk3wc
-         cPZg==
-X-Gm-Message-State: AOAM532U+44sb8hn6VGa6MCCkzQoLilEyBd+hdjNAA28FbTYpwkH0BA9
-        SV5gE8Urtn/QJUOWczEwGw5YLzfM
-X-Google-Smtp-Source: ABdhPJzRUy/X3SaFV5EFn6YWvEy9RBAmXeflzoksCOu90tF4XY0cwCsVJSerfna6N59ZebO3dsxEyA==
-X-Received: by 2002:a37:a746:: with SMTP id q67mr1425580qke.93.1595443415651;
-        Wed, 22 Jul 2020 11:43:35 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b2sm547488qkf.122.2020.07.22.11.43.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 11:43:35 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/build: Move max-page-size option to LDFLAGS_vmlinux
-Date:   Wed, 22 Jul 2020 14:43:34 -0400
-Message-Id: <20200722184334.3785418-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
+        Wed, 22 Jul 2020 14:44:56 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MIZKTe000862
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:44:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=091r98mpbHHVZrheekCNJu9nc9xPl3jkMv48nBFufDg=;
+ b=PmbHpiOPUv+2z+Kcgt2LK7K+Fb9nrIJXnOvVucsHtnVg+JUXXpwWCtNisrmjb4FxJhQJ
+ nlcOqJZc5l0oGIfw1ehJaRRAQR2zXt3cRRQ05J43GS+69lTxu9yodKc4ga0NK11SD06r
+ je5laM+BH1Aa4h+UM2Rbu1d8RSuI5W2m9RI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32esyurd4h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:44:55 -0700
+Received: from intmgw001.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 22 Jul 2020 11:44:54 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 5B50262E4CDB; Wed, 22 Jul 2020 11:42:12 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v4 bpf-next 0/4] bpf: fix stackmap on perf_events with PEBS
+Date:   Wed, 22 Jul 2020 11:42:06 -0700
+Message-ID: <20200722184210.4078256-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_10:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220119
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option is only required for vmlinux on 64-bit, to enforce 2MiB
-alignment, so set it in LDFLAGS_vmlinux instead of KBUILD_LDFLAGS. Also
-drop the ld-option check: this option was added in binutils-2.18 and all
-the other places that use it already don't have the check.
+Calling get_perf_callchain() on perf_events from PEBS entries may cause
+unwinder errors. To fix this issue, perf subsystem fetches callchain earl=
+y,
+and marks perf_events are marked with __PERF_SAMPLE_CALLCHAIN_EARLY.
+Similar issue exists when BPF program calls get_perf_callchain() via
+helper functions. For more information about this issue, please refer to
+discussions in [1].
 
-This reduces the size of the intermediate ELF files
-arch/x86/boot/setup.elf and arch/x86/realmode/rm/realmode.elf by about
-2MiB each. The binary versions are unchanged.
+This set fixes this issue with helper proto bpf_get_stackid_pe and
+bpf_get_stack_pe.
 
-Move the LDFLAGS settings to all be together and just after CFLAGS
-settings are done.
+[1] https://lore.kernel.org/lkml/ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.=
+com/
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/Makefile | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+Changes v3 =3D> v4:
+1. Fix error check logic in bpf_get_stackid_pe and bpf_get_stack_pe.
+   (Alexei)
+2. Do not allow attaching BPF programs with bpf_get_stack|stackid to
+   perf_event with precise_ip > 0, but not proper callchain. (Alexei)
+3. Add selftest get_stackid_cannot_attach.
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 00e378de8bc0..1e634d7ee6eb 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -47,10 +47,6 @@ export REALMODE_CFLAGS
- # e.g.: obj-y += foo_$(BITS).o
- export BITS
- 
--ifdef CONFIG_X86_NEED_RELOCS
--        LDFLAGS_vmlinux := --emit-relocs --discard-none
--endif
--
- #
- # Prevent GCC from generating any FP code by mistake.
- #
-@@ -177,17 +173,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
- 	KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
- endif
- 
--KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
--
--#
--# The 64-bit kernel must be aligned to 2MB.  Pass -z max-page-size=0x200000 to
--# the linker to force 2MB page size regardless of the default page size used
--# by the linker.
--#
--ifdef CONFIG_X86_64
--KBUILD_LDFLAGS += $(call ld-option, -z max-page-size=0x200000)
--endif
--
- # Workaround for a gcc prelease that unfortunately was shipped in a suse release
- KBUILD_CFLAGS += -Wno-sign-compare
- #
-@@ -207,6 +192,23 @@ ifdef CONFIG_RETPOLINE
-   endif
- endif
- 
-+KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
-+
-+ifdef CONFIG_X86_NEED_RELOCS
-+LDFLAGS_vmlinux := --emit-relocs --discard-none
-+else
-+LDFLAGS_vmlinux :=
-+endif
-+
-+#
-+# The 64-bit kernel must be aligned to 2MB.  Pass -z max-page-size=0x200000 to
-+# the linker to force 2MB page size regardless of the default page size used
-+# by the linker.
-+#
-+ifdef CONFIG_X86_64
-+LDFLAGS_vmlinux += -z max-page-size=0x200000
-+endif
-+
- archscripts: scripts_basic
- 	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
- 
--- 
-2.26.2
+Changes v2 =3D> v3:
+1. Fix handling of stackmap skip field. (Andrii)
+2. Simplify the code in a few places. (Andrii)
 
+Changes v1 =3D> v2:
+1. Simplify the design and avoid introducing new helper function. (Andrii=
+)
+
+Song Liu (4):
+  bpf: separate bpf_get_[stack|stackid] for perf events BPF
+  bpf: fail PERF_EVENT_IOC_SET_BPF when bpf_get_[stack|stackid] cannot
+    work
+  selftests/bpf: add callchain_stackid
+  selftests/bpf: add get_stackid_cannot_attach
+
+ include/linux/bpf.h                           |   2 +
+ include/linux/filter.h                        |   3 +-
+ kernel/bpf/stackmap.c                         | 184 ++++++++++++++++--
+ kernel/bpf/verifier.c                         |   3 +
+ kernel/events/core.c                          |  18 ++
+ kernel/trace/bpf_trace.c                      |   4 +-
+ .../prog_tests/get_stackid_cannot_attach.c    |  91 +++++++++
+ .../bpf/prog_tests/perf_event_stackmap.c      | 116 +++++++++++
+ .../selftests/bpf/progs/perf_event_stackmap.c |  59 ++++++
+ 9 files changed, 459 insertions(+), 21 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/get_stackid_ca=
+nnot_attach.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_event_sta=
+ckmap.c
+ create mode 100644 tools/testing/selftests/bpf/progs/perf_event_stackmap=
+.c
+
+--
+2.24.1
