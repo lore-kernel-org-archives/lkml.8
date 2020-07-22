@@ -2,185 +2,108 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0F2C433F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B244CC433F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A748B20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fiHFW9K/"
+	by mail.kernel.org (Postfix) with ESMTP id 90EDC2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595425500;
+	bh=pVSFwe9WAZVAYOyGMf4RoJKSgLIxFtnJSZePlHiqGrc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=b+4d7NScpqtQH+oIyfQGzgtJR5I78WpxbaB0j1oU45pNzp2z9+fg9i3sZ6GSqzrZW
+	 Fde5e4YNSEjUbxpmhZrLOTwNt7to9ZB0e6CngttC7WoGYXfvsKjX8pav6hk673ZksV
+	 mjazrw7zniE16rqidyUQkNz6EgCrcRPiZjdCTQQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732563AbgGVNo5 (ORCPT
+        id S1732572AbgGVNo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:44:57 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:56891 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732519AbgGVNon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:44:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595425482; x=1626961482;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AZqakvsW2eY/rh4CY+P6S9cbwQSN2N9lnmvXsIkmBcE=;
-  b=fiHFW9K/WfuVumcBWKHYHiGIflMHxgrn5B1rgVBPP4JaqSnFKMzi79A5
-   NWbhGwzviJmq5/B8PKcaua42AVUFIY9ZUifw7gQUGWHUC8Y+lE7Rm23j4
-   I/Ov1zmsLppxUoN0ysKP5u01KTVYaOqy4PVz1pNAr9Vx6kT4H1aPNO7lJ
-   bkUStDOcFjvKysxo6hCwzKU6XOL4lcA36nlJh9euFRAe0oxXrI+qXX6t8
-   MDS8YejIsa9Nybae7bmNi5LMjzeMy+rCkDmaaF+46L59J6YkTEWC5DPQ+
-   /dcnCn3x+6LNfcuGfcvoSkVs9qDk5LBWAeJwhIM0f45+VYg1nv9Ytmhj1
-   g==;
-IronPort-SDR: d41XxWmnb0xhsPys09rpdMOC4O+Jcu8EfT3soG7xYWIeBA6Ib9gYeYcR0KJrx+hwKtylfxRBRf
- KEZMGuxs2iyud6GwWflKSW2KpfUEGOpwB5+twSUPCeB5rdSJBHNX+hFbD0UvPJsL17tCGEAC5i
- ulg5Tdhh74wplsnYRiAMqHPa04oOTvuEinxRHGvbDwMBJa4Skl+KThi3vh0ayxmeRnog0B9In0
- 7lKtBD3zKO4u4JTRlhDG8MVIdVnv2pwDsSxK1Fia3jsETTyWLEBVVSyXYOhgFB9LFBwxSlgrzY
- L9Q=
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="82819500"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 06:44:41 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 22 Jul 2020 06:44:41 -0700
-Received: from cristi-P53.amer.actel.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 22 Jul 2020 06:43:59 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Cristian Birsan <cristian.birsan@microchip.com>
-Subject: [PATCH v3 5/6] usb: gadget: udc: atmel: update endpoint allocation for sam9x60
-Date:   Wed, 22 Jul 2020 16:44:20 +0300
-Message-ID: <20200722134421.190741-6-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722134421.190741-1-cristian.birsan@microchip.com>
-References: <20200722134421.190741-1-cristian.birsan@microchip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Wed, 22 Jul 2020 09:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732519AbgGVNo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:44:58 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C3F20729;
+        Wed, 22 Jul 2020 13:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595425497;
+        bh=pVSFwe9WAZVAYOyGMf4RoJKSgLIxFtnJSZePlHiqGrc=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=aj7wifMJfNbiBNwUUX2VmkAaWR0SwxE8gSVwzMPBjgS5ZE4GhOYPkj9XdYQb458W4
+         ODeEz2ALjG7X0k65ysMGcjDZLAQLG6ZABxg5JxU8MYfDcIN6crzhCU68m9wgXhqJ/T
+         02VWjAHj/4iK9Hx8i+f5FtUjURcJxAH8Nxe6AC8g=
+Date:   Wed, 22 Jul 2020 14:44:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     alsa-devel@alsa-project.org,
+        Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     festevam@gmail.com, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, shengjiu.wang@nxp.com
+In-Reply-To: <20200720072046.8152-1-daniel.baluta@oss.nxp.com>
+References: <20200720072046.8152-1-daniel.baluta@oss.nxp.com>
+Subject: Re: [PATCH 0/7] SOF IMX fixes
+Message-Id: <159542547441.19620.1737685462805157717.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+On Mon, 20 Jul 2020 10:20:39 +0300, Daniel Baluta wrote:
+> This patchseries contains a couple of SOF IMX fixes
+> found during our first IMX SOF release.
+> 
+> Daniel Baluta (7):
+>   ASoC: SOF: define INFO_ flags in dsp_ops for imx8
+>   ASoC: SOF: imx: Use ARRAY_SIZE instead of hardcoded value
+>   ASoC: SOF: imx8: Fix ESAI DAI driver name for i.MX8/iMX8X
+>   ASoC: SOF: imx8m: Fix SAI DAI driver for i.MX8M
+>   ASoC: SOF: imx8: Add SAI dai driver for i.MX/i.MX8X
+>   ASoC: SOF: topology: Update SAI config bclk/fsync rate
+>   ASoC: SOF: pcm: Update rate/channels for SAI/ESAI DAIs
+> 
+> [...]
 
-The DPRAM memory from the USB High Speed Device Port (UDPHS) hardware
-block was increased. This patch updates the endpoint allocation for sam9x60
-to take advantage of this larger memory. At the same time the
-constraint to allocate the endpoints in order was lifted. To handle old
-and new hardware in the same driver the ep_prealloc was added.
+Applied to
 
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
----
- drivers/usb/gadget/udc/atmel_usba_udc.c | 20 +++++++++++++++++---
- drivers/usb/gadget/udc/atmel_usba_udc.h |  2 ++
- 2 files changed, 19 insertions(+), 3 deletions(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-index 843ba525d277..8015b99f6b5c 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-@@ -1061,12 +1061,14 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
- 
- 		case USB_ENDPOINT_XFER_ISOC:
- 			ep->fifo_size = 1024;
--			ep->nr_banks = 2;
-+			if (ep->udc->ep_prealloc)
-+				ep->nr_banks = 2;
- 			break;
- 
- 		case USB_ENDPOINT_XFER_BULK:
- 			ep->fifo_size = 512;
--			ep->nr_banks = 1;
-+			if (ep->udc->ep_prealloc)
-+				ep->nr_banks = 1;
- 			break;
- 
- 		case USB_ENDPOINT_XFER_INT:
-@@ -1076,7 +1078,8 @@ static struct usb_ep *atmel_usba_match_ep(struct usb_gadget *gadget,
- 			else
- 				ep->fifo_size =
- 				    roundup_pow_of_two(le16_to_cpu(desc->wMaxPacketSize));
--			ep->nr_banks = 1;
-+			if (ep->udc->ep_prealloc)
-+				ep->nr_banks = 1;
- 			break;
- 		}
- 
-@@ -2087,23 +2090,33 @@ static const struct usba_udc_config udc_at91sam9rl_cfg = {
- 	.errata = &at91sam9rl_errata,
- 	.config = ep_config_sam9,
- 	.num_ep = ARRAY_SIZE(ep_config_sam9),
-+	.ep_prealloc = true,
- };
- 
- static const struct usba_udc_config udc_at91sam9g45_cfg = {
- 	.errata = &at91sam9g45_errata,
- 	.config = ep_config_sam9,
- 	.num_ep = ARRAY_SIZE(ep_config_sam9),
-+	.ep_prealloc = true,
- };
- 
- static const struct usba_udc_config udc_sama5d3_cfg = {
- 	.config = ep_config_sama5,
- 	.num_ep = ARRAY_SIZE(ep_config_sama5),
-+	.ep_prealloc = true,
-+};
-+
-+static const struct usba_udc_config udc_sam9x60_cfg = {
-+	.num_ep = ARRAY_SIZE(ep_config_sam9),
-+	.config = ep_config_sam9,
-+	.ep_prealloc = false,
- };
- 
- static const struct of_device_id atmel_udc_dt_ids[] = {
- 	{ .compatible = "atmel,at91sam9rl-udc", .data = &udc_at91sam9rl_cfg },
- 	{ .compatible = "atmel,at91sam9g45-udc", .data = &udc_at91sam9g45_cfg },
- 	{ .compatible = "atmel,sama5d3-udc", .data = &udc_sama5d3_cfg },
-+	{ .compatible = "microchip,sam9x60-udc", .data = &udc_sam9x60_cfg },
- 	{ /* sentinel */ }
- };
- 
-@@ -2131,6 +2144,7 @@ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
- 		return ERR_PTR(-EINVAL);
- 
- 	udc_config = match->data;
-+	udc->ep_prealloc = udc_config->ep_prealloc;
- 	udc->errata = udc_config->errata;
- 	if (udc->errata) {
- 		pp = of_find_matching_node_and_match(NULL, atmel_pmc_dt_ids,
-diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.h b/drivers/usb/gadget/udc/atmel_usba_udc.h
-index a9bf655eb513..620472f218bc 100644
---- a/drivers/usb/gadget/udc/atmel_usba_udc.h
-+++ b/drivers/usb/gadget/udc/atmel_usba_udc.h
-@@ -317,6 +317,7 @@ struct usba_udc_config {
- 	const struct usba_udc_errata *errata;
- 	const struct usba_ep_config *config;
- 	const int num_ep;
-+	const bool ep_prealloc;
- };
- 
- struct usba_udc {
-@@ -343,6 +344,7 @@ struct usba_udc {
- 	bool bias_pulse_needed;
- 	bool clocked;
- 	bool suspended;
-+	bool ep_prealloc;
- 
- 	u16 devstatus;
- 
--- 
-2.25.1
+Thanks!
 
+[1/7] ASoC: SOF: define INFO_ flags in dsp_ops for imx8
+      commit: 45b7262174dcc2ca62e23220219eee1462dcada9
+[2/7] ASoC: SOF: imx: Use ARRAY_SIZE instead of hardcoded value
+      commit: beaa7bd10dce348b033aff3f466ab1a78b33fed3
+[3/7] ASoC: SOF: imx8: Fix ESAI DAI driver name for i.MX8/iMX8X
+      commit: bcba2c9d62f391cd2cd6acb7f658d47bfb10e8b9
+[4/7] ASoC: SOF: imx8m: Fix SAI DAI driver for i.MX8M
+      commit: f23a8e9402f899e3555ac8aff3d3d050adafe39e
+[5/7] ASoC: SOF: imx8: Add SAI dai driver for i.MX/i.MX8X
+      commit: 68f56f618c3fbc4b1af0428f715f952cdada7a54
+[6/7] ASoC: SOF: topology: Update SAI config bclk/fsync rate
+      commit: 72bb9564fd97cd4f6dec88c8363acc3ab642673f
+[7/7] ASoC: SOF: pcm: Update rate/channels for SAI/ESAI DAIs
+      commit: 51b0243aefaa554ca57817562da8eb269280d4ae
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
