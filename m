@@ -2,118 +2,121 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB3C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C698C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8453A207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:22:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtSpJ5Cf"
+	by mail.kernel.org (Postfix) with ESMTP id 4F46B207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732847AbgGVPWh (ORCPT
+        id S1732857AbgGVPWv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgGVPWg (ORCPT
+        Wed, 22 Jul 2020 11:22:51 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:44038 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732849AbgGVPWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:22:36 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A3FC0619DC;
-        Wed, 22 Jul 2020 08:22:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f2so2292343wrp.7;
-        Wed, 22 Jul 2020 08:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p46aNpFOGjdCmJUYCpOTrNt8oHQJcuNdSnoUklPY2KU=;
-        b=FtSpJ5Cf7uEsr3PCdVXu/ThzroZELAAgxI5XSHKoHhPqICq8j7jJm57MTCQt/FoVJR
-         tOUXhYlpE7K4qq8ptOgZWxa1KAKeUT3SXzUgFVP443/7qmqQdjIGNGUeDopmMejdHKdm
-         Ss8ULTkAr23R77WM2EMkEF/XKwgOcxJaUs80MTlL2h0028lTEleLHa3fHziIFjmR+kxm
-         FYF75ivaIGSyjuGNbKfC5o1axi14RdPHy49kY/7213SQC7skXYE2SpWmY4CcG9LwAnGj
-         Kj0Fk1dsl+5hlk9VTa6ksYbSZRWbFZRZ3SIEl2RzvkmVkJ1nxWJQBV1oGNMBM8XvBN8V
-         wW9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p46aNpFOGjdCmJUYCpOTrNt8oHQJcuNdSnoUklPY2KU=;
-        b=P0W6TskF0zVLrHf/Lf+pkiRftmCo5aeFazOwogGANC4/nPi321gg6An71Zt1pg/Hkn
-         kgM9v3E8aOIWBGzx9G849mYxhg+C6YBTJzOjagDpGMcx59xOKuKBWPMgx8IA04ZsmwyS
-         E9KgZjRN8Qhc9XtSLok0zNdBezxIjJ9/t/qyLRXU3ZRT/QFpEGRtEA9S1zEbLs4zUhrb
-         IO6dENNeGzFZtdnBAzhCU/q0lt+qGrRUFuOFWpArMTvpHzOURPZGOXLvc+rmSs4k5cSK
-         DaG1uT4x/4+FOimqo0fmd2OLIVABNZOdS91NOJYb0jN+sv2MWiBKhOYMHF3JidqKcnBp
-         6Z7A==
-X-Gm-Message-State: AOAM533t12RwWt/Uk5P+o6mcwif+hV0YsRMmxr3ixnM/0SnmLLSpGF8x
-        5TTSySvP5N2Jk+KujTd4sZc=
-X-Google-Smtp-Source: ABdhPJzfk+sntvb8MTYNW0SLffM4YqzF4Kt2Pn9rPi7wN6oH604KA4hfxmQUs1CCPXdjrb/zEQoDHA==
-X-Received: by 2002:adf:d084:: with SMTP id y4mr69504wrh.161.1595431355050;
-        Wed, 22 Jul 2020 08:22:35 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id y11sm271524wrs.80.2020.07.22.08.22.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 08:22:34 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] clk: mediatek: remove UART3 clock support
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
- <1595387397-13110-3-git-send-email-hanks.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <3f326326-ca93-1d4d-3a5c-0821aa97fd71@gmail.com>
-Date:   Wed, 22 Jul 2020 17:22:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1595387397-13110-3-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 22 Jul 2020 11:22:50 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-74-f_ZtVPR8PtCaz6mMzPOs4w-1; Wed, 22 Jul 2020 16:22:46 +0100
+X-MC-Unique: f_ZtVPR8PtCaz6mMzPOs4w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 22 Jul 2020 16:22:45 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 22 Jul 2020 16:22:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0FggABJU4CAABlpkA==
+Date:   Wed, 22 Jul 2020 15:22:45 +0000
+Message-ID: <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
+References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
+ <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
+ <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
+ <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
+ <20200722144213.GE2786714@ZenIV.linux.org.uk>
+In-Reply-To: <20200722144213.GE2786714@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 22/07/2020 05:09, Hanks Chen wrote:
-> CLK_INFRA_UART3 is a dummy clk interface,
-> it has no effect on the operation of the read/write instruction.
+From: Al Viro
+> Sent: 22 July 2020 15:42
 > 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->   drivers/clk/mediatek/clk-mt6779.c | 2 --
->   1 file changed, 2 deletions(-)
+> On Wed, Jul 22, 2020 at 09:27:32AM +0000, David Laight wrote:
+> > From: Al Viro
+> > > Sent: 21 July 2020 21:26
+> > > Preparation for the change of calling conventions; right now all
+> > > callers pass 0 as initial sum.  Passing 0xffffffff instead yields
+> > > the values comparable mod 0xffff and guarantees that 0 will not
+> > > be returned on success.
+> > >
+> > > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> > > ---
+> > >  lib/iov_iter.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> > > index 7405922caaec..d5b7e204fea6 100644
+> > > --- a/lib/iov_iter.c
+> > > +++ b/lib/iov_iter.c
+> > > @@ -1451,7 +1451,7 @@ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
+> > >  		int err = 0;
+> > >  		next = csum_and_copy_from_user(v.iov_base,
+> > >  					       (to += v.iov_len) - v.iov_len,
+> > > -					       v.iov_len, 0, &err);
+> > > +					       v.iov_len, ~0U, &err);
+> > >  		if (!err) {
+> > >  			sum = csum_block_add(sum, next, off);
+> > >  			off += v.iov_len;
+> >
+> > Can't you remove the csum_block_add() by passing the
+> > old 'sum' in instead of the ~0U ?
+> > You'll need to keep track of whether the buffer fragment
+> > is odd/even aligned.
+> > After an odd length fragment a bswap32() or 8 bit rotate will
+> > fix things (and maybe one right at the end).
 > 
-> diff --git a/drivers/clk/mediatek/clk-mt6779.c b/drivers/clk/mediatek/clk-mt6779.c
-> index 9766cccf5844..75f2235486be 100644
-> --- a/drivers/clk/mediatek/clk-mt6779.c
-> +++ b/drivers/clk/mediatek/clk-mt6779.c
-> @@ -923,8 +923,6 @@ static const struct mtk_gate infra_clks[] = {
->   		    "uart_sel", 23),
->   	GATE_INFRA0(CLK_INFRA_UART2, "infra_uart2",
->   		    "uart_sel", 24),
-> -	GATE_INFRA0(CLK_INFRA_UART3, "infra_uart3",
-> -		    "uart_sel", 25),
->   	GATE_INFRA0(CLK_INFRA_GCE_26M, "infra_gce_26m",
->   		    "axi_sel", 27),
->   	GATE_INFRA0(CLK_INFRA_CQ_DMA_FPC, "infra_cqdma_fpc",
-> 
+> And the benefit of that would be...?  It wouldn't be any simpler,
+> it almost certainly would not even be a valid microoptimization
+> (nevermind that this is an arch-independent code)...
+
+It ought to give a minor improvement because it saves the extra
+csum_fold() when the checksum from a buffer is added to the
+previous total.
+
+On 64bit systems there are even advantages in passing in a 64bit
+value - so the caller can add many 32bit values together.
+If nothing else it lets you use a '<< 8' if the previous fragment
+had an odd length.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
