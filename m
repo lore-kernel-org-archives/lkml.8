@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A64C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC7DC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74BAF20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1648720737
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="q/FrPM+/"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Dm/Ptylh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbgGVSpA (ORCPT
+        id S1732546AbgGVSpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:45:00 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48432 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbgGVSo6 (ORCPT
+        Wed, 22 Jul 2020 14:45:02 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58310 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732477AbgGVSo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 14:44:58 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MIcINX002807
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06MIZKKM026699
         for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:44:57 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=BmNGEeDKMrJyzy0Y9qdmCpxqmPVaFWC2rxabJSNl9YY=;
- b=q/FrPM+/6vHgvpBQprEdXOFM/CazKJGAN9bfLWLEelrc1uY/lAPLOJN16thtJpc4VVp2
- r7uFGCgdxzS7/QReh0KpfSX3Eqy5coMiXhb1DuisALQlXQ//EhXrM/f6HHI6J5o84G8r
- 6SknA/JB/kfnPMMLuRS3ML1nYoAU+tHKFYE= 
+ bh=d0xYJy4huNGUNES1TTj69vv7d4p2DHeoXRNFx3PPv5Y=;
+ b=Dm/PtylhpZr08bwf/6FCst3gAj7N2C69vXQ7/G/jZjfK8pWJevKIj95HiH0lZLVbL75J
+ Sofz+0U5i+qUPB2MwCViD7pDOpKC7VG5wb0mnx3gKLc+kHgHl+KathYYWuJDkIVEPZjA
+ H8vzVZMEt30lkVIuygVJB5MdQ0Zrek1LPWY= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32esyn8cvm-1
+        by m0089730.ppops.net with ESMTP id 32esdjgkbq-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:44:57 -0700
-Received: from intmgw005.03.ash8.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::6) with Microsoft SMTP Server
+Received: from intmgw003.03.ash8.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 22 Jul 2020 11:44:56 -0700
+ 15.1.1979.3; Wed, 22 Jul 2020 11:44:54 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 55F4262E4FB1; Wed, 22 Jul 2020 11:42:20 -0700 (PDT)
+        id 6627D62E5043; Wed, 22 Jul 2020 11:42:29 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -53,9 +53,9 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <brouer@redhat.com>, <peterz@infradead.org>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v4 bpf-next 2/4] bpf: fail PERF_EVENT_IOC_SET_BPF when bpf_get_[stack|stackid] cannot work
-Date:   Wed, 22 Jul 2020 11:42:08 -0700
-Message-ID: <20200722184210.4078256-3-songliubraving@fb.com>
+Subject: [PATCH v4 bpf-next 4/4] selftests/bpf: add get_stackid_cannot_attach
+Date:   Wed, 22 Jul 2020 11:42:10 -0700
+Message-ID: <20200722184210.4078256-5-songliubraving@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200722184210.4078256-1-songliubraving@fb.com>
 References: <20200722184210.4078256-1-songliubraving@fb.com>
@@ -65,10 +65,10 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-22_10:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 clxscore=1015
- bulkscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 adultscore=0 impostorscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007220119
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,81 +76,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bpf_get_[stack|stackid] on perf_events with precise_ip uses callchain
-attached to perf_sample_data. If this callchain is not presented, do not
-allow attaching BPF program that calls bpf_get_[stack|stackid] to this
-event.
+This test confirms that BPF program that calls bpf_get_stackid() cannot
+attach to perf_event with precise_ip > 0 but not PERF_SAMPLE_CALLCHAIN;
+and cannot attach if the perf_event has exclude_callchain_kernel.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- include/linux/filter.h |  3 ++-
- kernel/bpf/verifier.c  |  3 +++
- kernel/events/core.c   | 18 ++++++++++++++++++
- 3 files changed, 23 insertions(+), 1 deletion(-)
+ .../prog_tests/get_stackid_cannot_attach.c    | 91 +++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/get_stackid_ca=
+nnot_attach.c
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 8252572db918f..582262017a7dd 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -534,7 +534,8 @@ struct bpf_prog {
- 				is_func:1,	/* program is a bpf function */
- 				kprobe_override:1, /* Do we override a kprobe? */
- 				has_callchain_buf:1, /* callchain buffer allocated? */
--				enforce_expected_attach_type:1; /* Enforce expected_attach_type chec=
-king at attach time */
-+				enforce_expected_attach_type:1, /* Enforce expected_attach_type chec=
-king at attach time */
-+				call_get_stack:1; /* Do we call bpf_get_stack() or bpf_get_stackid()=
- */
- 	enum bpf_prog_type	type;		/* Type of BPF program */
- 	enum bpf_attach_type	expected_attach_type; /* For some prog types */
- 	u32			len;		/* Number of filter blocks */
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 9a6703bc3f36f..41c9517a505ff 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -4887,6 +4887,9 @@ static int check_helper_call(struct bpf_verifier_en=
-v *env, int func_id, int insn
- 		env->prog->has_callchain_buf =3D true;
- 	}
-=20
-+	if (func_id =3D=3D BPF_FUNC_get_stackid || func_id =3D=3D BPF_FUNC_get_=
-stack)
-+		env->prog->call_get_stack =3D true;
+diff --git a/tools/testing/selftests/bpf/prog_tests/get_stackid_cannot_at=
+tach.c b/tools/testing/selftests/bpf/prog_tests/get_stackid_cannot_attach=
+.c
+new file mode 100644
+index 0000000000000..f13149d279bc9
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/get_stackid_cannot_attach.c
+@@ -0,0 +1,91 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2020 Facebook
++#include <test_progs.h>
++#include "test_stacktrace_build_id.skel.h"
 +
- 	if (changes_data)
- 		clear_all_pkt_pointers(env);
- 	return 0;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 856d98c36f562..f77d009fcce95 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9544,6 +9544,24 @@ static int perf_event_set_bpf_handler(struct perf_=
-event *event, u32 prog_fd)
- 	if (IS_ERR(prog))
- 		return PTR_ERR(prog);
-=20
-+	if (event->attr.precise_ip &&
-+	    prog->call_get_stack &&
-+	    (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY) ||
-+	     event->attr.exclude_callchain_kernel ||
-+	     event->attr.exclude_callchain_user)) {
-+		/*
-+		 * On perf_event with precise_ip, calling bpf_get_stack()
-+		 * may trigger unwinder warnings and occasional crashes.
-+		 * bpf_get_[stack|stackid] works around this issue by using
-+		 * callchain attached to perf_sample_data. If the
-+		 * perf_event does not full (kernel and user) callchain
-+		 * attached to perf_sample_data, do not allow attaching BPF
-+		 * program that calls bpf_get_[stack|stackid].
-+		 */
-+		bpf_prog_put(prog);
-+		return -EINVAL;
++void test_get_stackid_cannot_attach(void)
++{
++	struct perf_event_attr attr =3D {
++		/* .type =3D PERF_TYPE_SOFTWARE, */
++		.type =3D PERF_TYPE_HARDWARE,
++		.config =3D PERF_COUNT_HW_CPU_CYCLES,
++		.precise_ip =3D 1,
++		.sample_type =3D PERF_SAMPLE_IP | PERF_SAMPLE_BRANCH_STACK,
++		.branch_sample_type =3D PERF_SAMPLE_BRANCH_USER |
++			PERF_SAMPLE_BRANCH_NO_FLAGS |
++			PERF_SAMPLE_BRANCH_NO_CYCLES |
++			PERF_SAMPLE_BRANCH_CALL_STACK,
++		.sample_period =3D 5000,
++		.size =3D sizeof(struct perf_event_attr),
++	};
++	struct test_stacktrace_build_id *skel;
++	__u32 duration =3D 0;
++	int pmu_fd, err;
++
++	skel =3D test_stacktrace_build_id__open();
++	if (CHECK(!skel, "skel_open", "skeleton open failed\n"))
++		return;
++
++	/* override program type */
++	bpf_program__set_perf_event(skel->progs.oncpu);
++
++	err =3D test_stacktrace_build_id__load(skel);
++	if (CHECK(err, "skel_load", "skeleton load failed: %d\n", err))
++		goto cleanup;
++
++	pmu_fd =3D syscall(__NR_perf_event_open, &attr, -1 /* pid */,
++			 0 /* cpu 0 */, -1 /* group id */,
++			 0 /* flags */);
++	if (pmu_fd < 0 && errno =3D=3D ENOENT) {
++		printf("%s:SKIP:cannot open PERF_COUNT_HW_CPU_CYCLES with precise_ip >=
+ 0\n",
++		       __func__);
++		test__skip();
++		goto cleanup;
 +	}
++	if (CHECK(pmu_fd < 0, "perf_event_open", "err %d errno %d\n",
++		  pmu_fd, errno))
++		goto cleanup;
 +
- 	event->prog =3D prog;
- 	event->orig_overflow_handler =3D READ_ONCE(event->overflow_handler);
- 	WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
++	skel->links.oncpu =3D bpf_program__attach_perf_event(skel->progs.oncpu,
++							   pmu_fd);
++	CHECK(!IS_ERR(skel->links.oncpu), "attach_perf_event_no_callchain",
++	      "should have failed\n");
++	close(pmu_fd);
++
++	/* add PERF_SAMPLE_CALLCHAIN, attach should succeed */
++	attr.sample_type |=3D PERF_SAMPLE_CALLCHAIN;
++
++	pmu_fd =3D syscall(__NR_perf_event_open, &attr, -1 /* pid */,
++			 0 /* cpu 0 */, -1 /* group id */,
++			 0 /* flags */);
++
++	if (CHECK(pmu_fd < 0, "perf_event_open", "err %d errno %d\n",
++		  pmu_fd, errno))
++		goto cleanup;
++
++	skel->links.oncpu =3D bpf_program__attach_perf_event(skel->progs.oncpu,
++							   pmu_fd);
++	CHECK(IS_ERR(skel->links.oncpu), "attach_perf_event_callchain",
++	      "err: %ld\n", PTR_ERR(skel->links.oncpu));
++	close(pmu_fd);
++
++	/* add exclude_callchain_kernel, attach should fail */
++	attr.exclude_callchain_kernel =3D 1;
++
++	pmu_fd =3D syscall(__NR_perf_event_open, &attr, -1 /* pid */,
++			 0 /* cpu 0 */, -1 /* group id */,
++			 0 /* flags */);
++
++	if (CHECK(pmu_fd < 0, "perf_event_open", "err %d errno %d\n",
++		  pmu_fd, errno))
++		goto cleanup;
++
++	skel->links.oncpu =3D bpf_program__attach_perf_event(skel->progs.oncpu,
++							   pmu_fd);
++	CHECK(!IS_ERR(skel->links.oncpu), "attach_perf_event_exclude_callchain_=
+kernel",
++	      "should have failed\n");
++	close(pmu_fd);
++
++cleanup:
++	test_stacktrace_build_id__destroy(skel);
++}
 --=20
 2.24.1
 
