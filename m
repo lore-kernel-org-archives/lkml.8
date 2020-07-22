@@ -2,103 +2,63 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9395C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8433EC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8572B20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595401895;
-	bh=Qq1JCrzfULqcOMGKug19xkzcyJpWj4fO4NHT0pDzsvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n9QSi6beJtnSgmsXkCUz5D3KEoNEvhO4Ca3O8hSnt/x/GHxA/MpRMy1RNbaRlMLMm
-	 8+WymroYsXuFk/K6bDcXFN2EI2bdMTOuvtLsazTkEHqWAyDlOP1pcMltX0ow2SrmH6
-	 kPJnKrr6p8bgEgtgAAOmgUangY8qRPEpKcSLA3j4=
+	by mail.kernel.org (Postfix) with ESMTP id 6910F206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbgGVHLe (ORCPT
+        id S1731981AbgGVHMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 03:12:13 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:59656 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbgGVHLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:11:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B309206F5;
-        Wed, 22 Jul 2020 07:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595401893;
-        bh=Qq1JCrzfULqcOMGKug19xkzcyJpWj4fO4NHT0pDzsvs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jrqJnq6bYanfGKt2tciRbAai+wfqcrokv6kyAQU9ceTOOBGjSqSLjbkN1U1yp45FC
-         3QbZUnQ4dUbycZDigjqcEQci7LNfUSJ+3z3kkiEf7FhNumfaVSqYsPVHWXcd3CZ0p+
-         A4EAiFrfUXObJZD8YjAX0AWTBvAg1Zqhs3nRt8nk=
-Date:   Wed, 22 Jul 2020 09:11:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johnson CH Chen =?utf-8?B?KOmZs+aYreWLsyk=?= 
-        <JohnsonCH.Chen@moxa.com>
-Cc:     Jiri Slaby <jirislaby@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Victor Yu =?utf-8?B?KOa4uOWLnee+qSk=?= <victor.yu@moxa.com>,
-        Danny Lin =?utf-8?B?KOael+aUv+aYkyk=?= <danny.lin@moxa.com>
-Subject: Re: [PATCH] tty: Add MOXA NPort Real TTY Driver
-Message-ID: <20200722071140.GA2769446@kroah.com>
-References: <HK2PR01MB328134FB2EF5F9D1E381BDA3FA610@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
- <20200714073609.GA688099@kroah.com>
- <HK2PR01MB32815CE2F455B909EA32F406FA7F0@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
- <20200716072305.GA970724@kroah.com>
- <HK2PR01MB32817A21FEDDC410F2822640FA790@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+        id S1727096AbgGVHMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 03:12:12 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jy8u9-0002Pa-FR; Wed, 22 Jul 2020 17:11:06 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 22 Jul 2020 17:11:05 +1000
+Date:   Wed, 22 Jul 2020 17:11:05 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        linux@armlinux.org.uk, mcoquelin.stm32@gmail.com,
+        davem@davemloft.net, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH for v5.9] ARM: STM32: Replace HTTP links with HTTPS ones
+Message-ID: <20200722071105.GA27451@gondor.apana.org.au>
+References: <20200719094948.57487-1-grandmaster@al2klimov.de>
+ <43c11c7a-269e-cc41-6934-0d2e0dec3226@st.com>
+ <219075a0-d7cf-a699-21d7-fabc6f077f95@al2klimov.de>
+ <55c95208-de0f-b2d3-c20c-d19f3ce34e2a@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <HK2PR01MB32817A21FEDDC410F2822640FA790@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+In-Reply-To: <55c95208-de0f-b2d3-c20c-d19f3ce34e2a@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 07:04:00AM +0000, Johnson CH Chen (陳昭勳) wrote:
-> Hi Greg,
-> 
-> Thanks for your response!
-> 
-> > > > > +	unsigned long flag;
-> > > > > +	unsigned char cmd_buffer[84];
-> > > > > +	unsigned char rsp_buffer[84];
-> > > >
-> > > > You seem to have two "static" buffers here, for your device, that 
-> > > > you semi-randomly write to all over the place, but I can't find 
-> > > > any locking or coordination between things that prevents multiple 
-> > > > commands from not just overwritting each other.
-> > > >
-> > > For cmd_buffer[], we use npreal_wait_and_set_command() to make sure 
-> > > cmd_buffer[] is safe to be written by checking "cmd_buffer[0] == 0".
-> > 
-> > And what locks are protecting you there?
-> > 
-> > > For rsp_buffer[], we use npreal_wait_command_completed() to make 
-> > > sure rsp_buffer[] is desired by checking rsp_buffer[0] and rsp_buffer[1].
-> > > Command_set and command should be checked. Besides, rsp_buffer[] is 
-> > > got from user space by "NPREAL_NET_CMD_RESPONSE" in 
-> > > npreal_net_ioctl().
-> > 
-> > Again, what locking is really handling this?
-> > 
-> 
-> It's better to protect cmd_buffer[84] and rsp_buffer[84] by locking completely. They are safe because NPort driver should be worked with NPort daemon before, and NPort daemon is designed to be simple.
+On Wed, Jul 22, 2020 at 09:06:29AM +0200, Alexandre Torgue wrote:
+>
+> hum, I was not aware that I could take "crypto" patches. But anyway I think,
+> the clean way (to avoid merge  issue later) is that I take mach-stm32 patch
+> and Herbert the crypto one. Except if Herbert doesn't agree can you please
+> split ?
 
-I'm sorry, but I do not understand this answer at all.  Something can be
-"simple" and still be totally wrong :)
+Yes I think splitting it up would be better in case there are
+other patches down the track that may cause conflicts.
 
-Without locking, this code is broken.
-
-thanks,
-
-greg k-h
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
