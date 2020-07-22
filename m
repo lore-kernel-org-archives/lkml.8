@@ -2,286 +2,166 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A3CC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0BAC4345D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073E522CF8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8307F22B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="fxBs/9lz"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3Avni9XQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xR0tkiw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387520AbgGVWND (ORCPT
+        id S2387409AbgGVWM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:13:03 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:45016 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733156AbgGVWM7 (ORCPT
+        Wed, 22 Jul 2020 18:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733190AbgGVWLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:12:59 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6wNI019882;
-        Wed, 22 Jul 2020 15:12:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=zS0D2xqWH6fEMmnPectJQZgM/k93cgYZ441B5zCe7LU=;
- b=fxBs/9lzqdnwaRSipj40590evKJZfQNoilZv69t+5tW+Qzn+RgRDgAsarhqSF/5ICHvD
- 27gSouEq1kb/U/YU1zSdvolliqEcyBba7xmeYDCiVfTVyOkb3WeUsZd7BSFc/JhsFt6Y
- sQhV1fg8eV+Wpf7MxMjmixFeylBRCgzjywKT1hbWDCU7OT+dK3gdlr+46zv7hg9EYw4s
- mYSRbMqbMvpC9bgbiCSFfaZMp3pcMpw82Mlz/cd0qvaL8s60YtY9/SXhCpPmD7i9lgOu
- 87whYmNS2mKX9ilLkoIlndxZx+s0Qbkomh7GKZdfqa/p+Iiwgw118jU9WL5H9AOFYNRC Cw== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkt0pt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 15:12:42 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
- 2020 15:12:41 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 15:12:41 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id AB4833F703F;
-        Wed, 22 Jul 2020 15:12:34 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "Ariel Elior" <aelior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        KP Singh <kpsingh@chromium.org>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 14/15] qede: refactor XDP Tx processing
-Date:   Thu, 23 Jul 2020 01:10:44 +0300
-Message-ID: <20200722221045.5436-15-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
-References: <20200722221045.5436-1-alobakin@marvell.com>
+        Wed, 22 Jul 2020 18:11:43 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5436EC0619DC;
+        Wed, 22 Jul 2020 15:11:43 -0700 (PDT)
+Message-Id: <20200722220520.979724969@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595455901;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=fyK4bEaw4vLDvxA5c9xUboQ6FfeyiYAtOZNHTGpDJ/Q=;
+        b=3Avni9XQxVhjGJAzbNZiEgYS9TgBI8N9MS854IyYeyIIhMIuAs2KBxo0kmHl5+VAvHtw1V
+        vnzPqLzI4voN3IvLygtntQEbFMyobIBlnDuzB+W5bhZj5jvZIdi7uumWY8QNKyzuOjpbFX
+        /jEPsmreWiQh9FHo1c36nuodpgv7NYnX7gTNFHG6Dc5ONtvdtGsj+VD2sEoX7YOKFifCP7
+        +81x0VGKI/3Frnc6gjnYQHroALTJDGvvPoRVC+Out7hm11yfDKP71SJsfGiPAN6dsw0Dgo
+        ghxcGCCG2LyCaMy2oaa2XCdaAwIcppozD0P1KYN8aqJ/LhzvWB8HSfNUCIb5Hw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595455901;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=fyK4bEaw4vLDvxA5c9xUboQ6FfeyiYAtOZNHTGpDJ/Q=;
+        b=xR0tkiw7OdTpq6Bydhg5ii+LnuP8DgtDNKPR9xkR5JZ5Z2DGjEn/gU+5HQr5fveqGIsJxk
+        TLpSeOD9n6o1NEBQ==
+Date:   Thu, 23 Jul 2020 00:00:09 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V5 15/15] x86/kvm: Use generic xfer to guest work function
+References: <20200722215954.464281930@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current XDP Tx logic is suboptimal and can't be reused for XDP_REDIRECT
-path.
-Make qede_xdp_{tx_int,xmit}() more universal and effective in general to
-allow future expanding.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Misc: use unlikely() hints where appropriate and replace "fallthrough"
-comments with pseudo-keywords.
+Use the generic infrastructure to check for and handle pending work before
+transitioning into guest mode.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+This now handles TIF_NOTIFY_RESUME as well which was ignored so
+far. Handling it is important as this covers task work and task work will
+be used to offload the heavy lifting of POSIX CPU timers to thread context.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h    |  1 +
- drivers/net/ethernet/qlogic/qede/qede_fp.c | 89 +++++++++++-----------
- 2 files changed, 45 insertions(+), 45 deletions(-)
+V5: Rename exit -> xfer
+---
+ arch/x86/kvm/Kconfig   |    1 +
+ arch/x86/kvm/vmx/vmx.c |   11 +++++------
+ arch/x86/kvm/x86.c     |   15 ++++++---------
+ 3 files changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index e8ed0bb94ee0..308c66a5f98f 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -455,6 +455,7 @@ struct qede_fastpath {
- 	u8				id;
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -42,6 +42,7 @@ config KVM
+ 	select HAVE_KVM_MSI
+ 	select HAVE_KVM_CPU_RELAX_INTERCEPT
+ 	select HAVE_KVM_NO_POLL
++	select KVM_XFER_TO_GUEST_WORK
+ 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+ 	select KVM_VFIO
+ 	select SRCU
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -27,6 +27,7 @@
+ #include <linux/slab.h>
+ #include <linux/tboot.h>
+ #include <linux/trace_events.h>
++#include <linux/entry-kvm.h>
  
- 	u8				xdp_xmit;
-+#define QEDE_XDP_TX			BIT(0)
- 
- 	struct napi_struct		napi;
- 	struct qed_sb_info		*sb_info;
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_fp.c b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-index 1c4ece0713f8..c80bf6d37b89 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_fp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-@@ -302,48 +302,37 @@ static inline void qede_update_tx_producer(struct qede_tx_queue *txq)
- 	wmb();
- }
- 
--static int qede_xdp_xmit(struct qede_dev *edev, struct qede_fastpath *fp,
--			 struct sw_rx_data *metadata, u16 padding, u16 length)
-+static int qede_xdp_xmit(struct qede_tx_queue *txq, dma_addr_t dma, u16 pad,
-+			 u16 len, struct page *page)
- {
--	struct qede_tx_queue *txq = fp->xdp_tx;
--	struct eth_tx_1st_bd *first_bd;
--	u16 idx = txq->sw_tx_prod;
-+	struct eth_tx_1st_bd *bd;
-+	struct sw_tx_xdp *xdp;
- 	u16 val;
- 
--	if (!qed_chain_get_elem_left(&txq->tx_pbl)) {
-+	if (unlikely(qed_chain_get_elem_used(&txq->tx_pbl) >=
-+		     txq->num_tx_buffers)) {
- 		txq->stopped_cnt++;
- 		return -ENOMEM;
- 	}
- 
--	first_bd = (struct eth_tx_1st_bd *)qed_chain_produce(&txq->tx_pbl);
-+	bd = qed_chain_produce(&txq->tx_pbl);
-+	bd->data.nbds = 1;
-+	bd->data.bd_flags.bitfields = BIT(ETH_TX_1ST_BD_FLAGS_START_BD_SHIFT);
- 
--	memset(first_bd, 0, sizeof(*first_bd));
--	first_bd->data.bd_flags.bitfields =
--	    BIT(ETH_TX_1ST_BD_FLAGS_START_BD_SHIFT);
--
--	val = (length & ETH_TX_DATA_1ST_BD_PKT_LEN_MASK) <<
-+	val = (len & ETH_TX_DATA_1ST_BD_PKT_LEN_MASK) <<
- 	       ETH_TX_DATA_1ST_BD_PKT_LEN_SHIFT;
- 
--	first_bd->data.bitfields |= cpu_to_le16(val);
--	first_bd->data.nbds = 1;
-+	bd->data.bitfields = cpu_to_le16(val);
- 
- 	/* We can safely ignore the offset, as it's 0 for XDP */
--	BD_SET_UNMAP_ADDR_LEN(first_bd, metadata->mapping + padding, length);
-+	BD_SET_UNMAP_ADDR_LEN(bd, dma + pad, len);
- 
--	/* Synchronize the buffer back to device, as program [probably]
--	 * has changed it.
--	 */
--	dma_sync_single_for_device(&edev->pdev->dev,
--				   metadata->mapping + padding,
--				   length, PCI_DMA_TODEVICE);
-+	xdp = txq->sw_tx_ring.xdp + txq->sw_tx_prod;
-+	xdp->mapping = dma;
-+	xdp->page = page;
- 
--	txq->sw_tx_ring.xdp[idx].page = metadata->data;
--	txq->sw_tx_ring.xdp[idx].mapping = metadata->mapping;
- 	txq->sw_tx_prod = (txq->sw_tx_prod + 1) % txq->num_tx_buffers;
- 
--	/* Mark the fastpath for future XDP doorbell */
--	fp->xdp_xmit = 1;
--
- 	return 0;
- }
- 
-@@ -362,20 +351,21 @@ int qede_txq_has_work(struct qede_tx_queue *txq)
- 
- static void qede_xdp_tx_int(struct qede_dev *edev, struct qede_tx_queue *txq)
- {
--	u16 hw_bd_cons, idx;
-+	struct sw_tx_xdp *xdp_info, *xdp_arr = txq->sw_tx_ring.xdp;
-+	struct device *dev = &edev->pdev->dev;
-+	u16 hw_bd_cons;
- 
- 	hw_bd_cons = le16_to_cpu(*txq->hw_cons_ptr);
- 	barrier();
- 
- 	while (hw_bd_cons != qed_chain_get_cons_idx(&txq->tx_pbl)) {
--		qed_chain_consume(&txq->tx_pbl);
--		idx = txq->sw_tx_cons;
-+		xdp_info = xdp_arr + txq->sw_tx_cons;
- 
--		dma_unmap_page(&edev->pdev->dev,
--			       txq->sw_tx_ring.xdp[idx].mapping,
--			       PAGE_SIZE, DMA_BIDIRECTIONAL);
--		__free_page(txq->sw_tx_ring.xdp[idx].page);
-+		dma_unmap_page(dev, xdp_info->mapping, PAGE_SIZE,
-+			       DMA_BIDIRECTIONAL);
-+		__free_page(xdp_info->page);
- 
-+		qed_chain_consume(&txq->tx_pbl);
- 		txq->sw_tx_cons = (txq->sw_tx_cons + 1) % txq->num_tx_buffers;
- 		txq->xmit_pkts++;
- 	}
-@@ -1064,32 +1054,39 @@ static bool qede_rx_xdp(struct qede_dev *edev,
- 	switch (act) {
- 	case XDP_TX:
- 		/* We need the replacement buffer before transmit. */
--		if (qede_alloc_rx_buffer(rxq, true)) {
-+		if (unlikely(qede_alloc_rx_buffer(rxq, true))) {
- 			qede_recycle_rx_bd_ring(rxq, 1);
-+
- 			trace_xdp_exception(edev->ndev, prog, act);
--			return false;
-+			break;
+ #include <asm/apic.h>
+ #include <asm/asm.h>
+@@ -5376,14 +5377,12 @@ static int handle_invalid_guest_state(st
  		}
  
- 		/* Now if there's a transmission problem, we'd still have to
- 		 * throw current buffer, as replacement was already allocated.
+ 		/*
+-		 * Note, return 1 and not 0, vcpu_run() is responsible for
+-		 * morphing the pending signal into the proper return code.
++		 * Note, return 1 and not 0, vcpu_run() will invoke
++		 * xfer_to_guest_mode() which will create a proper return
++		 * code.
  		 */
--		if (qede_xdp_xmit(edev, fp, bd, *data_offset, *len)) {
--			dma_unmap_page(rxq->dev, bd->mapping,
--				       PAGE_SIZE, DMA_BIDIRECTIONAL);
-+		if (unlikely(qede_xdp_xmit(fp->xdp_tx, bd->mapping,
-+					   *data_offset, *len, bd->data))) {
-+			dma_unmap_page(rxq->dev, bd->mapping, PAGE_SIZE,
-+				       rxq->data_direction);
- 			__free_page(bd->data);
-+
- 			trace_xdp_exception(edev->ndev, prog, act);
-+		} else {
-+			dma_sync_single_for_device(rxq->dev,
-+						   bd->mapping + *data_offset,
-+						   *len, rxq->data_direction);
-+			fp->xdp_xmit |= QEDE_XDP_TX;
- 		}
- 
- 		/* Regardless, we've consumed an Rx BD */
- 		qede_rx_bd_ring_consume(rxq);
--		return false;
+-		if (signal_pending(current))
++		if (__xfer_to_guest_mode_work_pending())
+ 			return 1;
 -
-+		break;
- 	default:
- 		bpf_warn_invalid_xdp_action(act);
--		/* Fall through */
-+		fallthrough;
- 	case XDP_ABORTED:
- 		trace_xdp_exception(edev->ndev, prog, act);
--		/* Fall through */
-+		fallthrough;
- 	case XDP_DROP:
- 		qede_recycle_rx_bd_ring(rxq, cqe->bd_num);
+-		if (need_resched())
+-			schedule();
  	}
-@@ -1353,6 +1350,9 @@ int qede_poll(struct napi_struct *napi, int budget)
- 						napi);
- 	struct qede_dev *edev = fp->edev;
- 	int rx_work_done = 0;
-+	u16 xdp_prod;
-+
-+	fp->xdp_xmit = 0;
  
- 	if (likely(fp->type & QEDE_FASTPATH_TX)) {
- 		int cos;
-@@ -1380,10 +1380,9 @@ int qede_poll(struct napi_struct *napi, int budget)
+ 	return 1;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -56,6 +56,7 @@
+ #include <linux/sched/stat.h>
+ #include <linux/sched/isolation.h>
+ #include <linux/mem_encrypt.h>
++#include <linux/entry-kvm.h>
+ 
+ #include <trace/events/kvm.h>
+ 
+@@ -1585,7 +1586,7 @@ EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
+ bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu)
+ {
+ 	return vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu) ||
+-		need_resched() || signal_pending(current);
++		xfer_to_guest_mode_work_pending();
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_exit_request);
+ 
+@@ -8676,15 +8677,11 @@ static int vcpu_run(struct kvm_vcpu *vcp
+ 			break;
+ 		}
+ 
+-		if (signal_pending(current)) {
+-			r = -EINTR;
+-			vcpu->run->exit_reason = KVM_EXIT_INTR;
+-			++vcpu->stat.signal_exits;
+-			break;
+-		}
+-		if (need_resched()) {
++		if (xfer_to_guest_mode_work_pending()) {
+ 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
+-			cond_resched();
++			r = xfer_to_guest_mode(vcpu);
++			if (r)
++				return r;
+ 			vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
  		}
  	}
- 
--	if (fp->xdp_xmit) {
--		u16 xdp_prod = qed_chain_get_prod_idx(&fp->xdp_tx->tx_pbl);
-+	if (fp->xdp_xmit & QEDE_XDP_TX) {
-+		xdp_prod = qed_chain_get_prod_idx(&fp->xdp_tx->tx_pbl);
- 
--		fp->xdp_xmit = 0;
- 		fp->xdp_tx->tx_db.data.bd_prod = cpu_to_le16(xdp_prod);
- 		qede_update_tx_producer(fp->xdp_tx);
- 	}
--- 
-2.25.1
 
