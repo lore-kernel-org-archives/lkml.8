@@ -2,78 +2,133 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E474FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4C8C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCA98207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237CE20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEqY+uZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbgGVPTG (ORCPT
+        id S1732774AbgGVPTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:19:06 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:53118 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728046AbgGVPTG (ORCPT
+        Wed, 22 Jul 2020 11:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728046AbgGVPTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:19:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id k12so2007295iom.19
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:19:05 -0700 (PDT)
+        Wed, 22 Jul 2020 11:19:08 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CFEC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:19:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc15so3022460pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=Hnc1prn4gqdZY/uJrCuRN7dMv55IchBRg3AjBbSa9HY=;
+        b=oEqY+uZztK+GTH0rvS82TpQ0E5rlT8GitcDlEjjT6sUzuHIY7BWKb0Y28BvioJW1t8
+         KbnjWbWqaykvr8qEBeOQeaSBW04aI69x4f+b5jxjvyZgP/WBQKnScj4HyMZyLbbI4fCA
+         cd+DJ8fiePq0JoH+Q5dFOpPkKuocgEjWCJ+IbNbN8ZjxYoSjyhJcPzhzKIt7iH2CThGN
+         3b7yzo/9XgNvtmnS+CAODzPUVvoAo+P7LJXRIgFzCVFdJbCOXl3UjXhjF1nSj/KB9r4L
+         kO53qX9tcHwFOgGp20vQ5QhxARO0STGcaOcgrsn+RgmyFeaPxjHnFtQ9xpnUZCX1nRWh
+         VRcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=8O+hcy9D+3uP1r6XjHEoJrtrZg3bcURkhZ7Tw7GCuco=;
-        b=r32Kp8P6UAUf6JRJIH3rSe1ghOW5Nwd+D8Nu1Q73HsxgVj2P9BUhtg9B948xFe4Uk3
-         TvU19rt0FAZt1BRGh4bFpIed8cMv9m6EzFa2rBoNCRzIo+g/ATAPkUjmu7Ziqj+/mFPO
-         2VLQSUgBK99fFACAuvhek6SJHvt8DZjFWIQlEvdy2XKu8kDGa6D9N4s2mUCzmrOMpmRj
-         WVg2yM3qG22jI4tCIXYXZRM9ltNfISXg8MD2iIS3AXocAn891sf5Wx0LeGXnlLYvtg/o
-         B5dnyWnG2V1NEIzfZQo887al6pgrL92qEWpHRc0lmyDq0sgbk5krrvnx+PK/n9e/jUBc
-         dS2A==
-X-Gm-Message-State: AOAM530y073ekzyrFPvrzbIghH1QlbIdUVmJo5pwSwnlbvYcwFE2m7lr
-        sHkwMqsbZ0dBuQfLf9RaN8hPHINSy1ljIiwMDdXkRW/YMbLL
-X-Google-Smtp-Source: ABdhPJxrRwotvwsFMlv3C7Kix89/6yIaucCdCzBMJYqcV+TZWkdMEarhp/fVTNBpGxms54f0K8O0NlRmZla/4oD6CdGmmcZ6R3gT
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=Hnc1prn4gqdZY/uJrCuRN7dMv55IchBRg3AjBbSa9HY=;
+        b=Dip85Bc+E9DZjylNQQyAh+V84gBO9wrBaJEGGbr7t4RChnIYO4xFWhvY98Jsgls1XK
+         Q578Zn4Ups+6LQcJL68zPpbSqyHerCiRgJbjUAUCjB6PxAfn+yk1ZX4VOYsc2ZUv/QR6
+         seRBtubwpc0m9J+SczCYMBvCDDfOy6aIZDYJS5fHaq+31/yqWqNNhzh8R61mJ+UTi+rD
+         Sq7uMfFgDzrrnxZVKBV9H6hb1vO0urgwoz6vgr2lxkiV+IwLlLw3ZjQCWmQ5rtvKtr1S
+         E3vOJnx67nJEIvL94rG/emvOb+hA7aSZNiMj2+uXhX+g8f7QNVCm0QGLOh3Xzuk2o6uL
+         3sPg==
+X-Gm-Message-State: AOAM53234KgB7ChBcsr4tny+kX5G+RxXrl1a2tFvChS2QI7VH+ZsVpje
+        QDMtqTEdsXtJ6ztCD+dmXoQ=
+X-Google-Smtp-Source: ABdhPJyQgeFZerWlXivVvCHlBW+hxP8zzZ9rASx4/DF8X48FIeK29YiPlb+nmor4Ax1S/z2qIUAaPQ==
+X-Received: by 2002:a17:90a:3684:: with SMTP id t4mr10143619pjb.91.1595431147867;
+        Wed, 22 Jul 2020 08:19:07 -0700 (PDT)
+Received: from localhost ([1.23.142.145])
+        by smtp.gmail.com with ESMTPSA id 64sm281319pgb.63.2020.07.22.08.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 08:19:06 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 20:49:00 +0530
+From:   Mrinal Pandey <mrinalmni@gmail.com>
+To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        insafonov@gmail.com, straube.linux@gmail.com,
+        simon.fodin@gmail.com, yepeilin.cs@gmail.com,
+        saurav.girepunje@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8188eu: Fix an indent coding style issue
+Message-ID: <20200722151900.5dcebtavkdi5cc77@mrinalpandey>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c011:: with SMTP id q17mr398957ild.290.1595431145264;
- Wed, 22 Jul 2020 08:19:05 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 08:19:05 -0700
-In-Reply-To: <00000000000079a77705a8ce6da7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ad5afa05ab09427f@google.com>
-Subject: Re: general protection fault in qrtr_endpoint_post
-From:   syzbot <syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com>
-To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fpt4wn3ldqcwypba"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
 
-commit e42671084361302141a09284fde9bbc14fdd16bf
-Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date:   Thu May 7 12:53:06 2020 +0000
+--fpt4wn3ldqcwypba
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    net: qrtr: Do not depend on ARCH_QCOM
+Only a single tab space is required after the if statement.
+Fix this issue by running scripts/checkpatch.pl on the file.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f50e27100000
-start commit:   1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=140d0e27100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=100d0e27100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
-dashboard link: https://syzkaller.appspot.com/bug?extid=03e343dbccf82a5242a2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1496f9f9100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1692523d100000
+Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_recv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reported-by: syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com
-Fixes: e42671084361 ("net: qrtr: Do not depend on ARCH_QCOM")
+diff --git a/drivers/staging/rtl8188eu/core/rtw_recv.c b/drivers/staging/rt=
+l8188eu/core/rtw_recv.c
+index 656fe70ae4fb..0a4c1b2686b5 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_recv.c
++++ b/drivers/staging/rtl8188eu/core/rtw_recv.c
+@@ -671,8 +671,8 @@ static int sta2sta_data_frame(struct adapter *adapter,
+ 		if (mcast) {
+ 			/*  For AP mode, if DA =3D=3D MCAST, then BSSID should be also MCAST */
+ 			if (!is_multicast_ether_addr(pattrib->bssid)) {
+-					ret =3D _FAIL;
+-					goto exit;
++				ret =3D _FAIL;
++				goto exit;
+ 			}
+ 		} else { /*  not mc-frame */
+ 			/*  For AP mode, if DA is non-MCAST, then it must be BSSID, and bssid =
+=3D=3D BSSID */
+--=20
+2.25.1
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+--fpt4wn3ldqcwypba
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE8DwCG1PwaC2uTI99xIwpEWwxhGQFAl8YWN4ACgkQxIwpEWwx
+hGTV7BAAi1/qy9HC1pFSyKBVuey7wA8uYsw2/tIGlmHamM7UunyD9mOdyTKjHQaH
+VKUukWo1302Gl2kiUG/mfLRbEzcZedY/qOuUfVaxP1Nfa+Hp25W4rfn6Mt0CXo7D
+sneUd2HAexEvPn+qN+EoiZC/tCa/VqbwwPMovJ8/3riORAsSPhb661YHceJVjIjH
+FI1peJln9zfGYTViju4CtIXbJpfADvntrDG9QJO/B8QLpcWr6WmefvJ+worv+ouZ
+JUecDwPsPC5OCgm2Nqi1gNwfhHZzgVkyT7ucDgZCWeCYLazFffWZ2UoAKho23fmQ
+iQnzjCG66tX5MZpwZObrWda2csvXtuZi019i0iBE9ZxD+2/G+5nAZ3OT5bChPK2o
+lm9OYzJXaOJZZHRWVNM4FFLk/bzhuda9b/l9rjwKJqVLZXfn67TqvYhhPHp03CF9
+2EEU92f+RTUlrO2m64AcBGitpzqOPTtFOKRtSONYFcukSonrXKPUSwQ75I2LeaoF
+ICo7G3j2mzOcxIk+9XP4WtMvjclbzYwIJzIEElfHGXZxFc1AlIaEdZW13vHel3gA
+hVJDUGHV9OqltqNXkryvj3vZ3QjRAUwC7OF0a8P/7QFOTrpS3DlgRGo/CYASwYZj
+drGAErnjTln/x3+oMapcZUQxJsJRBbJDvxgugCaGIdD4WaHeiC0=
+=vAMR
+-----END PGP SIGNATURE-----
+
+--fpt4wn3ldqcwypba--
