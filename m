@@ -2,175 +2,133 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BF3C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B779205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34D320787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:49:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1lKNaJt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bAA051jA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbgGVItC (ORCPT
+        id S1730905AbgGVItF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:49:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55388 "EHLO
+        Wed, 22 Jul 2020 04:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgGVItC (ORCPT
+        with ESMTP id S1726526AbgGVItD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:49:02 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0131FC0619DC;
-        Wed, 22 Jul 2020 01:49:02 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n5so833517pgf.7;
-        Wed, 22 Jul 2020 01:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2KyPHff/Uosyh2rGRRq7zQWY57m8n2yFC/KFH0GE8II=;
-        b=s1lKNaJtq7hqWFXwPC1USXb9595sUUEXquCs6mbVMWavi0papiZVIzk3dAeRUROgeO
-         9IWlKb8qJma8pYNUB3bUQsaxe/9ua3QrDVk5WLM8CavqckkP462cJt+JZfBOrifnP/+k
-         22BZI5+6j309pw3DrYjC331VyK+EmtyM9imDlIuJa9WP1TrDRqnMK3XhiBNSW7UHRVl9
-         8maOa3uoMOSOIHVFWpP7R5EPyb3Rz12bzIrfKWVZWYhWhYlXGQgQF4SawZQbr+SgSNK3
-         kZzmIOAvuy3vxEDWXJmfQG+hzRsSTWUq/jnMQq39TnMdwi0gDBzK//s1Y2By15VXxfrA
-         7qnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2KyPHff/Uosyh2rGRRq7zQWY57m8n2yFC/KFH0GE8II=;
-        b=tCRt/CsI6lf4sP1ZcWRJLbvaAwXZlXAxzZlXKDaLRiBiL2+AJqfwRG21WtwwiAUAi0
-         oAjsnwfLnmXGu0KgpwBQVYBaDwTqeyv98OrLTiA00zm+7ORlPC2J/lx80qSxTzupZJ/L
-         I2z3K4DYDoMuCfI4i0UXeks2C1ZyM0YGgfgc/d3dQ3mAgVIApg2L6BEZyaHFyeiuxctc
-         ytli3qwzO+Y9eZUFJ/GC6MkeiD/JBl7Zt0dYhIUi/aJqcvr48Fz5SR32JBykRUTWC351
-         iwKAKFyQDPGQGPB8dk0D8XxCHGUGEOpT2OqZc//QXRTtHCqVEE5NiWilByE1+34NmT07
-         hoog==
-X-Gm-Message-State: AOAM530chTxMFT1VBAHBZbrW1COkWblVYC2IPG+KFNk/gnWrgTNnhO+P
-        zVlP9L1zKj3Fa+AcNbVRwKMZDpkU8MIYe+rjhvz9KP+ew3Y=
-X-Google-Smtp-Source: ABdhPJycJY8Os5gbLzkhFPKkBoH7k04etCMzkKuIR+iuQjyXigdwFEJoM3PDC6WQaA30NM2SX0kd5wL4NZ4DvuoyiXo=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr26560784pgi.203.1595407741419;
- Wed, 22 Jul 2020 01:49:01 -0700 (PDT)
+        Wed, 22 Jul 2020 04:49:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412F7C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0MdZWsXfOSzrpphaq5yn3/uApZ2HJH5s2c6LnYTQWjI=; b=bAA051jAuLR40JWxrp848gcYzM
+        ZB6Vh98+ib5oHuDcldB6ngF2/JX5hS7H5GQ43X+C3NxI3dqO4r/uxkXI2BxwHX3XKYwu65Ez9aY3g
+        xVblQT1hnpuOZNZSXDxLrWfs9jx1XfGeqqFQ+wwliWLZsB44Cy/bCc4hiDjeM3kJ4gg3Wg+EpVVP+
+        7OLxrneq6vb5gxiFOXhm5k4/R34pxD6pLKeT0NDOt6F3fxT3IJEmXXpUj5RTVH6jVtoXzwGDnTqc9
+        bBJu6EBN/TSxP9EuUfKwFNrELuBFPQzsa8RC2aQleD6LFrjDroQpvVw+Bt22AG2b1H0Iy91pPsKOO
+        Tc3ioxTA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyAQp-0004OW-1K; Wed, 22 Jul 2020 08:48:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7DD403006D0;
+        Wed, 22 Jul 2020 10:48:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 45D6320140AC8; Wed, 22 Jul 2020 10:48:54 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 10:48:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <michaele@au1.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v2 06/10] powerpc/smp: Generalize 2nd sched domain
+Message-ID: <20200722084854.GL10769@hirez.programming.kicks-ass.net>
+References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+ <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
+ <20200722074624.GP119549@hirez.programming.kicks-ass.net>
+ <20200722081822.GG9290@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200721222851.2075891-1-drew@beagleboard.org>
-In-Reply-To: <20200721222851.2075891-1-drew@beagleboard.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Jul 2020 11:48:46 +0300
-Message-ID: <CAHp75Vd35n0=hB-K3WjUXD3HPNt6F=MHNafNY55NGfb5ahvLSA@mail.gmail.com>
-Subject: Re: [PATCH v4] pinctrl: core: print gpio in pins debugfs file
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722081822.GG9290@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 1:29 AM Drew Fustini <drew@beagleboard.org> wrote:
->
-> If there is a gpio range mapping for the pin, then print out the gpio
-> chip and line index for the pin in the debugfs 'pins' file with the
-> format: "[line-index]:[gpio-label]"
->
-> Here is an example output on the BeagleBoard.org PocketBeagle (AM3358):
-> /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins
->
-> pin 25 (PIN25) 25:gpio-32-63 44e10864 00000037 pinctrl-single
-> pin 26 (PIN26) 26:gpio-32-63 44e10868 00000037 pinctrl-single
-> pin 27 (PIN27) 27:gpio-32-63 44e1086c 00000037 pinctrl-single
-> pin 28 (PIN28) 0:N/A 44e10870 00000036 pinctrl-single
-> pin 29 (PIN29) 0:N/A 44e10874 00000006 pinctrl-single
-> pin 30 (PIN30) 28:gpio-32-63 44e10878 00000027 pinctrl-single
-> pin 31 (PIN31) 29:gpio-32-63 44e1087c 00000037 pinctrl-single
-> pin 32 (PIN32) 30:gpio-32-63 44e10880 00000037 pinctrl-single
-> pin 33 (PIN33) 31:gpio-32-63 44e10884 00000037 pinctrl-single
-> pin 34 (PIN34) 0:gpio-64-95 44e10888 00000037 pinctrl-single
-> pin 35 (PIN35) 1:gpio-64-95 44e1088c 00000037 pinctrl-single
->
+On Wed, Jul 22, 2020 at 01:48:22PM +0530, Srikar Dronamraju wrote:
+> * peterz@infradead.org <peterz@infradead.org> [2020-07-22 09:46:24]:
+> 
+> > On Tue, Jul 21, 2020 at 05:08:10PM +0530, Srikar Dronamraju wrote:
+> > > Currently "CACHE" domain happens to be the 2nd sched domain as per
+> > > powerpc_topology. This domain will collapse if cpumask of l2-cache is
+> > > same as SMT domain. However we could generalize this domain such that it
+> > > could mean either be a "CACHE" domain or a "BIGCORE" domain.
+> > 
+> > What's the whole smallcore vs bigcore thing?
+> > 
+> > Would it make sense to have an actual overview of the various topology
+> > layers somewhere? Because I'm getting lost and can't really make sense
+> > of the code due to that.
+> 
+> To quote with an example: using (Power 9)
+> 
+> Power 9 is an SMT 8 core by design. However this 8 thread core can run as 2
+> independent core with threads 0,2,4 and 6 acting like a core, while threads
+> 1,3,5,7 acting as another core.  
+> 
+> The firmware can decide to showcase them as 2 independent small cores or as
+> one big core. However the LLC (i.e last level of cache) is shared between
+> all the threads of the SMT 8 core. Future power chips, LLC might change, it
+> may be expanded to share with another SMT 8 core or it could be made
+> specific to SMT 4 core.
+> 
+> The smt 8 core is also known as fused core/ Big core.
+> The smaller smt 4 core is known as small core.
+> 
+> So on a Power9 Baremetal, the firmware would show up as SMT4 core.
+> and we have a CACHE level at SMT 8. CACHE level would be very very similar
+> to MC domain in X86.
+> 
+> Hope this is clear.
 
-This variant looks good enough to me, thanks! FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Ooh, that thing. I thought P9 was in actual fact an SMT4 hardware part,
+but to be compatible with P8 it has this fused option where two cores
+act like a single SMT8 part.
 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->  drivers/pinctrl/core.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->
-> v4 change:
-> - can format to be integer first as Andy suggested it will make parsing
->   easier
->
-> v3 change:
-> - gpio column is now gpiochip label and line index
->
-> v2 changes:
-> - print 'NA' if pin does not have a GPIO number
-> - change gpio_num from unsigned to unsigned int per checkpatch
->
->
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index 821242bb4b16..39e74cdf5c7d 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -27,6 +27,7 @@
->  #include <linux/pinctrl/machine.h>
->
->  #ifdef CONFIG_GPIOLIB
-> +#include "../gpio/gpiolib.h"
->  #include <asm-generic/gpio.h>
->  #endif
->
-> @@ -1601,6 +1602,9 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
->         struct pinctrl_dev *pctldev = s->private;
->         const struct pinctrl_ops *ops = pctldev->desc->pctlops;
->         unsigned i, pin;
-> +       struct pinctrl_gpio_range *range;
-> +       unsigned int gpio_num;
-> +       struct gpio_chip *chip;
->
->         seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
->
-> @@ -1618,6 +1622,23 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
->
->                 seq_printf(s, "pin %d (%s) ", pin, desc->name);
->
-> +#ifdef CONFIG_GPIOLIB
-> +               gpio_num = 0;
-> +               list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-> +                       if ((pin >= range->pin_base) &&
-> +                           (pin < (range->pin_base + range->npins))) {
-> +                               gpio_num = range->base + (pin - range->pin_base);
-> +                               break;
-> +                       }
-> +               }
-> +               chip = gpio_to_chip(gpio_num);
-> +               if (chip && chip->gpiodev && chip->gpiodev->base)
-> +                       seq_printf(s, "%u:%s ", gpio_num -
-> +                               chip->gpiodev->base, chip->label);
-> +               else
-> +                       seq_puts(s, "0:N/A ");
-> +#endif
-> +
->                 /* Driver-specific info per pin */
->                 if (ops->pin_dbg_show)
->                         ops->pin_dbg_show(pctldev, s, pin);
-> --
-> 2.25.1
->
+The interleaving enumeration is done due to P7 asymmetric cores,
+resuting in schedulers having the preference to use the lower threads.
+
+Combined that results in a P9-fused configuration using two independent
+full cores when there's only 2 runnable threads.
+
+Which is a subtly different story from yours.
+
+But reading your explanation, it looks like the Linux topology setup
+could actually unravel the fused-faux-SMT8 into two independent SMT4
+parts, negating that firmware option.
+
+Anyway, a few comments just around there might be helpfull.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks!
