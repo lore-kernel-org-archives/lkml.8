@@ -2,136 +2,145 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63731C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A57C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4032620658
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595417417;
-	bh=zDKW70gtRYBxNcRCZwDBVRBmBO9V/xhxwmi6E5qgeqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fSjvN3mjLS558Hihb5tQ31QXlsdaPsEG80lY0/+2Gwm0RfnEyGBUFqOa32yGFssxZ
-	 YUepm06Y2kfFioyLYNbIaHsSlRX74p+0FHfqaKTm5HRULXgHwox5p5OhISyIXkTraM
-	 iODqzdr3fyqu+61uaDEQXTDBvyfTgAvMN6cDdXBU=
+	by mail.kernel.org (Postfix) with ESMTP id BBCB920771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPwE57tT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbgGVLaO (ORCPT
+        id S1731680AbgGVLa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgGVLaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:30:13 -0400
-Received: from quaco.ghostprotocols.net (unknown [177.17.3.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C477920771;
-        Wed, 22 Jul 2020 11:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595417413;
-        bh=zDKW70gtRYBxNcRCZwDBVRBmBO9V/xhxwmi6E5qgeqE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=htoisg+wZdskpQ/VrgTFuIOfe53U2SVfcUrgbJ0WUpoTdx7adkZV3fZuTgsIX6yNS
-         XX+nyH+atCe+njcnvvGEHBzF+V5JRL740v6n6OR34r/Zqk23V2R5EolNHDFe4Ar8Zh
-         uRfa4vGIjhKbvsTiW//KPMTRhzn2BI6+Hbt3ZhbI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 16F77404B1; Wed, 22 Jul 2020 08:30:08 -0300 (-03)
-Date:   Wed, 22 Jul 2020 08:30:07 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-Message-ID: <20200722113007.GI77866@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <76718dc6-5483-5e2e-85b8-64e70306ee1f@linux.ibm.com>
- <7776fa40-6c65-2aa6-1322-eb3a01201000@linux.intel.com>
- <20200710170911.GD7487@kernel.org>
- <0d2e2306-22b2-a730-dc3f-edb3538b6561@linux.intel.com>
- <20200713121746.GA7029@kernel.org>
- <0fadcf78-8b0e-ed03-a554-cc172b7d249c@linux.intel.com>
- <20200713185152.GA18094@kernel.org>
- <8d6030a4-ff2c-230c-c36e-d0a8c68832ac@linux.intel.com>
+        Wed, 22 Jul 2020 07:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgGVLa5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 07:30:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D981EC0619DC;
+        Wed, 22 Jul 2020 04:30:56 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d7so826540plq.13;
+        Wed, 22 Jul 2020 04:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=REutpgTEY8zqFjKsJaL/pIrbvSAniP7JYrpnR8Uq2Hg=;
+        b=kPwE57tThRH2Xl2UQew/QQhJ0HEFx8Jfswz2xfdVqwfJEnOAVAQt/gxOFQAaucsGkP
+         iwTxQyDTZN9pqWHyQWba20tdpkLJC2eECm1uryNRmShampx1pE6Vqnabd5MtVoMw6sjt
+         R+ycwIZOfR1O7qUEEU+VW5xTpGSYvO1YVON5j49sDyzYwH17KCT6JRCUGuZvoh9PiFfA
+         DRZE8xEzFRyPWozCxhyMyoRKlnMCyCM8Y5O4ruvALKA/qPYA4j14X5sJUIKVOhfQHLge
+         BVw42vbho9lHN+PHthr4gTN2OkWYS5xn1ArFGBP5FXQOm6N1+ddhU1wxKIa+NP6Zwsiq
+         +xXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=REutpgTEY8zqFjKsJaL/pIrbvSAniP7JYrpnR8Uq2Hg=;
+        b=aCyrPU/bVv2GJYNtNf6vLt6qtZS7anPm01nVbO9uZOo0OPnZkARXjWNBXPqtNc/6yS
+         UPXOdiacxD60cv+BYcz2OWFUvq39L8RnSHl3PjBLbqVc5fo6CRO8BP/kTUs0BRyXGP+6
+         EcQnHe60UYAlYdyt7TD0POAar+UiubfIeTtuCeLHN9R+27nksOi0U1BRPOQdST8yT8ut
+         75d1BNnUbRyo9clrsqceDKFeJAxCbRloORkzvddWblE6OAZy0geusZz9MTwTRYCuQEX6
+         kvf85ITiKNj1qt845tOKj0bqXgcEA5jWN9Ubk/vXNa+g4b2mKlwJglNwF9tWB/x94Uvx
+         IJGw==
+X-Gm-Message-State: AOAM530aKUxgl+K3tgl8fU/dbfM69rScSG5CA/0bgTC2n7PcHe7EESY6
+        o5a3jj2NjOgEoc1dsucCA0s=
+X-Google-Smtp-Source: ABdhPJyeGR7pcKdtW0vy20t9YcWddsffnZ+VrlDb2rR78ZIMmGBE0qd26bogPd3aN3sGzeQ3acYUJQ==
+X-Received: by 2002:a17:902:10e:: with SMTP id 14mr24718428plb.297.1595417456363;
+        Wed, 22 Jul 2020 04:30:56 -0700 (PDT)
+Received: from rahulg-ThinkPad-T450 ([122.175.73.180])
+        by smtp.gmail.com with ESMTPSA id gv16sm6507715pjb.5.2020.07.22.04.30.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 04:30:55 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 17:00:52 +0530
+From:   Rahul Gottipati <rahul.blr97@gmail.com>
+To:     mchehab@kernel.org
+Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] media: atomisp: Fix coding style issue - correct
+ multiline comments
+Message-ID: <c73ee9bced34777cea5b1a3a97f57c723b0a97b1.1595416585.git.rahul.blr97@gmail.com>
+References: <cover.1595416585.git.rahul.blr97@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d6030a4-ff2c-230c-c36e-d0a8c68832ac@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <cover.1595416585.git.rahul.blr97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 21, 2020 at 04:06:34PM +0300, Alexey Budankov escreveu:
-> 
-> On 13.07.2020 21:51, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Jul 13, 2020 at 03:37:51PM +0300, Alexey Budankov escreveu:
-> >>
-> >> On 13.07.2020 15:17, Arnaldo Carvalho de Melo wrote:
-> >>> Em Mon, Jul 13, 2020 at 12:48:25PM +0300, Alexey Budankov escreveu:
-> >> If it had that patch below then message change would not be required.
+This fixes some coding style issues of multiline comments to
+correct a few checkpatch.pl warnings.
 
-> > Sure, but the tool should continue to work and provide useful messages
-> > when running on kernels without that change. Pointing to the document is
-> > valid and should be done, that is an agreed point. But the tool can do
-> > some checks, narrow down the possible causes for the error message and
-> > provide something that in most cases will make the user make progress.
+Signed-off-by: Rahul Gottipati <rahul.blr97@gmail.com>
+---
+Changes in v2:
+	Distributed changes across 2 patches instead of the previous 1.
+ drivers/staging/media/atomisp/pci/atomisp_ioctl.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-> >> However this two sentences in the end of whole message would still add up:
-> >> "Please read the 'Perf events and tool security' document:
-> >>  https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html"
-
-> > We're in violent agreement here. :-)
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+index 9cdcbe774229..5bf3a86f98f8 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_ioctl.c
+@@ -1281,7 +1281,8 @@ static int atomisp_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
+ 	 * But the capture number cannot be determined by HAL.
+ 	 * So HAL only sets the capture number to be 1 and queue multiple
+ 	 * buffers. Atomisp driver needs to check this case and re-trigger
+-	 * CSS to do capture when new buffer is queued. */
++	 * CSS to do capture when new buffer is queued.
++	 */
+ 	if (asd->continuous_mode->val &&
+ 	    atomisp_subdev_source_pad(vdev)
+ 	    == ATOMISP_SUBDEV_PAD_SOURCE_CAPTURE &&
+@@ -1806,7 +1807,7 @@ static int atomisp_streamon(struct file *file, void *fh,
+ 		/*
+ 		 * set freq to max when streaming count > 1 which indicate
+ 		 * dual camera would run
+-		*/
++		 */
+ 		if (atomisp_streaming_count(isp) > 1) {
+ 			if (atomisp_freq_scaling(isp,
+ 						 ATOMISP_DFS_MODE_MAX, false) < 0)
+@@ -2438,7 +2439,8 @@ static int atomisp_g_ext_ctrls(struct file *file, void *fh,
+ 	int i, ret = 0;
  
-> Here is the message draft mentioning a) CAP_SYS_PTRACE, for kernels prior
-> v5.8, and b) Perf security document link. The plan is to send a patch extending
-> perf_events with CAP_PERFMON check [1] for ptrace_may_access() and extending
-> the tool with this message.
+ 	/* input_lock is not need for the Camera related IOCTLs
+-	 * The input_lock downgrade the FPS of 3A*/
++	 * The input_lock downgrade the FPS of 3A
++	 */
+ 	ret = atomisp_camera_g_ext_ctrls(file, fh, c);
+ 	if (ret != -EINVAL)
+ 		return ret;
+@@ -2521,7 +2523,8 @@ static int atomisp_camera_s_ext_ctrls(struct file *file, void *fh,
+ 				    v4l2_s_ctrl(NULL, isp->flash->ctrl_handler,
+ 						&ctrl);
+ 				/* When flash mode is changed we need to reset
+-				 * flash state */
++				 * flash state
++				 */
+ 				if (ctrl.id == V4L2_CID_FLASH_MODE) {
+ 					asd->params.flash_state =
+ 					    ATOMISP_FLASH_IDLE;
+@@ -2560,7 +2563,8 @@ static int atomisp_s_ext_ctrls(struct file *file, void *fh,
+ 	int i, ret = 0;
  
-> "Access to performance monitoring and observability operations is limited.
->  Enforced MAC policy settings (SELinux) can limit access to performance
->  monitoring and observability operations. Inspect system audit records for
->  more perf_event access control information and adjusting the policy.
->  Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
->  access to performance monitoring and observability operations for processes
->  without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
->  More information can be found at 'Perf events and tool security' document:
->  https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
->  perf_event_paranoid setting is -1:
->      -1: Allow use of (almost) all events by all users
->            Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->  >= 0: Disallow raw and ftrace function tracepoint access
->  >= 1: Disallow CPU event access
->  >= 2: Disallow kernel profiling
->  To make the adjusted perf_event_paranoid setting permanent preserve it
->  in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)"
+ 	/* input_lock is not need for the Camera related IOCTLs
+-	 * The input_lock downgrade the FPS of 3A*/
++	 * The input_lock downgrade the FPS of 3A
++	 */
+ 	ret = atomisp_camera_s_ext_ctrls(file, fh, c);
+ 	if (ret != -EINVAL)
+ 		return ret;
+-- 
+2.25.1
 
-Looks ok! Lots of knobs to control access as one needs.
-
-- Arnaldo
- 
-> Alexei
-> 
-> [1] https://lore.kernel.org/lkml/20200713121746.GA7029@kernel.org/
