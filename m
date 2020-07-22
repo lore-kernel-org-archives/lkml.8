@@ -7,104 +7,203 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16981C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF4DC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1CFA2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8345920825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:08:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dvmV07cX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kqsyj1xN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733055AbgGVWDG (ORCPT
+        id S1732555AbgGVWIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
+        Wed, 22 Jul 2020 18:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730938AbgGVWDF (ORCPT
+        with ESMTP id S1726462AbgGVWI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:03:05 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F19C0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:03:05 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so2001584pgc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:03:05 -0700 (PDT)
+        Wed, 22 Jul 2020 18:08:29 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDE9C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:08:29 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id g22so930734vke.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YaSJOjYxrri/7FmsO8ASKIWMQQUaS+fP22lTbIs6vnM=;
-        b=dvmV07cXBvU6pa9JHOugLBmCAKGJXy4Xyt8SZxoUsDxFV9w3dSWHQf4J6HLa69AgJj
-         0myf2mTZvNtY6UIVyfMdY/7IxQsANIuxGFColh431YPOU+jni/LEusYzTaW+N1xg6EAz
-         IoDC+yzkEEFUg1qQ19d5uxvi6kFcJNaBQnZwk=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wUNWDv0pMvOxp3f1lq5ubWVgLTQ75vGUx1UyIToohCs=;
+        b=kqsyj1xN2xk8GBmQL+ZMGDx/S5h87V9fnQpibUyeZjaONvTDcRgLHjE8PqbBx7DGFp
+         Ahbis0yqSTcab9Ul9KNZ7DuQFFmo5+Xvc9Gf6pZeeZTMcywy8m10G6WwlwxkSaH/M+cM
+         R4EjCh92aMjx/SlIcpDp8HZuUkRo4KKJkUJKk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YaSJOjYxrri/7FmsO8ASKIWMQQUaS+fP22lTbIs6vnM=;
-        b=jrDwa6JX+BC/pYZVMNgUg3akA1sMPYNO+Oei4fAs89zrF0C4vIrVIi8dsM+vCVTaEs
-         +MYAOQiRaZzwmlmK818NdSMdrvAeT7mDY0B2xSMWJ/alIi00YHiIEtGIW8Q6P7Z8oRao
-         pboM3k/qF2SUzA+lEjaJ5YCGaY7DeoAwCLus6E5xdum94jjzjo7QXrKz18HmZud1HETK
-         O2dCri2u2+eGCd24jgEtObVJrc/BH/Dw+KwaRTSPT+UB9eNIjsUWC2YL4oWZgV8+R3WT
-         oIsapjKa7PvdnIVHsap6k3t+eS8SEh8aymGfDqu0863/sQJzGMVn80rtZK0GOOdUVj6O
-         GReg==
-X-Gm-Message-State: AOAM533K6lS0PwqXD52k6Jt3Uox57zPkLf+Gg/1big4obBEr2R2iOHdD
-        1A3WsG0NS5XY6EXA28azCtb5ow==
-X-Google-Smtp-Source: ABdhPJzYFIwq2FueKwSGHZWrGPt0BN+iM2QiUgijkXljAolj8IoZVaJFJqNqA1mLxhQ5Q+NyNkO8Cw==
-X-Received: by 2002:aa7:9d9a:: with SMTP id f26mr1505287pfq.26.1595455384828;
-        Wed, 22 Jul 2020 15:03:04 -0700 (PDT)
-Received: from google.com ([2620:15c:202:1:8edc:d4ff:fe53:350d])
-        by smtp.gmail.com with ESMTPSA id o8sm618049pjf.37.2020.07.22.15.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 15:03:03 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 15:03:01 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v2 0/4] platform/chrome: cros_ec_proto: Convert EC error
- codes to Linux error codes
-Message-ID: <20200722220301.GB2137556@google.com>
-References: <20200720202243.180230-1-linux@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wUNWDv0pMvOxp3f1lq5ubWVgLTQ75vGUx1UyIToohCs=;
+        b=ElZLJSI1abekP4en64bei6TAJS5r+mitZpe9fm5McBy/m8ExndWR5BvEbzBNZTrwoa
+         WPwL0rfgvt7dN1WSc6guJ79fwZ4+md1GZxvBLsbz1XhZj7hCW327pJSaED1UVXlADIvV
+         qYSvwaeQrUu3JUdaqPk9oVexBk9mYvATB1A6eSaT/PjRaxEgqGlUsXpnhwdMzPQGpSRx
+         rJnihBBNUMVIvYtoAktgR8HKLvWzIAeSYzuCOLhGSxyo88ukivrSUTnv1cFd5gtFhGPR
+         tXb1r1SURe++8X/bm3Cfgqfe5CffxvIPXZ+fuqN8ze4of8si6ZgGQ1+kgi8JRHmWUxTa
+         vaEg==
+X-Gm-Message-State: AOAM532e2GEre5PW5eWFzz58Jxjun9pnds8/PjZHonL+jUwQmOmZ1Bq+
+        P+odQVgTtn9RkQ+Ppb95iubmL8GQw4E=
+X-Google-Smtp-Source: ABdhPJwY/WlKEq4MROumPqNqmQ28ySxgYZByZ6po7cti6cEp5hZ5MvHpVo4f6hLf44jauWL3hLoPNQ==
+X-Received: by 2002:a1f:16c3:: with SMTP id 186mr1650345vkw.16.1595455708293;
+        Wed, 22 Jul 2020 15:08:28 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id f15sm152745vsa.28.2020.07.22.15.08.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 15:08:26 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id r63so1156524uar.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:08:26 -0700 (PDT)
+X-Received: by 2002:ab0:150c:: with SMTP id o12mr1758711uae.90.1595455706030;
+ Wed, 22 Jul 2020 15:08:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720202243.180230-1-linux@roeck-us.net>
+References: <20200720172448.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+ <159531115483.3847286.18280088484118119899@swboyd.mtv.corp.google.com>
+ <159531527579.3847286.1254956818647049462@swboyd.mtv.corp.google.com>
+ <CAD=FV=X=NDym3V31dQ8c341UwQm9pDybUCR8jFF1JR99XeVKVw@mail.gmail.com>
+ <159535775253.3847286.5195740102798837524@swboyd.mtv.corp.google.com> <CAD=FV=WhsPkaB_cLNzGuuBrAEHiyrM9TGGvhUY4+0C=SzWwsHA@mail.gmail.com>
+In-Reply-To: <CAD=FV=WhsPkaB_cLNzGuuBrAEHiyrM9TGGvhUY4+0C=SzWwsHA@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 22 Jul 2020 15:08:14 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vt+0xQ6wpyF2y1TqS8d04nq4x1b_TcLwy2aNO4dn9x4g@mail.gmail.com>
+Message-ID: <CAD=FV=Vt+0xQ6wpyF2y1TqS8d04nq4x1b_TcLwy2aNO4dn9x4g@mail.gmail.com>
+Subject: Re: [PATCH] i2c: i2c-qcom-geni: Fix DMA transfer race
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+Hi,
 
-On Mon, Jul 20, 2020 at 01:22:39PM -0700, Guenter Roeck wrote:
-> The EC reports a variety of error codes. Most of those, with the exception
-> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
-> error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
-> to Linux error codes to report a more meaningful error to the caller to aid
-> debugging.
-> 
-> To prepare for this change, handle error codes other than -EPROTO for all
-> callers of cros_ec_cmd_xfer_status(). Specifically, no longer assume that
-> -EPROTO reflects an error from the EC and all other error codes reflect a
-> transfer error.
-> 
-> v2: Add patches 1/4 to 3/4 to handle callers of cros_ec_cmd_xfer_status()
+On Tue, Jul 21, 2020 at 1:26 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Tue, Jul 21, 2020 at 11:55 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Doug Anderson (2020-07-21 09:18:35)
+> > > On Tue, Jul 21, 2020 at 12:08 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > > Quoting Stephen Boyd (2020-07-20 22:59:14)
+> > > > >
+> > > > > I worry that we also need a dmb() here to make sure the dma buffer is
+> > > > > properly mapped before this write to the device is attempted. But it may
+> > > > > only matter to be before the I2C_READ.
+> > > > >
+> > > >
+> > > > I'm suggesting this patch instead where we make geni_se_setup_m_cmd()
+> > > > use a writel() so that it has the proper barrier semantics to wait for
+> > > > the other memory writes that happened in program order before this point
+> > > > to complete before the device is kicked to do a read or a write.
+> > >
+> > > Are you saying that dma_map_single() isn't guaranteed to have a
+> > > barrier or something?  I tried to do some searching and found a thread
+> > > [1] where someone tried to add a barrierless variant of them.  To me
+> > > that means that the current APIs have barriers.
+> > >
+> > > ...or is there something else you're worried about?
+> >
+> > I'm not really thinking about dma_map_single() having a barrier or not.
+> > The patch you mention is from 2010. Many things have changed in the last
+> > decade. Does it have barrier semantics? The presence of a patch on the
+> > mailing list doesn't mean much.
+>
+> Yes, it's pretty old, but if you follow the thread and look at the
+> patch I'm fairly certain it's still relevant.  Specifically, following
+> one thread of dma_map_single() on arm64:
+>
+> dma_map_single()
+> -> dma_map_single_attrs()
+> --> dma_map_page_attrs()
+> ---> dma_direct_map_page()
+> ----> arch_sync_dma_for_device()
+> -----> __dma_map_area()
+> ------> __dma_inv_area() which has a "dsb"
+>
+> I'm sure there are lots of other possible paths, but one thing pointed
+> out by following that path is 'DMA_ATTR_SKIP_CPU_SYNC'.  The
+> documentation of that option talks about the normal flow.  It says
+> that in the normal flow that dma_map_{single,page,sg} will
+> synchronize.  We are in the normal flow here.
+>
+> As far as I understand, the whole point of dma_map_single() is to take
+> a given buffer and get it all ready so that if a device does DMA on it
+> right after the function exits that it's all set.
+>
+>
+> > Specifically I'm looking at "KERNEL I/O BARRIER EFFECTS" of
+> > Documentation/memory-barriers.txt and noticing that this driver is using
+> > relaxed IO accessors meaning that the reads and writes aren't ordered
+> > with respect to other memory accesses. They're only ordered to
+> > themselves within the same device. I'm concerned that the CPU will issue
+> > the IO access to start the write DMA operation before the buffer is
+> > copied over due to out of order execution.
+>
+> I'm not an expert either, but it really looks like dma_map_single()
+> does all that we need it to.
+>
+>
+> > I'm not an expert in this area, but this is why we ask driver authors to
+> > use the non-relaxed accessors because they have the appropriate
+> > semantics built in to make them easy to reason about. They do what they
+> > say when they say to do it.
+>
+> I'm all for avoiding using the relaxed variants too except if it's
+> been shown to be a performance problem.  The one hesitation I have,
+> though, is that I've spent time poking a bunch at the geni SPI driver.
+> We do _a lot_ of very small SPI transfers on our system.  For each of
+> these it's gotta setup a lot of commands.  When I was poking I
+> definitely noticed the difference between writel() and
+> writel_relaxed().  If we can save a few microseconds on each one of
+> these transfers it's probably worth it since it's effectively in the
+> inner loop of some transfers.
+>
+> One option I thought of was to track the mode (DMA vs. FIFO) and only
+> do writel() for DMA mode.  If you're not convinced by my arguments
+> about dma_map_single(), would you be good with just doing the
+> non-relaxed version if we're in DMA mode?
 
-I did a rough grep to see what you might be missing:
+OK, so I did some quick benchmarking and I couldn't find any
+performance regression with just always using writel() here.  Even if
+dma_map_single() does guarantee that things are synced:
 
-  git grep -n EPROTO | grep -e cros -e '-ec'
+* There's no guarantee that all geni users will use dma_map_{xxx}.
 
-I think cros-ec-pwm / cros_ec_num_pwms() might need fixing too? Boy, I
-wrote that, but it sure ain't easy to read...(*checks watch*)...4 years
-later.
+* As Stephen says, the writel() is easier to reason about.
 
-Apart from the notes already made, I think the series looks good:
+The change to a writel() is a bit orthogonal to the issue being
+discussed here, though and it wouldn't make sense to have one patch
+touch both the geni headers and also the i2c code.  Thus, I have sent
+v2 without it (just with the other fixes that Stephen requested) and
+also sent out a separate patch to change from writel_relaxed() to
+writel().
 
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+Breadcrumbs:
 
-Feel free to CC me on v3, if you want another look
+[PATCH v2] i2c: i2c-qcom-geni: Fix DMA transfer race
+https://lore.kernel.org/r/20200722145948.v2.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid/
 
-Brian
+[PATCH] soc: qcom-geni-se: Don't use relaxed writes when writing commands
+https://lore.kernel.org/r/20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid/
+
+As mentioned after the cut in the i2c change, I have kept people's
+tested/reviewed tags for v2.
+
+-Doug
