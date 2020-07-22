@@ -2,143 +2,158 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B583C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F56C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4216C2068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9170020714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4iNIqmL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvyoCQRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbgGVJkO (ORCPT
+        id S1731085AbgGVJnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVJkN (ORCPT
+        Wed, 22 Jul 2020 05:43:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21208 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727034AbgGVJnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:40:13 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C41C0619DC;
-        Wed, 22 Jul 2020 02:40:13 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id 8so898990pjj.1;
-        Wed, 22 Jul 2020 02:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BTqwNESkYaInlEDNf57EMyqM2P7fZXzlbKUeW0yvUD4=;
-        b=o4iNIqmLE3FMfgb+OrQxj1Mvl7e5Ktc/ApMTal4syItnYfN0BAe2XnpaUzhm0rM0k/
-         XF1Q2fnTdqMsgjbVIP/xo53gFE1AJYhE5Eo8og5XjkOhmuR9h9egGUwT4ECUIIBG13ZS
-         As+Cd5uLnkVzWNsqBTWaHQivC+6Vj7wZdg15/11Sh3S/aoVPw4ktv5ekYAcuEHsCIsfx
-         qsYTU3fjpLaJGJOxz4tfEic4/iu8d9kIG/tgkhP3ozEwJyJ+YapN6sygf1Pg9MGeDKcb
-         UmcFjl+6MH0IkTRQ5ItaxJh/2iuq1N3ACESAfcFIoCE6AN1qOA3ghtea5XYGqQhDHvN0
-         2LRQ==
+        Wed, 22 Jul 2020 05:43:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595410996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5Kb/Abqzc1wwGUB57wyooGlyiAmmMs/m2j0ybHDH3Uc=;
+        b=OvyoCQRc6lDxNo+evSuS+fCcqphzfFaEzcN95OB4YVo2FZqDdpv7q1URfUuLPHEWVRrYxk
+        DfrJwPCGDD8nHm6iyencmWf98b8k108fQffYCNRc9/WRur7oNMRw/9+vuCW0yTxqtRUmKI
+        vXwOpnU713EES53GoAjQDSD3yMgIcK4=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-6Fw3fOseN2GzzilEEkJeHA-1; Wed, 22 Jul 2020 05:43:13 -0400
+X-MC-Unique: 6Fw3fOseN2GzzilEEkJeHA-1
+Received: by mail-ed1-f69.google.com with SMTP id u25so568892edq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:43:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BTqwNESkYaInlEDNf57EMyqM2P7fZXzlbKUeW0yvUD4=;
-        b=gTZTmvCWVfqjAQ9QmfqA8dG3oA8tsGyngIXp9qxVNL2AexNUtbDaNPXbOIP4IfW66B
-         pmtoT+W7VCBShE6nTHZNsnR/tjR329VaFonV0E2Krvq+iXX4UjYS+imajZ96F4kn8DOm
-         v9ooAkwAZIAEunHPZFe1m+GhvTqZRvdhJXHPPFmvccvSXSroxqSLm/e0vHAI5os94sFh
-         x9xNzPY+JVPxvNGnPG8dWu6coONl5H1tmIhaYsDICaFm6LgCpvq5o2Ujyv3OKONnPNaR
-         dzpGueLt1zbrXzMO12PfRY+vlBUzFiLbLsA2wu5MNSsLoVaWETHon7zkinHXPWf30vXj
-         V2Ww==
-X-Gm-Message-State: AOAM530zZ/TaVmudAUY8HCWRmX35T4RGsYBAOvx3udTxjFPx7YdEmC4B
-        bsRgmI6FanGb+WD5Xh6KfvS1mmgTYsQ=
-X-Google-Smtp-Source: ABdhPJwA3Tif2dJS3Jcbh7lrpxlRuo7QjIrMiXPTHfBnLUzHEC1t1fuB4Qd3JlCqC057HkVnUJsnuA==
-X-Received: by 2002:a17:902:7790:: with SMTP id o16mr23785608pll.299.1595410812927;
-        Wed, 22 Jul 2020 02:40:12 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6418:58eb:d028:8959:a8a3:a7bc? ([2409:4072:6418:58eb:d028:8959:a8a3:a7bc])
-        by smtp.gmail.com with ESMTPSA id g5sm5959977pjl.31.2020.07.22.02.40.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 02:40:12 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] iio: gyro: Add driver support for ADXRS290
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-References: <20200721181926.27046-1-nish.malpani25@gmail.com>
- <CAHp75Vdr+Uo2uw3mzYP+LMRgp-eyi+YjG=O+wGVqyYx-+MRCaw@mail.gmail.com>
- <7ba8469a-dd8c-1686-6d26-e2a4cbfedce9@gmail.com>
- <CAHp75VdYVC9n7-2MH62J46N0p+sNSE9QVwonor5QfdnvL4hoLg@mail.gmail.com>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <5cb55101-af5c-b6a2-d770-9717f8a463cc@gmail.com>
-Date:   Wed, 22 Jul 2020 15:10:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=5Kb/Abqzc1wwGUB57wyooGlyiAmmMs/m2j0ybHDH3Uc=;
+        b=lQxefjoPkAMkPEj6G5r6K0Sy7S4EafXakuRxJEYE6i8q/Tizjk4jcKSMR+X7bhA5I8
+         IDutPtV50Cbql/i/f0xHFKPrSkhpWdjHvRzSUSgVymW23ZRj3wPxRA8h8ys7skB66f5y
+         9wkKBfIqZWY8ZEmvNTzUK6J7VRIssuuNTWFx/A++fA8uXtKM5bXPSq30mTfB0zl+iJ83
+         sYpjcNWERfVQl2mqrrw0rkI1UZtU5uAmC+GKdBoIMYgT00LlfnqSLKMY3HrruB1GckDz
+         NJRQ+DeK4nUENRpuw7hmLQiiSdgwYkHLVIolI9PeSPQQQuk2aEC7BLnyUDJquFJbZris
+         1LRg==
+X-Gm-Message-State: AOAM532FdUu/b4s1kJv5RpEMjhjQrr/bl/YkeemgurmN6laMH2hHX8Vu
+        a24IJfSk8m24ygpqDoLE4sZBWnYxFhV+JS/1MVzYMoBIQ9ti5ldy4LCFbBXVypB1f+a4E7fag8/
+        bFedP2ZwZ/x4GjyZ9MMwXR8L7
+X-Received: by 2002:a17:906:2b9b:: with SMTP id m27mr4987689ejg.19.1595410992396;
+        Wed, 22 Jul 2020 02:43:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx79uCW95X1s9k7qWVHGXqTcMrE2CCXxJ+5xye1vKxSac5AbBD7Ow2dhnLE/qSMpg8Md5C5bg==
+X-Received: by 2002:a17:906:2b9b:: with SMTP id m27mr4987673ejg.19.1595410992177;
+        Wed, 22 Jul 2020 02:43:12 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id d24sm18338851eje.21.2020.07.22.02.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 02:43:11 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Julia Suvorova <jusual@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Julia Suvorova <jusual@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
+References: <20200722001513.298315-1-jusual@redhat.com>
+Date:   Wed, 22 Jul 2020 11:43:10 +0200
+Message-ID: <87d04nq40h.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdYVC9n7-2MH62J46N0p+sNSE9QVwonor5QfdnvL4hoLg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Julia Suvorova <jusual@redhat.com> writes:
 
-On 22/07/20 3:08 am, Andy Shevchenko wrote:
-> On Tue, Jul 21, 2020 at 11:35 PM Nishant Malpani
-> <nish.malpani25@gmail.com> wrote:
->> On 22/07/20 1:16 am, Andy Shevchenko wrote:
->>> On Tue, Jul 21, 2020 at 9:20 PM Nishant Malpani
->>> <nish.malpani25@gmail.com> wrote:
-> 
-> ...
-> 
->>>> +               *vals = (const int *)adxrs290_lpf_3db_freq_tbl;
->>>
->>> Why casting?
->>>
->> adxrs290_lpf_3db_freq_tbl is of type (int *)[2], right? Without the
->> casting, an incompatible-pointer-type error is thrown.
->>
->>> ...
->>>
->>>> +               *vals = (const int *)adxrs290_hpf_3db_freq_tbl;
->>>
->>> Ditto.
->>>
->> See above comment.
-> 
-> Can't you declare table as const int?
-> 
-I'm not sure I understand you completely here; do you mean const int *? 
-So, an array of alternate integer and fractional parts? I suppose that's 
-possible but we'd be introducing unwanted complexity I feel - for 
-example, currently the index of the 3db frequency in the table is used 
-to directly map & set bits in the filter register corresponding to that 
-frequency but with the approach you share, we'd have to apply a 
-transformation (div by 2) to set the same bits in the filter register. 
-Do you think the added complexity justifies the removal of the casting?
+> Scanning for PCI devices at boot takes a long time for KVM guests. It
+> can be reduced if KVM will handle all configuration space accesses for
+> non-existent devices without going to userspace [1]. But for this to
+> work, all accesses must go through MMCONFIG.
+> This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+> guests making MMCONFIG the default access method.
+>
+> [1] https://lkml.org/lkml/2020/5/14/936
+>
+> Signed-off-by: Julia Suvorova <jusual@redhat.com>
+> ---
+>  arch/x86/pci/direct.c      | 5 +++++
+>  arch/x86/pci/mmconfig_64.c | 3 +++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
+> index a51074c55982..8ff6b65d8f48 100644
+> --- a/arch/x86/pci/direct.c
+> +++ b/arch/x86/pci/direct.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/init.h>
+>  #include <linux/dmi.h>
+> +#include <linux/kvm_para.h>
+>  #include <asm/pci_x86.h>
+>  
+>  /*
+> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
+>  {
+>  	if (type == 0)
+>  		return;
+> +
+> +	if (raw_pci_ext_ops && kvm_para_available())
+> +		return;
+> +
+>  	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+>  		 type);
+>  	if (type == 1) {
+> diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
+> index 0c7b6e66c644..9eb772821766 100644
+> --- a/arch/x86/pci/mmconfig_64.c
+> +++ b/arch/x86/pci/mmconfig_64.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/init.h>
+>  #include <linux/acpi.h>
+>  #include <linux/bitmap.h>
+> +#include <linux/kvm_para.h>
+>  #include <linux/rcupdate.h>
+>  #include <asm/e820/api.h>
+>  #include <asm/pci_x86.h>
+> @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
+>  		}
+>  
+>  	raw_pci_ext_ops = &pci_mmcfg;
+> +	if (kvm_para_available())
+> +		raw_pci_ops = &pci_mmcfg;
+>  
+>  	return 1;
+>  }
 
-> ...
-> 
->>>> +       /* max transition time to measurement mode */
->>>> +       msleep_interruptible(ADXRS290_MAX_TRANSITION_TIME_MS);
->>>
->>> I'm not sure what the point of interruptible variant here?
->>>
->> I referred Documentation/timers/timers-howto.rst for this.
->> My reasoning was shaped to use the interruptible variant because the
->> transition settles in a time *less than* 100ms and since 100ms is quite
->> a huge time to sleep, it should be interrupted in case a signal arrives.
-> 
-> This is probe of the device,
-> What are the expectations here?
-> 
-I fail to understand why this can't be used in the probe() but perhaps 
-in a routine to standby/resume. Could you please elaborate?
+This implies mmconfig access method is always functional (when present)
+for all KVM guests, regardless of hypervisor version/which KVM userspace
+is is use/... In case the assumption is true the patch looks good (to
+me) but in case it isn't or if we think that more control over this
+is needed we may want to introduce a PV feature bit for KVM.
 
-With regards,
-Nishant Malpani
+Also, I'm thinking about moving this to arch/x86/kernel/kvm.c: we can
+override x86_init.pci.arch_init and reassign raw_pci_ops after doing
+pci_arch_init().
+
+Cc: kvm@vger.kernel.org
+
+-- 
+Vitaly
+
