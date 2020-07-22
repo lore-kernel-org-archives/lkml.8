@@ -2,114 +2,364 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E41C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997A9C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9558A207D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:13:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595387608;
-	bh=dtoCdUEmKe3K+GX9hTYYwHUWlcrljUxsFv8D57+cspo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=WzYi0YFRA10s3dyyN8EJce4NenR6rG7/iIZ9hjNHUYFOs3UeAfGgo9MpQ+Ou9oVpZ
-	 DFD9dTE5RqGUqXCmT4x9btV0jwVM8W1NYv8bKpVeuhqk7fYXbF9rjjVWtU1CLleVL3
-	 DIMPXK4ZsfDMAll4KosyxQZNuam/vh7osaHkC+h4=
+	by mail.kernel.org (Postfix) with ESMTP id 76CB620684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:15:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+sfsjMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731911AbgGVDN1 (ORCPT
+        id S1731917AbgGVDPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731621AbgGVDN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:13:27 -0400
-Received: from embeddedor (unknown [201.162.241.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C73E207CD;
-        Wed, 22 Jul 2020 03:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595387606;
-        bh=dtoCdUEmKe3K+GX9hTYYwHUWlcrljUxsFv8D57+cspo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=vk2YMEdFcMgL1qzpSDrii3EXT+ZwZWyG3yjeh6eLsVrNH5wW8lCkZrVG7sGmOczxz
-         W9p1C7EmhHkpzPAJiRBP6s/LV6+2J1J6CJ5U9KXnreZh1+YRkScE+hu6r2box0BAjR
-         Qj9HYehoxzxiWxlmDRdQvSRGPKahBz4IbZ4EcBEY=
-Date:   Tue, 21 Jul 2020 22:19:03 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v2][next] PCI: imx6: Use fallthrough pseudo-keyword
-Message-ID: <20200722031903.GA3711@embeddedor>
+        Tue, 21 Jul 2020 23:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731837AbgGVDPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jul 2020 23:15:44 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFDEC0619DC
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:15:44 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q74so1048878iod.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=45JomO1d9wejy1HPoYxaCzisM7wW+NcLf1i+9Sigraw=;
+        b=o+sfsjMCDuKPzbe/qIeYMbzrEqO1c3cG6lOfmpnyTEQm+sA/yJ7z+qHiKEtgfUSGpV
+         wMHw163AiILZEL7mx9dOU1WNE5kixKXY7q5NnrEUACGAFtwWFsWKdiRNJUyepwilvgnY
+         iUn0p2++v3ZaNkQioAz7VGloQD2D6dHBNUGz5/vSQwvYkSesZoiwJQ8HnhyMZ6enhZKr
+         DkV6zb9TmsuIxgw003JvA4UaCJ2+HAtqFGqwIpq6Yo3VADMSwQfMzOgQnC2bjgrGkQvB
+         i3j1u9ZQZnzkMYpllOWdDbcDqymwGviqmmwK2tUcfutCvtQpZAb2xrrWvd8ElWMbZGO0
+         7aTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=45JomO1d9wejy1HPoYxaCzisM7wW+NcLf1i+9Sigraw=;
+        b=g53oVQTf1JM09KDWf9VhzeXBYpSWtPlPOFlg5JLO6/Ek/n1+ae2hsSXq4deBFfaMyf
+         YXADTtEWrOE+Ap1TDq2VLlpI7zXxVww0yAa62wKsMZ0tEVVZ622z9kMn2R7aVJwriswT
+         qSucL4SZFUPdTv1TTK1VvMC8hhRMRaXkCq5s46xIzE02FRiBKBd5wtRk+Lm5G0PsWbAa
+         P7bcesKtXFyffBjiYrdSgPYj+Z/aQrWqdhDk9eLzVwIMTCl6BDysXBx4xzCGmRq2Sxqj
+         bz4+51O8ZUoqJI6vXoP6w8S/AT1OAgiFNF7ZjxLKCXO4sD0Cd15PjUNZG4KKNoqjS/Nn
+         M1Bw==
+X-Gm-Message-State: AOAM533gsTja1fQ0f4rKuFvTbQDg7Ge+O33vfSsyKFoW/iFOwgU+wsIf
+        o0xF5ChYuAyYX1Ju27g4xYjaE2f4skMjtW5dCXY7gg==
+X-Google-Smtp-Source: ABdhPJytvgzhX6bIeTKuXIhQ8Ogfb1O2KxTd1ZdvSE0ibGG3xWtYgYMUBBjc4eOOaKb7vSbZzLHEhfw0MosrRiQSayg=
+X-Received: by 2002:a6b:d301:: with SMTP id s1mr30475980iob.146.1595387743234;
+ Tue, 21 Jul 2020 20:15:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200721104422.369368-1-cychiang@chromium.org> <20200721104422.369368-3-cychiang@chromium.org>
+In-Reply-To: <20200721104422.369368-3-cychiang@chromium.org>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Wed, 22 Jul 2020 11:15:32 +0800
+Message-ID: <CA+Px+wUEQqe0dOeHBFxOEFG5QctTipj6egu94OD+LvYmSunaTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ASoC: qcom: sc7180: Add machine driver for sound
+ card registration
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Douglas Anderson <dianders@chromium.org>, dgreid@chromium.org,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        ALSA development <alsa-devel@alsa-project.org>,
+        Ajit Pandey <ajitp@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the existing /* fall through */ comments and its variants with
-the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-fall-through markings when it is the case.
+On Tue, Jul 21, 2020 at 6:44 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+> diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
+> new file mode 100644
+> index 000000000000..3beb2b129d01
+> --- /dev/null
+> +++ b/sound/soc/qcom/sc7180.c
+> @@ -0,0 +1,380 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +//
+> +//Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> +//
+> +//sc7180.c -- ALSA SoC Machine driver for SC7180
+Insert an extra space between // and text to make it look better.
 
-[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> +static int sc7180_headset_init(struct snd_soc_component *component);
+> +
+> +static struct snd_soc_aux_dev sc7180_headset_dev = {
+> +       .dlc = COMP_EMPTY(),
+> +       .init = sc7180_headset_init,
+> +};
+Move definition of sc7180_headset_dev after sc7180_headset_init( ) so
+that you don't need forward declaration of sc7180_headset_init( ).
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Update URL. Use proper URL to Linux v5.7 documentation.
+> +static unsigned int primary_dai_fmt = SND_SOC_DAIFMT_CBS_CFS |
+> +                                     SND_SOC_DAIFMT_NB_NF |
+> +                                     SND_SOC_DAIFMT_I2S;
+> +
+> +static int sc7180_snd_startup(struct snd_pcm_substream *substream)
+> +{
+> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +       struct snd_soc_card *card = rtd->card;
+> +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
+> +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
+> +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
+> +       int ret;
+> +
+> +       switch (cpu_dai->id) {
+> +       case MI2S_PRIMARY:
+> +               if (++data->pri_mi2s_clk_count == 1) {
+> +                       snd_soc_dai_set_sysclk(cpu_dai,
+> +                                              LPASS_MCLK0,
+> +                                              DEFAULT_MCLK_RATE,
+> +                                              SNDRV_PCM_STREAM_PLAYBACK);
+> +               }
+> +               snd_soc_dai_set_fmt(codec_dai, primary_dai_fmt);
+My comment on the previous thread may mislead.  My original intent:
+move the DAIFMT setting to DAI link->dai_fmt in sc7180_parse_of( ).
 
- drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+If you need to keep it as is: inline the SND_SOC_DAIFMT_* into
+snd_soc_dai_set_fmt( ) (i.e. eliminate primary_dai_fmt).
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 8f08ae53f53e..6c78903b49be 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -439,7 +439,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
- 				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
- 		break;
--	case IMX6QP:		/* FALLTHROUGH */
-+	case IMX6QP:
- 	case IMX6Q:
- 		/* power up core phy and enable ref clock */
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-@@ -642,7 +642,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
- 				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
- 				   IMX6SX_GPR12_PCIE_RX_EQ_2);
--		/* FALLTHROUGH */
-+		fallthrough;
- 	default:
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
- 				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
-@@ -1107,7 +1107,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 			dev_err(dev, "pcie_aux clock source missing or invalid\n");
- 			return PTR_ERR(imx6_pcie->pcie_aux);
- 		}
--		/* fall through */
-+		fallthrough;
- 	case IMX7D:
- 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
- 			imx6_pcie->controller_id = 1;
--- 
-2.27.0
+> +static int sc7180_parse_of(struct snd_soc_card *card)
+> +{
+> +       struct device_node *np;
+> +       struct device_node *codec = NULL;
+> +       struct device_node *platform = NULL;
+The function doesn't use platform.
 
+> +       struct device_node *cpu = NULL;
+> +       struct device *dev = card->dev;
+> +       struct snd_soc_dai_link *link;
+> +       struct of_phandle_args args;
+> +       struct snd_soc_dai_link_component *dlc;
+> +       int ret, num_links;
+> +
+> +       ret = snd_soc_of_parse_card_name(card, "model");
+> +       if (ret) {
+> +               dev_err(dev, "Error parsing card name: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       /* DAPM routes */
+> +       if (of_property_read_bool(dev->of_node, "audio-routing")) {
+> +               ret = snd_soc_of_parse_audio_routing(card,
+> +                                                    "audio-routing");
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       /* headset aux dev. */
+> +       sc7180_headset_dev.dlc.of_node = of_parse_phandle(
+> +                       dev->of_node, "aux-dev", 0);
+> +       if (!sc7180_headset_dev.dlc.of_node) {
+> +               dev_err(dev,
+> +                       "Property 'aux-dev' missing/invalid\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Populate links */
+> +       num_links = of_get_child_count(dev->of_node);
+Eliminate num_links but use card->num_links directly.
+
+> +
+> +       /* Allocate the DAI link array */
+> +       card->dai_link = devm_kcalloc(dev, num_links, sizeof(*link),
+> +                                     GFP_KERNEL);
+> +       if (!card->dai_link)
+> +               return -ENOMEM;
+> +
+> +       card->num_links = num_links;
+Ditto, eliminate it.
+
+> +       link = card->dai_link;
+> +
+Eliminate the blank line to make "link = card->dai_link" and the
+following for-loop "a whole thing".
+
+> +       for_each_child_of_node(dev->of_node, np) {
+> +               dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
+> +               if (!dlc)
+> +                       return -ENOMEM;
+> +
+> +               link->cpus      = &dlc[0];
+> +               link->platforms = &dlc[1];
+> +
+> +               link->num_cpus          = 1;
+> +               link->num_platforms     = 1;
+> +
+> +               ret = of_property_read_string(np, "link-name", &link->name);
+> +               if (ret) {
+> +                       dev_err(card->dev,
+> +                               "error getting codec dai_link name\n");
+> +                       goto err;
+> +               }
+> +
+> +               link->playback_only = of_property_read_bool(np,
+> +                                                           "playback_only");
+> +               link->capture_only = of_property_read_bool(np,
+> +                                                          "capture_only");
+> +
+> +               if (link->playback_only && link->capture_only) {
+> +                       dev_err(card->dev,
+> +                               "getting both playback and capture only\n");
+ret = -EINVAL;
+
+> +                       goto err;
+> +               }
+> +
+> +               cpu = of_get_child_by_name(np, "cpu");
+> +               codec = of_get_child_by_name(np, "codec");
+Move to below.
+
+> +
+> +               if (!cpu) {
+> +                       dev_err(dev, "%s: Can't find cpu DT node\n",
+> +                               link->name);
+> +                       ret = -EINVAL;
+> +                       goto err;
+> +               }
+> +
+> +               ret = of_parse_phandle_with_args(cpu, "sound-dai",
+> +                                                "#sound-dai-cells", 0, &args);
+I may overlook it but I failed to find "#sound-dai-cells" in the
+dt-binding example.  I think it should be in DTS?
+
+> +               if (ret) {
+> +                       dev_err(card->dev, "%s: error getting cpu phandle\n",
+> +                               link->name);
+> +                       goto err;
+> +               }
+> +               link->cpus->of_node = args.np;
+> +               link->id = args.args[0];
+I am not quite sure what it will be.  I guess one of the following
+comes from DTS node name.
+#define MI2S_PRIMARY 0
+#define MI2S_SECONDARY 1
+
+> +
+> +               ret = snd_soc_of_get_dai_name(cpu, &link->cpus->dai_name);
+> +               if (ret) {
+> +                       dev_err(card->dev, "%s: error getting cpu dai name\n",
+> +                               link->name);
+> +                       goto err;
+> +               }
+> +
+
+Move "codec = of_get_child_by_name(np, "codec");" to here.
+> +               if (codec) {
+> +                       ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
+> +                       if (ret < 0) {
+> +                               dev_err(card->dev, "%s: codec dai not found\n",
+> +                                       link->name);
+> +                               goto err;
+> +                       }
+> +               } else {
+> +                       dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
+> +                       if (!dlc)
+> +                               return -ENOMEM;
+> +
+> +                       link->codecs     = dlc;
+> +                       link->num_codecs = 1;
+> +
+> +                       link->codecs->dai_name = "snd-soc-dummy-dai";
+> +                       link->codecs->name = "snd-soc-dummy";
+> +               }
+> +
+> +               link->platforms->of_node = link->cpus->of_node;
+> +               link->stream_name = link->name;
+> +               link->ops = &sc7180_ops;
+> +               link++;
+> +
+> +               of_node_put(cpu);
+> +               of_node_put(codec);
+cpu = NULL;
+codec = NULL;
+In case of double of_node_put( ).
+
+> +       }
+> +
+> +       return 0;
+> +err:
+> +       of_node_put(np);
+I guess you don't need this.
+
+> +       of_node_put(cpu);
+> +       of_node_put(codec);
+> +       of_node_put(platform);
+Eliminate it, not used.
+
+> +static int sc7180_snd_platform_probe(struct platform_device *pdev)
+> +{
+> +       struct snd_soc_card *card;
+> +       struct sc7180_snd_data *data;
+> +       struct device *dev = &pdev->dev;
+> +       int ret;
+> +
+> +       card = &sc7180_card;
+In this case, inline the initialization while declaration.
+
+> +
+> +       /* Allocate the private data */
+> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       card->dapm_widgets = sc7180_snd_widgets;
+> +       card->num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets);
+Remove them.
+
+> +       card->dev = dev;
+> +       dev_set_drvdata(dev, card);
+I guess you don't need this if using devm_snd_soc_register_card(...).
+
+Insert a blank line.
+> +       ret = sc7180_parse_of(card);
+> +       if (ret) {
+> +               dev_err(dev, "Error parsing OF data\n");
+> +               return ret;
+> +       }
+> +
+> +       data->card = card;
+Looks like data->card is not used.
+
+> +       snd_soc_card_set_drvdata(card, data);
+> +
+> +       ret = snd_soc_register_card(card);
+> +       if (ret) {
+> +               dev_err(dev, "Sound card registration failed\n");
+> +               return ret;
+> +       }
+> +       return ret;
+Just return devm_snd_soc_register_card(...);
+
+> +static int sc7180_snd_platform_remove(struct platform_device *pdev)
+> +{
+> +       struct snd_soc_card *card = dev_get_drvdata(&pdev->dev);
+> +
+> +       snd_soc_unregister_card(card);
+> +       return 0;
+> +}
+Can be removed if using devm_snd_soc_register_card( ).
+
+
+I didn't go through all the cases.  But it would be better if all "if
+(ret < 0)" can be replaced to "if (ret)".
