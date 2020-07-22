@@ -2,193 +2,105 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11314C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20512077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wJuHu3zB"
+	by mail.kernel.org (Postfix) with ESMTP id EA506207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbgGVIfv (ORCPT
+        id S1728615AbgGVIhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgGVIfv (ORCPT
+        Wed, 22 Jul 2020 04:37:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57473 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgGVIhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:35:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E79B9C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QXhlms6z6mxKbNYRQIXcoIbNJvyasfs3bwxG1SAtCHY=; b=wJuHu3zBGTBJWVpH84hmH3QULB
-        sF9PokLfw576QGSDpqeNsJnOSiRFKn0szcBhv8AzHEHCYsnTxaUeYScpWhjGH0RVIsvaH/Ov8LU8W
-        hcjszoijhfvuv2cZf9KDYvm3Cxoils83GCCe+jnJJkbwrvFTxN/MP30/LFoFCfowzx7ANr3tZlcFr
-        mADX8unsGsivvdGlIlYRPMQ+oaSqZ5RjIa8L01bCOa8RZkLc7pUzMK6mJNiJdTKsdpDu2doeZI98R
-        rjX28t8UaC5aGNmRJu9Svj0RODMMQPgvnZGeFLAyo7Ylg2gyBRA6mIGX7UfLzYbQnl2jiJGeuHAP3
-        0UfBvw9A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyADx-0003gp-IC; Wed, 22 Jul 2020 08:35:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 34A023060F3;
-        Wed, 22 Jul 2020 10:35:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1C1D3203DE799; Wed, 22 Jul 2020 10:35:33 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 10:35:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
-        keescook@chromium.org, torvalds@linux-foundation.org,
-        jannh@google.com, will@kernel.org, hch@lst.de, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
-Message-ID: <20200722083533.GK10769@hirez.programming.kicks-ass.net>
-References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
- <20200721140623.4e8ecc6ef5d5ff42115d68fc@linux-foundation.org>
+        Wed, 22 Jul 2020 04:37:18 -0400
+Received: from mail-vs1-f71.google.com ([209.85.217.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <paolo.pisati@canonical.com>)
+        id 1jyAFX-0005xF-Rd
+        for linux-kernel@vger.kernel.org; Wed, 22 Jul 2020 08:37:15 +0000
+Received: by mail-vs1-f71.google.com with SMTP id l189so103320vsc.19
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:37:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R+bYSyuCUZFAkGtII1RmdIT7fMN+AO1fhPK7l1587qY=;
+        b=Q5pUqzuG17ZzCpxaMf0qsjNs+Z+Q80qJMo7YOp4BVcNoMCRgyBK++7ipseYOUe7s2w
+         BOlgU8JlBp1hvMO8CZgIG39KR85fISY8l8vs1efxrF5HWbdx1NuJVGnUsXOadBj0ToEq
+         RVO1ZYbOx6mdWYIXlOREGob0/sbP5cPukxUkjcKx4DyhmcW0KY8NGK5Y2FPddZzX6Mo+
+         nKi6qsKN6HYDMUIW8OzMEuVO9rjKe/vu8mA5H5Htr6e+bZ+5L8EzG/faTGYfwvSMz8Ut
+         Ic42UPAtbsRdF5Mxl7Ipk1lSr4SyBmfZDEeoLD7/tsUwD3O1i3b6dzK3W2cWSkPHC7AK
+         4yXQ==
+X-Gm-Message-State: AOAM532N5Ile1PCIBiD6sCIVukvQbRJat1ptbaVS95PM6VcRTzBEDGC1
+        5X4Hhs+3Ak1ysOrcV3IZJ3FoRbnQbylfjQ4BdByB8moZlabsgsJt1rvdlI79mybOs+ucrcMgybQ
+        Jy2vi7/saVH7RtorqRj4Av98Vi9iktdtQupaEKl0EPjTgoswqBiqBjOa0jw==
+X-Received: by 2002:a67:1105:: with SMTP id 5mr24340543vsr.174.1595407034588;
+        Wed, 22 Jul 2020 01:37:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyHhx8M1zvoxC/SgvLXUeJNSlv9KoZs9SK1CB828zfYcRVOHt6JU+7hR5X5KsNVtgCDY7YsQoWp9nuI8gUSZfk=
+X-Received: by 2002:a67:1105:: with SMTP id 5mr24340530vsr.174.1595407034362;
+ Wed, 22 Jul 2020 01:37:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721140623.4e8ecc6ef5d5ff42115d68fc@linux-foundation.org>
+References: <CA+FuTSeN8SONXySGys8b2EtTqJmHDKw1XVoDte0vzUPg=yuH5g@mail.gmail.com>
+ <20200721161710.80797-1-paolo.pisati@canonical.com> <CA+FuTSe1-ZEC5xEXXbT=cbN6eAK1NXXKJ3f2Gz_v3gQyh2SkjA@mail.gmail.com>
+In-Reply-To: <CA+FuTSe1-ZEC5xEXXbT=cbN6eAK1NXXKJ3f2Gz_v3gQyh2SkjA@mail.gmail.com>
+From:   Paolo Pisati <paolo.pisati@canonical.com>
+Date:   Wed, 22 Jul 2020 10:37:03 +0200
+Message-ID: <CAMsH0TTQnPGrXci3WvjM+8sdJdxOjR9MnwFvv4DS6=crMCAt4A@mail.gmail.com>
+Subject: Re: [PATCH v2] selftest: txtimestamp: fix net ns entry logic
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, Jian Yang <jianyang@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 02:06:23PM -0700, Andrew Morton wrote:
-> On Tue, 21 Jul 2020 17:41:06 +0200 Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > 
-> > For SMP systems using IPI based TLB invalidation, looking at
-> > current->active_mm is entirely reasonable. This then presents the
-> > following race condition:
-> > 
-> > 
-> >   CPU0			CPU1
-> > 
-> >   flush_tlb_mm(mm)	use_mm(mm)
-> >     <send-IPI>
-> > 			  tsk->active_mm = mm;
-> > 			  <IPI>
-> > 			    if (tsk->active_mm == mm)
-> > 			      // flush TLBs
-> > 			  </IPI>
-> > 			  switch_mm(old_mm,mm,tsk);
-> > 
-> > 
-> > Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-> > because the IPI lands before we actually switched.
-> > 
-> > Avoid this by disabling IRQs across changing ->active_mm and
-> > switch_mm().
-> > 
-> > [ There are all sorts of reasons this might be harmless for various
-> > architecture specific reasons, but best not leave the door open at
-> > all. ]
-> 
-> Can we give the -stable maintainers (and others) more explanation of
-> why they might choose to merge this?
+On Tue, Jul 21, 2020 at 6:26 PM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> Fixes: cda261f421ba ("selftests: add txtimestamp kselftest")
+>
+> Acked-by: Willem de Bruijn <willemb@google.com>
 
-Like so then?
+Besides, is it just me or this test fails frequently? I've been
+running it on 5.4.x, 5.7.x and 5.8-rcX and it often fails:
 
----
-Subject: mm: Fix kthread_use_mm() vs TLB invalidate
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Tue, 11 Feb 2020 10:25:19 +0100
-
-For SMP systems using IPI based TLB invalidation, looking at
-current->active_mm is entirely reasonable. This then presents the
-following race condition:
+...
+    USR: 1595405084 s 947366 us (seq=0, len=0)
+    SND: 1595405084 s 948686 us (seq=9, len=10)  (USR +1319 us)
+ERROR: 6542 us expected between 6000 and 6500
+    ACK: 1595405084 s 953908 us (seq=9, len=10)  (USR +6541 us)
+    USR: 1595405084 s 997979 us (seq=0, len=0)
+    SND: 1595405084 s 999101 us (seq=19, len=10)  (USR +1121 us)
+    ACK: 1595405085 s 4438 us (seq=19, len=10)  (USR +6458 us)
+    USR: 1595405085 s 49317 us (seq=0, len=0)
+    SND: 1595405085 s 50680 us (seq=29, len=10)  (USR +1363 us)
+ERROR: 6661 us expected between 6000 and 6500
+    ACK: 1595405085 s 55978 us (seq=29, len=10)  (USR +6661 us)
+    USR: 1595405085 s 101049 us (seq=0, len=0)
+    SND: 1595405085 s 102342 us (seq=39, len=10)  (USR +1293 us)
+ERROR: 6578 us expected between 6000 and 6500
+    ACK: 1595405085 s 107627 us (seq=39, len=10)  (USR +6577 us)
+    USR-SND: count=4, avg=1274 us, min=1121 us, max=1363 us
+    USR-ACK: count=4, avg=6559 us, min=6458 us, max=6661 us
 
 
-  CPU0			CPU1
-
-  flush_tlb_mm(mm)	use_mm(mm)
-    <send-IPI>
-			  tsk->active_mm = mm;
-			  <IPI>
-			    if (tsk->active_mm == mm)
-			      // flush TLBs
-			  </IPI>
-			  switch_mm(old_mm,mm,tsk);
-
-
-Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-because the IPI lands before we actually switched.
-
-Avoid this by disabling IRQs across changing ->active_mm and
-switch_mm().
-
-Of the (SMP) architectures that have IPI based TLB invalidate:
-
-  Alpha    - checks active_mm
-  ARC      - ASID specific
-  IA64     - checks active_mm
-  MIPS     - ASID specific flush
-  OpenRISC - shoots down world
-  PARISC   - shoots down world
-  SH       - ASID specific
-  SPARC    - ASID specific
-  x86      - N/A
-  xtensa   - checks active_mm
-
-So at the very least Alpha, IA64 and Xtensa are suspect.
-
-On top of this, for scheduler consistency we need at least preemption
-disabled across changing tsk->mm and doing switch_mm(), which is
-currently provided by task_lock(), but that's not sufficient for
-PREEMPT_RT.
-
-Reported-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@kernel.org
----
- kernel/kthread.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -1241,13 +1241,20 @@ void kthread_use_mm(struct mm_struct *mm
- 	WARN_ON_ONCE(tsk->mm);
- 
- 	task_lock(tsk);
-+	/*
-+	 * Serialize the tsk->mm store and switch_mm() against TLB invalidation
-+	 * IPIs. Also make sure we're non-preemptible on PREEMPT_RT to not race
-+	 * against the scheduler writing to these variables.
-+	 */
-+	local_irq_disable();
- 	active_mm = tsk->active_mm;
- 	if (active_mm != mm) {
- 		mmgrab(mm);
- 		tsk->active_mm = mm;
- 	}
- 	tsk->mm = mm;
--	switch_mm(active_mm, mm, tsk);
-+	switch_mm_irqs_off(active_mm, mm, tsk);
-+	local_irq_enable();
- 	task_unlock(tsk);
- #ifdef finish_arch_post_lock_switch
- 	finish_arch_post_lock_switch();
-@@ -1276,9 +1283,11 @@ void kthread_unuse_mm(struct mm_struct *
- 
- 	task_lock(tsk);
- 	sync_mm_rss(mm);
-+	local_irq_disable();
- 	tsk->mm = NULL;
- 	/* active_mm is still 'mm' */
- 	enter_lazy_tlb(mm, tsk);
-+	local_irq_enable();
- 	task_unlock(tsk);
- }
- EXPORT_SYMBOL_GPL(kthread_unuse_mm);
+In particular, "run_test_v4v6 ${args}       # tcp" is the most
+susceptible to failures (though i've seen the udp variant fail too).
+-- 
+bye,
+p.
