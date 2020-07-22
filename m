@@ -2,119 +2,132 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87989C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8999C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C653206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE76E20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 07:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="U27WCAy9";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="w79m+DE0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbgGVHSw (ORCPT
+        id S1732034AbgGVHUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 03:18:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728338AbgGVHSw (ORCPT
+        Wed, 22 Jul 2020 03:20:24 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:60015 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbgGVHUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 03:18:52 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06M71WMu191977;
-        Wed, 22 Jul 2020 03:18:27 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1wkqx6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 03:18:27 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06M7C1Wp002112;
-        Wed, 22 Jul 2020 07:18:26 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 32brbh4n3t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 07:18:25 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06M7INhq65012112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jul 2020 07:18:23 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1907FA4053;
-        Wed, 22 Jul 2020 07:18:23 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94437A4051;
-        Wed, 22 Jul 2020 07:18:22 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.57.80])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jul 2020 07:18:22 +0000 (GMT)
-Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: rework secure mem slot
- dropping
-To:     Ram Pai <linuxram@us.ibm.com>, paulus@samba.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, mpe@ellerman.id.au, sukadev@linux.ibm.com,
-        bauerman@linux.ibm.com, bharata@linux.ibm.com,
-        Paul Mackerras <paulus@ozlabs.org>
-References: <20200721104202.15727-1-ldufour@linux.ibm.com>
- <20200721104202.15727-3-ldufour@linux.ibm.com>
- <20200721213736.GG7339@oc0525413822.ibm.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <9158d2d7-7446-6eaa-8c88-666264c53dda@linux.ibm.com>
-Date:   Wed, 22 Jul 2020 09:18:20 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200721213736.GG7339@oc0525413822.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 22 Jul 2020 03:20:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595402421; x=1626938421;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=U27WCAy9zaAs2WpMTz5Jje4K6BBxzqY/xNd71Rc+jMSz84eYh2hEL6G1
+   CdbLjgMfCYBzHGhEqOpJ9fs2wiVJv7oFF5VqG83SxSUvc50gznb0Y3pgh
+   z8QjQR//V9sF92vWniIZp3Zrg8BPBlwkCYgVo8CT6kCuff8ROz3GxTaQb
+   SRVwIpavnYh45iM5vQE0El771nB1T2Y+mryW2gMGp8vvfKKSLYCn6awBN
+   LJbAksFUUVyq4m/bpcZMl6anWBweXDBxCrdztz+xNXJjHbX32iYrwfpxP
+   9U2GPcaHWASzR6kDHsC+q+5UQaX+JEZtp2hQiWwbysmG0N903c3LxNPPn
+   Q==;
+IronPort-SDR: X/QBfi9oXs2oNzvdjBDNnaSbKu0sKJMDEpkSBxQVvuYugvRnjkwZVLriexDuoP7hdfcgOZzSx6
+ txe7hy4mHx9YSrwl2kAPb07/v+9geyDn/pNZf7shrCEuIGM/NL2emjUtFgY/hfMCJQ6XhajPXJ
+ qOb/LQD9hdvirZPXBg0RR1474sazrVi8jPNDbmByv7o/ET+dr4R2qoyeptIy7gYvmx2R1Ip3Px
+ MczbKlcxio2bcqllKzCJYjZ7HQkImZBDEjgVVxUuDpidSB4Ji4moRagA4NMnWpdSBOaeXtHRTT
+ TDc=
+X-IronPort-AV: E=Sophos;i="5.75,381,1589212800"; 
+   d="scan'208";a="143089024"
+Received: from mail-mw2nam12lp2045.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.45])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jul 2020 15:20:19 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nv9C4sayWAuZTuUghXVjwdLu4Alqd68t5gOIJQ6CUeAsB8S85dhstxG+MuOSQWsLgK6QF3F/vHg3vOrkL6IvNi6QjyN18VvdvLuJT/846t2hxs0jDRYhGddGs2VOF2srbbIw4Kb+qPGn42t4AyoaulHZhfKnETO3S7iLAqFJispGSaBnZsiWvPKSzbsBCq13OeNbQCK7BSKKxFy+im+ZK7LkWHqf/imKrRc0Ig4RECBHxgQhiYWMlG4NhVyGU8RV1zYOvi+lU89mPCJxZNHIWN3R4e0GokuZt+NtAkGxtCXs7keobtEZPX4GF6rEODBwpHMGJrWCDdyO34VtMU4nYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=SS0pJoMtT2x8NEka5VKwqdHdWaySwaxYsqpUrjUdY6UFPA8rK9TbCQmeRFbqU4ywp/KSiAkCDD3bxwvh2sRo3hFbf4uclOHkgjOOnV797TLvlquPCdT+lYfgzacrg2EBIqE0jFPIWlLishSvu691wZC5tpsnB6bhmocpgYnyCPb1uDmTqW7BgW0HMSb30YuzYsgjVrWsMeEnqSkLM6IZhGSPLjPk7u5w6+jcWwj1pBUFTABjW8cEfON3H2D+wTMfjCIBJeK1tHxvQD19/yILgsNAXU2nl6M+eOg7OhiLZ1/UbZ6yg26HyBdiNwXwuUxjoTRw0Ticns6v1xg4ffvvbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=w79m+DE0Oyhzvqtk/pHHEEuIOG0gT8Xc6tBM1l9FGRNCARQmr6Ckn3qPabYQnlmHJz5hlYWvkMprtfBvRmbws8BsL1mCcVdjZWHth1PH7bARfQtBjLR8JjsRPiwKz2eJWfy6EoP2jIDDR1DYFPQAt5DP8Te9Wz8SUyWchlV3QVM=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB5328.namprd04.prod.outlook.com
+ (2603:10b6:805:fe::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Wed, 22 Jul
+ 2020 07:20:18 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 07:20:18 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 08/14] block: add helper macros for queue sysfs entries
+Thread-Topic: [PATCH 08/14] block: add helper macros for queue sysfs entries
+Thread-Index: AQHWX/E6SMPB6kgBPUaskZWzXZRPyw==
+Date:   Wed, 22 Jul 2020 07:20:18 +0000
+Message-ID: <SN4PR0401MB3598294D373946F23B521D0E9B790@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200722062552.212200-1-hch@lst.de>
+ <20200722062552.212200-9-hch@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_03:2020-07-22,2020-07-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=500 impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007220048
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bb0b06ec-45be-4edd-6605-08d82e0fb017
+x-ms-traffictypediagnostic: SN6PR04MB5328:
+x-microsoft-antispam-prvs: <SN6PR04MB5328B9E9862809E1DA6C145C9B790@SN6PR04MB5328.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TX4ij0rdNFb7KSO6vRl1tFUjA9Dg0oQNIaD3K6RkI0euOniyvdiiiSutx1IVwB1oxtjXpiMrqbCQG2+o1eQYyhCUHsCmFJEu6XftayBTfSryHtmUUzGjvaPsfEPZXfRDvGomfY6ipjcTvQrJrNiV2vhF7wGd2BaZwik3p4N/kHA/gpwPJjC58IW45YAlva/YAyPbvBNkavyoXWsG0fnYgqzdFqYdneHJBOBX7eIqq4Q/CD2BGmPU/F6KANpWbw3JXzc7pjywDVv52acDGvY3LGFlVJG+64D9lPwjQKG79vUPHJQyI/FC44SGtY3JY0ouxz9z5a6ESELqYOA13HSegQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(136003)(346002)(396003)(478600001)(64756008)(91956017)(7416002)(66946007)(76116006)(66476007)(66556008)(66446008)(33656002)(2906002)(19618925003)(7696005)(6506007)(4270600006)(55016002)(558084003)(4326008)(26005)(186003)(9686003)(8676002)(52536014)(86362001)(5660300002)(110136005)(54906003)(316002)(71200400001)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: uxkebodhmSxir3MbaHc4mgxd3LNWJq49AlIYKwNQ7w4Xz8FnWPi/9Yp1akLDh3pK+CoaqYLxJaZrMdL3uQo7PjbxvdZTuybC3vz/wCtZ76RLMPXTuxBNRegvaztz/na51K57xXELrcdzUAp6TI6LUDlRpPgnUUV9qaJ5hevPQAH2H4VPnJBZkgPmhigWxqcJRJfVAdynXRO8WTzl99sWaLrC7QJ3H2GAiucK+UJlx7GcwLgCTTRgQOLluHtm9SoJ+RMIxHfBDICXRPxDQjM/xZgjZV4wYDFCVTXwT8vHUY8r1IYrjq2gp2H/4o8UqF2d2nQ1QdbZLxI2xZWl4OLQH31tXedCe320SEh0XZKr5/tds3zT7VF+55UHIkiHHlHd5nuf755bLMPdVhfXT6MWzj3Q7vizgs+MZFcWiONo5GMa6a/xZ/oM+NFMOryXyIxRl//q7eRsTmLjGFalmunYw5Br87eOyspaxyf4AZVDtPL2NPCBAbxUoVx5O6hVKEAV
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb0b06ec-45be-4edd-6605-08d82e0fb017
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 07:20:18.5206
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JYhn7lcWKLN+WIysS/xbEyEK9O0zI2quM3KrmzBuTvmyr0V4ebcNx0bGoyEr7IrI2UqHlIRKNXc/sP5k3AN5At1FdXccLUzEU9JvbWk0J+A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 21/07/2020 à 23:37, Ram Pai a écrit :
-> On Tue, Jul 21, 2020 at 12:42:02PM +0200, Laurent Dufour wrote:
->> When a secure memslot is dropped, all the pages backed in the secure device
->> (aka really backed by secure memory by the Ultravisor) should be paged out
->> to a normal page. Previously, this was achieved by triggering the page
->> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
->>
->> This can't work when hot unplugging a memory slot because the memory slot
->> is flagged as invalid and gfn_to_pfn() is then not trying to access the
->> page, so the page fault mechanism is not triggered.
->>
->> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
->> simpler to directly calling it instead of triggering such a mechanism. This
->              ^^ call directly instead of triggering..
-> 
->> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
->> memslot.
->>
->> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
->> the call to __kvmppc_svm_page_out() is made.
->> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
->> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
->> addition, the mmap_sem is help in read mode during that time, not in write
-> 		          ^^ held
-> 
->> mode since the virual memory layout is not impacted, and
->> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
->>
->> Cc: Ram Pai <linuxram@us.ibm.com>
-> 
-> Reviewed-by: Ram Pai <linuxram@us.ibm.com>
-
-Thanks for reviewing this series.
-
-Regarding the wordsmithing, Paul, could you manage that when pulling the series?
-
-Thanks,
-Laurent.
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
