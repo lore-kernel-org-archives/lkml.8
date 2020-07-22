@@ -2,100 +2,129 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A11C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C916C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99DD1207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5871C207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 16:54:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wV+co3N+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgGVQxv (ORCPT
+        id S1731199AbgGVQyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbgGVQxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:53:51 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBE0B206F5;
-        Wed, 22 Jul 2020 16:53:49 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 17:53:47 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] raw_copy_from_user() semantics
-Message-ID: <20200722165346.GB4069@gaia>
-References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
- <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
- <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
- <20200722113707.GC27540@gaia>
- <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
+        Wed, 22 Jul 2020 12:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgGVQyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 12:54:54 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD970C0619E0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:54:53 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id i19so1703177lfj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 09:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QUxmdpqhygtgKfzN8W9vujh+GzdOa2S0bqyvDwXYyhA=;
+        b=wV+co3N+GbqN/y0oexAFRRgA4x0zoc2MLgnobj+GtwIikjfaAX3O4tJp9+0E/QTE4a
+         IBadGE3VzIlg/ZGN7ZdALOZfaOpWX+rFiBDJg++rJ9tbsdMABK7FuX5Ap8bNtP4kzCDk
+         /tzLC4ZuQYtp3U9M0KzBCdHy9w2fhLm+ebpnJjmmCedEGqGKFyiwvNfxx8I6D3QozfXc
+         7sA12yOo1tyb1vrs3KuCTZ+izv3FeBPQoWTTOD//8QCbEhSvhep5x4qulR1Tx9H8i8Cw
+         3ApnTAVI2Of8xOV4GDoZTPTAl9H9G+sqlsZvPvejhMnpxeyZ5xCqSaLCZk8WoU2ORf6k
+         Yfpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QUxmdpqhygtgKfzN8W9vujh+GzdOa2S0bqyvDwXYyhA=;
+        b=k4NZVKjdhv+xIcmGfRJ/dCW0DzubWSnpVn++xl10j0+giu9kGD0EBs3vt7KUuqIWKV
+         aqqAJTgXVwXL//HkPeZDIWEqp0kZOGaGBoCH4jdXEZQyiJ+bZak+0Tp+FfRI4zXUmjLj
+         rRvCvUvTPz8J70WmVvwAfhcVsRe42NSK/MeFpNNLyE0ZH9ekiCFcx/yqs+bfaCmH+//S
+         Skvaa22APecnfwO+5p9C6vnMkhImqQoJV3YDHEQFkdO1VJTILMhMLWS1prYRh+AInSmh
+         bTqIngQVZ9KAkvA5hA2lSlMVVZd3wNKtwY3AZWhedkeanZ8KYKlb7UN7rE6N1cKRJ413
+         L29Q==
+X-Gm-Message-State: AOAM530GOFeHfXtly+o4NzRoWN8C/utOztu3cPjWlDsdeg6trhXupseW
+        bAn61NGslr/7n+V589hUhS4VCBhU03PuQ+PSQKG53A==
+X-Google-Smtp-Source: ABdhPJziugCNOtA+haz6tPn4p1Sdw9jHB5V1BZaSpUkzo1SkrAuZ5w9XZAE+IuJ+QaTyXtQCEjaq7N+rEOxkaVHXQWU=
+X-Received: by 2002:a05:6512:1182:: with SMTP id g2mr150606lfr.126.1595436891943;
+ Wed, 22 Jul 2020 09:54:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200714120917.11253-1-joro@8bytes.org> <20200715092456.GE10769@hirez.programming.kicks-ass.net>
+ <20200715093426.GK16200@suse.de> <20200715095556.GI10769@hirez.programming.kicks-ass.net>
+ <20200715101034.GM16200@suse.de> <CAAYXXYxJf8sr6fvbZK=t6o_to4Ov_yvZ91Hf6ZqQ-_i-HKO2VA@mail.gmail.com>
+ <20200721124957.GD6132@suse.de> <CAAYXXYwVV_g8pGL52W9vxkgdNxg1dNKq_OBsXKZ_QizdXiTx2g@mail.gmail.com>
+ <20200722090442.GI6132@suse.de>
+In-Reply-To: <20200722090442.GI6132@suse.de>
+From:   Erdem Aktas <erdemaktas@google.com>
+Date:   Wed, 22 Jul 2020 09:54:40 -0700
+Message-ID: <CAAYXXYxRzO+hFvge4sKvNyH64iW9N2eLNbbKOR2DZf0DDL6CUw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/75] x86: SEV-ES Guest Support
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 01:14:21PM +0000, David Laight wrote:
-> From: Catalin Marinas
-> > Sent: 22 July 2020 12:37
-> > On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
-> > > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
-> > > <torvalds@linux-foundation.org> wrote:
-> > > > I think we should try to get rid of the exact semantics.
-> > >
-> > > Side note: I think one of the historical reasons for the exact
-> > > semantics was that we used to do things like the mount option copying
-> > > with a "copy_from_user()" iirc.
-> > >
-> > > And that could take a fault at the end of the stack etc, because
-> > > "copy_mount_options()" is nasty and doesn't get a size, and just
-> > > copies "up to 4kB" of data.
-> > >
-> > > It's a mistake in the interface, but it is what it is. But we've
-> > > always handled the inexact count there anyway by originally doing byte
-> > > accesses, and at some point you optimized it to just look at where
-> > > page boundaries might be..
-> > 
-> > And we may have to change this again since, with arm64 MTE, the page
-> > boundary check is insufficient:
-> > 
-> > https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
-> > 
-> > While currently the fault path is unlikely to trigger, with MTE in user
-> > space it's a lot more likely since the buffer (e.g. a string) is
-> > normally less than 4K and the adjacent addresses would have a different
-> > colour.
-> > 
-> > I looked (though briefly) into passing the copy_from_user() problem to
-> > filesystems that would presumably know better how much to copy. In most
-> > cases the options are string, so something like strncpy_from_user()
-> > would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
-> > has a better way to figure out how much to copy.
-> 
-> What about changing the mount code to loop calling get_user()
-> to read aligned words until failure?
-> Mount is fairly uncommon and the extra cost is probably small compared
-> to the rest of doing a mount.
+I am using a custom, optimized and stripped down version, OVMF build.
+Do you think it is because of the OVMF or grub?
 
-Before commit 12efec560274 ("saner copy_mount_options()"), it was using
-single-byte get_user(). That could have been optimised for aligned words
-reading but I don't really think it's worth the hassle. Since the source
-and destination don't have the same alignment and some architecture
-don't support unaligned accesses (for storing to the kernel buffer), it
-would just make this function unnecessarily complicated.
+In my case, there are 2 places where the CPUID is called: the first
+one is to decide if long mode is supported, along with few other
+features like SSE support and the second one is to retrieve the
+encryption bit location.
 
--- 
-Catalin
+-Erdem
+
+On Wed, Jul 22, 2020 at 2:04 AM Joerg Roedel <jroedel@suse.de> wrote:
+>
+> Hi Erdem,
+>
+> On Tue, Jul 21, 2020 at 09:48:51AM -0700, Erdem Aktas wrote:
+> > Yes, I am using OVMF with SEV-ES (sev-es-v12 patches applied). I am
+> > running Ubuntu 18.04 distro. My grub target is x86_64-efi. I also
+> > tried installing the grub-efi-amd64 package. In all cases, the grub is
+> > running in 64bit but enters the startup_32 in 32 bit mode. I think
+> > there should be a 32bit #VC handler just something very similar in the
+> > OVMF patches to handle the cpuid when the CPU is still in 32bit mode.
+> > As it is now, it will be a huge problem to support different distro images.
+> > I wonder if I am the only one having this problem.
+>
+> I havn't heard from anyone else that the startup_32 boot-path is being
+> used for SEV-ES. What OVMF binary do you use for your guest?
+>
+> In general it is not that difficult to support that boot-path too, but
+> I'd like to keep that as a future addition, as the patch-set is already
+> quite large. In the startup_32 path there is already a GDT set up, so
+> whats needed is an IDT and a 32-bit #VC handler using the MRS-based
+> protocol (and hoping that there will only be CPUID intercepts until it
+> reaches long-mode).
+>
+> Regards,
+>
+>         Joerg
+>
