@@ -2,185 +2,133 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9603C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 324342086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595461760;
-	bh=1IS+O/7YryqIBEkm5nkaKs05nC51c/pf8nsRFWQ6LdE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KHG44JwM9m0pqzoSywonYT9t6Chod2SnK5Y+l9s+5CLtBv7x5U08gMoZfX9HO8vKG
-	 AQQzI6xuAXJPGPIk6Y16AmBjojQkYMaPCcr1hJKLcZo+frXiP4fQNRrcuqHR00l7nQ
-	 C7n+i4i+rOl2PN/KBpcXOVjC+GokhtEpX3sBrVr4=
+	by mail.kernel.org (Postfix) with ESMTP id B15D920771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 23:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733207AbgGVXtT (ORCPT
+        id S1733246AbgGVXuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 19:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728607AbgGVXtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 19:49:18 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99E9320825;
-        Wed, 22 Jul 2020 23:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595461757;
-        bh=1IS+O/7YryqIBEkm5nkaKs05nC51c/pf8nsRFWQ6LdE=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=FrgmIjvmA70VVMfZFUF0EKllD6JAd0T3wuzJkEXkBHd9mk68R94zOTAVb1VshR80o
-         VoedozueZTQ79QnhYsBQuIWbKhzLCmG3xMwCZYv104TVVJWpntgJlkPZ9kXSd1yIxs
-         xBrz8+QmXgyh1brARc/h9Lq6CDqDU8ZD0/QxaBss=
-Date:   Wed, 22 Jul 2020 16:49:16 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Anchal Agarwal <anchalag@amazon.com>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, jgross@suse.com, linux-pm@vger.kernel.org,
-        linux-mm@kvack.org, kamatam@amazon.com, konrad.wilk@oracle.com,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org
-Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend
- mode
-In-Reply-To: <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-Message-ID: <alpine.DEB.2.21.2007221645430.17562@sstabellini-ThinkPad-T480s>
-References: <cover.1593665947.git.anchalag@amazon.com> <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com> <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com> <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com> <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com> <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com> <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com> <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s> <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1520963972-1595461757=:17562"
+        Wed, 22 Jul 2020 19:50:18 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:45140 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733213AbgGVXuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 19:50:17 -0400
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 7C5572A2A0; Wed, 22 Jul 2020 19:50:16 -0400 (EDT)
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "Paul Mackerras" <paulus@ozlabs.org>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <3952bc691e150a7128b29120999b6092071b039a.1595460351.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH] scsi/mesh: Fix panic after host or bus reset
+Date:   Thu, 23 Jul 2020 09:25:51 +1000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Booting Linux with a Conner CP3200 drive attached to the MESH SCSI bus
+results in EH measures and a panic:
 
---8323329-1520963972-1595461757=:17562
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+[   25.499838] mesh: configured for synchronous 5 MB/s
+[   25.787154] mesh: performing initial bus reset...
+[   29.867115] scsi host0: MESH
+[   29.929527] mesh: target 0 synchronous at 3.6 MB/s
+[   29.998763] scsi 0:0:0:0: Direct-Access     CONNER   CP3200-200mb-3.5 4040 PQ: 0 ANSI: 1 CCS
+[   31.989975] sd 0:0:0:0: [sda] 415872 512-byte logical blocks: (213 MB/203 MiB)
+[   32.070975] sd 0:0:0:0: [sda] Write Protect is off
+[   32.137197] sd 0:0:0:0: [sda] Mode Sense: 5b 00 00 08
+[   32.209661] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[   32.332708]  sda: [mac] sda1 sda2 sda3
+[   32.417733] sd 0:0:0:0: [sda] Attached SCSI disk
+... snip ...
+[   76.687067] mesh_abort((ptrval))
+[   76.743606] mesh: state at (ptrval), regs at (ptrval), dma at (ptrval)
+[   76.810798]     ct=6000 seq=86 bs=4017 fc= 0 exc= 0 err= 0 im= 7 int= 0 sp=85
+[   76.880720]     dma stat=84e0 cmdptr=1f73d000
+[   76.941387]     phase=4 msgphase=0 conn_tgt=0 data_ptr=24576
+[   77.005567]     dma_st=1 dma_ct=0 n_msgout=0
+[   77.065456]     target 0: req=(ptrval) goes_out=0 saved_ptr=0
+[   77.130512] mesh_abort((ptrval))
+[   77.187670] mesh: state at (ptrval), regs at (ptrval), dma at (ptrval)
+[   77.255594]     ct=6000 seq=86 bs=4017 fc= 0 exc= 0 err= 0 im= 7 int= 0 sp=85
+[   77.325778]     dma stat=84e0 cmdptr=1f73d000
+[   77.387239]     phase=4 msgphase=0 conn_tgt=0 data_ptr=24576
+[   77.453665]     dma_st=1 dma_ct=0 n_msgout=0
+[   77.515900]     target 0: req=(ptrval) goes_out=0 saved_ptr=0
+[   77.582902] mesh_host_reset
+[   88.187083] Kernel panic - not syncing: mesh: double DMA start !
+[   88.254510] CPU: 0 PID: 358 Comm: scsi_eh_0 Not tainted 5.6.13-pmac #1
+[   88.323302] Call Trace:
+[   88.378854] [e16ddc58] [c0027080] panic+0x13c/0x308 (unreliable)
+[   88.446221] [e16ddcb8] [c02b2478] mesh_start.part.12+0x130/0x414
+[   88.513298] [e16ddcf8] [c02b2fc8] mesh_queue+0x54/0x70
+[   88.577097] [e16ddd18] [c02a1848] scsi_send_eh_cmnd+0x374/0x384
+[   88.643476] [e16dddc8] [c02a1938] scsi_eh_tur+0x5c/0xb8
+[   88.707878] [e16dddf8] [c02a1ab8] scsi_eh_test_devices+0x124/0x178
+[   88.775663] [e16dde28] [c02a2094] scsi_eh_ready_devs+0x588/0x8a8
+[   88.843124] [e16dde98] [c02a31d8] scsi_error_handler+0x344/0x520
+[   88.910697] [e16ddf08] [c00409c8] kthread+0xe4/0xe8
+[   88.975166] [e16ddf38] [c000f234] ret_from_kernel_thread+0x14/0x1c
+[   89.044112] Rebooting in 180 seconds..
 
-On Wed, 22 Jul 2020, Anchal Agarwal wrote:
-> On Tue, Jul 21, 2020 at 05:18:34PM -0700, Stefano Stabellini wrote:
-> > On Tue, 21 Jul 2020, Boris Ostrovsky wrote:
-> > > >>>>>> +static int xen_setup_pm_notifier(void)
-> > > >>>>>> +{
-> > > >>>>>> +     if (!xen_hvm_domain())
-> > > >>>>>> +             return -ENODEV;
-> > > >>>>>>
-> > > >>>>>> I forgot --- what did we decide about non-x86 (i.e. ARM)?
-> > > >>>>> It would be great to support that however, its  out of
-> > > >>>>> scope for this patch set.
-> > > >>>>> I’ll be happy to discuss it separately.
-> > > >>>>
-> > > >>>> I wasn't implying that this *should* work on ARM but rather whether this
-> > > >>>> will break ARM somehow (because xen_hvm_domain() is true there).
-> > > >>>>
-> > > >>>>
-> > > >>> Ok makes sense. TBH, I haven't tested this part of code on ARM and the series
-> > > >>> was only support x86 guests hibernation.
-> > > >>> Moreover, this notifier is there to distinguish between 2 PM
-> > > >>> events PM SUSPEND and PM hibernation. Now since we only care about PM
-> > > >>> HIBERNATION I may just remove this code and rely on "SHUTDOWN_SUSPEND" state.
-> > > >>> However, I may have to fix other patches in the series where this check may
-> > > >>> appear and cater it only for x86 right?
-> > > >>
-> > > >>
-> > > >> I don't know what would happen if ARM guest tries to handle hibernation
-> > > >> callbacks. The only ones that you are introducing are in block and net
-> > > >> fronts and that's arch-independent.
-> > > >>
-> > > >>
-> > > >> You do add a bunch of x86-specific code though (syscore ops), would
-> > > >> something similar be needed for ARM?
-> > > >>
-> > > >>
-> > > > I don't expect this to work out of the box on ARM. To start with something
-> > > > similar will be needed for ARM too.
-> > > > We may still want to keep the driver code as-is.
-> > > >
-> > > > I understand the concern here wrt ARM, however, currently the support is only
-> > > > proposed for x86 guests here and similar work could be carried out for ARM.
-> > > > Also, if regular hibernation works correctly on arm, then all is needed is to
-> > > > fix Xen side of things.
-> > > >
-> > > > I am not sure what could be done to achieve any assurances on arm side as far as
-> > > > this series is concerned.
-> > 
-> > Just to clarify: new features don't need to work on ARM or cause any
-> > addition efforts to you to make them work on ARM. The patch series only
-> > needs not to break existing code paths (on ARM and any other platforms).
-> > It should also not make it overly difficult to implement the ARM side of
-> > things (if there is one) at some point in the future.
-> > 
-> > FYI drivers/xen/manage.c is compiled and working on ARM today, however
-> > Xen suspend/resume is not supported. I don't know for sure if
-> > guest-initiated hibernation works because I have not tested it.
-> > 
-> > 
-> > 
-> > > If you are not sure what the effects are (or sure that it won't work) on
-> > > ARM then I'd add IS_ENABLED(CONFIG_X86) check, i.e.
-> > >
-> > >
-> > > if (!IS_ENABLED(CONFIG_X86) || !xen_hvm_domain())
-> > >       return -ENODEV;
-> > 
-> > That is a good principle to have and thanks for suggesting it. However,
-> > in this specific case there is nothing in this patch that doesn't work
-> > on ARM. From an ARM perspective I think we should enable it and
-> > &xen_pm_notifier_block should be registered.
-> > 
-> This question is for Boris, I think you we decided to get rid of the notifier
-> in V3 as all we need  to check is SHUTDOWN_SUSPEND state which sounds plausible
-> to me. So this check may go away. It may still be needed for sycore_ops
-> callbacks registration.
-> > Given that all guests are HVM guests on ARM, it should work fine as is.
-> > 
-> > 
-> > I gave a quick look at the rest of the series and everything looks fine
-> > to me from an ARM perspective. I cannot imaging that the new freeze,
-> > thaw, and restore callbacks for net and block are going to cause any
-> > trouble on ARM. The two main x86-specific functions are
-> > xen_syscore_suspend/resume and they look trivial to implement on ARM (in
-> > the sense that they are likely going to look exactly the same.)
-> > 
-> Yes but for now since things are not tested I will put this
-> !IS_ENABLED(CONFIG_X86) on syscore_ops calls registration part just to be safe
-> and not break anything.
-> > 
-> > One question for Anchal: what's going to happen if you trigger a
-> > hibernation, you have the new callbacks, but you are missing
-> > xen_syscore_suspend/resume?
-> > 
-> > Is it any worse than not having the new freeze, thaw and restore
-> > callbacks at all and try to do a hibernation?
-> If callbacks are not there, I don't expect hibernation to work correctly.
-> These callbacks takes care of xen primitives like shared_info_page,
-> grant table, sched clock, runstate time which are important to save the correct
-> state of the guest and bring it back up. Other patches in the series, adds all
-> the logic to these syscore callbacks. Freeze/thaw/restore are just there for at driver
-> level.
+In theory, a panic can happen after a bus or host reset with dma_started
+flag set. Fix this by halting the DMA before reinitializing the host.
+Don't assume that ms->current_req is set when halt_dma() is invoked as
+it may not hold for bus or host reset.
 
-I meant the other way around :-)  Let me rephrase the question.
+BTW, this particular Conner drive can be made to work by inhibiting
+disconnect/reselect with 'mesh.resel_targets=0'.
 
-Do you think that implementing freeze/thaw/restore at the driver level
-without having xen_syscore_suspend/resume can potentially make things
-worse compared to not having freeze/thaw/restore at the driver level at
-all?
---8323329-1520963972-1595461757=:17562--
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Fixes: 1da177e4c3f41 ("Linux-2.6.12-rc2")
+Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+ drivers/scsi/mesh.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/mesh.c b/drivers/scsi/mesh.c
+index 74fb50644678d..4dd50db906779 100644
+--- a/drivers/scsi/mesh.c
++++ b/drivers/scsi/mesh.c
+@@ -1045,6 +1045,8 @@ static void handle_error(struct mesh_state *ms)
+ 		while ((in_8(&mr->bus_status1) & BS1_RST) != 0)
+ 			udelay(1);
+ 		printk("done\n");
++		if (ms->dma_started)
++			halt_dma(ms);
+ 		handle_reset(ms);
+ 		/* request_q is empty, no point in mesh_start() */
+ 		return;
+@@ -1357,7 +1359,8 @@ static void halt_dma(struct mesh_state *ms)
+ 		       ms->conn_tgt, ms->data_ptr, scsi_bufflen(cmd),
+ 		       ms->tgts[ms->conn_tgt].data_goes_out);
+ 	}
+-	scsi_dma_unmap(cmd);
++	if (cmd)
++		scsi_dma_unmap(cmd);
+ 	ms->dma_started = 0;
+ }
+ 
+@@ -1712,6 +1715,9 @@ static int mesh_host_reset(struct scsi_cmnd *cmd)
+ 
+ 	spin_lock_irqsave(ms->host->host_lock, flags);
+ 
++	if (ms->dma_started)
++		halt_dma(ms);
++
+ 	/* Reset the controller & dbdma channel */
+ 	out_le32(&md->control, (RUN|PAUSE|FLUSH|WAKE) << 16);	/* stop dma */
+ 	out_8(&mr->exception, 0xff);	/* clear all exception bits */
+-- 
+2.26.2
+
