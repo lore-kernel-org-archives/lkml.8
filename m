@@ -2,96 +2,84 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3694F20792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136872077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qMkOu+zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730856AbgGVIxx (ORCPT
+        id S1730963AbgGVIyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:53:53 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:45061 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgGVIxx (ORCPT
+        Wed, 22 Jul 2020 04:54:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgGVIyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:53:53 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 06M8rcie010699
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 01:53:38 -0700 (PDT)
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 22 Jul 2020 01:53:37 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/dmapool.c: add lock protect in dma_pool_destroy
-Date:   Wed, 22 Jul 2020 17:05:16 +0800
-Message-ID: <20200722090516.28829-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 22 Jul 2020 04:54:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6292EC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2Z73rgNzULE5N7bg+bwWraBZnyK5vQPqWDQ36XJiXik=; b=qMkOu+zicovwtaHxhU7/JCNNZA
+        anhh7VzJHSzHkfXX8/EeXDtu9RIIG5u4IS5ZaRGdmniEPdQ1c01p30A2Iyf+G5cQXvGX8GWwmrWCw
+        6UhCwjdOD0egAM/WhuB2DLDc/yqviqFYqMKFwkNG7iZ7kFYAGDVOpjiW+Cs4ab9z1PDT7r/mgRtEe
+        Cd/WmMNeiqEn0tpGwq2x5Y4n6zFlqi03e/nDaGGK14jTpvIwgs736id3Ei+W7t378ptk8F2ERFH2A
+        V4Lj1RA9iqNF3s6R9ktGwmZ06VpHEOieNXFNanHIjc7PsmuO13h+9HK7P7MAwyG0OuijwTpw+IoUU
+        PuLw3CpQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyAVw-0004gu-Cf; Wed, 22 Jul 2020 08:54:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD79A304E03;
+        Wed, 22 Jul 2020 10:54:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B221A21A7D50F; Wed, 22 Jul 2020 10:54:11 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 10:54:11 +0200
+From:   peterz@infradead.org
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <michaele@au1.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v2 06/10] powerpc/smp: Generalize 2nd sched domain
+Message-ID: <20200722085411.GI43129@hirez.programming.kicks-ass.net>
+References: <20200721113814.32284-1-srikar@linux.vnet.ibm.com>
+ <20200721113814.32284-7-srikar@linux.vnet.ibm.com>
+ <20200722074624.GP119549@hirez.programming.kicks-ass.net>
+ <20200722081822.GG9290@linux.vnet.ibm.com>
+ <20200722084854.GL10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722084854.GL10769@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+On Wed, Jul 22, 2020 at 10:48:54AM +0200, Peter Zijlstra wrote:
+> But reading your explanation, it looks like the Linux topology setup
+> could actually unravel the fused-faux-SMT8 into two independent SMT4
+> parts, negating that firmware option.
 
-When traversing "pool->page" linked list, to prevent possible
-other path operations this list, causing it to be destroyed, we
-should add lock protect for this list in dma_pool_destroy func.
-
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
----
- mm/dmapool.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/mm/dmapool.c b/mm/dmapool.c
-index f9fb9bbd733e..f7375b25af6c 100644
---- a/mm/dmapool.c
-+++ b/mm/dmapool.c
-@@ -267,6 +267,9 @@ static void pool_free_page(struct dma_pool *pool, struct dma_page *page)
- void dma_pool_destroy(struct dma_pool *pool)
- {
- 	bool empty = false;
-+	LIST_HEAD(discard);
-+	struct dma_page *page,*h;
-+	unsigned long flags;
- 
- 	if (unlikely(!pool))
- 		return;
-@@ -281,8 +284,8 @@ void dma_pool_destroy(struct dma_pool *pool)
- 		device_remove_file(pool->dev, &dev_attr_pools);
- 	mutex_unlock(&pools_reg_lock);
- 
-+	spin_lock_irqsave(&pool->lock, flags);
- 	while (!list_empty(&pool->page_list)) {
--		struct dma_page *page;
- 		page = list_entry(pool->page_list.next,
- 				  struct dma_page, page_list);
- 		if (is_page_busy(page)) {
-@@ -297,8 +300,12 @@ void dma_pool_destroy(struct dma_pool *pool)
- 			list_del(&page->page_list);
- 			kfree(page);
- 		} else
--			pool_free_page(pool, page);
-+			list_move(&page->page_list, &discard);
- 	}
-+	spin_unlock_irqrestore(&pool->lock, flags);
-+
-+	list_for_each_entry_safe(page, h, &discard, page_list)
-+		pool_free_page(pool, page);
- 
- 	kfree(pool);
- }
--- 
-2.26.2
-
+Ah, it looks like that's exactly what you're doing. Nice!
