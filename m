@@ -2,125 +2,110 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC6C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF98C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB5A2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2CF22B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="mgwniwRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbgGVV0O convert rfc822-to-8bit (ORCPT
+        id S1726535AbgGVV1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:26:14 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:36952 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726642AbgGVV0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:26:14 -0400
-Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 351ECD2A31C70E876290;
-        Thu, 23 Jul 2020 05:26:12 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.52]) by
- dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
- Thu, 23 Jul 2020 05:26:04 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        huangdaode <huangdaode@huawei.com>
-Subject: RE: [PATCH v3 1/2] dma-direct: provide the ability to reserve
- per-numa CMA
-Thread-Topic: [PATCH v3 1/2] dma-direct: provide the ability to reserve
- per-numa CMA
-Thread-Index: AQHWTT1ZxTwLmOgUCE+K/2/rfDv6P6kTRO0AgAD4soA=
-Date:   Wed, 22 Jul 2020 21:26:03 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD25A15A3@DGGEMI525-MBS.china.huawei.com>
-References: <20200628111251.19108-1-song.bao.hua@hisilicon.com>
- <20200628111251.19108-2-song.bao.hua@hisilicon.com>
- <20200722141658.GA17658@lst.de>
-In-Reply-To: <20200722141658.GA17658@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.4]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 22 Jul 2020 17:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbgGVV1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:27:32 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC43C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:27:31 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a24so1940046pfc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hl2XuNuNkAqex2SGnJNgB8ZMRNf7wyWxPXDL2QCMQCc=;
+        b=mgwniwRsEe3aJN2pXVHZ2zBgVy8NORfYLvjdNRgHWHCEQ4Wkrn9p2yfMuUDiBFb4Fn
+         kaqO3XN3wo64Xg9hfvgVIXaUnUrrwnpclaaewiaMO/hXO/KyyWEDyHRaG3MUCFvmOlZy
+         ACq78xBj4KFTrrohmGNnOPRN1Ln6a88C3qcuoCh4UZjgMCmVJRYds3aJs1v+oQCagsMN
+         /5rG0btcGC/KbooFPkuA2mpgkkmiyndtmGdbz75ZtHx8iceCMcMXy2cBwoxH/kCEQ2hB
+         ncN5xjm4wnQ2yXSRjVlMXkjOLFC0Auwae+mBgwKMZbqcuMl4+ttNv9TS+V/RU8FvaC+3
+         ktig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hl2XuNuNkAqex2SGnJNgB8ZMRNf7wyWxPXDL2QCMQCc=;
+        b=bBxeBA5g9Y6I/2VHoMM8nkE1VDA44W3jTPvcr9CLz1YtfFT4jdYf9YLrKKLoXmmZbM
+         PdOvNsDqT/atkBvBs6/D20fZXacmAGh5EgJ4zWrGeAVi/X587y23ZBY84l7LYLcYO5og
+         wT/9gY5jNcfUikzl5pTx50jrhI8aXUYzHcrzh8a117vHRTDJ5Hh9/otMpliMCMnfX1bP
+         YbLny0MHQCVryQqxjRI7Yokc96tEvyH2DLGESt+jd3IdBPSgj3Aurrojnz1TgTPBQeI4
+         491X7O2htScVChZWOYrnMduCGyKDcc7oymf5X/RhuZg33wyxHARuJPO0cH2oeMCTFb5+
+         l+Fw==
+X-Gm-Message-State: AOAM533e2wYO0oj5wWUsajtjbNzciWVHqLCw35hAWEJFszAmqZF7zMLN
+        89KZST+H4ij6uP/mqKoDlUVOyQ==
+X-Google-Smtp-Source: ABdhPJyBYNk1Gesb1dS12vZOz9EIgl5P+POV45wQeYpM5xKGF2/3FchyKvbb8/EHEbFg5mReegGl0Q==
+X-Received: by 2002:a63:ca11:: with SMTP id n17mr1485450pgi.439.1595453251341;
+        Wed, 22 Jul 2020 14:27:31 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id 129sm536531pfv.161.2020.07.22.14.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 14:27:31 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 14:27:22 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     wangxiongfeng2@huawei.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net-sysfs: add a newline when printing 'tx_timeout'
+ by sysfs
+Message-ID: <20200722142722.24ce28c7@hermes.lan>
+In-Reply-To: <20200722.132311.31388808811810422.davem@davemloft.net>
+References: <1595314977-57991-1-git-send-email-wangxiongfeng2@huawei.com>
+        <20200721.153632.1416164807029507588.davem@davemloft.net>
+        <20200722082741.1675d611@hermes.lan>
+        <20200722.132311.31388808811810422.davem@davemloft.net>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 22 Jul 2020 13:23:11 -0700 (PDT)
+David Miller <davem@davemloft.net> wrote:
 
-
-> -----Original Message-----
-> From: Christoph Hellwig [mailto:hch@lst.de]
-> Sent: Thursday, July 23, 2020 2:17 AM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: hch@lst.de; m.szyprowski@samsung.com; robin.murphy@arm.com;
-> will@kernel.org; ganapatrao.kulkarni@cavium.com;
-> catalin.marinas@arm.com; iommu@lists.linux-foundation.org; Linuxarm
-> <linuxarm@huawei.com>; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; Jonathan Cameron
-> <jonathan.cameron@huawei.com>; Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de>; Steve Capper <steve.capper@arm.com>; Andrew
-> Morton <akpm@linux-foundation.org>; Mike Rapoport <rppt@linux.ibm.com>
-> Subject: Re: [PATCH v3 1/2] dma-direct: provide the ability to reserve
-> per-numa CMA
+> From: Stephen Hemminger <stephen@networkplumber.org>
+> Date: Wed, 22 Jul 2020 08:27:41 -0700
 > 
-
-+cc Prime and Daode who are interested in this patchset.
-
-> On Sun, Jun 28, 2020 at 11:12:50PM +1200, Barry Song wrote:
-> > This is useful for at least two scenarios:
-> > 1. ARM64 smmu will get memory from local numa node, it can save its
-> > command queues and page tables locally. Tests show it can decrease
-> > dma_unmap latency at lot. For example, without this patch, smmu on
-> > node2 will get memory from node0 by calling dma_alloc_coherent(),
-> > typically, it has to wait for more than 560ns for the completion of
-> > CMD_SYNC in an empty command queue; with this patch, it needs 240ns
-> > only.
-> > 2. when we set iommu passthrough, drivers will get memory from CMA,
-> > local memory means much less latency.
+> > On Tue, 21 Jul 2020 15:36:32 -0700 (PDT)
+> > David Miller <davem@davemloft.net> wrote:
+> >   
+> >> From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> >> Date: Tue, 21 Jul 2020 15:02:57 +0800
+> >>   
+> >> > When I cat 'tx_timeout' by sysfs, it displays as follows. It's better to
+> >> > add a newline for easy reading.
+> >> > 
+> >> > root@syzkaller:~# cat /sys/devices/virtual/net/lo/queues/tx-0/tx_timeout
+> >> > 0root@syzkaller:~#
+> >> > 
+> >> > Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>    
+> >> 
+> >> Applied, thank you.  
+> > 
+> > Could you add  
 > 
-> I really don't like the config options.  With the boot parameters
-> you can always hardcode that in CONFIG_CMDLINE anyway.
+> Stephen, of all people you should know by now that all of my commits
+> are %100 immutable.  So commit log changes cannot be made after I've
+> applied the patch, ever.
 
-I understand your concern. Anyway, The primary purpose of this patchset is providing
-a general way for users like IOMMU to get local coherent dma buffers to put their
-command queue and page tables in. The first user case is what really made me
-begin to prepare this patchset.
-
-For the second case, it is probably a positive side effect of this patchset for those users
-who have more concern on performance than dma security, then they maybe skip
-IOMMU by
-	iommu.passthrough=
-			[ARM64, X86] Configure DMA to bypass the IOMMU by default.
-			Format: { "0" | "1" }
-			0 - Use IOMMU translation for DMA.
-			1 - Bypass the IOMMU for DMA.
-			unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
-In this case, they can get local memory and get better performance.
-However, it is not the primary purpose of this patchset.
-
-Thanks
-Barry
-
+Will you send it to stable tree?
+It could be added then.
