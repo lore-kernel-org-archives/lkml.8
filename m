@@ -2,144 +2,105 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4C7C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BB6C433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC1AD207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nlLzWBUD"
+	by mail.kernel.org (Postfix) with ESMTP id 67E6220729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595425491;
+	bh=laniH5UgS3DrsXSeVguJDybYLw25gKEKrpalctaeV8A=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=Yl7aY8pWCEFKxOBfNfnC3YRJjk8M3MeqFHjEkeXBlajZZecUYo+jyIo0TDgqrJaV0
+	 nlIRbhh8Kg4G8EARMNPGVGk1oDgbI1noLr+z1tWNZL4pzW0I1t0bYKgtuTyLCdwS5l
+	 KHkipICcbM6u1VECRdxntEpV7G6crm0P/c8mudT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgGVNos (ORCPT
+        id S1732556AbgGVNou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Jul 2020 09:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732544AbgGVNos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 09:44:48 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:56907 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732528AbgGVNop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:44:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595425485; x=1626961485;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AQ4wWOdIKVge/cPSYMb3D9ty6S2PPK3wNKVv4CCqRH8=;
-  b=nlLzWBUDRwgIDh8+POxeg543AT3HANGaEFx4nLx7x+TJIkFukrdgBvka
-   dMK/Ic91FNsK556fW7yeot43WYbVP8FZSKz+yBiOzh6Q9ES7vSxvxn8pF
-   dqba0m2USMAwDO1es+WNEenvvstdQP5cxyfXVu0Ksy7QMc0CWf5nrJtDQ
-   GgCyCGbbjQgM+senwEXoTwpnH53YYsGDmgueSKzV+oFGXQmxFVjpHobPJ
-   Qh/HJxiF1VHSATMBWe8ayOqTai8Tc6P96YujjXrAYyPaUjSlJKPdtk5XQ
-   jBLa3kG3zOLPqX0jXZtodiZvijOHOcs/4WU+v2HCIGxPqfpl6QbaHG2Yb
-   g==;
-IronPort-SDR: i+HSXrkki1DPvbMVjDVRBXRvxME0nWWWV776wU6w/EzuTmJ2XRr9NT6vx54gRpARLB6RHVJZ1L
- UtH8q8aqNmsUR8tlu3aHyJ15q8zW49rvXA4rxYQ/XxY5aaJDiRn703LPXhasKYM84kcij/fZLN
- eK0kk4LWYtTqHLa7r5N4NFL6AfGcbmCkCdU6DzqFjDiYkzRI76LlUyODkaETEWN3ICRQ9IIlXW
- z/SmAMbYSUJzCl3xGL/0ykT68CBngqoPRDg9qo+c+3IP+MkDB/+Rug6tROcMBOy+jClfilgyz3
- BzU=
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="82819506"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 06:44:44 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 22 Jul 2020 06:44:44 -0700
-Received: from cristi-P53.amer.actel.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 22 Jul 2020 06:44:02 -0700
-From:   <cristian.birsan@microchip.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Cristian Birsan <cristian.birsan@microchip.com>
-Subject: [PATCH v3 6/6] ARM: dts: at91: sam9x60ek: enable usb device
-Date:   Wed, 22 Jul 2020 16:44:21 +0300
-Message-ID: <20200722134421.190741-7-cristian.birsan@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200722134421.190741-1-cristian.birsan@microchip.com>
-References: <20200722134421.190741-1-cristian.birsan@microchip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349E62071A;
+        Wed, 22 Jul 2020 13:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595425487;
+        bh=laniH5UgS3DrsXSeVguJDybYLw25gKEKrpalctaeV8A=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=JtEvPKKk9ePwlbsUXe8JIGCNQffTKaHbDfykpD21/3zHX3D3gT0MMTXMr7SBk5bpS
+         wQdGbvtpZT0xMqxLYHHRwk4cEyamAcnmxybYuGW04ts+28PbaXmStFP1+WQDJF+09F
+         EUmnIcSkI84ICarie4DxC6YUhrDV+O44MfHCfpHw=
+Date:   Wed, 22 Jul 2020 14:44:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     lgirdwood@gmail.com, shifu0704@thundersoft.com,
+        nikita.yoush@cogentembedded.com, rikard.falkeborn@gmail.com,
+        devicetree@vger.kernel.org, yuehaibing@huawei.com,
+        kuninori.morimoto.gx@renesas.com, corbet@lwn.net,
+        cychiang@chromium.org, l.stach@pengutronix.de,
+        dinghao.liu@zju.edu.cn, jbrunet@baylibre.com, perex@perex.cz,
+        dmurphy@ti.com, linux-doc@vger.kernel.org, afd@ti.com,
+        robh+dt@kernel.org, lkp@intel.com,
+        pankaj.laxminarayan.bharadiya@intel.com, colin.king@canonical.com,
+        tiwai@suse.com, "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        alsa-devel@alsa-project.org, keescook@chromium.org,
+        tzungbi@google.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20200719153822.59788-1-grandmaster@al2klimov.de>
+References: <20200719153822.59788-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH for v5.9] ASoC: Replace HTTP links with HTTPS ones
+Message-Id: <159542547441.19620.12700618394214218697.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+On Sun, 19 Jul 2020 17:38:22 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-Enable usb device for sam9x60ek board.
+Applied to
 
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
----
- arch/arm/boot/dts/at91-sam9x60ek.dts | 13 +++++++++++++
- arch/arm/boot/dts/sam9x60.dtsi       | 14 ++++++++++++++
- 2 files changed, 27 insertions(+)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
-index a5f5718c711a..984cf596dfe9 100644
---- a/arch/arm/boot/dts/at91-sam9x60ek.dts
-+++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
-@@ -559,6 +559,12 @@ pinctrl_key_gpio_default: pinctrl_key_gpio {
- 			atmel,pins = <AT91_PIOD 18 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
- 		};
- 	};
-+
-+	usb0 {
-+		pinctrl_usba_vbus: usba_vbus {
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
- }; /* pinctrl */
- 
- &pmc {
-@@ -657,6 +663,13 @@ timer1: timer@1 {
- 	};
- };
- 
-+&usb0 {
-+	atmel,vbus-gpio = <&pioB 16 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usba_vbus>;
-+	status = "okay";
-+};
-+
- &usb1 {
- 	num-ports = <3>;
- 	atmel,vbus-gpio = <0
-diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
-index 6763423d64b8..ef0ef8625f25 100644
---- a/arch/arm/boot/dts/sam9x60.dtsi
-+++ b/arch/arm/boot/dts/sam9x60.dtsi
-@@ -69,6 +69,20 @@ ahb {
- 		#size-cells = <1>;
- 		ranges;
- 
-+		usb0: gadget@500000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "microchip,sam9x60-udc";
-+			reg = <0x00500000 0x100000
-+				0xf803c000 0x400>;
-+			interrupts = <23 IRQ_TYPE_LEVEL_HIGH 2>;
-+			clocks = <&pmc PMC_TYPE_PERIPHERAL 23>, <&pmc PMC_TYPE_CORE PMC_UTMI>;
-+			clock-names = "pclk", "hclk";
-+			assigned-clocks = <&pmc PMC_TYPE_CORE PMC_UTMI>;
-+			assigned-clock-rates = <480000000>;
-+			status = "disabled";
-+		};
-+
- 		usb1: ohci@600000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00600000 0x100000>;
--- 
-2.25.1
+Thanks!
 
+[1/1] ASoC: Replace HTTP links with HTTPS ones
+      commit: 5856d8bd308f9467cefa65d04e184a56a3977559
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
