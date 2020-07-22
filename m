@@ -2,98 +2,108 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A745C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D3CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C4320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3490320781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:42:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f2QZ2qti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbgGVSlo (ORCPT
+        id S1732463AbgGVSmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:41:44 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:50021 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVSln (ORCPT
+        Wed, 22 Jul 2020 14:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgGVSmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:41:43 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N1gac-1kvfav3ssK-011y0L; Wed, 22 Jul 2020 20:41:42 +0200
-Received: by mail-qk1-f170.google.com with SMTP id 11so3029978qkn.2;
-        Wed, 22 Jul 2020 11:41:41 -0700 (PDT)
-X-Gm-Message-State: AOAM53327j9/gEy4SKdk466X3SK7KCj5RQnRWjScNWaky9ImPFBAE/0A
-        xAwfqJJhrKF5y64x4VLVanAevGhBhYk6HEhKbfQ=
-X-Google-Smtp-Source: ABdhPJyhbrD6tzQxx6tX0jvgDW3CuNZbeFESKXN/P3EjNbM4QSRZdQvTqZXS1d+oo+E+xij7I8GhcpR7DQeIgnPVjL0=
-X-Received: by 2002:a05:620a:2444:: with SMTP id h4mr1481373qkn.352.1595443300710;
- Wed, 22 Jul 2020 11:41:40 -0700 (PDT)
+        Wed, 22 Jul 2020 14:42:06 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66197C0619DC;
+        Wed, 22 Jul 2020 11:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DqMZf+NKxev5DHoTyVPRSIfA19GkA4kV6jf4PNYb+Nw=; b=f2QZ2qtibGlJEp42Nw1cOpOp54
+        xbjG6CyuAnifkHhoaLv3ELLYaPI+boJBEqUHwPU8IRo3DgqZB0dDkl95wHJ3Axyeoto9wfj7/AslF
+        9aPPV/YLLSrMT4llswvO23XJiYK29HD1OetvJXWSZcPxxR+MdkO8QvG++Vlqc/nBAoJhsojJbIiHo
+        SI/70lKuy3BslY5UiNJn0bADWU41eswtFmSrIoBoLcUK+SyrYfBMQ5U6RrsOJxJAMH0reIgx8ltdR
+        3ypKp2jtlWDYKldYYGBc79YEfFgyCydN57+ohspjNE9DQ9wgkd6pv9IRLS98rE9bYGad90A2JdWZ2
+        ZzlpB7wg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyJgU-0002Lw-27; Wed, 22 Jul 2020 18:41:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD0533006D0;
+        Wed, 22 Jul 2020 20:41:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 96CE828B5B17B; Wed, 22 Jul 2020 20:41:37 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 20:41:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        mhelsley@vmware.com
+Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
+Message-ID: <20200722184137.GP10769@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-5-samitolvanen@google.com>
+ <20200624212737.GV4817@hirez.programming.kicks-ass.net>
+ <20200624214530.GA120457@google.com>
+ <20200625074530.GW4817@hirez.programming.kicks-ass.net>
+ <20200625161503.GB173089@google.com>
+ <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+ <20200625224042.GA169781@google.com>
+ <20200626112931.GF4817@hirez.programming.kicks-ass.net>
+ <20200722135542.41127cc4@oasis.local.home>
 MIME-Version: 1.0
-References: <20200722172329.16727-1-madhuparnabhowmik10@gmail.com>
-In-Reply-To: <20200722172329.16727-1-madhuparnabhowmik10@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 22 Jul 2020 20:41:23 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a23zUHGnVBsBX=GqBzbRxwkqmOA_7heMze4EsyQvVfg3g@mail.gmail.com>
-Message-ID: <CAK8P3a23zUHGnVBsBX=GqBzbRxwkqmOA_7heMze4EsyQvVfg3g@mail.gmail.com>
-Subject: Re: [PATCH] drivers: isdn: capi: Fix data-race bug
-To:     madhuparnabhowmik10@gmail.com
-Cc:     Karsten Keil <isdn@linux-pingi.de>,
-        David Miller <davem@davemloft.net>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:aNK/nvkB9ZCM6woMY5T9CGO9BENrHy5uQvQkanc1Pbed9KqX9tJ
- +wl76T0zrTQAvqp5NWj9g66YBoeEO7CUPufpzgwlLvKO5Hhos1cDtsE8iMP0L7oZyunRE3O
- iHLcO4Gz8xbieUn9OCCsUi+0J+alWL93SvuUF7a3LS/ba9c4+3AYJ/bAP4L+Qy4wfHP7k8v
- 1u/XB48SzF4xGL1e7IuHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4cJMUcNIDuo=:HoIR/x3awrbj3u6LAh5nU6
- 30nvKnT+5L9dppHCuzlEVHcNQ4jXzmtw2LA054tTAz/2rYO8zYFXAnC5Ay818ISN7byLb+NYJ
- oQ2DOA/4vEhy+DkIJp/bOxcy9aNZoAeeZ2OYDwOLb1YhhnRQQXKnCb/WqYpjKZ8b0Y7/+Rdsf
- GPgsfloPJ6obgQjoXdcEOz0k+kZ0TWBAJBB14yimVco49RWEgVVtfJlBnMR08VAaYJ4x3sVlz
- K7HMH5zGvJrGL+MqBj7Atv8bxqj7F0nHb1UoY0ven9fTagxDPINLS3SX5ah5TgAaLYw5x42aq
- VHCe2+pz6DSGwWZkiVd5eCFsO5TQfXJSKG42hcYIHKgDYPaOiD/WJwpnRTsLCYB7XXCe0nEYU
- jn3FKVCq5NW372kzUpAn236drbHpo+DUXmTZ0vXL/TE1AaW7cFHba/2C5yTi6byp07R7lyNCx
- 5qvuU5H9hFcYmXxj9B38Vfzj/AVNweMzpcXidv8Pbd50lxmbv1oSmthbvvjzK3dt7gAMByHu0
- uqopQncEaWsxdXNo0S2NTZoulTpkZM3S9SDvsRRbxE0ZGMCQTmEzaUmUskbmQO/AAMhV0Pb+j
- VXjk2i6kNR5Iqb+DKWFQQBerEAolWHQ+utixt6VssVSwbzAZdG69Rw9QVoUw0uM0ZX18BtKUk
- xiR4CFM+mraf07lVsB6ioxFdntcr1wdcjS0U1yEX72xp+CpuKMhLGenllnBZ3j0ais1+PYiCv
- hIcqcndLGgE7qor7OGJaAsXUqjxUI2hdI1IeGUJfPmXgcflO1rTum8mgO3705Hi2otEo8eUtJ
- qfJQHy4oR3Of8IIpDrX1ZPK3fUL0dlga7re+b2jleVH9IPC4QGmOTf90c7c2JEm77kHIoBb9d
- J89m3IjLH1Sl89HRoIThhaF64o81ejTpIgFHSwrMiEnQWsTHqcVsPfT3odEjvrOjg747gzyaV
- 8VD3g2OyeIKQ71oWrDqEUO8dE9eUo/qksWSSHONzzTUU9WshlrWTC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722135542.41127cc4@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 7:23 PM <madhuparnabhowmik10@gmail.com> wrote:
->
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->
-> In capi_init(), after register_chrdev() the file operation callbacks
-> can be called. However capinc_tty_init() is called later.
-> Since capiminors and capinc_tty_driver are initialized in
-> capinc_tty_init(), their initialization can race with their usage
-> in various callbacks like in capi_release().
->
-> Therefore, call capinc_tty_init() before register_chrdev to avoid
-> such race conditions.
->
-> Found by Linux Driver Verification project (linuxtesting.org).
->
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Wed, Jul 22, 2020 at 01:55:42PM -0400, Steven Rostedt wrote:
 
-I don't think there are any users of this driver, but I had a look anyway.
+> > Ha! it is trying to convert the "CALL __fentry__" into a NOP and not
+> > finding the CALL -- because objtool already made it a NOP...
+> > 
+> > Weird, I thought recordmcount would also write NOPs, it certainly has
+> > code for that. I suppose we can use CC_USING_NOP_MCOUNT to avoid those,
+> > but I'd rather Steve explain this before I wreck things further.
+> 
+> The reason for not having recordmcount insert all the nops, is because
+> x86 has more than one optimal nop which is determined by the machine it
+> runs on, and not at compile time. So we figured just updated it then.
+> 
+> We can change it to be a nop on boot, and just modify it if it's not
+> the optimal nop already. 
 
-The patch looks reasonable at first, but I'm not sure if you just
-replace one race with another, since now the tty device can be
-opened before the rest of the subsystem is initialized.
+Right, I throught that's what we'd be doing already, anyway:
 
-It's probably fine.
+> That said, Andi Kleen added an option to gcc called -mnop-mcount which
+> will have gcc do both create the mcount section and convert the calls
+> into nops. When doing so, it defines CC_USING_NOP_MCOUNT which will
+> tell ftrace to expect the calls to already be converted.
 
-         Arnd
+That seems like the much easier solution, then we can forget about
+recordmcount / objtool entirely for this.
