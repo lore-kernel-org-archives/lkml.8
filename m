@@ -2,113 +2,109 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20697C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E495C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9DA52065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595437564;
-	bh=OR5cu9ZiOnyEIuGOim8D0YhB42FI73IvAZzLYBaMrAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fAPy8thBtnVK+5JTcg5NY933lAdsds+U3UkUDYaZsz9zxeLdjG24LNBV36ti6+H2J
-	 j8RRTeTO8g8NafXlXIuNlxeA0x/F8Jw/n9Ww7IoNzoLAmg+mc/ISsyPSwUqhzafnSC
-	 Rv8Y8ykdbEK8mzhgbT0cpHMf/wlOWPwF45UwanF4=
+	by mail.kernel.org (Postfix) with ESMTP id 5401E2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 17:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbgGVRGC (ORCPT
+        id S1731684AbgGVRF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59574 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 13:05:57 -0400
+Received: from mga07.intel.com ([134.134.136.100]:13822 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731701AbgGVRF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:05:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77903207E8;
-        Wed, 22 Jul 2020 17:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595437558;
-        bh=OR5cu9ZiOnyEIuGOim8D0YhB42FI73IvAZzLYBaMrAU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fo21+ikbWeaUKIlmQNUaTc7OWl1nlaenOWLBZXBwygMsnaX9HuJ9knbDk583vacjj
-         YNS64Wb3BIoGLj8a7Y/fgPhNnSc5EFsxGH21pGPqhSDx3BY8knZVbnQw+puTpgdjIy
-         f1s8m7QiEWgjc5Abrl8IzGXrbNwOtsHQ0SzVKdFg=
-Date:   Wed, 22 Jul 2020 19:06:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [PATCH 1/2] f2fs: add sysfs symbolic link to kobject with volume
- name
-Message-ID: <20200722170602.GA440171@kroah.com>
-References: <20200719054409.3050516-1-daeho43@gmail.com>
- <20200719151640.GA301791@kroah.com>
- <20200722164356.GA3912099@google.com>
+        id S1726157AbgGVRF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:05:57 -0400
+IronPort-SDR: /oCfT+a9GmLu2AXGt3FjF+8zo4mNtJiSqKHdPDGK41mGHd4DmO2Ob4CP7hSRNKzkhyogXEXBi1
+ Nq4nrUShJmkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215008550"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="215008550"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 10:05:56 -0700
+IronPort-SDR: LzRvidCjs/m9a564knoOx4ZyoubMuvJUXEs5TAVSzPayEV+nJ1bEljsUkzKx5PKhBUpJ5lZR9x
+ GVzVn7GWImyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="328276703"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga007.jf.intel.com with ESMTP; 22 Jul 2020 10:05:56 -0700
+Received: from [10.254.181.38] (10.254.181.38) by ORSMSX101.amr.corp.intel.com
+ (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 Jul
+ 2020 10:05:55 -0700
+Subject: Re: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to allocate/free
+ dev-msi interrupts
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>
+CC:     <vkoul@kernel.org>, <maz@kernel.org>, <bhelgaas@google.com>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
+        <tglx@linutronix.de>, <hpa@zytor.com>,
+        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
+        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
+        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
+        <tony.luck@intel.com>, <jing.lin@intel.com>,
+        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
+        <eric.auger@redhat.com>, <parav@mellanox.com>,
+        <dave.hansen@intel.com>, <netanelg@mellanox.com>,
+        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
+        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
+        <mona.hossain@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534736176.28840.5547007059232964457.stgit@djiang5-desk3.ch.intel.com>
+ <20200721162501.GC2021248@mellanox.com>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <b3bc68b3-937e-4b64-e1c7-84942d7ba60c@intel.com>
+Date:   Wed, 22 Jul 2020 10:05:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200722164356.GA3912099@google.com>
+In-Reply-To: <20200721162501.GC2021248@mellanox.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.254.181.38]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 09:43:56AM -0700, Jaegeuk Kim wrote:
-> On 07/19, Greg KH wrote:
-> > On Sun, Jul 19, 2020 at 02:44:08PM +0900, Daeho Jeong wrote:
-> > > From: Daeho Jeong <daehojeong@google.com>
-> > > 
-> > > Added a symbolic link directory pointing to its device name
-> > > directory using the volume name of the partition in sysfs.
-> > > (i.e., /sys/fs/f2fs/vol_#x -> /sys/fs/f2fs/sda1)
-> > 
-> > No, please no.
-> > 
-> > That is already created today for you in /dev/disk/  The kernel does not
-> > need to do this again.
-> > 
-> > If your distro/system/whatever does not provide you with /dev/disk/ and
-> > all of the symlinks in there, then work with your distro/system/whatever
-> > to do so.
+
+
+On 7/21/2020 9:25 AM, Jason Gunthorpe wrote:
+> On Tue, Jul 21, 2020 at 09:02:41AM -0700, Dave Jiang wrote:
+>> From: Megha Dey <megha.dey@intel.com>
+>>
+>> The dev-msi interrupts are to be allocated/freed only for custom devices,
+>> not standard PCI-MSIX devices.
+>>
+>> These interrupts are device-defined and they are distinct from the already
+>> existing msi interrupts:
+>> pci-msi: Standard PCI MSI/MSI-X setup format
+>> platform-msi: Platform custom, but device-driver opaque MSI setup/control
+>> arch-msi: fallback for devices not assigned to the generic PCI domain
+>> dev-msi: device defined IRQ domain for ancillary devices. For e.g. DSA
+>> portal devices use device specific IMS(Interrupt message store) interrupts.
+>>
+>> dev-msi interrupts are represented by their own device-type. That means
+>> dev->msi_list is never contended for different interrupt types. It
+>> will either be all PCI-MSI or all device-defined.
 > 
-> I don't get the point, since /dev/disk points device node, not any sysfs entry.
-> Do you mean we need to create symlink to /sys/fs/f2fs/dm-X in /dev/disk?
-
-Huh, no!  It's all done for you today automagically by userspace:
-
-$ tree /dev/disk/by-label/
-/dev/disk/by-label/
-├── boot -> ../../sda1
-├── fast_disk -> ../../md0
-├── root -> ../../sda2
-└── stuff -> ../../dm-0
-
-Look on your laptop/desktop/server today for those, there's lots of
-symlinks in /dev/disk/
-
-> > Again, no need to do this on a per-filesystem-basis when we already have
-> > this around for all filesystems, and have had it for 15+ years now.
+> Not sure I follow this, where is the enforcement that only dev-msi or
+> normal MSI is being used at one time on a single struct device?
 > 
-> Could you point out where we can get this? And, the label support depends
-> on per-filesystem design. I'm not sure how this can be generic enough.
 
-Userspace knows how to read labels on a per-filesystem-basis and does so
-just fine.  That's how it creates those symlinks, no kernel support is
-needed.
+So, in the dev_msi_alloc_irqs, I first check if the dev_is_pci..
+If it is a pci device, it is forbidden to use dev-msi and must use the 
+pci subsystem calls. dev-msi is to be used for all other custom devices, 
+mdev or otherwise.
 
-This has been implemented for 15+ years now, it's not a new thing...
-
-Now if your embedded system doesn't support it, that's the userspace of
-that system's fault, it's not the kernel's fault at all.  Go fix your
-userspace if you want those things.
-
-thanks,
-
-greg k-h
+> Jason
+> 
