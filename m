@@ -2,248 +2,178 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062C6C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C615DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3DE20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="c6gciru4"
+	by mail.kernel.org (Postfix) with ESMTP id 9EEBC2071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732324AbgGVVkF (ORCPT
+        id S1732480AbgGVVmD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:40:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgGVVkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:40:04 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03C2C0619E1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:40:03 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id a1so3934397ejg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:40:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R2Z64vw+qagebjdsDOZbyCjOc3To2u+GAsC3OZaH0G0=;
-        b=c6gciru4GNSVk6ACnSwN7WSWkOkNYhNfvBET9SAOmn9Ro9gbliYSWw5UdV+cBA4Yj8
-         ijw7MqughICPQnqPFWXiMZ+dEzfbYjruQTOVG5ab17egls2CEdRZoH+Rm+qri6GxpOtJ
-         yNMIIl70FXiRM3bvH4JDvfTx49NZd/arMvbHn6ksBcaNdJMTZ2giM70wkugXd2kxF6qu
-         OdnPaAZTfqjfyGjP98TZ2fgPnEiHiIV6Ut86/rl9MfLAnwaEULKtHrc225f31ma8a3F4
-         E5ndfVJeY0aDdCQ2Kgu3s2AOVmVj7I+5uOTie1Ka71f7tGNgJofPOd4c6AQivGkDrZXS
-         1YVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R2Z64vw+qagebjdsDOZbyCjOc3To2u+GAsC3OZaH0G0=;
-        b=RIqt2cqklKA41BEplXrXxrBuN+UTPYYWeUo0yXWobKQABTgk+J1PrjrkKtHqwX9xh4
-         MxFZvJyL58LdQnNBTBnutM/60kem+yuo0Q3fCmduA4UszxsQewkfm0PjLPzrvmafgsS1
-         AOVZhuAKoxKbuPCT3zdJoelnT1Katyrkgeq2uPrgdpwvBH8SRXpmKdFlJ77vx+PZaSe2
-         KqcnoZ+5bRLIbPMuFhxiHVsgrspDKhHXDxDcOS8wwe0RGj+J7UP5rZBB/vS0zRcL+Xl7
-         O2D2HHJc6LhVWhmsqCYSTmmHKqiZSiGUH/cT/iR0YWqQTIpX/0wacOBNZ8M538/xdPXl
-         W5qg==
-X-Gm-Message-State: AOAM530L/91lcE1qsuoQLqwqT9GRVp06Xo6d1ofmvuXv8sDyeSAdCYIB
-        zXdxdPPtjOYVPqF1szbMi2FkAiknwayP8y3crzWEDw==
-X-Google-Smtp-Source: ABdhPJzHaNsqfK3Cgkhaz7H4JevQ9ugXdy7SdXJtgxpfwTXUY+TcYHfJIaCSrlRJz0qjL8JV1YigBM7LqQiReqlipEY=
-X-Received: by 2002:a17:906:1e43:: with SMTP id i3mr1470530ejj.92.1595454002394;
- Wed, 22 Jul 2020 14:40:02 -0700 (PDT)
+        Wed, 22 Jul 2020 17:42:03 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2656 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726452AbgGVVmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:42:03 -0400
+Received: from dggemi404-hub.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id E8611F4957C3AE51D4A3;
+        Thu, 23 Jul 2020 05:42:00 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.52]) by
+ dggemi404-hub.china.huawei.com ([10.3.17.142]) with mapi id 14.03.0487.000;
+ Thu, 23 Jul 2020 05:41:50 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        huangdaode <huangdaode@huawei.com>
+Subject: RE: [PATCH v3 1/2] dma-direct: provide the ability to reserve
+ per-numa CMA
+Thread-Topic: [PATCH v3 1/2] dma-direct: provide the ability to reserve
+ per-numa CMA
+Thread-Index: AQHWTT1ZxTwLmOgUCE+K/2/rfDv6P6kTSH2AgAD8G8A=
+Date:   Wed, 22 Jul 2020 21:41:50 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD25A1606@DGGEMI525-MBS.china.huawei.com>
+References: <20200628111251.19108-1-song.bao.hua@hisilicon.com>
+ <20200628111251.19108-2-song.bao.hua@hisilicon.com>
+ <20200722142943.GB17658@lst.de>
+In-Reply-To: <20200722142943.GB17658@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.202.4]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200713060842.471356-1-acourbot@chromium.org> <20200713060842.471356-4-acourbot@chromium.org>
-In-Reply-To: <20200713060842.471356-4-acourbot@chromium.org>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Wed, 22 Jul 2020 18:39:50 -0300
-Message-ID: <CAAEAJfBO1Sih3r_RqxYCLRxtx6SoDq674zrvqhJiEBJeiDAtvw@mail.gmail.com>
-Subject: Re: [PATCH v3 03/16] media: mtk-vcodec: add SCP firmware ops
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jul 2020 at 03:09, Alexandre Courbot <acourbot@chromium.org> wrote:
->
-> From: Yunfei Dong <yunfei.dong@mediatek.com>
->
-> Add support for communicating with the SCP firmware, which will be used
-> by MT8183.
->
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> [acourbot: refactor, cleanup and split]
-> Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> ---
->  drivers/media/platform/Kconfig                |  1 +
->  .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  3 +
->  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  3 +
->  .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 56 +++++++++++++++++++
->  .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  2 +
->  5 files changed, 65 insertions(+)
->
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-> index c57ee78fa99d..f0dbe048efea 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -256,6 +256,7 @@ config VIDEO_MEDIATEK_VCODEC
->         select VIDEOBUF2_DMA_CONTIG
->         select V4L2_MEM2MEM_DEV
->         select VIDEO_MEDIATEK_VPU
-> +       select MTK_SCP
->         help
->             Mediatek video codec driver provides HW capability to
->             encode and decode in a range of video formats
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> index 4f07a5fcce7f..5b5765b98e57 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> @@ -225,6 +225,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
->         if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
->                                   &rproc_phandle)) {
->                 fw_type = VPU;
-> +       } else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-> +                                        &rproc_phandle)) {
-> +               fw_type = SCP;
->         } else {
->                 mtk_v4l2_err("Could not get vdec IPI device");
->                 return -ENODEV;
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> index 4340ea10afd0..42530cd01a30 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> @@ -233,6 +233,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
->         if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
->                                   &rproc_phandle)) {
->                 fw_type = VPU;
-> +       } else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
-> +                                        &rproc_phandle)) {
-> +               fw_type = SCP;
->         } else {
->                 mtk_v4l2_err("Could not get venc IPI device");
->                 return -ENODEV;
-> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-> index 967bb100a990..f2a62ea62fc6 100644
-> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-> @@ -19,6 +19,7 @@ struct mtk_vcodec_fw {
->         enum mtk_vcodec_fw_type type;
->         const struct mtk_vcodec_fw_ops *ops;
->         struct platform_device *pdev;
-> +       struct mtk_scp *scp;
->  };
->
->  static int mtk_vcodec_vpu_load_firmware(struct mtk_vcodec_fw *fw)
-> @@ -71,6 +72,48 @@ static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
->         .ipi_send = mtk_vcodec_vpu_ipi_send,
->  };
->
-> +static int mtk_vcodec_scp_load_firmware(struct mtk_vcodec_fw *fw)
-> +{
-> +       return rproc_boot(scp_get_rproc(fw->scp));
-> +}
-> +
-> +static unsigned int mtk_vcodec_scp_get_vdec_capa(struct mtk_vcodec_fw *fw)
-> +{
-> +       return scp_get_vdec_hw_capa(fw->scp);
-> +}
-> +
-> +static unsigned int mtk_vcodec_scp_get_venc_capa(struct mtk_vcodec_fw *fw)
-> +{
-> +       return scp_get_venc_hw_capa(fw->scp);
-> +}
-> +
-> +static void *mtk_vcodec_vpu_scp_dm_addr(struct mtk_vcodec_fw *fw,
-> +                                       u32 dtcm_dmem_addr)
-> +{
-> +       return scp_mapping_dm_addr(fw->scp, dtcm_dmem_addr);
-> +}
-> +
-> +static int mtk_vcodec_scp_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
-> +               mtk_vcodec_ipi_handler handler, const char *name, void *priv)
-> +{
-> +       return scp_ipi_register(fw->scp, id, handler, priv);
-> +}
-> +
-> +static int mtk_vcodec_scp_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
-> +               unsigned int len, unsigned int wait)
-> +{
-> +       return scp_ipi_send(fw->scp, id, buf, len, wait);
-> +}
-> +
-> +static const struct mtk_vcodec_fw_ops mtk_vcodec_rproc_msg = {
-> +       .load_firmware = mtk_vcodec_scp_load_firmware,
-> +       .get_vdec_capa = mtk_vcodec_scp_get_vdec_capa,
-> +       .get_venc_capa = mtk_vcodec_scp_get_venc_capa,
-> +       .map_dm_addr = mtk_vcodec_vpu_scp_dm_addr,
-> +       .ipi_register = mtk_vcodec_scp_set_ipi_register,
-> +       .ipi_send = mtk_vcodec_scp_ipi_send,
-> +};
-> +
->  static void mtk_vcodec_reset_handler(void *priv)
->  {
->         struct mtk_vcodec_dev *dev = priv;
-> @@ -94,6 +137,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
->         const struct mtk_vcodec_fw_ops *ops;
->         struct mtk_vcodec_fw *fw;
->         struct platform_device *fw_pdev = NULL;
-> +       struct mtk_scp *scp = NULL;
->
->         switch (type) {
->         case VPU:
-> @@ -106,6 +150,14 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
->                 vpu_wdt_reg_handler(fw_pdev, mtk_vcodec_reset_handler,
->                                     dev, rst_id);
->                 break;
-> +       case SCP:
-> +               ops = &mtk_vcodec_rproc_msg;
-> +               scp = scp_get(dev->plat_dev);
-> +               if (!scp) {
-> +                       mtk_v4l2_err("could not get vdec scp handle");
-> +                       return ERR_PTR(-EPROBE_DEFER);
 
-I suspect the EPROBE_DEFER should be returned by scp_get
-itself instead.
 
-> +               }
-> +               break;
->         default:
->                 mtk_v4l2_err("invalid vcodec fw type");
->                 return ERR_PTR(-EINVAL);
-> @@ -118,6 +170,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
->         fw->type = type;
->         fw->ops = ops;
->         fw->pdev = fw_pdev;
-> +       fw->scp = scp;
->
->         return fw;
->  }
-> @@ -129,6 +182,9 @@ void mtk_vcodec_fw_release(struct mtk_vcodec_fw *fw)
->         case VPU:
->                 put_device(&fw->pdev->dev);
->                 break;
-> +       case SCP:
-> +               scp_put(fw->scp);
+> -----Original Message-----
+> From: Christoph Hellwig [mailto:hch@lst.de]
+> Sent: Thursday, July 23, 2020 2:30 AM
+> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
+> Cc: hch@lst.de; m.szyprowski@samsung.com; robin.murphy@arm.com;
+> will@kernel.org; ganapatrao.kulkarni@cavium.com;
+> catalin.marinas@arm.com; iommu@lists.linux-foundation.org; Linuxarm
+> <linuxarm@huawei.com>; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; Jonathan Cameron
+> <jonathan.cameron@huawei.com>; Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de>; Steve Capper <steve.capper@arm.com>; Andrew
+> Morton <akpm@linux-foundation.org>; Mike Rapoport <rppt@linux.ibm.com>
+> Subject: Re: [PATCH v3 1/2] dma-direct: provide the ability to reserve
+> per-numa CMA
+> 
++cc Prime and Daode who are interested in this patchset.
 
-Interestingly scp_put is a wrapper around put_device :-)
-Perhaps not a reason to violate the layering.
+> On Sun, Jun 28, 2020 at 11:12:50PM +1200, Barry Song wrote:
+> >  struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t
+> gfp)
+> >  {
+> >  	size_t count = size >> PAGE_SHIFT;
+> >  	struct page *page = NULL;
+> >  	struct cma *cma = NULL;
+> > +	int nid = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> > +	bool alloc_from_pernuma = false;
+> > +
+> > +	if ((count <= 1) && !(dev && dev->cma_area))
+> > +		return NULL;
+> >
+> >  	if (dev && dev->cma_area)
+> >  		cma = dev->cma_area;
+> > -	else if (count > 1)
+> > +	else if ((nid != NUMA_NO_NODE) &&
+> dma_contiguous_pernuma_area[nid]
+> > +		&& !(gfp & (GFP_DMA | GFP_DMA32))) {
+> > +		cma = dma_contiguous_pernuma_area[nid];
+> > +		alloc_from_pernuma = true;
+> > +	} else {
+> >  		cma = dma_contiguous_default_area;
+> > +	}
+> 
+> I find the function rather confusing now.  What about something
+> like (this relies on the fact that dev should never be NULL in the
+> DMA API)
+> 
+> struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+> {
+> 	size_t cma_align = min_t(size_t, get_order(size),
+> CONFIG_CMA_ALIGNMENT);
+>  	size_t count = size >> PAGE_SHIFT;
+> 
+> 	if (gfpflags_allow_blocking(gfp))
+> 		return NULL;
+> 	gfp &= __GFP_NOWARN;
+> 
+> 	if (dev->cma_area)
 
-Regards,
-Ezequiel
+I got a kernel robot warning which said dev should be checked before being accessed
+when I did a similar change in v1. Probably it was an invalid warning if dev should
+never be null.
+
+> 		return cma_alloc(dev->cma_area, count, cma_align, gfp);
+> 	if (count <= 1)
+> 		return NULL;
+> 
+> 	if (IS_ENABLED(CONFIG_PERNODE_CMA) && !(gfp & (GFP_DMA |
+> GFP_DMA32)) {
+> 		int nid = dev_to_node(dev);
+>  		struct cma *cma = dma_contiguous_pernuma_area[nid];
+> 		struct page *page;
+> 
+> 		if (cma) {
+> 			page = cma_alloc(cma, count, cma_align, gfp);
+> 			if (page)
+> 				return page;
+> 		}
+> 	}
+> 
+> 	return cma_alloc(dma_contiguous_default_area, count, cma_align, gfp);
+> }
+
+Yes, it looks much better.
+
+> 
+> > +		/*
+> > +		 * otherwise, page is from either per-numa cma or default cma
+> > +		 */
+> > +		int nid = page_to_nid(page);
+> > +
+> > +		if (nid != NUMA_NO_NODE) {
+> > +			if (cma_release(dma_contiguous_pernuma_area[nid], page,
+> > +						PAGE_ALIGN(size) >> PAGE_SHIFT))
+> > +				return;
+> > +		}
+> > +
+> > +		if (cma_release(dma_contiguous_default_area, page,
+> 
+> How can page_to_nid ever return NUMA_NO_NODE?
+
+I thought page_to_nid would return NUMA_NO_NODE if CONFIG_NUMA is
+not enabled. Probably I was wrong. Will get it fixed in v4.
+
+Thanks
+Barry
+
