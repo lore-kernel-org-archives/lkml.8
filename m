@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CACEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81570C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6245120771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D6A20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732663AbgGVPM3 (ORCPT
+        id S1732568AbgGVPQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:12:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41683 "EHLO
+        Wed, 22 Jul 2020 11:16:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41911 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgGVPM2 (ORCPT
+        with ESMTP id S1726717AbgGVPQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:12:28 -0400
+        Wed, 22 Jul 2020 11:16:35 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <colin.king@canonical.com>)
-        id 1jyGPt-0001rA-Ha; Wed, 22 Jul 2020 15:12:21 +0000
+        id 1jyGTv-0002S9-1o; Wed, 22 Jul 2020 15:16:31 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] lan743x: remove redundant initialization of variable current_head_index
-Date:   Wed, 22 Jul 2020 16:12:21 +0100
-Message-Id: <20200722151221.957972-1-colin.king@canonical.com>
+Subject: [PATCH] media: radio: remove redundant assignment to variable retval
+Date:   Wed, 22 Jul 2020 16:16:30 +0100
+Message-Id: <20200722151630.958201-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -46,36 +45,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-The variable current_head_index is being initialized with a value that
-is never read and it is being updated later with a new value.  Replace
-the initialization of -1 with the latter assignment.
+The variable retval is being initialized with a value that is
+never read and it is being updated later with a new value. The
+initialization is redundant and can be removed.
 
 Addresses-Coverity: ("Unused value")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/net/ethernet/microchip/lan743x_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/radio/si4713/radio-usb-si4713.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index f6479384dc4f..de93cc6ebc1a 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -2046,14 +2046,13 @@ static int lan743x_rx_process_packet(struct lan743x_rx *rx)
- {
- 	struct skb_shared_hwtstamps *hwtstamps = NULL;
- 	int result = RX_PROCESS_RESULT_NOTHING_TO_DO;
-+	int current_head_index = *rx->head_cpu_ptr;
- 	struct lan743x_rx_buffer_info *buffer_info;
- 	struct lan743x_rx_descriptor *descriptor;
--	int current_head_index = -1;
- 	int extension_index = -1;
- 	int first_index = -1;
- 	int last_index = -1;
+diff --git a/drivers/media/radio/si4713/radio-usb-si4713.c b/drivers/media/radio/si4713/radio-usb-si4713.c
+index 33274189c83c..2cf36c8abdde 100644
+--- a/drivers/media/radio/si4713/radio-usb-si4713.c
++++ b/drivers/media/radio/si4713/radio-usb-si4713.c
+@@ -414,7 +414,7 @@ static int usb_si4713_probe(struct usb_interface *intf,
+ 	struct si4713_usb_device *radio;
+ 	struct i2c_adapter *adapter;
+ 	struct v4l2_subdev *sd;
+-	int retval = -ENOMEM;
++	int retval;
  
--	current_head_index = *rx->head_cpu_ptr;
- 	if (current_head_index < 0 || current_head_index >= rx->ring_size)
- 		goto done;
- 
+ 	dev_info(&intf->dev, "Si4713 development board discovered: (%04X:%04X)\n",
+ 			id->idVendor, id->idProduct);
 -- 
 2.27.0
 
