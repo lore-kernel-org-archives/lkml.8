@@ -2,179 +2,182 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A095C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5696C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7979922B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A171E22B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wyajGkXn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xgKFFSG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732818AbgGVUm2 (ORCPT
+        id S1732887AbgGVUo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:42:28 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:52635 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbgGVUm1 (ORCPT
+        Wed, 22 Jul 2020 16:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGVUoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:42:27 -0400
-Received: by mail-il1-f197.google.com with SMTP id o17so1927540ilt.19
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:42:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=XD+SXlq3/2gU9EkMcZLGPTp8jmHGm8EtipgOib0Vg24=;
-        b=eSabHpaDYmD3ex8SygkjldehY7ISz4uDtpT2J53YhbPKTMXhZZOexRJ8AC4r/lpl5a
-         OYumA4BAVwm4GcJbuyQXmVlQSBxSUHPn0d72ztgP6e1Opw5H+JPVwc9mJTPUo51Tb1Xm
-         NE0DwjcmLmc1Qe0gWH3sPN3v1OVLahu2emKybjAFRW6ZiuWWb3t1+OXDzRq4kzkPvT9P
-         yUtiieIWhw7/1LZSNRdAeWczARCW1z2IREQuIMpC1DkHaSMbY2Ln2AB2nvZ57nYgYGNP
-         B7GbSeGQdKXQ0MVuVzkMchx0mBNI/8WqY3Nci1jjOd0tgUqupQwPo0oFus+noefV75I0
-         KV4w==
-X-Gm-Message-State: AOAM5306isozOT4I66P++q0PyX/KtXHXMdkaFAJoFvE94CB4KQPsi8NR
-        jBqkZ5oEcbFfjBUogLwQmFqNF/RutIj/DmWH02JJW3ke0nt2
-X-Google-Smtp-Source: ABdhPJyIVUe7TBkJ7v52/44AYMjF3LCCv5SR/P+tek0q5wlkLyDtLnVA2NDEqhHFTroTNwGVWSsmkU3mgJUXaYcveNhBWM5NExnA
+        Wed, 22 Jul 2020 16:44:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BDCC0619DC;
+        Wed, 22 Jul 2020 13:44:55 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595450693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wXmzNCf+SuxkNEeA2BGq+ls7ErUJp1r23WIHfZ6ytY8=;
+        b=wyajGkXnsNJNOy+GEr2xcZ7WbqirfqC0K6s21soI7YoKiIB/oTL8lqbKiapU9N/5ohnvku
+        D3d1K/LUt/HgfKgbGveYYjFG4S5Bbr61Udj8uCDDoq+B+pyjD4jgMs4OAMnAhKv+b4F9AL
+        xqM2zl08ylbrd0wK5RkmFEjouB8bmOF/1auaFPOop6yG+LS9aLhzqU/DoYMsCf3R3jYBJR
+        Gc6LB/4Te2ahHOIN3yOeBweEVBRa+9/1w7s/zqRYdz52xhOmBkI1IBDqBzjz4d3UUqUlHa
+        ot6lQapK1TZPQLBiqI++zY71ic1K+dJbvu4RcMJMzYMejR35bRW5NcdS5vY46w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595450693;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wXmzNCf+SuxkNEeA2BGq+ls7ErUJp1r23WIHfZ6ytY8=;
+        b=xgKFFSG6c+aqvhtZbhIloJilsTGyEpYIJbC+QLyW5QnyNvEzVpja7KeGWisf5hs+2VAK2k
+        FXupTA7ESov48+AQ==
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        jgg@mellanox.com, rafael@kernel.org, dave.hansen@intel.com,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 03/18] irq/dev-msi: Create IR-DEV-MSI irq domain
+In-Reply-To: <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 22 Jul 2020 22:44:51 +0200
+Message-ID: <87lfjbz3cs.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a02:5b83:: with SMTP id g125mr1081660jab.91.1595450546168;
- Wed, 22 Jul 2020 13:42:26 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 13:42:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000fa7b205ab0dc778@google.com>
-Subject: KASAN: use-after-free Write in __linkwatch_run_queue
-From:   syzbot <syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com>
-To:     andrew@lunn.ch, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Dave Jiang <dave.jiang@intel.com> writes:
+> From: Megha Dey <megha.dey@intel.com>
+>
+> When DEV_MSI is enabled, the dev_msi_default_domain is updated to the
+> base DEV-MSI irq  domain. If interrupt remapping is enabled, we create
 
-syzbot found the following issue on:
+s/we//
 
-HEAD commit:    544f287b bonding: check error value of register_netdevice(..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=14385887100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dddbcb5a9f4192db
-dashboard link: https://syzkaller.appspot.com/bug?extid=bbc3a11c4da63c1b74d6
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b11780900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1080f887100000
+> a new IR-DEV-MSI irq domain and update the dev_msi_default domain to
+> the same.
+>
+> For X86, introduce a new irq_alloc_type which will be used by the
+> interrupt remapping driver.
+>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Megha Dey <megha.dey@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  arch/x86/include/asm/hw_irq.h       |    1 +
+>  arch/x86/kernel/apic/msi.c          |   12 ++++++
+>  drivers/base/dev-msi.c              |   66 +++++++++++++++++++++++++++++++----
+>  drivers/iommu/intel/irq_remapping.c |   11 +++++-
+>  include/linux/intel-iommu.h         |    1 +
+>  include/linux/irqdomain.h           |   11 ++++++
+>  include/linux/msi.h                 |    3 ++
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com
+Why is this mixing generic code, x86 core code and intel specific driver
+code? This is new functionality so:
 
-==================================================================
-BUG: KASAN: use-after-free in __list_splice include/linux/list.h:422 [inline]
-BUG: KASAN: use-after-free in list_splice_init include/linux/list.h:464 [inline]
-BUG: KASAN: use-after-free in __linkwatch_run_queue+0x58a/0x630 net/core/link_watch.c:200
-Write of size 8 at addr ffff888094ccc578 by task kworker/0:1/12
+      1) Provide the infrastructure
+      2) Add support to architecture specific parts
+      3) Enable it
 
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events linkwatch_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __list_splice include/linux/list.h:422 [inline]
- list_splice_init include/linux/list.h:464 [inline]
- __linkwatch_run_queue+0x58a/0x630 net/core/link_watch.c:200
- linkwatch_event+0x4a/0x60 net/core/link_watch.c:251
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> +
+> +#ifdef CONFIG_DEV_MSI
+> +int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +			   int nvec, msi_alloc_info_t *arg)
+> +{
+> +	memset(arg, 0, sizeof(*arg));
+> +
+> +	arg->type = X86_IRQ_ALLOC_TYPE_DEV_MSI;
+> +
+> +	return 0;
+> +}
+> +#endif
 
-Allocated by task 6822:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmalloc_node include/linux/slab.h:578 [inline]
- kvmalloc_node+0xb4/0xf0 mm/util.c:574
- kvmalloc include/linux/mm.h:753 [inline]
- kvzalloc include/linux/mm.h:761 [inline]
- alloc_netdev_mqs+0x97/0xdc0 net/core/dev.c:9938
- rtnl_create_link+0x219/0xad0 net/core/rtnetlink.c:3067
- __rtnl_newlink+0xfa0/0x1750 net/core/rtnetlink.c:3329
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+What is this? Tons of new lines for taking up more space and not a
+single comment.
 
-Freed by task 6822:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- kvfree+0x42/0x50 mm/util.c:603
- device_release+0x71/0x200 drivers/base/core.c:1559
- kobject_cleanup lib/kobject.c:693 [inline]
- kobject_release lib/kobject.c:722 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1c0/0x270 lib/kobject.c:739
- put_device+0x1b/0x30 drivers/base/core.c:2779
- free_netdev+0x35d/0x480 net/core/dev.c:10054
- __rtnl_newlink+0x14d8/0x1750 net/core/rtnetlink.c:3354
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> -static int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +int __weak dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  			   int nvec, msi_alloc_info_t *arg)
+>  {
+>  	memset(arg, 0, sizeof(*arg));
 
-The buggy address belongs to the object at ffff888094ccc000
- which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 1400 bytes inside of
- 8192-byte region [ffff888094ccc000, ffff888094cce000)
-The buggy address belongs to the page:
-page:ffffea0002533300 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002533300 order:2 compound_mapcount:0 compound_pincount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea0002519408 ffffea0002623008 ffff8880aa0021c0
-raw: 0000000000000000 ffff888094ccc000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
+Oh well. So every architecure which needs to override this and I assume
+all which are eventually going to support it need to do the memset() in
+their override.
 
-Memory state around the buggy address:
- ffff888094ccc400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888094ccc480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888094ccc500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff888094ccc580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888094ccc600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+       memset(arg,,,);
+       arch_dev_msi_prepare();
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> -	dev_msi_default_domain = msi_create_irq_domain(fn, &dev_msi_domain_info, parent);
+> +	/*
+> +	 * This initcall may come after remap code is initialized. Ensure that
+> +	 * dev_msi_default domain is updated correctly.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+What? No, this is a disgusting hack. Get your ordering straight, that's
+not rocket science.
+
+> +#ifdef CONFIG_IRQ_REMAP
+
+IRQ_REMAP is x86 specific. Is this file x86 only or intended to be for
+general use? If it's x86 only, then this should be clearly
+documented. If not, then these x86'isms have no place here.
+
+> +struct irq_domain *create_remap_dev_msi_irq_domain(struct irq_domain *parent,
+> +						   const char *name)
+
+So we have msi_create_irq_domain() and this is about dev_msi, right? So
+can you please stick with a consistent naming scheme?
+
+> +{
+> +	struct fwnode_handle *fn;
+> +	struct irq_domain *domain;
+> +
+> +	fn = irq_domain_alloc_named_fwnode(name);
+> +	if (!fn)
+> +		return NULL;
+> +
+> +	domain = msi_create_irq_domain(fn, &dev_msi_ir_domain_info, parent);
+> +	if (!domain) {
+> +		pr_warn("failed to initialize irqdomain for IR-DEV-MSI.\n");
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+> +
+> +	if (!dev_msi_default_domain)
+> +		dev_msi_default_domain = domain;
+
+Can this be called several times? If so, then this lacks a comment. If
+not, then this condition is useless.
+
+Thanks,
+
+        tglx
