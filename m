@@ -2,122 +2,101 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75995C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D201D20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F89720771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YFI/F6on"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Mx/VbPSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbgGVULD (ORCPT
+        id S1732650AbgGVULI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:11:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59227 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgGVULD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:11:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595448661;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+z8Sjy8ZptOYQPBj+H820e2EKukutEsqDOT5iiJ3PDM=;
-        b=YFI/F6onfTPy859uWiW4y+mYExQ6TcfQmCBeorkF4J6L6xqj70gQxQGv9n0DtlZVxTSuHp
-        r1auikkcfi1FnatLezCbA2zDZZ299eGayp3hbuqTloxS11NQeqLJLFpsiWX5cfHMR75R8z
-        +gaY6Ol1gx640keM/pPKpat4KZnG8C0=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-DATXNlbRMde62i8CrBzfFA-1; Wed, 22 Jul 2020 16:11:00 -0400
-X-MC-Unique: DATXNlbRMde62i8CrBzfFA-1
-Received: by mail-qk1-f199.google.com with SMTP id h4so2202968qkl.23
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:11:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=+z8Sjy8ZptOYQPBj+H820e2EKukutEsqDOT5iiJ3PDM=;
-        b=FE3usbBMpGDn0huTpwgRj+/+zNqj5OnMlVfHFbF+7+kBV2SglfSFxSngO7lh8VeZQW
-         GYVulmYP6NPXqqWzAKaqggfJim8Bw6ELP73VYE9e1p+lzDrz5j7+uNwEzio8DQWxUXQD
-         IATSO1pXgL06fB9sMVuVt4jVXD7EO7o5B0kV1ymOtXKYRiUJk82tVpvRBaPhqCS8/j76
-         oH8nKEKnNcZm6rfQD/+VNlgL/80ER35Xx+h4R1PX2Ly2bZDnFUTw5PDTXLK5A/yJ7p9O
-         6iwC+I8jvFiSPQO0gUpV4nNYSmgnrqBrAyXRMi5D2YO166svmDePqFxan4QlYAAH1CpF
-         nXiA==
-X-Gm-Message-State: AOAM5301ECUu6ntGbDmjw9OKL0HrmupWuGJrOE+Wls4BECTnv/0C9ZuI
-        YSNuTiZEFLfNVbm7rtCTSCWF2UoMgtaGj56d7Dn/9cIAh5fleGSjNTaOA3UneaJqYlsgrRorVW1
-        OfQBUQqm3fH59SVvytmpoW0iR
-X-Received: by 2002:a05:620a:230:: with SMTP id u16mr1636733qkm.387.1595448659274;
-        Wed, 22 Jul 2020 13:10:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzh0P/cdl6d05hqmcebLmXrq3sWiqikrcPUldQ6BQFsWF/cpmfObT/Kf16aCA1SldNDaH+SmQ==
-X-Received: by 2002:a05:620a:230:: with SMTP id u16mr1636711qkm.387.1595448659017;
-        Wed, 22 Jul 2020 13:10:59 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id o2sm743539qkh.102.2020.07.22.13.10.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 13:10:58 -0700 (PDT)
-Subject: Re: [PATCH v2] KEYS: remove redundant memset
-To:     Joe Perches <joe@perches.com>, dhowells@redhat.com,
-        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
-        serge@hallyn.com, denkenz@gmail.com, marcel@holtmann.org
-Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200722134610.31947-1-trix@redhat.com>
- <2bdd6b8ec731d180023d593b679afc66def19b4f.camel@perches.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <e36c364e-22f4-c520-04da-ca1196fec049@redhat.com>
-Date:   Wed, 22 Jul 2020 13:10:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 22 Jul 2020 16:11:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:58693 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732348AbgGVULH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 16:11:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595448665; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=KZi1ETE3on/bhyAJfeRa2juKIYErBeITDTsM9mbpJA0=; b=Mx/VbPSVn2naKXbAbylOuDYc9Lno3Xnd/ztG90XfC/7aXdEdli9npVcVdO4wtPsJCOaDu9dF
+ kInP8Al3IcQLH5VmCpes5N3xicQiwIMz3xiGPaErDnmgW0wfu1Gzw7t94JgxoUdCi/Av5Ji4
+ qjg1pPzevUZAfbMaTueF86s9dMI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5f189d5765270fa5953ad2a6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 22 Jul 2020 20:11:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0A6A5C4339C; Wed, 22 Jul 2020 20:11:03 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1736BC433C9;
+        Wed, 22 Jul 2020 20:10:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1736BC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        evgreen@chromium.org, ohad@wizery.com,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v3 0/3] Add modem debug features
+Date:   Thu, 23 Jul 2020 01:40:44 +0530
+Message-Id: <20200722201047.12975-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <2bdd6b8ec731d180023d593b679afc66def19b4f.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The series adds support for the following modem debug features:
+ * Modem debug policy which enables coredumps/live debug on secure devices
+ * MBA text logs extraction on SC7180 SoCs
 
-On 7/22/20 1:02 PM, Joe Perches wrote:
-> On Wed, 2020-07-22 at 06:46 -0700, trix@redhat.com wrote:
->> From: Tom Rix <trix@redhat.com>
->>
->> Reviewing use of memset in keyctrl_pkey.c
->>
->> keyctl_pkey_params_get prologue code to set params up
->>
->> 	memset(params, 0, sizeof(*params));
->> 	params->encoding = "raw";
->>
->> keyctl_pkey_query has the same prologue
->> and calls keyctl_pkey_params_get.
->>
->> So remove the prologue.
->>
->> Fixes: 00d60fd3b932 ("KEYS: Provide keyctls to drive the new key type ops for asymmetric keys [ver #2]")
-> At best, this is a micro optimization.
-Yes
-> How is this appropriate for a Fixes: line?
-Removing unneeded code is not a fix?
->
->> diff --git a/security/keys/keyctl_pkey.c b/security/keys/keyctl_pkey.c
-> []
->> @@ -166,8 +166,6 @@ long keyctl_pkey_query(key_serial_t id,
->>  	struct kernel_pkey_query res;
->>  	long ret;
->>  
->> -	memset(&params, 0, sizeof(params));
->> -
->>  	ret = keyctl_pkey_params_get(id, _info, &params);
->>  	if (ret < 0)
->>  		goto error;
+The series also includes fixes for a couple of mem aborts seen when
+mba/modem blob size exceeds mba/mpss regions respectively.
+
+V3:
+ * Drop mba text log extraction support since its already
+   picked up by Bjorn
+ * Fix dp_fw leak and create a separate func for dp load [Bjorn]
+ * Reset dp_size on mba_reclaim
+ * 2 new patches are included and they validate mba/modem blob size
+   before load
+
+V2:
+ * Use request_firmware_direct [Bjorn]
+ * Use Bjorn's template to show if debug policy is present
+ * Add size check to prevent memcpy out of bounds [Bjorn]
+ * Don't dump logs in mba_reclaim path [Bjorn]
+ * Move has_mba_logs check to q6v5_dump_mba_logs [Bjorn]
+ * SDM845 mss was incorrectly marked to support mba logs
+ * Drop patch 3 where mba text logs are added to imem
+
+Sibi Sankar (3):
+  remoteproc: qcom_q6v5_mss: Validate MBA firmware size before load
+  remoteproc: qcom_q6v5_mss: Validate modem blob firmware size before
+    load
+  remoteproc: qcom_q6v5_mss: Add modem debug policy support
+
+ drivers/remoteproc/qcom_q6v5_mss.c | 36 ++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
