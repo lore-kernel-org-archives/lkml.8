@@ -2,141 +2,125 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF9CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3F20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A91MMATI"
+	by mail.kernel.org (Postfix) with ESMTP id 2789B20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgGVFws (ORCPT
+        id S1728380AbgGVFxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbgGVFwq (ORCPT
+        Wed, 22 Jul 2020 01:53:21 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56936 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727980AbgGVFxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:52:46 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E99C061794;
-        Tue, 21 Jul 2020 22:52:46 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBPkd2qC6z9sPB;
-        Wed, 22 Jul 2020 15:52:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595397164;
-        bh=+DXFXfkYQ7uc+rrRZx7ipC29lUJNlQ0fiSh7XiaivgA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A91MMATIUEaxLTuUSUSdP7KATr04kAPL8N5UX9dO7hhyHoOXaLRV8iG1/1lML/umk
-         sSBpcfCEtqy7XFgPDk2QXzVewAD+ZKdK1potR30457KWa6szjB2yqH3SV3drCMBpjN
-         jQH0Z99e/UDe4R55zZBKOfK/hpvb0xwAY37vw+TgR6AeTYI6rVIgXZaC5fEfLmgz0l
-         kff4Kr/f+nNa8fm7KXdxeR3iYKTaPvAdrNc9rFztrIUp+iHURI1i+XiPRtNOjRgO7h
-         Nn9AzYnTgWqmR8GZMhkoXtwar7loQlKhUA4f13IFnQxCSe6NRgHVuLh5Naso0YrLf8
-         Wrt3AM/F5MG5g==
-Date:   Wed, 22 Jul 2020 15:52:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: linux-next: manual merge of the devicetree tree with the drm tree
-Message-ID: <20200722155239.07bafdfc@canb.auug.org.au>
+        Wed, 22 Jul 2020 01:53:20 -0400
+Received: by mail-io1-f71.google.com with SMTP id f21so1088099ioo.23
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:53:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9IgRu2uMesy4c9c+gNLBJYsfcIEEN+7tndJeF0Yh/Zg=;
+        b=Z7QuTFfxwl+Toks2Wg3Nv2kSKelqx45L/I2TWNe2Or5QNqE5y2rKVzOicn3X7Yv0oT
+         uqnHxnn56yGm+PpWFlpAGoT0gab3yo7AxYIDEJtusXgYuJ99U2C6QQ0KyFwBSb6JciMj
+         szHPDtfYDsO8J0MiuaaV+2uUUB1YFYsx1aBYALRxA1ynZT9jv5NiHCwOUGhDP8qoQBel
+         OkFWjsRPfYnUMtCzVndIjgtWow3A/cWYQr5vV53bnQSMzt0fQb+SUkxl1+t9qWQGkWVP
+         NSiEKWkVp+JDzlTia8tN1yAghc15oOX8wOqB8PuSUtcG/PEvjP+1d5UcNsyhK4855H3E
+         otlQ==
+X-Gm-Message-State: AOAM533RYIkxpBO9kokyf2C/CxQSFlIiRwjYvpHeEHHxnDsuGnCB0SY4
+        XjkN3SMZdyBMMLDpJBbswYv9ReMpk61X/8u99/aueM8NgVqN
+X-Google-Smtp-Source: ABdhPJx4ETI+hJ9B7DaNY0pHG6EuDb/SP4iQAglQKZ41CgdONAdLTa4V/NlhyPKE6bCDgRmyUE6PaBJXgMuva1uC/npo5rNPbGz+
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/oWXN3SQ8lhH9H.AU2OpA83W";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a05:6e02:4ca:: with SMTP id f10mr31722621ils.291.1595397199398;
+ Tue, 21 Jul 2020 22:53:19 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 22:53:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000588d8b05ab015bed@google.com>
+Subject: KMSAN: uninit-value in video_usercopy
+From:   syzbot <syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, bnvandana@gmail.com, glider@google.com,
+        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org, niklas.soderlund+renesas@ragnatech.se,
+        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oWXN3SQ8lhH9H.AU2OpA83W
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+syzbot found the following issue on:
 
-Today's linux-next merge of the devicetree tree got a conflict in:
+HEAD commit:    14525656 compiler.h: reinstate missing KMSAN_INIT
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=15be8380900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c534a9fad6323722
+dashboard link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17eb93d0900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116da33b100000
 
-  Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
 
-between commit:
+=====================================================
+BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:428
+CPU: 0 PID: 8471 Comm: syz-executor794 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1df/0x240 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
+ kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:428
+ instrument_copy_to_user include/linux/instrumented.h:91 [inline]
+ _copy_to_user+0x100/0x1d0 lib/usercopy.c:30
+ copy_to_user include/linux/uaccess.h:161 [inline]
+ video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3226 [inline]
+ video_usercopy+0x248a/0x2c00 drivers/media/v4l2-core/v4l2-ioctl.c:3325
+ video_ioctl2+0x9f/0xb0 drivers/media/v4l2-core/v4l2-ioctl.c:3335
+ v4l2_ioctl+0x23f/0x270 drivers/media/v4l2-core/v4l2-dev.c:360
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ ksys_ioctl fs/ioctl.c:753 [inline]
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl+0x2e9/0x410 fs/ioctl.c:760
+ __x64_sys_ioctl+0x4a/0x70 fs/ioctl.c:760
+ do_syscall_64+0xb0/0x150 arch/x86/entry/common.c:386
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x444009
+Code: Bad RIP value.
+RSP: 002b:00007ffd83706aa8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444009
+RDX: 0000000020000100 RSI: 00000000c0505611 RDI: 0000000000000003
+RBP: 00000000006ce018 R08: 00000000004002e0 R09: 00000000004002e0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401c90
+R13: 0000000000401d20 R14: 0000000000000000 R15: 0000000000000000
 
-  5a2e9b658cdc ("dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml")
+Local variable ----vb32.i@video_usercopy created at:
+ video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3210 [inline]
+ video_usercopy+0x20bd/0x2c00 drivers/media/v4l2-core/v4l2-ioctl.c:3325
+ video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3210 [inline]
+ video_usercopy+0x20bd/0x2c00 drivers/media/v4l2-core/v4l2-ioctl.c:3325
 
-from the drm tree and commit:
+Bytes 52-55 of 80 are uninitialized
+Memory access of size 80 starts at ffffa41d80dcfce0
+=====================================================
 
-  382646090f7f ("dt-bindings: drm/bridge: Replace HTTP links with HTTPS one=
-s")
 
-from the devicetree tree.
-
-I fixed it up (I delete the file and adde the following merge fix
-patch) and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 22 Jul 2020 15:47:22 +1000
-Subject: [PATCH] fix for "dt-bindings: drm/bridge: Replace HTTP links with =
-HTTPS ones"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml        | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.=
-yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-index be10e8cf31e1..f8622bd0f61e 100644
---- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-@@ -11,7 +11,7 @@ maintainers:
-=20
- description: |
-   The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
--  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=
-=3Dsn65dsi86&fileType=3Dpdf
-+  https://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=
-=3Dsn65dsi86&fileType=3Dpdf
-=20
- properties:
-   compatible:
---=20
-2.27.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/oWXN3SQ8lhH9H.AU2OpA83W
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8X1CcACgkQAVBC80lX
-0GwyWwf/YY8JKEer/2P6zf3IYHeHk0ZD+pm8MZsXm19M+/dHnvxs0kSficrlJ5iy
-oOQhfgCgBIgzUUQqR5PH2bXkXEyiPp/LsX2WupbNOa9V+zUpRIUanbDJbBMGf8dQ
-BBSTeJtOpf/U6pqOdY17NQFPBuBMRi4ng+9eiGXWJvjN6uoqWrIhWOilDuAxC9gC
-oO1YQesKFh46ONrGJJLKbFVjnhe+XDrsUZwdZPQHbPncUZK4AWhqs4BA560hqmmd
-Cm8nT4nqpuCPOvrKrXVudFj4Uu1FSiT7N1/Ati5/FEj0hZM1FzOYPaQ34v5YDeae
-abW5mOmRlOGr2JDHVNZc2ut4ZK8PTg==
-=aBZg
------END PGP SIGNATURE-----
-
---Sig_/oWXN3SQ8lhH9H.AU2OpA83W--
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
