@@ -2,319 +2,155 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0513AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FECE22B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C0F20825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595455787;
-	bh=Ia353sLPOcP2dsD+d2MRKC/6UosDFuQpSkniVtNRaKo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=OBqOZoZKWXAOkRX0xZKXum3WT+rpqYU7OoSsrK/cf219Wx7wQzu6G1dj0bY9rSd6x
-	 I18XnlCrayW0v1au/arx9MGRXTniUETMrjTpbn7tapuVJDOjDNfB5f1Qf01wZXirbE
-	 U8rbzTc/q3bzniyfJS0I78lpBbo2tqtQvoLBnVkc=
+	s=default; t=1595455866;
+	bh=rrD1MaIcckKimmVcrd51dA0aWUpllFClYsv/eT1nyCw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dDfo+AN3mf6bZHqEtf1czryYExxNQQ/+ut1QxnoQ3i6KYMqfCP+n13VwwR17QrJKf
+	 8dYT77rUWL5+c1AzBMfWuliH/wNKSCXIdy5stH4WdR4CtewrDdO6X5RaHJX47kCKJt
+	 yA4hrCBESDabJd+rZ+bwFxirni5/gCDwPEryYbJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732973AbgGVWJp (ORCPT
+        id S1732998AbgGVWLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730153AbgGVWJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:09:45 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A61C820825;
-        Wed, 22 Jul 2020 22:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595455783;
-        bh=Ia353sLPOcP2dsD+d2MRKC/6UosDFuQpSkniVtNRaKo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=RI0SVps7P+HsuINuxwZ7Rs9Y5ECg7vg8+T6cpzB81CpkNBBiuExQBqnm9aOx3X9L3
-         JhzSMb67yzyXSuPCramL3X4fkc7Vu/YpK7OPHgtUo9TsqGcz8us3fKOLf72lhnDvH7
-         Wz58n4c0U+jsNG+4ffOkkPSJWWhfuHjYYAmItTdo=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 853833522AB9; Wed, 22 Jul 2020 15:09:43 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 15:09:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, will@kernel.org, hch@lst.de,
-        axboe@kernel.dk, chris@chris-wilson.co.uk, davem@davemloft.net,
-        kuba@kernel.org, fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [RFC][PATCH 7/9] smp,irq_work: Use the new irq_work API
-Message-ID: <20200722220943.GC23360@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200722150149.525408253@infradead.org>
- <20200722153017.445914025@infradead.org>
+        Wed, 22 Jul 2020 18:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgGVWLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 18:11:05 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8921DC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:11:04 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u12so2213426lff.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mKcnks++BVJckGT27RdKRDX4KPgvtTbjBQBJPx6EVtE=;
+        b=HfjxMSNXOBFs72NZQwzgLB+n1HTdUhb2cUmrKtKW+8eiwn4OoCtnYZdYaBLyuKrcQk
+         UfOFr2okT+3ozHOJ2IfVHuWgMZEiY+vOc8DmYBkD/QLBRZQfVAs94sB2DMASW5ElGu2q
+         P25unJrMLZmaAUjrKbNr8RMGKLunq02CX9d4s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mKcnks++BVJckGT27RdKRDX4KPgvtTbjBQBJPx6EVtE=;
+        b=Jf+e5iFKL5zj4MqLUaAmMLorS76CiFnrJw1SUPZwlxkhaet9Pauj4FHrlFIRmKWACJ
+         Q7ShBZTef0lSL7nlG+OTP29KolTlpx8A5BpYCPBCtVqcUpDDoL38M8IoRxi3RfXcFlmG
+         kcmMfhNzDROIZEoGaYWlGOR3r//CJx91ZfEiVJEZ/kTh37hIq1D4vDC4WkOLDmJZKv8k
+         nctOblvJdABifkUsSvFIYbdxUgqb1YVcsU6/d1K/AQcjE7bau/9S/fp1rAclnGNgjjcU
+         q97WhBSfY+ebeNdMl/zkFJB+akSMGqnJ7grxyvE5k+uKhckJHNtVg05Uv6xHIKh+szV+
+         Cpqg==
+X-Gm-Message-State: AOAM530gmuoWAH5INaXlBvsYtA/ctE9TJei1xuIm8KwqATgB9n2e0oGZ
+        HRE+EG8awONpc9FipgJB9lWaPtM+5K4=
+X-Google-Smtp-Source: ABdhPJxosU6FFBca4Dy+IoqpqG0yo77BQOCFrM+6ZRl7XhjF/jxsCAkYPKSmF/NQPqcgGZ2345Sivw==
+X-Received: by 2002:a05:6512:74b:: with SMTP id c11mr654342lfs.119.1595455862650;
+        Wed, 22 Jul 2020 15:11:02 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id 2sm893935lfr.48.2020.07.22.15.11.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 15:11:01 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id b30so2185137lfj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:11:01 -0700 (PDT)
+X-Received: by 2002:ac2:58d5:: with SMTP id u21mr673351lfo.31.1595455860915;
+ Wed, 22 Jul 2020 15:11:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722153017.445914025@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200721063258.17140-1-mhocko@kernel.org> <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
+ <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com> <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 22 Jul 2020 15:10:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
+Message-ID: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 05:01:56PM +0200, Peter Zijlstra wrote:
-> Convert the performance sensitive users of
-> smp_call_single_function_async() over to the new
-> irq_work_queue_remote_static().
-> 
-> The new API is marginally less crap but taking these users away allows
-> fixing up smp_call_single_function_async() without risk of performance
-> regressions.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Wed, Jul 22, 2020 at 2:29 PM Hugh Dickins <hughd@google.com> wrote:
+>
+> -#define PAGE_WAIT_TABLE_BITS 8
+> +#define PAGE_WAIT_TABLE_BITS 10
 
-But given that kvm.sh gives a return status like "git bisect run",
-why not bisect?
+Well, that seems harmless even on small machines.
 
-And bisection converged on this patch with a similar splat.
+> +       bool first_time = true;
+>         bool thrashing = false;
+>         bool delayacct = false;
+>         unsigned long pflags;
+> @@ -1134,7 +1135,12 @@ static inline int wait_on_page_bit_commo
+>                 spin_lock_irq(&q->lock);
+>
+>                 if (likely(list_empty(&wait->entry))) {
+> -                       __add_wait_queue_entry_tail(q, wait);
+> +                       if (first_time) {
+> +                               __add_wait_queue_entry_tail(q, wait);
+> +                               first_time = false;
+> +                       } else {
+> +                               __add_wait_queue(q, wait);
+> +                       }
+>                         SetPageWaiters(page);
+>                 }
 
-Decoding the assembly makes it appear that nohz_work_func() got a bogus
-pointer having a rather odd value of 0x200000001.
+This seems very hacky.
 
-							Thanx, Paul
+And in fact, looking closer, I'd say that there are more serious problems here.
 
-------------------------------------------------------------------------
+Look at that WQ_FLAG_EXCLUSIVE thing: non-exclusive waits should
+always go at the head (because they're not going to steal the bit,
+they just want to know when it got cleared), and exclusive waits
+should always go at the tail (because of fairness).
 
-0:  e8 35 52 ff ff          call   0xffffffffffff523a
-5:  48 89 c3                mov    rbx,rax
-8:  eb 93                   jmp    0xffffffffffffff9d
-a:  8b 43 70                mov    eax,DWORD PTR [rbx+0x70]
-d:  89 44 24 04             mov    DWORD PTR [rsp+0x4],eax
-11: eb c2                   jmp    0xffffffffffffffd5
-13: 48 c7 c0 ea ff ff ff    mov    rax,0xffffffffffffffea
-1a: eb 94                   jmp    0xffffffffffffffb0
-1c: e8 c9 02 a7 00          call   0xa702ea
-21: 66 0f 1f 84 00 00 00    nop    WORD PTR [rax+rax*1+0x0]
-28: 00 00
-2a: 4c 63 8f f0 09 00 00    movsxd r9,DWORD PTR [rdi+0x9f0]  <-------
-31: 48 c7 c1 00 91 02 00    mov    rcx,0x29100
-38: 48 89 ca                mov    rdx,rcx
+But that's not at all what we do.
 
-> ---
->  block/blk-mq.c            |    8 ++++----
->  include/linux/blkdev.h    |    4 ++--
->  include/linux/netdevice.h |    3 ++-
->  kernel/sched/core.c       |   16 ++++++++--------
->  kernel/sched/fair.c       |    6 +++---
->  kernel/sched/sched.h      |    4 ++--
->  net/core/dev.c            |   15 ++++++++++-----
->  7 files changed, 31 insertions(+), 25 deletions(-)
-> 
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -623,9 +623,9 @@ static int blk_softirq_cpu_dead(unsigned
->  }
->  
->  
-> -static void __blk_mq_complete_request_remote(void *data)
-> +static void __blk_mq_complete_request_remote(struct irq_work *work)
->  {
-> -	struct request *rq = data;
-> +	struct request *rq = container_of(work, struct request, work);
->  
->  	/*
->  	 * For most of single queue controllers, there is only one irq vector
-> @@ -672,8 +672,8 @@ bool blk_mq_complete_request_remote(stru
->  		return false;
->  
->  	if (blk_mq_complete_need_ipi(rq)) {
-> -		INIT_CSD(&rq->csd, __blk_mq_complete_request_remote, rq);
-> -		smp_call_function_single_async(rq->mq_ctx->cpu, &rq->csd);
-> +		rq->work = IRQ_WORK_INIT_HARD(__blk_mq_complete_request_remote);
-> +		irq_work_queue_remote_static(rq->mq_ctx->cpu, &rq->work);
->  	} else {
->  		if (rq->q->nr_hw_queues > 1)
->  			return false;
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -19,7 +19,7 @@
->  #include <linux/stringify.h>
->  #include <linux/gfp.h>
->  #include <linux/bsg.h>
-> -#include <linux/smp.h>
-> +#include <linux/irq_work.h>
->  #include <linux/rcupdate.h>
->  #include <linux/percpu-refcount.h>
->  #include <linux/scatterlist.h>
-> @@ -234,7 +234,7 @@ struct request {
->  	unsigned long deadline;
->  
->  	union {
-> -		struct __call_single_data csd;
-> +		struct irq_work work;
->  		u64 fifo_time;
->  	};
->  
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -26,6 +26,7 @@
->  #include <linux/delay.h>
->  #include <linux/atomic.h>
->  #include <linux/prefetch.h>
-> +#include <linux/irq_work.h>
->  #include <asm/cache.h>
->  #include <asm/byteorder.h>
->  
-> @@ -3126,7 +3127,7 @@ struct softnet_data {
->  	unsigned int		input_queue_head ____cacheline_aligned_in_smp;
->  
->  	/* Elements below can be accessed between CPUs for RPS/RFS */
-> -	call_single_data_t	csd ____cacheline_aligned_in_smp;
-> +	struct irq_work		work ____cacheline_aligned_in_smp;
->  	struct softnet_data	*rps_ipi_next;
->  	unsigned int		cpu;
->  	unsigned int		input_queue_tail;
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -265,9 +265,9 @@ static void __hrtick_restart(struct rq *
->  /*
->   * called from hardirq (IPI) context
->   */
-> -static void __hrtick_start(void *arg)
-> +static void __hrtick_start(struct irq_work *work)
->  {
-> -	struct rq *rq = arg;
-> +	struct rq *rq = container_of(work, struct rq, hrtick_work);
->  	struct rq_flags rf;
->  
->  	rq_lock(rq, &rf);
-> @@ -298,7 +298,7 @@ void hrtick_start(struct rq *rq, u64 del
->  	if (rq == this_rq())
->  		__hrtick_restart(rq);
->  	else
-> -		smp_call_function_single_async(cpu_of(rq), &rq->hrtick_csd);
-> +		irq_work_queue_remote_static(cpu_of(rq), &rq->hrtick_work);
->  }
->  
->  #else
-> @@ -323,7 +323,7 @@ void hrtick_start(struct rq *rq, u64 del
->  static void hrtick_rq_init(struct rq *rq)
->  {
->  #ifdef CONFIG_SMP
-> -	INIT_CSD(&rq->hrtick_csd, __hrtick_start, rq);
-> +	rq->hrtick_work = IRQ_WORK_INIT_HARD(__hrtick_start);
->  #endif
->  	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
->  	rq->hrtick_timer.function = hrtick;
-> @@ -633,14 +633,14 @@ void wake_up_nohz_cpu(int cpu)
->  		wake_up_idle_cpu(cpu);
->  }
->  
-> -static void nohz_csd_func(void *info)
-> +static void nohz_work_func(struct irq_work *work)
->  {
-> -	struct rq *rq = info;
-> +	struct rq *rq = container_of(work, struct rq, nohz_work);
->  	int cpu = cpu_of(rq);
->  	unsigned int flags;
->  
->  	/*
-> -	 * Release the rq::nohz_csd.
-> +	 * Release rq::nohz_work.
->  	 */
->  	flags = atomic_fetch_andnot(NOHZ_KICK_MASK, nohz_flags(cpu));
->  	WARN_ON(!(flags & NOHZ_KICK_MASK));
-> @@ -6827,7 +6827,7 @@ void __init sched_init(void)
->  		rq->last_blocked_load_update_tick = jiffies;
->  		atomic_set(&rq->nohz_flags, 0);
->  
-> -		INIT_CSD(&rq->nohz_csd, nohz_csd_func, rq);
-> +		rq->nohz_work = IRQ_WORK_INIT_HARD(nohz_work_func);
->  #endif
->  #endif /* CONFIG_SMP */
->  		hrtick_rq_init(rq);
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10039,8 +10039,8 @@ static void kick_ilb(unsigned int flags)
->  		return;
->  
->  	/*
-> -	 * Access to rq::nohz_csd is serialized by NOHZ_KICK_MASK; he who sets
-> -	 * the first flag owns it; cleared by nohz_csd_func().
-> +	 * Access to rq::nohz_work is serialized by NOHZ_KICK_MASK; he who sets
-> +	 * the first flag owns it; cleared by nohz_work_func().
->  	 */
->  	flags = atomic_fetch_or(flags, nohz_flags(ilb_cpu));
->  	if (flags & NOHZ_KICK_MASK)
-> @@ -10051,7 +10051,7 @@ static void kick_ilb(unsigned int flags)
->  	 * is idle. And the softirq performing nohz idle load balance
->  	 * will be run before returning from the IPI.
->  	 */
-> -	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
-> +	irq_work_queue_remote_static(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_work);
->  }
->  
->  /*
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -904,7 +904,7 @@ struct rq {
->  #ifdef CONFIG_SMP
->  	unsigned long		last_blocked_load_update_tick;
->  	unsigned int		has_blocked_load;
-> -	call_single_data_t	nohz_csd;
-> +	struct irq_work		nohz_work;
->  #endif /* CONFIG_SMP */
->  	unsigned int		nohz_tick_stopped;
->  	atomic_t		nohz_flags;
-> @@ -1015,7 +1015,7 @@ struct rq {
->  
->  #ifdef CONFIG_SCHED_HRTICK
->  #ifdef CONFIG_SMP
-> -	call_single_data_t	hrtick_csd;
-> +	struct irq_work		hrtick_work;
->  #endif
->  	struct hrtimer		hrtick_timer;
->  #endif
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -4444,9 +4444,9 @@ EXPORT_SYMBOL(rps_may_expire_flow);
->  #endif /* CONFIG_RFS_ACCEL */
->  
->  /* Called from hardirq (IPI) context */
-> -static void rps_trigger_softirq(void *data)
-> +static void rps_trigger_softirq(struct irq_work *work)
->  {
-> -	struct softnet_data *sd = data;
-> +	struct softnet_data *sd = container_of(work, struct softnet_data, work);
->  
->  	____napi_schedule(sd, &sd->backlog);
->  	sd->received_rps++;
-> @@ -6185,8 +6185,13 @@ static void net_rps_send_ipi(struct soft
->  	while (remsd) {
->  		struct softnet_data *next = remsd->rps_ipi_next;
->  
-> -		if (cpu_online(remsd->cpu))
-> -			smp_call_function_single_async(remsd->cpu, &remsd->csd);
-> +		if (cpu_online(remsd->cpu)) {
-> +			/*
-> +			 * XXX can there be two CPUs calling into the same remsd?
-> +			 * XXX serialized by NAPI_STATE_SCHED ??
-> +			 */
-> +			irq_work_queue_remote_static(remsd->cpu, &remsd->work);
-> +		}
->  		remsd = next;
->  	}
->  #endif
-> @@ -10661,7 +10666,7 @@ static int __init net_dev_init(void)
->  		INIT_LIST_HEAD(&sd->poll_list);
->  		sd->output_queue_tailp = &sd->output_queue;
->  #ifdef CONFIG_RPS
-> -		INIT_CSD(&sd->csd, rps_trigger_softirq, sd);
-> +		init_irq_work(&sd->work, rps_trigger_softirq);
->  		sd->cpu = i;
->  #endif
->  
-> 
-> 
+Your patch adds even more confusion to this nasty area.
+
+And your third one:
+
+> +               if (ret)
+> +                       woken++;
+>
+> -               if (bookmark && (++cnt > WAITQUEUE_WALK_BREAK_CNT) &&
+> +               if (bookmark && (++cnt > WAITQUEUE_WALK_BREAK_CNT) && woken &&
+
+I've got two reactions to this
+
+ (a) we should not need a new "woken" variable, we should just set a
+high bit of "cnt" and make WAITQUEUE_WALK_BREAK_CNT contain that high
+bit
+
+     (Tune "high bit" to whatever you want: it could be either the
+_real_ high bit of the variable, or it could be something like "128",
+which would mean that you'd break out after 128 non-waking entries).
+
+ (b) Ugh, what hackery and magic behavior regardless
+
+I'm really starting to hate that wait_on_page_bit_common() function.
+
+See a few weeks ago how the function looks buggy to begin with
+
+  https://lore.kernel.org/lkml/CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com/
+
+and that never got resolved either (but probably never happens in practice).
+
+              Linus
