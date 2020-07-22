@@ -2,132 +2,114 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3323C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912E8206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53037206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:47:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JuNcAjzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732279AbgGVMpv (ORCPT
+        id S1732206AbgGVMrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:45:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14452 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgGVMpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:45:51 -0400
-IronPort-SDR: vKcfbB8DomslsmFiGL4cyEBIZ/zBbPJx21GDs4qZ/5C7ojrLgWnPX1SMXsIr8lp6Ae7k7uko7P
- mGHCDk+VQ8JA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="150297447"
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="150297447"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 05:45:50 -0700
-IronPort-SDR: WJ6Qj/418nndmgvTB7pOtlXgYvSgyd0ICYRCcwjMwtaIgUxGQqn1lG/yysCIb6REj67T+kL8Lv
- LdsUNmnxECkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
-   d="scan'208";a="432364651"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 22 Jul 2020 05:45:50 -0700
-Received: from [10.249.230.82] (abudanko-mobl.ccr.corp.intel.com [10.249.230.82])
-        by linux.intel.com (Postfix) with ESMTP id 5A5725802E4;
-        Wed, 22 Jul 2020 05:45:44 -0700 (PDT)
-Subject: Re: [PATCH v12 05/15] perf evlist: implement control command handling
- functions
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <8d91c3a0-3db4-0a7a-ae13-299adb444bd6@linux.intel.com>
- <62518ceb-1cc9-2aba-593b-55408d07c1bf@linux.intel.com>
- <20200722122734.GJ77866@kernel.org> <20200722123423.GK77866@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <cc1e7d3d-32ad-693f-6db6-4573ad49cb20@linux.intel.com>
-Date:   Wed, 22 Jul 2020 15:45:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 08:47:04 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33536 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGVMrE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:47:04 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06MCVYxW015144;
+        Wed, 22 Jul 2020 12:46:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=TMwc7BGRAH4UXd6M43+Uicp5h4KfH7HOJGlypIEIzX0=;
+ b=JuNcAjzlmL596wb9P1bqu0R42HNl1ikC7YCzopRH0jYf5QfpVKNWi+SmnmqaGyQb0beY
+ yz6Spti13GXea3RufhIBjuBk9SifaR3wChgAYnR4Ym0K4me9Tw49X+5Mvock4QSmQ91T
+ KIRc2xyWlW713Zc+4GQLYZOjT5ncu50ceddOxwlcR9fuws+L8xdyFzvfJ2r1jvmN0AE/
+ HrPvzi6bemjaUAA+N3DfqjZ0BLke5xq1t94Nljjc8E+h1RnbzqC/8XoydjkSZcT51VLF
+ +u46n+6tBiIeyXEKZhGtynMtbOwElgrFIwneBhcuYkfjNLScFYGLw+9y7lkf5z7AURPD NQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 32d6ksq8jy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 12:46:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06MChYMw125098;
+        Wed, 22 Jul 2020 12:46:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 32ehx0ddpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 12:46:48 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06MCkgJY001307;
+        Wed, 22 Jul 2020 12:46:43 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Jul 2020 05:46:42 -0700
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Subject: Re: [PATCH v6 2/5] scsi: ufs: Add UFS-feature layer
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1h7tzg1lb.fsf@ca-mkp.ca.oracle.com>
+References: <231786897.01594636801601.JavaMail.epsvc@epcpadp1>
+        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+        <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p4>
+        <231786897.01594637401708.JavaMail.epsvc@epcpadp1>
+        <20200722064112.GB21117@infradead.org>
+Date:   Wed, 22 Jul 2020 08:46:38 -0400
+In-Reply-To: <20200722064112.GB21117@infradead.org> (Christoph Hellwig's
+        message of "Wed, 22 Jul 2020 07:41:12 +0100")
 MIME-Version: 1.0
-In-Reply-To: <20200722123423.GK77866@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9689 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=786 adultscore=0
+ phishscore=0 bulkscore=0 spamscore=0 suspectscore=1 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007220094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9689 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
+ bulkscore=0 mlxscore=0 mlxlogscore=776 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007220094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 22.07.2020 15:34, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Jul 22, 2020 at 09:27:34AM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Fri, Jul 17, 2020 at 10:01:33AM +0300, Alexey Budankov escreveu:
->>>
->>> Implement functions of initialization, finalization and processing
->>> of control command messages coming from control file descriptors.
->>> Allocate control file descriptor as descriptor at struct pollfd
->>> object of evsel_list for atomic poll() operation.
->>>
->>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>> Acked-by: Jiri Olsa <jolsa@redhat.com>
->>> Acked-by: Namhyung Kim <namhyung@kernel.org>
->>
->> I'm applying locally for testing, but can you answer what is the reason
->> for that newline in the CMD_ACK_TAG? I tried looking at previous
->> discussion but couldn't quickly find any reasoning for that
->>
->> - Arnaldo
->>
->>> +++ b/tools/perf/util/evlist.h
->>> @@ -359,4 +359,22 @@ void perf_evlist__force_leader(struct evlist *evlist);
->>>  struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
->>>  						 struct evsel *evsel,
->>>  						bool close);
->>> +#define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
->>> +#define EVLIST_CTL_CMD_DISABLE_TAG "disable"
->>> +#define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
->>
->> What for? That '\n'?
-> 
-> Oh, I see, this is not a _command_, it is a _response_, and the sender
-> expects a newline, right?
+Christoph,
 
-Right. Shell commands can expect strings terminated by \n, e.g. 'read -u'.
-See sample bash script in 00/15 for example.
+> Independent of the problems with the concept of HPB, this patch is
+> just really bad software architecture.  Don't just add random
+> indirection layers that do represent an actual real abstraction.
 
-> 
-> So I think this needs to be marked clearly as:
-> 
-> // Commands accepted by 'perf record'
-> 
-> #define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
-> #define EVLIST_CTL_CMD_DISABLE_TAG "disable"
-> 
-> 
-> // Responses sent by 'perf record'
-> 
-> #define EVLIST_CTL_RSP_ACK     "ack"
-> 
-> And then make the response add the newline, as conceivably we could have
-> something like "nack", "invalid", "enoperm", etc, no?
+I am also not sold on the whole "bus" thing.
 
-That above makes sense.
-
-> 
-> Anyway, this can be done on top of this series, so I'm continuing
-> processing it locally.
-> 
-> - Arnaldo
-> 
-
-Alexei
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
