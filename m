@@ -2,189 +2,147 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F6DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EF2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E35207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B1A20792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 04:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nG39IMDj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zto6XPkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGVEsK (ORCPT
+        id S1726933AbgGVEtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 00:48:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46474 "EHLO
+        Wed, 22 Jul 2020 00:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgGVEsK (ORCPT
+        with ESMTP id S1726147AbgGVEtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 00:48:10 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFEDC061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 21:48:09 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u185so543029pfu.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 21:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=58zKMZOPt1u3jpGyc+egvpdxr0peyatL+Nyz70ratxs=;
-        b=nG39IMDjujMeRh/4sbcvRxIPQSNRe2DOZ6Nx2FVG6gFBmEZfpbR8IHnABB/ZFmmuYq
-         L9xik+zNqwLx6t9ltZtPjSlPzGwW8BnJ3U4QayiLDdViWAIAJtsky0WxIHPn26ocOqWy
-         goPjV8dCAOoFOA+8R4dlu0BP0LN9LKT5QfYZbL1Csgi59vmx1OEuQghm6E6wBeBB15Vz
-         UlJEiHxgOpMI29wi8Rh60WgwyBr33qFbpArVhR2gW4+hsSu0SntQMTQn8yTNYF78DY8o
-         AlyXxwIlq39XaWwhHYmo8npE5Bw4Lb0yEBUd0I9rhSUOKy+6rR2KbHStwZl1SRblTPt6
-         qjww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=58zKMZOPt1u3jpGyc+egvpdxr0peyatL+Nyz70ratxs=;
-        b=tkKfFVByDHqJazdXjlJLL5+ulcrZUZnluXMIfmIWGpJE3X/eAr7t+MfgC/jtZjPBAT
-         AwyVpSh9kbs1cqhqAV7XnLkrj90aMM2OrItuET9XiRRz7M8IexQtFVxIoRQSEYp2UaLH
-         vEZYkC2vuXN3qOPl5vdDruznRWcaaQUlU/A09UznSoFf2Nt8EsCQ2B/V1mn+rThmKv9p
-         y8t+83wjpaTHuL1p+QROgB+ImbXAdqmewbNpjJfWlw2i8+3MXYcCNgQ5s9T/sA3pRPYA
-         xHumEebbFxDs0imCYNJHGaYkwp92ux5WqArhy1tJYmmboVGaUigTuvDxVGsXxrYksqNa
-         UZqQ==
-X-Gm-Message-State: AOAM5338hoDS8AkFt4UUYeznLuKCuxvE6KWGgqnGCQQ/WSI56xAV3WHO
-        vmWG5qO+K1eco03PyoGZBeNzug==
-X-Google-Smtp-Source: ABdhPJy06BZ1ClnCiS4rdd+DGQj+8rN/XzWayLoX5YI/eqUtY8HLfx6BNn8AsV/rf4BLpaE0sM22Nw==
-X-Received: by 2002:a63:f806:: with SMTP id n6mr24931192pgh.346.1595393289326;
-        Tue, 21 Jul 2020 21:48:09 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w1sm22555353pfq.53.2020.07.21.21.48.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 21:48:08 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 21:46:15 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-Message-ID: <20200722044615.GR388985@builder.lan>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-2-bjorn.andersson@linaro.org>
- <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
+        Wed, 22 Jul 2020 00:49:55 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E7DC061794;
+        Tue, 21 Jul 2020 21:49:54 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBNL73gDQz9sPf;
+        Wed, 22 Jul 2020 14:49:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595393393;
+        bh=KtYiC6cb1/nWjvWk5MwcjnpTN7SZ1LgyLW40FdeZs8A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Zto6XPkNAKZJ7fw1giNAPs7SGcBtHmNSvBXrrbq/FaXCUjKvMcP9uyr5Zc6G5hFMB
+         SEFRLy06SSO5kaWRgh1Hjxos4M3dp+DOp4iRfhyqBUYzX2ak1UV/+QhjAGlMKSqoDc
+         iKV7yDgHWQ+w3rPE1duOWXjs6Ec1YlxaXftFxJ5ZhF1VNbEqm9f999uaBli1bdD9l/
+         IqRfKgcsru80laty+6oaw71TEoDgoD2rt9TOmw1korcnN9yOvCtGJLT6zt/PfNsW5D
+         mLjf7o9+4k1YHShQvsGepFpsWiLzfAMX1X+j1dUMURTnedF8xaikQHkxUnyH9l8WWi
+         bDdC5StvulWyw==
+Date:   Wed, 22 Jul 2020 14:49:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Jingle Wu <jingle.wu@emc.com.tw>
+Subject: linux-next: manual merge of the input tree with Linus' tree
+Message-ID: <20200722144950.220b44ec@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/IdEgtprhHnijhSJwrL=X7ZF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21 Jul 08:13 PDT 2020, Rob Herring wrote:
+--Sig_/IdEgtprhHnijhSJwrL=X7ZF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Jun 22, 2020 at 1:59 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
-> >
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >
-> > Changes since v1:
-> > - Actually remove the old binding doc
-> >
-> >  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
-> >  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
-> >  2 files changed, 51 insertions(+), 39 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> >  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> 
-> [...]
-> 
-> > diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> > new file mode 100644
-> > index 000000000000..71e63b52edd5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Hardware Mutex Block
-> > +
-> > +maintainers:
-> > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> > +
-> > +description:
-> > +  The hardware block provides mutexes utilized between different processors on
-> > +  the SoC as part of the communication protocol used by these processors.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - qcom,sfpb-mutex
-> > +      - qcom,tcsr-mutex
-> > +
-> > +  '#hwlock-cells':
-> > +    const: 1
-> > +
-> > +  syscon:
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> > +    description:
-> > +      Should be a triple of phandle referencing the TCSR mutex syscon, offset
-> > +      of first mutex within the syscon and stride between each mutex.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - '#hwlock-cells'
-> > +  - syscon
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +        tcsr_mutex_block: syscon@fd484000 {
-> > +                compatible = "syscon";
-> 
-> 'syscon' alone now generates warnings. Can you drop this node or add a
-> specific compatible.
-> 
+Hi all,
 
-In the binding examples or in the dts files as well?
+Today's linux-next merge of the input tree got a conflict in:
 
-The hardware block here is named "TCSR_MUTEX", so the natural compatible
-to add here would be "qcom,tcsr-mutex", but that already has a meaning -
-and the syscon node here doesn't carry all required properties...
+  drivers/input/mouse/elan_i2c_core.c
 
+between commit:
 
-Should we perhaps just remove the split model (syscon and
-qcom,tcsr-mutex as different nodes) from the example and dts files?
-(While maintaining backwards compatibility in the binding and driver)
+  966334dfc472 ("Input: elan_i2c - only increment wakeup count on touch")
 
-For the platforms where we have other drivers that needs to poke in this
-syscon it seems to work fine to say:
-	compatible = "qcom,tcsr-mutex", "syscon";
+from Linus' tree and commit:
 
-Regards,
-Bjorn
+  04d5ce620f79 ("Input: elan_i2c - add support for high resolution reports")
 
-> > +                reg = <0xfd484000 0x2000>;
-> > +        };
-> > +
-> > +        hwlock {
-> > +                compatible = "qcom,tcsr-mutex";
-> > +                syscon = <&tcsr_mutex_block 0 0x80>;
-> > +
-> > +                #hwlock-cells = <1>;
-> > +        };
-> > +...
-> > --
-> > 2.26.2
-> >
+from the input tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/input/mouse/elan_i2c_core.c
+index 6291fb5fa015,4b6e2dffc0ea..000000000000
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@@ -951,13 -997,12 +997,14 @@@ static void elan_report_absolute(struc
+  	u8 hover_info =3D packet[ETP_HOVER_INFO_OFFSET];
+  	bool contact_valid, hover_event;
+ =20
+ +	pm_wakeup_event(&data->client->dev, 0);
+ +
+- 	hover_event =3D hover_info & 0x40;
+- 	for (i =3D 0; i < ETP_MAX_FINGERS; i++) {
+- 		contact_valid =3D tp_info & (1U << (3 + i));
+- 		elan_report_contact(data, i, contact_valid, finger_data);
++ 	hover_event =3D hover_info & BIT(6);
+ =20
++ 	for (i =3D 0; i < ETP_MAX_FINGERS; i++) {
++ 		contact_valid =3D tp_info & BIT(3 + i);
++ 		elan_report_contact(data, i, contact_valid, high_precision,
++ 				    packet, finger_data);
+  		if (contact_valid)
+  			finger_data +=3D ETP_FINGER_DATA_LEN;
+  	}
+@@@ -1019,9 -1063,14 +1066,12 @@@ static irqreturn_t elan_isr(int irq, vo
+  	if (error)
+  		goto out;
+ =20
+ -	pm_wakeup_event(dev, 0);
+ -
+  	switch (report[ETP_REPORT_ID_OFFSET]) {
+  	case ETP_REPORT_ID:
+- 		elan_report_absolute(data, report);
++ 		elan_report_absolute(data, report, false);
++ 		break;
++ 	case ETP_REPORT_ID2:
++ 		elan_report_absolute(data, report, true);
+  		break;
+  	case ETP_TP_REPORT_ID:
+  		elan_report_trackpoint(data, report);
+
+--Sig_/IdEgtprhHnijhSJwrL=X7ZF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8XxW4ACgkQAVBC80lX
+0GxnaQf/TwesPieTBCj7wlbkGDAbfxseJTjpbun+8/qAM0QA8EygGVFMEmZ40HEJ
+9TT6zgLu+CfR9/1E4Y42kPcprsRo/W3fyxCWmKI2O0nGkFlDkcT9wS8GF1AZaKP1
+p/tOL18iRtjxpE8M+muhBxXGJTtzEhlidR0ZiL3v/tKHgqjK4emd0/GpgYwuQ4QX
+9JmMd28/BVVhMO+vLFHztPyRC4GjSZFDDR/XDm0x1hl4w4T/6hoiTRHkE1/5zhg6
+ljM0C8e2YyAKRwTd6WEPlscH9wGBE2wYGSUyv5rJA+4iDzzaXeLX3DD7zbCkxql8
+IWyc3VyNztgwjsAF/TsRqEIs3zKGgw==
+=shGj
+-----END PGP SIGNATURE-----
+
+--Sig_/IdEgtprhHnijhSJwrL=X7ZF--
