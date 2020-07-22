@@ -2,148 +2,90 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E9FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5A40206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6273820729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:16:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eozjfHKC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U3FXwPQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgGVLIW (ORCPT
+        id S1728227AbgGVLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:08:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47574 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726599AbgGVLIW (ORCPT
+        Wed, 22 Jul 2020 07:16:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51630 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbgGVLQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:08:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595416100;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I+s91G7/3YaWvofNQl3jYEEEmAS3FwXQUuV6BeKXMpI=;
-        b=eozjfHKCkgpCE0w4M0xtlspbCrYTxr2hJKBuMX4uMGGmHKJxQ1jcAViL9rRIrbs46nf4NP
-        dbIhYhb69ucrzMQ2lvTDxmF4hJZ0qvzKiNFSX0AUVR8f0eNIE1oOP/zDhjTS0hNCcxv6Mz
-        KkXOTc++WByrS1qT6AUNlAOrGt8vSxg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-GuygH6u4PZ-IUkhxS8mhpw-1; Wed, 22 Jul 2020 07:08:16 -0400
-X-MC-Unique: GuygH6u4PZ-IUkhxS8mhpw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F4A9800C64;
-        Wed, 22 Jul 2020 11:08:14 +0000 (UTC)
-Received: from krava (unknown [10.40.194.40])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C7F556931A;
-        Wed, 22 Jul 2020 11:08:11 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 13:08:10 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com, irogers@google.com,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2] perf evsel: Don't set
- sample_regs_intr/sample_regs_user for dummy event
-Message-ID: <20200722110810.GD981884@krava>
-References: <20200720010013.18238-1-yao.jin@linux.intel.com>
- <20200720091748.GH760733@krava>
- <af1da971-5c60-4c17-e5d9-01430c928592@linux.intel.com>
+        Wed, 22 Jul 2020 07:16:25 -0400
+X-UUID: f9812e6cfc094f8ea830413cadeda40d-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=kUGN4eod9+73obp1QXaVgA/WjQAmxsxhBRuAz9P0fHI=;
+        b=U3FXwPQtliIYH3zOvzWBlPYGdl3P2bV8WM2jNW4aMu7zzIg45fjxVe454gZTPUkn1z7/E3ajOrnb6i61QOarGRJdWkcjuy85O4ouXV6ymOBUgqIMsJE/wOqJILLc3Jrju25f6Rl2m4ZTIPIsf0qxp4m7fgji7MHhrFrMZn1wZFE=;
+X-UUID: f9812e6cfc094f8ea830413cadeda40d-20200722
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1690839541; Wed, 22 Jul 2020 19:16:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 19:16:19 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 19:16:20 +0800
+Message-ID: <1595416581.5511.6.camel@mtkswgap22>
+Subject: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Wed, 22 Jul 2020 19:16:21 +0800
+In-Reply-To: <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
+References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+         <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af1da971-5c60-4c17-e5d9-01430c928592@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-TM-SNTS-SMTP: 8678F406109F856D891B379E590361900A402883DC336283B2FDBEFAF9C867542000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 01:00:03PM +0800, Jin, Yao wrote:
-
-SNIP
-
-> > > 
-> > > If we use -IXMM0, the attr>sample_regs_intr will be set with
-> > > PERF_REG_EXTENDED_MASK bit.
-> > > 
-> > > It doesn't make sense to set attr->sample_regs_intr for a
-> > > software dummy event.
-> > > 
-> > > This patch adds dummy event checking before setting
-> > > attr->sample_regs_intr and attr->sample_regs_user.
-> > > 
-> > > After:
-> > >    # ./perf record -e cycles:p -IXMM0 -a -- sleep 1
-> > >    [ perf record: Woken up 1 times to write data ]
-> > >    [ perf record: Captured and wrote 0.413 MB perf.data (45 samples) ]
-> > > 
-> > >   v2:
-> > >   ---
-> > >   Rebase to perf/core
-> > > 
-> > > Fixes: 0a892c1c9472 ("perf record: Add dummy event during system wide synthesis")
-> > > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> > > ---
-> > >   tools/perf/util/evsel.c | 6 ++++--
-> > >   1 file changed, 4 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index 9aa51a65593d..11794d3b7879 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -1014,12 +1014,14 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
-> > >   	if (callchain && callchain->enabled && !evsel->no_aux_samples)
-> > >   		evsel__config_callchain(evsel, opts, callchain);
-> > > -	if (opts->sample_intr_regs && !evsel->no_aux_samples) {
-> > > +	if (opts->sample_intr_regs && !evsel->no_aux_samples &&
-> > > +	    !evsel__is_dummy_event(evsel)) {
-> > 
-> > hum, I thought it'd look something like this:
-> > 
-> >    if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel))
-> > 
-> > but I'm not sure how no_aux_samples flag works exactly.. so it might be
-> > correct.. just making sure ;-)
-> > 
-> > cc-ing Adrian
-> > 
-> > jirka
-> > 
-> > 
-> 
-> no_aux_samples is set to false by default and it's only set to true by pt, right?
-> 
-> So most of the time, !evsel->no_aux_samples is always true.
-> 
-> if (opts->sample_intr_regs && (!evsel->no_aux_samples || !evsel__is_dummy_event(evsel)) {
-> 	attr->sample_regs_intr = opts->sample_intr_regs;
-> 	evsel__set_sample_bit(evsel, REGS_INTR);
-> }
-> 
-> So even if the evsel is dummy event, the condition check is true. :(
-> 
-> Or maybe I misunderstand anything?
-
-I was just curious, because I did not follow the no_aux_samples
-usage in detail.. so how about a case where:
-
-   evsel->no_aux_samples == true and evsel__is_dummy_event(evsel) = false
-
-then the original condition will be false for non dummy event
-
-  (opts->sample_intr_regs && !evsel->no_aux_samples && !evsel__is_dummy_event(evsel))
-
-is that ok?
-
-jirka
+T24gV2VkLCAyMDIwLTA3LTIyIGF0IDEwOjQzICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjIvMDcvMjAyMCAwNTowOSwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiByZW1v
+dmUgdGhlIHJlZHVuZGFudCBjbGsgaW50ZXJmYWNlIG9mIHVhcnQuDQo+ID4gQ0xLX0lORlJBX1VB
+UlQzIGlzIGEgZHVtbXkgY2xrIGludGVyZmFjZSwNCj4gPiBpdCBoYXMgbm8gZWZmZWN0IG9uIHRo
+ZSBvcGVyYXRpb24gb2YgdGhlIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ID4gDQo+ID4gQ2hh
+bmdlIHNpbmNlIHYyOg0KPiA+IENvbW1pdCAiZHQtYmluZGluZ3M6IGNsb2NrOiByZW1vdmUgVUFS
+VDMgY2xvY2sgc3VwcG9ydCINCj4gDQo+IFNvcnJ5IGp1c3QgYW5vdGhlciBjb21tZW50LiBJIHRo
+aW5rIHdlIGNhbiBtYWtlIHRoaXMgb25lIHBhdGNoIGRlbGV0aW5nIGV2ZXJ5dGhpbmcuDQo+IA0K
+U29ycnksIEkgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgY29tbWVudC4gRG8gSSBuZWVkIHRvIG1lcmdl
+IHRoZW0gaW50byBvbmUNCmJpZyBwYXRjaD8NCkJ0dywgaWYgSSB1c2Ugb25lIHBhdGNoLCBJIHdv
+dWxkIGdldCBjaGVjayBwYXRjaCBmYWlsLg0KLS0tDQpbMjAyMC0wNy0yMiAxOToxMjo0OSwwNDYg
+RVJST1JdIFJ1biBjaGVjayBwYXRjaCByZXN1bHRzOg0KV0FSTklORzpEVF9TUExJVF9CSU5ESU5H
+X1BBVENIOiBEVCBiaW5kaW5nIGRvY3MgYW5kIGluY2x1ZGVzIHNob3VsZCBiZSBhDQpzZXBhcmF0
+ZSBwYXRjaC4gU2VlOg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N1Ym1pdHRp
+bmctcGF0Y2hlcy5yc3QNCi0tLQ0KDQpIYW5rcw0KDQo+ID4gLS0gcmVtb3ZlIEZpeGVzIHRhZw0K
+PiA+IENvbW1pdCAiY2xrOiBtZWRpYXRlazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQiDQo+
+ID4gLS0gcmVtb3ZlIEZpeGVzIHRhZw0KPiA+IA0KPiA+IEhhbmtzIENoZW4gKDIpOg0KPiA+ICAg
+IGR0LWJpbmRpbmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQNCj4gPiAgICBj
+bGs6IG1lZGlhdGVrOiByZW1vdmUgVUFSVDMgY2xvY2sgc3VwcG9ydA0KPiA+IA0KPiA+ICAgZHJp
+dmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3OS5jICAgICAgfCAyIC0tDQo+ID4gICBpbmNsdWRl
+L2R0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaCB8IDEgLQ0KPiA+ICAgMiBmaWxlcyBjaGFu
+Z2VkLCAzIGRlbGV0aW9ucygtKQ0KPiA+IA0KDQo=
 
