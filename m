@@ -2,171 +2,89 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F60FC433EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB23C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73FC12071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:06:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IDLw097B"
+	by mail.kernel.org (Postfix) with ESMTP id 259322071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595452190;
+	bh=7LxwAvjr8ykq8ESG6suR3QKwh18PwBgx8Y7xnBV7/hs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sUHvqAhkp0Xl+JlrNjpgWd5uVGwpEppCzuF9ljym1iBMcmJodHftM+nc1s4hVtkdz
+	 nZJq0Uk2KuLUFuLhSdX3PZo844zJb1PhPV/4Qy5fLYnoR9H3ovD+eVC+JGgLV049QD
+	 JkDNjoHGsTw1uvFZEOF/GVjjiV4o6ypMHmRO2ZLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732852AbgGVVGg (ORCPT
+        id S1732415AbgGVVJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:06:36 -0400
-Received: from mail-bn7nam10on2134.outbound.protection.outlook.com ([40.107.92.134]:20544
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726447AbgGVVGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:06:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SiAP2x5YbZHUWx6ZWrBqU4AvG8//JoVhQvsr+9CATPcXA/xD8MYzSuTwY/KtqcAtjkVSR59kjrFkjwt4fprTxOJvGByu3AqqrePTpNu9YdLjbY0V27rHvfVrniaFgYF9FxRBFIjCxfa+1pZvZeIvhmzKjiZYJ8jkWdYTLCTADuKfJsfGDvLpT3mKTrhT+ewiHVBhY298VAic7QMG4KsSGupJNR323WOTDdoJT85piPBWjO5JVYPZ6utsJrkB3Gs2QTK8L1hiJE5kCppxamrLs9NMchSIB41N6BLWsIEHIyC0zEnhVKP0ajNlP2iMW4nTG6WQXWExqbGsebiE1ow5aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+lMasATm9m2GgcBwa5O1jLWooNgMcGvcd3hAK55w77o=;
- b=G57n+8Y4QU91D2tRlQbAWLyBrwyNw1KEJVuNsd9XLrw1V2kixmtYfBzYv46e2NNn6bE02VB+CzFwDwYUzf2I4Yu1BNRU41iXaVMyb3P8g4yva9IZYwdmHxK6rKkwqu28ZVC9vSIb9xYUYkhPF4MYLcrM2eetvnsqQu5MGy1wiNkS2qSEzt/Jj0k8Y5tAfaku2Isc5xzMjpqPrC1l0AFe9ldhNykEq7hvgdS1x69DR8ERXpUVIP5oAf8TArAkzELrspZX8QoJc6B8JML5qxaG5F5C2VUNXUWdJ3Hs5hmz2RVLEa+7oz7AkpHqhg24rIhwBNYl1llAfPjTcWiOnzRNuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+lMasATm9m2GgcBwa5O1jLWooNgMcGvcd3hAK55w77o=;
- b=IDLw097BtTmUItquERLqz5ee91L+7rIxGqyIhB7KFQ5EFLzwFDB3F3FbHFtMe8w5qeKX33Q7STRfUOuoo16HhFkJ5Td5qfaxtsNoi0yGlC8NdhUaITzd0VlDXozwp349R7RuCMNwlLl5iz/TXfS25+DiYuSvbnZTDCcdXfGlkrk=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by BL0PR2101MB1028.namprd21.prod.outlook.com
- (2603:10b6:207:34::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.0; Wed, 22 Jul
- 2020 21:06:31 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::f5a4:d43f:75c1:1b33]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::f5a4:d43f:75c1:1b33%5]) with mapi id 15.20.3239.007; Wed, 22 Jul 2020
- 21:06:31 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Sriram Krishnan <srirakr2@cisco.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     "mbumgard@cisco.com" <mbumgard@cisco.com>,
-        "ugm@cisco.com" <ugm@cisco.com>, "nimm@cisco.com" <nimm@cisco.com>,
-        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
-Thread-Topic: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
-Thread-Index: AQHWYD4zMrrU71PALk6zvPLr8Box4qkUFzuw
-Date:   Wed, 22 Jul 2020 21:06:30 +0000
-Message-ID: <BL0PR2101MB09304ED1D26BD3D61EF62948CA790@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200722153845.79946-1-srirakr2@cisco.com>
-In-Reply-To: <20200722153845.79946-1-srirakr2@cisco.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-22T21:06:29Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=70356182-baba-4c36-a4df-3b2fdb1f4f5e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: cisco.com; dkim=none (message not signed)
- header.d=none;cisco.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6f8f4a3c-f06b-4834-a9e2-08d82e831bd2
-x-ms-traffictypediagnostic: BL0PR2101MB1028:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB102885773035FEB0AFBF13C3CA790@BL0PR2101MB1028.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r3hXAJe9gehAMWwnuJOJQIk2M4iDFhg8OfJqBa4xoJVhFOVDZK+lgJtDcyVbIqyGVqROPIrS5zBcz4DwmrOJ71qc4OVKsixDk0WmGrH9ESQCNqkzSH4nipt9j82fy7TH2BZQOdosZx3TjKiK9Od1dKqBJsPKa4EdS3o0FzJACg7626OVIm9s74X42xrlVBEjoJC1tRhYbxeR0zbdCrrKdPz7mmFuYFexGPpEj7iFE/g/S7Q38wNJ8o1jkOZz+GfK+LQIq1rFU6W1ZnBKJgW8du8AdEjbCxYRyfIv81icMBQYF/xcXYcbB8+iJS3HIaNk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(366004)(346002)(396003)(8676002)(5660300002)(83380400001)(6506007)(10290500003)(9686003)(7696005)(2906002)(54906003)(186003)(86362001)(55016002)(478600001)(26005)(53546011)(110136005)(66446008)(64756008)(66556008)(66476007)(316002)(33656002)(66946007)(8936002)(76116006)(4326008)(82950400001)(82960400001)(7416002)(8990500004)(71200400001)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: HNfXYmbjw39hGOYo2qG3mJYA109YXVgcJuaLYfJ7J8/TU2RZKFoSWEqtsDFqT1KXLpY3NaQ3ZxOhO9HtuzGt4TKs67DUmBIxUndTms/2DbRcLu1u9775UupWVt9Qz5SLLtLOerHaqb+Juijnm7X8oykiquMPKa0dtPuuFPCgBXE1NZZnxG7KVZN97YkiqVCWnkkZNJbBrct4jmn26xUdNgDK3U6rKd0T2Gy5nFkxWXvFeNgihtJYJYrZckmVKWnFdMMpqmkXwHgrAhw3cXXfw4+G/xgaQOOOwCwtMVNY/qsa7Q0jhElG1ThWneDWC6l2WuHO0tt93EGlbvX0UuNWpoUAhoep4Mc5S/meiTFGkdXLtctulnMq3yX+w/F2kofKCkuZzTXXm4iTOlGouYrjneaJ4wCbrHaKPD1mj3/jzs0ETx0NMRM4QncsrCCblKuSJM4LVtVWSW6rHGLGPkU6t+5eGiqwQQ7I/jNXaVC311eqsOBjv0yqE/+BJfjAgE87sBVS+wIo750+I4VaUfwVFlYYnYvTfFlV8ur4clSSjxysGgk6MTutmHEEC0fmiUB3dXukw4vHf2DKMEPmX98bvTQlyVKEI/hhSUEOIgBMYPU6oH+uKhvojnkNeYUgiIZay5tqaVUu4FupgE3xX3ZcuQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 Jul 2020 17:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbgGVVJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:09:46 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54BDF2086A;
+        Wed, 22 Jul 2020 21:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595452186;
+        bh=7LxwAvjr8ykq8ESG6suR3QKwh18PwBgx8Y7xnBV7/hs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=suNn+PZj5fXe3Gk34BuYQFeHTRZ9KNKGknllkaDzFoQLSIDuX9kY6bE0q1+Dw/O4O
+         gwlmDyngGssu26cfWbrzqXY1o1qdyjK9Jj1sdEB+ReZq9VpuJiIRgjocIZShgvFegn
+         AYKg/4f63L9J1VFuM3mdtfActYYdVGvL7iF1w7IY=
+Received: by mail-oi1-f180.google.com with SMTP id t198so3101832oie.7;
+        Wed, 22 Jul 2020 14:09:46 -0700 (PDT)
+X-Gm-Message-State: AOAM533ekqIKxxBTR//ouHXb11CCJWndc+khyFdSMtOFFrlLsT3DPZ4c
+        86AIuc2/duBOis833/P+n868w5BeO7btIy8wQQ==
+X-Google-Smtp-Source: ABdhPJwfp+YAPCsJA3I/xtWn07xTJ1BfmZsmccfovGvP27cA7yRNxB3h+jbY64ZV41q+fYrIU+sxvx1jQhqudMqqZYo=
+X-Received: by 2002:a05:6808:3d8:: with SMTP id o24mr1316793oie.69.1595452185706;
+ Wed, 22 Jul 2020 14:09:45 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f8f4a3c-f06b-4834-a9e2-08d82e831bd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 21:06:31.3710
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XqBBm4ulmsin1qrcZg+qKcaqzQNYWFmwmlGv910DUpjRznCqoxM97999+RdrHDeyPIna95bqhRWdV+wfp7YtRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1028
+References: <20200722201313.754671-1-saravanak@google.com> <20200722201313.754671-2-saravanak@google.com>
+In-Reply-To: <20200722201313.754671-2-saravanak@google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 22 Jul 2020 15:09:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJvhpghE=LR=ng-gL5ek-7LOC1CGfOx6Vr-iACu-TX_fQ@mail.gmail.com>
+Message-ID: <CAL_JsqJvhpghE=LR=ng-gL5ek-7LOC1CGfOx6Vr-iACu-TX_fQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] of: property: Add device link support for
+ pinctrl-0 through pinctrl-8
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 22, 2020 at 2:13 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
+> to add support for pinctrl-%d properties.
+>
+> Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
+> are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
+> (9486) are made up of pinctrl-[0-2].
+>
+> Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
+> unnecessarily complicated. So, just add support for pinctrl-[0-8] for
+> now. In the unlikely event we ever exceed pinctrl-8, we can come back
+> and improve this.
 
+It wasn't immediately clear from this that pinctrl-8 is the current
+max you found vs. a should be enough for a while.
 
-> -----Original Message-----
-> From: Sriram Krishnan <srirakr2@cisco.com>
-> Sent: Wednesday, July 22, 2020 11:39 AM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> Wei Liu <wei.liu@kernel.org>
-> Cc: mbumgard@cisco.com; ugm@cisco.com; nimm@cisco.com; xe-linux-
-> external@cisco.com; David S. Miller <davem@davemloft.net>; Jakub Kicinski
-> <kuba@kernel.org>; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
->=20
-> Vlan tagged packets are getting dropped when used with DPDK that uses
-> the AF_PACKET interface on a hyperV guest.
->=20
-> The packet layer uses the tpacket interface to communicate the vlans
-> information to the upper layers. On Rx path, these drivers can read the
-> vlan info from the tpacket header but on the Tx path, this information
-> is still within the packet frame and requires the paravirtual drivers to
-> push this back into the NDIS header which is then used by the host OS to
-> form the packet.
->=20
-> This transition from the packet frame to NDIS header is currently missing
-> hence causing the host OS to drop the all vlan tagged packets sent by
-> the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
->=20
-> Here is an overview of the changes in the vlan header in the packet path:
->=20
-> The RX path (userspace handles everything):
->   1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
->   2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
->      header into kernel SKB
->   3. Kernel shares packets with user space application with PACKET_MMAP.
->      The SKB VLAN info is copied to tpacket layer and indication set
->      TP_STATUS_VLAN_VALID.
->   4. The user space application will re-insert the VLAN info into the fra=
-me
->=20
-> The TX path:
->   1. The user space application has the VLAN info in the frame.
->   2. Guest kernel gets packets from the application with PACKET_MMAP.
->   3. The kernel later sends the frame to the hv_netvsc driver. The only w=
-ay
->      to send VLANs is when the SKB is setup & the VLAN is stripped from t=
-he
->      frame.
->   4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it se=
-es
->      a VLAN in the frame the packet is dropped.
->=20
-> Cc: xe-linux-external@cisco.com
-> Cc: Sriram Krishnan <srirakr2@cisco.com>
-> Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
+Pinctrl is also a bit special in that we have 100s of child nodes and
+only 1 to a few actual dependencies (the pinctrl node). I assume in
+the end here, it's just the pin controller node that's the dependency
+rather than creating lot's of dependencies?
 
-Thanks you!
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Rob
