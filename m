@@ -2,274 +2,303 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA38C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95614C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44ACF20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595427928;
-	bh=7qu9AhuxHamYf2H65Wn8U6QS1wG03iK+GcGL7GeTdt0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y4AlD8lJpuYjAZ6P3QbeNnCNLdn9GGaqbc498ft7Qc6KsGVpIF4lI2SdTPDI5ggSq
-	 njvKwQi0ADHZkhBY+edejuBPD9+eVPQLbmh9UT/fQJ3FVsarNfgcKfhaI3ETmwxj0B
-	 dQaAKmscRvHT9R7nX0waquHRqIT2kTfK43YPfrys=
+	by mail.kernel.org (Postfix) with ESMTP id 72CFC20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 14:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LGTg3sne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732525AbgGVOZ1 (ORCPT
+        id S1732529AbgGVO0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgGVOZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:25:26 -0400
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B852120729;
-        Wed, 22 Jul 2020 14:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595427926;
-        bh=7qu9AhuxHamYf2H65Wn8U6QS1wG03iK+GcGL7GeTdt0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UdOTKCQNQEAHNuJPmna0YOIC32+p0i5Fs49J2mN+BlpL4q4OnGm7p32BW0oDSaQxm
-         kWEl+WHTI0AUOh6qR4A8SWognsRXz+p34Iz+CrrmT2euaU3CJ/nz7y87eGz1tiuz61
-         mY85CSbo1PFGp4cRDrm1OHL9zd1c82kTPX9vviWI=
-Received: by mail-ej1-f42.google.com with SMTP id y10so2437783eje.1;
-        Wed, 22 Jul 2020 07:25:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530JzqviUExCJYbH0FWEbFX3TRrA0fWepCTHfkGrq/4FhfNzgVYD
-        GRoHF6uErDEfgPqBhXRxXfZJpFZlzdiY+zDyWg==
-X-Google-Smtp-Source: ABdhPJzFT8VUNhe352u2h73sOsvThk1Vu0xKwN26k6fBL2y8N2CMnD91ujV5It0L2yB+67/2TV+cl1gHiuVf6ha3PqI=
-X-Received: by 2002:a17:906:6959:: with SMTP id c25mr29600316ejs.375.1595427924194;
- Wed, 22 Jul 2020 07:25:24 -0700 (PDT)
+        Wed, 22 Jul 2020 10:26:44 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:48509 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728837AbgGVO0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:26:43 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id yFhcjw1x7uuXOyFhej7fgS; Wed, 22 Jul 2020 16:26:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1595427999; bh=56yRUiKhD0MOtm04mXf4Q+G03kN/DqhCNQ2ElNxcYak=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=LGTg3snecQ8VXP2b8e1jJ5a4NafqBy5y0CrD+xSM7Ix1RYkKQxteVf1Vu7Jm85t5x
+         rOQlj8f9Mc+cQ8HnuY7qyTGUP4ja22RUgYbF0D3dAlQEBS96oKRJ56kYOQNdCPZnAo
+         0YQS/804uyOLHmO7pdXUToHcdeg+XTEgH0+buVXFfRDBCZskNbdwZ3kme4mOlWIY3f
+         5RFkS04RTBxYDoFjXZjKhF3MB6PtIEdZB9Qy7oblOippJYqP8lLWgmWwFGRCc17hsk
+         alVT1JP03kCZfv56CAMjgS71EbKef7WBdpaKOFa6Rfa8MwVJHfDePDGfoSPHEgZvRX
+         WF7CqbmguTT/A==
+Subject: Re: [RFC PATCH 0/1] Add LTR controls
+To:     dikshita@codeaurora.org
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
+        ezequiel@collabora.com, boris.brezillon@collabora.com,
+        ribalda@kernel.org, paul.kocialkowski@bootlin.com,
+        posciak@chromium.org, linux-media@vger.kernel.org,
+        stanimir.varbanov@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org,
+        majja@codeaurora.org, linux-media-owner@vger.kernel.org
+References: <1591871121-25420-1-git-send-email-dikshita@codeaurora.org>
+ <f07c4aab69d2b333c0e36c50c526c0a85322e708.camel@ndufresne.ca>
+ <1a9904b6-60a5-0faa-8a5e-c9dc00802184@xs4all.nl>
+ <40040141fc3027c3eb1fdebc1a0e8ade@codeaurora.org>
+ <d37e4e83-b7ae-7d44-c75f-2055f11ae898@xs4all.nl>
+ <dd365fe82523c4e44af4353f4f457137@codeaurora.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <976be099-f003-d08f-3394-ff2dad43d7aa@xs4all.nl>
+Date:   Wed, 22 Jul 2020 16:26:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
- <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
- <1595389756.20193.12.camel@mtkswgap22>
-In-Reply-To: <1595389756.20193.12.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 22 Jul 2020 22:25:13 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
-Message-ID: <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <dd365fe82523c4e44af4353f4f457137@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfLIxkTxMQLWFLT5uvhMei0eW/SGw7VDiK5KAPO8L154niCUZr6u1mncfnYch66GjnFgCpf2kEAg67RhEunBfP1t291DDwhYBRYjEPCjHJt4LJnrVLnJb
+ CA4n+xldnvnzYCNKOD6PZOMmuQCd2JoDC8UFiQA9FYDH8HmxjFLNzQtR9Z9pDP/2I0klAgFys9qt2hxZxaDKWfIICOajIkYp9YEniET8nLr8RFUO7NLtEE7c
+ WczH9mZdl3AdF3yMcdxzsJEZacLgdyps74Nzw7hkirEoQ+KVCxJ/U6dLKt3l5KeHVy6m5ABagYXTBwwkZdo0BWE/ftkZlq7mDcskDnXdJgMFBHuxBOVBIK0e
+ qxcx2IAzT2xxLVfl9LMaN0es2AsxqTlNH8hfH/rdLtYTls9ojm2SYMPst32IP25O9gkbd5Jplfhfz2Ak09A84/RsrM1zx+XrtjSLv6v5W6xUxDibN+zZlnAb
+ qHBaiSXPUeuxeiAB7H27vpBXhQuZpZ4EYDsHJccA5ACx2HOb9Yd1XxLR3cTsNOgeTeGdH9DaTFS8m/eITFcVWZaRtcXoGQ7sba9emsFPE5KHhsUTlg1Tjw0x
+ v6eaffbXV0Y1X6Msj601jq1oTGWGOdZ87zczUraFMb7GxViC5RB4WpVMBqgio1GhCICTXodfTWEshgTy5aTkNf1RsxP+IPFlmmNpDWyzVxGxfEq5/7w2oeDQ
+ Vkq0aGMQLjSkWJZsYzrRVE9jIlu60gW+S8Nv8aV1v/yebf4+2fNw+AeRj565jX7j0OOyksMSDbuGuFirULcbnmIOsxiLEFVsJaMqUTTT5Ct9XH/lXFdndw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Neal:
+On 20/07/2020 16:33, dikshita@codeaurora.org wrote:
+> On 2020-07-16 14:25, Hans Verkuil wrote:
+>> On 16/06/2020 20:41, dikshita@codeaurora.org wrote:
+>>> Hi Hans, Nicolas,
+>>>
+>>> Thanks for your comments.
+>>>
+>>> On 2020-06-12 14:41, Hans Verkuil wrote:
+>>>> Hi Dikshita, Nicolas,
+>>>>
+>>>> On 11/06/2020 16:22, Nicolas Dufresne wrote:
+>>>>> Le jeudi 11 juin 2020 à 15:55 +0530, Dikshita Agarwal a écrit :
+>>>>>> LTR (Long Term Reference) frames are the frames that are encoded
+>>>>>> sometime in the past
+>>>>>> and stored in the DPB buffer list to be used as reference to encode
+>>>>>> future frames.
+>>>>>> One usage of LTR encoding is to reduce error propagation for video
+>>>>>> transmission
+>>>>>> in packet lossy networks.  For example, encoder may want to specify
+>>>>>> some key frames as
+>>>>>> LTR pictures and use them as reference frames for encoding. With
+>>>>>> extra protection
+>>>>>> selectively on these LTR frames or synchronization with the receiver
+>>>>>> of reception of
+>>>>>> the LTR frames during transmission, decoder can receive reference
+>>>>>> frames more reliably
+>>>>>> than other non-reference frames. As a result, transmission error can
+>>>>>> be effectively
+>>>>>> restricted within certain frames rather than propagated to future
+>>>>>> frames.
+>>>>>>
+>>>>>> We are introducing below V4l2 Controls for this feature
+>>>>>> 1. V4L2_CID_MPEG_VIDEO_LTRCOUNT
+>>>>>>     a. This is used to query or configure the number of LTR frames.
+>>>>>>        This is a static control and is controlled by the client.
+>>>>>>     b. The LTR index varies from 0 to the max LTR-1.
+>>>>>>     c. If LTR Count is more than max supported LTR count (max LTR) by
+>>>>>> driver, it will be rejected.
+>>>>>>     d. Auto Marking : If LTR count is non zero,
+>>>>>>         1) first LTR count frames would be mark as LTR automatically
+>>>>>> after
+>>>>>>              every IDR frame (inclusive).
+>>>>>>         2) For multilayer encoding: first LTR count base layer
+>>>>>> reference frames starting after
+>>>>>>            every IDR frame (inclusive) in encoding order would be
+>>>>>> marked as LTR frames by the encoder.
+>>>>>>         3) Auto marking of LTR due to IDR should consider following
+>>>>>> conditions:
+>>>>>>             1. The frame is not already set to be marked as LTR.
+>>>>>>             2. The frame is part of the base layer in the
+>>>>>> hierarchical layer case.
+>>>>>>             3. The number of frames currently marked as LTR is less
+>>>>>> than the maximum LTR frame index plus 1.
+>>>>>>     e. Encoder needs to handle explicit Mark/Use command when encoder
+>>>>>> is still doing "auto" marking
+>>>>
+>>>> I don't follow this, quite possibly due to lack of experience with
+>>>> encoders.
+>>>>
+>>>> I kind of would expect to see two modes: either automatic where
+>>>> encoders can
+>>>> mark up to LTR_COUNT frames as long term reference, and userspace just
+>>>> sets
+>>>> LTR_COUNT and doesn't have to do anything else.
+>>>>
+>>>> Or it is manual mode where userspace explicitly marks long term
+>>>> reference
+>>>> frames.
+>>>>
+>>>> From the proposal above it looks like you can mix auto and manual
+>>>> modes.
+>>>>
+>>>> BTW, how do you 'unmark' long term reference frames?
+>>>>
+>>>> This feature is for stateful encoders, right?
+>>>>
+>>>>>
+>>>>> Perhaps we are missing a LONG_TERM_REFERENCE_MODE ? I bet some encoder
+>>>>> can select by themself long term references and even some encoders may
+>>>>> not let the user decide.
+>>>>>
+>>>>> (not huge han of LTR acronyme, but that could be fine too, assuming
+>>>>> you
+>>>>> add more _).
+>>>>>
+>>>
+>>> Userspace sets LTR count which signifies the number of LTR frames
+>>> encoder needs to generate or keep.
+>>> The encoder has to build-up its internal buffer reference list (aka DBP
+>>> list or recon buffer list).
+>>> In order to achieve that encoder will fill It's LTR (long term
+>>> references) list and STR (short term references) list
+>>> by auto marking n frames as LTR frames(n is equal to LTR count) based on
+>>> auto-marking dictated by the encoder spec.
+>>> The client then can replace those automatically marked frames with new
+>>> frames using V4L2_CID_MPEG_VIDEO_MARKLTRFRAME and can ask
+>>> encoder to refer the newly marked frame for encoding the next frame
+>>> using V4L2_CID_MPEG_VIDEO_USELTRFRAME.
+>>>
+>>>>>>
+>>>>>> 2. V4L2_CID_MPEG_VIDEO_MARKLTRFRAME :
+>>>>>>     a. This signals to mark the current frame as LTR frame. It is a
+>>>>>> dynamic control and also provide the LTR index to be used.
+>>>>>>     b. the LTR index provided by this control should never exceed the
+>>>>>> max LTR-1. Else it will be rejected.
+>>>>>
+>>>>> The "current" frame seems a bit loose. Perhaps you wanted to use
+>>>>> buffer
+>>>>> flags ? A bit like what we have to signal TOP/BOTTOM fields in
+>>>>> alternate interlacing.
+>>>>
+>>>> I was thinking the same thing. Using a control for this doesn't seem
+>>>> right.
+>>>>
+>>>
+>>> the client sets this to replace automatically marked frames by the
+>>> encoder with a particular frame.
+>>> this provides an index that ranges from 0 to LTR count-1 and then the
+>>> particular frame will be marked with that index.
+>>> this can be achieved through request by associating this control with a
+>>> specific buffer to make it synchronized.
+>>>
+>>>>>
+>>>>>>
+>>>>>> 3. V4L2_CID_MPEG_VIDEO_USELTRFRAME :
+>>>>>>     a. This specifies the LTR frame(s) to be used for encoding the
+>>>>>> current frame. This is a dynamic control.
+>>>>>>     b. LTR Use Bitmap : this consists of bits [0, 15]. A total of N
+>>>>>> LSB bits of this field are valid,
+>>>>>>        where N is the maximum number of LTRs supported. All the other
+>>>>>> bits are invalid and should be rejected.
+>>>>>>        The LSB corresponds to the LTR index 0. Bit N-1 from the LSB
+>>>>>> corresponds to the LTR index max LTR-1.
+>>>>
+>>>> How would userspace know this? Esp. with auto marking since userspace
+>>>> would have
+>>>> to predict how auto marking works (if I understand this correctly).
+>>>>
+>>>
+>>> Client sets LTR count which tells about the number of LTR frames
+>>> automatically marked by the encoder.
+>>> so client can use LTR index (0 to LTR count -1) to ask encoder to refer
+>>> any particular
+>>> frame (marked automatically by driver or marked by client with
+>>> V4L2_CID_MPEG_VIDEO_MARKLTRFRAME) as a reference to encode the next
+>>> frame.
+>>>
+>>>> For which HW encoder is this meant?
+>>>>
+>>> This is primarily meant for H264 and HEVC.
+>>
+>> The venus encoder?
+> yes
+>>
+>> Some more questions:
+>>
+>> 1) How many LTR frames do h.264 and hevc allow?
+> According to spec, MAX LTR allowed by H.264 is 15 and HEVC allows max 32 LTR frames.
+>> 2) Given N LTR frames, is there a ordering of those frames? E.g.
+>>    the LTR frame with index 0 is processed/used differently from
+>>    LTR frame with index 1? Or are they all equal in that it is just a pool
+>>    of LTR frames that the encoder can use as it wishes?
+> they are different frames marked to be used as LTR and stored in available indices.
+> Userspace notifies encoder which LTR frame index to use via USE LTR control.
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8822=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8821=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > >
-> >
-> > > +
-> > > +/*
-> > > + * mtk_devapc_dump_vio_dbg - get the violation index and dump the fu=
-ll violation
-> > > + *                           debug information.
-> > > + */
-> > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_context *ctx, =
-u32 vio_idx)
-> > > +{
-> > > +       u32 shift_bit;
-> > > +
-> > > +       if (check_vio_mask(ctx, vio_idx))
-> > > +               return false;
-> > > +
-> > > +       if (!check_vio_status(ctx, vio_idx))
-> > > +               return false;
-> > > +
-> > > +       shift_bit =3D get_shift_group(ctx, vio_idx);
-> > > +
-> > > +       if (sync_vio_dbg(ctx, shift_bit))
-> > > +               return false;
-> > > +
-> > > +       devapc_extract_vio_dbg(ctx);
-> >
-> > I think get_shift_group(), sync_vio_dbg(), and
-> > devapc_extract_vio_dbg() should be moved out of vio_idx for-loop (the
-> > loop in devapc_violation_irq()) because these three function is not
-> > related to vio_idx.
-> > Another question: when multiple vio_idx violation occur, vio_addr is
-> > related to which one vio_idx? The latest happened one?
-> >
->
-> Actually, it's related to vio_idx. But we don't use it directly on these
-> function. I think below snip code might be better way to understand it.
->
-> for (...)
-> {
->         check_vio_mask()
->         check_vio_status()
->
->         // if get vio_idx, mask it temporarily
->         mask_module_irq(true)
->         clear_vio_status()
->
->         // dump violation info
->         get_shift_group()
->         sync_vio_dbg()
->         devapc_extract_vio_dbg()
->
->         // unmask
->         mask_module_irq(false)
-> }
+One more question: if a frame is marked as a LTR frame, does that mean that userspace
+can't reuse the buffer containing that frame? I assume that's the case.
 
-This snip code does not explain any thing. I could rewrite this code as:
+One thing that I don't like about this API is that it introduces the LTR indices.
+Would it be possible to instead use buffer indices? (i.e. the v4l2_buffer index field).
+Then you can use a buffer flag to indicate that a buffer should be an LTR buffer,
+or (for automarking) the driver can mark a buffer as an LTR buffer by setting this flag
+before returning the buffer to userspace.
 
-for (...)
-{
-    check_vio_mask()
-    check_vio_status()
+You would still need a V4L2_CID_MPEG_VIDEO_USELTRFRAME, but that can be a bitmask
+using the buffer index.
 
-    // if get vio_idx, mask it temporarily
-    mask_module_irq(true)
-    clear_vio_status()
-    // unmask
-    mask_module_irq(false)
-}
-
-// dump violation info
-get_shift_group()
-sync_vio_dbg()
-devapc_extract_vio_dbg()
-
-And my version is identical with your version, isn't it?
-
->
-> About your question, vio_addr would be the first one.
-
-So other vio_addr would be dropped? Or hardware would keep all
-vio_addr and you have some way to get all vio_addr?
-
->
-> > > +
-> > > +       return true;
-> > > +}
-> > > +
-> > > +/*
-> > > + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR)=
- will dump
-> > > + *                        violation information including which mast=
-er violates
-> > > + *                        access slave.
-> > > + */
-> > > +static irqreturn_t devapc_violation_irq(int irq_number,
-> > > +                                       struct mtk_devapc_context *ct=
-x)
-> > > +{
-> > > +       u32 vio_idx;
-> > > +
-> > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
-> > > +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx))
-> > > +                       continue;
-> > > +
-> > > +               /* Ensure that violation info are written before
-> > > +                * further operations
-> > > +                */
-> > > +               smp_mb();
-> > > +
-> > > +               /*
-> > > +                * Mask slave's irq before clearing vio status.
-> > > +                * Must do it to avoid nested interrupt and prevent
-> > > +                * unexpected behavior.
-> > > +                */
-> > > +               mask_module_irq(ctx, vio_idx, true);
-> > > +
-> > > +               clear_vio_status(ctx, vio_idx);
-> > > +
-> > > +               mask_module_irq(ctx, vio_idx, false);
-> > > +       }
-> > > +
-> > > +       return IRQ_HANDLED;
-> > > +}
-> > > +
-> > > +/*
-> > > + * start_devapc - initialize devapc status and start receiving inter=
-rupt
-> > > + *                while devapc violation is triggered.
-> > > + */
-> > > +static int start_devapc(struct mtk_devapc_context *ctx)
-> > > +{
-> > > +       void __iomem *pd_vio_shift_sta_reg;
-> > > +       void __iomem *pd_apc_con_reg;
-> > > +       u32 vio_shift_sta;
-> > > +       u32 vio_idx;
-> > > +
-> > > +       pd_apc_con_reg =3D ctx->devapc_pd_base + ctx->offset->apc_con=
-;
-> > > +       pd_vio_shift_sta_reg =3D ctx->devapc_pd_base + ctx->offset->v=
-io_shift_sta;
-> > > +       if (!pd_apc_con_reg || !pd_vio_shift_sta_reg)
-> > > +               return -EINVAL;
-> > > +
-> > > +       /* Clear devapc violation status */
-> > > +       writel(BIT(31), pd_apc_con_reg);
-> > > +
-> > > +       /* Clear violation shift status */
-> > > +       vio_shift_sta =3D readl(pd_vio_shift_sta_reg);
-> > > +       if (vio_shift_sta)
-> > > +               writel(vio_shift_sta, pd_vio_shift_sta_reg);
-> > > +
-> > > +       /* Clear slave violation status */
-> > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
-> > > +               clear_vio_status(ctx, vio_idx);
-> > > +               mask_module_irq(ctx, vio_idx, false);
-> > > +       }
-> > > +
-> >
-> > Why do you clear these? After power on hardware, I think these
-> > register status are correct. If the default value of these register
-> > are not correct, add a comment for this.
-> >
->
-> The register default value would be correct after power on.
-> But there are many things have to do before kernel driver probe.
-> During that time, devapc register status might be changed. But we are
-> focusing on handling violation after driver probe instead.
-> So clearing all reg status to make it as initial state.
-
-After hardware is powered on and some violation happen before this
-driver init, why do you not care about it? That is a violation in this
-system.
-For one application, I could build this driver as a ko (kernel
-module). I do not insert this ko in normal, but I insert it after
-something is wrong. So I need to get the information happened before
-this driver init.
+This would avoid introducing a second method of referring to buffers (LTR index),
+and I think that V4L2_CID_MPEG_VIDEO_MARKLTRFRAME can be dropped.
 
 Regards,
-Chun-Kuang.
 
->
-> > Regards,
-> > Chun-Kuang.
-> >
-> > > +       return 0;
-> > > +}
-> > > +
->
+	Hans
+
+> 
+> Thanks,
+> Dikshita
+>>
+>> Regards,
+>>
+>>     Hans
+>>
+>>>
+>>> Thanks,
+>>> Dikshita
+>>>
+>>>>>
+>>>>> Note, I haven't captured very well the userspace control flow, perhaps
+>>>>> this could be enhanced through writing some documentation.
+>>>>>
+>>>>> As per all other generic encoder controls, we need to make sure it
+>>>>> will
+>>>>> be usable and flexible enough for multiple HW blocks, as it can be
+>>>>> tedious to extend later otherwise. It is important that along with
+>>>>> this
+>>>>> RFC you provide some comparisons with with other HW / SW APIs in order
+>>>>> to help justify the design decisions. I also think there should be
+>>>>> link made V4L2_CID_MPEG_VIDEO_GOP_* , number of B-Frames etc.
+>>>>
+>>>> I agree with Nicolas.
+>>>>
+>>>> Regards,
+>>>>
+>>>>     Hans
+>>>>
+>>>>>
+>>>>> regards,
+>>>>> Nicolas
+>>>>>
+>>>>>>
+>>>>>> Dikshita Agarwal (1):
+>>>>>>   media: v4l2-ctrls:  add control for ltr
+>>>>>>
+>>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c | 6 ++++++
+>>>>>>  include/uapi/linux/v4l2-controls.h   | 4 ++++
+>>>>>>  2 files changed, 10 insertions(+)
+>>>>>>
+>>>>>
+
