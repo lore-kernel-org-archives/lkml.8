@@ -2,73 +2,75 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9246CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ACCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDF6206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3F5206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GfK17w9A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r94Bx+p3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgGVLBn (ORCPT
+        id S1730511AbgGVLBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47692 "EHLO
+        Wed, 22 Jul 2020 07:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVLBl (ORCPT
+        with ESMTP id S1730054AbgGVLBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:01:41 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316E6C0619DE
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so1442335wrj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:41 -0700 (PDT)
+        Wed, 22 Jul 2020 07:01:44 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B269C0619E1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:43 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so1477638wrh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1sISKqG3zytnruvPe3/sMoutNe9YJtA5YhpTs8Hs22Q=;
-        b=GfK17w9A7urar0bbCno8XvDiWdKYtCn/FkvPPArA+GEu1ZXhnvZ9bAoakVcJhb1LwB
-         lJAYp1XvgXaOSu3TD6gMvEwpokTWVzY+8o/e4yDWUWImmsTeZ5eBCvp3ffROdkEXsCOC
-         O7wNzG5tJKLjVlkL0IhrVBD26gbfXwfvzDXO9UkMBoeOwJPervPItYGXbfzI4yQHGSc8
-         c9kaNVZ2W8Q4AErxprcIx01PSnUQXWkcUQk7+f6VfHZMNAn1tSSoVqT0JzlHEKRALQ6x
-         MuNIEfo7OLSYXpX/IJQKjmn+I1MtwyxTRCGxaSjFHCWwyoHfJbOFfTCZU6fvmms10wG/
-         lhlQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=niAmRUGsg4kxR596xiqQAVaMYD9d+SGcGWnDYDntXxM=;
+        b=r94Bx+p3fcIDdAUsi8ATLuebYYefpEfjtAfalUhzc8pUWLe7DYZlGToUERmUT6175v
+         ridcQ7TDaWP5Jou4y5JCHVow5LoJaJmJTCGsqXpB1OrI5UBftKfAYaVYfwzURR66u/H9
+         iHci+7rpt+mdko5bdHcESZMNj4ARx6gtgIhfZZ/o0auMSlQPxuV4B2FlB+9MMh7yl9Iv
+         nBI5Anaw9Q7+OmR8XNlS06NTmtjbZTzwh5i4lOJra4g19ge0YzKw0ZZOzzm/YUG6QVwU
+         8Am9GunVPEw14N3o7HFV6CuCO0QWUc6s/ie+Uy5RY9m5EjGvqPB07L4KQv75NEShn5qI
+         N7IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1sISKqG3zytnruvPe3/sMoutNe9YJtA5YhpTs8Hs22Q=;
-        b=HezTSMCpB/yBii+vCfEntYY4KpIKow2Wq+bzLw9LSw4Z0f2k0Bzlis2Cs7LoBbkfyu
-         JgeYCy8HtJP+J9MK7F3kA346JA7riaKmDIFpXYIYoi6TsIxXuD3hz0Fd8JgDArPhxWlk
-         qpUJrqHSDdRtJ6bHXW7G/JOwomUF9Ds7KFccQWe8zkFHd1HqCoGdSp/liuC0hyaj+ddJ
-         OttOUFifdidzVIMYU1ytFLYEgJh8OAopBZ8W5xlPhAyxHrVox4MUsWHKmpTSvKNdX3qS
-         rWtfn7MNCpn/JHxjYx4rT0VjDv6NUBr4ZXMb1ZvUEjTOTrlVuTCu4cFXOnEZXH1xEfrH
-         GLiQ==
-X-Gm-Message-State: AOAM533RQIDbCetywgarTvIcI1R1/HiOiFLytE2GKR/vY43zss3f/rFE
-        HwFt3G4DAv2BNTOt50NJaoGFfA==
-X-Google-Smtp-Source: ABdhPJzvbJiEbZhTK9KtS+CuXvFxkQ841o0YWwDshK+1uhQj4fRq4YoTcgct5xjCsALL1vxZi3oyjw==
-X-Received: by 2002:adf:e8ca:: with SMTP id k10mr14176435wrn.110.1595415699849;
-        Wed, 22 Jul 2020 04:01:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=niAmRUGsg4kxR596xiqQAVaMYD9d+SGcGWnDYDntXxM=;
+        b=ubRlqjO5XAM9XzkZHTy0FyJTabC0MzBG5egzRWC5/njAH1qSp2MKk45hl/ArmCJhcB
+         MJnOlxHmNqa93PHsCUnCk99WaQjbnCobR3gQo1pLZ1cNLXuBH/lVdU5D1lA79pjcZJr1
+         em3PajzxngYvdvVOmR2C7wLqkxUBlLA20zxp+sDb7KN4XuHPrmDB8UCe3Sla+xZFuBl/
+         7avTPTVTJju3DlU4RI+A2UO5d4NbIkN6NhIhahG71YEzfJ5IS52GhVDMrsFjiI1dpjcB
+         mzB0FiycWyo7IvGylySp1DyKtbgPhXHObdZv870AWsYjue1/8c/z4JrN8Nfn8qbxwwip
+         3+pw==
+X-Gm-Message-State: AOAM5329nxg4KMj6zmvsP9M+AeOokcoxuGI24O0NNFMaiTFPU+2K548M
+        QiWjMF6BaM2VzB2+SUxNHqV3qQ==
+X-Google-Smtp-Source: ABdhPJxDV2Vmpdiz+h/u+9NMFx3xGKLE7lckZbCG8ZfyTR6oMuWNipVN11Zb3mzDpjoxhrGwzS6DbQ==
+X-Received: by 2002:a5d:4a0d:: with SMTP id m13mr13001479wrq.12.1595415702339;
+        Wed, 22 Jul 2020 04:01:42 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id y6sm41256164wrr.74.2020.07.22.04.01.38
+        by smtp.googlemail.com with ESMTPSA id y6sm41256164wrr.74.2020.07.22.04.01.41
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jul 2020 04:01:39 -0700 (PDT)
+        Wed, 22 Jul 2020 04:01:41 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org
 Cc:     saravanak@google.com, mdtipton@codeaurora.org,
         okukatla@codeaurora.org, bjorn.andersson@linaro.org,
         vincent.guittot@linaro.org, georgi.djakov@linaro.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] Add interconnect sync state support
-Date:   Wed, 22 Jul 2020 14:01:37 +0300
-Message-Id: <20200722110139.24778-1-georgi.djakov@linaro.org>
+Subject: [PATCH v2 2/2] interconnect: qcom: Use icc_sync_state in sdm845 and osm-3l drivers
+Date:   Wed, 22 Jul 2020 14:01:39 +0300
+Message-Id: <20200722110139.24778-3-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200722110139.24778-1-georgi.djakov@linaro.org>
+References: <20200722110139.24778-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,35 +78,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bootloaders often leave some system resources enabled such as clocks,
-regulators, interconnects etc. We want to keep these resources enabled
-until all their consumers are probed. These resources are often shared,
-so we must wait for all the consumers to come up, before deciding
-whether to turn them off or change the configuration. This patchset is
-trying to solve the above problem just for the on-chip interconnects.
+Lowering the bandwidth on the bus might have negative consequences if
+it's done before all consumers had a chance to cast their vote. Let's
+return the maximum amount of bandwidth as initial value. This bandwidth
+level would be maintained until all consumers have probed.
 
-The problem is solved by allowing the interconnect providers to specify
-an initial bandwidth values, which are enforced during boot as floor
-values, while the requests from all consumers are being collected.
-Then the sync_state() callback is used to signal when all consumers have
-been probed, meaning that the floor bandwidth is not needed anymore and
-the framework is ready to re-aggregate and process all requests.
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/qcom/osm-l3.c | 3 +++
+ drivers/interconnect/qcom/sdm845.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-v2:
-* Support initial values for both average and peak bandwidth (Mike)
-* Skip aggregating/setting for nodes that don't specify initial bw (Mike)
-* Drop patch 2/4: Add get_bw() callback (Mike)
-* Squash patches 3 and 4.
-
-v1: https://lore.kernel.org/lkml/20200709110705.30359-1-georgi.djakov@linaro.org/
-
-Georgi Djakov (2):
-  interconnect: Add sync state support
-  interconnect: qcom: Use icc_sync_state in sdm845 and osm-3l drivers
-
- drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
- drivers/interconnect/qcom/osm-l3.c    |  3 ++
- drivers/interconnect/qcom/sdm845.c    |  3 ++
- include/linux/interconnect-provider.h |  5 +++
- 4 files changed, 72 insertions(+)
-
+diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+index 96fb9ff5ff2e..54aff6273af1 100644
+--- a/drivers/interconnect/qcom/osm-l3.c
++++ b/drivers/interconnect/qcom/osm-l3.c
+@@ -236,6 +236,8 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+ 
+ 		node->name = qnodes[i]->name;
+ 		node->data = qnodes[i];
++		node->init_avg = INT_MAX;
++		node->init_peak = INT_MAX;
+ 		icc_node_add(node, provider);
+ 
+ 		for (j = 0; j < qnodes[i]->num_links; j++)
+@@ -268,6 +270,7 @@ static struct platform_driver osm_l3_driver = {
+ 	.driver = {
+ 		.name = "osm-l3",
+ 		.of_match_table = osm_l3_of_match,
++		.sync_state = icc_sync_state,
+ 	},
+ };
+ module_platform_driver(osm_l3_driver);
+diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+index f6c7b969520d..c04775820f15 100644
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -503,6 +503,8 @@ static int qnoc_probe(struct platform_device *pdev)
+ 
+ 		node->name = qnodes[i]->name;
+ 		node->data = qnodes[i];
++		node->init_avg = INT_MAX;
++		node->init_peak = INT_MAX;
+ 		icc_node_add(node, provider);
+ 
+ 		for (j = 0; j < qnodes[i]->num_links; j++)
+@@ -559,6 +561,7 @@ static struct platform_driver qnoc_driver = {
+ 	.driver = {
+ 		.name = "qnoc-sdm845",
+ 		.of_match_table = qnoc_of_match,
++		.sync_state = icc_sync_state,
+ 	},
+ };
+ module_platform_driver(qnoc_driver);
