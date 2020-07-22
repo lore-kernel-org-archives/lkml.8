@@ -2,105 +2,76 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00972C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E685C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70622073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P7dBpETo"
+	by mail.kernel.org (Postfix) with ESMTP id 4CF212073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 01:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731650AbgGVBjZ (ORCPT
+        id S1731659AbgGVBlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 21:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727795AbgGVBjZ (ORCPT
+        Tue, 21 Jul 2020 21:41:17 -0400
+Received: from mail-m17613.qiye.163.com ([59.111.176.13]:2255 "EHLO
+        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbgGVBlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 21:39:25 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0185FC061794;
-        Tue, 21 Jul 2020 18:39:24 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBJ6K5JtDz9sPB;
-        Wed, 22 Jul 2020 11:39:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595381961;
-        bh=WHwCUA6+aBBZaQRwlAjT9rFspJZTYA3kgO9KG2fmgYg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=P7dBpEToG6jN78/5fqn/BqoUjC7DEuOeZjPko8HcV3A3QKdU0ky1LqrwW/I90SiRo
-         dx1wUgcHnyzLTcykU06OooTJm5RkV7p2L7R3bMucTiMr/T00StVUxyufmg8Huht9EG
-         Qw4WuMDmv37wN6knwWtOJww3EENnYWvVSLzmdKpVZlP8ZxGSTvvL5d0d8x0U2hkrBa
-         aC80y4E3fGp6lUggPu53jayn5caxVz21qhRIxhp3idiOUD9M7OEDsiT3CBauBHVptX
-         Sy0PiEgS2l/LgvQPMbVSt+YX3ZgWqPyWg0WERzqaDWGT9+s/nV9VX31H+zD2cHTfrp
-         1XNJolzPUWkrA==
-Date:   Wed, 22 Jul 2020 11:39:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the pci tree
-Message-ID: <20200722113920.393deb21@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/AQZnIG.g1aGCXExNuR72w3i";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 21 Jul 2020 21:41:16 -0400
+Received: from njvxl5505.vivo.xyz (unknown [157.0.31.125])
+        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 26F984824FA;
+        Wed, 22 Jul 2020 09:41:14 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Icenowy Zheng <icenowy@aosc.io>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
+Subject: [PATCH] drm/panel: remove meaningless if(ret) check code.
+Date:   Wed, 22 Jul 2020 09:41:07 +0800
+Message-Id: <20200722014107.26045-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZSEoYQ0keTEpKSUxOVkpOQk5IQ0lLTE9IT0tVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6M1E6Tjo*Oj8iTBU3LwEMEw48
+        VjZPCkxVSlVKTkJOSENJS0xPQ0tNVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSU5ZV1kIAVlBSkJPSzcG
+X-HM-Tid: 0a73742e8bb293bakuws26f984824fa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AQZnIG.g1aGCXExNuR72w3i
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The function drm_panel_add always returns true.
+So if(ret) check code will never run into error branch.
+Remove these check make the code a bit readable.
 
-Hi all,
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+ drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-After merging the pci tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+diff --git a/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c b/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
+index fddbfddf6566..7f2eb54e4254 100644
+--- a/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
++++ b/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
+@@ -478,9 +478,7 @@ static int k101_im2ba02_dsi_probe(struct mipi_dsi_device *dsi)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = drm_panel_add(&ctx->panel);
+-	if (ret < 0)
+-		return ret;
++	drm_panel_add(&ctx->panel);
+ 
+ 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
+ 	dsi->format = MIPI_DSI_FMT_RGB888;
+-- 
+2.17.1
 
-drivers/pci/pci.c:2176:6: error: redefinition of 'pcie_clear_device_status'
- 2176 | void pcie_clear_device_status(struct pci_dev *dev)
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/pci/pci.c:37:
-drivers/pci/pci.h:668:20: note: previous definition of 'pcie_clear_device_s=
-tatus' was here
-  668 | static inline void pcie_clear_device_status(struct pci_dev *dev) { }
-      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Caused by commit
-
-  02c111e4a5a3 ("PCI/ERR: Rename pci_aer_clear_device_status() to pcie_clea=
-r_device_status()")
-
-CONFIG_PCIEAER is not set for this build.
-
-I have used the pci tree from next-20200721 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/AQZnIG.g1aGCXExNuR72w3i
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8XmMgACgkQAVBC80lX
-0GzTGgf/SmT8oqHfvhAe3Aqjgfr6BxtKDyZtBN1KiFKt+Hy1Re1HCSlHlnW6/ijr
-qvoB7Xp6qVc8vvIoE5+qrRCtYyncKlyGpG4x2dmtMBQRBrJmUTtC2xZA/wSCnH0V
-lI13kkvovCDAdQStSO3TzbqwI9nDirthtmHbp9R5Xr81eIb9TWpgX5BtmvILDYV+
-e0ZztxqTwDViIO8rDAC0lKKSl+OGp4pLN6Ol7vZ5+WtHvmO0e6dhwMa+kG7QdhMA
-rOe2LWQ3jdauwrj1mK+ZpzTHOEsbV4DmE+BTXlyKidHkf5SUq/1NA0S7vbFj4Nn9
-w28oULgZkR65+07Q1wnGjojGqBWGlw==
-=le/i
------END PGP SIGNATURE-----
-
---Sig_/AQZnIG.g1aGCXExNuR72w3i--
