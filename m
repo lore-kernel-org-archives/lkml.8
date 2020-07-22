@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991C9C433F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B1C433F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B84120771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AAA20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732282AbgGVMPS (ORCPT
+        id S1732293AbgGVMPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:15:18 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51518 "EHLO inva021.nxp.com"
+        Wed, 22 Jul 2020 08:15:20 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51502 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732261AbgGVMPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:15:15 -0400
+        id S1732252AbgGVMPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:15:14 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C1055200901;
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 501F2200906;
         Wed, 22 Jul 2020 14:15:13 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B3BD02008FF;
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 43C05200905;
         Wed, 22 Jul 2020 14:15:13 +0200 (CEST)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 52762202AC;
-        Wed, 22 Jul 2020 14:15:13 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D7A28202AC;
+        Wed, 22 Jul 2020 14:15:12 +0200 (CEST)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -37,9 +37,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Dan Douglass <dan.douglass@nxp.com>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH 7/7] crypto: caam/qi2 - add module alias
-Date:   Wed, 22 Jul 2020 15:14:58 +0300
-Message-Id: <20200722121458.8478-8-horia.geanta@nxp.com>
+Subject: [PATCH 6/7] crypto: caam - add more RNG hw error codes
+Date:   Wed, 22 Jul 2020 15:14:57 +0300
+Message-Id: <20200722121458.8478-7-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200722121458.8478-1-horia.geanta@nxp.com>
 References: <20200722121458.8478-1-horia.geanta@nxp.com>
@@ -52,28 +52,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a module alias, to enable udev-based module autoloading:
+In some cases, e.g. when TRNG is not properly configured,
+the RNG module could issue a "Hardware error" at runtime.
 
-$ modinfo -F alias drivers/crypto/caam/dpaa2_caam.ko
-fsl-mc:v00001957ddpseci
+"Continuos check" error is emitted when some of the BISTs fail.
 
+Signed-off-by: Horia Geantă <horia.geanta@freescale.com>
 Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- drivers/crypto/caam/caamalg_qi2.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/caam/error.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 700e1d50211f..66ae1d581168 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -5405,6 +5405,7 @@ static const struct fsl_mc_device_id dpaa2_caam_match_id_table[] = {
- 	},
- 	{ .vendor = 0x0 }
+diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
+index 17c6108b6d41..72db90176b1a 100644
+--- a/drivers/crypto/caam/error.c
++++ b/drivers/crypto/caam/error.c
+@@ -212,6 +212,9 @@ static const char * const rng_err_id_list[] = {
+ 	"Prediction resistance and test request",
+ 	"Uninstantiate",
+ 	"Secure key generation",
++	"",
++	"Hardware error",
++	"Continuous check"
  };
-+MODULE_DEVICE_TABLE(fslmc, dpaa2_caam_match_id_table);
  
- static struct fsl_mc_driver dpaa2_caam_driver = {
- 	.driver = {
+ static int report_ccb_status(struct device *jrdev, const u32 status,
 -- 
 2.17.1
 
