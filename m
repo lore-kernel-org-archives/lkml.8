@@ -2,198 +2,240 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70D0C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE79C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813612084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D85C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 18:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="n3fKOZmR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XMpS/yfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbgGVSCw (ORCPT
+        id S1731528AbgGVSDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:02:52 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:65397 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbgGVSCw (ORCPT
+        Wed, 22 Jul 2020 14:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730111AbgGVSDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:02:52 -0400
+        Wed, 22 Jul 2020 14:03:33 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C6C9C0619E1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:03:33 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u185so1707404pfu.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 11:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595440971; x=1626976971;
-  h=date:from:to:cc:message-id:references:mime-version:
-   content-transfer-encoding:in-reply-to:subject;
-  bh=7S9G0j6WNk2lHQ1bZXQAcCjIdbziJxspgdHUPMMA6gA=;
-  b=n3fKOZmRaWlxBxz8OeIFS/hlDM2E87OppNvfThGepfcaJqkjR7iQT9Dj
-   dRT2IAFeAXGhT3jKEnn5cRRKjiWMcWmnPjGGG2AJ8a/nBplCMM1EvxDzO
-   D/VBmBlpV94ZQ0ycDkUre0pLYhLg6dXIYwH3uZUaKisYOKOQ4IGRTHJKo
-   I=;
-IronPort-SDR: gddspTBzn+Y+TFjJTeY9TdNlPFZ60AB2yNuYk5xuO/V+CC+LP+ZLXGVyt1ka9QWY+Qo+37Am9i
- sF1re8O1G5oQ==
-X-IronPort-AV: E=Sophos;i="5.75,383,1589241600"; 
-   d="scan'208";a="60802713"
-Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend mode
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 22 Jul 2020 18:02:46 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 51994240ABB;
-        Wed, 22 Jul 2020 18:02:40 +0000 (UTC)
-Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 18:02:30 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Jul 2020 18:02:29 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Wed, 22 Jul 2020 18:02:29 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 8E7C44CA97; Wed, 22 Jul 2020 18:02:29 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 18:02:29 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
-Message-ID: <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1593665947.git.anchalag@amazon.com>
- <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com>
- <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com>
- <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
- <20200721000348.GA19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <408d3ce9-2510-2950-d28d-fdfe8ee41a54@oracle.com>
- <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yWcfktADb3uPJbFkIiNC/fq9uZOsRANKyg7Yhrbd3tg=;
+        b=XMpS/yfUE5QvKTqgqHXr498QBJt1LtXUBTlBwABMTYg0Endz9kTZGsNVoItzCCJ8JZ
+         kBCM5saOtYxBLzG65jr1vE+X4/UzMu73f/A1NH+keySUjedHG6c6BI2LlBufsNrhATxN
+         bVH3baDqsU8Nh8OwoeDBGNIQ54aggROKqB9px+29u7Cy+lea4Oy56Z/axz1FhQ42Fgvq
+         +7ca24D4Qcfr83XGHgalFULZ9om5Fbfwf3QHAIAJB1cGJtn2M8oicM3DTaYflPkkDvWA
+         ClceWQu4Ql4Ons+Ct9bcqc602uKrNDtogEo0tlJaIvxjU9ZCUCDBz6Fkpmw0a+exYJUm
+         FN7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yWcfktADb3uPJbFkIiNC/fq9uZOsRANKyg7Yhrbd3tg=;
+        b=EaP+xjHkNbspw3d4EVkZY42ttZkgO3sTKI5jPgdqwkapbKrSA6c9Vy6Hj1l4ILfjKL
+         rPjnKgoDVQ9aKllbFDZ9n3BGoOLHmaP3gXSiCjjauP1a+AlztQesGDHYUZ1ESIHIoWn5
+         UTT+DWIaQT/dlB4Qcm6olvmkjQOVh3e+7cjmYNiBmdhGl+LRR3sMV6ScYv9FMQMtgAVx
+         OEY4wbo9XkZDwc83Y3mqOxl0+3uipYu1Os+fkTMSiLP7XZ49dk7iXa76E95EMHl4qxx7
+         Rf2FB3SLEQmsuqiX7y7yrDitPVq/1PLlZoVJpu34/JRVOsD46qtYLS3RYQRQvbtBpegH
+         1Iuw==
+X-Gm-Message-State: AOAM530GdkiB5GDr9SXU0qYGEBB6arZoVPxIPRbkY1uzORfQviQhPDln
+        P6Blz6Au7NCnRJ2zjcD7Xb3iOg==
+X-Google-Smtp-Source: ABdhPJw4CCh/JqUryfanhVXNO34PrKWEi7bBLUJ8EKXba3fX0MsU9Wcj2adh+VkHowSyvD3Dk78D3Q==
+X-Received: by 2002:a63:c509:: with SMTP id f9mr920841pgd.144.1595441012822;
+        Wed, 22 Jul 2020 11:03:32 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w9sm341994pja.39.2020.07.22.11.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 11:03:32 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 11:01:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Siddharth Gupta <sidgup@codeaurora.org>, agross@kernel.org,
+        ohad@wizery.com, corbet@lwn.net, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] remoteproc: Add remoteproc character device
+ interface
+Message-ID: <20200722180139.GA3700915@builder.lan>
+References: <1594148870-27276-1-git-send-email-sidgup@codeaurora.org>
+ <1594148870-27276-2-git-send-email-sidgup@codeaurora.org>
+ <20200715201839.GA3204081@xps15>
+ <20200715215149.GA3267350@xps15>
+ <81d7514c-727e-b4dc-e4ac-74a25966ccaf@codeaurora.org>
+ <20200721205635.GM2922385@builder.lan>
+ <20200722171841.GA1268891@xps15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200722171841.GA1268891@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 05:18:34PM -0700, Stefano Stabellini wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+On Wed 22 Jul 10:18 PDT 2020, Mathieu Poirier wrote:
+
+> On Tue, Jul 21, 2020 at 01:56:35PM -0700, Bjorn Andersson wrote:
+> > On Tue 21 Jul 12:16 PDT 2020, Siddharth Gupta wrote:
+> > > On 7/15/2020 2:51 PM, Mathieu Poirier wrote:
+> > > > On Wed, Jul 15, 2020 at 02:18:39PM -0600, Mathieu Poirier wrote:
+> > > > > On Tue, Jul 07, 2020 at 12:07:49PM -0700, Siddharth Gupta wrote:
+> > [..]
+> > > > > > diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
+> > [..]
+> > > > > > +int rproc_char_device_add(struct rproc *rproc)
+> > > > > > +{
+> > > > > > +	int ret;
+> > > > > > +	dev_t cdevt;
+> > > > > > +
+> > > > > > +	cdev_init(&rproc->char_dev, &rproc_fops);
+> > > > > > +	rproc->char_dev.owner = THIS_MODULE;
+> > > > > > +
+> > > > > > +	cdevt = MKDEV(rproc_major, rproc->index);
+> > > > > > +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+> > > > Trying this patchset on my side gave me the following splat[1].  After finding
+> > > > the root case I can't understand how you haven't see it on your side when you
+> > > > tested the feature.
+> > > > 
+> > > > [1]. https://pastebin.com/aYTUUCdQ
+> > 
+> > Mathieu, I've looked at this back and forth. Afaict this implies that
+> > rproc_major is still 0. Could it be that either alloc_chrdev_region()
+> > failed or somehow has yet to be called when you hit this point?
 > 
+> That is exacly what I thought when I first stumbled on this but instrumenting
+> the code showed otherwise.
 > 
+> After function rproc_init_cdev() has been called @rproc_major contains the
+> dynamically allocated major number in the upper 12 bits and the base minor
+> number in the lower 20 bits.
 > 
-> On Tue, 21 Jul 2020, Boris Ostrovsky wrote:
-> > >>>>>> +static int xen_setup_pm_notifier(void)
-> > >>>>>> +{
-> > >>>>>> +     if (!xen_hvm_domain())
-> > >>>>>> +             return -ENODEV;
-> > >>>>>>
-> > >>>>>> I forgot --- what did we decide about non-x86 (i.e. ARM)?
-> > >>>>> It would be great to support that however, its  out of
-> > >>>>> scope for this patch set.
-> > >>>>> I’ll be happy to discuss it separately.
-> > >>>>
-> > >>>> I wasn't implying that this *should* work on ARM but rather whether this
-> > >>>> will break ARM somehow (because xen_hvm_domain() is true there).
-> > >>>>
-> > >>>>
-> > >>> Ok makes sense. TBH, I haven't tested this part of code on ARM and the series
-> > >>> was only support x86 guests hibernation.
-> > >>> Moreover, this notifier is there to distinguish between 2 PM
-> > >>> events PM SUSPEND and PM hibernation. Now since we only care about PM
-> > >>> HIBERNATION I may just remove this code and rely on "SHUTDOWN_SUSPEND" state.
-> > >>> However, I may have to fix other patches in the series where this check may
-> > >>> appear and cater it only for x86 right?
-> > >>
-> > >>
-> > >> I don't know what would happen if ARM guest tries to handle hibernation
-> > >> callbacks. The only ones that you are introducing are in block and net
-> > >> fronts and that's arch-independent.
-> > >>
-> > >>
-> > >> You do add a bunch of x86-specific code though (syscore ops), would
-> > >> something similar be needed for ARM?
-> > >>
-> > >>
-> > > I don't expect this to work out of the box on ARM. To start with something
-> > > similar will be needed for ARM too.
-> > > We may still want to keep the driver code as-is.
-> > >
-> > > I understand the concern here wrt ARM, however, currently the support is only
-> > > proposed for x86 guests here and similar work could be carried out for ARM.
-> > > Also, if regular hibernation works correctly on arm, then all is needed is to
-> > > fix Xen side of things.
-> > >
-> > > I am not sure what could be done to achieve any assurances on arm side as far as
-> > > this series is concerned.
+
+Ahh, alloc_chrdev_region() actually returns the dev_t, not the major.
+Too bad that we all name this variable "major" to maximize the
+confusion.
+
+> In rproc_char_device_add() we find this line:
 > 
-> Just to clarify: new features don't need to work on ARM or cause any
-> addition efforts to you to make them work on ARM. The patch series only
-> needs not to break existing code paths (on ARM and any other platforms).
-> It should also not make it overly difficult to implement the ARM side of
-> things (if there is one) at some point in the future.
+>         cdevt = MKDEV(rproc_major, rproc->index);
 > 
-> FYI drivers/xen/manage.c is compiled and working on ARM today, however
-> Xen suspend/resume is not supported. I don't know for sure if
-> guest-initiated hibernation works because I have not tested it.
+> Macro MKDEV() builds a device number by shifting @rproc_major by 20 bits to the
+> left and OR'ing that with @rproc->index.  But the device's major number is
+> already occupying the upper 12bits, so shifthing another 20 bits to the left
+> makes the major portion of the device number '0'.  That is causing cdev_add() to
+> complain bitterly.
 > 
+> The right way to do this is:
 > 
+>         cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
 > 
-> > If you are not sure what the effects are (or sure that it won't work) on
-> > ARM then I'd add IS_ENABLED(CONFIG_X86) check, i.e.
-> >
-> >
-> > if (!IS_ENABLED(CONFIG_X86) || !xen_hvm_domain())
-> >       return -ENODEV;
-> 
-> That is a good principle to have and thanks for suggesting it. However,
-> in this specific case there is nothing in this patch that doesn't work
-> on ARM. From an ARM perspective I think we should enable it and
-> &xen_pm_notifier_block should be registered.
-> 
-This question is for Boris, I think you we decided to get rid of the notifier
-in V3 as all we need  to check is SHUTDOWN_SUSPEND state which sounds plausible
-to me. So this check may go away. It may still be needed for sycore_ops
-callbacks registration.
-> Given that all guests are HVM guests on ARM, it should work fine as is.
-> 
-> 
-> I gave a quick look at the rest of the series and everything looks fine
-> to me from an ARM perspective. I cannot imaging that the new freeze,
-> thaw, and restore callbacks for net and block are going to cause any
-> trouble on ARM. The two main x86-specific functions are
-> xen_syscore_suspend/resume and they look trivial to implement on ARM (in
-> the sense that they are likely going to look exactly the same.)
-> 
-Yes but for now since things are not tested I will put this
-!IS_ENABLED(CONFIG_X86) on syscore_ops calls registration part just to be safe
-and not break anything.
-> 
-> One question for Anchal: what's going to happen if you trigger a
-> hibernation, you have the new callbacks, but you are missing
-> xen_syscore_suspend/resume?
-> 
-> Is it any worse than not having the new freeze, thaw and restore
-> callbacks at all and try to do a hibernation?
-If callbacks are not there, I don't expect hibernation to work correctly.
-These callbacks takes care of xen primitives like shared_info_page,
-grant table, sched clock, runstate time which are important to save the correct
-state of the guest and bring it back up. Other patches in the series, adds all
-the logic to these syscore callbacks. Freeze/thaw/restore are just there for at driver
-level.
+
+Agreed (and let's continue naming it rproc_major, in line with all other
+drivers - now I know better).
 
 Thanks,
-Anchal
+Bjorn
+
+> Once I found the problem I thought about 32/64 bit issues.  Since Siddharth is
+> using a 64bit application processor shifting another 20 bits would still have
+> yielded a non-zero value.  But that can't be since dev_t is a u32 in
+> linux/types.h.
+> 
+> As such I can't see how it is possible to not hit that problem on a 64bit
+> platform.
+> 
+> > 
+> > > Hey Mathieu,
+> > > 
+> > > We aren't able to reproduce the error that you are seeing, the splat is
+> > > coming
+> > > from the check for whiteout device[1] - which shouldn't happen because of
+> > > the
+> > > find_dynamic_major call[2], right?
+> > > 
+> > > We are successfully seeing all our character device files and able to
+> > > successfully boot remoteprocs. From what I read and understood about
+> > > whiteout
+> > > devices they will be hidden in the fs.
+> > > 
+> > > Could you provide more details about your configuration and testing?
+> > > 
+> > > [1]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486
+> > > <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123>
+> > > [2]: https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L123
+> > > 
+> > > <https://github.com/torvalds/linux/blob/master/fs/char_dev.c#L486>
+> > > > > > +	if (ret < 0)
+> > > > > > +		goto out;
+> > > > > > +
+> > > > > > +	rproc->dev.devt = cdevt;
+> > > > > > +out:
+> > > > > > +	return ret;
+> > > > > > +}
+> > > > > > +
+> > > > > > +void rproc_char_device_remove(struct rproc *rproc)
+> > > > > > +{
+> > > > > > +	__unregister_chrdev(rproc_major, rproc->index, 1, "remoteproc");
+> > > > > > +}
+> > > > > > +
+> > > > > > +void __init rproc_init_cdev(void)
+> > > > > > +{
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, "remoteproc");
+> > > > > > +	if (ret < 0)
+> > > > > > +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+> > > > > > +}
+> > > > > > +
+> > > > > > +void __exit rproc_exit_cdev(void)
+> > > > > > +{
+> > > > > > +	unregister_chrdev_region(MKDEV(rproc_major, 0), NUM_RPROC_DEVICES);
+> > > > > Please go back to the comment I made on this during my last review and respin.
+> > > > After digging in the code while debugging the above problem, I don't see how
+> > > > unregistering the chrdev region the way it is done here would have worked.
+> > > Since this is compiled statically and not built as a module, we will never
+> > > exercise the code path, so I will remove it in the next patchset.
+> > > 
+> > 
+> > You're right Siddharth, since we changed CONFIG_REMOTEPROC to bool it's no longer
+> > possible to hit remoteproc_exit(), so you can omit this function
+> > entirely. (And we should clean up the rest of that as well)
+> > 
+> > [..]
+> > > > > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> > [..]
+> > > > > > @@ -488,6 +489,8 @@ struct rproc_dump_segment {
+> > > > > >    * @auto_boot: flag to indicate if remote processor should be auto-started
+> > > > > >    * @dump_segments: list of segments in the firmware
+> > > > > >    * @nb_vdev: number of vdev currently handled by rproc
+> > > > > > + * @char_dev: character device of the rproc
+> > > > > > + * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
+> > > > > >    */
+> > > > > >   struct rproc {
+> > > > > >   	struct list_head node;
+> > > > > > @@ -523,6 +526,8 @@ struct rproc {
+> > > > > >   	int nb_vdev;
+> > > > > >   	u8 elf_class;
+> > > > > >   	u16 elf_machine;
+> > > > > > +	struct cdev char_dev;
+> > 
+> > As stated privately, I assumed based on this name that this is a struct
+> > device related to that character device. So please rename this cdev to
+> > save me from doing this mistake again.
+> > 
+> > Thanks,
+> > Bjorn
