@@ -2,236 +2,103 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC603C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7422C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1D082071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02AA2071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="WSoyaQ48"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S28SZVzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732898AbgGVVn4 (ORCPT
+        id S1728961AbgGVVtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:43:56 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:48645 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgGVVn4 (ORCPT
+        Wed, 22 Jul 2020 17:49:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgGVVtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:43:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=QHg1KzJuJRoJs0JEscQdHyBcO620GX3IT0D06djc5yk=;
-        b=WSoyaQ48E6jg3HstUMUVhLy2OHHqL+qANLHM16cdGkd2HVA0iOPJKdFzlsSB0wesfr8E
-        w7RPfRXvityeluS3ZngcLud0J+oSbxgmMDNbEwK8BZG18AxMOkQF8guX4wHzpfWEGJKdt5
-        nJqNts+MIfT9jeBMZxelWvMIaqOpuA4CY=
-Received: by filterdrecv-p3iad2-5b55dcd864-m99xc with SMTP id filterdrecv-p3iad2-5b55dcd864-m99xc-18-5F18B319-35
-        2020-07-22 21:43:53.518064465 +0000 UTC m=+2262868.123012744
-Received: from [192.168.1.14] (unknown)
-        by ismtpd0002p1lon1.sendgrid.net (SG) with ESMTP
-        id 571HsbEpTFKhin8cGd43Xw
-        Wed, 22 Jul 2020 21:43:53.171 +0000 (UTC)
-Subject: Re: [PATCH 01/10] media: uapi: h264: Update reference lists
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-2-ezequiel@collabora.com>
-From:   Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <e5c57fd5-74d3-b25d-8054-f268aee6539c@kwiboo.se>
-Date:   Wed, 22 Jul 2020 21:43:53 +0000 (UTC)
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 17:49:21 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E950EC0619DC;
+        Wed, 22 Jul 2020 14:49:20 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id b205so919704vkb.8;
+        Wed, 22 Jul 2020 14:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ithjliQLqJY6tGxYNN/Cp/9uoUkvQUM6Qu6DjieyS3M=;
+        b=S28SZVzvTqBP++BXwAVzA8kidLotcnQaXAEfAlpiKNPt9dVr/RVP+Y6zLJSlQYC8hK
+         AyT/8BCNlBMUqVrjql1fSSSDlWysrQg2yRTd/F32IB7YuAM3euDwMJ2FHC1/kLnZ0uk9
+         1EKjUKLsRrsNO/Wsz1X8h86cvyEbFT/nB/HdUQftPpcT6IqFRLKchmaYN4YwywSNAxwX
+         0RLfKMKrMlWigH16BQrYX0yEEfpdkAXLn7kd85gKBVxxruTeD/ZhZBc/iHXFX+q2Flhr
+         Pkl9g/IIfHpiRUkx6UDxngGdtMMZpTBLOKiPoGXnxstkoCj9fsTpEz/gmbf8/1xMgYV8
+         PTtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ithjliQLqJY6tGxYNN/Cp/9uoUkvQUM6Qu6DjieyS3M=;
+        b=Z3isM2E49RbyfseGtQJEmNIc2wlJS3MBArkv4l64xd+amWcw3OitrijYbVM0etDb0j
+         UHtamIqs/z3jLBS4+PcyfhTRXa9eq31A3iXn6ht+FehvGOEH4Se27XaPYA/hL9PNfqMY
+         F/RHO1mvayFeqpjNlUSL5JyVtqqqFQM+ccllIpP6I+Cxftm6WZS1mWsMNJ75cKymnPAB
+         KmO4IZCHnD9gS4mPEjAcWAd/WYCY0Pcrhdd8cEHQnw9gKAhblzAa5tVRZkcVKfg00JFr
+         N2z0Ze6jTtgIu1jGpU9NmCfI7Rc6XdFdeJB88BHTcAKroInHLXc1kLVETLQvYDVKxI3T
+         JaeQ==
+X-Gm-Message-State: AOAM531Paql10/60SOBY+f5zNIiKaxnZyKa6XIzGTtiEOa6LxC+0rAie
+        4UxIB6lIek2SuveKiS6Uco88/4aO4zjmBJ3CDaw=
+X-Google-Smtp-Source: ABdhPJyyvmZr7Bt/PIKq8EkvKIF9yqm4tipgYWw+E8JY4c7+nItck3eN+1grf9hY5s++vEf73w5bBOrA+DdFGicoFCc=
+X-Received: by 2002:a1f:f848:: with SMTP id w69mr1525600vkh.86.1595454560034;
+ Wed, 22 Jul 2020 14:49:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200715202233.185680-2-ezequiel@collabora.com>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hz1gPYa6lKt1atsJk?=
- =?us-ascii?Q?53KKPCQYr5JyfXdbCYZHyfAJt=2Fk8vLVHu3i6tiy?=
- =?us-ascii?Q?WxvIHf6HdfG3ZqV88vZQkNkLAyuySpTzpgCFXha?=
- =?us-ascii?Q?H1ca17fkVZVps4aN0KfGoLlUA97h7IaU7Pd4Rwj?=
- =?us-ascii?Q?qhN1AYAuHa2M4hCxYF65M899u7mGItMJQvwN08j?=
- =?us-ascii?Q?dKpONxcka1GfoCZ1m00YQ=3D=3D?=
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Language: sv
-Content-Transfer-Encoding: 7bit
+References: <20200722203341.578651-1-cphealy@gmail.com>
+In-Reply-To: <20200722203341.578651-1-cphealy@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 22 Jul 2020 18:49:08 -0300
+Message-ID: <CAOMZO5DfuU5dGALFOmryn=xpRq+wWfpQjZEhBje9JAQ8jkXPjw@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: ZII: Disable HW Ethernet switch reset GPIOs
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-15 22:22, Ezequiel Garcia wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> When dealing with with interlaced frames, reference lists must tell if
-> each particular reference is meant for top or bottom field. This info
-> is currently not provided at all in the H264 related controls.
-> 
-> Make reference lists hold a structure which will also hold flags along
-> index into DPB array. Flags will tell if reference is meant for top or
-> bottom field.
-> 
-> Currently the only user of these lists is Cedrus which is just compile
-> fixed here. Actual usage of newly introduced flags will come in
-> following commit.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> [Ezequiel: Use a macro for the reference picture list length]
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Hi Chris,
+
+On Wed, Jul 22, 2020 at 5:33 PM Chris Healy <cphealy@gmail.com> wrote:
+>
+> From: Chris Healy <cphealy@gmail.com>
+>
+> Disable Ethernet switch reset GPIO with ZII platforms that have it
+> enabled.  HW switch reset results in a reset of the copper PHYs
+> inside of the switch.  We want to avoid this reset of the copper PHYs
+> in the switch as this results in unnecessary broader network disruption on
+> a soft reboot of the application processor.
+>
+> With the HW GPIO removed, the switch driver still performs a soft reset of
+> the switch core which has been shown to sufficiently meet our needs with
+> other ZII platforms that do not have the HW switch reset GPIO defined.
+>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 > ---
->  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
->  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
->  include/media/h264-ctrls.h                    | 20 +++++++---
->  3 files changed, 55 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index d0d506a444b1..c2e17c02f77e 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->      * - __u32
->        - ``slice_group_change_cycle``
->        -
-> -    * - __u8
-> +    * - struct :c:type:`v4l2_h264_reference`
->        - ``ref_pic_list0[32]``
->        - Reference picture list after applying the per-slice modifications
-> -    * - __u8
-> +    * - struct :c:type:`v4l2_h264_reference`
->        - ``ref_pic_list1[32]``
->        - Reference picture list after applying the per-slice modifications
->      * - __u32
-> @@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->        - ``chroma_offset[32][2]``
->        -
->  
-> +``Picture Reference``
-> +
-> +.. c:type:: v4l2_h264_reference
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table:: struct v4l2_h264_reference
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - __u16
-> +      - ``flags``
-> +      - See :ref:`Picture Reference Flags <h264_reference_flags>`
-> +    * - __u8
-> +      - ``index``
-> +      - Index into the :c:type:`v4l2_ctrl_h264_decode_params`.dpb array.
-> +
-> +.. _h264_reference_flags:
-> +
-> +``Picture Reference Flags``
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
-> +      - 0x00000001
-> +      -
-> +    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
-> +      - 0x00000002
-> +      -
-> +
->  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
->      Specifies the decode parameters (as extracted from the bitstream)
->      for the associated H264 slice data. This includes the necessary
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> index 54ee2aa423e2..cce527bbdf86 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
->  
->  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
->  				   struct cedrus_run *run,
-> -				   const u8 *ref_list, u8 num_ref,
-> -				   enum cedrus_h264_sram_off sram)
-> +				   const struct v4l2_h264_reference *ref_list,
-> +				   u8 num_ref, enum cedrus_h264_sram_off sram)
->  {
->  	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
->  	struct vb2_queue *cap_q;
-> @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
->  		int buf_idx;
->  		u8 dpb_idx;
->  
-> -		dpb_idx = ref_list[i];
-> +		dpb_idx = ref_list[i].index;
->  		dpb = &decode->dpb[dpb_idx];
->  
->  		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index 080fd1293c42..bca4a9887e7e 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -19,6 +19,8 @@
->   */
->  #define V4L2_H264_NUM_DPB_ENTRIES 16
->  
-> +#define V4L2_H264_REF_LIST_LEN (2 * V4L2_H264_NUM_DPB_ENTRIES)
-> +
->  /* Our pixel format isn't stable at the moment */
->  #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
->  
-> @@ -140,6 +142,16 @@ struct v4l2_h264_pred_weight_table {
->  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
->  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
->  
-> +#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD		0x01
-> +#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD		0x02
+> v2:
+> - Update the description to more accurately reflect why we are making the change
 
-Later in this series enum v4l2_h264_dpb_reference is introduced that
-represent same information as these two flags.
-Maybe consolidate and use a shared enum for both slice ref list and dpb?
+Updated description is clear now:
 
-Regards,
-Jonas
-
-> +
-> +struct v4l2_h264_reference {
-> +	__u8 flags;
-> +
-> +	/* Index into v4l2_ctrl_h264_decode_params.dpb[] */
-> +	__u8 index;
-> +};
-> +
->  struct v4l2_ctrl_h264_slice_params {
->  	/* Size in bytes, including header */
->  	__u32 size;
-> @@ -178,12 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
->  	__u8 num_ref_idx_l1_active_minus1;
->  	__u32 slice_group_change_cycle;
->  
-> -	/*
-> -	 * Entries on each list are indices into
-> -	 * v4l2_ctrl_h264_decode_params.dpb[].
-> -	 */
-> -	__u8 ref_pic_list0[32];
-> -	__u8 ref_pic_list1[32];
-> +	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_LIST_LEN];
-> +	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_LIST_LEN];
->  
->  	__u32 flags;
->  };
-> 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
