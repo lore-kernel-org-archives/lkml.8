@@ -2,158 +2,124 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F56C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22874C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9170020714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvyoCQRc"
+	by mail.kernel.org (Postfix) with ESMTP id 0778D2068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbgGVJnT (ORCPT
+        id S1731512AbgGVJoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:43:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21208 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727034AbgGVJnS (ORCPT
+        Wed, 22 Jul 2020 05:44:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:40587 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgGVJoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:43:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595410996;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5Kb/Abqzc1wwGUB57wyooGlyiAmmMs/m2j0ybHDH3Uc=;
-        b=OvyoCQRc6lDxNo+evSuS+fCcqphzfFaEzcN95OB4YVo2FZqDdpv7q1URfUuLPHEWVRrYxk
-        DfrJwPCGDD8nHm6iyencmWf98b8k108fQffYCNRc9/WRur7oNMRw/9+vuCW0yTxqtRUmKI
-        vXwOpnU713EES53GoAjQDSD3yMgIcK4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-6Fw3fOseN2GzzilEEkJeHA-1; Wed, 22 Jul 2020 05:43:13 -0400
-X-MC-Unique: 6Fw3fOseN2GzzilEEkJeHA-1
-Received: by mail-ed1-f69.google.com with SMTP id u25so568892edq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:43:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=5Kb/Abqzc1wwGUB57wyooGlyiAmmMs/m2j0ybHDH3Uc=;
-        b=lQxefjoPkAMkPEj6G5r6K0Sy7S4EafXakuRxJEYE6i8q/Tizjk4jcKSMR+X7bhA5I8
-         IDutPtV50Cbql/i/f0xHFKPrSkhpWdjHvRzSUSgVymW23ZRj3wPxRA8h8ys7skB66f5y
-         9wkKBfIqZWY8ZEmvNTzUK6J7VRIssuuNTWFx/A++fA8uXtKM5bXPSq30mTfB0zl+iJ83
-         sYpjcNWERfVQl2mqrrw0rkI1UZtU5uAmC+GKdBoIMYgT00LlfnqSLKMY3HrruB1GckDz
-         NJRQ+DeK4nUENRpuw7hmLQiiSdgwYkHLVIolI9PeSPQQQuk2aEC7BLnyUDJquFJbZris
-         1LRg==
-X-Gm-Message-State: AOAM532FdUu/b4s1kJv5RpEMjhjQrr/bl/YkeemgurmN6laMH2hHX8Vu
-        a24IJfSk8m24ygpqDoLE4sZBWnYxFhV+JS/1MVzYMoBIQ9ti5ldy4LCFbBXVypB1f+a4E7fag8/
-        bFedP2ZwZ/x4GjyZ9MMwXR8L7
-X-Received: by 2002:a17:906:2b9b:: with SMTP id m27mr4987689ejg.19.1595410992396;
-        Wed, 22 Jul 2020 02:43:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx79uCW95X1s9k7qWVHGXqTcMrE2CCXxJ+5xye1vKxSac5AbBD7Ow2dhnLE/qSMpg8Md5C5bg==
-X-Received: by 2002:a17:906:2b9b:: with SMTP id m27mr4987673ejg.19.1595410992177;
-        Wed, 22 Jul 2020 02:43:12 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id d24sm18338851eje.21.2020.07.22.02.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 02:43:11 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Julia Suvorova <jusual@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Julia Suvorova <jusual@redhat.com>, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
-In-Reply-To: <20200722001513.298315-1-jusual@redhat.com>
-References: <20200722001513.298315-1-jusual@redhat.com>
-Date:   Wed, 22 Jul 2020 11:43:10 +0200
-Message-ID: <87d04nq40h.fsf@vitty.brq.redhat.com>
+        Wed, 22 Jul 2020 05:44:10 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M3DeV-1jxLwj0sXt-003bxP for <linux-kernel@vger.kernel.org>; Wed, 22 Jul
+ 2020 11:44:08 +0200
+Received: by mail-qt1-f174.google.com with SMTP id o22so1094451qtt.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 02:44:08 -0700 (PDT)
+X-Gm-Message-State: AOAM532xPoNGxTTlGnE/1BHACRiL6bGtjvM/0Xc6QV3O1glN11ttle9s
+        ALfjToL5QDcHRMh5YNg8oWp7yQYAq3bEznfkQ/0=
+X-Google-Smtp-Source: ABdhPJxwkYMqqlMOkCtiDhkAnK0U1Z3J/eM92Y3pA2ZYfCjSxZxJC559Vt8UZd0LKulfbnhn81unz3J72RGNNuPEagQ=
+X-Received: by 2002:ac8:7587:: with SMTP id s7mr33522432qtq.304.1595411047084;
+ Wed, 22 Jul 2020 02:44:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <7cb2285e-68ba-6827-5e61-e33a4b65ac03@ghiti.fr> <mhng-08bff01a-ca15-4bbc-8454-2ca3e823fef8@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-08bff01a-ca15-4bbc-8454-2ca3e823fef8@palmerdabbelt-glaptop1>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Jul 2020 11:43:50 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a34sT2bQbkZUjaxaShzCkn+s35pXxS0UNhqGFu+t2hZYw@mail.gmail.com>
+Message-ID: <CAK8P3a34sT2bQbkZUjaxaShzCkn+s35pXxS0UNhqGFu+t2hZYw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Alexandre Ghiti <alex@ghiti.fr>, Albert Ou <aou@eecs.berkeley.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:UdL+knbubfZO1AGP4zdXTM6MPoW1ddEKSJ9gnTlGDCvNqCZOZEw
+ h7xYd4Z82KexpL1F5SWl0llW+VV4zjyqCDMNJgmfoWPfeyfElOaHZbUNEPml4/4BVHj9NTd
+ u9ZLALnOmGXCNNalKf5YntaxDIT7NGyXxFtlRqLPMC3f4VI8Yu/bPk3ndzTtLuwo7145vO8
+ t7fnWFT+GXcm+NrVfwyeA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rPhSp6j4HFc=:D0mTTq/+TBMJicx/ruZrBq
+ prQE0fqVtH6TDtF3OUlsR7jsujvzoc645Jnvc3Vqje2ezGonwPEE4a7UIJpa8+yfSg5vrEN0a
+ eK0BLZBXp95dHTewqa5V35SafwaZOLccXVxNl4S5cA+HH7hVvbONC2WmJBQRPZkr24wT+1tgx
+ M2xPKgJOj1SlSHkALc1OZ1wAGpMqlFqFr8rrnwH0c2uaMvTfBbqWiMqV3ntjwvkvn77yd1bO+
+ UsWyxG7WumXCbTvEKRgtOMy8T70Df2fvSgP9kerk6NmFLXyL3fmMNW7oiSqYrORTApMXuaI2m
+ q+UAgYIU1UfyQzoyGo9xvBm2yF6Ecie2Ckh75gYP9lh5UkXIBMiKzMpvxQpZtd9LEo0S0YtWL
+ fxmrC3gbJ696D8HDsDzwyVhLh3XjIBSpSXN7N/OW8TfaRsM+OLdmrCFAeZWXT9ZbmV1ybi4n4
+ c5exjUWTWLCMRiDXddMkfJCIJzX+VYZui1Snp97S/wm4QvYKTty08WqzCYU64qnLHw/NyM0So
+ ziKJpHbWO4fZfQvGW+NNdhxJLEc43WbXF9QFDZn50Vik9Qpt7QBGT726iuitsvLADAO0VH5dc
+ 10SsKjwPJ25UDm7XNV8gy+KIbO+JdTAOw+uobVWvSofgomKHzEnEH4sg8vAzUQTBMa+FKfhRs
+ h5reHE1hloNRWlvs44zN0bsC42YgNtdYwtx6XRD1rfgpblqf1Dvx7Z/Z1A57f/VmP7gaDDu8i
+ qBvIGAIHqG2vwQmP5Gop4pYDICQvWuNpYYH+PEYkJc00HJIGgQc1GPux7cEvG8f79Cz/Elj7l
+ wxADClbXeRepMILenVuXdmwyNNkhK4vzg4qQub6j82lUlbI4wUi+3nfRwFeLLjybfUb6riuQ+
+ FPMeGfR0QFe0hFF5laLv0ZCi2/dCI6gaK73A34Pp1CbY6yyfbgot8CukGda1vDGNX+eY4/t3N
+ 5r2cKbCbrUzQxEwylj+veETrpqYCgh8kSw505JfTHgJaoqdCvKwMv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Julia Suvorova <jusual@redhat.com> writes:
-
-> Scanning for PCI devices at boot takes a long time for KVM guests. It
-> can be reduced if KVM will handle all configuration space accesses for
-> non-existent devices without going to userspace [1]. But for this to
-> work, all accesses must go through MMCONFIG.
-> This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
-> guests making MMCONFIG the default access method.
+On Tue, Jul 21, 2020 at 9:06 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
-> [1] https://lkml.org/lkml/2020/5/14/936
+> On Tue, 21 Jul 2020 11:36:10 PDT (-0700), alex@ghiti.fr wrote:
+> > Let's try to make progress here: I add linux-mm in CC to get feedback on
+> > this patch as it blocks sv48 support too.
 >
-> Signed-off-by: Julia Suvorova <jusual@redhat.com>
-> ---
->  arch/x86/pci/direct.c      | 5 +++++
->  arch/x86/pci/mmconfig_64.c | 3 +++
->  2 files changed, 8 insertions(+)
+> Sorry for being slow here.  I haven't replied because I hadn't really fleshed
+> out the design yet, but just so everyone's on the same page my problems with
+> this are:
 >
-> diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
-> index a51074c55982..8ff6b65d8f48 100644
-> --- a/arch/x86/pci/direct.c
-> +++ b/arch/x86/pci/direct.c
-> @@ -6,6 +6,7 @@
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/dmi.h>
-> +#include <linux/kvm_para.h>
->  #include <asm/pci_x86.h>
->  
->  /*
-> @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
->  {
->  	if (type == 0)
->  		return;
-> +
-> +	if (raw_pci_ext_ops && kvm_para_available())
-> +		return;
-> +
->  	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
->  		 type);
->  	if (type == 1) {
-> diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
-> index 0c7b6e66c644..9eb772821766 100644
-> --- a/arch/x86/pci/mmconfig_64.c
-> +++ b/arch/x86/pci/mmconfig_64.c
-> @@ -10,6 +10,7 @@
->  #include <linux/init.h>
->  #include <linux/acpi.h>
->  #include <linux/bitmap.h>
-> +#include <linux/kvm_para.h>
->  #include <linux/rcupdate.h>
->  #include <asm/e820/api.h>
->  #include <asm/pci_x86.h>
-> @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
->  		}
->  
->  	raw_pci_ext_ops = &pci_mmcfg;
-> +	if (kvm_para_available())
-> +		raw_pci_ops = &pci_mmcfg;
->  
->  	return 1;
->  }
+> * We waste vmalloc space on 32-bit systems, where there isn't a lot of it.
 
-This implies mmconfig access method is always functional (when present)
-for all KVM guests, regardless of hypervisor version/which KVM userspace
-is is use/... In case the assumption is true the patch looks good (to
-me) but in case it isn't or if we think that more control over this
-is needed we may want to introduce a PV feature bit for KVM.
+There is actually an ongoing work to make 32-bit Arm kernels move
+vmlinux into the vmalloc space, as part of the move to avoid highmem.
 
-Also, I'm thinking about moving this to arch/x86/kernel/kvm.c: we can
-override x86_init.pci.arch_init and reassign raw_pci_ops after doing
-pci_arch_init().
+Overall, a 32-bit system would waste about 0.1% of its virtual address space
+by having the kernel be located in both the linear map and the vmalloc area.
+It's not zero, but not that bad either. With the typical split of 3072 MB user,
+768MB linear and 256MB vmalloc, it's also around 1.5% of the available
+vmalloc area (assuming a 4MB vmlinux in a typical 32-bit kernel), but the
+boundaries can be changed arbitrarily if needed.
 
-Cc: kvm@vger.kernel.org
+The eventual goal is to have a split of 3840MB for either user or linear map
+plus and 256MB for vmalloc, including the kernel. Switching between linear
+and user has a noticeable runtime overhead, but it relaxes both the limits
+for user memory and lowmem, and it provides a somewhat stronger
+address space isolation.
 
--- 
-Vitaly
+Another potential idea would be to completely randomize the physical
+addresses underneath the kernel by using a random permutation of the
+pages in the kernel image. This adds even more overhead (virt_to_phys
+may need to call vmalloc_to_page or similar) and may cause problems
+with DMA into kernel .data across page boundaries,
 
+> * Sort out how to maintain a linear map as the canonical hole moves around
+>   between the VA widths without adding a bunch of overhead to the virt2phys and
+>   friends.  This is probably going to be the trickiest part, but I think if we
+>   just change the page table code to essentially lie about VAs when an sv39
+>   system runs an sv48+sv39 kernel we could make it work -- there'd be some
+>   logical complexity involved, but it would remain fast.
+
+I assume you can't use the trick that x86 has where all kernel addresses
+are at the top of the 64-bit address space and user addresses are at the
+bottom, regardless of the size of the page tables?
+
+      Arnd
