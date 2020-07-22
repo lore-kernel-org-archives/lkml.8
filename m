@@ -2,220 +2,89 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C69DC433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3971B22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N60bJeq9"
+	by mail.kernel.org (Postfix) with ESMTP id D78CA206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgGVLBq (ORCPT
+        id S1730826AbgGVLBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbgGVLBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:01:43 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B00C0619DE
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:42 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so1486874wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Mb4TDwngKstdYsXu7RUzjZ9eyxkXyxQaDZSnxs4t1+Y=;
-        b=N60bJeq90gF41M58w7DHRMQvF6qMoRnkCpkk5WCEHbDJW0aHQ6I4402GfkkTroitnv
-         DxGEB6UcyEovmUTMewJhlshvkGdmcaqwzbcqdfA9nxgw8Spu298DxnjSikpWRXypTvC8
-         dQSOOG0oVp3kRk+4vQZBFRagUdUm0V8zL5nCuMACDngI5NldIASAtY9m3s+pDNjYVNEZ
-         Ga8vzcgGqEaScwPGpp2H60wF2eh+4Q9q9UsO3QEH84g81YpAwV7+Ti9bty7qsYWIdfSA
-         uYRKddOBJ/AArr/opFW0AMFu8JnJf8jQZLjQoYGrQLEdLYE7a2pVrXYOpPbKi3sQdRLd
-         RSNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Mb4TDwngKstdYsXu7RUzjZ9eyxkXyxQaDZSnxs4t1+Y=;
-        b=FtlAPALKiySpOBhdqFX6zejqr4278HVk25HA1/E4kqudQ9XjqYY/iZAwQnllnVYlP0
-         c8MdJtSNiCnId/UEdF4GQj3qJjwR22bmXmH0woQWdAKw6X1n7IP/IPPvey8bJAre6dEP
-         NjyxsCp0VlQUo3z7nE0f0yjfebf2ZWY+niOu3iTYSsDlBaFwia/jvzs2MhQCgL98YtwV
-         KyMxdrWywrmeHLg38NWIb2l8DmJw0bqq4iZ8Kv+TRGey3cWsX00bRB5cwVINjc5XzmMp
-         Ozv37vGnXdmqA8RrspyAfSg8hZOumXst8CsfwgtTgZvZJRqyNlQwALRexCG+4xH6Fgi2
-         yrTA==
-X-Gm-Message-State: AOAM533kKAoPPIWkB8TlrnNa9rwWPilqiKLhmaH71gco6YEa+x6C1u0W
-        ikyxYEO2bbxOQUMKaGfp9j/ksw==
-X-Google-Smtp-Source: ABdhPJyVFEACUDVgyJ7BwW37Wm8jOezlYQOmluktE5flWxq8GlmeRLwB1J95+gBWQAjMSub6hpTORA==
-X-Received: by 2002:adf:cd8b:: with SMTP id q11mr22330993wrj.98.1595415701114;
-        Wed, 22 Jul 2020 04:01:41 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id y6sm41256164wrr.74.2020.07.22.04.01.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jul 2020 04:01:40 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     saravanak@google.com, mdtipton@codeaurora.org,
-        okukatla@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, georgi.djakov@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] interconnect: Add sync state support
-Date:   Wed, 22 Jul 2020 14:01:38 +0300
-Message-Id: <20200722110139.24778-2-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200722110139.24778-1-georgi.djakov@linaro.org>
-References: <20200722110139.24778-1-georgi.djakov@linaro.org>
+        Wed, 22 Jul 2020 07:01:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11667 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgGVLBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 07:01:51 -0400
+IronPort-SDR: UReT7caanMw9IHtcaEd87zqu8/s3REOF84lWI53fpCuoQVCNlXJL3/49A7S4nPHAfoKh9ra8S4
+ vuCkb262bJfw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9689"; a="211850855"
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="211850855"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 04:01:50 -0700
+IronPort-SDR: fZ6SHTvlHEVgZkFC8IVm371dDSplTZvMaC1Ev2OyawvRSN3MATnVwd7nbi0DVmj583oEBWGavv
+ /7Iw3ESiI8tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="487951806"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Jul 2020 04:01:46 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jyCVO-003F9Z-48; Wed, 22 Jul 2020 14:01:46 +0300
+Date:   Wed, 22 Jul 2020 14:01:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        helgaas@kernel.org, bp@alien8.de, james.morse@arm.com,
+        lenb@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
+        zhangliguang@linux.alibaba.com, wangkefeng.wang@huawei.com,
+        jroedel@suse.de, linuxarm@huawei.com, yangyicong@hisilicon.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
+Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Message-ID: <20200722110146.GW3703480@smile.fi.intel.com>
+References: <20200722103952.1009-1-shiju.jose@huawei.com>
+ <20200722103952.1009-2-shiju.jose@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722103952.1009-2-shiju.jose@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bootloaders often do some initial configuration of the interconnects
-in the system and we want to keep this configuration until all consumers
-have probed and expressed their bandwidth needs. This is because we don't
-want to change the configuration by starting to disable unused paths until
-every user had a chance to request the amount of bandwidth it needs.
+On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
+> CPER records describing a firmware-first error are identified by GUID.
+> The ghes driver currently logs, but ignores any unknown CPER records.
+> This prevents describing errors that can't be represented by a standard
+> entry, that would otherwise allow a driver to recover from an error.
+> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+> version 2.8).
+> 
+> Add a notifier chain for these non-standard/vendor-records. Callers
+> must identify their type of records by GUID.
+> 
+> Record data is copied to memory from the ghes_estatus_pool to allow
+> us to keep it until after the notifier has run.
+> 
+> Co-developed-by: James Morse <james.morse@arm.com>
 
-To accomplish this we will implement an interconnect specific sync_state
-callback which will synchronize (aggregate and set) the current bandwidth
-settings when all consumers have been probed.
+Co-developed-by: is going _in conjunction with_ SoB tag which is missing here.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/core.c           | 61 +++++++++++++++++++++++++++
- include/linux/interconnect-provider.h |  5 +++
- 2 files changed, 66 insertions(+)
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index e5f998744501..0c4e38d9f1fa 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -26,6 +26,8 @@
- 
- static DEFINE_IDR(icc_idr);
- static LIST_HEAD(icc_providers);
-+static int providers_count;
-+static bool synced_state;
- static DEFINE_MUTEX(icc_lock);
- static struct dentry *icc_debugfs_dir;
- 
-@@ -255,6 +257,12 @@ static int aggregate_requests(struct icc_node *node)
- 			continue;
- 		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
- 			     &node->avg_bw, &node->peak_bw);
-+
-+		/* during boot use the initial bandwidth as a floor value */
-+		if (!synced_state) {
-+			node->avg_bw = max(node->avg_bw, node->init_avg);
-+			node->peak_bw = max(node->peak_bw, node->init_peak);
-+		}
- 	}
- 
- 	return 0;
-@@ -919,6 +927,13 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
- 	node->provider = provider;
- 	list_add_tail(&node->node_list, &provider->nodes);
- 
-+	/* get the initial bandwidth values and sync them with hardware */
-+	if ((node->init_avg || node->init_peak) && provider->set) {
-+		node->avg_bw = node->init_avg;
-+		node->peak_bw = node->init_peak;
-+		provider->set(node, node);
-+	}
-+
- 	mutex_unlock(&icc_lock);
- }
- EXPORT_SYMBOL_GPL(icc_node_add);
-@@ -1014,8 +1029,54 @@ int icc_provider_del(struct icc_provider *provider)
- }
- EXPORT_SYMBOL_GPL(icc_provider_del);
- 
-+static int of_count_icc_providers(struct device_node *np)
-+{
-+	struct device_node *child;
-+	int count = 0;
-+
-+	for_each_available_child_of_node(np, child) {
-+		if (of_property_read_bool(child, "#interconnect-cells"))
-+			count++;
-+		count += of_count_icc_providers(child);
-+	}
-+	of_node_put(np);
-+
-+	return count;
-+}
-+
-+void icc_sync_state(struct device *dev)
-+{
-+	struct icc_provider *p;
-+	struct icc_node *n;
-+	static int count;
-+
-+	count++;
-+
-+	if (count < providers_count)
-+		return;
-+
-+	mutex_lock(&icc_lock);
-+	synced_state = true;
-+	list_for_each_entry(p, &icc_providers, provider_list) {
-+		dev_dbg(p->dev, "interconnect provider is in synced state\n");
-+		list_for_each_entry(n, &p->nodes, node_list) {
-+			if (n->init_avg || n->init_peak) {
-+				aggregate_requests(n);
-+				p->set(n, n);
-+			}
-+		}
-+	}
-+	mutex_unlock(&icc_lock);
-+}
-+EXPORT_SYMBOL_GPL(icc_sync_state);
-+
- static int __init icc_init(void)
- {
-+	struct device_node *root = of_find_node_by_path("/");
-+
-+	providers_count = of_count_icc_providers(root);
-+	of_node_put(root);
-+
- 	icc_debugfs_dir = debugfs_create_dir("interconnect", NULL);
- 	debugfs_create_file("interconnect_summary", 0444,
- 			    icc_debugfs_dir, NULL, &icc_summary_fops);
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 0c494534b4d3..aa85b96296c4 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -71,6 +71,8 @@ struct icc_provider {
-  * @req_list: a list of QoS constraint requests associated with this node
-  * @avg_bw: aggregated value of average bandwidth requests from all consumers
-  * @peak_bw: aggregated value of peak bandwidth requests from all consumers
-+ * @init_avg: average bandwidth value that is read from the hardware during init
-+ * @init_peak: peak bandwidth value that is read from the hardware during init
-  * @data: pointer to private data
-  */
- struct icc_node {
-@@ -87,6 +89,8 @@ struct icc_node {
- 	struct hlist_head	req_list;
- 	u32			avg_bw;
- 	u32			peak_bw;
-+	u32			init_avg;
-+	u32			init_peak;
- 	void			*data;
- };
- 
-@@ -103,6 +107,7 @@ void icc_node_del(struct icc_node *node);
- int icc_nodes_remove(struct icc_provider *provider);
- int icc_provider_add(struct icc_provider *provider);
- int icc_provider_del(struct icc_provider *provider);
-+void icc_sync_state(struct device *dev);
- 
- #else
- 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
