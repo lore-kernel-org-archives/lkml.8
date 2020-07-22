@@ -2,82 +2,81 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A21C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3712206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4D620825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732939AbgGVUqg (ORCPT
+        id S1732319AbgGVUtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:46:36 -0400
-Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:55562 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726452AbgGVUqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:46:36 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 2D8AB1D6A0374;
-        Wed, 22 Jul 2020 20:46:35 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: vase54_4e01a1326f39
-X-Filterd-Recvd-Size: 1999
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 Jul 2020 20:46:33 +0000 (UTC)
-Message-ID: <8721f64a3150e1e5c4813738f470443297ef1cdd.camel@perches.com>
-Subject: Re: [PATCH v2] net-sysfs: add a newline when printing 'tx_timeout'
- by sysfs
-From:   Joe Perches <joe@perches.com>
-To:     David Miller <davem@davemloft.net>, stephen@networkplumber.org
-Cc:     wangxiongfeng2@huawei.com, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 22 Jul 2020 13:46:32 -0700
-In-Reply-To: <20200722.132311.31388808811810422.davem@davemloft.net>
-References: <1595314977-57991-1-git-send-email-wangxiongfeng2@huawei.com>
-         <20200721.153632.1416164807029507588.davem@davemloft.net>
-         <20200722082741.1675d611@hermes.lan>
-         <20200722.132311.31388808811810422.davem@davemloft.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Wed, 22 Jul 2020 16:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbgGVUtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 16:49:19 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4D7207BB;
+        Wed, 22 Jul 2020 20:49:16 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 16:49:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Haren Myneni <haren@us.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Tal Gilboa <talgi@mellanox.com>, kunit-dev@googlegroups.com,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] kbuild: trace functions in subdirectories of
+ lib/
+Message-ID: <20200722164915.29be42d9@oasis.local.home>
+In-Reply-To: <CAK7LNASdytWgqQWux1cyBrGJb_FvS7Ur5UqgHaA2Xf5cwfL85A@mail.gmail.com>
+References: <20200707092117.963394-1-masahiroy@kernel.org>
+        <20200707092117.963394-2-masahiroy@kernel.org>
+        <20200707120212.7010fa4f@oasis.local.home>
+        <CAK7LNASdytWgqQWux1cyBrGJb_FvS7Ur5UqgHaA2Xf5cwfL85A@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-07-22 at 13:23 -0700, David Miller wrote:
-> From: Stephen Hemminger <stephen@networkplumber.org>
-> Date: Wed, 22 Jul 2020 08:27:41 -0700
+On Wed, 22 Jul 2020 11:08:51 +0900
+Masahiro Yamada <masahiroy@kernel.org> wrote:
+
+> That's why I split this into two commits
+> so that we can do git-bisect and
+> revert the second one in case of a regression.
 > 
-> > On Tue, 21 Jul 2020 15:36:32 -0700 (PDT)
-> > David Miller <davem@davemloft.net> wrote:
-> > 
-> >> From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> >> Date: Tue, 21 Jul 2020 15:02:57 +0800
-> >> 
-> >> > When I cat 'tx_timeout' by sysfs, it displays as follows. It's better to
-> >> > add a newline for easy reading.
-> >> > 
-> >> > root@syzkaller:~# cat /sys/devices/virtual/net/lo/queues/tx-0/tx_timeout
-> >> > 0root@syzkaller:~#
-> >> > 
-> >> > Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>  
-> >> 
-> >> Applied, thank you.
-> > 
-> > Could you add
+> Anyway, we have some more time to test this in linux-next
+> (and somebody reports an issue, if any).
 > 
-> Stephen, of all people you should know by now that all of my commits
-> are %100 immutable.  So commit log changes cannot be made after I've
-> applied the patch, ever.
 
-Maybe it's time to use git notes?
+You can add my
 
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
+and take it through your tree.
+
+-- Steve
