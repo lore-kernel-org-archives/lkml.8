@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF49C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB21220792
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0E820792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ePwYqv7d";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OGPeBmMC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yBnRFIXC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="odpwU/DC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbgGVJMc (ORCPT
+        id S1731297AbgGVJMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:12:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46940 "EHLO
+        Wed, 22 Jul 2020 05:12:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46976 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730713AbgGVJM3 (ORCPT
+        with ESMTP id S1728911AbgGVJMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:12:29 -0400
-Date:   Wed, 22 Jul 2020 09:12:25 -0000
+        Wed, 22 Jul 2020 05:12:35 -0400
+Date:   Wed, 22 Jul 2020 09:12:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595409146;
+        s=2020; t=1595409152;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Y9bGe5nDz+lbBZk9A8geV5VlItlX8zF2nR/AK4qanxw=;
-        b=ePwYqv7d2xNTWZsw5vlHShkxhCJsbNK23rBsR36UZticVjoR3AQBZ507xlm2Quk+n43Cqj
-        HW3j9gKiXZQIIGDxjwLBZZls2FH6l9OTXZwJ0TS3JBTxokzVnUrVzY56gm7Sf6q/G7e73Z
-        7iQ+C8TSqqhMiHq1O0ZOwCWf1r/oTFnwQqAoMdIncN7YA4dO/CZYs7/7eyYO37Z3AxY76b
-        ZOx0osCIVVWZUBj31nZzedXAz2FeqY6tHfeOsI72RrBdPZkPk3uUYbh22SpvcqCwftzKfO
-        ur80RqF/DuUc/2fAWJwkRfH/q9ETM+g1CW3txTdNblDiJEzXZi1MgB+USThrqg==
+        bh=WHacWLIcDurmhW0FpN0Glp+owoWiXqtADVgC0S49uas=;
+        b=yBnRFIXCaKrROj2E/Ri5sFh2mOuyn/Yd4LkE9maRcWD8UvZWfenMpRFwcHwoVB7ZWk7fmY
+        +kmUsnfk8EdezplTz6pv4ekoiKPuRzgmy3Ai9zsnBhecIrLX0Ql1V6zapa/WbMK1NVIQX0
+        q+QoBgKvbHr8yfjosYuiaOh3+jK/oN69UNjYHJSZaCsL5J1nSzwJKavECXAHetZQfNRsbp
+        jC8Kdat8PEz/z8H87GR7YRnBrVpcSlksvMosxFaJ3aIfSGQxFEKzZ0F/ZzmU81GF85B642
+        qefUgjGVcZTMYi+d5G2mnnUeUYx5oOusgYkRdWUQ7ys11RFzIYt9uI0QJB14iA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595409146;
+        s=2020e; t=1595409152;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Y9bGe5nDz+lbBZk9A8geV5VlItlX8zF2nR/AK4qanxw=;
-        b=OGPeBmMCNcX/4hhFmMJ8IC4cczeefAP7rhsY9G6SJ0xjd0LljeK+EYYML6tWe/Xyq2laQK
-        88QCZB/z5KVLDADw==
-From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
+        bh=WHacWLIcDurmhW0FpN0Glp+owoWiXqtADVgC0S49uas=;
+        b=odpwU/DCOIStcbkkx18/2Lrvc7LSRA/XNcYGyzlhvLmm9QdiKZOM20ERPi7hUvDl/6K6xI
+        5Db76kXsWH3B3dAw==
+From:   "tip-bot2 for Peter Puhov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] linux/sched/mm.h: drop duplicated words in comments
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
+Subject: [tip: sched/core] sched/fair: update_pick_idlest() Select group with
+ lowest group_util when idle_cpus are equal
+Cc:     Peter Puhov <peter.puhov@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <927ea8d8-3f6c-9b65-4c2b-63ab4bd59ef1@infradead.org>
-References: <927ea8d8-3f6c-9b65-4c2b-63ab4bd59ef1@infradead.org>
+In-Reply-To: <20200714125941.4174-1-peter.puhov@linaro.org>
+References: <20200714125941.4174-1-peter.puhov@linaro.org>
 MIME-Version: 1.0
-Message-ID: <159540914596.4006.5608717862064477178.tip-bot2@tip-bot2>
+Message-ID: <159540914714.4006.8932700488407491684.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,52 +71,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     e0078e2eb8620079d988f150ba02a4ce9b5a946a
-Gitweb:        https://git.kernel.org/tip/e0078e2eb8620079d988f150ba02a4ce9b5a946a
-Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Wed, 15 Jul 2020 18:30:31 -07:00
+Commit-ID:     3edecfef028536cb19a120ec8788bd8a11f93b9e
+Gitweb:        https://git.kernel.org/tip/3edecfef028536cb19a120ec8788bd8a11f93b9e
+Author:        Peter Puhov <peter.puhov@linaro.org>
+AuthorDate:    Tue, 14 Jul 2020 08:59:41 -04:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 22 Jul 2020 10:22:05 +02:00
+CommitterDate: Wed, 22 Jul 2020 10:22:04 +02:00
 
-linux/sched/mm.h: drop duplicated words in comments
+sched/fair: update_pick_idlest() Select group with lowest group_util when idle_cpus are equal
 
-Drop doubled words "to" and "that".
+In slow path, when selecting idlest group, if both groups have type
+group_has_spare, only idle_cpus count gets compared.
+As a result, if multiple tasks are created in a tight loop,
+and go back to sleep immediately
+(while waiting for all tasks to be created),
+they may be scheduled on the same core, because CPU is back to idle
+when the new fork happen.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+For example:
+sudo perf record -e sched:sched_wakeup_new -- \
+                                  sysbench threads --threads=4 run
+...
+    total number of events:              61582
+...
+sudo perf script
+sysbench 129378 [006] 74586.633466: sched:sched_wakeup_new:
+                            sysbench:129380 [120] success=1 CPU:007
+sysbench 129378 [006] 74586.634718: sched:sched_wakeup_new:
+                            sysbench:129381 [120] success=1 CPU:007
+sysbench 129378 [006] 74586.635957: sched:sched_wakeup_new:
+                            sysbench:129382 [120] success=1 CPU:007
+sysbench 129378 [006] 74586.637183: sched:sched_wakeup_new:
+                            sysbench:129383 [120] success=1 CPU:007
+
+This may have negative impact on performance for workloads with frequent
+creation of multiple threads.
+
+In this patch we are using group_util to select idlest group if both groups
+have equal number of idle_cpus. Comparing the number of idle cpu is
+not enough in this case, because the newly forked thread sleeps
+immediately and before we select the cpu for the next one.
+This is shown in the trace where the same CPU7 is selected for
+all wakeup_new events.
+That's why, looking at utilization when there is the same number of
+CPU is a good way to see where the previous task was placed. Using
+nr_running doesn't solve the problem because the newly forked task is not
+running and the cpu would not have been idle in this case and an idle
+CPU would have been selected instead.
+
+With this patch newly created tasks would be better distributed.
+
+With this patch:
+sudo perf record -e sched:sched_wakeup_new -- \
+                                    sysbench threads --threads=4 run
+...
+    total number of events:              74401
+...
+sudo perf script
+sysbench 129455 [006] 75232.853257: sched:sched_wakeup_new:
+                            sysbench:129457 [120] success=1 CPU:008
+sysbench 129455 [006] 75232.854489: sched:sched_wakeup_new:
+                            sysbench:129458 [120] success=1 CPU:009
+sysbench 129455 [006] 75232.855732: sched:sched_wakeup_new:
+                            sysbench:129459 [120] success=1 CPU:010
+sysbench 129455 [006] 75232.856980: sched:sched_wakeup_new:
+                            sysbench:129460 [120] success=1 CPU:011
+
+We tested this patch with following benchmarks:
+master: 'commit b3a9e3b9622a ("Linux 5.8-rc1")'
+
+100 iterations of: perf bench -f simple futex wake -s -t 128 -w 1
+Lower result is better
+|         |   BASELINE |   +PATCH |   DELTA (%) |
+|---------|------------|----------|-------------|
+| mean    |      0.33  |    0.313 |      +5.152 |
+| std (%) |     10.433 |    7.563 |             |
+
+100 iterations of: sysbench threads --threads=8 run
+Higher result is better
+|         |   BASELINE |   +PATCH |   DELTA (%) |
+|---------|------------|----------|-------------|
+| mean    |   5235.02  | 5863.73  |      +12.01 |
+| std (%) |      8.166 |   10.265 |             |
+
+100 iterations of: sysbench mutex --mutex-num=1 --threads=8 run
+Lower result is better
+|         |   BASELINE |   +PATCH |   DELTA (%) |
+|---------|------------|----------|-------------|
+| mean    |      0.413 |    0.404 |      +2.179 |
+| std (%) |      3.791 |    1.816 |             |
+
+Signed-off-by: Peter Puhov <peter.puhov@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/927ea8d8-3f6c-9b65-4c2b-63ab4bd59ef1@infradead.org
+Link: https://lkml.kernel.org/r/20200714125941.4174-1-peter.puhov@linaro.org
 ---
- include/linux/sched/mm.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sched/fair.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index a98604e..6be66f5 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -23,7 +23,7 @@ extern struct mm_struct *mm_alloc(void);
-  * will still exist later on and mmget_not_zero() has to be used before
-  * accessing it.
-  *
-- * This is a preferred way to to pin @mm for a longer/unbounded amount
-+ * This is a preferred way to pin @mm for a longer/unbounded amount
-  * of time.
-  *
-  * Use mmdrop() to release the reference acquired by mmgrab().
-@@ -232,7 +232,7 @@ static inline unsigned int memalloc_noio_save(void)
-  * @flags: Flags to restore.
-  *
-  * Ends the implicit GFP_NOIO scope started by memalloc_noio_save function.
-- * Always make sure that that the given flags is the return value from the
-+ * Always make sure that the given flags is the return value from the
-  * pairing memalloc_noio_save call.
-  */
- static inline void memalloc_noio_restore(unsigned int flags)
-@@ -263,7 +263,7 @@ static inline unsigned int memalloc_nofs_save(void)
-  * @flags: Flags to restore.
-  *
-  * Ends the implicit GFP_NOFS scope started by memalloc_nofs_save function.
-- * Always make sure that that the given flags is the return value from the
-+ * Always make sure that the given flags is the return value from the
-  * pairing memalloc_nofs_save call.
-  */
- static inline void memalloc_nofs_restore(unsigned int flags)
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 98a53a2..2ba8f23 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8711,8 +8711,14 @@ static bool update_pick_idlest(struct sched_group *idlest,
+ 
+ 	case group_has_spare:
+ 		/* Select group with most idle CPUs */
+-		if (idlest_sgs->idle_cpus >= sgs->idle_cpus)
++		if (idlest_sgs->idle_cpus > sgs->idle_cpus)
+ 			return false;
++
++		/* Select group with lowest group_util */
++		if (idlest_sgs->idle_cpus == sgs->idle_cpus &&
++			idlest_sgs->group_util <= sgs->group_util)
++			return false;
++
+ 		break;
+ 	}
+ 
