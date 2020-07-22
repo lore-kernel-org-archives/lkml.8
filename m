@@ -2,186 +2,138 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB97C4346A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA51AC4346B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0854920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A0120792
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 11:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="snk6AnZF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blnhOXIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732248AbgGVLEW (ORCPT
+        id S1732256AbgGVLEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:04:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39092 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732232AbgGVLET (ORCPT
+        Wed, 22 Jul 2020 07:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729064AbgGVLEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 07:04:19 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB492J070527;
-        Wed, 22 Jul 2020 06:04:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595415849;
-        bh=pHVwr0B9RS5UQH+s1G6hqrpNKMvHCsZKgu0aWdichPo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=snk6AnZFSehevFH352lv7cptVVx80lSsZ4ECP470qg2DH++Npz105lSlJqNb8MS+8
-         PjhkJAfE4ByzmnFtZKMMd7eZyZv212ZmHyfEsZ5ueiRzg916nnnvnZot2Nuxynyjag
-         zYAysP7xqr7go8JBUwKmipkf0hMkdyfuAddvkiM4=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MB49Va020568
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 06:04:09 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 06:04:08 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 06:04:08 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFk078616;
-        Wed, 22 Jul 2020 06:04:05 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v8 12/15] dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
-Date:   Wed, 22 Jul 2020 16:33:14 +0530
-Message-ID: <20200722110317.4744-13-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200722110317.4744-1-kishon@ti.com>
-References: <20200722110317.4744-1-kishon@ti.com>
+        Wed, 22 Jul 2020 07:04:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0664DC0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:04:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a15so1460740wrh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 04:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=OCy4M+IerAUwrGq+R10RYFBywYGUc8/udZhkNLn8gcA=;
+        b=blnhOXIRlgBIHslJnR+DyX3qRw0egROpKwj7Y0Zkk0MMdUtpreXtgx75Kq1wPrfpcw
+         YT0xqBP0X9bvfkLrjDAjTmnTxzFZrZQIvAqUg6rrrRMpE1+2Am8fg/BMXJTPLpUCrRHG
+         WG4KDPcO+AnnCn+WJph8oQSDcEQOtFVBnYkClbRvOg2bqXfvK2yeOn1d/J2s59wzpd0b
+         VTw1CPE1C6poESLQsUVR+9mx8lbuqnKWymfrOoz608Ea4C1gFhgHQ1OA0EBcrOP2hpnE
+         2Z07LwLiO83BYhupbyWqS0g8hcUHHqXlNFYa0FOnBXmju5sMmeNIWSPap5YxzMnH1UeX
+         n0Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=OCy4M+IerAUwrGq+R10RYFBywYGUc8/udZhkNLn8gcA=;
+        b=Mc9dCG7d+wS0lzUm7bVrMVmSvoordyyrxIn+slHaG6921MIcSvpgYcEbaoHpKK3DEO
+         wdGWducVgsFi3a3QsrWPBrs16bkRtQdHyIhA8r7MVKGCuCcrv6YGKyy5iHHF4ymcBLrl
+         MdtGzwz7zjTOKkDPnMHdBj5DwIsvctTk6brwszWBkKyCRoSSnyfm+umPpRv25jCyvdFv
+         0zkz5OGqhaP30I5n4P+VaeIqPmN/6gdZCx7n2mKxudoKkibT/6O2ioVeE0Nnjtwc5DOR
+         3bIhxJE/3X7jwnf+BdjIaFFJCU6cDfcmpBomBf11c8Jz/2CxkfkWWp68KuAXpKvpsTPO
+         mV/g==
+X-Gm-Message-State: AOAM530FgtPxffUNg0y9gVUWOKkjPYjOuxuSnaocyCrG7Np8s7xGolEe
+        HpgUV2Lh/z7lPx2SQAMDrcTFTS1ybIQ=
+X-Google-Smtp-Source: ABdhPJyen9XQxbMOmxYyIRo9xkcOiFhcP/BsUcVILGQr7xM0UXW3SkKzFeItTtT4WGFXCvo6Y3Wceg==
+X-Received: by 2002:adf:ea06:: with SMTP id q6mr29366083wrm.69.1595415861662;
+        Wed, 22 Jul 2020 04:04:21 -0700 (PDT)
+Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
+        by smtp.gmail.com with ESMTPSA id t2sm6735027wma.43.2020.07.22.04.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 04:04:21 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 08:04:11 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com, twoerner@gmail.com
+Subject: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
+ pair on flush
+Message-ID: <20200722110411.ebkv6knvc6mzw5uf@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe EP mode dt-bindings for TI's J721E SoC.
+This patch adds a missing drm_crtc_vblank_put op to the pair
+drm_crtc_vblank_get/put (inc/decrement counter to guarantee vblanks).
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+It clears the execution of the following kms_cursor_crc subtests:
+1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
+   random, fast-moving])] - successful when running individually.
+2. pipe-A-cursor-dpms passes again
+3. pipe-A-cursor-suspend also passes
+
+The issue was initially tracked in the sequential execution of IGT
+kms_cursor_crc subtest: when running the test sequence or one of its
+subtests twice, the odd execs complete and the pairs get stuck in an
+endless wait. In the IGT code, calling a wait_for_vblank before the start
+of CRC capture prevented the busy-wait. But the problem persisted in the
+pipe-A-cursor-dpms and -suspend subtests.
+
+Checking the history, the pipe-A-cursor-dpms subtest was successful when,
+in vkms_atomic_commit_tail, instead of using the flip_done op, it used
+wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
+enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
+blocking in the 2nd start of CRC capture, which may indicate that
+something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
+the crc setup was able to sync things and free all kms_cursor_crc
+subtests.
+
+Tracing and comparing a clean run with a blocked one:
+- in a clean one, vkms_crtc_atomic_flush enables vblanks;
+- when blocked, only in next op, vkms_crtc_atomic_enable, the vblanks
+started. Moreover, a series of vkms_vblank_simulate flow out until
+disabling vblanks.
+Also watching the steps of vkms_crtc_atomic_flush, when the very first
+drm_crtc_vblank_get returned an error, the subtest crashed. On the other
+hand, when vblank_get succeeded, the subtest completed. Finally, checking
+the flush steps: it increases counter to hold a vblank reference (get),
+but there isn't a op to decreased it and release vblanks (put).
+
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 ---
- .../bindings/pci/ti,j721e-pci-ep.yaml         | 94 +++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+ drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-new file mode 100644
-index 000000000000..cfe25cface21
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-ep.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: TI J721E PCI EP (PCIe Wrapper)
-+
-+maintainers:
-+  - Kishon Vijay Abraham I <kishon@ti.com>
-+
-+allOf:
-+  - $ref: "cdns-pcie-ep.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,j721e-pcie-ep
-+
-+  reg:
-+    maxItems: 4
-+
-+  reg-names:
-+    items:
-+      - const: intd_cfg
-+      - const: user_cfg
-+      - const: reg
-+      - const: mem
-+
-+  ti,syscon-pcie-ctrl:
-+    description: Phandle to the SYSCON entry required for configuring PCIe mode
-+                 and link speed.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: clock-specifier to represent input to the PCIe
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+  dma-coherent:
-+    description: Indicates that the PCIe IP block can ensure the coherency
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - ti,syscon-pcie-ctrl
-+  - max-link-speed
-+  - num-lanes
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - cdns,max-outbound-regions
-+  - dma-coherent
-+  - max-functions
-+  - phys
-+  - phy-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie0_ep: pcie-ep@d000000 {
-+           compatible = "ti,j721e-pcie-ep";
-+           reg = <0x00 0x02900000 0x00 0x1000>,
-+                 <0x00 0x02907000 0x00 0x400>,
-+                 <0x00 0x0d000000 0x00 0x00800000>,
-+                 <0x00 0x10000000 0x00 0x08000000>;
-+           reg-names = "intd_cfg", "user_cfg", "reg", "mem";
-+           ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
-+           max-link-speed = <3>;
-+           num-lanes = <2>;
-+           power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
-+           clocks = <&k3_clks 239 1>;
-+           clock-names = "fck";
-+           cdns,max-outbound-regions = <16>;
-+           max-functions = /bits/ 8 <6>;
-+           dma-coherent;
-+           phys = <&serdes0_pcie_link>;
-+           phy-names = "pcie-phy";
-+       };
-+    };
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index ac85e17428f8..a99d6b4a92dd 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -246,6 +246,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
+ 
+ 		spin_unlock(&crtc->dev->event_lock);
+ 
++		drm_crtc_vblank_put(crtc);
+ 		crtc->state->event = NULL;
+ 	}
+ 
 -- 
-2.17.1
+2.27.0
 
