@@ -2,49 +2,50 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5424FC433EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F2AC433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33CCF22B47
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3A522D04
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xz2mcYoU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0/WVH3J0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G7gFd1y4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="miICDflK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbgGVWLe (ORCPT
+        id S1733102AbgGVWLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:11:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52524 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733043AbgGVWLc (ORCPT
+        Wed, 22 Jul 2020 18:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733043AbgGVWL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:11:32 -0400
-Message-Id: <20200722220519.943016204@linutronix.de>
+        Wed, 22 Jul 2020 18:11:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80ACC0619DC;
+        Wed, 22 Jul 2020 15:11:24 -0700 (PDT)
+Message-Id: <20200722215954.464281930@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595455889;
+        s=2020; t=1595455882;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=wfrNNyf0k+yoW4cOmX0AJIgfRphuvLoCo0Pz618iLsM=;
-        b=Xz2mcYoUeYbJNNZIUOB1eiWQee3inAqH3lDgZhE2FElxDFjiIM17JIXw1O1IIp2uxEcHLL
-        SJh4Wke9/ubJcki48DcbEhVuEi30dtzT41xOga1Vns1Awr35GAhI5V4CrBiROZCbtXvdeT
-        FjIvWI2T9jLAhvrYE952AizT5/jdX9ToF/cfIgHQtjkY+OG2otPGV0s8FZSjNY0cPodmHu
-        yZMqInqp8nzI4FK44oDfRMW349nWTEgCK43PgA60mDq6u1kd5nfMNoYsAtGh3/Tb9C5OC8
-        SRfUS/GhtsUm6Ut5tfOr1NwrL+Wz+D4o8LJWtovyvu52YAib2XKvdVSKJSKvew==
+         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
+        bh=ahlK79PK5YUaQAhd7lygE8UJdfTKv0Vu+HW5xnc5ELM=;
+        b=G7gFd1y4nAOmB1fa4bznNO6Hn3Xz5vGns+k1b2AAzgB3r8aFNsAxK66jM7k+woJjeVIGPk
+        98ntp/LIG2+BVCPqkuHjXZQI75CRxyf81EpjyYchX1/id1bgwygapu4zV6NpZj5iV+34lN
+        5jupVlM/5oMJUto46ob0x4SNkXVFEdZ/4vVsJBiX7zlSsHAjQy9gxt5C0toWs91Bpe/RZs
+        L185WibgR0N4V4qXYAj4nyjC7PSyi9i1q0vQ+1ut7dpat2CwoFRTkp6RJ+x9moWliHMRCE
+        h3QD1iopZgNwAdQKa8R+EDTF0w281Ry2bTenti8lF/lPd6GforcDq/MMnNnnZQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595455890;
+        s=2020e; t=1595455882;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=wfrNNyf0k+yoW4cOmX0AJIgfRphuvLoCo0Pz618iLsM=;
-        b=0/WVH3J0pffARIVH6hk71lVyU59nWYuBpO5nU967HFVZ9bSaBBuH2xcwOJXInA2YOvB5Zz
-        GP8C3Psg5IarlxAQ==
-Date:   Thu, 23 Jul 2020 00:00:00 +0200
+         to:to:cc:cc:content-transfer-encoding:content-transfer-encoding;
+        bh=ahlK79PK5YUaQAhd7lygE8UJdfTKv0Vu+HW5xnc5ELM=;
+        b=miICDflKl+rPTMgRosTGj5rJ8+uSXdXfY8WUsObaLLnl8ki5Ojwpope+EfNnupX4TEtU3L
+        iAM7h9QaqHryhDDQ==
+Date:   Wed, 22 Jul 2020 23:59:54 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
@@ -55,114 +56,36 @@ Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         Gabriel Krisman Bertazi <krisman@collabora.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V5 06/15] x86/entry: Consolidate check_user_regs()
-References: <20200722215954.464281930@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [patch V5 00/15] entry, x86, kvm: Generic entry/exit functionality
+ for host and guest
 Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+This is the 5th version of generic entry/exit functionality for host and
+guest.
 
-The user register sanity check is sprinkled all over the place. Move it
-into enter_from_user_mode().
+The 4th version is available here:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+    https://lore.kernel.org/r/20200721105706.030914876@linutronix.de
 
----
- arch/x86/entry/common.c |   24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
+Changes vs. V4:
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -82,10 +82,11 @@ static noinstr void check_user_regs(stru
-  * 2) Invoke context tracking if enabled to reactivate RCU
-  * 3) Trace interrupts off state
-  */
--static noinstr void enter_from_user_mode(void)
-+static noinstr void enter_from_user_mode(struct pt_regs *regs)
- {
- 	enum ctx_state state = ct_state();
- 
-+	check_user_regs(regs);
- 	lockdep_hardirqs_off(CALLER_ADDR0);
- 	user_exit_irqoff();
- 
-@@ -95,8 +96,9 @@ static noinstr void enter_from_user_mode
- 	instrumentation_end();
- }
- #else
--static __always_inline void enter_from_user_mode(void)
-+static __always_inline void enter_from_user_mode(struct pt_regs *regs)
- {
-+	check_user_regs(regs);
- 	lockdep_hardirqs_off(CALLER_ADDR0);
- 	instrumentation_begin();
- 	trace_hardirqs_off_finish();
-@@ -369,9 +371,7 @@ static void __syscall_return_slowpath(st
- {
- 	struct thread_info *ti;
- 
--	check_user_regs(regs);
--
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
- 	local_irq_enable();
-@@ -434,9 +434,7 @@ static void do_syscall_32_irqs_on(struct
- /* Handles int $0x80 */
- __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
- {
--	check_user_regs(regs);
--
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
- 	local_irq_enable();
-@@ -487,8 +485,6 @@ static bool __do_fast_syscall_32(struct
- 					vdso_image_32.sym_int80_landing_pad;
- 	bool success;
- 
--	check_user_regs(regs);
--
- 	/*
- 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
- 	 * so that 'regs->ip -= 2' lands back on an int $0x80 instruction.
-@@ -496,7 +492,7 @@ static bool __do_fast_syscall_32(struct
- 	 */
- 	regs->ip = landing_pad;
- 
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
- 	local_irq_enable();
-@@ -599,8 +595,7 @@ idtentry_state_t noinstr idtentry_enter(
- 	};
- 
- 	if (user_mode(regs)) {
--		check_user_regs(regs);
--		enter_from_user_mode();
-+		enter_from_user_mode(regs);
- 		return ret;
- 	}
- 
-@@ -733,8 +728,7 @@ void noinstr idtentry_exit(struct pt_reg
-  */
- void noinstr idtentry_enter_user(struct pt_regs *regs)
- {
--	check_user_regs(regs);
--	enter_from_user_mode();
-+	enter_from_user_mode(regs);
- }
- 
- /**
+  - Add the missing instrumentation prevetions to the entry Makefile (Kees)
+  - Rename exit_to_guest to xfer_to_guest (Sean)
 
+The patches depend on:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+
+The lot is also available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/entry
+
+Thanks,
+
+	tglx
 
 
