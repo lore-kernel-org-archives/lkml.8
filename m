@@ -2,191 +2,89 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8598FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98905C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546E32071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595426254;
-	bh=kcAHjZM1rs+yjiyHvvMG1g8izKqFZPmNJbqLCZ7HdJ8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=eVJ1PqmTkC/9CrOTPeNU5euUi2rb/McOMwwsEzSPlHVjKOFe96dntyL7fvPerdvty
-	 s9yIFOaGz4lEsW7kcwMDN7t/yS8wJ3n6VmK4TMc09+L8/XCa5tzdDqEDHGUCE9K0fV
-	 mlcXG99hnTRAdoTsc/HCLJGbUXn3EkYAD7oRbXns=
+	by mail.kernel.org (Postfix) with ESMTP id 6D1FA2071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 13:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dwLHhZb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbgGVN5d (ORCPT
+        id S1732504AbgGVN6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgGVN5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:57:32 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 22 Jul 2020 09:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbgGVN6M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:58:12 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC22C0619DC;
+        Wed, 22 Jul 2020 06:58:11 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E0EE2071A;
-        Wed, 22 Jul 2020 13:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595426251;
-        bh=kcAHjZM1rs+yjiyHvvMG1g8izKqFZPmNJbqLCZ7HdJ8=;
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBcVk14RJz9sRN;
+        Wed, 22 Jul 2020 23:58:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595426287;
+        bh=Ar/36BU5b1JALnEh8D2rR9Sczsbb2i7m/hyLGbACMRo=;
         h=Date:From:To:Cc:Subject:From;
-        b=yLT+R3vGn0tLy5aw/l98zCCqoE35efOhSndolU3XblPpyu2+gYcaKSrAwiuWNV5r2
-         6RQjLO41ctrwunx1WMShk6c3Tnxc9tgU6Toi0E+6W1VmQITKmGA6Q1TA4apRyh0Wvd
-         k9ZdCCrlftENlBwU/iJYR/0ZRMKGalxomtKp/GXQ=
-Date:   Wed, 22 Jul 2020 15:57:27 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.8-rc7] media fixes
-Message-ID: <20200722155727.06ab1692@coco.lan>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        b=dwLHhZb8eCxuBAvtFkGsbJbzibH6zu5Gpgaw3B9sZLsQyOqPK6zt6iLiiKdWUxLWT
+         BBTCKLyYxL/uOH52UlO/WdjK8Drk2GC9AWTxAXMEa5l5TUj7iid8mnGjpuq4ymByqS
+         FyRXtezr56rh4mbL6E827aymMtQmnH/+wvY5gmMVkqpFZzQhdpx9g0yxNLFE1Cgrqw
+         ovUXZQe388Xw0lx3183WXkrz8k2T9w/nRP5TvIzWEQJFcK0tw6aKIv4rT6hAjA128N
+         32ZLOxsWT98Fem8WSVq3omr19VjxMfw88qvzgj+Myig6ygUNnO6jIdqQGNIeW5zqnk
+         /J5W3XQyZLQpg==
+Date:   Wed, 22 Jul 2020 23:58:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: linux-next: interesting merge in the zonefs tree
+Message-ID: <20200722235802.1f01457e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/8q6A2uYfujIo74WNTDp2wUk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+--Sig_/8q6A2uYfujIo74WNTDp2wUk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/me=
-dia/v5.8-3
+Hi all,
 
+It looks an old version of the block tree has been merged into the
+zonefs tree.  Is that deliberate?  Other trees should not be merged unless
+they are guaranteed not to be rebased (which is what has happened here).
 
-For a series of fixes for the upcoming stating atomisp driver. They solve
-issues when probing atomisp on devices with multiple cameras and get rid of
-warnings when built with W=3D1.
+--=20
+Cheers,
+Stephen Rothwell
 
-The diffstat is a bit long, as this driver has several abstractions. The=20
-patches that solved the issues with W=3D1 had to get rid of some duplicated
-code (there used to have 2 versions of the same code, one for ISP2401 and
-another one for ISP2400).=20
+--Sig_/8q6A2uYfujIo74WNTDp2wUk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Anyway, as this driver is not at Kernel 5.7, such changes won't cause
-regressions.
+-----BEGIN PGP SIGNATURE-----
 
-Regards,
-Mauro
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8YReoACgkQAVBC80lX
+0Gzoegf8CCylamuV5sAnrasN7luW2oMHGcj6zHPVHATfi8Rl2Xlcx3LL4cPK8/U3
+5aErb0b0gtgXTZBiC9SGu0kk9T1WKSgYKNb+cnX5MfW3MEu9/kamlZf3s+qVYUQD
+Ct5oSukAsmgjtFXBXNkLUfixZ1LObEM9OxsqhWpSyBlc4vrycUBLxigIEq4rkNhl
+K8RSBcLT4j0hnM1QcT5GzveHLQtqjVloqKaa6qkmCNmxnCCwt5hGnb8VOp02cIOi
+/gi06yFmDBfCMdzoenWZer2ZXf4hCar5fkU2OrScYkG/IETCOu3jwtMb0n0pzE7o
+OjUjEsOi8noD84QrSixC3Bcb9qMduw==
+=rz6a
+-----END PGP SIGNATURE-----
 
-
-.
-
-The following changes since commit 2630e1bb0948c3134c6f22ad275ae27cc6023532:
-
-  media: rkvdec: Fix H264 scaling list order (2020-06-11 19:21:38 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/me=
-dia/v5.8-3
-
-for you to fetch changes up to 0d6db85131e014c128e57649793aff5aa96e065f:
-
-  Revert "media: atomisp: keep the ISP powered on when setting it" (2020-07=
--19 13:31:53 +0200)
-
-----------------------------------------------------------------
-media fixes for v5.8-rc7
-
-----------------------------------------------------------------
-Andy Shevchenko (17):
-      media: atomisp: Replace last use of Intel MID APIs
-      media: atomisp: move CCK endpoint address to generic header
-      media: atomisp: Use proper APIs to find I=C2=B2C client device by ACP=
-I HID
-      media: atomisp: don't pass struct device_driver as parameter
-      media: atomisp: Get rid of struct pci_dev in struct atomisp_device
-      media: atomisp: Unify pdev to be pointer to struct pci_device
-      media: atomisp: Replace direct access to MMIO with proper helpers
-      media: atomisp: Drop global atomisp_dev variable (easy cases)
-      media: atomisp: make platform data more readable
-      media: atomisp: Don't try to parse unexpected ACPI object type
-      media: atomisp: Make pointer to PMIC client global
-      media: atomisp: Deduplicate return ret in gmin_i2c_write()
-      media: atomisp: Refactor PMIC detection to a separate function
-      media: atomisp: Use temporary variable for device in gmin_subdev_add()
-      media: atomisp: Provide Gmin subdev as parameter to gmin_subdev_add()
-      media: atomisp: Get rid of ACPI specifics in gmin_subdev_add()
-      media: atomisp: Clean up non-existing folders from Makefile
-
-B K Karthik (1):
-      media: atomisp: i2c: atomisp-ov2680.c: fixed a brace coding style iss=
-ue.
-
-Baidyanath Kundu (1):
-      media: atomisp: Fix __func__ style warnings
-
-Colin Ian King (2):
-      media: atomisp: make const arrays static, makes object smaller
-      media: atomisp: fix mask and shift operation on ISPSSPM0
-
-Dan Carpenter (1):
-      media: atomisp: Fix error code in ov5693_probe()
-
-Mauro Carvalho Chehab (15):
-      media: atomisp: fix the handling of clock number
-      media: atomisp: reorganize the code under gmin_subdev_add()
-      media: atomisp: Prepare sensor support for ACPI PM
-      media: atomisp: properly parse CLK PMIC on newer devices
-      media: atomisp: fix call to g_frame_interval
-      media: atomisp: print info if gpio0 and gpio2 were detected
-      media: atomisp: split add from find subdev
-      media: atomisp: place all gpio parsing together
-      media: atomisp: fix help message for ISP2401 selection
-      media: atomisp: get rid of some unused static vars
-      media: atomisp: remove non-used 32-bits consts at system_local
-      media: atomisp: move global stuff into a common header
-      media: atomisp: get rid of version-specific system_local.h
-      media: atomisp: move system_local consts into a C file
-      Revert "media: atomisp: keep the ISP powered on when setting it"
-
-Nicolas Boichat (1):
-      media: atomisp: Replace trace_printk by pr_info
-
- arch/x86/include/asm/iosf_mbi.h                    |   1 +
- drivers/staging/media/atomisp/Kconfig              |   2 +-
- drivers/staging/media/atomisp/Makefile             |   6 +-
- drivers/staging/media/atomisp/i2c/atomisp-ov2680.c |   6 +-
- .../media/atomisp/i2c/ov5693/atomisp-ov5693.c      |   6 +-
- .../media/atomisp/include/linux/atomisp_platform.h |   1 +
- drivers/staging/media/atomisp/pci/atomisp-regs.h   |   3 -
- drivers/staging/media/atomisp/pci/atomisp_acc.c    |   4 +-
- drivers/staging/media/atomisp/pci/atomisp_cmd.c    |  59 +--
- drivers/staging/media/atomisp/pci/atomisp_cmd.h    |   4 +-
- drivers/staging/media/atomisp/pci/atomisp_compat.h |   2 -
- .../media/atomisp/pci/atomisp_compat_css20.c       |  70 ++-
- .../media/atomisp/pci/atomisp_compat_css20.h       |   2 +-
- drivers/staging/media/atomisp/pci/atomisp_drvfs.c  |  14 +-
- drivers/staging/media/atomisp/pci/atomisp_drvfs.h  |   2 +-
- .../media/atomisp/pci/atomisp_gmin_platform.c      | 537 ++++++++++++++---=
-----
- .../staging/media/atomisp/pci/atomisp_internal.h   |   2 +-
- drivers/staging/media/atomisp/pci/atomisp_ioctl.c  |  19 +-
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c   | 287 +++++------
- .../media/atomisp/pci/base/refcount/src/refcount.c |  28 +-
- drivers/staging/media/atomisp/pci/hive_types.h     |  24 +-
- drivers/staging/media/atomisp/pci/hmm/hmm.c        |  10 +-
- .../media/atomisp/pci/isp2400_system_global.h      | 302 ------------
- .../media/atomisp/pci/isp2400_system_local.h       | 321 ------------
- .../media/atomisp/pci/isp2401_system_global.h      | 410 +---------------
- .../media/atomisp/pci/isp2401_system_local.h       | 402 ---------------
- drivers/staging/media/atomisp/pci/sh_css.c         |   9 +-
- drivers/staging/media/atomisp/pci/system_global.h  | 395 +++++++++++++++
- drivers/staging/media/atomisp/pci/system_local.c   | 179 +++++++
- drivers/staging/media/atomisp/pci/system_local.h   | 104 +++-
- 30 files changed, 1280 insertions(+), 1931 deletions(-)
- delete mode 100644 drivers/staging/media/atomisp/pci/isp2400_system_local.h
- delete mode 100644 drivers/staging/media/atomisp/pci/isp2401_system_local.h
- create mode 100644 drivers/staging/media/atomisp/pci/system_local.c
-
+--Sig_/8q6A2uYfujIo74WNTDp2wUk--
