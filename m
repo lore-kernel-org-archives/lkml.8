@@ -2,380 +2,186 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66439C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EB2C433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3135F20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D02120714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 08:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCxONF1I"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="cYGQklK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgGVI1d (ORCPT
+        id S1730380AbgGVI15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgGVI1c (ORCPT
+        Wed, 22 Jul 2020 04:27:57 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:43850 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729946AbgGVI1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:27:32 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79DDC0619DF
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:27:31 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e8so1598846ljb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 01:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=61HrId0S+vKH9AhKqEPMXDXVBKVaiTCAQAIzcmrLOI0=;
-        b=jCxONF1IsQDXBqv8BxRXic4Pjgw2vzzOVx9liKokTZcewYEcAbNngi4mqvDcFFK8zO
-         ofjOTGjcgj8KDtcVVyqX4YhVWrRCAZeX5KbT+V4Tnlr3Zb3rPH3vQZmDSRm8nJzVsgM7
-         CUAfNcoluKyD2Oe5s7eV2iComiQfpxMxePTECGEaU3x7HiR4mYhLo+Vr21eTMVql12jz
-         aMXDWzN4gQa+Ic635Vu4MA3a5vp9IKHZB1YO1j5qirUNH6LSwHW+qDdmbRiGjRzv/ngD
-         Md4w9Y9zlo9ODhGk25MeZ/EYqMQwfahDzJuyIuTJs45yVy1pjdzU9gbsX3SbTzK6wtmn
-         Y/4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=61HrId0S+vKH9AhKqEPMXDXVBKVaiTCAQAIzcmrLOI0=;
-        b=MTZkWryPpdSZkQTf8IeTiZjxKUgV0OcdkOJdpBhy5rWYFC4qdRFVpo5vxmHPvPQpAi
-         sds8O1TscmRfZeEsdpaYejbF9YJ+aWVuDjkSYLvvTeNilqSvsiAzziI0t6yVagtD1bTO
-         aWztZtpPlXx31nOAmAf4cM8tUSSkDf4V1nL1L6s3rBO9trSWitHR8fMAcrcW4J17OFj8
-         93SXpZwQU2ikMMTpNp0udNYAHMTbiAUrBkx/3UolcGlBNkEm7Zkd1pQn7zxRqrlrVLe8
-         esqv7/fias/3FJ1CDZK22MHcNew/BqBHEJI6DbgftmPNwfOm4B7fEp97jUYWvagd+aPO
-         4Pcw==
-X-Gm-Message-State: AOAM531I8lu4iOO+AIeGpDHetUnYqw4oNOSBKT79mzc53P8c7eNpADFE
-        i2ffw/FUQPv+uFpT50NiebXuWg==
-X-Google-Smtp-Source: ABdhPJzfBLgpxr27VEStYDLmMcDtT0e/7WIXHkIptcv6wN9LXv3efvOn/xbweWarVr/ok8RF6BHerQ==
-X-Received: by 2002:a2e:760f:: with SMTP id r15mr13902715ljc.275.1595406450160;
-        Wed, 22 Jul 2020 01:27:30 -0700 (PDT)
-Received: from [192.168.1.12] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id d22sm6717050lfs.26.2020.07.22.01.27.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 01:27:29 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] media: venus: core: Add support for opp
- tables/perf voting
-To:     Rajendra Nayak <rnayak@codeaurora.org>, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org
-References: <1595228842-9826-1-git-send-email-rnayak@codeaurora.org>
- <1595228842-9826-3-git-send-email-rnayak@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <840e20b6-186f-14c2-b0f0-fac7b61f1c50@linaro.org>
-Date:   Wed, 22 Jul 2020 11:27:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 04:27:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1595406476;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=FN40+KHzDRqn99k21tmlYB+H9TCBGBR1w3tvJcN9Tgs=;
+  b=cYGQklK5OJcdqGfhVG/S/3cufajSRbOFRUfQQLa3TCpzos4ukgypGEBn
+   Eg1L30ggqyBKuSKpzlhqE//n0ii5AgdcqF+pJBVd5SRYPzD7JuxukI+78
+   HCQIezx4M+cWLF4AfkwJ2AiwIcsWAOnwqh2ec3qVNTRjI8INjRN/z8JEr
+   s=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: mlqzl0cWqd5gabQyWtfyst+GqUDqk2plDTUvwmrYJ8XALOOL3c4pwsZ14wIgTuqSOrWdAsqabU
+ U3z4rBnJN46Le58mC9XaMMoAN3S3s0bqLbgiivLfDLVwkpF/RX2WQDULvW4T8zVE5XCVH++AU3
+ OUWlO6ngvCzlLeLZixzTsry09fylayuaS5boFcXYZna62kTmuNMGKttp0dIuWif7hkABJgwyxK
+ ikPkcGIF9TKekbeq9FWw+LIYJMaFgyhyMnNs+N/qmuLzuxVJUkXnzCjftz5DjOIOBeOWFolL+4
+ yw4=
+X-SBRS: 2.7
+X-MesageID: 22916032
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.75,381,1589256000"; 
+   d="scan'208";a="22916032"
+Date:   Wed, 22 Jul 2020 10:27:46 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Anchal Agarwal <anchalag@amazon.com>
+CC:     <marmarek@invisiblethingslab.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <jgross@suse.com>,
+        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kamatam@amazon.com>, <sstabellini@kernel.org>,
+        <konrad.wilk@oracle.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend
+ mode
+Message-ID: <20200722082746.GS7191@Air-de-Roger>
+References: <20200702182136.GA3511@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <50298859-0d0e-6eb0-029b-30df2a4ecd63@oracle.com>
+ <20200715204943.GB17938@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <0ca3c501-e69a-d2c9-a24c-f83afd4bdb8c@oracle.com>
+ <20200717191009.GA3387@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <5464f384-d4b4-73f0-d39e-60ba9800d804@oracle.com>
+ <20200720093705.GG7191@Air-de-Roger>
+ <20200721001736.GB19610@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200721083018.GM7191@Air-de-Roger>
+ <20200721195509.GA14682@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <1595228842-9826-3-git-send-email-rnayak@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721195509.GA14682@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra,
-
-Thanks for the patch!
-
-Sorry for last minute comments.
-
-On 7/20/20 10:07 AM, Rajendra Nayak wrote:
-> Add support to add OPP tables and perf voting on the OPP powerdomain.
-> This is needed so venus votes on the corresponding performance state
-> for the OPP powerdomain along with setting the core clock rate.
+On Tue, Jul 21, 2020 at 07:55:09PM +0000, Anchal Agarwal wrote:
+> On Tue, Jul 21, 2020 at 10:30:18AM +0200, Roger Pau Monné wrote:
+> > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > 
+> > 
+> > 
+> > Marek: I'm adding you in case you could be able to give this a try and
+> > make sure it doesn't break suspend for dom0.
+> > 
+> > On Tue, Jul 21, 2020 at 12:17:36AM +0000, Anchal Agarwal wrote:
+> > > On Mon, Jul 20, 2020 at 11:37:05AM +0200, Roger Pau Monné wrote:
+> > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > >
+> > > >
+> > > >
+> > > > On Sat, Jul 18, 2020 at 09:47:04PM -0400, Boris Ostrovsky wrote:
+> > > > > (Roger, question for you at the very end)
+> > > > >
+> > > > > On 7/17/20 3:10 PM, Anchal Agarwal wrote:
+> > > > > > On Wed, Jul 15, 2020 at 05:18:08PM -0400, Boris Ostrovsky wrote:
+> > > > > >> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > >>
+> > > > > >>
+> > > > > >>
+> > > > > >> On 7/15/20 4:49 PM, Anchal Agarwal wrote:
+> > > > > >>> On Mon, Jul 13, 2020 at 11:52:01AM -0400, Boris Ostrovsky wrote:
+> > > > > >>>> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > >>>>
+> > > > > >>>>
+> > > > > >>>>
+> > > > > >>>> On 7/2/20 2:21 PM, Anchal Agarwal wrote:
+> > > > > >>>> And PVH dom0.
+> > > > > >>> That's another good use case to make it work with however, I still
+> > > > > >>> think that should be tested/worked upon separately as the feature itself
+> > > > > >>> (PVH Dom0) is very new.
+> > > > > >>
+> > > > > >> Same question here --- will this break PVH dom0?
+> > > > > >>
+> > > > > > I haven't tested it as a part of this series. Is that a blocker here?
+> > > > >
+> > > > >
+> > > > > I suspect dom0 will not do well now as far as hibernation goes, in which
+> > > > > case you are not breaking anything.
+> > > > >
+> > > > >
+> > > > > Roger?
+> > > >
+> > > > I sadly don't have any box ATM that supports hibernation where I
+> > > > could test it. We have hibernation support for PV dom0, so while I
+> > > > haven't done anything specific to support or test hibernation on PVH
+> > > > dom0 I would at least aim to not make this any worse, and hence the
+> > > > check should at least also fail for a PVH dom0?
+> > > >
+> > > > if (!xen_hvm_domain() || xen_initial_domain())
+> > > >     return -ENODEV;
+> > > >
+> > > > Ie: none of this should be applied to a PVH dom0, as it doesn't have
+> > > > PV devices and hence should follow the bare metal device suspend.
+> > > >
+> > > So from what I understand you meant for any guest running on pvh dom0 should not
+> > > hibernate if hibernation is triggered from within the guest or should they?
+> > 
+> > Er no to both I think. What I meant is that a PVH dom0 should be able
+> > to properly suspend, and we should make sure this work doesn't make
+> > this any harder (or breaks it if it's currently working).
+> > 
+> > Or at least that's how I understood the question raised by Boris.
+> > 
+> > You are adding code to the generic suspend path that's also used by dom0
+> > in order to perform bare metal suspension. This is fine now for a PV
+> > dom0 because the code is gated on xen_hvm_domain, but you should also
+> > take into account that a PVH dom0 is considered a HVM domain, and
+> > hence will get the notifier registered.
+> >
+> Ok that makes sense now. This is good to be safe, but my patch series is only to
+> support domU hibernation, so I am not sure if this will affect pvh dom0.
+> However, since I do not have a good way of testing sure I will add the check.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
->  drivers/media/platform/qcom/venus/core.h       |  5 +++
->  drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
->  3 files changed, 92 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index 203c653..b9f61a6 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -12,6 +12,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <media/videobuf2-v4l2.h>
->  #include <media/v4l2-mem2mem.h>
-> @@ -216,21 +217,37 @@ static int venus_probe(struct platform_device *pdev)
->  	if (!core->pm_ops)
->  		return -ENODEV;
->  
-> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
-> +	if (IS_ERR(core->opp_table))
-> +		return PTR_ERR(core->opp_table);
-> +
-> +	if (core->res->opp_pmdomain) {
-> +		ret = dev_pm_opp_of_add_table(dev);
-> +		if (!ret) {
-> +			core->has_opp_table = true;
-> +		} else if (ret != -ENODEV) {
-> +			dev_err(dev, "invalid OPP table in device tree\n");
-> +			return ret;
-> +		}
-> +	}
-> +
+> Moreover, in Patch-0004, I do register suspend/resume syscore_ops specifically for domU
+> hibernation only if its xen_hvm_domain.
 
-Can we move those dev_pm_opp_xxx invocations into pm_ops->core_get where
-the other pmdomains are? The pm_ops abstarction is created exactly for
-such pm and clks manipulations.
+So if the hooks are only registered for domU, do you still need this
+xen_hvm_domain check here?
 
->  	if (core->pm_ops->core_get) {
->  		ret = core->pm_ops->core_get(dev);
->  		if (ret)
-> -			return ret;
-> +			goto err_opp_cleanup;
->  	}
->  
->  	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
->  	if (ret)
-> -		return ret;
-> +		goto err_opp_cleanup;
->  
->  	if (!dev->dma_parms) {
->  		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
->  					      GFP_KERNEL);
-> -		if (!dev->dma_parms)
-> -			return -ENOMEM;
-> +		if (!dev->dma_parms) {
-> +			ret = -ENOMEM;
-> +			goto err_opp_cleanup;
-> +		}
->  	}
->  	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
->  
-> @@ -242,11 +259,11 @@ static int venus_probe(struct platform_device *pdev)
->  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
->  					"venus", core);
->  	if (ret)
-> -		return ret;
-> +		goto err_opp_cleanup;
->  
->  	ret = hfi_create(core, &venus_core_ops);
->  	if (ret)
-> -		return ret;
-> +		goto err_opp_cleanup;
->  
->  	pm_runtime_enable(dev);
->  
-> @@ -302,6 +319,10 @@ static int venus_probe(struct platform_device *pdev)
->  	pm_runtime_set_suspended(dev);
->  	pm_runtime_disable(dev);
->  	hfi_destroy(core);
-> +err_opp_cleanup:
-> +	if (core->has_opp_table)
-> +		dev_pm_opp_of_remove_table(dev);
-> +	dev_pm_opp_put_clkname(core->opp_table);
+I have to admit I'm not familiar with Linux PM suspend.
 
-this also belongs to pm_ops->core_put but it is missing in the .probe
-error path.
+> I don't see any reason that should not
+> be registered for domU's running on pvh dom0.
 
-+	if (core->pm_ops->core_put)
-+		core->pm_ops->core_put(dev);
+To be clear: it should be registered for all HVM domUs, regardless of
+whether they are running on a PV or a PVH dom0. My intention was never
+to suggest otherwise. It should be enabled for all HVM domUs, but
+shouldn't be enabled for HVM dom0.
 
-above addition should be separate patch I guess.
+> Those suspend/resume callbacks will
+> only be invoked in case hibernation and will be skipped if generic suspend path
+> is in progress. Do you see any issue with that?
 
->  	return ret;
->  }
->  
-> @@ -326,6 +347,10 @@ static int venus_remove(struct platform_device *pdev)
->  	pm_runtime_put_sync(dev);
->  	pm_runtime_disable(dev);
->  
-> +	if (core->has_opp_table)
-> +		dev_pm_opp_of_remove_table(dev);
-> +	dev_pm_opp_put_clkname(core->opp_table);
-> +
+No, I think it's fine.
 
-those also should be moved to core_put
-
->  	if (pm_ops->core_put)
->  		pm_ops->core_put(dev);
->  
-> @@ -355,6 +380,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
->  	if (ret)
->  		return ret;
->  
-> +	/* Drop the performance state vote */
-> +	if (core->opp_pmdomain)
-> +		dev_pm_opp_set_rate(dev, 0);
-> +
-
-move this in core_power(OFF)
-
->  	if (pm_ops->core_power)
->  		ret = pm_ops->core_power(dev, POWER_OFF);
->  
-> @@ -520,6 +549,7 @@ static const struct venus_resources sdm845_res_v2 = {
->  	.vcodec_clks_num = 2,
->  	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
->  	.vcodec_pmdomains_num = 3,
-> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
->  	.vcodec_num = 2,
->  	.max_load = 3110400,	/* 4096x2160@90 */
->  	.hfi_version = HFI_VERSION_4XX,
-> @@ -565,6 +595,7 @@ static const struct venus_resources sc7180_res = {
->  	.vcodec_clks_num = 2,
->  	.vcodec_pmdomains = { "venus", "vcodec0" },
->  	.vcodec_pmdomains_num = 2,
-> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
->  	.vcodec_num = 1,
->  	.hfi_version = HFI_VERSION_4XX,
->  	.vmem_id = VIDC_RESOURCE_NONE,
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 7118612..b0cc544 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -62,6 +62,7 @@ struct venus_resources {
->  	unsigned int vcodec_clks_num;
->  	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
->  	unsigned int vcodec_pmdomains_num;
-> +	const char **opp_pmdomain;
->  	unsigned int vcodec_num;
->  	enum hfi_version hfi_version;
->  	u32 max_load;
-> @@ -145,8 +146,12 @@ struct venus_core {
->  	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
->  	struct icc_path *video_path;
->  	struct icc_path *cpucfg_path;
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
->  	struct device_link *pd_dl_venus;
->  	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
-> +	struct device_link *opp_dl_venus;
-> +	struct device *opp_pmdomain;
->  	struct video_device *vdev_dec;
->  	struct video_device *vdev_enc;
->  	struct v4l2_device v4l2_dev;
-> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-> index abf9315..4149ab8 100644
-> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
-> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-> @@ -9,6 +9,7 @@
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
->  #include <linux/pm_domain.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/types.h>
->  #include <media/v4l2-mem2mem.h>
-> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
->  
->  static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
->  {
-> -	struct clk *clk = core->clks[0];
->  	int ret;
->  
-> -	ret = clk_set_rate(clk, freq);
-> +	ret = dev_pm_opp_set_rate(core->dev, freq);
->  	if (ret)
->  		return ret;
->  
-> @@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
->  
->  static int vcodec_domains_get(struct device *dev)
->  {
-> +	int ret;
-> +	struct opp_table *opp_table;
-> +	struct device **opp_virt_dev;
->  	struct venus_core *core = dev_get_drvdata(dev);
->  	const struct venus_resources *res = core->res;
->  	struct device *pd;
->  	unsigned int i;
->  
->  	if (!res->vcodec_pmdomains_num)
-> -		return -ENODEV;
-> +		goto skip_pmdomains;
->  
->  	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
->  		pd = dev_pm_domain_attach_by_name(dev,
-> @@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
->  	if (!core->pd_dl_venus)
->  		return -ENODEV;
->  
-> +skip_pmdomains:
-> +	if (!core->has_opp_table)
-> +		return 0;
-> +
-> +	/* Attach the power domain for setting performance state */
-> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
-> +	if (IS_ERR(opp_table)) {
-> +		ret = PTR_ERR(opp_table);
-> +		goto opp_attach_err;
-> +	}
-> +
-> +	core->opp_pmdomain = *opp_virt_dev;
-> +	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
-> +					     DL_FLAG_RPM_ACTIVE |
-> +					     DL_FLAG_PM_RUNTIME |
-> +					     DL_FLAG_STATELESS);
-> +	if (!core->opp_dl_venus) {
-> +		ret = -ENODEV;
-> +		goto opp_dl_add_err;
-> +	}
-> +
->  	return 0;
-> +
-> +opp_dl_add_err:
-> +	dev_pm_domain_detach(core->opp_pmdomain, true);
-> +opp_attach_err:
-> +	if (core->pd_dl_venus) {
-> +		device_link_del(core->pd_dl_venus);
-> +		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
-> +			if (IS_ERR_OR_NULL(core->pmdomains[i]))
-> +				continue;
-> +			dev_pm_domain_detach(core->pmdomains[i], true);
-> +		}
-> +	}
-> +	return ret;
->  }
->  
->  static void vcodec_domains_put(struct device *dev)
-> @@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
->  	unsigned int i;
->  
->  	if (!res->vcodec_pmdomains_num)
-> -		return;
-> +		goto skip_pmdomains;
->  
->  	if (core->pd_dl_venus)
->  		device_link_del(core->pd_dl_venus);
-> @@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
->  			continue;
->  		dev_pm_domain_detach(core->pmdomains[i], true);
->  	}
-> +
-> +skip_pmdomains:
-> +	if (!core->has_opp_table)
-> +		return;
-> +
-> +	if (core->opp_dl_venus)
-> +		device_link_del(core->opp_dl_venus);
-> +
-> +	dev_pm_domain_detach(core->opp_pmdomain, true);
->  }
->  
->  static int core_get_v4(struct device *dev)
-> 
-
--- 
-regards,
-Stan
+Roger.
