@@ -2,231 +2,134 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD05FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F47A22B43
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5EE422B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:33:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bgbl4hio"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gYBt6oho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733005AbgGVV3w (ORCPT
+        id S1732873AbgGVVd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbgGVV3v (ORCPT
+        Wed, 22 Jul 2020 17:33:28 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59998 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726685AbgGVVd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:29:51 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDEA0C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:29:51 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id h17so3181917oie.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 14:29:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=MfkhC03Gc9jUuHWJh3Z9KGKVUr5k40t6D5IVuHnukSY=;
-        b=Bgbl4hioE6Lxk+ni+VFgHv+JZXaOi46dj4jneGTg2LbDXDeb410BiCaxc00g7JlziL
-         PfzZQFWvlwpLhvCdYW7yhCM2BeGmUHKYhQiNCrSpiix+BJChoBvlLEvBe6LXTtdGTgDc
-         cemp03JrIPNs7W6mvR17su+JKU2nKPx2pI9BZKpS0mNwNjoYEaztLDMVdu4jZXSYJT1i
-         kj5idv4L50oGDfgBBIqvRv5k2QkUNDG/8Jf5zZ7yzpex5FLYXUgYgoMJuVrAmSPPgwXc
-         q6vxhkrD76DTQEQrBtwupWX0O8RHaVYfCPRPRz/QOfbdMuiuRPk9UrrXdJTNJONrIVFw
-         5Nqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=MfkhC03Gc9jUuHWJh3Z9KGKVUr5k40t6D5IVuHnukSY=;
-        b=dGV3legbXb2DrdFyRm3/zvJl3vdE0GlY50qVBM/ChRxJ7HRuoYLC7BoCg7Xik0+lZM
-         g2obR68sA32fk6A/b/TYae2bHs3SmNCbWuUqBb2/yVKzX+g577KyderIhgosMIScmeXJ
-         Bht/fbEbG9oVVELIw4vvXamz5TqgFfusFTk4Csx2fSpkUhCdZT26nDtz6k2tFegWTbfJ
-         3nXF1nZA/rF04DUXGa3zSu2Cztc//dCQsAULsP+YXYbBViMnPqJ1bz9ECOTLAsgWnTu6
-         Vf4B/QRoOwYZaNOg+FVdwykadwHu7BJ7Ewml2T1y+Q09g+f0Q+OWKjlNxsv6udqEW1SM
-         ub1A==
-X-Gm-Message-State: AOAM530rW8twosCc+Fvn6NDvSfLEUIILlUnw0cdLnnFQYgaWG6nFDMIM
-        fy3600shaRg0ZQHWY3XY2tUMFQ==
-X-Google-Smtp-Source: ABdhPJwLRa67OJOCfoXDJdByIDklLYqywqdtVbMPH11zT2T7yjjeQPKMkJfj6BzgCQT8ns2C8oTSxQ==
-X-Received: by 2002:aca:4e05:: with SMTP id c5mr1303955oib.37.1595453390906;
-        Wed, 22 Jul 2020 14:29:50 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id q15sm198197ood.11.2020.07.22.14.29.49
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 22 Jul 2020 14:29:49 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 14:29:36 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Michal Hocko <mhocko@kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-In-Reply-To: <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com>
-Message-ID: <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
-References: <20200721063258.17140-1-mhocko@kernel.org> <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com> <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Wed, 22 Jul 2020 17:33:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595453606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6UgVjjJcVGP42I9xFZ1qZP7ITGojf/KeQGKFYq4eMxc=;
+        b=gYBt6ohoIQZ86bOnFdZo5aNAxyVlGMrOykaZOdOR0Ff9H42lKmNbi+9jQsFFz1v7SSj3TK
+        6elIgb6h9sb2PhFNz5XgA07XK3jDJxwIIHlOm/Gnp3oTIF9BBMee6FLeJAH268I745BTMj
+        nSBoxsmR6VfZU/0mXVEmUmHVu9ORLeI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-2z4NQGofNKiv8rFqmw4fnw-1; Wed, 22 Jul 2020 17:33:20 -0400
+X-MC-Unique: 2z4NQGofNKiv8rFqmw4fnw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA8EE1923762;
+        Wed, 22 Jul 2020 21:33:17 +0000 (UTC)
+Received: from treble (ovpn-116-168.rdu2.redhat.com [10.10.116.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C6D8E710C3;
+        Wed, 22 Jul 2020 21:33:15 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 16:33:13 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     Kees Cook <keescook@chromium.org>, Miroslav Benes <mbenes@suse.cz>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+Message-ID: <20200722213313.aetl3h5rkub6ktmw@treble>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+ <202007220738.72F26D2480@keescook>
+ <20200722160730.cfhcj4eisglnzolr@treble>
+ <202007221241.EBC2215A@keescook>
+ <301c7fb7d22ad6ef97856b421873e32c2239d412.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <301c7fb7d22ad6ef97856b421873e32c2239d412.camel@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020, Linus Torvalds wrote:
+On Wed, Jul 22, 2020 at 12:56:10PM -0700, Kristen Carlson Accardi wrote:
+> On Wed, 2020-07-22 at 12:42 -0700, Kees Cook wrote:
+> > On Wed, Jul 22, 2020 at 11:07:30AM -0500, Josh Poimboeuf wrote:
+> > > On Wed, Jul 22, 2020 at 07:39:55AM -0700, Kees Cook wrote:
+> > > > On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes wrote:
+> > > > > Let me CC live-patching ML, because from a quick glance this is
+> > > > > something 
+> > > > > which could impact live patching code. At least it invalidates
+> > > > > assumptions 
+> > > > > which "sympos" is based on.
+> > > > 
+> > > > In a quick skim, it looks like the symbol resolution is using
+> > > > kallsyms_on_each_symbol(), so I think this is safe? What's a good
+> > > > selftest for live-patching?
+> > > 
+> > > The problem is duplicate symbols.  If there are two static
+> > > functions
+> > > named 'foo' then livepatch needs a way to distinguish them.
+> > > 
+> > > Our current approach to that problem is "sympos".  We rely on the
+> > > fact
+> > > that the second foo() always comes after the first one in the
+> > > symbol
+> > > list and kallsyms.  So they're referred to as foo,1 and foo,2.
+> > 
+> > Ah. Fun. In that case, perhaps the LTO series has some solutions. I
+> > think builds with LTO end up renaming duplicate symbols like that, so
+> > it'll be back to being unique.
+> > 
 > 
-> I do wonder if we should make that PAGE_WAIT_TABLE_SIZE be larger. 256
-> entries seems potentially ridiculously small, and aliasing not only
-> increases the waitqueue length, it also potentially causes more
-> contention on the waitqueue spinlock (which is already likely seeing
-> some false sharing on a cacheline basis due to the fairly dense array
-> of waitqueue entries: wait_queue_head is intentionally fairly small
-> and dense unless you have lots of spinlock debugging options enabled).
-> 
-> That hashed wait-queue size is an independent issue, though. But it
-> might be part of "some loads can get into some really nasty behavior
-> in corner cases"
+> Well, glad to hear there might be some precendence for how to solve
+> this, as I wasn't able to think of something reasonable off the top of
+> my head. Are you speaking of the Clang LTO series? 
+> https://lore.kernel.org/lkml/20200624203200.78870-1-samitolvanen@google.com/
 
-I don't think we've ever suffered from unlock_page() softlockups when
-booting, as Michal reports; but we do have a forkbomby test (and a few
-others) which occasionally suffer that way, on machines with many cpus.
+I'm not sure how LTO does it, but a few more (half-brained) ideas that
+could work:
 
-We run with the three imperfect patches appended below, which together
-seemed to improve, but not entirely solve, the situation:
+1) Add a field in kallsyms to keep track of a symbol's original offset
+   before randomization/re-sorting.  Livepatch could use that field to
+   determine the original sympos.
 
-mm,sched: make page_wait_table[] four times bigger
-mm,sched: wait_on_page_bit_common() add back to head
-mm,sched: __wake_up_common() break only after waking
- kernel/sched/wait.c |    5 ++++-
- mm/filemap.c        |   10 ++++++++--
- 2 files changed, 12 insertions(+), 3 deletions(-)
+2) In fgkaslr code, go through all the sections and mark the ones which
+   have duplicates (i.e. same name).  Then when shuffling the sections,
+   skip a shuffle if it involves a duplicate section.  That way all the
+   duplicates would retain their original sympos.
 
-I've rediffed them to 5.8-rc6, and checked that they build and sustain
-a load for a few minutes: so they're not entirely ridiculous on latest
-kernels, but certainly not thoroughly retested.
+3) Livepatch could uniquely identify symbols by some feature other than
+   sympos.  For example:
 
-I'm rather desperate to stay out of the discussion here, given how far
-behind I am on responding to other threads; and may not be able to
-defend them beyond what I said in the original commit messages.
-But seeing this thread, thought I'd better put them up for your eyes.
+   Symbol/function size - obviously this would only work if duplicately
+   named symbols have different sizes.
 
-(And, no, I don't think I have a Copyright on changing an 8 to a 10:
-you've probably gone further already; just included for completeness.)
+   Checksum - as part of a separate feature we're also looking at giving
+   each function its own checksum, calculated based on its instruction
+   opcodes.  Though calculating checksums at runtime could be
+   complicated by IP-relative addressing.
 
-Hugh
+I'm thinking #1 or #2 wouldn't be too bad.  #3 might be harder.
 
-[PATCH] mm,sched: make page_wait_table[] four times bigger
-
-Current page_wait_table[] size is 256 entries: bump that up to 1024
-to reduce latency from frequent page hash collisions.  No science in
-choosing fourfold: just "a little bigger".
-
-Signed-off-by: Hugh Dickins <hughd@google.com>
-
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -968,7 +968,7 @@ EXPORT_SYMBOL(__page_cache_alloc);
-  * at a cost of "thundering herd" phenomena during rare hash
-  * collisions.
-  */
--#define PAGE_WAIT_TABLE_BITS 8
-+#define PAGE_WAIT_TABLE_BITS 10
- #define PAGE_WAIT_TABLE_SIZE (1 << PAGE_WAIT_TABLE_BITS)
- static wait_queue_head_t page_wait_table[PAGE_WAIT_TABLE_SIZE] __cacheline_aligned;
- 
- 
-[PATCH] mm,sched: wait_on_page_bit_common() add back to head
-
-wait_on_page_bit_common() always adds to tail of wait queue.  That is
-of course right when adding an entry for the first time; but when woken,
-and bit found already set, so adding back again?  Looks unfair: it would
-get placed after recent arrivals, and in danger of indefinite starvation.
-
-Instead, add back to head on repeat passes: not quite right either, but
-if that happens again and again, the ordering will be reversed each time,
-so it should work out reasonably fair.
-
-Signed-off-by: Hugh Dickins <hughd@google.com>
-
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1109,6 +1109,7 @@ static inline int wait_on_page_bit_commo
- 	struct wait_page_queue wait_page;
- 	wait_queue_entry_t *wait = &wait_page.wait;
- 	bool bit_is_set;
-+	bool first_time = true;
- 	bool thrashing = false;
- 	bool delayacct = false;
- 	unsigned long pflags;
-@@ -1134,7 +1135,12 @@ static inline int wait_on_page_bit_commo
- 		spin_lock_irq(&q->lock);
- 
- 		if (likely(list_empty(&wait->entry))) {
--			__add_wait_queue_entry_tail(q, wait);
-+			if (first_time) {
-+				__add_wait_queue_entry_tail(q, wait);
-+				first_time = false;
-+			} else {
-+				__add_wait_queue(q, wait);
-+			}
- 			SetPageWaiters(page);
- 		}
- 
-
-[PATCH] mm,sched: __wake_up_common() break only after waking
-
-4.14 commit 2554db916586 ("sched/wait: Break up long wake list walk")
-added WQ_FLAG_BOOKMARK early breakout from __wake_up_common(): it lets
-the waker drop and retake the irq-safe wait queue lock every 64 entries.
-It was introduced to handle an Intel customer issue with long page wait
-queues, but it also applies to all paths using __wake_up_common_lock().
-
-It would probably be more useful to our non-preemptible kernel if it
-could do a cond_resched() along with its cpu_relax(); but although
-most unlock_page() calls would be fine with that, some would not -
-page_endio(), for example; and it would be a big job to sort them,
-and not clear that doing some not others would really help anyway.
-
-A patch that I've been running with, that does help somewhat to reduce
-those unlock_page() softlockups, is this weakening of 2554db916586:
-don't break out until at least one wakeup has been issued for the page.
-
-In the worst case (waking a page at the very end of a hash queue shared
-with many waiters on another page), this would simply revert to the old
-behavior, where there was no WQ_FLAG_BOOKMARK early breakout at all.
-
-Whilst it did not set out to change behavior for __wake_up_common_lock()
-users, review suggests that this change is probably good for them too.
-
-Signed-off-by: Hugh Dickins <hughd@google.com>
-
---- a/kernel/sched/wait.c
-+++ b/kernel/sched/wait.c
-@@ -68,6 +68,7 @@ static int __wake_up_common(struct wait_
- 			wait_queue_entry_t *bookmark)
- {
- 	wait_queue_entry_t *curr, *next;
-+	int woken = 0;
- 	int cnt = 0;
- 
- 	lockdep_assert_held(&wq_head->lock);
-@@ -95,8 +96,10 @@ static int __wake_up_common(struct wait_
- 			break;
- 		if (ret && (flags & WQ_FLAG_EXCLUSIVE) && !--nr_exclusive)
- 			break;
-+		if (ret)
-+			woken++;
- 
--		if (bookmark && (++cnt > WAITQUEUE_WALK_BREAK_CNT) &&
-+		if (bookmark && (++cnt > WAITQUEUE_WALK_BREAK_CNT) && woken &&
- 				(&next->entry != &wq_head->head)) {
- 			bookmark->flags = WQ_FLAG_BOOKMARK;
- 			list_add_tail(&bookmark->entry, &next->entry);
+-- 
+Josh
 
