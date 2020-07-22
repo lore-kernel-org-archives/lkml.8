@@ -7,58 +7,61 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1731C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC1DC433E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C2B2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31E520729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 09:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tbfbpQQD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AZ59no4p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Kc+aZvh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6FfKB5+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbgGVJMb (ORCPT
+        id S1731351AbgGVJMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:12:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46908 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbgGVJM1 (ORCPT
+        Wed, 22 Jul 2020 05:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731067AbgGVJM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:12:27 -0400
-Date:   Wed, 22 Jul 2020 09:12:24 -0000
+        Wed, 22 Jul 2020 05:12:29 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7877C0619DE;
+        Wed, 22 Jul 2020 02:12:28 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 09:12:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595409144;
+        s=2020; t=1595409147;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=33vlhfoXAvi92zjdyqBNFRkNoHys63suSf2USBDLYXQ=;
-        b=tbfbpQQDP0Ztro2l29E5OPD5121XmWoA8fhw16YU/SFA5BaN9ldzZny6b7tBs/PaJXyq8B
-        kyjaX/aXetXw2SvRXkMYmKPthqi1NdXMLbwsyWKgM9kWARJyIjgwNvQxbbOWqy1Wli5ZiI
-        Kfwko3X1uV2XflKfYFDnagFbvgmnebjry/z1G1QQc7/PtirArsyWVT17PUGJcB6N9vdWgO
-        TICQw+PLjtgHi01+eu/GqqyitjbQv+L5S4lTZoc+3J9bQmCQ7meLG5cQW4Tf25dxilLeNN
-        8Uk0ZzorEk9efp9tTl7LcK3wo3yfNTnsxl3M2AQMHXRiu/JgtPD4g6otSUoWYQ==
+        bh=omHB0IzWPPjMngZlXCyyJLHrhx3ZzshX+RzXI2T3C2Q=;
+        b=1Kc+aZvhbfHATS4qa6EH7R6sGPiTbOfjQh6QL3rg1ehawkmZYOElrfVbnLneA5FjgsL0Ww
+        X56HwjFn5TrN6dbcVt4G6w3n/ySIAAXXpSR5JbHuuJot9V/oEL8zV6LmXr3ic/dLXfEigf
+        AzXZbVin09daw4VXefBf3D23Fbz7xRc0BMGn78RpZNYAx/FM2WxgYGf1LrK7RCNc6/C458
+        1hNh8q/LQuOiYE5KfLxrY35PRu2kTCfHI2rclOdZ81KdEeSUzUOyHx+ZINlHqgVQoV8dKZ
+        0szi5jcaMGF4yd9JwhgZ/vgBXVYdB+qWMgVAHDh2RHAhFAHTMUUpsTjKSDcvIQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595409144;
+        s=2020e; t=1595409147;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=33vlhfoXAvi92zjdyqBNFRkNoHys63suSf2USBDLYXQ=;
-        b=AZ59no4pS29XZKisNZoZYMFOuO8Soib6upttg9E7VamohVfR4JbixGhD/7xKpTS+2XNg0b
-        bmlpxdfYb3WxH6Cg==
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+        bh=omHB0IzWPPjMngZlXCyyJLHrhx3ZzshX+RzXI2T3C2Q=;
+        b=6FfKB5+rWBb9db7GVFArZ8IvC/Gy5roTTGjsM4RtyHnDg0KH4x8R5ToplxKpH5KxzKPByd
+        4FeEWBAqBrX3nhDA==
+From:   "tip-bot2 for Muchun Song" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Cleanup SCHED_THERMAL_PRESSURE kconfig entry
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+Subject: [tip: sched/core] smp: Fix a potential usage of stale nr_cpus
+Cc:     Muchun Song <songmuchun@bytedance.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200712165917.9168-3-valentin.schneider@arm.com>
-References: <20200712165917.9168-3-valentin.schneider@arm.com>
+In-Reply-To: <20200716070457.53255-1-songmuchun@bytedance.com>
+References: <20200716070457.53255-1-songmuchun@bytedance.com>
 MIME-Version: 1.0
-Message-ID: <159540914411.4006.17518831755080064888.tip-bot2@tip-bot2>
+Message-ID: <159540914653.4006.6322052574571138388.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,55 +73,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     98eb401d09301d8a38c31cc8851ba95ac9385c8f
-Gitweb:        https://git.kernel.org/tip/98eb401d09301d8a38c31cc8851ba95ac9385c8f
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Sun, 12 Jul 2020 17:59:16 +01:00
+Commit-ID:     589343569d7b58a64ec2446e6686c8e79aea7fcf
+Gitweb:        https://git.kernel.org/tip/589343569d7b58a64ec2446e6686c8e79aea7fcf
+Author:        Muchun Song <songmuchun@bytedance.com>
+AuthorDate:    Thu, 16 Jul 2020 15:04:57 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 22 Jul 2020 10:22:06 +02:00
+CommitterDate: Wed, 22 Jul 2020 10:22:04 +02:00
 
-sched: Cleanup SCHED_THERMAL_PRESSURE kconfig entry
+smp: Fix a potential usage of stale nr_cpus
 
-As Russell pointed out [1], this option is severely lacking in the
-documentation department, and figuring out if one has the required
-dependencies to benefit from turning it on is not straightforward.
+The get_option() maybe return 0, it means that the nr_cpus is
+not initialized. Then we will use the stale nr_cpus to initialize
+the nr_cpu_ids. So fix it.
 
-Make it non user-visible, and add a bit of help to it. While at it, make it
-depend on CPU_FREQ_THERMAL.
-
-[1]: https://lkml.kernel.org/r/20200603173150.GB1551@shell.armlinux.org.uk
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200712165917.9168-3-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20200716070457.53255-1-songmuchun@bytedance.com
 ---
- init/Kconfig | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ kernel/smp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 0498af5..0a97d85 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -492,8 +492,21 @@ config HAVE_SCHED_AVG_IRQ
- 	depends on SMP
+diff --git a/kernel/smp.c b/kernel/smp.c
+index aa17eed..d0ae8eb 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -634,8 +634,7 @@ static int __init nrcpus(char *str)
+ {
+ 	int nr_cpus;
  
- config SCHED_THERMAL_PRESSURE
--	bool "Enable periodic averaging of thermal pressure"
-+	bool
- 	depends on SMP
-+	depends on CPU_FREQ_THERMAL
-+	help
-+	  Select this option to enable thermal pressure accounting in the
-+	  scheduler. Thermal pressure is the value conveyed to the scheduler
-+	  that reflects the reduction in CPU compute capacity resulted from
-+	  thermal throttling. Thermal throttling occurs when the performance of
-+	  a CPU is capped due to high operating temperatures.
-+
-+	  If selected, the scheduler will be able to balance tasks accordingly,
-+	  i.e. put less load on throttled CPUs than on non/less throttled ones.
-+
-+	  This requires the architecture to implement
-+	  arch_set_thermal_pressure() and arch_get_thermal_pressure().
+-	get_option(&str, &nr_cpus);
+-	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
++	if (get_option(&str, &nr_cpus) && nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+ 		nr_cpu_ids = nr_cpus;
  
- config BSD_PROCESS_ACCT
- 	bool "BSD Process Accounting"
+ 	return 0;
