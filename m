@@ -2,162 +2,135 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E514BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6E9C433EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B805020729
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F6E206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IsAoqvXN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YZBnyVel";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="QV3tPH/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730527AbgGVGye (ORCPT
+        id S1730673AbgGVGy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgGVGyd (ORCPT
+        Wed, 22 Jul 2020 02:54:57 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:4258 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgGVGy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 02:54:33 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6536BC0619DB
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:54:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a14so762774wra.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 23:54:33 -0700 (PDT)
+        Wed, 22 Jul 2020 02:54:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595400896; x=1626936896;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Mf/HAZi0hlQyHsOJAqRX4fByTFGCVEgXSRxQNGkmG0E=;
+  b=YZBnyVelQnCf2VdM/ibzzugOe6YGpyWFlLGCuiuyUoLC3U2dgCd0xxmd
+   9gSpSXT7Xv0K4BpiyiHJhUeEFImqV2MXqZ8bjJK80PcbLb0iZ1zrbjeou
+   UXijPtUhe5/AQ2IWGOL9eZIra8LPj459k8WrhYV+u6ugMC16t2+62Vp02
+   uSgYSskXVTiV+C6s8F97JIpuATGYJicSF1bihUIjGl9khwEHj+hJmq/hI
+   VQgKjFIHPCwR28cBZcF6XdAyO4te367xKRCnKGiIZGiIGJxVWe6pupTuP
+   DVI2cMdSsVgtqAwGzk8iZrLquPBq+sg9vvvtiZUVGhZoPWz62VHTh5qQa
+   g==;
+IronPort-SDR: uX+mFOpiJ5WMYTqXRu+hTctVIkQQVPELRznVVqhpeCyEHEb1Zf62pe2bHdyuJRm1QYvBhvpj1J
+ ixBPaAauYQgKN2rXhZiUVjFyQlhLBvfDgej4mWGNOM+4TTNeqN2af2ROTHlZtr7gZIdcMaCAtO
+ 5DfX7AMaQXIMxOx6lRa1qQA4elkNt5o8eKzW6nk1YEhCET3LkVTLe8mWhOZcFcQiTB2fzrRdLz
+ YPf7t3FZeshKUuaLFO04C+3gAnEHsgeX56PprMQ4XnVngJakjnu9vTTzWFt6DwjrRD/AfcrzRo
+ i34=
+X-IronPort-AV: E=Sophos;i="5.75,381,1589212800"; 
+   d="scan'208";a="252373980"
+Received: from mail-bn3nam04lp2055.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.55])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Jul 2020 14:54:54 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h60Ivr3Xc0oExf+JN5C2VcMrZN2/eVG7btCxUvhW5hZov8x8MMzKWsLNvcLlD4mXyW5gqt/q8UERMiDL0cOGGKqqgyIbnr2q0CPFpi5tJh95Z6+joYY1iprZ4jJx3a4hDqm/UvkORrvTVERsxOzqNkHNkhMlxNgu5fbQ6xwvj2QPydYRh7ovprvn1fOGVGBshyq5G2fazARuSTyvBuHvbZ1t4WR3uzxcMWsjiD5UCoQgv3/st6zJMaNZNJNtAiBp6CEX49dPV/6VeJseMt42g4miSG0KTqgofMWz8taEvUEVGaTzur3M2OFdxmShh6zWokC9nnHD5MBaiPUypTeoLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mf/HAZi0hlQyHsOJAqRX4fByTFGCVEgXSRxQNGkmG0E=;
+ b=oakeSkymx0vsRqfsvCk4iGB68+XyklMH7Povy1vfVd2+11u6FWD/yk0kPsGIK/q1iOfrljUfdxzS2QGOeO0S4ihrI9/zpoNsjufnsfb64nScL90kpibXUyaTDfY0r9tfOuVsDa3BL4//TlbVGHMr8KYzRlbh8rUMqWSffC0l81qLuMAJpB3cZPeP0uIp37d+2r7mh+zAAR5US+n6MS46fFoqSk2JmxdLhx3MlLSQDChHBp/WB4f+wVfNudXo+IZLL//Sa3Zi+kk9/rPpE1Qj2i1Vy5h75FPE9E4kl5sG2gaqzSpSq7ZT7aDNK2YMKRmP0NFQW6nBgdscTM7dmHNlXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ocBmwtCFiYWP9YFIU9y/qGa4fpuschond1lKiBqRad4=;
-        b=IsAoqvXNG2/0xQHeu18hvZcm6DuJpizwx+JDHvWFU2JKIN2MpdQDmUQ+uu2ylHccoI
-         rJdblvsBWP/F5sJjt+ptjDC26ZfdRZDhCbl5/c7eJo7gg6xVok0/gXRFbA6bGdlsK+YI
-         yJF7m5VWJY+VT/8DasrqeqIwKreZRj2FwcpU2EIGQhCBBj21Cfm4ZQvK9V/QIAM4kUiz
-         3WH0GrgLYsyCQQsfK9ZHsB3flBg2QcBZFllL884AZaxPmRmmuNwrn++/k3q19c/wIQZS
-         +dSOwzNYmZB0Zawp3c3EYJPI9lVSmHeieq1TmcZpLjVjfJr9v8pU6KcmPjcreQ9qD0LE
-         mNxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ocBmwtCFiYWP9YFIU9y/qGa4fpuschond1lKiBqRad4=;
-        b=BV+Nkqz/M3oL219SgGm9kB8SweDGF5KX2VOTSd9yNj+FEo+wKWtSUvlWIZ4Lf8nM4e
-         B8nPJ7poSuZJckZDfm8n4rwwbrczSHWu46Xz+fw/pDWS6LSjtvd5OZvDWdoTVJYrlAXb
-         211sArSuPEnhfTYh4g30k5fQMcULwpMeR3zomWhq6cMEokGj/tehHuwKWZQtASXlvADR
-         cQAMIC6/K7I3wrJpt7Bqvb6vF8U3ttQeLE7aZfLdOMXrZN4I/10NUyCway2YK3T7pm71
-         Y5NJQ13VZHz6nn+qInBXGxFASuMXazGiPAZlEcRzbLE8R577l9Jt0YjpN2svm4IFSPQk
-         O7VA==
-X-Gm-Message-State: AOAM530wX3TiwSsUPIzOoOxt1Jr8zsbyDeQdiUFqAsKt+J2Jk/5mV9TV
-        153D6V+SHLAgR+ESkq9KTcZA0X/Vs1Y=
-X-Google-Smtp-Source: ABdhPJyo10m2wQJAJRAjVOGmLFVQEnAPrhWt00A+y6ezpxtZSlEAclgSzZxiLt39v1L/xOQWpCQkGg==
-X-Received: by 2002:adf:a3d0:: with SMTP id m16mr28162290wrb.232.1595400871982;
-        Tue, 21 Jul 2020 23:54:31 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id h14sm39439532wrt.36.2020.07.21.23.54.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 23:54:31 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 07:54:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, tony@atomide.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH for v5.9] mfd: Replace HTTP links with HTTPS ones
-Message-ID: <20200722065429.GI621928@dell>
-References: <20200719195613.61458-1-grandmaster@al2klimov.de>
- <20200721161028.GA389086@bogus>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mf/HAZi0hlQyHsOJAqRX4fByTFGCVEgXSRxQNGkmG0E=;
+ b=QV3tPH/FPauDbK+X0qyj938TZfVsJ3/YspaKqvUsEdMLbFERNXcGvbMk5Yr4rE1QRaW16Slk42OKw6CsTqtpmj4YugRxktCE8CpA6J4ChqzNNm7SkxoCwpS3AWYKrMP07+T7XHWBPlJTo3euNzbkNxPlylW13zYSYe1VeMxXDw0=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN2PR04MB2240.namprd04.prod.outlook.com
+ (2603:10b6:804:e::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 22 Jul
+ 2020 06:54:53 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
+ 06:54:53 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+Subject: Re: [PATCH 01/14] fs: remove the unused SB_I_MULTIROOT flag
+Thread-Topic: [PATCH 01/14] fs: remove the unused SB_I_MULTIROOT flag
+Thread-Index: AQHWX/FDB40tZCzWM0ydmrzWX6HQ7w==
+Date:   Wed, 22 Jul 2020 06:54:53 +0000
+Message-ID: <SN4PR0401MB35987802444E56DED8C7962E9B790@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200722062552.212200-1-hch@lst.de>
+ <20200722062552.212200-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3cc6b058-e96d-4554-6048-08d82e0c22d7
+x-ms-traffictypediagnostic: SN2PR04MB2240:
+x-microsoft-antispam-prvs: <SN2PR04MB2240AB2AA052BBB77780AF6C9B790@SN2PR04MB2240.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IDVmgvohX7JSexygYWy/gOHLtmMk0pYHg3OX93VX4WVrXR65igCwUFOiXSy/YcISEyC7S0LenThZvvTH9Hqkk+fQau0x5DI1D1sbJVBh/l+YrP8SC5QWxSGnldIeXgpYPqugyHzQB7wFu4DigmF/me5aKVWY0rlmCBvv0rTHC734WzcPVwj7aVwS+NElirKkzg+9psne5MLJmhk3C1LBqOcKncYE4m3x6wA/PYSywbjqs0ApTbT+OvQVgIrAcIsNdhCkjg985Ybvj9EFf/kSyzU39aRCGcCUf518jWY9NjQn0Pkr54KW+xf4ZnRMHYzD3l6vgLoOkwNi+OY1LT+5ag==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(346002)(39860400002)(71200400001)(558084003)(26005)(55016002)(478600001)(5660300002)(186003)(4326008)(6506007)(86362001)(8936002)(7696005)(33656002)(316002)(9686003)(8676002)(52536014)(66446008)(66556008)(64756008)(66476007)(76116006)(91956017)(66946007)(110136005)(2906002)(7416002)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: /27ro/TwgT3wmbz0gAlm/4yMGrMf4LxlNA6yKwS5muEQ3saFOCMlIP9lXn+bFE9pvh4/VSnXeAY3rlcMF6crS/VEU7Isdj3HpOGtaoEhESyOPpRo3Fe1STSm6+ntmFL9CnOwK5AT0Opvr+PMEmuDCeX1lTQW2IukYQ1T/XeTpCWeTELZEkx8XU50UWQQudQ3yQCOT0f5Pxc94V430bSiN3kgIwxexGTTHCkOV6wAphyDdraAbFl+EQkXfe7rJjBEsAcR+mb1OnGRYAV8Vqqj9QguxWjdICi7uhRITSy347pRdN9omKPKgmq1siH3iXrLThmW/sdd/Nkh6iqQNXOOjXwgw9noWKwhU8T1CWTdmRbw69QbYFSod+f9AFDWHevcQ3OvPk5lgHEnxITJUawsu5A/prRcUAZpyIkzGcnr9z5Rs1/t8zvhcu92nydjtdaq2hN4n2FRnSMGd4fAxp1dC2C5y3dAnTknVwgRMaQtGuBXPEHJxibYGi5ipPtwZgzN
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721161028.GA389086@bogus>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cc6b058-e96d-4554-6048-08d82e0c22d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 06:54:53.0951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sK+zFm6//NsZ55QHbWcTkYXPaG6cMYoVQJQvSJlfcuZOIe5XRjNhiHNd+wkavDlBO3CLZbvQ0i0elGFSi5k1hA8123AIETr4T8yBNiqiEsI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR04MB2240
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jul 2020, Rob Herring wrote:
-
-> On Sun, 19 Jul 2020 21:56:13 +0200, Alexander A. Klimov wrote:
-> > Rationale:
-> > Reduces attack surface on kernel devs opening the links for MITM
-> > as HTTPS traffic is much harder to manipulate.
-> > 
-> > Deterministic algorithm:
-> > For each file:
-> >   If not .svg:
-> >     For each line:
-> >       If doesn't contain `\bxmlns\b`:
-> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> >             If both the HTTP and HTTPS versions
-> >             return 200 OK and serve the same content:
-> >               Replace HTTP with HTTPS.
-> > 
-> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> > ---
-> >  Continuing my work started at 93431e0607e5.
-> >  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> >  (Actually letting a shell for loop submit all this stuff for me.)
-
-I'm guessing something went wrong with your submission, as Rob's reply
-is the first time I saw this patch.  Did your bot send it to me?
-
-You really should be fully reviewing anything that gets sent to the
-MLs.  "Sorry, I didn't send it, my bot did" is not an acceptable
-excuse for inadequacies.
-
-> >  If there are any URLs to be removed completely
-> >  or at least not (just) HTTPSified:
-> >  Just clearly say so and I'll *undo my change*.
-> >  See also: https://lkml.org/lkml/2020/6/27/64
-> > 
-> >  If there are any valid, but yet not changed URLs:
-> >  See: https://lkml.org/lkml/2020/6/26/837
-> > 
-> >  If you apply the patch, please let me know.
-> > 
-> >  Sorry again to all maintainers who complained about subject lines.
-> >  Now I realized that you want an actually perfect prefixes,
-> >  not just subsystem ones.
-> >  I tried my best...
-> >  And yes, *I could* (at least half-)automate it.
-> >  Impossible is nothing! :)
-> > 
-> > 
-> >  Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
-> >  drivers/mfd/hi6421-pmic-core.c                       | 2 +-
-> >  drivers/mfd/lp873x.c                                 | 2 +-
-> >  drivers/mfd/lp87565.c                                | 2 +-
-> >  drivers/mfd/omap-usb-host.c                          | 2 +-
-> >  drivers/mfd/omap-usb-tll.c                           | 2 +-
-> >  drivers/mfd/smsc-ece1099.c                           | 2 +-
-> >  drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
-> >  drivers/mfd/tps65086.c                               | 2 +-
-> >  drivers/mfd/tps65217.c                               | 2 +-
-> >  drivers/mfd/tps65218.c                               | 2 +-
-> >  drivers/mfd/tps65912-core.c                          | 2 +-
-> >  drivers/mfd/tps65912-i2c.c                           | 2 +-
-> >  drivers/mfd/tps65912-spi.c                           | 2 +-
-> >  include/linux/mfd/hi6421-pmic.h                      | 2 +-
-> >  include/linux/mfd/lp873x.h                           | 2 +-
-> >  include/linux/mfd/lp87565.h                          | 2 +-
-> >  include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
-> >  include/linux/mfd/tps65086.h                         | 2 +-
-> >  include/linux/mfd/tps65217.h                         | 2 +-
-> >  include/linux/mfd/tps65218.h                         | 2 +-
-> >  include/linux/mfd/tps65912.h                         | 2 +-
-> >  22 files changed, 22 insertions(+), 22 deletions(-)
-> > 
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+A little bit of git archeology shows the last user of SB_I_MULTIROOT is gon=
+e with=0A=
+f2aedb713c28 ("NFS: Add fs_context support.")=0A=
+=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
