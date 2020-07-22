@@ -2,238 +2,177 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAB120714
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD9E20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 03:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="n5kU7X/C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DX3EID1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbgGVDgi (ORCPT
+        id S1731943AbgGVDlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731781AbgGVDgi (ORCPT
+        Tue, 21 Jul 2020 23:41:06 -0400
+Received: from gateway23.websitewelcome.com ([192.185.48.84]:25568 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731793AbgGVDlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jul 2020 23:36:38 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CE2C061794
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:36:37 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 17so579100wmo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 20:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZYjf/M8LtGnB4n0AyVVMXshArfiVRiM4rRLy+QhAdfs=;
-        b=n5kU7X/CI3Z5fW6+a551VM3WKGThHB5ECCmvscA5jslOS6TIK8br9x2moqjvPMW/cO
-         4IROMHQFonmY+VuZyRzuCUu0Br+fXUw4ZZh9w+kNVins/sX+FDLeCUpDLXWopq4L4KKR
-         JJwgau3DxCOp6ISAphnMaIyhgaekZHeFaBxBcykEqImIhN5bxU5bUFH/nihdD8K5vnv3
-         1ohikFnZFDtlWYURDzaqbbthwJJijaRT2nDXJbRxgS25kCrD7dM0khqGcZl59dAyAxR1
-         7YuAlnecgKJrux+CpYjmP4mCDKs634ykK+DO0MEpxfSao+US+//ueJcWdf6vHNJyYdBU
-         Z3xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZYjf/M8LtGnB4n0AyVVMXshArfiVRiM4rRLy+QhAdfs=;
-        b=TfRTRjWNvbM5yw/jZjW+2lHI24hkTVpQJ0/fhThdZPfuU9ulEdosb4ri37cepGYgHr
-         8hdqWKozt3UGmxWjW9K8ueh/5zuUE6MhxitIEYEITRXUOsfQROqDrhvgMJ5X5fvjNVP9
-         1dn5i3M5AVX31YVneWDWWCYNdrMs8xDqMDaP77hrOe6rCAXn0edwv9nyz5KBOdc6Y3dM
-         whWKwW5uRtlstHPRgHYn+1s6iVDK4STfqSQAdHVRY9cRUX469BxGerm3qYynZYTR/+vt
-         5TxvM0zTvwVHofAj/M/z262s1X6qUH9qMNHXaIbky2WN6s5fjiwHm3XqQLB8Bv0FDKpV
-         2LVw==
-X-Gm-Message-State: AOAM530PHC0nSeplDPCI0DFxy5k57iUQ9Vcqop/o3PAw71/KfcSMeqiC
-        RMiN3QkK7HmqklZFKLJvpVpVNjjduOb97C83/USf1w==
-X-Google-Smtp-Source: ABdhPJz1xTvLXcoVhk8ZPc7aGEiWIeZd45I4TtCBSHOm9CSA0MqoCjl6Ufc6dKkEIUr4LC9xvkDrLWvqNuc1sdfLi/k=
-X-Received: by 2002:a1c:8117:: with SMTP id c23mr6252105wmd.157.1595388996424;
- Tue, 21 Jul 2020 20:36:36 -0700 (PDT)
+        Tue, 21 Jul 2020 23:41:05 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 5381A8D54
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jul 2020 22:17:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id y5FpjvVwAzOauy5Fpjlawl; Tue, 21 Jul 2020 22:17:13 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Qz12tSZOwxvrEelfi34PkqtoYAgKxxxRHM9F+fPHhTc=; b=DX3EID1Ds1ML0gwPG4xQOEWDCp
+        rJBWqa3k0SSjpMDMFYWkrI5QGtwqby8ZCS9bj6PiATpPElloyGYeHoHfKSA49pJI6f5/f3RR6zV+g
+        MWEgRQxuxedX2uydCttoO8xqHrEZGlQJ6XBUnkqGTJQ8k+Yhk7RacFJRvaO7cAc/47qBGCjIjwYfa
+        efZE8L8ElsTs/+bs4RS4vVjOpYXy1ULGTAG5eTwIJK5LswLlkGbiEldFs9BpXy4etG+AycG0xgY6M
+        0VOq8MpCv0VF/1T4z415tZK1lqJq0iI4+4Q2Cl0gL+aX3TSmhB24ZkCjwZBNQH246kHy8R1CAnfFn
+        NMEy7dUQ==;
+Received: from [201.162.241.127] (port=22113 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jy5Fo-000qJI-JI; Tue, 21 Jul 2020 22:17:12 -0500
+Subject: Re: [PATCH][next] PCI: imx6: Use fallthrough pseudo-keyword
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200716220629.GA663054@bjorn-Precision-5520>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <e20b7b95-4b61-4ade-cf90-40f49f3744bf@embeddedor.com>
+Date:   Tue, 21 Jul 2020 22:22:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-3-anup.patel@wdc.com>
- <63f65ddd-b7c4-b8fd-151c-a77e8c87efed@linaro.org> <CAAhSdy2oGAk6A6=SwgCgZ+trmzCMRPOCiB6ibDTL2A_1sUu1og@mail.gmail.com>
- <107e3ef3-9f61-05d1-7a91-95d0dc7ea7b8@linaro.org>
-In-Reply-To: <107e3ef3-9f61-05d1-7a91-95d0dc7ea7b8@linaro.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 22 Jul 2020 09:06:24 +0530
-Message-ID: <CAAhSdy0fmtaExqEx-7qW6Bpzu23d6A4OnUY7b785VJW_5a6rdA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] clocksource/drivers: Add CLINT timer driver
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Emil Renner Berhing <kernel@esmil.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200716220629.GA663054@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.241.127
+X-Source-L: No
+X-Exim-ID: 1jy5Fo-000qJI-JI
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.241.127]:22113
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 5:45 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 21/07/2020 13:49, Anup Patel wrote:
-> > On Tue, Jul 21, 2020 at 4:32 PM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 17/07/2020 09:50, Anup Patel wrote:
-> >>> We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
-> >>> RISC-V NoMMU kernel).
-> >>>
-> >>> The CLINT MMIO device provides three things:
-> >>> 1. 64bit free running counter register
-> >>> 2. 64bit per-CPU time compare registers
-> >>> 3. 32bit per-CPU inter-processor interrupt registers
-> >>>
-> >>> Unlike other timer devices, CLINT provides IPI registers along with
-> >>> timer registers. To use CLINT IPI registers, the CLINT timer driver
-> >>> provides IPI related callbacks to arch/riscv.
-> >>>
-> >>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >>> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> >>> ---
-> >>>  drivers/clocksource/Kconfig       |   9 ++
-> >>>  drivers/clocksource/Makefile      |   1 +
-> >>>  drivers/clocksource/timer-clint.c | 231 ++++++++++++++++++++++++++++=
-++
-> >>>  include/linux/cpuhotplug.h        |   1 +
-> >>>  4 files changed, 242 insertions(+)
-> >>>  create mode 100644 drivers/clocksource/timer-clint.c
-> >>>
-> >>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
-g
-> >>> index 91418381fcd4..e1ce0d510a03 100644
-> >>> --- a/drivers/clocksource/Kconfig
-> >>> +++ b/drivers/clocksource/Kconfig
-> >>> @@ -658,6 +658,15 @@ config RISCV_TIMER
-> >>>         is accessed via both the SBI and the rdcycle instruction.  Th=
-is is
-> >>>         required for all RISC-V systems.
-> >>>
-> >>> +config CLINT_TIMER
-> >>> +     bool "Timer for the RISC-V platform"
-> >>> +     depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
-> >>> +     select TIMER_PROBE
-> >>> +     select TIMER_OF
-> >>> +     help
-> >>> +       This option enables the CLINT timer for RISC-V systems. The C=
-LINT
-> >>> +       driver is usually used for NoMMU RISC-V systems.
-> >>
-> >> V3 has a comment about fixing the Kconfig option.
-> >
-> > I have removed "default y" from the Kconfig option as-per your suggesti=
-ons.
-> >
-> > I looked at other Timer Kconfig options. Most of them have menuconfig n=
-ame.
-> > Also, we can certainly have different timer MMIO timer drivers in futur=
-e. Do
-> > you still insist on making this kconfig option totally silent ??
->
-> Yes, and there is an effort to change the entries to be silent as much
-> as possible.
->
-> Just add:
->
->         bool "Timer for the RISC-V platform" if COMPILE_TEST
+Hi Bjorn,
 
-Okay, I will update.
+On 7/16/20 17:06, Bjorn Helgaas wrote:
+> On Thu, Jul 16, 2020 at 04:10:52PM -0500, Gustavo A. R. Silva wrote:
+>> Replace the existing /* fall through */ comments and its variants with
+>> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+>> fall-through markings when it is the case.
+>>
+>> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> 
+> Hi Gustavo,
+> 
+> I'm certainly fine with these patches, and thanks for doing them!
+> 
+> And thanks for providing a link to the rationale.  But the URL
+> contains "latest", so I think it may break if deprecated.rst or the
+> section is ever renamed.
+> 
+> I think I would prefer if we could reference the current text, e.g.,
+> via
+> 
+>   https://www.kernel.org/doc/html/v5.7-rc7/process/deprecated.html#implicit-switch-case-fall-through
+> 
 
->
-> and remove the RISCV_M_MODE dependency.
+I already sent v2 with a URL to proper documentation for Linux v5.7:
 
-CLINT driver depends on RISC-V specific symbols from asm/smp.h
-so we should at least have "depends on RISCV" so that compile
-test does not fail.
+https://lore.kernel.org/lkml/20200722031903.GA3711@embeddedor/
 
-Agree ??
+> (The v5.7 doc would be better but doesn't seem to be generated yet; I
+> pinged the helpdesk about that.)
+> 
 
->
-> Or alternatively:
->
-> replace the RISCV_M_MODE dependency with COMPILE_TEST
->
-> The goal is to be able to compile the driver on different platforms for
-> compilation test covering.
+Thanks for doing that. I wasn't aware that one could ask helpdesk about this.
 
-Please see the above comment.
+--
+Gustavo
 
->
-> Then when more mmio drivers will added we will figure out.
->
-> >> [ ... ]
-> >>
-> >>> +{
-> >>> +     bool *registered =3D per_cpu_ptr(&clint_clock_event_registered,=
- cpu);
-> >>> +     struct clock_event_device *ce =3D per_cpu_ptr(&clint_clock_even=
-t, cpu);
-> >>> +
-> >>> +     if (!(*registered)) {
-> >>> +             ce->cpumask =3D cpumask_of(cpu);
-> >>> +             clockevents_config_and_register(ce, clint_timer_freq, 2=
-00,
-> >>> +                                              ULONG_MAX);
-> >>> +             *registered =3D true;
-> >>> +     }
-> >>
-> >>
-> >> I was unsure about the clockevents_config_and_register() multiple call=
-s
-> >> when doing the comment. It seems like it is fine to call it several
-> >> times and that is done in several places like riscv or arch_arm_timer.
-> >>
-> >> It is probably safe to drop the 'registered' code here, sorry for the
-> >> confusion.
-> >
-> > Okay, will revert these changes.
-> >
-> >>
-> >>> +     enable_percpu_irq(clint_timer_irq,
-> >>> +                       irq_get_trigger_type(clint_timer_irq));
-> >>> +     return 0;
-> >>> +}
-> >>> +
-> >>
-> >> [ ... ]
-> >>
-> >>
-> >> --
-> >> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
- ARM SoCs
-> >>
-> >> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> >> <http://twitter.com/#!/linaroorg> Twitter |
-> >> <http://www.linaro.org/linaro-blog/> Blog
-> >
-> > Regards,
-> > Anup
-> >
->
->
-> --
-> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for AR=
-M SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-
-Regards,
-Anup
