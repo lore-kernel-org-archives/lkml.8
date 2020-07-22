@@ -2,223 +2,95 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C31C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF56CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB8D20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RXUSEw8q"
+	by mail.kernel.org (Postfix) with ESMTP id A7C9B20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 15:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595431148;
+	bh=/TiSgQ7+mGcBPpF1YXT8hJhda7K3imzWGSSujsDQ3cs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GqKNYQ2ODi2tno7jmn4wsfGPw6UJ0i710VV0wbVwuHxqJ4YlzfvSDz+0KN3blAbHZ
+	 soW4ULJ6w+ZRwhf68tCLYCIzg04Ixp+RCgnFQcvSk4Kwr693KFzRa2O6m4buBHhZFi
+	 rIU56blvfmQMvuU2YEXcWGhLY2sJTZiDpMkyKZ64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732645AbgGVPRS (ORCPT
+        id S1732736AbgGVPTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbgGVPRR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 11:17:17 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81591C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:17:17 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id g37so2000490otb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 08:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GFIb9RkIl/5PngvU9D0g83i5c49gu3ClHdgFBkg+KM8=;
-        b=RXUSEw8qJFw8zLM/pCnMRbbGAaNGa6zJKqY2tKmsL3PX1BCaa3s3lIOXS2gBkQs1UB
-         dfezQ5FiOvR54RgsynRvuMmNUJqxnTxnC8kS3N1z5b7efvEqVJ7/2vT9mF4SDvhmnzDg
-         efRMbUpNZ1UUrXfwqg3k4U7dyLaEdiKBtaY0Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GFIb9RkIl/5PngvU9D0g83i5c49gu3ClHdgFBkg+KM8=;
-        b=YoPiwvJmXLK9i77LAnujDToTp+uv+onlliFopSfV4R3BZqhMqMCBiDSJvgXx1LMS/r
-         yll4257qXoj02cOP7KURuajTk0fXGs/+JaVV2WzgIFFzP9904EAkueEY4TiSfh5o2zxe
-         Pk3L+EVyzxNCfNQVWRM1xuWWEPCKyNOj7NKZAWl5YorK7yBffn522QLrO+hKfO+W76X2
-         gmpjugs4ob6xYBNj4W7Hk5a5OO2TAAYOBTWxHKnYzJKdcd2UOcSqgm7XT93iKyrQT/lv
-         rR7AvL9EqK3He/iYZcpRy/hFBMG8HUKVzdN0IjNiNyd0iQjYjiYAvCbUtQxqSNJHR8Th
-         CNVw==
-X-Gm-Message-State: AOAM533PvYZJnHPH9KiEyDymLOedGPfVaBR1cAgINGLHe9x9qcnNf9yC
-        GYTaxrk4qFkP7ATYTiRxTOUlG6LIwvTll0Aq568VVQ==
-X-Google-Smtp-Source: ABdhPJwq097xNK22VXYcucjcITK4+EiOAQwRfLVk02HO2+jzyTqyuSkROCzJkE/yY+59ufwNy6k+Z3mUhliCdhF0J+c=
-X-Received: by 2002:a05:6830:1613:: with SMTP id g19mr366916otr.303.1595431036827;
- Wed, 22 Jul 2020 08:17:16 -0700 (PDT)
+        Wed, 22 Jul 2020 11:19:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728046AbgGVPTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 11:19:06 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1729820717;
+        Wed, 22 Jul 2020 15:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595431146;
+        bh=/TiSgQ7+mGcBPpF1YXT8hJhda7K3imzWGSSujsDQ3cs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=il+qv/JbMMpP64vydR9x2Cl+6xC/AXVGURVPkCLkNF07YsL742I4Mk4XRIXp4wOgV
+         5T4YRH5ffWNjRq2fWBLjStGoxqqoEcFLdw+JYLUmoRGJydh1OWhKykh3ZMoAA7nSsY
+         4J20yMuPLBP1lB6yToLY0b3CFZpsZPOn7pKtNMDk=
+Date:   Wed, 22 Jul 2020 08:19:04 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Sriram Krishnan <srirakr2@cisco.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, mbumgard@cisco.com,
+        ugm@cisco.com, nimm@cisco.com, xe-linux-external@cisco.com,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] hv_netvsc: add support for vlans in AF_PACKET mode
+Message-ID: <20200722081904.4a924917@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200722070809.70876-1-srirakr2@cisco.com>
+References: <20200722070809.70876-1-srirakr2@cisco.com>
 MIME-Version: 1.0
-References: <20200722110411.ebkv6knvc6mzw5uf@smtp.gmail.com>
- <20200722120502.GK6419@phenom.ffwll.local> <20200722140604.27dfzfnzug5vb75r@smtp.gmail.com>
-In-Reply-To: <20200722140604.27dfzfnzug5vb75r@smtp.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 22 Jul 2020 17:17:05 +0200
-Message-ID: <CAKMK7uHWCnJ+3YnP2FwVGH6cEDkmPnH9ALjY_1R51QVs0HPG0Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
- pair on flush
-To:     Melissa Wen <melissa.srw@gmail.com>
-Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-usp@googlegroups.com, Trevor Woerner <twoerner@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 4:06 PM Melissa Wen <melissa.srw@gmail.com> wrote:
->
-> On 07/22, daniel@ffwll.ch wrote:
-> > On Wed, Jul 22, 2020 at 08:04:11AM -0300, Melissa Wen wrote:
-> > > This patch adds a missing drm_crtc_vblank_put op to the pair
-> > > drm_crtc_vblank_get/put (inc/decrement counter to guarantee vblanks).
-> > >
-> > > It clears the execution of the following kms_cursor_crc subtests:
-> > > 1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
-> > >    random, fast-moving])] - successful when running individually.
-> > > 2. pipe-A-cursor-dpms passes again
-> > > 3. pipe-A-cursor-suspend also passes
-> > >
-> > > The issue was initially tracked in the sequential execution of IGT
-> > > kms_cursor_crc subtest: when running the test sequence or one of its
-> > > subtests twice, the odd execs complete and the pairs get stuck in an
-> > > endless wait. In the IGT code, calling a wait_for_vblank before the start
-> > > of CRC capture prevented the busy-wait. But the problem persisted in the
-> > > pipe-A-cursor-dpms and -suspend subtests.
-> > >
-> > > Checking the history, the pipe-A-cursor-dpms subtest was successful when,
-> > > in vkms_atomic_commit_tail, instead of using the flip_done op, it used
-> > > wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
-> > > enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
-> > > blocking in the 2nd start of CRC capture, which may indicate that
-> > > something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
-> > > the crc setup was able to sync things and free all kms_cursor_crc
-> > > subtests.
-> > >
-> > > Tracing and comparing a clean run with a blocked one:
-> > > - in a clean one, vkms_crtc_atomic_flush enables vblanks;
-> > > - when blocked, only in next op, vkms_crtc_atomic_enable, the vblanks
-> > > started. Moreover, a series of vkms_vblank_simulate flow out until
-> > > disabling vblanks.
-> > > Also watching the steps of vkms_crtc_atomic_flush, when the very first
-> > > drm_crtc_vblank_get returned an error, the subtest crashed. On the other
-> > > hand, when vblank_get succeeded, the subtest completed. Finally, checking
-> > > the flush steps: it increases counter to hold a vblank reference (get),
-> > > but there isn't a op to decreased it and release vblanks (put).
-> > >
-> > > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > > Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> > > Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > index ac85e17428f8..a99d6b4a92dd 100644
-> > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > @@ -246,6 +246,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
-> > >
-> > >             spin_unlock(&crtc->dev->event_lock);
-> > >
-> > > +           drm_crtc_vblank_put(crtc);
-> >
-> > Uh so I reviewed this a bit more carefully now, and I dont think this is
-> > the correct bugfix. From the kerneldoc of drm_crtc_arm_vblank_event():
-> >
-> >  * Caller must hold a vblank reference for the event @e acquired by a
-> >  * drm_crtc_vblank_get(), which will be dropped when the next vblank arrives.
-> >
-> > So when we call drm_crtc_arm_vblank_event then the vblank_put gets called
-> > for us. And that's the only case where we successfully acquired a vblank
-> > interrupt reference since on failure of drm_crtc_vblank_get (0 indicates
-> > success for that function, failure negative error number) we directly send
-> > out the event.
-> >
-> > So something else fishy is going on, and now I'm totally confused why this
-> > even happens.
-> >
-> > We also have a pile of WARN_ON checks in drm_crtc_vblank_put to make sure
-> > we don't underflow the refcount, so it's also not that I think (except if
-> > this patch creates more WARNING backtraces).
-> >
-> > But clearly it changes behaviour somehow ... can you try to figure out
-> > what changes? Maybe print out the vblank->refcount at various points in
-> > the driver, and maybe also trace when exactly the fake vkms vblank hrtimer
-> > is enabled/disabled ...
->
-> :(
->
-> I can check these, but I also have other suspicions. When I place the
-> drm_crct_vblank_put out of the if (at the end of flush), it not only solve
-> the issue of blocking on kms_cursor_crc, but also the WARN_ON on kms_flip
-> doesn't appear anymore (a total cleanup). Just after:
->
-> vkms_output->composer_state = to_vkms_crtc_state(crtc->state);
->
-> looks like there is something stuck around here.
+On Wed, 22 Jul 2020 12:38:07 +0530 Sriram Krishnan wrote:
+> +	/* When using AF_PACKET we need to drop VLAN header from
+> +	 * the frame and update the SKB to allow the HOST OS
+> +	 * to transmit the 802.1Q packet
+> +	 */
+> +	if (skb->protocol == htons(ETH_P_8021Q)) {
+> +		u16 vlan_tci = 0;
+> +		skb_reset_mac_header(skb);
+> +		if (eth_type_vlan(eth_hdr(skb)->h_proto)) {
+> +			if (unlikely(__skb_vlan_pop(skb, &vlan_tci) != 0)) {
+> +				++net_device_ctx->eth_stats.vlan_error;
+> +				goto drop;
+> + 			}
+> +
+> +			__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
+> +			/* Update the NDIS header pkt lengths */
+> +			packet->total_data_buflen -= VLAN_HLEN;
+> +			packet->total_bytes -= VLAN_HLEN;
+> +			rndis_msg->msg_len = packet->total_data_buflen;
+> +			rndis_msg->msg.pkt.data_len = packet->total_data_buflen;
+> +		}
+> +	}
 
-Hm do you have the full WARNING for this? Maybe this gives me an idea
-what's going wrong.
+Please run checkpatch on your submissions:
 
-> Besides, there is a lock at atomic_begin:
->
->   /* This lock is held across the atomic commit to block vblank timer
->    * from scheduling vkms_composer_worker until the composer is updated
->    */
->   spin_lock_irq(&vkms_output->lock);
->
-> that seems to be released on atomic_flush and make me suspect something
-> missing on the composer update.
+WARNING: Missing a blank line after declarations
+#76: FILE: drivers/net/hyperv/netvsc_drv.c:614:
++		u16 vlan_tci = 0;
++		skb_reset_mac_header(skb);
 
-atomic_begin/atomic_flush are symmetric functions an always called
-around all the plane updates. So having the spin_lock in _begin and
-the spin_unlock in _flush should be symmetric and correct.
-
-If you want to make sure, recompile with CONFIG_PROVE_LOCKING, which
-should immmediately give you a huge splat in dmesg if there's anything
-unbalanced with locking.
-
-> I'll check all these things and come back with news (hope) :)
-
-Have fun chasing stuff :-)
-
-Cheers, Daniel
-
-
->
-> Thanks,
->
-> Melissa
-> >
-> > I'm totally confused about what's going on here now.
-> > -Daniel
-> >
-> > >             crtc->state->event = NULL;
-> > >     }
-> > >
-> > > --
-> > > 2.27.0
-> > >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+ERROR: code indent should use tabs where possible
+#81: FILE: drivers/net/hyperv/netvsc_drv.c:619:
++ ^I^I^I}$
