@@ -2,175 +2,293 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D14B722B42
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595451115;
-	bh=mF3MJR/qxIp+nbQ94v18XXzDQdmyapy79Ztw3OgQHqY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=JMZZJHM6Jqij03EZkjg+nZg7r+V6D5CWxUqIlsEs93OkZXkcugT8ompV/2RxSDd2f
-	 2MpZyDGQ0s15Sy8YrfL+SXiCms5FQfiJ2nxnqxw3PmkCdClRQ/40JxDlzYSMpAQo3n
-	 6Zd0IFDsI5/sVvH3OGElPBSRm56M9GQODc8Q7MHA=
+	by mail.kernel.org (Postfix) with ESMTP id 3B54F2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 20:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732997AbgGVUvy (ORCPT
+        id S1733013AbgGVUwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgGVUvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 16:51:54 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA2E2086A;
-        Wed, 22 Jul 2020 20:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595451113;
-        bh=mF3MJR/qxIp+nbQ94v18XXzDQdmyapy79Ztw3OgQHqY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=LOt9PSQbCV7kJfzvrITgn+PeMGQvLdPYxJidohLmszcAVI/qn9/VBXkx7hWk+fhyf
-         DtxojwwdqweQj0Cm6lIurQWh05VKrhVdwCQfqxCW616laYx65WjoIBG27PFWV9sRH+
-         2CtjRsT9PNcx0RXDAGjrbGveYyMvgpW5V7uBtn4g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 396663522AB9; Wed, 22 Jul 2020 13:51:53 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 13:51:53 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, will@kernel.org, hch@lst.de,
-        axboe@kernel.dk, chris@chris-wilson.co.uk, davem@davemloft.net,
-        kuba@kernel.org, fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [RFC][PATCH 0/9] smp: irq_work / smp_call_function rework
-Message-ID: <20200722205153.GB23360@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200722150149.525408253@infradead.org>
+        Wed, 22 Jul 2020 16:52:25 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:35268 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgGVUwY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 16:52:24 -0400
+Received: by mail-io1-f71.google.com with SMTP id i204so2631652ioa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 13:52:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JdIfjEHL+4A5TZ1xt8pLCAOTUkFCQbJUUrKsXuvdFP4=;
+        b=fiC47SDgZXwYeMlFsKxhfg/YFHauNqeXJEY+VXbWzsLELOXQbi1lF1hcWzvOz8DkSm
+         I35oBvG66BzURzqHlnkbXkHjpHlq4imyoIjQx43oFF8gSG9aLissCvJnwvvSkcrrcVye
+         WXaC2im88vjjznqy7KtGJb+6wP9FLIlOxm518ff5PoNT3m4MpP/oFQXfGOQIVd+a4sKO
+         HwHol9JQTKIdjr5oApUvnZ1FlGz/Ek5s6e5biIYJ8yHMsuNIWAf9VVs+iJdaRiENmmDQ
+         7OEF7x4KgzULLBex5HWt0XsrHWyUpZiVqDvABsYOparmGZXRgON5w/Bm/8WBg3ijnSMw
+         DVeQ==
+X-Gm-Message-State: AOAM5317c6pOMDeHNVFUzjVfCUoh/UyGjd1KJ6iti9rylj1Ua1p8ClWk
+        NHTGJYtetE0eMzVIvW3/QTQqB+QqYwPC7uazzcWVCGDl9/89
+X-Google-Smtp-Source: ABdhPJyaYmph2NjkUB1AEgB66swQU3JjWn1Fb28H9aqxkbGfTM+QSLu9sHe36kygZ6JaG9FixRcAH7Ue8yW+p/138HbMaGXCW8mD
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722150149.525408253@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a6b:bc41:: with SMTP id m62mr1498917iof.95.1595451142845;
+ Wed, 22 Jul 2020 13:52:22 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 13:52:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a03cc305ab0deaea@google.com>
+Subject: INFO: task hung in ovs_dp_masks_rebalance
+From:   syzbot <syzbot+bad6507e5db05017b008@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 05:01:49PM +0200, Peter Zijlstra wrote:
-> Hi,
-> 
-> Here are a number of patches that continue the irq_work / smp_call_function
-> integration / cleanup.
-> 
-> One of the biggest warts in this area is smp_call_function_single_async(); it
-> looks like a useful function but is incredibly hard to use correctly due to the
-> test-and-set LOCK on the csd not being atomic. This means you need to be
-> incredibly careful to not corrupt the csd.
-> 
-> Simple patterns like allowing any CPU to IPI any other CPU end up requiring
-> nr_cpu^2 storage because of this.
-> 
-> On top of that the csd has external data, vs the more common internal/embedded
-> data pattern.
-> 
-> Now, irq_work has the embedded data pattern, but requires arch support for
-> self-IPI. But because irq_work for remote CPUs relies on the smp_call_function
-> infrastructure we can implement a generic irq_work_queue_remote().
-> 
-> Then it goes a bit ugly, and I introduce irq_work_queue_remote_static() that is
-> non-atomic in exactly the same way smp_call_function_single_async() is now, but
-> at least it has embedded data. A few performance sensitive users of
-> smp_call_function_single_async() are converted.
-> 
-> Finally, smp_call_function_single_async() is made safer by using an atomic
-> test-and-set.
-> 
-> TL;DR, I think at least the first few patches should go in the next round, but
-> the rest can use some feedback.
+Hello,
 
-And scftorture doesn't much like the full set of patches.  Though this
-is early enough during boot that I am not sure that scftorture had much
-chance to do any real damage.
+syzbot found the following issue on:
 
-I started with next-20200722, and reverted these three commits per our
-IRC discussion:
+HEAD commit:    fa56a987 Merge branch 'ionic-updates'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1105f053100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2b7b67c0c1819c87
+dashboard link: https://syzkaller.appspot.com/bug?extid=bad6507e5db05017b008
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-c1c8004b7415 ("smp: Make symbol 'csd_bug_count' static")
-1af4b06012bd ("kernel/smp: Provide CSD lock timeout diagnostics")
-e327200d9d75 ("smp: Add source and destination CPUs to __call_single_data")
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I ran scftorture using the following command on my 12-hardware-thread
-x86 laptop:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bad6507e5db05017b008@syzkaller.appspotmail.com
 
-tools/testing/selftests/rcutorture/bin/kvm.sh --torture scf --allcpus --duration 2 --trust-make
+INFO: task kworker/1:8:10136 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/1:8     D27336 10136      2 0x00004000
+Workqueue: events ovs_dp_masks_rebalance
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+INFO: task kworker/0:9:8606 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/0:9     D27792  8606      2 0x00004000
+Workqueue: events ovs_dp_masks_rebalance
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+INFO: task syz-executor.2:9414 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.2  D27832  9414   7005 0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_dp_cmd_new+0x69d/0x1160 net/openvswitch/datapath.c:1690
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2363
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c1f9
+Code: Bad RIP value.
+RSP: 002b:00007f864e02dc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000000002b400 RCX: 000000000045c1f9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+R13: 00007ffc8c137ccf R14: 00007f864e02e9c0 R15: 000000000078bf0c
+INFO: task syz-executor.2:9422 blocked for more than 144 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.2  D27040  9422   7005 0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1873
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+ __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
+ __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
+ ovs_dp_cmd_del+0x18c/0x270 net/openvswitch/datapath.c:1790
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2363
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c1f9
+Code: Bad RIP value.
+RSP: 002b:00007f864e00cc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000000002b400 RCX: 000000000045c1f9
+RDX: 0000000000000000 RSI: 0000000020001980 RDI: 0000000000000004
+RBP: 000000000078bfe0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
+R13: 00007ffc8c137ccf R14: 00007f864e00d9c0 R15: 000000000078bfac
+INFO: task syz-executor.2:9427 blocked for more than 144 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.2  D27688  9427   7005 0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2363
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c1f9
+Code: Bad RIP value.
+RSP: 002b:00007f864dfebc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000000002b400 RCX: 000000000045c1f9
+RDX: 0000000000000000 RSI: 0000000020001980 RDI: 0000000000000004
+RBP: 000000000078c080 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078c04c
+R13: 00007ffc8c137ccf R14: 00007f864dfec9c0 R15: 000000000078c04c
 
-Rerunning this on top of the last of the above reverts completed with
-no drama, as in no complaints and "echo $?" said "0".
+Showing all locks held in the system:
+1 lock held by khungtaskd/1147:
+ #0: ffffffff89bc0ec0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
+1 lock held by in:imklog/6505:
+ #0: ffff888095ffe8b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
+3 locks held by kworker/1:8/10136:
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc900017f7da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+ #2: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #2: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+3 locks held by kworker/0:9/8606:
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90016617da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+ #2: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #2: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+2 locks held by syz-executor.2/9414:
+ #0: ffffffff8a817810 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+ #1: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #1: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_new+0x69d/0x1160 net/openvswitch/datapath.c:1690
+2 locks held by syz-executor.2/9422:
+ #0: ffffffff8a817810 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+ #1: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #1: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
+2 locks held by syz-executor.2/9427:
+ #0: ffffffff8a817810 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+ #1: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #1: ffffffff8aa5d868 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
 
-Does this reproduce at your end?  If not, any debug code I should apply
-or debug options I should enable?
+=============================================
 
-						Thanx, Paul
+NMI backtrace for cpu 1
+CPU: 1 PID: 1147 Comm: khungtaskd Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:209 [inline]
+ watchdog+0xd7d/0x1000 kernel/hung_task.c:295
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 3875 Comm: systemd-journal Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0033:0x7fad4c407b07
+Code: Bad RIP value.
+RSP: 002b:00007ffef2a78c90 EFLAGS: 00000206
+RAX: 00000000ffffffea RBX: 00005556a5c274b0 RCX: fffffffffffffe00
+RDX: 00000000000001a0 RSI: 0000000000000001 RDI: 00005556a5c274b0
+RBP: 0000000000000000 R08: 00000000000001c0 R09: 00000000ffffffff
+R10: 0000000000000069 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000fffffffe R14: 00007ffef2a78f90 R15: 00005556a5c274b0
+FS:  00007fad4c7198c0 GS:  0000000000000000
 
-------------------------------------------------------------------------
 
-[    1.230832] BUG: unable to handle page fault for address: 00000002000009f1
-[    1.231342] #PF: supervisor read access in kernel mode
-[    1.231705] #PF: error_code(0x0000) - not-present page
-[    1.231818] PGD 0 P4D 0 
-[    1.231818] Oops: 0000 [#1] SMP PTI
-[    1.231818] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.8.0-rc6-next-20200722+ #4
-[    1.231818] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.10.2-1ubuntu1 04/01/2014
-[    1.231818] RIP: 0010:nohz_work_func+0x0/0xa0
-[    1.231818] Code: e8 35 52 ff ff 48 89 c3 eb 93 8b 43 70 89 44 24 04 eb c2 48 c7 c0 ea ff ff ff eb 94 e8 c9 02 a7 00 66 0f 1f 84 00 00 00 00 00 <4c> 63 8f f0 09 00 00 48 c7 c1 00 91 02 00 48 89 ca 4a 03 14 cd e0
-[    1.231818] RSP: 0000:ffff8fa4c0130fb8 EFLAGS: 00010086
-[    1.231818] RAX: ffff8d505f2a9118 RBX: 0000000000000000 RCX: ffff8d505f2a9118
-[    1.231818] RDX: ffffffff8f692330 RSI: 0000000000000000 RDI: 0000000200000001
-[    1.231818] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000028980
-[    1.231818] R10: ffff8fa4c0077dc0 R11: 0000000000000000 R12: 0000000000000000
-[    1.231818] R13: ffff8d505f2a9118 R14: 0000000000000000 R15: 0000000000000000
-[    1.238055] FS:  0000000000000000(0000) GS:ffff8d505f280000(0000) knlGS:0000000000000000
-[    1.238055] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.238055] CR2: 00000002000009f1 CR3: 000000001440a000 CR4: 00000000000006e0
-[    1.238055] Call Trace:
-[    1.238055]  <IRQ>
-[    1.238055]  flush_smp_call_function_queue+0xc4/0x1e0
-[    1.238055]  __sysvec_call_function_single+0x28/0xb0
-[    1.238055]  asm_call_on_stack+0x12/0x20
-[    1.238055]  </IRQ>
-[    1.238055]  sysvec_call_function_single+0x52/0x80
-[    1.238055]  asm_sysvec_call_function_single+0x12/0x20
-[    1.238055] RIP: 0010:default_idle+0x20/0x140
-[    1.238055] Code: 9f ff ff cc cc cc cc cc cc cc 41 55 41 54 55 53 65 8b 2d e3 8c f0 6f 0f 1f 44 00 00 e9 07 00 00 00 0f 00 2d 54 d4 4f 00 fb f4 <65> 8b 2d c9 8c f0 6f 0f 1f 44 00 00 5b 5d 41 5c 41 5d c3 65 8b 05
-[    1.238055] RSP: 0000:ffff8fa4c0077ed0 EFLAGS: 00000246
-[    1.238055] RAX: ffffffff90108670 RBX: 0000000000000002 RCX: 7fffffffb80ea43f
-[    1.238055] RDX: 00000000000cc596 RSI: 0000000000000002 RDI: ffff8d505f29e460
-[    1.238055] RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-[    1.238055] R10: ffff8fa4c0077eb0 R11: 0000000000000000 R12: 0000000000000000
-[    1.238055] R13: 0000000000000000 R14: ffffffffffffffff R15: ffff8d505ed3a700
-[    1.238055]  ? __sched_text_end+0x7/0x7
-[    1.238055]  do_idle+0x1ca/0x2b0
-[    1.238055]  cpu_startup_entry+0x14/0x20
-[    1.238055]  secondary_startup_64+0xb6/0xc0
-[    1.238055] Modules linked in:
-[    1.238055] CR2: 00000002000009f1
-[    1.238055] ---[ end trace d53a363244ab3d2f ]---
-[    1.238055] RIP: 0010:nohz_work_func+0x0/0xa0
-[    1.238055] Code: e8 35 52 ff ff 48 89 c3 eb 93 8b 43 70 89 44 24 04 eb c2 48 c7 c0 ea ff ff ff eb 94 e8 c9 02 a7 00 66 0f 1f 84 00 00 00 00 00 <4c> 63 8f f0 09 00 00 48 c7 c1 00 91 02 00 48 89 ca 4a 03 14 cd e0
-[    1.238055] RSP: 0000:ffff8fa4c0130fb8 EFLAGS: 00010086
-[    1.238055] RAX: ffff8d505f2a9118 RBX: 0000000000000000 RCX: ffff8d505f2a9118
-[    1.238055] RDX: ffffffff8f692330 RSI: 0000000000000000 RDI: 0000000200000001
-[    1.238055] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000028980
-[    1.238055] R10: ffff8fa4c0077dc0 R11: 0000000000000000 R12: 0000000000000000
-[    1.238055] R13: ffff8d505f2a9118 R14: 0000000000000000 R15: 0000000000000000
-[    1.238055] FS:  0000000000000000(0000) GS:ffff8d505f280000(0000) knlGS:0000000000000000
-[    1.238055] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.238055] CR2: 00000002000009f1 CR3: 000000001440a000 CR4: 00000000000006e0
-[    1.238055] Kernel panic - not syncing: Fatal exception in interrupt
-[    1.238055] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
