@@ -2,433 +2,148 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486E5C433FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC37C433EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8B720825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5902322B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zg0vq9Ti";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9buLFMn5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="c6Y2N2ZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387580AbgGVWNq (ORCPT
+        id S1733038AbgGVWNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:13:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52552 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733043AbgGVWLh (ORCPT
+        Wed, 22 Jul 2020 18:13:50 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:3176 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733145AbgGVWLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 18:11:37 -0400
-Message-Id: <20200722220520.376213694@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595455895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=td4EcViVgIbqmwFGO8ok/DI/Q7YXvTz9qL23irAwY9k=;
-        b=Zg0vq9Tik/JSO9E0M9sxOOUlRHmeK2GTajX0gn4WHbpVENYUgcbs6iMl8nfOCamE5r+Hcb
-        n5zc5rrUPfyuZ5YDmkX7zAgLjO0ybod/VQbw1FhaEmjp4kJia86e3bLiG6ISkPsA+nasYY
-        Wjm7ye7QZm/aawY4N/eSrCd41mzQjpXPc/peZ+p0qMEglAzLyIRp1NTtD/4oOxIV3dCrgf
-        TjdQWVOC9pEsPfYKvsBaFW/HMRTcLW0uDXvOCBjZLSt3mi8tvdwpn9SQ7lxH9QV9tKGK2j
-        TYxKUyeiHoYLYpxpZAR4ApLoBa7TUmTawRKpoUGHSdfAdhdpexdMBckC/D5xYw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595455895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=td4EcViVgIbqmwFGO8ok/DI/Q7YXvTz9qL23irAwY9k=;
-        b=9buLFMn53JF/YBP+ygHbzApc5kmLymX7oaITjTsD3DoNasupjyqnEzlcEov+m0gmHlrve2
-        IKAz1bj1prAIXaDg==
-Date:   Thu, 23 Jul 2020 00:00:04 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V5 10/15] x86/entry: Use generic syscall entry function
-References: <20200722215954.464281930@linutronix.de>
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM6f3D019802;
+        Wed, 22 Jul 2020 15:11:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=GmEgsOs6h9b3iKtTR1f7ZzvpfMSp6NwSWPeac8kAzwo=;
+ b=c6Y2N2ZLJaqT0j2CraOBXVCGB54OVxNENrQe1pxef7nuy7vMViODmBvNTRXbaMp3sZp3
+ 3AEuvZx++ODlRoSWQLe+q0KSXs3XgtfUUFaMhwYvNr9mgkMJ/e+mSbjR5jpBr0jkZ7Nf
+ UnMNG1OuYMSgPqL+ZMe0JLbzKueUZKHtjYHA4fmIuTnx4I57Z5lFqr3H2D2cGJZfIIJr
+ z/asPlY/0afpipBkcpWjhdNTWx/x6Z/2GFThL7r/UGqmLfll2ltBC1jdeCMUSN/o2Gfy
+ 9JuHCjVu2MP53bTYHB+AdMxSTHgxHDYwE4+dyIx8NnjNIm2UejAEi9mhsEAEIpdCU0Mu 5Q== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkt0jr-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 15:11:21 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 15:11:20 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 15:11:19 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 15:11:19 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id A61E43F7040;
+        Wed, 22 Jul 2020 15:11:12 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "Doug Ledford" <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Jesper Dangaard Brouer" <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 net-next 02/15] qed: reformat Makefile
+Date:   Thu, 23 Jul 2020 01:10:32 +0300
+Message-ID: <20200722221045.5436-3-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
+References: <20200722221045.5436-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+List one entry per line and sort them alphabetically to simplify the
+addition of the new ones.
 
-Replace the syscall entry work handling with the generic version. Provide
-the necessary helper inlines to handle the real architecture specific
-parts, e.g. ptrace.
-
-Use a temporary define for idtentry_enter_user which will be cleaned up
-seperately.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 ---
-V4: Drop the seccomp/audit wrappers as they are not longer required (Kees)
+ drivers/net/ethernet/qlogic/qed/Makefile | 36 +++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 7 deletions(-)
 
-V3: Adapt to the noinstr changes
----
- arch/x86/Kconfig                    |    1 
- arch/x86/entry/common.c             |  181 +-----------------------------------
- arch/x86/include/asm/entry-common.h |   32 ++++++
- arch/x86/include/asm/idtentry.h     |    5 
- arch/x86/include/asm/thread_info.h  |    5 
- 5 files changed, 45 insertions(+), 179 deletions(-)
-
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -115,6 +115,7 @@ config X86
- 	select GENERIC_CPU_AUTOPROBE
- 	select GENERIC_CPU_VULNERABILITIES
- 	select GENERIC_EARLY_IOREMAP
-+	select GENERIC_ENTRY
- 	select GENERIC_FIND_FIRST_BIT
- 	select GENERIC_IOMAP
- 	select GENERIC_IRQ_EFFECTIVE_AFF_MASK	if SMP
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -10,13 +10,13 @@
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/sched/task_stack.h>
-+#include <linux/entry-common.h>
- #include <linux/mm.h>
- #include <linux/smp.h>
- #include <linux/errno.h>
- #include <linux/ptrace.h>
- #include <linux/tracehook.h>
- #include <linux/audit.h>
--#include <linux/seccomp.h>
- #include <linux/signal.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-@@ -42,70 +42,8 @@
- #include <asm/syscall.h>
- #include <asm/irq_stack.h>
+diff --git a/drivers/net/ethernet/qlogic/qed/Makefile b/drivers/net/ethernet/qlogic/qed/Makefile
+index 4176bbf2a22b..3c75e4fa9b02 100644
+--- a/drivers/net/ethernet/qlogic/qed/Makefile
++++ b/drivers/net/ethernet/qlogic/qed/Makefile
+@@ -3,12 +3,34 @@
  
--#define CREATE_TRACE_POINTS
- #include <trace/events/syscalls.h>
+ obj-$(CONFIG_QED) := qed.o
  
--/* Check that the stack and regs on entry from user mode are sane. */
--static noinstr void check_user_regs(struct pt_regs *regs)
--{
--	if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
--		/*
--		 * Make sure that the entry code gave us a sensible EFLAGS
--		 * register.  Native because we want to check the actual CPU
--		 * state, not the interrupt state as imagined by Xen.
--		 */
--		unsigned long flags = native_save_fl();
--		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
--				      X86_EFLAGS_NT));
--
--		/* We think we came from user mode. Make sure pt_regs agrees. */
--		WARN_ON_ONCE(!user_mode(regs));
--
--		/*
--		 * All entries from user mode (except #DF) should be on the
--		 * normal thread stack and should have user pt_regs in the
--		 * correct location.
--		 */
--		WARN_ON_ONCE(!on_thread_stack());
--		WARN_ON_ONCE(regs != task_pt_regs(current));
--	}
--}
--
--#ifdef CONFIG_CONTEXT_TRACKING
--/**
-- * enter_from_user_mode - Establish state when coming from user mode
-- *
-- * Syscall entry disables interrupts, but user mode is traced as interrupts
-- * enabled. Also with NO_HZ_FULL RCU might be idle.
-- *
-- * 1) Tell lockdep that interrupts are disabled
-- * 2) Invoke context tracking if enabled to reactivate RCU
-- * 3) Trace interrupts off state
-- */
--static noinstr void enter_from_user_mode(struct pt_regs *regs)
--{
--	enum ctx_state state = ct_state();
--
--	check_user_regs(regs);
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	user_exit_irqoff();
--
--	instrumentation_begin();
--	CT_WARN_ON(state != CONTEXT_USER);
--	trace_hardirqs_off_finish();
--	instrumentation_end();
--}
--#else
--static __always_inline void enter_from_user_mode(struct pt_regs *regs)
--{
--	check_user_regs(regs);
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	instrumentation_begin();
--	trace_hardirqs_off_finish();
--	instrumentation_end();
--}
--#endif
--
- /**
-  * exit_to_user_mode - Fixup state when exiting to user mode
-  *
-@@ -129,83 +67,6 @@ static __always_inline void exit_to_user
- 	lockdep_hardirqs_on(CALLER_ADDR0);
- }
- 
--static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
--{
--#ifdef CONFIG_X86_64
--	if (arch == AUDIT_ARCH_X86_64) {
--		audit_syscall_entry(regs->orig_ax, regs->di,
--				    regs->si, regs->dx, regs->r10);
--	} else
--#endif
--	{
--		audit_syscall_entry(regs->orig_ax, regs->bx,
--				    regs->cx, regs->dx, regs->si);
--	}
--}
--
--/*
-- * Returns the syscall nr to run (which should match regs->orig_ax) or -1
-- * to skip the syscall.
-- */
--static long syscall_trace_enter(struct pt_regs *regs)
--{
--	u32 arch = in_ia32_syscall() ? AUDIT_ARCH_I386 : AUDIT_ARCH_X86_64;
--
--	struct thread_info *ti = current_thread_info();
--	unsigned long ret = 0;
--	u32 work;
--
--	work = READ_ONCE(ti->flags);
--
--	if (work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
--		ret = tracehook_report_syscall_entry(regs);
--		if (ret || (work & _TIF_SYSCALL_EMU))
--			return -1L;
--	}
--
--#ifdef CONFIG_SECCOMP
--	/*
--	 * Do seccomp after ptrace, to catch any tracer changes.
--	 */
--	if (work & _TIF_SECCOMP) {
--		struct seccomp_data sd;
--
--		sd.arch = arch;
--		sd.nr = regs->orig_ax;
--		sd.instruction_pointer = regs->ip;
--#ifdef CONFIG_X86_64
--		if (arch == AUDIT_ARCH_X86_64) {
--			sd.args[0] = regs->di;
--			sd.args[1] = regs->si;
--			sd.args[2] = regs->dx;
--			sd.args[3] = regs->r10;
--			sd.args[4] = regs->r8;
--			sd.args[5] = regs->r9;
--		} else
--#endif
--		{
--			sd.args[0] = regs->bx;
--			sd.args[1] = regs->cx;
--			sd.args[2] = regs->dx;
--			sd.args[3] = regs->si;
--			sd.args[4] = regs->di;
--			sd.args[5] = regs->bp;
--		}
--
--		ret = __secure_computing(&sd);
--		if (ret == -1)
--			return ret;
--	}
--#endif
--
--	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
--		trace_sys_enter(regs, regs->orig_ax);
--
--	do_audit_syscall_entry(regs, arch);
--
--	return ret ?: regs->orig_ax;
--}
--
- #define EXIT_TO_USERMODE_LOOP_FLAGS				\
- 	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |	\
- 	 _TIF_NEED_RESCHED | _TIF_PATCH_PENDING)
-@@ -366,26 +227,10 @@ static void __syscall_return_slowpath(st
- 	exit_to_user_mode();
- }
- 
--static noinstr long syscall_enter(struct pt_regs *regs, unsigned long nr)
--{
--	struct thread_info *ti;
--
--	enter_from_user_mode(regs);
--	instrumentation_begin();
--
--	local_irq_enable();
--	ti = current_thread_info();
--	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
--		nr = syscall_trace_enter(regs);
--
--	instrumentation_end();
--	return nr;
--}
--
- #ifdef CONFIG_X86_64
- __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
- {
--	nr = syscall_enter(regs, nr);
-+	nr = syscall_enter_from_user_mode(regs, nr);
- 
- 	instrumentation_begin();
- 	if (likely(nr < NR_syscalls)) {
-@@ -407,6 +252,8 @@ static noinstr long syscall_enter(struct
- #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
- static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
- {
-+	unsigned int nr = (unsigned int)regs->orig_ax;
+-qed-y := qed_cxt.o qed_dev.o qed_hw.o qed_init_fw_funcs.o qed_init_ops.o \
+-	 qed_int.o qed_main.o qed_mcp.o qed_sp_commands.o qed_spq.o qed_l2.o \
+-	 qed_selftest.o qed_dcbx.o qed_debug.o qed_ptp.o qed_mng_tlv.o
+-qed-$(CONFIG_QED_SRIOV) += qed_sriov.o qed_vf.o
+-qed-$(CONFIG_QED_LL2) += qed_ll2.o
+-qed-$(CONFIG_QED_RDMA) += qed_roce.o qed_rdma.o qed_iwarp.o
+-qed-$(CONFIG_QED_ISCSI) += qed_iscsi.o
++qed-y :=			\
++	qed_cxt.o		\
++	qed_dcbx.o		\
++	qed_debug.o		\
++	qed_dev.o		\
++	qed_hw.o		\
++	qed_init_fw_funcs.o	\
++	qed_init_ops.o		\
++	qed_int.o		\
++	qed_l2.o		\
++	qed_main.o		\
++	qed_mcp.o		\
++	qed_mng_tlv.o		\
++	qed_ptp.o		\
++	qed_selftest.o		\
++	qed_sp_commands.o	\
++	qed_spq.o
 +
- 	if (IS_ENABLED(CONFIG_IA32_EMULATION))
- 		current_thread_info()->status |= TS_COMPAT;
- 	/*
-@@ -414,7 +261,7 @@ static __always_inline unsigned int sysc
- 	 * orig_ax, the unsigned int return value truncates it.  This may
- 	 * or may not be necessary, but it matches the old asm behavior.
- 	 */
--	return syscall_enter(regs, (unsigned int)regs->orig_ax);
-+	return (unsigned int)syscall_enter_from_user_mode(regs, nr);
- }
- 
- /*
-@@ -568,7 +415,7 @@ SYSCALL_DEFINE0(ni_syscall)
-  * solves the problem of kernel mode pagefaults which can schedule, which
-  * is not possible after invoking rcu_irq_enter() without undoing it.
-  *
-- * For user mode entries enter_from_user_mode() must be invoked to
-+ * For user mode entries irqentry_enter_from_user_mode() must be invoked to
-  * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
-  * would not be possible.
-  *
-@@ -584,7 +431,7 @@ idtentry_state_t noinstr idtentry_enter(
- 	};
- 
- 	if (user_mode(regs)) {
--		enter_from_user_mode(regs);
-+		irqentry_enter_from_user_mode(regs);
- 		return ret;
- 	}
- 
-@@ -615,7 +462,7 @@ idtentry_state_t noinstr idtentry_enter(
- 		/*
- 		 * If RCU is not watching then the same careful
- 		 * sequence vs. lockdep and tracing is required
--		 * as in enter_from_user_mode().
-+		 * as in irqentry_enter_from_user_mode().
- 		 */
- 		lockdep_hardirqs_off(CALLER_ADDR0);
- 		rcu_irq_enter();
-@@ -709,18 +556,6 @@ void noinstr idtentry_exit(struct pt_reg
- }
- 
- /**
-- * idtentry_enter_user - Handle state tracking on idtentry from user mode
-- * @regs:	Pointer to pt_regs of interrupted context
-- *
-- * Invokes enter_from_user_mode() to establish the proper context for
-- * NOHZ_FULL. Otherwise scheduling on exit would not be possible.
-- */
--void noinstr idtentry_enter_user(struct pt_regs *regs)
--{
--	enter_from_user_mode(regs);
--}
--
--/**
-  * idtentry_exit_user - Handle return from exception to user mode
-  * @regs:	Pointer to pt_regs (exception entry regs)
-  *
---- /dev/null
-+++ b/arch/x86/include/asm/entry-common.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_X86_ENTRY_COMMON_H
-+#define _ASM_X86_ENTRY_COMMON_H
+ qed-$(CONFIG_QED_FCOE) += qed_fcoe.o
++qed-$(CONFIG_QED_ISCSI) += qed_iscsi.o
++qed-$(CONFIG_QED_LL2) += qed_ll2.o
+ qed-$(CONFIG_QED_OOO) += qed_ooo.o
 +
-+/* Check that the stack and regs on entry from user mode are sane. */
-+static __always_inline void arch_check_user_regs(struct pt_regs *regs)
-+{
-+	if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
-+		/*
-+		 * Make sure that the entry code gave us a sensible EFLAGS
-+		 * register.  Native because we want to check the actual CPU
-+		 * state, not the interrupt state as imagined by Xen.
-+		 */
-+		unsigned long flags = native_save_fl();
-+		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
-+				      X86_EFLAGS_NT));
++qed-$(CONFIG_QED_RDMA) +=	\
++	qed_iwarp.o		\
++	qed_rdma.o		\
++	qed_roce.o
 +
-+		/* We think we came from user mode. Make sure pt_regs agrees. */
-+		WARN_ON_ONCE(!user_mode(regs));
-+
-+		/*
-+		 * All entries from user mode (except #DF) should be on the
-+		 * normal thread stack and should have user pt_regs in the
-+		 * correct location.
-+		 */
-+		WARN_ON_ONCE(!on_thread_stack());
-+		WARN_ON_ONCE(regs != task_pt_regs(current));
-+	}
-+}
-+#define arch_check_user_regs arch_check_user_regs
-+
-+#endif
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -6,11 +6,14 @@
- #include <asm/trapnr.h>
- 
- #ifndef __ASSEMBLY__
-+#include <linux/entry-common.h>
- #include <linux/hardirq.h>
- 
- #include <asm/irq_stack.h>
- 
--void idtentry_enter_user(struct pt_regs *regs);
-+/* Temporary define */
-+#define idtentry_enter_user	irqentry_enter_from_user_mode
-+
- void idtentry_exit_user(struct pt_regs *regs);
- 
- typedef struct idtentry_state {
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -133,11 +133,6 @@ struct thread_info {
- #define _TIF_X32		(1 << TIF_X32)
- #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
- 
--/* Work to do before invoking the actual syscall. */
--#define _TIF_WORK_SYSCALL_ENTRY	\
--	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU | _TIF_SYSCALL_AUDIT |	\
--	 _TIF_SECCOMP | _TIF_SYSCALL_TRACEPOINT)
--
- /* flags to check in __switch_to() */
- #define _TIF_WORK_CTXSW_BASE					\
- 	(_TIF_NOCPUID | _TIF_NOTSC | _TIF_BLOCKSTEP |		\
-
++qed-$(CONFIG_QED_SRIOV) +=	\
++	qed_sriov.o		\
++	qed_vf.o
+-- 
+2.25.1
 
