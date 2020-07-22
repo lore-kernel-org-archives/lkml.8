@@ -2,151 +2,141 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A9C20771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D3F20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 05:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PEulbgQ/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A91MMATI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgGVFvN (ORCPT
+        id S1728076AbgGVFws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:51:13 -0400
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:6581
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726696AbgGVFvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 01:51:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TqNsTY8QgGWkB4f4EcBnYuea8Nq+rQBuk2DW2N5BMUCMwEMmsadqDjtCN/dB7K4y7dIwSA0EdkP6Vq6hIE2INlxeEaVRmDZJbgrvXCwwOOvD60hfU9dZQ7PAAqoLOjAZRb1hsQlA6qRwAypyl/QsSmqpmRImg9pI53EFrk4m/hsPeDKEgxfcVu5bsabGTPVzhy3+LKwfCOA4aTXpyUMe6j7OgCwSkuy0pWzPVcXHLVNuRz5EBv3bCi4SL8jGA/jxaSyIlM37DDG+XvnrLpZ8sm3t5h3ZxR3mo7cxwlQPOwu0v5r4zA9nSc8BGXNxMquyrztgGAaV3hHkfu9TDP/wug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jsox7AyRBmsmUDNT1vBINDujvgr4gegjQJQdhcDSKB4=;
- b=gDHE2p/3p3p2CsMJPlxrXmi9MuBCwlfJPL7F5bdxEgS6R7CE7psdCdyiinbhEawxHUab7lax70J4RMZy2utfUSmITTGfZhK6JyB9BHTl5j3qc5hsIapvCdc43vV4oOs5vGopbYGS0K9t7AtgbyY5p0y1FZ36A6PHnNwZa453K9ZsKVtes9bP5I3REnHCvRas7xa4VnQmXBUs8KuOKFQgu7ETZVteu2etKErV09otitVp3WQkxmw4yNl3W7xl+ZAT5nx+abvCJZwMCgjcLKZsuKWBSo3bK35aHvAPoFgE30kO6n2uvhyKpLqJluiCfNjzfRoN2FjuSgpwn3iZsTQ/VQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jsox7AyRBmsmUDNT1vBINDujvgr4gegjQJQdhcDSKB4=;
- b=PEulbgQ/ZV5zT+zuJIo87BoYV8UKdUG/9k+qVed5swtCIH2qbKsGfU/akqzT2VjGL8hLLtf8sr9lMuCIkNXF2eJrVB2oog8lCpC87Lblb0wEGkJYQ35Gpaa+SAqwZZ6vzpCHJCYiqs7Kef3ZIjSeFYh6mRtvTF6hiRUleYiRWR0=
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
- by VI1PR04MB7199.eurprd04.prod.outlook.com (2603:10a6:800:11d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Wed, 22 Jul
- 2020 05:51:07 +0000
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7]) by VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::596d:cc81:f48a:daf7%2]) with mapi id 15.20.3216.022; Wed, 22 Jul 2020
- 05:51:07 +0000
-From:   Hongbo Wang <hongbo.wang@nxp.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "idosch@idosch.org" <idosch@idosch.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "nikolay@cumulusnetworks.com" <nikolay@cumulusnetworks.com>,
-        "roopa@cumulusnetworks.com" <roopa@cumulusnetworks.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
-Subject: RE: [EXT] Re: [PATCH] net: dsa: Add protocol support for 802.1AD when
- adding or deleting vlan for dsa switch and port
-Thread-Topic: [EXT] Re: [PATCH] net: dsa: Add protocol support for 802.1AD
- when adding or deleting vlan for dsa switch and port
-Thread-Index: AQHWX04EMH7CLqtpZku3cp2AmKugOqkSUZOAgADHLiA=
-Date:   Wed, 22 Jul 2020 05:51:07 +0000
-Message-ID: <VI1PR04MB5103BD1A1ED530D0720CE594E1790@VI1PR04MB5103.eurprd04.prod.outlook.com>
-References: <20200721110214.15268-1-hongbo.wang@nxp.com>
- <eaf6e25a-4e64-1ffe-972a-9d309d307294@gmail.com>
-In-Reply-To: <eaf6e25a-4e64-1ffe-972a-9d309d307294@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e79d85c1-4fbf-43b6-5133-08d82e033ab5
-x-ms-traffictypediagnostic: VI1PR04MB7199:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB7199353F4FBDAC6C8633B16FE1790@VI1PR04MB7199.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AFIKgVNTlaFlnuyT3qMGN/PGhOEAyKAjCSMnZvrDJYgUpuuJlNK2lvFafx7js9DaLn8vv0RcQRZVJsb3WbooRBiEEa6xrk2IFqNbhEb4HtJh74+Mv3TE05TAdssghYV6Qy3bw2jmRk++EwFepstNXIjiTIWWUYr2NYLP1kjgh/J1iPQFHOhJQX1QTiL98qef0UQKO7RupGiwXRpbNVlzH5i3Y0YJRAB8DZ1gK4ntUYOvn5KHPXRQCJxiDCywm0bDcqyo1N8VUAzLhO9mtdlzjfBqWxJDUrPts8/zIn8LX1o3U6yfMiNGu9wjd+AfikSG1X0v6FG0EJu77twdevCW2nVRdzRdIBXLgPRbC0Pf2oHxBalysRpFaGEKOL1ZNrTD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(39860400002)(346002)(366004)(2906002)(64756008)(66476007)(76116006)(55016002)(66946007)(66446008)(66556008)(86362001)(5660300002)(52536014)(7416002)(71200400001)(26005)(316002)(110136005)(186003)(8676002)(7696005)(53546011)(9686003)(44832011)(8936002)(6506007)(33656002)(83380400001)(478600001)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: DSPJz0wnT9V4KtugKpoVR0Fy1ndu7DRrs+y9kdj8QIsxFuQQRVyH3ntHXSF3Z+G3741dKjTaH00teOiz2mgoWArpJVqkyKgXth2cgkzJ8sK2jWQhTeWJC/ARHUg4LextL5BN5zV3KTQk48ef3giqLDiI08sQ3nKEjlzHvJU9Gqi7+WYxE466OzFIDa1Y8kDEuWqQM5qUCkzssxxA0EY0fi78CYn/1+GFwYkdOEbWsUgCiG/K5n8qVLfTcmJc3EQQD3rv+aNmz22CZ4WueqzG41w5YuDz4emehDdg8cUS1Rp2PBdS9bC36ryZZiDphDRrkLWRGg6izJysxu/rjW6KKhVeXxcGgPDSQbYI1voYBymz87tP+V+9iDvKEMmCJ48kqVuvRM1fbk6F1jQmzvLJdVyxLHNN1hR+t56UeNgBpbnOitReEdBMLn30XOAtZp7TqhTU7+AyvvmkZ2qh0kNTRKScv/7wcw95MOyU/t8Vl7I=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 Jul 2020 01:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbgGVFwq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 01:52:46 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E99C061794;
+        Tue, 21 Jul 2020 22:52:46 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBPkd2qC6z9sPB;
+        Wed, 22 Jul 2020 15:52:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595397164;
+        bh=+DXFXfkYQ7uc+rrRZx7ipC29lUJNlQ0fiSh7XiaivgA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=A91MMATIUEaxLTuUSUSdP7KATr04kAPL8N5UX9dO7hhyHoOXaLRV8iG1/1lML/umk
+         sSBpcfCEtqy7XFgPDk2QXzVewAD+ZKdK1potR30457KWa6szjB2yqH3SV3drCMBpjN
+         jQH0Z99e/UDe4R55zZBKOfK/hpvb0xwAY37vw+TgR6AeTYI6rVIgXZaC5fEfLmgz0l
+         kff4Kr/f+nNa8fm7KXdxeR3iYKTaPvAdrNc9rFztrIUp+iHURI1i+XiPRtNOjRgO7h
+         Nn9AzYnTgWqmR8GZMhkoXtwar7loQlKhUA4f13IFnQxCSe6NRgHVuLh5Naso0YrLf8
+         Wrt3AM/F5MG5g==
+Date:   Wed, 22 Jul 2020 15:52:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Herring <robherring2@gmail.com>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: linux-next: manual merge of the devicetree tree with the drm tree
+Message-ID: <20200722155239.07bafdfc@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e79d85c1-4fbf-43b6-5133-08d82e033ab5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 05:51:07.5767
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vSVmH4j3y7I3nO1z6q1+NdCcpJCIM1VtqASMcfI9CVQ+eVxPvq6kY3w96iYd5wdvtdRVJMAkRGGYHPeFFBkjAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7199
+Content-Type: multipart/signed; boundary="Sig_/oWXN3SQ8lhH9H.AU2OpA83W";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmxvcmlhbiwNCg0KVGhhbmtzIGZvciB5b3VyIHJlcGx5IQ0KDQpJIGhhZCBwb3N0ZWQgbXkg
-cGF0Y2ggZm9yIHN3aXRjaCBwb3J0IGRyaXZlciwgdGhlIGVtYWlsIHRpdGxlIGlzICJuZXQ6IGRz
-YTogb2NlbG90OiBBZGQgc3VwcG9ydCBmb3IgUWluUSBPcGVyYXRpb24iLA0KDQpCZXN0IFJlZ2Fy
-ZHMhDQpob25nYm8NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEZsb3JpYW4g
-RmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPiANClNlbnQ6IDIwMjDlubQ35pyIMjLml6Ug
-MTo1NQ0KVG86IEhvbmdibyBXYW5nIDxob25nYm8ud2FuZ0BueHAuY29tPjsgWGlhb2xpYW5nIFlh
-bmcgPHhpYW9saWFuZy55YW5nXzFAbnhwLmNvbT47IGFsbGFuLm5pZWxzZW5AbWljcm9jaGlwLmNv
-bTsgUG8gTGl1IDxwby5saXVAbnhwLmNvbT47IENsYXVkaXUgTWFub2lsIDxjbGF1ZGl1Lm1hbm9p
-bEBueHAuY29tPjsgQWxleGFuZHJ1IE1hcmdpbmVhbiA8YWxleGFuZHJ1Lm1hcmdpbmVhbkBueHAu
-Y29tPjsgVmxhZGltaXIgT2x0ZWFuIDx2bGFkaW1pci5vbHRlYW5AbnhwLmNvbT47IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgYW5k
-cmV3QGx1bm4uY2g7IHZpdmllbi5kaWRlbG90QGdtYWlsLmNvbTsgZGF2ZW1AZGF2ZW1sb2Z0Lm5l
-dDsgamlyaUByZXNudWxsaS51czsgaWRvc2NoQGlkb3NjaC5vcmc7IGt1YmFAa2VybmVsLm9yZzsg
-dmluaWNpdXMuZ29tZXNAaW50ZWwuY29tOyBuaWtvbGF5QGN1bXVsdXNuZXR3b3Jrcy5jb207IHJv
-b3BhQGN1bXVsdXNuZXR3b3Jrcy5jb207IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGhvcmF0aXUudnVsdHVyQG1pY3JvY2hpcC5jb207IGFsZXhh
-bmRyZS5iZWxsb25pQGJvb3RsaW4uY29tOyBVTkdMaW51eERyaXZlckBtaWNyb2NoaXAuY29tOyBs
-aW51eC1kZXZlbEBsaW51eC5ueGRpLm54cC5jb20NClN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hd
-IG5ldDogZHNhOiBBZGQgcHJvdG9jb2wgc3VwcG9ydCBmb3IgODAyLjFBRCB3aGVuIGFkZGluZyBv
-ciBkZWxldGluZyB2bGFuIGZvciBkc2Egc3dpdGNoIGFuZCBwb3J0DQoNCkNhdXRpb246IEVYVCBF
-bWFpbA0KDQpPbiA3LzIxLzIwIDQ6MDIgQU0sIGhvbmdiby53YW5nQG54cC5jb20gd3JvdGU6DQo+
-IEZyb206ICJob25nYm8ud2FuZyIgPGhvbmdiby53YW5nQG54cC5jb20+DQo+DQo+IHRoZSBmb2xs
-b3dpbmcgY29tbWFuZCB3aWxsIGJlIHN1cHBvcnRlZDoNCj4gQWRkIFZMQU46DQo+ICAgICBpcCBs
-aW5rIGFkZCBsaW5rIHN3cDEgbmFtZSBzd3AxLjEwMCB0eXBlIHZsYW4gcHJvdG9jb2wgODAyLjFh
-ZCBpZCANCj4gMTAwIERlbGV0ZSBWTEFOOg0KPiAgICAgaXAgbGluayBkZWwgbGluayBzd3AxIG5h
-bWUgc3dwMS4xMDANCj4NCj4gd2hlbiBhZGRpbmcgdmxhbiwgdGhpcyBwYXRjaCBvbmx5IHNldCBw
-cm90b2NvbCBmb3IgdXNlciBwb3J0LCBjcHUgcG9ydCANCj4gZG9uJ3QgY2FyZSBpdCwgc28gc2V0
-IHBhcmFtZXRlciBwcm90byB0byAwIGZvciBjcHUgcG9ydC4NCg0KTXkgcHJldmlvdXMgZmVlZGJh
-Y2sgaGFzIGJlZW4gcGFydGlhbGx5IGFkZHJlc3NlZCwgY2FuIHlvdSBhbHNvIHBvc3QgdGhlIHN3
-aXRjaCBkcml2ZXIgY2hhbmdlcyB0aGF0IGFyZSBnb2luZyB0byBpbXBsZW1lbnQgdGhlIGRyaXZl
-ciBzaWRlIGNoYW5nZXM/IFByZXN1bWFibHkgeW91IG11c3QgYWN0IG9uIHRoZSA4MDIuMUFEIHBy
-b2dyYW1taW5nIHJlcXVlc3QgaW4gdGhlIHN3aXRjaCBkcml2ZXIgc29tZWhvdywgcmlnaHQ/DQot
-LQ0KRmxvcmlhbg0K
+--Sig_/oWXN3SQ8lhH9H.AU2OpA83W
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the devicetree tree got a conflict in:
+
+  Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+
+between commit:
+
+  5a2e9b658cdc ("dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml")
+
+from the drm tree and commit:
+
+  382646090f7f ("dt-bindings: drm/bridge: Replace HTTP links with HTTPS one=
+s")
+
+from the devicetree tree.
+
+I fixed it up (I delete the file and adde the following merge fix
+patch) and can carry the fix as necessary. This is now fixed as far as
+linux-next is concerned, but any non trivial conflicts should be
+mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 22 Jul 2020 15:47:22 +1000
+Subject: [PATCH] fix for "dt-bindings: drm/bridge: Replace HTTP links with =
+HTTPS ones"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ .../devicetree/bindings/display/bridge/ti,sn65dsi86.yaml        | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.=
+yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+index be10e8cf31e1..f8622bd0f61e 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+@@ -11,7 +11,7 @@ maintainers:
+=20
+ description: |
+   The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
+-  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=
+=3Dsn65dsi86&fileType=3Dpdf
++  https://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=
+=3Dsn65dsi86&fileType=3Dpdf
+=20
+ properties:
+   compatible:
+--=20
+2.27.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oWXN3SQ8lhH9H.AU2OpA83W
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8X1CcACgkQAVBC80lX
+0GwyWwf/YY8JKEer/2P6zf3IYHeHk0ZD+pm8MZsXm19M+/dHnvxs0kSficrlJ5iy
+oOQhfgCgBIgzUUQqR5PH2bXkXEyiPp/LsX2WupbNOa9V+zUpRIUanbDJbBMGf8dQ
+BBSTeJtOpf/U6pqOdY17NQFPBuBMRi4ng+9eiGXWJvjN6uoqWrIhWOilDuAxC9gC
+oO1YQesKFh46ONrGJJLKbFVjnhe+XDrsUZwdZPQHbPncUZK4AWhqs4BA560hqmmd
+Cm8nT4nqpuCPOvrKrXVudFj4Uu1FSiT7N1/Ati5/FEj0hZM1FzOYPaQ34v5YDeae
+abW5mOmRlOGr2JDHVNZc2ut4ZK8PTg==
+=aBZg
+-----END PGP SIGNATURE-----
+
+--Sig_/oWXN3SQ8lhH9H.AU2OpA83W--
