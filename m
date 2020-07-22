@@ -2,281 +2,311 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0A4C433ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEE6C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7351620825
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4B820825
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QgPc+0Q0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hDmQ4DHF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Yq9J8og9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387617AbgGVWOJ (ORCPT
+        id S2387605AbgGVWOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:14:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52552 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730938AbgGVWLb (ORCPT
+        Wed, 22 Jul 2020 18:14:03 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:15666 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733104AbgGVWLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jul 2020 18:11:31 -0400
-Message-Id: <20200722220519.833296398@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595455888;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=ME3PQX9GdECA9ZkinQ9fWUsF86JfwUKma+CTqWqs8dk=;
-        b=QgPc+0Q0VolEURIJFJACNOdu81SudG+nQuJndN8u8219Ja5hT+wlo3AsxGnP6DPqaxrIh8
-        +l6Fd4bOollLnlo0y5ZNLGjtd7d07XsqbWDCK/zAzrwhKiGUZTVLMfKyupp0nZzrThgOtm
-        2Pjrb/rXlN55aMp7kwMK4TIUeLHf986dWbaSphlhWQcE/u5BYrOD/buV8wiENS57JpXEu+
-        1u4+oktD31/Vz9uaBuY3VqnejfclrUbFLgvb7/3V9saA5uyV4NtmZOv4rD7AEgo9Um2XBf
-        clzUIw7shhYqZLQpZi8k9/6s2B8jnsKTqHDUL885PbBLl1NjzPzMujlM4ksS8w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595455888;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=ME3PQX9GdECA9ZkinQ9fWUsF86JfwUKma+CTqWqs8dk=;
-        b=hDmQ4DHFaWNevNckooSbFM8TJSIzb0+v4rem/nNDzOweVJtD74V5apIVUlkLhWunIbVUKd
-        5y3OgesCl+kJjMBg==
-Date:   Wed, 22 Jul 2020 23:59:59 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, linux-arch@vger.kernel.org,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V5 05/15] entry: Provide infrastructure for work before
- transitioning to guest mode
-References: <20200722215954.464281930@linutronix.de>
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MM7112027569;
+        Wed, 22 Jul 2020 15:11:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=FhAggLZ0tLiue9xeV5tnAuoxZeC8O3N9g9v9jT+7MzA=;
+ b=Yq9J8og9b0dzo+IWpNfWrK6a58sydhcZzodN706GFEVd5gNYcO7ccdw5BrNdv1VdNev3
+ MScu+OIfg50epl7u1uuOqvYnyBwq8P0O3HqffjHQfBrUuW3WxL3/cYzWFCBFxFdLnCBd
+ UxZbSz9DZ+9FHyxFLBIaDmyhgOd6nwTCaBzd3PJfmto1R0n377nwBRufiDUsaheEakKM
+ vbHo5KkepCG3fPjioq78qTxnOVKtd8ieQs7aCPw+HmPJgRxwpAm6fjB6bofl5cEPy6Za
+ /Jz9F0ey9xk9o4MxeO4j/odgedFN2x4AKYxP9+a6FPV0MfhFrwPVu8I3iCorzagJ/9lp oA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32bxentx65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 15:11:14 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 15:11:13 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 22 Jul
+ 2020 15:11:12 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 15:11:12 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id E55AE3F703F;
+        Wed, 22 Jul 2020 15:11:05 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "Ariel Elior" <aelior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        "Doug Ledford" <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Jesper Dangaard Brouer" <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        KP Singh <kpsingh@chromium.org>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 net-next 01/15] qed: reformat "qed_chain.h" a bit
+Date:   Thu, 23 Jul 2020 01:10:31 +0300
+Message-ID: <20200722221045.5436-2-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
+References: <20200722221045.5436-1-alobakin@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_16:2020-07-22,2020-07-22 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Reformat structs and macros definitions a bit prior to making functional
+changes.
 
-Entering a guest is similar to exiting to user space. Pending work like
-handling signals, rescheduling, task work etc. needs to be handled before
-that.
-
-Provide generic infrastructure to avoid duplication of the same handling
-code all over the place.
-
-The transfer to guest mode handling is different from the exit to usermode
-handling, e.g. vs. rseq and live patching, so a separate function is used.
-
-The initial list of work items handled is:
-
-    TIF_SIGPENDING, TIF_NEED_RESCHED, TIF_NOTIFY_RESUME
-
-Architecture specific TIF flags can be added via defines in the
-architecture specific include files.
-
-The calling convention is also different from the syscall/interrupt entry
-functions as KVM invokes this from the outer vcpu_run() loop with
-interrupts and preemption enabled. To prevent missing a pending work item
-it invokes a check for pending TIF work from interrupt disabled code right
-before transitioning to guest mode. The lockdep, RCU and tracing state
-handling is also done directly around the switch to and from guest mode.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 ---
-V5: Rename exit -> xfer (Sean)
+ include/linux/qed/qed_chain.h | 126 ++++++++++++++++++----------------
+ 1 file changed, 66 insertions(+), 60 deletions(-)
 
-V3: Reworked and simplified version adopted to recent X86 and KVM changes
-    
-V2: Moved KVM specific functions to kvm (Paolo)
-    Added lockdep assert (Andy)
-    Dropped live patching from enter guest mode work (Miroslav)
----
- include/linux/entry-kvm.h |   80 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/kvm_host.h  |    8 ++++
- kernel/entry/Makefile     |    3 +
- kernel/entry/kvm.c        |   51 +++++++++++++++++++++++++++++
- virt/kvm/Kconfig          |    3 +
- 5 files changed, 144 insertions(+), 1 deletion(-)
-
---- /dev/null
-+++ b/include/linux/entry-kvm.h
-@@ -0,0 +1,80 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_ENTRYKVM_H
-+#define __LINUX_ENTRYKVM_H
-+
-+#include <linux/entry-common.h>
-+
-+/* Transfer to guest mode work */
-+#ifdef CONFIG_KVM_XFER_TO_GUEST_WORK
-+
-+#ifndef ARCH_XFER_TO_GUEST_MODE_WORK
-+# define ARCH_XFER_TO_GUEST_MODE_WORK	(0)
-+#endif
-+
-+#define XFER_TO_GUEST_MODE_WORK					\
-+	(_TIF_NEED_RESCHED | _TIF_SIGPENDING |			\
-+	 _TIF_NOTIFY_RESUME | ARCH_XFER_TO_GUEST_MODE_WORK)
-+
-+struct kvm_vcpu;
-+
-+/**
-+ * arch_xfer_to_guest_mode_work - Architecture specific xfer to guest mode
-+ *				  work function.
-+ * @vcpu:	Pointer to current's VCPU data
-+ * @ti_work:	Cached TIF flags gathered in xfer_to_guest_mode()
-+ *
-+ * Invoked from xfer_to_guest_mode_work(). Defaults to NOOP. Can be
-+ * replaced by architecture specific code.
-+ */
-+static inline int arch_xfer_to_guest_mode_work(struct kvm_vcpu *vcpu,
-+					      unsigned long ti_work);
-+
-+#ifndef arch_xfer_to_guest_mode_work
-+static inline int arch_xfer_to_guest_mode_work(struct kvm_vcpu *vcpu,
-+					       unsigned long ti_work)
-+{
-+	return 0;
-+}
-+#endif
-+
-+/**
-+ * xfer_to_guest_mode - Check and handle pending work which needs to be
-+ *			handled before returning to guest mode
-+ * @vcpu:	Pointer to current's VCPU data
-+ *
-+ * Returns: 0 or an error code
-+ */
-+int xfer_to_guest_mode(struct kvm_vcpu *vcpu);
-+
-+/**
-+ * __xfer_to_guest_mode_work_pending - Check if work is pending
-+ *
-+ * Returns: True if work pending, False otherwise.
-+ *
-+ * Bare variant of xfer_to_guest_mode_work_pending(). Can be called from
-+ * interrupt enabled code for racy quick checks with care.
-+ */
-+static inline bool __xfer_to_guest_mode_work_pending(void)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+
-+	return !!(ti_work & XFER_TO_GUEST_MODE_WORK);
-+}
-+
-+/**
-+ * xfer_to_guest_mode_work_pending - Check if work is pending which needs to be
-+ *				     handled before returning to guest mode
-+ *
-+ * Returns: True if work pending, False otherwise.
-+ *
-+ * Has to be invoked with interrupts disabled before the transition to
-+ * guest mode.
-+ */
-+static inline bool xfer_to_guest_mode_work_pending(void)
-+{
-+	lockdep_assert_irqs_disabled();
-+	return __xfer_to_guest_mode_work_pending();
-+}
-+#endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
-+
-+#endif
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1439,4 +1439,12 @@ int kvm_vm_create_worker_thread(struct k
- 				uintptr_t data, const char *name,
- 				struct task_struct **thread_ptr);
+diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
+index 7071dc92b4e2..087073517c09 100644
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -26,9 +26,9 @@ enum qed_chain_mode {
+ };
  
-+#ifdef CONFIG_KVM_XFER_TO_GUEST_WORK
-+static inline void kvm_handle_signal_exit(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->run->exit_reason = KVM_EXIT_INTR;
-+	vcpu->stat.signal_exits++;
-+}
-+#endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
-+
- #endif
---- a/kernel/entry/Makefile
-+++ b/kernel/entry/Makefile
-@@ -9,4 +9,5 @@ KCOV_INSTRUMENT := n
- CFLAGS_REMOVE_common.o	 = -fstack-protector -fstack-protector-strong
- CFLAGS_common.o		+= -fno-stack-protector
+ enum qed_chain_use_mode {
+-	QED_CHAIN_USE_TO_PRODUCE,		/* Chain starts empty */
+-	QED_CHAIN_USE_TO_CONSUME,		/* Chain starts full */
+-	QED_CHAIN_USE_TO_CONSUME_PRODUCE,	/* Chain starts empty */
++	QED_CHAIN_USE_TO_PRODUCE,			/* Chain starts empty */
++	QED_CHAIN_USE_TO_CONSUME,			/* Chain starts full */
++	QED_CHAIN_USE_TO_CONSUME_PRODUCE,		/* Chain starts empty */
+ };
  
--obj-$(CONFIG_GENERIC_ENTRY) += common.o
-+obj-$(CONFIG_GENERIC_ENTRY) 		+= common.o
-+obj-$(CONFIG_KVM_XFER_TO_GUEST_WORK)	+= kvm.o
---- /dev/null
-+++ b/kernel/entry/kvm.c
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/entry-kvm.h>
-+#include <linux/kvm_host.h>
-+
-+static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
-+{
-+	do {
-+		int ret;
-+
-+		if (ti_work & _TIF_SIGPENDING) {
-+			kvm_handle_signal_exit(vcpu);
-+			return -EINTR;
-+		}
-+
-+		if (ti_work & _TIF_NEED_RESCHED)
-+			schedule();
-+
-+		if (ti_work & _TIF_NOTIFY_RESUME) {
-+			clear_thread_flag(TIF_NOTIFY_RESUME);
-+			tracehook_notify_resume(NULL);
-+		}
-+
-+		ret = arch_xfer_to_guest_mode_work(vcpu, ti_work);
-+		if (ret)
-+			return ret;
-+
-+		ti_work = READ_ONCE(current_thread_info()->flags);
-+	} while (ti_work & XFER_TO_GUEST_MODE_WORK || need_resched());
-+	return 0;
-+}
-+
-+int xfer_to_guest_mode(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long ti_work;
-+
-+	/*
-+	 * This is invoked from the outer guest loop with interrupts and
-+	 * preemption enabled.
-+	 *
-+	 * KVM invokes xfer_to_guest_mode_work_pending() with interrupts
-+	 * disabled in the inner loop before going into guest mode. No need
-+	 * to disable interrupts here.
-+	 */
-+	ti_work = READ_ONCE(current_thread_info()->flags);
-+	if (!(ti_work & XFER_TO_GUEST_MODE_WORK))
-+		return 0;
-+
-+	return xfer_to_guest_mode_work(vcpu, ti_work);
-+}
-+EXPORT_SYMBOL_GPL(xfer_to_guest_mode);
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -60,3 +60,6 @@ config HAVE_KVM_VCPU_RUN_PID_CHANGE
+ enum qed_chain_cnt_type {
+@@ -40,84 +40,86 @@ enum qed_chain_cnt_type {
+ };
  
- config HAVE_KVM_NO_POLL
-        bool
+ struct qed_chain_next {
+-	struct regpair	next_phys;
+-	void		*next_virt;
++	struct regpair					next_phys;
++	void						*next_virt;
+ };
+ 
+ struct qed_chain_pbl_u16 {
+-	u16 prod_page_idx;
+-	u16 cons_page_idx;
++	u16						prod_page_idx;
++	u16						cons_page_idx;
+ };
+ 
+ struct qed_chain_pbl_u32 {
+-	u32 prod_page_idx;
+-	u32 cons_page_idx;
++	u32						prod_page_idx;
++	u32						cons_page_idx;
+ };
+ 
+ struct qed_chain_ext_pbl {
+-	dma_addr_t p_pbl_phys;
+-	void *p_pbl_virt;
++	dma_addr_t					p_pbl_phys;
++	void						*p_pbl_virt;
+ };
+ 
+ struct qed_chain_u16 {
+ 	/* Cyclic index of next element to produce/consme */
+-	u16 prod_idx;
+-	u16 cons_idx;
++	u16						prod_idx;
++	u16						cons_idx;
+ };
+ 
+ struct qed_chain_u32 {
+ 	/* Cyclic index of next element to produce/consme */
+-	u32 prod_idx;
+-	u32 cons_idx;
++	u32						prod_idx;
++	u32						cons_idx;
+ };
+ 
+ struct addr_tbl_entry {
+-	void *virt_addr;
+-	dma_addr_t dma_map;
++	void						*virt_addr;
++	dma_addr_t					dma_map;
+ };
+ 
+ struct qed_chain {
+-	/* fastpath portion of the chain - required for commands such
++	/* Fastpath portion of the chain - required for commands such
+ 	 * as produce / consume.
+ 	 */
 +
-+config KVM_XFER_TO_GUEST_WORK
-+       bool
+ 	/* Point to next element to produce/consume */
+-	void *p_prod_elem;
+-	void *p_cons_elem;
++	void						*p_prod_elem;
++	void						*p_cons_elem;
+ 
+ 	/* Fastpath portions of the PBL [if exists] */
++
+ 	struct {
+ 		/* Table for keeping the virtual and physical addresses of the
+ 		 * chain pages, respectively to the physical addresses
+ 		 * in the pbl table.
+ 		 */
+-		struct addr_tbl_entry *pp_addr_tbl;
++		struct addr_tbl_entry			*pp_addr_tbl;
+ 
+ 		union {
+-			struct qed_chain_pbl_u16 u16;
+-			struct qed_chain_pbl_u32 u32;
+-		} c;
+-	} pbl;
++			struct qed_chain_pbl_u16	u16;
++			struct qed_chain_pbl_u32	u32;
++		}					c;
++	}						pbl;
+ 
+ 	union {
+-		struct qed_chain_u16 chain16;
+-		struct qed_chain_u32 chain32;
+-	} u;
++		struct qed_chain_u16			chain16;
++		struct qed_chain_u32			chain32;
++	}						u;
+ 
+ 	/* Capacity counts only usable elements */
+-	u32 capacity;
+-	u32 page_cnt;
++	u32						capacity;
++	u32						page_cnt;
+ 
+-	enum qed_chain_mode mode;
++	enum qed_chain_mode				mode;
+ 
+ 	/* Elements information for fast calculations */
+-	u16 elem_per_page;
+-	u16 elem_per_page_mask;
+-	u16 elem_size;
+-	u16 next_page_mask;
+-	u16 usable_per_page;
+-	u8 elem_unusable;
++	u16						elem_per_page;
++	u16						elem_per_page_mask;
++	u16						elem_size;
++	u16						next_page_mask;
++	u16						usable_per_page;
++	u8						elem_unusable;
+ 
+-	u8 cnt_type;
++	u8						cnt_type;
+ 
+ 	/* Slowpath of the chain - required for initialization and destruction,
+ 	 * but isn't involved in regular functionality.
+@@ -125,43 +127,47 @@ struct qed_chain {
+ 
+ 	/* Base address of a pre-allocated buffer for pbl */
+ 	struct {
+-		dma_addr_t p_phys_table;
+-		void *p_virt_table;
+-	} pbl_sp;
++		dma_addr_t				p_phys_table;
++		void					*p_virt_table;
++	}						pbl_sp;
+ 
+ 	/* Address of first page of the chain - the address is required
+ 	 * for fastpath operation [consume/produce] but only for the SINGLE
+ 	 * flavour which isn't considered fastpath [== SPQ].
+ 	 */
+-	void *p_virt_addr;
+-	dma_addr_t p_phys_addr;
++	void						*p_virt_addr;
++	dma_addr_t					p_phys_addr;
+ 
+ 	/* Total number of elements [for entire chain] */
+-	u32 size;
++	u32						size;
+ 
+-	u8 intended_use;
++	u8						intended_use;
+ 
+-	bool b_external_pbl;
++	bool						b_external_pbl;
+ };
+ 
+-#define QED_CHAIN_PBL_ENTRY_SIZE        (8)
+-#define QED_CHAIN_PAGE_SIZE             (0x1000)
+-#define ELEMS_PER_PAGE(elem_size)       (QED_CHAIN_PAGE_SIZE / (elem_size))
++#define QED_CHAIN_PBL_ENTRY_SIZE			8
++#define QED_CHAIN_PAGE_SIZE				0x1000
++
++#define ELEMS_PER_PAGE(elem_size)					     \
++	(QED_CHAIN_PAGE_SIZE / (elem_size))
+ 
+-#define UNUSABLE_ELEMS_PER_PAGE(elem_size, mode)	 \
+-	(((mode) == QED_CHAIN_MODE_NEXT_PTR) ?		 \
+-	 (u8)(1 + ((sizeof(struct qed_chain_next) - 1) / \
+-		   (elem_size))) : 0)
++#define UNUSABLE_ELEMS_PER_PAGE(elem_size, mode)			     \
++	(((mode) == QED_CHAIN_MODE_NEXT_PTR) ?				     \
++	 (u8)(1 + ((sizeof(struct qed_chain_next) - 1) / (elem_size))) :     \
++	 0)
+ 
+-#define USABLE_ELEMS_PER_PAGE(elem_size, mode) \
+-	((u32)(ELEMS_PER_PAGE(elem_size) -     \
+-	       UNUSABLE_ELEMS_PER_PAGE(elem_size, mode)))
++#define USABLE_ELEMS_PER_PAGE(elem_size, mode)				     \
++	((u32)(ELEMS_PER_PAGE(elem_size) -				     \
++	       UNUSABLE_ELEMS_PER_PAGE((elem_size), (mode))))
+ 
+-#define QED_CHAIN_PAGE_CNT(elem_cnt, elem_size, mode) \
+-	DIV_ROUND_UP(elem_cnt, USABLE_ELEMS_PER_PAGE(elem_size, mode))
++#define QED_CHAIN_PAGE_CNT(elem_cnt, elem_size, mode)			     \
++	DIV_ROUND_UP((elem_cnt), USABLE_ELEMS_PER_PAGE((elem_size), (mode)))
+ 
+-#define is_chain_u16(p) ((p)->cnt_type == QED_CHAIN_CNT_TYPE_U16)
+-#define is_chain_u32(p) ((p)->cnt_type == QED_CHAIN_CNT_TYPE_U32)
++#define is_chain_u16(p)							     \
++	((p)->cnt_type == QED_CHAIN_CNT_TYPE_U16)
++#define is_chain_u32(p)							     \
++	((p)->cnt_type == QED_CHAIN_CNT_TYPE_U32)
+ 
+ /* Accessors */
+ static inline u16 qed_chain_get_prod_idx(struct qed_chain *p_chain)
+-- 
+2.25.1
 
