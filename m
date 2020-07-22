@@ -2,134 +2,171 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52367C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5A820658
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129B4206C1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 22:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p0o6P5s5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ThnfCRmo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J8nGwE8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733017AbgGVVzl (ORCPT
+        id S1731665AbgGVWAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
+        Wed, 22 Jul 2020 18:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbgGVVzi (ORCPT
+        with ESMTP id S1729684AbgGVWAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:55:38 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79671C0619E1;
-        Wed, 22 Jul 2020 14:55:38 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 21:55:36 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595454936;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=onB23TV72snXsM4Kk96d5u93DsT0lvJ0OrxNxUiy8sE=;
-        b=p0o6P5s5BhdLlp7pKo4s6PmgWr+C9miZGU0gCo8LtmjeDMKEON1TUpaN/IcnRCjZLc22TD
-        nfYe1D1ykPnGi2WFB9/J8a1BfqxGqQQhEUXIQJ4eOG8X5JNxHbNONJ8/ow/Vs0GzYelEZf
-        p85qxdTPsDnLv5wsbHQ/15wKwyrUCHZ0idXQUKKiPcSbhxSuzFexCWo3GeJy9u6dMyGCdX
-        4x5nQjubva1HfG20SziXeDB4kCgTf8kDWFr4rVAIAlrWzxek5o59WtBa3ICaPAmmJ6PSqb
-        Ji2P+BzNucC43+MLBJyV5J9glJFyJ800lMP0QM6csi/fqRrejNeXoqYwDcpPmw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595454936;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=onB23TV72snXsM4Kk96d5u93DsT0lvJ0OrxNxUiy8sE=;
-        b=ThnfCRmojj4756uQOXu4tU+8xR4DYwcdu9i8JkV7KolVSHgqd7Tyrb/gh6K/8uYYw1tBK1
-        GaPUy/amx7HMn2Ag==
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/stacktrace: Fix reliable check for empty user
- task stacks
-Cc:     Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com>
-References: <f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com>
+        Wed, 22 Jul 2020 18:00:30 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D88C0619E2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:00:29 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id f16so2096181pjt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 15:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N8+S2bs/z4ong2YrfE5GwRztsvmrOV1x6iJptONruQ0=;
+        b=J8nGwE8Z6AcRTaG73HoFvoUiIYSNEt7re2zANYCmw5IQOU7tN6t8rgdNm/mCE7mulD
+         2DqGU0X4O5Fxqm6nc1MusIKF/IPRHB1DME6QXlO0DxV6HdW+kjuX7WZ8rTD28AR1YBDb
+         XwFB/CcyJ65OruUfOL8Dv8PHJcs54lVFMKPH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N8+S2bs/z4ong2YrfE5GwRztsvmrOV1x6iJptONruQ0=;
+        b=LTmqeKT+rw3P+k27OPl0PqnpbqAONTorIgamk/3yJcvE3IGyskalx+nkCMRUP55X3D
+         CwZZFbgTR8qyRIeqadrZEaeHV+JU1Pf1AQg+Vqkl9zm42kC+vma/IC9H+yinLRGagJtF
+         hQJyymM3xVh0aS0fKy9eZcvkEq8Ol6PKzozFD/Rb1ybjy48F3HtFA6PJQQ+5tfAzWJy+
+         p4f1GfTzn72zb704Ce6vGv5q0+9SVAY7KV6xTxx8m/2kcyPox9G954MTlNzhWVdVNE5O
+         TfD80LS7UzrZ3+KOLt/wynAZ51YGZuHoj4zHKPBDQaLha8A2flEK0ypkniCVdcif+dIW
+         sing==
+X-Gm-Message-State: AOAM532PEV+p3XBkczBXn3pUbNZrifzwMxWibJP6kJ6xjUkf547c7cG3
+        pT5SDUpgoPyEpikZXQhNVpXlZA==
+X-Google-Smtp-Source: ABdhPJy2c6o/MRrkKFm8aPWmkth//QhJMrLmzY21twfgd+iLnkoZPn9A4WSB+3YAdPMnaGK6BeC/mQ==
+X-Received: by 2002:a17:90b:f16:: with SMTP id br22mr1417424pjb.170.1595455228985;
+        Wed, 22 Jul 2020 15:00:28 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id kx3sm641235pjb.32.2020.07.22.15.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 15:00:28 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     swboyd@chromium.org, msavaliy@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] i2c: i2c-qcom-geni: Fix DMA transfer race
+Date:   Wed, 22 Jul 2020 15:00:21 -0700
+Message-Id: <20200722145948.v2.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 MIME-Version: 1.0
-Message-ID: <159545493605.4006.17560256116826409394.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+When I have KASAN enabled on my kernel and I start stressing the
+touchscreen my system tends to hang.  The touchscreen is one of the
+only things that does a lot of big i2c transfers and ends up hitting
+the DMA paths in the geni i2c driver.  It appears that KASAN adds
+enough delay in my system to tickle a race condition in the DMA setup
+code.
 
-Commit-ID:     039a7a30ec102ec866d382a66f87f6f7654f8140
-Gitweb:        https://git.kernel.org/tip/039a7a30ec102ec866d382a66f87f6f7654f8140
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Fri, 17 Jul 2020 09:04:26 -05:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 22 Jul 2020 23:47:47 +02:00
+When the system hangs, I found that it was running the geni_i2c_irq()
+over and over again.  It had these:
 
-x86/stacktrace: Fix reliable check for empty user task stacks
+m_stat   = 0x04000080
+rx_st    = 0x30000011
+dm_tx_st = 0x00000000
+dm_rx_st = 0x00000000
+dma      = 0x00000001
 
-If a user task's stack is empty, or if it only has user regs, ORC
-reports it as a reliable empty stack.  But arch_stack_walk_reliable()
-incorrectly treats it as unreliable.
+Notably we're in DMA mode but are getting M_RX_IRQ_EN and
+M_RX_FIFO_WATERMARK_EN over and over again.
 
-That happens because the only success path for user tasks is inside the
-loop, which only iterates on non-empty stacks.  Generally, a user task
-must end in a user regs frame, but an empty stack is an exception to
-that rule.
+Putting some traces in geni_i2c_rx_one_msg() showed that when we
+failed we were getting to the start of geni_i2c_rx_one_msg() but were
+never executing geni_se_rx_dma_prep().
 
-Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
-__unwind_start()"), unwind_start() now sets state->error appropriately.
-So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
-always means the end of the stack was successfully reached.  So the
-success path for kthreads is no longer needed -- it can also be used for
-empty user tasks.
+I believe that the problem here is that we are starting the geni
+command before we run geni_se_rx_dma_prep().  If a transfer makes it
+far enough before we do that then we get into the state I have
+observed.  Let's change the order, which seems to work fine.
 
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
+Although problems were seen on the RX path, code inspection suggests
+that the TX should be changed too.  Change it as well.
 
+Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C controller")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 ---
- arch/x86/kernel/stacktrace.c | 5 -----
- 1 file changed, 5 deletions(-)
+Even though this patch is slightly different than v1 I have kept tags.
+Hopefully this is OK.
 
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 6ad43fc..2fd698e 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			 * or a page fault), which can make frame pointers
- 			 * unreliable.
- 			 */
--
- 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
- 				return -EINVAL;
- 		}
-@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 	if (unwind_error(&state))
- 		return -EINVAL;
+Changes in v2:
+- Fix both TX and RX.
+- Only move the setting up of the command, not the set of the length.
+
+ drivers/i2c/busses/i2c-qcom-geni.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index 18d1e4fd4cf3..7f130829bf01 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -367,7 +367,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ 		geni_se_select_mode(se, GENI_SE_FIFO);
  
--	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
--	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
--		return -EINVAL;
--
- 	return 0;
- }
+ 	writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
+-	geni_se_setup_m_cmd(se, I2C_READ, m_param);
  
+ 	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
+ 		geni_se_select_mode(se, GENI_SE_FIFO);
+@@ -375,6 +374,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ 		dma_buf = NULL;
+ 	}
+ 
++	geni_se_setup_m_cmd(se, I2C_READ, m_param);
++
+ 	time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
+ 	if (!time_left)
+ 		geni_i2c_abort_xfer(gi2c);
+@@ -408,7 +409,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ 		geni_se_select_mode(se, GENI_SE_FIFO);
+ 
+ 	writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
+-	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
+ 
+ 	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
+ 		geni_se_select_mode(se, GENI_SE_FIFO);
+@@ -416,6 +416,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ 		dma_buf = NULL;
+ 	}
+ 
++	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
++
+ 	if (!dma_buf) /* Get FIFO IRQ */
+ 		writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
+ 
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
