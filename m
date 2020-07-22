@@ -2,87 +2,128 @@ Return-Path: <SRS0=5pK+=BB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4086FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C41C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B4B206C1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BD620729
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jul 2020 12:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595422190;
+	bh=9bO/CzlUBTjOYs2zyy1HJs8h4p36huP1Q1qYFobCpFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XQzGZqFM4dOeOoLpK7IKCpEcPRNwvtmlKFuYAaUnFk6fEtNlxuP+T11hT11pm7/AK
+	 G45Y6iq/plJZpHeMdMmsRAyeqDMS9uOM/q6zbwNWoTRV2vOA2NmJOitnipz+E7xpUY
+	 trVHLg17LMpMdpNcHoOV9KTxRj7hJXUZKOoalI/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732371AbgGVMtc (ORCPT
+        id S1732379AbgGVMtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:49:32 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54018 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGVMtb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:49:31 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8E2601C0BD8; Wed, 22 Jul 2020 14:49:28 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 14:49:28 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     jacek.anaszewski@gmail.com, dmurphy@ti.com, robh+dt@kernel.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] leds: Replace HTTP links with HTTPS ones
-Message-ID: <20200722124928.3gya2v3g6g2mdgia@duo.ucw.cz>
-References: <20200713145115.35121-1-grandmaster@al2klimov.de>
+        Wed, 22 Jul 2020 08:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726161AbgGVMts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 08:49:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E0CB206C1;
+        Wed, 22 Jul 2020 12:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595422187;
+        bh=9bO/CzlUBTjOYs2zyy1HJs8h4p36huP1Q1qYFobCpFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R017QB32BaN0BRff70sDEikYHqmQ4xHZjQF0RpE552UGWlfJwzcxTozos7SDhsCqS
+         rGd9v4+sI0Pq/PzqzTI9UM3dH++mUbPzU/YeTRaOQftlGhI6eQze+RtLHuzN+5Na31
+         xTUN9qBJBvh1PFeNdGOxcGjKKe+WNOFDJlAG+4UE=
+Date:   Wed, 22 Jul 2020 14:49:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        jolsa@redhat.com, Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>
+Subject: Re: [PATCH 5.7 000/243] 5.7.10-rc2 review
+Message-ID: <20200722124953.GE3155653@kroah.com>
+References: <20200720191523.845282610@linuxfoundation.org>
+ <CA+G9fYuVJAHyXqPhhqtcdDstKrjb-TLu=d7DZTuQX3YuCsypHA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kj5yxf4eo4ywrkfx"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200713145115.35121-1-grandmaster@al2klimov.de>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuVJAHyXqPhhqtcdDstKrjb-TLu=d7DZTuQX3YuCsypHA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 02:59:22PM +0530, Naresh Kamboju wrote:
+> On Tue, 21 Jul 2020 at 00:46, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.7.10 release.
+> > There are 243 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 22 Jul 2020 19:14:36 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.10-rc2.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Results from Linaro’s test farm.
+> Regressions detected on arm and arm64 (Juno-r2)
+> We are bisecting this problem and get back to you soon.
+> 
+> perf test cases failed
+>   perf:
+>     * Track-with-sched_switch
+>     * perf_record_test
+>     * perf_report_test
+> 
+> Bad case:
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.002 MB perf-lava-test.data ]
+> 
+> when it was pass it prints number of samples like below,
+> Good case:
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.004 MB perf-lava-test.data (46 samples) ]
+> 
+> steps to reproduce:
+> # perf record -e cycles -o perf-lava-test.data ls -a  2>&1 | tee perf-record.log
+> 
+> Link to full test:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/build/v5.7.9-244-g7d2e5723ce4a/testrun/2969482/suite/perf/test/perf_record_test/log
+> 
+> test case:
+> https://github.com/Linaro/test-definitions/blob/master/automated/linux/perf/perf.sh
 
---kj5yxf4eo4ywrkfx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Any hint by bisection as to what this problem is caused by?
 
-Hi!
+thanks,
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->=20
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
->=20
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-
-Thanks, applied.
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---kj5yxf4eo4ywrkfx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxg12AAKCRAw5/Bqldv6
-8kj8AKC0kAL1fOx5tgtV1gIAvHOIwWwj6QCgsq0+6+rj1i2Lvg6b7fEjCUEEzxc=
-=XAWI
------END PGP SIGNATURE-----
-
---kj5yxf4eo4ywrkfx--
+greg k-h
