@@ -2,97 +2,123 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16E5C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535CDC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70CF7206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595535017;
-	bh=eNKpwSJoIH/QWZoG8b/RRJYSwe76+p44J5pfJxf14y8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jjalX2xDkBcvHdAYdh9Mw9W9VV5H2SGQH6XRMubGPnV8B+4KU3MILw4DHLoXvT0Hu
-	 r5KTdySF6sVytP74TeQWwH5d4u2e2BWU1x/ySjjv9G4KDM2okSgsU5JH/lvYHGP0Du
-	 I/ghT+F74l66JdiIOMfsT960ZnH/xFDKc1YCBkg8=
+	by mail.kernel.org (Postfix) with ESMTP id 2A121207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="F15X1O9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgGWUKQ (ORCPT
+        id S1726977AbgGWULA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:10:16 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36719 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWUKQ (ORCPT
+        Thu, 23 Jul 2020 16:11:00 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:43046 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWULA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:10:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id t131so7605916iod.3;
-        Thu, 23 Jul 2020 13:10:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6qKebxTelJllWzX+vBkDTjUwXCky31GlyoLB/Us13RU=;
-        b=m1KZXjXETbceHodYwrOXIHlhGjcabQvxNMPpbhG4AKQoamlCNiCBOBvNyyZaklX3ae
-         jiA9R1M0KJo0A8IShcK8PKYQASEThHOXg6BReGMn0tmJvr5/n5buuq7dbouRav8g17lL
-         zlDlZ7QgUd/NiHGGZuzR8iYNx3QUzkJuUg/SsfNJKrMRBlPgGTT2JBl+/1zb6RuUEllQ
-         VJmjupLDalFl4IaZ9kWlvI9fqd541wzVakPmrWZYC0mrbgiOajq7n1WysUHJx6ALcq3q
-         OVQyRQpKpdkBARQRYNJRqE3/gLjUI2/8ydO4E3AV4XkINJ874Jk5nwobFWUxdwwrovzh
-         +ExQ==
-X-Gm-Message-State: AOAM532evdEofb3v68iq1JnLpI0fxYl0MX5uvw4xSuLeruByEISelU8m
-        k3+KC1V2VX6daQpH1UbzGg==
-X-Google-Smtp-Source: ABdhPJxGEX8Ak0s03CYs/Oeyc9EzvHmJLaxCDLLXIMq2atxOMK1p55BpCBZEw/SWFXye1D4dLGknwA==
-X-Received: by 2002:a05:6602:2184:: with SMTP id b4mr6883379iob.156.1595535015110;
-        Thu, 23 Jul 2020 13:10:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k7sm1963383iot.20.2020.07.23.13.10.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:10:14 -0700 (PDT)
-Received: (nullmailer pid 783482 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:10:13 -0000
-Date:   Thu, 23 Jul 2020 14:10:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, git@xilinx.com,
-        saikrishna12468@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Updated binding for Versal
- reset driver
-Message-ID: <20200723201013.GA783435@bogus>
-References: <1595402165-8282-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <1595402165-8282-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+        Thu, 23 Jul 2020 16:11:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=v1ayK2JNh09cbcXMchXBkeJUQfzVRgEw+NVUe/9qPvM=; b=F15X1O9wGoAqnElKkbPU/X/h7P
+        0QrI67MnbBQtdFQ06AWBIGKgDvDuXhUWVxuFLEcaI9M8N5cKBVaUIUJYfH2pBLYQSdgebxw/GcSJD
+        twcHe8RmiW7EF923JFIMQZhgKYkv21HvAd1feR5/W6AaC5qM/uyhKzzhJIBh42Ew8WuQldAJWRLta
+        rm7ZCNBtUQcz5FQH80GfIpCxvkJVh21oqcVhNNVoV2tz7V4tpVte9p/dqrIbALLW2FPrwsaIQtKwv
+        /qwlXyK1WuAEQCBuUioWRt2bppy2e6n8qCBtfQD3PGudulEZnZUfv/vHX1VlPQ8lsfTH2PoQgGgq2
+        GS9x3Lpg==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jyhYM-0002SK-JP; Thu, 23 Jul 2020 14:10:55 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200723195742.GA1447143@bjorn-Precision-5520>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
+Date:   Thu, 23 Jul 2020 14:10:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595402165-8282-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+In-Reply-To: <20200723195742.GA1447143@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: hpa@zytor.com, andrew.maier@eideticom.com, ray.huang@amd.com, christian.koenig@amd.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, alexdeucher@gmail.com, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 12:46:04 +0530, Sai Krishna Potthuri wrote:
-> Added documentation and Versal reset indices to describe
-> about Versal reset driver bindings.
-> In Versal all reset indices includes Class, SubClass, Type, Index
-> information whereas class refers to clock, reset, power etc.,
-> Underlying firmware in Versal have such classification and expects
-> the ID to be this way.
-> [13:0] - Index bits
-> [19:14] - Type bits
-> [25:20] - SubClass bits
-> [31:26] - Class bits.
-> 
-> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-> ---
->  .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
->  .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
->  2 files changed, 112 insertions(+), 4 deletions(-)
->  create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+> [+cc Andrew, Armen, hpa]
+> 
+> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>
+>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+>>> transactions between root ports and found to work. Therefore add it
+>>> to the list.
+>>>
+>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>> Cc: Christian König <christian.koenig@amd.com>
+>>> Cc: Huang Rui <ray.huang@amd.com>
+>>> Cc: Alex Deucher <alexdeucher@gmail.com>
+>>
+>> Starting with Zen, all AMD platforms support P2P for reads and writes.
+> 
+> What's the plan for getting out of the cycle of "update this list for
+> every new chip"?  Any new _DSMs planned, for instance?
+
+Well there was an effort to add capabilities in the PCI spec to describe
+this but, as far as I know, they never got anywhere, and hardware still
+doesn't self describe with this.
+
+> A continuous trickle of updates like this is not really appealing.  So
+> far we have:
+> 
+>   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
+>   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+>   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+>   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+>   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+> 
+> And that's just from the last year, not including this patch.
+
+Yes, it's not ideal. But most of these are adding old devices as people
+test and care about running on those platforms -- a lot of this is
+bootstrapping the list. I'd expect this to slow down a bit as by now we
+have hopefully got a lot of the existing platforms people care about.
+But we'd still probably expect to be adding a new Intel and AMD devices
+about once a year as they produce new hardware designs.
+
+Unless, the Intel and AMD folks know of a way to detect this, or even to
+query if a root complex is newer than a certain generation, I'm not sure
+what else we can do here.
+
+Logan
