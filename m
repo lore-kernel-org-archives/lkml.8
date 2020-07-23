@@ -2,141 +2,106 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72BFC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9159D20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B526A20759
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HM3W2w5n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cbuvro59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgGWOVw (ORCPT
+        id S1729437AbgGWOWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgGWOVw (ORCPT
+        Thu, 23 Jul 2020 10:22:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35461 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726815AbgGWOWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:21:52 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9B4C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:21:51 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id x83so5105733oif.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ho1zGHjnuSGDFtev9MLuATNuOooj2fcyX8jL11zoph0=;
-        b=HM3W2w5nySJMCwxvxz7t1p2dBIIUgMKrcMzzDQiNx6rVXq5XMHQJz77XUdcWV8huvr
-         QmnQuWOaTeE3CyVEcBohDEDeq3kWjQNrpJE2PwxR3iF3hxDd5nZGBlyeg4LncNnyffnK
-         FQGhLwslLGdxJPUQLTM/0IdsTZppDicQb8ZUkDnLN13vP0WJbZcNv1yrFEcdedwizzKh
-         u0MGb1aDWpJsR5meyYo2REC49bck50/0GsBFbZ4TC/rMdBWZjH0rAtmPLGbyUxgsR00u
-         SYARW7sbNI9GUM5fzOGYGQTHJ+O/YLBfIGYTeer9YYgt3txZU53cGYoIOe2r2C33tpkZ
-         Cuyw==
+        Thu, 23 Jul 2020 10:22:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595514140;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=zSZAhL25JSXHpF0bAbKJRfBjeCgJ6YYI4dxlYgSnMIw=;
+        b=Cbuvro597snkLvrAHWM+a9elIWOJgEr0VAHsxk9dk5zy/VNpalTniVsbmh0gGJp15JLIaQ
+        OPm5R/VyR8TiHV6cIrh4rh8nrO2KAJN2dHZxeQZFKZfhlxbJeWAnzptrKflHz+SKtKUzW8
+        K+uI6hiLd+CN3J2zxetuI0uqhEE3Eno=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-459-7R6QeyniNQ2a-anay2-ICg-1; Thu, 23 Jul 2020 10:22:16 -0400
+X-MC-Unique: 7R6QeyniNQ2a-anay2-ICg-1
+Received: by mail-qt1-f198.google.com with SMTP id i5so3775566qtw.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:22:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ho1zGHjnuSGDFtev9MLuATNuOooj2fcyX8jL11zoph0=;
-        b=FeVDVKaBvY/Eb0Npvwnass5rWmGsKcXBHlrv5XIAgY0ajs9b+vfB/AHsfHSqBAC1LZ
-         r1ujZY+z1DVz9r+0IkCKHsuJcOg6O6Henuie1X3T2XT5JlqRXw1uhRKEvEtz4ZbDIAMR
-         uE20baq2eaSngjjby+C6TrsOf8JbzLzmMv6m/9CIk9ztAayQ2FTuSIR4/fN7poUqYZF3
-         hAzbhHhQkqUvUSriotzNjXTPTq6IXXfGtimy97Q3uIiXzET7SeCwylEuKA8mpjvE9Ae5
-         hnneYWPjk0vhZFyzLf4AcSBOjU5qE2hGTBxx0bD+e4RZycD8BoYsdfcumCYYH2bh6yoa
-         J7pw==
-X-Gm-Message-State: AOAM532fOkPqrQ+ZtHsVov76/BkZ3cngAXVHSSVrz10AIP2X+AHJOO5u
-        PlvX9ONV6QgrP8TahlGKCy320FxaBwjHWjlHtqDO+cW/
-X-Google-Smtp-Source: ABdhPJyPbrPOe7bzTiWgCeqX4KXaO4HdpYUmFIdSGyIrCwsrNswTXkOLWm6PAzq47W5+M40oucZFaAOrpxyBRuIeqfI=
-X-Received: by 2002:aca:57c5:: with SMTP id l188mr4082203oib.154.1595514111292;
- Thu, 23 Jul 2020 07:21:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200723061757.12906-1-ttayar@habana.ai>
-In-Reply-To: <20200723061757.12906-1-ttayar@habana.ai>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Thu, 23 Jul 2020 17:21:22 +0300
-Message-ID: <CAFCwf11+ZV1no4Sew8LU3sYh7V4wO=iwmPkohob9tbnBzOA-Og@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: Fix memory leak in error flow of context init
-To:     Tomer Tayar <ttayar@habana.ai>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        SW_Drivers@habana.ai
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zSZAhL25JSXHpF0bAbKJRfBjeCgJ6YYI4dxlYgSnMIw=;
+        b=OzN587deUf8whyb/QdCCZ8I27Qv2BxpOpXbhrrSclQgo7scKT7lSN05fpJu9rIHHTi
+         w2id6dHpuE8CZvu9tg/8tDbm6+fmK0umxeF1yyyzJ+kRxI5glR+ve0kvc6BImaDOrGY8
+         6DaRGm6kHYToyBgMe6aYEZY40FMI6ArUYXv3CDoizuYyZu7KZU8odRdgtDRL81qvySvM
+         NtFZejs88b4fGMai/66mrw3t3hPSuaZ2zE/ACwrGRnWdZ/9pPx/318TbENyk1bWF9QhK
+         2lQz1z4UhNTkiklTzUNlW07NGWyRJH63Hy+RAs2oqNnu3tQYk6vp6VxikP3Cj5+mmH4v
+         LMPg==
+X-Gm-Message-State: AOAM530pJwt/yeaTBeAdIxVKeJ9UTFPXAmScVVYs7og9xqExSONfQism
+        PVPIf4/NnMBUgDU3Y+Lh+875py8YapiUMZgm+CyLb10/LaxvYBGdVCJcBp4yavtq4ewk5gd6HKZ
+        y3qom3Nlg9+Ki6drrcJOdRRDj
+X-Received: by 2002:ad4:4bb0:: with SMTP id i16mr5099826qvw.42.1595514136253;
+        Thu, 23 Jul 2020 07:22:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw+P4z/SKan23uckp0U4ZwHA1Evj9o8JlarlIuBAqm40uOmGWRZUthDHWilRj8lh/rxbybNZQ==
+X-Received: by 2002:ad4:4bb0:: with SMTP id i16mr5099803qvw.42.1595514136058;
+        Thu, 23 Jul 2020 07:22:16 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id f53sm2225651qta.84.2020.07.23.07.22.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 07:22:15 -0700 (PDT)
+From:   trix@redhat.com
+To:     davem@davemloft.net, kuba@kernel.org, masahiroy@kernel.org
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] net: cdc_ncm: USB_NET_CDC_NCM selects USB_NET_CDCETHER
+Date:   Thu, 23 Jul 2020 07:22:10 -0700
+Message-Id: <20200723142210.21274-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:18 AM Tomer Tayar <ttayar@habana.ai> wrote:
->
-> Add a missing free of the cs_pending array in the error flow of context
-> init.
->
-> Fixes: 4b49c5b118b9 ("habanalabs: Use pending cs amount per asic")
->
-> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
-> ---
->  drivers/misc/habanalabs/common/context.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
-> index b75a20364fad..3e375958e73b 100644
-> --- a/drivers/misc/habanalabs/common/context.c
-> +++ b/drivers/misc/habanalabs/common/context.c
-> @@ -138,36 +138,38 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
->                 rc = hl_mmu_ctx_init(ctx);
->                 if (rc) {
->                         dev_err(hdev->dev, "Failed to init mmu ctx module\n");
-> -                       goto mem_ctx_err;
-> +                       goto err_free_cs_pending;
->                 }
->         } else {
->                 ctx->asid = hl_asid_alloc(hdev);
->                 if (!ctx->asid) {
->                         dev_err(hdev->dev, "No free ASID, failed to create context\n");
-> -                       return -ENOMEM;
-> +                       rc = -ENOMEM;
-> +                       goto err_free_cs_pending;
->                 }
->
->                 rc = hl_vm_ctx_init(ctx);
->                 if (rc) {
->                         dev_err(hdev->dev, "Failed to init mem ctx module\n");
->                         rc = -ENOMEM;
-> -                       goto mem_ctx_err;
-> +                       goto err_asid_free;
->                 }
->
->                 rc = hdev->asic_funcs->ctx_init(ctx);
->                 if (rc) {
->                         dev_err(hdev->dev, "ctx_init failed\n");
-> -                       goto ctx_init_err;
-> +                       goto err_vm_ctx_fini;
->                 }
->         }
->
->         return 0;
->
-> -ctx_init_err:
-> +err_vm_ctx_fini:
->         hl_vm_ctx_fini(ctx);
-> -mem_ctx_err:
-> -       if (ctx->asid != HL_KERNEL_ASID_ID)
-> -               hl_asid_free(hdev, ctx->asid);
-> +err_asid_free:
-> +       hl_asid_free(hdev, ctx->asid);
-> +err_free_cs_pending:
-> +       kfree(ctx->cs_pending);
->
->         return rc;
->  }
-> --
-> 2.17.1
->
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+From: Tom Rix <trix@redhat.com>
+
+A link error
+
+ld: drivers/net/usb/cdc_ncm.o:
+  undefined reference to `usbnet_cdc_update_filter'
+
+usbnet_cdc_update_filter is defined in cdc_ether.c
+Building of cdc_ether.o is controlled by USB_NET_CDCETHER
+
+Building of cdc_ncm.o is controlled by USB_NET_CDC_NCM
+
+So add a select USB_NET_CDCETHER to USB_NET_CDC_NCM
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/net/usb/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
+index a7fbc3ccd29e..c7bcfca7d70b 100644
+--- a/drivers/net/usb/Kconfig
++++ b/drivers/net/usb/Kconfig
+@@ -252,6 +252,7 @@ config USB_NET_CDC_EEM
+ config USB_NET_CDC_NCM
+ 	tristate "CDC NCM support"
+ 	depends on USB_USBNET
++	select USB_NET_CDCETHER
+ 	default y
+ 	help
+ 	  This driver provides support for CDC NCM (Network Control Model
+-- 
+2.18.1
+
