@@ -2,138 +2,141 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CF5C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72BFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEF2E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595514069;
-	bh=DwG9+pXoNYRP1xXdYl20/XfML1PesR93kEaPYXidrE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tWmFVyEgQZkGqGa7yaK9Dsc4SeFikZFf3KydILHvRHWl5MbuUZby3DaKACdPUU+aX
-	 O4E7ratMZVkUD2qRYyt85FN5ZHG1a8nrgLSnlDACVBO/vVIwKPLxFfKLyi//h1Fnfs
-	 8CZ+LS7F2qJ9spsrQFbr96j7MODZOGYRFYz3oaQY=
+	by mail.kernel.org (Postfix) with ESMTP id 9159D20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HM3W2w5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgGWOVI (ORCPT
+        id S1729424AbgGWOVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726815AbgGWOVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:21:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16BBD20759;
-        Thu, 23 Jul 2020 14:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595514067;
-        bh=DwG9+pXoNYRP1xXdYl20/XfML1PesR93kEaPYXidrE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kxf2jh3n16Cqi842NE27sFgWtSWK+7ENJd5lTnUXfLSPQeqgXGOlI1AZdGACV/zJv
-         g4o6uamQTJm7iIu6ox+u4upCTlzSjSqqtGnVzjivV2q/uLDAyQwvV9PVMgpRjh7aAW
-         Vaff7IalES2a7kZ1v7zAgr7DMIOLBl2aXDSLZAuw=
-Date:   Thu, 23 Jul 2020 16:21:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        George Kennedy <george.kennedy@oracle.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v2] fbdev: Detect integer underflow at "struct
- fbcon_ops"->clear_margins.
-Message-ID: <20200723142111.GA2377086@kroah.com>
-References: <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200715094836.GD2571@kadam>
- <9e6eac10-c5c3-f518-36cc-9ea32fb5d7fe@i-love.sakura.ne.jp>
- <b50f85c7-80e5-89c5-0aca-31d8e9892665@i-love.sakura.ne.jp>
- <20200715151220.GE2571@kadam>
- <adfa8720-c411-dfe6-6b0f-7591dd95396c@i-love.sakura.ne.jp>
- <20200716100006.GN3278063@phenom.ffwll.local>
- <b202b74b-6a7b-e2be-2350-72144331303b@i-love.sakura.ne.jp>
- <20200721160836.GA2109047@kroah.com>
- <CAKMK7uGtDQKkSJhvr4YrGOmcbfVyTeEvSD-QSoHhUtH8=D856w@mail.gmail.com>
+        Thu, 23 Jul 2020 10:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgGWOVw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:21:52 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9B4C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:21:51 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id x83so5105733oif.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ho1zGHjnuSGDFtev9MLuATNuOooj2fcyX8jL11zoph0=;
+        b=HM3W2w5nySJMCwxvxz7t1p2dBIIUgMKrcMzzDQiNx6rVXq5XMHQJz77XUdcWV8huvr
+         QmnQuWOaTeE3CyVEcBohDEDeq3kWjQNrpJE2PwxR3iF3hxDd5nZGBlyeg4LncNnyffnK
+         FQGhLwslLGdxJPUQLTM/0IdsTZppDicQb8ZUkDnLN13vP0WJbZcNv1yrFEcdedwizzKh
+         u0MGb1aDWpJsR5meyYo2REC49bck50/0GsBFbZ4TC/rMdBWZjH0rAtmPLGbyUxgsR00u
+         SYARW7sbNI9GUM5fzOGYGQTHJ+O/YLBfIGYTeer9YYgt3txZU53cGYoIOe2r2C33tpkZ
+         Cuyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ho1zGHjnuSGDFtev9MLuATNuOooj2fcyX8jL11zoph0=;
+        b=FeVDVKaBvY/Eb0Npvwnass5rWmGsKcXBHlrv5XIAgY0ajs9b+vfB/AHsfHSqBAC1LZ
+         r1ujZY+z1DVz9r+0IkCKHsuJcOg6O6Henuie1X3T2XT5JlqRXw1uhRKEvEtz4ZbDIAMR
+         uE20baq2eaSngjjby+C6TrsOf8JbzLzmMv6m/9CIk9ztAayQ2FTuSIR4/fN7poUqYZF3
+         hAzbhHhQkqUvUSriotzNjXTPTq6IXXfGtimy97Q3uIiXzET7SeCwylEuKA8mpjvE9Ae5
+         hnneYWPjk0vhZFyzLf4AcSBOjU5qE2hGTBxx0bD+e4RZycD8BoYsdfcumCYYH2bh6yoa
+         J7pw==
+X-Gm-Message-State: AOAM532fOkPqrQ+ZtHsVov76/BkZ3cngAXVHSSVrz10AIP2X+AHJOO5u
+        PlvX9ONV6QgrP8TahlGKCy320FxaBwjHWjlHtqDO+cW/
+X-Google-Smtp-Source: ABdhPJyPbrPOe7bzTiWgCeqX4KXaO4HdpYUmFIdSGyIrCwsrNswTXkOLWm6PAzq47W5+M40oucZFaAOrpxyBRuIeqfI=
+X-Received: by 2002:aca:57c5:: with SMTP id l188mr4082203oib.154.1595514111292;
+ Thu, 23 Jul 2020 07:21:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGtDQKkSJhvr4YrGOmcbfVyTeEvSD-QSoHhUtH8=D856w@mail.gmail.com>
+References: <20200723061757.12906-1-ttayar@habana.ai>
+In-Reply-To: <20200723061757.12906-1-ttayar@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 23 Jul 2020 17:21:22 +0300
+Message-ID: <CAFCwf11+ZV1no4Sew8LU3sYh7V4wO=iwmPkohob9tbnBzOA-Og@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: Fix memory leak in error flow of context init
+To:     Tomer Tayar <ttayar@habana.ai>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        SW_Drivers@habana.ai
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:07:06AM +0200, Daniel Vetter wrote:
-> On Tue, Jul 21, 2020 at 6:08 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jul 16, 2020 at 08:27:21PM +0900, Tetsuo Handa wrote:
-> > > On 2020/07/16 19:00, Daniel Vetter wrote:
-> > > > On Thu, Jul 16, 2020 at 12:29:00AM +0900, Tetsuo Handa wrote:
-> > > >> On 2020/07/16 0:12, Dan Carpenter wrote:
-> > > >>> I've complained about integer overflows in fbdev for a long time...
-> > > >>>
-> > > >>> What I'd like to see is something like the following maybe.  I don't
-> > > >>> know how to get the vc_data in fbmem.c so it doesn't include your checks
-> > > >>> for negative.
-> > > >>
-> > > >> Yes. Like I said "Thus, I consider that we need more sanity/constraints checks." at
-> > > >> https://lore.kernel.org/lkml/b1e7dd6a-fc22-bba8-0abb-d3e779329bce@i-love.sakura.ne.jp/ ,
-> > > >> we want basic checks. That's a task for fbdev people who should be familiar with
-> > > >> necessary constraints.
-> > > >
-> > > > I think the worldwide supply of people who understand fbdev and willing to
-> > > > work on it is roughly 0. So if someone wants to fix this mess properly
-> > > > (which likely means adding tons of over/underflow checks at entry points,
-> > > > since you're never going to catch the driver bugs, there's too many and
-> > > > not enough people who care) they need to fix this themselves.
-> > >
-> > > But I think we can enforce reasonable constraint which is much stricter than Dan's basic_checks()
-> > > (which used INT_MAX). For example, do we need to accept var->{xres,yres} >= 1048576, for
-> > > "32768 rows or cols" * "32 pixels per character" = 1045876 and vc_do_resize() accepts only
-> > > rows and cols < 32768 ?
-> > >
-> > > >
-> > > > Just to avoid confusion here.
-> > > >
-> > > >> Anyway, my two patches are small and low cost; can we apply these patches regardless
-> > > >> of basic checks?
-> > > >
-> > > > Which two patches where?
-> > >
-> > > [PATCH v3] vt: Reject zero-sized screen buffer size.
-> > >  from https://lkml.kernel.org/r/20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp
-> >
-> > This is now in my tree.
-> >
-> > > [PATCH v2] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
-> > >  from https://lkml.kernel.org/r/20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp
-> >
-> > That should be taken by the fbdev maintainer, but I can take it too if
-> > people want.
-> 
-> Just missed this weeks pull request train and feeling like not worth
-> making this an exception (it's been broken forever after all), so
-> maybe best if you just add this to vt.
-> 
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> Also this avoids the impression I know what's going on in fbdev code,
-> maybe with sufficient abandon from my side someone will pop up who
-> cares an fixes the bazillion of syzkaller issues we seem to have
-> around console/vt and everything related.
-
-Great, will go queue it up now, thanks!
-
-greg k-h
+On Thu, Jul 23, 2020 at 9:18 AM Tomer Tayar <ttayar@habana.ai> wrote:
+>
+> Add a missing free of the cs_pending array in the error flow of context
+> init.
+>
+> Fixes: 4b49c5b118b9 ("habanalabs: Use pending cs amount per asic")
+>
+> Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+> ---
+>  drivers/misc/habanalabs/common/context.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
+> index b75a20364fad..3e375958e73b 100644
+> --- a/drivers/misc/habanalabs/common/context.c
+> +++ b/drivers/misc/habanalabs/common/context.c
+> @@ -138,36 +138,38 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+>                 rc = hl_mmu_ctx_init(ctx);
+>                 if (rc) {
+>                         dev_err(hdev->dev, "Failed to init mmu ctx module\n");
+> -                       goto mem_ctx_err;
+> +                       goto err_free_cs_pending;
+>                 }
+>         } else {
+>                 ctx->asid = hl_asid_alloc(hdev);
+>                 if (!ctx->asid) {
+>                         dev_err(hdev->dev, "No free ASID, failed to create context\n");
+> -                       return -ENOMEM;
+> +                       rc = -ENOMEM;
+> +                       goto err_free_cs_pending;
+>                 }
+>
+>                 rc = hl_vm_ctx_init(ctx);
+>                 if (rc) {
+>                         dev_err(hdev->dev, "Failed to init mem ctx module\n");
+>                         rc = -ENOMEM;
+> -                       goto mem_ctx_err;
+> +                       goto err_asid_free;
+>                 }
+>
+>                 rc = hdev->asic_funcs->ctx_init(ctx);
+>                 if (rc) {
+>                         dev_err(hdev->dev, "ctx_init failed\n");
+> -                       goto ctx_init_err;
+> +                       goto err_vm_ctx_fini;
+>                 }
+>         }
+>
+>         return 0;
+>
+> -ctx_init_err:
+> +err_vm_ctx_fini:
+>         hl_vm_ctx_fini(ctx);
+> -mem_ctx_err:
+> -       if (ctx->asid != HL_KERNEL_ASID_ID)
+> -               hl_asid_free(hdev, ctx->asid);
+> +err_asid_free:
+> +       hl_asid_free(hdev, ctx->asid);
+> +err_free_cs_pending:
+> +       kfree(ctx->cs_pending);
+>
+>         return rc;
+>  }
+> --
+> 2.17.1
+>
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
