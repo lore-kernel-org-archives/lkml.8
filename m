@@ -2,92 +2,119 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 471F320709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96A820737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgGWJv5 (ORCPT
+        id S1728188AbgGWJ6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:51:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgGWJv4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:51:56 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA9CC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 02:51:56 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id AF329300011A0;
-        Thu, 23 Jul 2020 11:51:52 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 68E6B36272; Thu, 23 Jul 2020 11:51:52 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 11:51:52 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Michael Haeuptle <michael.haeuptle@hpe.com>,
-        Ian May <ian.may@canonical.com>,
-        Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        Rick Farrington <ricardo.farrington@cavium.com>,
-        Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Govinda Tatti <govinda.tatti@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [PCI] 3233e41d3e:
- WARNING:at_drivers/pci/pci.c:#pci_reset_hotplug_slot
-Message-ID: <20200723095152.nf3fmfzrjlpoi35h@wunner.de>
-References: <908047f7699d9de9ec2efd6b79aa752d73dab4b6.1595329748.git.lukas@wunner.de>
- <20200723091305.GJ19262@shao2-debian>
+        Thu, 23 Jul 2020 05:58:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57352 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbgGWJ6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 05:58:54 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 23A9053A4D19736B6009;
+        Thu, 23 Jul 2020 17:58:52 +0800 (CST)
+Received: from [10.174.177.167] (10.174.177.167) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Jul 2020 17:58:45 +0800
+Subject: Re: [PATCH] jffs2: move jffs2_init_inode_info() just after allocating
+ inode
+To:     "zhangyi (F)" <yi.zhang@huawei.com>, <viro@zeniv.linux.org.uk>,
+        <linux-mtd@lists.infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>
+CC:     <zhongguohua1@huawei.com>, <daniel@iogearbox.net>,
+        <yihuaijie@huawei.com>, <ast@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <chenjie6@huawei.com>
+References: <20200106080411.41394-1-yi.zhang@huawei.com>
+From:   Hou Tao <houtao1@huawei.com>
+Message-ID: <2202d894-5b47-e606-2f58-306ec151626b@huawei.com>
+Date:   Thu, 23 Jul 2020 17:58:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723091305.GJ19262@shao2-debian>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200106080411.41394-1-yi.zhang@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.167]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 05:13:06PM +0800, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-9):
-[...]
-> commit: 3233e41d3e8ebcd44e92da47ffed97fd49b84278 ("[PATCH] PCI: pciehp: Fix AB-BA deadlock between reset_lock and device_lock")
-[...]
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> [    0.971752] WARNING: CPU: 0 PID: 1 at drivers/pci/pci.c:4905 pci_reset_hotplug_slot+0x70/0x80
+Hi,
 
-Thank you, trusty robot.
+Cc +Richard +David
 
-I botched the call to lockdep_assert_held_write(), it should have been
-conditional on "if (probe)".
+On 2020/1/6 16:04, zhangyi (F) wrote:
+> After commit 4fdcfab5b553 ("jffs2: fix use-after-free on symlink
+> traversal"), it expose a freeing uninitialized memory problem due to
+> this commit move the operaion of freeing f->target to
+> jffs2_i_callback(), which may not be initialized in some error path of
+> allocating jffs2 inode (eg: jffs2_iget()->iget_locked()->
+> destroy_inode()->..->jffs2_i_callback()->kfree(f->target)).
+> 
+Could you please elaborate the scenario in which the use of a uninitialized
+f->target is possible ? IMO one case is that there are concurrent
+jffs2_lookup() and jffs2 GC on an evicted inode, and two new inodes
+are created, and then one needless inode is destroyed.
 
-Happy to respin the patch, but I'd like to hear opinions on the locking
-issues surrounding xen and octeon (and the patch in general).
+> Fix this by initialize the jffs2_inode_info just after allocating it.
+> 
+> Reported-by: Guohua Zhong <zhongguohua1@huawei.com>
+> Reported-by: Huaijie Yi <yihuaijie@huawei.com>
+> Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+> Cc: stable@vger.kernel.org
+> ---
+A Fixes tag is also needed here.
 
-In particular, would a solution be entertained wherein the pci_dev is
-reset by the PCI core after driver unbinding, contingent on a flag which
-is set by a PCI driver to indicate that the pci_dev is returned to the
-core in an unclean state?
-
-Also, why does xen require a device reset on bind?
-
-Thanks!
-
-Lukas
+>  fs/jffs2/fs.c    | 2 --
+>  fs/jffs2/super.c | 2 ++
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/jffs2/fs.c b/fs/jffs2/fs.c
+> index ab8cdd9e9325..50a9df7d43a5 100644
+> --- a/fs/jffs2/fs.c
+> +++ b/fs/jffs2/fs.c
+> @@ -270,7 +270,6 @@ struct inode *jffs2_iget(struct super_block *sb, unsigned long ino)
+>  	f = JFFS2_INODE_INFO(inode);
+>  	c = JFFS2_SB_INFO(inode->i_sb);
+>  
+> -	jffs2_init_inode_info(f);
+>  	mutex_lock(&f->sem);
+>  
+>  	ret = jffs2_do_read_inode(c, f, inode->i_ino, &latest_node);
+> @@ -438,7 +437,6 @@ struct inode *jffs2_new_inode (struct inode *dir_i, umode_t mode, struct jffs2_r
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	f = JFFS2_INODE_INFO(inode);
+> -	jffs2_init_inode_info(f);
+>  	mutex_lock(&f->sem);
+>  
+>  	memset(ri, 0, sizeof(*ri));
+> diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+> index 0e6406c4f362..90373898587f 100644
+> --- a/fs/jffs2/super.c
+> +++ b/fs/jffs2/super.c
+> @@ -42,6 +42,8 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
+>  	f = kmem_cache_alloc(jffs2_inode_cachep, GFP_KERNEL);
+>  	if (!f)
+>  		return NULL;
+> +
+> +	jffs2_init_inode_info(f);
+>  	return &f->vfs_inode;
+>  }
+>  
+> 
