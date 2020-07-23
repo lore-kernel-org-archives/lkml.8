@@ -2,73 +2,82 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB2DC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF1FC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4712086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595488904;
-	bh=hzHe2/UKQtRQ+CdSuBofzo9tTWOBUKPss0cCKGiJmKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QdmiUm3Avmnlwhvn9DBBOXN67Hu+f3Lg0pVukhj4ikHvEIT4dKO45Ypdq/nhWovS/
-	 129k2hF21Rg6xIPez3IGf69vbq4pTv4N3NDc8IRmgG8e+4xqawknMDnW/A1awAw6CR
-	 hWBafoabi+CgjYrGXpNOuwwZGc+cM+b5H5HpMZLg=
+	by mail.kernel.org (Postfix) with ESMTP id 34B15206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgGWHVn (ORCPT
+        id S1726975AbgGWHWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:21:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 03:22:52 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34434 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgGWHVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:21:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3024E2086A;
-        Thu, 23 Jul 2020 07:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595488902;
-        bh=hzHe2/UKQtRQ+CdSuBofzo9tTWOBUKPss0cCKGiJmKo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QJVr2NKyXBvtwdCfd8Yq1Wt4ywBjwN/E+C1axRnl9cIUzkxPxffUdwVusYFo/o+QF
-         U93If/5IcImJiN3ohhXaTVlHay9T1ljm+ECtthRpAb6T5TyWjJIU+HvGY7+KS69KNE
-         mhEzgjP1dl9ovqTxdzClHVw2txplEW7HDmHBTpE4=
-Date:   Thu, 23 Jul 2020 09:20:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] soundwire updates for v5.9-rc1
-Message-ID: <20200723072057.GA1178592@kroah.com>
-References: <20200723070813.GV12965@vkoul-mobl>
+        id S1726127AbgGWHWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:22:51 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jyVYT-0005Jd-7g; Thu, 23 Jul 2020 17:22:14 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 23 Jul 2020 17:22:13 +1000
+Date:   Thu, 23 Jul 2020 17:22:13 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     gregkh@linuxfoundation.org, wangzhou1@hisilicon.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] crypto: hisilicon: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200723072213.GA4760@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200723070813.GV12965@vkoul-mobl>
+In-Reply-To: <20200716090345.13396-1-miaoqinglang@huawei.com>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 12:38:13PM +0530, Vinod Koul wrote:
-> Hey Greg,
+Qinglang Miao <miaoqinglang@huawei.com> wrote:
+> From: Liu Shixin <liushixin2@huawei.com>
 > 
-> Here are the updates for soundwire subsystem for 5.9. Please pull.
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 > 
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> ---
+> drivers/crypto/hisilicon/qm.c | 12 +-----------
+> 1 file changed, 1 insertion(+), 11 deletions(-)
 > 
-> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index b594dc728..5f16d8ae7 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -1046,17 +1046,7 @@ static int qm_regs_show(struct seq_file *s, void *unused)
+>        return 0;
+> }
 > 
->   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/soundwire-5.9-rc1
+> -static int qm_regs_open(struct inode *inode, struct file *file)
+> -{
+> -       return single_open(file, qm_regs_show, inode->i_private);
+> -}
+> -
+> -static const struct file_operations qm_regs_fops = {
+> -       .owner = THIS_MODULE,
+> -       .open = qm_regs_open,
+> -       .read_iter = seq_read_iter,
+> -       .release = single_release,
+> -};
+> +DEFINE_SHOW_ATTRIBUTE(qm_regs);
 
-Pulled and pushed out, thanks.
+This doesn't apply against the cryptodev tree.  If this patch
+depends on another one, you should post them together in a series.
 
-greg k-h
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
