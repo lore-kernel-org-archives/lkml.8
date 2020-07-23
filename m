@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4381FC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23314206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C63206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYeW1Pux"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKFHLOUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgGWTAa (ORCPT
+        id S1727929AbgGWS4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34902 "EHLO
+        Thu, 23 Jul 2020 14:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGWTA3 (ORCPT
+        with ESMTP id S1726349AbgGWS4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:00:29 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD69C0619DC;
-        Thu, 23 Jul 2020 12:00:29 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x5so5341464wmi.2;
-        Thu, 23 Jul 2020 12:00:29 -0700 (PDT)
+        Thu, 23 Jul 2020 14:56:12 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63EDC0619DC;
+        Thu, 23 Jul 2020 11:56:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f2so6144838wrp.7;
+        Thu, 23 Jul 2020 11:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bxQ7tQ6z3mNBLFtLdG+90Disq7Kpghx+V15fQV2DmfA=;
-        b=sYeW1PuxnekV4ROtlxlA7ESkzlBGbmk5bP31BVrhnTATMy4GEyfEHi89pa0/ev8Pav
-         ljkjdyXRL/YpE8JiUktzoF/kuu2H+H68To/A6wfMC/r8c0vlJvybZKO3OyfA4jjSxk0r
-         I7gz3roAsYV14asqYUzB+jmAlwypxr+eRoFYLa2fSmiEgjE4qNAqt9+s5Az0RYa38inC
-         i+6/FkVLH3Vejm5/asyza9wBoU2hzBe46KHpQj0Ebammar5rLa3/VqM3Tb8Qg2OTWujh
-         te4DKcqoojKhKcb5SufhoY6Tcflr8Zxchqy6juWKgCa3G5GiBYEuu+4h1IgdVEfQUDkT
-         6asQ==
+        bh=jF7KlZeIFETBUP6S7hMmCkkTQ3kpYA6BiAUjxPrWI9w=;
+        b=LKFHLOUjoBzD4nj8VGQkRyg/s/2fEVVzgijX+442ZbhU4n8I2zAsCbqQyh0ocQLWcb
+         yLKstI7XVJSRp5EWVJ3al6euJQ1TOTdw37/nMaAk6P6T7Q7qBzVGqOwN+u0iBzEf69V4
+         KN4XoBjWS4cPKTIOOPAMbvrfp6Dc6bynKAj8ffZqBDautMqx2z98DxN7RD1S6xplLfDR
+         v+2s9FFXoftUpkd7wOO5V1l+mX7KaBL2z/d4tEgPFubcDfnmak3pEFesyP5m0HsayfdX
+         6RH5aidIalFjtXvDa3yv38xg/md8JQf5Hhmgnjv/qbHKoW3H6UMzY+i4XS1Hp48UPimL
+         +HGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=bxQ7tQ6z3mNBLFtLdG+90Disq7Kpghx+V15fQV2DmfA=;
-        b=MrKAqNglxzwmsUd4RxUH1/IR2kOSYADaOOnhK9i/EJipYm456aWxos9E5rMDvZJ2uU
-         g9grgdEWCDuCfirSU60wQiWVrSgEid2Zb4+aRQ3ETF1yvYcHO0ezvwN1tl+PGDBqIbTQ
-         7ANkHuIgi0KIXMVmO1RQlPwSiSU3tTAr1w1GuyBqj8VdfA0Lfi5kxXX4ZihS6cZQ5vXx
-         C8PqrHsC8oQm6/9pBlXLrZuZRm65R9qhZOAfWgCnnW31kJo7kTwVB6Ew21NsQ1rwqFRn
-         u3RU5bgkJYFewDgfvoh2g2V2HYVUXUsf2UvvpFiPV57+I4SAQ4CnaOkq6wL3I/hKx03g
-         1jkA==
-X-Gm-Message-State: AOAM531D/AvODn/NzzEU1tBKlWZlmMSUOpRB/FKOxRgs4YZ8fg/XwvdC
-        vCffgAtOoqeAZjm5ZVI4//c=
-X-Google-Smtp-Source: ABdhPJxtxkMBgrfFEpXypdXkG+KGZGupmxL1G7wKXcKuJ0h6hvYRwJsVRV0ivgDaQjCyMq7dB8dxAA==
-X-Received: by 2002:a1c:1bce:: with SMTP id b197mr4207185wmb.32.1595530828008;
-        Thu, 23 Jul 2020 12:00:28 -0700 (PDT)
+        bh=jF7KlZeIFETBUP6S7hMmCkkTQ3kpYA6BiAUjxPrWI9w=;
+        b=L2HpTmxOEeY+PwECz6ee/BIZOCWXAMZLJ0mvfQTbXhPHP1VAuPLxvseng6q+iVkksB
+         G1UZPjMS+RX1NFh4WVEBtlux2aUYWjZB1TaeTA1a3fTmk580c9pppUZEWbRMwNCVU0m7
+         ubvUOyX/dfJlV6+kygnYpvfhUgrrxcSU2/SDo45/CldCtMsYaIki4r5yND6gD5fgyKyR
+         ukCafc1PxdmEcNg4YVdQGdJA9gwlBhUxXAIbzL/L7rW4EY/NUQF0zlP5i6G57rlZd6Zk
+         bVkU+0pNI0f2OgbjikMM4B1UTcBJnW7yv2frTN0aU23q4IAu8kk4dglvTNaGKdf70DDR
+         43ew==
+X-Gm-Message-State: AOAM532O7kXYRFieTgiQpOeeILntEeTxrZzz83bmE7WDtkTwwpcMgRqK
+        ydOXb6XWeR92qAa6d6VQeKA=
+X-Google-Smtp-Source: ABdhPJyxZozzLHfoJi8Kj9wOw/LAy7KbJgZJ0zBp5mH6JHdX0f+Iwcx27Nek/lynuN7z9L4J/+AqXQ==
+X-Received: by 2002:a5d:5681:: with SMTP id f1mr4995090wrv.192.1595530570299;
+        Thu, 23 Jul 2020 11:56:10 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 129sm4624576wmd.48.2020.07.23.12.00.25
+        by smtp.googlemail.com with ESMTPSA id e5sm5210355wrc.37.2020.07.23.11.56.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 12:00:27 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 6/7] ARM: dts: at91: sama5d4: add an mdio
- sub-node to macb
+        Thu, 23 Jul 2020 11:56:09 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 1/7] net: macb: use device-managed
+ devm_mdiobus_alloc()
 To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
@@ -71,7 +71,7 @@ Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
         robh+dt@kernel.org, alexandre.belloni@bootlin.com,
         ludovic.desroches@microchip.com
 References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
- <20200721171316.1427582-7-codrin.ciubotariu@microchip.com>
+ <20200721171316.1427582-2-codrin.ciubotariu@microchip.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -127,12 +127,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <815906b0-7415-ae93-f991-4e8c6432d953@gmail.com>
-Date:   Thu, 23 Jul 2020 12:00:23 -0700
+Message-ID: <67d873d0-bfe4-1568-9714-f37c3a959abb@gmail.com>
+Date:   Thu, 23 Jul 2020 11:55:54 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721171316.1427582-7-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20200721171316.1427582-2-codrin.ciubotariu@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -142,8 +142,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/21/20 10:13 AM, Codrin Ciubotariu wrote:
-> Use the new macb bindings and add an mdio sub-node to contain all the
-> phy nodes.
+> Use the device-managed variant for the allocating the MDIO bus. This
+> cleans-up the code a little on the remove and error paths.
 > 
 > Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
