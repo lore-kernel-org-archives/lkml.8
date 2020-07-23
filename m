@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4297C433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DCAC433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E8B20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0CE20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgGWNNR (ORCPT
+        id S1729195AbgGWNNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:13:17 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:44115 "EHLO
+        Thu, 23 Jul 2020 09:13:01 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34707 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGWNNP (ORCPT
+        with ESMTP id S1726521AbgGWNNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:13:15 -0400
+        Thu, 23 Jul 2020 09:13:00 -0400
 X-Originating-IP: 42.109.196.68
 Received: from localhost.localdomain (unknown [42.109.196.68])
         (Authenticated sender: me@yadavpratyush.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E9E451C0006;
-        Thu, 23 Jul 2020 13:13:10 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id EBB141C0010;
+        Thu, 23 Jul 2020 13:12:54 +0000 (UTC)
 From:   Pratyush Yadav <me@yadavpratyush.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Pratyush Yadav <p.yadav@ti.com>,
         Pratyush Yadav <me@yadavpratyush.com>
-Subject: [PATCH v11 12/14] mtd: spi-nor: core: expose spi_nor_default_setup() in core.h
-Date:   Thu, 23 Jul 2020 18:42:01 +0530
-Message-Id: <20200723131203.40916-13-me@yadavpratyush.com>
+Subject: [PATCH v11 08/14] mtd: spi-nor: core: enable octal DTR mode when possible
+Date:   Thu, 23 Jul 2020 18:41:57 +0530
+Message-Id: <20200723131203.40916-9-me@yadavpratyush.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200723131203.40916-1-me@yadavpratyush.com>
 References: <20200723131203.40916-1-me@yadavpratyush.com>
@@ -51,48 +51,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pratyush Yadav <p.yadav@ti.com>
 
-Flashes might want to add a custom setup hook to configure the flash in
-the proper mode for operation. But after that, they would still want to
-run the default setup hook because it selects the read, program, and
-erase operations. Since there is little point in repeating all that
-code, expose the spi_nor_default_setup() in core.h to
-manufacturer-specific files.
+Allow flashes to specify a hook to enable octal DTR mode. Use this hook
+whenever possible to get optimal transfer speeds.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/core.c | 4 ++--
- drivers/mtd/spi-nor/core.h | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/mtd/spi-nor/core.c | 35 +++++++++++++++++++++++++++++++++++
+ drivers/mtd/spi-nor/core.h |  2 ++
+ 2 files changed, 37 insertions(+)
 
 diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index a263196d970f..5ebe0aed0871 100644
+index 6efc86e2aba0..b990fc7add20 100644
 --- a/drivers/mtd/spi-nor/core.c
 +++ b/drivers/mtd/spi-nor/core.c
-@@ -2740,8 +2740,8 @@ static int spi_nor_select_erase(struct spi_nor *nor)
+@@ -3050,6 +3050,35 @@ static int spi_nor_init_params(struct spi_nor *nor)
  	return 0;
  }
  
--static int spi_nor_default_setup(struct spi_nor *nor,
--				 const struct spi_nor_hwcaps *hwcaps)
-+int spi_nor_default_setup(struct spi_nor *nor,
-+			  const struct spi_nor_hwcaps *hwcaps)
++/** spi_nor_octal_dtr_enable() - enable Octal DTR I/O if needed
++ * @nor:                 pointer to a 'struct spi_nor'
++ * @enable:              whether to enable or disable Octal DTR
++ *
++ * Return: 0 on success, -errno otherwise.
++ */
++static int spi_nor_octal_dtr_enable(struct spi_nor *nor, bool enable)
++{
++	int ret;
++
++	if (!nor->params->octal_dtr_enable)
++		return 0;
++
++	if (!(nor->read_proto == SNOR_PROTO_8_8_8_DTR &&
++	      nor->write_proto == SNOR_PROTO_8_8_8_DTR))
++		return 0;
++
++	ret = nor->params->octal_dtr_enable(nor, enable);
++	if (ret)
++		return ret;
++
++	if (enable)
++		nor->reg_proto = SNOR_PROTO_8_8_8_DTR;
++	else
++		nor->reg_proto = SNOR_PROTO_1_1_1;
++
++	return 0;
++}
++
+ /**
+  * spi_nor_quad_enable() - enable/disable Quad I/O if needed.
+  * @nor:                pointer to a 'struct spi_nor'
+@@ -3090,6 +3119,12 @@ static int spi_nor_init(struct spi_nor *nor)
  {
- 	struct spi_nor_flash_parameter *params = nor->params;
- 	u32 ignored_mask, shared_mask;
+ 	int err;
+ 
++	err = spi_nor_octal_dtr_enable(nor, true);
++	if (err) {
++		dev_dbg(nor->dev, "octal mode not supported\n");
++		return err;
++	}
++
+ 	err = spi_nor_quad_enable(nor, true);
+ 	if (err) {
+ 		dev_dbg(nor->dev, "quad mode not supported\n");
 diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index ec54ce6c5403..24cff27c51aa 100644
+index 27e00a9f5950..17dbbb3e4796 100644
 --- a/drivers/mtd/spi-nor/core.h
 +++ b/drivers/mtd/spi-nor/core.h
-@@ -453,6 +453,9 @@ int spi_nor_post_bfpt_fixups(struct spi_nor *nor,
- 			     const struct sfdp_bfpt *bfpt,
- 			     struct spi_nor_flash_parameter *params);
+@@ -203,6 +203,7 @@ struct spi_nor_locking_ops {
+  *                      higher index in the array, the higher priority.
+  * @erase_map:		the erase map parsed from the SFDP Sector Map Parameter
+  *                      Table.
++ * @octal_dtr_enable:	enables SPI NOR octal DTR mode.
+  * @quad_enable:	enables/disables SPI NOR Quad mode.
+  * @set_4byte_addr_mode: puts the SPI NOR in 4 byte addressing mode.
+  * @convert_addr:	converts an absolute address into something the flash
+@@ -226,6 +227,7 @@ struct spi_nor_flash_parameter {
  
-+int spi_nor_default_setup(struct spi_nor *nor,
-+			  const struct spi_nor_hwcaps *hwcaps);
-+
- static struct spi_nor __maybe_unused *mtd_to_spi_nor(struct mtd_info *mtd)
- {
- 	return mtd->priv;
+ 	struct spi_nor_erase_map        erase_map;
+ 
++	int (*octal_dtr_enable)(struct spi_nor *nor, bool enable);
+ 	int (*quad_enable)(struct spi_nor *nor, bool enable);
+ 	int (*set_4byte_addr_mode)(struct spi_nor *nor, bool enable);
+ 	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
 -- 
 2.27.0
 
