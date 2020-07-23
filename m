@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57480C433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F1720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2764D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zbMoMN09"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vviuEPQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgGWNJv (ORCPT
+        id S1729081AbgGWNJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:09:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
+        Thu, 23 Jul 2020 09:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728951AbgGWNJr (ORCPT
+        with ESMTP id S1728869AbgGWNJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:09:47 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8051C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 184so5150655wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:45 -0700 (PDT)
+        Thu, 23 Jul 2020 09:09:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4954C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:51 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so5115285wrh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u+kCNiTjOgccPUFcK1QBTuSbaCk+Ae80CxJOPhO94oQ=;
-        b=zbMoMN09R+vY0MKqBYUY4Ifemnd2nzZZvHl+95cXAe78RLLF2G2UppaXYhhvSLTQJg
-         Hqr0gKmVIC1OcZJ72G4vVROqzIUMHMKJ2f1fTHRQAJ0cpXqL6WENgXfBqcMvmJYpKVoz
-         O6KaabT7Ij0HmN6qUIw6K/Mb9rRtGkFjWlZ1FwVVFHrjo9z4Kl2a8B1yc06Bm/utwnKE
-         VrvVigWXNWjauqL1agdbmmL+i53g3wgJAuGOn+ZPqH+691U5gFvpmUYPY9+eoSHXamhN
-         QHwaqGGgzso2dLu0a/5Uz5JlUmcn+mlrToCre3bFOq7l1kFCvzoYFptU/eieNrRvNBsS
-         inMQ==
+        bh=n+YRVEMhnbtayqfrSyBvmCm5bK/RwwiScDdw5E9JYC4=;
+        b=vviuEPQmcvhQqv1Z0x0GJ9ykx0dLrTanjL3H1DFreVW2ToWT3rgBB5PpVyO8u+YrH9
+         KfbHY6nhjnsbTXvXLYXWVmxquDJRNkayAp5yzGmzdOrVxoktL+eLbvQrFFawxqxGXSRr
+         gF+oKSnTHu8CeKPh9b4Qlg1zqCY30cqain6+moI13gihSzzI5hSyOQRgvi53W+w0/WpS
+         U2+n72vXb0Vaw7g4GkgelfEun7do1s5VWCjvsRh9t6d4jIVvYdreuZEnz1HkH+nY6Tpv
+         WHMqtVwiTHX/plNh1WQHayzhiR7i4LbkoknVrDOlsO7/yg/0zVDIOnM7QWg8NL1LXcHm
+         mNDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u+kCNiTjOgccPUFcK1QBTuSbaCk+Ae80CxJOPhO94oQ=;
-        b=m+OA6VD1imKD/SfbXTsb14HEyUw8/QRCSLgxbG0b1uAPYTQJfiiyzLe9nOiKdYXTmt
-         rUKphQjEYtL/rF4bmJf6T/K+W+6jmN/CRuiDgMwexI9Wj7bWJHz4qGEcCgfzLXpi/0Qu
-         aO/RRGkPTcrcg/Y/dRKTJe7G5AY3mRnIgfmB0l9aymFU6UstEJAE86fdwIEqOV2zMy/w
-         73yM38XAX2KMlyrS5Z+RvfoUTYCrUeTBfANxCajHmmcZXa8cgA1k3ft1gVjHTXL+EW6d
-         AmMTV0lhE2h9uWImnTJTaIO+6xL4sn3k2A2e+65qv71IROaVEIgQEC9bCRoBdOlF3wAo
-         lg6w==
-X-Gm-Message-State: AOAM533OHT3+cNafnPKmDyu9JzVLnkVwgiF0sRB9pkSJNzwGdBqc1xTB
-        m4P1m+nWcqLFO4GkiFpl2VsGKQ==
-X-Google-Smtp-Source: ABdhPJz4e0aJewPYy7uh/Xs3tFu1upX0paTP2HOAXmVWvLuRADqRHfPWlicum4l/jqi4R0EhZGqWKg==
-X-Received: by 2002:a1c:acc9:: with SMTP id v192mr3976604wme.164.1595509783572;
-        Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+        bh=n+YRVEMhnbtayqfrSyBvmCm5bK/RwwiScDdw5E9JYC4=;
+        b=C3mMPwfSlHvFE+eSBE2w8bpVuHAiNURfcOCdOJ/ET94kgJQiAFYZ2hZRiHMu9ATV6s
+         OIdi/YSH+/4g8BRu2h1CzOVT0rb115mkrY5x1mLf9GJ6nhg9R0HF2J4gpXwUIOwQtIaT
+         3ECfAMiXPdayyO1N4U4XaQFoZk6hYtSSLuhFsdDPoGTDW6trfL0TbP9mupI6IjzJwto5
+         hMc4Y2Gw58800zt9kJarqVHO7PSMW1y3QqgYb7skI1USxi3iFd9sbnRt36hg8hwRB/RT
+         H/q5JZMP0B+NGeL7Al2ZDWFvK45M3j773tJbyu48+01EGB2xzSYiTQ64j/WN5PVY16HE
+         wF0Q==
+X-Gm-Message-State: AOAM530iYVCGt9044gqcfYW07EgiKb8y3V42Gti3mdVYzl4vZ3ufnjV4
+        ceJGlROALbafm1jcWnd3EBEwaqpfggo=
+X-Google-Smtp-Source: ABdhPJwnVaJNJ5YE1Z+K7EJmo6WoWQmnILaUidasCk7/aniLjVKwMYiCIOjtiU6ZZuHbkaHi9S1mMg==
+X-Received: by 2002:adf:9bdd:: with SMTP id e29mr4334632wrc.394.1595509790015;
+        Thu, 23 Jul 2020 06:09:50 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.42
+        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+        Thu, 23 Jul 2020 06:09:49 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
         sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
         georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] interconnect: Introduce xlate_extended() callback
-Date:   Thu, 23 Jul 2020 16:09:37 +0300
-Message-Id: <20200723130942.28491-2-georgi.djakov@linaro.org>
+Subject: [PATCH 6/6] arm64: dts: qcom: sc7180: Increase the number of interconnect cells
+Date:   Thu, 23 Jul 2020 16:09:42 +0300
+Message-Id: <20200723130942.28491-7-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200723130942.28491-1-georgi.djakov@linaro.org>
 References: <20200723130942.28491-1-georgi.djakov@linaro.org>
@@ -77,209 +77,639 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is the xlate() callback, which is provider-specific is
-used for mapping the nodes from phandle arguments. This is fine for simple
-mappings, but the phandle arguments could contain an additional data, such
-as tag information. Let's create another callback xlate_extended() for the
-cases where providers want also populate the tagging data.
+From: Sibi Sankar <sibis@codeaurora.org>
 
+Increase the number of interconnect-cells, as now we can include
+the tag information. The consumers can specify the path tag as an
+additional argument to the endpoints.
+
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/core.c           | 73 ++++++++++++++++++---------
- include/linux/interconnect-provider.h | 17 ++++++-
- 2 files changed, 65 insertions(+), 25 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 216 +++++++++++++--------------
+ 1 file changed, 108 insertions(+), 108 deletions(-)
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index befd111049c0..6ccf55818e68 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -336,12 +336,13 @@ EXPORT_SYMBOL_GPL(of_icc_xlate_onecell);
-  * Looks for interconnect provider under the node specified by @spec and if
-  * found, uses xlate function of the provider to map phandle args to node.
-  *
-- * Returns a valid pointer to struct icc_node on success or ERR_PTR()
-+ * Returns a valid pointer to struct icc_node_data on success or ERR_PTR()
-  * on failure.
-  */
--struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
-+struct icc_node_data *of_icc_get_from_provider(struct of_phandle_args *spec)
- {
- 	struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
-+	struct icc_node_data *data = NULL;
- 	struct icc_provider *provider;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 16df08d9ef8f..fe80e1b8acee 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -132,7 +132,7 @@ &LITTLE_CPU_SLEEP_1
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			next-level-cache = <&L2_0>;
+ 			#cooling-cells = <2>;
+@@ -158,7 +158,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_100>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -180,7 +180,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_200>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -202,7 +202,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_300>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -224,7 +224,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_400>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -246,7 +246,7 @@ &LITTLE_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_500>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+@@ -268,7 +268,7 @@ &BIG_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <405>;
+ 			next-level-cache = <&L2_600>;
+ 			operating-points-v2 = <&cpu6_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+@@ -290,7 +290,7 @@ &BIG_CPU_SLEEP_1
+ 			dynamic-power-coefficient = <405>;
+ 			next-level-cache = <&L2_700>;
+ 			operating-points-v2 = <&cpu6_opp_table>;
+-			interconnects = <&gem_noc MASTER_APPSS_PROC &mc_virt SLAVE_EBI1>,
++			interconnects = <&gem_noc MASTER_APPSS_PROC 3 &mc_virt SLAVE_EBI1 3>,
+ 					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+ 			#cooling-cells = <2>;
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+@@ -742,7 +742,7 @@ qupv3_id_0: geniqup@8c0000 {
+ 			#size-cells = <2>;
+ 			ranges;
+ 			iommus = <&apps_smmu 0x43 0x0>;
+-			interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>;
++			interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>;
+ 			interconnect-names = "qup-core";
+ 			status = "disabled";
  
- 	if (!spec)
-@@ -349,14 +350,33 @@ struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
+@@ -756,9 +756,9 @@ i2c0: i2c@880000 {
+ 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>,
+-						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>,
++						<&aggre1_noc MASTER_QUP_0 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -776,8 +776,8 @@ spi0: spi@880000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -792,8 +792,8 @@ uart0: serial@880000 {
+ 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -808,9 +808,9 @@ i2c1: i2c@884000 {
+ 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>,
+-						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>,
++						<&aggre1_noc MASTER_QUP_0 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -828,8 +828,8 @@ spi1: spi@884000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -844,8 +844,8 @@ uart1: serial@884000 {
+ 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -860,9 +860,9 @@ i2c2: i2c@888000 {
+ 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>,
+-						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>,
++						<&aggre1_noc MASTER_QUP_0 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -878,8 +878,8 @@ uart2: serial@888000 {
+ 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -894,9 +894,9 @@ i2c3: i2c@88c000 {
+ 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>,
+-						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>,
++						<&aggre1_noc MASTER_QUP_0 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -914,8 +914,8 @@ spi3: spi@88c000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -930,8 +930,8 @@ uart3: serial@88c000 {
+ 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -946,9 +946,9 @@ i2c4: i2c@890000 {
+ 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>,
+-						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>,
++						<&aggre1_noc MASTER_QUP_0 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -964,8 +964,8 @@ uart4: serial@890000 {
+ 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -980,9 +980,9 @@ i2c5: i2c@894000 {
+ 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>,
+-						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>,
++						<&aggre1_noc MASTER_QUP_0 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1000,8 +1000,8 @@ spi5: spi@894000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1016,8 +1016,8 @@ uart5: serial@894000 {
+ 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_0>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_0 0 &qup_virt SLAVE_QUP_CORE_0 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_0 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1033,7 +1033,7 @@ qupv3_id_1: geniqup@ac0000 {
+ 			#size-cells = <2>;
+ 			ranges;
+ 			iommus = <&apps_smmu 0x4c3 0x0>;
+-			interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>;
++			interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>;
+ 			interconnect-names = "qup-core";
+ 			status = "disabled";
  
- 	mutex_lock(&icc_lock);
- 	list_for_each_entry(provider, &icc_providers, provider_list) {
--		if (provider->dev->of_node == spec->np)
--			node = provider->xlate(spec, provider->data);
--		if (!IS_ERR(node))
--			break;
-+		if (provider->dev->of_node == spec->np) {
-+			if (provider->xlate_extended) {
-+				data = provider->xlate_extended(spec, provider->data);
-+				if (!IS_ERR(data)) {
-+					node = data->node;
-+					break;
-+				}
-+			} else {
-+				node = provider->xlate(spec, provider->data);
-+				if (!IS_ERR(node))
-+					break;
-+			}
-+		}
- 	}
- 	mutex_unlock(&icc_lock);
+@@ -1047,9 +1047,9 @@ i2c6: i2c@a80000 {
+ 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>,
+-						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>,
++						<&aggre2_noc MASTER_QUP_1 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1067,8 +1067,8 @@ spi6: spi@a80000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1083,8 +1083,8 @@ uart6: serial@a80000 {
+ 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1099,9 +1099,9 @@ i2c7: i2c@a84000 {
+ 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>,
+-						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>,
++						<&aggre2_noc MASTER_QUP_1 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1117,8 +1117,8 @@ uart7: serial@a84000 {
+ 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1133,9 +1133,9 @@ i2c8: i2c@a88000 {
+ 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>,
+-						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>,
++						<&aggre2_noc MASTER_QUP_1 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1153,8 +1153,8 @@ spi8: spi@a88000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1169,8 +1169,8 @@ uart8: serial@a88000 {
+ 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1185,9 +1185,9 @@ i2c9: i2c@a8c000 {
+ 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>,
+-						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>,
++						<&aggre2_noc MASTER_QUP_1 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1203,8 +1203,8 @@ uart9: serial@a8c000 {
+ 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1219,9 +1219,9 @@ i2c10: i2c@a90000 {
+ 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>,
+-						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>,
++						<&aggre2_noc MASTER_QUP_1 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1239,8 +1239,8 @@ spi10: spi@a90000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1255,8 +1255,8 @@ uart10: serial@a90000 {
+ 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1271,9 +1271,9 @@ i2c11: i2c@a94000 {
+ 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>,
+-						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>,
++						<&aggre2_noc MASTER_QUP_1 0 &mc_virt SLAVE_EBI1 0>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
+ 				status = "disabled";
+@@ -1291,8 +1291,8 @@ spi11: spi@a94000 {
+ 				#size-cells = <0>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1307,8 +1307,8 @@ uart11: serial@a94000 {
+ 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+-				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+-						<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_QUP_1>;
++				interconnects = <&qup_virt MASTER_QUP_CORE_1 0 &qup_virt SLAVE_QUP_CORE_1 0>,
++						<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_QUP_1 0>;
+ 				interconnect-names = "qup-core", "qup-config";
+ 				status = "disabled";
+ 			};
+@@ -1317,63 +1317,63 @@ uart11: serial@a94000 {
+ 		config_noc: interconnect@1500000 {
+ 			compatible = "qcom,sc7180-config-noc";
+ 			reg = <0 0x01500000 0 0x28000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
--	return node;
-+	if (IS_ERR(node))
-+		return ERR_CAST(node);
-+
-+	if (!data) {
-+		data = kzalloc(sizeof(*data), GFP_KERNEL);
-+		if (!data)
-+			return ERR_PTR(-ENOMEM);
-+		data->node = node;
-+	}
-+
-+	return data;
- }
- EXPORT_SYMBOL_GPL(of_icc_get_from_provider);
+ 		system_noc: interconnect@1620000 {
+ 			compatible = "qcom,sc7180-system-noc";
+ 			reg = <0 0x01620000 0 0x17080>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
-@@ -403,7 +423,7 @@ EXPORT_SYMBOL_GPL(devm_of_icc_get);
- struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
- {
- 	struct icc_path *path;
--	struct icc_node *src_node, *dst_node;
-+	struct icc_node_data *src_data, *dst_data;
- 	struct device_node *np;
- 	struct of_phandle_args src_args, dst_args;
- 	int ret;
-@@ -441,39 +461,46 @@ struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
+ 		mc_virt: interconnect@1638000 {
+ 			compatible = "qcom,sc7180-mc-virt";
+ 			reg = <0 0x01638000 0 0x1000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
- 	of_node_put(dst_args.np);
+ 		qup_virt: interconnect@1650000 {
+ 			compatible = "qcom,sc7180-qup-virt";
+ 			reg = <0 0x01650000 0 0x1000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
--	src_node = of_icc_get_from_provider(&src_args);
-+	src_data = of_icc_get_from_provider(&src_args);
+ 		aggre1_noc: interconnect@16e0000 {
+ 			compatible = "qcom,sc7180-aggre1-noc";
+ 			reg = <0 0x016e0000 0 0x15080>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
--	if (IS_ERR(src_node)) {
--		if (PTR_ERR(src_node) != -EPROBE_DEFER)
-+	if (IS_ERR(src_data)) {
-+		if (PTR_ERR(src_data) != -EPROBE_DEFER)
- 			dev_err(dev, "error finding src node: %ld\n",
--				PTR_ERR(src_node));
--		return ERR_CAST(src_node);
-+				PTR_ERR(src_data));
-+		return ERR_CAST(src_data);
- 	}
+ 		aggre2_noc: interconnect@1705000 {
+ 			compatible = "qcom,sc7180-aggre2-noc";
+ 			reg = <0 0x01705000 0 0x9000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
--	dst_node = of_icc_get_from_provider(&dst_args);
-+	dst_data = of_icc_get_from_provider(&dst_args);
+ 		compute_noc: interconnect@170e000 {
+ 			compatible = "qcom,sc7180-compute-noc";
+ 			reg = <0 0x0170e000 0 0x6000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
--	if (IS_ERR(dst_node)) {
--		if (PTR_ERR(dst_node) != -EPROBE_DEFER)
-+	if (IS_ERR(dst_data)) {
-+		if (PTR_ERR(dst_data) != -EPROBE_DEFER)
- 			dev_err(dev, "error finding dst node: %ld\n",
--				PTR_ERR(dst_node));
--		return ERR_CAST(dst_node);
-+				PTR_ERR(dst_data));
-+		kfree(src_data);
-+		return ERR_CAST(dst_data);
- 	}
+ 		mmss_noc: interconnect@1740000 {
+ 			compatible = "qcom,sc7180-mmss-noc";
+ 			reg = <0 0x01740000 0 0x1c100>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
- 	mutex_lock(&icc_lock);
--	path = path_find(dev, src_node, dst_node);
-+	path = path_find(dev, src_data->node, dst_data->node);
- 	mutex_unlock(&icc_lock);
- 	if (IS_ERR(path)) {
- 		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
--		return path;
-+		goto free_icc_data;
- 	}
+ 		ipa_virt: interconnect@1e00000 {
+ 			compatible = "qcom,sc7180-ipa-virt";
+ 			reg = <0 0x01e00000 0 0x1000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
-+	if (src_data->tag && src_data->tag == dst_data->tag)
-+		icc_set_tag(path, src_data->tag);
-+
- 	path->name = kasprintf(GFP_KERNEL, "%s-%s",
--			       src_node->name, dst_node->name);
-+			       src_data->node->name, dst_data->node->name);
- 	if (!path->name) {
- 		kfree(path);
--		return ERR_PTR(-ENOMEM);
-+		path = ERR_PTR(-ENOMEM);
- 	}
+@@ -1400,9 +1400,9 @@ ipa: ipa@1e40000 {
+ 			clocks = <&rpmhcc RPMH_IPA_CLK>;
+ 			clock-names = "core";
  
-+free_icc_data:
-+	kfree(src_data);
-+	kfree(dst_data);
- 	return path;
- }
- EXPORT_SYMBOL_GPL(of_icc_get_by_index);
-@@ -975,7 +1002,7 @@ int icc_provider_add(struct icc_provider *provider)
- {
- 	if (WARN_ON(!provider->set))
- 		return -EINVAL;
--	if (WARN_ON(!provider->xlate))
-+	if (WARN_ON(!provider->xlate && !provider->xlate_extended))
- 		return -EINVAL;
+-			interconnects = <&aggre2_noc MASTER_IPA &mc_virt SLAVE_EBI1>,
+-				        <&aggre2_noc MASTER_IPA &system_noc SLAVE_IMEM>,
+-					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_IPA_CFG>;
++			interconnects = <&aggre2_noc MASTER_IPA 0 &mc_virt SLAVE_EBI1 0>,
++					<&aggre2_noc MASTER_IPA 0 &system_noc SLAVE_IMEM 0>,
++					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_IPA_CFG 0>;
+ 			interconnect-names = "memory",
+ 					     "imem",
+ 					     "config";
+@@ -2526,8 +2526,8 @@ qspi: spi@88dc000 {
+ 			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+ 				 <&gcc GCC_QSPI_CORE_CLK>;
+ 			clock-names = "iface", "core";
+-			interconnects = <&gem_noc MASTER_APPSS_PROC
+-					&config_noc SLAVE_QSPI_0>;
++			interconnects = <&gem_noc MASTER_APPSS_PROC 0
++					&config_noc SLAVE_QSPI_0 0>;
+ 			interconnect-names = "qspi-config";
+ 			power-domains = <&rpmhpd SC7180_CX>;
+ 			operating-points-v2 = <&qspi_opp_table>;
+@@ -2586,7 +2586,7 @@ usb_1_ssphy: phy@88e9200 {
+ 		dc_noc: interconnect@9160000 {
+ 			compatible = "qcom,sc7180-dc-noc";
+ 			reg = <0 0x09160000 0 0x03200>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
- 	mutex_lock(&icc_lock);
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 4735518de515..4d535fddd5d3 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -14,6 +14,17 @@
- struct icc_node;
- struct of_phandle_args;
+@@ -2600,14 +2600,14 @@ system-cache-controller@9200000 {
+ 		gem_noc: interconnect@9680000 {
+ 			compatible = "qcom,sc7180-gem-noc";
+ 			reg = <0 0x09680000 0 0x3e200>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
-+/**
-+ * struct icc_node_data - icc node data
-+ *
-+ * @node: icc node
-+ * @tag: tag
-+ */
-+struct icc_node_data {
-+	struct icc_node *node;
-+	u32 tag;
-+};
-+
- /**
-  * struct icc_onecell_data - driver data for onecell interconnect providers
-  *
-@@ -39,6 +50,7 @@ struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
-  * @pre_aggregate: pointer to device specific function that is called
-  *		   before the aggregation begins (optional)
-  * @xlate: provider-specific callback for mapping nodes from phandle arguments
-+ * @xlate_extended: vendor-specific callback for mapping node data from phandle arguments
-  * @dev: the device this interconnect provider belongs to
-  * @users: count of active users
-  * @inter_set: whether inter-provider pairs will be configured with @set
-@@ -52,6 +64,7 @@ struct icc_provider {
- 			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
- 	void (*pre_aggregate)(struct icc_node *node);
- 	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
-+	struct icc_node_data* (*xlate_extended)(struct of_phandle_args *spec, void *data);
- 	struct device		*dev;
- 	int			users;
- 	bool			inter_set;
-@@ -105,7 +118,7 @@ void icc_node_del(struct icc_node *node);
- int icc_nodes_remove(struct icc_provider *provider);
- int icc_provider_add(struct icc_provider *provider);
- int icc_provider_del(struct icc_provider *provider);
--struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec);
-+struct icc_node_data *of_icc_get_from_provider(struct of_phandle_args *spec);
+ 		npu_noc: interconnect@9990000 {
+ 			compatible = "qcom,sc7180-npu-noc";
+ 			reg = <0 0x09990000 0 0x1600>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
  
- #else
+@@ -2643,8 +2643,8 @@ usb_1: usb@a6f8800 {
  
-@@ -157,7 +170,7 @@ static inline int icc_provider_del(struct icc_provider *provider)
- 	return -ENOTSUPP;
- }
+ 			resets = <&gcc GCC_USB30_PRIM_BCR>;
  
--static inline struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
-+static inline struct icc_node_data *of_icc_get_from_provider(struct of_phandle_args *spec)
- {
- 	return ERR_PTR(-ENOTSUPP);
- }
+-			interconnects = <&aggre2_noc MASTER_USB3 &mc_virt SLAVE_EBI1>,
+-					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3>;
++			interconnects = <&aggre2_noc MASTER_USB3 0 &mc_virt SLAVE_EBI1 0>,
++					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3 0>;
+ 			interconnect-names = "usb-ddr", "apps-usb";
+ 
+ 			usb_1_dwc3: dwc3@a600000 {
+@@ -2675,8 +2675,8 @@ venus: video-codec@aa00000 {
+ 				      "vcodec0_core", "vcodec0_bus";
+ 			iommus = <&apps_smmu 0x0c00 0x60>;
+ 			memory-region = <&venus_mem>;
+-			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
+-					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
++			interconnects = <&mmss_noc MASTER_VIDEO_P0 0 &mc_virt SLAVE_EBI1 0>,
++					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_VENUS_CFG 0>;
+ 			interconnect-names = "video-mem", "cpu-cfg";
+ 
+ 			video-decoder {
+@@ -2701,7 +2701,7 @@ videocc: clock-controller@ab00000 {
+ 		camnoc_virt: interconnect@ac00000 {
+ 			compatible = "qcom,sc7180-camnoc-virt";
+ 			reg = <0 0x0ac00000 0 0x1000>;
+-			#interconnect-cells = <1>;
++			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
