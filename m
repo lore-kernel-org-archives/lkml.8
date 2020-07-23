@@ -2,65 +2,136 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFB2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5B3206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3418D206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:58:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNZgxHPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgGWV5Z (ORCPT
+        id S1728076AbgGWV6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgGWV5Y (ORCPT
+        Thu, 23 Jul 2020 17:58:53 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50226 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726697AbgGWV6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:57:24 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31DBC0619D3;
-        Thu, 23 Jul 2020 14:57:24 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DF90611E48C62;
-        Thu, 23 Jul 2020 14:40:37 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 14:57:22 -0700 (PDT)
-Message-Id: <20200723.145722.752878326752101646.davem@davemloft.net>
-To:     andrea.righi@canonical.com
-Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, kuba@kernel.org,
-        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xen-netfront: fix potential deadlock in xennet_remove()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200722065211.GA841369@xps-13>
-References: <20200722065211.GA841369@xps-13>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Thu, 23 Jul 2020 17:58:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595541531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T3T05BblW5qcrnE9EzvsH5COWPH3G8n5S+3dyvDj4j8=;
+        b=NNZgxHPYs7IiJSENv23mZk1yvLJWyFHvx9PaUvtbFiATGc0fHdN/j3DhIep3IxgB5/Oqmo
+        I55Vg6aqdMmQt5WkO4PBr/ENZ0vLouZEYuSY2kdpYnxpfJx2384HcOMqaOyIvKfJ7C/vWp
+        JuCJ1bDLV+D2D5Y3yBT1m4y66grP22o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-1wwkHWrOOpOP_vwI3YSGQw-1; Thu, 23 Jul 2020 17:58:47 -0400
+X-MC-Unique: 1wwkHWrOOpOP_vwI3YSGQw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6195D80183C;
+        Thu, 23 Jul 2020 21:58:45 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-119-128.rdu2.redhat.com [10.10.119.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D6E245C1D3;
+        Thu, 23 Jul 2020 21:58:43 +0000 (UTC)
+Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
+ SPLPAR
+To:     peterz@infradead.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <20200706043540.1563616-6-npiggin@gmail.com>
+ <874kqhvu1v.fsf@mpe.ellerman.id.au>
+ <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
+ <20200723140011.GR5523@worktop.programming.kicks-ass.net>
+ <845de183-56f5-2958-3159-faa131d46401@redhat.com>
+ <20200723184759.GS119549@hirez.programming.kicks-ass.net>
+ <6d6279ad-7432-63c1-14c3-18c4cff30bf8@redhat.com>
+ <20200723195855.GU119549@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <4fbe47a5-dbc9-427a-5b21-b31b37bc751a@redhat.com>
+Date:   Thu, 23 Jul 2020 17:58:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200723195855.GU119549@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 Jul 2020 14:40:38 -0700 (PDT)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
-Date: Wed, 22 Jul 2020 08:52:11 +0200
+On 7/23/20 3:58 PM, peterz@infradead.org wrote:
+> On Thu, Jul 23, 2020 at 03:04:13PM -0400, Waiman Long wrote:
+>> On 7/23/20 2:47 PM, peterz@infradead.org wrote:
+>>> On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
+>>>> BTW, do you have any comment on my v2 lock holder cpu info qspinlock patch?
+>>>> I will have to update the patch to fix the reported 0-day test problem, but
+>>>> I want to collect other feedback before sending out v3.
+>>> I want to say I hate it all, it adds instructions to a path we spend an
+>>> aweful lot of time optimizing without really getting anything back for
+>>> it.
+>> It does add some extra instruction that may slow it down slightly, but I
+>> don't agree that it gives nothing back. The cpu lock holder information can
+>> be useful in analyzing crash dumps and in some debugging situation. I think
+>> it can be useful in RHEL for this readon. How about an x86 config option to
+>> allow distros to decide if they want to have it enabled? I will make sure
+>> that it will have no performance degradation if the option is not enabled.
+> Config knobs suck too; they create a maintenance burden (we get to make
+> sure all the permutations works/build/etc..) and effectively nobody uses
+> them, since world+dog uses what distros pick.
+>
+> Anyway, instead of adding a second per-cpu variable, can you see how
+> horrible something like this is:
+>
+> unsigned char adds(unsigned char var, unsigned char val)
+> {
+> 	unsigned short sat = 0xff, tmp = var;
+>
+> 	asm ("addb	%[val], %b[var];"
+> 	     "cmovc	%[sat], %[var];"
+> 	     : [var] "+r" (tmp)
+> 	     : [val] "ir" (val), [sat] "r" (sat)
+> 	     );
+>
+> 	return tmp;
+> }
+>
+> Another thing to try is, instead of threading that lockval throughout
+> the thing, simply:
+>
+> #define _Q_LOCKED_VAL	this_cpu_read_stable(cpu_sat)
+>
+> or combined with the above
+>
+> #define _Q_LOCKED_VAL	adds(this_cpu_read_stable(cpu_number), 2)
+>
+> and see if the compiler really makes a mess of things.
+>
+Thanks for the suggestion. I will try that out.
 
-> +static int xennet_remove(struct xenbus_device *dev)
-> +{
-> +	struct netfront_info *info = dev_get_drvdata(&dev->dev);
-> +
-> +	dev_dbg(&dev->dev, "%s\n", dev->nodename);
+Cheers,
+Longman
 
-These kinds of debugging messages provide zero context and are so much
-less useful than simply using tracepoints which are more universally
-available than printk debugging facilities.
-
-Please remove all of the dev_dbg() calls from this patch.
