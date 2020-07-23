@@ -2,78 +2,79 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A78C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF61620709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983A820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595529153;
+	bh=ZDU+EEnAEQWEflbNqthke0jssQz/wTzJgnUV5q4keqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bGTKrqMUp9z5KAU759i+m6G7l8T5qbtaQNo+9Tj3ajgRy5Kp2VL2rUE0jHVf57EaZ
+	 u+mdKyYbSmYppvCtgHHS1D+viTiN9/vHkopoPgo+XB/MN6DxjPOWChS5umk7U9xt2M
+	 kAYF1HLV0KmyeMF4e5Zkm0XT0SlubUlcOKDtfihQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgGWScF (ORCPT
+        id S1727804AbgGWScc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:32:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:49924 "EHLO foss.arm.com"
+        Thu, 23 Jul 2020 14:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbgGWScF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:32:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90AECD6E;
-        Thu, 23 Jul 2020 11:32:04 -0700 (PDT)
-Received: from [192.168.0.57] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64E8A3F66E;
-        Thu, 23 Jul 2020 11:32:03 -0700 (PDT)
-Subject: Re: [PATCH v5 00/10] x86/resctrl: Misc cleanup
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Babu Moger <Babu.Moger@amd.com>
-References: <20200708163929.2783-1-james.morse@arm.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <1887b64a-dd18-25ff-a9f4-885c231c60b2@arm.com>
-Date:   Thu, 23 Jul 2020 19:31:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726349AbgGWScc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:32:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8DA20709;
+        Thu, 23 Jul 2020 18:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595529151;
+        bh=ZDU+EEnAEQWEflbNqthke0jssQz/wTzJgnUV5q4keqw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lPrTsHDb+D4Ge6NG31U0z3PeggId4zb7RAYTrqQ0uoyp9RS8ZBkoNO5NnXx3xRSkJ
+         38R+0QYeLVuKc4sOTvJ2+xSXaOLxzaDKj0teqXKCYAHZGZnXnVVQTWjpx2bglXS14p
+         yGIN2/GGK/3PmuUAbZbaLBaP1J4ApF0cF2AlLvFs=
+Date:   Thu, 23 Jul 2020 20:32:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        rafael.j.wysocki@intel.com
+Cc:     linux-pm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org, swboyd@chromium.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 1/1] power: Emit changed uevent on
+ wakeup_sysfs_add/remove
+Message-ID: <20200723183235.GA3445384@kroah.com>
+References: <20200707172845.4177903-1-abhishekpandit@chromium.org>
+ <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
 MIME-Version: 1.0
-In-Reply-To: <20200708163929.2783-1-james.morse@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Reinette,
-
-On 08/07/2020 17:39, James Morse wrote:
-> These are the miscellaneous cleanup patches that floated to the top of
-> the MPAM tree.
-
-Is there anything else I should do with this series?
-(Does patch 10 need an ACK from anyone else?)
-
-Would a branch or pull request make anyone's life easier?
-
-
-Thanks,
-
-James
-
-> The only interesting thing are the patches to make the AMD/Intel
-> differences something resctrl understands, instead of just 'happening'
-> because of the different function pointers.
-> This will become more important once MPAM support is added. parse_bw()
-> and friends are what enforces resctrl's ABI. Allowing an
-> architecture/platform to provide a subtly different function here would
-> be bad for user-space.
+On Tue, Jul 07, 2020 at 10:28:44AM -0700, Abhishek Pandit-Subedi wrote:
+> Udev rules that depend on the power/wakeup attribute don't get triggered
+> correctly if device_set_wakeup_capable is called after the device is
+> created. This can happen for several reasons (driver sets wakeup after
+> device is created, wakeup is changed on parent device, etc) and it seems
+> reasonable to emit a changed event when adding or removing attributes on
+> the device.
 > 
-> MPAM would set arch_has_sparse_bitmaps and arch_has_empty_bitmap, but
-> not arch_needs_linear.
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
-> Nothing in this series should change any behaviour.
+Rafael, any objection to this?  Do you want me to take it through my
+tree, or are you going to take it through yours?  Either is fine for me.
+
+thanks,
+
+greg k-h
