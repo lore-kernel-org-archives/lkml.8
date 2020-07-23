@@ -2,194 +2,124 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B3DC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD69B206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="GwwRckPu"
+	by mail.kernel.org (Postfix) with ESMTP id 3A3C720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgGWQXF (ORCPT
+        id S1729816AbgGWQXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:23:05 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:55996 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgGWQXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:23:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595521385;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pnROkcEpzt5hqqMgmqaKRrmNaTL4b1rnk61ZyREWxOE=;
-  b=GwwRckPuN9CZXV0JIapMxBsl4NokNF+orfmrVvOSUgMU5CQXygZKXV3y
-   nBSHGlc/G6T7lvGffPF8/Gzduey/TSkZzcOjrEI3PzeVXUUGatUycgDx5
-   rtj17PZbSaZ0psZLvYwKZsuCctMwGUuThe8mhvIXcRKN5rRixKeu7/QoG
-   U=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: SWN1Qv9Vg9UuCVerUDK4H3bgKeOadVxeZGsvJXl6PnccOSKOYBTcvN9I6wjT6IwJFkPdhXIRw0
- kFcKo29eMjnJoS2WsGGcaZyca03MQjcyw9U9320DxG5Asn9dsHmVHne9Bb6/eAg5+tv33V2pMR
- vEJbAaT3x6DNSYYJ7UfUjgvb+4YbrSOkcFVfMSfCiq8087EDxZOi+vssGJbntjDi+9FJZH7Mfe
- PdndOJ+pY4J7QtauKXpYcPYITi03og2YKjxGzu/uKM3rK82oV5/A3wPsVz9EOMq3DVQzMSI2KP
- Ebg=
-X-SBRS: 2.7
-X-MesageID: 23391925
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,387,1589256000"; 
-   d="scan'208";a="23391925"
-Date:   Thu, 23 Jul 2020 18:22:56 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        David Hildenbrand <david@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
+        Thu, 23 Jul 2020 12:23:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48328 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbgGWQXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:23:16 -0400
+IronPort-SDR: gxQEbKt6Zgwo1Jv4dJl4CnSwOUKj3kgYJ76M543d4oChagD/INXos4Nxt4A0nWHoE296DPQADn
+ DLHgMJhQ8PVA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="212103989"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="212103989"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:23:15 -0700
+IronPort-SDR: YpUImzkJbhJ5GzpfHZafueCnTauiViLJnLUDexlubhGtA7MTuQD7ODVue/eLXjdqJ9WI8tlfXi
+ ym0JuZ1Uj9UA==
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="393047961"
+Received: from bhkleins-mobl.amr.corp.intel.com (HELO [10.252.140.192]) ([10.252.140.192])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:23:14 -0700
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
+ exceptions
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Weiny Ira <ira.weiny@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-Message-ID: <20200723162256.GI7191@Air-de-Roger>
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
- <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
- <20200723122300.GD7191@Air-de-Roger>
- <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
- <20200723135930.GH7191@Air-de-Roger>
- <82b131f4-8f50-cd49-65cf-9a87d51b5555@suse.com>
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-18-ira.weiny@intel.com>
+ <CALCETrVe1i5JdyzD_BcctxQJn+ZE3T38EFPgjxN1F577M36g+w@mail.gmail.com>
+ <20200723161818.GA77434@romley-ivt3.sc.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <1cdb358b-861a-5f74-8cd0-84ee5265035c@intel.com>
+Date:   Thu, 23 Jul 2020 09:23:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+In-Reply-To: <20200723161818.GA77434@romley-ivt3.sc.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <82b131f4-8f50-cd49-65cf-9a87d51b5555@suse.com>
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 05:10:03PM +0200, Jürgen Groß wrote:
-> On 23.07.20 15:59, Roger Pau Monné wrote:
-> > On Thu, Jul 23, 2020 at 03:22:49PM +0200, David Hildenbrand wrote:
-> > > On 23.07.20 14:23, Roger Pau Monné wrote:
-> > > > On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
-> > > > > On 23.07.20 10:45, Roger Pau Monne wrote:
-> > > > > > Add an extra option to add_memory_resource that overrides the memory
-> > > > > > hotplug online behavior in order to force onlining of memory from
-> > > > > > add_memory_resource unconditionally.
-> > > > > > 
-> > > > > > This is required for the Xen balloon driver, that must run the
-> > > > > > online page callback in order to correctly process the newly added
-> > > > > > memory region, note this is an unpopulated region that is used by Linux
-> > > > > > to either hotplug RAM or to map foreign pages from other domains, and
-> > > > > > hence memory hotplug when running on Xen can be used even without the
-> > > > > > user explicitly requesting it, as part of the normal operations of the
-> > > > > > OS when attempting to map memory from a different domain.
-> > > > > > 
-> > > > > > Setting a different default value of memhp_default_online_type when
-> > > > > > attaching the balloon driver is not a robust solution, as the user (or
-> > > > > > distro init scripts) could still change it and thus break the Xen
-> > > > > > balloon driver.
-> > > > > 
-> > > > > I think we discussed this a couple of times before (even triggered by my
-> > > > > request), and this is responsibility of user space to configure. Usually
-> > > > > distros have udev rules to online memory automatically. Especially, user
-> > > > > space should eb able to configure *how* to online memory.
-> > > > 
-> > > > Note (as per the commit message) that in the specific case I'm
-> > > > referring to the memory hotplugged by the Xen balloon driver will be
-> > > > an unpopulated range to be used internally by certain Xen subsystems,
-> > > > like the xen-blkback or the privcmd drivers. The addition of such
-> > > > blocks of (unpopulated) memory can happen without the user explicitly
-> > > > requesting it, and hence not even aware such hotplug process is taking
-> > > > place. To be clear: no actual RAM will be added to the system.
-> > > 
-> > > Okay, but there is also the case where XEN will actually hotplug memory
-> > > using this same handler IIRC (at least I've read papers about it). Both
-> > > are using the same handler, correct?
-> > 
-> > Yes, it's used by this dual purpose, which I have to admit I don't
-> > like that much either.
-> > 
-> > One set of pages should be clearly used for RAM memory hotplug, and
-> > the other to map foreign pages that are not related to memory hotplug,
-> > it's just that we happen to need a physical region with backing struct
-> > pages.
-> > 
-> > > > 
-> > > > > It's the admin/distro responsibility to configure this properly. In case
-> > > > > this doesn't happen (or as you say, users change it), bad luck.
-> > > > > 
-> > > > > E.g., virtio-mem takes care to not add more memory in case it is not
-> > > > > getting onlined. I remember hyper-v has similar code to at least wait a
-> > > > > bit for memory to get onlined.
-> > > > 
-> > > > I don't think VirtIO or Hyper-V use the hotplug system in the same way
-> > > > as Xen, as said this is done to add unpopulated memory regions that
-> > > > will be used to map foreign memory (from other domains) by Xen drivers
-> > > > on the system.
-> > > 
-> > > Indeed, if the memory is never exposed to the buddy (and all you need is
-> > > struct pages +  a kernel virtual mapping), I wonder if
-> > > memremap/ZONE_DEVICE is what you want?
-> > 
-> > I'm certainly not familiar with the Linux memory subsystem, but if
-> > that gets us a backing struct page and a kernel mapping then I would
-> > say yes.
-> > 
-> > > Then you won't have user-visible
-> > > memory blocks created with unclear online semantics, partially involving
-> > > the buddy.
-> > 
-> > Seems like a fine solution.
-> > 
-> > Juergen: would you be OK to use a separate page-list for
-> > alloc_xenballooned_pages on HVM/PVH using the logic described by
-> > David?
-> > 
-> > I guess I would leave PV as-is, since it already has this reserved
-> > region to map foreign pages.
-> 
-> I would really like a common solution, especially as it would enable
-> pv driver domains to use that feature, too.
+On 7/23/20 9:18 AM, Fenghua Yu wrote:
+> The PKRS MSR has been preserved in thread_info during kernel entry. We
+> don't need to preserve it in another place (i.e. idtentry_state).
 
-I think PV is much more easy on that regard, as it doesn't have MMIO
-holes except when using PCI passthrough, and in that case it's
-trivial to identify those.
-
-However on HVM/PVH this is not so trivial. I'm certainly not opposing
-to a solution that covers both, but ATM I would really like to get
-something working for PVH dom0, or else it's not usable on Linux IMO.
-
-> And finding a region for this memory zone in PVH dom0 should be common
-> with PV dom0 after all. We don't want to collide with either PCI space
-> or hotplug memory.
-
-Right, we could use the native memory map for that on dom0, and maybe
-create a custom resource for the Xen balloon driver instead of
-allocating from iomem_resource?
-
-DomUs are more tricky as a guest has no idea where mappings can be
-safely placed, maybe we will have to resort to iomem_resource in that
-case, as I don't see much other option due to the lack of information
-from Xen.
-
-I also think that ZONE_DEVICE will need some adjustments, for once the
-types in memory_type don't seem to be suitable for Xen, as they are
-either specific to DAX or PCI. I gave a try at using allocate_resource
-plus memremap_pages but that didn't seem to fly, I will need to
-investigate further.
-
-Maybe we can resort to something even simpler than memremap_pages? I
-certainly have very little idea of how this is supposed to be used,
-but dev_pagemap seems overly complex for what we are trying to
-achieve.
-
-Thanks, Roger.
+I'm missing how the PKRS MSR gets preserved in thread_info.  Could you
+explain the mechanism by which this happens and point to the code
+implementing it, please?
