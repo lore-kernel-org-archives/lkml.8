@@ -2,172 +2,224 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1275C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBD052068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7778206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="At0Pl150"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBJI9IFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgGWHPk (ORCPT
+        id S1726764AbgGWHP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:15:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59684 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbgGWHPk (ORCPT
+        Thu, 23 Jul 2020 03:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgGWHP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:15:40 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N7DD7m014051;
-        Thu, 23 Jul 2020 09:15:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=yqcfY/padsjVsHSiHABJVoYRhWwTvp1SMriQZY8ccyU=;
- b=At0Pl150HlvjCdBUER0ftWuQuekxfi0EwklT75x/bePqYqO4iWqKjxuNsDn7aFrOZpLe
- 42WJqY4eJEJYzCCfh/TdisUjXbq47ICeBRdrfFAg1n3vrswF9wFc/L6+9l7FjlYtbXQt
- ozlUIOEaCMZYqIrJm2Hkl+fcCAUERTXyqFjbBOcq/0GLgFxwvX8H7yVXfR6PxmwRFprp
- eNlqkDES+OBWBOHik1XACNAmvweFWNWXHS8ed4YVhMeDS/KSfUhK60bbf0KJWTXQs8CG
- btG6mEnaLZj84V88bkHov2UkcUEiRRfWtd1swOyWMnDoc2ka7q39STFgU6Gh1OKqTcVS 7A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsah95dp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 09:15:20 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4B13610002A;
-        Thu, 23 Jul 2020 09:15:19 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 32E0621FEA9;
-        Thu, 23 Jul 2020 09:15:19 +0200 (CEST)
-Received: from lmecxl0995.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Jul
- 2020 09:15:18 +0200
-Subject: Re: [PATCH 1/3] usb: dwc2: override PHY input signals with usb role
- switch support
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "balbi@kernel.org" <balbi@kernel.org>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hminas@synopsys.com" <hminas@synopsys.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-References: <20200616140717.28465-2-amelie.delaunay@st.com>
- <20200704174219.612060-1-martin.blumenstingl@googlemail.com>
- <05a81997-5ddb-ea81-7a89-8078b8a2b610@st.com>
- <CAFBinCCVYJ=DuKbqhJJ8463Gs+GW0bgxyXSFiLXhUfvWV6AR0Q@mail.gmail.com>
- <ee4ee889-835e-2244-504c-2b1b605d78aa@st.com>
- <CAFBinCDUxvovAyDywz3xVcu_1v4nai+ebR2D38U2B8oBGss=yg@mail.gmail.com>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <7497c0ed-bac6-969e-8198-c40a41e874e3@st.com>
-Date:   Thu, 23 Jul 2020 09:15:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 03:15:58 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3ADC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:15:58 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m9so2562207pfh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=VR/NDI+ozBpNv5i6H/LGSP7yoKE3iYE0zpP1AoTLlT4=;
+        b=vBJI9IFDmZI6MiAf44fmljKRlbNnO4ZasFgKep1ex6LosYIIjo7torR6Ha5JPVbJyi
+         BUFOmrX9GjX3APpo8ePyWe5/tv52Ui8mgvJ2HIbGs/4ksEDKwvUvDKJvS0JtmNosYul8
+         WU7MDmGbryziAdjmAEBxK5SHy08IdMCHtNsaW3uaW69IliUBMSTIrfBEb1Sx9+GwXB/V
+         ukB55bHNP2CSZmKhap+0BSS8woaOKYyF/sj4/vvjnCmOE3AFjRshI+ei0J8nvisj+bpG
+         n4tP4VCaKkZh12Wxr/pJUkswnaJSor7TVKDDoDFgJUjNYq2mCP37r2iZYOz9rDxCQEgg
+         jE2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=VR/NDI+ozBpNv5i6H/LGSP7yoKE3iYE0zpP1AoTLlT4=;
+        b=lvNj94SFbTuBB4FfaxY3WGyn3VktWMl4StmOageP7EZZQg25RMOZXAK5czyIR6ZgCM
+         I21+4+h0+K1A0muDqONnX9OoncYDdMAoapQ3STkNIZSNaRSX+i7b9reya7O30qxplk/7
+         S6SfanJsY1RPxE2M5UxxpwR8cwMTbrXNNYAFc95sP/2f0P4LdzVo4JkG2yih7QC7T9FW
+         JdUC939wxylsNVlDVC0R3VnnOV00YHZ+lKc85CKxnWm4o4SIr9OQSlWmf5IYUKXM2lYs
+         wH7n+29Z/bfzzQNm1+H7YsohDJTpTB3xyw7fyO65nbao7YT1fdSyS+wPfs9MdOmG/8hn
+         g/jA==
+X-Gm-Message-State: AOAM530ado+KSSLBUk1vl+SyH4LSq955e2FwqeFK2X8+Ejh/O3XFd/6u
+        HX1bbmEN3OPI2mPk4H+sOjc=
+X-Google-Smtp-Source: ABdhPJw3nLDvjjVOGNbiGEyZt1VIatOakEbUn0NLgXBisL8qGgxdARcSXmlZIpvzylWYjrjh048ocg==
+X-Received: by 2002:a63:9246:: with SMTP id s6mr3009420pgn.22.1595488557986;
+        Thu, 23 Jul 2020 00:15:57 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id q5sm1784616pfc.130.2020.07.23.00.15.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 00:15:57 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 17:15:51 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     axboe@kernel.dk, hch@lst.de, jannh@google.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        luto@amacapital.net, mathieu.desnoyers@efficios.com,
+        torvalds@linux-foundation.org, will@kernel.org
+References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
+        <20200721140623.4e8ecc6ef5d5ff42115d68fc@linux-foundation.org>
+        <20200722083533.GK10769@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200722083533.GK10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCDUxvovAyDywz3xVcu_1v4nai+ebR2D38U2B8oBGss=yg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
+Message-Id: <1595487967.kclapwroks.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe,
-Hi Martin,
+Excerpts from Peter Zijlstra's message of July 22, 2020 6:35 pm:
+> On Tue, Jul 21, 2020 at 02:06:23PM -0700, Andrew Morton wrote:
+>> On Tue, 21 Jul 2020 17:41:06 +0200 Peter Zijlstra <peterz@infradead.org>=
+ wrote:
+>>=20
+>> >=20
+>> > For SMP systems using IPI based TLB invalidation, looking at
+>> > current->active_mm is entirely reasonable. This then presents the
+>> > following race condition:
+>> >=20
+>> >=20
+>> >   CPU0			CPU1
+>> >=20
+>> >   flush_tlb_mm(mm)	use_mm(mm)
+>> >     <send-IPI>
+>> > 			  tsk->active_mm =3D mm;
+>> > 			  <IPI>
+>> > 			    if (tsk->active_mm =3D=3D mm)
+>> > 			      // flush TLBs
+>> > 			  </IPI>
+>> > 			  switch_mm(old_mm,mm,tsk);
+>> >=20
+>> >=20
+>> > Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
+>> > because the IPI lands before we actually switched.
+>> >=20
+>> > Avoid this by disabling IRQs across changing ->active_mm and
+>> > switch_mm().
+>> >=20
+>> > [ There are all sorts of reasons this might be harmless for various
+>> > architecture specific reasons, but best not leave the door open at
+>> > all. ]
+>>=20
+>> Can we give the -stable maintainers (and others) more explanation of
+>> why they might choose to merge this?
+>=20
+> Like so then?
+>=20
+> ---
+> Subject: mm: Fix kthread_use_mm() vs TLB invalidate
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Tue, 11 Feb 2020 10:25:19 +0100
+>=20
+> For SMP systems using IPI based TLB invalidation, looking at
+> current->active_mm is entirely reasonable. This then presents the
+> following race condition:
+>=20
+>=20
+>   CPU0			CPU1
+>=20
+>   flush_tlb_mm(mm)	use_mm(mm)
+>     <send-IPI>
+> 			  tsk->active_mm =3D mm;
+> 			  <IPI>
+> 			    if (tsk->active_mm =3D=3D mm)
+> 			      // flush TLBs
+> 			  </IPI>
+> 			  switch_mm(old_mm,mm,tsk);
+>=20
+>=20
+> Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
+> because the IPI lands before we actually switched.
+>=20
+> Avoid this by disabling IRQs across changing ->active_mm and
+> switch_mm().
+>=20
+> Of the (SMP) architectures that have IPI based TLB invalidate:
+>=20
+>   Alpha    - checks active_mm
+>   ARC      - ASID specific
+>   IA64     - checks active_mm
+>   MIPS     - ASID specific flush
+>   OpenRISC - shoots down world
+>   PARISC   - shoots down world
+>   SH       - ASID specific
+>   SPARC    - ASID specific
+>   x86      - N/A
+>   xtensa   - checks active_mm
+>=20
+> So at the very least Alpha, IA64 and Xtensa are suspect.
+>=20
+> On top of this, for scheduler consistency we need at least preemption
+> disabled across changing tsk->mm and doing switch_mm(), which is
+> currently provided by task_lock(), but that's not sufficient for
+> PREEMPT_RT.
+>=20
+> Reported-by: Andy Lutomirski <luto@amacapital.net>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: stable@kernel.org
+> ---
+>  kernel/kthread.c |   11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> --- a/kernel/kthread.c
+> +++ b/kernel/kthread.c
+> @@ -1241,13 +1241,20 @@ void kthread_use_mm(struct mm_struct *mm
+>  	WARN_ON_ONCE(tsk->mm);
+> =20
+>  	task_lock(tsk);
+> +	/*
+> +	 * Serialize the tsk->mm store and switch_mm() against TLB invalidation
+> +	 * IPIs. Also make sure we're non-preemptible on PREEMPT_RT to not race
+> +	 * against the scheduler writing to these variables.
+> +	 */
+> +	local_irq_disable();
+>  	active_mm =3D tsk->active_mm;
+>  	if (active_mm !=3D mm) {
+>  		mmgrab(mm);
+>  		tsk->active_mm =3D mm;
+>  	}
+>  	tsk->mm =3D mm;
+> -	switch_mm(active_mm, mm, tsk);
+> +	switch_mm_irqs_off(active_mm, mm, tsk);
+> +	local_irq_enable();
+>  	task_unlock(tsk);
+>  #ifdef finish_arch_post_lock_switch
+>  	finish_arch_post_lock_switch();
+> @@ -1276,9 +1283,11 @@ void kthread_unuse_mm(struct mm_struct *
+> =20
+>  	task_lock(tsk);
+>  	sync_mm_rss(mm);
+> +	local_irq_disable();
+>  	tsk->mm =3D NULL;
+>  	/* active_mm is still 'mm' */
+>  	enter_lazy_tlb(mm, tsk);
+> +	local_irq_enable();
+>  	task_unlock(tsk);
+>  }
+>  EXPORT_SYMBOL_GPL(kthread_unuse_mm);
+>=20
 
-I saw the issue reported ([balbi-usb:testing/next 2/17] 
-drivers/usb/dwc2/drd.c:80:38: error: no member named 'test_mode' in 
-'struct dwc2_hsotg'). I prepare a V2 fixing it + adressing Martin's 
-comments.
+Oh good, this is also needed as part of my preferred fix for the=20
+io_uring mmget_not_zero->use_mm() vs mm_cpumask problem
 
-Regards,
-Amelie
+https://marc.info/?l=3Dlinux-mm&m=3D159520550112106&w=3D2
 
-On 7/19/20 9:56 PM, Martin Blumenstingl wrote:
-> Hello Amelie,
-> 
-> sorry for the late reply
-> 
-> On Wed, Jul 8, 2020 at 6:00 PM Amelie DELAUNAY <amelie.delaunay@st.com> 
-> wrote:
-> [...]
->> Could you please test with:
->>
->> static int dwc2_drd_role_sw_set(struct device *dev, enum usb_role role)
->> {
->>         struct dwc2_hsotg *hsotg = dev_get_drvdata(dev);
->>         unsigned long flags;
->>         int already = 0;
->>
->>         /* Skip session not in line with dr_mode */
->>         if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
->>             (role == USB_ROLE_HOST && hsotg->dr_mode == USB_DR_MODE_PERIPHERAL))
->>                 return -EINVAL;
->>
->>         /* Skip session if core is in test mode */
->>         if (role == USB_ROLE_NONE && hsotg->test_mode) {
->>                 dev_dbg(hsotg->dev, "Core is in test mode\n");
->>                 return -EBUSY;
->>         }
->>
->>         spin_lock_irqsave(&hsotg->lock, flags);
->>
->>         if (role == USB_ROLE_HOST) {
->>                 already = dwc2_ovr_avalid(hsotg, true);
->>         } else if (role == USB_ROLE_DEVICE) {
->>                 already = dwc2_ovr_bvalid(hsotg, true);
->>                 /* This clear DCTL.SFTDISCON bit */
->>                 dwc2_hsotg_core_connect(hsotg);
->>         } else {
->>                 if (dwc2_is_device_mode(hsotg)) {
->>                     if (!dwc2_ovr_bvalid(hsotg, false))
->>                         /* This set DCTL.SFTDISCON bit */
->>                         dwc2_hsotg_core_disconnect(hsotg);
->>                 } else {
->>                         dwc2_ovr_avalid(hsotg, false);
->>                 }
->>         }
->>
->>         spin_unlock_irqrestore(&hsotg->lock, flags);
->>
->>         if (!already &&
->>             role != USB_ROLE_NONE && hsotg->dr_mode == USB_DR_MODE_OTG)
->>                 /* This will raise a Connector ID Status Change Interrupt */
->>                 dwc2_force_mode(hsotg, role == USB_ROLE_HOST);
->>
->>         dev_dbg(hsotg->dev, "%s-session valid\n",
->>                 role == USB_ROLE_NONE ? "No" :
->>                 role == USB_ROLE_HOST ? "A" : "B");
->>
->>         return 0;
->> }
->>
->>
->> dwc2_force_mode is called outside the spin_lock_irqsave so the kernel
->> should not complain. I've tested on my setup and the behavior seems the
->> same.
-> this one is looking good - the previous kernel warnings are now gone!
-> thank you very much
-> 
-> 
-> Best regards,
-> Martin
+I'll try to do arch fixes on top of this (I have the same hunks
+locally!). After that, we should be able to allow mmget_not_zero
+to be first class references to mm AFAIKS.
+
+Thanks,
+Nick
