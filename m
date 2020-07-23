@@ -2,122 +2,116 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E2CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042A5C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 076842071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:57:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BRankmmJ"
+	by mail.kernel.org (Postfix) with ESMTP id D2C1B2071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgGWI5t (ORCPT
+        id S1727859AbgGWI7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:57:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30907 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGWI5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:57:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595494668; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=uMsXblhmzZzd8eLTAl6l9gS/3WdMrBZGhkBeFqbIlWs=; b=BRankmmJbYW+rKO+7az1eAFuWdItT/GqvaL9sfkgpMIansMasYhfRWP2XGdp5fs9w0DuQomf
- p6COjumNdKZICCOsj98HKRvL/wkB1k6ZlKZQAlwX393HLzPvrI9EHYetdQtWAdIjFxF1NUPn
- xIU4gDF3jIiNl742igbRhloj5TA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f1950fb1e603dbb447eb6a3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 08:57:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 91BA2C433CB; Thu, 23 Jul 2020 08:57:30 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [123.201.159.88])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: msavaliy)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5997AC433C9;
-        Thu, 23 Jul 2020 08:57:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5997AC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=msavaliy@codeaurora.org
-Subject: Re: [PATCH] soc: qcom-geni-se: Don't use relaxed writes when writing
- commands
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
-From:   "Mukesh, Savaliya" <msavaliy@codeaurora.org>
-Message-ID: <c41ccd0e-e18b-02eb-79b7-2cad604b5090@codeaurora.org>
-Date:   Thu, 23 Jul 2020 14:27:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thu, 23 Jul 2020 04:59:53 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:31288 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgGWI7x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:59:53 -0400
+Received: from [192.168.43.110] ([93.23.16.85])
+        by mwinf5d15 with ME
+        id 6Yzp2300S1q71ed03Yzqlf; Thu, 23 Jul 2020 10:59:51 +0200
+X-ME-Helo: [192.168.43.110]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 23 Jul 2020 10:59:51 +0200
+X-ME-IP: 93.23.16.85
+Subject: Re: [PATCH 1/2] misc: hpilo: switch from 'pci_' to 'dma_' API
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200718070224.337964-1-christophe.jaillet@wanadoo.fr>
+ <20200723073433.GA1273491@kroah.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <15e5f2e4-a623-3fc2-36b6-4132ee316220@wanadoo.fr>
+Date:   Thu, 23 Jul 2020 10:59:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
+In-Reply-To: <20200723073433.GA1273491@kroah.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le 23/07/2020 à 09:34, Greg KH a écrit :
+> On Sat, Jul 18, 2020 at 09:02:24AM +0200, Christophe JAILLET wrote:
+>> The wrappers in include/linux/pci-dma-compat.h should go away.
+>>
+>> The patch has been generated with the coccinelle script below and has been
+>> hand modified to replace GFP_ with a correct flag.
+>> It has been compile tested.
+>>
+>> When memory is allocated in 'ilo_ccb_setup()' GFP_ATOMIC must be used
+>> because a spin_lock is hold in 'ilo_open()' before calling
+>> 'ilo_ccb_setup()'
 
-On 7/23/2020 3:31 AM, Douglas Anderson wrote:
-> Writing the command is the final step in kicking off a transfer.
-> Let's use writel() to ensure that any other memory accesses are done
-> before the command kicks off.  It's expected that this is mostly
-> relevant if we're in DMA mode but since it doesn't appear to regress
-> performance in a measurable way [1] even in PIO mode and it's easier
-> to reason about then let's just always use it.
->
-> NOTE: this patch came about due to code inspection.  No actual
-> problems were observed that this patch fixes.
->
-> [1] Tested by timing "flashrom -p ec" on a Chromebook which stresses
-> GENI SPI a lot.
->
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
-> ---
->
->   include/linux/qcom-geni-se.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd464943f717..f50c73be1428 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -262,7 +262,7 @@ static inline void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
->   	u32 m_cmd;
->   
->   	m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
-> -	writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
-> +	writel(m_cmd, se->base + SE_GENI_M_CMD0);
->   }
->   
->   /**
-> @@ -282,7 +282,7 @@ static inline void geni_se_setup_s_cmd(struct geni_se *se, u32 cmd, u32 params)
->   	s_cmd &= ~(S_OPCODE_MSK | S_PARAMS_MSK);
->   	s_cmd |= (cmd << S_OPCODE_SHFT);
->   	s_cmd |= (params & S_PARAMS_MSK);
-> -	writel_relaxed(s_cmd, se->base + SE_GENI_S_CMD0);
-> +	writel(s_cmd, se->base + SE_GENI_S_CMD0);
->   }
->   
->   /**
+        ^
+        |
+
+>> [...]
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>> If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+>>     https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+>> ---
+>>   drivers/misc/hpilo.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/misc/hpilo.c b/drivers/misc/hpilo.c
+>> index 10c975662f8b..c9539c89a925 100644
+>> --- a/drivers/misc/hpilo.c
+>> +++ b/drivers/misc/hpilo.c
+>> @@ -256,7 +256,8 @@ static void ilo_ccb_close(struct pci_dev *pdev, struct ccb_data *data)
+>>   	memset_io(device_ccb, 0, sizeof(struct ccb));
+>>   
+>>   	/* free resources used to back send/recv queues */
+>> -	pci_free_consistent(pdev, data->dma_size, data->dma_va, data->dma_pa);
+>> +	dma_free_coherent(&pdev->dev, data->dma_size, data->dma_va,
+>> +			  data->dma_pa);
+>>   }
+>>   
+>>   static int ilo_ccb_setup(struct ilo_hwinfo *hw, struct ccb_data *data, int slot)
+>> @@ -272,8 +273,8 @@ static int ilo_ccb_setup(struct ilo_hwinfo *hw, struct ccb_data *data, int slot)
+>>   			 2 * desc_mem_sz(NR_QENTRY) +
+>>   			 ILO_START_ALIGN + ILO_CACHE_SZ;
+>>   
+>> -	data->dma_va = pci_alloc_consistent(hw->ilo_dev, data->dma_size,
+>> -					    &data->dma_pa);
+>> +	data->dma_va = dma_alloc_coherent(&hw->ilo_dev->dev, data->dma_size,
+>> +					  &data->dma_pa, GFP_ATOMIC);
+> 
+> This is being called from open() so it can be GFP_KERNEL.  Can you fix
+> that up and resend a new version?
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+The call chain is:
+    .open	                       (file_operations)
+       --> ilo_open
+	  spin_lock(&hw->open_lock);   (around line 782)
+          --> ilo_ccb_setup	       (hw->open_lock is still hold)
+
+So I think that GFP_ATOMIC is needed here, or the code should be 
+reworked to avoid holding the spin_lock when ilo_ccb_setup is called.
+
+CJ
