@@ -2,84 +2,131 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B6EC43446
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8958520709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1409B20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EUBfvEjY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hzqKFn98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgGWL2L (ORCPT
+        id S1728669AbgGWL2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:28:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbgGWL2K (ORCPT
+        Thu, 23 Jul 2020 07:28:14 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11741 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728635AbgGWL2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:28:10 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722E8C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YgkYb9+mXjx9AMiNkQHw9z5f5bsoHW0FayfQqrx0gm0=; b=EUBfvEjYINo6zYXuS9AtgTymxc
-        sEF9uWBo6EyK2/TPvNKF85iyrdfBvpdqDIzEwuz4kuiewJP/ezm3Mf2KAl1UyNBCA7aXRv6dgiJ1L
-        IHfr2HvF06zF20qFJWNjoeI6CSfKMDi4enYRs/uTES1Klo9qQa5tPfSWkPdI+MpRdJCQcESoVC4sJ
-        CVet2ZxMAYHrQDUIadl07rmXJxx18/EeiFZzjKNgqBI1sVFqvidM3x00NVNm/2TbB3pSK+ZQChQ45
-        VV7GdFGp631uydfecF15dCkgst18fi5KZtepSH6EmHHsQag0JLzB0vJNFREoD3asWQZxLemIaZOWM
-        VD7lExUA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyZOL-00013u-Sb; Thu, 23 Jul 2020 11:28:02 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4E49B9821EE; Thu, 23 Jul 2020 13:27:57 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 13:27:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Peter Oskolkov <posk@posk.io>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Oskolkov <posk@google.com>,
-        Andrei Vagin <avagin@google.com>, Paul Turner <pjt@google.com>,
-        Ben Segall <bsegall@google.com>, Aaron Lu <aaron.lwe@gmail.com>
-Subject: Re: [PATCH for 5.9 1/3] futex: introduce FUTEX_SWAP operation
-Message-ID: <20200723112757.GN5523@worktop.programming.kicks-ass.net>
-References: <20200722234538.166697-1-posk@posk.io>
- <20200722234538.166697-2-posk@posk.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722234538.166697-2-posk@posk.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 23 Jul 2020 07:28:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595503691; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Hgc8qrbajmA7cvjWQhgBc1e4wcka087+3kuJ5nLwjR4=; b=hzqKFn98VhpfPPDwlP0iB+ygTCCsT3bBvbdf9kj0T0vXT9rDJdfeEwyK7Fu49oJW2l6gR7fT
+ Ws0pWYdRll/sxOfBjvjqNPPv4/qKdDx9svD5mRt80iCiQfibX0mKbAv4C5Qxs2YOC3BesAxv
+ iqE02e+38pHKigZogQObV++pbYw=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f19742a427cd55766af9c62 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:38
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 58570C43395; Thu, 23 Jul 2020 11:27:37 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF6B8C43391;
+        Thu, 23 Jul 2020 11:27:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF6B8C43391
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v4 5/5] arm64: dts: sc7180: Add OPP tables and power-domains for venus
+Date:   Thu, 23 Jul 2020 16:56:52 +0530
+Message-Id: <1595503612-2901-6-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 04:45:36PM -0700, Peter Oskolkov wrote:
-> This patchset is the first step to open-source this work. As explained
-> in the linked pdf and video, SwitchTo API has three core operations: wait,
-> resume, and swap (=switch). So this patchset adds a FUTEX_SWAP operation
-> that, in addition to FUTEX_WAIT and FUTEX_WAKE, will provide a foundation
-> on top of which user-space threading libraries can be built.
+Add the OPP tables in order to be able to vote on the performance state
+of a power-domain
 
-The PDF and video can go pound sand; you get to fully explain things
-here.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 35 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
 
-What worries me is how FUTEX_SWAP would interact with the future
-FUTEX_LOCK / FUTEX_UNLOCK. When we implement pthread_mutex with those,
-there's very few WAIT/WAKE left.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 16df08d..cb6137d 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2664,8 +2664,10 @@
+ 			reg = <0 0x0aa00000 0 0xff000>;
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+ 			power-domains = <&videocc VENUS_GDSC>,
+-					<&videocc VCODEC0_GDSC>;
+-			power-domain-names = "venus", "vcodec0";
++					<&videocc VCODEC0_GDSC>,
++					<&rpmhpd SC7180_CX>;
++			power-domain-names = "venus", "vcodec0", "cx";
++			operating-points-v2 = <&venus_opp_table>;
+ 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+@@ -2686,6 +2688,35 @@
+ 			video-encoder {
+ 				compatible = "venus-encoder";
+ 			};
++
++			venus_opp_table: venus-opp-table {
++				compatible = "operating-points-v2";
++
++				opp-150000000 {
++					opp-hz = /bits/ 64 <150000000>;
++					required-opps = <&rpmhpd_opp_low_svs>;
++				};
++
++				opp-270000000 {
++					opp-hz = /bits/ 64 <270000000>;
++					required-opps = <&rpmhpd_opp_svs>;
++				};
++
++				opp-340000000 {
++					opp-hz = /bits/ 64 <340000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-434000000 {
++					opp-hz = /bits/ 64 <434000000>;
++					required-opps = <&rpmhpd_opp_nom>;
++				};
++
++				opp-500000000 {
++					opp-hz = /bits/ 64 <500000000>;
++					required-opps = <&rpmhpd_opp_turbo>;
++				};
++			};
+ 		};
+ 
+ 		videocc: clock-controller@ab00000 {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Also, why would we commit to an ABI without ever having seen the rest?
-
-On another note: wake_up_process_prefer_current_cpu() is a horrific
-function name :/ That's half to a third of the line limit.
