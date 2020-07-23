@@ -2,132 +2,131 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE03C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 542FC20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595543205;
-	bh=4I6K2bstw8whHHQ3mWdIbhXto4R03CtTeG7e4+0kzFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fqT454Dsv+mQdMthdE5VidRF3Wkj0Jo6Lq9+ZopJbPcRqEvudL4l5wVh35z1/F9Vn
-	 Ipv67sE+dRvoYO/FeFlNmKn1fzfhvsXlezThv1Mu1eNVxvQbuSdAPO5HFsSmPWHrzY
-	 Zf/XZetwNAZh0oxTl3oMLqakXXoGH3Q8U6M1opIA=
+	by mail.kernel.org (Postfix) with ESMTP id 4709820825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgGWW0o (ORCPT
+        id S1726895AbgGWW2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39764 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 18:28:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61172 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgGWW0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:26:43 -0400
-Received: from embeddedor (unknown [201.162.245.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D618620684;
-        Thu, 23 Jul 2020 22:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595543203;
-        bh=4I6K2bstw8whHHQ3mWdIbhXto4R03CtTeG7e4+0kzFc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LRShgveQJG+PEGpRtCQ3fo2lUNePVuucYahn31B5+daFQkrttyecjlfSjqxna+dtC
-         2uJrxE8rgrfIKxopUHROGeuhzdRaxlB5NoHCPClwlJ6+01+uL/33jj6l5YgYdada1k
-         jcD8/OaTsvBhJ0ZpSzr0otmo2OuKYtubcwr6YZg0=
-Date:   Thu, 23 Jul 2020 17:32:25 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 2/3] tty: Fix identation issues in struct serial_struct32
-Message-ID: <77576843397aeab0af8aa0423a9768f3ca8dedfb.1595543280.git.gustavoars@kernel.org>
-References: <cover.1595543280.git.gustavoars@kernel.org>
+        id S1726417AbgGWW2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:28:39 -0400
+IronPort-SDR: fDaO3YeD9eLDbsj7iS/hg6PkrvMUutGPAvxAefIoqrEsP9JsfYd3kFBHwLiQEZlMY/C8s4d7Km
+ /t0bG2aI1CHw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148552515"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="148552515"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:28:38 -0700
+IronPort-SDR: 12e5EXJKPrvHJpozBK7ppGhRLaekf3U7FE30h8xFNpdgHvX/QEGaM+J0OQPJ444D8waIBIFc/X
+ YFSHVKtVhWNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="272424091"
+Received: from abdelh1x-mobl.amr.corp.intel.com (HELO localhost) ([10.249.38.107])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2020 15:28:36 -0700
+Date:   Fri, 24 Jul 2020 01:28:35 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
+Message-ID: <20200723222835.GC12405@linux.intel.com>
+References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
+ <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
+ <20200718162359.GA2919062@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1595543280.git.gustavoars@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200718162359.GA2919062@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch.pl warnings together with all the
-identation issues in struct serial_struct32:
+On Sat, Jul 18, 2020 at 07:23:59PM +0300, Mike Rapoport wrote:
+> On Fri, Jul 17, 2020 at 06:04:17AM +0300, Jarkko Sakkinen wrote:
+> > Introduce functions for allocating memory for dynamic trampolines, such
+> > as kprobes. An arch can promote the availability of these functions with
+> > CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
+> > wrapping module_alloc() and module_memfree().
+> > 
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  include/linux/vmalloc.h | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> > 
+> > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> > index 0221f852a7e1..e981436e30b6 100644
+> > --- a/include/linux/vmalloc.h
+> > +++ b/include/linux/vmalloc.h
+> > @@ -9,6 +9,7 @@
+> >  #include <asm/page.h>		/* pgprot_t */
+> >  #include <linux/rbtree.h>
+> >  #include <linux/overflow.h>
+> > +#include <linux/moduleloader.h>
+> >  
+> >  #include <asm/vmalloc.h>
+> >  
+> > @@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
+> >  int register_vmap_purge_notifier(struct notifier_block *nb);
+> >  int unregister_vmap_purge_notifier(struct notifier_block *nb);
+> >  
+> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > +/*
+> > + * Allocate memory to be used for dynamic trampoline code.
+> > + */
+> > +void *text_alloc(unsigned long size);
+> > +
+> > +/*
+> > + * Free memory returned from text_alloc().
+> > + */
+> > +void text_free(void *region);
+> > +#else
+> > +static inline void *text_alloc(unsigned long size)
+> > +{
+> > +	return module_alloc(size);
+> > +}
+> > +
+> > +static inline void text_free(void *region)
+> > +{
+> > +	module_memfree(region);
+> > +}
+> 
+> Using module_alloc() as the default implementation of generic
+> text_alloc() does not sound right to me.
+> 
+> I would suggest rename module_alloc() to text_alloc() on x86, as Peter
+> proposed and then add text_alloc_kprobes() that can be overridden by the
+> architectures. x86 could use text_alloc(), arm64 vmalloc() with options
+> of their choice and the fallback would remain module_alloc(). Something
+> like (untested) patch below:
 
-ERROR: code indent should use tabs where possible
-+        char    reserved_char;$
+I'm not exactly sure which of the below is relevant as the patch set
+includes the exact same changes with maybe different phrasing:
 
-WARNING: please, no spaces at the start of a line
-+        char    reserved_char;$
+https://lore.kernel.org/lkml/20200717030422.679972-1-jarkko.sakkinen@linux.intel.com/
 
-ERROR: code indent should use tabs where possible
-+        compat_int_t    reserved;$
+If there is something that these patches are missing, please do remark
+but these seven patches have been at least tested and split in
+reasonable manner.
 
-WARNING: please, no spaces at the start of a line
-+        compat_int_t    reserved;$
-
-Acked-by: Jiri Slaby <jirislaby@kernel.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/tty/tty_io.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 3b6e5ec3ba54..629fbafc9b7e 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -2673,25 +2673,25 @@ long tty_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- #ifdef CONFIG_COMPAT
- 
- struct serial_struct32 {
--        compat_int_t    type;
--        compat_int_t    line;
--        compat_uint_t   port;
--        compat_int_t    irq;
--        compat_int_t    flags;
--        compat_int_t    xmit_fifo_size;
--        compat_int_t    custom_divisor;
--        compat_int_t    baud_base;
--        unsigned short  close_delay;
--        char    io_type;
--        char    reserved_char;
--        compat_int_t    hub6;
--        unsigned short  closing_wait; /* time to wait before closing */
--        unsigned short  closing_wait2; /* no longer used... */
--        compat_uint_t   iomem_base;
--        unsigned short  iomem_reg_shift;
--        unsigned int    port_high;
--     /* compat_ulong_t  iomap_base FIXME */
--        compat_int_t    reserved;
-+	compat_int_t    type;
-+	compat_int_t    line;
-+	compat_uint_t   port;
-+	compat_int_t    irq;
-+	compat_int_t    flags;
-+	compat_int_t    xmit_fifo_size;
-+	compat_int_t    custom_divisor;
-+	compat_int_t    baud_base;
-+	unsigned short  close_delay;
-+	char    io_type;
-+	char    reserved_char;
-+	compat_int_t    hub6;
-+	unsigned short  closing_wait; /* time to wait before closing */
-+	unsigned short  closing_wait2; /* no longer used... */
-+	compat_uint_t   iomem_base;
-+	unsigned short  iomem_reg_shift;
-+	unsigned int    port_high;
-+	/* compat_ulong_t  iomap_base FIXME */
-+	compat_int_t    reserved;
- };
- 
- static int compat_tty_tiocsserial(struct tty_struct *tty,
--- 
-2.27.0
-
+/Jarkko
