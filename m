@@ -2,120 +2,80 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB4D420714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EpupmgBA"
+	by mail.kernel.org (Postfix) with ESMTP id DD7C2207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgGWFRN (ORCPT
+        id S1726349AbgGWFRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgGWFRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:17:13 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06348C0619DC;
-        Wed, 22 Jul 2020 22:17:13 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id t6so887572ooh.4;
-        Wed, 22 Jul 2020 22:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Zbq5s3NWQ6aMlyNzWrT29aHUmN+zLUvS/LCeuCEFaZc=;
-        b=EpupmgBATf213WBksb0Z7TxdIzKg66JWtdAc/rkgj3nfF4MCFEBqgCYi0v1FGxYMhx
-         VFxyWg0bwbW/kwG57ipBjs0aaqXJZlVdki8MatmIaTHXcMvyfvCHVbmldLPgdNrlFA2P
-         PSsPao1HdBVRNVWW0nb0tCyZPwKbV3OEm6Nj6yc1PhdMdu7ewEVa+qDwUo2cRGgnFXAM
-         UdnrBT/jM6PfKBZ2fce8e/c3Y4b1mA6rPRsU5WNlGVfbWwSAfCXeX1G5wsOzWx+3swGH
-         AbxYHBWPELOkhkE9eCy1IWO4NK1F9q6v8DW2JVYty8z8jakcALWeca8iFuoQg9vV84DL
-         zw/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Zbq5s3NWQ6aMlyNzWrT29aHUmN+zLUvS/LCeuCEFaZc=;
-        b=CbgqCHflPhK7qxW5KY/FwbTTFgmGYN0Pw4dD/oMeC7DGwy36ZpdOufD3abON5qeDf0
-         R1OwWxg5f01lAAnmKvGeaCWD9vf2cDHxWqaikjYFXw78pHiZgqYJ1dEuqg9nS/437+oV
-         SU9EaERZjP5YND9fETqcUAbet/T+5rbFhMU8zaNpQM5vI27ODKHdNsBEXnx7AiRC+f5R
-         2bNLnWBSU0i6Qq+ZxoGZZEajvMzW3+y3Agy6VA2iH8yeEAx4zZIahWgNxGsBTJ2vKgJ0
-         6a+6tsDEH+WnuV1HNL2koEvVNvO2FK5mDga8gNF35dY8E1qfqAWepl7E8R4ZvQfEVhlJ
-         27TQ==
-X-Gm-Message-State: AOAM533J5cepKpRQbL/Ktbv+zek2g+h4lCRoZUVES9epC9fgHmzE0KO+
-        jCG6GNGdxLJyLv10NNiLaoxGOduIAcgbTiIPsZSuCm3x
-X-Google-Smtp-Source: ABdhPJyzFbPx6TANJJKvaLSb73XxjCPGu5I1eX38jYmjFzSlaRFzQ6HmMdl2zbj4Jzh5Hxwf8I6TYWl9Tf8LbeIm5c0=
-X-Received: by 2002:a4a:b503:: with SMTP id r3mr2978556ooo.92.1595481432207;
- Wed, 22 Jul 2020 22:17:12 -0700 (PDT)
+        Thu, 23 Jul 2020 01:17:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:39158 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbgGWFRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 01:17:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4B98D6E;
+        Wed, 22 Jul 2020 22:17:45 -0700 (PDT)
+Received: from [10.163.85.73] (unknown [10.163.85.73])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C13DC3F718;
+        Wed, 22 Jul 2020 22:17:43 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] doc/vm: fix typo in the hugetlb admin
+ documentation
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
+        akpm@linux-foundation.org
+References: <20200723032248.24772-1-bhe@redhat.com>
+ <20200723032248.24772-4-bhe@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <da5d1d65-32ff-dd27-af4b-159e48eaa763@arm.com>
+Date:   Thu, 23 Jul 2020 10:47:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-From:   richard clark <richard.xnu.clark@gmail.com>
-Date:   Thu, 23 Jul 2020 13:17:01 +0800
-Message-ID: <CAJNi4rOaCLfZhiMOB1+5qOpmBV2h+W3CGUZHy-qF=rSszWqMiA@mail.gmail.com>
-Subject: [PATCH] Update the obsolete comments of 'register_blkdev' func
-To:     linux-block@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        xuesong chen <xuesong.cxs@alibaba-inc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200723032248.24772-4-bhe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the code of 'register_blkdev(...)', the major number range
-
-should be in [1..BLKDEV_MAJOR_HASH_SIZE-1] while not [1..BLKDEV_MAJOR_MAX]
-
-in case of calling 'register_blkdev(...) with @major = 0, so correct
-
-the wrong info of the function's comments
 
 
-Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
+On 07/23/2020 08:52 AM, Baoquan He wrote:
+> Change 'pecify' to 'Specify'.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> ---
+>  Documentation/admin-guide/mm/hugetlbpage.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
+> index 015a5f7d7854..f7b1c7462991 100644
+> --- a/Documentation/admin-guide/mm/hugetlbpage.rst
+> +++ b/Documentation/admin-guide/mm/hugetlbpage.rst
+> @@ -131,7 +131,7 @@ hugepages
+>  	parameter is preceded by an invalid hugepagesz parameter, it will
+>  	be ignored.
+>  default_hugepagesz
+> -	pecify the default huge page size.  This parameter can
+> +	Specify the default huge page size.  This parameter can
+>  	only be specified once on the command line.  default_hugepagesz can
+>  	optionally be followed by the hugepages parameter to preallocate a
+>  	specific number of huge pages of default size.  The number of default
+> 
 
-Cc: Jens Axboe <axboe@kernel.dk>
+This does not apply on 5.8-rc6 and the original typo seems to be missing
+there as well. This section was introduced recently with following commit.
 
-Cc: xuesong chen <xuesong.cxs@alibaba-inc.com>
-
----
-
- block/genhd.c | 2 +-
-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-
-diff --git a/block/genhd.c b/block/genhd.c
-
-index 8b1e9f48957c..db73aa852434 100644
-
---- a/block/genhd.c
-
-+++ b/block/genhd.c
-
-@@ -429,7 +429,7 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
-
-  *    then the function returns zero on success, or a negative error code
-
-  *  - if any unused major number was requested with @major = 0 parameter
-
-  *    then the return value is the allocated major number in range
-
-- *    [1..BLKDEV_MAJOR_MAX-1] or a negative error code otherwise
-
-+ *    [1..BLKDEV_MAJOR_HASH_SIZE-1] or a negative error code otherwise
-
-  *
-
-  * See Documentation/admin-guide/devices.txt for the list of allocated
-
-  * major numbers.
-
---
-
-2.17.1
+ 282f4214384e ("hugetlbfs: clean up command line processing")
