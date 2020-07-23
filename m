@@ -2,277 +2,120 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D2FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27742C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B9C2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D8720888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgGWIwa (ORCPT
+        id S1728222AbgGWIxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:52:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40538 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728141AbgGWIw3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:52:29 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N8XLxY034708;
-        Thu, 23 Jul 2020 04:52:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23g075a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 04:52:10 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N8XPNs035086;
-        Thu, 23 Jul 2020 04:52:09 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23g074d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 04:52:09 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N8opDc001819;
-        Thu, 23 Jul 2020 08:52:07 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq85ynj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 08:52:06 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N8q4X258458532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 08:52:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 522C7AE057;
-        Thu, 23 Jul 2020 08:52:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89EA7AE045;
-        Thu, 23 Jul 2020 08:52:01 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.56.65])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 08:52:01 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v3 09/10] powerpc/smp: Create coregroup domain
-Date:   Thu, 23 Jul 2020 14:21:15 +0530
-Message-Id: <20200723085116.4731-10-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
-References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- adultscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230065
+        Thu, 23 Jul 2020 04:53:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:42008 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbgGWIxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:53:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9ED1D6E;
+        Thu, 23 Jul 2020 01:53:28 -0700 (PDT)
+Received: from [10.163.85.73] (unknown [10.163.85.73])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E46D3F66F;
+        Thu, 23 Jul 2020 01:53:26 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] mm/hugetlb.c: Remove the unnecessary
+ non_swap_entry()
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mike.kravetz@oracle.com, david@redhat.com,
+        akpm@linux-foundation.org
+References: <20200723032248.24772-1-bhe@redhat.com>
+ <20200723032248.24772-3-bhe@redhat.com>
+ <f66035ea-abfa-2523-8df5-ceb3599c9395@arm.com>
+ <20200723061437.GQ32539@MiWiFi-R3L-srv>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <7c0d19e9-4f90-9f74-d364-4d877ccf67f9@arm.com>
+Date:   Thu, 23 Jul 2020 14:22:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200723061437.GQ32539@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add percpu coregroup maps and masks to create coregroup domain.
-If a coregroup doesn't exist, the coregroup domain will be degenerated
-in favour of SMT/CACHE domain.
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v2 -> v3:
-	Add optimization for mask updation under coregroup_support
 
-Changelog v1 -> v2:
-	Moved coregroup topology fixup to fixup_topology (Gautham)
+On 07/23/2020 11:44 AM, Baoquan He wrote:
+> On 07/23/20 at 10:36am, Anshuman Khandual wrote:
+>>
+>>
+>> On 07/23/2020 08:52 AM, Baoquan He wrote:
+>>> The checking is_migration_entry() and is_hwpoison_entry() are stricter
+>>> than non_swap_entry(), means they have covered the conditional check
+>>> which non_swap_entry() is doing.
+>>
+>> They are no stricter as such but implicitly contains non_swap_entry() in itself.
+>> If a swap entry tests positive for either is_[migration|hwpoison]_entry(), then
+>> its swap_type() is among SWP_MIGRATION_READ, SWP_MIGRATION_WRITE and SWP_HWPOISON.
+>> All these types >= MAX_SWAPFILES, exactly what is asserted with non_swap_entry().
+>>
+>>>
+>>> Hence remove the unnecessary non_swap_entry() in is_hugetlb_entry_migration()
+>>> and is_hugetlb_entry_hwpoisoned() to simplify code.
+>>>
+>>> Signed-off-by: Baoquan He <bhe@redhat.com>
+>>> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+>>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>>  mm/hugetlb.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>> index 3569e731e66b..c14837854392 100644
+>>> --- a/mm/hugetlb.c
+>>> +++ b/mm/hugetlb.c
+>>> @@ -3748,7 +3748,7 @@ bool is_hugetlb_entry_migration(pte_t pte)
+>>>  	if (huge_pte_none(pte) || pte_present(pte))
+>>>  		return false;
+>>>  	swp = pte_to_swp_entry(pte);
+>>> -	if (non_swap_entry(swp) && is_migration_entry(swp))
+>>> +	if (is_migration_entry(swp))
+>>>  		return true;
+>>>  	else
+>>>  		return false;
+>>> @@ -3761,7 +3761,7 @@ static bool is_hugetlb_entry_hwpoisoned(pte_t pte)
+>>>  	if (huge_pte_none(pte) || pte_present(pte))
+>>>  		return false;
+>>>  	swp = pte_to_swp_entry(pte);
+>>> -	if (non_swap_entry(swp) && is_hwpoison_entry(swp))
+>>> +	if (is_hwpoison_entry(swp))
+>>>  		return true;
+>>>  	else
+>>>  		return false;
+>>>
+>>
+>> It would be better if the commit message contains details about
+>> the existing redundant check. But either way.
+> 
+> Thanks for your advice. Do you think updating the log as below is OK?
+> 
+> ~~~~~~~~
+> If a swap entry tests positive for either is_[migration|hwpoison]_entry(), then
+> its swap_type() is among SWP_MIGRATION_READ, SWP_MIGRATION_WRITE and SWP_HWPOISON.
+> All these types >= MAX_SWAPFILES, exactly what is asserted with non_swap_entry().
+> 
+> So the checking non_swap_entry() in is_hugetlb_entry_migration() and
+> is_hugetlb_entry_hwpoisoned() is redundant.
+> 
+> Let's remove it to optimize code.
+> ~~~~~~~~
 
- arch/powerpc/include/asm/topology.h | 10 +++++++
- arch/powerpc/kernel/smp.c           | 44 +++++++++++++++++++++++++++++
- arch/powerpc/mm/numa.c              |  5 ++++
- 3 files changed, 59 insertions(+)
-
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index f0b6300e7dd3..6609174918ab 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -88,12 +88,22 @@ static inline int cpu_distance(__be32 *cpu1_assoc, __be32 *cpu2_assoc)
- 
- #if defined(CONFIG_NUMA) && defined(CONFIG_PPC_SPLPAR)
- extern int find_and_online_cpu_nid(int cpu);
-+extern int cpu_to_coregroup_id(int cpu);
- #else
- static inline int find_and_online_cpu_nid(int cpu)
- {
- 	return 0;
- }
- 
-+static inline int cpu_to_coregroup_id(int cpu)
-+{
-+#ifdef CONFIG_SMP
-+	return cpu_to_core_id(cpu);
-+#else
-+	return 0;
-+#endif
-+}
-+
- #endif /* CONFIG_NUMA && CONFIG_PPC_SPLPAR */
- 
- #include <asm-generic/topology.h>
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 7d8d44cbab11..1faedde3e406 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -80,6 +80,7 @@ DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
- DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
- DEFINE_PER_CPU(cpumask_var_t, cpu_l2_cache_map);
- DEFINE_PER_CPU(cpumask_var_t, cpu_core_map);
-+DEFINE_PER_CPU(cpumask_var_t, cpu_coregroup_map);
- 
- EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
- EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
-@@ -91,6 +92,7 @@ enum {
- 	smt_idx,
- #endif
- 	bigcore_idx,
-+	mc_idx,
- 	die_idx,
- };
- 
-@@ -869,6 +871,21 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
- }
- #endif
- 
-+static struct cpumask *cpu_coregroup_mask(int cpu)
-+{
-+	return per_cpu(cpu_coregroup_map, cpu);
-+}
-+
-+static bool has_coregroup_support(void)
-+{
-+	return coregroup_enabled;
-+}
-+
-+static const struct cpumask *cpu_mc_mask(int cpu)
-+{
-+	return cpu_coregroup_mask(cpu);
-+}
-+
- static const struct cpumask *cpu_bigcore_mask(int cpu)
- {
- 	return per_cpu(cpu_sibling_map, cpu);
-@@ -879,6 +896,7 @@ static struct sched_domain_topology_level powerpc_topology[] = {
- 	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
- #endif
- 	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
-+	{ cpu_mc_mask, SD_INIT_NAME(MC) },
- 	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
- 	{ NULL, },
- };
-@@ -925,6 +943,10 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 					GFP_KERNEL, cpu_to_node(cpu));
- 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
- 					GFP_KERNEL, cpu_to_node(cpu));
-+		if (has_coregroup_support())
-+			zalloc_cpumask_var_node(&per_cpu(cpu_coregroup_map, cpu),
-+						GFP_KERNEL, cpu_to_node(cpu));
-+
- #ifdef CONFIG_NEED_MULTIPLE_NODES
- 		/*
- 		 * numa_node_id() works after this.
-@@ -942,6 +964,9 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	cpumask_set_cpu(boot_cpuid, cpu_l2_cache_mask(boot_cpuid));
- 	cpumask_set_cpu(boot_cpuid, cpu_core_mask(boot_cpuid));
- 
-+	if (has_coregroup_support())
-+		cpumask_set_cpu(boot_cpuid, cpu_coregroup_mask(boot_cpuid));
-+
- 	init_big_cores();
- 	if (has_big_cores) {
- 		cpumask_set_cpu(boot_cpuid,
-@@ -1233,6 +1258,8 @@ static void remove_cpu_from_masks(int cpu)
- 		set_cpus_unrelated(cpu, i, cpu_sibling_mask);
- 		if (has_big_cores)
- 			set_cpus_unrelated(cpu, i, cpu_smallcore_mask);
-+		if (has_coregroup_support())
-+			set_cpus_unrelated(cpu, i, cpu_coregroup_mask);
- 	}
- }
- #endif
-@@ -1293,6 +1320,20 @@ static void add_cpu_to_masks(int cpu)
- 	add_cpu_to_smallcore_masks(cpu);
- 	update_mask_by_l2(cpu, cpu_l2_cache_mask);
- 
-+	if (has_coregroup_support()) {
-+		int coregroup_id = cpu_to_coregroup_id(cpu);
-+
-+		cpumask_set_cpu(cpu, cpu_coregroup_mask(cpu));
-+		for_each_cpu_and(i, cpu_online_mask, cpu_cpu_mask(cpu)) {
-+			int fcpu = cpu_first_thread_sibling(i);
-+
-+			if (fcpu == first_thread)
-+				set_cpus_related(cpu, i, cpu_coregroup_mask);
-+			else if (coregroup_id == cpu_to_coregroup_id(i))
-+				set_cpus_related(cpu, i, cpu_coregroup_mask);
-+		}
-+	}
-+
- 	if (pkg_id == -1) {
- 		struct cpumask *(*mask)(int) = cpu_sibling_mask;
- 
-@@ -1384,6 +1425,9 @@ int setup_profiling_timer(unsigned int multiplier)
- 
- static void fixup_topology(void)
- {
-+	if (!has_coregroup_support())
-+		powerpc_topology[mc_idx].mask = cpu_bigcore_mask;
-+
- 	if (shared_caches) {
- 		pr_info("Using shared cache scheduler topology\n");
- 		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 3248160c0327..ef8aa580da21 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1216,6 +1216,11 @@ int find_and_online_cpu_nid(int cpu)
- 	return new_nid;
- }
- 
-+int cpu_to_coregroup_id(int cpu)
-+{
-+	return cpu_to_core_id(cpu);
-+}
-+
- static int topology_update_init(void)
- {
- 	topology_inited = 1;
--- 
-2.18.2
-
+Something like above would be good.
