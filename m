@@ -2,137 +2,95 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5926AC433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFA6C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332902086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF09920768
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595539822;
-	bh=LjPYQXYCMq01OkWf8ZVQxeTp9Qz+blIk2hR6fIzeLNs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ldhl7HAP9C26rspS5ai2HpXVE7YDh8lYR8FkArPbhatCBScR7BviM5LmzwuWJZnGY
-	 /f9rf9QyEUUrcbSdFkk6S61tXoL5ce+soB/gGZYDS1QI1YRcEJBit7qVAE0rxfZX17
-	 /Rbgeqty06lVj2B69/5uYibCCj9jCcBzcVocdKTA=
+	s=default; t=1595539832;
+	bh=aYeCzwzW9/htP78CK7AzU3isFmfSOaPwRaSW6TwmK9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sVQAGD5wBNQRZqAS0hXC0+ihBICWjXAFDR3Heds3GyIYlMIt8XCY3DxGyYMBIQRVu
+	 mR0FxCVWrb0UPb9EcnXsenj9UhLL+neGoK0CNvwvfmAU4zfJm/cdP+iXE+MCtYBQqT
+	 FqY/9Ig1BM0GZYXucoxUUP5Is5FEXXTRgtkIe1jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgGWVaV (ORCPT
+        id S1727843AbgGWVab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:30:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgGWVaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:30:21 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0A2C22CF7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 21:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595539820;
-        bh=LjPYQXYCMq01OkWf8ZVQxeTp9Qz+blIk2hR6fIzeLNs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QinynW2K93EXrPR6DHoUgxUGXaHWzMH146Nrrve6MhpMPCFwGDoURTCwZW01w2nig
-         yjJRiHvrDGxPpz7uOlli64G8+T1vxQUU9Hzaz9+hUdIyI0JcVCYuSGY1wFgfAPnSa/
-         Qz1ISBhK19OBZO0AlIkHeM5E1hrKxyuX0nsm1UII=
-Received: by mail-wr1-f47.google.com with SMTP id b6so6474929wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:30:19 -0700 (PDT)
-X-Gm-Message-State: AOAM533pQzHigWhIg4TKPZQmbpU6z1pZfqkjn5H2J3/xw0dD8QsfFnNB
-        XBK/Q4xtkiEexgoFEC/HLASDcbiWppJHwaA9iGpNcQ==
-X-Google-Smtp-Source: ABdhPJxkIDtPFawZcWsduLG2ySWexVRWYEyTMNYsD2OEQFrKOENShjDryhjYBkc7VXix4cqL0MKNzSQ5LIQb5iHR31E=
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr5578852wrc.257.1595539818063;
- Thu, 23 Jul 2020 14:30:18 -0700 (PDT)
+        Thu, 23 Jul 2020 17:30:31 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45777 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgGWVab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 17:30:31 -0400
+Received: by mail-il1-f193.google.com with SMTP id b18so405681ilo.12;
+        Thu, 23 Jul 2020 14:30:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JzZ0nBZzhB8jMlslgVQmPmCdOkAHjYRRqrjNvqdfKKE=;
+        b=c2oaQlnPUSfdZ99zImdZnXdWuRKasVW0bdXfciIgXBZHQHR93EKQoMlMi+RvLniy3t
+         IbeeZP+hBOu4Kd6/a4/RULcV3o+oIsgrfSi0yF3xbf42O1cil+DRknubl94x9XIYqogB
+         A7ukJ9LShTDz3fByk7OjxCbBwJEGkFqyIsp/2CxdwPxDTdz+IDljBIV10YabSH/kvfvg
+         XKeAwlkIxLcQvnsp7db/tdt2MRaJxCwDV/GAr9KUHnnbrmOhq2DsTf8Ll24C690JnT77
+         V/p5oRJZIQAietmWmMfGZve9djzCxdeceQyoFa6V1Cm5MZHmyT3vEHqIc2/iw/GQP3TM
+         Ugyg==
+X-Gm-Message-State: AOAM530c7LS3ae1LTGhEGl7i0hB7fxgRmsElDgbvouvYNrfikQeADavX
+        jZHsmSjVEO1/RarF+U/8Dtb7D+1s2g==
+X-Google-Smtp-Source: ABdhPJybyfd5TV9Tvuj9mjuLraHscose5g52+l1W3fANVfhqj4I1xye7ZnvdT4mjM82F6Q8IhmImqw==
+X-Received: by 2002:a92:290a:: with SMTP id l10mr7354583ilg.204.1595539830440;
+        Thu, 23 Jul 2020 14:30:30 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n7sm2033803iob.44.2020.07.23.14.30.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 14:30:29 -0700 (PDT)
+Received: (nullmailer pid 892710 invoked by uid 1000);
+        Thu, 23 Jul 2020 21:30:27 -0000
+Date:   Thu, 23 Jul 2020 15:30:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     linux-rockchip@lists.infradead.org,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dt-bindings: arm: rockchip: Add Engicam PX30.Core
+ EDIMM2.2 Starter Kit
+Message-ID: <20200723213027.GA892680@bogus>
+References: <20200723123951.149497-1-jagan@amarulasolutions.com>
+ <20200723123951.149497-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-References: <20200723165204.GB77434@romley-ivt3.sc.intel.com>
- <C03DA782-BD1A-42E3-B118-ABB34BC5F2AF@amacapital.net> <87imeevv6b.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87imeevv6b.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 23 Jul 2020 14:30:06 -0700
-X-Gmail-Original-Message-ID: <CALCETrUdxpVP3dZgsZBpCODxW8yaiHguxTu=aHg_AkRbs91dWg@mail.gmail.com>
-Message-ID: <CALCETrUdxpVP3dZgsZBpCODxW8yaiHguxTu=aHg_AkRbs91dWg@mail.gmail.com>
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Weiny Ira <ira.weiny@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723123951.149497-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jul 23, 2020, at 1:22 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> =EF=BB=BFAndy Lutomirski <luto@amacapital.net> writes:
->
->> Suppose some kernel code (a syscall or kernel thread) changes PKRS
->> then takes a page fault. The page fault handler needs a fresh
->> PKRS. Then the page fault handler (say a VMA=E2=80=99s .fault handler) c=
-hanges
->> PKRS.  The we get an interrupt. The interrupt *also* needs a fresh
->> PKRS and the page fault value needs to be saved somewhere.
->>
->> So we have more than one saved value per thread, and thread_struct
->> isn=E2=80=99t going to solve this problem.
->
-> A stack of 7 entries and an index needs 32bytes total which is a
-> reasonable amount and solves the problem including scheduling from #PF
-> nicely. Make it 15 and it's still only 64 bytes.
->
->> But idtentry_state is also not great for a couple reasons.  Not all
->> entries have idtentry_state, and the unwinder can=E2=80=99t find it for
->> debugging. For that matter, the page fault logic probably wants to
->> know the previous PKRS, so it should either be stashed somewhere
->> findable or it should be explicitly passed around.
->>
->> My suggestion is to enlarge pt_regs.  The save and restore logic can
->> probably be in C, but pt_regs is the logical place to put a register
->> that is saved and restored across all entries.
->
-> Kinda, but that still sucks because schedule from #PF will get it wrong
-> unless you do extra nasties.
+On Thu, 23 Jul 2020 18:09:45 +0530, Jagan Teki wrote:
+> PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
+> 
+> EDIMM2.2 Starter Kit is an EDIMM 2.2 Form Factor Capacitive
+> Evaluation Board from Engicam.
+> 
+> PX30.Core needs to mount on top of this Evaluation board for
+> creating complete PX30.Core EDIMM2.2 Starter Kit.
+> 
+> Add bindings for it.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-This seems like we=E2=80=99re reinventing the wheel.  PKRS is not
-fundamentally different from, say, RSP.  If we want to save it across
-exceptions, we save it on entry and context-switch-out and restore it
-on exit and context-switch-in.
-
-
->
->> Whoever does this work will have the delightful job of figuring out
->> whether BPF thinks that the layout of pt_regs is ABI and, if so,
->> fixing the resulting mess.
->>
->> The fact the new fields will go at the beginning of pt_regs will make
->> this an entertaining prospect.
->
-> Good luck with all of that.
-
-We can always cheat like this:
-
-struct real_pt_regs {
-  unsigned long pkrs;
-  struct pt_regs regs;
-};
-
-and pass a pointer to regs around.  What BPF doesn't know about can't hurt =
-it.
+Acked-by: Rob Herring <robh@kernel.org>
