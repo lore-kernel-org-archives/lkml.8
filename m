@@ -2,106 +2,100 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E83DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363B422BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9F122D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iWRjUi5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgGWJL2 (ORCPT
+        id S1728170AbgGWJLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:11:28 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:35679 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgGWJL1 (ORCPT
+        Thu, 23 Jul 2020 05:11:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29973 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726330AbgGWJLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:11:27 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mr8zO-1kdw4W026w-00oFj4; Thu, 23 Jul 2020 11:11:26 +0200
-Received: by mail-qk1-f169.google.com with SMTP id x69so4703496qkb.1;
-        Thu, 23 Jul 2020 02:11:25 -0700 (PDT)
-X-Gm-Message-State: AOAM53023axEZDgnVlMMgO3Nu6ueSN7+CTrABkzU66EJcRQYrRdrvwD1
-        V1Jlpz1NRIGtqvW796dDDi513T8n62wWpUerOB8=
-X-Google-Smtp-Source: ABdhPJxStLH4bkEByDAb/z44/3h8H0El0YO8LxmjELnMmVnMZT+ySbMYTCQvSxd/U4jvrltWM2ImxEZLkkbzi6dufOs=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr4090550qkf.394.1595495484736;
- Thu, 23 Jul 2020 02:11:24 -0700 (PDT)
+        Thu, 23 Jul 2020 05:11:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595495512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jOegfAFD7KmRGII6oc4i/sR1c5ZZZGyGt2xHdWoeR1E=;
+        b=iWRjUi5oPgg2ybHq2AFlAinSbwmrHhcO8DAGLpdiH5PRbQPSroSZCRbmBU2y2V3oSL+8YB
+        zUjePOS8guoJL/IN3DBYBaeoujTiK6n1iuHtLh0R7PhlIpqnCIUW7HQmno6BqyKY9HOtQg
+        d5mU1jkB1YiMkD7AnN4zj3h/SbjtBKE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-498-uDp4JBGwN8CN6cCd1mJACw-1; Thu, 23 Jul 2020 05:11:50 -0400
+X-MC-Unique: uDp4JBGwN8CN6cCd1mJACw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C11241005504;
+        Thu, 23 Jul 2020 09:11:48 +0000 (UTC)
+Received: from localhost (ovpn-13-53.pek2.redhat.com [10.72.13.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 78D2F2DE68;
+        Thu, 23 Jul 2020 09:11:45 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 17:11:42 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mike.kravetz@oracle.com, david@redhat.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH v2 4/4] mm/hugetl.c: warn out if expected count of huge
+ pages adjustment is not achieved
+Message-ID: <20200723091142.GR32539@MiWiFi-R3L-srv>
+References: <20200723032248.24772-1-bhe@redhat.com>
+ <20200723032248.24772-5-bhe@redhat.com>
+ <62c8ce6c-fe98-f371-99b6-cfdb96d1c2fd@arm.com>
 MIME-Version: 1.0
-References: <20200723073744.13400-1-krzk@kernel.org> <20200723073744.13400-21-krzk@kernel.org>
-In-Reply-To: <20200723073744.13400-21-krzk@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 23 Jul 2020 11:11:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1=WCQ5326Et5RRK7yiOYeHH7uUkQ+T3YPtj2XRh+gkgA@mail.gmail.com>
-Message-ID: <CAK8P3a1=WCQ5326Et5RRK7yiOYeHH7uUkQ+T3YPtj2XRh+gkgA@mail.gmail.com>
-Subject: Re: [PATCH 20/23] memory: omap-gpmc: Fix whitespace issue
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:v18qdtD1UxaUBVHa41zG90KKmFsLt4sykU64bSt5ycjTL0+LfNy
- AreI4W2yvXDVndyCg57IJlttwGrj5O+KzbTqt1oMRG5SVN6v/WadOJuE+dCiaLbb3a7TRCE
- P/JzVx39YXeN4dGBZh2UMXgXmkL9ltcaiuALqpP7xak0C8Zde6WM09ekSpQU35UTmQ6UVo5
- H4lGMDBhdlbVFYa1gzxDA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0hrSZiOk9bw=:V9D6CK2SMMYYU6WUUk2dCQ
- HGnmpm20PKyvoCLlc5xTS88O6pO69Cal3nuefhzHYSsQIdi8FPKJKhjr5WJt5ltuhD42KnaXo
- NnarjvMmIkib92ekKQaKOtiC7QcVzghYmGYCx8R5qRQW28Q1syC0HHtj8N1yvOdnZhVwJRfZ1
- WNHVifTZCSJJCex9xFHlEoE4OmyWNC3Bk5AiYxBGMF5cXuZfb2F0VZUbnt2U4wlfwjdSe4jbc
- fq9wX0iM+6XTzV8rpncV4o4Q4/bn/pBUz69Hrz0yfoFc0Emt9brfIXf//vUeGzPyPNX8LWwV2
- A0mQCrLvSPdAA2XGMrx5VhL62lo47WL9H9zCXlHwHUjfjuOvL8vqQbbVezIqOWCL2kY9dobeP
- qG5PVmsk2TZXbLvFmTccDzX4mBpOrF9m/Lli+xKOQ1FXUJC+pRvdqeSTtqfIoLh3Pcdg+wtiz
- FIwcKkpuwwWmF4tkBM/1LxrpDaa4bZFCBUvT/+TyTxwShzkZygK2c9DlESoz5nYUFKwpI2r43
- TXhPJGfiIAoj+jLAGwbIN2o/byA/CnnfsrXDOlfcdBnZ2Wc6hHJGkKTYXi6yBrIbnUMfUvy8A
- /hOewnXSJOEg2nzF1NEmK5lMjyRvX/IWDMXb4IBGY24PKWG5mXLFeu2FtvsI8T+LhqCbWMzgi
- Milpui+x2KbrxQh2KYHEK0hbCc7HYi+EmUah3JKcrRQnQ+S5i4Si7/goZCrY3GjSYMQkCFtew
- aAxjDsqbuDdt2ADYt20m7eshIXGNEfpL06b6vygyUCWM4tZ0u/PWLxapqfs8OfgTZR4i/X4Bh
- N7at00DM35nsbgCtv8E5odgBe65xMlonPyT5pSYHhRYV/H9LCwGN7HuLaJAK0btOdfkCbkT9J
- JFDbw3J6l4K2ERue5+Od4ZjCfvIisc1jRjCHQ84cT2zB4ZsHbD0HIIoDGq82e2pHan0fDGFt7
- guuE47syc79rMkSew9ea/tNLznSP0cVMKYsOhQQe50s4K6V6/rjKx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62c8ce6c-fe98-f371-99b6-cfdb96d1c2fd@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On 07/23/20 at 11:46am, Anshuman Khandual wrote:
+> 
+> 
+> On 07/23/2020 08:52 AM, Baoquan He wrote:
+> > A customer complained that no message is logged wh	en the number of
+> > persistent huge pages is not changed to the exact value written to
+> > the sysfs or proc nr_hugepages file.
+> > 
+> > In the current code, a best effort is made to satisfy requests made
+> > via the nr_hugepages file.  However, requests may be only partially
+> > satisfied.
+> > 
+> > Log a message if the code was unsuccessful in fully satisfying a
+> > request. This includes both increasing and decreasing the number
+> > of persistent huge pages.
+> 
+> But is kernel expected to warn for all such situations where the user
+> requested resources could not be allocated completely ? Otherwise, it
+> does not make sense to add an warning for just one such situation.
 
-> @@ -1756,7 +1756,7 @@ static int gpmc_calc_common_timings(struct gpmc_timings *gpmc_t,
->  /* TODO: remove this function once all peripherals are confirmed to
->   * work with generic timing. Simultaneously gpmc_cs_set_timings()
->   * has to be modified to handle timings in ps instead of ns
-> -*/
-> + */
+It's not for just one such situation, we have already had one to warn
+out in mm/hugetlb.c, please check hugetlb_hstate_alloc_pages().
 
-This still doesn't follow the normal coding style for multi-line comments.
+As Mike said, in one time of persistent huge page number setting,
+comparing the old value with the new vlaue is good enough for customer
+to get the information. However, if customer want to detect and analyze
+previous setting failure, logging message will be helpful. So I think
+logging the failure or partial success makes sense.
 
-I don't think it's worth fixing, but if you think it should be changed, then
-make it
+Thanks
+Baoquan
 
-     /*
-      * mult-line comment
-      * ...
-      */
-
-     Arnd
