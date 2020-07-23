@@ -2,157 +2,188 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E2C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6850CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3D720658
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E6F2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="KPoB8Ki2"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="la6rYz1r";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="FdfHArwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgGWGSK (ORCPT
+        id S1726962AbgGWGUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:18:10 -0400
-Received: from mail-am6eur05on2136.outbound.protection.outlook.com ([40.107.22.136]:10337
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725536AbgGWGSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:18:09 -0400
+        Thu, 23 Jul 2020 02:20:54 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35200 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725984AbgGWGUx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 02:20:53 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N6AlNh006540;
+        Wed, 22 Jul 2020 23:20:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=UhwR0T2vMUNqABzRoeZrzbAvRhkDEuRcZILTsvvlwLQ=;
+ b=la6rYz1rpkVcSmo6EnPBlDyuQM2ak/LTaSZPW3Zu3Bp0hR6PIBVX8g8gyyxQLdWrmCUq
+ 9hUxSdJnO/asIAgMlbZ3nDFgAyv1MGMsQRcFXHyiYza/L/KjqEE7j/ygVQcRtH17c/24
+ PnbxkZFzC1pcVx11zo2t7MnuGqS6lZzQp1A= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32etmwajhd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 22 Jul 2020 23:20:33 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 22 Jul 2020 23:20:31 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J7tM9kM2Ebzs0jx8cCbXXKKT/bZq24hwpSaFP1DqPB2dUpO/zEajBmrEem3BgZZs4d4u2vvlj0U1lYnd1I8WIcP5nHXxjXc6CuRZyGoXvlXKBqtA8adDPzJvv8ZOMzTCiBqEtkvYrL3NNsuLbwuQoTr4E2FqhiixFStSItEMrliEBnVWaQQwf0Knzd98lBtGQp7mPtKlyHKHOOcNwej+vg1tjiU63FdipwD9gTNH0by0ljt3qlLYZURfFq7mtRINDxaflW8XRkyK4JycMHVwlGwI8nGQmCwWEqAZYK3ac7nN0wqA8rOX5b5SPtK3IssckVGAYA/CVSzR+T2hms0S9A==
+ b=TOaIimL2vUNvgfz7C/6id2c8GU7yyc+v17W4IFuW11UE17MP1S3AQa9o7/d5pza3QauV1AFvzjOwTgJqmmu7DizPj6Lb6ZsePj28dWVb7sRsqnQxmre2ELkQFiqFVU/enXMVOxhk2xYZycBF+mX6jAbuTyyM2KYMooz0OTyOup2ZWsGIZnfSkbxie8MOqPQLkPTZaXP4Gh2kvEnIG6gmCcrC/A5ekZldPbddOTJKVTslzszxTbJSrBDkG+SO8pbh//MpN0V0DprRKFyrQfd2cfo5dMpgfBkilea7k37MbppM3K4aNtVPbELYv2Kh8dQdgnxkL37iwjqousrScvttQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KAYzWfbFvxnce6TWsJ8eKgE613lRZZGQApr+HX5A2ig=;
- b=ib2jhf75+GcQ8F4m6Mn6jtRu4lktkVTv2m4S5mmhvSDY0vntSrKMDfeM2+lBFfbICm2zOmbzkj41tC7ueGoXxAB+FLX9wXumnQ5llix2lc5sIjfnn6WdF9kFh/2WLxa6PmzkUUFr6a5q7BvAUaOkzaF6KGeBZ5AE5VY5Zz/3lmFczPdjHRSAELZ83HSmNXktwfZ3VZFGNQePWrAq3CPYljJju1oWMwlsL65FZtXDNjZI5PY1fJWeslUvN6MwG3TpMtmeBZRvUpWAUo5Lcutb6rjL9ZUpSyPzK2yF1+qzLRRjvvQxWSTYi+owHN8wPs+EXkM9lJnR126BZ4+Xap7DNg==
+ bh=UhwR0T2vMUNqABzRoeZrzbAvRhkDEuRcZILTsvvlwLQ=;
+ b=a1fg9LyZ4fcIDKpAgwy6uDOLRK4CttEF0pG1eGq62WbZ83M7VE4BFvdBD6hITmFezSpnvEQSjDWWjyeSmJlkkUTPEjsjPzCeEQv6TfY+Nnd6gHdgztX/g61hjpQ07qJmH4+3FsmZ2mxBuqqFY065vQQD4vt/bIEZr3bErhA0gSfJr+x78fGQIGSCFzOK6MlN/sIV0WzkzU+J+SrH9JjE3uBlE0rSA21ZHSAREIpqfVrJFBCzhhhAoGsnmzXpPqMUhNKDcCpeirxSh3UCxilutyKUfO8jWOaewqjRZ5BGVAI7vV/5ReUctloL79LFdJCr0BboKsUp6CC0dWBkPRTXaw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KAYzWfbFvxnce6TWsJ8eKgE613lRZZGQApr+HX5A2ig=;
- b=KPoB8Ki2MGoDQ6tpe0hnQL/d/norNeK1TZCcu7MYTVKxyl426ySVymNhU0K18+Siwd3ghyQ38lPKgr8jRVeEdh0wHl4fQUWjfIvsg8JRY0VJOAAyaQ3AQo/QKmNk2IzgkpqWSCLlAA5XpLlovdYMpfWICRgf9mmfHo4VUZiWVzM=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
- by DB3PR0202MB3548.eurprd02.prod.outlook.com (2603:10a6:8:8::21) with
+ bh=UhwR0T2vMUNqABzRoeZrzbAvRhkDEuRcZILTsvvlwLQ=;
+ b=FdfHArwFStdsgsHFvCURQ5jfki2o5DZWZqOuySos+AALmRuzGmjhObxAxegvLZS4N5C3fqI/JlRA1dhscMuDjeo8lNG+Em6dUTvTMAtUjbtnOb/cfir4cMrIDfawy+qXL2oAvJjfzZ1v7gADeDpKUhVex1AKuFjuEpLzS79uiTQ=
+Received: from BN8PR15MB2995.namprd15.prod.outlook.com (2603:10b6:408:8a::16)
+ by BN7PR15MB2483.namprd15.prod.outlook.com (2603:10b6:406:87::26) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Thu, 23 Jul
- 2020 06:18:04 +0000
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::68d4:6b:d077:19a9]) by DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::68d4:6b:d077:19a9%4]) with mapi id 15.20.3216.020; Thu, 23 Jul 2020
- 06:18:04 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     oded.gabbay@gmail.com
-Cc:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Subject: [PATCH] habanalabs: Fix memory leak in error flow of context init
-Date:   Thu, 23 Jul 2020 09:17:57 +0300
-Message-Id: <20200723061757.12906-1-ttayar@habana.ai>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM3PR07CA0082.eurprd07.prod.outlook.com
- (2603:10a6:207:6::16) To DB8PR02MB5468.eurprd02.prod.outlook.com
- (2603:10a6:10:ef::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
+ 2020 06:20:29 +0000
+Received: from BN8PR15MB2995.namprd15.prod.outlook.com
+ ([fe80::a89e:b0f9:d0b9:51a2]) by BN8PR15MB2995.namprd15.prod.outlook.com
+ ([fe80::a89e:b0f9:d0b9:51a2%5]) with mapi id 15.20.3195.028; Thu, 23 Jul 2020
+ 06:20:29 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>
+Subject: Re: [PATCH v4 bpf-next 2/4] bpf: fail PERF_EVENT_IOC_SET_BPF when
+ bpf_get_[stack|stackid] cannot work
+Thread-Topic: [PATCH v4 bpf-next 2/4] bpf: fail PERF_EVENT_IOC_SET_BPF when
+ bpf_get_[stack|stackid] cannot work
+Thread-Index: AQHWYFg8vuUCJ74xFUm7fXSqHe+MGakUqv8AgAAHCAA=
+Date:   Thu, 23 Jul 2020 06:20:29 +0000
+Message-ID: <684DA506-6780-4CB5-B99C-24D939CDE6DF@fb.com>
+References: <20200722184210.4078256-1-songliubraving@fb.com>
+ <20200722184210.4078256-3-songliubraving@fb.com>
+ <20200723055518.onydx7uhmzomt7ud@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200723055518.onydx7uhmzomt7ud@ast-mbp.dhcp.thefacebook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:b2a1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 473dd7a5-9ff3-497c-e88e-08d82ed07f1f
+x-ms-traffictypediagnostic: BN7PR15MB2483:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR15MB248366052172F7D06FBC90E8B3760@BN7PR15MB2483.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p+tvIytnJycn7Bg/I4y9nevEPQtgss/9fDneOk+zQ72OEzwImLDvzy28k/0Mb5O9bTnxzSO8S7k5ApDq3+7PmMt6+qSvSe1Z3XLu8lxacyD7yr6X9YCSxsAKk5M0UzO3eJ0AL63vZ+yh0yXBeN+xwoCXHEBX9awvaTgoaCbpWzVy3vueomObZAhTCzRL3N0Bb6rGGyPhNxWJ+bK3F2xZ/ZjfK1RUc21w5gcYkGGdz79kIa+6fsiTHE0GDqEwneO4MIaY08jvWaXBNeC8W/b+X3pYmiaE5FCaTDesU3DpRsOn/0fgtTDQFVEABixnquFSC3GSYQIkEnPGGm9Qcs9Esw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR15MB2995.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(136003)(396003)(346002)(366004)(8936002)(33656002)(316002)(2906002)(86362001)(6486002)(8676002)(71200400001)(186003)(83380400001)(66446008)(66946007)(66556008)(66476007)(7416002)(478600001)(4326008)(5660300002)(6506007)(6916009)(54906003)(53546011)(91956017)(6512007)(76116006)(64756008)(2616005)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: AwP9K7xihoJAdFhvQ5FCbiudCXXCDISZzzCfrMeTlGNB8e55fvqx3ybdwhRGWK0SlTVlc4zv60BI5mksYxhSSowd6/7L7Cj/RD7LV0EU9lG4HXFkHXcIAyhI6S+N9BiRJyBLOCapKJltQA8SMx5t4c5QdVrKQtOnopa+rVbbB8mkPmLJw7NHJWpsBELTKSD4dkCM6QV+HLtl2R7c2+5686DMsVQCFf/v+GFV6I9AmzYEaKfU0mdtX7Wy5f7ba7fiVEsUdT8gyAICqf+/CdCRf1Smrz2KUqdOPmIO8S6ZCYnldTJWL6MYgC1/yx+ur9Ewb9gQGTbjdi+AHlV31JqP1Me3xfrWGFRaGGKJgo0Cqejum3oVavdgstTnQaCQPS2R0RuxmT2zR3GteTDuRvkA4jhecKL+y2Cf2HFeWMZ1m0yNExYY2YPQw38+knFlen93MM8nK2pnnUJJJEjlB+4uxxHOyyIWfle5wG27d3FsP5ThwNgWCYUQ3Cxr3Lrv1pyb4DELFoovg+saI1ph22agXg==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4C7094C581011D4E9F3722B2F188D225@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ttayar-VM.habana-labs.com (213.57.90.10) by AM3PR07CA0082.eurprd07.prod.outlook.com (2603:10a6:207:6::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend Transport; Thu, 23 Jul 2020 06:18:03 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [213.57.90.10]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 57478071-b7b7-4e90-d680-08d82ed0287a
-X-MS-TrafficTypeDiagnostic: DB3PR0202MB3548:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB3PR0202MB3548516714B14CAA0FD0340ED2760@DB3PR0202MB3548.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DzC2JAHFIFvRURbTZhO8trbScpwCkoj/LpkNmNXHW7pKMilIOA8s7yLMHGoG9lkpw/m/E2Gtn8ktFbJ8PK2nTwol5E0ewOzZ4e0fa0iKjQRIyUekIFzBhi2aN6ipQdPJOkxqZSqC8v+DS4CqzvNqMi049oxMZEcK1XtJkLJ3EF00gY8MomtDQbajhvIET/g1WWftRYxfiAMQl79IMBSy8CaLkDp9oG0cOapXDDi9iDU17/xou8fD3wAahhg2x1JarHlF8JyH2JPFYmUG8G9vNNno4qI+LRSELcZmci4ZTMO0MmLmIMWkw/bhJPHN3EvzYhDLGhIAB778bbe1VClK8g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(39850400004)(396003)(366004)(107886003)(186003)(2906002)(6916009)(26005)(6512007)(16526019)(6486002)(8676002)(478600001)(6666004)(36756003)(83380400001)(52116002)(316002)(8936002)(1076003)(66476007)(2616005)(956004)(86362001)(55236004)(66946007)(6506007)(4326008)(5660300002)(66556008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: /hWMGiNwOQxubcBcCkJBzI+9FyOWL0/s8BUWm8Aagt55s0vrVt42kgEAK3hWV5uYI46VCa1VORfLe7J06thvybV9IxGhdrFQKxSuxpxspLh/rRsnqfOqhiT6I2Bg5x75InhmCJ0+vcqsyU8rb6sXkcmdfSV0FJu/eQePSGwtBB6m9CJX2IQDmp2FuBJruCfqtJAQb1HPn/bYMsuXBusI4v9zHY9BzjtbNC3p6wsxypXRbeYY1T1HzGRthcGW3ZxEcHz6BSInIEi7997Lm+qEGWkUQr+5HkSwdemDlnZ9q8fX2KR5koHgHHfRF3DcA+c7HE7hpUgVQXMsIyATb4JIkZsHUptr4IbX1uNwobyaKAjtrcN7bwlfVfXsKn4Iddy4zKqphd2dzT9bURQHrfaQrC4NCC9KDcxPviz51+xoEXlIxDB3/op6bzyr/MzUZRd98z5Qd0DG4KHzvlq1+Joodx94jL3vNosjPIh2fsVXN9A=
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57478071-b7b7-4e90-d680-08d82ed0287a
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 06:18:04.2667
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR15MB2995.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 473dd7a5-9ff3-497c-e88e-08d82ed07f1f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 06:20:29.2638
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YfB7O3IA48NkCS6pyUdyF0RSXnVfmQYld2iJ9VWdzEZlKu/gVEB91mPxys71bCuRijFVes3dRZQlJzwT+0K/gQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3548
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vAU2WF8NegWfn6WGcbfOaf7helyzLdqdctl7Nieuml9VmelVWgbj9K51oAuUC9I8RcJQf32yLwalpuY/13HbYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR15MB2483
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 clxscore=1015 phishscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007230050
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a missing free of the cs_pending array in the error flow of context
-init.
 
-Fixes: 4b49c5b118b9 ("habanalabs: Use pending cs amount per asic")
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
----
- drivers/misc/habanalabs/common/context.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+> On Jul 22, 2020, at 10:55 PM, Alexei Starovoitov <alexei.starovoitov@gmai=
+l.com> wrote:
+>=20
+> On Wed, Jul 22, 2020 at 11:42:08AM -0700, Song Liu wrote:
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 856d98c36f562..f77d009fcce95 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -9544,6 +9544,24 @@ static int perf_event_set_bpf_handler(struct perf=
+_event *event, u32 prog_fd)
+>> 	if (IS_ERR(prog))
+>> 		return PTR_ERR(prog);
+>>=20
+>> +	if (event->attr.precise_ip &&
+>> +	    prog->call_get_stack &&
+>> +	    (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY) ||
+>> +	     event->attr.exclude_callchain_kernel ||
+>> +	     event->attr.exclude_callchain_user)) {
+>> +		/*
+>> +		 * On perf_event with precise_ip, calling bpf_get_stack()
+>> +		 * may trigger unwinder warnings and occasional crashes.
+>> +		 * bpf_get_[stack|stackid] works around this issue by using
+>> +		 * callchain attached to perf_sample_data. If the
+>> +		 * perf_event does not full (kernel and user) callchain
+>> +		 * attached to perf_sample_data, do not allow attaching BPF
+>> +		 * program that calls bpf_get_[stack|stackid].
+>> +		 */
+>> +		bpf_prog_put(prog);
+>> +		return -EINVAL;
+>=20
+> I suspect this will be a common error. bpftrace and others will be hittin=
+g
+> this issue and would need to fix how they do perf_event_open.
+> But EINVAL is too ambiguous and sys_perf_event_open has no ability to
+> return a string.
+> So how about we pick some different errno here to make future debugging
+> a bit less painful?
+> May be EBADFD or EPROTO or EPROTOTYPE ?
+> I think anything would be better than EINVAL.
 
-diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
-index b75a20364fad..3e375958e73b 100644
---- a/drivers/misc/habanalabs/common/context.c
-+++ b/drivers/misc/habanalabs/common/context.c
-@@ -138,36 +138,38 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
- 		rc = hl_mmu_ctx_init(ctx);
- 		if (rc) {
- 			dev_err(hdev->dev, "Failed to init mmu ctx module\n");
--			goto mem_ctx_err;
-+			goto err_free_cs_pending;
- 		}
- 	} else {
- 		ctx->asid = hl_asid_alloc(hdev);
- 		if (!ctx->asid) {
- 			dev_err(hdev->dev, "No free ASID, failed to create context\n");
--			return -ENOMEM;
-+			rc = -ENOMEM;
-+			goto err_free_cs_pending;
- 		}
- 
- 		rc = hl_vm_ctx_init(ctx);
- 		if (rc) {
- 			dev_err(hdev->dev, "Failed to init mem ctx module\n");
- 			rc = -ENOMEM;
--			goto mem_ctx_err;
-+			goto err_asid_free;
- 		}
- 
- 		rc = hdev->asic_funcs->ctx_init(ctx);
- 		if (rc) {
- 			dev_err(hdev->dev, "ctx_init failed\n");
--			goto ctx_init_err;
-+			goto err_vm_ctx_fini;
- 		}
- 	}
- 
- 	return 0;
- 
--ctx_init_err:
-+err_vm_ctx_fini:
- 	hl_vm_ctx_fini(ctx);
--mem_ctx_err:
--	if (ctx->asid != HL_KERNEL_ASID_ID)
--		hl_asid_free(hdev, ctx->asid);
-+err_asid_free:
-+	hl_asid_free(hdev, ctx->asid);
-+err_free_cs_pending:
-+	kfree(ctx->cs_pending);
- 
- 	return rc;
- }
--- 
-2.17.1
+I like EPROTO most. I will change it to EPROTO if we don't have better idea=
+s.
 
+Btw, this is not the error code on sys_perf_event_open(). It is the ioctl()
+on the perf_event fd. So debugging this error will be less painful than=20
+debugging sys_perf_event_open() errors.=20
+
+Thanks,
+Song=
