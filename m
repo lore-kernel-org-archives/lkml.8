@@ -2,149 +2,116 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1660C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8164C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 977082086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6ED22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="I7R68egh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jLHhwfMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgGWNIj (ORCPT
+        id S1728898AbgGWNJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:08:39 -0400
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:20885 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGWNIi (ORCPT
+        Thu, 23 Jul 2020 09:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgGWNJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:08:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595509718;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=dXHSH9wbRdiIIVrdpu3/5eZAN762+wcXGXoVK0/kVTw=;
-  b=I7R68eghWhEajjqpmWnOtxgQZoM9OwSc3LfXkA5467cMguYfD8E/jPTi
-   O3nnY1ch2titxdfrlK/1d+wDfrXbin2H3YyATpqDZ+3z6BcPJe9SaKSOa
-   BFnf1L3rDTSzi5fOGeQ2Wf/LsSgKJCWeSKT3q43F2d+Zr0v9JpZ8c0NBK
-   Q=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: c1OsWBvLwJGdBIFnV7ENKa2QZlNdSh82WqwRMgsvuKPvhFpo8s2BP9yFpIzMwzmrLh1F/8swoZ
- NrSBwknuSpeGkYXCW5UWNYuhJU8cn0wmYFemgCYDsDgCReb6KpvhYi2bXcfZWWYgtFxE9Ixuvw
- u9IPUuf+bT+bpZ2TKC6xY9VT1lQpDIyTN64WgIb0KSU+YiyW5pIPd8v9ABo8y0wCjBDXZ82BsE
- MvH9H5V+C1VWlj2yILkGrJQv49MC+ckfofs7CZwF7xjTb5eCuU3E4AhWScvQVHySkwkSS5GKV4
- Oxk=
-X-SBRS: 2.7
-X-MesageID: 23230214
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,386,1589256000"; 
-   d="scan'208";a="23230214"
-Date:   Thu, 23 Jul 2020 15:08:31 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-CC:     David Hildenbrand <david@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-Message-ID: <20200723130831.GE7191@Air-de-Roger>
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
- <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
- <20200723122300.GD7191@Air-de-Roger>
- <404ea76f-c3d8-dbc5-432d-08d84a17f2d7@suse.com>
+        Thu, 23 Jul 2020 09:09:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC66C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f1so4561315wro.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHNOabgTTNbh6uri8W4VPeDNkD37Z9qVynqApQA8NN4=;
+        b=jLHhwfMgxxeLyGX9Vu5obKFeM6cJuGW5m219rJLASk42B8yCuiSrbsYu9g4Om3CrQO
+         u8+PhnKSL74Rqrmjsn7QSzvAuZWPYtNlJ5c4JvYRPf9ug+ThVMEr6OQiOaSvx39H6D6K
+         +dAXBolNwP9SldzHVxjetuVWbdFFkOk3DerVI9CYHiOh8s8cAhVMlWL2jpEZW3SwmNbl
+         VWdbomN2X2NbtU7jNJeyYRxauMv+gmJWqdsbiEUHdhc5maNRJGqc8ce7NbyXNT1EarIT
+         CCkawWMZ5O6qDOcq2Mmr8jZa4RGPQ28pS7aAM/1nsoEHccPsCL8DblVhkak/i6PPUViD
+         z94A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHNOabgTTNbh6uri8W4VPeDNkD37Z9qVynqApQA8NN4=;
+        b=GRUZPG484yHF2VISPiGehNDEPG/krqdFE3Pzo9AvxgJBeoJLqFAxIwYNnIMf1Z3qcX
+         W/VEXM67eOmp5dpWIqVMrXsgKtfjwtR3KvDtywsSj9jTUdvVVonTiOuC2oFW1tmIaQOn
+         Domn72SOz2Lo7W+9K5fzVg2VmHxdlgXK9/2NaJTnWmoq3MQ0xb4lgdhvhgi6E7oO1Zxy
+         kXMPYbIfWaHlcNMpJ2uOub9zGXmABLL53clAceopmSGqf5G/RAqVW2BqsWZMKXrIv7rj
+         A27BlVa3Mikb48yj8O20NV2+O5EzwPww0Ky6g5JNj7BGA7zlvJmylkf0wwGhbAZrHvcy
+         QmJA==
+X-Gm-Message-State: AOAM530vq6DOq9nJmvBHfhbxB2yQy7xDrep9NkAmM9WF9n5PKVFTb0iB
+        dvEzwfSH1q/8xQIttUhQex2yCQ==
+X-Google-Smtp-Source: ABdhPJyn9q77KWRk28k9ReYpgP1tzCRLEjDCCty8oAulmC1LG1zHc+TAu26s0hrwLaOIgaDbxOXoaQ==
+X-Received: by 2002:adf:ee06:: with SMTP id y6mr4020677wrn.225.1595509782303;
+        Thu, 23 Jul 2020 06:09:42 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Jul 2020 06:09:41 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] interconnect: Introduce xlate_extended()
+Date:   Thu, 23 Jul 2020 16:09:36 +0300
+Message-Id: <20200723130942.28491-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <404ea76f-c3d8-dbc5-432d-08d84a17f2d7@suse.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 02:28:13PM +0200, Jürgen Groß wrote:
-> On 23.07.20 14:23, Roger Pau Monné wrote:
-> > On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
-> > > On 23.07.20 10:45, Roger Pau Monne wrote:
-> > > > Add an extra option to add_memory_resource that overrides the memory
-> > > > hotplug online behavior in order to force onlining of memory from
-> > > > add_memory_resource unconditionally.
-> > > > 
-> > > > This is required for the Xen balloon driver, that must run the
-> > > > online page callback in order to correctly process the newly added
-> > > > memory region, note this is an unpopulated region that is used by Linux
-> > > > to either hotplug RAM or to map foreign pages from other domains, and
-> > > > hence memory hotplug when running on Xen can be used even without the
-> > > > user explicitly requesting it, as part of the normal operations of the
-> > > > OS when attempting to map memory from a different domain.
-> > > > 
-> > > > Setting a different default value of memhp_default_online_type when
-> > > > attaching the balloon driver is not a robust solution, as the user (or
-> > > > distro init scripts) could still change it and thus break the Xen
-> > > > balloon driver.
-> > > 
-> > > I think we discussed this a couple of times before (even triggered by my
-> > > request), and this is responsibility of user space to configure. Usually
-> > > distros have udev rules to online memory automatically. Especially, user
-> > > space should eb able to configure *how* to online memory.
-> > 
-> > Note (as per the commit message) that in the specific case I'm
-> > referring to the memory hotplugged by the Xen balloon driver will be
-> > an unpopulated range to be used internally by certain Xen subsystems,
-> > like the xen-blkback or the privcmd drivers. The addition of such
-> > blocks of (unpopulated) memory can happen without the user explicitly
-> > requesting it, and hence not even aware such hotplug process is taking
-> > place. To be clear: no actual RAM will be added to the system.
-> > 
-> > Failure to online such blocks using the Xen specific online handler
-> > (which does not handle back the memory to the allocator in any way)
-> > will result in the system getting stuck and malfunctioning.
-> > 
-> > > It's the admin/distro responsibility to configure this properly. In case
-> > > this doesn't happen (or as you say, users change it), bad luck.
-> > > 
-> > > E.g., virtio-mem takes care to not add more memory in case it is not
-> > > getting onlined. I remember hyper-v has similar code to at least wait a
-> > > bit for memory to get onlined.
-> > 
-> > I don't think VirtIO or Hyper-V use the hotplug system in the same way
-> > as Xen, as said this is done to add unpopulated memory regions that
-> > will be used to map foreign memory (from other domains) by Xen drivers
-> > on the system.
-> > 
-> > Maybe this should somehow use a different mechanism to hotplug such
-> > empty memory blocks? I don't mind doing this differently, but I would
-> > need some pointers. Allowing user-space to change a (seemingly
-> > unrelated) parameter and as a result produce failures on Xen drivers
-> > is not an acceptable solution IMO.
-> 
-> Maybe we can use the same approach as Xen PV-domains: pre-allocate a
-> region in the memory map to be used for mapping foreign pages. For the
-> kernel it will look like pre-ballooned memory, so it will create struct
-> page for the region (which is what we are after), but it won't give the
-> memory to the allocator.
+Currently the interconnect framework provides the xlate() callback for
+mapping the endpoints from phandle arguments in DT. This is implemented
+by the provider drivers. But the endpoints (or the path between the
+endpoints) might have an additional attributes, which should be parsed
+and populated. During previous discussions [1], it was suggested that
+adding more and more DT properties will not scale very well. So instead
+of adding DT properties, such data should be put into the 'interconnects'
+arguments.
 
-IMO using something similar to memory hotplug would give us more
-flexibility, and TBH the logic is already there in the balloon driver.
-It seems quite wasteful to allocate such region(s) beforehand for all
-domains, even when most of them won't end up using foreign mappings at
-all.
+This patchset is introducing a new xlate_extended() callback, which
+would allow the interconnect provider drivers to parse additional data
+(such as path tags) and allow the framework to make use of them.
 
-Anyway, I'm going to take a look at how to do that, I guess it's going
-to involve playing with the memory map and reserving some space.
+Thanks to Sibi for the preliminary feedback and testing this patchset
+on the sc7180 platform.
 
-I suggest we should remove the Xen balloon hotplug logic, as it's not
-working properly and we don't have a plan to fix it.
+The patchset is based on linux-next (next-20200723).
 
-Thanks, Roger.
+[1]. https://lore.kernel.org/linux-devicetree/20200519185836.GA469006@bogus/
+
+Georgi Djakov (4):
+  interconnect: Introduce xlate_extended() callback
+  interconnect: qcom: Implement xlate_extended() to parse tags
+  interconnect: qcom: sdm845: Replace xlate with xlate_extended
+  arm64: dts: qcom: sdm845: Increase the number of interconnect cells
+
+Sibi Sankar (2):
+  interconnect: qcom: sc7180: Replace xlate with xlate_extended
+  arm64: dts: qcom: sc7180: Increase the number of interconnect cells
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi  | 216 +++++++++++++-------------
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  |  44 +++---
+ drivers/interconnect/core.c           |  73 ++++++---
+ drivers/interconnect/qcom/icc-rpmh.c  |  27 ++++
+ drivers/interconnect/qcom/icc-rpmh.h  |   1 +
+ drivers/interconnect/qcom/sc7180.c    |   2 +-
+ drivers/interconnect/qcom/sdm845.c    |   2 +-
+ include/linux/interconnect-provider.h |  17 +-
+ 8 files changed, 225 insertions(+), 157 deletions(-)
+
