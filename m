@@ -2,107 +2,151 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2227C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86B7C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1BA207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YevgOcOa"
+	by mail.kernel.org (Postfix) with ESMTP id 86A40207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgGWO7O (ORCPT
+        id S1729432AbgGWO7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbgGWO7N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:59:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640FDC0619DC;
-        Thu, 23 Jul 2020 07:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8Gt1hFpE3q2wE3LOCsagXAgF4SokTskzV+hSBzd+h94=; b=YevgOcOaHex/SgwKEBjKklY9ML
-        EOz76F9PRoMjWXYbh8Q+m/GbZsxZzpaftQUDGL6i0rkl4d3XOsti2q6zidbbAOdlaQCoDEkMbBo/3
-        uibNzMdLQFmkllHyPKj3GT64ohKnBbGPeTcObiayUHZKr6mpih1MPL/xTlmXNwMkbz0YYUTrokLxc
-        e+ansIggeKN0bMmp5DAW7L3MyHSOAaMAbgr26KCQ+j5BOGanY609zpdhmuxph9F1tP80dQDAtzqoT
-        O61aCCCF81d39djAdwbpYFPQ/yDWx2bIuB8dtmgMTTFEzaQfBByrk9i+tOsYEg/FELh+tePD+S6hu
-        wE5r4t3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jycgc-0000Ed-C9; Thu, 23 Jul 2020 14:59:06 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 01DF5983422; Thu, 23 Jul 2020 16:59:04 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 16:59:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
- synchronisation with actual irq state
-Message-ID: <20200723145904.GU5523@worktop.programming.kicks-ass.net>
-References: <20200723105615.1268126-1-npiggin@gmail.com>
- <20200723114010.GO5523@worktop.programming.kicks-ass.net>
- <1595506730.3mvrxktem5.astroid@bobo.none>
+        Thu, 23 Jul 2020 10:59:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39262 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727885AbgGWO7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:59:31 -0400
+IronPort-SDR: Ru/fFVXlq6iVPje2iI4SUyEawnEeMz7O/+2wltJZA5M3f6pXmYPxGVq4u+q/W1FDom1XLuGr7u
+ WvThIt7HTh9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="212079069"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="212079069"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 07:59:30 -0700
+IronPort-SDR: VqA7cPDBVn0A+Ax50jfYal6yPkW7NZ/DoFPHOT57ObBl7VeDaAwCS2AIN5atA37T5NprC1RtjI
+ WvvXuSNh3icw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="311051122"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 07:59:29 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jycgy-0000US-GL; Thu, 23 Jul 2020 14:59:28 +0000
+Date:   Thu, 23 Jul 2020 22:58:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ d181d2da0141371bbc360eaea78719203e165e1c
+Message-ID: <5f19a594.VdIJp2u56/kSBpBr%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595506730.3mvrxktem5.astroid@bobo.none>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 11:11:03PM +1000, Nicholas Piggin wrote:
-> Excerpts from Peter Zijlstra's message of July 23, 2020 9:40 pm:
-> > On Thu, Jul 23, 2020 at 08:56:14PM +1000, Nicholas Piggin wrote:
-> > 
-> >> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
-> >> index 3a0db7b0b46e..35060be09073 100644
-> >> --- a/arch/powerpc/include/asm/hw_irq.h
-> >> +++ b/arch/powerpc/include/asm/hw_irq.h
-> >> @@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
-> >>  #define powerpc_local_irq_pmu_save(flags)			\
-> >>  	 do {							\
-> >>  		raw_local_irq_pmu_save(flags);			\
-> >> -		trace_hardirqs_off();				\
-> >> +		if (!raw_irqs_disabled_flags(flags))		\
-> >> +			trace_hardirqs_off();			\
-> >>  	} while(0)
-> >>  #define powerpc_local_irq_pmu_restore(flags)			\
-> >>  	do {							\
-> >> -		if (raw_irqs_disabled_flags(flags)) {		\
-> >> -			raw_local_irq_pmu_restore(flags);	\
-> >> -			trace_hardirqs_off();			\
-> >> -		} else {					\
-> >> +		if (!raw_irqs_disabled_flags(flags))		\
-> >>  			trace_hardirqs_on();			\
-> >> -			raw_local_irq_pmu_restore(flags);	\
-> >> -		}						\
-> >> +		raw_local_irq_pmu_restore(flags);		\
-> >>  	} while(0)
-> > 
-> > You shouldn't be calling lockdep from NMI context!
-> 
-> After this patch it doesn't.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: d181d2da0141371bbc360eaea78719203e165e1c  x86/dumpstack: Dump user space code correctly again
 
-You sure, trace_hardirqs_{on,off}() calls into lockdep. (FWIW they're
-also broken vs entry ordering, but that's another story).
+elapsed time: 1023m
 
-> trace_hardirqs_on/off implementation appears to expect to be called in NMI 
-> context though, for some reason.
+configs tested: 80
+configs skipped: 1
 
-Hurpm, not sure.. I'll have to go grep arch code now :/ The generic NMI
-code didn't touch that stuff.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Argh, yes, there might be broken there... damn! I'll go frob around.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20200723
+i386                 randconfig-a005-20200723
+i386                 randconfig-a004-20200723
+i386                 randconfig-a006-20200723
+i386                 randconfig-a002-20200723
+i386                 randconfig-a001-20200723
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
