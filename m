@@ -2,164 +2,137 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39568C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82610C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDA420792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A14520737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgGWVSm (ORCPT
+        id S1726728AbgGWVUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgGWVSj (ORCPT
+        Thu, 23 Jul 2020 17:20:07 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:36287 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGWVUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:18:39 -0400
-Received: from hera.iit.uni-miskolc.hu (hera.iit.uni-miskolc.hu [IPv6:2001:738:6001:500::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982ECC0619DC;
-        Thu, 23 Jul 2020 14:18:39 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id 06A74A12;
-        Thu, 23 Jul 2020 23:10:29 +0200 (CEST)
-X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
-Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
-        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ae8prMPlSpa0; Thu, 23 Jul 2020 23:10:19 +0200 (CEST)
-Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:908:226:9eff:fe30:2af8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: szucst@iit.uni-miskolc.hu)
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id 33A04A0F;
-        Thu, 23 Jul 2020 23:10:19 +0200 (CEST)
-From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        JC Kuo <jckuo@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-Subject: [PATCH v2 1/4] arm64: tegra: Enable signal voltage switching on Tegra194 SDMMC1 and SDMMC3
-Date:   Thu, 23 Jul 2020 23:09:29 +0200
-Message-Id: <20200723210932.8076-2-tszucs@protonmail.ch>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200723210932.8076-1-tszucs@protonmail.ch>
-References: <20200723210932.8076-1-tszucs@protonmail.ch>
+        Thu, 23 Jul 2020 17:20:06 -0400
+Received: by mail-io1-f72.google.com with SMTP id h205so4962563iof.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:20:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=8OsQi/rtngRly2aes5OHJCr6XU7KTICHzhKX0xPzoq4=;
+        b=Q2oKClLz++02i+AiDB/LxWcgeTsIiKi1gZL2dkMH4SRO/Pm03MsTyLFyTBVl3kXTAh
+         q2/Efi9eiqyDwezwGQa0YBiLUzXHWbZpWDjwGzO0zTxXvzLP28NIine/cUo1ly1O3AIG
+         WK+ir3s1SGAkrZd+jWoGBm0Emt1yjngvzftKccddR6RVjoFR7xnKN7zHivB2TLJNC4S4
+         Wiq9D4GL8/GDcgF/LPjd1dY2Ycm5VfnIUNYDZ7D0yGJZRpBdBRD+7XCxunfpuVweGXbi
+         ORA1sW6z3E6+7R+WXXYw+hq4hNMPh9OHy927OLr7c3FMObR99bLAR8WMevgr9Tik1oW0
+         f4RQ==
+X-Gm-Message-State: AOAM533SoUUvqNX66g7gFnNHO5oQx7twKGYmFJ8CU0aFLlaqwkRQZGlv
+        Qyr64WbD6fFpcmU9y0LPdL2EyoTm+j8+s+0jKPj5+Fdb+/y1
+X-Google-Smtp-Source: ABdhPJySXYoykumIrlUktwKjkmXgW7KFAwAJVGuQHGNXzGRgHXRiekNfL/HLAh/yfSaCAJV29uQD4tvuHcS03PqthES9It126o4f
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:150d:: with SMTP id v13mr6690732ilk.297.1595539205575;
+ Thu, 23 Jul 2020 14:20:05 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 14:20:05 -0700
+In-Reply-To: <CAM_iQpXTe-DCr2MozGTik-SxOt8wiTehe6YkNhZGtDWfbHNPTA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000092da5105ab226b64@google.com>
+Subject: Re: KASAN: use-after-free Read in macvlan_dev_get_iflink
+From:   syzbot <syzbot+95eec132c4bd9b1d8430@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pad voltage configuration nodes for SDMMC pads with configurable voltages
-and enable supported SD card, SDIO and eMMC modes.
+Hello,
 
-Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 45 ++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in macvlan_get_link_net
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 48160f48003a..8351035bb6a7 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/mailbox/tegra186-hsp.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
-+#include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
- #include <dt-bindings/power/tegra194-powergate.h>
- #include <dt-bindings/reset/tegra194-reset.h>
- #include <dt-bindings/thermal/tegra194-bpmp-thermal.h>
-@@ -467,6 +468,9 @@
- 			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCRA &emc>,
- 					<&mc TEGRA194_MEMORY_CLIENT_SDMMCWA &emc>;
- 			interconnect-names = "dma-mem", "write";
-+			pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
-+			pinctrl-0 = <&sdmmc1_3v3>;
-+			pinctrl-1 = <&sdmmc1_1v8>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
- 									<0x07>;
- 			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
-@@ -478,6 +482,15 @@
- 			nvidia,pad-autocal-pull-down-offset-sdr104 = <0x00>;
- 			nvidia,default-tap = <0x9>;
- 			nvidia,default-trim = <0x5>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
-+			sd-uhs-sdr12;
-+			sd-uhs-sdr25;
-+			sd-uhs-sdr50;
-+			sd-uhs-sdr104;
-+			cap-sdio-irq;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
- 			status = "disabled";
- 		};
- 
-@@ -492,6 +505,9 @@
- 			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCR &emc>,
- 					<&mc TEGRA194_MEMORY_CLIENT_SDMMCW &emc>;
- 			interconnect-names = "dma-mem", "write";
-+			pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
-+			pinctrl-0 = <&sdmmc3_3v3>;
-+			pinctrl-1 = <&sdmmc3_1v8>;
- 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
- 			nvidia,pad-autocal-pull-down-offset-1v8 = <0x7a>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x07>;
-@@ -504,6 +520,15 @@
- 			nvidia,pad-autocal-pull-down-offset-sdr104 = <0x00>;
- 			nvidia,default-tap = <0x9>;
- 			nvidia,default-trim = <0x5>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
-+			sd-uhs-sdr12;
-+			sd-uhs-sdr25;
-+			sd-uhs-sdr50;
-+			sd-uhs-sdr104;
-+			cap-sdio-irq;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
- 			status = "disabled";
- 		};
- 
-@@ -1029,6 +1054,26 @@
- 
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
-+
-+			sdmmc1_3v3: sdmmc1-3v3 {
-+				pins = "sdmmc1-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
-+			};
-+
-+			sdmmc1_1v8: sdmmc1-1v8 {
-+				pins = "sdmmc1-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
-+			};
-+
-+			sdmmc3_3v3: sdmmc3-3v3 {
-+				pins = "sdmmc3-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
-+			};
-+
-+			sdmmc3_1v8: sdmmc3-1v8 {
-+				pins = "sdmmc3-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
-+			};
- 		};
- 
- 		host1x@13e00000 {
--- 
-2.20.1
+general protection fault, probably for non-canonical address 0xdffffc00000000b3: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000598-0x000000000000059f]
+CPU: 0 PID: 8229 Comm: syz-executor.0 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:read_pnet include/net/net_namespace.h:330 [inline]
+RIP: 0010:dev_net include/linux/netdevice.h:2261 [inline]
+RIP: 0010:macvlan_get_link_net+0x43/0x60 drivers/net/macvlan.c:1667
+Code: c6 f0 0b 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 dc cb d6 fc bb 98 05 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 be cb d6 fc 48 8b 03 5b 41 5e 41
+RSP: 0018:ffffc90004e47110 EFLAGS: 00010202
+RAX: 00000000000000b3 RBX: 0000000000000598 RCX: ffff88808f57c040
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888089dc8000
+RBP: ffffc90004e47228 R08: ffffffff866c14ae R09: fffffbfff12b7531
+R10: fffffbfff12b7531 R11: 0000000000000000 R12: 1ffff110113b904b
+R13: ffff888089dc825f R14: ffff888089dc8bf0 R15: dffffc0000000000
+FS:  00007f40720ea700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005623955cb160 CR3: 000000009dc8e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ rtnl_fill_link_netnsid net/core/rtnetlink.c:1569 [inline]
+ rtnl_fill_ifinfo+0x3355/0x4650 net/core/rtnetlink.c:1758
+ rtmsg_ifinfo_build_skb+0xe2/0x180 net/core/rtnetlink.c:3706
+ rollback_registered_many+0xc9b/0x14a0 net/core/dev.c:8972
+ unregister_netdevice_many+0x46/0x260 net/core/dev.c:10113
+ __rtnl_newlink net/core/rtnetlink.c:3381 [inline]
+ rtnl_newlink+0x1876/0x1c10 net/core/rtnetlink.c:3398
+ rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cb99
+Code: Bad RIP value.
+RSP: 002b:00007f40720e9c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000502680 RCX: 000000000045cb99
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000006
+RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a40 R14: 00000000004cd2f6 R15: 00007f40720ea6d4
+Modules linked in:
+---[ end trace 45c7e0a1442252cb ]---
+RIP: 0010:read_pnet include/net/net_namespace.h:330 [inline]
+RIP: 0010:dev_net include/linux/netdevice.h:2261 [inline]
+RIP: 0010:macvlan_get_link_net+0x43/0x60 drivers/net/macvlan.c:1667
+Code: c6 f0 0b 00 00 4c 89 f0 48 c1 e8 03 42 80 3c 38 00 74 08 4c 89 f7 e8 dc cb d6 fc bb 98 05 00 00 49 03 1e 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 be cb d6 fc 48 8b 03 5b 41 5e 41
+RSP: 0018:ffffc90004e47110 EFLAGS: 00010202
+RAX: 00000000000000b3 RBX: 0000000000000598 RCX: ffff88808f57c040
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888089dc8000
+RBP: ffffc90004e47228 R08: ffffffff866c14ae R09: fffffbfff12b7531
+R10: fffffbfff12b7531 R11: 0000000000000000 R12: 1ffff110113b904b
+R13: ffff888089dc825f R14: ffff888089dc8bf0 R15: dffffc0000000000
+FS:  00007f40720ea700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005623955cb160 CR3: 000000009dc8e000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+Tested on:
+
+commit:         9506a941 net: fix a race condition in dev_get_iflink()
+git tree:       https://github.com/congwang/linux.git net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1569d430900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b1a5a263f7a540cb
+dashboard link: https://syzkaller.appspot.com/bug?extid=95eec132c4bd9b1d8430
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
