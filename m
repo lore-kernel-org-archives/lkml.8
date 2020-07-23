@@ -2,187 +2,103 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBDDC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F38C433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175FE206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C38206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:14:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5vDCuMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgGWLON (ORCPT
+        id S1728558AbgGWLOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:14:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:44004 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgGWLON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:14:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 413A1D6E;
-        Thu, 23 Jul 2020 04:14:12 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE4663F718;
-        Thu, 23 Jul 2020 04:14:10 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 12:14:02 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, decui@microsoft.com,
-        mikelley@microsoft.com
-Subject: Re: [PATCH v3] PCI: hv: Fix a timing issue which causes kdump to
- fail occasionally
-Message-ID: <20200723111402.GA8120@e121166-lin.cambridge.arm.com>
-References: <20200718034752.4843-1-weh@microsoft.com>
+        Thu, 23 Jul 2020 07:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgGWLOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:14:52 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB255C0619DC;
+        Thu, 23 Jul 2020 04:14:51 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id y10so5980718eje.1;
+        Thu, 23 Jul 2020 04:14:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vdYyoECOJpkvRW+iDSJN0RIdv+nH41NS293U/5tTNzU=;
+        b=B5vDCuMK34uIsnpD9z3FcIKsP+ARgUC68tC2JBNii294ZVz92X5OyPMGm1cnHIYPvl
+         3DKQSNa/jdlu0biVdgVy3X/Usw30FobXy8VPbwfs9mZO4hgKFIB5Q6ou4++0iHZWcmIg
+         rfstWtDzaQOlAHrnGsoBfnDZMJ2kD6uwV1y2oKkj2sr770VnwjwNmw0Za18fcxNwyhPN
+         PX5gNfWd5bOhXJY1Kvg+SfF57+CLOAPlOGTBbqcVuFCBHygW7tXdpNSN+uznlRCislSc
+         n2D4vVeaN2C63ZjJ8LYUcP4YwR3kpvL7IT5R8VKRAe3yBJewccDUsJmVY4TugCpk7vZl
+         wX7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vdYyoECOJpkvRW+iDSJN0RIdv+nH41NS293U/5tTNzU=;
+        b=OSvvl4od8qhpj0fbhiA5979OI0+nto4RcDPfbflf+CsAatqxszOPd30p2nbgNR+IfU
+         Hd4Ap9iZqCDKpgUp/3NGF5K7lQtcFWmFg7DLFnZ6EUXBh/VXovuO6fj16efUU0UZJB56
+         /yZaiZovVILBMf1WY2kqzsc28Xlbo1UNKEuIIMVN9CcfLJ94OEb+/LRhUFn+19ynMxmr
+         k+mdHaryMe5vp8ozuKPKGl1b+kojsES1aVxBo8FD/TjgQC+XFj3r/D/vvcvm8xuVF0i+
+         9ryHfVoYSCkW38tTAwIW5BkJD0WHLiwdFF/WScJ0DlHUbTehhAEeCth11uxc5MqgI1dW
+         srSg==
+X-Gm-Message-State: AOAM530tjR5YjkGijVHLCXbqdpcgxRzpeQ+0qqsNcCysFIF6kxanE7VZ
+        6AArdUThi60tVzU3ctXj05E=
+X-Google-Smtp-Source: ABdhPJz4rM+z9eQOHfGGUF+Hj1F0q1VizoeW8bUipy1mWLCV1z/2+oZlfysZjxBFObbrbyKXQkFElw==
+X-Received: by 2002:a17:906:1187:: with SMTP id n7mr3696742eja.161.1595502890446;
+        Thu, 23 Jul 2020 04:14:50 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:f109:49dc:4e2a:ea12])
+        by smtp.gmail.com with ESMTPSA id y22sm1817552ejj.67.2020.07.23.04.14.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 04:14:49 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 13:14:47 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: Re: [PATCH 01/26] bpfilter: fix up a sparse annotation
+Message-ID: <20200723111447.3xj7cidlsspofsja@ltop.local>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200723060908.50081-2-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200718034752.4843-1-weh@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200723060908.50081-2-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 11:47:52AM +0800, Wei Hu wrote:
-> Kdump could fail sometime on Hyper-V guest over Accelerated Network
-> interface. This is because the retry in hv_pci_enter_d0() relies on
-> an asynchronous host event arriving before the guest calls
-> hv_send_resources_allocated(). Fix the problem by moving retry
-> to hv_pci_probe(), removing this dependency and making the calling
-> sequence synchronous.
+On Thu, Jul 23, 2020 at 08:08:43AM +0200, Christoph Hellwig wrote:
+> The __user doesn't make sense when casting to an integer type, just
+> switch to a uintptr_t cast which also removes the need for the __force.
 
-You have to explain why this code move fixes the problem and you
-also have to add a comment to the code so that anyone who has to
-fix it in the future can understand why the code is where you
-are moving it to and why that's a solution.
+Feel free to add my:
 
-> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
-> Signed-off-by: Wei Hu <weh@microsoft.com>
+Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-Please carry tags and send patches -in-reply-to the previous version
-to allow threading.
-
-Thanks,
-Lorenzo
-
-> ---
->     v2: Adding Fixes tag according to Michael Kelley's review comment.
->     v3: Fix couple typos and reword commit message to make it clearer.
->     Thanks the comments from Bjorn Helgaas.
-> 
->  drivers/pci/controller/pci-hyperv.c | 66 ++++++++++++++---------------
->  1 file changed, 32 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index bf40ff09c99d..738ee30f3334 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	struct pci_bus_d0_entry *d0_entry;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> -	bool retry = true;
->  	int ret;
->  
-> -enter_d0_retry:
->  	/*
->  	 * Tell the host that the bus is ready to use, and moved into the
->  	 * powered-on state.  This includes telling the host which region
-> @@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	if (ret)
->  		goto exit;
->  
-> -	/*
-> -	 * In certain case (Kdump) the pci device of interest was
-> -	 * not cleanly shut down and resource is still held on host
-> -	 * side, the host could return invalid device status.
-> -	 * We need to explicitly request host to release the resource
-> -	 * and try to enter D0 again.
-> -	 */
-> -	if (comp_pkt.completion_status < 0 && retry) {
-> -		retry = false;
-> -
-> -		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> -
-> -		/*
-> -		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-> -		 * to free up resources of its child devices.
-> -		 * In the kdump kernel we need to set the
-> -		 * wslot_res_allocated to 255 so it scans all child
-> -		 * devices to release resources allocated in the
-> -		 * normal kernel before panic happened.
-> -		 */
-> -		hbus->wslot_res_allocated = 255;
-> -
-> -		ret = hv_pci_bus_exit(hdev, true);
-> -
-> -		if (ret == 0) {
-> -			kfree(pkt);
-> -			goto enter_d0_retry;
-> -		}
-> -		dev_err(&hdev->device,
-> -			"Retrying D0 failed with ret %d\n", ret);
-> -	}
-> -
->  	if (comp_pkt.completion_status < 0) {
->  		dev_err(&hdev->device,
->  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-> @@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	struct hv_pcibus_device *hbus;
->  	u16 dom_req, dom;
->  	char *name;
-> +	bool enter_d0_retry = true;
->  	int ret;
->  
->  	/*
-> @@ -3178,11 +3145,42 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto free_fwnode;
->  
-> +retry:
->  	ret = hv_pci_query_relations(hdev);
->  	if (ret)
->  		goto free_irq_domain;
->  
->  	ret = hv_pci_enter_d0(hdev);
-> +	/*
-> +	 * In certain case (Kdump) the pci device of interest was
-> +	 * not cleanly shut down and resource is still held on host
-> +	 * side, the host could return invalid device status.
-> +	 * We need to explicitly request host to release the resource
-> +	 * and try to enter D0 again.
-> +	 * The retry should start from hv_pci_query_relations() call.
-> +	 */
-> +	if (ret == -EPROTO && enter_d0_retry) {
-> +		enter_d0_retry = false;
-> +
-> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> +
-> +		/*
-> +		 * Hv_pci_bus_exit() calls hv_send_resources_released()
-> +		 * to free up resources of its child devices.
-> +		 * In the kdump kernel we need to set the
-> +		 * wslot_res_allocated to 255 so it scans all child
-> +		 * devices to release resources allocated in the
-> +		 * normal kernel before panic happened.
-> +		 */
-> +		hbus->wslot_res_allocated = 255;
-> +		ret = hv_pci_bus_exit(hdev, true);
-> +
-> +		if (ret == 0)
-> +			goto retry;
-> +
-> +		dev_err(&hdev->device,
-> +			"Retrying D0 failed with ret %d\n", ret);
-> +	}
->  	if (ret)
->  		goto free_irq_domain;
->  
-> -- 
-> 2.20.1
-> 
+-- Luc
