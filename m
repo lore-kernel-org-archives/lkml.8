@@ -5,39 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF0C433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A665EC43460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08FA20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8494120825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="anKqe2mr"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GyJ1vhtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgGWXtA (ORCPT
+        id S1728404AbgGWXsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:49:00 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7670 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgGWXsW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 19:48:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1a21b80000>; Thu, 23 Jul 2020 16:48:08 -0700
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17993 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgGWXsT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 19:48:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1a21830000>; Thu, 23 Jul 2020 16:47:15 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Jul 2020 16:48:21 -0700
+  Thu, 23 Jul 2020 16:48:18 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 16:48:21 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
- 2020 23:48:20 +0000
+        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 16:48:18 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
+ 2020 23:48:18 +0000
 Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 23 Jul 2020 23:48:21 +0000
+ Transport; Thu, 23 Jul 2020 23:48:18 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1a21c40001>; Thu, 23 Jul 2020 16:48:20 -0700
+        id <B5f1a21c10002>; Thu, 23 Jul 2020 16:48:18 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +48,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v4 07/14] media: tegra-video: Enable TPG based on kernel config
-Date:   Thu, 23 Jul 2020 16:51:05 -0700
-Message-ID: <1595548272-9809-8-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v4 03/14] i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+Date:   Thu, 23 Jul 2020 16:51:01 -0700
+Message-ID: <1595548272-9809-4-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
 References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
@@ -57,254 +58,62 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595548088; bh=ds7oxXGxAuyDw53E4hJLEBinWlNAsgh9dJ6sWX9tefI=;
+        t=1595548035; bh=eufXsoZ14WkRUf36lqjK6lfwNSwXZDr32mhUx6fHlSE=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=anKqe2mrelehIEqA1YnoIEAMG9KHvjFSlOLXGCO6GpAS6GMLrxZQ3VqANa1UWUaVK
-         oOPZrcAKRuJpOV0dS5c5SulL3Pt/VenZFqct3Mnu0kO5SZvrw4qJmARFr9vNzBmxee
-         wJgcZZlZ5FUNqlebYADarKY2Vnk63s8hTbhgHD/6mzCNMJqftinwU0syimbbR6Po+i
-         3Pu2pzLD6qOVTBUnOCpesAtSXlk3r0t+GIruNQjaPrqPIoSKBhbxSEzKv4wcZEJ22W
-         DF+co2DH4DWNNsOMwxjuqlS/fpDIJuYCgnmGf2kJrCqh/hyJ8Dp+9kQPctIT6N7uKZ
-         aKCX+glSd03Vw==
+        b=GyJ1vhtqJ3xldvtM5bdGL3aj2uZlCQL/Al5ZopfVFtN/2FE3WPwKkbLI+d8ENnV13
+         WCjP+iphCOu/3nY4rP1s2/H/c4t0CsJmj6+GoSRYAF07dHdSTBmlp6TLZYEPJ82yWq
+         9L3GRBEUhSE7cM8QcO9NG+jJns4cvSKTibQVjQ3FfQzdltOGV3makqy6ZnymOfINlO
+         E4B7VYqvDvhRutOHqWuF1wyPBolyu83kBAdMjEm5DhxFRtFSm4DvOwj5GMS4rk/V7P
+         s6vk/sLQ5pfdUpgiYpstsTvDafiZ+5RwAjQu6Mba1u94tltX9Eau6+ETs6ZTmTp6i2
+         vl7MHOzQjv0PA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra internal TPG mode is only for Tegra vi and csi testing
-without a real sensor and driver should default support real
-sensor.
+tegra_i2c_runtime_resume does not disable prior enabled clocks
+properly.
 
-So, This patch adds CONFIG_VIDEO_TEGRA_TPG and enables Tegra
-internal TPG mode only when this config is selected.
+This patch fixes it.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/Kconfig    |  6 +++++
- drivers/staging/media/tegra-video/csi.c      | 38 +++++++++++++++++++++++-----
- drivers/staging/media/tegra-video/tegra210.c |  6 +++++
- drivers/staging/media/tegra-video/vi.c       | 13 +++++++---
- drivers/staging/media/tegra-video/video.c    | 23 +++++++++--------
- 5 files changed, 65 insertions(+), 21 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/Kconfig b/drivers/staging/media/tegra-video/Kconfig
-index f6c61ec..566da62 100644
---- a/drivers/staging/media/tegra-video/Kconfig
-+++ b/drivers/staging/media/tegra-video/Kconfig
-@@ -10,3 +10,9 @@ config VIDEO_TEGRA
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called tegra-video.
-+
-+config VIDEO_TEGRA_TPG
-+	bool "NVIDIA Tegra VI driver TPG mode"
-+	depends on VIDEO_TEGRA
-+	help
-+	  Say yes here to enable Tegra internal TPG mode
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index 40ea195..fb667df 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -62,6 +62,9 @@ static int csi_enum_bus_code(struct v4l2_subdev *subdev,
- 			     struct v4l2_subdev_pad_config *cfg,
- 			     struct v4l2_subdev_mbus_code_enum *code)
- {
-+	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOIOCTLCMD;
-+
- 	if (code->index >= ARRAY_SIZE(tegra_csi_tpg_fmts))
- 		return -EINVAL;
- 
-@@ -76,6 +79,9 @@ static int csi_get_format(struct v4l2_subdev *subdev,
- {
- 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
- 
-+	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOIOCTLCMD;
-+
- 	fmt->format = csi_chan->format;
- 
- 	return 0;
-@@ -121,6 +127,9 @@ static int csi_enum_framesizes(struct v4l2_subdev *subdev,
- {
- 	unsigned int i;
- 
-+	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOIOCTLCMD;
-+
- 	if (fse->index >= ARRAY_SIZE(tegra_csi_tpg_sizes))
- 		return -EINVAL;
- 
-@@ -148,6 +157,9 @@ static int csi_enum_frameintervals(struct v4l2_subdev *subdev,
- 	const struct tpg_framerate *frmrate = csi->soc->tpg_frmrate_table;
- 	int index;
- 
-+	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOIOCTLCMD;
-+
- 	/* one framerate per format and resolution */
- 	if (fie->index > 0)
- 		return -EINVAL;
-@@ -172,6 +184,9 @@ static int csi_set_format(struct v4l2_subdev *subdev,
- 	const struct v4l2_frmsize_discrete *sizes;
- 	unsigned int i;
- 
-+	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOIOCTLCMD;
-+
- 	sizes = v4l2_find_nearest_size(tegra_csi_tpg_sizes,
- 				       ARRAY_SIZE(tegra_csi_tpg_sizes),
- 				       width, height,
-@@ -208,6 +223,9 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
- {
- 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
- 
-+	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOIOCTLCMD;
-+
- 	vfi->interval.numerator = 1;
- 	vfi->interval.denominator = csi_chan->framerate;
- 
-@@ -311,8 +329,12 @@ static int tegra_csi_channel_init(struct tegra_csi_channel *chan)
- 	subdev = &chan->subdev;
- 	v4l2_subdev_init(subdev, &tegra_csi_ops);
- 	subdev->dev = csi->dev;
--	snprintf(subdev->name, V4L2_SUBDEV_NAME_SIZE, "%s-%d", "tpg",
--		 chan->csi_port_num);
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		snprintf(subdev->name, V4L2_SUBDEV_NAME_SIZE, "%s-%d", "tpg",
-+			 chan->csi_port_num);
-+	else
-+		snprintf(subdev->name, V4L2_SUBDEV_NAME_SIZE, "%s",
-+			 kbasename(chan->of_node->full_name));
- 
- 	v4l2_set_subdevdata(subdev, chan);
- 	subdev->fwnode = of_fwnode_handle(chan->of_node);
-@@ -405,11 +427,13 @@ static int tegra_csi_init(struct host1x_client *client)
- 
- 	INIT_LIST_HEAD(&csi->csi_chans);
- 
--	ret = tegra_csi_tpg_channels_alloc(csi);
--	if (ret < 0) {
--		dev_err(csi->dev,
--			"failed to allocate tpg channels: %d\n", ret);
--		goto cleanup;
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)) {
-+		ret = tegra_csi_tpg_channels_alloc(csi);
-+		if (ret < 0) {
-+			dev_err(csi->dev,
-+				"failed to allocate tpg channels: %d\n", ret);
-+			goto cleanup;
-+		}
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index c91307b9..7b93c45 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -665,18 +665,23 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+ 	ret = clk_enable(i2c_dev->slow_clk);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to enable slow clock: %d\n", ret);
+-		return ret;
++		goto disable_fast_clk;
  	}
  
- 	ret = tegra_csi_channels_init(csi);
-diff --git a/drivers/staging/media/tegra-video/tegra210.c b/drivers/staging/media/tegra-video/tegra210.c
-index 3baa4e3..3492a8a 100644
---- a/drivers/staging/media/tegra-video/tegra210.c
-+++ b/drivers/staging/media/tegra-video/tegra210.c
-@@ -631,7 +631,11 @@ const struct tegra_vi_soc tegra210_vi_soc = {
- 	.ops = &tegra210_vi_ops,
- 	.hw_revision = 3,
- 	.vi_max_channels = 6,
-+#if IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)
- 	.vi_max_clk_hz = 499200000,
-+#else
-+	.vi_max_clk_hz = 998400000,
-+#endif
- };
- 
- /* Tegra210 CSI PHY registers accessors */
-@@ -957,7 +961,9 @@ static const char * const tegra210_csi_cil_clks[] = {
- 	"cilab",
- 	"cilcd",
- 	"cile",
-+#if IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)
- 	"csi_tpg",
-+#endif
- };
- 
- /* Tegra210 CSI operations */
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index d621ebc..0197f4e 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -565,6 +565,7 @@ static int tegra_channel_setup_ctrl_handler(struct tegra_vi_channel *chan)
- {
- 	int ret;
- 
-+#if IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)
- 	/* add test pattern control handler to v4l2 device */
- 	v4l2_ctrl_new_std_menu_items(&chan->ctrl_handler, &vi_ctrl_ops,
- 				     V4L2_CID_TEST_PATTERN,
-@@ -576,6 +577,7 @@ static int tegra_channel_setup_ctrl_handler(struct tegra_vi_channel *chan)
- 		v4l2_ctrl_handler_free(&chan->ctrl_handler);
- 		return chan->ctrl_handler.error;
- 	}
-+#endif
- 
- 	/* setup the controls */
- 	ret = v4l2_ctrl_handler_setup(&chan->ctrl_handler);
-@@ -918,10 +920,13 @@ static int tegra_vi_init(struct host1x_client *client)
- 
- 	INIT_LIST_HEAD(&vi->vi_chans);
- 
--	ret = tegra_vi_tpg_channels_alloc(vi);
--	if (ret < 0) {
--		dev_err(vi->dev, "failed to allocate tpg channels: %d\n", ret);
--		goto free_chans;
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)) {
-+		ret = tegra_vi_tpg_channels_alloc(vi);
-+		if (ret < 0) {
-+			dev_err(vi->dev,
-+				"failed to allocate tpg channels: %d\n", ret);
-+			goto free_chans;
-+		}
- 	}
- 
- 	ret = tegra_vi_channels_init(vi);
-diff --git a/drivers/staging/media/tegra-video/video.c b/drivers/staging/media/tegra-video/video.c
-index 30816aa..e50bd70 100644
---- a/drivers/staging/media/tegra-video/video.c
-+++ b/drivers/staging/media/tegra-video/video.c
-@@ -60,15 +60,17 @@ static int host1x_video_probe(struct host1x_device *dev)
- 	if (ret < 0)
- 		goto unregister_v4l2;
- 
--	/*
--	 * Both vi and csi channels are available now.
--	 * Register v4l2 nodes and create media links for TPG.
--	 */
--	ret = tegra_v4l2_nodes_setup_tpg(vid);
--	if (ret < 0) {
--		dev_err(&dev->dev,
--			"failed to setup tpg graph: %d\n", ret);
--		goto device_exit;
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)) {
-+		/*
-+		 * Both vi and csi channels are available now.
-+		 * Register v4l2 nodes and create media links for TPG.
-+		 */
-+		ret = tegra_v4l2_nodes_setup_tpg(vid);
-+		if (ret < 0) {
-+			dev_err(&dev->dev,
-+				"failed to setup tpg graph: %d\n", ret);
-+			goto device_exit;
-+		}
+ 	ret = clk_enable(i2c_dev->div_clk);
+ 	if (ret < 0) {
+ 		dev_err(i2c_dev->dev,
+ 			"Enabling div clk failed, err %d\n", ret);
+-		clk_disable(i2c_dev->fast_clk);
+-		return ret;
++		goto disable_slow_clk;
  	}
  
  	return 0;
-@@ -91,7 +93,8 @@ static int host1x_video_remove(struct host1x_device *dev)
- {
- 	struct tegra_video_device *vid = dev_get_drvdata(&dev->dev);
++
++disable_slow_clk:
++	clk_disable(i2c_dev->slow_clk);
++disable_fast_clk:
++	clk_disable(i2c_dev->fast_clk);
++	return ret;
+ }
  
--	tegra_v4l2_nodes_cleanup_tpg(vid);
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		tegra_v4l2_nodes_cleanup_tpg(vid);
- 
- 	host1x_device_exit(dev);
- 
+ static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
 -- 
 2.7.4
 
