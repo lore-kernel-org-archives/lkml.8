@@ -2,132 +2,126 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6551C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAE8C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CED8920781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D40620781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7L/ZNI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387496AbgGWBmf (ORCPT
+        id S2387527AbgGWBm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:42:35 -0400
-Received: from regular1.263xmail.com ([211.150.70.198]:35384 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729198AbgGWBme (ORCPT
+        Wed, 22 Jul 2020 21:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbgGWBm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:42:34 -0400
-Received: from localhost (unknown [192.168.167.70])
-        by regular1.263xmail.com (Postfix) with ESMTP id 339BE635;
-        Thu, 23 Jul 2020 09:42:26 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P22087T140330575841024S1595468544587490_;
-        Thu, 23 Jul 2020 09:42:25 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <29b66cfdfecd2f7eee694f93ea2330f7>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: kever.yang@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH v1] clk: Export __clk_lookup()
-To:     Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        kever.yang@rock-chips.com
-References: <20200722023230.10826-1-zhangqing@rock-chips.com>
- <14639646.VOZsFJ8Tpa@phil>
- <159546549321.3847286.4678382117195983280@swboyd.mtv.corp.google.com>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <f3e7b8f3-e4d4-9965-703d-aa4b96f50f6d@rock-chips.com>
-Date:   Thu, 23 Jul 2020 09:42:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 21:42:56 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7340DC0619DC;
+        Wed, 22 Jul 2020 18:42:56 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l6so3986539qkc.6;
+        Wed, 22 Jul 2020 18:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Hgi93fl+d8Jztwv9C8gs6eaqKANcCITr2o5G6xotyng=;
+        b=D7L/ZNI66qtNV5JuQnNjl0SDMvevUM3dgtVUc3cnxUfKR6te7KrNdPlqKJ1Ein65u9
+         N3BUT+aba14tAPV8r5EpRwSBTrSOidxRu0tvFHicS1i3b4rrrQwuI/zatq6iRtoAdOP1
+         n4nBfsIgNrvXpejJPUSk82EtwqoZ+RIErwzhBvTmUsz+l2ppEp4TzbUHNMvg3Ggs51yp
+         4ULdTCZBIuAcRu5fauMdldzyk8J8okz06GyatZcdIUvF/WIoW8yNM770AYGD8hcJxXNl
+         jFYaxrifYlQsd8MJkXraL5j9bZzTynkTH/5eCRfgu2WzVfSSAPTh3OW6JdckQUl5XoJT
+         6Q6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Hgi93fl+d8Jztwv9C8gs6eaqKANcCITr2o5G6xotyng=;
+        b=WIuaKZ99t6+07TnOGMVKsaKeAk+dRfelT4vYl2zq+z3MCvxjjV+JzS/RsFkbBO9WjK
+         2o+0xqzfeON3X3t8q6nD6ZOytHtSpNVtu9BRYO2x4C6LXN29GFej8UoKQyNVUFH3fVVU
+         FUh6I9WTQVbhCw4iCNkU8QEA/48ahgQHX5994adVL5KJKNtwjEp7DUshTyFz26uGDbRX
+         bBiZ2QWBtDZwqtHaK2lSoiKVVsz8nXnDMfAN83QiOzrez4pRZkjq8DLX4MQr0jKigZhX
+         6C+ayP4iCg4AJcloOUZxpKf45w8JuVyuwFCEXon/daOyY2J6xFBPqfMMH3GQAHZG9jva
+         ogvA==
+X-Gm-Message-State: AOAM531UqRucIacbVi1dnlvlK4GWzdhM4kdXxF0o8sDenz3S4QMLl8Sx
+        yI3WTMc1jhNyXHDSjM/+jTJFuKmahK7SA/LK7fQ=
+X-Google-Smtp-Source: ABdhPJx8VAfEHMvN7Qs5nLr0PCFEisdQTFTIrLgCPq5V5asR/gkL6ddOABn+KhrG/fW8UMQSRzNi5vC/24zVqfQ9BWc=
+X-Received: by 2002:a37:6d2:: with SMTP id 201mr2782563qkg.187.1595468575726;
+ Wed, 22 Jul 2020 18:42:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159546549321.3847286.4678382117195983280@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200721120533.GD15516@casper.infradead.org> <4c484ce0-cfed-0c50-7a20-d1474ce9afee@suse.cz>
+ <20200721124312.GE15516@casper.infradead.org>
+In-Reply-To: <20200721124312.GE15516@casper.infradead.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 23 Jul 2020 10:42:44 +0900
+Message-ID: <CAAmzW4NSQi016QH4rwZ4d5nCfS+9bpRZGd0wovaUSWnuySTvoQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2020/7/23 上午8:51, Stephen Boyd 写道:
-> Quoting Heiko Stuebner (2020-07-22 11:26:50)
->> Hi Elaine,
->>
->> Am Mittwoch, 22. Juli 2020, 04:32:30 CEST schrieb Elaine Zhang:
->>> Export __clk_lookup() to support user built as module.
->>>
->>> ERROR:
->>> drivers/clk/rockchip/clk.ko: In function
->>> `rockchip_clk_protect_critical':
->>> drivers/clk/rockchip/clk.c:741:
->>> undefined reference to `__clk_lookup'
->> can you elaborate a bit more on why this would be needed?
->>
->> Because right now the Rockchip clocks are of course built into
->> the main kernel image (especially due to them being needed during early
->> boot) and __clk_lookup actually is a pretty deep part of the clock-
->> framework itself, as probably also denoted by the "__" in the function
->> name.
->>
-> Can you stop using __clk_lookup()? The plan is to remove it.
-
-Rk use  __clk_lookup() as:
-
-drivers/clk/rockchip/clk.c
-
-void __init rockchip_clk_protect_critical(const char *const clocks[],
-                                           int nclocks)
-{
-         int i;
-
-         /* Protect the clocks that needs to stay on */
-         for (i = 0; i < nclocks; i++) {
-                 struct clk *clk = __clk_lookup(clocks[i]);
-
-                 if (clk)
-                         clk_prepare_enable(clk);
-         }
-}
-e.g:
-
-drivers/clk/rockchip/clk-rk3328.c
-
-static const char *const rk3328_critical_clocks[] __initconst = {
-         "aclk_bus",
-         "aclk_bus_niu",
-         "pclk_bus",
-         "pclk_bus_niu",
-         "hclk_bus",
-         "hclk_bus_niu",
-         "aclk_peri",
-............
-
-};
-
-If have plan to remove the __clk_lookup, I need to replace the 
-rockchip_clk_protect_critical, and use the flag CLK_IS_CRITICAL.(but use 
-flag CLK_IS_CRITICAL, the enable count is always "0")
-
+2020=EB=85=84 7=EC=9B=94 21=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 9:43, M=
+atthew Wilcox <willy@infradead.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
+> On Tue, Jul 21, 2020 at 02:38:56PM +0200, Vlastimil Babka wrote:
+> > On 7/21/20 2:05 PM, Matthew Wilcox wrote:
+> > > On Tue, Jul 21, 2020 at 12:28:49PM +0900, js1304@gmail.com wrote:
+> > >> @@ -4619,8 +4631,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsign=
+ed int order,
+> > >>            wake_all_kswapds(order, gfp_mask, ac);
+> > >>
+> > >>    reserve_flags =3D __gfp_pfmemalloc_flags(gfp_mask);
+> > >> -  if (reserve_flags)
+> > >> +  if (reserve_flags) {
+> > >>            alloc_flags =3D reserve_flags;
+> > >> +          alloc_flags =3D current_alloc_flags(gfp_mask, alloc_flags=
+);
+> > >> +  }
+> > >
+> > > Is this right?  Shouldn't you be passing reserve_flags to
+> > > current_alloc_flags() here?  Also, there's no need to add { } here.
+> >
+> > Note the "alloc_flags =3D reserve_flags;" line is not being deleted her=
+e. But if
+> > it was, your points would be true, and yeah it would be a bit more tidy=
+.
 >
+> Oh ... I should wake up a little more.
+>
+> Yeah, I'd recommend just doing this:
+>
+> -               alloc_flags =3D reserve_flags;
+> +               alloc_flags =3D current_alloc_flags(gfp_mask, reserve_fla=
+gs);
 
+Okay. I will change it. Just note that the reason that I added it
+separately is that
+I think that separation is more readable since we can easily notice
+that alloc_flags
+is changed to reserve_flags without inspecting currect_alloc_flags() functi=
+on.
 
+Thanks.
