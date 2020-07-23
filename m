@@ -2,108 +2,395 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C00320714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B731320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBWC4BFW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BnvTYMpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGWSHc (ORCPT
+        id S1726801AbgGWSJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgGWSHb (ORCPT
+        Thu, 23 Jul 2020 14:09:07 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:56470 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgGWSJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:07:31 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C41C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:07:31 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so6039337wml.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=wBJkfvCOZyc81ojTqQT3ESIFT3XyYfjTfodi1aPt+nE=;
-        b=vBWC4BFWxoQ3LrcjrDvJrZH7UWrLeHoqpZB96XyLvMPGCtVpHsoNpuIbJnXnjq4yWm
-         vo6uZ3g+z9vMmWdau9QLisc2cyK3UxBb7jbodkxuUjHPZgOFUtq5gH4IvoEHZjQFfz97
-         AnbnPvxHOryRiQ50xW55yVT+WWzMxinoJurb8aceqADrGP5sFZsaeR0Sd3TnjeuGhpsn
-         XJsxnoBI/9gV+dc9zVWA7hFBlnhJrjVlQTklVAw1d2htgctWIAN0P4vczHJEYMX/HChY
-         AAz4OpnATOr/UFu5HySHp4gxxFuwRLqDDmj3++ducAOukaUb3rSSJY7R48l6hq5NFrye
-         fftQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wBJkfvCOZyc81ojTqQT3ESIFT3XyYfjTfodi1aPt+nE=;
-        b=ltvjXs+QpT6sTyBd3C+/E9kzjxV0/ND9qdfW9NRNwHPC1Qy9W6eyVaWczWIZP0uuiM
-         UvfiKR02RPgtq7MY00bhZHOfoVQYiswzXE34hULQLBb6aTYvjFm2shK83W7p3J/quei9
-         qevBejgZBO91021xOklS0mxgW1JFz4S9nvY+mO7+GZss0eG2lQULASssGb3MI3XQpeQH
-         ydwTbKgSYXVwrdccavKU5XTNsIlBv2Ztf9lAFrodP6qgaFZMtiRJFZhFzuKm8uKGBjpF
-         FFxIrVnFQZ6Ggbjp+Z0t7IQy3ivQAIH9V+Ay9rKGOOrvBaD/1Lim8gPMpDTlJQ5bBI3l
-         qEZA==
-X-Gm-Message-State: AOAM530Ze5Ly6zbXvZVyRtTNdQP2z+CyRcjqDfJmuhE9kQhHrQqjp3Ht
-        6LsTW9PsnjD6SPhEP02UniwvtX3r01U=
-X-Google-Smtp-Source: ABdhPJykbDyBx5oqb8XWMu/eo8SzcwM1HastQpYeTmCY46cuigp/qUVDVoBkJTbZCRoy49cV9QYARQ==
-X-Received: by 2002:a1c:770f:: with SMTP id t15mr5103654wmi.22.1595527649969;
-        Thu, 23 Jul 2020 11:07:29 -0700 (PDT)
-Received: from musamaanjum ([111.119.187.25])
-        by smtp.gmail.com with ESMTPSA id p15sm1568184wrj.61.2020.07.23.11.07.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jul 2020 11:07:29 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 23:07:23 +0500
-From:   Muhammad Usama Anjum <musamaanjum@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        Thu, 23 Jul 2020 14:09:07 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C326920B4908;
+        Thu, 23 Jul 2020 11:09:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C326920B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595527745;
+        bh=uHrnXOZikJH8DshH8Cb6szZjihDhComUUIzQpEmZSwM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BnvTYMpVe765C2JcC5rEdC+x2pVTiwcftFN2NwG46XCv2pXToEjPSBe4+DyThhWIp
+         C+3OhI4W71do3Rgc/DeRCmTDfYAgw+zqeyMmhKb1y/8C0Rl1ONQmlz+T173m0A9UIA
+         MtMuiJp6cuASErKXqHnvIEBFKJ9EK2ScLzB0diP0=
+Date:   Thu, 23 Jul 2020 13:09:02 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     musamaanjum@gmail.com
-Subject: [PATCH v3] staging: octeon: Add the license identifier
-Message-ID: <20200723180723.GA30699@musamaanjum>
+Subject: Re: [PATCH v1 1/1] loop: scale loop device by introducing per device
+ lock
+Message-ID: <20200723180902.GV3673@sequoia>
+References: <20200717205322.127694-1-pasha.tatashin@soleen.com>
+ <20200717205322.127694-2-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200717205322.127694-2-pasha.tatashin@soleen.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the checkpatch.pl warning:
-WARNING: Missing or malformed SPDX-License-Identifier tag
+On 2020-07-17 16:53:22, Pavel Tatashin wrote:
+> Currently, loop device has only one global lock:
+> loop_ctl_mutex.
+> 
+> This becomes hot in scenarios where many loop devices are used.
+> 
+> Scale it by introducing per-device lock: lo_mutex that proctests
+> field in struct loop_device. Keep loop_ctl_mutex to protect global
 
-Add a the SPDX-License-Identifier tag on line 1
+s/proctests field/protects the fields/
 
-Other files in this folder have GPL-2.0 license. So this file should
-have the same license which was missing before and checkpatch.pl was
-giving the warning.
+> data such as loop_index_idr, loop_lookup, loop_add.
+> 
+> Lock ordering: loop_ctl_mutex > lo_mutex.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  drivers/block/loop.c | 86 ++++++++++++++++++++++++--------------------
+>  drivers/block/loop.h |  1 +
+>  2 files changed, 48 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 475e1a738560..056af3bca6c2 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -706,7 +706,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+>  	int		error;
+>  	bool		partscan;
+>  
+> -	error = mutex_lock_killable(&loop_ctl_mutex);
+> +	error = mutex_lock_killable(&lo->lo_mutex);
+>  	if (error)
+>  		return error;
+>  	error = -ENXIO;
+> @@ -745,9 +745,9 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+>  	loop_update_dio(lo);
+>  	blk_mq_unfreeze_queue(lo->lo_queue);
+>  	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN;
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	/*
+> -	 * We must drop file reference outside of loop_ctl_mutex as dropping
+> +	 * We must drop file reference outside of lo_mutex as dropping
+>  	 * the file ref can take bd_mutex which creates circular locking
+>  	 * dependency.
+>  	 */
+> @@ -757,7 +757,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+>  	return 0;
+>  
+>  out_err:
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	if (file)
+>  		fput(file);
+>  	return error;
+> @@ -1096,7 +1096,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+>  		}
+>  	}
+>  
+> -	error = mutex_lock_killable(&loop_ctl_mutex);
+> +	error = mutex_lock_killable(&lo->lo_mutex);
+>  	if (error)
+>  		goto out_bdev;
+>  
+> @@ -1176,7 +1176,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+>  	 * put /dev/loopXX inode. Later in __loop_clr_fd() we bdput(bdev).
+>  	 */
+>  	bdgrab(bdev);
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	if (partscan)
+>  		loop_reread_partitions(lo, bdev);
+>  	if (claimed_bdev)
+> @@ -1184,7 +1184,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+>  	return 0;
+>  
+>  out_unlock:
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  out_bdev:
+>  	if (claimed_bdev)
+>  		bd_abort_claiming(bdev, claimed_bdev, loop_configure);
+> @@ -1205,7 +1205,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>  	bool partscan = false;
+>  	int lo_number;
+>  
+> -	mutex_lock(&loop_ctl_mutex);
+> +	mutex_lock(&lo->lo_mutex);
+>  	if (WARN_ON_ONCE(lo->lo_state != Lo_rundown)) {
+>  		err = -ENXIO;
+>  		goto out_unlock;
+> @@ -1259,7 +1259,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>  	lo_number = lo->lo_number;
+>  	loop_unprepare_queue(lo);
+>  out_unlock:
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	if (partscan) {
+>  		/*
+>  		 * bd_mutex has been held already in release path, so don't
+> @@ -1290,18 +1290,18 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>  	 * protects us from all the other places trying to change the 'lo'
+>  	 * device.
+>  	 */
+> -	mutex_lock(&loop_ctl_mutex);
+> +	mutex_lock(&lo->lo_mutex);
+>  	lo->lo_flags = 0;
+>  	if (!part_shift)
+>  		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
+>  	lo->lo_state = Lo_unbound;
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  
+>  	/*
+> -	 * Need not hold loop_ctl_mutex to fput backing file.
+> -	 * Calling fput holding loop_ctl_mutex triggers a circular
+> +	 * Need not hold lo_mutex to fput backing file.
+> +	 * Calling fput holding lo_mutex triggers a circular
+>  	 * lock dependency possibility warning as fput can take
+> -	 * bd_mutex which is usually taken before loop_ctl_mutex.
+> +	 * bd_mutex which is usually taken before lo_mutex.
+>  	 */
+>  	if (filp)
+>  		fput(filp);
+> @@ -1312,11 +1312,11 @@ static int loop_clr_fd(struct loop_device *lo)
+>  {
+>  	int err;
+>  
+> -	err = mutex_lock_killable(&loop_ctl_mutex);
+> +	err = mutex_lock_killable(&lo->lo_mutex);
+>  	if (err)
+>  		return err;
+>  	if (lo->lo_state != Lo_bound) {
+> -		mutex_unlock(&loop_ctl_mutex);
+> +		mutex_unlock(&lo->lo_mutex);
+>  		return -ENXIO;
+>  	}
+>  	/*
+> @@ -1331,11 +1331,11 @@ static int loop_clr_fd(struct loop_device *lo)
+>  	 */
+>  	if (atomic_read(&lo->lo_refcnt) > 1) {
+>  		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
+> -		mutex_unlock(&loop_ctl_mutex);
+> +		mutex_unlock(&lo->lo_mutex);
+>  		return 0;
+>  	}
+>  	lo->lo_state = Lo_rundown;
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  
+>  	return __loop_clr_fd(lo, false);
+>  }
+> @@ -1350,7 +1350,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  	bool partscan = false;
+>  	bool size_changed = false;
+>  
+> -	err = mutex_lock_killable(&loop_ctl_mutex);
+> +	err = mutex_lock_killable(&lo->lo_mutex);
+>  	if (err)
+>  		return err;
+>  	if (lo->lo_encrypt_key_size &&
+> @@ -1417,7 +1417,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  		partscan = true;
+>  	}
+>  out_unlock:
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	if (partscan)
+>  		loop_reread_partitions(lo, bdev);
+>  
+> @@ -1431,11 +1431,11 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
+>  	struct kstat stat;
+>  	int ret;
+>  
+> -	ret = mutex_lock_killable(&loop_ctl_mutex);
+> +	ret = mutex_lock_killable(&lo->lo_mutex);
+>  	if (ret)
+>  		return ret;
+>  	if (lo->lo_state != Lo_bound) {
+> -		mutex_unlock(&loop_ctl_mutex);
+> +		mutex_unlock(&lo->lo_mutex);
+>  		return -ENXIO;
+>  	}
+>  
+> @@ -1454,10 +1454,10 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
+>  		       lo->lo_encrypt_key_size);
+>  	}
+>  
+> -	/* Drop loop_ctl_mutex while we call into the filesystem. */
+> +	/* Drop lo_mutex while we call into the filesystem. */
+>  	path = lo->lo_backing_file->f_path;
+>  	path_get(&path);
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	ret = vfs_getattr(&path, &stat, STATX_INO, AT_STATX_SYNC_AS_STAT);
+>  	if (!ret) {
+>  		info->lo_device = huge_encode_dev(stat.dev);
+> @@ -1643,7 +1643,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
+>  {
+>  	int err;
+>  
+> -	err = mutex_lock_killable(&loop_ctl_mutex);
+> +	err = mutex_lock_killable(&lo->lo_mutex);
+>  	if (err)
+>  		return err;
+>  	switch (cmd) {
+> @@ -1659,7 +1659,7 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
+>  	default:
+>  		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
+>  	}
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	return err;
+>  }
+>  
+> @@ -1890,22 +1890,23 @@ static int lo_open(struct block_device *bdev, fmode_t mode)
+>  		return err;
+>  	lo = bdev->bd_disk->private_data;
+>  	if (!lo) {
+> -		err = -ENXIO;
+> -		goto out;
+> +		mutex_unlock(&loop_ctl_mutex);
+> +		return -ENXIO;
+>  	}
+> -
+> -	atomic_inc(&lo->lo_refcnt);
+> -out:
+> +	err = mutex_lock_killable(&lo->lo_mutex);
+>  	mutex_unlock(&loop_ctl_mutex);
 
-Signed-off-by: Muhammad Usama Anjum <musamaanjum@gmail.com>
----
-Changes in v3:
-  - Removed an empty line which I had added in v1
-  - Updated the commit message to include why this patch is needed
+I don't see a possibility for deadlock but it bothers me a little that
+we're not unlocking in the reverse locking order here, as we do in
+loop_control_ioctl(). There should be no perf impact if we move the
+mutex_unlock(&loop_ctl_mutex) after mutex_unlock(&lo->lo_mutex).
 
- drivers/staging/octeon/octeon-stubs.h | 1 +
- 1 file changed, 1 insertion(+)
+> -	return err;
+> +	if (err)
+> +		return err;
+> +	atomic_inc(&lo->lo_refcnt);
+> +	mutex_unlock(&lo->lo_mutex);
+> +	return 0;
+>  }
+>  
+>  static void lo_release(struct gendisk *disk, fmode_t mode)
+>  {
+> -	struct loop_device *lo;
+> +	struct loop_device *lo = disk->private_data;
+>  
+> -	mutex_lock(&loop_ctl_mutex);
+> -	lo = disk->private_data;
+> +	mutex_lock(&lo->lo_mutex);
+>  	if (atomic_dec_return(&lo->lo_refcnt))
+>  		goto out_unlock;
+>  
+> @@ -1913,7 +1914,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
+>  		if (lo->lo_state != Lo_bound)
+>  			goto out_unlock;
+>  		lo->lo_state = Lo_rundown;
+> -		mutex_unlock(&loop_ctl_mutex);
+> +		mutex_unlock(&lo->lo_mutex);
+>  		/*
+>  		 * In autoclear mode, stop the loop thread
+>  		 * and remove configuration after last close.
+> @@ -1930,7 +1931,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
+>  	}
+>  
+>  out_unlock:
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  }
+>  
+>  static const struct block_device_operations lo_fops = {
+> @@ -1969,10 +1970,10 @@ static int unregister_transfer_cb(int id, void *ptr, void *data)
+>  	struct loop_device *lo = ptr;
+>  	struct loop_func_table *xfer = data;
+>  
+> -	mutex_lock(&loop_ctl_mutex);
+> +	mutex_lock(&lo->lo_mutex);
+>  	if (lo->lo_encryption == xfer)
+>  		loop_release_xfer(lo);
+> -	mutex_unlock(&loop_ctl_mutex);
+> +	mutex_unlock(&lo->lo_mutex);
+>  	return 0;
+>  }
+>  
+> @@ -2157,6 +2158,7 @@ static int loop_add(struct loop_device **l, int i)
+>  		disk->flags |= GENHD_FL_NO_PART_SCAN;
+>  	disk->flags |= GENHD_FL_EXT_DEVT;
+>  	atomic_set(&lo->lo_refcnt, 0);
+> +	mutex_init(&lo->lo_mutex);
 
-diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index d06743504f2b..3f8e5713b8a8 100644
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- #define CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE	512
- 
- #ifndef XKPHYS_TO_PHYS
--- 
-2.17.1
+We need a corresponding call to mutex_destroy() in loop_remove().
 
+>  	lo->lo_number		= i;
+>  	spin_lock_init(&lo->lo_lock);
+>  	disk->major		= LOOP_MAJOR;
+> @@ -2272,15 +2274,21 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
+>  		ret = loop_lookup(&lo, parm);
+>  		if (ret < 0)
+>  			break;
+> +		ret = mutex_lock_killable(&lo->lo_mutex);
+> +		if (ret)
+> +			break;
+>  		if (lo->lo_state != Lo_unbound) {
+>  			ret = -EBUSY;
+> +			mutex_unlock(&lo->lo_mutex);
+>  			break;
+>  		}
+>  		if (atomic_read(&lo->lo_refcnt) > 0) {
+>  			ret = -EBUSY;
+> +			mutex_unlock(&lo->lo_mutex);
+>  			break;
+>  		}
+>  		lo->lo_disk->private_data = NULL;
+> +		mutex_unlock(&lo->lo_mutex);
+>  		idr_remove(&loop_index_idr, lo->lo_number);
+>  		loop_remove(lo);
+>  		break;
+> diff --git a/drivers/block/loop.h b/drivers/block/loop.h
+> index af75a5ee4094..a3c04f310672 100644
+> --- a/drivers/block/loop.h
+> +++ b/drivers/block/loop.h
+> @@ -62,6 +62,7 @@ struct loop_device {
+>  	struct request_queue	*lo_queue;
+>  	struct blk_mq_tag_set	tag_set;
+>  	struct gendisk		*lo_disk;
+
+There's an instance, which is not in this patch's context, of accessing
+lo_disk that needs lo_mutex protection. In loop_probe(), we call
+get_disk_and_module(lo->lo_disk) and we need to lock and unlock lo_mutex
+around that call.
+
+Tyler
+
+> +	struct mutex		lo_mutex;
+>  };
+>  
+>  struct loop_cmd {
+> -- 
+> 2.25.1
+> 
