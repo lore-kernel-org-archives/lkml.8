@@ -2,147 +2,128 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B0EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B6F207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AE120792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SRtxdB2H"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PzYRT6x2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgGWSYG (ORCPT
+        id S1727118AbgGWSZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:24:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58418 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgGWSYG (ORCPT
+        Thu, 23 Jul 2020 14:25:15 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:60145 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726617AbgGWSZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:24:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NIGb1l045079;
-        Thu, 23 Jul 2020 18:23:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ASJIFeVb4/jzzyTZ/kIiW0l+JRFXzYz6cYGbV8kdkbY=;
- b=SRtxdB2HJDb5fxt2abqDOerQ07hw8EfNxsfknJp8KN5s4J9EOWHwnEBu38Mvaaz7Di9P
- luSXSFhJCpetitzFng81kp+wyNUlwgyHO0PhAex0rkzGYnfcN5RAiseNIUjrbf8Oh5QV
- Givwr7mznDDyIrErSsFdJ30M9UKXFfZEs6LUEjHdTwXnIHAHVmeqERVkez0tqexxZTlD
- buFEjr7Y0fDq4HwTVGDXxJUXpkmte8mXpr0QOxCdEu8bHcL2dfiDVRwguRzjsb8gHKn1
- PdSEWSRtvaQlHKtiahDimjRDgG9RDNDny/vEtsbFz5maW0ScEmJbiUm1uAi1T1ajL8lN Mw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32brgru446-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 18:23:56 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NIIMJb190971;
-        Thu, 23 Jul 2020 18:21:55 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 32fc0b2up5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 18:21:55 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06NILsC0025625;
-        Thu, 23 Jul 2020 18:21:54 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jul 2020 11:21:54 -0700
-Subject: Re: [PATCH v2 4/4] mm/hugetl.c: warn out if expected count of huge
- pages adjustment is not achieved
-To:     Baoquan He <bhe@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, david@redhat.com,
-        akpm@linux-foundation.org
-References: <20200723032248.24772-1-bhe@redhat.com>
- <20200723032248.24772-5-bhe@redhat.com>
- <62c8ce6c-fe98-f371-99b6-cfdb96d1c2fd@arm.com>
- <20200723091142.GR32539@MiWiFi-R3L-srv>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <b94f4dc1-5c53-68ca-2023-0aa4de4df8b7@oracle.com>
-Date:   Thu, 23 Jul 2020 11:21:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 23 Jul 2020 14:25:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595528714; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=yAfJG1ZM4LmfNVZaxnZ0GMv0GxwURX4mJ3TXKqKYdGE=; b=PzYRT6x2lZzXLyeFyAwES4URvImeRjGt9Rq7kSmVcfV3ctxYWmZEmE0+1H1fNr8iHZTevodm
+ IhRy6kszKTEV8HTA6pztZUGOW5wujxX0lb0d7/vvashB+q87Um7hNlXMcJW6NVLAFdgHNstY
+ jnjIwOYvLD2JyiHJXibTjy2UD/E=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f19d60a5b75bcda60cbde68 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 18:25:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1EFAAC433CA; Thu, 23 Jul 2020 18:25:14 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B12BFC433C6;
+        Thu, 23 Jul 2020 18:25:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B12BFC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Rajkumar Manoharan'" <rmanohar@codeaurora.org>
+Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kvalo@codeaurora.org>,
+        <johannes@sipsolutions.net>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <dianders@chromium.org>, <evgreen@chromium.org>,
+        <linux-wireless-owner@vger.kernel.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org> <1595351666-28193-3-git-send-email-pillair@codeaurora.org> <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
+In-Reply-To: <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
+Subject: RE: [RFC 2/7] ath10k: Add support to process rx packet in thread
+Date:   Thu, 23 Jul 2020 23:55:06 +0530
+Message-ID: <003001d6611e$9afa0cc0$d0ee2640$@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200723091142.GR32539@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230133
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG1Bu1FBYi7G1oVhHY/01uT1gSslwH2O/GCAtCmWRqpMfdhsA==
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 2:11 AM, Baoquan He wrote:
-> On 07/23/20 at 11:46am, Anshuman Khandual wrote:
->>
->>
->> On 07/23/2020 08:52 AM, Baoquan He wrote:
->>> A customer complained that no message is logged wh	en the number of
->>> persistent huge pages is not changed to the exact value written to
->>> the sysfs or proc nr_hugepages file.
->>>
->>> In the current code, a best effort is made to satisfy requests made
->>> via the nr_hugepages file.  However, requests may be only partially
->>> satisfied.
->>>
->>> Log a message if the code was unsuccessful in fully satisfying a
->>> request. This includes both increasing and decreasing the number
->>> of persistent huge pages.
->>
->> But is kernel expected to warn for all such situations where the user
->> requested resources could not be allocated completely ? Otherwise, it
->> does not make sense to add an warning for just one such situation.
+
+
+> -----Original Message-----
+> From: Rajkumar Manoharan <rmanohar@codeaurora.org>
+> Sent: Wednesday, July 22, 2020 3:23 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> kernel@vger.kernel.org; kvalo@codeaurora.org; johannes@sipsolutions.net;
+> davem@davemloft.net; kuba@kernel.org; netdev@vger.kernel.org;
+> dianders@chromium.org; evgreen@chromium.org; linux-wireless-
+> owner@vger.kernel.org
+> Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
 > 
-> It's not for just one such situation, we have already had one to warn
-> out in mm/hugetlb.c, please check hugetlb_hstate_alloc_pages().
+> On 2020-07-21 10:14, Rakesh Pillai wrote:
+> > NAPI instance gets scheduled on a CPU core on which
+> > the IRQ was triggered. The processing of rx packets
+> > can be CPU intensive and since NAPI cannot be moved
+> > to a different CPU core, to get better performance,
+> > its better to move the gist of rx packet processing
+> > in a high priority thread.
+> >
+> > Add the init/deinit part for a thread to process the
+> > receive packets.
+> >
+> IMHO this defeat the whole purpose of NAPI. Originally in ath10k
+> irq processing happened in tasklet (high priority) context which in
+> turn push more data to net core even though net is unable to process
+> driver data as both happen in different context (fast producer - slow
+> consumer)
+> issue. Why can't CPU governor schedule the interrupts in less loaded CPU
+> core?
+> Otherwise you can play with different RPS and affinity settings to meet
+> your
+> requirement.
+> 
+> IMO introducing high priority tasklets/threads is not viable solution.
 
-Those are a little different in that they are warnings based on kernel
-command line parameters.
+Hi Rajkumar,
+In linux, the IRQs are directed to the first core which is booted.
+I see that all the IRQs are getting routed to CORE0 even if its heavily
+loaded.
 
-> As Mike said, in one time of persistent huge page number setting,
-> comparing the old value with the new vlaue is good enough for customer
-> to get the information. However, if customer want to detect and analyze
-> previous setting failure, logging message will be helpful. So I think
-> logging the failure or partial success makes sense.
+IRQ and NAPI are not under the scheduler's control, since it cannot be
+moved.
+NAPI is scheduled only on the same core as IRQ. But a thread can be moved
+around by the scheduler based on the CPU load.
+This is the reason I went ahead with using thread.
 
-I can understand the argument against adding a new warning for this.
-You could even argue that this condition has existed since the time
-hugetlb was added to the kernel which was long ago.  And, nobody has
-complained enough to add a warning.  I have even heard of a sysadmin
-practice of asking for a ridiculously large amount of hugetlb pages
-just so that the kernel will allocate as many as possible.  They do
-not 'expect' to get the ridiculous amount they asked for.  In such
-cases, this will be a new warning in their log.
+Affinity settings are static, and cannot be done runtime without any
+downstream userspace entity.
 
-As mentioned in a previous e-mail, when one sets nr_hugepages by writing
-to the sysfs or proc file, one needs to read the file to determine if the
-number of requested pages were actually allocated.  Anyone who does not
-do this is just asking for trouble.  Yet, I imagine that it may happen.
 
-To be honest, I do not see this log message as something that would be
-helpful to end users.  Rather, I could see this as being useful to support
-people.  Support always asks for system logs and this could point out a
-possible issue with hugetlb usage.
+> 
+> -Rajkumar
 
-I do not feel strongly one way or another about adding the warning.  Since
-it is fairly trivial and could help diagnose issues I am in favor of adding
-it.  If people feel strongly that it should not be added, I am open to
-those arguments.
--- 
-Mike Kravetz
