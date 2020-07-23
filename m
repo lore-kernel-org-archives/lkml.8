@@ -2,108 +2,74 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FBCC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686AAC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47BD720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Us6llAZP"
+	by mail.kernel.org (Postfix) with ESMTP id 4B22D206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgGWPZy (ORCPT
+        id S1729505AbgGWP0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:25:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54170 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgGWPZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:25:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NFMs2N080032;
-        Thu, 23 Jul 2020 15:25:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=ih7aDDHndvJgRh9w5b+olJvrbDWUkyFxJDMc04b3AcE=;
- b=Us6llAZPwqKXRXoeLVi15UBQwyZu62gUGDF8yz+IhYoYjCJAo9df4dw52U4kwHg5KNyc
- nkWqL5sRX8LfAUTo/OczU/BJLh9T8MsDS2XKUFc3YEnxJ/XkknjhIvg7brUXWMFE4PUv
- XYhL6nY8L/DCwxlXSOHBR9u6diXU+BmYSlowasnIqQFhbIAxyG+rvLueSTLWZxgcU1xT
- z9y/1YLlKdeyGm7nPhV/KSkgIRYD8WTUx+pOnJuYO4DkrhjQDrCTRN1sn66vyVkQi6qs
- XDFnb1cAGcjtL58euLOZzKv6Z51jGq0KOQfL2cECGXvIwFRj60YEu+Qb0mVtxyJjsd/D Zw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32brgrt3ab-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 15:25:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NFNh2O000842;
-        Thu, 23 Jul 2020 15:23:46 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 32fb8gysps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 15:23:46 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06NFNC5a004638;
-        Thu, 23 Jul 2020 15:23:12 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jul 2020 08:23:11 -0700
-Date:   Thu, 23 Jul 2020 18:23:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [PATCH 2/2] Smack: prevent underflow in smk_set_cipso()
-Message-ID: <20200723152305.GB302005@mwanda>
+        Thu, 23 Jul 2020 11:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbgGWP0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:26:47 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7678A206D8;
+        Thu, 23 Jul 2020 15:26:46 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 11:26:44 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "mingo@redhat.com" <mingo@redhat.com>, kernel <kernel@axis.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH] dynamic debug: allow printing to trace event
+Message-ID: <20200723112644.7759f82f@oasis.local.home>
+In-Reply-To: <20200723105735.mqfkfbljjda7qz7n@axis.com>
+References: <20200721141105.16034-1-vincent.whitchurch@axis.com>
+        <20200721173045.540ae500@oasis.local.home>
+        <87eep3zmg9.fsf@jogness.linutronix.de>
+        <20200722144952.2mewrgebgkyr2zyf@axis.com>
+        <20200722112823.3ba72d31@oasis.local.home>
+        <20200723105735.mqfkfbljjda7qz7n@axis.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000d282bd05ab0bf532@google.com>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=968
- bulkscore=0 malwarescore=0 mlxscore=0 spamscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=975
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230115
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have an upper bound on "maplevel" but forgot to check for negative
-values.
+On Thu, 23 Jul 2020 12:57:35 +0200
+Vincent Whitchurch <vincent.whitchurch@axis.com> wrote:
 
-Fixes: e114e473771c ("Smack: Simplified Mandatory Access Control Kernel")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- security/smack/smackfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Would it be acceptable to just use a fixed size for the event?  At least
+> for my own debugging use cases it's preferable to just have to increase
+> the trace buffer size in case it's insufficient, rather than to have to
+> restort to one-off debugging code.
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 81c6ceeaa4f9..7675305511ef 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -884,7 +884,7 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 	}
- 
- 	ret = sscanf(rule, "%d", &maplevel);
--	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
-+	if (ret != 1 || maplevel < 0 || maplevel > SMACK_CIPSO_MAXLEVEL)
- 		goto out;
- 
- 	rule += SMK_DIGITLEN;
--- 
-2.27.0
+There's two other options.
+
+Option 1, is to allocate 256 bytes times 4 (in case of interruption,
+where you have a separate buffer for every context - normal, softirq,
+irq, nmi), and use it like I do for stack traces in the latest kernel
+(see __ftrace_stack_trace() in kernel/trace/trace.c)
+
+Option 2, would be to use trace_array_vprintk(), but you need to create
+your own instance to do so to keep from messing with the top level buffer.
+
+-- Steve
+
 
