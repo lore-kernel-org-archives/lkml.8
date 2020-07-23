@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41CCC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C76C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5AC92086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5B420714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKKrBrNf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZj9lyZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGWHtq (ORCPT
+        id S1727794AbgGWHty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43726 "EHLO
+        Thu, 23 Jul 2020 03:49:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgGWHtp (ORCPT
+        with ESMTP id S1725911AbgGWHtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:49:45 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D67C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:49:45 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so2791988pje.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:49:45 -0700 (PDT)
+        Thu, 23 Jul 2020 03:49:53 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4518AC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:49:53 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s189so2658660pgc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5r7ZBhmToWfTh6yXZt2NTooBEemow+91NRlzlx63OaA=;
-        b=aKKrBrNfvnuVnx6fk6ZNyxZpIturi5UukrlUbtgchTUg3LoYtaKBLQXQQl846pivrU
-         OzVCoEjsAbTk57NfakzdF5y5fWOeEhyvofMScO0C2cgHk3VUOCkgYrxppZE9z7iY//up
-         BCFrnJcja1Zx4ScJMAFuBWoat2/OUwUCLJ4cu0i0mRoyF7i7eqOHSOyRu5msm16S6Qlu
-         rSjSCqdBrRxQYPeEuDq2jOBkCl+yX9bPNTqR3Gt3q1ygFZOFyw0OVYKUpTzjKgMLpylU
-         3kgX5JBz5QJ42NSQFWBGpxCxu6muuyDv37Yb74wKAWpi88250gaL3O7DqckUFM0voS2k
-         +pJg==
+        bh=x/km7mgDbJXIYaMWCyJ3YkoTJJc8gYFxyZlip+EPAcI=;
+        b=VZj9lyZJphVJvmiWmMbxbSbRxIBQTdhWuwF2+Gt4QuWV+HVnZAg6CG25f5qkTIT0EM
+         /vzTGj1n51ZceEemZz2rcJBss9HEios9DGkGrpE5q2fFZlBedYXqluFggQP3CEZIc0Zm
+         4md1wtlEKkweHkRRUWEHUEMQcApGrF+jRyJyHKZ5qTDwfJosxGZ5dynUH476wmYv46mF
+         KeE9vSHSy+Iti9SXAXTtwgQZDSMWcZvGyK4ZJr/NIxnv5XSi0Qgi/MkCsZ883/5XQCEK
+         mBjEofY5IzVWvaHhkYJEqVItOWqDg59cKlQyRqL/NRqiylWFKEFAaxlh7wqhtj5UBThd
+         B6IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=5r7ZBhmToWfTh6yXZt2NTooBEemow+91NRlzlx63OaA=;
-        b=T9Rux7Vm0jaw2dc1O11y+gGTOZzVrSwOjfMy42bwDYVDslI/n4WYAnvXgYGHZSUtI7
-         Q0xmQh6qWh7lv3sFEafrDBp8bVNdZiFJgfm0HbRzK3v53I1AroQeRXKlF8ZRQPirg9DW
-         mU4oqztfT3C8r+zLAxuyS2wQat/6j1wb6RE+tAXmEh5ZomavD9rXOMZBkbaqsjfvFZax
-         xh+9m1qGKTy9GKKPODvQC94cCEH9Zoy1UKKnCWvQ2v9W2mBKVYShWG96NnQSVbK0OJvb
-         c+IYUNPJJxj/keVvLZWnulsjKULY7rLBIxM2wpWjLiex/2rzlrHB2j1A3t8uAbuqyUNE
-         H2RQ==
-X-Gm-Message-State: AOAM530xZrtudsJ12/RzAv9iZQyNClyEuDNu/htUsv1YvME4xmh2P66p
-        0vEC9u8siXrMHQes91Bq3Eo7cDJD
-X-Google-Smtp-Source: ABdhPJzOmqRN5+guEfjcZ2SZmYbkAu/w/sMiuUlFAihfvY02WYYdo6MpTqejFdG0eBvSrzPSPqKzdQ==
-X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr2816332plm.72.1595490585244;
-        Thu, 23 Jul 2020 00:49:45 -0700 (PDT)
+        bh=x/km7mgDbJXIYaMWCyJ3YkoTJJc8gYFxyZlip+EPAcI=;
+        b=XTRaAb2+MbTAvNmrqhLZIyOCScYys5CQE/b+VcHIwf7z+ATe3aWhkSZ/4WVQ3lBcQz
+         pVM7kpD5EybxkuIdGGA3ocqGYaju2L3i/uhojweDegG81jzPVmJWCM+FjjKcqqzJPsYk
+         A0hnn/VssxlOMdkaY73oRUZD3aLs/NaXD0MWm7eR+9HWm1AbCcZGrAxp864nPErVnrIc
+         oNhOMXMwUT/GuK+F4WBGKU5vca9nGudRBsbvCxFHpqYdHVgBzqDfnDDBswZkwbWCo+bc
+         1bD5htyTuCkb2T+1zf1oI6bqXdj4Lzliy4G6z/0NyF6UJO9btpEgL+DRL1qDDs+wOZIU
+         BevQ==
+X-Gm-Message-State: AOAM530C0/dJEdiL5iTXsz3y/E2kK9Lsn6iQi8vHMITkVApfPBg5i1rV
+        uyzeUOpGuT5XbJFgal3RNZs=
+X-Google-Smtp-Source: ABdhPJx3qGLhzpu9c9r6KiQh3xC+l6KbpPMe54G3ggrDKw3Iq5RDFibido+r9b9gzhVw8dqdwHsI7Q==
+X-Received: by 2002:a65:63d4:: with SMTP id n20mr3270504pgv.213.1595490592760;
+        Thu, 23 Jul 2020 00:49:52 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id f71sm9164879pje.0.2020.07.23.00.49.42
+        by smtp.gmail.com with ESMTPSA id f71sm9164879pje.0.2020.07.23.00.49.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 00:49:44 -0700 (PDT)
+        Thu, 23 Jul 2020 00:49:51 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -71,9 +71,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Mel Gorman <mgorman@techsingularity.net>,
         Matthew Wilcox <willy@infradead.org>, kernel-team@lge.com,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v7 2/6] mm/vmscan: protect the workingset on anonymous LRU
-Date:   Thu, 23 Jul 2020 16:49:16 +0900
-Message-Id: <1595490560-15117-3-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v7 4/6] mm/swapcache: support to handle the shadow entries
+Date:   Thu, 23 Jul 2020 16:49:18 +0900
+Message-Id: <1595490560-15117-5-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595490560-15117-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1595490560-15117-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -84,255 +84,252 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-In current implementation, newly created or swap-in anonymous page
-is started on active list. Growing active list results in rebalancing
-active/inactive list so old pages on active list are demoted to inactive
-list. Hence, the page on active list isn't protected at all.
-
-Following is an example of this situation.
-
-Assume that 50 hot pages on active list. Numbers denote the number of
-pages on active/inactive list (active | inactive).
-
-1. 50 hot pages on active list
-50(h) | 0
-
-2. workload: 50 newly created (used-once) pages
-50(uo) | 50(h)
-
-3. workload: another 50 newly created (used-once) pages
-50(uo) | 50(uo), swap-out 50(h)
-
-This patch tries to fix this issue.
-Like as file LRU, newly created or swap-in anonymous pages will be
-inserted to the inactive list. They are promoted to active list if
-enough reference happens. This simple modification changes the above
-example as following.
-
-1. 50 hot pages on active list
-50(h) | 0
-
-2. workload: 50 newly created (used-once) pages
-50(h) | 50(uo)
-
-3. workload: another 50 newly created (used-once) pages
-50(h) | 50(uo), swap-out 50(uo)
-
-As you can see, hot pages on active list would be protected.
-
-Note that, this implementation has a drawback that the page cannot
-be promoted and will be swapped-out if re-access interval is greater than
-the size of inactive list but less than the size of total(active+inactive).
-To solve this potential issue, following patch will apply workingset
-detection similar to the one that's already applied to file LRU.
+Workingset detection for anonymous page will be implemented in the
+following patch and it requires to store the shadow entries into the
+swapcache. This patch implements an infrastructure to store the shadow
+entry in the swapcache.
 
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/swap.h    |  2 +-
- kernel/events/uprobes.c |  2 +-
- mm/huge_memory.c        |  2 +-
- mm/khugepaged.c         |  2 +-
- mm/memory.c             |  9 ++++-----
- mm/migrate.c            |  2 +-
- mm/swap.c               | 13 +++++++------
- mm/swapfile.c           |  2 +-
- mm/userfaultfd.c        |  2 +-
- mm/vmscan.c             |  4 +---
- 10 files changed, 19 insertions(+), 21 deletions(-)
+ include/linux/swap.h | 17 ++++++++++++----
+ mm/shmem.c           |  3 ++-
+ mm/swap_state.c      | 57 ++++++++++++++++++++++++++++++++++++++++++++++------
+ mm/swapfile.c        |  2 ++
+ mm/vmscan.c          |  2 +-
+ 5 files changed, 69 insertions(+), 12 deletions(-)
 
 diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 7eb59bc..51ec9cd 100644
+index 51ec9cd..8a4c592 100644
 --- a/include/linux/swap.h
 +++ b/include/linux/swap.h
-@@ -352,7 +352,7 @@ extern void deactivate_page(struct page *page);
- extern void mark_page_lazyfree(struct page *page);
- extern void swap_setup(void);
+@@ -414,9 +414,13 @@ extern struct address_space *swapper_spaces[];
+ extern unsigned long total_swapcache_pages(void);
+ extern void show_swap_cache_info(void);
+ extern int add_to_swap(struct page *page);
+-extern int add_to_swap_cache(struct page *, swp_entry_t, gfp_t);
+-extern void __delete_from_swap_cache(struct page *, swp_entry_t entry);
++extern int add_to_swap_cache(struct page *page, swp_entry_t entry,
++			gfp_t gfp, void **shadowp);
++extern void __delete_from_swap_cache(struct page *page,
++			swp_entry_t entry, void *shadow);
+ extern void delete_from_swap_cache(struct page *);
++extern void clear_shadow_from_swap_cache(int type, unsigned long begin,
++				unsigned long end);
+ extern void free_page_and_swap_cache(struct page *);
+ extern void free_pages_and_swap_cache(struct page **, int);
+ extern struct page *lookup_swap_cache(swp_entry_t entry,
+@@ -570,13 +574,13 @@ static inline int add_to_swap(struct page *page)
+ }
  
--extern void lru_cache_add_active_or_unevictable(struct page *page,
-+extern void lru_cache_add_inactive_or_unevictable(struct page *page,
- 						struct vm_area_struct *vma);
- 
- /* linux/mm/vmscan.c */
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index f500204..02791f8 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -184,7 +184,7 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 	if (new_page) {
- 		get_page(new_page);
- 		page_add_new_anon_rmap(new_page, vma, addr, false);
--		lru_cache_add_active_or_unevictable(new_page, vma);
-+		lru_cache_add_inactive_or_unevictable(new_page, vma);
- 	} else
- 		/* no new page, just dec_mm_counter for old_page */
- 		dec_mm_counter(mm, MM_ANONPAGES);
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 15c9690..2068518 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -619,7 +619,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
- 		entry = mk_huge_pmd(page, vma->vm_page_prot);
- 		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
- 		page_add_new_anon_rmap(page, vma, haddr, true);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
- 		set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
- 		update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index b043c40..02fb51f 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1173,7 +1173,7 @@ static void collapse_huge_page(struct mm_struct *mm,
- 	spin_lock(pmd_ptl);
- 	BUG_ON(!pmd_none(*pmd));
- 	page_add_new_anon_rmap(new_page, vma, address, true);
--	lru_cache_add_active_or_unevictable(new_page, vma);
-+	lru_cache_add_inactive_or_unevictable(new_page, vma);
- 	pgtable_trans_huge_deposit(mm, pmd, pgtable);
- 	set_pmd_at(mm, address, pmd, _pmd);
- 	update_mmu_cache_pmd(vma, address, pmd);
-diff --git a/mm/memory.c b/mm/memory.c
-index 45e1dc0..25769b6 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2717,7 +2717,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		 */
- 		ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
- 		page_add_new_anon_rmap(new_page, vma, vmf->address, false);
--		lru_cache_add_active_or_unevictable(new_page, vma);
-+		lru_cache_add_inactive_or_unevictable(new_page, vma);
- 		/*
- 		 * We call the notify macro here because, when using secondary
- 		 * mmu page tables (such as kvm shadow page tables), we want the
-@@ -3268,10 +3268,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	/* ksm created a completely new copy */
- 	if (unlikely(page != swapcache && swapcache)) {
- 		page_add_new_anon_rmap(page, vma, vmf->address, false);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	} else {
- 		do_page_add_anon_rmap(page, vma, vmf->address, exclusive);
--		activate_page(page);
- 	}
- 
- 	swap_free(entry);
-@@ -3416,7 +3415,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 
- 	inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
- 	page_add_new_anon_rmap(page, vma, vmf->address, false);
--	lru_cache_add_active_or_unevictable(page, vma);
-+	lru_cache_add_inactive_or_unevictable(page, vma);
- setpte:
- 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
- 
-@@ -3674,7 +3673,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct page *page)
- 	if (write && !(vma->vm_flags & VM_SHARED)) {
- 		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
- 		page_add_new_anon_rmap(page, vma, vmf->address, false);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	} else {
- 		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
- 		page_add_file_rmap(page, false);
-diff --git a/mm/migrate.c b/mm/migrate.c
-index c233781..4fef341 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2912,7 +2912,7 @@ static void migrate_vma_insert_page(struct migrate_vma *migrate,
- 	inc_mm_counter(mm, MM_ANONPAGES);
- 	page_add_new_anon_rmap(page, vma, addr, false);
- 	if (!is_zone_device_page(page))
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	get_page(page);
- 
- 	if (flush) {
-diff --git a/mm/swap.c b/mm/swap.c
-index 587be74..d16d65d 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -476,23 +476,24 @@ void lru_cache_add(struct page *page)
- EXPORT_SYMBOL(lru_cache_add);
- 
- /**
-- * lru_cache_add_active_or_unevictable
-+ * lru_cache_add_inactive_or_unevictable
-  * @page:  the page to be added to LRU
-  * @vma:   vma in which page is mapped for determining reclaimability
-  *
-- * Place @page on the active or unevictable LRU list, depending on its
-+ * Place @page on the inactive or unevictable LRU list, depending on its
-  * evictability.  Note that if the page is not evictable, it goes
-  * directly back onto it's zone's unevictable list, it does NOT use a
-  * per cpu pagevec.
-  */
--void lru_cache_add_active_or_unevictable(struct page *page,
-+void lru_cache_add_inactive_or_unevictable(struct page *page,
- 					 struct vm_area_struct *vma)
+ static inline int add_to_swap_cache(struct page *page, swp_entry_t entry,
+-							gfp_t gfp_mask)
++					gfp_t gfp_mask, void **shadowp)
  {
-+	bool unevictable;
-+
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
+ 	return -1;
+ }
  
--	if (likely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
--		SetPageActive(page);
--	else if (!TestSetPageMlocked(page)) {
-+	unevictable = (vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) == VM_LOCKED;
-+	if (unlikely(unevictable) && !TestSetPageMlocked(page)) {
+ static inline void __delete_from_swap_cache(struct page *page,
+-							swp_entry_t entry)
++					swp_entry_t entry, void *shadow)
+ {
+ }
+ 
+@@ -584,6 +588,11 @@ static inline void delete_from_swap_cache(struct page *page)
+ {
+ }
+ 
++static inline void clear_shadow_from_swap_cache(int type, unsigned long begin,
++				unsigned long end)
++{
++}
++
+ static inline int page_swapcount(struct page *page)
+ {
+ 	return 0;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 89b357a..85ed46f 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1434,7 +1434,8 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
+ 		list_add(&info->swaplist, &shmem_swaplist);
+ 
+ 	if (add_to_swap_cache(page, swap,
+-			__GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN) == 0) {
++			__GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN,
++			NULL) == 0) {
+ 		spin_lock_irq(&info->lock);
+ 		shmem_recalc_inode(inode);
+ 		info->swapped++;
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 66e750f..13d8d66 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -110,12 +110,14 @@ void show_swap_cache_info(void)
+  * add_to_swap_cache resembles add_to_page_cache_locked on swapper_space,
+  * but sets SwapCache flag and private instead of mapping and index.
+  */
+-int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
++int add_to_swap_cache(struct page *page, swp_entry_t entry,
++			gfp_t gfp, void **shadowp)
+ {
+ 	struct address_space *address_space = swap_address_space(entry);
+ 	pgoff_t idx = swp_offset(entry);
+ 	XA_STATE_ORDER(xas, &address_space->i_pages, idx, compound_order(page));
+ 	unsigned long i, nr = thp_nr_pages(page);
++	void *old;
+ 
+ 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 	VM_BUG_ON_PAGE(PageSwapCache(page), page);
+@@ -125,16 +127,25 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
+ 	SetPageSwapCache(page);
+ 
+ 	do {
++		unsigned long nr_shadows = 0;
++
+ 		xas_lock_irq(&xas);
+ 		xas_create_range(&xas);
+ 		if (xas_error(&xas))
+ 			goto unlock;
+ 		for (i = 0; i < nr; i++) {
+ 			VM_BUG_ON_PAGE(xas.xa_index != idx + i, page);
++			old = xas_load(&xas);
++			if (xa_is_value(old)) {
++				nr_shadows++;
++				if (shadowp)
++					*shadowp = old;
++			}
+ 			set_page_private(page + i, entry.val + i);
+ 			xas_store(&xas, page);
+ 			xas_next(&xas);
+ 		}
++		address_space->nrexceptional -= nr_shadows;
+ 		address_space->nrpages += nr;
+ 		__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, nr);
+ 		ADD_CACHE_INFO(add_total, nr);
+@@ -154,7 +165,8 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
+  * This must be called only on pages that have
+  * been verified to be in the swap cache.
+  */
+-void __delete_from_swap_cache(struct page *page, swp_entry_t entry)
++void __delete_from_swap_cache(struct page *page,
++			swp_entry_t entry, void *shadow)
+ {
+ 	struct address_space *address_space = swap_address_space(entry);
+ 	int i, nr = thp_nr_pages(page);
+@@ -166,12 +178,14 @@ void __delete_from_swap_cache(struct page *page, swp_entry_t entry)
+ 	VM_BUG_ON_PAGE(PageWriteback(page), page);
+ 
+ 	for (i = 0; i < nr; i++) {
+-		void *entry = xas_store(&xas, NULL);
++		void *entry = xas_store(&xas, shadow);
+ 		VM_BUG_ON_PAGE(entry != page, entry);
+ 		set_page_private(page + i, 0);
+ 		xas_next(&xas);
+ 	}
+ 	ClearPageSwapCache(page);
++	if (shadow)
++		address_space->nrexceptional += nr;
+ 	address_space->nrpages -= nr;
+ 	__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, -nr);
+ 	ADD_CACHE_INFO(del_total, nr);
+@@ -208,7 +222,7 @@ int add_to_swap(struct page *page)
+ 	 * Add it to the swap cache.
+ 	 */
+ 	err = add_to_swap_cache(page, entry,
+-			__GFP_HIGH|__GFP_NOMEMALLOC|__GFP_NOWARN);
++			__GFP_HIGH|__GFP_NOMEMALLOC|__GFP_NOWARN, NULL);
+ 	if (err)
  		/*
- 		 * We use the irq-unsafe __mod_zone_page_stat because this
- 		 * counter is not modified from interrupt context, and the pte
+ 		 * add_to_swap_cache() doesn't return -EEXIST, so we can safely
+@@ -246,13 +260,44 @@ void delete_from_swap_cache(struct page *page)
+ 	struct address_space *address_space = swap_address_space(entry);
+ 
+ 	xa_lock_irq(&address_space->i_pages);
+-	__delete_from_swap_cache(page, entry);
++	__delete_from_swap_cache(page, entry, NULL);
+ 	xa_unlock_irq(&address_space->i_pages);
+ 
+ 	put_swap_page(page, entry);
+ 	page_ref_sub(page, thp_nr_pages(page));
+ }
+ 
++void clear_shadow_from_swap_cache(int type, unsigned long begin,
++				unsigned long end)
++{
++	unsigned long curr = begin;
++	void *old;
++
++	for (;;) {
++		unsigned long nr_shadows = 0;
++		swp_entry_t entry = swp_entry(type, curr);
++		struct address_space *address_space = swap_address_space(entry);
++		XA_STATE(xas, &address_space->i_pages, curr);
++
++		xa_lock_irq(&address_space->i_pages);
++		xas_for_each(&xas, old, end) {
++			if (!xa_is_value(old))
++				continue;
++			xas_store(&xas, NULL);
++			nr_shadows++;
++		}
++		address_space->nrexceptional -= nr_shadows;
++		xa_unlock_irq(&address_space->i_pages);
++
++		/* search the next swapcache until we meet end */
++		curr >>= SWAP_ADDRESS_SPACE_SHIFT;
++		curr++;
++		curr <<= SWAP_ADDRESS_SPACE_SHIFT;
++		if (curr > end)
++			break;
++	}
++}
++
+ /* 
+  * If we are the only user, then try to free up the swap cache. 
+  * 
+@@ -429,7 +474,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 	__SetPageSwapBacked(page);
+ 
+ 	/* May fail (-ENOMEM) if XArray node allocation failed. */
+-	if (add_to_swap_cache(page, entry, gfp_mask & GFP_RECLAIM_MASK)) {
++	if (add_to_swap_cache(page, entry, gfp_mask & GFP_RECLAIM_MASK, NULL)) {
+ 		put_swap_page(page, entry);
+ 		goto fail_unlock;
+ 	}
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 7b0974f..6bd9b4c 100644
+index 6bd9b4c..3dba9be 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -1921,7 +1921,7 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
- 		page_add_anon_rmap(page, vma, addr, false);
- 	} else { /* ksm created a completely new copy */
- 		page_add_new_anon_rmap(page, vma, addr, false);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
+@@ -696,6 +696,7 @@ static void add_to_avail_list(struct swap_info_struct *p)
+ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 			    unsigned int nr_entries)
+ {
++	unsigned long begin = offset;
+ 	unsigned long end = offset + nr_entries - 1;
+ 	void (*swap_slot_free_notify)(struct block_device *, unsigned long);
+ 
+@@ -722,6 +723,7 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 			swap_slot_free_notify(si->bdev, offset);
+ 		offset++;
  	}
- 	swap_free(entry);
- 	/*
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index b804193..9a3d451 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -123,7 +123,7 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
++	clear_shadow_from_swap_cache(si->type, begin, end);
+ }
  
- 	inc_mm_counter(dst_mm, MM_ANONPAGES);
- 	page_add_new_anon_rmap(page, dst_vma, dst_addr, false);
--	lru_cache_add_active_or_unevictable(page, dst_vma);
-+	lru_cache_add_inactive_or_unevictable(page, dst_vma);
- 
- 	set_pte_at(dst_mm, dst_addr, dst_pte, _dst_pte);
- 
+ static void set_cluster_next(struct swap_info_struct *si, unsigned long next)
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d5a19c7..9406948 100644
+index 6dda5b2..b9b543e 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -998,8 +998,6 @@ static enum page_references page_check_references(struct page *page,
- 		return PAGEREF_RECLAIM;
- 
- 	if (referenced_ptes) {
--		if (PageSwapBacked(page))
--			return PAGEREF_ACTIVATE;
- 		/*
- 		 * All mapped pages start out with page table
- 		 * references from the instantiating fault, so we need
-@@ -1022,7 +1020,7 @@ static enum page_references page_check_references(struct page *page,
- 		/*
- 		 * Activate file-backed executable pages after first usage.
- 		 */
--		if (vm_flags & VM_EXEC)
-+		if ((vm_flags & VM_EXEC) && !PageSwapBacked(page))
- 			return PAGEREF_ACTIVATE;
- 
- 		return PAGEREF_KEEP;
+@@ -896,7 +896,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
+ 	if (PageSwapCache(page)) {
+ 		swp_entry_t swap = { .val = page_private(page) };
+ 		mem_cgroup_swapout(page, swap);
+-		__delete_from_swap_cache(page, swap);
++		__delete_from_swap_cache(page, swap, NULL);
+ 		xa_unlock_irqrestore(&mapping->i_pages, flags);
+ 		put_swap_page(page, swap);
+ 		workingset_eviction(page, target_memcg);
 -- 
 2.7.4
 
