@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E868FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B47C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B979E20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1652C20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Q+TYD5S7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="T8E6buZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbgGWQtd (ORCPT
+        id S1729953AbgGWQto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:49:33 -0400
-Received: from gateway32.websitewelcome.com ([192.185.144.98]:19993 "EHLO
+        Thu, 23 Jul 2020 12:49:44 -0400
+Received: from gateway32.websitewelcome.com ([192.185.144.98]:44167 "EHLO
         gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgGWQtb (ORCPT
+        by vger.kernel.org with ESMTP id S1726621AbgGWQtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:49:31 -0400
+        Thu, 23 Jul 2020 12:49:43 -0400
 Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 090BA28E714
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:49:28 -0500 (CDT)
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 153ED3B816
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:49:42 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id yePPjNyXrwgQAyePQjObcs; Thu, 23 Jul 2020 11:49:28 -0500
+        id yePdjNyqBwgQAyePdjObvG; Thu, 23 Jul 2020 11:49:42 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,19 +36,19 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mX9WbPR2A08lAhxlpv9nqKTZKz1fenNVDE+tR5xQ44Q=; b=Q+TYD5S7vFBz3TXmZyJys1Ag2u
-        48HcHd05NsTizQ1KY8e5i23+ZGgg+3NcoaThhzQ+5Lh3XqshtM2AqgxKcRAG5N6xMooYoIKRQUT0W
-        Ujcw1e+mxNNuw1XXqv0KSM5JEjHdSGoOUBW3emIV4izevVHPDYdvNaYP6jGngi+NNXYWpI58hQVqJ
-        b8DkJBwmyq9SNz9m9D5n99EUDT2fo55vmYkZK39CXVJvV+IDdCvL+ztU2c1wgF+gU2GagPRO+64Bx
-        hNNl+NHWA07Yt35hfzZhHWygWtsk0+TwE79YLPUic4etiAK1nFlzSeQO35W6b1FmnKUBqiSAmb8p/
-        drKd4pGg==;
-Received: from [201.162.245.27] (port=42558 helo=[192.168.43.132])
+        bh=K/lvHSj27UHGEil/orLjlYSbezm47rMNNnmrp3q01GA=; b=T8E6buZqg+jVo8wVQFuEFiTo5d
+        jPxLlDT4UWBMtYabcSJsRj+MXq1V0K/eq78M5Fmv/9mpyehM2YkmO3UWtK5VzsIl3yPwciBfB5tf5
+        JYlE0/1KsBEApjrpQwU5KnE6w8QkDtlCmVR3fXpto/juUsRbHDtjeyP9acxyTTdt6rbwWJ2TnGMH5
+        UcIs/EWWftryTgeSduT9L4lfkXAlIDs9gru1SzEWfXditQ/VadYeXe72zezElyQ9KtB3O2F9yzW2r
+        TyOHwam0I7WTP1RWXoYbiBOiEVKOrRJBWdYENHwNQjKU2pqzhecaOr/gHb3moXrVTUHkVH5qB9ZNQ
+        kYPh3MJw==;
+Received: from [201.162.245.27] (port=42564 helo=[192.168.43.132])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jyePP-0040ek-GZ; Thu, 23 Jul 2020 11:49:27 -0500
-Subject: Re: [char-misc-next 3/6] mei: bus: use sizeof of variable instead of
- struct type
+        id 1jyePd-0040lv-9T; Thu, 23 Jul 2020 11:49:41 -0500
+Subject: Re: [char-misc-next 2/6] mei: ioctl: use sizeof of variable instead
+ of struct type
 To:     Tomas Winkler <tomas.winkler@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
@@ -56,7 +56,7 @@ Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>
 References: <20200723145927.882743-1-tomas.winkler@intel.com>
- <20200723145927.882743-4-tomas.winkler@intel.com>
+ <20200723145927.882743-3-tomas.winkler@intel.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -102,12 +102,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
  rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
  AP7RWS474w==
-Message-ID: <cab66bcc-6b48-772e-9f16-41c1c076c42d@embeddedor.com>
-Date:   Thu, 23 Jul 2020 11:55:11 -0500
+Message-ID: <992a5bd7-f8c6-c5ea-3531-65e2785f96a6@embeddedor.com>
+Date:   Thu, 23 Jul 2020 11:55:25 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200723145927.882743-4-tomas.winkler@intel.com>
+In-Reply-To: <20200723145927.882743-3-tomas.winkler@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -119,13 +119,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.162.245.27
 X-Source-L: No
-X-Exim-ID: 1jyePP-0040ek-GZ
+X-Exim-ID: 1jyePd-0040lv-9T
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42558
+X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42564
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 22
+X-Email-Count: 28
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -136,6 +136,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 7/23/20 09:59, Tomas Winkler wrote:
+> Use sizeof(connect_data))) instead of
+> sizeof(struct mei_connect_client_data) when copying data
+> between user space and kernel.
+> 
 > There is a possibility of bug when variable type has changed but
 > corresponding struct passed to the sizeof has not.
 > 
@@ -149,94 +153,37 @@ Thanks
 Gustavo
 
 > ---
->  drivers/misc/mei/bus-fixup.c | 23 +++++++++++------------
->  drivers/misc/mei/bus.c       |  2 +-
->  2 files changed, 12 insertions(+), 13 deletions(-)
+>  drivers/misc/mei/main.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
-> index 910f059b3384..07ba16d46690 100644
-> --- a/drivers/misc/mei/bus-fixup.c
-> +++ b/drivers/misc/mei/bus-fixup.c
+> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+> index f17297f2943d..05e6ad6d4d54 100644
+> --- a/drivers/misc/mei/main.c
+> +++ b/drivers/misc/mei/main.c
 > @@ -1,6 +1,6 @@
 >  // SPDX-License-Identifier: GPL-2.0
 >  /*
-> - * Copyright (c) 2013-2019, Intel Corporation. All rights reserved.
-> + * Copyright (c) 2013-2020, Intel Corporation. All rights reserved.
+> - * Copyright (c) 2003-2018, Intel Corporation. All rights reserved.
+> + * Copyright (c) 2003-2020, Intel Corporation. All rights reserved.
 >   * Intel Management Engine Interface (Intel MEI) Linux driver
 >   */
 >  
-> @@ -159,17 +159,17 @@ static int mei_osver(struct mei_cl_device *cldev)
->  static int mei_fwver(struct mei_cl_device *cldev)
->  {
->  	char buf[MKHI_FWVER_BUF_LEN];
-> -	struct mkhi_msg *req;
-> +	struct mkhi_msg req;
-> +	struct mkhi_msg *rsp;
->  	struct mkhi_fw_ver *fwver;
->  	int bytes_recv, ret, i;
+> @@ -476,7 +476,7 @@ static long mei_ioctl(struct file *file, unsigned int cmd, unsigned long data)
+>  	case IOCTL_MEI_CONNECT_CLIENT:
+>  		dev_dbg(dev->dev, ": IOCTL_MEI_CONNECT_CLIENT.\n");
+>  		if (copy_from_user(&connect_data, (char __user *)data,
+> -				sizeof(struct mei_connect_client_data))) {
+> +				   sizeof(connect_data))) {
+>  			dev_dbg(dev->dev, "failed to copy data from userland\n");
+>  			rets = -EFAULT;
+>  			goto out;
+> @@ -488,7 +488,7 @@ static long mei_ioctl(struct file *file, unsigned int cmd, unsigned long data)
 >  
->  	memset(buf, 0, sizeof(buf));
->  
-> -	req = (struct mkhi_msg *)buf;
-> -	req->hdr.group_id = MKHI_GEN_GROUP_ID;
-> -	req->hdr.command = MKHI_GEN_GET_FW_VERSION_CMD;
-> +	req.hdr.group_id = MKHI_GEN_GROUP_ID;
-> +	req.hdr.command = MKHI_GEN_GET_FW_VERSION_CMD;
->  
-> -	ret = __mei_cl_send(cldev->cl, buf, sizeof(struct mkhi_msg_hdr),
-> +	ret = __mei_cl_send(cldev->cl, (u8 *)&req, sizeof(req),
->  			    MEI_CL_IO_TX_BLOCKING);
->  	if (ret < 0) {
->  		dev_err(&cldev->dev, "Could not send ReqFWVersion cmd\n");
-> @@ -188,7 +188,8 @@ static int mei_fwver(struct mei_cl_device *cldev)
->  		return -EIO;
->  	}
->  
-> -	fwver = (struct mkhi_fw_ver *)req->data;
-> +	rsp = (struct mkhi_msg *)buf;
-> +	fwver = (struct mkhi_fw_ver *)rsp->data;
->  	memset(cldev->bus->fw_ver, 0, sizeof(cldev->bus->fw_ver));
->  	for (i = 0; i < MEI_MAX_FW_VER_BLOCKS; i++) {
->  		if ((size_t)bytes_recv < MKHI_FWVER_LEN(i + 1))
-> @@ -329,16 +330,14 @@ static int mei_nfc_if_version(struct mei_cl *cl,
->  
->  	WARN_ON(mutex_is_locked(&bus->device_lock));
->  
-> -	ret = __mei_cl_send(cl, (u8 *)&cmd, sizeof(struct mei_nfc_cmd),
-> -			    MEI_CL_IO_TX_BLOCKING);
-> +	ret = __mei_cl_send(cl, (u8 *)&cmd, sizeof(cmd), MEI_CL_IO_TX_BLOCKING);
->  	if (ret < 0) {
->  		dev_err(bus->dev, "Could not send IF version cmd\n");
->  		return ret;
->  	}
->  
->  	/* to be sure on the stack we alloc memory */
-> -	if_version_length = sizeof(struct mei_nfc_reply) +
-> -		sizeof(struct mei_nfc_if_version);
-> +	if_version_length = sizeof(*reply) + sizeof(*ver);
->  
->  	reply = kzalloc(if_version_length, GFP_KERNEL);
->  	if (!reply)
-> @@ -352,7 +351,7 @@ static int mei_nfc_if_version(struct mei_cl *cl,
->  		goto err;
->  	}
->  
-> -	memcpy(ver, reply->data, sizeof(struct mei_nfc_if_version));
-> +	memcpy(ver, reply->data, sizeof(*ver));
->  
->  	dev_info(bus->dev, "NFC MEI VERSION: IVN 0x%x Vendor ID 0x%x Type 0x%x\n",
->  		ver->fw_ivn, ver->vendor_id, ver->radio_type);
-> diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-> index f476dbc7252b..a6dfc3ce1db2 100644
-> --- a/drivers/misc/mei/bus.c
-> +++ b/drivers/misc/mei/bus.c
-> @@ -931,7 +931,7 @@ static struct mei_cl_device *mei_cl_bus_dev_alloc(struct mei_device *bus,
->  	struct mei_cl_device *cldev;
->  	struct mei_cl *cl;
->  
-> -	cldev = kzalloc(sizeof(struct mei_cl_device), GFP_KERNEL);
-> +	cldev = kzalloc(sizeof(*cldev), GFP_KERNEL);
->  	if (!cldev)
->  		return NULL;
->  
+>  		/* if all is ok, copying the data back to user. */
+>  		if (copy_to_user((char __user *)data, &connect_data,
+> -				sizeof(struct mei_connect_client_data))) {
+> +				 sizeof(connect_data))) {
+>  			dev_dbg(dev->dev, "failed to copy data to userland\n");
+>  			rets = -EFAULT;
+>  			goto out;
 > 
