@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCE8C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A49FC433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8477420737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5317F207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgGWNNZ (ORCPT
+        id S1729227AbgGWNNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:13:25 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:43845 "EHLO
+        Thu, 23 Jul 2020 09:13:09 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57329 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGWNNY (ORCPT
+        with ESMTP id S1726521AbgGWNNI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:13:24 -0400
+        Thu, 23 Jul 2020 09:13:08 -0400
 X-Originating-IP: 42.109.196.68
 Received: from localhost.localdomain (unknown [42.109.196.68])
         (Authenticated sender: me@yadavpratyush.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id F20D61C0007;
-        Thu, 23 Jul 2020 13:13:18 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id F2EBA1C0010;
+        Thu, 23 Jul 2020 13:13:02 +0000 (UTC)
 From:   Pratyush Yadav <me@yadavpratyush.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Pratyush Yadav <p.yadav@ti.com>,
         Pratyush Yadav <me@yadavpratyush.com>
-Subject: [PATCH v11 14/14] mtd: spi-nor: micron-st: allow using MT35XU512ABA in Octal DTR mode
-Date:   Thu, 23 Jul 2020 18:42:03 +0530
-Message-Id: <20200723131203.40916-15-me@yadavpratyush.com>
+Subject: [PATCH v11 10/14] mtd: spi-nor: core: perform a Soft Reset on shutdown
+Date:   Thu, 23 Jul 2020 18:41:59 +0530
+Message-Id: <20200723131203.40916-11-me@yadavpratyush.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200723131203.40916-1-me@yadavpratyush.com>
 References: <20200723131203.40916-1-me@yadavpratyush.com>
@@ -51,137 +51,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pratyush Yadav <p.yadav@ti.com>
 
-Since this flash doesn't have a Profile 1.0 table, the Octal DTR
-capabilities are enabled in the post SFDP fixup, along with the 8D-8D-8D
-fast read settings.
-
-Enable Octal DTR mode with 20 dummy cycles to allow running at the
-maximum supported frequency of 200Mhz.
-
-The flash supports the soft reset sequence. So, add the flag in the
-flash's info.
+Perform a Soft Reset on shutdown on flashes that support it so that the
+flash can be reset to its initial state and any configurations made by
+spi-nor (given that they're only done in volatile registers) will be
+reset. This will hand back the flash in pristine state for any further
+operations on it.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/micron-st.c | 102 +++++++++++++++++++++++++++++++-
- 1 file changed, 101 insertions(+), 1 deletion(-)
+ drivers/mtd/spi-nor/core.c  | 41 +++++++++++++++++++++++++++++++++++++
+ include/linux/mtd/spi-nor.h |  2 ++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/micron-st.c b/drivers/mtd/spi-nor/micron-st.c
-index 3dca5b9af3b6..e34098661b11 100644
---- a/drivers/mtd/spi-nor/micron-st.c
-+++ b/drivers/mtd/spi-nor/micron-st.c
-@@ -8,10 +8,110 @@
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index b990fc7add20..f55c062a7bd5 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -40,6 +40,9 @@
  
- #include "core.h"
+ #define SPI_NOR_MAX_ADDR_WIDTH	4
  
-+#define SPINOR_OP_MT_DTR_RD	0xfd	/* Fast Read opcode in DTR mode */
-+#define SPINOR_OP_MT_RD_ANY_REG	0x85	/* Read volatile register */
-+#define SPINOR_OP_MT_WR_ANY_REG	0x81	/* Write volatile register */
-+#define SPINOR_REG_MT_CFR0V	0x00	/* For setting octal DTR mode */
-+#define SPINOR_REG_MT_CFR1V	0x01	/* For setting dummy cycles */
-+#define SPINOR_MT_DTR_NO_DQS	0xc7	/* Enable Octal DTR without DQS. */
-+#define SPINOR_MT_EXSPI		0xff	/* Enable Extended SPI (default) */
++#define SPI_NOR_SRST_SLEEP_MIN 200
++#define SPI_NOR_SRST_SLEEP_MAX 400
 +
-+static int spi_nor_micron_octal_dtr_enable(struct spi_nor *nor, bool enable)
+ /**
+  * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
+  *			   extension type.
+@@ -3155,6 +3158,41 @@ static int spi_nor_init(struct spi_nor *nor)
+ 	return 0;
+ }
+ 
++static void spi_nor_soft_reset(struct spi_nor *nor)
 +{
 +	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width;
 +	int ret;
 +
-+	if (enable)
-+		addr_width = 3;
-+	else
-+		addr_width = 4;
-+
-+	if (enable) {
-+		/* Use 20 dummy cycles for memory array reads. */
-+		ret = spi_nor_write_enable(nor);
-+		if (ret)
-+			return ret;
-+
-+		*buf = 20;
-+		op = (struct spi_mem_op)
-+			SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_MT_WR_ANY_REG, 1),
-+				   SPI_MEM_OP_ADDR(addr_width,
-+						   SPINOR_REG_MT_CFR1V, 1),
-+				   SPI_MEM_OP_NO_DUMMY,
-+				   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+		ret = spi_mem_exec_op(nor->spimem, &op);
-+		if (ret)
-+			return ret;
-+
-+		ret = spi_nor_wait_till_ready(nor);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		*buf = SPINOR_MT_DTR_NO_DQS;
-+	else
-+		*buf = SPINOR_MT_EXSPI;
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_MT_WR_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_MT_CFR0V, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+
-+	if (!enable)
-+		spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
-+
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_SRSTEN, 8),
++			SPI_MEM_OP_NO_DUMMY,
++			SPI_MEM_OP_NO_ADDR,
++			SPI_MEM_OP_NO_DATA);
++	spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
 +	ret = spi_mem_exec_op(nor->spimem, &op);
 +	if (ret) {
-+		dev_err(nor->dev, "Failed to enable octal DTR mode\n");
-+		return ret;
++		dev_warn(nor->dev, "Software reset failed: %d\n", ret);
++		return;
 +	}
 +
-+	return 0;
-+}
-+
-+static void mt35xu512aba_default_init(struct spi_nor *nor)
-+{
-+	nor->params->octal_dtr_enable = spi_nor_micron_octal_dtr_enable;
-+}
-+
-+static void mt35xu512aba_post_sfdp_fixup(struct spi_nor *nor)
-+{
-+	/* Set the Fast Read settings. */
-+	nor->params->hwcaps.mask |= SNOR_HWCAPS_READ_8_8_8_DTR;
-+	spi_nor_set_read_settings(&nor->params->reads[SNOR_CMD_READ_8_8_8_DTR],
-+				  0, 20, SPINOR_OP_MT_DTR_RD,
-+				  SNOR_PROTO_8_8_8_DTR);
-+
-+	nor->cmd_ext_type = SPI_NOR_EXT_REPEAT;
-+	nor->params->rdsr_dummy = 8;
-+	nor->params->rdsr_addr_nbytes = 0;
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_SRST, 8),
++			SPI_MEM_OP_NO_DUMMY,
++			SPI_MEM_OP_NO_ADDR,
++			SPI_MEM_OP_NO_DATA);
++	spi_nor_spimem_setup_op(nor, &op, nor->reg_proto);
++	ret = spi_mem_exec_op(nor->spimem, &op);
++	if (ret) {
++		dev_warn(nor->dev, "Software reset failed: %d\n", ret);
++		return;
++	}
 +
 +	/*
-+	 * The BFPT quad enable field is set to a reserved value so the quad
-+	 * enable function is ignored by spi_nor_parse_bfpt(). Make sure we
-+	 * disable it.
++	 * Software Reset is not instant, and the delay varies from flash to
++	 * flash. Looking at a few flashes, most range somewhere below 100
++	 * microseconds. So, sleep for a range of 200-400 us.
 +	 */
-+	nor->params->quad_enable = NULL;
++	usleep_range(SPI_NOR_SRST_SLEEP_MIN, SPI_NOR_SRST_SLEEP_MAX);
 +}
 +
-+static struct spi_nor_fixups mt35xu512aba_fixups = {
-+	.default_init = mt35xu512aba_default_init,
-+	.post_sfdp = mt35xu512aba_post_sfdp_fixup,
-+};
+ /* mtd resume handler */
+ static void spi_nor_resume(struct mtd_info *mtd)
+ {
+@@ -3175,6 +3213,9 @@ void spi_nor_restore(struct spi_nor *nor)
+ 	    nor->flags & SNOR_F_BROKEN_RESET)
+ 		nor->params->set_4byte_addr_mode(nor, false);
+ 
++	if (nor->flags & SNOR_F_SOFT_RESET)
++		spi_nor_soft_reset(nor);
 +
- static const struct flash_info micron_parts[] = {
- 	{ "mt35xu512aba", INFO(0x2c5b1a, 0, 128 * 1024, 512,
- 			       SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
--			       SPI_NOR_4B_OPCODES) },
-+			       SPI_NOR_4B_OPCODES | SPI_NOR_OCTAL_DTR_READ |
-+			       SPI_NOR_OCTAL_DTR_PP)
-+		.fixups = &mt35xu512aba_fixups},
- 	{ "mt35xu02g", INFO(0x2c5b1c, 0, 128 * 1024, 2048,
- 			    SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
- 			    SPI_NOR_4B_OPCODES) },
+ 	spi_nor_quad_enable(nor, false);
+ }
+ EXPORT_SYMBOL_GPL(spi_nor_restore);
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index cd549042c53d..299685d15dc2 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -51,6 +51,8 @@
+ #define SPINOR_OP_CLFSR		0x50	/* Clear flag status register */
+ #define SPINOR_OP_RDEAR		0xc8	/* Read Extended Address Register */
+ #define SPINOR_OP_WREAR		0xc5	/* Write Extended Address Register */
++#define SPINOR_OP_SRSTEN	0x66	/* Software Reset Enable */
++#define SPINOR_OP_SRST		0x99	/* Software Reset */
+ 
+ /* 4-byte address opcodes - used on Spansion and some Macronix flashes. */
+ #define SPINOR_OP_READ_4B	0x13	/* Read data bytes (low frequency) */
 -- 
 2.27.0
 
