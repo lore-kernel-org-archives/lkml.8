@@ -2,168 +2,213 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B03C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC967C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1524E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C492120888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGWKDI (ORCPT
+        id S1728320AbgGWKDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:03:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:42934 "EHLO foss.arm.com"
+        Thu, 23 Jul 2020 06:03:21 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1494 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgGWKDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:03:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C57ED6E;
-        Thu, 23 Jul 2020 03:03:07 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D527B3F66F;
-        Thu, 23 Jul 2020 03:03:05 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 11:02:58 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 00/15] Add PCIe support to TI's J721E SoC
-Message-ID: <20200723100258.GA7195@e121166-lin.cambridge.arm.com>
-References: <20200722110317.4744-1-kishon@ti.com>
+        id S1728234AbgGWKDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:03:20 -0400
+IronPort-SDR: vkKEu+rcROaRaTcaNbshnowUPMWMg3QlraKr3GbieQHnjQ+XYrgqall1rxUiV4GVBn836cLhe3
+ +qnDf5iAP3Pw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="150479763"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="150479763"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 03:03:19 -0700
+IronPort-SDR: Mo9g3aqn+5pESbGSA+ASuLdLj4ZXqCS0K16NlHhCzhJf+HIO3tLFI4k2zdn6TmF0T/uTj3bdwU
+ dx41dlQknhrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="362998701"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 23 Jul 2020 03:03:17 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jyY4L-003QHj-2p; Thu, 23 Jul 2020 13:03:17 +0300
+Date:   Thu, 23 Jul 2020 13:03:17 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200723100317.GJ3703480@smile.fi.intel.com>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722110317.4744-1-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 04:33:02PM +0530, Kishon Vijay Abraham I wrote:
-> TI's J721E SoC uses Cadence PCIe core to implement both RC mode
-> and EP mode.
+On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
+> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
+> top of a GPIO chip. It's better from maintainability and readability
+> point of view to use one instead of supporting a hand-written Generic
+> IRQ-chip-based implementation. Moreover the new implementation won't
+> cause much functional overhead but will provide a cleaner driver code.
+> All of that makes the DW APB GPIO driver conversion pretty much justified
+> especially seeing a tendency of the other GPIO drivers getting converted
+> too.
 > 
-> The high level features are:
->   *) Supports Legacy, MSI and MSI-X interrupt
->   *) Supports upto GEN4 speed mode
->   *) Supports SR-IOV
->   *) Supports multiple physical function
->   *) Ability to route all transactions via SMMU
-> 
-> This patch series
->   *) Add support in Cadence PCIe core to be used for TI's J721E SoC
->   *) Add a driver for J721E PCIe wrapper
-> 
-> v1 of the series can be found @ [1]
-> v2 of the series can be found @ [2]
-> v3 of the series can be found @ [5]
-> v4 of the series can be found @ [6]
-> v5 of the series can be found @ [7]
-> v6 of the series can be found @ [8]
-> v7 of the series can be found @ [9]
-> 
-> Changes from v7:
-> 1) Replaced WARN with pr_warn
-> 2) Included support for "dma-ranges" property patch in this series [10]
-> 
-> Changes from v6:
-> 1) Fixed bot found errors running 'make dt_binding_check'
-> 
-> Changes from v5:
-> 1) Added Reviewed-by: for PATCH #6
-> 2) Protect writes to PCI_STATUS with spin_lock during raising interrupts
->    in EP mode to reduce the time between read and write of RMW.
-> 
-> Changes from v4:
-> 1) Added Reviewed-by: & Acked-by: tags from RobH
-> 2) Removed un-used accessors for pcie-cadence.h and removed having ops
->    for read/write accessors
-> 3) Updated cdns,cdns-pcie-host.yaml to remove "mem" from reg
-> 
-> Changes from v3:
-> 1) Changed the order of files in MAINTAINTERS file to fix Joe's comments
-> 2) Fixed indentation and added Reviewed-by: Rob Herring <robh@kernel.org>
-> 3) Cleaned up computing msix_tbl
-> 4) Fixed RobH's comment on J721E driver
-> 
-> Changes from v2:
-> 1) Converting Cadence binding to YAML schema was done as a
->    separate series [3] & [4]. [3] is merged and [4] is
->    pending.
-> 2) Included MSI-X support in this series
-> 3) Added link down interrupt handling (only error message)
-> 4) Rebased to latest 5.7-rc1
-> 5) Adapted TI J721E binding to [3] & [4]
-> 
-> Changes from v1:
-> 1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
->    cdns-pcie.yaml for Cadence PCIe core and included it in
->    TI's PCIe DT schema.
-> 2) Added cpu_addr_fixup() for Cadence Platform driver.
-> 3) Fixed subject/description/renamed functions as commented by
->    Andrew Murray.
-> 
-> [1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
-> [2] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
-> [3] -> http://lore.kernel.org/r/20200305103017.16706-1-kishon@ti.com
-> [4] -> http://lore.kernel.org/r/20200417114322.31111-1-kishon@ti.com
-> [5] -> http://lore.kernel.org/r/20200417125753.13021-1-kishon@ti.com
-> [6] -> http://lore.kernel.org/r/20200506151429.12255-1-kishon@ti.com
-> [7] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
-> [8] -> http://lore.kernel.org/r/20200708093018.28474-1-kishon@ti.com
-> [9] -> http://lore.kernel.org/r/20200713110141.13156-1-kishon@ti.com
-> [10] -> http://lore.kernel.org/r/20200521080153.5902-1-kishon@ti.com
-> 
-> Alan Douglas (1):
->   PCI: cadence: Add MSI-X support to Endpoint driver
-> 
-> Kishon Vijay Abraham I (14):
->   PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
->     property
->   PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
->   linux/kernel.h: Add PTR_ALIGN_DOWN macro
->   PCI: cadence: Convert all r/w accessors to perform only 32-bit
->     accesses
->   PCI: cadence: Add support to start link and verify link status
->   PCI: cadence: Allow pci_host_bridge to have custom pci_ops
->   dt-bindings: PCI: cadence: Remove "mem" from reg binding
->   PCI: cadence: Add new *ops* for CPU addr fixup
->   PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
->   dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
->   dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
->   PCI: j721e: Add TI J721E PCIe driver
->   misc: pci_endpoint_test: Add J721E in pci_device_id table
->   MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
-> 
->  .../bindings/pci/cdns,cdns-pcie-host.yaml     |   8 +-
->  .../bindings/pci/ti,j721e-pci-ep.yaml         |  94 ++++
->  .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++
->  MAINTAINERS                                   |   4 +-
->  drivers/misc/pci_endpoint_test.c              |   9 +
->  drivers/pci/controller/cadence/Kconfig        |  23 +
->  drivers/pci/controller/cadence/Makefile       |   1 +
->  drivers/pci/controller/cadence/pci-j721e.c    | 493 ++++++++++++++++++
->  .../pci/controller/cadence/pcie-cadence-ep.c  | 129 ++++-
->  .../controller/cadence/pcie-cadence-host.c    | 310 +++++++++--
->  .../controller/cadence/pcie-cadence-plat.c    |  13 +
->  drivers/pci/controller/cadence/pcie-cadence.c |   8 +-
->  drivers/pci/controller/cadence/pcie-cadence.h | 161 +++++-
->  include/linux/kernel.h                        |   1 +
->  14 files changed, 1297 insertions(+), 70 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+> Here is what we do in the framework of this commit to convert the driver
+> to using the GPIO-lib-based IRQ-chip interface:
+> 1) IRQ ack, mask and unmask callbacks are locally defined instead of
+> using the Generic IRQ-chip ones.
+> 2) An irq_chip structure instance is embedded into the dwapb_gpio
+> private data. Note we can't have a static instance of that structure since
+> GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
+> A warning about that would have been printed by the GPIO-lib code if we
+> used a single irq_chip structure instance for multiple DW APB GPIO
+> controllers.
+> 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
+> descriptor. By default there is no IRQ enabled so any event raised will be
+> handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
+> is synthesized to have non-shared reference IRQ-lines, then as before the
+> hierarchical and cascaded cases are distinguished by checking how many
+> parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
+> initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
+> is used on a platform with shared IRQ line, then we simply won't let the
+> GPIO-lib to initialize the parental IRQs, but will handle them locally in
+> the driver.
+> 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
+> GPIO-lib IRQ-chip interface will create a new domain and accept a standard
+> IRQ-chip structure pointer based on the setting we provided in the
+> gpio_irq_chip structure.
+> 5) Manually select a proper IRQ flow handler directly in the
+> irq_set_type() callback by calling irq_set_handler_locked() method, since
+> an ordinary (not Generic) irq_chip descriptor is now utilized.
 
-Applied to pci/cadence for v5.9, thanks !
+Can you also emphasize that this make no regression to the 6a2f4b7dadd5 ("gpio:
+dwapb: use a second irq chip")?
 
-Lorenzo
+(And I hope you have means to test that scenario, because in my case I have
+ only one IRQ and it's actually as input from other GPIO IRQ chip).
+
+> 6) Discard the custom GPIO-to-IRQ mapping function since GPIO-lib defines
+> the standard method gpiochip_to_irq(), which will be used anyway no matter
+> whether the custom to_irq callback is specified or not.
+> 7) Discard the acpi_gpiochip_{request,free}_interrupts()
+> invocations, since they will be called from
+> gpiochip_add_irqchip()/gpiochip_irqchip_remove() anyway.
+> 8) Alter CONFIG_GPIO_DWAPB kernel config to select
+> CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
+
+I like the idea, but is it possible to split this?
+
+...
+
+>  static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+>  {
+> -	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+> -	struct dwapb_gpio *gpio = igc->private;
+> -	struct gpio_chip *gc = &gpio->ports[0].gc;
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+>  	irq_hw_number_t bit = irqd_to_hwirq(d);
+>  	unsigned long level, polarity, flags;
+> +	irq_flow_handler_t handler;
+>  
+>  	if (type & ~IRQ_TYPE_SENSE_MASK)
+>  		return -EINVAL;
+> @@ -274,26 +304,31 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+>  	case IRQ_TYPE_EDGE_BOTH:
+>  		level |= BIT(bit);
+>  		dwapb_toggle_trigger(gpio, bit);
+> +		handler = handle_edge_irq;
+>  		break;
+>  	case IRQ_TYPE_EDGE_RISING:
+>  		level |= BIT(bit);
+>  		polarity |= BIT(bit);
+> +		handler = handle_edge_irq;
+>  		break;
+>  	case IRQ_TYPE_EDGE_FALLING:
+>  		level |= BIT(bit);
+>  		polarity &= ~BIT(bit);
+> +		handler = handle_edge_irq;
+>  		break;
+>  	case IRQ_TYPE_LEVEL_HIGH:
+>  		level &= ~BIT(bit);
+>  		polarity |= BIT(bit);
+> +		handler = handle_level_irq;
+>  		break;
+>  	case IRQ_TYPE_LEVEL_LOW:
+>  		level &= ~BIT(bit);
+>  		polarity &= ~BIT(bit);
+> +		handler = handle_level_irq;
+>  		break;
+>  	}
+>  
+> -	irq_setup_alt_chip(d, type);
+> +	irq_set_handler_locked(d, handler);
+
+Can we rather do like other GPIO IRQ chip implementations are doing, i.e.
+instead of repeating same handler in each branch, use one conditional:
+
+	if (type & IRQ_TYPE_LEVEL_MASK) {
+		...
+		irq_set_handler_locked(d, handle_level_irq);
+	} else if (type & IRQ_TYPE_EDGE_BOTH) {
+		...
+		irq_set_handler_locked(d, handle_edge_irq);
+	}
+
+?
+
+...
+
+> +		/*
+> +		 * If more than one IRQ line is specified then try to
+> +		 * initialize the hierarchical interrupts. Otherwise it's
+> +		 * a simple cascaded case with a common IRQ signal.
+> +		 */
+> +		girq->num_parents = pp->irq[1] ? pp->ngpio : 1;
+
+Can it be sparse in the array? (It's actually the main point why I went with
+memchr_inv() instead of doing something like above)
+
+> +		girq->parents = pp->irq;
+> +		girq->parent_handler_data = gpio;
+> +		girq->parent_handler = dwapb_irq_handler;
+
+...
+
++ blank line.
+
+> +		/* This will let us handle the parent IRQ in the driver */
+> +		girq->parents = NULL;
+> +		girq->num_parents = 0;
+> +		girq->parent_handler = NULL;
+
+Shan't we do this before request_irq() call (at least for consistency with the
+rest of the drivers)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
