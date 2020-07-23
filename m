@@ -2,90 +2,89 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8DCC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8815BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5657B20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDE6206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595525429;
+	bh=dUp4zG0Nz7kiYMLma/fD8FPK4Iryj3VrkQhzFLdHfvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=alwOHnLkelmo2IJ71NJUWy+b5nb2wsT6w+R8bGS+VoGwx3xzNoJK3N2qOX8LJCXNs
+	 2q4llmJR+KGBb6d5vYz6Bgvy0scl6SpW+KqGIS7B9guFX3Eyvl1v78AXFcVyEu/JbO
+	 hUzEkWb4lKWE2tTay1CyIqMDr1H6fdtu4t6GsTqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbgGWR3k (ORCPT
+        id S1730120AbgGWRa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:29:40 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56394 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgGWR3i (ORCPT
+        Thu, 23 Jul 2020 13:30:28 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37525 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgGWRa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:29:38 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jyf1z-0001YW-VR; Thu, 23 Jul 2020 17:29:20 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        kyounghwan sohn <kyounghwan.sohn@sk.com>,
-        linux-nvme@lists.infradead.org (open list:NVM EXPRESS DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] nvme/pci: Prevent SK hynix PC400 from using Write Zeroes command
-Date:   Fri, 24 Jul 2020 01:29:10 +0800
-Message-Id: <20200723172910.28350-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200723155731.22313-1-kai.heng.feng@canonical.com>
-References: <20200723155731.22313-1-kai.heng.feng@canonical.com>
+        Thu, 23 Jul 2020 13:30:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id v6so7111968iob.4;
+        Thu, 23 Jul 2020 10:30:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qgUaFDrHbOILyfqT+XXpYvQaYA8JAqXoyvym0M5OCNc=;
+        b=lTTSOLRSWeNSOzLU87DcFVywQARtrW28cCuG4swx3tYIw8uwTXAvSipWjr1uTBnGyd
+         BapKRf/jwoKxMHOgqnm6SuoDyhccP4yRS/IR7MP4p5h6YKb4zi3m6ZsNT60imV943b2Y
+         0fm0tsrXul1DBNC8omdt/5YOjVK5bTFCrGgI//bjuADLQkZbGSVTcNgOlb8yKuw+Et4+
+         toMdF9IQbCG/vLGQwSYWBL0SLBNt059t5L3MTpm/lVtSB85hI4KpXQwhSacxh6u6Ni6x
+         73zTtBSDL4NffkPTPJ4o4+8IpiC8nSxiQymjSdJpfPggJTQcdVrbCzV2M0p95ZAemkvp
+         jwww==
+X-Gm-Message-State: AOAM531v1t5Pi0ttcgehxKq/kBQPcBUnCQwK7FoL56JuWg1VmmtjksLb
+        tAGuAmEtdgu8Xyctue/Z8Q==
+X-Google-Smtp-Source: ABdhPJylOwNpPwC+R0uyMF+5XIFQygM3Vz+mhnN0DmIy3sNnVPVLqRvYsz6VE1ZOGHEXx8RYit1RbQ==
+X-Received: by 2002:a5e:c607:: with SMTP id f7mr5920403iok.2.1595525426683;
+        Thu, 23 Jul 2020 10:30:26 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d125sm1780712iof.32.2020.07.23.10.30.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 10:30:25 -0700 (PDT)
+Received: (nullmailer pid 572932 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:30:24 -0000
+Date:   Thu, 23 Jul 2020 11:30:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, mka@chromium.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        agross@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+Message-ID: <20200723173024.GA572877@bogus>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-2-git-send-email-rnayak@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595503612-2901-2-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 6e02318eaea5 ("nvme: add support for the Write Zeroes
-command"), SK hynix PC400 becomes very slow with the following error
-message:
-[  224.567695] blk_update_request: operation not supported error, dev nvme1n1, sector 499384320 op 0x9:(WRITE_ZEROES) flags 0x1000000 phys_seg 0 prio class 0]
+On Thu, 23 Jul 2020 16:56:48 +0530, Rajendra Nayak wrote:
+> Venus needs to vote for the performance state of a power domain (cx)
+> to be able to support DVFS. This 'cx' power domain is controlled by
+> rpmh and is a common power domain (scalable) not specific to
+> venus alone. This is optional in the sense that, leaving this power
+> domain out does not really impact the functionality but just makes
+> the platform a little less power efficient.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+>  Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
 
-SK Hynix PC400 has a buggy firmware that treats NLB as max value instead
-of a range, so the NLB passed isn't a valid value to the firmware.
-
-According to SK hynix there are three commands are affected:
-- Write Zeroes
-- Compare
-- Write Uncorrectable
-
-Right now only Write Zeroes is implemented, so disable it completely on
-SK hynix PC400.
-
-BugLink: https://bugs.launchpad.net/bugs/1872383
-Cc: kyounghwan sohn <kyounghwan.sohn@sk.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
-- Simply disable Write Zeroes command.
-
-v2:
-- SK hynix found the root cause so change the approach accordingly.
-- lspci is wrong, the device is PC400 instead of SC300.
-
- drivers/nvme/host/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index b1d18f0633c7..25a187e43dbe 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3122,6 +3122,8 @@ static const struct pci_device_id nvme_id_table[] = {
- 	{ PCI_DEVICE(0x1cc1, 0x8201),   /* ADATA SX8200PNP 512GB */
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
- 				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
-+	{ PCI_DEVICE(0x1c5c, 0x1504),   /* SK Hynix PC400 */
-+		.driver_data = NVME_QUIRK_DISABLE_WRITE_ZEROES, },
- 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001),
- 		.driver_data = NVME_QUIRK_SINGLE_VECTOR },
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
