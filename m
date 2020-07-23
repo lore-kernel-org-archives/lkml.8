@@ -2,124 +2,137 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B860EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95BEE22D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C2722CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgGWJKA (ORCPT
+        id S1728362AbgGWJKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 23 Jul 2020 05:10:00 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:46671 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgGWJJ7 (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgGWJJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 05:09:59 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mtxxk-1koJRZ1Voy-00uLNN; Thu, 23 Jul 2020 11:09:57 +0200
-Received: by mail-qk1-f171.google.com with SMTP id g26so4687610qka.3;
-        Thu, 23 Jul 2020 02:09:56 -0700 (PDT)
-X-Gm-Message-State: AOAM530omc8Oz6Yi4PihOQH1LosDiWWxnLRf+3bZHmfqi1ZM1M+hMLi1
-        y3ZICop3xN44lR56DrFg7BvixM1H2WPMyveC+5k=
-X-Google-Smtp-Source: ABdhPJxSTa5cKHst3O4qitCaV1YQ0tX+BRjglSXj/Cu27GhpJg8d0OcwDlaZbCo1S43Lb3m3S4DuPLbxybObeRblrbk=
-X-Received: by 2002:a05:620a:2444:: with SMTP id h4mr4289080qkn.352.1595495396053;
- Thu, 23 Jul 2020 02:09:56 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N91AiD072688;
+        Thu, 23 Jul 2020 05:09:33 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32f6wbs6ww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 05:09:33 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N91QBM074615;
+        Thu, 23 Jul 2020 05:09:32 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32f6wbs6w7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 05:09:32 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N9642t022181;
+        Thu, 23 Jul 2020 09:09:30 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 32brbh5vs4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 09:09:30 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N99QQb66322810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 09:09:26 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79B744C058;
+        Thu, 23 Jul 2020 09:09:26 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 458554C040;
+        Thu, 23 Jul 2020 09:09:20 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.40.160])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Jul 2020 09:09:19 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     ravi.bangoria@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
+        fweisbec@gmail.com, mingo@kernel.org, pedromfc@br.ibm.com,
+        miltonm@us.ibm.com, jniethe5@gmail.com, rogealve@br.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 09/10] powerpc/watchpoint: Return available watchpoints dynamically
+Date:   Thu, 23 Jul 2020 14:38:12 +0530
+Message-Id: <20200723090813.303838-10-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200723090813.303838-1-ravi.bangoria@linux.ibm.com>
+References: <20200723090813.303838-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200723073744.13400-1-krzk@kernel.org> <20200723073744.13400-20-krzk@kernel.org>
-In-Reply-To: <20200723073744.13400-20-krzk@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 23 Jul 2020 11:09:40 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3emZd=Tz5JhxevkX3OJMMEn_2Nb+_LQtGZJ9-GWNpd2g@mail.gmail.com>
-Message-ID: <CAK8P3a3emZd=Tz5JhxevkX3OJMMEn_2Nb+_LQtGZJ9-GWNpd2g@mail.gmail.com>
-Subject: Re: [PATCH 19/23] memory: omap-gpmc: Enclose macro statements in do-while
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:6ny/DMVML+SjQTHts0giPpRaNRrIMYvQPhgbmdntf1OZguwvdCX
- vbPiQ4ua46OMxvOFU1TQtVvBVMx83uLWBBfp0ND0CXPeuVe8DGY6dsj+iOtp+VwzatW5BFu
- l6jrCGtYURRy+W6tp5P68xgWhtRtk9A+ngZzNX2KCsW70rbk+VJJ/H8oW7iUf1m4Ty1VSUK
- l2OAF0zc7VV4vOlM8cXHw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D1CFpvprRZ4=:8bS1votwphA7KsYZmwPjLh
- 4Re0l7bP/t52NnZCCJerBYW01ImZ6WkkBguLiyYWsNeUqmoUsWH6hguvPtsArXPyCTtQ42aOd
- WGj8Msf7iTMkKE9JOoWNRY/BW5zft7d3GhHimjuwn1Qsw/16oJCXIQvWsLI2QXAhAEdOUzyPQ
- JJK9ReAA+ttA47yw0xmzszJrKovR7i8WmtjUyikxjKOmmkD0kfdylxDuAJ8L/7KkarNRA4QE3
- 51KZxocyKREIXyQ4y6PfJT8uL0f+3DHeM2QfcV4BukrI9bjzsBGBvFWUwc5NVrtody9s4g2SS
- xGCCIftj0kW1WQtCrOPpbMBd2kwo3/JVJNOi6USqBV0hxuMD2u/6g3aBEFlR6nNY5dBClZZfQ
- S1idCWrl8e/cs+d9gF5/QFkJovGL7x6OzgqZAxfyr0QnqV3r7wCuFz7mZwJNQ+aN1HHxDAKs1
- AG9uHpy4zKTFAisptWPNAfCqYg3Lxu7EAo80fJmt58SSIPIiMcd0936/HFVu2mTczY0+XJLOC
- nYtVgctWUXRnrVOt4XQGiFpCELUX0F9xld4gf2qpEXXEzTXSiz5KhOIvqMt8X68+0ovj7GRx8
- wR7DHtrbZHlYj0EdHSv6JtZ6TFXaNBL8ThvPM9ygLXIkVgyD5kJ43PC1I7N7umuEadwaQLcIA
- KnJXUAuIhR2zL0hJeSflGgcBEda/iTKfepDBLQQfVaPPhIHVhB9J51rL7pZqypgS6Uv4McN2l
- Gu2fyx7VDryA15wpqdcBzEOg8lRSVVh9pXCyU+j5GMCGEHSRmusCuiDh1MI8U+X9HDbjnpkGC
- K0g4mGqgEbh4NdR9SjKS4rAvbU0n9zBgyBq3yZ7wqexxyWiHYCljS2fk4SDuT9i3iy9gxgf/O
- NLvYIhAUAocAUQkgTyIyL0t9SEe5uudBDFwA8bBF7ZnHPp9I4RphdYSc9BFuOQSfI4zCoAyZX
- enW34kEJ2OjpJRIpHaCZ/q1/duw7Q5paZpMHTVSQO2ORgBMdrr68r
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ adultscore=0 impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> do-while is a preferred way for complex macros because of safety
-> reasons.  This fixes checkpatch error:
->
->     ERROR: Macros starting with if should be enclosed by a do - while
->         loop to avoid possible if/else logic defects
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+So far Book3S Powerpc supported only one watchpoint. Power10 is
+introducing 2nd DAWR. Enable 2nd DAWR support for Power10.
+Availability of 2nd DAWR will depend on CPU_FTR_DAWR1.
 
-This is an improvement, but the macro still has other issues that
-are just as bad as the one you address:
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ arch/powerpc/include/asm/cputable.h      | 5 +++--
+ arch/powerpc/include/asm/hw_breakpoint.h | 4 +++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-- Using the # operator to avoid the "" in the invocation seems confusing
-- it implicitly uses the 'cs' and 't' variables of the calling function instead
-  of passing them as arguments.
-- it calls 'return -1' in a function that otherwise uses errno-style
-  return codes, so this gets interpreted as EPERM "Operation not
-  permitted".
+diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
+index 5583f2d08df7..fa1232c33ab9 100644
+--- a/arch/powerpc/include/asm/cputable.h
++++ b/arch/powerpc/include/asm/cputable.h
+@@ -629,9 +629,10 @@ enum {
+ 
+ /*
+  * Maximum number of hw breakpoint supported on powerpc. Number of
+- * breakpoints supported by actual hw might be less than this.
++ * breakpoints supported by actual hw might be less than this, which
++ * is decided at run time in nr_wp_slots().
+  */
+-#define HBP_NUM_MAX	1
++#define HBP_NUM_MAX	2
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
+diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+index cb424799da0d..c89250b6ac34 100644
+--- a/arch/powerpc/include/asm/hw_breakpoint.h
++++ b/arch/powerpc/include/asm/hw_breakpoint.h
+@@ -9,6 +9,8 @@
+ #ifndef _PPC_BOOK3S_64_HW_BREAKPOINT_H
+ #define _PPC_BOOK3S_64_HW_BREAKPOINT_H
+ 
++#include <asm/cpu_has_feature.h>
++
+ #ifdef	__KERNEL__
+ struct arch_hw_breakpoint {
+ 	unsigned long	address;
+@@ -46,7 +48,7 @@ struct arch_hw_breakpoint {
+ 
+ static inline int nr_wp_slots(void)
+ {
+-	return HBP_NUM_MAX;
++	return cpu_has_feature(CPU_FTR_DAWR1) ? 2 : 1;
+ }
+ 
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+-- 
+2.26.2
 
-I would probably just open-code the entire thing and remove the
-macro like:
-
-ret = 0;
-ret |= set_gpmc_timing_reg(cs, GPMC_CS_CONFIG2,  0,  3, 0, t->cs_on,
-GPMC_CD_FCLK, "cs_on");
-ret |= set_gpmc_timing_reg(cs, GPMC_CS_CONFIG2,  8,  12, 0,
-t->cs_rd_off, GPMC_CD_FCLK, "cs_rd_off");
-ret |= set_gpmc_timing_reg(cs, GPMC_CS_CONFIG2,  16,  20, 0,
-t->cs_wr_off, GPMC_CD_FCLK, "cs_wr_off);
-...
-if (ret)
-     return -ENXIO;
-
-Of maybe leave the macro, but remove the if/return part and use
-the "ret |= GPMC_SET_ONE(...)" trick to avoid some of the problems.
-
-      Arnd
