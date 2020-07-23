@@ -2,104 +2,179 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A693C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BFBC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6677D207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9CE207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YmkS7Vh4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="PKy1IOIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgGWNkN (ORCPT
+        id S1729390AbgGWNjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgGWNkL (ORCPT
+        Thu, 23 Jul 2020 09:39:53 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:41579 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGWNjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:40:11 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69573C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:40:10 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so6363517ljn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0eegOArgjvO8rP9syB7xmG1tp8kx/F1yrwr3UNCLFEo=;
-        b=YmkS7Vh4mwIp+nMV18OSIk4pf7op1uBA2TkP/ke9aZMe7v2Bo7c53f8FLIkodKBdkZ
-         3tcKEQi0+gDlUUl6vIQfXe03avSwX4r0Z1Ho/SNeJNDr1nD0OrRzHWUx+4BhS+I6jcdg
-         PkIxlP6R205v6/wCBRBgA1UQXA+bfQNPfyTHXkoXZdJMDZndAQuu9LozLyTLHGrkOoSM
-         hLP3AYgQ28AzXbEjtCVD2jjKbdtrN15cBQPjVqD2FsThQgoX97pHT/KgLCCR8DY+hKF4
-         3UhsPZi4/CGdI+2Sif+O3/1rXFoDXnFmZXbwW+b2GUh/JSOY/T92UI03ODBXOAU4kJEI
-         5yFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0eegOArgjvO8rP9syB7xmG1tp8kx/F1yrwr3UNCLFEo=;
-        b=dyujz80FUiRGOP1/ryTmCHfiRN2xsB4vPkoKD9KjyXTegkChyDD+fT7eG49XmoAJhN
-         Vl19Hgvo3bbov50FGt8rZo5EIEYHLbcHolBR/zZIPgLeAfypF1kU/Txw/JEosZDhrD+N
-         ObjVauzv4d77MLwnOYt09/hTR865vpuAtfptewQLfKq95j84q6dX5qvkv5WaW5ny4Sqw
-         TpDyQfwt0HreW4+HB/qNZIG98+BQOoNjWyXicyd5h240RYVfbqrV5zMOlP6Fosn2V7iK
-         swbu+YPrx/3UTkiokqySz0rLNxE/QvPr/aF8n90fzIP+6PbDTfCDBlkb/HqEepwqa+Zn
-         8RwQ==
-X-Gm-Message-State: AOAM532PWJ3n5Aoz+FMo0+t+TBABNC3Q+ie5xXldkEPZweO8SQM2MpJr
-        F7Z09sylrwf/J2Jgv8dP/dnPqIT075kGlOQYJo6dEA==
-X-Google-Smtp-Source: ABdhPJzkhTQiz4v4EweObFS3VjvRBHaK+7cqyFcfiqMUdnGJXvj0jmfVgVQamNi7423328Gef8C+2ZKNdMl7Uo351Ro=
-X-Received: by 2002:a2e:8597:: with SMTP id b23mr1865085lji.338.1595511608925;
- Thu, 23 Jul 2020 06:40:08 -0700 (PDT)
+        Thu, 23 Jul 2020 09:39:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1595511593;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=SPySEjUBF6icBOLV/IomyE/JZa+kTbam/2Y6LYZ1gk4=;
+  b=PKy1IOIL2sIAr5fyUXxRzB8PZBUy5yDAsYPWPW9QJW/e4OQGHhSJuKQ2
+   KBxaAZ8hxrc6vobOpRPkcizB+Db4x+sMiDBTkzCFrJBXE7Wqs3MzTK4I4
+   Swd9nHHKToechJxBylPiLJPEqR6uqHlN/gFzcDv+UlLmRPrXJuOBCC/6v
+   o=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: gC5NREPQG9nd67j1J33rwfTdriPTr6ltn3xqL6NDbB05O6F5teQ1n0VfuWFZIocFW0HPSBnMhp
+ Y3AkadLKuX5GHB6lXFzUjoY8mWfARLA3wo89xLy28bpq0ZpOjtTfM6Z31iif8gGHWxF9Plv8cy
+ lLawOTf2kPVUTbahVLvJ2ev0fP6KPvwLLfWkXiupcpZq9kfiZy5s8GImGeE7nXiaGVzhL5KoTB
+ k0WwwMKtT43wX/Mtj9uBSx87QwZ7lALeN1Svj0BnISrs76OosK8MsmSJrxp7cUYbfdlvngV48W
+ R6g=
+X-SBRS: 2.7
+X-MesageID: 23038656
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.75,386,1589256000"; 
+   d="scan'208";a="23038656"
+Date:   Thu, 23 Jul 2020 15:39:45 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+CC:     David Hildenbrand <david@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>
+Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
+ hotplug memory
+Message-ID: <20200723133945.GG7191@Air-de-Roger>
+References: <20200723084523.42109-1-roger.pau@citrix.com>
+ <20200723084523.42109-4-roger.pau@citrix.com>
+ <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
+ <20200723122300.GD7191@Air-de-Roger>
+ <404ea76f-c3d8-dbc5-432d-08d84a17f2d7@suse.com>
+ <20200723130831.GE7191@Air-de-Roger>
+ <76640b3e-f46c-80d5-7714-aa3b731276ab@suse.com>
 MIME-Version: 1.0
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru> <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jul 2020 15:17:08 +0200
-Message-ID: <CACRpkdZO242FC=O8nAXjKX=9VRpkkQdMA6S0L2ZWNX9D1hmcYw@mail.gmail.com>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76640b3e-f46c-80d5-7714-aa3b731276ab@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge,
+On Thu, Jul 23, 2020 at 03:20:55PM +0200, Jürgen Groß wrote:
+> On 23.07.20 15:08, Roger Pau Monné wrote:
+> > On Thu, Jul 23, 2020 at 02:28:13PM +0200, Jürgen Groß wrote:
+> > > On 23.07.20 14:23, Roger Pau Monné wrote:
+> > > > On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
+> > > > > On 23.07.20 10:45, Roger Pau Monne wrote:
+> > > > > > Add an extra option to add_memory_resource that overrides the memory
+> > > > > > hotplug online behavior in order to force onlining of memory from
+> > > > > > add_memory_resource unconditionally.
+> > > > > > 
+> > > > > > This is required for the Xen balloon driver, that must run the
+> > > > > > online page callback in order to correctly process the newly added
+> > > > > > memory region, note this is an unpopulated region that is used by Linux
+> > > > > > to either hotplug RAM or to map foreign pages from other domains, and
+> > > > > > hence memory hotplug when running on Xen can be used even without the
+> > > > > > user explicitly requesting it, as part of the normal operations of the
+> > > > > > OS when attempting to map memory from a different domain.
+> > > > > > 
+> > > > > > Setting a different default value of memhp_default_online_type when
+> > > > > > attaching the balloon driver is not a robust solution, as the user (or
+> > > > > > distro init scripts) could still change it and thus break the Xen
+> > > > > > balloon driver.
+> > > > > 
+> > > > > I think we discussed this a couple of times before (even triggered by my
+> > > > > request), and this is responsibility of user space to configure. Usually
+> > > > > distros have udev rules to online memory automatically. Especially, user
+> > > > > space should eb able to configure *how* to online memory.
+> > > > 
+> > > > Note (as per the commit message) that in the specific case I'm
+> > > > referring to the memory hotplugged by the Xen balloon driver will be
+> > > > an unpopulated range to be used internally by certain Xen subsystems,
+> > > > like the xen-blkback or the privcmd drivers. The addition of such
+> > > > blocks of (unpopulated) memory can happen without the user explicitly
+> > > > requesting it, and hence not even aware such hotplug process is taking
+> > > > place. To be clear: no actual RAM will be added to the system.
+> > > > 
+> > > > Failure to online such blocks using the Xen specific online handler
+> > > > (which does not handle back the memory to the allocator in any way)
+> > > > will result in the system getting stuck and malfunctioning.
+> > > > 
+> > > > > It's the admin/distro responsibility to configure this properly. In case
+> > > > > this doesn't happen (or as you say, users change it), bad luck.
+> > > > > 
+> > > > > E.g., virtio-mem takes care to not add more memory in case it is not
+> > > > > getting onlined. I remember hyper-v has similar code to at least wait a
+> > > > > bit for memory to get onlined.
+> > > > 
+> > > > I don't think VirtIO or Hyper-V use the hotplug system in the same way
+> > > > as Xen, as said this is done to add unpopulated memory regions that
+> > > > will be used to map foreign memory (from other domains) by Xen drivers
+> > > > on the system.
+> > > > 
+> > > > Maybe this should somehow use a different mechanism to hotplug such
+> > > > empty memory blocks? I don't mind doing this differently, but I would
+> > > > need some pointers. Allowing user-space to change a (seemingly
+> > > > unrelated) parameter and as a result produce failures on Xen drivers
+> > > > is not an acceptable solution IMO.
+> > > 
+> > > Maybe we can use the same approach as Xen PV-domains: pre-allocate a
+> > > region in the memory map to be used for mapping foreign pages. For the
+> > > kernel it will look like pre-ballooned memory, so it will create struct
+> > > page for the region (which is what we are after), but it won't give the
+> > > memory to the allocator.
+> > 
+> > IMO using something similar to memory hotplug would give us more
+> > flexibility, and TBH the logic is already there in the balloon driver.
+> > It seems quite wasteful to allocate such region(s) beforehand for all
+> > domains, even when most of them won't end up using foreign mappings at
+> > all.
+> 
+> We can do it for dom0 only per default, and add a boot parameter e.g.
+> for driver domains.
+> 
+> And the logic is already there (just pv-only right now).
+> 
+> > 
+> > Anyway, I'm going to take a look at how to do that, I guess it's going
+> > to involve playing with the memory map and reserving some space.
+> 
+> Look at arch/x86/xen/setup.c (xen_add_extra_mem() and its usage).
 
-On Thu, Jul 23, 2020 at 3:39 AM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
+Yes, I've taken a look. It's my rough understanding that I would need
+to add a hook for HVM/PVH that modifies the memory map in order to add
+an extra region (or regions) that would be marked as reserved using
+memblock_reserve by xen_add_extra_mem.
 
-> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> top of a GPIO chip. It's better from maintainability and readability
-> point of view to use one instead of supporting a hand-written Generic
-> IRQ-chip-based implementation. Moreover the new implementation won't
-> cause much functional overhead but will provide a cleaner driver code.
-> All of that makes the DW APB GPIO driver conversion pretty much justified
-> especially seeing a tendency of the other GPIO drivers getting converted
-> too.
+Adding such hook for PVH guests booted using the PVH entry point and
+fetching the memory map using the hypercall interface
+(mem_map_via_hcall) seems feasible, however I'm not sure dealing with
+other guests types is that easy.
 
-Needless to say I am a big fan of this patch. It's what I wanted to
-do with the driver but was afraid to dry-code.
+> > 
+> > I suggest we should remove the Xen balloon hotplug logic, as it's not
+> > working properly and we don't have a plan to fix it.
+> 
+> I have used memory hotplug successfully not very long ago.
 
-Please look into the minor nits pointed out by Andy and respin,
-I really want to apply this patch set.
+Right, but it requires a certain set of enabled options, which IMO is
+not obvious. For example enabling xen_hotplug_unpopulated without also
+setting the default memory hotplug policy to online the added blocks
+will result in processes getting stuck. This is IMO too fragile.
 
-Thanks,
-Linus Walleij
+Roger.
