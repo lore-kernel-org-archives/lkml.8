@@ -2,70 +2,166 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971D4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2550C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7575E207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595537706;
-	bh=l+Tzk2koYg96Wo1mDSQbKykcCnYS8KhqJ6Ypx5XvssY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ykOMDdRjwSjPuAT0BXhcIvDmnTAuNvkoZLOsS8VL3ml7I8JeFOLzwTy4oWKpJZzU1
-	 RRJrQxGaq7p8MbDyZDSwIPHNmcpBe2ii/Eqs/Hl0fKm9K8Y4xlfcdH4Ttt6VJI4JwZ
-	 TjcrWwCHnMCixVqQ58SrlcZSz3s5hK52mdLjKc6M=
+	by mail.kernel.org (Postfix) with ESMTP id ADE9D20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PXTfv7AN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgGWUzF (ORCPT
+        id S1728227AbgGWUzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgGWUzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:55:04 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.8-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595537703;
-        bh=l+Tzk2koYg96Wo1mDSQbKykcCnYS8KhqJ6Ypx5XvssY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WAy146blJHHWb4XeWaokbIGHGOuD6sVHoq1YnHYmYgvoc374IfP+G0bZvb+IiqA0s
-         rdliXvF8DaIRpQzVBd/1zo3lD2J2uyJkFSGj4QLRzUsadj3TZgmbEKWGcTVfHNLAy1
-         cr2hCxBN8eY2c9Q7wisjEdqaXwlcVMAE8H4hdm5M=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200723192643.GA7038@osiris>
-References: <20200723192643.GA7038@osiris>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200723192643.GA7038@osiris>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-6
-X-PR-Tracked-Commit-Id: 0cfa112b33aba4473b00151c75b87818a835702a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f37e99aca03f63aa3f2bd13ceaf769455d12c4b0
-Message-Id: <159553770371.17202.7792268161901478887.pr-tracker-bot@kernel.org>
-Date:   Thu, 23 Jul 2020 20:55:03 +0000
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        Thu, 23 Jul 2020 16:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgGWUzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:55:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD423C0619D3;
+        Thu, 23 Jul 2020 13:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=ICBX86+Lkkci6Ue+B7VowL4TPQylTLlU+8rjSgsn/kY=; b=PXTfv7ANvy94gKr5OC2zsWn/nz
+        i3vfvhKgL0r99ZON2G7T9JuyG6hp+D7SaO4uHupQV/jZRDdUs3jiKiALhhPXE9kOvbSJOOHRtFRj2
+        WA1dy4PcFiEgIpjkKiTwq8X3A4Ob09hCWySRByy+HGaFBHhhzefDJRLOXjMdVulhuFAIhwqRTwA6L
+        0oZDBTtSmj0lU2JewPsGFRLexOeKXW7RKsoyiWTGFMmEVkM/vxwYDhL36tMUDXFSHy4A5dy41IcQS
+        5EYweiIy2x8N85dmapjSvH7QoSjE/icilxuyiZQhmJDdrlCrs7tzavF85LR4SX7dMqcBBXxQBtojP
+        /cVSq9cg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyiF9-00043b-9A; Thu, 23 Jul 2020 20:55:08 +0000
+Subject: Re: [PATCH V17 3/3] Input: new da7280 haptic driver
+To:     Roy Im <roy.im.opensource@diasemi.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+References: <cover.1595516501.git.Roy.Im@diasemi.com>
+ <c13d812871b7f09205c1f04e95f5bdf07f307eaf.1595516501.git.Roy.Im@diasemi.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ad4f8a07-9e78-ce97-021f-094210d99a3c@infradead.org>
+Date:   Thu, 23 Jul 2020 13:55:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <c13d812871b7f09205c1f04e95f5bdf07f307eaf.1595516501.git.Roy.Im@diasemi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 23 Jul 2020 21:26:43 +0200:
+On 7/23/20 8:01 AM, Roy Im wrote:
+> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
+> multiple mode and integrated waveform memory and wideband support.
+> It communicates via an I2C bus to the device.
+> 
+> Reviewed-by: Jes Sorensen <Jes.Sorensen@gmail.com>.
+> 
+> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> 
+> ---
+> 
+> 
+>  drivers/input/misc/Kconfig  |   13 +
+>  drivers/input/misc/Makefile |    1 +
+>  drivers/input/misc/da7280.c | 1840 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1854 insertions(+)
+>  create mode 100644 drivers/input/misc/da7280.c
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-6
+> diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
+> new file mode 100644
+> index 0000000..6e3ead5
+> --- /dev/null
+> +++ b/drivers/input/misc/da7280.c
+> @@ -0,0 +1,1840 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * DA7280 Haptic device driver
+> + *
+> + * Copyright (c) 2020 Dialog Semiconductor.
+> + * Author: Roy Im <Roy.Im.Opensource@diasemi.com>
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/bitops.h>
+> +#include <linux/bitfield.h>
+> +
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f37e99aca03f63aa3f2bd13ceaf769455d12c4b0
+...
 
-Thank you!
 
+> +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool enabled)
+> +{
+> +	struct pwm_state state;
+> +	u64 period_mag_multi;
+> +	int error;
+> +
+> +	if (!haptics->gain && enabled) {
+> +		dev_err(haptics->dev,
+> +			"Please set the gain first for the pwm mode\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pwm_get_state(haptics->pwm_dev, &state);
+> +	state.enabled = enabled;
+> +	if (enabled) {
+> +		period_mag_multi = (u64)state.period * haptics->gain;
+> +		period_mag_multi >>= MAX_MAGNITUDE_SHIFT;
+> +
+> +		/* The interpretation of duty cycle depends on the acc_en,
+> +		 * it should be between 50% and 100% for acc_en = 0.
+> +		 * See datasheet 'PWM mode' section.
+> +		 */
+
+from coding-style.rst:
+
+	/*
+	 * This is the preferred style for multi-line
+	 * comments in the Linux kernel source code.
+	 * Please use it consistently.
+	 *
+	 * Description:  A column of asterisks on the left side,
+	 * with beginning and ending almost-blank lines.
+	 */
+
+(except for networking code)
+
+Please fix multiple locations.
+
+
+thanks.
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+~Randy
+
