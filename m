@@ -2,87 +2,181 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4117C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D5AC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE7B52080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810C720825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="c0Fsw8o9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AHWMVgl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgGWGEk (ORCPT
+        id S1726710AbgGWGJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:04:40 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:23623 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725536AbgGWGEk (ORCPT
+        Thu, 23 Jul 2020 02:09:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgGWGJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:04:40 -0400
-X-UUID: 04843e8a70dc46968d560848381cdb10-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=iZ9yK+S9kB96ZqeDW7h02ziiSCDTyDczQRrti5SX7zw=;
-        b=c0Fsw8o9Y0LitexrQ6u+NAbfciXPCIQX5XkggI8FYKFGoHi8AbUUdIwAOxjySwXhw5FrTgv3bakJNJ2kChDblIOfiz37jVs4j1he+7eUf8Uogwlj5w7Z0BtwC2Ai5AhM2BUPYbyoGw89cPZgeAoXD5UJd8YdHEP58Hx9WhJEb0s=;
-X-UUID: 04843e8a70dc46968d560848381cdb10-20200723
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 760264497; Thu, 23 Jul 2020 14:04:34 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul
- 2020 14:04:34 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 14:04:33 +0800
-Message-ID: <1595484205.16079.28.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/4] i2c: mediatek: Support DMA mask range over 33-bits
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
-CC:     <wsa@the-dreams.de>, <qiangming.xia@mediatek.com>,
-        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <leilk.liu@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 23 Jul 2020 14:03:25 +0800
-In-Reply-To: <1595467461.7332.3.camel@mtksdaap41>
-References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
-         <1595421106-10017-3-git-send-email-qii.wang@mediatek.com>
-         <1595467461.7332.3.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 23 Jul 2020 02:09:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31CEC0619E3;
+        Wed, 22 Jul 2020 23:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=jnNftkdWuHutn0l5/V2Gz6Qvt1s8tXbdDMQLxkwuHBo=; b=AHWMVgl+gZI3ppeRUJG22CnuN2
+        mXsqGUtHr7hHIshIeM0BR3FDFu7P8hUJdDKWEDjaeFBPFzHAKS1/J2NqqrgVWAiWy0PDBIJV6MaAk
+        gPot77jPYt8McodlLqHe4rYj1xwXIh3dwL7d5dP2a47D69tnzjzBjxRqbyL4qtqPcLy6LsSPLTz8/
+        YOabKmimQamGM4cxDNfekHWNUuwVnDebo84hbzn4arDbH1CmgtyNxmN2OFQxyAhRHpoT37cldfrc6
+        Ax/DteamlOzerpb/bK5cMQkwL7vWGfqduGUdI9Ez5lzvt3eBZC1+o7Ayqr6UYOa2Jd5AGGDGAZ45S
+        4D3R2EfQ==;
+Received: from [2001:4bb8:18c:2acc:91df:aae8:fa3b:de9c] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyUPo-0003jj-5f; Thu, 23 Jul 2020 06:09:12 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: [PATCH 02/26] net/bpfilter: split __bpfilter_process_sockopt
+Date:   Thu, 23 Jul 2020 08:08:44 +0200
+Message-Id: <20200723060908.50081-3-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200723060908.50081-1-hch@lst.de>
+References: <20200723060908.50081-1-hch@lst.de>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 0187662DA839AB3AB988161E5738441024327E1EEDC636DD4CFA77ABBB887D0E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTIzIGF0IDA5OjI0ICswODAwLCBZaW5nam9lIENoZW4gd3JvdGU6DQo+
-IE9uIFdlZCwgMjAyMC0wNy0yMiBhdCAyMDozMSArMDgwMCwgUWlpIFdhbmcgd3JvdGU6DQo+ID4g
-UmVwbGFjZSAnc3VwcG9ydF8zM2JpdHMgd2l0aCAnZG1hX21heF9zdXBwb3J0JyBmb3IgRE1BIG1h
-c2sNCj4gPiBvcGVyYXRpb24sIGFuZCByZXBsYWNlICdtdGtfaTJjX3NldF80Z19tb2RlJyB3aXRo
-ICd1cHBlcl8zMl9iaXRzJy4NCj4gDQo+IFRoaXMgZG9lc24ndCBleHBsYWluIHdoeSB3ZSBuZWVk
-IHRoaXMgcGF0Y2guIEhvdyBhYm91dDoNCj4gDQo+IE5ld2VyIE1USyBjaGlwIHN1cHBvcnQgbW9y
-ZSB0aGFuIDhHQiBvZiBkcmFtLiBSZXBsYWNlIHN1cHBvcnRfMzNiaXRzDQo+IHdpdGggbW9yZSBn
-ZW5lcmFsIGRtYV9tYXhfc3VwcG9ydC4NCj4gDQoNCm9rLCBUaGFua3MgZm9yIHlvdXIgY29tbWVu
-dHMuDQoNCj4gDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcgPHFpaS53YW5nQG1l
-ZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHgu
-YyB8IDM3ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIGIvZHJpdmVycy9pMmMv
-YnVzc2VzL2kyYy1tdDY1eHguYw0KPiA+IGluZGV4IGU2Yjk4NGEuLmU0NzU4NzcgMTAwNjQ0DQo+
-ID4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiA+ICsrKyBiL2RyaXZl
-cnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gPiBAQCAtMjA5LDYgKzIwOSw3IEBAIHN0cnVj
-dCBtdGtfaTJjX2NvbXBhdGlibGUgew0KPiA+ICAJdW5zaWduZWQgY2hhciBkbWFfc3luYzogMTsN
-Cj4gPiAgCXVuc2lnbmVkIGNoYXIgbHRpbWluZ19hZGp1c3Q6IDE7DQo+ID4gIAl1bnNpZ25lZCBj
-aGFyIGFwZG1hX3N5bmM6IDE7DQo+ID4gKwl1bnNpZ25lZCBjaGFyIG1heF9kbWFfc3VwcG9ydDsN
-Cj4gDQo+IHN1cHBvcnRfMzNiaXRzIGlzIG5vIGxvbmdlciB1c2VkLiBQbGVhc2UgcmVtb3ZlIGl0
-Lg0KPiANCj4gSm9lLkMNCj4gDQoNCm9rLg0KDQo+IA0KDQo=
+Split __bpfilter_process_sockopt into a low-level send request routine and
+the actual setsockopt hook to split the init time ping from the actual
+setsockopt processing.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ net/bpfilter/bpfilter_kern.c | 51 +++++++++++++++++++-----------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
+
+diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
+index 3bac5820062af1..78d561f2c54da7 100644
+--- a/net/bpfilter/bpfilter_kern.c
++++ b/net/bpfilter/bpfilter_kern.c
+@@ -31,48 +31,51 @@ static void __stop_umh(void)
+ 		shutdown_umh();
+ }
+ 
+-static int __bpfilter_process_sockopt(struct sock *sk, int optname,
+-				      char __user *optval,
+-				      unsigned int optlen, bool is_set)
++static int bpfilter_send_req(struct mbox_request *req)
+ {
+-	struct mbox_request req;
+ 	struct mbox_reply reply;
+ 	loff_t pos;
+ 	ssize_t n;
+-	int ret = -EFAULT;
+ 
+-	req.is_set = is_set;
+-	req.pid = current->pid;
+-	req.cmd = optname;
+-	req.addr = (uintptr_t)optval;
+-	req.len = optlen;
+ 	if (!bpfilter_ops.info.tgid)
+-		goto out;
++		return -EFAULT;
+ 	pos = 0;
+-	n = kernel_write(bpfilter_ops.info.pipe_to_umh, &req, sizeof(req),
++	n = kernel_write(bpfilter_ops.info.pipe_to_umh, req, sizeof(*req),
+ 			   &pos);
+-	if (n != sizeof(req)) {
++	if (n != sizeof(*req)) {
+ 		pr_err("write fail %zd\n", n);
+-		__stop_umh();
+-		ret = -EFAULT;
+-		goto out;
++		goto stop;
+ 	}
+ 	pos = 0;
+ 	n = kernel_read(bpfilter_ops.info.pipe_from_umh, &reply, sizeof(reply),
+ 			&pos);
+ 	if (n != sizeof(reply)) {
+ 		pr_err("read fail %zd\n", n);
+-		__stop_umh();
+-		ret = -EFAULT;
+-		goto out;
++		goto stop;
+ 	}
+-	ret = reply.status;
+-out:
+-	return ret;
++	return reply.status;
++stop:
++	__stop_umh();
++	return -EFAULT;
++}
++
++static int bpfilter_process_sockopt(struct sock *sk, int optname,
++				    char __user *optval, unsigned int optlen,
++				    bool is_set)
++{
++	struct mbox_request req = {
++		.is_set		= is_set,
++		.pid		= current->pid,
++		.cmd		= optname,
++		.addr		= (uintptr_t)optval,
++		.len		= optlen,
++	};
++	return bpfilter_send_req(&req);
+ }
+ 
+ static int start_umh(void)
+ {
++	struct mbox_request req = { .pid = current->pid };
+ 	int err;
+ 
+ 	/* fork usermode process */
+@@ -82,7 +85,7 @@ static int start_umh(void)
+ 	pr_info("Loaded bpfilter_umh pid %d\n", pid_nr(bpfilter_ops.info.tgid));
+ 
+ 	/* health check that usermode process started correctly */
+-	if (__bpfilter_process_sockopt(NULL, 0, NULL, 0, 0) != 0) {
++	if (bpfilter_send_req(&req) != 0) {
+ 		shutdown_umh();
+ 		return -EFAULT;
+ 	}
+@@ -103,7 +106,7 @@ static int __init load_umh(void)
+ 	mutex_lock(&bpfilter_ops.lock);
+ 	err = start_umh();
+ 	if (!err && IS_ENABLED(CONFIG_INET)) {
+-		bpfilter_ops.sockopt = &__bpfilter_process_sockopt;
++		bpfilter_ops.sockopt = &bpfilter_process_sockopt;
+ 		bpfilter_ops.start = &start_umh;
+ 	}
+ 	mutex_unlock(&bpfilter_ops.lock);
+-- 
+2.27.0
 
