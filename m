@@ -2,69 +2,106 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA49C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB4D6206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50815206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgGWLLO (ORCPT
+        id S1728588AbgGWLQY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:11:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8367 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727769AbgGWLLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:11:14 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A5ED7CC41F5894503DA3;
-        Thu, 23 Jul 2020 19:11:08 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Jul 2020
- 19:10:58 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <sam@mendozajonas.com>, <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net/ncsi: use eth_zero_addr() to clear mac address
-Date:   Thu, 23 Jul 2020 19:13:43 +0800
-Message-ID: <1595502823-9672-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 23 Jul 2020 07:16:24 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:43754 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728412AbgGWLQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:16:23 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mtapsc-1-ViGpBrHmNJOPXyJW7yMjBg-2; Thu, 23 Jul 2020 12:16:19 +0100
+X-MC-Unique: ViGpBrHmNJOPXyJW7yMjBg-2
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 12:16:16 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 Jul 2020 12:16:16 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "Eric Dumazet" <edumazet@google.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: [PATCH 13/26] bpfilter: switch bpfilter_ip_set_sockopt to
+ sockptr_t
+Thread-Topic: [PATCH 13/26] bpfilter: switch bpfilter_ip_set_sockopt to
+ sockptr_t
+Thread-Index: AQHWYOJf8qVR0zowd02v8gaMoEO9+6kVA2RQ
+Date:   Thu, 23 Jul 2020 11:16:16 +0000
+Message-ID: <621e193e4af74d8198ed87d6a9ce8260@AcuMS.aculab.com>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200723060908.50081-14-hch@lst.de>
+In-Reply-To: <20200723060908.50081-14-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Christoph Hellwig
+> Sent: 23 July 2020 07:09
+> 
+> This is mostly to prepare for cleaning up the callers, as bpfilter by
+> design can't handle kernel pointers.
 
-Use eth_zero_addr() to clear mac address insetad of memset().
+You've failed to fix the sense of the above...
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/ncsi/ncsi-rsp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	David
 
-diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
-index a94bb59793f0..5b1f4ec66dd9 100644
---- a/net/ncsi/ncsi-rsp.c
-+++ b/net/ncsi/ncsi-rsp.c
-@@ -471,7 +471,7 @@ static int ncsi_rsp_handler_sma(struct ncsi_request *nr)
- 		memcpy(&ncf->addrs[index], cmd->mac, ETH_ALEN);
- 	} else {
- 		clear_bit(cmd->index - 1, bitmap);
--		memset(&ncf->addrs[index], 0, ETH_ALEN);
-+		eth_zero_addr(&ncf->addrs[index]);
- 	}
- 	spin_unlock_irqrestore(&nc->lock, flags);
- 
--- 
-2.19.1
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
