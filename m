@@ -2,124 +2,161 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFBBC433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0ADC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5FCD207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A10207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgGWNxM (ORCPT
+        id S1728991AbgGWNxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:53:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41402 "EHLO mx2.suse.de"
+        Thu, 23 Jul 2020 09:53:03 -0400
+Received: from smtp.asem.it ([151.1.184.197]:61446 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbgGWNxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:53:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 66E13AB3D;
-        Thu, 23 Jul 2020 13:53:18 +0000 (UTC)
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-To:     David Hildenbrand <david@redhat.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        xen-devel@lists.xenproject.org, linux-mm@kvack.org
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
- <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
- <20200723122300.GD7191@Air-de-Roger>
- <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
- <429c2889-93c2-23b3-ba1e-da56e3a76ba4@redhat.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <de0b17e6-6cb1-211b-bc40-e34f4e1b30d0@suse.com>
-Date:   Thu, 23 Jul 2020 15:53:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728862AbgGWNxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:53:01 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000400764.MSG 
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 15:52:56 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Jul 2020 15:52:55 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 23 Jul 2020 15:52:55 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v2 7/9] intersil: fix wiki website url
+Date:   Thu, 23 Jul 2020 15:52:54 +0200
+Message-ID: <20200723135254.594984-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <429c2889-93c2-23b3-ba1e-da56e3a76ba4@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090210.5F199638.0028,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.07.20 15:47, David Hildenbrand wrote:
-> On 23.07.20 15:22, David Hildenbrand wrote:
->> On 23.07.20 14:23, Roger Pau Monné wrote:
->>> On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
->>>> On 23.07.20 10:45, Roger Pau Monne wrote:
->>>>> Add an extra option to add_memory_resource that overrides the memory
->>>>> hotplug online behavior in order to force onlining of memory from
->>>>> add_memory_resource unconditionally.
->>>>>
->>>>> This is required for the Xen balloon driver, that must run the
->>>>> online page callback in order to correctly process the newly added
->>>>> memory region, note this is an unpopulated region that is used by Linux
->>>>> to either hotplug RAM or to map foreign pages from other domains, and
->>>>> hence memory hotplug when running on Xen can be used even without the
->>>>> user explicitly requesting it, as part of the normal operations of the
->>>>> OS when attempting to map memory from a different domain.
->>>>>
->>>>> Setting a different default value of memhp_default_online_type when
->>>>> attaching the balloon driver is not a robust solution, as the user (or
->>>>> distro init scripts) could still change it and thus break the Xen
->>>>> balloon driver.
->>>>
->>>> I think we discussed this a couple of times before (even triggered by my
->>>> request), and this is responsibility of user space to configure. Usually
->>>> distros have udev rules to online memory automatically. Especially, user
->>>> space should eb able to configure *how* to online memory.
->>>
->>> Note (as per the commit message) that in the specific case I'm
->>> referring to the memory hotplugged by the Xen balloon driver will be
->>> an unpopulated range to be used internally by certain Xen subsystems,
->>> like the xen-blkback or the privcmd drivers. The addition of such
->>> blocks of (unpopulated) memory can happen without the user explicitly
->>> requesting it, and hence not even aware such hotplug process is taking
->>> place. To be clear: no actual RAM will be added to the system.
->>
->> Okay, but there is also the case where XEN will actually hotplug memory
->> using this same handler IIRC (at least I've read papers about it). Both
->> are using the same handler, correct?
->>
->>>
->>>> It's the admin/distro responsibility to configure this properly. In case
->>>> this doesn't happen (or as you say, users change it), bad luck.
->>>>
->>>> E.g., virtio-mem takes care to not add more memory in case it is not
->>>> getting onlined. I remember hyper-v has similar code to at least wait a
->>>> bit for memory to get onlined.
->>>
->>> I don't think VirtIO or Hyper-V use the hotplug system in the same way
->>> as Xen, as said this is done to add unpopulated memory regions that
->>> will be used to map foreign memory (from other domains) by Xen drivers
->>> on the system.
->>
->> Indeed, if the memory is never exposed to the buddy (and all you need is
->> struct pages +  a kernel virtual mapping), I wonder if
->> memremap/ZONE_DEVICE is what you want? Then you won't have user-visible
->> memory blocks created with unclear online semantics, partially involving
->> the buddy.
-> 
-> And just a note that there is also DCSS on s390x / z/VM which allows to
-> map segments into the VM physical address space (e.g., you can share
-> segments between VMs). They don't need any memmap (struct page) for that
-> memory, though. All they do is create the identity mapping in the kernel
-> virtual address space manually. Not sure what the exact requirements on
-> the XEN side are. I assume you need a memmap for this memory.
+In some Intersil files, the wiki url is still the old
+"wireless.kernel.org" instead of the new
+"wireless.wiki.kernel.org"
 
-We need to be able to do I/O with that memory via normal drivers and we
-need to be able to map it, both from user land and from the kernel.
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
 
+v2: the previous version failed to apply:
+    "fatal: corrupt patch at line 97
+     error: could not build fake ancestor"
 
-Juergen
+ drivers/net/wireless/intersil/Kconfig                  | 2 +-
+ drivers/net/wireless/intersil/p54/Kconfig              | 6 +++---
+ drivers/net/wireless/intersil/p54/fwio.c               | 2 +-
+ drivers/net/wireless/intersil/p54/p54usb.c             | 2 +-
+ drivers/net/wireless/intersil/prism54/islpci_hotplug.c | 3 ++-
+ 5 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/intersil/Kconfig b/drivers/net/wireless/intersil/Kconfig
+index 6a6ce9d4aeee..c52d9b535623 100644
+--- a/drivers/net/wireless/intersil/Kconfig
++++ b/drivers/net/wireless/intersil/Kconfig
+@@ -30,7 +30,7 @@ config PRISM54
+ 
+ 	  For more information refer to the p54 wiki:
+ 
+-	  http://wireless.kernel.org/en/users/Drivers/p54
++	  http://wireless.wiki.kernel.org/en/users/Drivers/p54
+ 
+ 	  Note: You need a motherboard with DMA support to use any of these cards
+ 
+diff --git a/drivers/net/wireless/intersil/p54/Kconfig b/drivers/net/wireless/intersil/p54/Kconfig
+index 024be5507daf..003c378ed131 100644
+--- a/drivers/net/wireless/intersil/p54/Kconfig
++++ b/drivers/net/wireless/intersil/p54/Kconfig
+@@ -10,7 +10,7 @@ config P54_COMMON
+ 	  also need to be enabled in order to support any devices.
+ 
+ 	  These devices require softmac firmware which can be found at
+-	  <http://wireless.kernel.org/en/users/Drivers/p54>
++	  <http://wireless.wiki.kernel.org/en/users/Drivers/p54>
+ 
+ 	  If you choose to build a module, it'll be called p54common.
+ 
+@@ -22,7 +22,7 @@ config P54_USB
+ 	  This driver is for USB isl38xx based wireless cards.
+ 
+ 	  These devices require softmac firmware which can be found at
+-	  <http://wireless.kernel.org/en/users/Drivers/p54>
++	  <http://wireless.wiki.kernel.org/en/users/Drivers/p54>
+ 
+ 	  If you choose to build a module, it'll be called p54usb.
+ 
+@@ -36,7 +36,7 @@ config P54_PCI
+ 	  supported by the fullmac driver/firmware.
+ 
+ 	  This driver requires softmac firmware which can be found at
+-	  <http://wireless.kernel.org/en/users/Drivers/p54>
++	  <http://wireless.wiki.kernel.org/en/users/Drivers/p54>
+ 
+ 	  If you choose to build a module, it'll be called p54pci.
+ 
+diff --git a/drivers/net/wireless/intersil/p54/fwio.c b/drivers/net/wireless/intersil/p54/fwio.c
+index a5afcc865196..bece14e4ff0d 100644
+--- a/drivers/net/wireless/intersil/p54/fwio.c
++++ b/drivers/net/wireless/intersil/p54/fwio.c
+@@ -132,7 +132,7 @@ int p54_parse_firmware(struct ieee80211_hw *dev, const struct firmware *fw)
+ 	if (priv->fw_var < 0x500)
+ 		wiphy_info(priv->hw->wiphy,
+ 			   "you are using an obsolete firmware. "
+-			   "visit http://wireless.kernel.org/en/users/Drivers/p54 "
++			   "visit http://wireless.wiki.kernel.org/en/users/Drivers/p54 "
+ 			   "and grab one for \"kernel >= 2.6.28\"!\n");
+ 
+ 	if (priv->fw_var >= 0x300) {
+diff --git a/drivers/net/wireless/intersil/p54/p54usb.c b/drivers/net/wireless/intersil/p54/p54usb.c
+index ff0e30c0c14c..cae47663b17b 100644
+--- a/drivers/net/wireless/intersil/p54/p54usb.c
++++ b/drivers/net/wireless/intersil/p54/p54usb.c
+@@ -36,7 +36,7 @@ static struct usb_driver p54u_driver;
+  * Note:
+  *
+  * Always update our wiki's device list (located at:
+- * http://wireless.kernel.org/en/users/Drivers/p54/devices ),
++ * http://wireless.wiki.kernel.org/en/users/Drivers/p54/devices ),
+  * whenever you add a new device.
+  */
+ 
+diff --git a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
+index 20291c0d962d..34912267ff63 100644
+--- a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
++++ b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
+@@ -26,7 +26,8 @@ module_param(init_pcitm, int, 0);
+ /* In this order: vendor, device, subvendor, subdevice, class, class_mask,
+  * driver_data
+  * If you have an update for this please contact prism54-devel@prism54.org
+- * The latest list can be found at http://wireless.kernel.org/en/users/Drivers/p54 */
++ * The latest list can be found at http://wireless.wiki.kernel.org/en/users/Drivers/p54
++ */
+ static const struct pci_device_id prism54_id_tbl[] = {
+ 	/* Intersil PRISM Duette/Prism GT Wireless LAN adapter */
+ 	{
+-- 
+2.25.1
+
