@@ -2,120 +2,100 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D101C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9DDC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66022065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C5820771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iDYVlM2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGWGW5 (ORCPT
+        id S1726642AbgGWGZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:22:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60207 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgGWGW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:22:56 -0400
-IronPort-SDR: xsfGA3PQb2iIrV4jbF0K3s7tdxNozigc1cWfO0yld/ybn7Hyy25qFc6kQ19uEWs3vmFH/cT1MO
- wPPqPv/Y5Pgw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="149647804"
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="149647804"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 23:22:56 -0700
-IronPort-SDR: +qBj/sN4MZPxY4m7ng2TpFYlzzbCueatcNMUHjax+5NgP4EWq9ePx1xDHyQ5suWmKcEKgGGEce
- hBvcKx79NNbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="392904286"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Jul 2020 23:22:53 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 23 Jul 2020 09:22:52 +0300
-Date:   Thu, 23 Jul 2020 09:22:52 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Tudor.Ambarus@microchip.com
-Cc:     alexander.sverdlin@nokia.com, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ibr@ilbers.de
-Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Simulate WRDI command
-Message-ID: <20200723062252.GR5180@lahna.fi.intel.com>
-References: <282e1305-fd08-e446-1a22-eb4dff78cfb4@nokia.com>
- <b5c17892-24ec-a690-96ca-d2238b8925d1@microchip.com>
- <20200722143604.GQ5180@lahna.fi.intel.com>
- <99e3f6c7-e9a6-584c-883a-0882f5137b7b@microchip.com>
+        Thu, 23 Jul 2020 02:25:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgGWGZE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 02:25:04 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A6AC0619DC;
+        Wed, 22 Jul 2020 23:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=pjr5iP/6E7OeZxRztKUO1s2/ZLCAyytKnlW4zOJ8uI4=; b=iDYVlM2ZhdXKhXn0ZvMLEHaUJw
+        laOWedbmPiFJHZTC0btCQKGCljV6+OT+V9tEG07dZfQIxGoUt6xEO6H+TIv7+aCZeAljHRJG/S3rr
+        4nwz8MZV+M7YFBXMDnacBGBCKfcHNGghJ+9OlcxBwEfgWfrRHridy/Ly5uYn459gazYqHAmpWba+8
+        5kCNpwDiTPOHNdH0gy/6FF5Om9RgjXAqowauFNQqUB/QoSAuasEc7zxiv5w7A3LyvlsdunQFYmCIX
+        769JTlvalr2v1PGKHBfobKSH0RC8/ySucxDcpA232H6ec9B+kqHzAuNOfAQv4kg8tHL2P7BoV54zh
+        byFp+//A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyUf3-00065W-Dr; Thu, 23 Jul 2020 06:24:57 +0000
+Subject: Re: [RFC] cpuidle : Add support for pseudo-cpuidle driver
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
+        ego@linux.vnet.ibm.com
+References: <20200723061339.9747-1-huntbag@linux.vnet.ibm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1be8a3d4-52cc-c91c-2560-25e0af41dd5c@infradead.org>
+Date:   Wed, 22 Jul 2020 23:24:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99e3f6c7-e9a6-584c-883a-0882f5137b7b@microchip.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200723061339.9747-1-huntbag@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:18:50PM +0000, Tudor.Ambarus@microchip.com wrote:
-> On 7/22/20 5:36 PM, Mika Westerberg wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > Hi,
-> > 
-> > On Wed, Jul 22, 2020 at 02:28:30PM +0000, Tudor.Ambarus@microchip.com wrote:
-> >> + Mika
-> >>
-> >> Hi, Mika,
-> >>
-> >> Would you please review the patch from below?
-> > 
-> > Sure, there is minor comment below.
-> > 
-> >>
-> >> Thanks!
-> >>
-> >> On 7/22/20 5:01 PM, Alexander Sverdlin wrote:
-> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>>
-> >>> From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> >>>
-> >>> After spi_nor_write_disable() return code checks were introduced in the
-> >>> spi-nor front end intel-spi backend stopped to work because WRDI was never
-> >>> supported and always failed.
-> >>>
-> >>> Just pretend it was sucessful and ignore the command itself. HW sequencer
-> >>> shall do the right thing automatically, while with SW sequencer we cannot
-> >>> do it anyway, because the only tool we had was preopcode and it makes no
-> >>> sense for WRDI.
-> >>>
-> >>> Cc: stable@vger.kernel.org
-> >>> Fixes: bce679e5ae3a ("mtd: spi-nor: Check for errors after each Register Operation")
-> >>> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> >>> ---
-> >>>  drivers/mtd/spi-nor/controllers/intel-spi.c | 8 ++++++++
-> >>>  1 file changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> >>> index 61d2a0a..134b356 100644
-> >>> --- a/drivers/mtd/spi-nor/controllers/intel-spi.c
-> >>> +++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> >>> @@ -612,6 +612,14 @@ static int intel_spi_write_reg(struct spi_nor *nor, u8 opcode, const u8 *buf,
-> >>>                 return 0;
-> >>>         }
-> >>>
-> >>> +       /*
-> >>> +        * We hope that HW sequencer will do the right thing automatically and
-> >>> +        * with the SW seuencer we cannot use preopcode any way, so just ignore
-> >                            ^^^^^^^^
-> > Typo, should be sequencer.
-> > 
-> > Otherwise looks good to me.
-> > 
-> 
-> It looks good to me too. Should I add your R-b tag when applying?
-> I can fix the typo.
+On 7/22/20 11:13 PM, Abhishek Goel wrote:
+> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
+> index c0aeedd66f02..1d73153a0e35 100644
+> --- a/drivers/cpuidle/Kconfig
+> +++ b/drivers/cpuidle/Kconfig
+> @@ -71,6 +71,15 @@ config HALTPOLL_CPUIDLE
+>  	 before halting in the guest (more efficient than polling in the
+>  	 host via halt_poll_ns for some scenarios).
+>  
+> +config TEST_CPUIDLE
+> +	tristate "cpuidle test driver"
+> +	default m
 
-Sure. Thanks!
+No default, please.
+We don't enable unneeded drivers for the fun of it.
+
+> +	help
+
+Indent the following help text with one tab + 2 spaces.
+
+> +	 This option enables a testing cpuidle driver, which allows to user
+
+	                                                     allows the user  [or a user]
+
+> +	 to define custom idle states with their respective latencies and residencies.
+> +	 This is useful for testing the behaviour of governors on different
+> +	 set of idle states.
+
+	 sets
+
+> +
+>  endif
+>  
+>  config ARCH_NEEDS_CPU_IDLE_COUPLED
+
+thanks.
+-- 
+~Randy
+
