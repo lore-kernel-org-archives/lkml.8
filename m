@@ -2,324 +2,347 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3DB20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595547811;
-	bh=syj7w1tMq7GxefHZVmf6T0YjQVyq7HOBsl+kZLrCvh8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y0zFupZhRyO89WR/fUn4EEFjv2GQkDee++PNJWGbSR4jw3NlwA8gg2PZ3PJvrT9bQ
-	 fikUTf98EvvY3Zwd5rH+3ijnCpuw+02duOB6UnSvqa6QX3vTU5Yv/zGDSVaNx/0uyb
-	 QMbYtUP5pvyTcF8HoBGF6ChhxFsbhAuAoO0XOGu8=
+	by mail.kernel.org (Postfix) with ESMTP id 2CA9E2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WR1Yz7hO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgGWXn3 (ORCPT
+        id S1728206AbgGWXnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:43:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50572 "EHLO
+        Thu, 23 Jul 2020 19:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgGWXn3 (ORCPT
+        with ESMTP id S1727783AbgGWXng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:43:29 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD722C0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:43:28 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 140so4238838lfi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:43:28 -0700 (PDT)
+        Thu, 23 Jul 2020 19:43:36 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0546C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:43:35 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so8211264lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7V/kDihgL5kEC4lQSCSY3jEHwZPrFwJNpyNc4Cr/ySQ=;
-        b=aRSf+xLIu4Y/vCn7qDLq71u/ubEYET8Rf4RKodJV13afaOPSHdMUSqkPmn9t0HVwrD
-         b4wqq0HG80AjQARZNArZLDzkQpxmeI2nVK1+/b/fc5R8U2JxvxJDLdt4W49tv/+3UpZw
-         fpPPhpjyMb262XAMeCKI2kb7aMfTCpQiOhQs4=
+         :cc:content-transfer-encoding;
+        bh=lrITTsHMWJgtlxQrfu80nB96T41W3LIcvJxyQMd+CQ4=;
+        b=WR1Yz7hOSFkyK+iBp9hZFjmlhqsXo29pxuvaLrj/E4/9SwL0L1b9bv8sZBZqMnnyMx
+         7YI7XhNKd4Fy/8es3w+G80udaKxlxKo/chDSZRnG0HGIaeVvLJovtn/snS3xf41ZY6XE
+         OlrHYBjNOsPUVvJh70FstqY1/YGro1oYus/noKEYtKvi/SWSUCsFHay3ih16X4BghZfY
+         H9tsM1UxlNYO0+ohBFahza8Y/7IkVojjjR4WxYCmNzHVrXg/rRtSMSguaE2Sk3HM3Ocn
+         TF8Br64dntlOE48mhoIXyOrozqweMgnvWCViLuD/HUc6p4Z7PxmkugeRM4/RI1ws5iY+
+         2ICg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7V/kDihgL5kEC4lQSCSY3jEHwZPrFwJNpyNc4Cr/ySQ=;
-        b=GyHDyeuM9AZFAqxYxA6Y7hi8YEQPaxiYcX7Q5UqWm5RTUa1GIlnvKCFjg5Pcl4rUBy
-         3fCsz9sGCP/lBRCoFPnBLWmg5cMAvO5U0e3D6CnBOmcLfSkZfqcAUB7b3JBgueUTxXw4
-         FxrbWdz7l7CaZSzCypO6yq4SSXeYB7baKhlGR2j4c3owVPeBroqTwK7bVnfR4Kqck/Sh
-         AXG2emgDyBcTzF9K9nbrBxwycUhsL+3q/IlJBD01s50MZjQe76zRUsAD/d6KtMZTHi3k
-         K7WNiOyFQdI+ajDRDgTV/QWKuyht1bAFL7wfe4kaPC8hV6VenNQN5/6QJSSMlf9Nex/1
-         ugKw==
-X-Gm-Message-State: AOAM532wisHUbQfQjSaj2jHvBDwCETVtrGFw6eIChrFLEtqDQ4YfjdTi
-        XRIiG+I810jjQDRPeSssx7gr6+2fuMo=
-X-Google-Smtp-Source: ABdhPJzRo4wFmrc3MOHaZB1HFAiXg4ro4w3iEmvsUo1cm2rEnn4P2Xr/ZcyL2ym6WBxSVU4BcEhwkg==
-X-Received: by 2002:a19:e009:: with SMTP id x9mr3551861lfg.11.1595547806944;
-        Thu, 23 Jul 2020 16:43:26 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id u5sm3526671lfm.81.2020.07.23.16.43.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 16:43:25 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id h19so8141439ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:43:25 -0700 (PDT)
-X-Received: by 2002:a2e:999a:: with SMTP id w26mr2920466lji.371.1595547805242;
- Thu, 23 Jul 2020 16:43:25 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lrITTsHMWJgtlxQrfu80nB96T41W3LIcvJxyQMd+CQ4=;
+        b=jYg1ODnqkuAt4OImGKTpYTaHbQQJ0VT8/8zO4ljfeYP+yg7cLIVR0WCW4UVljwWBvP
+         EFoOOgXB3WKO2rchTvCoaYx0VvCKjjQ79YiAQlhnU+jXPP9aIx31rDB3r6zMCmNnfMy/
+         yjE3RInsiqcG6oww/dPQG39NelrVCPSrxr4F+I7PvvwXoSOvCqIRjNAELtN7JSviKub6
+         Ihcc1nSVOsxn6DF4tdEZEw9gywpJ0/Iw4ZVcVFEpZLg9J9OhWz1+dtp+M70MVxpFsDik
+         U+Wt4YLdDuSXxl2r/3wuWRrPwdX+/b3U6WgJdx4r8IRCpONb9anYKWxV42srFHttA+OE
+         +Jvw==
+X-Gm-Message-State: AOAM532IpWzwqAqhxR4LDc7gIu6WVEENMLn+aTp8/wogJQDXQsyJa4aa
+        6S37xKgupl+vq0IRP9LmsqZiZOJAIoNKWAxWv6w=
+X-Google-Smtp-Source: ABdhPJwdjm3Som5VWCw6t9X/IAH/6qUvFelmhDQ6r59d/QN66EVobeV85YD2FCQCFElBJENsIRKBfNNj5lOVUclEpaY=
+X-Received: by 2002:a2e:98d0:: with SMTP id s16mr2835371ljj.457.1595547813936;
+ Thu, 23 Jul 2020 16:43:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721063258.17140-1-mhocko@kernel.org> <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
- <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com>
- <alpine.LSU.2.11.2007221359450.1017@eggly.anvils> <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
- <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
- <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com> <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 23 Jul 2020 16:43:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
-Message-ID: <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <9044a2ebde089483d45c091752d208a878c604ac.1593530334.git.vpillai@digitalocean.com>
+ <72869477-AA03-47D4-96C5-D3CDBDBC12E7@tencent.com> <459dbf33-02f6-d4e0-52e4-919e1e33be13@linux.intel.com>
+ <5C71B460-8DC3-44AF-A75E-68BB2E33686B@tencent.com> <589382b3-709e-17a6-d693-05ebd3998336@linux.intel.com>
+ <897E5117-8A78-4CE3-8514-3577C4474775@tencent.com> <6ab8a001-ae5e-e484-c571-90d6931004e7@linux.intel.com>
+ <96A765D7-7FD3-40EB-873B-0F9365569490@tencent.com> <a4533d7f-41b0-3477-0316-0e2df55cbe9c@linux.intel.com>
+ <325B98A4-9135-4138-AFED-ADFC3560D917@tencent.com> <36cce58e-03b3-4d77-dfc5-e3c49f3ecdd8@linux.intel.com>
+ <A73E4BD3-D742-40E1-9928-B45BC68D1B89@tencent.com>
+In-Reply-To: <A73E4BD3-D742-40E1-9928-B45BC68D1B89@tencent.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Fri, 24 Jul 2020 07:43:21 +0800
+Message-ID: <CAERHkrseWGsQ7Vw1Sb4A+PB6XFeeuTj4d1nH70kadRFRXLQLsg@mail.gmail.com>
+Subject: Re: [RFC PATCH 11/16] sched: migration changes for core
+ scheduling(Internet mail)
+To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Content-Type: multipart/mixed; boundary="00000000000027ca3205ab246ca4"
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Aubrey Li <aubrey.li@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "vineethrp@gmail.com" <vineethrp@gmail.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000027ca3205ab246ca4
-Content-Type: text/plain; charset="UTF-8"
-
-On Thu, Jul 23, 2020 at 4:11 PM Hugh Dickins <hughd@google.com> wrote:
+On Thu, Jul 23, 2020 at 4:28 PM benbjiang(=E8=92=8B=E5=BD=AA) <benbjiang@te=
+ncent.com> wrote:
 >
-> On Thu, 23 Jul 2020, Linus Torvalds wrote:
+> Hi,
+>
+> > On Jul 23, 2020, at 4:06 PM, Li, Aubrey <aubrey.li@linux.intel.com> wro=
+te:
 > >
-> > I'll send a new version after I actually test it.
+> > On 2020/7/23 15:47, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >> Hi,
+> >>
+> >>> On Jul 23, 2020, at 1:39 PM, Li, Aubrey <aubrey.li@linux.intel.com> w=
+rote:
+> >>>
+> >>> On 2020/7/23 12:23, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>> Hi,
+> >>>>> On Jul 23, 2020, at 11:35 AM, Li, Aubrey <aubrey.li@linux.intel.com=
+> wrote:
+> >>>>>
+> >>>>> On 2020/7/23 10:42, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>> Hi,
+> >>>>>>
+> >>>>>>> On Jul 23, 2020, at 9:57 AM, Li, Aubrey <aubrey.li@linux.intel.co=
+m> wrote:
+> >>>>>>>
+> >>>>>>> On 2020/7/22 22:32, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>> Hi,
+> >>>>>>>>
+> >>>>>>>>> On Jul 22, 2020, at 8:13 PM, Li, Aubrey <aubrey.li@linux.intel.=
+com> wrote:
+> >>>>>>>>>
+> >>>>>>>>> On 2020/7/22 16:54, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>>> Hi, Aubrey,
+> >>>>>>>>>>
+> >>>>>>>>>>> On Jul 1, 2020, at 5:32 AM, Vineeth Remanan Pillai <vpillai@d=
+igitalocean.com> wrote:
+> >>>>>>>>>>>
+> >>>>>>>>>>> From: Aubrey Li <aubrey.li@intel.com>
+> >>>>>>>>>>>
+> >>>>>>>>>>> - Don't migrate if there is a cookie mismatch
+> >>>>>>>>>>> Load balance tries to move task from busiest CPU to the
+> >>>>>>>>>>> destination CPU. When core scheduling is enabled, if the
+> >>>>>>>>>>> task's cookie does not match with the destination CPU's
+> >>>>>>>>>>> core cookie, this task will be skipped by this CPU. This
+> >>>>>>>>>>> mitigates the forced idle time on the destination CPU.
+> >>>>>>>>>>>
+> >>>>>>>>>>> - Select cookie matched idle CPU
+> >>>>>>>>>>> In the fast path of task wakeup, select the first cookie matc=
+hed
+> >>>>>>>>>>> idle CPU instead of the first idle CPU.
+> >>>>>>>>>>>
+> >>>>>>>>>>> - Find cookie matched idlest CPU
+> >>>>>>>>>>> In the slow path of task wakeup, find the idlest CPU whose co=
+re
+> >>>>>>>>>>> cookie matches with task's cookie
+> >>>>>>>>>>>
+> >>>>>>>>>>> - Don't migrate task if cookie not match
+> >>>>>>>>>>> For the NUMA load balance, don't migrate task to the CPU whos=
+e
+> >>>>>>>>>>> core cookie does not match with task's cookie
+> >>>>>>>>>>>
+> >>>>>>>>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+> >>>>>>>>>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+> >>>>>>>>>>> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.c=
+om>
+> >>>>>>>>>>> ---
+> >>>>>>>>>>> kernel/sched/fair.c  | 64 +++++++++++++++++++++++++++++++++++=
++++++----
+> >>>>>>>>>>> kernel/sched/sched.h | 29 ++++++++++++++++++++
+> >>>>>>>>>>> 2 files changed, 88 insertions(+), 5 deletions(-)
+> >>>>>>>>>>>
+> >>>>>>>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >>>>>>>>>>> index d16939766361..33dc4bf01817 100644
+> >>>>>>>>>>> --- a/kernel/sched/fair.c
+> >>>>>>>>>>> +++ b/kernel/sched/fair.c
+> >>>>>>>>>>> @@ -2051,6 +2051,15 @@ static void task_numa_find_cpu(struct =
+task_numa_env *env,
+> >>>>>>>>>>>             if (!cpumask_test_cpu(cpu, env->p->cpus_ptr))
+> >>>>>>>>>>>                     continue;
+> >>>>>>>>>>>
+> >>>>>>>>>>> +#ifdef CONFIG_SCHED_CORE
+> >>>>>>>>>>> +           /*
+> >>>>>>>>>>> +            * Skip this cpu if source task's cookie does not=
+ match
+> >>>>>>>>>>> +            * with CPU's core cookie.
+> >>>>>>>>>>> +            */
+> >>>>>>>>>>> +           if (!sched_core_cookie_match(cpu_rq(cpu), env->p)=
+)
+> >>>>>>>>>>> +                   continue;
+> >>>>>>>>>>> +#endif
+> >>>>>>>>>>> +
+> >>>>>>>>>>>             env->dst_cpu =3D cpu;
+> >>>>>>>>>>>             if (task_numa_compare(env, taskimp, groupimp, may=
+move))
+> >>>>>>>>>>>                     break;
+> >>>>>>>>>>> @@ -5963,11 +5972,17 @@ find_idlest_group_cpu(struct sched_gr=
+oup *group, struct task_struct *p, int this
+> >>>>>>>>>>>
+> >>>>>>>>>>>     /* Traverse only the allowed CPUs */
+> >>>>>>>>>>>     for_each_cpu_and(i, sched_group_span(group), p->cpus_ptr)=
+ {
+> >>>>>>>>>>> +           struct rq *rq =3D cpu_rq(i);
+> >>>>>>>>>>> +
+> >>>>>>>>>>> +#ifdef CONFIG_SCHED_CORE
+> >>>>>>>>>>> +           if (!sched_core_cookie_match(rq, p))
+> >>>>>>>>>>> +                   continue;
+> >>>>>>>>>>> +#endif
+> >>>>>>>>>>> +
+> >>>>>>>>>>>             if (sched_idle_cpu(i))
+> >>>>>>>>>>>                     return i;
+> >>>>>>>>>>>
+> >>>>>>>>>>>             if (available_idle_cpu(i)) {
+> >>>>>>>>>>> -                   struct rq *rq =3D cpu_rq(i);
+> >>>>>>>>>>>                     struct cpuidle_state *idle =3D idle_get_s=
+tate(rq);
+> >>>>>>>>>>>                     if (idle && idle->exit_latency < min_exit=
+_latency) {
+> >>>>>>>>>>>                             /*
+> >>>>>>>>>>> @@ -6224,8 +6239,18 @@ static int select_idle_cpu(struct task=
+_struct *p, struct sched_domain *sd, int t
+> >>>>>>>>>>>     for_each_cpu_wrap(cpu, cpus, target) {
+> >>>>>>>>>>>             if (!--nr)
+> >>>>>>>>>>>                     return -1;
+> >>>>>>>>>>> -           if (available_idle_cpu(cpu) || sched_idle_cpu(cpu=
+))
+> >>>>>>>>>>> -                   break;
+> >>>>>>>>>>> +
+> >>>>>>>>>>> +           if (available_idle_cpu(cpu) || sched_idle_cpu(cpu=
+)) {
+> >>>>>>>>>>> +#ifdef CONFIG_SCHED_CORE
+> >>>>>>>>>>> +                   /*
+> >>>>>>>>>>> +                    * If Core Scheduling is enabled, select =
+this cpu
+> >>>>>>>>>>> +                    * only if the process cookie matches cor=
+e cookie.
+> >>>>>>>>>>> +                    */
+> >>>>>>>>>>> +                   if (sched_core_enabled(cpu_rq(cpu)) &&
+> >>>>>>>>>>> +                       p->core_cookie =3D=3D cpu_rq(cpu)->co=
+re->core_cookie)
+> >>>>>>>>>> Why not also add similar logic in select_idle_smt to reduce fo=
+rced-idle? :)
+> >>>>>>>>> We hit select_idle_smt after we scaned the entire LLC domain fo=
+r idle cores
+> >>>>>>>>> and idle cpus and failed,so IMHO, an idle smt is probably a goo=
+d choice under
+> >>>>>>>>> this scenario.
+> >>>>>>>>
+> >>>>>>>> AFAIC, selecting idle sibling with unmatched cookie will cause u=
+nnecessary fored-idle, unfairness and latency, compared to choosing *target=
+* cpu.
+> >>>>>>> Choosing target cpu could increase the runnable task number on th=
+e target runqueue, this
+> >>>>>>> could trigger busiest->nr_running > 1 logic and makes the idle si=
+bling trying to pull but
+> >>>>>>> not success(due to cookie not match). Putting task to the idle si=
+bling is relatively stable IMHO.
+> >>>>>>
+> >>>>>> I=E2=80=99m afraid that *unsuccessful* pullings between smts would=
+ not result in unstableness, because
+> >>>>>> the load-balance always do periodicly , and unsuccess means nothin=
+g happen.
+> >>>>> unsuccess pulling means more unnecessary overhead in load balance.
+> >>>>>
+> >>>>>> On the contrary, unmatched sibling tasks running concurrently coul=
+d bring forced-idle to each other repeatedly,
+> >>>>>> Which is more unstable, and more costly when pick_next_task for al=
+l siblings.
+> >>>>> Not worse than two tasks ping-pong on the same target run queue I g=
+uess, and better if
+> >>>>> - task1(cookie A) is running on the target, and task2(cookie B) in =
+the runqueue,
+> >>>>> - task3(cookie B) coming
+> >>>>>
+> >>>>> If task3 chooses target's sibling, it could have a chance to run co=
+ncurrently with task2.
+> >>>>> But if task3 chooses target, it will wait for next pulling luck of =
+load balancer
+> >>>> That=E2=80=99s more interesting. :)
+> >>>> Distributing different cookie tasks onto different cpus(or cpusets) =
+could be the *ideal stable status* we want, as I understood.
+> >>>> Different cookie tasks running on sibling smts could hurt performanc=
+e, and that should be avoided with best effort.
+> >>> We already tried to avoid when we scan idle cores and idle cpus in ll=
+c domain.
+> >>
+> >> I=E2=80=99m afraid that=E2=80=99s not enough either, :)
+> >> 1. Scanning Idle cpus is not a full scan, there is limit according to =
+scan cost.
+> >> 2. That's only trying at the *core/cpu* level, *SMT* level should be c=
+onsidered too.
+> >>
+> >>>
+> >>>> For above case, selecting idle sibling cpu can improve the concurren=
+cy indeed, but it decrease the imbalance for load-balancer.
+> >>>> In that case, load-balancer could not notice the imbalance, and woul=
+d do nothing to improve the unmatched situation.
+> >>>> On the contrary, choosing the *target* cpu could enhance the imbalan=
+ce, and load-balancer could try to pull unmatched task away,
+> >>> Pulling away to where needs another bunch of elaboration.
+> >>
+> >> Still with the SMT2+3tasks case,
+> >> if *idle sibling* chosen,
+> >> Smt1=E2=80=99s load =3D task1+task2, smt2=E2=80=99s load =3D task3. Ta=
+sk3 will run intermittently because of forced-idle,
+> >> so smt2=E2=80=99s real load could low enough, that it could not be pul=
+led away forever. That=E2=80=99s indeed a stable state,
+> >> but with performance at a discount.
+> >>
+> >> If *target sibling* chose,
+> >> Smt1=E2=80=99s load =3D task1+task2+task3, smt2=E2=80=99s load=3D0. It=
+=E2=80=99s a obvious imbalance, and load-balancer will pick a task to pull,
+> >> 1. If task1(cookie A) picked, that=E2=80=99s done for good.
+> >> 2. If task2(cookie B) or task3(cookie B) picked, that=E2=80=99s ok too=
+, the rest task(cookie B) could be pulled away at next balance(maybe need t=
+o improve the pulling to tend to pull matched task more aggressively).
+> >> And then, we may reach a more stable state *globally* without performa=
+nce discount.
+> >
+> > I'm not sure what you mean pulled away,
+> I mean pulled away by other cpus, may be triggered by idle balance or per=
+iodic balance on other cpus.
 >
-> I'll give it a try when you're happy with it.
-
-Ok, what I described is what I've been running for a while now. But I
-don't put much stress on my system with my normal workload, so..
-
-> I did try yesterday's
-> with my swapping loads on home machines (3 of 4 survived 16 hours),
-> and with some google stresstests on work machines (0 of 10 survived).
+> > - if you mean pulled away from this core, cookieA in idle sibling case =
+can be
+> >  pulled away too.
+> Yep, cookieA(task1) in idle sibling case could be pulled away, but
+> cookieB(task3) on the smt2 could never get the chance being pulled
+> away(unless being waken up).
+> If cookieA(task1) failed being pulled(cookieB(task2) on smt1 may be pulle=
+d,
+> 50% chance), cookieA(task1) and cookieB(task3) would reach the stable sta=
+te
+> with performance discount.
 >
-> I've not spent long analyzing the crashes, all of them in or below
-> __wake_up_common() called from __wake_up_locked_key_bookmark():
-> sometimes gets to run the curr->func() and crashes on something
-> inside there (often list_del's lib/list_debug.c:53!), sometimes
-> cannot get that far. Looks like the wait queue entries on the list
-> were not entirely safe with that patch.
+If you meant pulled away from this core, I didn't see how two cases are
+different either. For example, when task2(cookieB) runs on SMT1, task3
+cookieb can be pulled to SMT2. and when task1(cookieA) switch onto SMT1,
+task2(cookieB) can be pulled away by other cpus, too.
 
-Hmm. The bug Oleg pointed out should be pretty theoretical. But I
-think the new approach with WQ_FLAG_WOKEN was much better anyway,
-despite me missing that one spot in the first version of the patch.
-
-So here's two patches - the first one does that wake_page_function()
-conversion, and the second one just does the memory ordering cleanup I
-mentioned.
-
-I don't think the second one shouldn't matter on x86, but who knows.
-
-I don't enable list debugging, but I find list corruption surprising.
-All of _that_ should be inside the page waiqueue lock, the only
-unlocked part was the "list_empty_careful()" part.
-
-But I'll walk over my patch mentally one more time. Here's the current
-version, anyway.
-
-                Linus
-
---00000000000027ca3205ab246ca4
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-mm-rewrite-wait_on_page_bit_common-logic.patch"
-Content-Disposition: attachment; 
-	filename="0001-mm-rewrite-wait_on_page_bit_common-logic.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kczftiv60>
-X-Attachment-Id: f_kczftiv60
-
-RnJvbSBjZjZkYjBiODU1NDcyM2YwMzA4ZmQ5Mjk5ZTY0Mjg5OGUzNmM5YzhjIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
-dGlvbi5vcmc+CkRhdGU6IFRodSwgMjMgSnVsIDIwMjAgMTA6MTY6NDkgLTA3MDAKU3ViamVjdDog
-W1BBVENIIDEvMl0gbW06IHJld3JpdGUgd2FpdF9vbl9wYWdlX2JpdF9jb21tb24oKSBsb2dpYwoK
-SXQgdHVybnMgb3V0IHRoYXQgd2FpdF9vbl9wYWdlX2JpdF9jb21tb24oKSBoYWQgc2V2ZXJhbCBw
-cm9ibGVtcywKcmFuZ2luZyBmcm9tIGp1c3QgdW5mYWlyIGJlaGF2aW9lIGR1ZSB0byByZS1xdWV1
-ZWluZyBhdCB0aGUgZW5kIG9mIHRoZQp3YWl0IHF1ZXVlIHdoZW4gcmUtdHJ5aW5nLCBhbmQgYW4g
-b3V0cmlnaHQgYnVnIHRoYXQgY291bGQgcmVzdWx0IGluCm1pc3NlZCB3YWtldXBzIChidXQgcHJv
-YmFibHkgbmV2ZXIgaGFwcGVuZWQgaW4gcHJhY3RpY2UpLgoKVGhpcyByZXdyaXRlcyB0aGUgd2hv
-bGUgbG9naWMgdG8gYXZvaWQgYm90aCBpc3N1ZXMsIGJ5IHNpbXBseSBtb3ZpbmcgdGhlCmxvZ2lj
-IHRvIGNoZWNrIChhbmQgcG9zc2libHkgdGFrZSkgdGhlIGJpdCBsb2NrIGludG8gdGhlIHdha2V1
-cCBwYXRoCmluc3RlYWQuCgpUaGF0IG1ha2VzIGV2ZXJ5dGhpbmcgbXVjaCBtb3JlIHN0cmFpZ2h0
-Zm9yd2FyZCwgYW5kIG1lYW5zIHRoYXQgd2UgbmV2ZXIKbmVlZCB0byByZS1xdWV1ZSB0aGUgd2Fp
-dCBlbnRyeTogaWYgd2UgZ2V0IHdva2VuIHVwLCB3ZSdsbCBiZSBub3RpZmllZAp0aHJvdWdoIFdR
-X0ZMQUdfV09LRU4sIGFuZCB0aGUgd2FpdCBxdWV1ZSBlbnRyeSB3aWxsIGhhdmUgYmVlbiByZW1v
-dmVkLAphbmQgZXZlcnl0aGluZyB3aWxsIGhhdmUgYmVlbiBkb25lIGZvciB1cy4KCkxpbms6IGh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvQ0FIay09d2pKQTJaM2tVRmItNXM9NituMHFiVHM4
-RUxxS0Z0OUIzcEg4NWE4ZkdENzN3QG1haWwuZ21haWwuY29tLwpMaW5rOiBodHRwczovL2xvcmUu
-a2VybmVsLm9yZy9sa21sL2FscGluZS5MU1UuMi4xMS4yMDA3MjIxMzU5NDUwLjEwMTdAZWdnbHku
-YW52aWxzLwpSZXBvcnRlZC1ieTogT2xlZyBOZXN0ZXJvdiA8b2xlZ0ByZWRoYXQuY29tPgpSZXBv
-cnRlZC1ieTogSHVnaCBEaWNraW5zIDxodWdoZEBnb29nbGUuY29tPgpDYzogTWljaGFsIEhvY2tv
-IDxtaG9ja29Ac3VzZS5jb20+ClNpZ25lZC1vZmYtYnk6IExpbnVzIFRvcnZhbGRzIDx0b3J2YWxk
-c0BsaW51eC1mb3VuZGF0aW9uLm9yZz4KLS0tCiBtbS9maWxlbWFwLmMgfCAxMjEgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdl
-ZCwgNzMgaW5zZXJ0aW9ucygrKSwgNDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvbW0vZmls
-ZW1hcC5jIGIvbW0vZmlsZW1hcC5jCmluZGV4IDM4NTc1OWM0Y2U0Yi4uMTE0M2MwNjUyZDgxIDEw
-MDY0NAotLS0gYS9tbS9maWxlbWFwLmMKKysrIGIvbW0vZmlsZW1hcC5jCkBAIC0xMDAyLDYgKzEw
-MDIsNyBAQCBzdHJ1Y3Qgd2FpdF9wYWdlX3F1ZXVlIHsKIAogc3RhdGljIGludCB3YWtlX3BhZ2Vf
-ZnVuY3Rpb24od2FpdF9xdWV1ZV9lbnRyeV90ICp3YWl0LCB1bnNpZ25lZCBtb2RlLCBpbnQgc3lu
-Yywgdm9pZCAqYXJnKQogeworCWludCByZXQ7CiAJc3RydWN0IHdhaXRfcGFnZV9rZXkgKmtleSA9
-IGFyZzsKIAlzdHJ1Y3Qgd2FpdF9wYWdlX3F1ZXVlICp3YWl0X3BhZ2UKIAkJPSBjb250YWluZXJf
-b2Yod2FpdCwgc3RydWN0IHdhaXRfcGFnZV9xdWV1ZSwgd2FpdCk7CkBAIC0xMDEzLDE4ICsxMDE0
-LDQwIEBAIHN0YXRpYyBpbnQgd2FrZV9wYWdlX2Z1bmN0aW9uKHdhaXRfcXVldWVfZW50cnlfdCAq
-d2FpdCwgdW5zaWduZWQgbW9kZSwgaW50IHN5bmMsCiAJaWYgKHdhaXRfcGFnZS0+Yml0X25yICE9
-IGtleS0+Yml0X25yKQogCQlyZXR1cm4gMDsKIAorCS8qIFN0b3Agd2Fsa2luZyBpZiBpdCdzIGxv
-Y2tlZCAqLworCWlmICh3YWl0LT5mbGFncyAmIFdRX0ZMQUdfRVhDTFVTSVZFKSB7CisJCWlmICh0
-ZXN0X2FuZF9zZXRfYml0KGtleS0+Yml0X25yLCAma2V5LT5wYWdlLT5mbGFncykpCisJCQlyZXR1
-cm4gLTE7CisJfSBlbHNlIHsKKwkJaWYgKHRlc3RfYml0KGtleS0+Yml0X25yLCAma2V5LT5wYWdl
-LT5mbGFncykpCisJCQlyZXR1cm4gLTE7CisJfQorCiAJLyoKLQkgKiBTdG9wIHdhbGtpbmcgaWYg
-aXQncyBsb2NrZWQuCi0JICogSXMgdGhpcyBzYWZlIGlmIHB1dF9hbmRfd2FpdF9vbl9wYWdlX2xv
-Y2tlZCgpIGlzIGluIHVzZT8KLQkgKiBZZXM6IHRoZSB3YWtlciBtdXN0IGhvbGQgYSByZWZlcmVu
-Y2UgdG8gdGhpcyBwYWdlLCBhbmQgaWYgUEdfbG9ja2VkCi0JICogaGFzIG5vdyBhbHJlYWR5IGJl
-ZW4gc2V0IGJ5IGFub3RoZXIgdGFzaywgdGhhdCB0YXNrIG11c3QgYWxzbyBob2xkCi0JICogYSBy
-ZWZlcmVuY2UgdG8gdGhlICpzYW1lIHVzYWdlKiBvZiB0aGlzIHBhZ2U7IHNvIHRoZXJlIGlzIG5v
-IG5lZWQKLQkgKiB0byB3YWxrIG9uIHRvIHdha2UgZXZlbiB0aGUgcHV0X2FuZF93YWl0X29uX3Bh
-Z2VfbG9ja2VkKCkgY2FsbGVycy4KKwkgKiBMZXQgdGhlIHdhaXRlciBrbm93IHdlIGhhdmUgZG9u
-ZSB0aGUgcGFnZSBmbGFnCisJICogaGFuZGxpbmcgZm9yIGl0IChhbmQgdGhlIHJldHVybiB2YWx1
-ZSBsZXRzIHRoZQorCSAqIHdha2V1cCBsb2dpYyBjb3VudCBleGNsdXNpdmUgd2FrZXVwIGV2ZW50
-cykuCiAJICovCi0JaWYgKHRlc3RfYml0KGtleS0+Yml0X25yLCAma2V5LT5wYWdlLT5mbGFncykp
-Ci0JCXJldHVybiAtMTsKKwlyZXQgPSAod2FpdC0+ZmxhZ3MgJiBXUV9GTEFHX0VYQ0xVU0lWRSkg
-IT0gMDsKKwl3YWl0LT5mbGFncyB8PSBXUV9GTEFHX1dPS0VOOworCXdha2VfdXBfc3RhdGUod2Fp
-dC0+cHJpdmF0ZSwgbW9kZSk7CiAKLQlyZXR1cm4gYXV0b3JlbW92ZV93YWtlX2Z1bmN0aW9uKHdh
-aXQsIG1vZGUsIHN5bmMsIGtleSk7CisJLyoKKwkgKiBPaywgd2UgaGF2ZSBzdWNjZXNzZnVsbHkg
-ZG9uZSB3aGF0IHdlJ3JlIHdhaXRpbmcgZm9yLAorCSAqIGFuZCB3ZSBjYW4gdW5jb25kaXRpb25h
-bGx5IHJlbW92ZSB0aGUgd2FpdCBlbnRyeS4KKwkgKgorCSAqIE5vdGUgdGhhdCB0aGlzIGhhcyB0
-byBiZSB0aGUgYWJzb2x1dGUgbGFzdCB0aGluZyB3ZSBkbywKKwkgKiBzaW5jZSBhZnRlciBsaXN0
-X2RlbF9pbml0KCZ3YWl0LT5lbnRyeSkgdGhlIHdhaXQgZW50cnkKKwkgKiBtaWdodCBiZSBkZS1h
-bGxvY2F0ZWQgYW5kIHRoZSBwcm9jZXNzIG1pZ2h0IGV2ZW4gaGF2ZQorCSAqIGV4aXRlZC4KKwkg
-KgorCSAqIFdlIF9yZWFsbHlfIHNob3VsZCBoYXZlIGEgImxpc3RfZGVsX2luaXRfY2FyZWZ1bCgp
-IiB0bworCSAqIHByb3Blcmx5IHBhaXIgd2l0aCB0aGUgdW5sb2NrZWQgImxpc3RfZW1wdHlfY2Fy
-ZWZ1bCgpIgorCSAqIGluIGZpbmlzaF93YWl0KCkuCisJICovCisJc21wX21iKCk7CisJbGlzdF9k
-ZWxfaW5pdCgmd2FpdC0+ZW50cnkpOworCXJldHVybiByZXQ7CiB9CiAKIHN0YXRpYyB2b2lkIHdh
-a2VfdXBfcGFnZV9iaXQoc3RydWN0IHBhZ2UgKnBhZ2UsIGludCBiaXRfbnIpCkBAIC0xMTAzLDE2
-ICsxMTI2LDIyIEBAIGVudW0gYmVoYXZpb3IgewogCQkJICovCiB9OwogCitzdGF0aWMgaW5saW5l
-IGludCB0cnlsb2NrX3BhZ2VfYml0X2NvbW1vbihzdHJ1Y3QgcGFnZSAqcGFnZSwgaW50IGJpdF9u
-ciwKKwllbnVtIGJlaGF2aW9yIGJlaGF2aW9yKQoreworCXJldHVybiBiZWhhdmlvciA9PSBFWENM
-VVNJVkUgPworCQkhdGVzdF9hbmRfc2V0X2JpdChiaXRfbnIsICZwYWdlLT5mbGFncykgOgorCQkh
-dGVzdF9iaXQoYml0X25yLCAmcGFnZS0+ZmxhZ3MpOworfQorCiBzdGF0aWMgaW5saW5lIGludCB3
-YWl0X29uX3BhZ2VfYml0X2NvbW1vbih3YWl0X3F1ZXVlX2hlYWRfdCAqcSwKIAlzdHJ1Y3QgcGFn
-ZSAqcGFnZSwgaW50IGJpdF9uciwgaW50IHN0YXRlLCBlbnVtIGJlaGF2aW9yIGJlaGF2aW9yKQog
-ewogCXN0cnVjdCB3YWl0X3BhZ2VfcXVldWUgd2FpdF9wYWdlOwogCXdhaXRfcXVldWVfZW50cnlf
-dCAqd2FpdCA9ICZ3YWl0X3BhZ2Uud2FpdDsKLQlib29sIGJpdF9pc19zZXQ7CiAJYm9vbCB0aHJh
-c2hpbmcgPSBmYWxzZTsKIAlib29sIGRlbGF5YWNjdCA9IGZhbHNlOwogCXVuc2lnbmVkIGxvbmcg
-cGZsYWdzOwotCWludCByZXQgPSAwOwogCiAJaWYgKGJpdF9uciA9PSBQR19sb2NrZWQgJiYKIAkg
-ICAgIVBhZ2VVcHRvZGF0ZShwYWdlKSAmJiBQYWdlV29ya2luZ3NldChwYWdlKSkgewpAQCAtMTEz
-MCw0OCArMTE1OSw0NCBAQCBzdGF0aWMgaW5saW5lIGludCB3YWl0X29uX3BhZ2VfYml0X2NvbW1v
-bih3YWl0X3F1ZXVlX2hlYWRfdCAqcSwKIAl3YWl0X3BhZ2UucGFnZSA9IHBhZ2U7CiAJd2FpdF9w
-YWdlLmJpdF9uciA9IGJpdF9ucjsKIAorCS8qCisJICogQWRkIG91cnNlbHZlcyB0byB0aGUgd2Fp
-dCBxdWV1ZS4KKwkgKgorCSAqIE5PVEUhIFRoaXMgaXMgd2hlcmUgd2UgYWxzbyBjaGVjayB0aGUg
-cGFnZQorCSAqIHN0YXRlIHN5bmNocm9ub3VzbHkgdGhlIGxhc3QgdGltZSB0byBzZWUgdGhhdAor
-CSAqIHNvbWVib2R5IGRpZG4ndCBqdXN0IGNsZWFyIHRoZSBiaXQuIERvIHRoZQorCSAqIFNldFBh
-Z2VXYWl0ZXJzKCkgYmVmb3JlIHRoYXQgdG8gbGV0IGFueWJvZHkKKwkgKiB3ZSBqdXN0IG1pc3Mg
-a25vdyB0aGV5IG5lZWQgdG8gd2FrZSB1cyB1cC4KKwkgKi8KKwlzcGluX2xvY2tfaXJxKCZxLT5s
-b2NrKTsKKwlTZXRQYWdlV2FpdGVycyhwYWdlKTsKKwlpZiAoIXRyeWxvY2tfcGFnZV9iaXRfY29t
-bW9uKHBhZ2UsIGJpdF9uciwgYmVoYXZpb3IpKQorCQlfX2FkZF93YWl0X3F1ZXVlX2VudHJ5X3Rh
-aWwocSwgd2FpdCk7CisJZWxzZQorCQl3YWl0LT5mbGFncyB8PSBXUV9GTEFHX1dPS0VOOworCXNw
-aW5fdW5sb2NrX2lycSgmcS0+bG9jayk7CisKKwkvKgorCSAqIEZyb20gbm93IG9uLCBhbGwgdGhl
-IGxvZ2ljIHdpbGwgYmUgYmFzZWQgb24KKwkgKiB3aGV0aGVyIHRoZSB3YWl0IGVudHJ5IGlzIG9u
-IHRoZSBxdWV1ZSBvciBub3QsCisJICogYW5kIHRoZSBwYWdlIGJpdCB0ZXN0aW5nIChhbmQgc2V0
-dGluZykgd2lsbCBiZQorCSAqIGRvbmUgYnkgdGhlIHdha2UgZnVuY3Rpb24sIG5vdCB1cy4KKwkg
-KgorCSAqIFdlIGNhbiBkcm9wIG91ciByZWZlcmVuY2UgdG8gdGhlIHBhZ2UuCisJICovCisJaWYg
-KGJlaGF2aW9yID09IERST1ApCisJCXB1dF9wYWdlKHBhZ2UpOworCiAJZm9yICg7OykgewotCQlz
-cGluX2xvY2tfaXJxKCZxLT5sb2NrKTsKLQotCQlpZiAobGlrZWx5KGxpc3RfZW1wdHkoJndhaXQt
-PmVudHJ5KSkpIHsKLQkJCV9fYWRkX3dhaXRfcXVldWVfZW50cnlfdGFpbChxLCB3YWl0KTsKLQkJ
-CVNldFBhZ2VXYWl0ZXJzKHBhZ2UpOwotCQl9Ci0KIAkJc2V0X2N1cnJlbnRfc3RhdGUoc3RhdGUp
-OwogCi0JCXNwaW5fdW5sb2NrX2lycSgmcS0+bG9jayk7Ci0KLQkJYml0X2lzX3NldCA9IHRlc3Rf
-Yml0KGJpdF9uciwgJnBhZ2UtPmZsYWdzKTsKLQkJaWYgKGJlaGF2aW9yID09IERST1ApCi0JCQlw
-dXRfcGFnZShwYWdlKTsKLQotCQlpZiAobGlrZWx5KGJpdF9pc19zZXQpKQotCQkJaW9fc2NoZWR1
-bGUoKTsKLQotCQlpZiAoYmVoYXZpb3IgPT0gRVhDTFVTSVZFKSB7Ci0JCQlpZiAoIXRlc3RfYW5k
-X3NldF9iaXRfbG9jayhiaXRfbnIsICZwYWdlLT5mbGFncykpCi0JCQkJYnJlYWs7Ci0JCX0gZWxz
-ZSBpZiAoYmVoYXZpb3IgPT0gU0hBUkVEKSB7Ci0JCQlpZiAoIXRlc3RfYml0KGJpdF9uciwgJnBh
-Z2UtPmZsYWdzKSkKLQkJCQlicmVhazsKLQkJfQotCi0JCWlmIChzaWduYWxfcGVuZGluZ19zdGF0
-ZShzdGF0ZSwgY3VycmVudCkpIHsKLQkJCXJldCA9IC1FSU5UUjsKKwkJaWYgKHNpZ25hbF9wZW5k
-aW5nX3N0YXRlKHN0YXRlLCBjdXJyZW50KSkKIAkJCWJyZWFrOwotCQl9CiAKLQkJaWYgKGJlaGF2
-aW9yID09IERST1ApIHsKLQkJCS8qCi0JCQkgKiBXZSBjYW4gbm8gbG9uZ2VyIHNhZmVseSBhY2Nl
-c3MgcGFnZS0+ZmxhZ3M6Ci0JCQkgKiBldmVuIGlmIENPTkZJR19NRU1PUllfSE9UUkVNT1ZFIGlz
-IG5vdCBlbmFibGVkLAotCQkJICogdGhlcmUgaXMgYSByaXNrIG9mIHdhaXRpbmcgZm9yZXZlciBv
-biBhIHBhZ2UgcmV1c2VkCi0JCQkgKiBmb3Igc29tZXRoaW5nIHRoYXQga2VlcHMgaXQgbG9ja2Vk
-IGluZGVmaW5pdGVseS4KLQkJCSAqIEJ1dCBiZXN0IGNoZWNrIGZvciAtRUlOVFIgYWJvdmUgYmVm
-b3JlIGJyZWFraW5nLgotCQkJICovCisJCWlmICh3YWl0LT5mbGFncyAmIFdRX0ZMQUdfV09LRU4p
-CiAJCQlicmVhazsKLQkJfQorCisJCWlvX3NjaGVkdWxlKCk7CiAJfQogCiAJZmluaXNoX3dhaXQo
-cSwgd2FpdCk7CkBAIC0xMTkwLDcgKzEyMTUsNyBAQCBzdGF0aWMgaW5saW5lIGludCB3YWl0X29u
-X3BhZ2VfYml0X2NvbW1vbih3YWl0X3F1ZXVlX2hlYWRfdCAqcSwKIAkgKiBib3RoZXIgd2l0aCBz
-aWduYWxzIGVpdGhlci4KIAkgKi8KIAotCXJldHVybiByZXQ7CisJcmV0dXJuIHdhaXQtPmZsYWdz
-ICYgV1FfRkxBR19XT0tFTiA/IDAgOiAtRUlOVFI7CiB9CiAKIHZvaWQgd2FpdF9vbl9wYWdlX2Jp
-dChzdHJ1Y3QgcGFnZSAqcGFnZSwgaW50IGJpdF9ucikKLS0gCjIuMjguMC5yYzAuMy5nMWUyNWQz
-YTYyZgoK
---00000000000027ca3205ab246ca4
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0002-list-add-list_del_init_careful-to-go-with-list_empty.patch"
-Content-Disposition: attachment; 
-	filename="0002-list-add-list_del_init_careful-to-go-with-list_empty.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kczftmke1>
-X-Attachment-Id: f_kczftmke1
-
-RnJvbSBkZGMwMGFhZjhlMDIwYmFiNjMwZWM2NDFiMzc1NjQ2MzQ0NTQ2MzRjIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
-dGlvbi5vcmc+CkRhdGU6IFRodSwgMjMgSnVsIDIwMjAgMTI6MzM6NDEgLTA3MDAKU3ViamVjdDog
-W1BBVENIIDIvMl0gbGlzdDogYWRkICJsaXN0X2RlbF9pbml0X2NhcmVmdWwoKSIgdG8gZ28gd2l0
-aAogImxpc3RfZW1wdHlfY2FyZWZ1bCgpIgoKVGhhdCBnaXZlcyB1cyBvcmRlcmluZyBndWFyYW50
-ZWVzIGFyb3VuZCB0aGUgcGFpci4KClNpZ25lZC1vZmYtYnk6IExpbnVzIFRvcnZhbGRzIDx0b3J2
-YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4KLS0tCiBpbmNsdWRlL2xpbnV4L2xpc3QuaCB8IDIw
-ICsrKysrKysrKysrKysrKysrKystCiBrZXJuZWwvc2NoZWQvd2FpdC5jICB8ICAyICstCiBtbS9m
-aWxlbWFwLmMgICAgICAgICB8ICA3ICstLS0tLS0KIDMgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0
-aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2xpc3Qu
-aCBiL2luY2x1ZGUvbGludXgvbGlzdC5oCmluZGV4IGFmZjQ0ZDM0ZjRlNC4uMGQwZDE3YTEwZDI1
-IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2xpc3QuaAorKysgYi9pbmNsdWRlL2xpbnV4L2xp
-c3QuaApAQCAtMjgyLDYgKzI4MiwyNCBAQCBzdGF0aWMgaW5saW5lIGludCBsaXN0X2VtcHR5KGNv
-bnN0IHN0cnVjdCBsaXN0X2hlYWQgKmhlYWQpCiAJcmV0dXJuIFJFQURfT05DRShoZWFkLT5uZXh0
-KSA9PSBoZWFkOwogfQogCisvKioKKyAqIGxpc3RfZGVsX2luaXRfY2FyZWZ1bCAtIGRlbGV0ZXMg
-ZW50cnkgZnJvbSBsaXN0IGFuZCByZWluaXRpYWxpemUgaXQuCisgKiBAZW50cnk6IHRoZSBlbGVt
-ZW50IHRvIGRlbGV0ZSBmcm9tIHRoZSBsaXN0LgorICoKKyAqIFRoaXMgaXMgdGhlIHNhbWUgYXMg
-bGlzdF9kZWxfaW5pdCgpLCBleGNlcHQgZGVzaWduZWQgdG8gYmUgdXNlZAorICogdG9nZXRoZXIg
-d2l0aCBsaXN0X2VtcHR5X2NhcmVmdWwoKSBpbiBhIHdheSB0byBndWFyYW50ZWUgb3JkZXJpbmcK
-KyAqIG9mIG90aGVyIG1lbW9yeSBvcGVyYXRpb25zLgorICoKKyAqIEFueSBtZW1vcnkgb3BlcmF0
-aW9ucyBkb25lIGJlZm9yZSBhIGxpc3RfZGVsX2luaXRfY2FyZWZ1bCgpIGFyZQorICogZ3VhcmFu
-dGVlZCB0byBiZSB2aXNpYmxlIGFmdGVyIGEgbGlzdF9lbXB0eV9jYXJlZnVsKCkgdGVzdC4KKyAq
-Lworc3RhdGljIGlubGluZSB2b2lkIGxpc3RfZGVsX2luaXRfY2FyZWZ1bChzdHJ1Y3QgbGlzdF9o
-ZWFkICplbnRyeSkKK3sKKwlfX2xpc3RfZGVsX2VudHJ5KGVudHJ5KTsKKwllbnRyeS0+cHJldiA9
-IGVudHJ5OworCXNtcF9zdG9yZV9yZWxlYXNlKCZlbnRyeS0+bmV4dCwgZW50cnkpOworfQorCiAv
-KioKICAqIGxpc3RfZW1wdHlfY2FyZWZ1bCAtIHRlc3RzIHdoZXRoZXIgYSBsaXN0IGlzIGVtcHR5
-IGFuZCBub3QgYmVpbmcgbW9kaWZpZWQKICAqIEBoZWFkOiB0aGUgbGlzdCB0byB0ZXN0CkBAIC0y
-OTcsNyArMzE1LDcgQEAgc3RhdGljIGlubGluZSBpbnQgbGlzdF9lbXB0eShjb25zdCBzdHJ1Y3Qg
-bGlzdF9oZWFkICpoZWFkKQogICovCiBzdGF0aWMgaW5saW5lIGludCBsaXN0X2VtcHR5X2NhcmVm
-dWwoY29uc3Qgc3RydWN0IGxpc3RfaGVhZCAqaGVhZCkKIHsKLQlzdHJ1Y3QgbGlzdF9oZWFkICpu
-ZXh0ID0gaGVhZC0+bmV4dDsKKwlzdHJ1Y3QgbGlzdF9oZWFkICpuZXh0ID0gc21wX2xvYWRfYWNx
-dWlyZSgmaGVhZC0+bmV4dCk7CiAJcmV0dXJuIChuZXh0ID09IGhlYWQpICYmIChuZXh0ID09IGhl
-YWQtPnByZXYpOwogfQogCmRpZmYgLS1naXQgYS9rZXJuZWwvc2NoZWQvd2FpdC5jIGIva2VybmVs
-L3NjaGVkL3dhaXQuYwppbmRleCBiYTA1OWZiZmM1M2EuLjAxZjVkMzAyMDU4OSAxMDA2NDQKLS0t
-IGEva2VybmVsL3NjaGVkL3dhaXQuYworKysgYi9rZXJuZWwvc2NoZWQvd2FpdC5jCkBAIC0zODks
-NyArMzg5LDcgQEAgaW50IGF1dG9yZW1vdmVfd2FrZV9mdW5jdGlvbihzdHJ1Y3Qgd2FpdF9xdWV1
-ZV9lbnRyeSAqd3FfZW50cnksIHVuc2lnbmVkIG1vZGUsIGkKIAlpbnQgcmV0ID0gZGVmYXVsdF93
-YWtlX2Z1bmN0aW9uKHdxX2VudHJ5LCBtb2RlLCBzeW5jLCBrZXkpOwogCiAJaWYgKHJldCkKLQkJ
-bGlzdF9kZWxfaW5pdCgmd3FfZW50cnktPmVudHJ5KTsKKwkJbGlzdF9kZWxfaW5pdF9jYXJlZnVs
-KCZ3cV9lbnRyeS0+ZW50cnkpOwogCiAJcmV0dXJuIHJldDsKIH0KZGlmZiAtLWdpdCBhL21tL2Zp
-bGVtYXAuYyBiL21tL2ZpbGVtYXAuYwppbmRleCAxMTQzYzA2NTJkODEuLjIzOWQxNTZhMzhlYSAx
-MDA2NDQKLS0tIGEvbW0vZmlsZW1hcC5jCisrKyBiL21tL2ZpbGVtYXAuYwpAQCAtMTA0MCwxMyAr
-MTA0MCw4IEBAIHN0YXRpYyBpbnQgd2FrZV9wYWdlX2Z1bmN0aW9uKHdhaXRfcXVldWVfZW50cnlf
-dCAqd2FpdCwgdW5zaWduZWQgbW9kZSwgaW50IHN5bmMsCiAJICogc2luY2UgYWZ0ZXIgbGlzdF9k
-ZWxfaW5pdCgmd2FpdC0+ZW50cnkpIHRoZSB3YWl0IGVudHJ5CiAJICogbWlnaHQgYmUgZGUtYWxs
-b2NhdGVkIGFuZCB0aGUgcHJvY2VzcyBtaWdodCBldmVuIGhhdmUKIAkgKiBleGl0ZWQuCi0JICoK
-LQkgKiBXZSBfcmVhbGx5XyBzaG91bGQgaGF2ZSBhICJsaXN0X2RlbF9pbml0X2NhcmVmdWwoKSIg
-dG8KLQkgKiBwcm9wZXJseSBwYWlyIHdpdGggdGhlIHVubG9ja2VkICJsaXN0X2VtcHR5X2NhcmVm
-dWwoKSIKLQkgKiBpbiBmaW5pc2hfd2FpdCgpLgogCSAqLwotCXNtcF9tYigpOwotCWxpc3RfZGVs
-X2luaXQoJndhaXQtPmVudHJ5KTsKKwlsaXN0X2RlbF9pbml0X2NhcmVmdWwoJndhaXQtPmVudHJ5
-KTsKIAlyZXR1cm4gcmV0OwogfQogCi0tIAoyLjI4LjAucmMwLjMuZzFlMjVkM2E2MmYKCg==
---00000000000027ca3205ab246ca4--
+Thanks,
+-Aubrey
