@@ -2,111 +2,154 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C79C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53FEC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C70C920737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:00:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="B9o9qaJu"
+	by mail.kernel.org (Postfix) with ESMTP id 9678920737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595498504;
+	bh=izeJyw5OGLETv+NMCChNJQz1ZQ4GTatkR8y1AWk5KfM=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=GpTN5CNMhaCueE+OTk2be1sS3ZhtLrkc7JpGxnc0lFxVnF64i01UBNzGTqytk7x8P
+	 XTnrVDZhTMXTvEEr0zWY0kL0RNEmmM/e4urkHIzVFfSfLS3IYqpS08JZsGdsH8lmll
+	 4WgkLjwoG0xVdpuf9y3OwezQXY/p7C0u1tUP9lB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgGWKA3 (ORCPT
+        id S1728295AbgGWKBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:00:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWKA2 (ORCPT
+        Thu, 23 Jul 2020 06:01:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36334 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbgGWKBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:00:28 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E4EC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 03:00:28 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q4so5720377lji.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 03:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HrbYk4F6BiU7qem6PjGJVBGaHMs1d/veVa02py3tg7c=;
-        b=B9o9qaJuicQJ2qsQkihdmy34rpXY1VeRtcFr+plwnR7HpNQMr6HSNrw+g7yamjxfNQ
-         gZA9bp4Z9v4qrITsTl9OVZ9H0KTCP1FeyBK5YRuUE/1fa1rfC1DX+4+h0GtwKPPXOdXl
-         6miY+01Vh8r5WmHot+riaztuwm77sTCPjxhOqoRkc4YrxNtV0ShA5fmocyFOlUeEUM79
-         z+HoRlj3IzjM0HmBkgfgzslA4bGyyaJCrq7FjfrlYRPQRKo4bRTua9giUB5ABsysB5w8
-         xZ+bwOS7VBS0kOjp/tVT137CID4wkm83mtBAkRrtLvLmxER3bJjaOxYhblQ5ScESeXDP
-         IAbw==
+        Thu, 23 Jul 2020 06:01:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id dg28so4076004edb.3;
+        Thu, 23 Jul 2020 03:01:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HrbYk4F6BiU7qem6PjGJVBGaHMs1d/veVa02py3tg7c=;
-        b=bwHB1N11RxcB8dQVXsvCk+OjFjsjR14spKVEfDIFmQvt/Sw8OVw9UeB2EWbhE1VRbi
-         asYLuYOSQ9ymDCfoBC1+0MRQ+0IcvhJXmmHUKfsPc6ojOYI9luuqc1zeTcEjfD5A9Az2
-         W3OYOVC7CYFEnN0QrbJcVl3jXZFN47FNbVXlIY0VVl9JIB3L3pHHVfLN9s4x1+2Jjk7w
-         1Uhlarpr6hqwEwjObfzSmncaWBUfCn/9dhIPJP/Ib877UzfqG0RYvonjYCUfzsqVnK9J
-         dF1+aQNa+0r9MDzsgV/tT1EdeWiVLZddzFxBF/kmI/mcj8gQpmWWK0vlZLedKxzDO7/A
-         PUZg==
-X-Gm-Message-State: AOAM531v7jHQScldvoaxARtC8Ykl9keUb2hfZU0gsvgHKkU/Ld0ungjr
-        kaWPCk3DQKtljAxwkeYH9f5Zcw==
-X-Google-Smtp-Source: ABdhPJw/oMsAA+OlV/VLPwHyjW2JxV3TAlZQg+zmuCePnVD68oRkQgXVu2xZ9VZvASbD/2RTobFLFA==
-X-Received: by 2002:a2e:8758:: with SMTP id q24mr1503960ljj.109.1595498426684;
-        Thu, 23 Jul 2020 03:00:26 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:42af:e693:70ac:4b21:9cec:e4c7? ([2a00:1fa0:42af:e693:70ac:4b21:9cec:e4c7])
-        by smtp.gmail.com with ESMTPSA id q3sm2316049ljm.22.2020.07.23.03.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 03:00:25 -0700 (PDT)
-Subject: Re: [PATCH] mips: traps, add __init to parity_protection_init
-To:     Jiri Slaby <jslaby@suse.cz>, tsbogend@alpha.franken.de
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20200723094235.12706-1-jslaby@suse.cz>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <252bf1ae-6c1d-463e-a035-debb119fa83d@cogentembedded.com>
-Date:   Thu, 23 Jul 2020 13:00:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hslSkDk2GV4smH9H5xKkxfOrQX9nbu5qQFnRZrSLifU=;
+        b=RJhho/I+QbuF9egQiumAbcszur8GB1mv5ZrXupJsH9hQxGESyFin62m+Z1+f/vSP3L
+         T1JxRDHozHQKTGXCT9mUHmp3T5St2mWp6L0CHj8XNp82QLolBNVqCs86v2WWyx9L31Xo
+         mJBkRmOTxIRMNfeLjjKOcJx0Xif0cYNJ8gu26i7//qOy8ZfCKcAawGa2vGxihyU4uCq2
+         b/bMZwLs9w5xAKdxGPQCJLj3ZarOifAqdZeklmxPjs+qWVAetX2NTdT3ST1KvyKLY4zl
+         lp2wLgApMQhWuw/yzgpCSvTamnFuds9Ym1bN6uH/s6d3pul4qmMUKejH28Rfpt2XvrcM
+         n3+w==
+X-Gm-Message-State: AOAM530NagihXxMcXJIiXoTSByLMbZdgZozWLTUUdu2CxWRfig3EpLZY
+        +kQrYsQzZmPT653MyFO7xY+p1A3Q17k=
+X-Google-Smtp-Source: ABdhPJyI1dXtFK9c7xFGtDoq/er+m8wTtbHeKjPM3NBbXDh2gegj/He+I6/0VjA5aQ16XwVCcNk6hQ==
+X-Received: by 2002:a05:6402:1a42:: with SMTP id bf2mr3292640edb.292.1595498500867;
+        Thu, 23 Jul 2020 03:01:40 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id h24sm1689173ejg.53.2020.07.23.03.01.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 03:01:40 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 12:01:36 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 14/23] memory: ti-emif-pm: Fix cast to iomem pointer
+Message-ID: <20200723100136.GB30472@kozik-lap>
+References: <20200723073744.13400-1-krzk@kernel.org>
+ <20200723073744.13400-15-krzk@kernel.org>
+ <CAK8P3a3btGD5oqmPXJk=UOmA=wuUxn-vOOO982uAjuRcE3crVg@mail.gmail.com>
+ <20200723090230.GB25935@kozik-lap>
+ <CAK8P3a2O4bCb_Bcpc+Y4BuXmrO6mbVwgo67aGF5E=uxHQpeTnw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723094235.12706-1-jslaby@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2O4bCb_Bcpc+Y4BuXmrO6mbVwgo67aGF5E=uxHQpeTnw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 23.07.2020 12:42, Jiri Slaby wrote:
-
-> It references __initdata and is called only from an __init function:
-> trap_init. This avoids section mismatches (which I am seeing with gcc
-> 10).
+On Thu, Jul 23, 2020 at 11:14:02AM +0200, Arnd Bergmann wrote:
+> On Thu, Jul 23, 2020 at 11:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > On Thu, Jul 23, 2020 at 10:48:19AM +0200, Arnd Bergmann wrote:
+> > > On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >
+> > > > Cast pointer to iomem memory properly to fix sparse warning:
+> > > >
+> > > >     drivers/memory/ti-emif-pm.c:251:38: warning: incorrect type in argument 1 (different address spaces)
+> > > >     drivers/memory/ti-emif-pm.c:251:38:    expected void const volatile [noderef] __iomem *addr
+> > > >     drivers/memory/ti-emif-pm.c:251:38:    got void *
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  drivers/memory/ti-emif-pm.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/memory/ti-emif-pm.c b/drivers/memory/ti-emif-pm.c
+> > > > index 9c90f815ad3a..6c747c1e98cb 100644
+> > > > --- a/drivers/memory/ti-emif-pm.c
+> > > > +++ b/drivers/memory/ti-emif-pm.c
+> > > > @@ -248,7 +248,7 @@ MODULE_DEVICE_TABLE(of, ti_emif_of_match);
+> > > >  static int ti_emif_resume(struct device *dev)
+> > > >  {
+> > > >         unsigned long tmp =
+> > > > -                       __raw_readl((void *)emif_instance->ti_emif_sram_virt);
+> > > > +                       __raw_readl((void __iomem *)emif_instance->ti_emif_sram_virt);
+> > > >
+> > >
+> > > Maybe this shouldn't even be __raw_readl(), but instead READ_ONCE()?
+> >
+> > Won't readl() be enough? Indeed it looks problematic.
 > 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: linux-mips@vger.kernel.org
-> ---
->   arch/mips/kernel/traps.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> readl() won't work on big-endian kernels, since this is a byte comparison.
+
+Ah, right.
+
 > 
-> diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-> index f655af68176c..702143ad7b47 100644
-> --- a/arch/mips/kernel/traps.c
-> +++ b/arch/mips/kernel/traps.c
-> @@ -1680,7 +1680,7 @@ __setup("nol2par", nol2parity);
->    * Some MIPS CPUs can enable/disable for cache parity detection, but do
->    * it different ways.
->    */
-> -static inline void parity_protection_init(void)
-> +static inline __init void parity_protection_init(void)
+> > > The other accesses in this file don't use MMIO wrappers either but just treat
+> > > it as a pointer. The effect would be the same though.
+> >
+> > I think all the reads and writes are with readl() and writel().
+> 
+> I actually see only one other access:
+> 
+>         copy_addr = sram_exec_copy(emif_data->sram_pool_code,
+>                                    (void *)emif_data->ti_emif_sram_virt,
+>                                    &ti_emif_sram, ti_emif_sram_sz);
+> 
+> and this one ends up in a memcpy() that does not perform any byte
+> swapping or barriers.
 
-    *inline* in a .c file? Perhaps gcc-10 has it out-of-line?
+At least the barrier would come through mutex in sram_exec_copy() and
+later spin locks for page table manipulation.
 
-[...]
+Anyway, I do not have the HW to test the changes or to confirm whether
+this is real issue.  I guess the driver author/owner should follow up on
+this report.
 
-MBR, Sergei
+Best regards,
+Krzysztof
+
