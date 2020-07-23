@@ -2,131 +2,208 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2ADC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E84B22CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E2F20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595520711;
+	bh=UwNbjNnkRhPtN3M1FcHhf18EPEdkbGS8hia36IkGCMU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WlVpRijmFULtirhnDCt86o6M3yjG1PKMtK0xdVKYdoLbmiuxNB5+r+G1Nii/j2VZj
+	 GktNtqVSAnHZkVjR5gCbwaJoCbyuo7T4ELerFyIiFLungeU40CfAdlcsz0IiErRWT6
+	 6nffXGfE52x6jeyciZE35U4OPu2QqYENowyY35ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgGWQKl (ORCPT
+        id S1729698AbgGWQLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:10:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10382 "EHLO mga04.intel.com"
+        Thu, 23 Jul 2020 12:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgGWQKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:10:41 -0400
-IronPort-SDR: QLuu9s7Hp+vjybC9uDZIpXvDMT3zW+g1vEq14+zK/uHNXmrWCvSpmqO98ZX0GjZDYYdAjSdTTB
- gR4KiKIytJ7g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148056938"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="148056938"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:10:40 -0700
-IronPort-SDR: sMTr1T4Ot5Yvoa3Z7f6Gt+sLRJaAGqkGv0CKqHpKa6bv1iw8QUxMeH7wjKcme7VYbDmyD+KuPr
- iT9q6o6QxZ5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="320703879"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Jul 2020 09:10:40 -0700
-Date:   Thu, 23 Jul 2020 09:10:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH v10 03/26] x86/fpu/xstate: Introduce CET MSR XSAVES
- supervisor states
-Message-ID: <20200723161039.GE21891@linux.intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
- <20200429220732.31602-4-yu-cheng.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429220732.31602-4-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726621AbgGWQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:11:49 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E0EC20714;
+        Thu, 23 Jul 2020 16:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595520708;
+        bh=UwNbjNnkRhPtN3M1FcHhf18EPEdkbGS8hia36IkGCMU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KTAu2n/tep3Ope7nKjpIkD+hDh2cBrQhD+vCOEIs3a+CvHULRCInnNBPVRtiJjVFz
+         y2b0cdYj8JDxlEzZaYRf3gdCEFZ2VHlj9ynUF6u0mFAZJRGgFPQzDsuL1mPD6bhOB6
+         bQrPjm1rSyM1gVdo1QEcqD83BrODAPLuHymSTkTU=
+Date:   Fri, 24 Jul 2020 01:11:43 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        Patrick =?UTF-8?B?U3TDpGhsaW4=?= <me@packi.ch>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Pekka Enberg <penberg@kernel.org>
+Subject: Re: [PATCH v3 6/7] riscv: Add KPROBES_ON_FTRACE supported
+Message-Id: <20200724011143.a2dd2e231411e46edde2e8c4@kernel.org>
+In-Reply-To: <CAJF2gTR4319vMy9hStLeR3+42WG4opnsZTaGdN__Bm23VCHjBg@mail.gmail.com>
+References: <1594683562-68149-1-git-send-email-guoren@kernel.org>
+        <1594683562-68149-7-git-send-email-guoren@kernel.org>
+        <20200714203757.512ce7fb5fa61a88b1dbb2f3@kernel.org>
+        <CAJF2gTSMUnHfv3GLj_TGT2dJkKq2zbEsnbPKREiq5i6PPjyTBg@mail.gmail.com>
+        <20200721222701.3074315f6a9f6c42c5963f40@kernel.org>
+        <CAJF2gTR4319vMy9hStLeR3+42WG4opnsZTaGdN__Bm23VCHjBg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:07:09PM -0700, Yu-cheng Yu wrote:
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index 12c9684d59ba..47f603729543 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -885,4 +885,22 @@
->  #define MSR_VM_IGNNE                    0xc0010115
->  #define MSR_VM_HSAVE_PA                 0xc0010117
->  
-> +/* Control-flow Enforcement Technology MSRs */
-> +#define MSR_IA32_U_CET		0x6a0 /* user mode cet setting */
-> +#define MSR_IA32_S_CET		0x6a2 /* kernel mode cet setting */
-> +#define MSR_IA32_PL0_SSP	0x6a4 /* kernel shstk pointer */
-> +#define MSR_IA32_PL1_SSP	0x6a5 /* ring-1 shstk pointer */
-> +#define MSR_IA32_PL2_SSP	0x6a6 /* ring-2 shstk pointer */
-> +#define MSR_IA32_PL3_SSP	0x6a7 /* user shstk pointer */
-> +#define MSR_IA32_INT_SSP_TAB	0x6a8 /* exception shstk table */
-> +
-> +/* MSR_IA32_U_CET and MSR_IA32_S_CET bits */
-> +#define MSR_IA32_CET_SHSTK_EN		0x0000000000000001ULL
+On Wed, 22 Jul 2020 21:31:20 +0800
+Guo Ren <guoren@kernel.org> wrote:
 
-Can we drop the MSR_IA32 prefix for the individual bits?  Mostly to yield
-shorter line lengths, but also because it's more or less redundant info,
-and in some ways unhelpful as it's hard to quickly differentiate between
-"this is an MSR index" and "this is a bit/mask for an MSR".
+> Hi Masami,
+> 
+> Current riscv ftrace_caller utilize fp(s0) - 8 in stack to get ra of
+> function, eg:
+> foo:
+>    2bb0:       7119                    addi    sp,sp,-128
+>     2bb2:       f8a2                    sd      s0,112(sp)
+>     2bb4:       fc86                    sd      ra,120(sp)
+> ...
+>     2bc4:       0100                    addi    s0,sp,128
+> ...
+> 0000000000002bca <.LVL828>:
+>     2bca:       00000097                auipc   ra,0x0
+>     2bce:       000080e7                jalr    ra # 2bca <.LVL828> //_mcount
+> 
+> So just put two nops before prologue of function isn't enough, because
+> riscv don't like arm64 which could use x9-x18 reserved regs to pass
+> ra(x30).
+>     | mov       x9, x30
+>     | bl        <ftrace-entry>
+> If the benefit is just making a kprobe on function symbol address to
+> prevent disassembling, I'll delay this feature.
 
-My vote would also be to use BIT() or BIT_ULL().  The SDM defines the flags
-by their (decimal) bit number.  Manually converting the bits to masks makes
-it difficult to check for correctness.
+I recommend that. This feature has to involve ftrace and gcc, so
+it is better to split it from this series.
 
-E.g.
+> 
+> 
+> I also have a look at HAVE_FENTRY & HAVE_NOP_MCOUNT. Seems it just
+> avoid using scripts/recordmcount.pl script and directly generate nops
+> for _mcount.
 
-#define CET_SHSTK_EN		BIT(0)
-#define CET_WRSS_EN		BIT(1)
-#define CET_ENDBR_EN		BIT(2)
-#define CET_LEG_IW_EN		BIT(3)
-#define CET_NO_TRACK_EN		BIT(4)
-#define CET_WAIT_ENDBR		BIT(5)
+Right.
 
-> +#define MSR_IA32_CET_WRSS_EN		0x0000000000000002ULL
-> +#define MSR_IA32_CET_ENDBR_EN		0x0000000000000004ULL
-> +#define MSR_IA32_CET_LEG_IW_EN		0x0000000000000008ULL
-> +#define MSR_IA32_CET_NO_TRACK_EN	0x0000000000000010ULL
-> +#define MSR_IA32_CET_WAIT_ENDBR	0x00000000000000800UL
-> +#define MSR_IA32_CET_BITMAP_MASK	0xfffffffffffff000ULL
+> It's different from -fpatchable-function-entry=2 which generating nops
+> before function prologue in arm64, isn't it?
 
-This particular define, the so called BITMAP_MASK, is no longer used in the
-IBT series.  IMO it'd be better off dropping this mask as it's not clear
-from the name that this is really nothing more than a mask for a virtual
-address, e.g. at first glance (for someone without CET knowledge) it looks
-like bits 63:12 hold a bitmap as opposed to holding a pointer to a bitmap.
+Yes, fentry is for x86, but -fpatchable-function-entry=2 is making a
+placeholder with nop at the entry of the functions for direct patching.
+
+Thank you,
+
+> 
+> On Tue, Jul 21, 2020 at 9:27 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Wed, 15 Jul 2020 00:24:54 +0800
+> > Guo Ren <guoren@kernel.org> wrote:
+> >
+> > > Thx Masami,
+> > >
+> > > On Tue, Jul 14, 2020 at 7:38 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > > On Mon, 13 Jul 2020 23:39:21 +0000
+> > > > guoren@kernel.org wrote:
+> > > >
+> > > > > From: Guo Ren <guoren@linux.alibaba.com>
+> > > > >
+> > > > > This patch adds support for kprobes on ftrace call sites to avoids
+> > > > > much of the overhead with regular kprobes. Try it with simple
+> > > > > steps:
+> > > > >
+> > > > > 1. Get _do_fork ftrace call site.
+> > > > > Dump of assembler code for function _do_fork:
+> > > > >    0xffffffe00020af64 <+0>:     addi    sp,sp,-128
+> > > > >    0xffffffe00020af66 <+2>:     sd      s0,112(sp)
+> > > > >    0xffffffe00020af68 <+4>:     sd      ra,120(sp)
+> > > > >    0xffffffe00020af6a <+6>:     addi    s0,sp,128
+> > > > >    0xffffffe00020af6c <+8>:     sd      s1,104(sp)
+> > > > >    0xffffffe00020af6e <+10>:    sd      s2,96(sp)
+> > > > >    0xffffffe00020af70 <+12>:    sd      s3,88(sp)
+> > > > >    0xffffffe00020af72 <+14>:    sd      s4,80(sp)
+> > > > >    0xffffffe00020af74 <+16>:    sd      s5,72(sp)
+> > > > >    0xffffffe00020af76 <+18>:    sd      s6,64(sp)
+> > > > >    0xffffffe00020af78 <+20>:    sd      s7,56(sp)
+> > > > >    0xffffffe00020af7a <+22>:    mv      s4,a0
+> > > > >    0xffffffe00020af7c <+24>:    mv      a0,ra
+> > > > >    0xffffffe00020af7e <+26>:    nop   <<<<<<<< here!
+> > > > >    0xffffffe00020af82 <+30>:    nop
+> > > > >    0xffffffe00020af86 <+34>:    ld      s3,0(s4)
+> > > > >
+> > > > > 2. Set _do_fork+26 as the kprobe.
+> > > > >   echo 'p:myprobe _do_fork+26 dfd=%a0 filename=%a1 flags=%a2 mode=+4($stack)' > /sys/kernel/debug/tracing/kprobe_events
+> > > > >   echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+> > > > >   cat /sys/kernel/debug/tracing/trace
+> > > > >   tracer: nop
+> > > > >
+> > > > >   entries-in-buffer/entries-written: 3/3   #P:1
+> > > > >
+> > > > >                                _-----=> irqs-off
+> > > > >                               / _----=> need-resched
+> > > > >                              | / _---=> hardirq/softirq
+> > > > >                              || / _--=> preempt-depth
+> > > > >                              ||| /     delay
+> > > > >             TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> > > > >                | |       |   ||||       |         |
+> > > > >               sh-87    [000] ....   551.557031: myprobe: (_do_fork+0x1a/0x2e6) dfd=0xffffffe00020af7e filename=0xffffffe00020b34e flags=0xffffffe00101e7c0 mode=0x20af86ffffffe0
+> > > > >
+> > > > >   cat /sys/kernel/debug/kprobes/list
+> > > > > ffffffe00020af7e  k  _do_fork+0x1a    [FTRACE]
+> > > > >                                        ^^^^^^
+> > > >
+> > > > Hmm, this seems fentry is not supported on RISC-V yet. But anyway,
+> > > > it will be useful for users (if they can find the offset).
+> > >
+> > > Seems only x86 & ⬆️90 use fentry，can you elaborate more about fentry's
+> > > benefit and how the user could set kprobe on ftrace call site without
+> > > disassemble?
+> >
+> > On x86, the fentry replaces the mcount with just one call instruction, without
+> > saving any arguments. This means all probes which are puts on the address of
+> > target symbol, are automatically using ftrace. IOW, all probes on _do_fork+0
+> > will use ftrace. We don't need any disassembling.
+> >
+> > I think if RISC-V already support "-fpatchable-function-entry=2" option on
+> > GCC, you can easily enable it as same as arm64. See https://lkml.org/lkml/2019/6/18/648
+> >
+> > Thank you,
+> >
+> > --
+> > Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> 
+> 
+> -- 
+> Best Regards
+>  Guo Ren
+> 
+> ML: https://lore.kernel.org/linux-csky/
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
