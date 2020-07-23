@@ -2,91 +2,104 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB5BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A693C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D46207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6677D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YmkS7Vh4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgGWNjn (ORCPT
+        id S1729398AbgGWNkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:39:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51724 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbgGWNjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:39:43 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 184198C5064C6EBF5F84;
-        Thu, 23 Jul 2020 21:39:40 +0800 (CST)
-Received: from huawei.com (10.175.104.82) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Jul 2020
- 21:39:37 +0800
-From:   Huang Guobin <huangguobin4@huawei.com>
-To:     <haren@us.ibm.com>, <ddstreet@ieee.org>,
-        <herbert@gondor.apana.org.au>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] lib: Verify array index is correct before using it
-Date:   Thu, 23 Jul 2020 09:48:07 -0400
-Message-ID: <20200723134807.35027-1-huangguobin4@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Jul 2020 09:40:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgGWNkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:40:11 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69573C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:40:10 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z24so6363517ljn.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0eegOArgjvO8rP9syB7xmG1tp8kx/F1yrwr3UNCLFEo=;
+        b=YmkS7Vh4mwIp+nMV18OSIk4pf7op1uBA2TkP/ke9aZMe7v2Bo7c53f8FLIkodKBdkZ
+         3tcKEQi0+gDlUUl6vIQfXe03avSwX4r0Z1Ho/SNeJNDr1nD0OrRzHWUx+4BhS+I6jcdg
+         PkIxlP6R205v6/wCBRBgA1UQXA+bfQNPfyTHXkoXZdJMDZndAQuu9LozLyTLHGrkOoSM
+         hLP3AYgQ28AzXbEjtCVD2jjKbdtrN15cBQPjVqD2FsThQgoX97pHT/KgLCCR8DY+hKF4
+         3UhsPZi4/CGdI+2Sif+O3/1rXFoDXnFmZXbwW+b2GUh/JSOY/T92UI03ODBXOAU4kJEI
+         5yFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0eegOArgjvO8rP9syB7xmG1tp8kx/F1yrwr3UNCLFEo=;
+        b=dyujz80FUiRGOP1/ryTmCHfiRN2xsB4vPkoKD9KjyXTegkChyDD+fT7eG49XmoAJhN
+         Vl19Hgvo3bbov50FGt8rZo5EIEYHLbcHolBR/zZIPgLeAfypF1kU/Txw/JEosZDhrD+N
+         ObjVauzv4d77MLwnOYt09/hTR865vpuAtfptewQLfKq95j84q6dX5qvkv5WaW5ny4Sqw
+         TpDyQfwt0HreW4+HB/qNZIG98+BQOoNjWyXicyd5h240RYVfbqrV5zMOlP6Fosn2V7iK
+         swbu+YPrx/3UTkiokqySz0rLNxE/QvPr/aF8n90fzIP+6PbDTfCDBlkb/HqEepwqa+Zn
+         8RwQ==
+X-Gm-Message-State: AOAM532PWJ3n5Aoz+FMo0+t+TBABNC3Q+ie5xXldkEPZweO8SQM2MpJr
+        F7Z09sylrwf/J2Jgv8dP/dnPqIT075kGlOQYJo6dEA==
+X-Google-Smtp-Source: ABdhPJzkhTQiz4v4EweObFS3VjvRBHaK+7cqyFcfiqMUdnGJXvj0jmfVgVQamNi7423328Gef8C+2ZKNdMl7Uo351Ro=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr1865085lji.338.1595511608925;
+ Thu, 23 Jul 2020 06:40:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.82]
-X-CFilter-Loop: Reflected
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru> <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Jul 2020 15:17:08 +0200
+Message-ID: <CACRpkdZO242FC=O8nAXjKX=9VRpkkQdMA6S0L2ZWNX9D1hmcYw@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code reads from the array before verifying that "c" is a valid
-index. Move test array offset code before use to fix it.
+Hi Serge,
 
-Fixes: 2da572c959dd ("lib: add software 842 compression/decompression")
-Signed-off-by: Huang Guobin <huangguobin4@huawei.com>
----
- lib/842/842_compress.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Thu, Jul 23, 2020 at 3:39 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
-diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
-index c02baa4168e1..10f9f8a0d05b 100644
---- a/lib/842/842_compress.c
-+++ b/lib/842/842_compress.c
-@@ -222,12 +222,13 @@ static int add_bits(struct sw842_param *p, u64 d, u8 n)
- static int add_template(struct sw842_param *p, u8 c)
- {
- 	int ret, i, b = 0;
--	u8 *t = comp_ops[c];
-+	u8 *t = NULL;
- 	bool inv = false;
- 
- 	if (c >= OPS_MAX)
- 		return -EINVAL;
- 
-+	t = comp_ops[c];
- 	pr_debug("template %x\n", t[4]);
- 
- 	ret = add_bits(p, t[4], OP_BITS);
-@@ -379,12 +380,14 @@ static int add_end_template(struct sw842_param *p)
- 
- static bool check_template(struct sw842_param *p, u8 c)
- {
--	u8 *t = comp_ops[c];
-+	u8 *t = NULL;
- 	int i, match, b = 0;
- 
- 	if (c >= OPS_MAX)
- 		return false;
- 
-+	t = comp_ops[c];
-+
- 	for (i = 0; i < 4; i++) {
- 		if (t[i] & OP_ACTION_INDEX) {
- 			if (t[i] & OP_AMOUNT_2)
--- 
-2.17.1
+> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
+> top of a GPIO chip. It's better from maintainability and readability
+> point of view to use one instead of supporting a hand-written Generic
+> IRQ-chip-based implementation. Moreover the new implementation won't
+> cause much functional overhead but will provide a cleaner driver code.
+> All of that makes the DW APB GPIO driver conversion pretty much justified
+> especially seeing a tendency of the other GPIO drivers getting converted
+> too.
 
+Needless to say I am a big fan of this patch. It's what I wanted to
+do with the driver but was afraid to dry-code.
+
+Please look into the minor nits pointed out by Andy and respin,
+I really want to apply this patch set.
+
+Thanks,
+Linus Walleij
