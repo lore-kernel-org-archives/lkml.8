@@ -2,94 +2,110 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2E0C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3194C2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D65220888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="niMgtu2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbgGWA6c (ORCPT
+        id S2387455AbgGWA6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgGWA6b (ORCPT
+        Wed, 22 Jul 2020 20:58:46 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:58652 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgGWA6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:58:31 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAC0C0619DC;
-        Wed, 22 Jul 2020 17:58:31 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF40B126ABECD;
-        Wed, 22 Jul 2020 17:41:45 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 17:58:30 -0700 (PDT)
-Message-Id: <20200722.175830.616952267325554952.davem@davemloft.net>
-To:     srirakr2@cisco.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, mbumgard@cisco.com, ugm@cisco.com,
-        nimm@cisco.com, xe-linux-external@cisco.com, kuba@kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] hv_netvsc: add support for vlans in AF_PACKET mode
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200722153845.79946-1-srirakr2@cisco.com>
-References: <20200722153845.79946-1-srirakr2@cisco.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 22 Jul 2020 20:58:45 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1046)
+        id D288C20B4908; Wed, 22 Jul 2020 17:58:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D288C20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595465924;
+        bh=COad48i7F7Ppim6j74aTQgCPv4ntgv9CarhdXkZqMSI=;
+        h=Date:To:Subject:Cc:References:In-Reply-To:From:From;
+        b=niMgtu2U1MhpmWIEO3cGbPKV10cWPPsqIFr07inBG1vKDl0zmHzqzlc8qrAmggp2N
+         5mGg9NdqEaGD+eIpTEWZ0ouRM1eH5z9gQbJNjRSwV9FBMxtwI2d29qezbxuw6rvMwg
+         +KIyK7esmDdlGvp/2oHrdVwlXhUvjNel8nOaNzEg=
+Date:   Wed, 22 Jul 2020 17:58:43 -0700
+To:     wsa@kernel.org, ray.jui@broadcom.com
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+Cc:     rjui@broadcom.com, rayagonda.kokatanur@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        dphadke@linux.microsoft.com, bcm-kernel-feedback-list@broadcom.com
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+ <20200722104128.GK1030@ninjato>
+ <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
+In-Reply-To: <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
+User-Agent: Heirloom mailx 12.5 7/5/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jul 2020 17:41:46 -0700 (PDT)
+Message-Id: <20200723005844.D288C20B4908@linux.microsoft.com>
+From:   dphadke@linux.microsoft.com (Dhananjay Phadke)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sriram Krishnan <srirakr2@cisco.com>
-Date: Wed, 22 Jul 2020 21:08:44 +0530
+Ray Jui <ray.jui@broadcom.com> wrote:
 
-> Vlan tagged packets are getting dropped when used with DPDK that uses
-> the AF_PACKET interface on a hyperV guest.
-> 
-> The packet layer uses the tpacket interface to communicate the vlans
-> information to the upper layers. On Rx path, these drivers can read the
-> vlan info from the tpacket header but on the Tx path, this information
-> is still within the packet frame and requires the paravirtual drivers to
-> push this back into the NDIS header which is then used by the host OS to
-> form the packet.
-> 
-> This transition from the packet frame to NDIS header is currently missing
-> hence causing the host OS to drop the all vlan tagged packets sent by
-> the drivers that use AF_PACKET (ETH_P_ALL) such as DPDK.
-> 
-> Here is an overview of the changes in the vlan header in the packet path:
-> 
-> The RX path (userspace handles everything):
->   1. RX VLAN packet is stripped by HOST OS and placed in NDIS header
->   2. Guest Kernel RX hv_netvsc packets and moves VLAN info from NDIS
->      header into kernel SKB
->   3. Kernel shares packets with user space application with PACKET_MMAP.
->      The SKB VLAN info is copied to tpacket layer and indication set
->      TP_STATUS_VLAN_VALID.
->   4. The user space application will re-insert the VLAN info into the frame
-> 
-> The TX path:
->   1. The user space application has the VLAN info in the frame.
->   2. Guest kernel gets packets from the application with PACKET_MMAP.
->   3. The kernel later sends the frame to the hv_netvsc driver. The only way
->      to send VLANs is when the SKB is setup & the VLAN is stripped from the
->      frame.
->   4. TX VLAN is re-inserted by HOST OS based on the NDIS header. If it sees
->      a VLAN in the frame the packet is dropped.
-> 
-> Cc: xe-linux-external@cisco.com
-> Cc: Sriram Krishnan <srirakr2@cisco.com>
-> Signed-off-by: Sriram Krishnan <srirakr2@cisco.com>
-
-Applied to net-next, thank you.
+>
+> On 7/22/2020 3:41 AM, Wolfram Sang wrote:
+> > 
+> >>> +	synchronize_irq(iproc_i2c->irq);
+> >>
+> >> If one takes a look at the I2C slave ISR routine, there are places where
+> >> IRQ can be re-enabled in the ISR itself. What happens after we mask all
+> >> slave interrupt and when 'synchronize_irq' is called, which I suppose is
+> >> meant to wait for inflight interrupt to finish where there's a chance
+> >> the interrupt can be re-enable again? How is one supposed to deal with that?
+> > 
+> > I encountered the same problem with the i2c-rcar driver before I left
+> > for my holidays.
+> > 
+>
+> I think the following sequence needs to be implemented to make this
+> safe, i.e., after 'synchronize_irq', no further slave interrupt will be
+> fired.
+>
+> In 'bcm_iproc_i2c_unreg_slave':
+>
+> 1. Set an atomic variable 'unreg_slave' (I'm bad in names so please come
+> up with a better name than this)
+>
+> 2. Disable all slave interrupts
+>
+> 3. synchronize_irq
+>
+> 4. Set slave to NULL
+>
+> 5. Erase slave addresses
+>
+> In the ISR routine, it should always check against 'unreg_slave' before
+> enabling any slave interrupt. If 'unreg_slave' is set, no slave
+> interrupt should be re-enabled from within the ISR.
+>
+> I think the above sequence can ensure no further slave interrupt after
+> 'synchronize_irq'. I suggested using an atomic variable instead of
+> variable + spinlock due to the way how sync irq works, i.e., "If you use
+> this function while holding a resource the IRQ handler may need you will
+> deadlock.".
+>
+> Thanks,
+>
+> Ray
+>
+> >>> +	iproc_i2c->slave = NULL;
+> >>> +
+> >>>  	/* Erase the slave address programmed */
+> >>>  	tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
+> >>>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+> >>>
