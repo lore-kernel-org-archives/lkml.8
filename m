@@ -2,108 +2,165 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33644C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEF9206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:25:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WoJnerbk"
+	by mail.kernel.org (Postfix) with ESMTP id A35B8206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgGWQZN (ORCPT
+        id S1729746AbgGWQbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:25:13 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:50440 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgGWQZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:25:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595521512; x=1627057512;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GmZjKvHA4i9aKtLNXB0oUxh93lHYoeSrTMVIgaJmzgU=;
-  b=WoJnerbkPIwBehDLvCdN40tDmGwy6M0pQU8FGPa+Qy9bvz+9BYWWPGIj
-   n7Xg/we2jUJYxMU7R77WmbK/qxC1aZ1S8HTXSqM6RXhBv3Jzp5pjOW+Lc
-   kdAOTTTIderFsOU/4KYe/4zmDj6Sr6Zs7+7P11NDzuguqiFXumLi8AIU2
-   OvWxVEVoy8NEUHnCIGfMwEBkCuSwzeYqwwJsaoelnDe6962iqmlrSk4Bn
-   Hsql/REr+zgDTK/ByTOZD+DBhSaqiu3HsrRYi6oSRkr8ssHBllreM0ia7
-   FJ1ZPTwFL2uNxz1OS7jaqw3BjVzrCpLooL4msVQ44CykxdqrFMzT/0Qdy
-   Q==;
-IronPort-SDR: PvTi7/sNZx75j3/s3VVK8G+NM+DWXFyea4Wrj9IzWNWCBatfNfGZexU7y5Y+WL+MslZCtWSKVm
- cuSe+JQlGNXrU0pwSEpt4GvLG8PjzKjZRt3sUBIpwy2UqqR9CCB4/LqZl3Sks0i6VfItk2OPE1
- xfWw+OrJCo/laauNB6OVDghPjuZ37jb84AmNVRBcwAsGtz9JahvWZMIxYKrr6UkXbpuadg8c3K
- tFBUjFl18N61LdFt1/nXNJOGAMXKTbh76brU2vsVslJvlfIfCSK8eHgUbKx/bJRekeCJNkMQqO
- BEY=
+        Thu, 23 Jul 2020 12:31:52 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47343 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbgGWQbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:31:52 -0400
+IronPort-SDR: OyJnp7R4Oj/MtP5FAZvSaDbqDDkYdBHb9sFEX4IAWeqWG8IvGyr7hC1PbGQd6E5u44u6neadHC
+ Yo1RuyhFNRRw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="215173567"
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="83016633"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 09:25:12 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 23 Jul 2020 09:25:12 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 23 Jul 2020 09:25:08 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <alexandre.belloni@bootlin.com>, <cristian.birsan@microchip.com>,
-        <nicolas.ferre@microchip.com>, <arnd@arndb.de>,
-        <ludovic.desroches@microchip.com>,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 1/3] ARM: configs: at91: sama5: add support for KSZ ethernet switches
-Date:   Thu, 23 Jul 2020 19:24:32 +0300
-Message-ID: <20200723162434.1983643-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
+   d="scan'208";a="215173567"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:31:50 -0700
+IronPort-SDR: +zGLCgGektfnH0My/RC1Y5Iu7oXQ5ecB1FDkNpz27jZvp+qBs0+9G6uKKNHmCM4h9+LW/ZdUxL
+ 1VvOkW4GJrfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="432795160"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jul 2020 09:31:48 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH v4 01/10] net: eth: altera: tse_start_xmit ignores
+ tx_buffer call response
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
+ <20200708072401.169150-2-joyce.ooi@intel.com>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <7601144f-a176-524f-57db-d428d7473a03@linux.intel.com>
+Date:   Thu, 23 Jul 2020 11:32:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20200708072401.169150-2-joyce.ooi@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-
-Enable DSA and KSZ9477 support as modules. Ethernet switches are used by
-the SAMA5D2-ICP board.
-
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- arch/arm/configs/sama5_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index f688443fe7bf..123b95c1447a 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -49,6 +49,7 @@ CONFIG_IP_PNP_RARP=y
- # CONFIG_INET6_XFRM_MODE_TUNNEL is not set
- # CONFIG_INET6_XFRM_MODE_BEET is not set
- CONFIG_IPV6_SIT_6RD=y
-+CONFIG_NET_DSA=m
- CONFIG_CAN=y
- CONFIG_CAN_AT91=y
- CONFIG_CAN_M_CAN=y
-@@ -80,6 +81,8 @@ CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- # CONFIG_SCSI_LOWLEVEL is not set
- CONFIG_NETDEVICES=y
-+CONFIG_NET_DSA_MICROCHIP_KSZ9477=m
-+CONFIG_NET_DSA_MICROCHIP_KSZ9477_SPI=m
- CONFIG_MACB=y
- # CONFIG_NET_VENDOR_BROADCOM is not set
- # CONFIG_NET_VENDOR_CIRRUS is not set
--- 
-2.25.1
-
+On 7/8/20 2:23 AM, Ooi, Joyce wrote:
+> From: Dalon Westergreen <dalon.westergreen@intel.com>
+> 
+> The return from tx_buffer call in tse_start_xmit is
+> inapropriately ignored.  tse_buffer calls should return
+> 0 for success or NETDEV_TX_BUSY.  tse_start_xmit should
+> return not report a successful transmit when the tse_buffer
+> call returns an error condition.
+> 
+> In addition to the above, the msgdma and sgdma do not return
+> the same value on success or failure.  The sgdma_tx_buffer
+> returned 0 on failure and a positive number of transmitted
+> packets on success.  Given that it only ever sends 1 packet,
+> this made no sense.  The msgdma implementation msgdma_tx_buffer
+> returns 0 on success.
+> 
+>    -> Don't ignore the return from tse_buffer calls
+>    -> Fix sgdma tse_buffer call to return 0 on success
+>       and NETDEV_TX_BUSY on failure.
+> 
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> ---
+> v2: no change
+> v3: queue is stopped before returning NETDEV_TX_BUSY
+> v4: no change
+> ---
+>   drivers/net/ethernet/altera/altera_sgdma.c    | 19 ++++++++++++-------
+>   drivers/net/ethernet/altera/altera_tse_main.c |  4 +++-
+>   2 files changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/altera/altera_sgdma.c b/drivers/net/ethernet/altera/altera_sgdma.c
+> index db97170da8c7..fe6276c7e4a3 100644
+> --- a/drivers/net/ethernet/altera/altera_sgdma.c
+> +++ b/drivers/net/ethernet/altera/altera_sgdma.c
+> @@ -4,6 +4,7 @@
+>    */
+>   
+>   #include <linux/list.h>
+> +#include <linux/netdevice.h>
+>   #include "altera_utils.h"
+>   #include "altera_tse.h"
+>   #include "altera_sgdmahw.h"
+> @@ -159,10 +160,11 @@ void sgdma_clear_txirq(struct altera_tse_private *priv)
+>   		    SGDMA_CTRLREG_CLRINT);
+>   }
+>   
+> -/* transmits buffer through SGDMA. Returns number of buffers
+> - * transmitted, 0 if not possible.
+> - *
+> - * tx_lock is held by the caller
+> +/* transmits buffer through SGDMA.
+> + *   original behavior returned the number of transmitted packets (always 1) &
+> + *   returned 0 on error.  This differs from the msgdma.  the calling function
+> + *   will now actually look at the code, so from now, 0 is good and return
+> + *   NETDEV_TX_BUSY when busy.
+>    */
+>   int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+>   {
+> @@ -173,8 +175,11 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+>   	struct sgdma_descrip __iomem *ndesc = &descbase[1];
+>   
+>   	/* wait 'til the tx sgdma is ready for the next transmit request */
+> -	if (sgdma_txbusy(priv))
+> -		return 0;
+> +	if (sgdma_txbusy(priv)) {
+> +		if (!netif_queue_stopped(priv->dev))
+> +			netif_stop_queue(priv->dev);
+> +		return NETDEV_TX_BUSY;
+> +	}
+>   
+>   	sgdma_setup_descrip(cdesc,			/* current descriptor */
+>   			    ndesc,			/* next descriptor */
+> @@ -191,7 +196,7 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+>   	/* enqueue the request to the pending transmit queue */
+>   	queue_tx(priv, buffer);
+>   
+> -	return 1;
+> +	return 0;
+>   }
+>   
+>   
+> diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+> index 907125abef2c..ec2b36e05c3f 100644
+> --- a/drivers/net/ethernet/altera/altera_tse_main.c
+> +++ b/drivers/net/ethernet/altera/altera_tse_main.c
+> @@ -595,7 +595,9 @@ static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>   	buffer->dma_addr = dma_addr;
+>   	buffer->len = nopaged_len;
+>   
+> -	priv->dmaops->tx_buffer(priv, buffer);
+> +	ret = priv->dmaops->tx_buffer(priv, buffer);
+> +	if (ret)
+> +		goto out;
+>   
+>   	skb_tx_timestamp(skb);
+>   
+> 
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
