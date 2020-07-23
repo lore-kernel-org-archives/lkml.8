@@ -2,69 +2,64 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F192C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC4A22CA1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595489133;
-	bh=VfAKlfxGzM1PSkqUl2tEI3DFP0XcgostHF2iqvPQChU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ILxvwyzT+slWYlLSimT5J6WQyteKikJubAVmyl7jalqKncuaYUeV+1Qhd0YH4ubYX
-	 +4+KMlUcVaXt7LN4aHbIZ6zCYDsGT/msh4YdXOK3B2wMcUmGUT/CU7fKFL5UceO04j
-	 kHt5+4h5tKVDGVI1BXgadJbM5zvyWwGbfPCzxDOE=
+	by mail.kernel.org (Postfix) with ESMTP id 5224622CA1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgGWHZb (ORCPT
+        id S1726992AbgGWHZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 03:25:41 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34464 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgGWHZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:25:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 656CE22CA0;
-        Thu, 23 Jul 2020 07:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595489131;
-        bh=VfAKlfxGzM1PSkqUl2tEI3DFP0XcgostHF2iqvPQChU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2AdaBwCURGdnGb9I4SstD6JQQF/fsyFMqCm6g3sUE+i/b0H7C8VAJ1ldjVm10N2xo
-         5kj/ytjeI88MPG7Ay84ZufLSCTNbc9oCG1KBvueaJMSc2jRuwviuDuKauzIZ6TwBow
-         HhonquNNY8IHnFdydCwksuz/xsWFGuTIU98DIAB8=
-Date:   Thu, 23 Jul 2020 09:25:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     moritzf@google.com, linux-fpga@vger.kernel.org,
+        id S1725857AbgGWHZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:25:40 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jyVbL-0005NT-MS; Thu, 23 Jul 2020 17:25:12 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 23 Jul 2020 17:25:11 +1000
+Date:   Thu, 23 Jul 2020 17:25:11 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     miaoqinglang@huawei.com, gregkh@linuxfoundation.org,
+        aymen.sghaier@nxp.com, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] FPGA Manager changes for 5.9-rc1
-Message-ID: <20200723072506.GA1178891@kroah.com>
-References: <20200718021954.GA7272@epycbox.lan>
+Subject: Re: [PATCH -next] crypto: caam: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200723072511.GA6095@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200718021954.GA7272@epycbox.lan>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <00ab6498-a1cb-afb2-b1e4-75389bfbbd4c@nxp.com>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 07:19:54PM -0700, Moritz Fischer wrote:
-> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+Horia Geantă <horia.geanta@nxp.com> wrote:
+> On 7/16/2020 12:00 PM, Qinglang Miao wrote:
+>> From: Liu Shixin <liushixin2@huawei.com>
+>> 
+>> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>> 
+>> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 > 
->   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mdf/linux-fpga.git tags/fpga-for-5.9
+> This patch depends on linux-next
+> commit 4d4901c6d748 ("seq_file: switch over direct seq_read method calls to seq_read_iter")
 
-Pulled and pushed out, thanks.
+Please postpone these cleanups until that patch hits mainline.
 
-greg k-h
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
