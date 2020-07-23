@@ -2,245 +2,133 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294A2C433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA48C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3DB422BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:46:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="faiV8r+S"
+	by mail.kernel.org (Postfix) with ESMTP id 9FEFD22B43
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgGWIqz (ORCPT
+        id S1727120AbgGWIm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:46:55 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53984 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgGWIqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:46:52 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06N8kltv107740;
-        Thu, 23 Jul 2020 03:46:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595494007;
-        bh=68M+G0481jfhwt1IrYtS1Ya5cHRGqqeNyerVQDwuiQs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=faiV8r+S2IIxSU2ro+YPXww47HgaOKs9vj9p5RJOsRbUzZq8/qcnq0XZh+7qmmeql
-         0SWWokJhN9yWjV46Jw49GQyQ5ny72BsvrdLLAn4w8169n3PHaWZl03ez9Mq7/Zprte
-         5OaziehUl7LbAvNVSM0+iva8gPpPA52h4W9X+iyo=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06N8klIm026272
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 03:46:47 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Jul 2020 03:46:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Jul 2020 03:46:47 -0500
-Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06N8kTEO123087;
-        Thu, 23 Jul 2020 03:46:44 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 4/4] arm64: dts: ti: Add support for J7200 Common Processor Board
-Date:   Thu, 23 Jul 2020 14:16:28 +0530
-Message-ID: <20200723084628.19241-5-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723084628.19241-1-lokeshvutla@ti.com>
-References: <20200723084628.19241-1-lokeshvutla@ti.com>
+        Thu, 23 Jul 2020 04:42:57 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2513 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725858AbgGWIm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:42:57 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id CAA78D7CF743FE7D3470;
+        Thu, 23 Jul 2020 09:42:55 +0100 (IST)
+Received: from localhost (10.52.125.229) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 23 Jul
+ 2020 09:42:55 +0100
+Date:   Thu, 23 Jul 2020 09:41:34 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     David Gow <davidgow@google.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Dike <jdike@addtoit.com>, <rafael@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Richard Weinberger <richard@nod.at>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        <kunit-dev@googlegroups.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] platform: ioremap: Build iomap functions even
+ without HAS_IOMEM
+Message-ID: <20200723094134.0000432d@Huawei.com>
+In-Reply-To: <20200721054528.2556267-1-davidgow@google.com>
+References: <20200721054528.2556267-1-davidgow@google.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.125.229]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for J7200 Common Processor Board.
-The EVM architecture is very similar to J721E as follows:
+On Mon, 20 Jul 2020 22:45:28 -0700
+David Gow <davidgow@google.com> wrote:
 
-+------------------------------------------------------+
-|   +-------------------------------------------+      |
-|   |                                           |      |
-|   |        Add-on Card 1 Options              |      |
-|   |                                           |      |
-|   +-------------------------------------------+      |
-|                                                      |
-|                                                      |
-|                     +-------------------+            |
-|                     |                   |            |
-|                     |   SOM             |            |
-|  +--------------+   |                   |            |
-|  |              |   |                   |            |
-|  |  Add-on      |   +-------------------+            |
-|  |  Card 2      |                                    |    Power Supply
-|  |  Options     |                                    |    |
-|  |              |                                    |    |
-|  +--------------+                                    | <---
-+------------------------------------------------------+
-                                Common Processor Board
+> A number of drivers use devm_platform_ioremap_resource(), but do not (or
+> did not) explicitly depend on IOMEM[1,2]. Given that the only platform
+> without HAS_IOMEM seems to be UML, and it has sufficient stubs for
+> devm_platform_ioremap_resource() and its dependencies to build, we can
+> remove the HAS_IOMEM requirement here, rather than playing whack-a-mole
+> with different drivers which don't try to build against ARCH=um.
+> 
+> The reason this works at the moment is that stub ioremap and iounmap
+> functions were added to UML to support this sort-of thing[3]. This
+> particular change doesn't require adding any additional stubs, but there
+> is possibly room in the future to stub out the remaining iomem functions
+> (or to provide mock implementations for testing), and get rid of
+> HAS_IOMEM entirely.
+> 
+> [1]: https://lkml.org/lkml/2020/6/30/176
+> [2]:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1e7468bd9d30a21e059af477106dc5588ae52dff
+> [3]:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1405627.html
 
-Common Processor board is the baseboard that has most of the actual
-connectors, power supply etc. A SOM (System on Module) is plugged on
-to the common processor board and this contains the SoC, PMIC, DDR and
-basic high speed components necessary for functionality.
+Hi David,
 
-Note:
-* The minimum configuration required to boot up the board is System On
-  Module(SOM) + Common Processor Board.
-* Since there is just a single SOM and Common Processor Board, we are
-  maintaining common processor board as the base dts and SOM as the dtsi
-  that we include. In the future as more SOM's appear, we should move
-  common processor board as a dtsi and include configurations as dts.
-* All daughter cards beyond the basic boards shall be maintained as
-  overlays.
-* Since J7200 is derivative of J721E re-using the CONFIG_ARCH_K3_J721E_SOC
-  config for building J7200 dts files.
+I don't quite follow why we change when iomap_copy.c is built.
+Was this just a case of there not seeming to be any reason to protect it
+or is there a direct dependency on something in there that I'm missing?
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm64/boot/dts/ti/Makefile               |  3 +-
- .../dts/ti/k3-j7200-common-proc-board.dts     | 64 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi   | 29 +++++++++
- 3 files changed, 95 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
- create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
+Otherwise looks good to me.
 
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index b397945fdf73..7b0b176eab1b 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -8,4 +8,5 @@
- 
- dtb-$(CONFIG_ARCH_K3_AM6_SOC) += k3-am654-base-board.dtb
- 
--dtb-$(CONFIG_ARCH_K3_J721E_SOC) += k3-j721e-common-proc-board.dtb
-+dtb-$(CONFIG_ARCH_K3_J721E_SOC) += k3-j721e-common-proc-board.dtb \
-+				   k3-j7200-common-proc-board.dtb
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-new file mode 100644
-index 000000000000..e27069317c4e
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+
-+#include "k3-j7200-som-p0.dtsi"
-+
-+/ {
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000";
-+	};
-+};
-+
-+&wkup_uart0 {
-+	/* Wakeup UART is used by System firmware */
-+	status = "disabled";
-+};
-+
-+&main_uart0 {
-+	power-domains = <&k3_pds 146 TI_SCI_PD_SHARED>;
-+};
-+
-+&main_uart2 {
-+	/* MAIN UART 2 is used by R5F firmware */
-+	status = "disabled";
-+};
-+
-+&main_uart3 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-+
-+&main_uart4 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-+
-+&main_uart5 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-+
-+&main_uart6 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-+
-+&main_uart7 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-+
-+&main_uart8 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-+
-+&main_uart9 {
-+	/* UART not brought out */
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-new file mode 100644
-index 000000000000..22fc50bd5c4c
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+
-+#include "k3-j7200.dtsi"
-+
-+/ {
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* 4G RAM */
-+		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
-+		      <0x00000008 0x80000000 0x00000000 0x80000000>;
-+	};
-+
-+	reserved_memory: reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		secure_ddr: optee@9e800000 {
-+			reg = <0x00 0x9e800000 0x00 0x01800000>;
-+			alignment = <0x1000>;
-+			no-map;
-+		};
-+	};
-+};
--- 
-2.27.0
+Jonathan
+
+> 
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+>  drivers/base/platform.c | 2 --
+>  lib/Makefile            | 2 +-
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index c0d0a5490ac6..628dde6675cf 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -61,7 +61,6 @@ struct resource *platform_get_resource(struct platform_device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(platform_get_resource);
+>  
+> -#ifdef CONFIG_HAS_IOMEM
+>  /**
+>   * devm_platform_get_and_ioremap_resource - call devm_ioremap_resource() for a
+>   *					    platform device and get resource
+> @@ -135,7 +134,6 @@ devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+>  	return devm_ioremap_resource(&pdev->dev, res);
+>  }
+>  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+> -#endif /* CONFIG_HAS_IOMEM */
+>  
+>  /**
+>   * platform_get_irq_optional - get an optional IRQ for a device
+> diff --git a/lib/Makefile b/lib/Makefile
+> index b1c42c10073b..35c21af33b93 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -115,7 +115,7 @@ obj-y += math/ crypto/
+>  
+>  obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
+>  obj-$(CONFIG_GENERIC_PCI_IOMAP) += pci_iomap.o
+> -obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
+> +obj-y += iomap_copy.o devres.o
+>  obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
+>  obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
+>  
+
 
