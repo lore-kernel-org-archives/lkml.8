@@ -2,218 +2,90 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3422AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5008AC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A07D20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:46:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCwYT/Hg"
+	by mail.kernel.org (Postfix) with ESMTP id 3978D20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgGWEqr (ORCPT
+        id S1726379AbgGWEr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 00:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGWEqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 00:46:46 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2FBC0619DC;
-        Wed, 22 Jul 2020 21:46:46 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u185so2394460pfu.1;
-        Wed, 22 Jul 2020 21:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=x5OWXZ2oCswUaXjRk5/hllGRxClOI19n8grS+p6yEeY=;
-        b=NCwYT/HglPC9BjF5hFoBQ8gvnq21EQlOOuf235wRoCXJW5tAroAUCRtrPFSG6KVxNo
-         eNSeDxO7EPgAqep4yOvmr06UUjE+7ICHE5b/n+4MLrKuzWLa5PMj8j+noZV0tzYJIpEA
-         R1EbXnq/QI7jt6V2NeUCymZlLrPVxsCaoAGCYSEdC8Habe+JYtdyHsA09lAC+0/gvwQU
-         wXqM6bLbGz53jGLOqj+uxEc3f2JyGPmbDTVveBUdQimR/ABZqgpSo7ZoSHJTlpd4uDir
-         I7nVC1vPDOBabOMjZv/cfGd0fPqW4e3jtc+5la+r0OhjjT4wESNBWR+YgQp/a3QUMt5j
-         +02g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x5OWXZ2oCswUaXjRk5/hllGRxClOI19n8grS+p6yEeY=;
-        b=O11Sbp/V4DL6XMeGrmZkMlaNZN7ah3JefbcFHAtTXQ5WPA3jc3lXPCupsLnW7aMHs1
-         5/8/fUQAhXog65B4nVRqHAp8lmMGX27EeJGp/GUMd1A58cZzYWW+MDkVbv/86d+ExOPk
-         CEsBQzjz8ZhQd7D3jy+UVBcKmbeJm5YS9viG0ySJq4e5CEFMRy+/IJmjxaGPS9qPQBJA
-         /1SuOf85kst32gVh+KblBk9VQJUg0NZ+AhTAB14XaUHzWNigcTDfNkWd5/Ai2ALrpAWH
-         fdxppHEyeR/mncsdX07EnWC8Rs/VdwzV/QhGboc160S0xN/hsv/tOryjfVC38Lv0sv2I
-         Rieg==
-X-Gm-Message-State: AOAM532qJup7XBqTenE074CKKvkcfA2AglYa/JaNaZ5LI4WBmjmSHLif
-        lZPE2HZO4Fju4CZgM4rpTmU=
-X-Google-Smtp-Source: ABdhPJwVZwpILYxgUNEUu8nRecBvRcd/N1KnIwfW0B1zZEM5IiwDsOwwHwVNctCJr9xktB0OtJc8tQ==
-X-Received: by 2002:a62:1407:: with SMTP id 7mr2433532pfu.88.1595479606028;
-        Wed, 22 Jul 2020 21:46:46 -0700 (PDT)
-Received: from localhost (g155.222-224-148.ppp.wakwak.ne.jp. [222.224.148.155])
-        by smtp.gmail.com with ESMTPSA id 129sm1256303pfv.161.2020.07.22.21.46.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 21:46:45 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 13:46:42 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "palmerdabbelt@google.com" <palmerdabbelt@google.com>,
-        "walken@google.com" <walken@google.com>,
-        "naresh.kamboju@linaro.org" <naresh.kamboju@linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zong.li@sifive.com" <zong.li@sifive.com>
-Subject: Re: [PATCH 5.7 233/244] RISC-V: Acquire mmap lock before invoking
- walk_page_range
-Message-ID: <20200723044642.GA80756@lianli.shorne-pla.net>
-References: <20200720191403.GB1529125@kroah.com>
- <mhng-903745bf-c5df-4e70-ade8-c1e596265fc4@palmerdabbelt-glaptop1>
- <20200722124839.GB3155653@kroah.com>
- <0fcbb91ab6dc49807dcca953c5dca673ad403045.camel@wdc.com>
+        Thu, 23 Jul 2020 00:47:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38894 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgGWEr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 00:47:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2379D31B;
+        Wed, 22 Jul 2020 21:47:26 -0700 (PDT)
+Received: from [10.163.85.73] (unknown [10.163.85.73])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4D953F718;
+        Wed, 22 Jul 2020 21:47:23 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] mm/hugetlb.c: make is_hugetlb_entry_hwpoisoned
+ return bool
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
+        akpm@linux-foundation.org
+References: <20200723032248.24772-1-bhe@redhat.com>
+ <20200723032248.24772-2-bhe@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <49c832ba-7f44-4e8a-b94a-629b53499f11@arm.com>
+Date:   Thu, 23 Jul 2020 10:16:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fcbb91ab6dc49807dcca953c5dca673ad403045.camel@wdc.com>
+In-Reply-To: <20200723032248.24772-2-bhe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:11:35PM +0000, Atish Patra wrote:
-> On Wed, 2020-07-22 at 14:48 +0200, Greg KH wrote:
-> > On Tue, Jul 21, 2020 at 03:50:35PM -0700, Palmer Dabbelt wrote:
-> > > On Mon, 20 Jul 2020 12:14:03 PDT (-0700), Greg KH wrote:
-> > > > On Mon, Jul 20, 2020 at 06:50:10PM +0000, Atish Patra wrote:
-> > > > > On Mon, 2020-07-20 at 23:11 +0530, Naresh Kamboju wrote:
-> > > > > > RISC-V build breaks on stable-rc 5.7 branch.
-> > > > > > build failed with gcc-8, gcc-9 and gcc-9.
-> > > > > > 
-> > > > > 
-> > > > > Sorry for the compilation issue.
-> > > > > 
-> > > > > mmap_read_lock was intrdouced in the following commit.
-> > > > > 
-> > > > > commit 9740ca4e95b4
-> > > > > Author: Michel Lespinasse <walken@google.com>
-> > > > > Date:   Mon Jun 8 21:33:14 2020 -0700
-> > > > > 
-> > > > >     mmap locking API: initial implementation as rwsem wrappers
-> > > > > 
-> > > > > The following two commits replaced the usage of mmap_sem rwsem
-> > > > > calls
-> > > > > with mmap_lock.
-> > > > > 
-> > > > > d8ed45c5dcd4 (mmap locking API: use coccinelle to convert
-> > > > > mmap_sem
-> > > > > rwsem call sites)
-> > > > > 89154dd5313f (mmap locking API: convert mmap_sem call sites
-> > > > > missed by
-> > > > > coccinelle)
-> > > > > 
-> > > > > The first commit is not present in stale 5.7-y for obvious
-> > > > > reasons.
-> > > > > 
-> > > > > Do we need to send a separate patch only for stable branch with
-> > > > > mmap_sem ? I am not sure if that will cause a conflict again in
-> > > > > future.
-> > > > 
-> > > > I do not like taking odd backports, and would rather take the
-> > > > real patch
-> > > > that is upstream.
-> > > 
-> > > I guess I'm a bit new to stable backports so I'm not sure what's
-> > > expected here.
-> > > The failing patch fixes a bug by using a new interface.  The
-> > > smallest diff fix
-> > > for the stable kernels would be to construct a similar fix without
-> > > the new
-> > > interface, which in this case is very easy as the new interface
-> > > just converted
-> > > some generic locking calls to one-line functions.  It seems
-> > > somewhat circuitous
-> > > to land that in Linus' tree, though, as it would require breaking
-> > > our port
-> > > before fixing it to use the old interfaces and then cleaning it up
-> > > to use the
-> > > new interfaces.
-> > > 
-> > > Are we expected to pull the new interface onto stable in addition
-> > > to this fix?
-> > 
-> > If it really does fix a big issue, yes, that is fine to do.
-> > 
+
+
+On 07/23/2020 08:52 AM, Baoquan He wrote:
+> Just like its neighbour is_hugetlb_entry_migration() has done.
 > 
-> The original issue was manifests only for certain rootfs with
-> CONFIG_DEBUG_VM enabled in kernel. I am not sure if that qualfies for a
-> big issue :). But there was a similar fix for OpenRISC as well.
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/hugetlb.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> +stafford (who fixed the issue for OpenRISC)
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index f24acb3af741..3569e731e66b 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3754,17 +3754,17 @@ bool is_hugetlb_entry_migration(pte_t pte)
+>  		return false;
+>  }
+>  
+> -static int is_hugetlb_entry_hwpoisoned(pte_t pte)
+> +static bool is_hugetlb_entry_hwpoisoned(pte_t pte)
+>  {
+>  	swp_entry_t swp;
+>  
+>  	if (huge_pte_none(pte) || pte_present(pte))
+> -		return 0;
+> +		return false;
+>  	swp = pte_to_swp_entry(pte);
+>  	if (non_swap_entry(swp) && is_hwpoison_entry(swp))
+> -		return 1;
+> +		return true;
+>  	else
+> -		return 0;
+> +		return false;
+>  }
+>  
+>  int copy_hugetlb_page_range(struct mm_struct *dst, struct mm_struct *src,
 > 
-> @stafford Was there a request to backport the fix to stable ?
 
-I have not requested  pulling my patch to stable.  Mine is this one:
-
-  313a5257b84c2 ("openrisc: fix boot oops when DEBUG_VM is enabled")
-
-If you cat request that would be great.
-
-> I can combine all the git ids that needs to be pulled in.
-
-Note, mine lists:
-
-  Fixes: 42fc541404f2 ("mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()")
-
-while your's lists:
-
-  Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
-
-That is when the code was introduced to the riscv port, but not the commit that
-broke booting.
-
-I think if you list the Fixes as I did when backporting to stable Greg, or his
-tools, would also know that the patch depends on the the 42fc541404f2 commit.
-
-Also, I guess there is no problem with listing 2 "Fixes" in the future.
-
-Thanks Atish and Palmer.
-
--Stafford
-
-> > > The new interface doesn't actually fix anything itself, but it
-> > > would allow a
-> > > functional kernel to be constructed that consisted of only
-> > > backports from
-> > > Linus' tree (which would also make further fixes easier).
-> > 
-> > That's fine.
-> > 
-> > > It seems safe to
-> > > just pull in 9740ca4e95b4 ("mmap locking API: initial
-> > > implementation as rwsem
-> > > wrappers") before this failing patch, as in this case the new
-> > > interface will
-> > > function correctly with only a subset of callers having been
-> > > converted.  Of
-> > > course that's not a generally true statement so I don't know if
-> > > future code
-> > > will behave that way, but pulling in those conversion patches is
-> > > definitely
-> > > unnecessary diff right now.
-> > 
-> > If someone wants to send me a full set of the git ids that need to be
-> > pulled in, I will be glad to do so.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> -- 
-> Regards,
-> Atish
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
