@@ -2,120 +2,112 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27742C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08D8720888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C242065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595494541;
+	bh=KOk5LS0g74RiFhSfc98KyCI8H9yYvI8/y2AG0JcWLG8=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=CbMwOw5tupaNPYNr0bKo/jIXp5yO1OODwxceGYZyUiY8uwKI0hMlq/8UrmBj4HAUJ
+	 /LvLU0Wm/u3lHQJm5OmMMsvBNa00Mh0xxUT6wYK9yoPW3zS2awn0ILzViSAxrnV+1y
+	 LP7zrbExo4UL7n4VN0JCEC6ilhrNs9Kzq/4zrn0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgGWIxa (ORCPT
+        id S1727111AbgGWIzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:53:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:42008 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgGWIxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:53:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9ED1D6E;
-        Thu, 23 Jul 2020 01:53:28 -0700 (PDT)
-Received: from [10.163.85.73] (unknown [10.163.85.73])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E46D3F66F;
-        Thu, 23 Jul 2020 01:53:26 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] mm/hugetlb.c: Remove the unnecessary
- non_swap_entry()
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mike.kravetz@oracle.com, david@redhat.com,
-        akpm@linux-foundation.org
-References: <20200723032248.24772-1-bhe@redhat.com>
- <20200723032248.24772-3-bhe@redhat.com>
- <f66035ea-abfa-2523-8df5-ceb3599c9395@arm.com>
- <20200723061437.GQ32539@MiWiFi-R3L-srv>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7c0d19e9-4f90-9f74-d364-4d877ccf67f9@arm.com>
-Date:   Thu, 23 Jul 2020 14:22:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 23 Jul 2020 04:55:39 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:40938 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgGWIzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:55:39 -0400
+Received: by mail-ej1-f67.google.com with SMTP id o18so5514928eje.7;
+        Thu, 23 Jul 2020 01:55:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xt5+vxpGC9nM/ZHsj3r5gI/nmTDmk9F2oBeOZtyGPQM=;
+        b=ddpnUlIUIV5C0ItojdvfTtAPdsnBCDQMXoF/G1SjnTGBKiFG8k3OVikaOxUm19odph
+         VEFVVmtP/eIlYfyKZmTPAMxK9gW1O/MLXDxdtie4Q9+xMGEieYxirNthaFgrIhC41sig
+         ubX6nkZiF2qCHGc0ghQf6rJdLPIrWWynuYsGef8ztTi8ThASG+r8jGuR7cCldme+GXSd
+         aZxhSnecXiH0HZn6FbRiqKkg6XY3xG7O/E96nXsPeMHMedVxtPw58TcwbnrYuzxNXjQE
+         TNPpHsVKkUXNC5ACLxjnGyCj8ITPMN/EdiMiJH5odImulHMyx3GFuDhKBiVjA/2LpGsZ
+         JhBQ==
+X-Gm-Message-State: AOAM533luptVUqF4R1RVBDBQVtqaDwYwrkDBiLqqUMQVULSFzffhYXjC
+        bjZX9BMt0RRZ8nnDHBFhrEvrC641jr0=
+X-Google-Smtp-Source: ABdhPJwRP+wjzC0Ys2mHygLb4mxZAtf0iTg0JkShIGi/qXx7US6BV7vrg2I5N8csKyuByvVrRm5SwQ==
+X-Received: by 2002:a17:906:414c:: with SMTP id l12mr3469617ejk.417.1595494536809;
+        Thu, 23 Jul 2020 01:55:36 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id jo25sm1541668ejb.116.2020.07.23.01.55.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 01:55:36 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 10:55:33 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 18/23] memory: mtk-smi: Add argument to function
+ definition
+Message-ID: <20200723085533.GA25935@kozik-lap>
+References: <20200723073744.13400-1-krzk@kernel.org>
+ <20200723073744.13400-19-krzk@kernel.org>
+ <CAK8P3a1TSTX9ATUuyWyqJ1xtd6GP13JM-RQkhGCi1BSTiM9X9A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723061437.GQ32539@MiWiFi-R3L-srv>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1TSTX9ATUuyWyqJ1xtd6GP13JM-RQkhGCi1BSTiM9X9A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 23, 2020 at 10:50:08AM +0200, Arnd Bergmann wrote:
+> On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Fix checkpatch warning:
+> >     WARNING: function definition argument 'struct device *' should also have an identifier name
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Is this a bug in checkpatch? I don't see why it should warn about this,
+> as there is no function definition here.
+> 
+> Your change is clearly harmless, but I wonder if we should fix
+> checkpatch instead.
 
+Good point. If this were not a warning, I would ignore it. However still
+the common practice is to add arguments to such type definitions as it
+helps to describe the type.
 
-On 07/23/2020 11:44 AM, Baoquan He wrote:
-> On 07/23/20 at 10:36am, Anshuman Khandual wrote:
->>
->>
->> On 07/23/2020 08:52 AM, Baoquan He wrote:
->>> The checking is_migration_entry() and is_hwpoison_entry() are stricter
->>> than non_swap_entry(), means they have covered the conditional check
->>> which non_swap_entry() is doing.
->>
->> They are no stricter as such but implicitly contains non_swap_entry() in itself.
->> If a swap entry tests positive for either is_[migration|hwpoison]_entry(), then
->> its swap_type() is among SWP_MIGRATION_READ, SWP_MIGRATION_WRITE and SWP_HWPOISON.
->> All these types >= MAX_SWAPFILES, exactly what is asserted with non_swap_entry().
->>
->>>
->>> Hence remove the unnecessary non_swap_entry() in is_hugetlb_entry_migration()
->>> and is_hugetlb_entry_hwpoisoned() to simplify code.
->>>
->>> Signed-off-by: Baoquan He <bhe@redhat.com>
->>> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
->>> Reviewed-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>  mm/hugetlb.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->>> index 3569e731e66b..c14837854392 100644
->>> --- a/mm/hugetlb.c
->>> +++ b/mm/hugetlb.c
->>> @@ -3748,7 +3748,7 @@ bool is_hugetlb_entry_migration(pte_t pte)
->>>  	if (huge_pte_none(pte) || pte_present(pte))
->>>  		return false;
->>>  	swp = pte_to_swp_entry(pte);
->>> -	if (non_swap_entry(swp) && is_migration_entry(swp))
->>> +	if (is_migration_entry(swp))
->>>  		return true;
->>>  	else
->>>  		return false;
->>> @@ -3761,7 +3761,7 @@ static bool is_hugetlb_entry_hwpoisoned(pte_t pte)
->>>  	if (huge_pte_none(pte) || pte_present(pte))
->>>  		return false;
->>>  	swp = pte_to_swp_entry(pte);
->>> -	if (non_swap_entry(swp) && is_hwpoison_entry(swp))
->>> +	if (is_hwpoison_entry(swp))
->>>  		return true;
->>>  	else
->>>  		return false;
->>>
->>
->> It would be better if the commit message contains details about
->> the existing redundant check. But either way.
-> 
-> Thanks for your advice. Do you think updating the log as below is OK?
-> 
-> ~~~~~~~~
-> If a swap entry tests positive for either is_[migration|hwpoison]_entry(), then
-> its swap_type() is among SWP_MIGRATION_READ, SWP_MIGRATION_WRITE and SWP_HWPOISON.
-> All these types >= MAX_SWAPFILES, exactly what is asserted with non_swap_entry().
-> 
-> So the checking non_swap_entry() in is_hugetlb_entry_migration() and
-> is_hugetlb_entry_hwpoisoned() is redundant.
-> 
-> Let's remove it to optimize code.
-> ~~~~~~~~
-
-Something like above would be good.
+Best regards,
+Krzysztof
