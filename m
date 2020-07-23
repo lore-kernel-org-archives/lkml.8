@@ -2,87 +2,106 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E1BC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A278D20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131F92086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595491601;
+	bh=4JGlD1TbFFWSg+P/0Pdxr7uW71kuoH7GfKoYbWbz4BU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=vfiOdnwInyCdjCeD/COMCfgESPZ0wPD4WtxgkCFzKat9Fg8qMS5hJFR1Zr0ED8P4l
+	 l9zENH/f51MoEBJeiTUmyuFsCzjaCNy9fm2G5xa0+lsQsLAhys24RHBdIbHA7k9tYv
+	 qHr7av544Is2xsj//RFksN3wbcn7k94bPQ/jXG94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgGWIEu (ORCPT
+        id S1726800AbgGWIGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:04:50 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59156 "EHLO mga18.intel.com"
+        Thu, 23 Jul 2020 04:06:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgGWIEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:04:50 -0400
-IronPort-SDR: rrZ+scjNfuk1lDb9hf8nl2RkFJDv8BG7g3qzfWpNsGdS8EYbNK1cHb5TyiN4ZX3cTQuxN+xa0n
- bDS+j0CRKG0A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="137981058"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="137981058"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 01:04:48 -0700
-IronPort-SDR: 4g07lofFm/wx2Qvqdq5W0HHQtsEwXsbuBkxr+Ya88F0tNcUn942NqXJvZVUK5IX5NFfF4tr4H3
- zATUMg/MTEjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="310940898"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 01:04:45 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jyWDc-003PA8-G0; Thu, 23 Jul 2020 11:04:44 +0300
-Date:   Thu, 23 Jul 2020 11:04:44 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, fkostenzer@live.at,
-        geert@linux-m68k.org, paul.gortmaker@windriver.com,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org
-Subject: Re: [PATCH] lib: kunit: Convert test_sort to KUnit test
-Message-ID: <20200723080444.GE3703480@smile.fi.intel.com>
-References: <20200723000807.171940-1-vitor@massaru.org>
+        id S1726178AbgGWIGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:06:39 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4BD20888;
+        Thu, 23 Jul 2020 08:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595491598;
+        bh=4JGlD1TbFFWSg+P/0Pdxr7uW71kuoH7GfKoYbWbz4BU=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=lX458IbiTO0ynEufOwB3W12aiXAlmMXEuxF79prWdjzw+veZgSATz/xrQfhAarY8L
+         p+kCqR4aIFWPNSyfGJfEUJAGYXa7AM26Mb7gaOsOXyW6P2Zk8XbAv0NaGBHdPdZ++M
+         Fc8boQfFt44GfftAgM8IC6OYdWUQkwY0+oOpDGns=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723000807.171940-1-vitor@massaru.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAK8P3a1ReCDR8REM7AWMisiEJ_D45pC8dXaoYFFVG3aZj91e7Q@mail.gmail.com>
+References: <CA+G9fYvGXOcsF=70FVwOxqVYOeGTUuzhUzh5od1cKV1hshsW_g@mail.gmail.com> <CAK8P3a1ReCDR8REM7AWMisiEJ_D45pC8dXaoYFFVG3aZj91e7Q@mail.gmail.com>
+Subject: Re: stable-rc 4.14: arm64: Internal error: Oops: clk_reparent __clk_set_parent_before on db410c
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux- stable <stable@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Eric Anholt <eric@anholt.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        samuel@sholland.org
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 23 Jul 2020 01:06:37 -0700
+Message-ID: <159549159798.3847286.18202724980881020289@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 09:08:07PM -0300, Vitor Massaru Iha wrote:
-> This adds the conversion of the test_sort.c to KUnit test.
-> 
-> Please apply this commit first (linux-kselftest/kunit-fixes):
-> 3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
+Quoting Arnd Bergmann (2020-07-21 02:51:32)
+>                         __clk_set_parent_before(orphan, parent);
+>=20
+> None of the above have changed in stable kernels.
+>=20
+> > [    5.633668]  pll_28nm_register+0xa4/0x340 [msm]
+> > [    5.637492]  msm_dsi_pll_28nm_init+0xc8/0x1d8 [msm]
+> > [    5.642007]  msm_dsi_pll_init+0x34/0xe0 [msm]
+> > [    5.646870]  dsi_phy_driver_probe+0x1cc/0x310 [msm]
+>=20
+> The only changes to the dsi driver in v4.14-stable were:
+>=20
+> 89e30bb46074 drm/msm/dsi: save pll state before dsi host is powered off
+> 892afde0f4a1 drm: msm: Fix return type of dsi_mgr_connector_mode_valid fo=
+r kCFI
+> 35ff594b0da2 drm/msm/dsi: Implement reset correctly
+> 5151a0c8d730 drm/msm/dsi: use correct enum in dsi_get_cmd_fmt
+> e6bc3a4b0c23 clk: divider: fix incorrect usage of container_of
+>=20
+> None of these look suspicious to me.
+>=20
 
-...
+It sounds like maybe you need this patch?
 
->  lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
+bdcf1dc25324 ("clk: Evict unregistered clks from parent caches")
 
-Is it established practice to put kunit as a suffix?
-For me much better to do
-	ls .../test* # and note shell completions
-then drop shell completions and always do something like
-	ls .../*_kunit.[cSsh]
+or=20
 
-Consider this, please.
+4368a1539c6b ("drm/msm: Depopulate platform on probe failure")
 
-P.S. Same question to KUnit folks.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I vaguelly recall that the display driver wasn't removing clks becaues
+it wasn't removing devices when probe defer happened and then we had
+dangling clks in the parent cache confusing things.
