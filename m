@@ -2,128 +2,101 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D09C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7939DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BD62071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544C220714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Lk9rxwTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgGWJCF (ORCPT
+        id S1727925AbgGWJIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:02:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41665 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgGWJCE (ORCPT
+        Thu, 23 Jul 2020 05:08:00 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:62859 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725846AbgGWJIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:02:04 -0400
-Received: from mail-lf1-f69.google.com ([209.85.167.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1jyX73-0001S0-IY
-        for linux-kernel@vger.kernel.org; Thu, 23 Jul 2020 09:02:01 +0000
-Received: by mail-lf1-f69.google.com with SMTP id j5so1282755lfc.15
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 02:02:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U+wT4uWfBoeVxuv9M2M1SsHXGOIE2eDw5GOYNjnOws0=;
-        b=KQI7abAsu+HRnDIAEQQotJaHfFsbijjKtFbOIgD+xv1B4h40j2GHtLSGeLmQRW8flh
-         dEe6U9xPz+EkZ4+DdgbtV4xxI31yoWfOv7a1p9BBuIzv3DjA0yqLqkBURS6B+J9BwePl
-         A3bJcNo09AWg4DhwAwqBMh9ERQZU+6oVOTnThx/QdFI+VQiXuNqFRAz5uXcp0hjtS7Iu
-         y9AWOemZXQJeaIa7zFaacyf/4nhgRGfU8LcbJjZcsbpQO/YNRqe6ld1kimTrUJr4oMac
-         0+T02rvheaE6X981BPFI7frQxQ2TrVJeUIE7TKwW15jfNwK/rDnOT7KjOCmT/1WQtnCz
-         CF7A==
-X-Gm-Message-State: AOAM532PkudQcJA1bXibznXzyRt6ATTWEysm8dJwhWOXVXrBZb+480tB
-        RJFemo6yh03nDZbVKAKUN0QkCG+ruKUAOzUZ1IGF8QsvRV/7GNeZ8YAsKUXSIWTLKHUBYMUMoc0
-        CKthTjlTh+KvNXF+/yNWa9m4gLuMMid4jyBoTHFGoclxEgKoK3AVuCK2G
-X-Received: by 2002:a2e:9d86:: with SMTP id c6mr1497765ljj.418.1595494920939;
-        Thu, 23 Jul 2020 02:02:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwJd3/VfgnjFYGCdo/JmUiXjd56BUIkYcecDQxaWSkFheEj5HUm6LObhj/XQNcciCiYaWu+tCWJIVdHgz99xd0=
-X-Received: by 2002:a2e:9d86:: with SMTP id c6mr1497750ljj.418.1595494920649;
- Thu, 23 Jul 2020 02:02:00 -0700 (PDT)
+        Thu, 23 Jul 2020 05:08:00 -0400
+X-UUID: 609ee1b2215c485ab6481c4575604080-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=fQAlYTu7jimnOiNSbIQbC1bv/gLKYWyftON61ys5CAk=;
+        b=Lk9rxwToEFLLsTkehhDeBHCo0H0jZUGXf0jbhFpJldHRQI8qrBLvNBH0Xy5rpLVyACJxlHz+XahoaimFd//B/8+W42p7chWSbgoOf1nFlwtTNl6bujE1p4QVn5xxqNXMUXvKvLjqpsJL9E5WClRSquxSQKdCn3fHPI+gKjGhwVM=;
+X-UUID: 609ee1b2215c485ab6481c4575604080-20200723
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <seiya.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1782811880; Thu, 23 Jul 2020 17:07:54 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Jul 2020 17:07:51 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 17:07:46 +0800
+From:   Seiya Wang <seiya.wang@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Subject: [PATCH 0/4] Add basic node support for Mediatek MT8192 SoC 
+Date:   Thu, 23 Jul 2020 17:07:27 +0800
+Message-ID: <20200723090731.4482-1-seiya.wang@mediatek.com>
+X-Mailer: git-send-email 2.14.1
 MIME-Version: 1.0
-References: <20200318024215.5270-1-po-hsu.lin@canonical.com>
-In-Reply-To: <20200318024215.5270-1-po-hsu.lin@canonical.com>
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-Date:   Thu, 23 Jul 2020 17:01:49 +0800
-Message-ID: <CAMy_GT9g48Xf=U==FeFd-8CaFM97u4WMkDBT013uzfjeqKMcfw@mail.gmail.com>
-Subject: Re: [PATCHv3] selftests/timers: Turn off timeout setting
-To:     linux-kselftest@vger.kernel.org
-Cc:     shuah <shuah@kernel.org>, sboyd@kernel.org, tglx@linutronix.de,
-        John Stultz <john.stultz@linaro.org>, joe.lawrence@redhat.com,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Adding Shuah's linuxfoundation mail)
-Hello,
-do you need more changes / tests for this test?
+DQpNVDgxOTIgaXMgYSBTb0MgYmFzZWQgb24gNjRiaXQgQVJNdjggYXJjaGl0ZWN0dXJlLg0KSXQg
+Y29udGFpbnMgNCBDQTU1IGFuZCA0IENBNzYgY29yZXMuDQpNVDgxOTIgc2hhcmUgbWFueSBIVyBJ
+UCB3aXRoIE1UNjV4eCBzZXJpZXMuDQpUaGlzIHBhdGNoc2V0IHdhcyB0ZXN0ZWQgb24gTVQ4MTky
+IGV2YWx1YXRpb24gYm9hcmQgYW5kIHVzZSBjb3JyZWN0IGNsb2NrIHRvIHNoZQ0KbGwuDQoNCkJh
+c2VkIG9uIHY1LjgtcmMxDQoNCkNyeXN0YWwgR3VvICgyKToNCiAgd2F0Y2hkb2c6IG10ODE5Mjog
+YWRkIHdkdCBzdXBwb3J0DQogIGR0LWJpbmRpbmc6IG1lZGlhdGVrOiBtdDgxOTI6IHVwZGF0ZSBt
+dGstd2R0IGRvY3VtZW50DQoNClNlaXlhIFdhbmcgKDIpOg0KICBhcm02NDogZHRzOiBBZGQgTWVk
+aWF0ZWsgU29DIE1UODE5MiBhbmQgZXZhbHVhdGlvbiBib2FyZCBkdHMgYW5kDQogICAgTWFrZWZp
+bGUNCiAgZHQtYmluZGluZ3M6IHNlcmlhbDogQWRkIGNvbXBhdGlibGUgZm9yIE1lZGlhdGVrIE1U
+ODE5Mg0KLS0tDQpUaGlzIHBhdGNoIGRlcGVuZHMgb24NCltQQVRDSCAxLzNdIGR0LWJpbmRpbmdz
+OiBwaW5jdHJsOiBtdDgxOTI6IGFkZCBwaW5jdHJsIGZpbGUNCltQQVRDSCAyLzNdIGR0LWJpbmRp
+bmdzOiBwaW5jdHJsOiBtdDgxOTI6IGFkZCBiaW5kaW5nIGRvY3VtZW50DQpbUEFUQ0ggdjIgMy80
+XSBkdC1iaW5kaW5nczogbWVkaWF0ZWs6IGFkZCBjb21wYXRpYmxlIGZvciBNVDY4NzMvODE5MiBw
+d3JhcA0KW1BBVENIIHYyIDEvMl0gZHQtYmluZGluZ3M6IHNwaTogdXBkYXRlIGJpbmRpbmdzIGZv
+ciBNVDgxOTIgU29DDQpbUEFUQ0ggMi80XSBjbGs6IG1lZGlhdGVrOiBBZGQgZHQtYmluZGluZ3Mg
+Zm9yIE1UODE5MiBjbG9ja3MNCltQQVRDSCAxLzRdIGR0LWJpbmRpbmdzOiBBUk06IE1lZGlhdGVr
+OiBEb2N1bWVudCBiaW5kaW5ncyBmb3IgTVQ4MTkyDQoNClBsZWFzZSBhbHNvIGFjY2VwdCB0aGlz
+IHBhdGNoIHRvZ2V0aGVyIHdpdGggWzFdWzJdWzNdWzRdWzVdWzZdDQp0byBhdm9pZCBidWlsZCBh
+bmQgZHQgYmluZGluZyBjaGVjayBlcnJvci4NCg0KWzFdIGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL3BpcGVybWFpbC9saW51eC1tZWRpYXRlay8yMDIwLUp1bHkvMDE0MDQyLmh0bWwNClsyXSBo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbWVkaWF0ZWsvMjAyMC1K
+dWx5LzAxNDA0My5odG1sDQpbM10gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWls
+L2xpbnV4LW1lZGlhdGVrLzIwMjAtSnVseS8wMTQ1NDYuaHRtbA0KWzRdIGh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tZWRpYXRlay8yMDIwLUp1bHkvMDE0NDA2Lmh0
+bWwNCls1XSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbWVkaWF0
+ZWsvMjAyMC1KdWx5LzAxNDQ1MC5odG1sDQpbNl0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+cGlwZXJtYWlsL2xpbnV4LW1lZGlhdGVrLzIwMjAtSnVseS8wMTQ0NTEuaHRtbA0KLS0tDQogLi4u
+L2RldmljZXRyZWUvYmluZGluZ3Mvc2VyaWFsL210ay11YXJ0LnR4dCAgICAgICAgfCAgIDEgKw0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0ICAgICAgIHwgICAy
+ICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICB8
+ICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTItZXZiLmR0cyAgICAg
+ICAgfCAgMjkgKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTkyLmR0c2kgICAg
+ICAgICAgIHwgNjYzICsrKysrKysrKysrKysrKysrKysrKw0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRr
+X3dkdC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsNCiA2IGZpbGVzIGNoYW5nZWQs
+IDcwMSBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9k
+dHMvbWVkaWF0ZWsvbXQ4MTkyLWV2Yi5kdHMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02
+NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaQ0KDQotLQ0KMi4xNC4xDQo=
 
-Thanks!
-Po-Hsu
-
-On Wed, Mar 18, 2020 at 10:42 AM Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
->
-> The following 4 tests in timers can take longer than the default 45
-> seconds that added in commit 852c8cbf34d3 ("selftests/kselftest/runner.sh:
-> Add 45 second timeout per test") to run:
->   * nsleep-lat - 2m7.350s
->   * set-timer-lat - 2m0.66s
->   * inconsistency-check - 1m45.074s
->   * raw_skew - 2m0.013s
->
-> Thus they will be marked as failed with the current 45s setting:
->   not ok 3 selftests: timers: nsleep-lat # TIMEOUT
->   not ok 4 selftests: timers: set-timer-lat # TIMEOUT
->   not ok 6 selftests: timers: inconsistency-check # TIMEOUT
->   not ok 7 selftests: timers: raw_skew # TIMEOUT
->
-> Disable the timeout setting for timers can make these tests finish
-> properly:
->   ok 3 selftests: timers: nsleep-lat
->   ok 4 selftests: timers: set-timer-lat
->   ok 6 selftests: timers: inconsistency-check
->   ok 7 selftests: timers: raw_skew
->
-> https://bugs.launchpad.net/bugs/1864626
-> Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
-> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> ---
->  tools/testing/selftests/timers/Makefile | 1 +
->  tools/testing/selftests/timers/settings | 1 +
->  2 files changed, 2 insertions(+)
->  create mode 100644 tools/testing/selftests/timers/settings
->
-> diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
-> index 7656c7c..0e73a16 100644
-> --- a/tools/testing/selftests/timers/Makefile
-> +++ b/tools/testing/selftests/timers/Makefile
-> @@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
->
->  TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
->
-> +TEST_FILES := settings
->
->  include ../lib.mk
->
-> diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
-> new file mode 100644
-> index 0000000..e7b9417
-> --- /dev/null
-> +++ b/tools/testing/selftests/timers/settings
-> @@ -0,0 +1 @@
-> +timeout=0
-> --
-> 2.7.4
->
