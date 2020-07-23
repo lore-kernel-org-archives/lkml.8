@@ -2,116 +2,135 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2E9C433F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EBCC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDE222CF8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Avs4LYyf"
+	by mail.kernel.org (Postfix) with ESMTP id A05F422BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgGWJNN (ORCPT
+        id S1728234AbgGWJOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:13:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51278 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726558AbgGWJNK (ORCPT
+        Thu, 23 Jul 2020 05:14:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:51077 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgGWJOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:13:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595495589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DV/00EyCP590tmCFq6jIThJcEZgsODjna9x+BTGXHYM=;
-        b=Avs4LYyfxc4OS7R86rEz+rJpw6E5t0aeVRaOr3zxBhbSb2wXFPCFj62IY/QTtVOyIRnD6D
-        l3FF7qox0B2O8J8Yt3bgT8lIdTkEEybhT8+HHaBzm4RnDcQlJpcRbN0SrdnIkkJhTSDZrp
-        1899U0MSATmT/JvsHpwWkVZ2Hw3KPeI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-N4SglXDZNtOGwyhkG2emPw-1; Thu, 23 Jul 2020 05:13:07 -0400
-X-MC-Unique: N4SglXDZNtOGwyhkG2emPw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B25A6800597;
-        Thu, 23 Jul 2020 09:13:06 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-141.pek2.redhat.com [10.72.13.141])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B2658619B5;
-        Thu, 23 Jul 2020 09:13:03 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [PATCH 2/2] vdpa: ifcvf: free config irq in ifcvf_free_irq()
-Date:   Thu, 23 Jul 2020 17:12:54 +0800
-Message-Id: <20200723091254.20617-2-jasowang@redhat.com>
-In-Reply-To: <20200723091254.20617-1-jasowang@redhat.com>
-References: <20200723091254.20617-1-jasowang@redhat.com>
+        Thu, 23 Jul 2020 05:14:22 -0400
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MtOT0-1korCv3xzq-00uuXD; Thu, 23 Jul 2020 11:14:20 +0200
+Received: by mail-qk1-f175.google.com with SMTP id e13so4675853qkg.5;
+        Thu, 23 Jul 2020 02:14:19 -0700 (PDT)
+X-Gm-Message-State: AOAM530c1r2tqj0+pTyvty7kjYk4SMUa/1GIVMv2myeL/w/bEa8ujy+a
+        suKa7UbgST6wBCj0JMjHny8MpKGjW61ErLfaSlI=
+X-Google-Smtp-Source: ABdhPJyfIhx6eiKVKg4rHbAuRO6OkD2w5iLBrvPotu3J5hOQmvUiK3e54tHiHcXr7T/fRPeYMXzXCv1u/Kq2bJSXU54=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr4131860qko.138.1595495658635;
+ Thu, 23 Jul 2020 02:14:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200723073744.13400-1-krzk@kernel.org> <20200723073744.13400-15-krzk@kernel.org>
+ <CAK8P3a3btGD5oqmPXJk=UOmA=wuUxn-vOOO982uAjuRcE3crVg@mail.gmail.com> <20200723090230.GB25935@kozik-lap>
+In-Reply-To: <20200723090230.GB25935@kozik-lap>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Jul 2020 11:14:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2O4bCb_Bcpc+Y4BuXmrO6mbVwgo67aGF5E=uxHQpeTnw@mail.gmail.com>
+Message-ID: <CAK8P3a2O4bCb_Bcpc+Y4BuXmrO6mbVwgo67aGF5E=uxHQpeTnw@mail.gmail.com>
+Subject: Re: [PATCH 14/23] memory: ti-emif-pm: Fix cast to iomem pointer
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:BuZuoFhwqlQyuJf6Z1sCO9jIZRWDzAo/haAFTgt/rZzZgZ//LSH
+ 0ndDvl6EQ76bgSvScovAZPdKFvJatGUeLyDdwt+X5t8CdIUkrsZ2IqRw1Sot/xhIdKcuHzF
+ A4SIKANE+tAo//V9/Tg2ksfMo+HTYnmZord/6fRWdIK+pKuqnfN/y5ERk1t7SDqfc+03riV
+ 7dyl8VUkdru8NYKDfUWQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B1XF1uwrRNY=:791O7UeUV/gA5nU7AtAo9P
+ 2C0wVmz5DnoWttCr8guFLY5lcd8mO9hdagyKd5wb76z4ogpdTRpKh6JKAKOVzWj8UVNPhy8X9
+ yCaM0tu9zbLNNR4WecH69ycjtlrHjJeot25bEl0Ar6LltfG99JHJNT7v/buXZ7fP7u9hCTRjB
+ 6u7CqUmDFfndFaDwZ9FQXQoCFY8DOPdEsyveoaer1PaJQ4+WBkZbZTjWvGJc2nuyw08T8+5Yi
+ 1MyFsOdhbYzGfIk8VBilGy4Qc2MDa/qUALaubhNJR+YsUJu8te7mjUkhH2N/R1muWZKlkkwvL
+ Pn+khxaysuQWMLmj9W5KeJk7O71yrome7IxU7pqNvc0hgkzgNN5u94kLYhruwPPi9PXGg2rVQ
+ uUf8SPLmlKHsUEYlF+r25jnDDD0+IPWGpimfTEEdJxXYmk9kLHJWfrvpcdEnffSbz2NamDMBl
+ 12USBpeQJJ6yimuFc1iBwt4j+fBxDhXnHQ1cXYyuKqOgcS3Z+D2M/yNSFjhiCW1j5szmfBjHx
+ UfaholMuT+SFjEYtjdybANqymr0eEzO7JFtFyITAfPu3FGr+b++mbP4z/YxZ8xWQoD83IqsPS
+ 9Hx3VjCh2wiJSTtIMtagH5qkrgJYkyVUA3EtQVk7wMaZSlVOhVR6gDCKYhV5oMiUduCj26JwK
+ rBf03W3ejPtfSmxwxrpWl2mjCq6jtwTEjlmjiKkg3kHk04+Kal0MuZezqwC/uFp78ehinyKN2
+ G27EXwTMEflySH88UPREMcnSjXpGCm3bLMtviTBGCY0qFIPQewIAS6QmTKUMjWEv2Jx8zgirj
+ yuo6sBl4rwgisFVmD7clpx4d3aUkAB+aOZgNzhVvIBJMEUzQXBSZzLQl8THEKqp4YjMrd3iaK
+ eUfA3MF/TItoVxtlMb15LVLuLF7HwaWNYevG9NndNkiRiVpqPXbd0kMdpvJeISZbC3UuuRfBo
+ qP5wtHk0LJyJ5kvT/Bm4aGZvU9b8Ky0RsTefW+VvOzA/JnBgbP+1S
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't free config irq in ifcvf_free_irq() which will trigger a
-BUG() in pci core since we try to free the vectors that has an
-action. Fixing this by recording the config irq in ifcvf_hw structure
-and free it in ifcvf_free_irq().
+On Thu, Jul 23, 2020 at 11:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Jul 23, 2020 at 10:48:19AM +0200, Arnd Bergmann wrote:
+> > On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Cast pointer to iomem memory properly to fix sparse warning:
+> > >
+> > >     drivers/memory/ti-emif-pm.c:251:38: warning: incorrect type in argument 1 (different address spaces)
+> > >     drivers/memory/ti-emif-pm.c:251:38:    expected void const volatile [noderef] __iomem *addr
+> > >     drivers/memory/ti-emif-pm.c:251:38:    got void *
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  drivers/memory/ti-emif-pm.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/memory/ti-emif-pm.c b/drivers/memory/ti-emif-pm.c
+> > > index 9c90f815ad3a..6c747c1e98cb 100644
+> > > --- a/drivers/memory/ti-emif-pm.c
+> > > +++ b/drivers/memory/ti-emif-pm.c
+> > > @@ -248,7 +248,7 @@ MODULE_DEVICE_TABLE(of, ti_emif_of_match);
+> > >  static int ti_emif_resume(struct device *dev)
+> > >  {
+> > >         unsigned long tmp =
+> > > -                       __raw_readl((void *)emif_instance->ti_emif_sram_virt);
+> > > +                       __raw_readl((void __iomem *)emif_instance->ti_emif_sram_virt);
+> > >
+> >
+> > Maybe this shouldn't even be __raw_readl(), but instead READ_ONCE()?
+>
+> Won't readl() be enough? Indeed it looks problematic.
 
-Fixes: e7991f376a4d ("ifcvf: implement config interrupt in IFCVF")
-Cc: Zhu Lingshan <lingshan.zhu@intel.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vdpa/ifcvf/ifcvf_base.h | 2 +-
- drivers/vdpa/ifcvf/ifcvf_main.c | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+readl() won't work on big-endian kernels, since this is a byte comparison.
 
-diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
-index f4554412e607..29efa75cdfce 100644
---- a/drivers/vdpa/ifcvf/ifcvf_base.h
-+++ b/drivers/vdpa/ifcvf/ifcvf_base.h
-@@ -84,7 +84,7 @@ struct ifcvf_hw {
- 	void __iomem * const *base;
- 	char config_msix_name[256];
- 	struct vdpa_callback config_cb;
--
-+	unsigned int config_irq;
- };
- 
- struct ifcvf_adapter {
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index ae7110955a44..7a6d899e541d 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -53,6 +53,7 @@ static void ifcvf_free_irq(struct ifcvf_adapter *adapter, int queues)
- 	for (i = 0; i < queues; i++)
- 		devm_free_irq(&pdev->dev, vf->vring[i].irq, &vf->vring[i]);
- 
-+	devm_free_irq(&pdev->dev, vf->config_irq, vf);
- 	ifcvf_free_irq_vectors(pdev);
- }
- 
-@@ -72,8 +73,8 @@ static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
- 	snprintf(vf->config_msix_name, 256, "ifcvf[%s]-config\n",
- 		 pci_name(pdev));
- 	vector = 0;
--	irq = pci_irq_vector(pdev, vector);
--	ret = devm_request_irq(&pdev->dev, irq,
-+	vf->config_irq = pci_irq_vector(pdev, vector);
-+	ret = devm_request_irq(&pdev->dev, vf->config_irq,
- 			       ifcvf_config_changed, 0,
- 			       vf->config_msix_name, vf);
- 	if (ret) {
--- 
-2.20.1
+> > The other accesses in this file don't use MMIO wrappers either but just treat
+> > it as a pointer. The effect would be the same though.
+>
+> I think all the reads and writes are with readl() and writel().
 
+I actually see only one other access:
+
+        copy_addr = sram_exec_copy(emif_data->sram_pool_code,
+                                   (void *)emif_data->ti_emif_sram_virt,
+                                   &ti_emif_sram, ti_emif_sram_sz);
+
+and this one ends up in a memcpy() that does not perform any byte
+swapping or barriers.
+
+     Arnd
