@@ -2,105 +2,96 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0913320792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595519779;
-	bh=GcS2kAU29xEZ0jnjZv+lYshFkwhHH/EsbplOO3bG05k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pCGRijgf0s1UolMpXYk9XSTlCk5e4ZmlQkPhPYZHWNHwwTgYzT8I/Ugm19dFyo1Wz
-	 8b9vq35dL/5mKnZm1zw2e9Td9U63uERUBlrToTIUPHYjmImZvMKHZMB3G2yPMY8Oe4
-	 LI0KXDM0BZxv4+6o3Z2sM2NCPyhraNJNnzyuha0A=
+	by mail.kernel.org (Postfix) with ESMTP id BF4D42071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgGWP4R (ORCPT
+        id S1729700AbgGWP5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:56:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 11:57:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39414 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgGWP4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:56:17 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CBB2071A;
-        Thu, 23 Jul 2020 15:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595519777;
-        bh=GcS2kAU29xEZ0jnjZv+lYshFkwhHH/EsbplOO3bG05k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0oyzTe84hn6Vi+wGOvEXcgLfAzirXbWQJ19VhKfJoYDqWTBUsvmi/Ur6HbDyxfBgK
-         OjloT3wXweREikgFKAWxvNvD+ia6USsUei/xHKb5GqTHWIOy3LVZBSvWWni91il77j
-         d+RHqZ7QrGeIFiwWbZXrK3MKpywI/hUmjwsAht0I=
-Date:   Thu, 23 Jul 2020 21:26:12 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, ckeepax@opensource.cirrus.com
-Subject: Re: [RFC PATCH v2 0/6] ALSA: compress: add support to change codec
- profile in gapless playback
-Message-ID: <20200723155612.GC12965@vkoul-mobl>
-References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org>
- <s5hpn8mqudq.wl-tiwai@suse.de>
- <20200723130522.GB12965@vkoul-mobl>
- <s5hlfjaqsk7.wl-tiwai@suse.de>
+        id S1726761AbgGWP5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:57:12 -0400
+IronPort-SDR: vu8i4Sl4xOoFB/JWK/82MKB0X5AIK/uQmZRTX1tZGfAPna13DbbZNd0vvkTf0hhIGRQYlGMSEh
+ /AEO2r1QC2xA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138055932"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="138055932"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 08:57:11 -0700
+IronPort-SDR: WgfvmvBADdiXis6e61jhSmVSItsancSBTqRCpczfMDMPmJuPRyP8VbEg/ovxlWgGzMzfGmlFsp
+ bAA104OlEruw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="319031598"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga008.jf.intel.com with ESMTP; 23 Jul 2020 08:57:11 -0700
+Date:   Thu, 23 Jul 2020 08:57:11 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Xiong Zhang <xiong.y.zhang@intel.com>,
+        Wayne Boyer <wayne.boyer@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
+ affected memslot
+Message-ID: <20200723155711.GD21891@linux.intel.com>
+References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
+ <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
+ <20200709211253.GW24919@linux.intel.com>
+ <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
+ <20200710042922.GA24919@linux.intel.com>
+ <20200713122226.28188f93@x1.home>
+ <20200713190649.GE29725@linux.intel.com>
+ <20200721030319.GD20375@linux.intel.com>
+ <20200721100036.464d4440@w520.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <s5hlfjaqsk7.wl-tiwai@suse.de>
+In-Reply-To: <20200721100036.464d4440@w520.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-07-20, 15:17, Takashi Iwai wrote:
-> On Thu, 23 Jul 2020 15:05:22 +0200,
-> Vinod Koul wrote:
-> > 
-> > On 23-07-20, 14:38, Takashi Iwai wrote:
-> > > On Tue, 21 Jul 2020 19:00:01 +0200,
-> > > Srinivas Kandagatla wrote:
-> > > > 
-> > > > For gapless playback it is possible that each track can have different
-> > > > codec profile with same decoder, for example we have WMA album,
-> > > > we may have different tracks as WMA v9, WMA v10 and so on
-> > > > Or if DSP's like QDSP have abililty to switch decoders on single stream
-> > > > for each track, then this call could be used to set new codec parameters.
-> > > > 
-> > > > Existing code does not allow to change this profile while doing gapless
-> > > > playback.
-> > > > 
-> > > > This patchset adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL along with
-> > > > flags in capablity structure to allow userspace to set this new
-> > > > parameters required which switching codec profile, either for gapless
-> > > > or cross fade usecase.
-> > > 
-> > > One idea that came up at the previous audio conference regarding this
-> > > implementation was to just allow SET_PARAMS during the stream is
-> > > running (only if the driver sets the capability) instead of
-> > > introducing yet a new ioctl and an ops.
-> > > Would it make sense?
-> > 
-> > That does sound good but only issue would be that we need to somehow
-> > mark/document that buffer info is useless and would be discarded, how do
-> > we do that?
+On Tue, Jul 21, 2020 at 10:00:36AM -0600, Alex Williamson wrote:
+> On Mon, 20 Jul 2020 20:03:19 -0700
+> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 > 
-> Yes, the buffer and no_wake_mode can be ignored in the gapless
-> re-setup.  Is your concern only about the documentation?  Or something
-> else needs to be changed significantly?  It's a new scheme in anyway,
-> so the documentation update is required...
+> > +Weijiang
+> > 
+> > On Mon, Jul 13, 2020 at 12:06:50PM -0700, Sean Christopherson wrote:
+> > > The only ideas I have going forward are to:
+> > > 
+> > >   a) Reproduce the bug outside of your environment and find a resource that
+> > >      can go through the painful bisection.  
+> > 
+> > We're trying to reproduce the original issue in the hopes of biesecting, but
+> > have not yet discovered the secret sauce.  A few questions:
+> > 
+> >   - Are there any known hardware requirements, e.g. specific flavor of GPU?
+> 
+> I'm using an old GeForce GT635, I don't think there's anything special
+> about this card.
 
-My concern is potential abuse of API down the road, if you feel it is
-okay, I am okay with the proposal
+Would you be able to provide your QEMU command line?  Or at least any
+potentially relevant bits?  Still no luck reproducing this on our end.
 
-Thanks
--- 
-~Vinod
+Thanks again!
