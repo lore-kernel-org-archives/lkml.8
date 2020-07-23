@@ -2,95 +2,108 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92331207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69CC207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgGWWU1 (ORCPT
+        id S1726826AbgGWWUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:20:27 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35839 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgGWWU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:20:26 -0400
-IronPort-SDR: t4OO8tqPfFYciiZuw1MIksYkpFU3i/ZXYf7aRuTzcPjCCZBjZFpf0q3aMF8WO2oHxiid77Tyeg
- sAb4nUaV0+kQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235507883"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="235507883"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:20:25 -0700
-IronPort-SDR: yU7OE+rmgHw4khpoV1uJpTIgloiygbWArkgqlvE0P1BFb7MbmA2T43gtMfduXZR7tMZMrZHO2d
- S0nJLK4emQ0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="327149689"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Jul 2020 15:20:22 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jyjZd-003i9Q-IK; Fri, 24 Jul 2020 01:20:21 +0300
-Date:   Fri, 24 Jul 2020 01:20:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     syzbot <syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com>
-Cc:     andy@greyhouse.net, andy@infradead.org, arnd@arndb.de,
-        davem@davemloft.net, dvhart@infradead.org,
-        gregkh@linuxfoundation.org, j.vosburgh@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, platform-driver-x86@vger.kernel.org,
-        skunberg.kelsey@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vfalico@gmail.com
-Subject: Re: kernel BUG at net/core/dev.c:LINE! (3)
-Message-ID: <20200723222021.GY3703480@smile.fi.intel.com>
-References: <000000000000ba65ba05a2fd48d9@google.com>
- <000000000000467ece05ab223d81@google.com>
+        Thu, 23 Jul 2020 18:20:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726436AbgGWWUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:20:01 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NM1gjf192980;
+        Thu, 23 Jul 2020 18:19:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32facspxp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 18:19:51 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06NMGmHM046190;
+        Thu, 23 Jul 2020 18:19:50 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32facspxp2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 18:19:50 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NMF2Qn006935;
+        Thu, 23 Jul 2020 22:19:50 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01dal.us.ibm.com with ESMTP id 32brq9bnfr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 22:19:50 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NMJjQA56099282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 22:19:45 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A666CC6055;
+        Thu, 23 Jul 2020 22:19:48 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EF15C605B;
+        Thu, 23 Jul 2020 22:19:45 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.53.35])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 23 Jul 2020 22:19:44 +0000 (GMT)
+References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com> <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v4 04/12] ppc64/kexec_file: avoid stomping memory used by special regions
+In-reply-to: <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
+Date:   Thu, 23 Jul 2020 19:19:41 -0300
+Message-ID: <877dut6fia.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000467ece05ab223d81@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 mlxlogscore=808 bulkscore=0 adultscore=0 suspectscore=0
+ clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 02:07:08PM -0700, syzbot wrote:
-> syzbot has bisected this issue to:
-> 
-> commit 5a707af10da95a53a55011a612e69063491020d4
-> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Date:   Fri Apr 21 13:36:06 2017 +0000
-> 
->     platform/x86: wmi: Describe function parameters
 
-Seems like random commit for known problem.
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a9ad40900000
-> start commit:   994e99a9 Merge tag 'platform-drivers-x86-v5.8-2' of git://..
-> git tree:       upstream
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=16a9ad40900000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12a9ad40900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
-> dashboard link: https://syzkaller.appspot.com/bug?extid=af23e7f3e0a7e10c8b67
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ea63cf100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14afdb9f100000
-> 
-> Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-> Fixes: 5a707af10da9 ("platform/x86: wmi: Describe function parameters")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> crashkernel region could have an overlap with special memory regions
+> like  opal, rtas, tce-table & such. These regions are referred to as
+> exclude memory ranges. Setup this ranges during image probe in order
+> to avoid them while finding the buffer for different kdump segments.
+> Override arch_kexec_locate_mem_hole() to locate a memory hole taking
+> these ranges into account.
+>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thiago Jung Bauermann
+IBM Linux Technology Center
