@@ -2,178 +2,97 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96335C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8AF20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F049207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="mHEcJO4W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UcZbYO2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgGWXEz (ORCPT
+        id S1727997AbgGWXFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:04:55 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:29539 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgGWXEy (ORCPT
+        Thu, 23 Jul 2020 19:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgGWXFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:04:54 -0400
+        Thu, 23 Jul 2020 19:05:49 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00487C0619D3;
+        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b9so3381940plx.6;
+        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1595545494; x=1627081494;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Oh+ogmc/TZuhxAnxxb6YKUirrCeSsjN12kP5BQhIWsQ=;
-  b=mHEcJO4W8ptFk8hwAoN5u79eJXEcoIH3//qJOI75geuqOQHidi0LgqrS
-   2o5uSRu9kU87t6qQ07bVWjpHdifigKtUz6lteBL/hxxwFaT5s5MEzxj/z
-   30dAJuR6eAxKvqeVhkOHPIg1UxZRHefN+7ASj+EtYqkfQ4l+ZroRxozxl
-   s=;
-IronPort-SDR: FVx39MKBJlHtHaCBgRLXtkRO+PxGL83OjnX1sX954gFXGeY9H4BhtjzuZbeUyGkP0p3sCNNTBD
- ghnX+ak/hwTQ==
-X-IronPort-AV: E=Sophos;i="5.75,388,1589241600"; 
-   d="scan'208";a="62428285"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Jul 2020 23:04:48 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 73454A2432;
-        Thu, 23 Jul 2020 23:04:46 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Jul 2020 23:04:45 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.26) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Jul 2020 23:04:40 +0000
-Subject: Re: [PATCH v5 01/18] nitro_enclaves: Add ioctl interface definition
-To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        David Duncan <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Karen Noel <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>, Alexander Graf <graf@amazon.com>
-References: <20200715194540.45532-1-andraprs@amazon.com>
- <20200715194540.45532-2-andraprs@amazon.com>
- <20200721121225.GA1855212@kroah.com>
- <5dad638c-0ef3-9d16-818c-54e1556d8fc8@amazon.com>
- <20200722095759.GA2817347@kroah.com>
- <b952de82-94de-fc14-74d3-f13859fe19f0@amazon.com>
- <20200723105409.GC1949236@kroah.com>
- <dd99213b-3caf-4fc0-1bf5-314297e3d450@amazon.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <a085bf17-8f83-5946-0f79-97230616b4b3@amazon.de>
-Date:   Fri, 24 Jul 2020 01:04:39 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <dd99213b-3caf-4fc0-1bf5-314297e3d450@amazon.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D37UWA002.ant.amazon.com (10.43.160.211) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
+        b=UcZbYO2tukUDPc5K2c90M2NirgPVRhjzR9QGQza6coVEV+vD8vN4Nog0ApFFbosbl/
+         dG5b8aS8zz20MClvdvI0CFrZioWlWwP97Xda4pr0ydgi7Ambf+atwg9qDes0p60nHnP3
+         EiKymcj568OiA+9MakggBgSNRdxny4zwuIq3c8uB7CrfKBPDrVpIjJAw7UH3OZqb7d1C
+         uZG8Zi4DBymBaPBJnEzJd1rTJsYAzLXMV4DxhxPJzcqPlDcy2AW68C6rUKhVZS4/WLgq
+         GLjn1jUOr2sRmzobipNkiDR7RQxrHq+HSoRIs1TW1Ky2e2hl8m1VcsUQGaLLiswGh4Q4
+         gxVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
+        b=bWTAPZAsvcpRk536kQBeAY91K/0734yOxNru/0aQz/X5ecfVuCtEf85ZCvK1Du4JzP
+         hmz8UvxUMqVtrlznG5UOSSuWIRqw5ATFsSxo6j6KpKxp7Gy2eepAv/t3DcH1IGzGljkM
+         dlKhkGz5KvZWy76M5ydPAdMyR+ag/FMYc2KF76AtUOLS5azlRJ4Tz2plaTbP2WuEicz3
+         Hk2Cx7rlqwJ1VD91+ste4A53uu7/NsyQiWXiypr6wpu7g633gqIx4ZD4qBwcfMnUMKBK
+         XPOUVHxO2uM8DFdVtEEqI5Dc6PadDY6QKBq3MmGSTabim8/QXPUHoqxdlIyxCM81p/Wv
+         LZZw==
+X-Gm-Message-State: AOAM531bie8X76rgQBFn1QMJ87cbd/WRsfUILzaTitKiutqFky5gXMi3
+        +pLa0LOhfEz/BWzCuaFiOy+8R4hJkQc=
+X-Google-Smtp-Source: ABdhPJw6b+CjqeczL6p7Kx1ZCNCp9dSoVlVCajK91Ff4+2KvkMLg88KX9mwSw72NK+D3DT3J0d0/xw==
+X-Received: by 2002:a17:902:d211:: with SMTP id t17mr5914972ply.106.1595545548328;
+        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id gn5sm3644742pjb.23.2020.07.23.16.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 16:05:47 -0700 (PDT)
+From:   rentao.bupt@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v2 0/3] ARM: dts: aspeed: fixup wedge40 device tree
+Date:   Thu, 23 Jul 2020 16:05:36 -0700
+Message-Id: <20200723230539.17860-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMy4wNy4yMCAyMDoyMSwgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3cm90ZToKPiAKPiAK
-PiBPbiAyMy8wNy8yMDIwIDEzOjU0LCBHcmVnIEtIIHdyb3RlOgo+PiBPbiBUaHUsIEp1bCAyMywg
-MjAyMCBhdCAxMjoyMzo1NlBNICswMzAwLCBQYXJhc2NoaXYsIEFuZHJhLUlyaW5hIHdyb3RlOgo+
-Pj4KPj4+IE9uIDIyLzA3LzIwMjAgMTI6NTcsIEdyZWcgS0ggd3JvdGU6Cj4+Pj4gT24gV2VkLCBK
-dWwgMjIsIDIwMjAgYXQgMTE6Mjc6MjlBTSArMDMwMCwgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3
-cm90ZToKPj4+Pj4+PiArI2lmbmRlZiBfVUFQSV9MSU5VWF9OSVRST19FTkNMQVZFU19IXwo+Pj4+
-Pj4+ICsjZGVmaW5lIF9VQVBJX0xJTlVYX05JVFJPX0VOQ0xBVkVTX0hfCj4+Pj4+Pj4gKwo+Pj4+
-Pj4+ICsjaW5jbHVkZSA8bGludXgvdHlwZXMuaD4KPj4+Pj4+PiArCj4+Pj4+Pj4gKy8qIE5pdHJv
-IEVuY2xhdmVzIChORSkgS2VybmVsIERyaXZlciBJbnRlcmZhY2UgKi8KPj4+Pj4+PiArCj4+Pj4+
-Pj4gKyNkZWZpbmUgTkVfQVBJX1ZFUlNJT04gKDEpCj4+Pj4+PiBXaHkgZG8geW91IG5lZWQgdGhp
-cyB2ZXJzaW9uP8KgIEl0IHNob3VsZG4ndCBiZSBuZWVkZWQsIHJpZ2h0Pwo+Pj4+PiBUaGUgdmVy
-c2lvbiBpcyB1c2VkIGFzIGEgd2F5IGZvciB0aGUgdXNlciBzcGFjZSB0b29saW5nIHRvIHN5bmMg
-b24gdGhlCj4+Pj4+IGZlYXR1cmVzIHNldCBwcm92aWRlZCBieSB0aGUgZHJpdmVyIGUuZy4gaW4g
-Y2FzZSBhbiBvbGRlciB2ZXJzaW9uIAo+Pj4+PiBvZiB0aGUKPj4+Pj4gZHJpdmVyIGlzIGF2YWls
-YWJsZSBvbiB0aGUgc3lzdGVtIGFuZCB0aGUgdXNlciBzcGFjZSB0b29saW5nIAo+Pj4+PiBleHBl
-Y3RzIGEgc2V0Cj4+Pj4+IG9mIGZlYXR1cmVzIHRoYXQgaXMgbm90IGluY2x1ZGVkIGluIHRoYXQg
-ZHJpdmVyIHZlcnNpb24uCj4+Pj4gVGhhdCBpcyBndWFyYW50ZWVkIHRvIGdldCBvdXQgb2Ygc3lu
-YyBpbnN0YW50bHkgd2l0aCBkaWZmZXJlbnQgZGlzdHJvCj4+Pj4ga2VybmVscyBiYWNrcG9ydGlu
-ZyByYW5kb20gdGhpbmdzLCBjb21iaW5lZCB3aXRoIHN0YWJsZSBrZXJuZWwgcGF0Y2gKPj4+PiB1
-cGRhdGVzIGFuZCB0aGUgbGlrZS4KPj4+Pgo+Pj4+IEp1c3QgdXNlIHRoZSBub3JtYWwgYXBpIGlu
-dGVyZmFjZXMgaW5zdGVhZCwgZG9uJ3QgdHJ5IHRvICJ2ZXJzaW9uIgo+Pj4+IGFueXRoaW5nLCBp
-dCB3aWxsIG5vdCB3b3JrLCB0cnVzdCB1cyA6KQo+Pj4+Cj4+Pj4gSWYgYW4gaW9jdGwgcmV0dXJu
-cyAtRU5PVFRZIHRoZW4gaGV5LCBpdCdzIG5vdCBwcmVzZW50IGFuZCB5b3VyCj4+Pj4gdXNlcnNw
-YWNlIGNvZGUgY2FuIGhhbmRsZSBpdCB0aGF0IHdheS4KPj4+IENvcnJlY3QsIHRoZXJlIGNvdWxk
-IGJlIGEgdmFyaWV0eSBvZiBrZXJuZWwgdmVyc2lvbnMgYW5kIHVzZXIgc3BhY2UgCj4+PiB0b29s
-aW5nCj4+PiBlaXRoZXIgaW4gdGhlIG9yaWdpbmFsIGZvcm0sIGN1c3RvbWl6ZWQgb3Igd3JpdHRl
-biBmcm9tIHNjcmF0Y2guIEFuZCAKPj4+IEVOT1RUWQo+Pj4gc2lnbmFscyBhbiBpb2N0bCBub3Qg
-YXZhaWxhYmxlIG9yIGUuZy4gRUlOVkFMIChvciBjdXN0b20gZXJyb3IpIGlmIHRoZQo+Pj4gcGFy
-YW1ldGVyIGZpZWxkIHZhbHVlIGlzIG5vdCB2YWxpZCB3aXRoaW4gYSBjZXJ0YWluIHZlcnNpb24u
-IFdlIGhhdmUgCj4+PiB0aGVzZQo+Pj4gaW4gcGxhY2UsIHRoYXQncyBnb29kLiA6KQo+Pj4KPj4+
-IEhvd2V2ZXIsIEkgd2FzIHRoaW5raW5nLCBmb3IgZXhhbXBsZSwgb2YgYW4gaW9jdGwgZmxvdyB1
-c2FnZSB3aGVyZSBhIAo+Pj4gY2VydGFpbgo+Pj4gb3JkZXIgbmVlZHMgdG8gYmUgZm9sbG93ZWQg
-ZS5nLiBjcmVhdGUgYSBWTSwgYWRkIHJlc291cmNlcyB0byBhIFZNLCAKPj4+IHN0YXJ0IGEKPj4+
-IFZNLgo+Pj4KPj4+IExldCdzIHNheSwgZm9yIGFuIHVzZSBjYXNlIHdydCBuZXcgZmVhdHVyZXMs
-IGlvY3RsIEEgKGNyZWF0ZSBhIFZNKSAKPj4+IHN1Y2NlZWRzLAo+Pj4gaW9jdGwgQiAoYWRkIG1l
-bW9yeSB0byB0aGUgVk0pIHN1Y2NlZWRzLCBpb2N0bCBDIChhZGQgQ1BVIHRvIHRoZSBWTSkKPj4+
-IHN1Y2NlZWRzIGFuZCBpb2N0bCBEIChhZGQgYW55IG90aGVyIHR5cGUgb2YgcmVzb3VyY2UgYmVm
-b3JlIHN0YXJ0aW5nIAo+Pj4gdGhlIFZNKQo+Pj4gZmFpbHMgYmVjYXVzZSBpdCBpcyBub3Qgc3Vw
-cG9ydGVkLgo+Pj4KPj4+IFdvdWxkIG5vdCBuZWVkIHRvIGNhbGwgaW9jdGwgQSB0byBDIGFuZCBn
-byB0aHJvdWdoIHRoZWlyIHVuZGVybmVhdGggCj4+PiBsb2dpYyB0bwo+Pj4gcmVhbGl6ZSBpb2N0
-bCBEIHN1cHBvcnQgaXMgbm90IHRoZXJlIGFuZCByb2xsYmFjayBhbGwgdGhlIGNoYW5nZXMgCj4+
-PiBkb25lIHRpbGwKPj4+IHRoZW4gd2l0aGluIGlvY3RsIEEgdG8gQyBsb2dpYy4gT2YgY291cnNl
-LCB0aGVyZSBjb3VsZCBiZSBpb2N0bCBBIAo+Pj4gZm9sbG93ZWQKPj4+IGJ5IGlvY3RsIEQsIGFu
-ZCB3b3VsZCBuZWVkIHRvIHJvbGxiYWNrIGlvY3RsIEEgY2hhbmdlcywgYnV0IEkgc2hhcmVkIAo+
-Pj4gYSBtb3JlCj4+PiBsZW5ndGh5IGNhbGwgY2hhaW4gdGhhdCBjYW4gYmUgYW4gb3B0aW9uIGFz
-IHdlbGwuCj4+IEkgdGhpbmsgeW91IGFyZSBvdmVydGhpbmtpbmcgdGhpcy4KPj4KPj4gSWYgeW91
-ciBpbnRlcmZhY2UgaXMgdGhpcyBjb21wbGV4LCB5b3UgaGF2ZSBtdWNoIGxhcmdlciBpc3N1ZXMg
-YXMgeW91Cj4+IEFMV0FZUyBoYXZlIHRvIGJlIGFibGUgdG8gaGFuZGxlIGVycm9yIGNvbmRpdGlv
-bnMgcHJvcGVybHksIGV2ZW4gaWYgdGhlCj4+IEFQSSBpcyAic3VwcG9ydGVkIi4KPiAKPiBUcnVl
-LCB0aGUgZXJyb3IgcGF0aHMgbmVlZCB0byBoYW5kbGVkIGNvcnJlY3RseSBvbiB0aGUga2VybmVs
-IGRyaXZlciBhbmQgCj4gb24gdGhlIHVzZXIgc3BhY2UgbG9naWMgc2lkZSwgaW5kZXBlbmRlbnQg
-b2Ygc3VwcG9ydGVkIGZlYXR1cmVzIG9yIG5vdC4gCj4gQ2Fubm90IGFzc3VtZSB0aGF0IGFsbCBp
-b2N0bCBjYWxsZXJzIGFyZSBiZWhhdmluZyBjb3JyZWN0bHkgb3IgdGhlcmUgYXJlIAo+IG5vIGVy
-cm9ycyBpbiB0aGUgc3lzdGVtLgo+IAo+IFdoYXQgSSB3YW50ZWQgdG8gY292ZXIgd2l0aCB0aGF0
-IGV4YW1wbGUgaXMgbW9yZSB0b3dhcmRzIHRoZSB1c2VyIHNwYWNlIAo+IGxvZ2ljIHVzaW5nIG5l
-dyBmZWF0dXJlcywgZWl0aGVyIGVhcmx5IGV4aXRpbmcgYmVmb3JlIGV2ZW4gdHJ5aW5nIHRoZSAK
-PiBpb2N0bCBjYWxsIGZsb3cgcGF0aCBvciBnb2luZyB0aHJvdWdoIHBhcnQgb2YgdGhlIGZsb3cg
-dGlsbCBnZXR0aW5nIHRoZSAKPiBlcnJvciBlLmcuIEVOT1RUWSBmb3Igb25lIG9mIHRoZSBpb2N0
-bCBjYWxscy4KCklmIHdlIG5lZWQgYW4gQVBJIHRvIHF1ZXJ5IGZvciBuZXcgZmVhdHVyZXMsIHdl
-IGNhbiBhZGQgaXQgb25jZSB3ZSBhZGQgCm5ldyBmZWF0dXJlcywgbm8/IFRoZSBhYnNlbmNlIG9m
-IHRoZSBxdWVyeSBBUEkgd2lsbCBpbmRpY2F0ZSB0aGF0IG5vIAphZGRpdGlvbmFsIGZlYXR1cmVz
-IGFyZSBhdmFpbGFibGUuCgpTbyB5ZXMsIHNvcnJ5LCBvdmVyc2lnaHQgb24gbXkgc2lkZSA6KC4g
-SSBhZ3JlZSB3aXRoIEdyZWc6IHRoZXJlIHJlYWxseSAKaXMgbm8gbmVlZCBmb3IgYSB2ZXJzaW9u
-IHF1ZXJ5IEFQSSBhcyBvZiB0b2RheS4KCj4gCj4+Cj4+IFBlcmhhcHMgeW91ciBBUEkgaXMgc2hv
-d2luZyB0byBiZSB0b28gY29tcGxleD8KPj4KPj4gQWxzbywgd2hlcmUgaXMgdGhlIHVzZXJzcGFj
-ZSBjb2RlIGZvciBhbGwgb2YgdGhpcz/CoCBEaWQgSSBtaXNzIGEgbGluayB0bwo+PiBpdCBpbiB0
-aGUgcGF0Y2hlcyBzb21ld2hlcmU/Cj4gCj4gTm9wZSwgeW91IGRpZG4ndCBtaXNzIGFueSByZWZl
-cmVuY2VzIHRvIGl0LiBUaGUgY29kZWJhc2UgZm9yIHRoZSB1c2VyIAo+IHNwYWNlIGNvZGUgaXMg
-bm90IHB1YmxpY2x5IGF2YWlsYWJsZSBmb3Igbm93LCBidXQgaXQgd2lsbCBiZSBhdmFpbGFibGUg
-Cj4gb24gR2l0SHViIG9uY2UgdGhlIHdob2xlIHByb2plY3QgaXMgR0EuIEFuZCBJJ2xsIGluY2x1
-ZGUgdGhlIHJlZnMsIG9uY2UgCj4gYXZhaWxhYmxlLCBpbiB0aGUgTkUga2VybmVsIGRyaXZlciBk
-b2N1bWVudGF0aW9uLgoKUGF0Y2ggMTYvMTggY29udGFpbnMgYW4gZXhhbXBsZSB1c2VyIHNwYWNl
-IHRvIGRyaXZlIHRoZSBpb2N0bCBpbnRlcmZhY2UuCgpUaGUgY29kZSBiYXNlIEFuZHJhIGlzIHJl
-ZmVycmluZyB0byBhYm92ZSBpcyBnb2luZyB0byBiZSBhIG1vcmUgY29tcGxldGUgCmZyYW1ld29y
-ayB0byBkcml2ZSBOaXRybyBFbmNsYXZlcyB0aGF0IGFsc28gY29uc3VtZXMgdGhpcyBrZXJuZWwg
-QVBJLgoKCkFsZXgKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3Jh
-dXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNj
-aGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxv
-dHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAy
-MzcgODc5CgoK
+From: Tao Ren <rentao.bupt@gmail.com>
+
+The patch series update several devices' settings in Facebook Wedge40
+device tree.
+
+Patch #1 disables a few i2c controllers as they are not being used at
+present.
+
+Patch #2 enables adc device for voltage monitoring.
+
+Patch #3 enables pwm_tacho device for fan control and monitoring.
+
+Tao Ren (3):
+  ARM: dts: aspeed: wedge40: disable a few i2c controllers
+  ARM: dts: aspeed: wedge40: enable adc device
+  ARM: dts: aspeed: wedge40: enable pwm_tacho device
+
+ .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 42 +++++++++++++++----
+ 1 file changed, 34 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
 
