@@ -2,123 +2,114 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD53BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F505C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45A5206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4192071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:38:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTICzKj0"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="pt3KMdpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgGWQg5 (ORCPT
+        id S1729826AbgGWQib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGWQg5 (ORCPT
+        Thu, 23 Jul 2020 12:38:31 -0400
+Received: from sonic301-38.consmr.mail.ne1.yahoo.com ([66.163.184.207]:45843
+        "EHLO sonic301-38.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbgGWQia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:36:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92088C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 09:36:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x5so4985115wmi.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 09:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+bQZoXIFqfGEwjMaiaB7VWns9AxgAgz8MsvENSHF3qY=;
-        b=cTICzKj0aMs/8vGqHK/g2hIbInMQECfRZuUvt4UmcNWYRqk4xjATkzw4Md7VTesbK9
-         0kXACOaYojQvUMt8hJJT+8DqTHfA17ryD0glQDk8JH2nVSP0Q4uBUYu/BAlzRAHmYA8o
-         y0kYtGciTUeol5L1fqlgNU5tvMXEEVhxrZ8JxZwzJ/f3M2PfP0/hJYt23ZKfrBJ0Cy3g
-         sf+5xxkkh9aFDlpfsJCo9y7d7Rci8zdg8zDIDIEXRlzdECbjUvgZWo5brVCHoGxKlSkt
-         ATq44f9IehaGrRpVQdy6xcH9zPONKCfD5Jiro1QmN0+EwIVSmPKq9p/ixYDoRczjnuBV
-         o65Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=+bQZoXIFqfGEwjMaiaB7VWns9AxgAgz8MsvENSHF3qY=;
-        b=iBkm5cH4G+1nhDovJR1dOpXULQijVXswAbTGhMRnOOl2x7nMJO58u2bd760WPEFvnR
-         n5/2mmSDe688HDgSUdCuKT7uUK+GS9Ps91GNAuwKUdmvTKp5sf43fsungcllt6rSq4P6
-         /IROoz5T52KTHJkUSF3nSGvUs2ZlmI9y3kjnBAKw5M4WWNNaFwSmfImfsVY9YCM519lc
-         Gm8NbMevourDZm43U4FXIcPpRdaEJ7L2rO4IyKW3k/5EntQIArQnzpK9d0R8StMZG/Km
-         MMtPkhNnxXF1dHHFssERFLm2nYL9qkDhbQMGazRbN8Y7GQQa6vntFeqT046YUjIJ/30o
-         E3LA==
-X-Gm-Message-State: AOAM53255bksMrrDLCSvkvbRPulsoByDPAVpWtkg2cKeYo6cAA2Ez8N1
-        5pr5DHcIBNE4EYBViOhLQ/4=
-X-Google-Smtp-Source: ABdhPJxO2ZsaLoOuyAebtlU69uOv3Tan2WxXsMV5Hevfj+jGM2uqH8o0ZrvtBxYO0qK/WRelOHHOvQ==
-X-Received: by 2002:a7b:c08b:: with SMTP id r11mr4810194wmh.130.1595522215302;
-        Thu, 23 Jul 2020 09:36:55 -0700 (PDT)
-Received: from localhost.localdomain ([80.71.140.73])
-        by smtp.gmail.com with ESMTPSA id f9sm4274342wru.47.2020.07.23.09.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 09:36:54 -0700 (PDT)
-From:   Emil Renner Berthing <kernel@esmil.dk>
-To:     linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: Grab text_mutex before patching jump-labels
-Date:   Thu, 23 Jul 2020 18:36:28 +0200
-Message-Id: <20200723163628.82794-1-kernel@esmil.dk>
-X-Mailer: git-send-email 2.27.0
+        Thu, 23 Jul 2020 12:38:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1595522309; bh=SYRrS6XgmvY8Ktcfk2etLG+BtX95xd9rhH7uXZLR1zM=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=pt3KMdpd/AEOs16zlL4F/p+iXomqcM7JAhtKrP1SDdJ2WGIrYBzo5W/vgN5yepLP0Ii4FAKq1djnR1QBjHHBm1o0QFP9AVLZlbfnjlAm5JmHeH5ucYw1AFBRUiZWrCkCRD48m7foAvEoUNv1GNyy5428nRi5vEIY6INbr/KiMjN0Zvi86QrFIM+rVHj0BnQIuNXpG72jgH1QbQuxWg0RvS6jiO/pawnd8GZ7BtLmVjxKBEQiEEEJha4nBvbtIeJBzHwiBYVgXv3lNzEuHYtEJkTKLm/+mn4ITZrkSmRuR/WNMv4SLMtuh86WnFfNsvskPrcnPp+XPcbcb2Nk9wIqNw==
+X-YMail-OSG: 8rhPpb4VM1m6wUX4LAHJS2qe8lFkMcillQM9P3nVueMb_jQnecbX98JLvNOddx_
+ UaQqhFr80q0MlvGj331AgLedr9YZtRMxm1xkiX7TUbhQ9VoupT1CUr5iES1ZjxDPUdZdN_.be3tf
+ oqFonn1rKHse2Vtdaehu_rb8eOQh2FaSTauTzdD6qaAQe9n4q4pSHQJEpYMbUjYMKF.bYxmJGXL2
+ KQ0YRza3n23cbtkN1P2l9sH.tFrw0RfAOUYSH7DXAqx50NHDWSc6ircYjt2SinZLU25fqLTR002N
+ 209zeCzkLE6eU2FsHdWECMKHfE7m5SN_phRG7_44zsY8g.poVnQ0KfoNlgrc4dqkbR70dMx.8yJR
+ ZxvG.zSimCNXWp5LK_X0G1pNgWWm55lPwDk2wZKnTxYnQWyKCR8ZhiHeCK_nVUZbnz8rb92KetP5
+ UMt1sDVgGwVHA1Dip4OCWm0upI8l1G.6.v5Q2j5vBsqyHErVuwmx.oBGZgoDKVRPsEyKXC6ghLeY
+ iNjsCDwOn0Q0peozYbpIrOO1xiR6x090zHbq8BMTPfi8oIOjVGlyEminDZomWeTvKJ3VwkZz1JKs
+ ZsFqC9qtf_T0Vk3jfbKeWBeFDJ0hGMsGlvoO2QH24XiRki7tv3p7LAjkYo8SKWul3tsqPdpjqPNT
+ OjCLdRnB6Qp4HIWt_B8HylrdWfyAOi.qJ9su972mvm81DuQOa24zceCs.Qt_Bp6fhA6wr4Lrh_Q7
+ LqEh9sp2Ovhuzm3p7FkLvmuqA5tvHqmFplQ_FE7fA78vsxpDMThIYB_S7fBa9yFgZEE5zu9tncjV
+ EXAe.yIrIaIxOzZvW2kftT55kDGjZ9ajUbnM0r5Ab7uVpS5kWnfp.iP..i58NuZljY35JXJLOiqk
+ 74F4iuUXgUowTEezgeXJeWSD14KsZIQKouA52_Q1HVwQ5GhX5oQgbs7VLSAhSslDkz8iPG9hZ0qi
+ ZXWUiXXjddvcPK8wL9PW.2i4nmlDYimd7.Q9fShM2KgrUAuMt6ChJz21oqzbJTnLthLoRyTax1f5
+ 5Wfhl.VEJNRIwoZj.KC8GLGc865MPwKojm7zKbZv_HGGFn_L4nMlnraxE2tLYRp24wzIpqE6owQv
+ .G_wSFpgE1ZdEB8mGkTiVQJHTWDC1Eoce7rL5G0Ai8Nt9EIjHre0msPmXoCLamtzOtfxY4BwMmYF
+ B5NPRCBW5l99.iHaQB4Y9QbIHQoB62BozwK27KnEhmwVKF4TbXKI9m6UIEDO8UYjxPwrUn_wwbyo
+ 1_1hBf.R8YIR7chQLZLgHUXF8iKhLSXstGWOMxOG2G5O4Bk5es5aszsw_FFxTVEh6B2mN59ePp16
+ qWdPBQlqByP__JevGapL3EImjvQWtskwKI7vR3xXroSeP.elMB07x0N0zORHy_d_4YLEBkylj7qD
+ J0FhoImMjCPYc
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Thu, 23 Jul 2020 16:38:29 +0000
+Received: by smtp419.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID d5534348c85e4e46cdb46855cd18d38f;
+          Thu, 23 Jul 2020 16:38:29 +0000 (UTC)
+Subject: Re: [PATCH 1/2] Smack: fix another vsscanf out of bounds
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200723152219.GA302005@mwanda>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <a59e6bb4-91ef-db75-f91b-1329b073307d@schaufler-ca.com>
+Date:   Thu, 23 Jul 2020 09:38:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723152219.GA302005@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16271 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like other arch's we use patch_text_nosync or equivalent
-to patch the jump-labels, but also like other arch's we
-need to hold the text_mutex before calling that.
+On 7/23/2020 8:22 AM, Dan Carpenter wrote:
+> This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
+> vsscanf") where we added a bounds check on "rule".
+>
+> Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
+> Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
----
+Thanks. I'll be testing these and take them assuming they pass.
 
-Fixes: b6e0878a4ec8 ("riscv: Add jump-label implementation")
-..that is already in riscv/for-next.
-
-Palmer: Sorry, I didn't notice this before. Feel free to
-squash this into the commit above if you like.
----
- arch/riscv/kernel/jump_label.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
-index 1bab1abc1aa5..20e09056d141 100644
---- a/arch/riscv/kernel/jump_label.c
-+++ b/arch/riscv/kernel/jump_label.c
-@@ -4,8 +4,10 @@
-  *
-  * Based on arch/arm64/kernel/jump_label.c
-  */
--#include <linux/kernel.h>
- #include <linux/jump_label.h>
-+#include <linux/kernel.h>
-+#include <linux/memory.h>
-+#include <linux/mutex.h>
- #include <asm/bug.h>
- #include <asm/patch.h>
- 
-@@ -33,7 +35,9 @@ void arch_jump_label_transform(struct jump_entry *entry,
- 		insn = RISCV_INSN_NOP;
- 	}
- 
-+	mutex_lock(&text_mutex);
- 	patch_text_nosync(addr, &insn, sizeof(insn));
-+	mutex_unlock(&text_mutex);
- }
- 
- void arch_jump_label_transform_static(struct jump_entry *entry,
--- 
-2.27.0
-
+> ---
+> This check is very straight forward and should fix the bug.  But if you
+> look at the fixes tag we used to rely on the check:
+>
+> 	if (count != (SMK_CIPSOMIN + catlen * SMK_DIGITLEN))
+>
+> and now that has been changed to:
+>
+> 	if (format == SMK_FIXED24_FMT &&
+> 	    count != (SMK_CIPSOMIN + catlen * SMK_DIGITLEN))
+>                 goto out;
+>
+> so it doesn't apply for every format.
+>
+>  security/smack/smackfs.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+> index c21b656b3263..81c6ceeaa4f9 100644
+> --- a/security/smack/smackfs.c
+> +++ b/security/smack/smackfs.c
+> @@ -905,6 +905,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
+>  
+>  	for (i = 0; i < catlen; i++) {
+>  		rule += SMK_DIGITLEN;
+> +		if (rule > data + count) {
+> +			rc = -EOVERFLOW;
+> +			goto out;
+> +		}
+>  		ret = sscanf(rule, "%u", &cat);
+>  		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+>  			goto out;
