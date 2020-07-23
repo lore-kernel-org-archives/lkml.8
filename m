@@ -2,166 +2,87 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2550C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C53C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE9D20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07FD207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PXTfv7AN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FH9HqSCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgGWUzM (ORCPT
+        id S1726503AbgGWU6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:55:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        Thu, 23 Jul 2020 16:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgGWUzK (ORCPT
+        with ESMTP id S1726046AbgGWU6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:55:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD423C0619D3;
-        Thu, 23 Jul 2020 13:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ICBX86+Lkkci6Ue+B7VowL4TPQylTLlU+8rjSgsn/kY=; b=PXTfv7ANvy94gKr5OC2zsWn/nz
-        i3vfvhKgL0r99ZON2G7T9JuyG6hp+D7SaO4uHupQV/jZRDdUs3jiKiALhhPXE9kOvbSJOOHRtFRj2
-        WA1dy4PcFiEgIpjkKiTwq8X3A4Ob09hCWySRByy+HGaFBHhhzefDJRLOXjMdVulhuFAIhwqRTwA6L
-        0oZDBTtSmj0lU2JewPsGFRLexOeKXW7RKsoyiWTGFMmEVkM/vxwYDhL36tMUDXFSHy4A5dy41IcQS
-        5EYweiIy2x8N85dmapjSvH7QoSjE/icilxuyiZQhmJDdrlCrs7tzavF85LR4SX7dMqcBBXxQBtojP
-        /cVSq9cg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyiF9-00043b-9A; Thu, 23 Jul 2020 20:55:08 +0000
-Subject: Re: [PATCH V17 3/3] Input: new da7280 haptic driver
-To:     Roy Im <roy.im.opensource@diasemi.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <cover.1595516501.git.Roy.Im@diasemi.com>
- <c13d812871b7f09205c1f04e95f5bdf07f307eaf.1595516501.git.Roy.Im@diasemi.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ad4f8a07-9e78-ce97-021f-094210d99a3c@infradead.org>
-Date:   Thu, 23 Jul 2020 13:55:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <c13d812871b7f09205c1f04e95f5bdf07f307eaf.1595516501.git.Roy.Im@diasemi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 23 Jul 2020 16:58:16 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95255C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:58:16 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id i62so7847405ybc.15
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=7FtAxHooqgZ8bYbSQNU2/0E4qw3ahA+xHDnMOW5hjTM=;
+        b=FH9HqSCGivFhNIBkaRYcLc/3uaAPzqk1yMojTdojvaGnh9+p1xm2CHWAYknAXVf8bT
+         VJ/LaPFh/gCl2KLRNNVPPm/700eNndvLPHu2pNEfBjV082Nc/HKBYRYQTdgpN3zsF5O6
+         Ph0ItPH4iiuqYObz9i1ie38edk2UFOuQ+bkubv6Jzu30271cSd47PlxS5NOO9TnN9RX6
+         9xfV6coq04yu/HpO9NdvV8rm0+yZu+zUU76rTWXlYW2QH+LTYL5ieM7IkOs591kcDGmk
+         Zh9INjfGnsTgB1Jpfq8Ve5TtqWLhBGeahZBmHQdVE5MIfzKHF0fZYn6OJ21NR8LI3vcW
+         Z4pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=7FtAxHooqgZ8bYbSQNU2/0E4qw3ahA+xHDnMOW5hjTM=;
+        b=nV96YQdg8fJjcIoYe8YCkn0NAPOqqX0jiPSAwgnMrSJ9OYR3BCH5zJaVrw8UJQaE26
+         lY+73DoObGbrpMMReYIETd9YuW0KvsMB1DpveJ6aeOhwBahbwnVxvucbCkZN5UA8x89H
+         yIEpsxrUwzbR7uqavNTGs95M7oFcXvy5Qm0t2sqYkBRN8LT/NsBu7cVWhciT8kMxHJdG
+         bgSzhWqZE2XGMekRmn8qPWUr/D3F+oEiheporIcgovwcd3UWV6uglJfgQMaohpwRDzxe
+         Jbm6uW7kcMrwbvukBj6XQFH28yk73xBCHuw8Nt826ojFP5IJeKEvWqtmE3EauhiH3ect
+         eDvw==
+X-Gm-Message-State: AOAM531ghFlcmMf6Ynlnct+FumwUSKZlcF13wo1ghqncHhNtNjZDrKFD
+        vV2V0zLUc99A7mGfP+2jr5gua2pEnkFIUyNxNk4=
+X-Google-Smtp-Source: ABdhPJxpM9sqMDDRi78NValLg0D9pOqPRoDdTPKRwwJ0nsj8SxgFsCg6p6BYYZx/zHf/CkOD+cnjuXmrXh2EQgBZg64=
+X-Received: by 2002:a25:b68d:: with SMTP id s13mr10666339ybj.330.1595537895811;
+ Thu, 23 Jul 2020 13:58:15 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 13:58:11 -0700
+Message-Id: <20200723205811.1104520-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH 0/2] tracepoint bugfix and cleanup
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 8:01 AM, Roy Im wrote:
-> Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
-> multiple mode and integrated waveform memory and wideband support.
-> It communicates via an I2C bus to the device.
-> 
-> Reviewed-by: Jes Sorensen <Jes.Sorensen@gmail.com>.
-> 
-> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-> 
-> ---
-> 
-> 
->  drivers/input/misc/Kconfig  |   13 +
->  drivers/input/misc/Makefile |    1 +
->  drivers/input/misc/da7280.c | 1840 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1854 insertions(+)
->  create mode 100644 drivers/input/misc/da7280.c
-> 
+The first patch fixes a reported bug in iterating the
+tracing/printk_formats sysfs node, and is tagged for stable.
 
-> diff --git a/drivers/input/misc/da7280.c b/drivers/input/misc/da7280.c
-> new file mode 100644
-> index 0000000..6e3ead5
-> --- /dev/null
-> +++ b/drivers/input/misc/da7280.c
-> @@ -0,0 +1,1840 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * DA7280 Haptic device driver
-> + *
-> + * Copyright (c) 2020 Dialog Semiconductor.
-> + * Author: Roy Im <Roy.Im.Opensource@diasemi.com>
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/bitops.h>
-> +#include <linux/bitfield.h>
-> +
+The second patch is a small cleanup and is less important than the
+first.
 
-...
+Nick Desaulniers (2):
+  tracepoint: mark __tracepoint_string's __used
+  tracepoint: used attribute definitions from compiler_attributes.h
 
+ include/linux/tracepoint.h | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-> +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool enabled)
-> +{
-> +	struct pwm_state state;
-> +	u64 period_mag_multi;
-> +	int error;
-> +
-> +	if (!haptics->gain && enabled) {
-> +		dev_err(haptics->dev,
-> +			"Please set the gain first for the pwm mode\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pwm_get_state(haptics->pwm_dev, &state);
-> +	state.enabled = enabled;
-> +	if (enabled) {
-> +		period_mag_multi = (u64)state.period * haptics->gain;
-> +		period_mag_multi >>= MAX_MAGNITUDE_SHIFT;
-> +
-> +		/* The interpretation of duty cycle depends on the acc_en,
-> +		 * it should be between 50% and 100% for acc_en = 0.
-> +		 * See datasheet 'PWM mode' section.
-> +		 */
-
-from coding-style.rst:
-
-	/*
-	 * This is the preferred style for multi-line
-	 * comments in the Linux kernel source code.
-	 * Please use it consistently.
-	 *
-	 * Description:  A column of asterisks on the left side,
-	 * with beginning and ending almost-blank lines.
-	 */
-
-(except for networking code)
-
-Please fix multiple locations.
-
-
-thanks.
 -- 
-~Randy
+2.28.0.rc0.105.gf9edc3c819-goog
 
