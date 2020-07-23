@@ -2,186 +2,118 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA1AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E32CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13CD3206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCBE206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="rkKiIc4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgGWGeb (ORCPT
+        id S1726716AbgGWGe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
+        Thu, 23 Jul 2020 02:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgGWGeb (ORCPT
+        with ESMTP id S1725843AbgGWGe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:34:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE31C0619DC
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 23:34:31 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jyUoD-0008Pl-5F; Thu, 23 Jul 2020 08:34:25 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jyUoB-0001C2-NZ; Thu, 23 Jul 2020 08:34:23 +0200
-Date:   Thu, 23 Jul 2020 08:34:20 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200723063420.rn4q74vasg54k6v7@pengutronix.de>
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
- <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
- <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
- <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
+        Thu, 23 Jul 2020 02:34:26 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74547C0619E2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 23:34:25 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so5126790eje.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 23:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YHBydU8vIOvimRwIQ4AVmmdC0WTsfc4hrzMrtnp6v40=;
+        b=rkKiIc4bIcWziclAnuygl88kLrosymEFhyaR5U3rtuhiQbRhU/oG9QfgSw6A9Ons5p
+         UATja2ojOHWqBgsAldLe/SfxOn3rNlg0RYcHhV+SvOb1w+Zy3Do086g2y+175lAWp6r2
+         oEaQbXci13z0gFCVVQAYjUiwdjjx7wso13jrM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YHBydU8vIOvimRwIQ4AVmmdC0WTsfc4hrzMrtnp6v40=;
+        b=Y3JtaQotXS5qI67oALe6JtZ3ij7zpfL1H65UhwQ/SU7F17bySPtQL0mykHNWYMjgGM
+         4w3seiBF2tuvN+dTCHxH3RnHaVCE8WGP5cU+mvdQEPJ4BVR3OvgRyXHdwunYQU+ykOFS
+         RbaX1yHhUc73wVt7zidLTh3w44LEBR5ggN7uVeVPxzEno8ss5XsbKA/43c+G/BnpmvIb
+         lN8aBNDOxfpldXgD0fKXijP5dCNaZZpglRoeprdhl/z2SdFIEm1FFXZY4oK9PgWdFDuB
+         ussEWpILbT+FR1Eth6h7zlj4wvR9WFp1vVkvXGq4S3BysevqYrZN1qWhD8J7cmFAUBbY
+         rWoQ==
+X-Gm-Message-State: AOAM530TT3FIBOpIY4EW4+9pUShoqULU6lXE45kEtsuSJciwT9W4E9sa
+        QUszIFqvDwVr58Hy5PTnGPz/E2zO+cZh3LjpZJAxtQ==
+X-Google-Smtp-Source: ABdhPJxsyATkUuOcnQe0rXO2IGjkjtHk9Fd38vKQTVik9MvcczWGbe4wq7L/G9FA2hVRAHtaDc0LvXdPYIpmPCd4id0=
+X-Received: by 2002:a17:906:e46:: with SMTP id q6mr2058869eji.234.1595486063946;
+ Wed, 22 Jul 2020 23:34:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="d5jj35vqcv44tli3"
-Content-Disposition: inline
-In-Reply-To: <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200722190949.215656-1-jagan@amarulasolutions.com>
+ <20200722190949.215656-3-jagan@amarulasolutions.com> <3893924.cuH9TW0V3R@phil>
+In-Reply-To: <3893924.cuH9TW0V3R@phil>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 23 Jul 2020 12:04:12 +0530
+Message-ID: <CAMty3ZDk28-wg_=wdf_Ps-5RaHK1T-+h0Jn43aK5ReWAz+GTGw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: arm: rockchip: Add ROCKPi 4B binding
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Heiko,
 
---d5jj35vqcv44tli3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Thu, Jul 23, 2020 at 12:16:18PM +0800, Tanwar, Rahul wrote:
-> On 14/7/2020 3:10 am, Uwe Kleine-K=F6nig wrote:
-> > Hello,
+On Thu, Jul 23, 2020 at 4:43 AM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Hi Jagan,
+>
+> Am Mittwoch, 22. Juli 2020, 21:09:46 CEST schrieb Jagan Teki:
+> > Add dt-bindings for ROCKPi 4B which is similar to 4A with
+> > additional AP6256 Wifi/BT, PoE.
 > >
-> > On Tue, Jun 30, 2020 at 03:55:32PM +0800, Rahul Tanwar wrote:
-> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-> >> This PWM controller does not have any other consumer, it is a
-> >> dedicated PWM controller for fan attached to the system. Add
-> >> driver for this PWM fan controller.
-> >>
-> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> >> ---
-> >>  drivers/pwm/Kconfig         |  11 ++
-> >>  drivers/pwm/Makefile        |   1 +
-> >>  drivers/pwm/pwm-intel-lgm.c | 266 +++++++++++++++++++++++++++++++++++=
-+++++++++
-> >>  3 files changed, 278 insertions(+)
-> >>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
->=20
-> [...]
->=20
-> >> +
-> >> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> >> +			 const struct pwm_state *state)
-> >> +{
-> >> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
-> >> +	u32 duty_cycle, val;
-> >> +	unsigned int period;
-> >> +
-> >> +	if (!state->enabled) {
-> >> +		lgm_pwm_enable(chip, 0);
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	period =3D min_t(u64, state->period, pc->period);
-> >> +
-> >> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-> >> +	    period < pc->period)
-> >> +		return -EINVAL;
-> > This check looks wrong. If you refuse period < pc->period there isn't
-> > much configuration possible.
->=20
-> I am kind of stuck here. I made this change of adding a check
-> period < pc->period based on your feedback on v2 patch.
-> In fact, you had specified this code in v2 review feedback
-> and i used the same exact code.
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v2:
+> > - new patch
+> >
+> >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > index 36057c9e4b83..7250adb43d24 100644
+> > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > @@ -448,6 +448,12 @@ properties:
+> >            - const: radxa,rockpi4a
+> >            - const: rockchip,rk3399
+> >
+> > +      - description: Radxa ROCK Pi 4B
+> > +        items:
+> > +          - const: radxa,rockpi4
+> > +          - const: radxa,rockpi4b
+> > +          - const: rockchip,rk3399
+> > +
+>
+> Please do all RockPi4 variants into one entry, so we want something like:
+>
+>       - description: Radxa ROCK Pi 4
 
-My feedback was nonsense, sorry. Now I don't understand anymore what I
-thought. The check you proposed in v2 is perfectly fine.
+What if the description has something like below.
 
-> How should we handle it when the hardware supports fixed period.
-> We don't want user to change period and allow just changing
-> duty_cycle. With that intention, i had first added a strict check
-> which refused configuration if period !=3D pc->period. Period is
-> intended to be a read only value.
->=20
-> How do you suggest we handle the fixed period hardware support?
-> Would you have any reference example of other drivers which also
-> supports fixed period? Thanks.
->=20
-> [...]
-> >> +static int lgm_pwm_remove(struct platform_device *pdev)
-> >> +{
-> >> +	struct lgm_pwm_chip *pc =3D platform_get_drvdata(pdev);
-> >> +	int ret;
-> >> +
-> >> +	ret =3D pwmchip_remove(&pc->chip);
-> >> +	if (ret < 0)
-> >> +		return ret;
-> >> +
-> >> +	clk_disable_unprepare(pc->clk);
-> >> +	reset_control_assert(pc->rst);
-> > Please swap the two previous lines to match the error patch of .probe.
->=20
-> Again, i had made this change based on your below review feedback
-> for v1. IMO, reverse of probe makes more sense.
->=20
-> "In .probe() you first release reset and then enable the clock. It's good
-> style to do it the other way round in .remove()."
+          - description: Radxa ROCK Pi 4A/B/C
 
-Again my comment was nonsense, I'm sorry. I think I was irritated by the
-fact that reset handling happens in between the clk stuff in probe. You
-do there:
-
-	devm_clk_get
-	devm_reset_control_get_exclusive
-	reset_control_deassert
-	clk_prepare_enable
-
-and I noticed that as "in probe clk handling is done first".
-
-Looking at the other feedback I think my other comments are not BS.
-
-Best regards and sorry again,
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---d5jj35vqcv44tli3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ZL2oACgkQwfwUeK3K
-7AkTaAf+MtroLMbh+kPdFcEyRNOvCTYIKkWxU6avMtvNO0R13KywJo5Wtuepkjhg
-IHwwaX24X2AquNZ24HtXnMfunLTGmnIpkDrtaKEkrWExyrI8KZgTZdwhbW9SHJzR
-uhkdXl6E5p5rkz8dThregiCt7HfGyNQz8NHnqWBdB9Wz6/gSIsVX5+5dx0nkd8zZ
-M9EGO3764K/pSBMqJuTRa4SuERpDp3YRDDjr3cYOQlVAyptVxVxJlAMfneyxB7Nk
-9mNZLjs6eOn9VQAv3gLRTBM79kqP00nKY8N3csaENlFOBUQR9sylXdSEsMA9Q3eF
-tSBdQQpNp7vUAEVVnVgq4/3k7oPhTQ==
-=uN7r
------END PGP SIGNATURE-----
-
---d5jj35vqcv44tli3--
+Jagan.
