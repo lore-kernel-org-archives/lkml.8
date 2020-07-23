@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DCAC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F22C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0CE20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BBDA22BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgGWNNB (ORCPT
+        id S1729208AbgGWNNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:13:01 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34707 "EHLO
+        Thu, 23 Jul 2020 09:13:05 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56717 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGWNNA (ORCPT
+        with ESMTP id S1726521AbgGWNNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:13:00 -0400
+        Thu, 23 Jul 2020 09:13:04 -0400
 X-Originating-IP: 42.109.196.68
 Received: from localhost.localdomain (unknown [42.109.196.68])
         (Authenticated sender: me@yadavpratyush.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id EBB141C0010;
-        Thu, 23 Jul 2020 13:12:54 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id DF2661C0009;
+        Thu, 23 Jul 2020 13:12:58 +0000 (UTC)
 From:   Pratyush Yadav <me@yadavpratyush.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -36,9 +36,9 @@ Cc:     Sekhar Nori <nsekhar@ti.com>,
         Boris Brezillon <boris.brezillon@collabora.com>,
         Pratyush Yadav <p.yadav@ti.com>,
         Pratyush Yadav <me@yadavpratyush.com>
-Subject: [PATCH v11 08/14] mtd: spi-nor: core: enable octal DTR mode when possible
-Date:   Thu, 23 Jul 2020 18:41:57 +0530
-Message-Id: <20200723131203.40916-9-me@yadavpratyush.com>
+Subject: [PATCH v11 09/14] mtd: spi-nor: sfdp: detect Soft Reset sequence support from BFPT
+Date:   Thu, 23 Jul 2020 18:41:58 +0530
+Message-Id: <20200723131203.40916-10-me@yadavpratyush.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200723131203.40916-1-me@yadavpratyush.com>
 References: <20200723131203.40916-1-me@yadavpratyush.com>
@@ -51,88 +51,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pratyush Yadav <p.yadav@ti.com>
 
-Allow flashes to specify a hook to enable octal DTR mode. Use this hook
-whenever possible to get optimal transfer speeds.
+A Soft Reset sequence will return the flash to Power-on-Reset (POR)
+state. It consists of two commands: Soft Reset Enable and Soft Reset.
+Find out if the sequence is supported from BFPT DWORD 16.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/core.c | 35 +++++++++++++++++++++++++++++++++++
- drivers/mtd/spi-nor/core.h |  2 ++
- 2 files changed, 37 insertions(+)
+ drivers/mtd/spi-nor/core.h | 1 +
+ drivers/mtd/spi-nor/sfdp.c | 4 ++++
+ drivers/mtd/spi-nor/sfdp.h | 2 ++
+ 3 files changed, 7 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 6efc86e2aba0..b990fc7add20 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -3050,6 +3050,35 @@ static int spi_nor_init_params(struct spi_nor *nor)
- 	return 0;
- }
- 
-+/** spi_nor_octal_dtr_enable() - enable Octal DTR I/O if needed
-+ * @nor:                 pointer to a 'struct spi_nor'
-+ * @enable:              whether to enable or disable Octal DTR
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+static int spi_nor_octal_dtr_enable(struct spi_nor *nor, bool enable)
-+{
-+	int ret;
-+
-+	if (!nor->params->octal_dtr_enable)
-+		return 0;
-+
-+	if (!(nor->read_proto == SNOR_PROTO_8_8_8_DTR &&
-+	      nor->write_proto == SNOR_PROTO_8_8_8_DTR))
-+		return 0;
-+
-+	ret = nor->params->octal_dtr_enable(nor, enable);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		nor->reg_proto = SNOR_PROTO_8_8_8_DTR;
-+	else
-+		nor->reg_proto = SNOR_PROTO_1_1_1;
-+
-+	return 0;
-+}
-+
- /**
-  * spi_nor_quad_enable() - enable/disable Quad I/O if needed.
-  * @nor:                pointer to a 'struct spi_nor'
-@@ -3090,6 +3119,12 @@ static int spi_nor_init(struct spi_nor *nor)
- {
- 	int err;
- 
-+	err = spi_nor_octal_dtr_enable(nor, true);
-+	if (err) {
-+		dev_dbg(nor->dev, "octal mode not supported\n");
-+		return err;
-+	}
-+
- 	err = spi_nor_quad_enable(nor, true);
- 	if (err) {
- 		dev_dbg(nor->dev, "quad mode not supported\n");
 diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index 27e00a9f5950..17dbbb3e4796 100644
+index 17dbbb3e4796..ec54ce6c5403 100644
 --- a/drivers/mtd/spi-nor/core.h
 +++ b/drivers/mtd/spi-nor/core.h
-@@ -203,6 +203,7 @@ struct spi_nor_locking_ops {
-  *                      higher index in the array, the higher priority.
-  * @erase_map:		the erase map parsed from the SFDP Sector Map Parameter
-  *                      Table.
-+ * @octal_dtr_enable:	enables SPI NOR octal DTR mode.
-  * @quad_enable:	enables/disables SPI NOR Quad mode.
-  * @set_4byte_addr_mode: puts the SPI NOR in 4 byte addressing mode.
-  * @convert_addr:	converts an absolute address into something the flash
-@@ -226,6 +227,7 @@ struct spi_nor_flash_parameter {
+@@ -26,6 +26,7 @@ enum spi_nor_option_flags {
+ 	SNOR_F_HAS_SR_TB_BIT6	= BIT(11),
+ 	SNOR_F_HAS_4BIT_BP      = BIT(12),
+ 	SNOR_F_HAS_SR_BP3_BIT6  = BIT(13),
++	SNOR_F_SOFT_RESET	= BIT(14),
+ };
  
- 	struct spi_nor_erase_map        erase_map;
+ struct spi_nor_read_command {
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index 05191f7b3b33..3bd173546cca 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -604,6 +604,10 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 		break;
+ 	}
  
-+	int (*octal_dtr_enable)(struct spi_nor *nor, bool enable);
- 	int (*quad_enable)(struct spi_nor *nor, bool enable);
- 	int (*set_4byte_addr_mode)(struct spi_nor *nor, bool enable);
- 	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
++	/* Soft Reset support. */
++	if (bfpt.dwords[BFPT_DWORD(16)] & BFPT_DWORD16_SOFT_RST)
++		nor->flags |= SNOR_F_SOFT_RESET;
++
+ 	/* Stop here if not JESD216 rev C or later. */
+ 	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
+ 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
+diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+index 6d7243067252..8ae55e98084e 100644
+--- a/drivers/mtd/spi-nor/sfdp.h
++++ b/drivers/mtd/spi-nor/sfdp.h
+@@ -90,6 +90,8 @@ struct sfdp_bfpt {
+ #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
+ #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
+ 
++#define BFPT_DWORD16_SOFT_RST			BIT(12)
++
+ #define BFPT_DWORD18_CMD_EXT_MASK		GENMASK(30, 29)
+ #define BFPT_DWORD18_CMD_EXT_REP		(0x0UL << 29) /* Repeat */
+ #define BFPT_DWORD18_CMD_EXT_INV		(0x1UL << 29) /* Invert */
 -- 
 2.27.0
 
