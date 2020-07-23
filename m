@@ -2,115 +2,143 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F352C4346A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3541120792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fl8tqvly"
+	by mail.kernel.org (Postfix) with ESMTP id 928D720825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:54:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595548489;
+	bh=UzX/AGYoCB8T78QYmOdcDcKyRy2jrBvxTcltmnDIzdA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eUuTQ4hqaJow1XoIaR9iqGaS00O+CZMPBObBTX26+vukq0JCdUIUf1x2J35+TzDFX
+	 s4WitX/7HHw6HVjYv6hBM6RBQCeotYPGMQwesTGsnl0ASbO9ecIa/dNLozNuqYJ8y3
+	 impYjoiMLgbdxBcFNwjsQ4VfNyt4VQ5vvLee/E5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgGWXtZ (ORCPT
+        id S1728181AbgGWXys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:49:25 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17987 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgGWXsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:48:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1a21820001>; Thu, 23 Jul 2020 16:47:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Jul 2020 16:48:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 16:48:17 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
- 2020 23:48:17 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 23 Jul 2020 23:48:17 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1a21c00002>; Thu, 23 Jul 2020 16:48:17 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v4 01/14] i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
-Date:   Thu, 23 Jul 2020 16:50:59 -0700
-Message-ID: <1595548272-9809-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
-References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 23 Jul 2020 19:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727778AbgGWXys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 19:54:48 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08097207C4;
+        Thu, 23 Jul 2020 23:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595548487;
+        bh=UzX/AGYoCB8T78QYmOdcDcKyRy2jrBvxTcltmnDIzdA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uslZaGUqify8pCiomAUIjTdXLyABjbNbCxTVEOTFmwx0PLP0IqN+Qa6V3cKr4XYfz
+         BEvEgH18gnL2l4F0YWejix7P32QEZQk8AXvqCwAMGL5MwPNk+SLeTAPOwgpsSFX1od
+         UxtN8lqUXA2GaU5toItGBuijaTpWKO6LXOfIOE38=
+Date:   Thu, 23 Jul 2020 18:54:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ashok Raj <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device
+ when SRIOV is enabled
+Message-ID: <20200723235445.GA1471911@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595548034; bh=zxB65TqmmcKmPfWkLJU50AtZToCBrCGEYlb/JsyjY+U=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Fl8tqvlySxeFQDQY+54PsTN9/Ap3KRcNINo11fVdby3IDSAfwpkG/gnQHKKq0aUdJ
-         z6/23I17/nIZNyD47iGPQM2JX2PaOUtGzNfJwDdHn1+QuQhAfthEeKt2cMqbzZnbQy
-         yAp4FZCOpjj8XQiNb4AJOWXCUefYA2o0KVdgK1X3CkSQVO8lV8HO/0ynCtMV11Rjvg
-         v5ad1aLajISWQCt8Hm8tLz5bgc4tuNSCIGbU4y5bcxtjcQPh4NCrq6MPDjC9tO4lVD
-         7Md3yFMMszQxoqAUB6JLrzGdUY4qKl8GRTvTwEZ2xSQC3GynxDEDAhn5r/03udxjTW
-         vrvkdslNLO0Ag==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI I2C is part of VE power domain and typically used for
-camera usecases.
+On Thu, Jul 23, 2020 at 03:37:29PM -0700, Ashok Raj wrote:
+> PASID and PRI capabilities are only enumerated in PF devices. VF devices
+> do not enumerate these capabilites. IOMMU drivers also need to enumerate
+> them before enabling features in the IOMMU. Extending the same support as
+> PASID feature discovery (pci_pasid_features) for PRI.
+> 
+> Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
 
-VE power domain is not always on and is non-IRQ safe. So, IRQ safe
-device cannot be attached to a non-IRQ safe domain as it prevents
-powering off the PM domain and generic power domain driver will warn.
+This looks right to me, but I would like Joerg's ack before applying
+it.
 
-Current driver marks all I2C devices as IRQ safe and VI I2C device
-does not require IRQ safe as it will not be used for atomic transfers.
-
-This patch has fix to make VI I2C as non-IRQ safe.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1577296..3be1018 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1750,7 +1750,15 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		goto unprepare_slow_clk;
- 	}
- 
--	pm_runtime_irq_safe(&pdev->dev);
-+	/*
-+	 * VI I2C is in VE power domain which is not always on and not
-+	 * an IRQ safe. So, IRQ safe device can't be attached to a non-IRQ
-+	 * safe domain as it prevents powering off the PM domain.
-+	 * Also, VI I2C device don't need to use runtime IRQ safe as it will
-+	 * not be used for atomic transfers.
-+	 */
-+	if (!i2c_dev->is_vi)
-+		pm_runtime_irq_safe(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	if (!pm_runtime_enabled(&pdev->dev)) {
- 		ret = tegra_i2c_runtime_resume(&pdev->dev);
--- 
-2.7.4
-
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> To: Joerg Roedel <joro@8bytes.com>
+> To: Lu Baolu <baolu.lu@intel.com>
+> Cc: stable@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: iommu@lists.linux-foundation.org
+> ---
+> v3: Added Fixes tag
+> v2: Fixed build failure reported from lkp when CONFIG_PRI=n
+> 
+>  drivers/iommu/intel/iommu.c |  2 +-
+>  drivers/pci/ats.c           | 13 +++++++++++++
+>  include/linux/pci-ats.h     |  4 ++++
+>  3 files changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index d759e7234e98..276452f5e6a7 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>  			}
+>  
+>  			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+> -			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
+> +			    pci_pri_supported(pdev))
+>  				info->pri_supported = 1;
+>  		}
+>  	}
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index b761c1f72f67..2e6cf0c700f7 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  
+>  	return pdev->pasid_required;
+>  }
+> +
+> +/**
+> + * pci_pri_supported - Check if PRI is supported.
+> + * @pdev: PCI device structure
+> + *
+> + * Returns true if PRI capability is present, false otherwise.
+> + */
+> +bool pci_pri_supported(struct pci_dev *pdev)
+> +{
+> +	/* VFs share the PF PRI configuration */
+> +	return !!(pci_physfn(pdev)->pri_cap);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_pri_supported);
+>  #endif /* CONFIG_PCI_PRI */
+>  
+>  #ifdef CONFIG_PCI_PASID
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index f75c307f346d..df54cd5b15db 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>  void pci_disable_pri(struct pci_dev *pdev);
+>  int pci_reset_pri(struct pci_dev *pdev);
+>  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> +bool pci_pri_supported(struct pci_dev *pdev);
+> +#else
+> +static inline bool pci_pri_supported(struct pci_dev *pdev)
+> +{ return false; }
+>  #endif /* CONFIG_PCI_PRI */
+>  
+>  #ifdef CONFIG_PCI_PASID
+> -- 
+> 2.7.4
+> 
