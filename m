@@ -2,74 +2,139 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23E6520714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA68320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:20:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WUTsHGNH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YNZsXb2u"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wkpo7qVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgGWOU0 (ORCPT
+        id S1729269AbgGWOUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:20:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58372 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgGWOU0 (ORCPT
+        Thu, 23 Jul 2020 10:20:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgGWOUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:20:26 -0400
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595514024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aSo/4VWDW4CMWU0h3PQvI5YPDGHrTnQn4D7hetc67Eg=;
-        b=WUTsHGNHI/kUYiHTcX4Cg84Y56n8X8+NEFYv0vB3PJbsEcfls6i/YIqNlkFk+iCukQ5ImF
-        xPyPT05ywGsgFUlA0/cALfT35Qs3TwOzi+513dE4v/ax6GFJbNzABXti/a5RJS00Qq1HTn
-        UBKnEN+RKfpr9UTqnS5UFhh2/CAfSk/1kTnczIBmP/bh3iGzWq7N1YqJaBeqlfwI9Ulk+X
-        p0EGdVqb1VjPpIqmukXiqtmcmFcC7iGgufnZgXdIYpob+SN/KURBUrcQbNpMh5aWSusto4
-        4PX6WxYShlGFirJ5iy/ngU9fK4ttCBZFXsSKlASRuEiWi4JBNZXPRPLsGve4cg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595514024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aSo/4VWDW4CMWU0h3PQvI5YPDGHrTnQn4D7hetc67Eg=;
-        b=YNZsXb2uiLHiS8cezCAimIfsNCBLXzqYhOjomDEGtzIw0evBpxSfknll6VNOU77aAn1onu
-        ugX8nyuvZGF8s0BA==
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        jbaron@akamai.com, mingo@redhat.com, kernel@axis.com,
-        corbet@lwn.net, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] dynamic debug: allow printing to trace event
-In-Reply-To: <87blk6cosb.fsf@jogness.linutronix.de>
-References: <20200721141105.16034-1-vincent.whitchurch@axis.com> <20200721173045.540ae500@oasis.local.home> <87eep3zmg9.fsf@jogness.linutronix.de> <20200722112525.694880d3@oasis.local.home> <87blk6cosb.fsf@jogness.linutronix.de>
-Date:   Thu, 23 Jul 2020 16:26:23 +0206
-Message-ID: <878sfacnyw.fsf@jogness.linutronix.de>
+        Thu, 23 Jul 2020 10:20:40 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB21C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:20:38 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id y3so5350200wrl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ntQu/VIUE9Ak1XWr+tVal7WWTvSlvV5WCmELVlSDg/A=;
+        b=wkpo7qVfmRQMPMxDfZe4UMyUKZbbfKfNEbl/ATyQ+ZamsFKEYkAJMnnsF70gm8MOJT
+         tIeMGGPN/oAeSvdffe4TFe9/EYgHs94i2eaGJHJCQYh0XOo512GHFUdIlei/g7RliGDx
+         D5O96c3ZwG2Bzr3+W5nwShYdzfOK89O4fKPNtmdk87x3U7ngJrYSSjHvTbZyfjO7Zf6H
+         Zxisg/HN2v9MGvbqicfa8OINsM2xCR3Vb98qLOSCA0bmAQIvu0YRJw2e8NO/+af+e4iw
+         fyjNMe4l21vet1zGIgwezkr5OkgUswi3wP/pJLcRDxHYQZkWCXdnNLYbhwozC9Ore0Tl
+         GAnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ntQu/VIUE9Ak1XWr+tVal7WWTvSlvV5WCmELVlSDg/A=;
+        b=HMXRv5dzFD9Pw+QGKM+WJRZ4i2Tbc+xDSgBk0yI88gwnM3gMy8zbrrKgpTxqtFzw5y
+         rvmqIyeWSheifCf3AF1aCI9pbbnaikPqkHdG4N7pHA/3y5Uo28ghGAHVP3AQLDCbicfb
+         Iaa8HKlQeRvqRQxloiXDSdYtU6aaPQ8JuhQUKgnopmt/Qo7qwh8JSTud+8TSEBzL3PED
+         cKNe6wJnCdZ6PNmfsD+CPtrid0qlyaB33miEcNxrhE1ryGJh2MUxZDiRtkiTt7QYIs3V
+         xXl4J7offQIV8ZBhopMpDhT1dQ2n4dxbcKsT3pOgop0woYqnw22+Z6B8sVvW4VgAdylC
+         D+Gw==
+X-Gm-Message-State: AOAM533rO+nz7J0vatPbDC7XN7jpVtAF2sChyS/bvXhfi2Y4mLQ7Uetx
+        8sQ/XbYEgQGkELEe1Yrd/v3WTg==
+X-Google-Smtp-Source: ABdhPJwPVH7gpTvD/ipnOWJvIHkx8CO3yNE7ijv4WaUQj7B8PPGPf7PeZuVShnyjBwPah/vGz1YMDg==
+X-Received: by 2002:a5d:4751:: with SMTP id o17mr4352832wrs.345.1595514036969;
+        Thu, 23 Jul 2020 07:20:36 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id w2sm235204wre.5.2020.07.23.07.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 07:20:36 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH] ASoC: soc-component: don't report of_xlate_dai_name failures
+Date:   Thu, 23 Jul 2020 16:20:20 +0200
+Message-Id: <20200723142020.1338740-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-23, John Ogness <john.ogness@linutronix.de> wrote:
-> For me a trace event represents a specific point in the kernel
-> code.
+With commit e2329eeba45f ("ASoC: soc-component: add soc_component_err()")
+every error different for ENOTSUPP or EPROBE_DEFER will log an error.
 
-Actually, after revisiting Vincent's original patch (adding a "dynamic"
-event in the "printk" group and placing the event within the
-dynamic_printk printing path), I would fully support the new event. It
-_is_ appropriately a printk/dynamic event.
+However, as explained in snd_soc_get_dai_name(), this callback may error
+to indicate that the DAI is not matched by the component tested. If the
+device provides other components, those may still match. Logging an error
+in this case is misleading.
 
-John Ogness
+Don't use soc_component_ret() in snd_soc_component_of_xlate_dai_name()
+to avoid spamming the log.
+
+Fixes: e2329eeba45f ("ASoC: soc-component: add soc_component_err()")
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+
+ If we wish to report an error when no name is found for dai phandle,
+ I think it would be more approriate to it with with "struct device *"
+ of the card, which is the one actually failing to get what it needs.
+
+ These user of snd_soc_get_dai_name() are already reporting the error:
+ * sound/soc/samsung/tm2_wm5110.c
+ * sound/soc/rockchip/rk3288_hdmi_analog.c
+
+ These could be silently failing:
+ * Simple cards
+ * Amlogic's cards
+ * Samsumg odroid card
+
+ sound/soc/soc-component.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/sound/soc/soc-component.c b/sound/soc/soc-component.c
+index 9565a0dd7cb6..fb6479b22d26 100644
+--- a/sound/soc/soc-component.c
++++ b/sound/soc/soc-component.c
+@@ -344,13 +344,15 @@ int snd_soc_component_of_xlate_dai_name(struct snd_soc_component *component,
+ 					struct of_phandle_args *args,
+ 					const char **dai_name)
+ {
+-	int ret = -ENOTSUPP;
+-
+ 	if (component->driver->of_xlate_dai_name)
+-		ret = component->driver->of_xlate_dai_name(component,
+-							   args, dai_name);
+-
+-	return soc_component_ret(component, ret);
++		return component->driver->of_xlate_dai_name(component,
++							    args, dai_name);
++	/*
++	 * Don't use soc_component_ret here because we may not want to report
++	 * the error just yet. If a device has more than one component, the
++	 * first may not match and we don't want spam the log with this.
++	 */
++	return -ENOTSUPP;
+ }
+ 
+ void snd_soc_component_setup_regmap(struct snd_soc_component *component)
+-- 
+2.25.4
+
