@@ -2,141 +2,84 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DF0C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5A29206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RHS9s6Pn"
+	by mail.kernel.org (Postfix) with ESMTP id 83844206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595539088;
+	bh=zka2wG+qXYaeC3pqd/fPt0xZLsscVGYe/mWLlcbw6Y8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oUmDY4oKZCxc7YXcwzYd8j0IxXqrDjrVCcLdJp9lb7Mt/hG2MvfpBOVVOj3HcnYN0
+	 pkmy0AYlTqxmYsZ2CoNEmYv9Bg1orn2MBj9ly2/WQ5Z8mvozNwYjygl6sx8uaId5uU
+	 oys2ijgNjwCspR1JRFqLc3h4ldxtQqKy3bsMQgpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgGWVRv (ORCPT
+        id S1727009AbgGWVSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgGWVRv (ORCPT
+        Thu, 23 Jul 2020 17:18:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45619 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgGWVSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:17:51 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22844C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:17:51 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id g26so6850322qka.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:17:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OCWUi446PADsQ51jtIS8KSzkmHB79NmlflmTv1tu7K8=;
-        b=RHS9s6Pnghb5h2/OhXZfIfYtnabBm8/+rsX6DRGtkA2SZOxaw0E77/jsxgoZe+Z1l0
-         QrbKhV9UxNJAeKNuoe0BNm0XAXzbqWqoRgw12a4CWgXuaRN2aWcWxlO+yjZiEfw1y641
-         AX1CAgtzywyYJTmfgdi8DBm+ybo/2vnWEkedHkV1tkrZ5lPbHiztaDZQzDU/56m1k06u
-         OlxSwRN34EKJUH0XPcpbe0R6YWFxGA34fw7T13TD3ybT3UVvLdvmkPuK3/h3LkyNGyV9
-         zCkhkKp+cDSA7UUGUFsU441kjy6StmzMkZJAsEW57Bp+EQTqmuDWpUK4rlVMcCETSdkv
-         Ioug==
+        Thu, 23 Jul 2020 17:18:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id e64so7763579iof.12;
+        Thu, 23 Jul 2020 14:18:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OCWUi446PADsQ51jtIS8KSzkmHB79NmlflmTv1tu7K8=;
-        b=Vf24dzp+ph0npuqbbNui1T8xKPtFeSPkBa1hYY0az70icmF6AsqccPJJ2kbOYXO8c5
-         V5MGGP5dJ1gaFo0ESq7esDELNJAUHGyTLUHVqcU6GsLRMOEcxuaucMHVHTWdh+/pbRRV
-         joK5eUbPWroIOlvRxO4MO6gpYW5Ev74jTjUgSXtgZQ+HRSo1s+kiaURRUCkzQsyH46Ey
-         ADZux2bK8bcGyuLpoRaxMIMjCHkbeayaccow0W6oyCoc9gkpmt0U72qrlSsMbdc7bmCp
-         tBtWkF51VSmO7IxbpTzMZh+V9xuzEPGg+u3wy3YMW4HNkfbztACUTIneFMSHUHZPZna7
-         7dFg==
-X-Gm-Message-State: AOAM5327i48wBLZYAaCrhUjkLRWWOCSqvP+No3bv2dKBwAM61kpBkE5+
-        Ddi0qX7QJz6H9vJ3PbA/7/bdjQ==
-X-Google-Smtp-Source: ABdhPJxJLATFfYC0yS6OTkbk2LGV4z78IaPuU4W6ogqlUbvHlxQumspQYlLie6V6M/CBE5hIGua6IQ==
-X-Received: by 2002:ae9:e30a:: with SMTP id v10mr7722339qkf.167.1595539070154;
-        Thu, 23 Jul 2020 14:17:50 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id c7sm4165918qta.95.2020.07.23.14.17.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Hx09CFzFEK3rFI8A30xOHAnNXgPfvKjfqFgA/SCg1s4=;
+        b=cDGBlyJ/oPvBAF8l8jpS/xTS17YlXIVKkyxn9brRELeDmHQU9s4daExQDwKpdMNAp9
+         hQVapPICgbvHru/ZC2F1OUUkcYFXJsS3AcJL7AO1eOf6Uqu+5S47iVl4e4q02was3BcA
+         1fMf5f7sF00n2ca10/LOH6z7H4JlwAQ/frfFDsvvuw2KdFE7AzHPKdYNoEwwT/85Zhn8
+         kWR4vbtmum/pObKnAI0AEFN5NvQ7/YURGWuTuk6opqq2Q6Tt1uy/Iua0h7lGRd6OLrO9
+         tceT1I2Wh8sEyLMucu+dl/Avm2FcLm6n1qvqrB7p1EKVcjGvRKp4X+jnmf1cSrvXaLH6
+         ENgA==
+X-Gm-Message-State: AOAM531dzTTXBH4WdkCCjTw5rtkN2Z2H5ocI5ErKE2tIaALmcr7h0agX
+        MQNtqL6hOYZHmtAvkPjwow==
+X-Google-Smtp-Source: ABdhPJzIrbGkisYa8iZy5IAqxlxr48Sy8HcbDiPVQc/+SP8E4CfSPaTNyFUPOeLZfDlyP9BAFCp0HQ==
+X-Received: by 2002:a5e:d90a:: with SMTP id n10mr7039546iop.50.1595539086180;
+        Thu, 23 Jul 2020 14:18:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d9sm2016925iod.55.2020.07.23.14.18.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:17:49 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, tyhicks@linux.microsoft.com,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/1] scale loop device lock
-Date:   Thu, 23 Jul 2020 17:17:47 -0400
-Message-Id: <20200723211748.13139-1-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 23 Jul 2020 14:18:05 -0700 (PDT)
+Received: (nullmailer pid 875357 invoked by uid 1000);
+        Thu, 23 Jul 2020 21:18:04 -0000
+Date:   Thu, 23 Jul 2020 15:18:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     qiangming.xia@mediatek.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, wsa@the-dreams.de,
+        linux-arm-kernel@lists.infradead.org, leilk.liu@mediatek.com,
+        linux-i2c@vger.kernel.org, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH 3/4] dt-bindings: i2c: update bindings for MT8192 SoC
+Message-ID: <20200723211804.GA875327@bogus>
+References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
+ <1595421106-10017-4-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595421106-10017-4-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog
-v2: Addressed Tyler Hicks comments
-	- added mutex_destroy()
-	- comment in lo_open()
-	- added lock around lo_disk in 
+On Wed, 22 Jul 2020 20:31:45 +0800, Qii Wang wrote:
+> Add a DT binding documentation for the MT8192 soc.
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-
-===
-
-In our environment we are using systemd portable containers in
-squashfs formats, convert them into loop device, and mount.
-
-NAME                      MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
-loop5                       7:5    0  76.4M  0 loop
-`-BaseImageM1908          252:3    0  76.4M  1 crypt /BaseImageM1908
-loop6                       7:6    0    20K  0 loop
-`-test_launchperf20       252:17   0   1.3M  1 crypt /app/test_launchperf20
-loop7                       7:7    0    20K  0 loop
-`-test_launchperf18       252:4    0   1.5M  1 crypt /app/test_launchperf18
-loop8                       7:8    0     8K  0 loop
-`-test_launchperf8        252:25   0    28K  1 crypt app/test_launchperf8
-loop9                       7:9    0   376K  0 loop
-`-test_launchperf14       252:29   0  45.7M  1 crypt /app/test_launchperf14
-loop10                      7:10   0    16K  0 loop
-`-test_launchperf4        252:11   0   968K  1 crypt app/test_launchperf4
-loop11                      7:11   0   1.2M  0 loop
-`-test_launchperf17       252:26   0 150.4M  1 crypt /app/test_launchperf17
-loop12                      7:12   0    36K  0 loop
-`-test_launchperf19       252:13   0   3.3M  1 crypt /app/test_launchperf19
-loop13                      7:13   0     8K  0 loop
-...
-
-We have over 50 loop devices which are mounted  during boot.
-
-We observed contentions around loop_ctl_mutex.
-
-The sample contentions stacks:
-
-Contention 1:
-__blkdev_get()
-   bdev->bd_disk->fops->open()
-      lo_open()
-         mutex_lock_killable(&loop_ctl_mutex); <- contention
-
-Contention 2:
-__blkdev_put()
-   disk->fops->release()
-      lo_release()
-         mutex_lock(&loop_ctl_mutex); <- contention
-
-With total time waiting for loop_ctl_mutex ~18.8s during boot (across 8
-CPUs) on our machine (69 loop devices): 2.35s per CPU.
-
-Scaling this lock eliminates this contention entirely, and improves the boot
-performance by 2s on our machine.
-
-Pavel Tatashin (1):
-  loop: scale loop device by introducing per device lock
-
- drivers/block/loop.c | 99 ++++++++++++++++++++++++++------------------
- drivers/block/loop.h |  1 +
- 2 files changed, 59 insertions(+), 41 deletions(-)
-
--- 
-2.25.1
-
+Acked-by: Rob Herring <robh@kernel.org>
