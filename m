@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A7AC433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E112EC433F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1E420792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA3E20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gPiSTZgQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xLaMH7UF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgGWMZI (ORCPT
+        id S1728956AbgGWMZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58144 "EHLO
+        Thu, 23 Jul 2020 08:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728919AbgGWMZG (ORCPT
+        with ESMTP id S1728918AbgGWMZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:25:06 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85224C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:06 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y24so830003wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:06 -0700 (PDT)
+        Thu, 23 Jul 2020 08:25:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1CFC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so4998047wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=h63LOgt+Dy9g/r9ZLeRwkVpd9spngRolp7BRUfjs04E=;
-        b=gPiSTZgQ6RVOnxc4T+m87zsgevXZ4/vwi6Yf3OWh3UnlrG/cYxRyuV8MqeTtANSA7V
-         nTPngr5LxGg1E9sY/xI/ULZ0VKbIHJqPl5mtUSEdz9tqIzywwy61U5+ShcSBPALBQL5z
-         lGWbxgDDdHb1OdvVc9Tya9fpObNJ4Bs/kP/DKylzQksw8IQqHt8g/g2sNQDmV+sLERNj
-         n0yXuZfidePc2w2gaZ4gdwasSMoIt0Me7VTOHm+E4enkBrVAlHvplwxLABQFbAEycqVq
-         bRxxmtcJewIv1+idmOiIFaeIv7CXcDrC6kVgs9bRTRdA/cR4wQMO7lq/AOYldXtTBHtV
-         ribg==
+        bh=EAO/H9oPsrENV00s3vT32VulXIxpsxrN3aKk7i47ICU=;
+        b=xLaMH7UFnDh2rj+PFQo4eI/Sb/L7kbhOi+ek9Z/VDwxFR7R4iy2NCT8Wwa+Gmz47k3
+         bYXR1Gbvv5/hRs1WHXAlWP2LtOx+qsMUm4Okzb/+JTLGqSRnyiOJgKVn9nfOcb+n9F1q
+         Jl6B/C3sktRHUiEfWDwmrwsF7SHg7QxovyroDW5iJsjc4mqe5RbaCh7HVnvtCkuPOEfM
+         +B6TpEH8bcJOk/vDivsxIC1bBRRjTLjsgtinK5oYTclgu0vtCWvkb2vw20FlKXNvxZQb
+         kSFqZnq2VNLgrjuX4FQw+sAnqODtWJ0KxJfJNdOLhu01aHmhOdU7hMQMpLpuBxMnj1k6
+         FkNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=h63LOgt+Dy9g/r9ZLeRwkVpd9spngRolp7BRUfjs04E=;
-        b=gyvFPmF14GOcwJR5ZOzE26qcLLbU+Ix/u1JJrLCJHRJIFw4v73rCD6kdGj46FhXEpU
-         FMc9MvhD0tAZS/oQAN6/JXknq/56ZbQuo2PWg1glJVyW6uIH6WxgyHAn4jl6Pc2JW1TQ
-         JM4WV9JTN/RyE5m/uGRMHjERbcjqSRYl2vPI+Hh8UophQgo6ifcrcIONDPdEahoicBAK
-         yh36piU/kkt/705TJMFwWKHWeai10fyNcTYiwpjb1QS+sbcbDk0uJXyo+rTUkTslurh1
-         IrxA+NLVTrwCblawHfD/10XeJBM4IYQRWws52VApUqyiuIY00Hh16ghcgsgCSFzZhzRT
-         jrFg==
-X-Gm-Message-State: AOAM530VSoSk5AtJueYjbC/GO3UGmMmyKV47Ch2ES3/aFJT309LY846i
-        LHjc2udU6GlHmXzHzkEwc2QquA==
-X-Google-Smtp-Source: ABdhPJwsIcwNe8dwuwe2OJqfzn2ZQ57y3/4mQvClR7t7daFL5f+jr6Jc5OuDYirzpKLdZtUGoAfWyw==
-X-Received: by 2002:a1c:7719:: with SMTP id t25mr4164947wmi.144.1595507105238;
-        Thu, 23 Jul 2020 05:25:05 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=EAO/H9oPsrENV00s3vT32VulXIxpsxrN3aKk7i47ICU=;
+        b=hjop41qdXlvzaml5VitkV6ZkvSdoOPiE6zqtf2EF3yHwv0oOzCF9Onp4i3C46HEDhi
+         wd5ue77STRygbipUXTJLsgdbAhO6pnTRyztn1hyFCYumEqRAdDkqBmhBQSe/OSYBfSDD
+         EekgE6JxHRmGlsMXzpLHL3dOb3nkVGBVpV0vRjQxGHwVl9VF2WwE+OBlFXYGlC07jLjO
+         4thp0Rvwq6ZZWF3vafeEogLXlVirOggtTBx4+fjVu2GdeWh3Mqj0PIdaNC87K4I3I5Ug
+         sbtEecF32r+vuW1hA82gl2xGN++ajLa6CVThxMSX1mLqUxZ8nJPIRJLYgmWlmPQO7OO4
+         h+bA==
+X-Gm-Message-State: AOAM533EYtirF4zdEdoRzCkzTLy1i8GnHiLU/68laevHH/py94z/K4W3
+        Ki5knhHhdkLZuMtbzJNec2eTwA==
+X-Google-Smtp-Source: ABdhPJyT54qRwLWqt3v4hcD2iJ0I4ZhmsVGVv/ehJlWHfF0om4aY1yvS5M1xFh3lIoQf0jzqOOsJSQ==
+X-Received: by 2002:a7b:cd90:: with SMTP id y16mr3953271wmj.20.1595507104079;
         Thu, 23 Jul 2020 05:25:04 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 05:25:03 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
         ipslinux@adaptec.com, Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH 13/40] scsi: ips: Convert strnlen() to memcpy() since result should not be NUL terminated
-Date:   Thu, 23 Jul 2020 13:24:19 +0100
-Message-Id: <20200723122446.1329773-14-lee.jones@linaro.org>
+Subject: [PATCH 12/40] scsi: ips: Remove some set but unused variables
+Date:   Thu, 23 Jul 2020 13:24:18 +0100
+Message-Id: <20200723122446.1329773-13-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
 References: <20200723122446.1329773-1-lee.jones@linaro.org>
@@ -79,85 +79,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Intentionally keeping all register reads/writes.
+
 Fixes the following W=1 kernel build warning(s):
 
- In file included from arch/arm/include/asm/io.h:23,
- from drivers/scsi/ips.c:164:
- In function ‘strncpy’,
- inlined from ‘ips_send_cmd’ at drivers/scsi/ips.c:3522:6:
- include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output
- truncated before terminating nul cop ying 4 bytes from a string of the same length [-Wstringop-truncation]
- 297 | #define __underlying_strncpy __builtin_strncpy
- | ^
- include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
- 307 | return __underlying_strncpy(p, q, size);
- | ^~~~~~~~~~~~~~~~~~~~
- NB: Lots of these - snipping for brevity
+ drivers/scsi/ips.c: In function ‘ips_init_copperhead’:
+ drivers/scsi/ips.c:4700:10: warning: variable ‘ConfigByte’ set but not used [-Wunused-but-set-variable]
+ 4700 | uint8_t ConfigByte[IPS_MAX_CONFIG_BYTES];
+ | ^~~~~~~~~~
+ drivers/scsi/ips.c: In function ‘ips_init_copperhead_memio’:
+ drivers/scsi/ips.c:4794:10: warning: variable ‘ConfigByte’ set but not used [-Wunused-but-set-variable]
+ 4794 | uint8_t ConfigByte[IPS_MAX_CONFIG_BYTES];
+ | ^~~~~~~~~~
+ drivers/scsi/ips.c: In function ‘ips_init_phase1’:
+ drivers/scsi/ips.c:6839:10: warning: variable ‘func’ set but not used [-Wunused-but-set-variable]
+ 6839 | uint8_t func;
+ | ^~~~
+ drivers/scsi/ips.c:6838:10: warning: variable ‘bus’ set but not used [-Wunused-but-set-variable]
+ 6838 | uint8_t bus;
+ | ^~~
 
 Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
 Cc: ipslinux@adaptec.com
 Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/ips.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/scsi/ips.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/scsi/ips.c b/drivers/scsi/ips.c
-index ec85ccce96647..2e6077c502fc7 100644
+index f25672982c5f3..ec85ccce96647 100644
 --- a/drivers/scsi/ips.c
 +++ b/drivers/scsi/ips.c
-@@ -2239,7 +2239,7 @@ ips_get_bios_version(ips_ha_t * ha, int intr)
- 	major = 0;
- 	minor = 0;
+@@ -4697,7 +4697,6 @@ ips_init_copperhead(ips_ha_t * ha)
+ 	uint8_t Isr;
+ 	uint8_t Cbsp;
+ 	uint8_t PostByte[IPS_MAX_POST_BYTES];
+-	uint8_t ConfigByte[IPS_MAX_CONFIG_BYTES];
+ 	int i, j;
  
--	strncpy(ha->bios_version, "       ?", 8);
-+	memcpy(ha->bios_version, "       ?", 8);
+ 	METHOD_TRACE("ips_init_copperhead", 1);
+@@ -4742,7 +4741,7 @@ ips_init_copperhead(ips_ha_t * ha)
+ 			/* error occurred */
+ 			return (0);
  
- 	if (ha->pcidev->device == IPS_DEVICEID_COPPERHEAD) {
- 		if (IPS_USE_MEMIO(ha)) {
-@@ -3515,11 +3515,11 @@ ips_send_cmd(ips_ha_t * ha, ips_scb_t * scb)
- 					inquiry.Flags[1] =
- 					    IPS_SCSI_INQ_WBus16 |
- 					    IPS_SCSI_INQ_Sync;
--					strncpy(inquiry.VendorId, "IBM     ",
-+					memcpy(inquiry.VendorId, "IBM     ",
- 						8);
--					strncpy(inquiry.ProductId,
-+					memcpy(inquiry.ProductId,
- 						"SERVERAID       ", 16);
--					strncpy(inquiry.ProductRevisionLevel,
-+					memcpy(inquiry.ProductRevisionLevel,
- 						"1.00", 4);
+-		ConfigByte[i] = inb(ha->io_addr + IPS_REG_ISPR);
++		inb(ha->io_addr + IPS_REG_ISPR);
+ 		outb(Isr, ha->io_addr + IPS_REG_HISR);
+ 	}
  
- 					ips_scmd_buf_write(scb->scsi_cmd,
-@@ -4036,9 +4036,9 @@ ips_inquiry(ips_ha_t * ha, ips_scb_t * scb)
- 	inquiry.Flags[0] = IPS_SCSI_INQ_Address16;
- 	inquiry.Flags[1] =
- 	    IPS_SCSI_INQ_WBus16 | IPS_SCSI_INQ_Sync | IPS_SCSI_INQ_CmdQue;
--	strncpy(inquiry.VendorId, "IBM     ", 8);
--	strncpy(inquiry.ProductId, "SERVERAID       ", 16);
--	strncpy(inquiry.ProductRevisionLevel, "1.00", 4);
-+	memcpy(inquiry.VendorId, "IBM     ", 8);
-+	memcpy(inquiry.ProductId, "SERVERAID       ", 16);
-+	memcpy(inquiry.ProductRevisionLevel, "1.00", 4);
+@@ -4791,7 +4790,6 @@ ips_init_copperhead_memio(ips_ha_t * ha)
+ 	uint8_t Isr = 0;
+ 	uint8_t Cbsp;
+ 	uint8_t PostByte[IPS_MAX_POST_BYTES];
+-	uint8_t ConfigByte[IPS_MAX_CONFIG_BYTES];
+ 	int i, j;
  
- 	ips_scmd_buf_write(scb->scsi_cmd, &inquiry, sizeof (inquiry));
+ 	METHOD_TRACE("ips_init_copperhead_memio", 1);
+@@ -4836,7 +4834,7 @@ ips_init_copperhead_memio(ips_ha_t * ha)
+ 			/* error occurred */
+ 			return (0);
  
-@@ -5620,10 +5620,10 @@ ips_write_driver_status(ips_ha_t * ha, int intr)
- 	/* change values (as needed) */
- 	ha->nvram->operating_system = IPS_OS_LINUX;
- 	ha->nvram->adapter_type = ha->ad_type;
--	strncpy((char *) ha->nvram->driver_high, IPS_VERSION_HIGH, 4);
--	strncpy((char *) ha->nvram->driver_low, IPS_VERSION_LOW, 4);
--	strncpy((char *) ha->nvram->bios_high, ha->bios_version, 4);
--	strncpy((char *) ha->nvram->bios_low, ha->bios_version + 4, 4);
-+	memcpy((char *) ha->nvram->driver_high, IPS_VERSION_HIGH, 4);
-+	memcpy((char *) ha->nvram->driver_low, IPS_VERSION_LOW, 4);
-+	memcpy((char *) ha->nvram->bios_high, ha->bios_version, 4);
-+	memcpy((char *) ha->nvram->bios_low, ha->bios_version + 4, 4);
+-		ConfigByte[i] = readb(ha->mem_ptr + IPS_REG_ISPR);
++		readb(ha->mem_ptr + IPS_REG_ISPR);
+ 		writeb(Isr, ha->mem_ptr + IPS_REG_HISR);
+ 	}
  
- 	ha->nvram->versioning = 0;	/* Indicate the Driver Does Not Support Versioning */
+@@ -6835,8 +6833,6 @@ ips_init_phase1(struct pci_dev *pci_dev, int *indexPtr)
+ 	uint32_t mem_addr;
+ 	uint32_t io_len;
+ 	uint32_t mem_len;
+-	uint8_t bus;
+-	uint8_t func;
+ 	int j;
+ 	int index;
+ 	dma_addr_t dma_address;
+@@ -6856,10 +6852,6 @@ ips_init_phase1(struct pci_dev *pci_dev, int *indexPtr)
+ 	if (index >= IPS_MAX_ADAPTERS)
+ 		return -1;
  
+-	/* stuff that we get in dev */
+-	bus = pci_dev->bus->number;
+-	func = pci_dev->devfn;
+-
+ 	/* Init MEM/IO addresses to 0 */
+ 	mem_addr = 0;
+ 	io_addr = 0;
 -- 
 2.25.1
 
