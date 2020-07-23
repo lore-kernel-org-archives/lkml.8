@@ -2,85 +2,122 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADA8C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785D5C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C219F20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A8A20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:15:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oyPtyDLE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xMq58S6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgGWUOW (ORCPT
+        id S1727033AbgGWUPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWUOW (ORCPT
+        Thu, 23 Jul 2020 16:15:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60982 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgGWUPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:14:22 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08F6C0619DC;
-        Thu, 23 Jul 2020 13:14:21 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id E42482BA;
-        Thu, 23 Jul 2020 20:14:20 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 14:14:19 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] docs: index.rst: Add watch_queue
-Message-ID: <20200723141419.01373889@lwn.net>
-In-Reply-To: <20200718165107.625847-13-dwlsalmeida@gmail.com>
-References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
-        <20200718165107.625847-13-dwlsalmeida@gmail.com>
-Organization: LWN.net
+        Thu, 23 Jul 2020 16:15:20 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595535317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wLeYvK4WU299PQEtv/NKty1ri+ij6okAVbv/cvUrEeY=;
+        b=oyPtyDLEyrQxVGt8iJo2xBVK2GuF7oNCZSR0MZXlO55sJxMcbRwOTcx+pZMm8iupNKXkY6
+        cmNtzBQ14NEZrpefB9QYqESp/CsQv15uuPoDty1IWmk7EkFqw0BvF+SMFXwhgJXdEOq5rA
+        0oXjb1YnIKnXU+YnlCK6ARyPtSRZaG5FTFcxDobkytwRsenOVpi32CpfiCGflKlCMd97Xv
+        K66n+f+ml/uyyisyllGyCA0lEfZgGSX8JWy+xVHuPNfppCO6WqD6LYPsdk6weGw638QfaJ
+        npBu2XCpFllhkCWgpy53paqFUouUnngUtCxG+BVCjd1gsWXBw1/morHz26HXVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595535317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wLeYvK4WU299PQEtv/NKty1ri+ij6okAVbv/cvUrEeY=;
+        b=xMq58S6bjjF6OmxCQMrCWKgry7jvqsd5b97YDXj6lRB8oTRACn+ydkU/iCO6YRSjFiVyVw
+        OKqEl3CJJ8XV30CQ==
+To:     Ira Weiny <ira.weiny@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
+In-Reply-To: <87o8o6vvt0.fsf@nanos.tec.linutronix.de>
+References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com> <20200717100610.GH10769@hirez.programming.kicks-ass.net> <20200722052709.GB478587@iweiny-DESK2.sc.intel.com> <87o8o6vvt0.fsf@nanos.tec.linutronix.de>
+Date:   Thu, 23 Jul 2020 22:15:17 +0200
+Message-ID: <87lfjavvhm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 13:51:07 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> 
-> Fix the following sphinx warning:
-> 
-> Documentation/watch_queue.rst:
-> WARNING: document isn't included in any toctree
-> 
-> By adding watch_queue.rst to the index.
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> ---
->  Documentation/index.rst | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/index.rst b/Documentation/index.rst
-> index 3b491af0122de..57719744774c2 100644
-> --- a/Documentation/index.rst
-> +++ b/Documentation/index.rst
-> @@ -193,6 +193,7 @@ to ReStructured Text format, or are simply too old.
->     :maxdepth: 2
->  
->     staging/index
-> +   watch_queue
+> Ira Weiny <ira.weiny@intel.com> writes:
+>> On Fri, Jul 17, 2020 at 12:06:10PM +0200, Peter Zijlstra wrote:
+>>> On Fri, Jul 17, 2020 at 12:20:56AM -0700, ira.weiny@intel.com wrote:
+>> I've been really digging into this today and I'm very concerned that I'm
+>> completely missing something WRT idtentry_enter() and idtentry_exit().
+>>
+>> I've instrumented idt_{save,restore}_pkrs(), and __dev_access_{en,dis}able()
+>> with trace_printk()'s.
+>>
+>> With this debug code, I have found an instance where it seems like
+>> idtentry_enter() is called without a corresponding idtentry_exit().  This has
+>> left the thread ref counter at 0 which results in very bad things happening
+>> when __dev_access_disable() is called and the ref count goes negative.
+>>
+>> Effectively this seems to be happening:
+>>
+>> ...
+>> 	// ref == 0
+>> 	dev_access_enable()  // ref += 1 ==> disable protection
+>> 		// exception  (which one I don't know)
+>> 			idtentry_enter()
+>> 				// ref = 0
+>> 				_handler() // or whatever code...
+>> 			// *_exit() not called [at least there is no trace_printk() output]...
+>> 			// Regardless of trace output, the ref is left at 0
+>> 	dev_access_disable() // ref -= 1 ==> -1 ==> does not enable protection
+>> 	(Bad stuff is bound to happen now...)
+>
+> Well, if any exception which calls idtentry_enter() would return without
+> going through idtentry_exit() then lots of bad stuff would happen even
+> without your patches.
+>
+>> Also is there any chance that the process could be getting scheduled and that
+>> is causing an issue?
+>
+> Only from #PF, but after the fault has been resolved and the tasks is
+> scheduled in again then the task returns through idtentry_exit() to the
+> place where it took the fault. That's not guaranteed to be on the same
+> CPU. If schedule is not aware of the fact that the exception turned off
+> stuff then you surely get into trouble. So you really want to store it
+> in the task itself then the context switch code can actually see the
+> state and act accordingly.
 
-Thanks, I've applied this, but it isn't really the right fix - this
-document should not be at the top level of Documentation/.  I'd be
-inclined to move it under userspace-api/, even though there's a strange
-mixture of user-space and kernel material here...
+Actually thats nasty as well as you need a stack of PKRS values to
+handle nested exceptions. But it might be still the most reasonable
+thing to do. 7 PKRS values plus an index should be really sufficient,
+that's 32bytes total, not that bad.
 
-jon
+Thanks,
+
+        tglx
