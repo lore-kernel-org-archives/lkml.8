@@ -2,83 +2,108 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AACC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F261AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1F82065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABD02065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkMxynTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgGWTmJ convert rfc822-to-8bit (ORCPT
+        id S1726607AbgGWTiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:42:09 -0400
-Received: from mail.fireflyinternet.com ([77.68.26.236]:51996 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726146AbgGWTmJ (ORCPT
+        Thu, 23 Jul 2020 15:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWTiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:42:09 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21911803-1500050 
-        for multiple; Thu, 23 Jul 2020 20:41:05 +0100
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 Jul 2020 15:38:03 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14335C0619DC;
+        Thu, 23 Jul 2020 12:38:03 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id n26so7660632ejx.0;
+        Thu, 23 Jul 2020 12:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=q9aNpNKaa3hKIU8fbCISqJpdam9Hz159Xkk+hYct4wA=;
+        b=QkMxynTHFSOlrYHV37e2/babhMJB67VamqWrafseHoTuw3Ae/Q8QekQWsGF2kOS60b
+         +jvJWhvl777kQyPceA92HNij6qOMQ9a564mJ79S+1az5XMvyA1F7SARy+Ojjs8nkNj/o
+         AFIfG+r4Uta3/cbY7J+1VrXCyTMCfVz93KeMYk+8U/VcQPQzbq1fxQQtJeF9RISJoNC3
+         I+Liw3A8PYYoxwJEMGJ8VRxUSwRnQ8H4KOmbrIrQ1EP8wbFzx3O8/ceSMyDPtpKNcROl
+         kdXQclxlz/Xa1JkPNSGvW+Yn/xqf8Zf6SYCDCr1mc4wN1YI6A1vb8Yv08k9xybnpLRvV
+         A2uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=q9aNpNKaa3hKIU8fbCISqJpdam9Hz159Xkk+hYct4wA=;
+        b=qI2xP1UwdlLZPg1gVP6u+gIy+jIXHlG3Ay3Vs0Vg8e7JqUFYXzwnV9K6frGTKMMYTc
+         P7odR2dHiCHkTeyC+ViMBV07+66yfpKmPM2r+O3LbVlSsYkH6anjw8f/cmoMqW1lZYRU
+         v4eQ/TRJULhNc0grQzjDHnh4KxIaEt9EYoKTKY/1vYfDE9jzotrMHlFQSX6j0jt/u+4A
+         AeG3zDvVXPCJOvEa0eEEmA3IeuiOfDgb4XWMGX3NC5tZbO/xOnMZ/qs6hteEDCfPmEoh
+         1IsBsXE8064viJ7CyBwwQ3UEsOLB8kbYuNzDNH5Xr6brJ8/+wDgPcPUo7gPDzfbwOOos
+         sPKg==
+X-Gm-Message-State: AOAM533/+MqudQKu11nyVKN50176oQnmLX5ID9dlmtKbzpW7wRC4Jobm
+        OthtPJBYMcOoItcuoX3qnf4=
+X-Google-Smtp-Source: ABdhPJy2sXNkWdJWkhZX5v9NVxeNJIf8aQTzdZtj5AK0CtAVs57Kz2V0BehmkljdmSZk5zYeAmpoZQ==
+X-Received: by 2002:a17:906:70cf:: with SMTP id g15mr5518734ejk.531.1595533081769;
+        Thu, 23 Jul 2020 12:38:01 -0700 (PDT)
+Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
+        by smtp.gmail.com with ESMTPSA id o20sm2655719ejr.64.2020.07.23.12.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 12:38:01 -0700 (PDT)
+From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, mani@kernel.org, a.fatoum@pengutronix.de,
+        marcin.sloniewski@gmail.com, sam@ravnborg.org,
+        linus.walleij@linaro.org, heiko.stuebner@theobroma-systems.com,
+        stephan@gerhold.net, lkundrak@v3.sk, broonie@kernel.org,
+        allen.chen@ite.com.tw, robh@kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/3] dt-bindings: arm: stm32: document Odyssey compatible
+Date:   Thu, 23 Jul 2020 21:37:36 +0200
+Message-Id: <20200723193737.190291-2-marcin.sloniewski@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200723193737.190291-1-marcin.sloniewski@gmail.com>
+References: <20200723193737.190291-1-marcin.sloniewski@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200723182841.GS10769@hirez.programming.kicks-ass.net>
-References: <20200622100122.477087977@infradead.org> <20200622100825.726200103@infradead.org> <159532854586.15672.5123219635720172265@build.alporthouse.com> <20200721113719.GI119549@hirez.programming.kicks-ass.net> <159541187604.15672.2433896906671712337@build.alporthouse.com> <20200723182841.GS10769@hirez.programming.kicks-ass.net>
-Subject: Re: [PATCH -v2 1/5] sched: Fix ttwu() race
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
-        torvalds@linux-foundation.org, hch@lst.de
-To:     Peter Zijlstra <peterz@infradead.org>
-Date:   Thu, 23 Jul 2020 20:41:03 +0100
-Message-ID: <159553326368.21069.3167204000119437062@build.alporthouse.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Peter Zijlstra (2020-07-23 19:28:41)
-> On Wed, Jul 22, 2020 at 10:57:56AM +0100, Chris Wilson wrote:
-> 
-> > Perhaps more damning is that I can replace WF_ON_CPU with p->on_cpu to
-> > suppress the warning:
-> 
-> *argh*, I'm starting to go mad...
-> 
-> Chris, could you please try the below patch?
+Document device tree bindings of Seeed SoM and carrier board.
 
- ttwu-IPI-self: 1==1, p->on_cpu=0;0, task_cpu(p)=1;1
- ttwu-IPI-self: 1==1, p->on_cpu=0;0, task_cpu(p)=1;1
- ttwu-IPI-self: 0==0, p->on_cpu=0;0, task_cpu(p)=0;0
- ttwu-IPI-self: 3==3, p->on_cpu=0;0, task_cpu(p)=3;3
- ttwu-IPI-self: 2==2, p->on_cpu=0;0, task_cpu(p)=2;2
- ttwu-IPI-self: 1==1, p->on_cpu=0;0, task_cpu(p)=1;1
- ttwu-IPI-self: 2==2, p->on_cpu=0;0, task_cpu(p)=2;2
- ttwu-IPI-self: 2==2, p->on_cpu=0;0, task_cpu(p)=2;2
- ttwu-IPI-self: 2==2, p->on_cpu=0;0, task_cpu(p)=2;2
+Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Can you also confirm that if you do:
-> 
-> $ echo NO_TTWU_QUEUE_ON_CPU > /debug/sched_features
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 790e6dd48e34..22b9aaa75eee 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -39,6 +39,8 @@ properties:
+           - enum:
+               - arrow,stm32mp157a-avenger96 # Avenger96
+               - lxa,stm32mp157c-mc1
++              - seeed,stm32mp157c-odyssey
++              - seeed,stm32mp157c-odyssey-som
+               - shiratech,stm32mp157a-iot-box # IoT Box
+               - shiratech,stm32mp157a-stinger96 # Stinger96
+               - st,stm32mp157c-ed1
+-- 
+2.27.0
 
-With,
-
- sched_feat_disable(10):TTWU_QUEUE_ON_CPU
-
-the pr_alert is still being hit
-
- ttwu-IPI-self: 3==3, p->on_cpu=0;0, task_cpu(p)=3;3
-
-At which point, it darns on me. Mea culpa, stray bits being passed into
-default_wake_function.
-
-I am very sorry for the wild goose chase.
--Chris
