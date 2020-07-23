@@ -2,82 +2,157 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEFDC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A562FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1410F20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810E420792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Tst37tB1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFRhdGJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387441AbgGWBY0 (ORCPT
+        id S2387451AbgGWB2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:24:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47999 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728607AbgGWBYZ (ORCPT
+        Wed, 22 Jul 2020 21:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgGWB2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:24:25 -0400
-X-UUID: fb6f332359f340ae8025c27774f9e1a7-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bbgQJNRcgmdZNRjAfyTf3xC6QTg1bKjqlo6CpIRT/nU=;
-        b=Tst37tB1yF+kEBSzXJq7Xt8nlzX0veU2Auiqo7v1e5I+hPuMR+AytQ7+Cn52kwvwyfDqSTU0dIlQNlMsKoGkzAHhn9U2GJ/ajbzBEZAh2mleOQl2ZNGayh5HQb+D9mkbvC5aK4k7wp4fU6zSw2VVb/MdUSYwBTeOK/kzarpzxHY=;
-X-UUID: fb6f332359f340ae8025c27774f9e1a7-20200723
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1599116157; Thu, 23 Jul 2020 09:24:22 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 09:24:21 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 09:24:17 +0800
-Message-ID: <1595467461.7332.3.camel@mtksdaap41>
-Subject: Re: [PATCH 2/4] i2c: mediatek: Support DMA mask range over 33-bits
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Qii Wang <qii.wang@mediatek.com>
-CC:     <wsa@the-dreams.de>, <qiangming.xia@mediatek.com>,
-        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <leilk.liu@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 23 Jul 2020 09:24:21 +0800
-In-Reply-To: <1595421106-10017-3-git-send-email-qii.wang@mediatek.com>
-References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
-         <1595421106-10017-3-git-send-email-qii.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 22 Jul 2020 21:28:20 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD154C0619DC;
+        Wed, 22 Jul 2020 18:28:20 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id z15so3940743qki.10;
+        Wed, 22 Jul 2020 18:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ISvgzxoJxaqtfEN4cCxmEtaBa4qO2/WEkfAYC32QJPQ=;
+        b=KFRhdGJbHHLCEpmHHLiG8973VYDa+If4ydc/+E7duJ0NcIOOohAB/Qq59dynEm/Z8u
+         eI8gL/jMkd33ppjnq6XGc3cGCGg0z0UCZrue73FNRJQbh+bR63igYlsuAPjuLas6GkOj
+         UGEjgg4jV5GycvGZnBbftdXpr7hGHa5QSDUUMik+oLF6sUncqyzdTsv+Al7+ACGJxMUu
+         pIq9vE1pmgaFKjR8Y9UJa8v4lqxzRKyXWWQRNb5MB7WlnwISi2LhNii2TyI/EGZGavZk
+         zABZ+wKNWg/hPMvm+PmKK3XEnyGIgZow1KaF/DjkvQRXrWBJZWa6C7ov6gCqPdzvOw3N
+         Crmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ISvgzxoJxaqtfEN4cCxmEtaBa4qO2/WEkfAYC32QJPQ=;
+        b=PdlwSf0PLa1smg4EhJ7hyIDW3QvNu8OZV3/Nrd6hJxFGx/Zi2NcoSJRs0xcOdhN+oG
+         WqzSnORrlYBfz3JUOlcHdEB7OG5QTu5ScHQ4AXmDgZRswT/51dioVK+6Ww+kAJgwOqqc
+         fKP6WSl11t8/IYdboZS/6Vc5oxWGttrpB23QQKhCL4QvMI266JMsbKkHroyGwyR+kThj
+         RCNmY8EEGA8mFoTyIgGSlpXFsQD1qGsgMMOMZ+u6VlYl2PYMGkH+R/X4yPo/mMsXa5o0
+         vtEZVw5x0zQquJRJvzla5UGl6L34n1WW8XKB4LASDJ8FF2dlfZ1iFQl1DizXmgEmzu14
+         CF8A==
+X-Gm-Message-State: AOAM530B7rh3bSUOCN25vn2PcHhgwjwW2rJUHpL2vEpMeAcxUyPsYeMd
+        G7QtmfJiuztG4PtREHs7I78=
+X-Google-Smtp-Source: ABdhPJwioK3vBm5SNOB4zOe+LvL66NxrJ+j/NpajF6LJW3yIwImr04wvzo/wZHJ54a7mVYssu3SROw==
+X-Received: by 2002:ae9:ef8d:: with SMTP id d135mr2836947qkg.109.1595467699964;
+        Wed, 22 Jul 2020 18:28:19 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id t5sm1423180qkh.46.2020.07.22.18.28.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jul 2020 18:28:19 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id EF10927C0054;
+        Wed, 22 Jul 2020 21:28:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 22 Jul 2020 21:28:17 -0400
+X-ME-Sender: <xms:sOcYX8onqX89VS5RHmezV31Yf9HDdqVO0WXYrlVckW4-Zon4tL8TKQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedtgdegkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepsghoqhhunhdr
+    fhgvnhhgsehgmhgrihhlrdgtohhmnecuggftrfgrthhtvghrnhepuddvgfeutdeuhefggf
+    fhlefggeevueeliefgvdfggeeukeehleelueeiiedukedunecukfhppeehvddrudehhedr
+    udduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeg
+    hedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomh
+    esfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:sOcYXyqJ83aJq9JSKwOU3pzUui55376a6Ia7uEZ4GwHrcBHiJckPrg>
+    <xmx:sOcYXxN7BUlFTfjNa_2Lz08krILI5ZM0BKkXyUr57G-T_vqkVyL33g>
+    <xmx:sOcYXz7lTzi0PUP1FaUdejEUOVu9bTqzo7k1LZyegGfQjcmW2SPRpA>
+    <xmx:secYX6TBZ0AIjtnDiQ3nXBsWvGO7UEY2EdxZkpJ_NlpHsLijiCBU85QunPQ>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0FE8F30600A3;
+        Wed, 22 Jul 2020 21:28:15 -0400 (EDT)
+Date:   Thu, 23 Jul 2020 09:28:14 +0800
+From:   boqun.feng@gmail.com
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [RFC 09/11] HID: hyperv: Make ringbuffer at least take two pages
+Message-ID: <20200723012814.GD35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200721014135.84140-1-boqun.feng@gmail.com>
+ <20200721014135.84140-10-boqun.feng@gmail.com>
+ <MW2PR2101MB10524E4C2DB9FBADEF887165D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10524E4C2DB9FBADEF887165D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTIyIGF0IDIwOjMxICswODAwLCBRaWkgV2FuZyB3cm90ZToNCj4gUmVw
-bGFjZSAnc3VwcG9ydF8zM2JpdHMgd2l0aCAnZG1hX21heF9zdXBwb3J0JyBmb3IgRE1BIG1hc2sN
-Cj4gb3BlcmF0aW9uLCBhbmQgcmVwbGFjZSAnbXRrX2kyY19zZXRfNGdfbW9kZScgd2l0aCAndXBw
-ZXJfMzJfYml0cycuDQoNClRoaXMgZG9lc24ndCBleHBsYWluIHdoeSB3ZSBuZWVkIHRoaXMgcGF0
-Y2guIEhvdyBhYm91dDoNCg0KTmV3ZXIgTVRLIGNoaXAgc3VwcG9ydCBtb3JlIHRoYW4gOEdCIG9m
-IGRyYW0uIFJlcGxhY2Ugc3VwcG9ydF8zM2JpdHMNCndpdGggbW9yZSBnZW5lcmFsIGRtYV9tYXhf
-c3VwcG9ydC4NCg0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBRaWkgV2FuZyA8cWlpLndhbmdAbWVk
-aWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCAz
-NyArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdl
-ZCwgMTcgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMt
-bXQ2NXh4LmMNCj4gaW5kZXggZTZiOTg0YS4uZTQ3NTg3NyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LW10NjV4eC5jDQo+IEBAIC0yMDksNiArMjA5LDcgQEAgc3RydWN0IG10a19pMmNfY29tcGF0aWJs
-ZSB7DQo+ICAJdW5zaWduZWQgY2hhciBkbWFfc3luYzogMTsNCj4gIAl1bnNpZ25lZCBjaGFyIGx0
-aW1pbmdfYWRqdXN0OiAxOw0KPiAgCXVuc2lnbmVkIGNoYXIgYXBkbWFfc3luYzogMTsNCj4gKwl1
-bnNpZ25lZCBjaGFyIG1heF9kbWFfc3VwcG9ydDsNCg0Kc3VwcG9ydF8zM2JpdHMgaXMgbm8gbG9u
-Z2VyIHVzZWQuIFBsZWFzZSByZW1vdmUgaXQuDQoNCkpvZS5DDQoNCg==
+On Wed, Jul 22, 2020 at 11:36:15PM +0000, Michael Kelley wrote:
+> From: Boqun Feng <boqun.feng@gmail.com> Sent: Monday, July 20, 2020 6:42 PM
+> > 
+> > When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
+> > least 2 * PAGE_SIZE: one page for the header and at least one page of
+> > the data part (because of the alignment requirement for double mapping).
+> > 
+> > So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
+> > using vmbus_open() to establish the vmbus connection.
+> > 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  drivers/hid/hid-hyperv.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+> > index 0b6ee1dee625..36c5e157c691 100644
+> > --- a/drivers/hid/hid-hyperv.c
+> > +++ b/drivers/hid/hid-hyperv.c
+> > @@ -104,8 +104,8 @@ struct synthhid_input_report {
+> > 
+> >  #pragma pack(pop)
+> > 
+> > -#define INPUTVSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
+> > -#define INPUTVSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+> > +#define INPUTVSC_SEND_RING_BUFFER_SIZE		(128 * 1024)
+> > +#define INPUTVSC_RECV_RING_BUFFER_SIZE		(128 * 1024)
+> 
+> Use max(40 * 1024, 2 * PAGE_SIZE) like in patch 8 of the series?
+> 
 
+Sure! Will change it in next version.
+
+Regards,
+Boqun
+
+> > 
+> > 
+> >  enum pipe_prot_msg_type {
+> > --
+> > 2.27.0
+> 
