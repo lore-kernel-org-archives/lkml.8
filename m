@@ -2,197 +2,99 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A6AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CB5C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F189E207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076A12080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgGWN4I (ORCPT
+        id S1729403AbgGWN4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:56:08 -0400
-Received: from mga07.intel.com ([134.134.136.100]:31940 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgGWN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:56:06 -0400
-IronPort-SDR: PIQ3QiaNhlzLGinTIuwfnAj8MDytEyW6XEHbKNzPz/48h2zNztC1XlBC1LHzmWH1tr6dFLXs6K
- pwZTJbubijWw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215132657"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="215132657"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 06:56:04 -0700
-IronPort-SDR: SIAukGYZbjWvyy0aLs0D8OR6l46I51tDLGzOil9oSQS2xiBwpLatn3fS4/poyVdi7TcZ0H+Rpp
- 6RyeS99Yu2Ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="488375975"
-Received: from ychan16-mobl1.ccr.corp.intel.com (HELO [10.255.29.206]) ([10.255.29.206])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2020 06:56:00 -0700
-Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] iommu aux-domain APIs extensions
-To:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f5f3e7bc-6c88-5680-ad6f-f1eb721a7445@linux.intel.com>
-Date:   Thu, 23 Jul 2020 21:55:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 09:56:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:33963 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729134AbgGWN4Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:56:16 -0400
+Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MLhsE-1kGH533iF6-00HiXo for <linux-kernel@vger.kernel.org>; Thu, 23 Jul
+ 2020 15:56:14 +0200
+Received: by mail-qk1-f169.google.com with SMTP id l23so5404326qkk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:56:13 -0700 (PDT)
+X-Gm-Message-State: AOAM533uzl1stOURGdWgrZ0h744lNTx5ZJdTFr+OPMn0IY4asqFSHvCG
+        boj9eamTMAe2VtGFv1HF6aKmdeNuDGrZWmRsVpE=
+X-Google-Smtp-Source: ABdhPJzZGTNJvW/D+pt2/+h0e7++KgU9TyH0Q1pJ2dvoN4jbBRN2PYLlVnONsRE9Ec1i1kB+bqO/UQt0wXPMaOi1ZCg=
+X-Received: by 2002:a37:9004:: with SMTP id s4mr5176965qkd.286.1595512572758;
+ Thu, 23 Jul 2020 06:56:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200714055703.5510-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200720204925.3654302-1-ndesaulniers@google.com>
+ <20200720204925.3654302-12-ndesaulniers@google.com> <87365izj7i.fsf@nanos.tec.linutronix.de>
+ <87zh7qy4i4.fsf@nanos.tec.linutronix.de> <CA+icZUVz0opOb0LihLvPvKM-t0Y=pcUWDyb+u-L_UVnnbPh1rQ@mail.gmail.com>
+ <CAK8P3a3Ms1uvLcbhmbsU+-u11BCrXPaU5Dro=P9LjAG7CYm8ww@mail.gmail.com> <CA+icZUXzjcQ7ekTg8LvwcaBZFn_HeDjif+rKaFAKy=0gUrx=Xg@mail.gmail.com>
+In-Reply-To: <CA+icZUXzjcQ7ekTg8LvwcaBZFn_HeDjif+rKaFAKy=0gUrx=Xg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Jul 2020 15:55:55 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0gFG8z_qdY2gPm5p7kjpj8xq-APyazk390FpHUJiZ7Hw@mail.gmail.com>
+Message-ID: <CAK8P3a0gFG8z_qdY2gPm5p7kjpj8xq-APyazk390FpHUJiZ7Hw@mail.gmail.com>
+Subject: Re: [PATCH v3 11/11] x86: support i386 with Clang
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dmitry Golovin <dima@golovin.in>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:VHGxVsp49KImS4oIXoeddkMq1omTd8LisxdOxonGpXQwixTHgjB
+ 2DwqG0rHFy/FfXjIaG8rN6TzROgOHYzWD67fIjXNamE+UMrlNa16jk8dbF5+cbUgM38QWy0
+ gRLMW6/PkBvXNyLqSNoHixU4aJ6d8DOHybYQjFF+3YM8nBPNADu6khV6fitQcB34uobX9Ma
+ 71pqg2Ml6aRdckGaAXnKg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S/nrZhp5nrc=:JAI//IXL+69i5Z1SRHlN6e
+ H7vI+ZBlkdYUHaJLXHPj9inLs9wMp/i3NdHxiJH5FHwFUioW/vPa4PWJdfvZYGofRkVKqsGPx
+ T86s32aXaUnrrNxP2HPIbc8Cagp9+dx5YBGJrrQcJmT6vn+DtIHRmMEpXqgrX3/gDi2j5Zhq5
+ n6ySIzi0vIyoDrWsvYUrQ64XZN0feWJ7tayeyAPDFZeyGSGRQ5ZDiejS/EmsNsRTF8imjKs8d
+ pFQHv4lYXTMNlPDULTq6HAfTUAMWMc6/oYM7P/TT5QLUZ7AwHLiKZsyH6nBgseihrf+r0QPHT
+ RYE1/gTsNhxmxRppNXejixh0KjDY1Gd7dQdilJ9tJokGpCvEDHYN1QUY7x3EM7jQNL88FXoMf
+ LnUcJ3lktC4iMC6hPek8M78HJXagWH60jqFRCXUDEpffXXnrh+uHCZYOT2twLVWwhkpyueBMd
+ ZqN+4I2Tjzi4wRVYOWLUP62gefusnOUoVKqDq3IZbtbts356PAn3swZ+MaaBbbkMeFWVbitFA
+ jb2DJ1XZv9veWYXXVoSDAkRYgjt4FSZ4QdUjwmQNiKJoAUySzEDEVlTx6+fQis8EWmmW4nEuF
+ fWybknsn2Cwm0/yjXNa5tXIV1GEgC7mg7MzpetSoe1fGjEj6z752VWVQ+xUr8VSvlXR68y1bA
+ XomVUspZjQqli8b70atNe6LZ/Y/kZ3x4Yeofqd9MBRs58cQwkIyPqJv3A1j41jODQXOCZiWz8
+ wP053n1llPoGSkppB/bnUakG0IvBg9VCfl44my0mwgebFXUl/jwPF7eYXCY5afxFa4B3BDmxM
+ 5e13or0WLQL+xJt9SDwei349gWUsBxtgnB9KjhcTIEMtZRftmNt6nTaE2mx/UZfcdI28dPcDL
+ XSLENht8AzOWQC0KpRg9gjnjkRWSPyZ9FCfyQMVJq3E9dwwPfMrYZXe9Xe5Zh4UXNInLRV7jG
+ HDBCBKTJ40yhvFY91ZyjwdDMzDybERP4cS9BTDlL++2px29rvN+/F
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg and Alex,
+On Thu, Jul 23, 2020 at 3:14 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> What happens when there is no CONFIG_64BIT line?
+> There exist explicit checks for (and "inverse") of CONFIG_64BIT like
+> "ifdef" and "ifndef" or any "defined(...)" and its opposite?
+> I remember I have seen checks for it in x86 tree.
 
-Any comments for this series?
+As long as you consistently pass ARCH=i386 when running 'make',
+nothing bad happens, as ARCH=i386 just hides that option.
 
-Just check to see whether we could make it for v5.9. The first aux-
-domain capable device driver has been posted [1].
+If you run "make ARCH=i386 defconfig" followed by "make olddefconfig"
+(without ARCH=i386) on a non-i386 machine, the absence of that
+CONFIG_64BIT line will lead to the kernel going back to a 64-bit
+configuration.
 
-[1] 
-https://lore.kernel.org/linux-pci/159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com/
-
-Best regards,
-baolu
-
-On 2020/7/14 13:56, Lu Baolu wrote:
-> This series aims to extend the IOMMU aux-domain API set so that it
-> could be more friendly to vfio/mdev usage. The interactions between
-> vfio/mdev and iommu during mdev creation and passthr are:
-> 
-> 1. Create a group for mdev with iommu_group_alloc();
-> 2. Add the device to the group with
-> 
->         group = iommu_group_alloc();
->         if (IS_ERR(group))
->                 return PTR_ERR(group);
-> 
->         ret = iommu_group_add_device(group, &mdev->dev);
->         if (!ret)
->                 dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->                          iommu_group_id(group));
-> 
-> 3. Allocate an aux-domain with iommu_domain_alloc();
-> 4. Attach the aux-domain to the iommu_group.
-> 
->         iommu_group_for_each_dev {
->                 if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
->                         return iommu_aux_attach_device(domain, iommu_device);
->                 else
->                         return iommu_attach_device(domain, iommu_device);
->          }
-> 
->     where, iommu_device is the aux-domain-capable device. The mdev's in
->     the group are all derived from it.
-> 
-> In the whole process, an iommu group was allocated for the mdev and an
-> iommu domain was attached to the group, but the group->domain leaves
-> NULL. As the result, iommu_get_domain_for_dev() (or other similar
-> interfaces) doesn't work anymore.
-> 
-> The iommu_get_domain_for_dev() is a necessary interface for device
-> drivers that want to support vfio/mdev based aux-domain. For example,
-> 
->          unsigned long pasid;
->          struct iommu_domain *domain;
->          struct device *dev = mdev_dev(mdev);
->          struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
-> 
->          domain = iommu_get_domain_for_dev(dev);
->          if (!domain)
->                  return -ENODEV;
-> 
->          pasid = iommu_aux_get_pasid(domain, iommu_device);
->          if (pasid <= 0)
->                  return -EINVAL;
-> 
->           /* Program the device context */
->           ....
-> 
-> We tried to address this by extending iommu_aux_at(de)tach_device() so that
-> the users could pass in an optional device pointer (for example vfio/mdev).
-> (v2 of this series)
-> 
-> https://lore.kernel.org/linux-iommu/20200707013957.23672-1-baolu.lu@linux.intel.com/
-> 
-> But that will cause a lock issue as group->mutex has been applied in
-> iommu_group_for_each_dev(), but has to be reapplied again in the
-> iommu_aux_attach_device().
-> 
-> This version tries to address this by introducing two new APIs into the
-> aux-domain API set:
-> 
-> /**
->   * iommu_aux_attach_group - attach an aux-domain to an iommu_group which
->   *                          contains sub-devices (for example mdevs)
->   *                          derived from @dev.
->   * @domain: an aux-domain;
->   * @group:  an iommu_group which contains sub-devices derived from @dev;
->   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
->   *
->   * Returns 0 on success, or an error value.
->   */
-> int iommu_aux_attach_group(struct iommu_domain *domain,
->                             struct iommu_group *group, struct device *dev)
-> 
-> /**
->   * iommu_aux_detach_group - detach an aux-domain from an iommu_group
->   *
->   * @domain: an aux-domain;
->   * @group:  an iommu_group which contains sub-devices derived from @dev;
->   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
->   *
->   * @domain must have been attached to @group via
->   * iommu_aux_attach_group().
->   */
-> void iommu_aux_detach_group(struct iommu_domain *domain,
->                              struct iommu_group *group, struct device *dev)
-> 
-> This version is evolved according to feedbacks from Robin(v1) and
-> Alex(v2). Your comments are very appreciated.
-> 
-> Best regards,
-> baolu
-> 
-> ---
-> Change log:
->   - v1->v2:
->     - https://lore.kernel.org/linux-iommu/20200627031532.28046-1-baolu.lu@linux.intel.com/
->     - Suggested by Robin.
-> 
->   - v2->v3:
->     - https://lore.kernel.org/linux-iommu/20200707013957.23672-1-baolu.lu@linux.intel.com/
->     - Suggested by Alex
-> 
-> Lu Baolu (4):
->    iommu: Check IOMMU_DEV_FEAT_AUX feature in aux api's
->    iommu: Add iommu_aux_at(de)tach_group()
->    iommu: Add iommu_aux_get_domain_for_dev()
->    vfio/type1: Use iommu_aux_at(de)tach_group() APIs
-> 
->   drivers/iommu/iommu.c           | 92 ++++++++++++++++++++++++++++++---
->   drivers/vfio/vfio_iommu_type1.c | 44 +++-------------
->   include/linux/iommu.h           | 24 +++++++++
->   3 files changed, 116 insertions(+), 44 deletions(-)
-> 
+    Arnd
