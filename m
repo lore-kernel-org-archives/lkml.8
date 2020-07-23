@@ -2,76 +2,126 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60605C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2BA320792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399E0207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595535399;
+	bh=ExgUqBonORZH5yAuDGyRAEVV1j7jfEoEVqtQOZhXuZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VHek7FTsZxPX+Jp4otvPsukT+5FTNtR1UIVcpax34MVbYoTHAhQ5jPpXUZheDBo7x
+	 cG4KixAqLsiVQUg2cdqh6X2G5+Tu1NGAP4ybgIDFZuLfeRpSX9oQYUJ667zNfb9FHW
+	 RrwEY3TwWewHGDM5F8/AoCi5vmFp2b4VaqRQkiF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgGWUQO (ORCPT
+        id S1727094AbgGWUQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:16:14 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42394 "EHLO ms.lwn.net"
+        Thu, 23 Jul 2020 16:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725979AbgGWUQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:16:14 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1725979AbgGWUQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:16:37 -0400
+Received: from localhost (p5486cde4.dip0.t-ipconnect.de [84.134.205.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 2132B2BA;
-        Thu, 23 Jul 2020 20:16:14 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 14:16:13 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     mathieu.poirier@linaro.org, mhiramat@kernel.org,
-        tranmanphong@gmail.com, mike.leach@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: trace/index.rst: add histogram-design.rst
-Message-ID: <20200723141613.03f41c86@lwn.net>
-In-Reply-To: <20200718165107.625847-12-dwlsalmeida@gmail.com>
-References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
-        <20200718165107.625847-12-dwlsalmeida@gmail.com>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 6378920792;
+        Thu, 23 Jul 2020 20:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595535397;
+        bh=ExgUqBonORZH5yAuDGyRAEVV1j7jfEoEVqtQOZhXuZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i7jXfaSb+jCA0yR+hxqBjPx6JmE28Na0uDbcTJt2xZhe/uyxzY1hqlETLF9uRyuBf
+         irDyKd/wAz4JO/hg6NFo4xLFbsqv4KTyldiPjRPxiUocjXZ7JIaEqMG9NEGNWyp/8O
+         EkEyLbOPsinQ8d05J0kQn+DwylB5pfMR4167RSeA=
+Date:   Thu, 23 Jul 2020 22:16:34 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] i2c: add PEC error event
+Message-ID: <20200723201634.GC908@ninjato>
+References: <20200717090155.10383-1-rayagonda.kokatanur@broadcom.com>
+ <20200717090155.10383-2-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f0KYrhQ4vYSV2aJu"
+Content-Disposition: inline
+In-Reply-To: <20200717090155.10383-2-rayagonda.kokatanur@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 13:51:06 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
 
-> From: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> 
-> Fix the following warning:
-> 
-> Documentation/trace/histogram-design.rst:
-> WARNING: document isn't included in any toctree
-> 
-> By adding 'histogram-design.rst' to the index.
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+--f0KYrhQ4vYSV2aJu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jul 17, 2020 at 02:31:54PM +0530, Rayagonda Kokatanur wrote:
+> Add new event I2C_SLAVE_PEC_ERR to list of slave events.
+> This event will be used by slave bus driver to indicate
+> PEC error to slave client or backend driver.
+>=20
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+
+Definately needs documentation in Documentation/i2c/slave-interface.rst.
+
+What is a backend supposed to do? Does 'value' have a meaning?
+
 > ---
->  Documentation/trace/index.rst | 1 +
+>  include/linux/i2c.h | 1 +
 >  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-> index 7d83156c9ac1f..f44794c8fd840 100644
-> --- a/Documentation/trace/index.rst
-> +++ b/Documentation/trace/index.rst
-> @@ -19,6 +19,7 @@ Linux Tracing Technologies
->     events-msr
->     mmiotrace
->     histogram
-> +   histogram-design
->     boottime-trace
+>=20
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index b8b8963f8bb9..e04acd04eb48 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -370,6 +370,7 @@ enum i2c_slave_event {
+>  	I2C_SLAVE_READ_PROCESSED,
+>  	I2C_SLAVE_WRITE_RECEIVED,
+>  	I2C_SLAVE_STOP,
+> +	I2C_SLAVE_PEC_ERR,
+>  };
+> =20
+>  int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_c=
+b);
+> --=20
+> 2.17.1
+>=20
 
-Applied, thanks.
+--f0KYrhQ4vYSV2aJu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-jon
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8Z8CIACgkQFA3kzBSg
+KbZegg//ejixvJjrb23pMlopYY4XUnLdUGFFZRrPc59k1p5j2eIR7Q0OBXwzks1u
+qiVDZj+VcdfESI7r7+BTWz8xlbWWMuUKXIM8MTZCTJFkNV1FMm/oP5MZdX8LkrpE
+XRMW5qrjDNlNCJuY3KKqqD7FNk4SXK7Mk4UNoUHcoJy3aybR2SBUZlHhqYmhrnOr
+yU1e97iwEV8Q4NsAwaZsd2aXzs3ijpdzEK2XME76w1fkAEu+8KQ+i/OnMOc9fo5l
+QGxzJ6X3QsTnJU650Ch/6XNsToVDU4yGVOJougVeJaEJrpVbT8hKzSi+S+9rONVa
+ojhpiD0uc491WOglzPmQYRIkRUIISip36BuUHXQQymwMbtkPV1PpPmox9TzBgU9G
+tqx6FXvCGlUQOdc5oLpM3yLuqzj2Kj+IKqW90A8Xffm+3FWvHS/Q5KC69c0Swjd0
+izfpf2p+1/Ztn44gAYFJ5peelwjG7D9rcgiGQdoAR2TG/lGKzaHhNRRGRv9kuWvq
+9j7iZ1ex98mLnQSvErn4Tsph6mPMjLdnqy6dZycEWwMDyxvGOXGyUDOXZIy7ywln
+18CMxUjmKHSAklxtsZpw6+UsJ+Xek+H4jKlpWt804J27kcXNnRBVpjDDUnO3gqS3
+H4h3YZZqe9ud8Jf7wbacKEuveXHBdE11qPqUuVX3Y3iQSZaMx0A=
+=r6EV
+-----END PGP SIGNATURE-----
+
+--f0KYrhQ4vYSV2aJu--
