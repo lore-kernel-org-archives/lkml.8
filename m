@@ -2,124 +2,262 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7875C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD09C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C392D2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FQx0BKIa"
+	by mail.kernel.org (Postfix) with ESMTP id CB5A7206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgGWPoa (ORCPT
+        id S1729554AbgGWPqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:44:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34683 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727108AbgGWPoa (ORCPT
+        Thu, 23 Jul 2020 11:46:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49972 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgGWPqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:44:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595519068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=BkBtUhmwfYQ1105zjfG6oXxQ3Lr6xBv5QKA0bUwDU1s=;
-        b=FQx0BKIa3uc19Inr/nrDo7PlQBTNi2GqfBRxFrX4+I6PpSacN9GoAS2Xs30ZE+Dqq/8ub1
-        AXjjJ/Zm0YiE0HG5/tDFmcw1OoPlknAqJ6O3oFm0/lJoAjdLISjexYKS4cmauFU6Kg7+qh
-        BkhZzZxRhZBGZrKRnk5nwoVVTWdpr3M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-fMTt5sBmMy2_WxbLBXHRrg-1; Thu, 23 Jul 2020 11:44:24 -0400
-X-MC-Unique: fMTt5sBmMy2_WxbLBXHRrg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48BD9100A8C1;
-        Thu, 23 Jul 2020 15:44:23 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.194.249])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 84FC675563;
-        Thu, 23 Jul 2020 15:44:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 23 Jul 2020 17:44:22 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 17:44:20 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Aaron Merey <amerey@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] uprobes: change handle_swbp() to send SIGTRAP with
- si_code=SI_KERNEL
-Message-ID: <20200723154420.GA32043@redhat.com>
+        Thu, 23 Jul 2020 11:46:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A53852985CE
+Subject: Re: [PATCH] dt-bindings: power: rockchip: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        dianders@chromium.org, heiko@sntech.de,
+        Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200715170216.2875868-1-enric.balletbo@collabora.com>
+ <20200721032536.GA3476792@bogus>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <9fa390ef-068f-82b0-2317-64f3ffc4864f@collabora.com>
+Date:   Thu, 23 Jul 2020 17:46:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200721032536.GA3476792@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
-does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
-to work when this code was written, but then GDB started to validate si_code
-and now it simply can't use breakpoints if the tracee has an active uprobe:
+Hi Rob,
 
-	# cat test.c
-	void unused_func(void)
-	{
-	}
-	int main(void)
-	{
-		return 0;
-	}
+Thank you for your review.
 
-	# gcc -g test.c -o test
-	# perf probe -x ./test -a unused_func
-	# perf record -e probe_test:unused_func gdb ./test -ex run
-	GNU gdb (GDB) 10.0.50.20200714-git
-	...
-	Program received signal SIGTRAP, Trace/breakpoint trap.
-	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
-	(gdb)
+On 21/7/20 5:25, Rob Herring wrote:
+> On Wed, Jul 15, 2020 at 07:02:16PM +0200, Enric Balletbo i Serra wrote:
+>> Convert the soc/rockchip/power_domain.txt binding document to json-schema
+>> and move to the power bindings directory.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>>  .../power/rockchip,power-controller.yaml      | 154 ++++++++++++++++++
+>>  .../bindings/soc/rockchip/power_domain.txt    | 136 ----------------
+>>  2 files changed, 154 insertions(+), 136 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+>>  delete mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+>> new file mode 100644
+>> index 000000000000..af50cf2b3e63
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+>> @@ -0,0 +1,154 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/power/rockchip,power-controller.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Rockchip Power Domains
+>> +
+>> +maintainers:
+>> +  - Caesar Wang <wxt@rock-chips.com>
+>> +  - Heiko Stuebner <heiko@sntech.de>
+>> +
+>> +description: |
+>> +  Rockchip processors include support for multiple power domains which can be
+>> +  powered up/down by software based on different application scenes to save power.
+>> +
+>> +  Power domains contained within power-controller node are generic power domain
+>> +  providers documented in Documentation/devicetree/bindings/power/power-domain.yaml.
+>> +
+>> +  IP cores belonging to a power domain should contain a 'power-domains'
+>> +  property that is a phandle for the power domain node representing the domain.
+>> +
+>> +properties:
+>> +  power-controller:
+>> +    type: object
+>> +    description: List of power domains provided by this controller.
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        enum:
+>> +          - rockchip,px30-power-controller
+>> +          - rockchip,rk3036-power-controller
+>> +          - rockchip,rk3066-power-controller
+>> +          - rockchip,rk3128-power-controller
+>> +          - rockchip,rk3188-power-controller
+>> +          - rockchip,rk3228-power-controller
+>> +          - rockchip,rk3288-power-controller
+>> +          - rockchip,rk3328-power-controller
+>> +          - rockchip,rk3366-power-controller
+>> +          - rockchip,rk3368-power-controller
+>> +          - rockchip,rk3399-power-controller
+>> +
+>> +      reg:
+>> +        description: |
+>> +          Power domain index. Valid values are defined in:
+>> +          "include/dt-bindings/power/px30-power.h" - for PX30 type power domain.
+>> +          "include/dt-bindings/power/rk3036-power.h" - for RK3036 type power domain.
+>> +          "include/dt-bindings/power/rk3066-power.h" - for RK3066 type power domain.
+>> +          "include/dt-bindings/power/rk3128-power.h" - for RK3128 type power domain.
+>> +          "include/dt-bindings/power/rk3188-power.h" - for RK3188 type power domain.
+>> +          "include/dt-bindings/power/rk3228-power.h" - for RK3228 type power domain.
+>> +          "include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
+>> +          "include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
+>> +          "include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
+>> +          "include/dt-bindings/power/rk3368-power.h" - for RK3368 type power domain.
+>> +          "include/dt-bindings/power/rk3399-power.h" - for RK3399 type power domain.
+>> +        maxItems: 1
+>> +
+>> +      clocks:
+>> +        description: |
+>> +          A number of phandles to clocks that need to be enabled while power domain
+>> +          switches state.
+>> +      pm_qos:
+>> +        description: |
+>> +          A number of phandles to qos blocks which need to be saved and restored
+>> +          while power domain switches state.
+>> +
+>> +      power-supply: true
+>> +
+>> +    required:
+>> +      - compatible
+>> +      - reg
+> 
+> You need:
+> 
+>        additionalProperties: false
+> 
+> (with indentation). Then you will get a bunch of errors as you are 
+> missing a level of nodes. 
 
-The tracee hits the internal breakpoint inserted by GDB to monitor shared
-library events but GDB misinterprets this SIGTRAP and reports a signal.
+Hmm, for some reason adding "additionalProperties: false" with indentation,
+doesn't give me any error. I'll double check my environment but I might be
+something silly.
 
-Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
-and fixes the problem.
+> The 'power-controller' node doesn't have 
+> 'reg' for example. You'll need to use 'patternProperties' with '^pd_'.
+> 
+> And to describe the nested power domains, you have to describe yet 
+> another level. You can do a $ref with something like:
+> 
+> $ref: '#/properties/power-controller/patternProperties/^pd_'
+> 
+> That creates a circular reference though and I'm not sure what will 
+> happen. :)
+> 
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/rk3399-cru.h>
+>> +    #include <dt-bindings/power/rk3399-power.h>
+>> +
+>> +    soc {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        qos_iep: qos@ffa98000 {
+>> +            compatible = "syscon";
+> 
+> This will generate a warning now. 'syscon' should not be used alone.
+> 
 
-This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
-wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
-but this doesn't confuse GDB and needs another x86-specific patch.
+What to do in such cases? I mean the rk3399.dtsi device-tree is like this, so
+wrong, should I create a new compatible?
 
-Reported-by: Aaron Merey <amerey@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/events/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Enric
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index bb0862873dba..5f8b0c52fd2e 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2199,7 +2199,7 @@ static void handle_swbp(struct pt_regs *regs)
- 	if (!uprobe) {
- 		if (is_swbp > 0) {
- 			/* No matching uprobe; signal SIGTRAP. */
--			send_sig(SIGTRAP, current, 0);
-+			force_sig(SIGTRAP);
- 		} else {
- 			/*
- 			 * Either we raced with uprobe_unregister() or we can't
--- 
-2.25.1.362.g51ebf55
-
-
+>> +            reg = <0x0 0xffa98000 0x0 0x20>;
+>> +        };
+>> +
+>> +        qos_rga_r: qos@ffab0000 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0 0xffab0000 0x0 0x20>;
+>> +        };
+>> +
+>> +        qos_rga_w: qos@ffab0080 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0 0xffab0080 0x0 0x20>;
+>> +        };
+>> +
+>> +        qos_video_m0: qos@ffab8000 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0 0xffab8000 0x0 0x20>;
+>> +        };
+>> +
+>> +        qos_video_m1_r: qos@ffac0000 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0 0xffac0000 0x0 0x20>;
+>> +        };
+>> +
+>> +        qos_video_m1_w: qos@ffac0080 {
+>> +            compatible = "syscon";
+>> +            reg = <0x0 0xffac0080 0x0 0x20>;
+>> +        };
+>> +
+>> +        power-management@ff310000 {
+>> +            compatible = "rockchip,rk3399-pmu", "syscon", "simple-mfd";
+>> +            reg = <0x0 0xff310000 0x0 0x1000>;
+>> +
+>> +            power-controller {
+>> +                compatible = "rockchip,rk3399-power-controller";
+>> +                #power-domain-cells = <1>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                /* These power domains are grouped by VD_CENTER */
+>> +                pd_iep@RK3399_PD_IEP {
+>> +                    reg = <RK3399_PD_IEP>;
+>> +                    clocks = <&cru ACLK_IEP>,
+>> +                             <&cru HCLK_IEP>;
+>> +                    pm_qos = <&qos_iep>;
+>> +                };
+>> +                pd_rga@RK3399_PD_RGA {
+>> +                    reg = <RK3399_PD_RGA>;
+>> +                    clocks = <&cru ACLK_RGA>,
+>> +                             <&cru HCLK_RGA>;
+>> +                    pm_qos = <&qos_rga_r>,
+>> +                             <&qos_rga_w>;
+>> +                };
+>> +                pd_vcodec@RK3399_PD_VCODEC {
+>> +                    reg = <RK3399_PD_VCODEC>;
+>> +                    clocks = <&cru ACLK_VCODEC>,
+>> +                             <&cru HCLK_VCODEC>;
+>> +                    pm_qos = <&qos_video_m0>;
+>> +                };
+>> +                pd_vdu@RK3399_PD_VDU {
+>> +                    reg = <RK3399_PD_VDU>;
+>> +                    clocks = <&cru ACLK_VDU>,
+>> +                             <&cru HCLK_VDU>;
+>> +                    pm_qos = <&qos_video_m1_r>,
+>> +                             <&qos_video_m1_w>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+> 
