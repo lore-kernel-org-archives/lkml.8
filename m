@@ -2,126 +2,111 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60496C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FE2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C47207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEFD207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:46:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nlh1gZFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733279AbgGWAoJ (ORCPT
+        id S1733306AbgGWAqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:44:09 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:58982 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733150AbgGWAoI (ORCPT
+        Wed, 22 Jul 2020 20:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733075AbgGWAqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:44:08 -0400
-Received: from localhost (unknown [192.168.167.209])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 43ADDC571D;
-        Thu, 23 Jul 2020 08:44:02 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P17009T140099499042560S1595465038112439_;
-        Thu, 23 Jul 2020 08:44:01 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f73ad779b029db30ddd48caac0ab4cfc>
-X-RL-SENDER: jon.lin@rock-chips.com
-X-SENDER: jon.lin@rock-chips.com
-X-LOGIN-NAME: jon.lin@rock-chips.com
-X-FST-TO: broonie@kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jon Lin <jon.lin@rock-chips.com>
-To:     broonie@kernel.org
-Cc:     heiko@sntech.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@esmil.dk, Jon Lin <jon.lin@rock-chips.com>
-Subject: [PATCH v3 2/3] spi: rockchip: Support 64-location deep FIFOs
-Date:   Thu, 23 Jul 2020 08:43:55 +0800
-Message-Id: <20200723004356.6390-2-jon.lin@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200723004356.6390-1-jon.lin@rock-chips.com>
-References: <20200723004356.6390-1-jon.lin@rock-chips.com>
+        Wed, 22 Jul 2020 20:46:18 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1242C0619DC;
+        Wed, 22 Jul 2020 17:46:17 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 72so3212943otc.3;
+        Wed, 22 Jul 2020 17:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1tc0sllhtY7w34bXcpMVY0Netptnusq1Em3V/sqHWI0=;
+        b=Nlh1gZFqOje/wjQsqdXngrNxRXr5/jM+CCGVx6vQgKOJTZM+IIme1CORg+EAE0xqik
+         nQ74StMEiW15q7uL5gjsfhHuqvM8RWH+GkMOaJeGQfO+IBSJJ6UkJ2wXnJgO7saLm9DT
+         s2T96qbkRqEJttlsAJMdC6xIBC7R5ip0FiyKddFFn8mc85kuldHRaEaVi+8P27hkoo5J
+         sBoMAFOvPh4PkNAf4Zm7KPiGEAMQ/RCHzz3pwJGbNdp8EiajsyR94WKtMLxV5YN45tDa
+         9Q14/O+Xb5QZKTF5VtG2S7Osb2ZCqLDHTEjkpRG33RYss9PQ/HfrrbJg31AznsLFOTPQ
+         qsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1tc0sllhtY7w34bXcpMVY0Netptnusq1Em3V/sqHWI0=;
+        b=oc8pCocdgJV/yXXHXZ2LEVbbWMQg1eS/JFPBluNbCwYaVTM3gkEJkr9RANoF5nuKkH
+         emwMUH0Bm0IC9YBg6z/W26/v3peOxg1gMGvinckS3N/ty52UjuLZcBq41TTWOj78v3uy
+         5TjT0gfPoKUsjSW7OL7d9fQ2uu0Hoz4zwdyvde7aNM56t8fsOwoQ2jJtl62VzVPYfucK
+         Naj4KPBYQSg1mlE+YfGq/pn12RVffzER/5qx1KHo7vxO3RkqAa3/rtxVQs7w9w0aqkpv
+         ZWzygMPWGCCsrsW0Bh1QhwEU9MiF2gsdbXXWbaynS6sB6LMxWEu9bH8wkX/LKyi2582e
+         3ECA==
+X-Gm-Message-State: AOAM532hLq22vapxnA9B3aTrlvArDEe2Pa04at6R1iODVrZF2BudDMMQ
+        dhsW54DElh0ElyVLiTo4m831o2+hZJmuVkD3tzA=
+X-Google-Smtp-Source: ABdhPJzqJOiYGRTIoq6oVthPZ4ese3vK8VW1DCnwjbIxJ84GTIETtTPTrzymv2zTBRjQETvttoKPI8msy2SfjIeQNIw=
+X-Received: by 2002:a9d:6410:: with SMTP id h16mr2184938otl.168.1595465177143;
+ Wed, 22 Jul 2020 17:46:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200722021803.17958-1-hancockrwd@gmail.com> <20200722174009.GA1291928@bjorn-Precision-5520>
+In-Reply-To: <20200722174009.GA1291928@bjorn-Precision-5520>
+From:   Robert Hancock <hancockrwd@gmail.com>
+Date:   Wed, 22 Jul 2020 18:46:06 -0600
+Message-ID: <CADLC3L0b8zqJoHt7aA6z6hb3cYC2z-32vmQsQ3tR0gGduC8+-Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI bridge
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+        Puranjay Mohan <puranjay12@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FIFO depth of SPI V2 is 64 instead of 32, add support for it.
+On Wed, Jul 22, 2020 at 11:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Puranjay]
+>
+> On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
+> > Recently ASPM handling was changed to no longer disable ASPM on all
+> > PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
+> > devices don't seem to function properly with ASPM enabled, as they
+> > cause the parent PCIe root port to cause repeated AER timeout errors.
+> > In addition to flooding the kernel log, this also causes the machine
+> > to wake up immediately after suspend is initiated.
+>
+> Hi Robert, thanks a lot for the report of this problem
+> (https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
+> and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
+>
+> I'm pretty sure Linux ASPM support is missing some things.  This
+> problem might be a hardware problem where a quirk is the right
+> solution, but it could also be that it's a result of a Linux defect
+> that we should fix.
+>
+> Could you collect the dmesg log and "sudo lspci -vvxxxx" output
+> somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
+> whether this L1 PM substates are enabled on this link, and whether
+> that's configured correctly.
 
-Signed-off-by: Jon Lin <jon.lin@rock-chips.com>
-Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
-Tested-by: Emil Renner Berthing <kernel@esmil.dk>
----
- drivers/spi/spi-rockchip.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+Created a Bugzilla entry and added dmesg and lspci output:
+https://bugzilla.kernel.org/show_bug.cgi?id=208667
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 63593a5b87fa..a451dacab5cf 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -39,8 +39,9 @@
- #define ROCKCHIP_SPI_RISR			0x0034
- #define ROCKCHIP_SPI_ICR			0x0038
- #define ROCKCHIP_SPI_DMACR			0x003c
--#define ROCKCHIP_SPI_DMATDLR		0x0040
--#define ROCKCHIP_SPI_DMARDLR		0x0044
-+#define ROCKCHIP_SPI_DMATDLR			0x0040
-+#define ROCKCHIP_SPI_DMARDLR			0x0044
-+#define ROCKCHIP_SPI_VERSION			0x0048
- #define ROCKCHIP_SPI_TXDR			0x0400
- #define ROCKCHIP_SPI_RXDR			0x0800
- 
-@@ -156,6 +157,8 @@
- #define ROCKCHIP_SPI_MAX_TRANLEN		0xffff
- 
- #define ROCKCHIP_SPI_MAX_CS_NUM			2
-+#define ROCKCHIP_SPI_VER2_TYPE1			0x05EC0002
-+#define ROCKCHIP_SPI_VER2_TYPE2			0x00110002
- 
- struct rockchip_spi {
- 	struct device *dev;
-@@ -206,17 +209,17 @@ static inline void wait_for_idle(struct rockchip_spi *rs)
- 
- static u32 get_fifo_len(struct rockchip_spi *rs)
- {
--	u32 fifo;
-+	u32 ver;
- 
--	for (fifo = 2; fifo < 32; fifo++) {
--		writel_relaxed(fifo, rs->regs + ROCKCHIP_SPI_TXFTLR);
--		if (fifo != readl_relaxed(rs->regs + ROCKCHIP_SPI_TXFTLR))
--			break;
--	}
--
--	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_TXFTLR);
-+	ver = readl_relaxed(rs->regs + ROCKCHIP_SPI_VERSION);
- 
--	return (fifo == 31) ? 0 : fifo;
-+	switch (ver) {
-+	case ROCKCHIP_SPI_VER2_TYPE1:
-+	case ROCKCHIP_SPI_VER2_TYPE2:
-+		return 64;
-+	default:
-+		return 32;
-+	}
- }
- 
- static void rockchip_spi_set_cs(struct spi_device *spi, bool enable)
--- 
-2.17.1
-
-
-
+As I noted in that report, I subsequently found this page on ASMedia's
+site: https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
+which indicates this ASM1083 device has "No PCIe ASPM support". It's
+not clear why this problem isn't occurring on Windows however - either
+it is not enabling ASPM, somehow it doesn't cause issues with the PCIe
+link, or it is causing issues and just doesn't notify the user in any
+way. I can try and check if this bridge device is ending up with ASPM
+enabled under Windows 10 or not..
