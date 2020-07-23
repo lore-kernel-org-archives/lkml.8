@@ -2,98 +2,120 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C137C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A794C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0B40207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595516428;
-	bh=4R4rFlQ9S7IYpPvd2WbOvsP7WGTiScpv5SiKG/TqEqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JQxcnH3mXW3LVZm7kwANcZkJeu+96uXdwBESrjNUG17/MwWZA14E0GjjUxJG99X0r
-	 Ua305hyTD/mehBWXWR+aaAKtd0gSJejquHv5dfVAzYcbUhTw4VM9HIWFMTS3kIRlI+
-	 /8e/J5ZAdVQn7SbG8mxurvw9igGlamghPLgzQVu8=
+	by mail.kernel.org (Postfix) with ESMTP id 2B390207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbgGWPA1 (ORCPT
+        id S1728777AbgGWO6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728723AbgGWPA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:00:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2324920709;
-        Thu, 23 Jul 2020 15:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595516426;
-        bh=4R4rFlQ9S7IYpPvd2WbOvsP7WGTiScpv5SiKG/TqEqM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IWKFSwsuuHedWFV8296RhqiXfCSflXGX0Mn4uTu2UdfcsBjoobW2Wk5OKHlxHFCoX
-         G4UjFgSV5B5Auc5KuE7Z/zq/r0ncUwVV1RvMi4lqvQpSKDOJWVu+oiM6SW2T7WPA0+
-         ulmfBIJpknRApArlcjRuXrW5kwO3d2jWmbHNAZpg=
-Date:   Thu, 23 Jul 2020 17:00:30 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 0/2] Small devm helper for devm implementations
-Message-ID: <20200723150030.GA2515799@kroah.com>
-References: <e8221bff-3e2a-7607-c5c8-abcf9cebb1b5@free.fr>
- <69f6f7fc-4fb6-248a-684a-b853ee0836bc@free.fr>
- <3fea884b-05d3-ff67-b9fe-41c9b46cf478@free.fr>
- <20200706195758.GA100842@kroah.com>
- <23a476f9-8ea3-566e-be5e-5237fb14bb91@free.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23a476f9-8ea3-566e-be5e-5237fb14bb91@free.fr>
+        Thu, 23 Jul 2020 10:58:10 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:38119 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgGWO6J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:58:09 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jycjV-0001cU-OJ; Thu, 23 Jul 2020 15:02:05 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Sean Nyekjaer <sean@geanix.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Timo=20Schl=C3=BC=C3=9Fler?= <schluessler@krause.de>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Tim Harvey <tharvey@gateworks.com>
+Subject: [RESEND PATCH] can: mcp251x: add support for half duplex controllers
+Date:   Thu, 23 Jul 2020 07:57:55 -0700
+Message-Id: <1595516275-1179-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 09:10:23AM +0200, Marc Gonzalez wrote:
-> On 06/07/2020 21:57, Greg Kroah-Hartman wrote:
-> 
-> > Given the lack of testing of the patch, it doesn't seem wise to add
-> > this, right?
-> 
-> You're probably not wrong :)
-> 
-> > Please get some testing, and some more users, and I'll be glad to
-> > consider it.
-> 
-> "Users" == files modified to use the new helper?
+Some SPI host controllers do not support full-duplex SPI and are
+marked as such via the SPI_CONTROLLER_HALF_DUPLEX controller flag.
 
-Yes.
+For such controllers use half duplex transactions but retain full
+duplex transactions for the controllers that can handle those.
 
-> How many files would you suggest? 3? 5? 10?
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ drivers/net/can/spi/mcp251x.c | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
-How many do you see that can use it?  I would suggest "all" :)
+diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+index 5009ff2..203ef20 100644
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -290,8 +290,12 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
+ 	priv->spi_tx_buf[0] = INSTRUCTION_READ;
+ 	priv->spi_tx_buf[1] = reg;
+ 
+-	mcp251x_spi_trans(spi, 3);
+-	val = priv->spi_rx_buf[2];
++	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
++		spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
++	} else {
++		mcp251x_spi_trans(spi, 3);
++		val = priv->spi_rx_buf[2];
++	}
+ 
+ 	return val;
+ }
+@@ -303,10 +307,18 @@ static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
+ 	priv->spi_tx_buf[0] = INSTRUCTION_READ;
+ 	priv->spi_tx_buf[1] = reg;
+ 
+-	mcp251x_spi_trans(spi, 4);
++	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
++		u8 val[2] = { 0 };
+ 
+-	*v1 = priv->spi_rx_buf[2];
+-	*v2 = priv->spi_rx_buf[3];
++		spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
++		*v1 = val[0];
++		*v2 = val[1];
++	} else {
++		mcp251x_spi_trans(spi, 4);
++
++		*v1 = priv->spi_rx_buf[2];
++		*v2 = priv->spi_rx_buf[3];
++	}
+ }
+ 
+ static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
+@@ -409,8 +421,16 @@ static void mcp251x_hw_rx_frame(struct spi_device *spi, u8 *buf,
+ 			buf[i] = mcp251x_read_reg(spi, RXBCTRL(buf_idx) + i);
+ 	} else {
+ 		priv->spi_tx_buf[RXBCTRL_OFF] = INSTRUCTION_READ_RXB(buf_idx);
+-		mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
+-		memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
++		if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
++			spi_write_then_read(spi, priv->spi_tx_buf, 1,
++					    priv->spi_rx_buf,
++					    SPI_TRANSFER_BUF_LEN);
++			memcpy(buf + 1, priv->spi_rx_buf,
++			       SPI_TRANSFER_BUF_LEN - 1);
++		} else {
++			mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
++			memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
++		}
+ 	}
+ }
+ 
+-- 
+2.7.4
 
-thanks,
-
-greg k-h
