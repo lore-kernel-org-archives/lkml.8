@@ -2,147 +2,79 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B192C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31800C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0253820684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F1120684
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgGWLwZ (ORCPT
+        id S1728265AbgGWLza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:52:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:44500 "EHLO foss.arm.com"
+        Thu, 23 Jul 2020 07:55:30 -0400
+Received: from verein.lst.de ([213.95.11.211]:59866 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgGWLwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:52:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48C3AD6E;
-        Thu, 23 Jul 2020 04:52:23 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.6.96])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BAB13F718;
-        Thu, 23 Jul 2020 04:52:22 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 12:52:16 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     gregory.herrero@oracle.com
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        stable@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH] recordmcount: only record relocation of type
- R_AARCH64_CALL26 on arm64.
-Message-ID: <20200723115216.GA17032@C02TD0UTHF1T.local>
-References: <20200717143338.19302-1-gregory.herrero@oracle.com>
+        id S1726109AbgGWLza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:55:30 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6004C68AFE; Thu, 23 Jul 2020 13:55:27 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 13:55:27 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        huangdaode <huangdaode@huawei.com>
+Subject: Re: [PATCH v3 1/2] dma-direct: provide the ability to reserve
+ per-numa CMA
+Message-ID: <20200723115527.GA31598@lst.de>
+References: <20200628111251.19108-1-song.bao.hua@hisilicon.com> <20200628111251.19108-2-song.bao.hua@hisilicon.com> <20200722141658.GA17658@lst.de> <B926444035E5E2439431908E3842AFD25A15A3@DGGEMI525-MBS.china.huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717143338.19302-1-gregory.herrero@oracle.com>
+In-Reply-To: <B926444035E5E2439431908E3842AFD25A15A3@DGGEMI525-MBS.china.huawei.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gregory,
-
-As a general thing, for patches affecting arm64 could you please Cc the
-linx-arm-kernel mailing list (linux-arm-kernel@lists.infradead.org).
-Some folk working on arm/arm64 aren't subscribed to LKML, and it means
-patches like this may get missed.
-
-On Fri, Jul 17, 2020 at 04:33:38PM +0200, gregory.herrero@oracle.com wrote:
-> From: Gregory Herrero <gregory.herrero@oracle.com>
+On Wed, Jul 22, 2020 at 09:26:03PM +0000, Song Bao Hua (Barry Song) wrote:
+> I understand your concern. Anyway, The primary purpose of this patchset is providing
+> a general way for users like IOMMU to get local coherent dma buffers to put their
+> command queue and page tables in. The first user case is what really made me
+> begin to prepare this patchset.
 > 
-> Currently, if a section has a relocation to '_mcount' symbol, a new
-> __mcount_loc entry will be added whatever the relocation type is.
-> This is problematic when a relocation to '_mcount' is in the middle of a
-> section and is not a call for ftrace use.
-> 
-> Such relocation could be generated with below code for example:
->     bool is_mcount(unsigned long addr)
->     {
->         return (target == (unsigned long) &_mcount);
->     }
-> 
-> With this snippet of code, ftrace will try to patch the mcount location
-> generated by this code on module load and fail with:
-> 
->     Call trace:
->      ftrace_bug+0xa0/0x28c
->      ftrace_process_locs+0x2f4/0x430
->      ftrace_module_init+0x30/0x38
->      load_module+0x14f0/0x1e78
->      __do_sys_finit_module+0x100/0x11c
->      __arm64_sys_finit_module+0x28/0x34
->      el0_svc_common+0x88/0x194
->      el0_svc_handler+0x38/0x8c
->      el0_svc+0x8/0xc
->     ---[ end trace d828d06b36ad9d59 ]---
->     ftrace failed to modify
->     [<ffffa2dbf3a3a41c>] 0xffffa2dbf3a3a41c
->      actual:   66:a9:3c:90
->     Initializing ftrace call sites
->     ftrace record flags: 2000000
->      (0)
->     expected tramp: ffffa2dc6cf66724
+> For the second case, it is probably a positive side effect of this patchset for those users
+> who have more concern on performance than dma security, then they maybe skip
+> IOMMU by
+> 	iommu.passthrough=
+> 			[ARM64, X86] Configure DMA to bypass the IOMMU by default.
+> 			Format: { "0" | "1" }
+> 			0 - Use IOMMU translation for DMA.
+> 			1 - Bypass the IOMMU for DMA.
+> 			unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
+> In this case, they can get local memory and get better performance.
+> However, it is not the primary purpose of this patchset.
 
-Which code specifically is this triggering for? Is this something in an
-upstream kernel, or out-of-tree patches?
-
-Can you say which toolchain you're using, too?
-
-> So Limit the relocation type to R_AARCH64_CALL26 as in perl version of
-> recordmcount.
-
-Given our patching code expects each callsite to be:
-
-	bl	_mcount
-
-... this looks sane to me, and I *think* that's sound for modules too.
-
-> Fixes: ed60453fa8f8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
-
-That's a 32-bit arm commit. I suspect that was meant to be:
-
-Fixes: af64d2aa872a1747 ("ftrace: Add arm64 support to recordmcount")
-
-> Signed-off-by: Gregory Herrero <gregory.herrero@oracle.com>
-> ---
->  scripts/recordmcount.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-> index 7225107a9aaf..e59022b3f125 100644
-> --- a/scripts/recordmcount.c
-> +++ b/scripts/recordmcount.c
-> @@ -434,6 +434,11 @@ static int arm_is_fake_mcount(Elf32_Rel const *rp)
->  	return 1;
->  }
->  
-> +static int arm64_is_fake_mcount(Elf64_Rel const *rp)
-> +{
-> +	return ELF64_R_TYPE(w(rp->r_info)) != R_AARCH64_CALL26;
-> +}
-> +
->  /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
->   * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
->   * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
-> @@ -547,6 +552,7 @@ static int do_file(char const *const fname)
->  		make_nop = make_nop_arm64;
->  		rel_type_nop = R_AARCH64_NONE;
->  		ideal_nop = ideal_nop4_arm64;
-> +		is_fake_mcount64 = arm64_is_fake_mcount;
->  		break;
-
-As above, I think this is sound, but if you could answer my questions
-that'd be helpful.
-
-Thanks,
-Mark.
-
->  	case EM_IA_64:	reltype = R_IA64_IMM64; break;
->  	case EM_MIPS:	/* reltype: e_class    */ break;
-> -- 
-> 2.27.0
-> 
+That's not what I mean.  Hardcoding the CMA regions in the kernel
+config is just a bad idea, and we should not add more hard coded values.
+You can always use CONFIG_CMDLINE to force a specific kernel command
+line including your options.
