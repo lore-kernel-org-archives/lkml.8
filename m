@@ -2,101 +2,130 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3970C43445
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653A4C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9419A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A39A206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/ZmKmF0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OOg1f43G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgGWP1Z (ORCPT
+        id S1729628AbgGWP1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58286 "EHLO
+        Thu, 23 Jul 2020 11:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbgGWP1W (ORCPT
+        with ESMTP id S1729614AbgGWP1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:27:22 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E711DC0619DC;
-        Thu, 23 Jul 2020 08:27:21 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e8so6811607ljb.0;
-        Thu, 23 Jul 2020 08:27:21 -0700 (PDT)
+        Thu, 23 Jul 2020 11:27:06 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF472C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:27:05 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id p14so4965662wmg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=icDrOEVC/8epZOak8kb0H/2e+mCU2SCzkHlrnG8TscA=;
-        b=X/ZmKmF04YhdoJNrfvi5V/RM9Nu870qnC3kLeTrtfFp73YnwrxcajumDhvPTNNAeyc
-         XM6hIDpuoGyKCTYQ1gKKMllEzrGoXXAKCWYI+I8ruapSC2O5zvT5nc/AyevI1yGqQdso
-         M0U0MOVYqoI/nrnIvkCeuJ+/qnpqER4ep0I0ZyZt/yt486bdv5POJFm9DbUBiK6RLxOE
-         cKwYojbAoANHV4l/+I4koCRrxgOVVCpgBhHgUrBBKhg9JTQLEi/CVXkREgIjiEEpRUCT
-         a5Q/xR2Yp4pK5BXYIp7x20LFymQ7XdSdZlzdTEkebQ5UjgyPI4nJHrznW0MYTt0w3/9s
-         dDQg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gT16S+wE9QP+Lpme4e1jgxInlD0M0uUa46Dg/gZiw4M=;
+        b=OOg1f43G0/Boq4zjOO1Z381OJt14MPElkJJ6ldbqBbuoTC9fhJZGA3yDnmM95/n/7O
+         pDdAajclwTkT1pQIg42a9a1qY5XBCIdofu2d0gGgNEfWv1Wdivb/YuXCY21uinty3DiC
+         P1+yAP36cUUz+fQFtnR/jhbxIHAKWbNAHKXK/YsxVQgCHPNtIzD/gidu6IIKbmvi6j+i
+         YCRGBtrS9vVSkrxhOpvzpN5THXNqYDZpMjeydx9SVHGlyuk/KNMMjhZ9GWu8F4LwfuMH
+         yZrM6chFuRBiJJg3ceGRVvI8fVaOWDx2UsZw7Bq8yomd+bJHtgz3vKwAZcQ65d9ZAGgO
+         dbwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=icDrOEVC/8epZOak8kb0H/2e+mCU2SCzkHlrnG8TscA=;
-        b=pVdqfDqKaZeAwp3gmkQTELfsJ8Ed4Wul+4nsoFYTJfzQP2WGzoi2/KLPZSfCmuMh7w
-         RKLp2AZekV660wNmW1uUNCW7C0NOBZbhoDl0mQGJJO0AuuLqMTIIntSc3cOYqe96Xj69
-         Ar8KkJixz4wDf5uhyx+lHeQ9uu1MerVPAXMZNkOvQV/y8K6RSMEPXlCCv5g6sz6dUKkO
-         XdKB2j5Muo6AyZFFVDleV0Wx52XqWnuruBqYPsUVIXtDUoCjrgAgsTytTRFoFrdF+42j
-         NND/CRhKMT4dnmSckU6n0bydV3sNpDHvQsJ7th+wA71lXKqe5MWXbJi3zldJdiL6TweG
-         6EtA==
-X-Gm-Message-State: AOAM5314D7no0ccKUAvwcfmJVhyb2YRXBOSyQo+vbFbs4c0mc+CXDMDr
-        61h5fJPgBfqFvtm9UJ9SNPnEvD7wIBIR8Iv+mQQ=
-X-Google-Smtp-Source: ABdhPJys2Y8KPPvvS8hAEOfeBh/cxXaslg/nRGG2CqfBBypTJG5NaYZw4bBCSPovLsojGPswX04aNzT3bZ73DvdQXCw=
-X-Received: by 2002:a2e:90da:: with SMTP id o26mr2313514ljg.91.1595518040467;
- Thu, 23 Jul 2020 08:27:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gT16S+wE9QP+Lpme4e1jgxInlD0M0uUa46Dg/gZiw4M=;
+        b=niZo5EEv4ZJPbcAXFiW2d0R/rBRmpgrsIdvedXawE+XHOUFQW69vVOl5QkILhdYFlq
+         xicGYsKQibO5ATLz7XLF+RZy3jGtkpCVCYLGDSSDYG6L9y+V8A53K+8mX9qVULdM1wxj
+         n+7bVUhU1EIYVj2eU+BUKDs/VutbBv4hkPwEGUUteapsxgv1oDsX98adwjc5/HQFTed6
+         beBxEZUlZmJPh3OVHYzFh9nfEvkOtIrHXZNZB2vAxTs5gaUSeVJvj29TGRAC2QmzijjQ
+         siNtXKdfXJEUuEPI0lRTCC3a0C/8AMoOtgOXifX9otB8yEcFbvSbMl/9V6zyDXhsxJof
+         NQ9g==
+X-Gm-Message-State: AOAM531XKiGwnkGFX9K5jjudjD/mINQwE/QFp9Pacs8S0pFaC/ee7G4w
+        BxNm7oI4Ipe2nYshq8rqgulUHw==
+X-Google-Smtp-Source: ABdhPJwY+1bzVpcKIe9+Fd1bx4mT//TJdWy4E/CueiOaDYHUQBR9iRc4PNZhj2N3QFJvjfFN+ZJvTA==
+X-Received: by 2002:a1c:28a:: with SMTP id 132mr4521810wmc.109.1595518024251;
+        Thu, 23 Jul 2020 08:27:04 -0700 (PDT)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:dca7:8d30:33fa:daac])
+        by smtp.gmail.com with ESMTPSA id g145sm5963491wmg.23.2020.07.23.08.27.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 08:27:03 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-kernel@vger.kernel.org (open list:CLOCKSOURCE, CLOCKEVENT DRIVERS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Microchip
+        (AT91) SoC support)
+Subject: [PATCH 09/16] clocksource/drivers/timer-atmel-tcb: Add sama5d2 support
+Date:   Thu, 23 Jul 2020 17:26:29 +0200
+Message-Id: <20200723152639.639771-9-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200723152639.639771-1-daniel.lezcano@linaro.org>
+References: <1b1122f4-bce9-f349-e602-ed8e14cbb501@linaro.org>
+ <20200723152639.639771-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-References: <20200723141914.20722-1-trix@redhat.com>
-In-Reply-To: <20200723141914.20722-1-trix@redhat.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 23 Jul 2020 08:27:08 -0700
-Message-ID: <CAADnVQJYsqosZ804geM1Urrz73+z1fMZu1w76KN-847S3CL+nQ@mail.gmail.com>
-Subject: Re: [PATCH] bpf: BPF_SYSCALL depends INET
-To:     trix@redhat.com
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>, krzk@kernel.org,
-        patrick.bellasi@arm.com, David Howells <dhowells@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 7:19 AM <trix@redhat.com> wrote:
->
-> From: Tom Rix <trix@redhat.com>
->
-> A link error
->
-> kernel/bpf/net_namespace.o: In function `bpf_netns_link_release':
-> net_namespace.c: undefined reference to `bpf_sk_lookup_enabled'
->
-> bpf_sk_lookup_enabled is defined with INET
-> net_namespace is controlled by BPF_SYSCALL
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-pls rebase. it was fixed already.
+The first divisor for the sama5d2 is actually the gclk selector. Because
+the currently remaining divisors are fitting the use case, currently ensure
+it is skipped.
+
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200710230813.1005150-10-alexandre.belloni@bootlin.com
+---
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index 7fea134650fc..787dbebbb432 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -359,9 +359,15 @@ static struct atmel_tcb_config tcb_sam9x5_config = {
+ 	.counter_width = 32,
+ };
+ 
++static struct atmel_tcb_config tcb_sama5d2_config = {
++	.counter_width = 32,
++	.has_gclk = 1,
++};
++
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
+ 	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
++	{ .compatible = "atmel,sama5d2-tcb", .data = &tcb_sama5d2_config, },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -426,7 +432,10 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 
+ 	/* How fast will we be counting?  Pick something over 5 MHz.  */
+ 	rate = (u32) clk_get_rate(t0_clk);
+-	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
++	i = 0;
++	if (tc.tcb_config->has_gclk)
++		i = 1;
++	for (; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+-- 
+2.25.1
+
