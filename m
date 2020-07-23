@@ -2,106 +2,145 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A56DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AE8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D0620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RwS3AWQX"
+	by mail.kernel.org (Postfix) with ESMTP id 46319207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGWSJ4 (ORCPT
+        id S1726742AbgGWSRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:09:56 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5804 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726455AbgGWSJ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:09:56 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NHrfdG021948
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:09:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=OSYQXum1ZUSOus2pzbijxGAz08dWSHRpUo7YeYxklVA=;
- b=RwS3AWQXEJlHx2XI9jFPh1C6P4Hwbm6u1YU+MSDU7J9FCmzM49Cd119lj2LI7IB9UxDa
- IICvdJvrmfc/hx9Uo+BFChHSVPX+xid6vJgDcKEHVdrcyDMeGNCn2ynoUCfb9tClHk0h
- jWQ3NVOVUs5UNNa9r8HdDY90Gp8JAxzWZF8= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32et5kwmwy-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:09:55 -0700
-Received: from intmgw003.08.frc2.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 23 Jul 2020 11:09:54 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 765E962E5064; Thu, 23 Jul 2020 11:07:00 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
-        <brouer@redhat.com>, <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 bpf-next 3/5] libbpf: print hint when PERF_EVENT_IOC_SET_BPF returns -EPROTO
-Date:   Thu, 23 Jul 2020 11:06:46 -0700
-Message-ID: <20200723180648.1429892-4-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200723180648.1429892-1-songliubraving@fb.com>
-References: <20200723180648.1429892-1-songliubraving@fb.com>
+        Thu, 23 Jul 2020 14:17:10 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29732 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbgGWSRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:17:10 -0400
+IronPort-SDR: PWMzL1apfzVz7GetJR44NNQV93E1AQ0WNwxtWaD1dcaWhRuKnHKVcI2vfAojDC3O7vroA5vTp+
+ wqLYU9fE5qRg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130673160"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="130673160"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 11:17:09 -0700
+IronPort-SDR: EUSG2qZA47jvxA+IO9sAgZj9nktgV7zdzP8xaw40VkuBXsUWbYTYqnhq3GqVfxTbviKZvmtLpH
+ D+BJwXfmkSgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="311128920"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 11:17:08 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jyfmG-0000ZW-2u; Thu, 23 Jul 2020 18:17:08 +0000
+Date:   Fri, 24 Jul 2020 02:16:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ ec0160891e387f4771f953b888b1fe951398e5d9
+Message-ID: <5f19d418.yOFiRAl8YMgbhNYB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- impostorscore=0 phishscore=0 adultscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 bulkscore=0 clxscore=1015 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007230132
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel prevents potential unwinder warnings and crashes by blocking
-BPF program with bpf_get_[stack|stackid] on perf_event without
-PERF_SAMPLE_CALLCHAIN, or with exclude_callchain_[kernel|user]. Print a
-hint message in libbpf to help the user debug such issues.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
+branch HEAD: ec0160891e387f4771f953b888b1fe951398e5d9  irqdomain/treewide: Free firmware node after domain removal
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
+elapsed time: 1165m
+
+configs tested: 74
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- tools/lib/bpf/libbpf.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 846164c79df1c..484e50d49a4cf 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -7833,6 +7833,9 @@ struct bpf_link *bpf_program__attach_perf_event(str=
-uct bpf_program *prog,
- 		pr_warn("program '%s': failed to attach to pfd %d: %s\n",
- 			bpf_program__title(prog, false), pfd,
- 			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
-+		if (err =3D=3D -EPROTO)
-+			pr_warn("program '%s': try add PERF_SAMPLE_CALLCHAIN to or remove exc=
-lude_callchain_[kernel|user] from pfd %d\n",
-+				bpf_program__title(prog, false), pfd);
- 		return ERR_PTR(err);
- 	}
- 	if (ioctl(pfd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
---=20
-2.24.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
