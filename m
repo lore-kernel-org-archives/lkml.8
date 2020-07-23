@@ -2,33 +2,34 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B311C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38461C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F25C2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125482080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XZHnjFZ2"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="lDfeis9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgGWOGX (ORCPT
+        id S1729413AbgGWOGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:06:23 -0400
-Received: from mail-dm6nam10on2044.outbound.protection.outlook.com ([40.107.93.44]:9921
+        Thu, 23 Jul 2020 10:06:33 -0400
+Received: from mail-dm6nam10on2088.outbound.protection.outlook.com ([40.107.93.88]:22432
         "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727068AbgGWOGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:06:22 -0400
+        id S1727111AbgGWOGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:06:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AtvYxdex/rHheVSekVNTf3j3ZGXkXbnBCGZXXSOYzUnve199o1b1EXaf++Few5FxlNYuJ2+cP6GnlO5NF2G7cRkif44YpoEFbxYcCNOMSAK9UeiwjbpHCVsvnL1yx8vAP2OxL5zslF2P0Zioxm9Ub4yMHsDLZWVf4/s79tEXZ0SN/wU2hxP7jjJrstZk8l2ZR9a5qVrye2j18oi6gYT0c+rjKzIAE977ID+jj25CZ8ifA9c79FBs9GbeNpz9BGFiyqDN1GpaV9LHClEjXcjMnp0z57pMyx2odT0+FRMp28wgoqCtF+byq2OztJ6YMeuTWt6eah7ryzAzX/W2JpEZ1Q==
+ b=iwh3BcFlFOKeJhKiXlg8X/vQuWr65i5oNLPQajYn0C0/OgAqQB1o7vc+F6bYAK65Vzpkj1oYxHNManIndFH9HbQJ0lpAWVbZ73vmzsQULNbBiFc6HdIkR+Nr4poGE0pMMY29YW6nU8SF3cqkJ5EXiTviL0LNb+EvqKs6FlvUCms1b0t+K+Bwa1Ho4gB9bm7qYLMlwnh5aMbM6qntD9lluXcRF3O6tdgfcq6UEGn0ojf6bHVaEvMVyAg6qSFll4viGmQPS9AzZom9TmE1oQohuhSf6kJBnk1N9Apv9usCNRIZu4pMAai0SAcuXFdV91qPynFYcauZRO2xSr4+2HG2qw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rf68Rav7mtA+jNyyMbvxRsOL+YGXtQH4gk+arAcCnhs=;
- b=KprH8DClToz+ccrPxNIQ1LuQWcfj7jy5DvS2io9QLSVrThlCZxrL3j6gNPBitM3JV+VdA61c2K+UAeVfrdU8bP8P5M7W35mJO8k3gQOwesmIQjL7rWeF/qX8yPEUXjL0HA3kA1uK8rnUcb3U4Mrmud6xCR0Iua+Iq9aa5+TMB57DVzyEeghgyw597ROT8Sc1CJWkixJmrChrLUObOHWM5ODFCDR6xnbbHIFDdbCPFE6fBeO2pfhw5LYnUPu+QTTTK5VNvNeMH/PdKaPweBjTpWoyOAF01XPgE8ITbw5OSk5flrS64WIilNBTNGtcM24/drWIMqcBzAb/uf8mQPg2Rg==
+ bh=ywkMrig5SSgN6/sqmk4HzYAND1AgcJ2iPorIfTQ34iw=;
+ b=Zjn4EnWt/nG8LGM5YLnHSR/ccy2zjTh3FQvPYvPAT1SjHMnBctxb24fvonidkf8KVvS1e9lHs12OH4cmtIiYLNNws1Z5rkVKbmuMDzB0IEZltZ8K7QC6z97IV1P/TbvpMMTIoIHLw/jjM5SNogJ6giol00N/KG3n71pelnLqfuAUh+bg+fah9ovot3UBs0YsR6iPKSw8O75LHMs52WCDd6CFXXE/8rGWMB40EFByJCREGwfYHLuJ/hXPafvmkPiK+DE6CyrBsf5dh5/QnKDgamVJgVpSDHr80NTOy7Ok/ySOXpY/WC3tY7z+aFzBmtq1SFPon2p4crUd3v112AyCag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -36,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rf68Rav7mtA+jNyyMbvxRsOL+YGXtQH4gk+arAcCnhs=;
- b=XZHnjFZ2tYIgmm0Rq10r5ghdTlKmYU5KbdHKx1TZOI7wpnbvm0uD2cr/e4PslkXwmAsMw9Kp7pvCals1VhrvQY9ov0sUBpwobVdAoUktGjCeglnjvk5lIOFdxlSVcF+qXPEjXnazSUJG7RvT/t2T31qgj27D2BjTYDrcumI6zp0=
-Received: from DM5PR19CA0002.namprd19.prod.outlook.com (2603:10b6:3:151::12)
- by DM5PR0201MB3447.namprd02.prod.outlook.com (2603:10b6:4:79::13) with
+ bh=ywkMrig5SSgN6/sqmk4HzYAND1AgcJ2iPorIfTQ34iw=;
+ b=lDfeis9+UZVRtxXibhX32gczqEqCJf9RTN5BYcGbYoiibGRlei3W/kGcVIKJNjSgYvn/hX0DlASA7MJeS3+gmzpDlZU5+Ep6yId06jf6USw+gYWNpgSOsOSnYYKm4x6HuaOboJLdiNs+ORLssxJUiUV1ZtXw8+X6kMiAC5yXHSQ=
+Received: from MN2PR05CA0039.namprd05.prod.outlook.com (2603:10b6:208:236::8)
+ by SN4PR0201MB3616.namprd02.prod.outlook.com (2603:10b6:803:4e::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Thu, 23 Jul
- 2020 14:06:19 +0000
-Received: from CY1NAM02FT023.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:151:cafe::ce) by DM5PR19CA0002.outlook.office365.com
- (2603:10b6:3:151::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend
- Transport; Thu, 23 Jul 2020 14:06:19 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Thu, 23 Jul
+ 2020 14:06:29 +0000
+Received: from BL2NAM02FT055.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:236:cafe::4c) by MN2PR05CA0039.outlook.office365.com
+ (2603:10b6:208:236::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend
+ Transport; Thu, 23 Jul 2020 14:06:29 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -56,34 +57,36 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT023.mail.protection.outlook.com (10.152.74.237) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Thu, 23 Jul 2020 14:06:19
+ BL2NAM02FT055.mail.protection.outlook.com (10.152.77.126) with Microsoft SMTP
+ Server id 15.20.3216.10 via Frontend Transport; Thu, 23 Jul 2020 14:06:29
  +0000
-Received: from [149.199.38.66] (port=56800 helo=smtp.xilinx.com)
+Received: from [149.199.38.66] (port=56968 helo=smtp.xilinx.com)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybpg-0004H5-RX; Thu, 23 Jul 2020 07:04:24 -0700
+        id 1jybpr-0004HR-0H; Thu, 23 Jul 2020 07:04:35 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybrW-0005RQ-Rj; Thu, 23 Jul 2020 07:06:18 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06NE6BHc020578;
-        Thu, 23 Jul 2020 07:06:11 -0700
+        id 1jybrh-0005To-0Q; Thu, 23 Jul 2020 07:06:29 -0700
+Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06NE6K0B004486;
+        Thu, 23 Jul 2020 07:06:20 -0700
 Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybrP-0005Q2-3E; Thu, 23 Jul 2020 07:06:11 -0700
+        id 1jybrX-0005Q2-PL; Thu, 23 Jul 2020 07:06:20 -0700
 From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
         sgoud@xilinx.com
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V2 0/3] gpio-xilinx: Update on xilinx gpio driver
-Date:   Thu, 23 Jul 2020 19:36:05 +0530
-Message-Id: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
+Subject: [PATCH V2 3/3] MAINTAINERS: add fragment for xilinx GPIO drivers
+Date:   Thu, 23 Jul 2020 19:36:08 +0530
+Message-Id: <1595513168-11965-4-git-send-email-srinivas.neeli@xilinx.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
+References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
@@ -92,59 +95,58 @@ X-MS-Office365-Filtering-HT: Tenant
 X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 34c77d85-e8f4-4e1b-cce5-08d82f119270
-X-MS-TrafficTypeDiagnostic: DM5PR0201MB3447:
-X-Microsoft-Antispam-PRVS: <DM5PR0201MB3447CFF8FCAFBCD87A7C1994AF760@DM5PR0201MB3447.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: d5f9b105-95e8-40b3-d227-08d82f11988d
+X-MS-TrafficTypeDiagnostic: SN4PR0201MB3616:
+X-Microsoft-Antispam-PRVS: <SN4PR0201MB3616680E08C50B0483627455AF760@SN4PR0201MB3616.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x/Yt9RfLe0+SipEN8BlCUOnK44OjVNI0wxx28/4Bwmp7yVRCu1aW64i8McqAHyqTWeUZpVNxdPwtXQc610uQoSZNwEj9xBUlER85UaxkOswI30hor/ePCWFupgRho8wqJStnHaXd6vEVzeALLGeIAOJ2PPh/WWDED5Z14M27/Qx1fH9ELbWlJY9l1yVO8fBrCR9EipJknYPbi/1GSt8ZISAllKJbSD1J6PhVq3hVBd8VDEdBWKl8ey+J2TkJXDx/pdKFL0pt+EHRCxcO8o4iWCiMSRH+M3ixRThy6ETb/Gl7zQltznfsCxzsj0Hl3fAvIR+XRI7hUTIVKUoz/Wk7LCg++P9iF3E/exSapTkriaEWCf0VGG8jYREL4D/5KMz61jOoHKCGEXQ2puDGlzvMd1ZuRWO0vLMuIZpP1V5zQ54=
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(396003)(39860400002)(46966005)(47076004)(8676002)(316002)(426003)(356005)(82740400003)(5660300002)(26005)(81166007)(2616005)(70206006)(70586007)(6666004)(478600001)(186003)(336012)(6636002)(8936002)(15650500001)(36756003)(83380400001)(107886003)(4326008)(9786002)(7696005)(2906002)(44832011)(82310400002)(4744005)(42866002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Jqv9787RC4TI3u7wi3TlNfXgoThYZ/W12FYCsFWDTA9vFYOWoaFlmVNm6QvGzmHKCIZCsLtd79MpXcXXQq8ibN+H80d4zFShF8YUGl0WCFoV7dzRfM95wKp/41Pqqx9zHze7l0U/iqPtCzMPilG/Ls+KW31CPlNBP8HrRre7JbZv5VnBvZx0WpuN2s5t7CPkM1rzcwVsd8oGtvc6fQmTjPMDWqyUBIZyKqkdf0o7eQXEXg8vUr7nnqOE4YS/zA3yNCBjtgocQ5fHC2buMFjkfaLyQT7UorJ9tztDAfPXBbBMyF7Te2ZiUZM/WDq01THgXHQuLb2dKZVrjsZ9KM2aVXX/nP2a/5OuO4Edb19RL35Lwjp2mqHC7ww3TegHBIRSf4rAmGE3rnDgax/44AiiIA==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(396003)(39860400002)(46966005)(107886003)(336012)(81166007)(2616005)(70206006)(82740400003)(47076004)(44832011)(70586007)(186003)(26005)(9786002)(4744005)(6666004)(8936002)(356005)(6636002)(7696005)(478600001)(2906002)(82310400002)(426003)(5660300002)(36756003)(8676002)(4326008)(316002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 14:06:19.0670
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 14:06:29.3235
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34c77d85-e8f4-4e1b-cce5-08d82f119270
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5f9b105-95e8-40b3-d227-08d82f11988d
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT023.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT055.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0201MB3447
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3616
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series does the following:
--Add clock adaption support
--Add interupt support
--Add MAINTAINERS fragment
+Added entry for xilinx GPIO drivers.
 
-Changes in V2:
--Added check for return value of platform_get_irq() API.
--Updated code to support rising edge and falling edge.
--Added xgpio_xlate() API to support switch.
--Added MAINTAINERS fragment.
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 ---
-Tested Below scenarios:
--Tested Loop Back.(channel 1.0 connected to channel 2.0)
--Tested External switch(Used DIP switch)
--Tested Cascade scenario(Here gpio controller acting as
- an interrupt controller).
----
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-
-Srinivas Neeli (3):
-  gpio: xilinx: Add clock adaptation support
-  gpio: xilinx: Add interrupt support
-  MAINTAINERS: add fragment for xilinx GPIO drivers
-
- MAINTAINERS                |  10 ++
- drivers/gpio/Kconfig       |   1 +
- drivers/gpio/gpio-xilinx.c | 404 ++++++++++++++++++++++++++++++++++++++++++---
- 3 files changed, 395 insertions(+), 20 deletions(-)
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea296f213e45..71c40b0ddef6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18900,6 +18900,16 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/net/can/xilinx_can.txt
+ F:	drivers/net/can/xilinx_can.c
+ 
++XILINX GPIO DRIVER
++M:	Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
++R:	Srinivas Neeli <srinivas.neeli@xilinx.com>
++R:	Michal Simek <michal.simek@xilinx.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
++F:	Documentation/devicetree/bindings/gpio/gpio-zynq.txt
++F:	drivers/gpio/gpio-xilinx.c
++F:	drivers/gpio/gpio-zynq.c
++
+ XILINX SD-FEC IP CORES
+ M:	Derek Kiernan <derek.kiernan@xilinx.com>
+ M:	Dragan Cvetic <dragan.cvetic@xilinx.com>
 -- 
 2.7.4
 
