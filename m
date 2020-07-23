@@ -2,126 +2,131 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B62C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0589C207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F51B207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8jN0+bL"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="lIe/aXUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgGWNez (ORCPT
+        id S1729319AbgGWNfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40820 "EHLO
+        Thu, 23 Jul 2020 09:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgGWNey (ORCPT
+        with ESMTP id S1727123AbgGWNfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:34:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C06C0619DC;
-        Thu, 23 Jul 2020 06:34:53 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id j18so4978167wmi.3;
-        Thu, 23 Jul 2020 06:34:53 -0700 (PDT)
+        Thu, 23 Jul 2020 09:35:41 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DEEC0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:35:40 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id n5so3113113pgf.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:35:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zZ5AbTmRi6SKRjj5jh6jgspAZ8rlBVrCJiQnAL/REKc=;
-        b=d8jN0+bLE7DW9ROZe/xGQcyl45MyiLs5bAqePU0cxQUpbV5sUx2Exr4doXTWBj9NRF
-         dZCrzZeLTWa/xhrb+UlwSMK5QAZiZBuWhAFH24H9nMac+YuXHlbsamRL5vsjx4Q4yaM8
-         ZNGkXapNAu/PAiOCK1mxAlX2uuXKK3QD1MrB5vUWdHB8KG2Qg6g9aaA0yD+kpwa3WrkI
-         eqYJZR8/oep/KXvVumH+Uufjky+VnIoVjiJRKflGkhbtva/JryX6rhvx5zaNpzkzWqzp
-         YiN0inWSvVsG2nHAD1DEbylUI5hzHq+0H/ekg7sKQ4xE9wBqMiegGgHpL8M5tFhTT/9y
-         H8ig==
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=cwVPi0Cn4h2WH4C8S19ASg8aJejy3Y+/nEhD+9llv+M=;
+        b=lIe/aXUucMOPiz/OXbLJLoTNdmO8U6F//K4bpATeZ7Qvr1NHKFxbt/BidSit7gvdZ4
+         jGbUgla6NmnrChfi+XoPbf8qsFRE6R0Xw5CmRO6x5C6GTWuHa8TRw6xIcbRAj9kMX5xC
+         Opa8OYI/qeofN7ancNGl5hhstiUdnWZIkfLL8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zZ5AbTmRi6SKRjj5jh6jgspAZ8rlBVrCJiQnAL/REKc=;
-        b=kk1mO2TgiiarqSjbQjN4Jw+y+uhTVq6cMjdOmg7UDnTacsPgQN5XCqe0ndzpvysvVk
-         0nz6lHxzKei5y6SVBZy1YlQCrlD1WOSgPtu4ndKKk040ZlpQPQRhOzHp1zgJPtdoJmuH
-         V2fsmjbpR/Ycok/6EaY7LPRwfttdbGPT4GWCoYV0krIVgPMfriJIytGg8M0IGL3mutXE
-         2thXIXMi5nWE+449YAh9IrFnkMYmX72Imowd7sV9PtFCJhZaj5LZ7Hd91pkT497POlCT
-         dhcyztD2WBcldg1hp7RM4joy82Aub0sxzkB2kfpb2EOAbSqN2uZqwytB6T2NMOLnXCnd
-         sHMQ==
-X-Gm-Message-State: AOAM530wz0OZVF5gfzyt/ung0YCa40YocXslqpTCcxwa9PHqU/6eiC59
-        k7hFnkn+m7LSi427p7H8AnPJ54Tro6xLhTb0ihua9m6r
-X-Google-Smtp-Source: ABdhPJxSQ5Rc5LXMXXqQgZOhc78GrmT88M9AV/Oyw196T+QQbWFOWsH3ZrYwCKGRHKbR9w2pZwrVj1aRey4/YgZ/fqo=
-X-Received: by 2002:a1c:2:: with SMTP id 2mr4266406wma.79.1595511291877; Thu,
- 23 Jul 2020 06:34:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=cwVPi0Cn4h2WH4C8S19ASg8aJejy3Y+/nEhD+9llv+M=;
+        b=j3JMaeAmOyibfzUTdHtvTGrY3HyvHqghTyaQQWhstbkSENVm8tJONjZVV8UAk7IDme
+         i/cEBM1IaGA3a3hQldcNU9E1eQ5xlSbuxTDZphNJlMBFGlV0flvrMuXZP3FHwovFUTzk
+         z/MFCDWkqz7K1OF2/9sxvrPN6K+A78D6+fNwLhAwvPHzLCdTZoH2sij2XMO3P7LaK7UL
+         lufuhkZr5naa2H402XsqQOy/JXlupTW9VeT9we7AClzgMbBVNj8Wqe4hcduliE08fjwZ
+         jECn5IIDu22dCkmmlmSeMfQeJAnRcv3wzszPi1DJeRT/uA9VrIY+q5TW6T+4YSgwFmLG
+         7szQ==
+X-Gm-Message-State: AOAM5321ZJIU5wdQNCZJZDHSxP5zy6YygrlNu93Psk0XjwDxdTMe6DUJ
+        S2uLWrCpHRJLyjmKF16HQ/lD1w==
+X-Google-Smtp-Source: ABdhPJwpmaoVdBtL1TggEkAp2g7fzQLYdBpNl5qWeNK/pKx/DYAV+TaVosTRobJq28Geqe135bCZpw==
+X-Received: by 2002:aa7:930b:: with SMTP id 11mr4359011pfj.320.1595511340121;
+        Thu, 23 Jul 2020 06:35:40 -0700 (PDT)
+Received: from localhost (2001-44b8-111e-5c00-8915-8b02-da60-7583.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:8915:8b02:da60:7583])
+        by smtp.gmail.com with ESMTPSA id b82sm3064805pfb.215.2020.07.23.06.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 06:35:39 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hughd@google.com
+Subject: Re: [PATCH 2/5] powerpc: Allow 4096 bytes of stack expansion for the signal frame
+In-Reply-To: <20200703141327.1732550-2-mpe@ellerman.id.au>
+References: <20200703141327.1732550-1-mpe@ellerman.id.au> <20200703141327.1732550-2-mpe@ellerman.id.au>
+Date:   Thu, 23 Jul 2020 23:35:36 +1000
+Message-ID: <87blk6tkuv.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-References: <20200722143417.42b52c73@canb.auug.org.au> <CAKMK7uGZ4qdtkD6r_RzRUiEXrumkdAwENuKfKmfsuscQZtkWqA@mail.gmail.com>
-In-Reply-To: <CAKMK7uGZ4qdtkD6r_RzRUiEXrumkdAwENuKfKmfsuscQZtkWqA@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 23 Jul 2020 09:34:40 -0400
-Message-ID: <CADnq5_PFfVONDAQLYLpkOzL5yxdA-0zisN7xdEt6pJmP6ZfQaA@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the amdgpu tree with Linus' tree
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 4:01 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Wed, Jul 22, 2020 at 6:34 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> >
-> > [I can't find a previous email about this, sorry ...]
-> >
-> > There is a semantic conflict between Linus' tree and the amdgpu tree
-> > between commit
-> >
-> >   d7a6634a4cfb ("drm/amdgpu/atomfirmware: fix vram_info fetching for renoir")
-> >
-> > from Linus' tree and commts
-> >
-> >   fe098a5d6443 ("drm/amdgpu/atomfirmware: fix vram_info fetching for renoir")
-> >   836dab851903 ("drm/amdgpu/atomfirmware: update vram info handling for renoir")
-> >
-> > The automted git merge leaves two "case 12" labels.  I have been
-> > reverting commit d7a6634a4cfb since July 3 ... This will need to be
-> > fixed up when the amdgpu tree is next merged into the drm tree, or a back
-> > merge of d7a6634a4cfb could be done into the amdgpu tree and the older
-> > "case 12" label removed in that merge.
->
-> Yeah this is a bit nasty, I just crashed over it too (btw moved to
-> drm-next now). Alex is this the right conflict resolution for -next? I
-> think we should bake this in with a backmerge ...
+Hi Michael,
 
-Yes, you can drop either d7a6634a4cfb or fe098a5d6443.  I just
-cherry-picked the commit from -next back to 5.8 and stable since it
-was a bug fix.
+Unfortunately, this patch doesn't completely solve the problem.
 
-Alex
+Trying the original reproducer, I'm still able to trigger the crash even
+with this patch, although not 100% of the time. (If I turn ASLR off
+outside of tmux it reliably crashes, if I turn ASLR off _inside_ of tmux
+it reliably succeeds; all of this is on a serial console.)
 
-> -Daniel
+./foo 1241000 & sleep 1; killall -USR1 foo; echo ok
+
+If I add some debugging information, I see that I'm getting
+address + 4096 = 7fffffed0fa0
+gpr1 =           7fffffed1020
+
+So address + 4096 is 0x80 bytes below the 4k window. I haven't been able
+to figure out why, gdb gives me a NIP in __kernel_sigtramp_rt64 but I
+don't know what to make of that.
+
+Kind regards,
+Daniel
+
+P.S. I don't know what your policy on linking to kernel bugzilla is, but
+if you want:
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205183
+
+
+> Reported-by: Tom Lane <tgl@sss.pgh.pa.us>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
+>  arch/powerpc/mm/fault.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> >
-> > --
-> > Cheers,
-> > Stephen Rothwell
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+> index 641fc5f3d7dd..ed01329dd12b 100644
+> --- a/arch/powerpc/mm/fault.c
+> +++ b/arch/powerpc/mm/fault.c
+> @@ -274,7 +274,7 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+>  	/*
+>  	 * N.B. The POWER/Open ABI allows programs to access up to
+>  	 * 288 bytes below the stack pointer.
+> -	 * The kernel signal delivery code writes up to about 1.5kB
+> +	 * The kernel signal delivery code writes up to 4KB
+>  	 * below the stack pointer (r1) before decrementing it.
+>  	 * The exec code can write slightly over 640kB to the stack
+>  	 * before setting the user r1.  Thus we allow the stack to
+> @@ -299,7 +299,7 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+>  		 * between the last mapped region and the stack will
+>  		 * expand the stack rather than segfaulting.
+>  		 */
+> -		if (address + 2048 >= uregs->gpr[1])
+> +		if (address + 4096 >= uregs->gpr[1])
+>  			return false;
+>  
+>  		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
+> -- 
+> 2.25.1
