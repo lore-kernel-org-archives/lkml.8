@@ -2,188 +2,146 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B47C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDADC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1652C20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BB520771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="T8E6buZq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="l3qGB432";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="g2lA/oQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgGWQto (ORCPT
+        id S1729956AbgGWQvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:49:44 -0400
-Received: from gateway32.websitewelcome.com ([192.185.144.98]:44167 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgGWQtn (ORCPT
+        Thu, 23 Jul 2020 12:51:20 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:1790 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726621AbgGWQvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:49:43 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 153ED3B816
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:49:42 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id yePdjNyqBwgQAyePdjObvG; Thu, 23 Jul 2020 11:49:42 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=K/lvHSj27UHGEil/orLjlYSbezm47rMNNnmrp3q01GA=; b=T8E6buZqg+jVo8wVQFuEFiTo5d
-        jPxLlDT4UWBMtYabcSJsRj+MXq1V0K/eq78M5Fmv/9mpyehM2YkmO3UWtK5VzsIl3yPwciBfB5tf5
-        JYlE0/1KsBEApjrpQwU5KnE6w8QkDtlCmVR3fXpto/juUsRbHDtjeyP9acxyTTdt6rbwWJ2TnGMH5
-        UcIs/EWWftryTgeSduT9L4lfkXAlIDs9gru1SzEWfXditQ/VadYeXe72zezElyQ9KtB3O2F9yzW2r
-        TyOHwam0I7WTP1RWXoYbiBOiEVKOrRJBWdYENHwNQjKU2pqzhecaOr/gHb3moXrVTUHkVH5qB9ZNQ
-        kYPh3MJw==;
-Received: from [201.162.245.27] (port=42564 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jyePd-0040lv-9T; Thu, 23 Jul 2020 11:49:41 -0500
-Subject: Re: [char-misc-next 2/6] mei: ioctl: use sizeof of variable instead
- of struct type
-To:     Tomas Winkler <tomas.winkler@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20200723145927.882743-1-tomas.winkler@intel.com>
- <20200723145927.882743-3-tomas.winkler@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzStHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvYXJzQGtlcm5lbC5vcmc+wsGrBBMBCAA+FiEEkmRahXBSurMI
- g1YvRwW0y0cG2zEFAl6zFvQCGyMFCQlmAYAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AAIQkQ
- RwW0y0cG2zEWIQSSZFqFcFK6swiDVi9HBbTLRwbbMZsEEACWjJyXLjtTAF21Vuf1VDoGzitP
- oE69rq9UhXIGR+e0KACyIFoB9ibG/1j/ESMa0RPSwLpJDLgfvi/I18H/9cKtdo2uz0XNbDT8
- i3llIu0b43nzGIDzRudINBXC8Coeob+hrp/MMZueyzt0CUoAnY4XqpHQbQsTfTrpFeHT02Qz
- ITw6kTSmK7dNbJj2naH2vSrU11qGdU7aFzI7jnVvGgv4NVQLPxm/t4jTG1o+P1Xk4N6vKafP
- zqzkxj99JrUAPt+LyPS2VpNvmbSNq85PkQ9gpeTHpkio/D9SKsMW62njITPgy6M8TFAmx8JF
- ZAI6k8l1eU29F274WnlQ6ZokkJoNctwHa+88euWKHWUDolCmQpegJJ8932www83GLn1mdUZn
- NsymjFSdMWE+y8apWaV9QsDOKWf7pY2uBuE6GMPRhX7e7h5oQwa1lYeO2L9LTDeXkEOJe+hE
- qQdEEvkC/nok0eoRlBlZh433DQlv4+IvSsfN/uWld2TuQFyjDCLIm1CPRfe7z0TwiCM27F+O
- lHnUspCFSgpnrxqNH6CM4aj1EF4fEX+ZyknTSrKL9BGZ/qRz7Xe9ikU2/7M1ov6rOXCI4NR9
- THsNax6etxCBMzZs2bdMHMcajP5XdRsOIARuN08ytRjDolR2r8SkTN2YMwxodxNWWDC3V8X2
- RHZ4UwQw487BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJBH1AAh8tq2ULl
- 7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0DbnWSOrG7z9H
- IZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo5NwYiwS0lGis
- LTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOPotJTApqGBq80
- X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfFl5qH5RFY/qVn
- 3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpDjKxY/HBUSmaE
- 9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+ezS/pzC/YTzAv
- CWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQI6Zk91jbx96n
- rdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqozol6ioMHMb+In
- rHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcAEQEAAcLBZQQY
- AQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QSUMebQRFjKavw
- XB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sdXvUjUocKgUQq
- 6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4WrZGh/1hAYw4
- ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVnimua0OpqRXhC
- rEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfgfBNOb1p1jVnT
- 2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF8ieyHVq3qatJ
- 9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDCORYf5kW61fcr
- HEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86YJWH93PN+ZUh
- 6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
- rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
- AP7RWS474w==
-Message-ID: <992a5bd7-f8c6-c5ea-3531-65e2785f96a6@embeddedor.com>
-Date:   Thu, 23 Jul 2020 11:55:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200723145927.882743-3-tomas.winkler@intel.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Jul 2020 12:51:19 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NGihbU025252;
+        Thu, 23 Jul 2020 09:50:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=veAKbFJuW0EIZJ9f0wwiqngzzZFMLettvWEXNy9Dafw=;
+ b=l3qGB43253E6+F9Hqr9XUklaekKjZvcPSyCM6DC+SPgM63lGZcN+oCLIPbYUH4Z3zneR
+ afTXottWkNLyQxHv3RoZQPJrB+xzvNQJEDLb9K+9578NeBENagVhxmDKTAr+JkXgY2e2
+ 3VOEbYGbZN6Smguu03WMY3N2EcmEpzLUhPXrI+V2okSlEnGGGx1f4UwVJUj/HC95NGrM
+ XVZjTNsR60UkQwhRSejg1WudCErTPK+vk/cte4KzbgbA9Aif7AhkfpiAcatQ5kEtUJ/v
+ wN7hamAzFR18NibxP8L7+H+SkqscTw9B1kcydFGx8r/x7IJ7EbGBsqqsRcZ2fsPnM7ls rA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 32bxenxqvh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 09:50:40 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul
+ 2020 09:50:38 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Thu, 23 Jul 2020 09:50:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UV3QtKFjJv/YFGvV3/ken3HrAlSSNBG0gSz8LNXOE0UMfk+gU0ACCQJBq+C2ocRYd7ibXItIsUKvYxwWWXMFkRTMXOpj1+5ILBqomItQr2x/MxAK1aS5d2TzAxc58Zqo2IUw/4jbxocXYxsZFtA3OilVcqtHJ3wUV6+H1a57cP/1TGIr9c8gx9JA9vYahXNsWJM1xbngHcGkEFPRfeFmHn0+wEbM4bOqZOngoU740yXBCmrQa/FK4aEjveNGiQZL2itkj1p7FFXASZHLjzjsSqfxC7I27uxHAREPCLYKxmQo5eGZLq+ap/mDg5gaEM78PjP49DnHLxKoW5SUuCwTaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=veAKbFJuW0EIZJ9f0wwiqngzzZFMLettvWEXNy9Dafw=;
+ b=EPRSfvY5bG0GUknBNwSaJKjbHv/51I2MGBaUH2wNmlNDvh5sUjWVRF8trMTqBzjZfsb1sRLgbGw3Fv+MTi/H44QYAR7I3/6K5R/XoUZZKt6Ph5Ls6/2ePFogrfz7Z3v/nxdKQ48ldXhk486nSkcym8bBmUG3hq2Y+qowZs7x7FUpAiXijCENGFPJNJu0296K3dy+7WFPFtBr0tqB3X/8tTAVbSAbkwnX9FyeInzhem5JtRYCN+7YhOD45T/70IqW83hD8RcpfUSI8xj6PR16BrTdTYs9ZLZuS15WD3Zw15AN/bfeRlIvebhYOVbvUBL/Fkok/CRygMt4BD9Y36nWeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=veAKbFJuW0EIZJ9f0wwiqngzzZFMLettvWEXNy9Dafw=;
+ b=g2lA/oQzIMVr7X+ura20AJS0QpumpAyZoBmLK73OqvFaw+/c/5agCrvT6gSNkmTed2l45bI779NOrHJLCnDywQOp9vo8gn5qQ4INMKTyVA4PRsSMWCAvBJWa9Sc404ixsEhnpH0Hlos9imwhK9zVYvQ6BrRIwejLcS3tRXQPMkk=
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com (2603:10b6:907:3::11)
+ by MWHPR1801MB2046.namprd18.prod.outlook.com (2603:10b6:301:61::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
+ 2020 16:50:37 +0000
+Received: from MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32]) by MW2PR18MB2267.namprd18.prod.outlook.com
+ ([fe80::b9a6:a3f2:2263:dc32%4]) with mapi id 15.20.3195.026; Thu, 23 Jul 2020
+ 16:50:37 +0000
+From:   Alex Belits <abelits@marvell.com>
+To:     "peterz@infradead.org" <peterz@infradead.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "frederic@kernel.org" <frederic@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 00/13] "Task_isolation" mode
+Thread-Topic: [PATCH v4 00/13] "Task_isolation" mode
+Thread-Index: AQHWYQSN+bm+zChO70Wsfble6+WsKakVT66AgAARDwA=
+Date:   Thu, 23 Jul 2020 16:50:37 +0000
+Message-ID: <3ff1383e669b543462737b0d12c0d1fb7d409e3e.camel@marvell.com>
+References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
+         <87imeextf3.fsf@nanos.tec.linutronix.de>
+         <831e023422aa0e4cb3da37ceef6fdcd5bc854682.camel@marvell.com>
+         <20200723154933.GB709@worktop.programming.kicks-ass.net>
+In-Reply-To: <20200723154933.GB709@worktop.programming.kicks-ass.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.245.27
-X-Source-L: No
-X-Exim-ID: 1jyePd-0040lv-9T
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42564
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 28
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [173.228.7.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0a52b9d7-8fc8-4952-adac-08d82f288659
+x-ms-traffictypediagnostic: MWHPR1801MB2046:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR1801MB204627D0370580789527BDFABC760@MWHPR1801MB2046.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +3+RdEW/7j8dbt0nz55+IHF6zrWvohSNewljlzdL5UWdm+f7FKFNLVuZDscQ1U/ifSkP2+sgXOojhGdGPeip7kFEidFPHIv6J0hpRDjA1VR44iqhJGaapFTBjMn6bBxLfBBv0QkDa6WwqEcyDNnWTaMJzBwHORGySkt9xnrQ+1N74zZUJtJUPuEorYe6KhWlI/mbpKLR9Klo3FKv9z7S3GyOd0eypEq4BTg3XRL+U/uRCwiGs2yeMTz6PFTyGLTk9EHp8mwXwrP2kCxvyoY6MwgDaUCP1eVFioNVRt+XCndPwibeHCv7ufOqd6izWxCFbmBoOP/5Seel6Pe8rHQOuA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2267.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(136003)(376002)(396003)(39850400004)(2616005)(26005)(478600001)(6506007)(186003)(6486002)(66476007)(64756008)(66446008)(66556008)(83380400001)(71200400001)(8936002)(4326008)(316002)(6916009)(86362001)(7416002)(54906003)(4744005)(76116006)(5660300002)(36756003)(6512007)(66946007)(91956017)(8676002)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: mKLbLh2Kc5LOf9uYMmM58rjDKzfQm5tagA+enwZ04GZQ0BZ05dgd6umTAet05Z0HEs7e6/h/Z1PUt+zM82VUAsB4PRJedKJTC3tKjCH4IFj+HDzupTuDSmuMLqMa82p/lgRuVVegFNj5UbBvVSTGNRfMlV4jrKyMmx9V1dSNFt2z+teFjJCQ+oIpDPaLOoaCchYvDBCT+/gJOte0sqY/Fzov7I4N+QUwL7I1WjzIdtAdh+HWP4F9gPYkSgY1SapJSYCRAEc5ZHpX2pmolgBI7tv4vSE80h0+8IYbH6nBGtREYAkAlL7f9IAH5IyEsoiS6ODShBAlz6ILV+K0KQloTc7qRhe3Q5VqLav45gS/1n2s2JJiigjBv5zthzs7E20b7WtLlCqSwg+XMZOwH0+rudjrThPNNt7kWBzzsqWxYTUxlsrJpYGOsrt4EuJRYI3S3ky3LDQlMpB8IzptuANLQVqqdhZNW9WYdMIaFNn9rrA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BCCF4D921554A94295135240AB2C05F4@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2267.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a52b9d7-8fc8-4952-adac-08d82f288659
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 16:50:37.0497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3OWOp6S0u844rKRNbJ36wZ8v1VtmNRcSwniRk20YBoyFKmlUgeGMoRduo8boi+KLY1ZciACKa6cCEavac+sK1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1801MB2046
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/23/20 09:59, Tomas Winkler wrote:
-> Use sizeof(connect_data))) instead of
-> sizeof(struct mei_connect_client_data) when copying data
-> between user space and kernel.
-> 
-> There is a possibility of bug when variable type has changed but
-> corresponding struct passed to the sizeof has not.
-> 
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
-> ---
->  drivers/misc/mei/main.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-> index f17297f2943d..05e6ad6d4d54 100644
-> --- a/drivers/misc/mei/main.c
-> +++ b/drivers/misc/mei/main.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (c) 2003-2018, Intel Corporation. All rights reserved.
-> + * Copyright (c) 2003-2020, Intel Corporation. All rights reserved.
->   * Intel Management Engine Interface (Intel MEI) Linux driver
->   */
->  
-> @@ -476,7 +476,7 @@ static long mei_ioctl(struct file *file, unsigned int cmd, unsigned long data)
->  	case IOCTL_MEI_CONNECT_CLIENT:
->  		dev_dbg(dev->dev, ": IOCTL_MEI_CONNECT_CLIENT.\n");
->  		if (copy_from_user(&connect_data, (char __user *)data,
-> -				sizeof(struct mei_connect_client_data))) {
-> +				   sizeof(connect_data))) {
->  			dev_dbg(dev->dev, "failed to copy data from userland\n");
->  			rets = -EFAULT;
->  			goto out;
-> @@ -488,7 +488,7 @@ static long mei_ioctl(struct file *file, unsigned int cmd, unsigned long data)
->  
->  		/* if all is ok, copying the data back to user. */
->  		if (copy_to_user((char __user *)data, &connect_data,
-> -				sizeof(struct mei_connect_client_data))) {
-> +				 sizeof(connect_data))) {
->  			dev_dbg(dev->dev, "failed to copy data to userland\n");
->  			rets = -EFAULT;
->  			goto out;
-> 
+DQpPbiBUaHUsIDIwMjAtMDctMjMgYXQgMTc6NDkgKzAyMDAsIFBldGVyIFppamxzdHJhIHdyb3Rl
+Og0KPiANCj4gJ1doYXQgZG9lcyBub2luc3RyIG1lYW4/IGFuZCB3aHkgZG8gd2UgaGF2ZSBpdCIg
+LS0gZG9uJ3QgZGFyZSB0b3VjaA0KPiB0aGUNCj4gZW50cnkgY29kZSB1bnRpbCB5b3UgY2FuIGFu
+c3dlciB0aGF0Lg0KDQpub2luc3RyIGRpc2FibGVzIGluc3RydW1lbnRhdGlvbiwgc28gdGhlcmUg
+d291bGQgbm90IGJlIGNhbGxzIGFuZA0KZGVwZW5kZW5jaWVzIG9uIG90aGVyIHBhcnRzIG9mIHRo
+ZSBrZXJuZWwgd2hlbiBpdCdzIG5vdCB5ZXQgc2FmZSB0bw0KY2FsbCB0aGVtLiBSZWxldmFudCBm
+dW5jdGlvbnMgYWxyZWFkeSBoYXZlIGl0LCBhbmQgSSBhZGQgYW4gaW5saW5lIGNhbGwNCnRvIHBl
+cmZvcm0gZmxhZ3MgdXBkYXRlIGFuZCBzeW5jaHJvbml6YXRpb24uIFVubGVzcyBzb21ldGhpbmcg
+ZWxzZSBpcw0KaW52b2x2ZWQsIHRob3NlIG9wZXJhdGlvbnMgYXJlIHNhZmUsIHNvIEkgYW0gbm90
+IGFkZGluZyBhbnl0aGluZyB0aGF0DQpjYW4gYnJlYWsgdGhvc2UuDQoNCi0tIA0KQWxleA0K
