@@ -2,171 +2,116 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC376C433F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFCC206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C/HEfOZW"
+	by mail.kernel.org (Postfix) with ESMTP id 3ECA0206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgGWM1q (ORCPT
+        id S1729011AbgGWM2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgGWMYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:24:53 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315C2C0619E2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:53 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f2so4964295wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ihdeGdGpgFkIzdF2x6is+yRXhsZbdmE+baPKtamOODg=;
-        b=C/HEfOZW2bHfFxf2HJjaIioq8YJFxQfJM9vjgsFwFUdLzkpjL8rfbLAnxrBChpmPhI
-         a0T+h39nKigPiDEkcIk7vlXAEYtuZNW5NHe6B5WJPVm95D9SOoezAGi9g2rMYu7DzLni
-         vX4jEccc5FiYXFLwoDQmOCrrVyYb0n7g05Q1mJ8l8Y7u36bdMXBzTkYNheQJ/VjntmCC
-         vVjkpHQlptkv0kJMiB8QUId2YOPfVUw91XTyYT0icpUhSoASPXCvwZcXaTJEPchLK0J3
-         FeRZQxmPx+atTDIjngKPD4MnFLwNA/NX0Och4/1FwVrMwkdWvJ69mBp6y/PLXg3kS2yX
-         NnJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ihdeGdGpgFkIzdF2x6is+yRXhsZbdmE+baPKtamOODg=;
-        b=O1VIa/BSk3qPO4IwJjDvIB5CnxzynVw4VnVImCSolIfKfZwDyUOvdHKymBx5a/KowR
-         dyzqGDyb2yB/W4JS6UZEjmnLeVJMqMsn7u12inbFQgAZ6nNh1268HS99iq3oEBI+vQ0h
-         m4oNwLw/Yfs84AFon65/XkbRX9nT4RMk5hJc+19c/QP21wAOyeiMAa6yP7GGAoVJDMTC
-         jMd1bgB1K0qrw7T/LjuRYpNNepC2PfrIWqHXMePknALMSBGuM6u9zq5VTMLo6LQUPSa1
-         MOrC+L1uLbxRJrKYyQe+GlVLXZsgJXf8/KiG2O10ZoZXp17KqZDNo1aPoOgf1zFtJt9J
-         Ewpg==
-X-Gm-Message-State: AOAM530Ks3i+gUic8LCasDk3yELO43wyETco7/Vap3XOsUOEK86jCSJw
-        8a5e3niwG5RNLM7xqtcXDL30Eg==
-X-Google-Smtp-Source: ABdhPJx/bi8f9Iyz4dlcIsq3N8F+lCeAvevX1AjO5UazBsvSxdcZAB5/UjE/vWFIW63WtnKDl3oLoQ==
-X-Received: by 2002:adf:cc85:: with SMTP id p5mr3755171wrj.273.1595507091857;
-        Thu, 23 Jul 2020 05:24:51 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:24:51 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-Subject: [PATCH 02/40] scsi: lpfc: lpfc_hbadisc: Fix kerneldoc parameter formatting/misnaming/missing issues
-Date:   Thu, 23 Jul 2020 13:24:08 +0100
-Message-Id: <20200723122446.1329773-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
-References: <20200723122446.1329773-1-lee.jones@linaro.org>
+        Thu, 23 Jul 2020 08:28:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43390 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728690AbgGWM2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 08:28:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F2008AAC5;
+        Thu, 23 Jul 2020 12:28:21 +0000 (UTC)
+Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
+ hotplug memory
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        xen-devel@lists.xenproject.org, linux-mm@kvack.org
+References: <20200723084523.42109-1-roger.pau@citrix.com>
+ <20200723084523.42109-4-roger.pau@citrix.com>
+ <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
+ <20200723122300.GD7191@Air-de-Roger>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <404ea76f-c3d8-dbc5-432d-08d84a17f2d7@suse.com>
+Date:   Thu, 23 Jul 2020 14:28:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200723122300.GD7191@Air-de-Roger>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On 23.07.20 14:23, Roger Pau Monné wrote:
+> On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
+>> On 23.07.20 10:45, Roger Pau Monne wrote:
+>>> Add an extra option to add_memory_resource that overrides the memory
+>>> hotplug online behavior in order to force onlining of memory from
+>>> add_memory_resource unconditionally.
+>>>
+>>> This is required for the Xen balloon driver, that must run the
+>>> online page callback in order to correctly process the newly added
+>>> memory region, note this is an unpopulated region that is used by Linux
+>>> to either hotplug RAM or to map foreign pages from other domains, and
+>>> hence memory hotplug when running on Xen can be used even without the
+>>> user explicitly requesting it, as part of the normal operations of the
+>>> OS when attempting to map memory from a different domain.
+>>>
+>>> Setting a different default value of memhp_default_online_type when
+>>> attaching the balloon driver is not a robust solution, as the user (or
+>>> distro init scripts) could still change it and thus break the Xen
+>>> balloon driver.
+>>
+>> I think we discussed this a couple of times before (even triggered by my
+>> request), and this is responsibility of user space to configure. Usually
+>> distros have udev rules to online memory automatically. Especially, user
+>> space should eb able to configure *how* to online memory.
+> 
+> Note (as per the commit message) that in the specific case I'm
+> referring to the memory hotplugged by the Xen balloon driver will be
+> an unpopulated range to be used internally by certain Xen subsystems,
+> like the xen-blkback or the privcmd drivers. The addition of such
+> blocks of (unpopulated) memory can happen without the user explicitly
+> requesting it, and hence not even aware such hotplug process is taking
+> place. To be clear: no actual RAM will be added to the system.
+> 
+> Failure to online such blocks using the Xen specific online handler
+> (which does not handle back the memory to the allocator in any way)
+> will result in the system getting stuck and malfunctioning.
+> 
+>> It's the admin/distro responsibility to configure this properly. In case
+>> this doesn't happen (or as you say, users change it), bad luck.
+>>
+>> E.g., virtio-mem takes care to not add more memory in case it is not
+>> getting onlined. I remember hyper-v has similar code to at least wait a
+>> bit for memory to get onlined.
+> 
+> I don't think VirtIO or Hyper-V use the hotplug system in the same way
+> as Xen, as said this is done to add unpopulated memory regions that
+> will be used to map foreign memory (from other domains) by Xen drivers
+> on the system.
+> 
+> Maybe this should somehow use a different mechanism to hotplug such
+> empty memory blocks? I don't mind doing this differently, but I would
+> need some pointers. Allowing user-space to change a (seemingly
+> unrelated) parameter and as a result produce failures on Xen drivers
+> is not an acceptable solution IMO.
 
- drivers/scsi/lpfc/lpfc_hbadisc.c:1209: warning: Function parameter or member 'phba' not described in 'lpfc_sli4_clear_fcf_rr_bmask'
- drivers/scsi/lpfc/lpfc_hbadisc.c:1309: warning: Function parameter or member 'sw_name' not described in 'lpfc_sw_name_match'
- drivers/scsi/lpfc/lpfc_hbadisc.c:1309: warning: Excess function parameter 'fab_name' description in 'lpfc_sw_name_match'
- drivers/scsi/lpfc/lpfc_hbadisc.c:1397: warning: Function parameter or member 'fcf_rec' not described in 'lpfc_copy_fcf_record'
- drivers/scsi/lpfc/lpfc_hbadisc.c:1397: warning: Excess function parameter 'fcf' description in 'lpfc_copy_fcf_record'
- drivers/scsi/lpfc/lpfc_hbadisc.c:1956: warning: Cannot understand  lpfc_sli4_fcf_record_match - testing new FCF record for matching existing FCF
- on line 1956 - I thought it was a doc line
- drivers/scsi/lpfc/lpfc_hbadisc.c:2078: warning: Function parameter or member 'fcf_index' not described in 'lpfc_sli4_fcf_pri_list_del'
- drivers/scsi/lpfc/lpfc_hbadisc.c:2109: warning: Function parameter or member 'fcf_index' not described in 'lpfc_sli4_set_fcf_flogi_fail'
- drivers/scsi/lpfc/lpfc_hbadisc.c:2135: warning: Function parameter or member 'fcf_index' not described in 'lpfc_sli4_fcf_pri_list_add'
- drivers/scsi/lpfc/lpfc_hbadisc.c:2135: warning: Function parameter or member 'new_fcf_record' not described in 'lpfc_sli4_fcf_pri_list_add'
+Maybe we can use the same approach as Xen PV-domains: pre-allocate a
+region in the memory map to be used for mapping foreign pages. For the
+kernel it will look like pre-ballooned memory, so it will create struct
+page for the region (which is what we are after), but it won't give the
+memory to the allocator.
 
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/scsi/lpfc/lpfc_hbadisc.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 1713349cec4f5..142a021144793 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -1198,7 +1198,7 @@ lpfc_mbx_cmpl_local_config_link(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 
- /**
-  * lpfc_sli4_clear_fcf_rr_bmask
-- * @phba pointer to the struct lpfc_hba for this port.
-+ * @phba: pointer to the struct lpfc_hba for this port.
-  * This fucnction resets the round robin bit mask and clears the
-  * fcf priority list. The list deletions are done while holding the
-  * hbalock. The ON_LIST flag and the FLOGI_FAILED flags are cleared
-@@ -1297,7 +1297,7 @@ lpfc_fab_name_match(uint8_t *fab_name, struct fcf_record *new_fcf_record)
- 
- /**
-  * lpfc_sw_name_match - Check if the fcf switch name match.
-- * @fab_name: pointer to fabric name.
-+ * @sw_name: pointer to switch name.
-  * @new_fcf_record: pointer to fcf record.
-  *
-  * This routine compare the fcf record's switch name with provided
-@@ -1385,7 +1385,7 @@ __lpfc_update_fcf_record_pri(struct lpfc_hba *phba, uint16_t fcf_index,
- 
- /**
-  * lpfc_copy_fcf_record - Copy fcf information to lpfc_hba.
-- * @fcf: pointer to driver fcf record.
-+ * @fcf_rec: pointer to driver fcf record.
-  * @new_fcf_record: pointer to fcf record.
-  *
-  * This routine copies the FCF information from the FCF
-@@ -1953,7 +1953,7 @@ lpfc_sli4_log_fcf_record_info(struct lpfc_hba *phba,
- }
- 
- /**
-- lpfc_sli4_fcf_record_match - testing new FCF record for matching existing FCF
-+ * lpfc_sli4_fcf_record_match - testing new FCF record for matching existing FCF
-  * @phba: pointer to lpfc hba data structure.
-  * @fcf_rec: pointer to an existing FCF record.
-  * @new_fcf_record: pointer to a new FCF record.
-@@ -2067,7 +2067,7 @@ int lpfc_sli4_fcf_rr_next_proc(struct lpfc_vport *vport, uint16_t fcf_index)
- /**
-  * lpfc_sli4_fcf_pri_list_del
-  * @phba: pointer to lpfc hba data structure.
-- * @fcf_index the index of the fcf record to delete
-+ * @fcf_index: the index of the fcf record to delete
-  * This routine checks the on list flag of the fcf_index to be deleted.
-  * If it is one the list then it is removed from the list, and the flag
-  * is cleared. This routine grab the hbalock before removing the fcf
-@@ -2097,7 +2097,7 @@ static void lpfc_sli4_fcf_pri_list_del(struct lpfc_hba *phba,
- /**
-  * lpfc_sli4_set_fcf_flogi_fail
-  * @phba: pointer to lpfc hba data structure.
-- * @fcf_index the index of the fcf record to update
-+ * @fcf_index: the index of the fcf record to update
-  * This routine acquires the hbalock and then set the LPFC_FCF_FLOGI_FAILED
-  * flag so the the round robin slection for the particular priority level
-  * will try a different fcf record that does not have this bit set.
-@@ -2117,7 +2117,8 @@ lpfc_sli4_set_fcf_flogi_fail(struct lpfc_hba *phba, uint16_t fcf_index)
- /**
-  * lpfc_sli4_fcf_pri_list_add
-  * @phba: pointer to lpfc hba data structure.
-- * @fcf_index the index of the fcf record to add
-+ * @fcf_index: the index of the fcf record to add
-+ * @new_fcf_record: pointer to a new FCF record.
-  * This routine checks the priority of the fcf_index to be added.
-  * If it is a lower priority than the current head of the fcf_pri list
-  * then it is added to the list in the right order.
--- 
-2.25.1
+Juergen
 
