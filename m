@@ -2,273 +2,244 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FFC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E8E206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B599820771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGWGZ0 (ORCPT
+        id S1726989AbgGWG1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:25:26 -0400
-Received: from out28-98.mail.aliyun.com ([115.124.28.98]:58460 "EHLO
-        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgGWGZY (ORCPT
+        Thu, 23 Jul 2020 02:27:24 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50629 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgGWG1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:25:24 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436651|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0284585-0.000932928-0.970609;FP=11267283304491539706|1|1|13|0|-1|-1|-1;HT=e02c03298;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.I6H7HEV_1595485508;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6H7HEV_1595485508)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Thu, 23 Jul 2020 14:25:18 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org, mpm@selenic.com,
-        herbert@gondor.apana.org.au, robh+dt@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, hadar.gat@arm.com,
-        prasannatsmkumar@gmail.com, krzk@kernel.org, masahiroy@kernel.org,
-        rdunlap@infradead.org, xuzaibo@huawei.com,
-        daniel.thompson@linaro.org, tmaimon77@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 2/2] crypto: Ingenic: Add hardware RNG for Ingenic JZ4780 and X1000.
-Date:   Thu, 23 Jul 2020 14:24:46 +0800
-Message-Id: <20200723062446.84013-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
-References: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
+        Thu, 23 Jul 2020 02:27:21 -0400
+Received: by mail-il1-f198.google.com with SMTP id l17so2796374ilj.17
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 23:27:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=qsxan2GHbh5Yt6TauSl3DTt9Ex/YOf+2LUY4AkusbFA=;
+        b=lUiWuADmwNmb59mWT/NvdtbK6fPivfec/sWlZp4zTlRcwdld9YDX2zUCzJA+mtUqa4
+         yaHpoesa0elsInzDhN3DXbiTFJBugOgcSMIXY2PLMDdD/gZJ43Y5dF+i01xYiwgr91TQ
+         FR6K0TEZ2wBAvwQ2FKhVFGJNqhOPy5CmZeh7P7QGbcyucixz7o8SI6lN+twn9zcn3Wq4
+         5F4m1K7K5YKTgxsJGMQs3pb81z70NPcnj2npPcRdNjVsecgUXYnYJ8RbPX6au7hi0e6e
+         5NQFKXY8z7y/iK93CF+HuQFVja00x02xyH/kvLb8FaTLcv6bdEl3mnvjcFDcwQpzPx8O
+         x3sg==
+X-Gm-Message-State: AOAM530IQS7KGJCsPe0ylnpl0QsrunsecInzaaYsON0vVRCthEl3obPr
+        uTrSeCyoWpkz7q1bbPHFJoymZsQLGnbQCkvZp6QCuMR81/AV
+X-Google-Smtp-Source: ABdhPJzZaTVmHoa345chVU84noFvR8WhAV9DV1Xl1RV8bl81eic6mqvPhU+o4QB7LKL78uyk15PsVbBjxsSVftOC6g81Zp04/1jM
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:dc4:: with SMTP id l4mr3710287ilj.134.1595485639187;
+ Wed, 22 Jul 2020 23:27:19 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 23:27:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c4a77205ab15f238@google.com>
+Subject: INFO: task hung in ovs_exit_net
+From:   syzbot <syzbot+2c4ff3614695f75ce26c@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add JZ4780 SoC and X1000 SoC random number generator driver,
-based on PrasannaKumar Muralidharan's JZ4780 RNG driver.
+Hello,
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Suggested-by: Jeffrey Walton <noloader@gmail.com>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+syzbot found the following issue on:
+
+HEAD commit:    a6c0d093 net: explicitly include <linux/compat.h> in net/c..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=179ee640900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2b7b67c0c1819c87
+dashboard link: https://syzkaller.appspot.com/bug?extid=2c4ff3614695f75ce26c
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2c4ff3614695f75ce26c@syzkaller.appspotmail.com
+
+INFO: task kworker/u4:3:235 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/u4:3    D24856   235      2 0x00004000
+Workqueue: netns cleanup_net
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_exit_net+0x1de/0xba0 net/openvswitch/datapath.c:2491
+ ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
+ cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+INFO: task kworker/0:5:9052 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/0:5     D27408  9052      2 0x00004000
+Workqueue: events ovs_dp_masks_rebalance
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+INFO: task syz-executor.3:21286 blocked for more than 143 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D26160 21286   7072 0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1873
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+ __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
+ __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
+ ovs_dp_cmd_del+0x18c/0x270 net/openvswitch/datapath.c:1790
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2363
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c1f9
+Code: Bad RIP value.
+RSP: 002b:00007f75a409cc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000000002b3c0 RCX: 000000000045c1f9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000004
+RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+R13: 00007ffed0e2724f R14: 00007f75a409d9c0 R15: 000000000078bf0c
+INFO: task syz-executor.3:21355 blocked for more than 144 seconds.
+      Not tainted 5.8.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D27400 21355   7072 0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3453 [inline]
+ __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4253
+ schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
+ __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+ __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
+ ovs_lock net/openvswitch/datapath.c:105 [inline]
+ ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2363
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c1f9
+Code: Bad RIP value.
+RSP: 002b:00007f75a405ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000000002b3c0 RCX: 000000000045c1f9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000004
+RBP: 000000000078c080 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078c04c
+R13: 00007ffed0e2724f R14: 00007f75a405b9c0 R15: 000000000078c04c
+
+Showing all locks held in the system:
+4 locks held by kworker/u4:3/235:
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880a97ad138 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90001847da8 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+ #2: ffffffff8a7ad4b0 (pernet_ops_rwsem){++++}-{3:3}, at: cleanup_net+0x9b/0xa00 net/core/net_namespace.c:565
+ #3: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #3: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_exit_net+0x1de/0xba0 net/openvswitch/datapath.c:2491
+1 lock held by khungtaskd/1150:
+ #0: ffffffff89bc0ec0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
+1 lock held by in:imklog/6505:
+3 locks held by kworker/0:5/9052:
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90001b17da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+ #2: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #2: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+2 locks held by syz-executor.3/21286:
+ #0: ffffffff8a817cf0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+ #1: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #1: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
+2 locks held by syz-executor.3/21355:
+ #0: ffffffff8a817cf0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+ #1: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #1: ffffffff8aa5dfe8 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1150 Comm: khungtaskd Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:209 [inline]
+ watchdog+0xd7d/0x1000 kernel/hung_task.c:295
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
+
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Notes:
-    v1->v2:
-    Use "help" instead "---help---" in Kconfig.
-
- drivers/char/hw_random/Kconfig       |  15 ++++
- drivers/char/hw_random/Makefile      |   1 +
- drivers/char/hw_random/ingenic-rng.c | 154 +++++++++++++++++++++++++++++++++++
- 3 files changed, 170 insertions(+)
- create mode 100644 drivers/char/hw_random/ingenic-rng.c
-
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 0ad17efc96df..2f5af6b9fbb7 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -257,6 +257,21 @@ config HW_RANDOM_IMX_RNGC
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_INGENIC_RNG
-+	tristate "Ingenic Random Number Generator support"
-+	depends on HW_RANDOM
-+	depends on MACH_JZ4780 || MACH_X1000
-+	default HW_RANDOM
-+	help
-+	  This driver provides kernel-side support for the Random Number Generator
-+	  hardware found in ingenic JZ4780 and X1000 SoC. MIPS Creator CI20 uses
-+	  JZ4780 SoC, YSH & ATIL CU1000-Neo uses X1000 SoC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ingenic-rng.
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_NOMADIK
- 	tristate "ST-Ericsson Nomadik Random Number Generator support"
- 	depends on ARCH_NOMADIK
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 2c6724735345..acb1a1978d23 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_HW_RANDOM_VIRTIO) += virtio-rng.o
- obj-$(CONFIG_HW_RANDOM_TX4939) += tx4939-rng.o
- obj-$(CONFIG_HW_RANDOM_MXC_RNGA) += mxc-rnga.o
- obj-$(CONFIG_HW_RANDOM_IMX_RNGC) += imx-rngc.o
-+obj-$(CONFIG_HW_RANDOM_INGENIC_RNG) += ingenic-rng.o
- obj-$(CONFIG_HW_RANDOM_OCTEON) += octeon-rng.o
- obj-$(CONFIG_HW_RANDOM_NOMADIK) += nomadik-rng.o
- obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
-diff --git a/drivers/char/hw_random/ingenic-rng.c b/drivers/char/hw_random/ingenic-rng.c
-new file mode 100644
-index 000000000000..d704cef64b64
---- /dev/null
-+++ b/drivers/char/hw_random/ingenic-rng.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic Random Number Generator driver
-+ * Copyright (c) 2017 PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+ * Copyright (c) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+/* RNG register offsets */
-+#define RNG_REG_ERNG_OFFSET		0x0
-+#define RNG_REG_RNG_OFFSET		0x4
-+
-+/* bits within the ERND register */
-+#define ERNG_READY				BIT(31)
-+#define ERNG_ENABLE				BIT(0)
-+
-+enum ingenic_rng_version {
-+	ID_JZ4780,
-+	ID_X1000,
-+};
-+
-+/* Device associated memory */
-+struct ingenic_rng {
-+	enum ingenic_rng_version version;
-+
-+	void __iomem *base;
-+	struct hwrng rng;
-+};
-+
-+static int ingenic_rng_init(struct hwrng *rng)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+
-+	writel(ERNG_ENABLE, priv->base + RNG_REG_ERNG_OFFSET);
-+
-+	return 0;
-+}
-+
-+static void ingenic_rng_cleanup(struct hwrng *rng)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+
-+	writel(0, priv->base + RNG_REG_ERNG_OFFSET);
-+}
-+
-+static int ingenic_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+	u32 *data = buf;
-+	u32 status;
-+	int ret;
-+
-+	if (priv->version >= ID_X1000) {
-+		ret = readl_poll_timeout(priv->base + RNG_REG_ERNG_OFFSET, status,
-+					 status & ERNG_READY, 10, 1000);
-+		if (ret == -ETIMEDOUT) {
-+			pr_err("%s: Wait for RNG data ready timeout\n", __func__);
-+			return ret;
-+		}
-+	} else {
-+		/*
-+		 * A delay is required so that the current RNG data is not bit shifted
-+		 * version of previous RNG data which could happen if random data is
-+		 * read continuously from this device.
-+		 */
-+		udelay(20);
-+	}
-+
-+	*data = readl(priv->base + RNG_REG_RNG_OFFSET);
-+
-+	return 4;
-+}
-+
-+static int ingenic_rng_probe(struct platform_device *pdev)
-+{
-+	struct ingenic_rng *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base)) {
-+		pr_err("%s: Failed to map RNG registers\n", __func__);
-+		ret = PTR_ERR(priv->base);
-+		goto err_free_rng;
-+	}
-+
-+	priv->version = (enum ingenic_rng_version)of_device_get_match_data(&pdev->dev);
-+
-+	priv->rng.name = pdev->name;
-+	priv->rng.init = ingenic_rng_init;
-+	priv->rng.cleanup = ingenic_rng_cleanup;
-+	priv->rng.read = ingenic_rng_read;
-+
-+	ret = hwrng_register(&priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register hwrng\n");
-+		goto err_free_rng;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	dev_info(&pdev->dev, "Ingenic RNG driver registered\n");
-+	return 0;
-+
-+err_free_rng:
-+	kfree(priv);
-+	return ret;
-+}
-+
-+static int ingenic_rng_remove(struct platform_device *pdev)
-+{
-+	struct ingenic_rng *priv = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&priv->rng);
-+
-+	writel(0, priv->base + RNG_REG_ERNG_OFFSET);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ingenic_rng_of_match[] = {
-+	{ .compatible = "ingenic,jz4780-rng", .data = (void *) ID_JZ4780 },
-+	{ .compatible = "ingenic,x1000-rng", .data = (void *) ID_X1000 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_rng_of_match);
-+
-+static struct platform_driver ingenic_rng_driver = {
-+	.probe		= ingenic_rng_probe,
-+	.remove		= ingenic_rng_remove,
-+	.driver		= {
-+		.name	= "ingenic-rng",
-+		.of_match_table = ingenic_rng_of_match,
-+	},
-+};
-+
-+module_platform_driver(ingenic_rng_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>");
-+MODULE_AUTHOR("周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>");
-+MODULE_DESCRIPTION("Ingenic Random Number Generator driver");
--- 
-2.11.0
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
