@@ -2,61 +2,63 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC2EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668CBC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F049207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4037220737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UcZbYO2t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKJuJgi3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgGWXFt (ORCPT
+        id S1728103AbgGWXFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44780 "EHLO
+        Thu, 23 Jul 2020 19:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgGWXFt (ORCPT
+        with ESMTP id S1728027AbgGWXFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:05:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00487C0619D3;
-        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id b9so3381940plx.6;
-        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+        Thu, 23 Jul 2020 19:05:51 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B918C0619D3;
+        Thu, 23 Jul 2020 16:05:51 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x72so3933038pfc.6;
+        Thu, 23 Jul 2020 16:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
-        b=UcZbYO2tukUDPc5K2c90M2NirgPVRhjzR9QGQza6coVEV+vD8vN4Nog0ApFFbosbl/
-         dG5b8aS8zz20MClvdvI0CFrZioWlWwP97Xda4pr0ydgi7Ambf+atwg9qDes0p60nHnP3
-         EiKymcj568OiA+9MakggBgSNRdxny4zwuIq3c8uB7CrfKBPDrVpIjJAw7UH3OZqb7d1C
-         uZG8Zi4DBymBaPBJnEzJd1rTJsYAzLXMV4DxhxPJzcqPlDcy2AW68C6rUKhVZS4/WLgq
-         GLjn1jUOr2sRmzobipNkiDR7RQxrHq+HSoRIs1TW1Ky2e2hl8m1VcsUQGaLLiswGh4Q4
-         gxVA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Zf3sEMsL0DPGCRUnLMz+Lz6K06ydPn+rQ+/2py+7OzE=;
+        b=oKJuJgi3jXl0gFItYfYerp5IuxM+KnI/XCd+fqR7+VKJwnwOZTDB3UxG9XC0UQsCey
+         aDPdu2Tb4JXmd/J3I3KcbxapdceIy8bznltwlbQ8vZwa9+AmhyO1CmAUB725E4bM+ONW
+         N35jTF8ny1KZpsWHE9VhjuTaL8xYOqD89qq8JhTpL7zr0v8iks0nyKknj1CGvux++7KH
+         Yidx/P7DfYyVOHv75uZniLyB3n8qhOKGM+QbYGd14sPARZXev81Aor5ml30g/SoWG/Po
+         N7VZlNg+8snGhUFW4i1OCn66fvIe7Kg4UGMo7Ox7uCWzukia7dSWj7ifSpIh1GmuPLRc
+         Q55g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
-        b=bWTAPZAsvcpRk536kQBeAY91K/0734yOxNru/0aQz/X5ecfVuCtEf85ZCvK1Du4JzP
-         hmz8UvxUMqVtrlznG5UOSSuWIRqw5ATFsSxo6j6KpKxp7Gy2eepAv/t3DcH1IGzGljkM
-         dlKhkGz5KvZWy76M5ydPAdMyR+ag/FMYc2KF76AtUOLS5azlRJ4Tz2plaTbP2WuEicz3
-         Hk2Cx7rlqwJ1VD91+ste4A53uu7/NsyQiWXiypr6wpu7g633gqIx4ZD4qBwcfMnUMKBK
-         XPOUVHxO2uM8DFdVtEEqI5Dc6PadDY6QKBq3MmGSTabim8/QXPUHoqxdlIyxCM81p/Wv
-         LZZw==
-X-Gm-Message-State: AOAM531bie8X76rgQBFn1QMJ87cbd/WRsfUILzaTitKiutqFky5gXMi3
-        +pLa0LOhfEz/BWzCuaFiOy+8R4hJkQc=
-X-Google-Smtp-Source: ABdhPJw6b+CjqeczL6p7Kx1ZCNCp9dSoVlVCajK91Ff4+2KvkMLg88KX9mwSw72NK+D3DT3J0d0/xw==
-X-Received: by 2002:a17:902:d211:: with SMTP id t17mr5914972ply.106.1595545548328;
-        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Zf3sEMsL0DPGCRUnLMz+Lz6K06ydPn+rQ+/2py+7OzE=;
+        b=XXZt/2YzoyE4slaTWi/d8WEpzqVcnpJ7Vgi4fJlevv+v6z20ht+mz67dt/w9D88xsM
+         O1jTjafKFBTpa7eBhBRr0JXhoqzJh1+6LVo1VRFdH66Iq8YAznyE5uU+jD3qRu15+VUv
+         UhtXLwyyp1x7277KYagoQ2GZXSA/fh8Xbo6V3wEha9f4PFSAPbm/g15DGahCOcBCjPG0
+         YkVbqrXFUhTnwwF8lnSrzHi7OvH6GtcowOucXBCSXDwkwQ7GQjyBanMm2zXQ/DZGGArg
+         sdQ5lYBot5h3Ug0Oqzz4XorPifgLlggS+B3Afxv9osOo80/lGY62gt2JhQPP1FNZZxDh
+         h+kA==
+X-Gm-Message-State: AOAM5329Z6UPbGDrR32x5s8Wy3Sb94y1qOx81mm6LpdvyUA1QJXFMa5C
+        mFc9IZb0wTubBWu5SwFG+qc=
+X-Google-Smtp-Source: ABdhPJzSr/qRS6pTZToh9J+O+BKWXJaU9VYurAj++Srk/ErDDZN8/HehZ/qFCw5K6+UHcK0Q1jzQfQ==
+X-Received: by 2002:a05:6a00:782:: with SMTP id g2mr6316942pfu.126.1595545550863;
+        Thu, 23 Jul 2020 16:05:50 -0700 (PDT)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id gn5sm3644742pjb.23.2020.07.23.16.05.46
+        by smtp.gmail.com with ESMTPSA id gn5sm3644742pjb.23.2020.07.23.16.05.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 16:05:47 -0700 (PDT)
+        Thu, 23 Jul 2020 16:05:50 -0700 (PDT)
 From:   rentao.bupt@gmail.com
 To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
         Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
@@ -64,10 +66,12 @@ To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         openbmc@lists.ozlabs.org, taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 0/3] ARM: dts: aspeed: fixup wedge40 device tree
-Date:   Thu, 23 Jul 2020 16:05:36 -0700
-Message-Id: <20200723230539.17860-1-rentao.bupt@gmail.com>
+Subject: [PATCH v2 2/3] ARM: dts: aspeed: wedge40: enable adc device
+Date:   Thu, 23 Jul 2020 16:05:38 -0700
+Message-Id: <20200723230539.17860-3-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200723230539.17860-1-rentao.bupt@gmail.com>
+References: <20200723230539.17860-1-rentao.bupt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,24 +79,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-The patch series update several devices' settings in Facebook Wedge40
-device tree.
+Enable adc controller and corresponding voltage sensoring channels for
+Wedge40.
 
-Patch #1 disables a few i2c controllers as they are not being used at
-present.
+Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+---
+ Changes in v2:
+   - Nothing changed. Resending the patch just in case the previous
+     email was not delivered.
 
-Patch #2 enables adc device for voltage monitoring.
+ arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Patch #3 enables pwm_tacho device for fan control and monitoring.
-
-Tao Ren (3):
-  ARM: dts: aspeed: wedge40: disable a few i2c controllers
-  ARM: dts: aspeed: wedge40: enable adc device
-  ARM: dts: aspeed: wedge40: enable pwm_tacho device
-
- .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 42 +++++++++++++++----
- 1 file changed, 34 insertions(+), 8 deletions(-)
-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+index aea23c313088..1049cfa80ac2 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+@@ -27,6 +27,11 @@
+ 	memory@40000000 {
+ 		reg = <0x40000000 0x20000000>;
+ 	};
++
++	ast-adc-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 5>, <&adc 6>, <&adc 7>, <&adc 8>, <&adc 9>;
++	};
+ };
+ 
+ &wdt1 {
+@@ -126,3 +131,7 @@
+ &vhub {
+ 	status = "okay";
+ };
++
++&adc {
++	status = "okay";
++};
 -- 
 2.17.1
 
