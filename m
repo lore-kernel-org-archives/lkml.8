@@ -2,175 +2,153 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEC3206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD07206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="SgIHvSNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgGWG1W (ORCPT
+        id S1726759AbgGWG2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:27:22 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54878 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgGWG1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:27:20 -0400
-Received: by mail-io1-f72.google.com with SMTP id q207so3401594iod.21
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 23:27:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5S/81hsecrU3K+bhmVLmmLLHbSsTXsRoeQzbcVaqmy4=;
-        b=Qhl7d5gH28KGG3vdLAc/+qkhPBTA6viE/K2DvMGfvqA/AlW1YJb8zaeDEAl38JbnyW
-         Jw5mokB+pWJfuQpLAzzyFbxMwkfIKdk6vU+QhzwoQsRcmQM/zhLzyEMauQibmLsmQPNW
-         mbONbL6qbTHlLcWUNuRZmtcdpTR/cpQRxjOeEDF2CmRSefHM9GaFC+uFimSVWXBfOTnW
-         Q5QiGzOc0eYPBfgg4Fo4b5eVrZYHuGuVI2HLxJkP7hi2BWajg7kRiiZdSzW5w2WBQy2L
-         Mf5kSqw+8nGgv1yM/mMfWAWlQBfjNrBQyRxwaDcSEIVJ8vCXZmGOwfR5Z899S2BJ1LP5
-         ax6A==
-X-Gm-Message-State: AOAM533dv4JGuvXPpmEE2VmqdM2yf/qzysk2OfyaLCKSn4AsvpIXBFc+
-        LeAMkzGYah3YjpbyL9T7NJd6S2XiSCcrX6/4NknVr0f4qfhA
-X-Google-Smtp-Source: ABdhPJz7+sq71viipFnrK5clBmYXYSwzIk+JgW4gZYB3Ro+zPp+LQjjpZq4hRxJfQAfK+TtaC1optjMnrrX+C6oDMPLEEZHNkceh
+        Thu, 23 Jul 2020 02:28:42 -0400
+Received: from mout.web.de ([212.227.17.12]:57667 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGWG2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 02:28:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1595485707;
+        bh=1hBN9tUEwHZsp75aFn4bQ6JIGaKpS5aggvBr37cGLDw=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=SgIHvSNXEVLP1YV2x7E8cn4GGBxFqIYz2e0zJHHUlktp5vNDO275pTTVlbXkD9Z0M
+         WFMjFo8DFazMnV/GcNDrpw1a5c7dj4268JKIeqY4eg38QQa4FHgKQAUBQzuMfoQGtX
+         mH9Qy/SW/hy6Xqi1QdkwGwSDG3GPsRUQvP9BqOtc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.132.31]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LqDUa-1kTRox2ua8-00doEZ; Thu, 23
+ Jul 2020 08:28:27 +0200
+To:     Li Heng <liheng40@huawei.com>, linux-efi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Rui Xiang <rui.xiang@huawei.com>
+Subject: Re: [PATCH] efi: add missed destroy_workqueue when efisubsys_init
+ fails
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9255e38a-e5fb-0a41-1b6d-5fe4226e3b42@web.de>
+Date:   Thu, 23 Jul 2020 08:28:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:d51:: with SMTP id h17mr3636243ilj.131.1595485639492;
- Wed, 22 Jul 2020 23:27:19 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 23:27:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c94b1a05ab15f2ea@google.com>
-Subject: KASAN: use-after-free Read in ceph_mdsc_destroy
-From:   syzbot <syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com>
-To:     ceph-devel@vger.kernel.org, idryomov@gmail.com, jlayton@kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+cIvmW+B4FEKJmlRaUsn3P6wwZXOZBSo++wjam41Os7s/c8euNP
+ SkvLdaNfwjEAG+QMwmIca39uOHG0ODw3lZpFSEdGZdH7bns/yufsNIJG5Kw4HKvPQ127PA4
+ FVof1wL0RRh0Uhg3clshBzt3JnpwiqwQCTLWPW4UI8d742kS5ctOMUzQmeHvqJ+esJix2XS
+ 00lXuwEGHYOm7u4Z1vwOw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L/021+LXaa4=:Or5roG2IFS8LvDlPWgTW+i
+ PN/jhuE+Gae9QdBPml7nb89H4lVxRZpQSI+Eg+GgTEzyMNYPBVRmJmAzq1kFQjJOiqA21yYj8
+ H9ZPyiB7LyuYn284N/JsrvteAj23f4DM5BAkQZPwLGQPOm6R7yeRmjGlc1wDmEdgBh6Pe34dk
+ 6uxNRz72qTtC+tJg+g2FMO8DjordtRsPrA5sJOIrbwhxPR8WBGATS5wuqknUK3A04Q8C+bWlE
+ rytZ0mFAyXgYe/DTXmkGHSDe/UKY2g6hXqi4M09Tb/V6IXwp3p5Nw/9v4DFiV5syPcWtAGMYd
+ 0Ixburob0qE/QPT4//44bWT8mqxsynBOgP8bJeiFCu9ycQJ7cl+lxH/Myvhi5RSq6waPetsL1
+ 9jcvYHBwUFKoeGqz1EyNTW7ON4iaIJpOWXZvDRvtbWZ8bLrfvfUdUgSbjypnM3qSFzauKFLTw
+ KXuq1ZNcR3LmeDrXtOJ1MTBmcc1CoZZxbfRDuzX1YZYz9I3SVsqZQxFl7yPg2n+O6jLa5V++9
+ GdAFMo8mxVyQ0qpKtuB7bVvOtkLubhuzTUHKmzTypG3Tw3kzC4ImIL3a2E8LF5WMbJUx9M4oC
+ oMkAVt4DutxtSaWodz9AUSKycXcsbyzs9Jklvk6GpRdhx73uKuQJ4jccu61wMUnUIRJPmwH6a
+ QhyoQdOe782jyJudId0LPzCw/3wMX+9l/oCPwczXxrlZSwseaEKSMIEJSo+a4aFBSErXB97G1
+ vckUOShRqMtWsPe+f1S9+ygbA9ucfxBHKJ5LNX+bdR2EgOK8K/GaY/EYvq6NJbG+QQGZHdbCc
+ IW2aGYUXL5giv4VzGPFJjTQk1r20fMBwskpq4/+k5mkfybpA/TAm2xKgL3CiJKwNlJi44uPro
+ U8u6+6PoDllaAPA6y/8A81dbkSavKoCJl4FNjWcEHCJarxKh6HUczLYfV+P8ycIaEm1ZZ5Qc/
+ 3elANUSfI7L/67SNJyPKiV3YyZ7zgfhHA1Nc3UCmnI7Xr2DL1xnUF28c6R66Kr2bnSXiMrXQX
+ ZR314qy5OpaNfgxPg1ootGZ4SjKzYof55WSpYrTjpVoqzaCVCmM4/zOYtNWIz8SEtskU7QHqR
+ WRRzYOBCl+UD5TsAleatAoXyae0NTvCvXkCcKQPhKuUUhLXcsfDveAHGch4eJe8JO5Sowx9lN
+ VgF4tcJG6O/uVAEK81m5Bs4XfWczvTqX4ETz5ch3RELqBh2Mt/KsdrUA8woxLSpel01C7hkgK
+ IgHIv0BcqowWE3pjsZ2rcYlTjD8LmNwZnJemp1w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> destroy_workqueue() should be called to destroy efi_rts_wq
+> when efisubsys_init() init resources fails.
 
-syzbot found the following issue on:
+* Can such exception handling depend on the data structure member =E2=80=
+=9Cefi.runtime_supported_mask=E2=80=9D?
 
-HEAD commit:    f932d58a Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=152c6a80900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a160d1053fc89af5
-dashboard link: https://syzkaller.appspot.com/bug?extid=b57f46d8d6ea51960b8c
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+* An imperative wording would be preferred for the change description
+  (besides another bit of fine-tuning), wouldn't it?
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in timer_is_static_object+0x7a/0x90 kernel/time/timer.c:611
-Read of size 8 at addr ffff88809e482380 by task syz-executor.3/15653
-
-CPU: 0 PID: 15653 Comm: syz-executor.3 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- timer_is_static_object+0x7a/0x90 kernel/time/timer.c:611
- debug_object_assert_init lib/debugobjects.c:866 [inline]
- debug_object_assert_init+0x1df/0x2e0 lib/debugobjects.c:841
- debug_timer_assert_init kernel/time/timer.c:728 [inline]
- debug_assert_init kernel/time/timer.c:773 [inline]
- del_timer+0x6d/0x110 kernel/time/timer.c:1196
- try_to_grab_pending kernel/workqueue.c:1249 [inline]
- __cancel_work_timer+0x12d/0x700 kernel/workqueue.c:3092
- ceph_mdsc_stop fs/ceph/mds_client.c:4660 [inline]
- ceph_mdsc_destroy+0x50/0x140 fs/ceph/mds_client.c:4679
- destroy_fs_client+0x13/0x200 fs/ceph/super.c:720
- ceph_get_tree+0x9e5/0x1660 fs/ceph/super.c:1110
- vfs_get_tree+0x89/0x2f0 fs/super.c:1547
- do_new_mount fs/namespace.c:2875 [inline]
- do_mount+0x1592/0x1fe0 fs/namespace.c:3200
- __do_sys_mount fs/namespace.c:3410 [inline]
- __se_sys_mount fs/namespace.c:3387 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3387
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c1d9
-Code: Bad RIP value.
-RSP: 002b:00007f33d2bc0c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 000000000001f400 RCX: 000000000045c1d9
-RDX: 0000000020000140 RSI: 00000000200000c0 RDI: 00000000200005c0
-RBP: 000000000078bf50 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007fffaad3cc8f R14: 00007f33d2bc19c0 R15: 000000000078bf0c
-
-Allocated by task 15653:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- ceph_mdsc_init+0x47/0xf10 fs/ceph/mds_client.c:4351
- ceph_get_tree+0x4fe/0x1660 fs/ceph/super.c:1063
- vfs_get_tree+0x89/0x2f0 fs/super.c:1547
- do_new_mount fs/namespace.c:2875 [inline]
- do_mount+0x1592/0x1fe0 fs/namespace.c:3200
- __do_sys_mount fs/namespace.c:3410 [inline]
- __se_sys_mount fs/namespace.c:3387 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3387
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 15653:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- ceph_mdsc_init+0xc64/0xf10 fs/ceph/mds_client.c:4422
- ceph_get_tree+0x4fe/0x1660 fs/ceph/super.c:1063
- vfs_get_tree+0x89/0x2f0 fs/super.c:1547
- do_new_mount fs/namespace.c:2875 [inline]
- do_mount+0x1592/0x1fe0 fs/namespace.c:3200
- __do_sys_mount fs/namespace.c:3410 [inline]
- __se_sys_mount fs/namespace.c:3387 [inline]
- __x64_sys_mount+0x18f/0x230 fs/namespace.c:3387
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff88809e482000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 896 bytes inside of
- 4096-byte region [ffff88809e482000, ffff88809e483000)
-The buggy address belongs to the page:
-page:ffffea0002792080 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0002792080 order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea0002792008 ffffea000241dc08 ffff8880aa002000
-raw: 0000000000000000 ffff88809e482000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809e482280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809e482300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88809e482380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff88809e482400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88809e482480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+* Will the tag =E2=80=9CFixes=E2=80=9D become helpful for the commit messa=
+ge?
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+=E2=80=A6
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -379,6 +379,7 @@ static int __init efisubsys_init(void)
+>  	efi_kobj =3D kobject_create_and_add("efi", firmware_kobj);
+>  	if (!efi_kobj) {
+>  		pr_err("efi: Firmware registration failed.\n");
+> +		destroy_workqueue(efi_rts_wq);
+>  		return -ENOMEM;
+>  	}
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+How do you think about to use the following statements instead
+in the if branch?
+
+-		return -ENOMEM;
++		error =3D -ENOMEM;
++		goto destroy_workqueue;
+
+
+Regards,
+Markus
