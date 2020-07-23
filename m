@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC4CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87759C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE37220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A49920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="H07yZtRe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dkjU3Lz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgGWQsN (ORCPT
+        id S1729901AbgGWQss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:48:13 -0400
-Received: from gateway20.websitewelcome.com ([192.185.52.45]:17872 "EHLO
+        Thu, 23 Jul 2020 12:48:48 -0400
+Received: from gateway20.websitewelcome.com ([192.185.52.45]:14970 "EHLO
         gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgGWQsM (ORCPT
+        by vger.kernel.org with ESMTP id S1726621AbgGWQss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:48:12 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id E7C54400E0253
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 10:25:55 -0500 (CDT)
+        Thu, 23 Jul 2020 12:48:48 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id D49CC400E142E
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 10:26:43 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id yeNsjNwHGwgQAyeNsjOZXW; Thu, 23 Jul 2020 11:47:52 -0500
+        id yeOejXtb3Bb5dyeOejIZRI; Thu, 23 Jul 2020 11:48:40 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,19 +36,19 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6AWZIibxr7YfSHGUsrhBZ16GS4ho7qtbLDrL7MZ8LPE=; b=H07yZtRe+AklMPIUWXZ2gfV8xU
-        uUdYeAuhccp+bu+KKppGW3snCHpZm2ujejRALV/tFkS9zvoo6FK3Rb476scmnuimr918rpMpwphzS
-        JCIO0snDztLNFWuMCgqjWqSJeoV5j7PvaiAK8sS/MCzJHVfVWc6tQyEOr3xvD+T1iOX40WkTCaWSd
-        oAjgdxvxD+9wCUYkgGXItOGYQVayAPFUTDr6dgmuhQdRVlqVhBomD4xEtAtgbeaUjB6UH2oA4mJFO
-        ua8hcCBP5kM3StA0gUTLAbK8EWVEwoq0c4JzKQ+hkAxWisPR+NfHTRLRQmXwFOwJjxg6osqkgO9dx
-        F75mRuNg==;
-Received: from [201.162.245.27] (port=42552 helo=[192.168.43.132])
+        bh=2bhrR5CX5A5ulNSBiogCSFRb0chiC1G/c4mHc4xJyPM=; b=dkjU3Lz2zT+WUZgKm8J71tQa7Q
+        ehrbWJYXFsTGv31bEJapTRDaW7H2iTvcOShr7gNVPzlACB50dusvTGjJnXW5eYRr8zyUCkyrn5KoG
+        BfqhBAm71KHPzdyJ6NR5LIU9zjl7gjoNzaoi/eaUi2SxWbO7J//jOjk+M78leswfw1slLfEuvE4cL
+        SaojQGWD3hjBNyf+/oDmmhCTdW9ywWKUQIDDUmy1dSjUh5acYuwuym3xRNVPrpAi1KTo+n3h0a8gI
+        saao36qxvcU5Er4G9V0Ga3qeQwxoJp9iiPgfTzrP+7do3+j50G8+7ya7CQlfFqeeJrNoNJSuYQyyg
+        dMGEpPug==;
+Received: from [201.162.245.27] (port=42556 helo=[192.168.43.132])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jyeNs-003zoU-Eq; Thu, 23 Jul 2020 11:47:52 -0500
-Subject: Re: [char-misc-next 5/6] mei: hw: use sizeof of variable instead of
- struct type
+        id 1jyeOe-0040Ga-Az; Thu, 23 Jul 2020 11:48:40 -0500
+Subject: Re: [char-misc-next 4/6] mei: client: use sizeof of variable instead
+ of struct type
 To:     Tomas Winkler <tomas.winkler@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
@@ -56,7 +56,7 @@ Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>
 References: <20200723145927.882743-1-tomas.winkler@intel.com>
- <20200723145927.882743-6-tomas.winkler@intel.com>
+ <20200723145927.882743-5-tomas.winkler@intel.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -102,12 +102,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
  rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
  AP7RWS474w==
-Message-ID: <3fa1faf1-40a8-7506-ea93-f266b0e45c86@embeddedor.com>
-Date:   Thu, 23 Jul 2020 11:53:37 -0500
+Message-ID: <67c7aeea-cfe6-a98b-bbe1-4881d8dc5ae0@embeddedor.com>
+Date:   Thu, 23 Jul 2020 11:54:24 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200723145927.882743-6-tomas.winkler@intel.com>
+In-Reply-To: <20200723145927.882743-5-tomas.winkler@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -119,13 +119,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.162.245.27
 X-Source-L: No
-X-Exim-ID: 1jyeNs-003zoU-Eq
+X-Exim-ID: 1jyeOe-0040Ga-Az
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42552
+X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42556
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
+X-Email-Count: 16
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -136,9 +136,6 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 7/23/20 09:59, Tomas Winkler wrote:
-> Use sizeof(*dev) + sizeof(*hw) instead of
-> sizeof(struct mei_device) + sizeof(struct mei_me_hw)
-> 
 > There is a possibility of bug when variable type has changed but
 > corresponding struct passed to the sizeof has not.
 > 
@@ -152,14 +149,13 @@ Thanks
 Gustavo
 
 > ---
->  drivers/misc/mei/hw-me.c  | 5 ++---
->  drivers/misc/mei/hw-txe.c | 5 ++---
->  2 files changed, 4 insertions(+), 6 deletions(-)
+>  drivers/misc/mei/client.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
-> index c51d3da8f333..7692b69abcb5 100644
-> --- a/drivers/misc/mei/hw-me.c
-> +++ b/drivers/misc/mei/hw-me.c
+> diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
+> index b32c825a0945..2572887d99b6 100644
+> --- a/drivers/misc/mei/client.c
+> +++ b/drivers/misc/mei/client.c
 > @@ -1,6 +1,6 @@
 >  // SPDX-License-Identifier: GPL-2.0
 >  /*
@@ -168,36 +164,31 @@ Gustavo
 >   * Intel Management Engine Interface (Intel MEI) Linux driver
 >   */
 >  
-> @@ -1600,8 +1600,7 @@ struct mei_device *mei_me_dev_init(struct device *parent,
->  	struct mei_me_hw *hw;
->  	int i;
+> @@ -369,7 +369,7 @@ static struct mei_cl_cb *mei_io_cb_init(struct mei_cl *cl,
+>  {
+>  	struct mei_cl_cb *cb;
 >  
-> -	dev = devm_kzalloc(parent, sizeof(struct mei_device) +
-> -			   sizeof(struct mei_me_hw), GFP_KERNEL);
-> +	dev = devm_kzalloc(parent, sizeof(*dev) + sizeof(*hw), GFP_KERNEL);
->  	if (!dev)
+> -	cb = kzalloc(sizeof(struct mei_cl_cb), GFP_KERNEL);
+> +	cb = kzalloc(sizeof(*cb), GFP_KERNEL);
+>  	if (!cb)
 >  		return NULL;
 >  
-> diff --git a/drivers/misc/mei/hw-txe.c b/drivers/misc/mei/hw-txe.c
-> index 785b260b3ae9..a4e854b9b9e6 100644
-> --- a/drivers/misc/mei/hw-txe.c
-> +++ b/drivers/misc/mei/hw-txe.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (c) 2013-2019, Intel Corporation. All rights reserved.
-> + * Copyright (c) 2013-2020, Intel Corporation. All rights reserved.
->   * Intel Management Engine Interface (Intel MEI) Linux driver
+> @@ -552,7 +552,7 @@ int mei_cl_flush_queues(struct mei_cl *cl, const struct file *fp)
 >   */
+>  static void mei_cl_init(struct mei_cl *cl, struct mei_device *dev)
+>  {
+> -	memset(cl, 0, sizeof(struct mei_cl));
+> +	memset(cl, 0, sizeof(*cl));
+>  	init_waitqueue_head(&cl->wait);
+>  	init_waitqueue_head(&cl->rx_wait);
+>  	init_waitqueue_head(&cl->tx_wait);
+> @@ -575,7 +575,7 @@ struct mei_cl *mei_cl_allocate(struct mei_device *dev)
+>  {
+>  	struct mei_cl *cl;
 >  
-> @@ -1201,8 +1201,7 @@ struct mei_device *mei_txe_dev_init(struct pci_dev *pdev)
->  	struct mei_device *dev;
->  	struct mei_txe_hw *hw;
->  
-> -	dev = devm_kzalloc(&pdev->dev, sizeof(struct mei_device) +
-> -			   sizeof(struct mei_txe_hw), GFP_KERNEL);
-> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev) + sizeof(*hw), GFP_KERNEL);
->  	if (!dev)
+> -	cl = kmalloc(sizeof(struct mei_cl), GFP_KERNEL);
+> +	cl = kmalloc(sizeof(*cl), GFP_KERNEL);
+>  	if (!cl)
 >  		return NULL;
 >  
 > 
