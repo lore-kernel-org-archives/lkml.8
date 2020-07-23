@@ -2,106 +2,80 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA49C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E264C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50815206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5967D20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595503105;
+	bh=7yYsCXQZddIcngHN79CYvQZyJ/SNajKQiZIuQXTYH1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qWATA8ZIQgaeKjbz6ILXydUgpCWJgCXB/MmwP1qhRL0B4QZRgSaadVWE8CIEW/HLC
+	 2sq+lfH+GrDVNvLo5NrCKx4OcKRpxcwQXLE8+Tsw6wAl+ULrHnZeVchdAEET8ol3he
+	 aWD+qBSQMw24p36wH7qC4HgXWqJCTqLbAWGPuxzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgGWLQY convert rfc822-to-8bit (ORCPT
+        id S1728431AbgGWLSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:16:24 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:43754 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728412AbgGWLQX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:16:23 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mtapsc-1-ViGpBrHmNJOPXyJW7yMjBg-2; Thu, 23 Jul 2020 12:16:19 +0100
-X-MC-Unique: ViGpBrHmNJOPXyJW7yMjBg-2
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 12:16:16 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 Jul 2020 12:16:16 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "Eric Dumazet" <edumazet@google.com>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: [PATCH 13/26] bpfilter: switch bpfilter_ip_set_sockopt to
- sockptr_t
-Thread-Topic: [PATCH 13/26] bpfilter: switch bpfilter_ip_set_sockopt to
- sockptr_t
-Thread-Index: AQHWYOJf8qVR0zowd02v8gaMoEO9+6kVA2RQ
-Date:   Thu, 23 Jul 2020 11:16:16 +0000
-Message-ID: <621e193e4af74d8198ed87d6a9ce8260@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-14-hch@lst.de>
-In-Reply-To: <20200723060908.50081-14-hch@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 23 Jul 2020 07:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgGWLSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:18:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C18C4206F4;
+        Thu, 23 Jul 2020 11:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595503103;
+        bh=7yYsCXQZddIcngHN79CYvQZyJ/SNajKQiZIuQXTYH1Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZQmYhHIqSL58pJgKhwa5wstW04qTgqgJtyLDnFIVGFQ1uqTP6sYe4eOKu32wm7drq
+         siQxhNZni9V6jqNnBXBOom01DACzlDbehFZHfXBN4RPkt8lTAIDi1qU/u5gOqeEqOp
+         /XIMgEkqsT+7EdbyVEZjv8meITwAiwf0o7KNgpBk=
+Date:   Thu, 23 Jul 2020 13:18:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mtd: properly check all write ioctls for permissions
+Message-ID: <20200723111827.GA1963557@kroah.com>
+References: <20200716115346.GA1667288@kroah.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716115346.GA1667288@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 23 July 2020 07:09
+On Thu, Jul 16, 2020 at 01:53:46PM +0200, Greg Kroah-Hartman wrote:
+> When doing a "write" ioctl call, properly check that we have permissions
+> to do so before copying anything from userspace or anything else so we
+> can "fail fast".  This includes also covering the MEMWRITE ioctl which
+> previously missed checking for this.
 > 
-> This is mostly to prepare for cleaning up the callers, as bpfilter by
-> design can't handle kernel pointers.
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: stable <stable@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/mtd/mtdchar.c | 54 +++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 45 insertions(+), 9 deletions(-)
 
-You've failed to fix the sense of the above...
+Any objection to this patch getting into 5.8-final?
 
-	David
+I can take this through one of my trees if you all give me an ack :)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+thanks,
 
+greg k-h
