@@ -2,89 +2,117 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAA1C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDD1C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A2620792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53404206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R8OYczo9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xvq/2AkV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbgGWM1C (ORCPT
+        id S1728780AbgGWM1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:27:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36626 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728944AbgGWM06 (ORCPT
+        Thu, 23 Jul 2020 08:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgGWM1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:26:58 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06NCQr8T077153;
-        Thu, 23 Jul 2020 07:26:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595507213;
-        bh=qEHLl+oKKILik5zFthl7K1N5nwqibOWaX+6gSuWNfnc=;
-        h=From:To:CC:Subject:Date;
-        b=R8OYczo9VzXsa0mue0YtwLX3AJ1CAKeO9BUM1irnWx3Fsb89WruMX0deD0RF+Bvk6
-         TgjJh3Oc5jFGrVta3b0EctU0p/7f452hMJKMyxRZERg43XvXU0QeREZuDU2pAf083N
-         MxMadroHDJhLBBl8RVJPc+j0da5o0NqOqAPXr20s=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06NCQr8H022951
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 07:26:53 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Jul 2020 07:26:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Jul 2020 07:26:53 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06NCQooV024814;
-        Thu, 23 Jul 2020 07:26:51 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] Add DT to get PCIe working in J721E SoC
-Date:   Thu, 23 Jul 2020 17:56:47 +0530
-Message-ID: <20200723122649.24676-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Jul 2020 08:27:09 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5F2C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:27:09 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id s26so2933520pfm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lieebjtDdlU4fQmXZR5p7nEaYKK/7RzpZddWMXNez6s=;
+        b=Xvq/2AkVeAoreBTplwDbHA6TE9XTz9Hvj6kvDSLdTdrZ40ZsLQP8gTJda1duBq+BVE
+         L5QGm+BpnYstK/J3kAegn5QN5lB+4Oad5iVPy2ZO5cSawTFECQAsWAPYtiFDa2YXJ5kP
+         /1IEm76imNIr1IVh3SLzTKVZ8XvlspCXPFjXaB5o6vF4OAWvbg8MjCRU1zh1PrwWhKEq
+         k8IZn0kqdeQoIref7mi/YV0hMWtE98x5ZHAkAcJSSdse7jZAEOV54UQAN48gBcM4/opq
+         cfU5NNKRvW3kAWAdNUhobnwwmwU/j2acFH1Earg4JH3gHfrgPygmP1q/Wa9Ub8Ge0xrX
+         uLYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lieebjtDdlU4fQmXZR5p7nEaYKK/7RzpZddWMXNez6s=;
+        b=QhQd+16KM+p+3fUx/HBasSrZWKF4dD+T1248g9AzhhpVAGNuVPefl3+XQCJiCZqmcI
+         FmCqaEnVAuB1ehCYCHNrh55CEVnPXagdbcDylu/+smaMG3BsHIvh/u6sM+/73SoXmZ8U
+         ssUd3FOlfUVyubf5ko8wIRHX2nh/yHE/SORIpYV3AsUXa6PXs9qRlbRoBodKYS6meewC
+         TDlZ6hltI0qEpaqUs8sFDxZrJEkfaKZStIbudprsfdv2sj4Bm6Na7DzbYKFt3stuxrIj
+         oHInq/9UBF92mW1juBz2gJ33SP2XhbThMWmBde+Ao0loc0yfWpZvPetVd2Gm2xd50Nda
+         Zfww==
+X-Gm-Message-State: AOAM531t3Z+jq9DA+k/c02qhIlu9r/E/Bmzu2k0KpPIPIDlyGz8iToRK
+        LRQZFSdLlyseqiqPD/oI5FU4TsyM/VTv8tU1EOmPe/is
+X-Google-Smtp-Source: ABdhPJxvx67nipqokrX921pbgYRvniV3tyBDvTu65YFq8A7iywwhOw5ApPvL4+vz6erQzqdAISgoO+AATgdoiXrMwuA=
+X-Received: by 2002:aa7:8bcb:: with SMTP id s11mr3819505pfd.170.1595507228551;
+ Thu, 23 Jul 2020 05:27:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <202007231701.CV9tyb31%lkp@intel.com> <20200723121617.GM3634@localhost>
+In-Reply-To: <20200723121617.GM3634@localhost>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 23 Jul 2020 15:26:54 +0300
+Message-ID: <CAHp75VeXh0vsydRay1a3uBP2kSsr6bNV7bT=vgCS7CSSRYT1mw@mail.gmail.com>
+Subject: Re: drivers/tty/serial/pmac_zilog.c:255:36: sparse: sparse: context
+ imbalance in 'pmz_receive_chars' - unexpected unlock
+To:     Johan Hovold <johan@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Series adds device tree of I2C and PCIe DT nodes to get PCIe working
-in both RC mode and EP mode in J721E.
+On Thu, Jul 23, 2020 at 3:19 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> On Thu, Jul 23, 2020 at 05:29:14PM +0800, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > head:   d15be546031cf65a0fc34879beca02fd90fe7ac7
+> > commit: 08d5470308ac3598e7709d08b8979ce6e9de8da2 serial: core: fix sysrq overhead regression
+> > date:   4 weeks ago
+> > config: m68k-randconfig-s032-20200723 (attached as .config)
+> > compiler: m68k-linux-gcc (GCC) 9.3.0
+> > reproduce:
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # apt-get install sparse
+> >         # sparse version: v0.6.2-93-g4c6cbe55-dirty
+> >         git checkout 08d5470308ac3598e7709d08b8979ce6e9de8da2
+> >         # save the attached .config to linux build tree
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=m68k
+> >
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kernel test robot <lkp@intel.com>
+> >
+> >
+> > sparse warnings: (new ones prefixed by >>)
+> >
+> > >> drivers/tty/serial/pmac_zilog.c:255:36: sparse: sparse: context imbalance in 'pmz_receive_chars' - unexpected unlock
+>
+> This warning is far from new,
 
-The PCIe support patch series is queued in Lorenzo's branch [1]
+I suspect it's a new sparse and kbuildbot that decided to unveil old sins.
 
-This patch series is rebased to Tero's ti-k3-next branch [2]
+> but let's add the missing annotation
+> nonetheless:
+>
+>         https://lore.kernel.org/r/20200723121423.24217-1-johan@kernel.org
 
-[1] -> https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/log/?h=pci/cadence
-[2] -> https://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux.git/log/?h=ti-k3-next
-
-Kishon Vijay Abraham I (2):
-  arm64: dts: ti: k3-j721e-main: Add PCIe device tree nodes
-  arm64: dts: ti: k3-j721e-common-proc-board: Configure the PCIe
-    instances
-
- .../dts/ti/k3-j721e-common-proc-board.dts     |  80 +++++++
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 218 ++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |   5 +-
- 3 files changed, 302 insertions(+), 1 deletion(-)
+Feel free to add Reviewed-by: Andy Shevchenko
+<andy.shevchenko@gmail.com> to them.
 
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
