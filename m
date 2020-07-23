@@ -2,89 +2,110 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA87C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24C7207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D342080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uDfZmcKs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gtKjIi1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgGWVkl (ORCPT
+        id S1727781AbgGWVo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:40:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:49151 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbgGWVkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:40:41 -0400
-IronPort-SDR: QYZrAG2UZimOo0rHAIV4S9E6Dcld4eTCNWZPTbMQgsIVIhFB/ax/6prlaFi5X8RvkM17ppSs2n
- bk8lZ4wzCxYg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130701915"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="130701915"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 14:40:40 -0700
-IronPort-SDR: d8OBUfzyhIUtrluHwoWBiEPYaGXZ+sJT4Sw1hBqSikxetw67LHKcbn4BFC2pFvvdSQsrr1R7G9
- ZmShiXK962EQ==
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="463007280"
-Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314) ([10.237.222.51])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 14:40:37 -0700
-Date:   Thu, 23 Jul 2020 22:40:29 +0100
-From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     herbert@gondor.apana.org.au, cohuck@redhat.com, nhorman@redhat.com,
-        vdronov@redhat.com, bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] vfio/pci: Add device blocklist
-Message-ID: <20200723214029.GA6572@silpixa00400314>
-References: <20200714063610.849858-1-giovanni.cabiddu@intel.com>
- <20200714063610.849858-3-giovanni.cabiddu@intel.com>
- <20200722230210.55b2d326@x1.home>
+        Thu, 23 Jul 2020 17:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgGWVo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 17:44:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BCEC0619D3;
+        Thu, 23 Jul 2020 14:44:26 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595540664;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YJAOZn+NV3c8JWx5UIem9HzDm7TCzzCZdh+QLWV9zos=;
+        b=uDfZmcKsPrtAZ9EPCn7wuQ2LYhtSESV/A3K5F2BxInsEbE5KGH3iTpU6hfb8Iq3xSCK73q
+        V9Cj62JEzbOFW3OO9Qd4MRy2gZ2LSAw0z46WszgaNU/zJbi7ZP7wk8dnXiKQf60M7aLhsx
+        jA/7O0lW2KwCga8BN95btUdT1LJ9rQgh/X0cFNLnGiatFNKk6B3MMAUoyAmKRGq5mWhl79
+        odbPA/3HPG1ndaQplTcsZgUZws6tgJxUTJ71z6h374VhakEAxq6k5LLugh0TyHZ/kGjtDo
+        JwM8uW6KKdYjq7gj0dY71e+o+dj1Dtmc74+ETE3waVxSWFBvllqwwCzBYnJN7g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595540664;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YJAOZn+NV3c8JWx5UIem9HzDm7TCzzCZdh+QLWV9zos=;
+        b=gtKjIi1mnr4FAzRJ1lQR9YtI+U6Z6fGDmO5VwPoawB9wYFUsAn5WivGjVh4rSWoYiyjTpS
+        sAHmg2otDHvRriBw==
+To:     Alex Belits <abelits@marvell.com>,
+        "peterz\@infradead.org" <peterz@infradead.org>
+Cc:     "davem\@davemloft.net" <davem@davemloft.net>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "mingo\@kernel.org" <mingo@kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "rostedt\@goodmis.org" <rostedt@goodmis.org>,
+        "frederic\@kernel.org" <frederic@kernel.org>,
+        "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
+        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "will\@kernel.org" <will@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 00/13] "Task_isolation" mode
+In-Reply-To: <3ff1383e669b543462737b0d12c0d1fb7d409e3e.camel@marvell.com>
+References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com> <87imeextf3.fsf@nanos.tec.linutronix.de> <831e023422aa0e4cb3da37ceef6fdcd5bc854682.camel@marvell.com> <20200723154933.GB709@worktop.programming.kicks-ass.net> <3ff1383e669b543462737b0d12c0d1fb7d409e3e.camel@marvell.com>
+Date:   Thu, 23 Jul 2020 23:44:24 +0200
+Message-ID: <877dutx5xj.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722230210.55b2d326@x1.home>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:02:10PM -0600, Alex Williamson wrote:
-> On Tue, 14 Jul 2020 07:36:07 +0100
-> Giovanni Cabiddu <giovanni.cabiddu@intel.com> wrote:
-> 
-> > Add blocklist of devices that by default are not probed by vfio-pci.
-> > Devices in this list may be susceptible to untrusted application, even
-> > if the IOMMU is enabled. To be accessed via vfio-pci, the user has to
-> > explicitly disable the blocklist.
-> > 
-> > The blocklist can be disabled via the module parameter disable_blocklist.
-> > 
-> > Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> 
-> Hi Giovanni,
-> 
-> I'm pretty satisfied with this series, except "blocklist" makes me
-> think of block devices, ie. storage, or block chains, or building block
-> types of things before I get to "block" as in a barrier.  The other
-> alternative listed as a suggestion currently in linux-next is denylist,
-> which is the counter to an allowlist.  I've already proposed changing
-> some other terminology in vfio.c to use the term "allowed", so
-> allow/deny would be my preference versus pass/block.
-Thanks Alex for your feedback. A new revision is on the way.
+Alex Belits <abelits@marvell.com> writes:
+> On Thu, 2020-07-23 at 17:49 +0200, Peter Zijlstra wrote:
+>> 
+>> 'What does noinstr mean? and why do we have it" -- don't dare touch
+>> the
+>> entry code until you can answer that.
+>
+> noinstr disables instrumentation, so there would not be calls and
+> dependencies on other parts of the kernel when it's not yet safe to
+> call them. Relevant functions already have it, and I add an inline call
+> to perform flags update and synchronization. Unless something else is
+> involved, those operations are safe, so I am not adding anything that
+> can break those.
 
-Regards,
+Sure.
 
--- 
-Giovanni
+ 1) That inline function can be put out of line by the compiler and
+    placed into the regular text section which makes it subject to
+    instrumentation
+
+ 2) That inline function invokes local_irq_save() which is subject to
+    instrumentation _before_ the entry state for the instrumentation
+    mechanisms is established.
+
+ 3) That inline function invokes sync_core() before important state has
+    been established, which is especially interesting in NMI like
+    exceptions.
+
+As you clearly documented why all of the above is safe and does not
+cause any problems, it's just me and Peter being silly, right?
+
+Try again.
+
+Thanks,
+
+        tglx
