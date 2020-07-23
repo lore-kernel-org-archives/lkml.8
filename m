@@ -7,74 +7,94 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E264C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DF5C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5967D20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6AE206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595503105;
-	bh=7yYsCXQZddIcngHN79CYvQZyJ/SNajKQiZIuQXTYH1Y=;
+	s=default; t=1595503173;
+	bh=/L66IPWsTwQKHafCML2stlb8sDzgzvJ2TicBnY5PFCg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qWATA8ZIQgaeKjbz6ILXydUgpCWJgCXB/MmwP1qhRL0B4QZRgSaadVWE8CIEW/HLC
-	 2sq+lfH+GrDVNvLo5NrCKx4OcKRpxcwQXLE8+Tsw6wAl+ULrHnZeVchdAEET8ol3he
-	 aWD+qBSQMw24p36wH7qC4HgXWqJCTqLbAWGPuxzo=
+	b=A2gpNsT0z+OP64SLFPkA1OM2AtQqNAjBWhN3XejLfDB3wWRciXMbT1Z8mvuGd91qk
+	 Ve6EjETTnRm+kRsXnQypuZoJCZVPvA+P7TFNldDBMv0tMXgijGSpXfZXSmynpAT+qe
+	 c1tQk4ZceqPnTEuW06N+VRP6dhY8ZHR0XWU70hYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgGWLSY (ORCPT
+        id S1728489AbgGWLTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 07:19:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgGWLSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:18:23 -0400
+        id S1725846AbgGWLTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:19:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C18C4206F4;
-        Thu, 23 Jul 2020 11:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44BDA206F4;
+        Thu, 23 Jul 2020 11:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595503103;
-        bh=7yYsCXQZddIcngHN79CYvQZyJ/SNajKQiZIuQXTYH1Y=;
+        s=default; t=1595503170;
+        bh=/L66IPWsTwQKHafCML2stlb8sDzgzvJ2TicBnY5PFCg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZQmYhHIqSL58pJgKhwa5wstW04qTgqgJtyLDnFIVGFQ1uqTP6sYe4eOKu32wm7drq
-         siQxhNZni9V6jqNnBXBOom01DACzlDbehFZHfXBN4RPkt8lTAIDi1qU/u5gOqeEqOp
-         /XIMgEkqsT+7EdbyVEZjv8meITwAiwf0o7KNgpBk=
-Date:   Thu, 23 Jul 2020 13:18:27 +0200
+        b=X5jl6HVtha0ujLKYFWMkzo561uPSVD0kzZS6SzOLXvaCUFCcssfEoXo5t+zcHzM9p
+         uUDOfOVysQjBw7DsO0D3sfPkioNQTAsI4aklnyieS12//nilszmfPH+YHWoma7xU7N
+         eqYeftvob5QxtWnfbo5cVqV1vFAarES+7wiQ4SlM=
+Date:   Thu, 23 Jul 2020 13:19:34 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: properly check all write ioctls for permissions
-Message-ID: <20200723111827.GA1963557@kroah.com>
-References: <20200716115346.GA1667288@kroah.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH V2] usb: tegra: Fix allocation for the FPCI context
+Message-ID: <20200723111934.GA1964033@kroah.com>
+References: <20200712102837.24340-1-jonathanh@nvidia.com>
+ <20200715113842.30680-1-jonathanh@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716115346.GA1667288@kroah.com>
+In-Reply-To: <20200715113842.30680-1-jonathanh@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 01:53:46PM +0200, Greg Kroah-Hartman wrote:
-> When doing a "write" ioctl call, properly check that we have permissions
-> to do so before copying anything from userspace or anything else so we
-> can "fail fast".  This includes also covering the MEMWRITE ioctl which
-> previously missed checking for this.
+On Wed, Jul 15, 2020 at 12:38:42PM +0100, Jon Hunter wrote:
+> Commit 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB
+> context save/restore") is using the IPFS 'num_offsets' value when
+> allocating memory for FPCI context instead of the FPCI 'num_offsets'.
 > 
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: stable <stable@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> After commit cad064f1bd52 ("devres: handle zero size in devm_kmalloc()")
+> was added system suspend started failing on Tegra186. The kernel log
+> showed that the Tegra XHCI driver was crashing on entry to suspend when
+> attempting the save the USB context. On Tegra186, the IPFS context has a
+> zero length but the FPCI content has a non-zero length, and because of
+> the bug in the Tegra XHCI driver we are incorrectly allocating a zero
+> length array for the FPCI context. The crash seen on entering suspend
+> when we attempt to save the FPCI context and following commit
+> cad064f1bd52 ("devres: handle zero size in devm_kmalloc()") this now
+> causes a NULL pointer deference when we access the memory. Fix this by
+> correcting the amount of memory we are allocating for FPCI contexts.
+> 
+> Cc: stable@vger.kernel.org
+> 
+> Fixes: 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB context save/restore")
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
 > ---
->  drivers/mtd/mtdchar.c | 54 +++++++++++++++++++++++++++++++++++--------
->  1 file changed, 45 insertions(+), 9 deletions(-)
+> 
+> Changes since V1:
+> - Corrected commit message
+> - Added Thierry's ACK
+> 
+>  drivers/usb/host/xhci-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Any objection to this patch getting into 5.8-final?
+No cc: to linux-usb@vger?  :(
 
-I can take this through one of my trees if you all give me an ack :)
+I'll go queue this up, but I would have caught it sooner if you had done
+so...
 
 thanks,
 
