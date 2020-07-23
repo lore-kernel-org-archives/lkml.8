@@ -2,82 +2,120 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D009C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07291C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1403022CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1CF20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u16vv/o6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3w6pydta";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S6pO3lE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgGWUVK (ORCPT
+        id S1727979AbgGWUWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWUVK (ORCPT
+        Thu, 23 Jul 2020 16:22:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32790 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgGWUWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:21:10 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC94C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OPQGqVX7mpZKPOmHDFbLw6MaXxi0mJcAVB6J/0PTbKw=; b=u16vv/o6OXUjKP55To9rkix2Q0
-        eHPw387bJVQj4gAEYDSOA2Qzm17xFwpyGN0nT+cjSowtwJWgi7aGfIZ7PVgZLY5esU2RSetLw0VxK
-        lhbVXl7SfZVmiYkUPSNO1n0etinUOYxplzhFtJrVS/41Sot1Llqc97YfOJXKqnvOF13vSFh+756Gl
-        dHdcFC3P5amyNKijoAdUrB9eqsW9PGc/khFCQFK+3jW/s45tw1ru2r4FJ4Jcfe9MbaxwZkIxuWnPB
-        PGg47IyDDucf/NbHrG0Piv87y+uD5yyvAIDn93ODN9veSWDrnTYh1UmBS+c1YFhXHkg0oSTMeezbF
-        aC9ZtKag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyhiA-0004LR-2p; Thu, 23 Jul 2020 20:21:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E5AC8305E21;
-        Thu, 23 Jul 2020 22:20:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B228D200DD94D; Thu, 23 Jul 2020 22:20:59 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 22:20:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] sched: Warn if garbage is passed to
- default_wake_function()
-Message-ID: <20200723202059.GU10769@hirez.programming.kicks-ass.net>
-References: <20200723201042.18861-1-chris@chris-wilson.co.uk>
+        Thu, 23 Jul 2020 16:22:07 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595535725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xUfejVCnGJSFUxx4AbkzbVJFCZGcWbz/N8REfPWxQoU=;
+        b=3w6pydta60AUDlW71ctlUmfCuxjZwrDBjdn+FnMylpeeRNx3lZdxfaaRT4irOoFTC9CUuh
+        PXbbNu0NFQnT2ebz/rTRFFus4A56eVJaHT1Nku6xPVzKWr5/EfpxjeqXE2M8OHYK60mpNZ
+        G/1vehBDzGDMsOv9JDLd9t0ZwgJq18uO4GXkwYlXX/XavlQ/d8MeiixW8yeG71ll4tXpXy
+        OSNidJ+vtacBscsslNQRCmpPO3hM5Ayd5CFQN/LEVQ+5TWmlgprge1xI1euwEayu59G88G
+        Yr4RymiC2f4ktP3jTZXWmeO9OG2t4cANxrJrr3YILRR0osb7reG9Ymiqqc1/bg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595535725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xUfejVCnGJSFUxx4AbkzbVJFCZGcWbz/N8REfPWxQoU=;
+        b=S6pO3lE+IfHj3HhkeQ26FcQansBJxu9GNSfmIP0x4haRe07iB3E2Ls0tYUMfsjoVnW9XRq
+        EEpNr2bboZIhELDQ==
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Weiny Ira <ira.weiny@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
+In-Reply-To: <C03DA782-BD1A-42E3-B118-ABB34BC5F2AF@amacapital.net>
+References: <20200723165204.GB77434@romley-ivt3.sc.intel.com> <C03DA782-BD1A-42E3-B118-ABB34BC5F2AF@amacapital.net>
+Date:   Thu, 23 Jul 2020 22:22:04 +0200
+Message-ID: <87imeevv6b.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723201042.18861-1-chris@chris-wilson.co.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 09:10:42PM +0100, Chris Wilson wrote:
-> Since the default_wake_function() passes its flags onto
-> try_to_wake_up(), warn if those flags collide with internal values.
-> Given that the supplied flags are garbage, no repair can be done but at
-> least alert the user to the damage they are causing.
-> 
-> In the belief that these errors should be picked up during testing, the
-> warning is only compiled in under CONFIG_SCHED_DEBUG.
-> 
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Andy Lutomirski <luto@amacapital.net> writes:
 
-Thanks!
+> Suppose some kernel code (a syscall or kernel thread) changes PKRS
+> then takes a page fault. The page fault handler needs a fresh
+> PKRS. Then the page fault handler (say a VMA=E2=80=99s .fault handler) ch=
+anges
+> PKRS.  The we get an interrupt. The interrupt *also* needs a fresh
+> PKRS and the page fault value needs to be saved somewhere.
+>
+> So we have more than one saved value per thread, and thread_struct
+> isn=E2=80=99t going to solve this problem.
+
+A stack of 7 entries and an index needs 32bytes total which is a
+reasonable amount and solves the problem including scheduling from #PF
+nicely. Make it 15 and it's still only 64 bytes.
+
+> But idtentry_state is also not great for a couple reasons.  Not all
+> entries have idtentry_state, and the unwinder can=E2=80=99t find it for
+> debugging. For that matter, the page fault logic probably wants to
+> know the previous PKRS, so it should either be stashed somewhere
+> findable or it should be explicitly passed around.
+>
+> My suggestion is to enlarge pt_regs.  The save and restore logic can
+> probably be in C, but pt_regs is the logical place to put a register
+> that is saved and restored across all entries.
+
+Kinda, but that still sucks because schedule from #PF will get it wrong
+unless you do extra nasties.
+
+> Whoever does this work will have the delightful job of figuring out
+> whether BPF thinks that the layout of pt_regs is ABI and, if so,
+> fixing the resulting mess.
+>
+> The fact the new fields will go at the beginning of pt_regs will make
+> this an entertaining prospect.
+
+Good luck with all of that.
+
+Thanks,
+
+        tglx
