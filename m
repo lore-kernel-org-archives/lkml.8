@@ -2,168 +2,156 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA71C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6656422B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743EC20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uFXjXbf4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IP9QMcXa"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="O0I3aUBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgGWTxY (ORCPT
+        id S1726696AbgGWTz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:53:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60814 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWTxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:53:24 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595534000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X0c32+NIatB9JM6CXey+0z41GiQlbz97j0f7TqXtlAY=;
-        b=uFXjXbf4Yp8aNwTNbxJjHuHwYks2TWbYKgxnG7Jr1JWxhF+duZctOadDtngKL2Pntdlcr5
-        AvKP6qpAvouuuiV9yCUIMDIlbTkuWxZoD7TQabGmbTA0mjtTK30eJeHRVEjwqxpk03fPUS
-        tTHuvjt5xvqU5prBd0+EqsNeg67IAnB6WbSAufCh1h3bnSTSGxuR6+oxKhzw+WygKCqZiO
-        DzSskQq90BXIC5ugNwOtkIPpZNUuGtTQ2f/N1n2GVcGCN+TQeOR0jfxYFV4o6wzageqeaB
-        yb7Im752qEUzAhYy4YEc/rgs/zaCt1/1hFkXqJTndrZAWzomDhEhunfLRUOtbQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595534000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X0c32+NIatB9JM6CXey+0z41GiQlbz97j0f7TqXtlAY=;
-        b=IP9QMcXa1ApuQm3+KZmrUmtJj6z7QxJxyk9fPf+kLhbrZgzz7HlWKdlTZhcyEP2iMZoUqw
-        PGdJS5nkBsmndqAQ==
-To:     ira.weiny@intel.com, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
-In-Reply-To: <20200717072056.73134-18-ira.weiny@intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com>
-Date:   Thu, 23 Jul 2020 21:53:20 +0200
-Message-ID: <87r1t2vwi7.fsf@nanos.tec.linutronix.de>
+        Thu, 23 Jul 2020 15:55:26 -0400
+Received: from mail-co1nam11on2135.outbound.protection.outlook.com ([40.107.220.135]:40449
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725894AbgGWTzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 15:55:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gXVB5iYA0wZOFExhIHQO2wf6R4LXWwUIioxgiCIySi/1N2So17mnrED95BBYvqlPGpZImkC8YpuItabZuaIdCeN4SrTpg31l2E/+ZiyrblapcbvJncJkF2EynQDpdxZQxcDlNbZICv4+nDcbfeHRAlYGs6V++l7BRnzhwP0qQmpubUiY4T9Bv9Gm2gw2GaNtgXdHIOs7laX2oaCkVVbY/ikwc/krnD8H7g54cCJEEih1LNIsQzTtsLQYVxhT6FT0XLZ6YPhjav3AoOtVfVACR8KbAbrOmo+ySfVfUk9xgbmg344cwj3E+8Eu7sZ93pZ6527Hs89JDH3nCkC/r0vGEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRMVBy+LIEzF1uKsYT8klw0+LEGkOnRtojCwM82GAZQ=;
+ b=NZsvoneaJZK7lr+e01MnHd1l8cefFbsueEGcQunQZg0BLkSdzZWJAOZaZkda+JQ79GR25J0P5MEY3X3VBLgrElDMMddHRyu8LBBSHGDTiMEkFFHbZhwULjq6v7CNoB5g4NiBq4QwQw6Y5hRWLpFNpbnEvbTcSguQ6wncqor2D7VNoCuBX8rWVGvQF3aSntBlysJnm6bqpCnwo3tggYOOyaxXp6TK+Tag8JSG7hSAq4FscmIPXsdTsHXt0L8Tvwqcgbp3CeGAwRBCJ7C0uD8ONenVqd1RiOlRqaCKG0iiygxnqQ2gUHo4Eg3vyyLQHHmyM0q7H4o6aTyn+pqzz7BTGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wRMVBy+LIEzF1uKsYT8klw0+LEGkOnRtojCwM82GAZQ=;
+ b=O0I3aUBxNxpUu4IVOOGWB34KSYApbs+lR7dv/3hjA7J+5RG+wlr+d5rAYCdBIZzaJVL2jmd65UzRQEosjyn+5B2AOHWtsXa5rER//LGWTPrRbub766r+dZVOw2Z5cDT+Gqv/a1lhoqq+IcozCqgeSRNU2bRgO56h1KPfEzn4wH0=
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ (2603:10b6:207:30::18) by BL0PR2101MB0900.namprd21.prod.outlook.com
+ (2603:10b6:207:36::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.1; Thu, 23 Jul
+ 2020 19:55:21 +0000
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::f5a4:d43f:75c1:1b33]) by BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::f5a4:d43f:75c1:1b33%5]) with mapi id 15.20.3239.007; Thu, 23 Jul 2020
+ 19:55:21 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        Chi Song <Song.Chi@microsoft.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
+ ethtool regs
+Thread-Topic: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
+ ethtool regs
+Thread-Index: AQHWYL7EarZGJgwXE0O1xrmSwXiMI6kVj2kAgAADMbA=
+Date:   Thu, 23 Jul 2020 19:55:20 +0000
+Message-ID: <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
+References: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+ <20200723193542.6vwu4cbokbihw3nh@lion.mk-sys.cz>
+In-Reply-To: <20200723193542.6vwu4cbokbihw3nh@lion.mk-sys.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-23T19:55:19Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=36674a39-8aab-4e9d-a159-4d8b5b4bd8e7;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: suse.cz; dkim=none (message not signed)
+ header.d=none;suse.cz; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [75.100.88.238]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6aa8d0e2-ecee-4ef6-fb97-08d82f425500
+x-ms-traffictypediagnostic: BL0PR2101MB0900:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB0900C920572DB4B03E5B8712CA760@BL0PR2101MB0900.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +J6MVmfqhd65A5HfP0qtf59gfQno69/bX4Gz3VS20E+nbtVSeatWHMOOefc6T7Fo5V2HxLxwB6jVOHw+JUNA+64FQzEcylWOJoiy61btqNR4TtSCRee7nwFvH+nb+nTE6VA3fsfnt+sGJ7OOlydBHU16XvQnwMogo7Mqs1zuuO9smFdgoolSNYrRczQWmHgPrP9297/KCIeUpL+zp/PYq/56LhVACeptjmTcN6aNtincB0Ojk8nbWb+n7tQILS8jqABS4OiU+NPBALkfNXLb6KkbrXtlkc1y9t7jAXC/jck1XAVvlpoclDWoNPNRJaSo
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(136003)(396003)(346002)(8990500004)(83380400001)(71200400001)(52536014)(86362001)(7696005)(66476007)(66946007)(5660300002)(186003)(64756008)(6506007)(66556008)(66446008)(10290500003)(82960400001)(82950400001)(26005)(4326008)(76116006)(53546011)(478600001)(54906003)(110136005)(8676002)(316002)(55016002)(2906002)(8936002)(33656002)(6636002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: OeSEA958MCXV3U3wBYjbLZ4d+EMjVZXs+6OXQkILh0+CLvzz0mXjJexAiD5b41Sc5UbMcHQdfQ4I/i5Ekag4feUYbRuLvQGdxp5/yyxKfihbJucYqTbZyRITxovuhtFWzu57roZo47PFma7ABWYeE/NjelpDOZWR94+TBtVbpwLoTuPNpUtYO6K3Hy+ftQXPeHD2jlqcoHVYYNAzOjDgsRATYtsgSqzqKWR7ze7S4a7tbvW0is9kXWXzN/pptTf/gVdYOKQ8m7sGPmSdJoRN652mQrenIY3zz75sfzOYkGUk1UE6e5WT2v+xBbqt048gOfGqz0DuN0T9NMIL7mPm2wPPssWyS3CvEIb9G98oDHq9EFgEi4X6fr84sz1G6cDikgn5+RaELisiAjmvtC0eYTZqHVE6fMcFhMLg+xXEXVBTFxU3n4wz3pOOFzGukruSLVh8Asawrgt89R/IA9I6vdzJ0rR621752yDI2JeTSbezvYbqca0teIydIMyOrECH8WA4cR2PUTTeZGhsZAui3Mf0gLLnrd0JaptNXBt4A1dv0wk+tulpN5Pwjg6am2AoM0QvUdF+dNaz+5IuIHjUfN9z395PtcvIvsi7YxU7hTayhDlo0erlvAe0yfssSlj2Fi4aSO4aMMzRUwlpUIbvpw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6aa8d0e2-ecee-4ef6-fb97-08d82f425500
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 19:55:21.0691
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qSc8wLUk6qlK4tkZcdi3SZPTQDjghYG7/mx26jTZ65Hg6CyEIs3gvKzFuqPbn8SyhcBk4HYvRalz8xzBAGZCHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0900
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ira,
 
-ira.weiny@intel.com writes:
 
-> ...
-> 	// ref == 0
-> 	dev_access_enable()  // ref += 1 ==> disable protection
-> 		irq()
-> 			// enable protection
-> 			// ref = 0
-> 			_handler()
-> 				dev_access_enable()   // ref += 1 ==> disable protection
-> 				dev_access_disable()  // ref -= 1 ==> enable protection
-> 			// WARN_ON(ref != 0)
-> 			// disable protection
-> 	do_pmem_thing()  // all good here
-> 	dev_access_disable() // ref -= 1 ==> 0 ==> enable protection
+> -----Original Message-----
+> From: Michal Kubecek <mkubecek@suse.cz>
+> Sent: Thursday, July 23, 2020 3:36 PM
+> To: Chi Song <Song.Chi@microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> Wei Liu <wei.liu@kernel.org>; David S. Miller <davem@davemloft.net>; Jaku=
+b
+> Kicinski <kuba@kernel.org>; linux-hyperv@vger.kernel.org;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table t=
+o
+> ethtool regs
+>=20
+> On Wed, Jul 22, 2020 at 11:59:09PM -0700, Chi Song wrote:
+> > An imbalanced TX indirection table causes netvsc to have low
+> > performance. This table is created and managed during runtime. To help
+> > better diagnose performance issues caused by imbalanced tables, it need=
+s
+> > make TX indirection tables visible.
+> >
+> > Because TX indirection table is driver specified information, so
+> > display it via ethtool register dump.
+>=20
+> Is the Tx indirection table really unique to netvsc or can we expect
+> other drivers to support similar feature? Also, would it make sense to
+> allow also setting the table with ethtool? (AFAICS it can be only set
+> from hypervisor at the moment.)
 
-...
-
-> First I'm not sure if adding this state to idtentry_state and having
-> that state copied is the right way to go.
-
-Adding the state to idtentry_state is fine at least for most interrupts
-and exceptions. Emphasis on most.
-
-#PF does not work because #PF can schedule.
-
-> It seems like we should start passing this by reference instead of
-> value.  But for now this works as an RFC.  Comments?
-
-Works as in compiles, right?
-
-static void noinstr idt_save_pkrs(idtentry_state_t state)
-{
-        state.foo = 1;
-}
-
-How is that supposed to change the caller state? C programming basics.
-
-> Second, I'm not 100% happy with having to save the reference count in
-> the exception handler.  It seems like a very ugly layering violation but
-> I don't see a way around it at the moment.
-
-That state is strict per task, right? So why do you want to store it
-anywhere else that in task/thread storage. That solves your problem of
-#PF scheduling nicely.
-
-> Third, this patch has gone through a couple of revisions as I've had
-> crashes which just don't make sense to me.  One particular issue I've
-> had is taking a MCE during memcpy_mcsafe causing my WARN_ON() to fire.
-> The code path was a pmem copy and the ref count should have been
-> elevated due to dev_access_enable() but why was
-> idtentry_enter()->idt_save_pkrs() not called I don't know.
-
-Because #MC does not go through idtentry_enter(). Neither do #NMI, #DB, #BP.
-
-> Finally, it looks like the entry/exit code is being refactored into
-> common code.  So likely this is best handled somewhat there.  Because
-> this can be predicated on CONFIG_ARCH_HAS_SUPERVISOR_PKEYS and handled
-> in a generic fashion.  But that is a ways off I think.
-
-The invocation of save/restore might be placed in generic code at least
-for the common exception and interrupt entries.
-
-> +static void noinstr idt_save_pkrs(idtentry_state_t state)
-
-*state. See above.
-
-> +#else
-> +/* Define as macros to prevent conflict of inline and noinstr */
-> +#define idt_save_pkrs(state)
-> +#define idt_restore_pkrs(state)
-
-Empty inlines do not need noinstr because they are optimized out. If you
-want inlines in a noinstr section then use __always_inline
-
->  /**
->   * idtentry_enter - Handle state tracking on ordinary idtentries
->   * @regs:	Pointer to pt_regs of interrupted context
-> @@ -604,6 +671,8 @@ idtentry_state_t noinstr idtentry_enter(struct pt_regs *regs)
->  		return ret;
->  	}
->  
-> +	idt_save_pkrs(ret);
-
-No. This really has no business to be called before the state is
-established. It's not something horribly urgent and write_pkrs() is NOT
-noinstr and invokes wrmsrl() which is subject to tracing.
-
-> +
-> +	idt_restore_pkrs(state);
-
-This one is placed correctly.
+Currently, TX indirection table is only used by the Hyper-V synthetic NIC. =
+I'm=20
+not aware of any other NIC planning to use this.
+This table is created by host dynamically based on host side CPU usage,=20
+and provided to the VM periodically. Our protocol doesn't let the guest sid=
+e=20
+to change it.
 
 Thanks,
+- Haiyang
 
-        tglx
