@@ -2,133 +2,144 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BFAC433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51D8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4C32086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA411207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgGWO4n convert rfc822-to-8bit (ORCPT
+        id S1729269AbgGWO6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:56:43 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:58710 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728134AbgGWO4i (ORCPT
+        Thu, 23 Jul 2020 10:58:20 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:33628 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728671AbgGWO6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:56:38 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-82-SdYRZOb-OAyxxDdIZA3c_Q-1; Thu, 23 Jul 2020 15:56:34 +0100
-X-MC-Unique: SdYRZOb-OAyxxDdIZA3c_Q-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 15:56:33 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 Jul 2020 15:56:33 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: [PATCH 03/26] bpfilter: reject kernel addresses
-Thread-Topic: [PATCH 03/26] bpfilter: reject kernel addresses
-Thread-Index: AQHWYLhxJPyZOJNDGEen8+LVytPg86kVPIvA///w6YCAABGh0A==
-Date:   Thu, 23 Jul 2020 14:56:33 +0000
-Message-ID: <5fc6b1716f1b4534bda95bab49512754@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-4-hch@lst.de>
- <c3dc5b4d84e64230bb6ca8df7bb70705@AcuMS.aculab.com>
- <20200723144455.GA12280@lst.de>
-In-Reply-To: <20200723144455.GA12280@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 23 Jul 2020 10:58:19 -0400
+Received: by mail-il1-f200.google.com with SMTP id c1so3639006ilr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:58:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=2ajYJta7gPomPQ3ggHDnk19Nes9XzOskd/Ob0MXDn1Q=;
+        b=qurEEn4XOKPWNy5DA3ciS6SGQXeHA5XVeCHvbMCTD+7ysYCuVyXWsA5RwhL3wfQ0VQ
+         mpAanhC0vMvKW6a+rbTpRm9JSl8sf5BeuvDr6lm6GJOP6FcByM7TxIwQKYmui+ORZPq0
+         VnuulUdn4c+wrNuKS0he9QueJ1rGZsWjQsYTJZpvsNC9bhCd80H2d5D+U+Q6tlDWKAQ1
+         fX7WZS4dQm+IW3ps5cY7vueP9nZojnWAv3qh4/sHyLi0Gkn6C/LAJPgEapSsYYGnEKF4
+         4XanED9efP8W4+5vFJDFoRgl90rfFfzT84v08zNgb7p8MN7dMLJ93ZVDavlZalZjI6/f
+         5oYw==
+X-Gm-Message-State: AOAM530g1OFygkqOfQClu0yHFYHjekZt+vpYuCCcanr9aWxih/HCZBl9
+        /syAvubs3JNI4Bcs+EjgpO7DJtSCw/ZhBMU4xZFhHkC0WFNj
+X-Google-Smtp-Source: ABdhPJxLPDPDJRModLlh6+FmiV2EJvPa918pxVPpQoJibFragVrEp0RB2Fxbt3WIi/1jUJ23r9Z4DlX6231HTfFDUZrEo1SL9Iu0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-Received: by 2002:a5e:dc03:: with SMTP id b3mr5032711iok.97.1595516298141;
+ Thu, 23 Jul 2020 07:58:18 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 07:58:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002f24fc05ab1d1669@google.com>
+Subject: WARNING: locking bug in sock_def_write_space
+From:   syzbot <syzbot+cc67536ed6798a962957@syzkaller.appspotmail.com>
+To:     christophe.jaillet@wanadoo.fr, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        navid.emamdoost@gmail.com, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 'Christoph Hellwig'
-> Sent: 23 July 2020 15:45
-> 
-> On Thu, Jul 23, 2020 at 02:42:11PM +0000, David Laight wrote:
-> > From: Christoph Hellwig
-> > > Sent: 23 July 2020 07:09
-> > >
-> > > The bpfilter user mode helper processes the optval address using
-> > > process_vm_readv.  Don't send it kernel addresses fed under
-> > > set_fs(KERNEL_DS) as that won't work.
-> >
-> > What sort of operations is the bpf filter doing on the sockopt buffers?
-> >
-> > Any attempts to reject some requests can be thwarted by a second
-> > application thread modifying the buffer after the bpf filter has
-> > checked that it allowed.
-> >
-> > You can't do security by reading a user buffer twice.
-> 
-> I'm not saying that I approve of the design, but the current bpfilter
-> design uses process_vm_readv to access the buffer, which obviously does
-> not work with kernel buffers.
+Hello,
 
-Is this a different bit of bpf that that which used to directly
-intercept setsockopt() requests and pass them down from a kernel buffer?
+syzbot found the following issue on:
 
-I can't held feeling that bpf is getting 'too big for its boots' and
-will have a local-user privilege escalation hiding in it somewhere.
+HEAD commit:    d15be546 Merge tag 'media/v5.8-3' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1356c130900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+dashboard link: https://syzkaller.appspot.com/bug?extid=cc67536ed6798a962957
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-I've had to fix my 'out of tree' driver to remove the [sg]etsockopt()
-calls. Some of the replacements will go badly wrong if I've accidentally
-lost track of the socket type.
-I do have a daemon process sleeping in the driver - so I can wake it up
-and make the requests from it with a user buffer.
-I may have to implement that to get the negotiated number of 'ostreams'
-to an SCTP connection.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-	David
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cc67536ed6798a962957@syzkaller.appspotmail.com
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 0 PID: 15816 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:183 [inline]
+WARNING: CPU: 0 PID: 15816 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:172 [inline]
+WARNING: CPU: 0 PID: 15816 at kernel/locking/lockdep.c:183 check_wait_context kernel/locking/lockdep.c:4054 [inline]
+WARNING: CPU: 0 PID: 15816 at kernel/locking/lockdep.c:183 __lock_acquire+0x1629/0x56e0 kernel/locking/lockdep.c:4330
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 15816 Comm: syz-executor.5 Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x45 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
+RIP: 0010:hlock_class kernel/locking/lockdep.c:183 [inline]
+RIP: 0010:hlock_class kernel/locking/lockdep.c:172 [inline]
+RIP: 0010:check_wait_context kernel/locking/lockdep.c:4054 [inline]
+RIP: 0010:__lock_acquire+0x1629/0x56e0 kernel/locking/lockdep.c:4330
+Code: 08 84 d2 0f 85 bd 35 00 00 8b 35 e2 4e 55 09 85 f6 0f 85 cc fa ff ff 48 c7 c6 20 b0 4b 88 48 c7 c7 20 ab 4b 88 e8 b9 44 eb ff <0f> 0b e9 b2 fa ff ff e8 7b 20 8c 06 85 c0 0f 84 ed fa ff ff 48 c7
+RSP: 0018:ffffc900174df6a0 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: ffff888084610400 RSI: ffffffff815d4eb7 RDI: fffff52002e9bec6
+RBP: ffff888084610cf8 R08: 0000000000000000 R09: ffffffff89bb5c23
+R10: 0000000000001626 R11: 0000000000000001 R12: ffff888084610400
+R13: 0000000000001924 R14: ffff888059583598 R15: 0000000000040000
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x8c/0xc0 kernel/locking/spinlock.c:159
+ __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
+ sock_def_write_space+0x1fd/0x630 net/core/sock.c:2927
+ sock_wfree+0x1cc/0x240 net/core/sock.c:2060
+ skb_release_head_state+0x9f/0x250 net/core/skbuff.c:651
+ skb_release_all net/core/skbuff.c:662 [inline]
+ __kfree_skb net/core/skbuff.c:678 [inline]
+ kfree_skb.part.0+0x89/0x350 net/core/skbuff.c:696
+ kfree_skb+0x7d/0x100 include/linux/refcount.h:270
+ skb_queue_purge+0x14/0x30 net/core/skbuff.c:3077
+ qrtr_tun_release+0x40/0x60 net/qrtr/tun.c:118
+ __fput+0x33c/0x880 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0xb72/0x2a40 kernel/exit.c:805
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x40b/0x1ee0 kernel/signal.c:2743
+ do_signal+0x82/0x2520 arch/x86/kernel/signal.c:810
+ exit_to_usermode_loop arch/x86/entry/common.c:235 [inline]
+ __prepare_exit_to_usermode+0x156/0x1f0 arch/x86/entry/common.c:269
+ do_syscall_64+0x6c/0xe0 arch/x86/entry/common.c:393
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c1f9
+Code: Bad RIP value.
+RSP: 002b:00007f5c22616cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000078bf08 RCX: 000000000045c1f9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000078bf08
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+R13: 00007ffd6b37c0ff R14: 00007f5c226179c0 R15: 000000000078bf0c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
