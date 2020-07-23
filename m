@@ -3,74 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5F6C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65363C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363FD206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6642065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgGWUWn (ORCPT
+        id S1728040AbgGWUWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgGWUWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:22:43 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4DEC0619DC;
-        Thu, 23 Jul 2020 13:22:43 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 60DDA2BA;
-        Thu, 23 Jul 2020 20:22:43 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 14:22:42 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: watch_queue.rst: fix malformed inline literal
-Message-ID: <20200723142242.5fd5760f@lwn.net>
-In-Reply-To: <20200718165107.625847-2-dwlsalmeida@gmail.com>
-References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
-        <20200718165107.625847-2-dwlsalmeida@gmail.com>
-Organization: LWN.net
+        Thu, 23 Jul 2020 16:22:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38746 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbgGWUWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:22:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8326AAB55;
+        Thu, 23 Jul 2020 20:22:59 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 1D40A604C9; Thu, 23 Jul 2020 22:22:51 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 22:22:51 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Chi Song <Song.Chi@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
+ ethtool regs
+Message-ID: <20200723202251.vwh4xr7ogp72gcsg@lion.mk-sys.cz>
+References: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+ <20200723193542.6vwu4cbokbihw3nh@lion.mk-sys.cz>
+ <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 13:50:56 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
+On Thu, Jul 23, 2020 at 07:55:20PM +0000, Haiyang Zhang wrote:
+> > -----Original Message-----
+> > From: Michal Kubecek <mkubecek@suse.cz>
+> > Sent: Thursday, July 23, 2020 3:36 PM
+> > To: Chi Song <Song.Chi@microsoft.com>
+> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > Wei Liu <wei.liu@kernel.org>; David S. Miller <davem@davemloft.net>; Jakub
+> > Kicinski <kuba@kernel.org>; linux-hyperv@vger.kernel.org;
+> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
+> > ethtool regs
+> > 
+> > On Wed, Jul 22, 2020 at 11:59:09PM -0700, Chi Song wrote:
+> > > An imbalanced TX indirection table causes netvsc to have low
+> > > performance. This table is created and managed during runtime. To help
+> > > better diagnose performance issues caused by imbalanced tables, it needs
+> > > make TX indirection tables visible.
+> > >
+> > > Because TX indirection table is driver specified information, so
+> > > display it via ethtool register dump.
+> > 
+> > Is the Tx indirection table really unique to netvsc or can we expect
+> > other drivers to support similar feature? Also, would it make sense to
+> > allow also setting the table with ethtool? (AFAICS it can be only set
+> > from hypervisor at the moment.)
+> 
+> Currently, TX indirection table is only used by the Hyper-V synthetic NIC. I'm 
+> not aware of any other NIC planning to use this.
+> This table is created by host dynamically based on host side CPU usage, 
+> and provided to the VM periodically. Our protocol doesn't let the guest side 
+> to change it.
 
->  To manage a watch list, the following functions are provided:
->  
-> -  * ``void init_watch_list(struct watch_list *wlist,
-> -			   void (*release_watch)(struct watch *wlist));``
-> +  * ``void init_watch_list(struct watch_list *wlist, void (*release_watch)(struct watch *wlist));``
->  
->      Initialise a watch list.  If ``release_watch`` is not NULL, then this
->      indicates a function that should be called when the watch_list object is
-> @@ -182,9 +181,9 @@ The following functions are provided to manage watches:
->      driver-settable fields in the watch struct must have been set before this
->      is called.
->  
-> -  * ``int remove_watch_from_object(struct watch_list *wlist,
-> -				   struct watch_queue *wqueue,
-> -				   u64 id, false);``
-> +  * ``int remove_watch_from_object(struct watch_list *wlist,``
-> +				 ``struct watch_queue *wqueue,``
-> +				 ``u64 id, false);``
+If host is expected to rewrite the table periodically, it would indeed
+be of little use to set it on guest side. OK, let's do it as register
+dump and see if someone else comes with similar feature.
 
-This is very much the wrong fix; please just put the text into a literal
-block instead.
-
-Thanks,
-
-jon
+Michal
