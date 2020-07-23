@@ -2,78 +2,97 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C03C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16E5C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F26320792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLSPLWFP"
+	by mail.kernel.org (Postfix) with ESMTP id 70CF7206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595535017;
+	bh=eNKpwSJoIH/QWZoG8b/RRJYSwe76+p44J5pfJxf14y8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jjalX2xDkBcvHdAYdh9Mw9W9VV5H2SGQH6XRMubGPnV8B+4KU3MILw4DHLoXvT0Hu
+	 r5KTdySF6sVytP74TeQWwH5d4u2e2BWU1x/ySjjv9G4KDM2okSgsU5JH/lvYHGP0Du
+	 I/ghT+F74l66JdiIOMfsT960ZnH/xFDKc1YCBkg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgGWUJG (ORCPT
+        id S1727020AbgGWUKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGWUJF (ORCPT
+        Thu, 23 Jul 2020 16:10:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36719 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWUKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:09:05 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF773C0619DC;
-        Thu, 23 Jul 2020 13:09:05 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id a11so5430594ilk.0;
-        Thu, 23 Jul 2020 13:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZypJVFE6v/3Jo2AiBRXxfrvf66bExjGHXFBsT718YSg=;
-        b=bLSPLWFPUYatzpPGMSwY8PGRalv0YCgMUYV5BWjWsG6K+jxU0oOYCdaCuT3Q5CBsA8
-         f8C9CoqEPoXpKg2te19bAOXKUBLCaffZVHJTg6q+bcCFl+zUK/ghi9H/805pv0XhTuoV
-         76c5hgFtAtfbxb1RWSRqXBhA6GS5QOOWKaU7bCMQUr9IYr7LvZHylt+cRYaEsoMy5MQL
-         8MIn8UJwTJijGiURy83bw4ZiBcYjvOu6gtSjHFXkx7UMuQBq5xjFkC22CegqpNt3Acls
-         ufAroUlixWrBFDD7avG5dW0gY6AN+nFgnUk3R+nmYR1w3BxS4TE7avzIkqq6iL13nq+j
-         HAyQ==
+        Thu, 23 Jul 2020 16:10:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id t131so7605916iod.3;
+        Thu, 23 Jul 2020 13:10:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZypJVFE6v/3Jo2AiBRXxfrvf66bExjGHXFBsT718YSg=;
-        b=ShwDMb/fh6bQvfkzk+JC3303kjxE3brOVYNsOpFBGpcpk+w0y8FWdn39EgxN7evDLQ
-         xgs4lwWLF3aZQ5X8fJhHtAOOIEpCs0/Tc/+9a6DoVQsjf86WBTW7mS3U0GykhxBwe6kJ
-         ST6NTULge7G2/giqZ3jDLXt4D6K/kmXKtc36xKABxUI8/q9i9AxBCDGqdIMOjnMwCAxU
-         NXFl/FAuma4T2vt1W3hUj8EN3A/3Qhk3orDklIdNUmEhK7m3wBmamxRrHwFYAdivUDhf
-         euF+DsOL859LvsGZ/TTGR3/OgPDaI8nodCR9QfPnNRC98Q25v4P2kfmeMSC10Y/oopnN
-         VJMg==
-X-Gm-Message-State: AOAM533n/J07EUxcNtNGyeV2+H/F+2Zslq5UyPznevMP1d3Ulstn2bg9
-        PCwMXXI8wT4b9UVr/cV2YVNgOAVGTBHrNhxvChlfoQwUlRA=
-X-Google-Smtp-Source: ABdhPJx8TQODPy60tmUDEP6q1R8QCRznpSiMWaVSF2+aT6RUj2ygg7oF8EYodrl7Fxb0piW5yw1GbXuWuTiFihbRTDw=
-X-Received: by 2002:a92:9a45:: with SMTP id t66mr4259372ili.268.1595534944808;
- Thu, 23 Jul 2020 13:09:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6qKebxTelJllWzX+vBkDTjUwXCky31GlyoLB/Us13RU=;
+        b=m1KZXjXETbceHodYwrOXIHlhGjcabQvxNMPpbhG4AKQoamlCNiCBOBvNyyZaklX3ae
+         jiA9R1M0KJo0A8IShcK8PKYQASEThHOXg6BReGMn0tmJvr5/n5buuq7dbouRav8g17lL
+         zlDlZ7QgUd/NiHGGZuzR8iYNx3QUzkJuUg/SsfNJKrMRBlPgGTT2JBl+/1zb6RuUEllQ
+         VJmjupLDalFl4IaZ9kWlvI9fqd541wzVakPmrWZYC0mrbgiOajq7n1WysUHJx6ALcq3q
+         OVQyRQpKpdkBARQRYNJRqE3/gLjUI2/8ydO4E3AV4XkINJ874Jk5nwobFWUxdwwrovzh
+         +ExQ==
+X-Gm-Message-State: AOAM532evdEofb3v68iq1JnLpI0fxYl0MX5uvw4xSuLeruByEISelU8m
+        k3+KC1V2VX6daQpH1UbzGg==
+X-Google-Smtp-Source: ABdhPJxGEX8Ak0s03CYs/Oeyc9EzvHmJLaxCDLLXIMq2atxOMK1p55BpCBZEw/SWFXye1D4dLGknwA==
+X-Received: by 2002:a05:6602:2184:: with SMTP id b4mr6883379iob.156.1595535015110;
+        Thu, 23 Jul 2020 13:10:15 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k7sm1963383iot.20.2020.07.23.13.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 13:10:14 -0700 (PDT)
+Received: (nullmailer pid 783482 invoked by uid 1000);
+        Thu, 23 Jul 2020 20:10:13 -0000
+Date:   Thu, 23 Jul 2020 14:10:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, git@xilinx.com,
+        saikrishna12468@gmail.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Updated binding for Versal
+ reset driver
+Message-ID: <20200723201013.GA783435@bogus>
+References: <1595402165-8282-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1595402165-8282-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 MIME-Version: 1.0
-References: <00000000000047d80905ab1fccdb@google.com>
-In-Reply-To: <00000000000047d80905ab1fccdb@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 23 Jul 2020 13:08:53 -0700
-Message-ID: <CAM_iQpXq9dYj67Lrv73UazJWG5UVVuMO0iFwJJWg7S_H-z1YcA@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in vlan_dev_get_iflink
-To:     syzbot <syzbot+d702fd2351989927037c@syzkaller.appspotmail.com>
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595402165-8282-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz test: https://github.com/congwang/linux.git net
+On Wed, 22 Jul 2020 12:46:04 +0530, Sai Krishna Potthuri wrote:
+> Added documentation and Versal reset indices to describe
+> about Versal reset driver bindings.
+> In Versal all reset indices includes Class, SubClass, Type, Index
+> information whereas class refers to clock, reset, power etc.,
+> Underlying firmware in Versal have such classification and expects
+> the ID to be this way.
+> [13:0] - Index bits
+> [19:14] - Type bits
+> [25:20] - SubClass bits
+> [31:26] - Class bits.
+> 
+> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+> ---
+>  .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
+>  .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
+>  2 files changed, 112 insertions(+), 4 deletions(-)
+>  create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
