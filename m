@@ -2,102 +2,71 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ACC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CFFC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6CC420888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDACA20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595466329;
-	bh=W2CYa/0UitifMAE40ODWZqF2evqHAMepGzJ4pFCBC0k=;
+	s=default; t=1595466373;
+	bh=O7z5DCoAi4Xu7UzI3rgGHjrWcS50NvtztAbu552gvjk=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=fPFTvaDkH8L8fT6n0+YUvSm6gfIp3szCH23glvg47f0FE9z8Ci+5Zdsd5Tznr/Rro
-	 m7ymgx4EW6pWsopP1Sa0m1YvFEw6Mdv2Kg9xT2+cHioXJC9lF6s5I7GzT62UhROZBr
-	 wPMmzxHn+sf1XqvNowJLTVu3sT6qpufjKxjJVPV0=
+	b=YyS6ATWVu0YORyDVlUQu9uS5/khkVhkNG66WmC2Tvt/7dHtfQqGoKAYBQfylbEm8j
+	 X3295c2qeD3Pp4Hq0fZE11jqi32R51LN5w7rVcwnIzDg3unxcdvj3FIcJ39MwOb/Dn
+	 3hn0p5SDgHJwJtGunpZkrf151NmP2kXXaAdRWLak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387584AbgGWBF3 (ORCPT
+        id S2387513AbgGWBGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51946 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 21:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733270AbgGWBF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:05:28 -0400
+        id S1729423AbgGWBGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:06:12 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0DEF2080D;
-        Thu, 23 Jul 2020 01:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A25802080D;
+        Thu, 23 Jul 2020 01:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595466327;
-        bh=W2CYa/0UitifMAE40ODWZqF2evqHAMepGzJ4pFCBC0k=;
+        s=default; t=1595466371;
+        bh=O7z5DCoAi4Xu7UzI3rgGHjrWcS50NvtztAbu552gvjk=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=0J1pLNs4srdlY758oP/2THuIFMZVT9hxJQSMive90bFdHGH6+nbirfrxeGSVL3LTd
-         FEDb7DfBOban1eIwGmg3oQ6s5N4HWHsvnHWpGitOtdFTll3xUArvAF+eU3pMkjpJ7h
-         NU+Nrqr8VQxmfC9GaSPK3UK+i9+JAROIxT8UX4Y8=
+        b=M0GUegne2U06Hs5J8//RxDtE7n99J5kRQ1A7/ZziPPFb4sXyI2SgCpmCgJvZYkEuZ
+         wrbiPx4m8j8YiyjvJ3iIrcYCkz7134mZ9n5Lox8w87Q3AJde4gWebUaOq5zgqGA0ZF
+         5AMZYli9N1V0if4vBlCXz7aNp2FyBMtuzmLj5+UI=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
-References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-3-git-send-email-tdas@codeaurora.org> <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com> <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
+In-Reply-To: <69dccde9-f577-6266-07cb-820930bace68@linaro.org>
+References: <1594796050-14511-1-git-send-email-tdas@codeaurora.org> <69dccde9-f577-6266-07cb-820930bace68@linaro.org>
+Subject: Re: [PATCH v0] clk: qcom: gcc: Update disp gpll0 branch for 7180/845
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     David Brown <david.brown@linaro.org>,
         Rajendra Nayak <rnayak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
+        evgreen@google.com
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Taniya Das <tdas@codeaurora.org>
-Date:   Wed, 22 Jul 2020 18:05:27 -0700
-Message-ID: <159546632701.3847286.14646561815611231678@swboyd.mtv.corp.google.com>
+Date:   Wed, 22 Jul 2020 18:06:11 -0700
+Message-ID: <159546637100.3847286.13662517451264201995@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-07-21 10:26:53)
-> Hi Stephen,
+Quoting Dmitry Baryshkov (2020-07-21 07:31:56)
+> On 15/07/2020 09:54, Taniya Das wrote:
+> > The display gpll0 branch clock needs to be always left enabled, thus
+> > move the clock ops to _aon branch ops.
 >=20
-> Thanks for the review.
->=20
-> On 7/21/2020 1:21 PM, Stephen Boyd wrote:
->=20
-> >> +...
-> >> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-=
-bindings/clock/qcom,gcc-sc7180.h
-> >> index 992b67b..bdf43adc 100644
-> >> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> >> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> >> @@ -138,6 +138,7 @@
-> >>   #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
-> >>   #define GCC_MSS_SNOC_AXI_CLK                                   129
-> >>   #define GCC_SEC_CTRL_CLK_SRC                                   130
-> >> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
-> >>  =20
-> >>   /* GCC resets */
-> >>   #define GCC_QUSB2PHY_PRIM_BCR                                  0
-> >=20
-> > This hunk should be in the next patch. Oh but then that patch should co=
-me
-> > before this one so the binding can use it. Either way, shouldn't be part
-> > of this patch.
-> >=20
->=20
->=20
-> We had a problem with the bot complaining about the clock handles being=20
-> used in the example.
->=20
-> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1582540703=
--6328-4-git-send-email-tdas@codeaurora.org/
->=20
-> Thus I have kept the GCC bindings in the same patch.
+> Does this also apply to sm8250/sm8150?
 >=20
 
-Ah ok. Well I'll fix it when you resend to fix the comment on patch 4.
+Probably.
