@@ -2,142 +2,222 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFE6C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4DEC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11C920709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D1E206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:34:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUmgMVV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgGWJeS (ORCPT
+        id S1728170AbgGWJes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:34:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7948 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727828AbgGWJeS (ORCPT
+        Thu, 23 Jul 2020 05:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgGWJer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:34:18 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N9XXDA127552;
-        Thu, 23 Jul 2020 05:34:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f1gxhk58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 05:34:00 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N9Y0m1129436;
-        Thu, 23 Jul 2020 05:34:00 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f1gxhk4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 05:34:00 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N9FbpA027287;
-        Thu, 23 Jul 2020 09:33:57 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 32brq7p0r5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 09:33:57 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N9XrcJ62521406
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 09:33:53 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D59552054;
-        Thu, 23 Jul 2020 09:33:53 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.40.160])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D715E5204F;
-        Thu, 23 Jul 2020 09:33:48 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, paulus@samba.org,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        pedromfc@br.ibm.com, rogealve@br.ibm.com, jniethe5@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] powerpc/watchpoint/ptrace: Introduce PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31
-Date:   Thu, 23 Jul 2020 15:03:30 +0530
-Message-Id: <20200723093330.306341-1-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200709122944.173744-1-ravi.bangoria@linux.ibm.com>
-References: <20200709122944.173744-1-ravi.bangoria@linux.ibm.com>
+        Thu, 23 Jul 2020 05:34:47 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A5DFC0619DC;
+        Thu, 23 Jul 2020 02:34:47 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id t4so4437874oij.9;
+        Thu, 23 Jul 2020 02:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mUOZNRgi2WDMnJstl3822UZz6W+cTtqoXZUUjvczjxY=;
+        b=GUmgMVV+0yJv2t6Z8/U6LiDv83RrL6WvPXQzaXMvqS8vXXLmonyC2f/sVYS5y3WgFS
+         lu6rgCV0dSB57hhQ+zGsUtViwuNgLJ4Wm7qmLAjXmLIhYKs9InfY8Q9Mg0Z4buKJZJSH
+         cnJDaPA48Vl9eEnM8CUeXSmvI0XU1x4mnwVY6JbJTdqm8hHXsl+0cSSgzHYC3UQRL7ek
+         FGCLCU4pcz8f6uKd3GfUfubrL0znfhsRCvZCn+xxy/PGfjVBLt1c2u5H4VW4nwTojQti
+         twT6bqpOGxsBkLp4efBZayJ0tWmfcim3ZSHR8XUttqsVtES8Gk6Km6KugjNGIC+F8vk6
+         P6kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mUOZNRgi2WDMnJstl3822UZz6W+cTtqoXZUUjvczjxY=;
+        b=Z6tb3doRHuU144pmrCJhF1+lNGD5IpuC2zGuL0k5akMbVcJVBFsoRdJ6q989w4kXZw
+         nkR2HTpH/57h7J8sEv8LfGM9k2/fGZl7z1CHyWMr3xCkgsV0at9+onbGWa1H70oTgiu7
+         3C6ms4pWMjizCsxPIvQ9EY4EsRvYmiYW3ZJnJg2qd5Lsys8m75NLWI2E+xDe/nEA2Xkt
+         Z6f/plbKGntm5azU933HJwFcwFlwRQA+jFOX+sHNNgn0cKoMbkwJOM9f6TZf+PQipj7u
+         X0/KW6d6y9mrvthoAMm7PwqqQcNBWQreffn5TpoRkiiQvBD5nbfPr4xEovHuxztMZA2d
+         RklA==
+X-Gm-Message-State: AOAM530bO4HtHMdfTyboL75o7+f4oFGyMSXzFbTwwDY7HFkP8Ol0OMl5
+        dNzC6DbuR9hIyGEsp3IjTa3RtBlb46AstcnTdSQ=
+X-Google-Smtp-Source: ABdhPJzgqe7CiGqbKBHmABe5mif7/AisJOSoULJ2y82Ij6b5HcCjs5bc/QhzNylG1ab4yxMZWRDIL9nHg85nK/H8kbk=
+X-Received: by 2002:aca:ba45:: with SMTP id k66mr3149488oif.47.1595496887048;
+ Thu, 23 Jul 2020 02:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_03:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=1 mlxscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015
- adultscore=0 malwarescore=0 spamscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230072
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com> <1595469798-3824-2-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1595469798-3824-2-git-send-email-yongqiang.niu@mediatek.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 23 Jul 2020 11:34:35 +0200
+Message-ID: <CAFqH_50=MkBLHJ23hJo--RG=4560ttOUOjHuEwpevghFZ59xQQ@mail.gmail.com>
+Subject: Re: [v7, PATCH 1/7] drm/mediatek: move ddp component defint into mtk_mmsys.h
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31 can be used to determine
-whether we are running on an ISA 3.1 compliant machine. Which is
-needed to determine DAR behaviour, 512 byte boundary limit etc.
-This was requested by Pedro Miraglia Franco de Carvalho for
-extending watchpoint features in gdb. Note that availability of
-2nd DAWR is independent of this flag and should be checked using
-ppc_debug_info->num_data_bps.
+Hi Yongqian Niu,
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
-v1->v2:
- - Mention new flag in Documentaion/ as well.
+Thank you for your patch
 
- Documentation/powerpc/ptrace.rst          | 1 +
- arch/powerpc/include/uapi/asm/ptrace.h    | 1 +
- arch/powerpc/kernel/ptrace/ptrace-noadv.c | 5 ++++-
- 3 files changed, 6 insertions(+), 1 deletion(-)
+Missatge de Yongqiang Niu <yongqiang.niu@mediatek.com> del dia dj., 23
+de jul. 2020 a les 4:05:
+>
+> move ddp component defint into mtk_mmsys.h
+>
 
-diff --git a/Documentation/powerpc/ptrace.rst b/Documentation/powerpc/ptrace.rst
-index 864d4b6dddd1..4d42290248cb 100644
---- a/Documentation/powerpc/ptrace.rst
-+++ b/Documentation/powerpc/ptrace.rst
-@@ -46,6 +46,7 @@ features will have bits indicating whether there is support for::
-   #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x4
-   #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x8
-   #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x10
-+  #define PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31	0x20
- 
- 2. PTRACE_SETHWDEBUG
- 
-diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
-index f5f1ccc740fc..0a87bcd4300a 100644
---- a/arch/powerpc/include/uapi/asm/ptrace.h
-+++ b/arch/powerpc/include/uapi/asm/ptrace.h
-@@ -222,6 +222,7 @@ struct ppc_debug_info {
- #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x0000000000000004
- #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x0000000000000008
- #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x0000000000000010
-+#define PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31	0x0000000000000020
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-index 697c7e4b5877..b2de874d650b 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-@@ -52,8 +52,11 @@ void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
- 	dbginfo->sizeof_condition = 0;
- 	if (IS_ENABLED(CONFIG_HAVE_HW_BREAKPOINT)) {
- 		dbginfo->features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
--		if (dawr_enabled())
-+		if (dawr_enabled()) {
- 			dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR;
-+			if (cpu_has_feature(CPU_FTR_ARCH_31))
-+				dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31;
-+		}
- 	} else {
- 		dbginfo->features = 0;
- 	}
--- 
-2.26.2
+There is a typo, should be "defines". But why you should move these
+defines to mtk-mmsys?
 
+
+
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 34 +----------------------------
+>  drivers/soc/mediatek/mtk-mmsys.c            |  4 +---
+>  include/linux/soc/mediatek/mtk-mmsys.h      | 33 ++++++++++++++++++++++++++++
+>  3 files changed, 35 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index debe363..161201f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -7,6 +7,7 @@
+>  #define MTK_DRM_DDP_COMP_H
+>
+>  #include <linux/io.h>
+> +#include <linux/soc/mediatek/mtk-mmsys.h>
+>
+>  struct device;
+>  struct device_node;
+> @@ -35,39 +36,6 @@ enum mtk_ddp_comp_type {
+>         MTK_DDP_COMP_TYPE_MAX,
+>  };
+>
+> -enum mtk_ddp_comp_id {
+> -       DDP_COMPONENT_AAL0,
+> -       DDP_COMPONENT_AAL1,
+> -       DDP_COMPONENT_BLS,
+> -       DDP_COMPONENT_CCORR,
+> -       DDP_COMPONENT_COLOR0,
+> -       DDP_COMPONENT_COLOR1,
+> -       DDP_COMPONENT_DITHER,
+> -       DDP_COMPONENT_DPI0,
+> -       DDP_COMPONENT_DPI1,
+> -       DDP_COMPONENT_DSI0,
+> -       DDP_COMPONENT_DSI1,
+> -       DDP_COMPONENT_DSI2,
+> -       DDP_COMPONENT_DSI3,
+> -       DDP_COMPONENT_GAMMA,
+> -       DDP_COMPONENT_OD0,
+> -       DDP_COMPONENT_OD1,
+> -       DDP_COMPONENT_OVL0,
+> -       DDP_COMPONENT_OVL_2L0,
+> -       DDP_COMPONENT_OVL_2L1,
+> -       DDP_COMPONENT_OVL1,
+> -       DDP_COMPONENT_PWM0,
+> -       DDP_COMPONENT_PWM1,
+> -       DDP_COMPONENT_PWM2,
+> -       DDP_COMPONENT_RDMA0,
+> -       DDP_COMPONENT_RDMA1,
+> -       DDP_COMPONENT_RDMA2,
+> -       DDP_COMPONENT_UFOE,
+> -       DDP_COMPONENT_WDMA0,
+> -       DDP_COMPONENT_WDMA1,
+> -       DDP_COMPONENT_ID_MAX,
+> -};
+> -
+>  struct mtk_ddp_comp;
+>  struct cmdq_pkt;
+>  struct mtk_ddp_comp_funcs {
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+> index a55f255..36ad66b 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -5,13 +5,11 @@
+>   */
+>
+>  #include <linux/device.h>
+> +#include <linux/io.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/soc/mediatek/mtk-mmsys.h>
+>
+> -#include "../../gpu/drm/mediatek/mtk_drm_ddp.h"
+> -#include "../../gpu/drm/mediatek/mtk_drm_ddp_comp.h"
+> -
+>  #define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN      0x040
+>  #define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN      0x044
+>  #define DISP_REG_CONFIG_DISP_OD_MOUT_EN                0x048
+> diff --git a/include/linux/soc/mediatek/mtk-mmsys.h b/include/linux/soc/mediatek/mtk-mmsys.h
+> index 7bab5d9..2228bf6 100644
+> --- a/include/linux/soc/mediatek/mtk-mmsys.h
+> +++ b/include/linux/soc/mediatek/mtk-mmsys.h
+> @@ -9,6 +9,39 @@
+>  enum mtk_ddp_comp_id;
+>  struct device;
+>
+> +enum mtk_ddp_comp_id {
+> +       DDP_COMPONENT_AAL0,
+> +       DDP_COMPONENT_AAL1,
+> +       DDP_COMPONENT_BLS,
+> +       DDP_COMPONENT_CCORR,
+> +       DDP_COMPONENT_COLOR0,
+> +       DDP_COMPONENT_COLOR1,
+> +       DDP_COMPONENT_DITHER,
+> +       DDP_COMPONENT_DPI0,
+> +       DDP_COMPONENT_DPI1,
+> +       DDP_COMPONENT_DSI0,
+> +       DDP_COMPONENT_DSI1,
+> +       DDP_COMPONENT_DSI2,
+> +       DDP_COMPONENT_DSI3,
+> +       DDP_COMPONENT_GAMMA,
+> +       DDP_COMPONENT_OD0,
+> +       DDP_COMPONENT_OD1,
+> +       DDP_COMPONENT_OVL0,
+> +       DDP_COMPONENT_OVL_2L0,
+> +       DDP_COMPONENT_OVL_2L1,
+> +       DDP_COMPONENT_OVL1,
+> +       DDP_COMPONENT_PWM0,
+> +       DDP_COMPONENT_PWM1,
+> +       DDP_COMPONENT_PWM2,
+> +       DDP_COMPONENT_RDMA0,
+> +       DDP_COMPONENT_RDMA1,
+> +       DDP_COMPONENT_RDMA2,
+> +       DDP_COMPONENT_UFOE,
+> +       DDP_COMPONENT_WDMA0,
+> +       DDP_COMPONENT_WDMA1,
+> +       DDP_COMPONENT_ID_MAX,
+> +};
+> +
+>  void mtk_mmsys_ddp_connect(struct device *dev,
+>                            enum mtk_ddp_comp_id cur,
+>                            enum mtk_ddp_comp_id next);
+> --
+> 1.8.1.1.dirty
