@@ -2,71 +2,75 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797DDC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55329207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595543651;
-	bh=8qskPwoWptnD+c7pF1+5A+lmPUNMsPIW8eSn114Sf6U=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=yqsI1xKCaieOi038lx6fD8A/1WjSKi4J6qmoR52oEqukuRmTnlN3tZ9x3aKU1T9Gt
-	 3VgHAklqyFZDSgs6DuW9fSS7/mxBFktIqAJhAtEohENUsNdFbaMC9E5TQqZ6EkVbN5
-	 I0ZY4UMvuMjA5UnpvU01oRSZvt7rIiP/lF3h95Sw=
+	by mail.kernel.org (Postfix) with ESMTP id A45D0207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgGWWeJ (ORCPT
+        id S1728062AbgGWWe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgGWWeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:34:08 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B33F20737;
-        Thu, 23 Jul 2020 22:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595543648;
-        bh=8qskPwoWptnD+c7pF1+5A+lmPUNMsPIW8eSn114Sf6U=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=yY8QshlfJUEK1Tt11XEEknVWYZ9IaMPmHmqSefGcS14KqU7ntDgoVv2GP16e/5wI1
-         jErqDGFUgZxCIHIuXpuiTls18ZBHTZ5vgBEsHwoQU+es9i/SgfrixHNo5LRSH2UCQJ
-         ti/BJnj504TQMKbnDAeBuht6MAaxulGKK8aZjQtw=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200723074112.3159-4-luca@lucaceresoli.net>
-References: <20200723074112.3159-1-luca@lucaceresoli.net> <20200723074112.3159-4-luca@lucaceresoli.net>
-Subject: Re: [PATCH v4 3/3] dt-bindings: clk: versaclock5: convert to yaml
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-clk@vger.kernel.org
-Date:   Thu, 23 Jul 2020 15:34:07 -0700
-Message-ID: <159554364791.3847286.6369989159213197503@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Thu, 23 Jul 2020 18:34:26 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:43108 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgGWWe0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:34:26 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 06NMXDcm005863
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 23 Jul 2020 17:33:16 -0500
+Message-ID: <418d5f3d3f42bbc79c5cf30e18ec89edfe2dbd26.camel@kernel.crashing.org>
+Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Alex Ghiti <alex@ghiti.fr>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     mpe@ellerman.id.au, paulus@samba.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-mm@kvack.org
+Date:   Fri, 24 Jul 2020 08:33:12 +1000
+In-Reply-To: <cade70e2-0179-2650-41c5-036679aaf30c@ghiti.fr>
+References: <mhng-831c4073-aefa-4aa0-a583-6a17f9aff9b7@palmerdabbelt-glaptop1>
+         <d7e3cbb7-c12a-bce2-f1db-c336d15f74bd@ghiti.fr>
+         <7cb2285e-68ba-6827-5e61-e33a4b65ac03@ghiti.fr>
+         <54af168083aee9dbda1b531227521a26b77ba2c8.camel@kernel.crashing.org>
+         <cade70e2-0179-2650-41c5-036679aaf30c@ghiti.fr>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Luca Ceresoli (2020-07-23 00:41:12)
-> Convert to yaml the VersaClock bindings document. The mapping between
-> clock specifier and physical pins cannot be described formally in yaml
-> schema, then keep it verbatim in the description field.
->=20
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->=20
-> ---
+On Thu, 2020-07-23 at 01:21 -0400, Alex Ghiti wrote:
+> > works fine with huge pages, what is your problem there ? You rely on
+> > punching small-page size holes in there ?
+> > 
+> 
+> ARCH_HAS_STRICT_KERNEL_RWX prevents the use of a hugepage for the kernel 
+> mapping in the direct mapping as it sets different permissions to 
+> different part of the kernel (data, text..etc).
 
-Applied to clk-next
+Ah ok, that can be solved in a couple of ways...
+
+One is to use the linker script to ensure those sections are linked
+HUGE_PAGE_SIZE appart and moved appropriately by early boot code. One
+is to selectively degrade just those huge pages.
+
+I'm not familiar with the RiscV MMU (I should probably go have a look)
+but if it's a classic radix tree with huge pages at PUD/PMD level, then
+you could just degrade the one(s) that cross those boundaries.
+
+Cheers,
+Ben.
+
+
