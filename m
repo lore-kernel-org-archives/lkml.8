@@ -2,247 +2,109 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A79C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A75C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0890D206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1208A206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="EPW0FMSZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ktInN0Bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgGWLvx (ORCPT
+        id S1728777AbgGWLwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:51:53 -0400
-Received: from mail-eopbgr60108.outbound.protection.outlook.com ([40.107.6.108]:20747
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728134AbgGWLvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:51:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SWlT8ZIWnW3heWrVOnF+cjkumPjoXJGGBXHBzf3yF3WuYjcGDrBMV3ZbwgYjWhv7nDmrqWOXbVmemtKZZPsuKojEju7ycqA9V9j7NZIUKMgquv6GibEqI9yStzqRZOQ5feFo1siq0PAkwZf5eBpmGIvXbGIP6ndiAXrYkyyNSHDJNNhNKEfREul0dIT/zhwMoa7LOIjJUT/8oVU3HgTzmHNdw4yflA/v1PW7V2nEUs3mkyQekjJW2AwOWuD/c0Z8ck2/Bc9wFFi9bMt/x9bgwyr8xm5RJElwS94LTPt5PRxxIAGp0GQVcTfygnWmEku05E8hboKZ0ETV3ntDKDTHlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7urlA14sQb3Vu+OSioXCRIRDU67/cHStLBtzvXygwT8=;
- b=md1ie3RW3gF5mnAal4+gY4mTidlZaxPz8PZfIuTY8rH31dDuGAXd/Iy3f9A5f7JrXAAS/PD1j6rxcMFcJLujdJAsr7+alk968fmc2S1TUnxvxvkIgzmy+bwS+WUbGY0PAU0//bsPFDFy/eHzeLE0JPkb6PZWlHby7MOJhf9nbD4CdUHtdcqsMFUp1Px70uHvr0REMJJk6gxw7ZCI+Qd3DJ1NHLYONW3RekD0vhHDYyRL1ciAL+xkuAxhDyFpVuonoahpQGN4/nLJENAualFT6ndXoHEdIB5cmgYRoWITCVaA261Ij9mmIsx+NUF7T7Bi79pVO51waTlYDGNxbedNJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7urlA14sQb3Vu+OSioXCRIRDU67/cHStLBtzvXygwT8=;
- b=EPW0FMSZvJTCbMD4q6pZu70NIL6I8zhOQZlvU3qOK2uKX2ow1BCZkvlUBmFU6tJAOwN5U6p0IHAhR9cAJr/pmG6pcBzeJDWI5lt5OVK5TCU6kD5vERFxk3A7t9AAr6VzAq0fbzHhDQ0aetFvH5O8hxaH4oeijWLlNCCayL9fUYs=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
- by DB8PR10MB3863.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:168::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
- 2020 11:51:47 +0000
-Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3195.025; Thu, 23 Jul 2020
- 11:51:47 +0000
-Subject: Re: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
- is_ram_script
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
- <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
- <1b04e4e6-ca26-3f45-e353-af81e03f85a7@kontron.de>
- <VE1PR04MB66385FC4FE591EAFA8CB7D8289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
-Date:   Thu, 23 Jul 2020 13:51:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 23 Jul 2020 07:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728706AbgGWLwF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:52:05 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D1FC0619E3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:52:05 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so4903159wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NZpJnIVSkJItlVzX7BU0eJ1NGmH1x+ATcfuITedLtig=;
+        b=ktInN0BkhURtuR83134zOeql/UFN3ASBDoe3ryIQAD7q1ahSWK29E4Vua6VXmbds07
+         5dl9Wur6XxmkBYAY8GRyqUeedQPdRgf3M1Dz9bT/Y064Dflg1U9tR2/eV47cXNYWg1v8
+         Zzch04KO2wxu0zcLZbnhZsuCnyj4rDYgHdaG4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NZpJnIVSkJItlVzX7BU0eJ1NGmH1x+ATcfuITedLtig=;
+        b=AbHzUirgG3c6SRBro+K3UoLRLfBgU2javGKVnKEeADjVVv+czz3dhs0s1KvTIBEwnQ
+         BBwK5cA0lSs8V+yC2qv6oNbwRAxmtj4/VTaZuSFagQxrKKXm2lk3kU8RDpnD3cCgEhio
+         vTjkW5SxgHHNDE7aJFr6rtubMbnERjRq8qJCxUkz/ADTlPYufBo1eR7MJyv5nbtQCYlA
+         opRi6jyYaAXmHyt4Fe9gGSRo9Aw5UW9oKGGBfjwQw8ruEAtHMgbHO9vtAq8+zE4O2Tqx
+         3yydNTk4IllJ2G0SSApkihoe5n83yAos9j+mn0Fp//ZsD5K9UpyXzDdLU6bpmYgj+nDi
+         gTnA==
+X-Gm-Message-State: AOAM531V2pJOVTc6Do7g2J6HYN2g+PyKdQPc2lSflS1TdP3l04hlFNnL
+        uydYPhWvnlCzNscvuB3C8ErOeQ==
+X-Google-Smtp-Source: ABdhPJx5kpjbbRmNFCzRww6zSgYNNCQm73V4u/MTpsk8pd8BfUKI6aPsdfQk8ek0oBVK2gQdotXUiw==
+X-Received: by 2002:a1c:e382:: with SMTP id a124mr3869340wmh.11.1595505123981;
+        Thu, 23 Jul 2020 04:52:03 -0700 (PDT)
+Received: from kpsingh-macbookpro2.roam.corp.google.com ([2a00:79e0:42:206:31d4:524e:af91:4e1c])
+        by smtp.gmail.com with ESMTPSA id v15sm3054324wmh.24.2020.07.23.04.52.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 04:52:03 -0700 (PDT)
+Subject: Re: [PATCH bpf-next v5 5/7] bpf: Implement bpf_local_storage for
+ inodes
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+References: <20200722171409.102949-6-kpsingh@chromium.org>
+ <202007230807.y1gfvekv%lkp@intel.com>
+ <CAADnVQK=m18hgfuRZvykQiJPk_c+z=FR6Dpg0aRVvtJn6-Ckrw@mail.gmail.com>
+From:   KP Singh <kpsingh@chromium.org>
+Message-ID: <6a907298-3355-d918-340c-10ef13d4d0d3@chromium.org>
+Date:   Thu, 23 Jul 2020 13:52:02 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAADnVQK=m18hgfuRZvykQiJPk_c+z=FR6Dpg0aRVvtJn6-Ckrw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM5PR0202CA0008.eurprd02.prod.outlook.com
- (2603:10a6:203:69::18) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:50::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.10.17] (46.142.152.98) by AM5PR0202CA0008.eurprd02.prod.outlook.com (2603:10a6:203:69::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Thu, 23 Jul 2020 11:51:45 +0000
-X-Originating-IP: [46.142.152.98]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b9e0efc1-ee5a-4f9e-69cf-08d82efec6ec
-X-MS-TrafficTypeDiagnostic: DB8PR10MB3863:
-X-Microsoft-Antispam-PRVS: <DB8PR10MB3863004B58D49300C2B65452E9760@DB8PR10MB3863.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BTpve2sTLNx7sdvyDJ/IegZlcuXtXrH8sDONPYcZPi1DzjKN5HW9GidfGiMWnU9tYAucteBVW4X9O6/KjeWKXvUyiCTex6Q2OyopKRvhVpAaMeWO7Yg0YEJgghPQxgI3U6P+CHz1Hdyrb+DygL6VHcfIW49kxqgIfi8w+9TeH6s8pLf3TDfDQ/qbAQB/m8acFMcre1liVlCd4UiEr9lcD/JBDNTKiKREvD7jrQY/e9h+BLfBd4aMu0sgjAWsw8ZDk8ouTT6jQFWwPPadMcMHV5yucwFSSeDL6Mii4YU6QX5YEbJAdlnyj3aINksdJCSwN+S8Bf1ETk4uxurT6cbXnLvW9fQ5zPNX1gemAxEZA88Tj92Yz7vPM+IGn6VSHbjOqWwMUpDajuA1YXH41wZuD9UdWlJTeKQrk2bixBVvgzYMe5Wge398Vg5DwIvhUvq0kavd5vXEf37jQ91vTWarTOA8j77tGU/QMBI7wY5ue1I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(7416002)(2906002)(5660300002)(110136005)(4326008)(8676002)(54906003)(186003)(316002)(478600001)(45080400002)(16576012)(36756003)(8936002)(53546011)(52116002)(16526019)(6486002)(44832011)(86362001)(26005)(966005)(31696002)(83380400001)(31686004)(66946007)(2616005)(66556008)(66476007)(956004)(921003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: kJTFheUPCkAiaiELRUjs+YPYC4HcUcnKCnAVyeJVvu2j/2qmBMWQcilYw1kjenQQa5Upuugs9/BXJdX5wOdyOtR0pglYJkC7BwVo9AF2hUTcNUvkSKNLKjnIiI+xvFozGAg762L678gs/1FBHoJTt23QBvYw5PKrp1eMzxoeHFoZvtqHqfaqJMUWJPJILhC8XlAub27kZX5zMWKoVExKWDx1ksRYoLWKioCxzBitHzLXo5VhCWrHeF1AS4QMBjO6BDfWVPje4Z0EOXwM2JTTEOOc2fIYdIgtTozKnFRL5mC7GTvDoe8oUzmYbWORJopyEkPHX1YBBm/rr8ZjKFJ8pqm5TlrGc1yv290SlPgjVUhYykmQpXSrFFGgnshSQWKlecaKPuDs4fuboYI5z/oOw5YZU4sQ8k4kkzK2Km7Nv3tfTrEWTqc+5rELlm5SmLbuErCgR7MCqLsm98a9zNDfIQf0hXzASDYd9U+c0O7z55k=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9e0efc1-ee5a-4f9e-69cf-08d82efec6ec
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 11:51:46.9446
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gs4soVbMsA8GIIJ+35O5cuKLIKNcPTMYfZyU4mloNvEAbaQFy5Zpd46TDUwmUtYD+yqh9Hw4wA3PMMnm4bPZtUkyox4YRwGclazR+Msm27Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3863
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.07.20 13:12, Robin Gong wrote:
->> On 2020/07/23 17:04 Frieder Schrempf <frieder.schrempf@kontron.de>
->> wrote:
->>> Hi Robin,
->>>
->>> On 30.06.20 15:31, Robin Gong wrote:
->>>> Add 'fw_loaded' and 'is_ram_script' to check if the script used by
->>>> channel is ram script and it's loaded or not, so that could prevent
->>>> meaningless following malloc dma descriptor and bd allocate in
->>>> sdma_transfer_init(), otherwise memory may be consumed out
->>>> potentially without free in case that spi fallback into pio while
->>>> dma transfer failed by sdma firmware not ready(next ERR009165 patch
->>>> depends on sdma
->>> RAM scripts/firmware).
->>>>
->>>> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
->>>> Acked-By: Vinod Koul <vkoul@kernel.org>
->>>> ---
->>>>    drivers/dma/imx-sdma.c | 13 +++++++++++++
->>>>    1 file changed, 13 insertions(+)
->>>>
->>>> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
->>>> 5411e01e..ce1c83e 100644
->>>> --- a/drivers/dma/imx-sdma.c
->>>> +++ b/drivers/dma/imx-sdma.c
->>>> @@ -379,6 +379,7 @@ struct sdma_channel {
->>>>    	enum dma_status			status;
->>>>    	struct imx_dma_data		data;
->>>>    	struct work_struct		terminate_worker;
->>>> +	bool				is_ram_script;
->>>>    };
->>>>
->>>>    #define IMX_DMA_SG_LOOP		BIT(0)
->>>> @@ -443,6 +444,7 @@ struct sdma_engine {
->>>>    	struct sdma_buffer_descriptor	*bd0;
->>>>    	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
->>>>    	bool				clk_ratio;
->>>> +	bool                            fw_loaded;
->>>>    };
->>>>
->>>>    static int sdma_config_write(struct dma_chan *chan, @@ -929,6
->>>> +931,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
->>>>    	case IMX_DMATYPE_SSI_DUAL:
->>>>    		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
->>>>    		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
->>>> +		sdmac->is_ram_script = true;
->>>>    		break;
->>>>    	case IMX_DMATYPE_SSI_SP:
->>>>    	case IMX_DMATYPE_MMC:
->>>> @@ -943,6 +946,7 @@ static void sdma_get_pc(struct sdma_channel
->>> *sdmac,
->>>>    		per_2_emi = sdma->script_addrs->asrc_2_mcu_addr;
->>>>    		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
->>>>    		per_2_per = sdma->script_addrs->per_2_per_addr;
->>>> +		sdmac->is_ram_script = true;
->>>>    		break;
->>>>    	case IMX_DMATYPE_ASRC_SP:
->>>>    		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
->>>> @@ -1339,6 +1343,11 @@ static struct sdma_desc
->>> *sdma_transfer_init(struct sdma_channel *sdmac,
->>>>    {
->>>>    	struct sdma_desc *desc;
->>>>
->>>> +	if (!sdmac->sdma->fw_loaded && sdmac->is_ram_script) {
->>>> +		dev_err(sdmac->sdma->dev, "sdma firmware not ready!\n");
->>>> +		goto err_out;
->>>> +	}
->>>
->>> I tried your v10 patches on next-20200722 with i.MX8MM and it mostly
->>> seems to work fine.
->>>
->>> When I tried first, I had the imx-sdma driver compiled into the
->>> kernel, so it didn't load the firmware and fell back to the ROM scripts.
->>> With this, SPI transactions work just fine, but I got the above error
->>> message printed continuously when sending data in SPI3 via spidev.
->> That's caused by you didn't load ram firmware as this patch set described.
->> Please follow below steps to load firmware manually if you don't want to use
->> NXP official Yocto release package:
->>
->> 1. Get sdma firmware from below linux-firmware and copy it to your local
->> rootfs /lib/firmware/imx/sdma.
->> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-firmware.git%2Ft&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7C08276b76f9a14dae1f8408d82ef94da1%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637310995564511410&amp;sdata=YA1455ILoNgRDHAOy1H2051J9cu5VsHk39xtQive8mo%3D&amp;reserved=0
->> ree/imx/sdma
->> 2. Load firmware manually:
->>          echo 1 > /sys/$DEVPATH/loading
->>          cat $MY_FW_DIR/$FIRMWARE > /sys/$DEVPATH/data
->>          echo 0 > /sys/$DEVPATH/loading
->> Please refer to Documentation/driver-api/firmware/fallback-mechanisms.rst
->> and load the firmware in 60s (firmware fallback loading timeout) from kernel
->> boot up.
->>
->>>
->>> When I build imx-sdma as a module, the firmware is loaded correctly
->>> and everything works as expected.
->> I guess that's not related with sdma building as module. If sdma build as
->> module, spi will fall to pio mode at spi-imx driver probe phase so that the
->> above warning log never to be walked. Would you please add some debug
->> info to double confirm?
-> Hi Frider,
-> 	Please ignore this comment, since there is -EPROBE_DEFER checking
-> , so you load sdma firmware by building sdma driver as module instead of
-> the above comment I mentioned?
 
-Yes, correct.
 
-> The warning log comes out during spi
-> transfer start and sdma firmware loading done, but if sdma driver building as
-> module could ensure firmware loading done in sdma_driver_probe_phase->
-> spi_imx_probe_phase, which means sdma firmware loading has been ready
-> before spi transfer start, hence no such warning message.
+On 23.07.20 07:18, Alexei Starovoitov wrote:
+> On Wed, Jul 22, 2020 at 5:22 PM kernel test robot <lkp@intel.com> wrote:
+>>
 > 
-> But I am not sure if all client drivers except spi are in good shape to support
-> ' CONFIG_IMX_SDMA=m '.
+>> All warnings (new ones prefixed by >>):
+>>
+>>    kernel/bpf/bpf_inode_storage.c: In function 'unlink_inode_storage':
+>>>> kernel/bpf/bpf_inode_storage.c:34:32: warning: variable 'smap' set but not used [-Wunused-but-set-variable]
+> 
+> KP,
+> 
+> feel free to resubmit as soon as you fix the build.
+> People typically ignore the patches when buildbot complains,
+> since they know that maintainers are not going to apply a set with
+> known build issue.
+> 
 
-I'm pretty sure that CONFIG_IMX_SDMA=m is supported and common. 
-Otherwise it wouldn't be an option in Kconfig.
+Got it. I need to get into the habit of building with W=1 
+(at least for the files I change).
 
-> Besides, do you think 'dev_err_once ' instead of 'dev_err' is okay for you?
-
-I can't really judge if this is a proper fix as I haven't looked at the 
-code in detail, but if you want to use dev_err_once(), that would be ok 
-for me, maybe even better dev_warn_once().
-As chances are that even without firmware transfers will work a warning 
-instead of an error makes more sense to me.
+Sent a v6 with the fix.
