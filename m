@@ -2,141 +2,81 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380FDC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1818E2071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:53:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rF4Nclcx"
+	by mail.kernel.org (Postfix) with ESMTP id 27B4B20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgGWPxf (ORCPT
+        id S1729500AbgGWPyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:53:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50062 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgGWPxe (ORCPT
+        Thu, 23 Jul 2020 11:54:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53406 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgGWPyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:53:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NFkYM4134791;
-        Thu, 23 Jul 2020 15:53:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=YEJKJVrh9zyoniRPLQ5+w7YtIh1urn01ae/6cECcoOs=;
- b=rF4NclcxAYyJyD6H+rKmY9tFMDz/axd5uFwaZWuGC+0r5tVShxd5zHntlPmOzdcKCA22
- B3Bji8s5s0NtXMqZgwa6E0ZY05ClKySatJOFrEHtW5xIo590eHOmED9M/CiwH/o89etj
- 603PUT4xfNNAyg1tO6dASXYP1O/UpkyRySMvhDoW1HD1c3nmSHGreY1PywGMj2R6kMA/
- lajZOBoBX3MaU/xChX8hsbwjiQPE1jkU6CL1+kunQn/A4bUuWrA4rys6AZ7WWoK9H7Rn
- oJtAdiI9Sj8pqh3OAio3L6x2nx4YLws4H31pmgvKToWJCqwPg//JFk330v33Za1Sea+P Zg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32brgrt955-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 15:53:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NFmKPK034186;
-        Thu, 23 Jul 2020 15:51:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 32fc4qmutx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 15:51:12 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06NFp7bh031099;
-        Thu, 23 Jul 2020 15:51:07 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jul 2020 08:51:06 -0700
-Date:   Thu, 23 Jul 2020 18:50:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Joerg Reuter <jreuter@yaina.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        Thu, 23 Jul 2020 11:54:19 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jydXz-0001Lg-U7; Thu, 23 Jul 2020 15:54:16 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     David Kershner <david.kershner@unisys.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hams@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] AX.25: Fix out-of-bounds read
- in ax25_connect()
-Message-ID: <20200723155057.GS2549@kadam>
-References: <20200722151901.350003-1-yepeilin.cs@gmail.com>
- <20200723142814.GQ2549@kadam>
- <20200723151355.GA412829@PWN>
+        sparmaintainer@unisys.com, devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: unisys: visorhba: remove redundant initialization of variables scsicmd_id and rc
+Date:   Thu, 23 Jul 2020 16:54:15 +0100
+Message-Id: <20200723155415.994036-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723151355.GA412829@PWN>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230117
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 11:13:55AM -0400, Peilin Ye wrote:
-> On Thu, Jul 23, 2020 at 05:28:15PM +0300, Dan Carpenter wrote:
-> > On Wed, Jul 22, 2020 at 11:19:01AM -0400, Peilin Ye wrote:
-> > > Checks on `addr_len` and `fsa->fsa_ax25.sax25_ndigis` are insufficient.
-> > > ax25_connect() can go out of bounds when `fsa->fsa_ax25.sax25_ndigis`
-> > > equals to 7 or 8. Fix it.
-> > > 
-> > > This issue has been reported as a KMSAN uninit-value bug, because in such
-> > > a case, ax25_connect() reaches into the uninitialized portion of the
-> > > `struct sockaddr_storage` statically allocated in __sys_connect().
-> > > 
-> > > It is safe to remove `fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS` because
-> > > `addr_len` is guaranteed to be less than or equal to
-> > > `sizeof(struct full_sockaddr_ax25)`.
-> > > 
-> > > Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
-> > > Link: https://syzkaller.appspot.com/bug?id=55ef9d629f3b3d7d70b69558015b63b48d01af66
-> > > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > > ---
-> > >  net/ax25/af_ax25.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-> > > index fd91cd34f25e..ef5bf116157a 100644
-> > > --- a/net/ax25/af_ax25.c
-> > > +++ b/net/ax25/af_ax25.c
-> > > @@ -1187,7 +1187,9 @@ static int __must_check ax25_connect(struct socket *sock,
-> > >  	if (addr_len > sizeof(struct sockaddr_ax25) &&
-> > >  	    fsa->fsa_ax25.sax25_ndigis != 0) {
-> > >  		/* Valid number of digipeaters ? */
-> > > -		if (fsa->fsa_ax25.sax25_ndigis < 1 || fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS) {
-> > > +		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
-> > > +		    addr_len < sizeof(struct sockaddr_ax25) +
-> > > +		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
-> > 
-> > The "sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis" can have an
-> > integer overflow so you still need the
-> > "fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS" check.
-> 
-> Thank you for fixing this up! I did some math but I didn't think of
-> that. Will be more careful when removing things.
+From: Colin Ian King <colin.king@canonical.com>
 
-No problem.  You had the right approach to look for ways to clean things
-up.
+The variables scsicmd_id and rc is being initialized with a value
+that is never read and are being updated later with a new value.
+The initializations are redundant and can be removed.
 
-Your patches make me happy because you're trying to fix important bugs.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/unisys/visorhba/visorhba_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-regards,
-dan carpenter
+diff --git a/drivers/staging/unisys/visorhba/visorhba_main.c b/drivers/staging/unisys/visorhba/visorhba_main.c
+index 99c57ceeb357..7ae5306b92fe 100644
+--- a/drivers/staging/unisys/visorhba/visorhba_main.c
++++ b/drivers/staging/unisys/visorhba/visorhba_main.c
+@@ -305,7 +305,7 @@ static int forward_taskmgmt_command(enum task_mgmt_types tasktype,
+ 		(struct visorhba_devdata *)scsidev->host->hostdata;
+ 	int notifyresult = 0xffff;
+ 	wait_queue_head_t notifyevent;
+-	int scsicmd_id = 0;
++	int scsicmd_id;
+ 
+ 	if (devdata->serverdown || devdata->serverchangingstate)
+ 		return FAILED;
+@@ -1186,7 +1186,7 @@ static struct visor_driver visorhba_driver = {
+  */
+ static int visorhba_init(void)
+ {
+-	int rc = -ENOMEM;
++	int rc;
+ 
+ 	visorhba_debugfs_dir = debugfs_create_dir("visorhba", NULL);
+ 	if (!visorhba_debugfs_dir)
+-- 
+2.27.0
+
