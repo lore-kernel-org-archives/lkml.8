@@ -2,77 +2,76 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066D0C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7661AC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBEAB20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406062086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Ulmnau0D";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="idGVOOCg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="RdhyMqB6";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="XzHH94Z4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgGWOYq (ORCPT
+        id S1729469AbgGWOZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:24:46 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:36978 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWOYp (ORCPT
+        Thu, 23 Jul 2020 10:25:07 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:16807 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgGWOZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:24:45 -0400
+        Thu, 23 Jul 2020 10:25:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595514286; x=1627050286;
+  t=1595514306; x=1627050306;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=6T/7hY07o22Q0syrS8BdMcfzg9rtHPy9RCJAhrJx1/k=;
-  b=Ulmnau0DMEp9emEQoU4uwhbrrrTfAX72qOZZJMuspAp7vn3auZUB9sh7
-   Hp9t3dvzkFY9zNa/i4hpGwGLtno79yVBQwpMF5CjxSs5Y4OBe8PJ8rJJx
-   zVYEfKbRaljsHwHHJ3t63hWx7WPACESQ/iK4+Gar6n+47ycb2whcxT9gA
-   8+/TxIY7nrHjQv3TDfW5snZuAxz7Uw0kLfLGnvgLtI+LrxyCubhEkT0/s
-   VVk+UMYGgEysS4EwQgoQqHivWrxElh3OTiUolKe/JmCRMVrv2UOYiedph
-   oAdflk4woXkABiRDf+XkjebHhMHnFmBuW7zG9jz/g4YPe9Aws5ogpQBPF
-   A==;
-IronPort-SDR: YBoVCFSsgx/guyd7zeppUvW0lJBL7r5mHWsavAk6V43JHv9VNdWF26pbkI7nU+96UgDGKxYLtc
- +KTx/loVnUXovlxaymmKBnhdJAQvdOJaSY1ko6LJqTsEJ2vMNioSfPRfZ+nMxvbkZb4jN2kh/b
- Qop8A2rVaz6GsxE3awNHAf3fToqq/LUETPqfNmqGZFWL+/F7y5W2ve5EIv2OpEyYZXrthxTrcb
- xw6ID66EKvFLFb/n/Rr9TayaXDn7TOCq1URqQVkhHFfnaayLy63S+f9250TCqNoYZGblg2WhwO
- 8rA=
+  bh=Rx1yS3iuPafWXuoAIeufX+dsOnrEPmRH/hIZRFUtzsE=;
+  b=RdhyMqB6YRpVOfRrClN+zkYO9VnhJpAwE4/vwXU+vYsHN05PgiF4GuTr
+   yYG7cDJxa25zaAT9bW6Jg0AK4f+hQJ0w2Nn8/xWIehPxame85VvpG/UJh
+   AbtzdjXS4tRhq7hsh0BxJEp8uHM0n3/XowX7JL09PaPBXOySTssXy3B8R
+   RQ3CqanbR6+i3QUOMdNTgjGb0Nra9wFT/NeXov4rDsqaAqm8yeC+OnMWo
+   VNlo7XWZAd9BmzqBxTKS4aFImxmzjttPHjI7HuNOkxC1AKNQUbJo2Zh8g
+   ZajfjyWSrVo9I3lM7ha7i6dfY+7Jbqj1xY4DJ5oX9btCFtW1HGkKWkwMZ
+   w==;
+IronPort-SDR: 76qUPfYnSj9MDGA2r/zqTbsCJwxNedj44z1E1ms/Tt9WAroD5DkgkyIu1sbl8QJzEkHmQ16hcm
+ LgD27kqpH26zuqQfjeCgXwWo3GeZCF2RKAbTtidqEog7gCt4rLWCkvxdJLHUQ3PXMLhvQejG0d
+ DewtZvdysAEzJgd6f9xqjfgbd5JzXYl2YtVW+hG4NHNfrmJ9EFxuVpkCIA92tlTtNfYgsB1Z7S
+ Hm7hnkxXuipUO38gNJGJwPDeHRT8MSzTScW9/lP7sgnJv/wBkjcwM1lKbTiDMMszdiAYvq8OvN
+ ZvE=
 X-IronPort-AV: E=Sophos;i="5.75,386,1589212800"; 
-   d="scan'208";a="143302660"
-Received: from mail-dm6nam10lp2106.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.106])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Jul 2020 22:24:45 +0800
+   d="scan'208";a="144473068"
+Received: from mail-bl2nam02lp2053.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.53])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Jul 2020 22:24:57 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FdvQHtqCpHQvpasOcQNLLMD/lLVRvxOWziEn/Kh8R0tL0yQlL3a9aoURl/c4+m8orecq+CSmbgcIfPfTWUhBoIkU8YRLXS+Xl+jUa0fnpVsSXYP+faqowNGxIXHP9vwC2/HHcXsKHmCJ3PA7FBabIXgyITWoFZs2Y3CiJ2BeSAYooFZZgblsY024kitBroUNAUXraDYsAjVzlf/qruaZLCUC/Urs5oq+c62wlKWY0CIpGdhU7Fo9k8SkyEhHWLnBN5k2qGKGvmi7tRYQbgArC4OqQxdVPiBAUPDMBnFy3nichaR+WV7Kt85OIbc/8DEwYC8DvEoseGVjuc+on/b2eQ==
+ b=mfDkgCaQQn0P+unvOahNyiXTnVePqogTUJLj+KEdYk3OoCrKnaOlhmmaKJX5dByX387GPMh0V/DzRASca4s1e9BEfHhUttUkIDEcsP7d9agdir0cM1dHWrk8f6+tA8Dri7P9/HKzG7qPNP/CA3lVS1Nj/U0I7+OuD22cy1rIjAtYMQX21VHVK6BZAodpkau37SrRsRxD6kAlQetrTZdy8RMLkIzEBdPC0i6M9Xpfw2B0EvTursose8euL7USJuKgqwfeT1qXOpzIF8K4aArQJ/MEqNRJxfx7cB4EXVJU+pLxPz8zrAM3diNrUQLyI0tjJr/OudYUHBAXQOu4+D9Wqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmXMm/nYWer0/e9YTk9xwJKxvcgW8xzlVA2YtFotjDk=;
- b=iFjF6x6WsXFC5bCSFJaYZx4pXWnlhFUgPzpBOBYxVg0AkP5D90eHury4fgZE53RCGsDQu33L6b2YDRW5dN/WbV6hjRCZFqhMrGAAxOyoAAF4jWH3L13oytBxxBQRdRDl4olNgohFNtVMlAzJ/QGWVj1txFZ2FF9WcuuwuDETgpOjjTDMAfgVlal7pd40Ecu6mtg2ZH8LWa2JRV0OLPiIYRnvb4bdb+Jad3fgs3a9KWwlkscU3rCIsnvkKhbugCQcTh+fybCLIx5QQei1cVX/D2snT3ErjRUvWsXxvhBX7sxuszyxvsP+fPBqW3o66lY0OnD7dsMequLFblU2axummA==
+ bh=TFgFKG7g8VjxwVxwcR/HHa2YnG0cA25nKgv91X0aT+4=;
+ b=NeQI0lpT/Gfk3R9chfE5maEd6/fdOOmW4dzc+p9hZEEFfiMCA1duUdM0+68R073c8YfsiUGgprKE8ISkLw417qUTSX3DoOoKZr1xDf/Gq+tDyqpChkybdfDV3H4nBZT7w605Tk74LWcRtqerhiiNTu5l1D7zUBjESm5dP+8grq2Mk2aZa4BoR2oeIws3TsgMtdwHV0MyrVSj8rBFNIIY7+26iJ0TZZiUMPZt39/HfbZXzGIunypo+AVzY2v6qtQZLdzQZmRs2dXXuJzT6GuJc9v+5Jb9qAuGf6eymvxkhDyRKzxJpnCNZJnol9DsSHoy0oyf222ZmIzQky93E4FxEA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
  header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmXMm/nYWer0/e9YTk9xwJKxvcgW8xzlVA2YtFotjDk=;
- b=idGVOOCgZA5FdUharrJiESLc34DDWO8qGIEKQogsV+aQnMN5lOwm7EAt5PIOZSoc1ibSeRuULtXkBXhxFhwMFTeUZFBwUuoV/dqEp0WpZvPhOSiEFHFHLXjtgZOP/q549jVQVS4vFQW6ITol4yOB21cJo7xyLy6Xm7RCADfrybI=
+ bh=TFgFKG7g8VjxwVxwcR/HHa2YnG0cA25nKgv91X0aT+4=;
+ b=XzHH94Z41R/0Z8QidAtCpeU5qaGpsKi7GxM+ck9M3NE+ZuRAkjwLU4+ZiMUY/fISz2TzN47VgTe0VvvZBDvpzwz/VJZUcxOexflKcH7dDc/x5WsdPi5vw+pYT6DLvwlALo+LVwlOteh6X0oG9phRWcWFsMHs8X7YhtDjih7xR70=
 Authentication-Results: dabbelt.com; dkim=none (message not signed)
  header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
 Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
  by DM6PR04MB6682.namprd04.prod.outlook.com (2603:10b6:5:247::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
- 2020 14:24:43 +0000
+ 2020 14:24:56 +0000
 Received: from DM6PR04MB6201.namprd04.prod.outlook.com
  ([fe80::e0a4:aa82:1847:dea5]) by DM6PR04MB6201.namprd04.prod.outlook.com
  ([fe80::e0a4:aa82:1847:dea5%7]) with mapi id 15.20.3216.023; Thu, 23 Jul 2020
- 14:24:43 +0000
+ 14:24:56 +0000
 From:   Anup Patel <anup.patel@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
@@ -87,9 +86,9 @@ Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
         Emil Renner Berhing <kernel@esmil.dk>
-Subject: [PATCH v5 1/4] RISC-V: Add mechanism to provide custom IPI operations
-Date:   Thu, 23 Jul 2020 19:54:06 +0530
-Message-Id: <20200723142409.47057-2-anup.patel@wdc.com>
+Subject: [PATCH v5 3/4] RISC-V: Remove CLINT related code from timer and arch
+Date:   Thu, 23 Jul 2020 19:54:08 +0530
+Message-Id: <20200723142409.47057-4-anup.patel@wdc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723142409.47057-1-anup.patel@wdc.com>
 References: <20200723142409.47057-1-anup.patel@wdc.com>
@@ -100,311 +99,386 @@ X-ClientProxiedBy: BMXPR01CA0068.INDPRD01.PROD.OUTLOOK.COM
  (2603:10b6:5:127::32)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from wdc.com (103.56.183.159) by BMXPR01CA0068.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Thu, 23 Jul 2020 14:24:38 +0000
+Received: from wdc.com (103.56.183.159) by BMXPR01CA0068.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Thu, 23 Jul 2020 14:24:50 +0000
 X-Mailer: git-send-email 2.25.1
 X-Originating-IP: [103.56.183.159]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fd44ca07-656c-44d4-d4ba-08d82f1424b1
+X-MS-Office365-Filtering-Correlation-Id: b0da9b68-04ae-446b-799d-08d82f142c05
 X-MS-TrafficTypeDiagnostic: DM6PR04MB6682:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB66829D01902CB2BBB199F46D8D760@DM6PR04MB6682.namprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM6PR04MB6682DDBBE901FCFC974E17618D760@DM6PR04MB6682.namprd04.prod.outlook.com>
 WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6pTpEbpJQHLOSsVMfyH1IAixTPrmexsoYeC8Wyq1Jh8PIBv4EQtExuhf8MfxQWvCCWK2rog3ivtEeyc1itlFr6PFywWG4HIWw6VRcaeT2zUYeBlXUTgmWI8UXLhQFrF53WBp+xdEBxsM0DrHdce2vBdoVt18d357M1I+FyhdLcc7Pd0uPtdUzRFQm0nXxtHYyfCD6lEyfcb9qnQHOaTxg+5fGepioQ+1m0svkV8psNMtdPMeXmc3Lhc7Ff0nKKoywAyddJqFefW0+PxD2RdHsJ/4vBSPweYiNDZz2XPUvKRgp8K7bZcprejjcO2V4fzBX6GLFijiI9w/dJjk5DyuCw==
+X-Microsoft-Antispam-Message-Info: eg2KTylsN5aaOoUwR9ndp0T9TVCaXntx11ZMgq6YEjOKFbohfF5ZLB/0hWYUV3MPllWfTLBoqEyNxIYxR77iReL6jU6nVCfGYFu4UthnkT2ptbqOuK00tLbF/il1dPhaZOYZjao2On3518hXx1yD2C1JOURbVDuybr4Ep7sKUzgQeQlpzFkP1rAFzLx7GKFBOIpDg6R4wwsizcTlFLCHHYwJ2MbFJftPZOe6SbDlvX6YzPalHBgvjLKJJds6rfj6NW6JDNBT/yGhmpD5ixNTviH9HbUrOUzRWX1i+N2UANkRGIglO+Tkki1HjBdxTY4+iwv7gxFcsblqfl36i9lQqg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(4326008)(5660300002)(36756003)(478600001)(7416002)(83380400001)(44832011)(55016002)(956004)(2616005)(2906002)(316002)(16526019)(8886007)(6666004)(52116002)(7696005)(66556008)(66946007)(66476007)(26005)(8676002)(54906003)(86362001)(186003)(8936002)(1076003)(110136005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 8YUlIsOINZOmfB+KnGda4TusOlKCpm34KcEqDp8LKOmAJy9yM0xWCIG136oeFu8AMyA6oI+b+DOLp0OjmfgkkO/y20xAvmCEE4LNF5Kcu6Gc0NXfhBLDfHndbO38HMIot6lsqNfbSQ/+0KKfuHgrYK6xvwogODzckzUOtx6OzXMX3jNVnFrICSrT/ghHzJm6VCIP6Sh4ouSr4FLKiCQgaU0tHyTDkTQT92e9hGmbEeQzV3LprPORELiyUfVxGpFztqBv+WrpNp0XVSVJOs7CIlPXrdRoNpmXBNshMAz6HLLTb9Ro+Mqif8DJki9AdcoiU0+KiArJzlWYLMRqRBM7WbwB4KGWYP0fV198hLEsKkhgFW/1ILypeV8vuUFSgIj94pSi7ugX4Z48YGs4TfSDrRto3n7FZ+sOsrIZ9vPhmy2U+sa3a7TG9pBqHiJMIQnQ2umKtFly+bl/0Uk25+WTJNEi/iW+THPGFdXziNnlJdc=
+X-MS-Exchange-AntiSpam-MessageData: 0MGL4v4Ax8JLPX5C2tvD1K/V15drZgDOpu190XuDDVqk7nwa3f/0N1i6Ogx0ZM0r9JZLiDBEysVRd7W2LHjqtQRfjVVagkniDdLPjqnK38n6TU4/Q4WLESirUkxXt3ve01ybotcL0oc8FpT11usKXEc7hPrthNxJBqax9+OXCcjFQe2ff9+vgBAh/NR7XIgHIAZrVuMj+WQ5M3lUElp5OmgAxuDxWZVwomULCQmso6lOUA9NPuIh3kHT8emXysaU6r0oOzp1lnlhFT4MkaGnE8iq2tTqJT4joL0/rnlttb8p6ai2Utma6onM+vuoFmQzLPDlLhhsvKJGNfBxifUTqknBisykytj5vdfHLr4u3jbBqeSPK8JDT4a7D+Oq/5n31cHqo9YWWt+CbjsHxaHo5lCedU+tMkiY5l1QfF7kW4kzcCRau5wNakomts+t/w+4phRsESErkxCc43hY3QtYEBhj0RH7Nd1usn5+zCbhzyA=
 X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd44ca07-656c-44d4-d4ba-08d82f1424b1
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0da9b68-04ae-446b-799d-08d82f142c05
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 14:24:43.6039
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 14:24:56.1160
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EpoWumJwk16SYba7+l+gRrpXa/2UtnRlNYsOcII8EWNhvI5oM8/i3OtxBcs8T/JoCpvHNc46UvcZtyIlnQ2Yrw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9xptuO1CJHsq/nQPagWpeHGKcWp+fcZ51jWwNOU+QmQ9WOeBURjOXehSoyjmLhQzgyJdmJDjQ6PMpe11m/mFXw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6682
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We add mechanism to set custom IPI operations so that CLINT driver
-from drivers directory can provide custom IPI operations.
+Right now the RISC-V timer driver is convoluted to support:
+1. Linux RISC-V S-mode (with MMU) where it will use TIME CSR for
+   clocksource and SBI timer calls for clockevent device.
+2. Linux RISC-V M-mode (without MMU) where it will use CLINT MMIO
+   counter register for clocksource and CLINT MMIO compare register
+   for clockevent device.
+
+We now have a separate CLINT timer driver which also provide CLINT
+based IPI operations so let's remove CLINT MMIO related code from
+arch/riscv directory and RISC-V timer driver.
 
 Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/include/asm/clint.h | 25 --------------------
- arch/riscv/include/asm/smp.h   | 19 +++++++++++++++
- arch/riscv/kernel/clint.c      | 23 ++++++++++++++++--
- arch/riscv/kernel/sbi.c        | 14 +++++++++++
- arch/riscv/kernel/smp.c        | 43 +++++++++++++++++++---------------
- arch/riscv/kernel/smpboot.c    |  3 +--
- 6 files changed, 79 insertions(+), 48 deletions(-)
+ arch/riscv/Kconfig                      |  2 +-
+ arch/riscv/Kconfig.socs                 |  2 +
+ arch/riscv/configs/nommu_virt_defconfig |  7 +--
+ arch/riscv/include/asm/clint.h          | 14 ------
+ arch/riscv/include/asm/timex.h          | 28 +++--------
+ arch/riscv/kernel/Makefile              |  2 +-
+ arch/riscv/kernel/clint.c               | 63 -------------------------
+ arch/riscv/kernel/setup.c               |  2 -
+ arch/riscv/kernel/smp.c                 |  1 -
+ arch/riscv/kernel/smpboot.c             |  1 -
+ drivers/clocksource/Kconfig             |  3 +-
+ drivers/clocksource/timer-riscv.c       | 17 +------
+ 12 files changed, 16 insertions(+), 126 deletions(-)
+ delete mode 100644 arch/riscv/include/asm/clint.h
+ delete mode 100644 arch/riscv/kernel/clint.c
 
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index fedb4a72b29a..57a72ae23d10 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -74,7 +74,7 @@ config RISCV
+ 	select PCI_DOMAINS_GENERIC if PCI
+ 	select PCI_MSI if PCI
+ 	select RISCV_INTC
+-	select RISCV_TIMER
++	select RISCV_TIMER if RISCV_SBI
+ 	select SPARSEMEM_STATIC if 32BIT
+ 	select SPARSE_IRQ
+ 	select SYSCTL_EXCEPTION_TRACE
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 6c88148f1b9b..8a55f6156661 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -12,6 +12,7 @@ config SOC_SIFIVE
+ 
+ config SOC_VIRT
+ 	bool "QEMU Virt Machine"
++	select CLINT_TIMER if RISCV_M_MODE
+ 	select POWER_RESET
+ 	select POWER_RESET_SYSCON
+ 	select POWER_RESET_SYSCON_POWEROFF
+@@ -24,6 +25,7 @@ config SOC_VIRT
+ config SOC_KENDRYTE
+ 	bool "Kendryte K210 SoC"
+ 	depends on !MMU
++	select CLINT_TIMER if RISCV_M_MODE
+ 	select SERIAL_SIFIVE if TTY
+ 	select SERIAL_SIFIVE_CONSOLE if TTY
+ 	select SIFIVE_PLIC
+diff --git a/arch/riscv/configs/nommu_virt_defconfig b/arch/riscv/configs/nommu_virt_defconfig
+index cf74e179bf90..cf9388184aa3 100644
+--- a/arch/riscv/configs/nommu_virt_defconfig
++++ b/arch/riscv/configs/nommu_virt_defconfig
+@@ -26,6 +26,7 @@ CONFIG_EXPERT=y
+ CONFIG_SLOB=y
+ # CONFIG_SLAB_MERGE_DEFAULT is not set
+ # CONFIG_MMU is not set
++CONFIG_SOC_VIRT=y
+ CONFIG_MAXPHYSMEM_2GB=y
+ CONFIG_SMP=y
+ CONFIG_CMDLINE="root=/dev/vda rw earlycon=uart8250,mmio,0x10000000,115200n8 console=ttyS0"
+@@ -48,7 +49,6 @@ CONFIG_VIRTIO_BLK=y
+ # CONFIG_SERIO is not set
+ # CONFIG_LEGACY_PTYS is not set
+ # CONFIG_LDISC_AUTOLOAD is not set
+-# CONFIG_DEVMEM is not set
+ CONFIG_SERIAL_8250=y
+ # CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
+ CONFIG_SERIAL_8250_CONSOLE=y
+@@ -56,16 +56,13 @@ CONFIG_SERIAL_8250_NR_UARTS=1
+ CONFIG_SERIAL_8250_RUNTIME_UARTS=1
+ CONFIG_SERIAL_OF_PLATFORM=y
+ # CONFIG_HW_RANDOM is not set
++# CONFIG_DEVMEM is not set
+ # CONFIG_HWMON is not set
+-# CONFIG_LCD_CLASS_DEVICE is not set
+-# CONFIG_BACKLIGHT_CLASS_DEVICE is not set
+ # CONFIG_VGA_CONSOLE is not set
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
+ CONFIG_VIRTIO_MMIO=y
+ CONFIG_VIRTIO_MMIO_CMDLINE_DEVICES=y
+-CONFIG_SIFIVE_PLIC=y
+-# CONFIG_VALIDATE_FS_PARSER is not set
+ CONFIG_EXT2_FS=y
+ # CONFIG_DNOTIFY is not set
+ # CONFIG_INOTIFY_USER is not set
 diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
-index a279b17a6aad..adaba98a7d6c 100644
+deleted file mode 100644
+index adaba98a7d6c..000000000000
 --- a/arch/riscv/include/asm/clint.h
-+++ b/arch/riscv/include/asm/clint.h
-@@ -6,34 +6,9 @@
++++ /dev/null
+@@ -1,14 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_RISCV_CLINT_H
+-#define _ASM_RISCV_CLINT_H 1
+-
+-#include <linux/io.h>
+-#include <linux/smp.h>
+-
+-#ifdef CONFIG_RISCV_M_MODE
+-void clint_init_boot_cpu(void);
+-#else /* CONFIG_RISCV_M_MODE */
+-#define clint_init_boot_cpu()	do { } while (0)
+-#endif /* CONFIG_RISCV_M_MODE */
+-
+-#endif /* _ASM_RISCV_CLINT_H */
+diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
+index bad2a7c2cda5..a3fb85d505d4 100644
+--- a/arch/riscv/include/asm/timex.h
++++ b/arch/riscv/include/asm/timex.h
+@@ -7,41 +7,27 @@
+ #define _ASM_RISCV_TIMEX_H
+ 
+ #include <asm/csr.h>
+-#include <asm/mmio.h>
+ 
+ typedef unsigned long cycles_t;
+ 
+-extern u64 __iomem *riscv_time_val;
+-extern u64 __iomem *riscv_time_cmp;
+-
+-#ifdef CONFIG_64BIT
+-#define mmio_get_cycles()	readq_relaxed(riscv_time_val)
+-#else
+-#define mmio_get_cycles()	readl_relaxed(riscv_time_val)
+-#define mmio_get_cycles_hi()	readl_relaxed(((u32 *)riscv_time_val) + 1)
+-#endif
+-
+ static inline cycles_t get_cycles(void)
+ {
+-	if (IS_ENABLED(CONFIG_RISCV_SBI))
+-		return csr_read(CSR_TIME);
+-	return mmio_get_cycles();
++	return csr_read(CSR_TIME);
+ }
+ #define get_cycles get_cycles
+ 
++static inline u32 get_cycles_hi(void)
++{
++	return csr_read(CSR_TIMEH);
++}
++#define get_cycles_hi get_cycles_hi
++
+ #ifdef CONFIG_64BIT
+ static inline u64 get_cycles64(void)
+ {
+ 	return get_cycles();
+ }
+ #else /* CONFIG_64BIT */
+-static inline u32 get_cycles_hi(void)
+-{
+-	if (IS_ENABLED(CONFIG_RISCV_SBI))
+-		return csr_read(CSR_TIMEH);
+-	return mmio_get_cycles_hi();
+-}
+-
+ static inline u64 get_cycles64(void)
+ {
+ 	u32 hi, lo;
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index b355cf485671..7edf15643146 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -31,7 +31,7 @@ obj-y	+= cacheinfo.o
+ obj-y	+= patch.o
+ obj-$(CONFIG_MMU) += vdso.o vdso/
+ 
+-obj-$(CONFIG_RISCV_M_MODE)	+= clint.o traps_misaligned.o
++obj-$(CONFIG_RISCV_M_MODE)	+= traps_misaligned.o
+ obj-$(CONFIG_FPU)		+= fpu.o
+ obj-$(CONFIG_SMP)		+= smpboot.o
+ obj-$(CONFIG_SMP)		+= smp.o
+diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
+deleted file mode 100644
+index a9845ee023e2..000000000000
+--- a/arch/riscv/kernel/clint.c
++++ /dev/null
+@@ -1,63 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2019 Christoph Hellwig.
+- */
+-
+-#include <linux/io.h>
+-#include <linux/of_address.h>
+-#include <linux/smp.h>
+-#include <linux/types.h>
+-#include <asm/clint.h>
+-#include <asm/csr.h>
+-#include <asm/timex.h>
+-
+-/*
+- * This is the layout used by the SiFive clint, which is also shared by the qemu
+- * virt platform, and the Kendryte KD210 at least.
+- */
+-#define CLINT_IPI_OFF		0
+-#define CLINT_TIME_CMP_OFF	0x4000
+-#define CLINT_TIME_VAL_OFF	0xbff8
+-
+-u32 __iomem *clint_ipi_base;
+-
+-static void clint_send_ipi(const struct cpumask *target)
+-{
+-	unsigned int cpu;
+-
+-	for_each_cpu(cpu, target)
+-		writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
+-}
+-
+-static void clint_clear_ipi(void)
+-{
+-	writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
+-}
+-
+-static struct riscv_ipi_ops clint_ipi_ops = {
+-	.ipi_inject = clint_send_ipi,
+-	.ipi_clear = clint_clear_ipi,
+-};
+-
+-void clint_init_boot_cpu(void)
+-{
+-	struct device_node *np;
+-	void __iomem *base;
+-
+-	np = of_find_compatible_node(NULL, NULL, "riscv,clint0");
+-	if (!np) {
+-		panic("clint not found");
+-		return;
+-	}
+-
+-	base = of_iomap(np, 0);
+-	if (!base)
+-		panic("could not map CLINT");
+-
+-	clint_ipi_base = base + CLINT_IPI_OFF;
+-	riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
+-	riscv_time_val = base + CLINT_TIME_VAL_OFF;
+-
+-	clint_clear_ipi();
+-	riscv_set_ipi_ops(&clint_ipi_ops);
+-}
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index f04373be54a6..2c6dd329312b 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -18,7 +18,6 @@
+ #include <linux/swiotlb.h>
  #include <linux/smp.h>
  
- #ifdef CONFIG_RISCV_M_MODE
--extern u32 __iomem *clint_ipi_base;
--
- void clint_init_boot_cpu(void);
--
--static inline void clint_send_ipi_single(unsigned long hartid)
--{
--	writel(1, clint_ipi_base + hartid);
--}
--
--static inline void clint_send_ipi_mask(const struct cpumask *mask)
--{
--	int cpu;
--
--	for_each_cpu(cpu, mask)
--		clint_send_ipi_single(cpuid_to_hartid_map(cpu));
--}
--
--static inline void clint_clear_ipi(unsigned long hartid)
--{
--	writel(0, clint_ipi_base + hartid);
--}
- #else /* CONFIG_RISCV_M_MODE */
- #define clint_init_boot_cpu()	do { } while (0)
--
--/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
--void clint_send_ipi_single(unsigned long hartid);
--void clint_send_ipi_mask(const struct cpumask *hartid_mask);
--void clint_clear_ipi(unsigned long hartid);
- #endif /* CONFIG_RISCV_M_MODE */
+-#include <asm/clint.h>
+ #include <asm/cpu_ops.h>
+ #include <asm/setup.h>
+ #include <asm/sections.h>
+@@ -79,7 +78,6 @@ void __init setup_arch(char **cmdline_p)
+ #else
+ 	unflatten_device_tree();
+ #endif
+-	clint_init_boot_cpu();
  
- #endif /* _ASM_RISCV_CLINT_H */
-diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-index 40bb1c15a731..68de78a8eba6 100644
---- a/arch/riscv/include/asm/smp.h
-+++ b/arch/riscv/include/asm/smp.h
-@@ -15,6 +15,11 @@
- struct seq_file;
- extern unsigned long boot_cpu_hartid;
- 
-+struct riscv_ipi_ops {
-+	void (*ipi_inject)(const struct cpumask *target);
-+	void (*ipi_clear)(void);
-+};
-+
- #ifdef CONFIG_SMP
- /*
-  * Mapping between linux logical cpu index and hartid.
-@@ -40,6 +45,12 @@ void arch_send_call_function_single_ipi(int cpu);
- int riscv_hartid_to_cpuid(int hartid);
- void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
- 
-+/* Set custom IPI operations */
-+void riscv_set_ipi_ops(struct riscv_ipi_ops *ops);
-+
-+/* Clear IPI for current CPU */
-+void riscv_clear_ipi(void);
-+
- /*
-  * Obtains the hart ID of the currently executing task.  This relies on
-  * THREAD_INFO_IN_TASK, but we define that unconditionally.
-@@ -78,6 +89,14 @@ static inline void riscv_cpuid_to_hartid_mask(const struct cpumask *in,
- 	cpumask_set_cpu(boot_cpu_hartid, out);
- }
- 
-+static inline void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
-+{
-+}
-+
-+static inline void riscv_clear_ipi(void)
-+{
-+}
-+
- #endif /* CONFIG_SMP */
- 
- #if defined(CONFIG_HOTPLUG_CPU) && (CONFIG_SMP)
-diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
-index 3647980d14c3..a9845ee023e2 100644
---- a/arch/riscv/kernel/clint.c
-+++ b/arch/riscv/kernel/clint.c
-@@ -5,11 +5,11 @@
- 
- #include <linux/io.h>
- #include <linux/of_address.h>
-+#include <linux/smp.h>
- #include <linux/types.h>
- #include <asm/clint.h>
- #include <asm/csr.h>
- #include <asm/timex.h>
--#include <asm/smp.h>
- 
- /*
-  * This is the layout used by the SiFive clint, which is also shared by the qemu
-@@ -21,6 +21,24 @@
- 
- u32 __iomem *clint_ipi_base;
- 
-+static void clint_send_ipi(const struct cpumask *target)
-+{
-+	unsigned int cpu;
-+
-+	for_each_cpu(cpu, target)
-+		writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
-+}
-+
-+static void clint_clear_ipi(void)
-+{
-+	writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
-+}
-+
-+static struct riscv_ipi_ops clint_ipi_ops = {
-+	.ipi_inject = clint_send_ipi,
-+	.ipi_clear = clint_clear_ipi,
-+};
-+
- void clint_init_boot_cpu(void)
- {
- 	struct device_node *np;
-@@ -40,5 +58,6 @@ void clint_init_boot_cpu(void)
- 	riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
- 	riscv_time_val = base + CLINT_TIME_VAL_OFF;
- 
--	clint_clear_ipi(boot_cpu_hartid);
-+	clint_clear_ipi();
-+	riscv_set_ipi_ops(&clint_ipi_ops);
- }
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index f383ef5672b2..226ccce0f9e0 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -547,6 +547,18 @@ static inline long sbi_get_firmware_version(void)
- 	return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_VERSION);
- }
- 
-+static void sbi_send_cpumask_ipi(const struct cpumask *target)
-+{
-+	struct cpumask hartid_mask;
-+
-+	riscv_cpuid_to_hartid_mask(target, &hartid_mask);
-+
-+	sbi_send_ipi(cpumask_bits(&hartid_mask));
-+}
-+
-+static struct riscv_ipi_ops sbi_ipi_ops = {
-+	.ipi_inject = sbi_send_cpumask_ipi
-+};
- 
- int __init sbi_init(void)
- {
-@@ -587,5 +599,7 @@ int __init sbi_init(void)
- 		__sbi_rfence	= __sbi_rfence_v01;
- 	}
- 
-+	riscv_set_ipi_ops(&sbi_ipi_ops);
-+
- 	return 0;
- }
+ #ifdef CONFIG_SWIOTLB
+ 	swiotlb_init(1);
 diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index b1d4f452f843..8b85683ce203 100644
+index 8b85683ce203..07626be78c23 100644
 --- a/arch/riscv/kernel/smp.c
 +++ b/arch/riscv/kernel/smp.c
-@@ -84,9 +84,25 @@ static void ipi_stop(void)
- 		wait_for_interrupt();
- }
+@@ -17,7 +17,6 @@
+ #include <linux/seq_file.h>
+ #include <linux/delay.h>
  
-+static struct riscv_ipi_ops *ipi_ops;
-+
-+void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
-+{
-+	ipi_ops = ops;
-+}
-+EXPORT_SYMBOL_GPL(riscv_set_ipi_ops);
-+
-+void riscv_clear_ipi(void)
-+{
-+	if (ipi_ops && ipi_ops->ipi_clear)
-+		ipi_ops->ipi_clear();
-+
-+	csr_clear(CSR_IP, IE_SIE);
-+}
-+EXPORT_SYMBOL_GPL(riscv_clear_ipi);
-+
- static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
- {
--	struct cpumask hartid_mask;
- 	int cpu;
- 
- 	smp_mb__before_atomic();
-@@ -94,33 +110,22 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
- 		set_bit(op, &ipi_data[cpu].bits);
- 	smp_mb__after_atomic();
- 
--	riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
--	if (IS_ENABLED(CONFIG_RISCV_SBI))
--		sbi_send_ipi(cpumask_bits(&hartid_mask));
-+	if (ipi_ops && ipi_ops->ipi_inject)
-+		ipi_ops->ipi_inject(mask);
- 	else
--		clint_send_ipi_mask(mask);
-+		pr_warn("SMP: IPI inject method not available\n");
- }
- 
- static void send_ipi_single(int cpu, enum ipi_message_type op)
- {
--	int hartid = cpuid_to_hartid_map(cpu);
--
- 	smp_mb__before_atomic();
- 	set_bit(op, &ipi_data[cpu].bits);
- 	smp_mb__after_atomic();
- 
--	if (IS_ENABLED(CONFIG_RISCV_SBI))
--		sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
--	else
--		clint_send_ipi_single(hartid);
--}
--
--static inline void clear_ipi(void)
--{
--	if (IS_ENABLED(CONFIG_RISCV_SBI))
--		csr_clear(CSR_IP, IE_SIE);
-+	if (ipi_ops && ipi_ops->ipi_inject)
-+		ipi_ops->ipi_inject(cpumask_of(cpu));
- 	else
--		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-+		pr_warn("SMP: IPI inject method not available\n");
- }
- 
- void handle_IPI(struct pt_regs *regs)
-@@ -131,7 +136,7 @@ void handle_IPI(struct pt_regs *regs)
- 
- 	irq_enter();
- 
--	clear_ipi();
-+	riscv_clear_ipi();
- 
- 	while (true) {
- 		unsigned long ops;
+-#include <asm/clint.h>
+ #include <asm/sbi.h>
+ #include <asm/tlbflush.h>
+ #include <asm/cacheflush.h>
 diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index 4e9922790f6e..5fe849791bf0 100644
+index 5fe849791bf0..a6cfa9842d4b 100644
 --- a/arch/riscv/kernel/smpboot.c
 +++ b/arch/riscv/kernel/smpboot.c
-@@ -147,8 +147,7 @@ asmlinkage __visible void smp_callin(void)
+@@ -24,7 +24,6 @@
+ #include <linux/of.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/sched/mm.h>
+-#include <asm/clint.h>
+ #include <asm/cpu_ops.h>
+ #include <asm/irq.h>
+ #include <asm/mmu_context.h>
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 41f1c147c178..b24449da3022 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -648,9 +648,8 @@ config ATCPIT100_TIMER
+ 	  This option enables support for the Andestech ATCPIT100 timers.
+ 
+ config RISCV_TIMER
+-	bool "Timer for the RISC-V platform"
++	bool "Timer for the RISC-V platform" if COMPILE_TEST
+ 	depends on GENERIC_SCHED_CLOCK && RISCV
+-	default y
+ 	select TIMER_PROBE
+ 	select TIMER_OF
+ 	help
+diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+index 9de1dabfb126..c51c5ed15aa7 100644
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -19,26 +19,13 @@
+ #include <linux/of_irq.h>
+ #include <asm/smp.h>
+ #include <asm/sbi.h>
+-
+-u64 __iomem *riscv_time_cmp;
+-u64 __iomem *riscv_time_val;
+-
+-static inline void mmio_set_timer(u64 val)
+-{
+-	void __iomem *r;
+-
+-	r = riscv_time_cmp + cpuid_to_hartid_map(smp_processor_id());
+-	writeq_relaxed(val, r);
+-}
++#include <asm/timex.h>
+ 
+ static int riscv_clock_next_event(unsigned long delta,
+ 		struct clock_event_device *ce)
  {
- 	struct mm_struct *mm = &init_mm;
+ 	csr_set(CSR_IE, IE_TIE);
+-	if (IS_ENABLED(CONFIG_RISCV_SBI))
+-		sbi_set_timer(get_cycles64() + delta);
+-	else
+-		mmio_set_timer(get_cycles64() + delta);
++	sbi_set_timer(get_cycles64() + delta);
+ 	return 0;
+ }
  
--	if (!IS_ENABLED(CONFIG_RISCV_SBI))
--		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-+	riscv_clear_ipi();
- 
- 	/* All kernel threads share the same mm context.  */
- 	mmgrab(mm);
 -- 
 2.25.1
 
