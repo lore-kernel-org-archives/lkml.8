@@ -2,226 +2,87 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81406C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E17C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AED220771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4891F2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocSI4ZH0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="PG7dIotM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgGWPm2 (ORCPT
+        id S1729728AbgGWPmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728063AbgGWPm1 (ORCPT
+        Thu, 23 Jul 2020 11:42:44 -0400
+Received: from m1355.mail.163.com ([220.181.13.55]:26949 "EHLO
+        m1355.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbgGWPmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:42:27 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901F7C0619DC;
-        Thu, 23 Jul 2020 08:42:27 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so5391417wme.0;
-        Thu, 23 Jul 2020 08:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WmpEF3wAK9MyQIycfqRtOyPcqi5ldyWuyIoAHJsmiPk=;
-        b=ocSI4ZH0PyYIM68bnC8T89tdDC4qku8Q6bns0IbSeRi1ZgVm3N/GxGxVS9OvbcFBTz
-         oN7uSgt2lKmq43lzIsDXJYDBJAwxxzPHxYg2X68/7Y4M6QFcG5OpgmJQJcIwmCwq8Pbn
-         X4yNeIg2evOKg9vwfUFM8w8zPvrBzqIsA/CLeb0RYbFvC5tedw0VnpZ+y5W8cdkQvVQB
-         B4qW9aI40iuWv9mIQka7e5M7rF5xN9BydSf+BcZtfkZ1XkUzYMg7gRBGOk5N+mR+G7fn
-         Tvq7pFmLlgjBzYZ7VZb3Jn4W762go9m09GdcVOeNhbmfyH3c/Bf1FddziFKl6cFlCC8U
-         bv2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WmpEF3wAK9MyQIycfqRtOyPcqi5ldyWuyIoAHJsmiPk=;
-        b=B118zAt6ee3ByheGglFCQFbj2Xt4fxe5R39ch0iEdosW+o9uQKamvBEzRMOdzxkCD4
-         mmNqhz9O+rN2cDIaImPrYjZHi60E10nBS70JYHStNzBVmUPyeq2841qmcFuo2IxafQOL
-         0ZpghNhPn5xc+6BQeYsA5HBbJnFWgniLKSxD1DLItUxRw8Aser2VmbpFp78ZdVsYSz31
-         o0QzU+4cEZ+ReAmYyzE0Tj+pbqbNmT87uX8279OH5TDovnW2GACsE6li2WbeCvhYihuw
-         ycOe5igpGddAUzTk4/pBq0dyt9CdyyeJMzAc2xD4Q9RLbgX/cnitXmdtmUctnY8FcR/R
-         bl4g==
-X-Gm-Message-State: AOAM531vHAB0CwI96Ct62axw3bgjBUqS+AohNR3ZbBOwynDNtfapAkht
-        0QX8bHC16N5FSMQQACMWnWY=
-X-Google-Smtp-Source: ABdhPJyX2JfGZsL+cpAXob0aVplIVs631ETGzU1KEWsj2v12UjMXeteDcjRnFvXcYr5gn4WVKyOiOQ==
-X-Received: by 2002:a1c:49c6:: with SMTP id w189mr2301255wma.97.1595518946327;
-        Thu, 23 Jul 2020 08:42:26 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id d18sm4238353wrj.8.2020.07.23.08.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 08:42:25 -0700 (PDT)
-Subject: Re: [v7, PATCH 5/7] arm64: dts: add display nodes for mt8183
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
- <1595469798-3824-6-git-send-email-yongqiang.niu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <a8a7232c-6c2b-b606-2091-da540e5cb79e@gmail.com>
-Date:   Thu, 23 Jul 2020 17:42:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 23 Jul 2020 11:42:43 -0400
+X-Greylist: delayed 935 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jul 2020 11:42:42 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=xMGRC
+        He842IB2MjNA/wba5wNMl7OGehLFqufBXZfZMU=; b=PG7dIotM/a/AhCfZdZ9Uo
+        CHxmGc4ztcnr1y4VtZECAvK1SvWZtCo9e6K4ZG50HQEmQldOWUupa0xbNHIPIRge
+        ZP9P2TxfsshbCLZehorUfUGrCGWaTXJo9Dnl0H5jInk3LA0ajqrjVByMst8zK1+t
+        lQG5aX2/jJOqXgGKX580A8=
+Received: from songfengcn$163.com ( [114.222.189.160] ) by
+ ajax-webmail-wmsvr55 (Coremail) ; Thu, 23 Jul 2020 23:26:01 +0800 (CST)
+X-Originating-IP: [114.222.189.160]
+Date:   Thu, 23 Jul 2020 23:26:01 +0800 (CST)
+From:   "Song Feng" <songfengcn@163.com>
+To:     "Chao Yu" <yuchao0@huawei.com>
+Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re:[f2fs-dev] [PATCH] f2fs: fix use-after-free issue
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190724(ac680a23)
+ Copyright (c) 2002-2020 www.mailtech.cn 163com
+In-Reply-To: <20200723102806.9662-1-yuchao0@huawei.com>
+References: <20200723102806.9662-1-yuchao0@huawei.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-In-Reply-To: <1595469798-3824-6-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <666af139.9663.1737c480519.Coremail.songfengcn@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: N8GowACndMwJrBlfwDhgAA--.59311W
+X-CM-SenderInfo: pvrqwwphqju0i6rwjhhfrp/1tbiRAlqW1SIgShn7QAAsD
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 23/07/2020 04:03, Yongqiang Niu wrote:
-> This patch add display nodes for mt8183
-> 
-
-In comparison, DTS patches should go last in a series as you will need the 
-driver patches to make it work.
-
-Regards,
-Matthias
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8183.dtsi | 98 ++++++++++++++++++++++++++++++++
->   1 file changed, 98 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 7b781eb..440cf22 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -31,6 +31,11 @@
->   		i2c9 = &i2c9;
->   		i2c10 = &i2c10;
->   		i2c11 = &i2c11;
-> +		ovl0 = &ovl0;
-> +		ovl_2l0 = &ovl_2l0;
-> +		ovl_2l1 = &ovl_2l1;
-> +		rdma0 = &rdma0;
-> +		rdma1 = &rdma1;
->   	};
->   
->   	cpus {
-> @@ -707,9 +712,102 @@
->   		mmsys: syscon@14000000 {
->   			compatible = "mediatek,mt8183-mmsys", "syscon";
->   			reg = <0 0x14000000 0 0x1000>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
->   			#clock-cells = <1>;
->   		};
->   
-> +		ovl0: ovl@14008000 {
-> +			compatible = "mediatek,mt8183-disp-ovl";
-> +			reg = <0 0x14008000 0 0x1000>;
-> +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_OVL0>;
-> +		};
-> +
-> +		ovl_2l0: ovl@14009000 {
-> +			compatible = "mediatek,mt8183-disp-ovl-2l";
-> +			reg = <0 0x14009000 0 0x1000>;
-> +			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_OVL0_2L>;
-> +		};
-> +
-> +		ovl_2l1: ovl@1400a000 {
-> +			compatible = "mediatek,mt8183-disp-ovl-2l";
-> +			reg = <0 0x1400a000 0 0x1000>;
-> +			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_OVL1_2L>;
-> +		};
-> +
-> +		rdma0: rdma@1400b000 {
-> +			compatible = "mediatek,mt8183-disp-rdma";
-> +			reg = <0 0x1400b000 0 0x1000>;
-> +			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
-> +			mediatek,rdma_fifo_size = <5120>;
-> +		};
-> +
-> +		rdma1: rdma@1400c000 {
-> +			compatible = "mediatek,mt8183-disp-rdma";
-> +			reg = <0 0x1400c000 0 0x1000>;
-> +			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +			mediatek,rdma_fifo_size = <2048>;
-> +		};
-> +
-> +		color0: color@1400e000 {
-> +			compatible = "mediatek,mt8183-disp-color",
-> +				     "mediatek,mt8173-disp-color";
-> +			reg = <0 0x1400e000 0 0x1000>;
-> +			interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
-> +		};
-> +
-> +		ccorr0: ccorr@1400f000 {
-> +			compatible = "mediatek,mt8183-disp-ccorr";
-> +			reg = <0 0x1400f000 0 0x1000>;
-> +			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_CCORR0>;
-> +		};
-> +
-> +		aal0: aal@14010000 {
-> +			compatible = "mediatek,mt8183-disp-aal",
-> +				     "mediatek,mt8173-disp-aal";
-> +			reg = <0 0x14010000 0 0x1000>;
-> +			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_AAL0>;
-> +		};
-> +
-> +		gamma0: gamma@14011000 {
-> +			compatible = "mediatek,mt8183-disp-gamma",
-> +				     "mediatek,mt8173-disp-gamma";
-> +			reg = <0 0x14011000 0 0x1000>;
-> +			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_GAMMA0>;
-> +		};
-> +
-> +		dither0: dither@14012000 {
-> +			compatible = "mediatek,mt8183-disp-dither";
-> +			reg = <0 0x14012000 0 0x1000>;
-> +			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_DITHER0>;
-> +		};
-> +
-> +		mutex: mutex@14016000 {
-> +			compatible = "mediatek,mt8183-disp-mutex";
-> +			reg = <0 0x14016000 0 0x1000>;
-> +			interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +		};
-> +
->   		smi_common: smi@14019000 {
->   			compatible = "mediatek,mt8183-smi-common", "syscon";
->   			reg = <0 0x14019000 0 0x1000>;
-> 
+QXQgMjAyMC0wNy0yMyAxNzoyODowNiwgIkNoYW8gWXUiIDx5dWNoYW8wQGh1YXdlaS5jb20+IHdy
+b3RlOgoKPkZyb206IExpIEd1aWZ1IDxibHVjZS5saWd1aWZ1QGh1YXdlaS5jb20+Cj4KPkR1cmlu
+ZyB1bW91bnQsIGYyZnNfcHV0X3N1cGVyKCkgdW5yZWdpc3RlcnMgcHJvY2ZzIGVudHJpZXMgYWZ0
+ZXIKPmYyZnNfZGVzdHJveV9zZWdtZW50X21hbmFnZXIoKSwgaXQgbWF5IGNhdXNlIHVzZS1hZnRl
+ci1mcmVlCj5pc3N1ZSB3aGVuIHVtb3VudCByYWNlcyB3aXRoIHByb2NmcyBhY2Nlc3NpbmcsIGZp
+eCBpdCBieSByZWxjYXRpbmcKdHlwbyBpc3N1ZTogcmVsY2F0aW5nIC0+IHJlbG9jYXRpbmc/Cj5m
+MmZzX3VucmVnaXN0ZXJfc3lzZnMoKS4KPgo+W0NoYW8gWXU6IGNoYW5nZSBjb21taXQgdGl0bGUv
+bWVzc2FnZSBhIGJpdF0KPgo+U2lnbmVkLW9mZi1ieTogTGkgR3VpZnUgPGJsdWNlLmxpZ3VpZnVA
+aHVhd2VpLmNvbT4KPlJldmlld2VkLWJ5OiBDaGFvIFl1IDx5dWNoYW8wQGh1YXdlaS5jb20+Cj5T
+aWduZWQtb2ZmLWJ5OiBDaGFvIFl1IDx5dWNoYW8wQGh1YXdlaS5jb20+Cj4tLS0KPiBmcy9mMmZz
+L3N1cGVyLmMgfCA1ICsrKy0tCj4gMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkKPgo+ZGlmZiAtLWdpdCBhL2ZzL2YyZnMvc3VwZXIuYyBiL2ZzL2YyZnMvc3Vw
+ZXIuYwo+aW5kZXggODBjYjdjZDM1OGY4Li5iZjhiZDY0YzgzODAgMTAwNjQ0Cj4tLS0gYS9mcy9m
+MmZzL3N1cGVyLmMKPisrKyBiL2ZzL2YyZnMvc3VwZXIuYwo+QEAgLTExNzUsNiArMTE3NSw5IEBA
+IHN0YXRpYyB2b2lkIGYyZnNfcHV0X3N1cGVyKHN0cnVjdCBzdXBlcl9ibG9jayAqc2IpCj4gCWlu
+dCBpOwo+IAlib29sIGRyb3BwZWQ7Cj4gCj4rCS8qIHVucmVnaXN0ZXIgcHJvY2ZzL3N5c2ZzIGVu
+dHJpZXMgdG8gYXZvaWQgcmFjZSBjYXNlICovCj4rCWYyZnNfdW5yZWdpc3Rlcl9zeXNmcyhzYmkp
+Owo+Kwo+IAlmMmZzX3F1b3RhX29mZl91bW91bnQoc2IpOwo+IAo+IAkvKiBwcmV2ZW50IHJlbWFp
+bmluZyBzaHJpbmtlciBqb2JzICovCj5AQCAtMTI0MCw4ICsxMjQzLDYgQEAgc3RhdGljIHZvaWQg
+ZjJmc19wdXRfc3VwZXIoc3RydWN0IHN1cGVyX2Jsb2NrICpzYikKPiAKPiAJa3ZmcmVlKHNiaS0+
+Y2twdCk7Cj4gCj4tCWYyZnNfdW5yZWdpc3Rlcl9zeXNmcyhzYmkpOwo+LQo+IAlzYi0+c19mc19p
+bmZvID0gTlVMTDsKPiAJaWYgKHNiaS0+c19jaGtzdW1fZHJpdmVyKQo+IAkJY3J5cHRvX2ZyZWVf
+c2hhc2goc2JpLT5zX2Noa3N1bV9kcml2ZXIpOwo+LS0gCj4yLjI2LjIKPgo+Cj4KPl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj5MaW51eC1mMmZzLWRldmVs
+IG1haWxpbmcgbGlzdAo+TGludXgtZjJmcy1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKPmh0
+dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL2xpbnV4LWYyZnMtZGV2
+ZWwKcGxlYXNlIGNoZWNrIHR5cG8gaXNzdWUgZm9yIGNvbW1lbnQ6IHJlbGNhdGluZy0+cmVsb2Nh
+dGluZz8=
