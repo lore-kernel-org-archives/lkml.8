@@ -2,95 +2,157 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C82C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B32EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2F762086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595546585;
-	bh=LpBa7WC+PmUuvju8pxnLc0G1tsZpO642XLjDjk2e2t4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=YKGb/ahdOsItI64sNdA0moNiEmkxKdmQkA3OqKhUo+TwpXF7PF+2B+Ekpw2BiZdrR
-	 QXtrhVzS4IyhzKH8s1UgR41hWjEVUovy2DQ+X7U0PQX0JsCCYdUwojRKECxo2eM+VR
-	 AKwMUh5wfDE7S2/V8DYzXW3GaUQOvI66t23rfzyk=
+	by mail.kernel.org (Postfix) with ESMTP id 60A1F206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGWXXE (ORCPT
+        id S1727775AbgGWXbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 19:31:37 -0400
+Received: from mga17.intel.com ([192.55.52.151]:58908 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgGWXXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:23:04 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11DDF2080D;
-        Thu, 23 Jul 2020 23:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595546583;
-        bh=LpBa7WC+PmUuvju8pxnLc0G1tsZpO642XLjDjk2e2t4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=X6o9ceMGv+6QFquvn2TvPUVx/zu/mVWGEEU5pf4oh4Wgllo8B2E5tlVVO7LTPHkUY
-         vz0BD9uuKTVDQ5v9CUpFPDMx+YAboz9sTAgKqWl9xkpr6EbsU/q4IJqYAvqDYb1TQX
-         CRixz1EWv7+K81kyoOJtGumwMEuGHYTp0h0tF/YU=
-Date:   Thu, 23 Jul 2020 18:23:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
-        james.morse@arm.com, lenb@kernel.org, tony.luck@intel.com,
-        dan.carpenter@oracle.com, zhangliguang@linux.alibaba.com,
-        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
-        jroedel@suse.de, linuxarm@huawei.com, yangyicong@hisilicon.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
-Subject: Re: [PATCH v13 0/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Message-ID: <20200723232301.GA1468407@bjorn-Precision-5520>
+        id S1726657AbgGWXbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 19:31:36 -0400
+IronPort-SDR: vuAPSDvbIjD9zh8e4Puvxd68EFsAKLBlPF77Pl2kK4SnUVARIcpCk1xmblhsdLymmrAdgcZWWa
+ UJ+pABZ9PskQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130712232"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="130712232"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:31:36 -0700
+IronPort-SDR: gsi5TqufM/NCPQq5j4OvDhn1lg4dgXY3l9G5IwVInwGapjDjEImE8VeaL7wQflU16Svq+zhLlR
+ ZB5JKQXS21Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="488546526"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2020 16:31:35 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jykgY-0000eP-JX; Thu, 23 Jul 2020 23:31:34 +0000
+Date:   Fri, 24 Jul 2020 07:30:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:sched/urgent] BUILD SUCCESS
+ d136122f58458479fd8926020ba2937de61d7f65
+Message-ID: <5f1a1d9d.yrpcf8xRVfJkYGEo%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200722104245.1060-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:42:43AM +0100, Shiju Jose wrote:
-> CPER records describing a firmware-first error are identified by GUID.
-> The ghes driver currently logs, but ignores any unknown CPER records.
-> This prevents describing errors that can't be represented by a standard
-> entry, that would otherwise allow a driver to recover from an error.
-> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-> version 2.8).
-> 
-> patch set
-> 1. add a notifier chain for these non-standard/vendor-records
->    in the ghes driver.
-> 
-> 2. add a driver to handle HiSilicon HIP PCIe controller's errors.
->    
-> Changes:
-> 
-> V13:
-> 1. Following changes in the HIP PCIe error handling driver.
-> 1.1 Add Bjorn's acked-by.
-> 1.2. Address the comments and macros order Bjorn mentioned.
->      Fix the words in the commit.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/urgent
+branch HEAD: d136122f58458479fd8926020ba2937de61d7f65  sched: Fix race against ptrace_freeze_trace()
 
-This series is ill-formed:
+elapsed time: 2342m
 
-  - Jul 22  5:39 Shiju Jose      [PATCH v13 0/2] ACPI / APEI: Add support to not
-  - Jul 22  5:39 Shiju Jose      └─>[PATCH v13 1/2] ACPI / APEI: Add a notifier
-  - Jul 22  5:42 Shiju Jose      [PATCH v13 0/2] ACPI / APEI: Add support to not
-  - Jul 22  5:42 Shiju Jose      └─>[PATCH v13 2/2] PCI: hip: Add handling of Hi
+configs tested: 86
+configs skipped: 1
 
-Patches 1/2 and 2/2 never appear in the same thread.  Both should be
-replies to 0/2.  And should be only *one* v13 0/2, not two :)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Bjorn
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20200723
+i386                 randconfig-a005-20200723
+i386                 randconfig-a004-20200723
+i386                 randconfig-a006-20200723
+i386                 randconfig-a002-20200723
+i386                 randconfig-a001-20200723
+x86_64               randconfig-a005-20200723
+x86_64               randconfig-a004-20200723
+x86_64               randconfig-a003-20200723
+x86_64               randconfig-a002-20200723
+x86_64               randconfig-a006-20200723
+x86_64               randconfig-a001-20200723
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
