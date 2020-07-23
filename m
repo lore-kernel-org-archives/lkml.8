@@ -2,101 +2,118 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC981C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD539C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B549A20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+gOXK8r"
+	by mail.kernel.org (Postfix) with ESMTP id 8B23C207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595534267;
+	bh=dRVWMy39tT6wAPfPtn0iZAUMp/DpcR3/2Kj29ElInIQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=1l9u8WnvIQ9zc1cGEj0RpB8tz42AEq4DEqSEdtzzGrnah/AkGaZQrOOWXPTjJ8wXC
+	 FYju1vR+lG0ZA7UAG1noOVGir8v2AfixDPAUN3qLXm4HZ/BlSlFxqnpib/SR3RrkHj
+	 agr1HEG6i9JBvn7iWR3qqErmrv2Maz2MwkWK7pHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgGWT5b (ORCPT
+        id S1726804AbgGWT5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGWT5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:57:30 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415AAC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:57:30 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so5337541qtg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hk1VOua7WA4W+2a0I8tnHK2NN+ZOxHTFP4Vzc6rLNi8=;
-        b=j+gOXK8rtTNs77JTc+74zeZInWXCebPkiK/Qra1mP+D0F5cHd9qLF9OvxofuHVNkZQ
-         Ewc7nDTdnrpEjzXM2dKHTWVQLOEASdds3607fOuHPynBxCAXEN1IgdlFSXnowoe8gQ5o
-         3i6j+QdgSAd8X/UZlH+Aar36Bc4rxRx2vWtgTZ6FRzrL3jypvRUG0SaKfCui/w2d6iNm
-         a5sBDMWAcv9OYSLfqz4tj+740k9AAuIavOY95lhSoEqn8GmmzQ0V/MyOmuy/d0coOH1a
-         biZ3A+ZLRrDNRasMdi/VfuBrP4bZtRe+a2oxt3EjeRbdsJQT+/OhB+FQuYffy2qNvcY3
-         TamA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hk1VOua7WA4W+2a0I8tnHK2NN+ZOxHTFP4Vzc6rLNi8=;
-        b=jiQQ66ra59UKeLj4q3Oc8FnYabbM3rEd8UuApRkIpXuDCbxrNqkko0UxvCVSOQfWB/
-         SJhiCSlwJNjfsFpNNZRoVOZHdrsEetY423PMWdIJP2kj2ZLrVraC4HgWD3P4wW/kZ+eP
-         ODc3Iwia14u7+1e94pO/gdGaX6Y97MF9Uaryu3r4Yjk/1yPcIHoYjaMp67wo26NMS+EL
-         NVwu+N8Ha9906ZZWRiJlTmwALW11xqp9DX1hn5OwzOi+ixlxN6cIADXdaarKMfF/GnYd
-         qEfrrsS9cKmjzaNYBOBKUZLUc7GW7PCFcCnfaXyZLfs2XwyYggMDKiLm8LUEua+HyOFh
-         6nPQ==
-X-Gm-Message-State: AOAM531BTe2W5Zqf2jsiwzOgjrHk/Jmo6rr352EqRdZNFv8nZ1qOTyDY
-        rlzenEY23jhq6S/rwvtotUvs3QK+rJcdJFN0HS4Pcw==
-X-Google-Smtp-Source: ABdhPJyx2lXUQ3HDTMYdZgeEMfHMWEhRcamB/2Z1IY/HT2QdGNZBtXBBN7HtWjH6eRybQhV+lkurDSOe++dKQvFVJOU=
-X-Received: by 2002:aed:2f46:: with SMTP id l64mr5986227qtd.1.1595534249528;
- Thu, 23 Jul 2020 12:57:29 -0700 (PDT)
+        Thu, 23 Jul 2020 15:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgGWT5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 15:57:46 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFF32086A;
+        Thu, 23 Jul 2020 19:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595534265;
+        bh=dRVWMy39tT6wAPfPtn0iZAUMp/DpcR3/2Kj29ElInIQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=L/QfwoU4oC9NCaDNrwHinZeKXeR9zsJSkX6zYFw5RRMbQZXDnUIGf1yV+B8lS1+Ki
+         XjbrFTzYbkCA2/Alu+Ip6PtccBJRk65NnYKP1Jx5Y6TVLywojlIGBO94LhPJMLjsZP
+         k5VchAgtlSvB1CTg3X2ZM1c/6mNemM+n1Y75OsQY=
+Date:   Thu, 23 Jul 2020 14:57:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        Armen Baloyan <abaloyan@gigaio.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+Message-ID: <20200723195742.GA1447143@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200716115346.GA1667288@kroah.com> <20200723111827.GA1963557@kroah.com>
-In-Reply-To: <20200723111827.GA1963557@kroah.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Thu, 23 Jul 2020 21:57:18 +0200
-Message-ID: <CAFLxGvzP5wMUvXzTFc8S8oqfM8mereFSy92qwwmgg-R73Z9sgQ@mail.gmail.com>
-Subject: Re: [PATCH] mtd: properly check all write ioctls for permissions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADnq5_Nqziz6TKfk7U6QvBjZtV7ibBfwwym1kTb1Q4t-cz04JQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 1:19 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 16, 2020 at 01:53:46PM +0200, Greg Kroah-Hartman wrote:
-> > When doing a "write" ioctl call, properly check that we have permissions
-> > to do so before copying anything from userspace or anything else so we
-> > can "fail fast".  This includes also covering the MEMWRITE ioctl which
-> > previously missed checking for this.
+[+cc Andrew, Armen, hpa]
+
+On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
 > >
-> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Cc: Richard Weinberger <richard@nod.at>
-> > Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> > Cc: stable <stable@kernel.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+> > transactions between root ports and found to work. Therefore add it
+> > to the list.
+> >
+> > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Christian König <christian.koenig@amd.com>
+> > Cc: Huang Rui <ray.huang@amd.com>
+> > Cc: Alex Deucher <alexdeucher@gmail.com>
+> 
+> Starting with Zen, all AMD platforms support P2P for reads and writes.
+
+What's the plan for getting out of the cycle of "update this list for
+every new chip"?  Any new _DSMs planned, for instance?
+
+A continuous trickle of updates like this is not really appealing.  So
+far we have:
+
+  7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
+  7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+  bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+  494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+  0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+
+And that's just from the last year, not including this patch.
+
 > > ---
-> >  drivers/mtd/mtdchar.c | 54 +++++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 45 insertions(+), 9 deletions(-)
->
-> Any objection to this patch getting into 5.8-final?
-
-Well, I hoped to get some acks/reviews...
-
-Applied to mtd/fixes! :-)
-
--- 
-Thanks,
-//richard
+> >  drivers/pci/p2pdma.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> > index e8e444eeb1cd..3d67a1ee083e 100644
+> > --- a/drivers/pci/p2pdma.c
+> > +++ b/drivers/pci/p2pdma.c
+> > @@ -284,6 +284,8 @@ static const struct pci_p2pdma_whitelist_entry {
+> >         {PCI_VENDOR_ID_AMD,     0x1450, 0},
+> >         {PCI_VENDOR_ID_AMD,     0x15d0, 0},
+> >         {PCI_VENDOR_ID_AMD,     0x1630, 0},
+> > +       /* AMD ZEN 2 */
+> > +       {PCI_VENDOR_ID_AMD,     0x1480, 0},
+> >
+> >         /* Intel Xeon E5/Core i7 */
+> >         {PCI_VENDOR_ID_INTEL,   0x3c00, REQ_SAME_HOST_BRIDGE},
+> >
+> > base-commit: ba47d845d715a010f7b51f6f89bae32845e6acb7
+> > --
+> > 2.20.1
+> >
