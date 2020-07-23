@@ -2,120 +2,102 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A794C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B390207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45191207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OxdHgVku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgGWO6K (ORCPT
+        id S1728581AbgGWPDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:58:10 -0400
-Received: from lists.gateworks.com ([108.161.130.12]:38119 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbgGWO6J (ORCPT
+        Thu, 23 Jul 2020 11:03:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33418 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgGWPDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:58:09 -0400
-Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1jycjV-0001cU-OJ; Thu, 23 Jul 2020 15:02:05 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Sean Nyekjaer <sean@geanix.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Timo=20Schl=C3=BC=C3=9Fler?= <schluessler@krause.de>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Tim Harvey <tharvey@gateworks.com>
-Subject: [RESEND PATCH] can: mcp251x: add support for half duplex controllers
-Date:   Thu, 23 Jul 2020 07:57:55 -0700
-Message-Id: <1595516275-1179-1-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 23 Jul 2020 11:03:35 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NF2ZNi044266;
+        Thu, 23 Jul 2020 15:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=L6YMu5hMIyONs163kBUsQtc+IsC5DQJqhzfU8lanX1o=;
+ b=OxdHgVkuuWhyf2dp06bQtEnEQBWqhg40pozko6piztSlwsH3ACxJqrKpDvkJUwNY9fZm
+ osupjqKm50GdqLJZ+ltP1Jhvn+U4Kp8ZQFITy981+Eh4CERhmUZdShlhTCCsnt2Z7iVh
+ 1B03PaTT88GWiGlEijqaWWiXNwrDH8lfZu0Ig+qqqPSwgR0HCjUlbtR9evDYS+1iLpud
+ 4v2CH6YsTyE6poW75ar3iGXYevSze3Rj/iXiPxLoR+r2F60WF46bwsfj2nACSWFpCwyN
+ H1XGa2+cNEZLAFeaSexkOgYd+emZp8CVZlQZmIOc5WP9q9JgRFdZ3kI8py3aXZggOGNP rA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32brgrsx57-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jul 2020 15:03:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NEx8aR112243;
+        Thu, 23 Jul 2020 15:01:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32fb8gxn5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 15:01:18 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06NF1FB0011054;
+        Thu, 23 Jul 2020 15:01:17 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jul 2020 08:01:15 -0700
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kiwoong Kim <kwmad.kim@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1mu3qe0wm.fsf@ca-mkp.ca.oracle.com>
+References: <20200721163045.50c205a5@canb.auug.org.au>
+        <20200723155452.6dccd510@canb.auug.org.au>
+Date:   Thu, 23 Jul 2020 11:01:10 -0400
+In-Reply-To: <20200723155452.6dccd510@canb.auug.org.au> (Stephen Rothwell's
+        message of "Thu, 23 Jul 2020 15:54:52 +1000")
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 mlxscore=0 spamscore=0 phishscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 suspectscore=1 adultscore=0 clxscore=1011 mlxlogscore=999
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007230112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SPI host controllers do not support full-duplex SPI and are
-marked as such via the SPI_CONTROLLER_HALF_DUPLEX controller flag.
 
-For such controllers use half duplex transactions but retain full
-duplex transactions for the controllers that can handle those.
+Stephen,
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- drivers/net/can/spi/mcp251x.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+>> ERROR: modpost: "exynos_ufs_dump_info" [drivers/scsi/ufs/ufs-exynos.ko] undefined!
+>> ERROR: modpost: "exynos_ufs_init_dbg" [drivers/scsi/ufs/ufs-exynos.ko] undefined!
+>> ERROR: modpost: "exynos_ufs_cmd_log_start" [drivers/scsi/ufs/ufs-exynos.ko] undefined!
 
-diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-index 5009ff2..203ef20 100644
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -290,8 +290,12 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
- 	priv->spi_tx_buf[0] = INSTRUCTION_READ;
- 	priv->spi_tx_buf[1] = reg;
- 
--	mcp251x_spi_trans(spi, 3);
--	val = priv->spi_rx_buf[2];
-+	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+		spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
-+	} else {
-+		mcp251x_spi_trans(spi, 3);
-+		val = priv->spi_rx_buf[2];
-+	}
- 
- 	return val;
- }
-@@ -303,10 +307,18 @@ static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
- 	priv->spi_tx_buf[0] = INSTRUCTION_READ;
- 	priv->spi_tx_buf[1] = reg;
- 
--	mcp251x_spi_trans(spi, 4);
-+	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+		u8 val[2] = { 0 };
- 
--	*v1 = priv->spi_rx_buf[2];
--	*v2 = priv->spi_rx_buf[3];
-+		spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
-+		*v1 = val[0];
-+		*v2 = val[1];
-+	} else {
-+		mcp251x_spi_trans(spi, 4);
-+
-+		*v1 = priv->spi_rx_buf[2];
-+		*v2 = priv->spi_rx_buf[3];
-+	}
- }
- 
- static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
-@@ -409,8 +421,16 @@ static void mcp251x_hw_rx_frame(struct spi_device *spi, u8 *buf,
- 			buf[i] = mcp251x_read_reg(spi, RXBCTRL(buf_idx) + i);
- 	} else {
- 		priv->spi_tx_buf[RXBCTRL_OFF] = INSTRUCTION_READ_RXB(buf_idx);
--		mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
--		memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
-+		if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+			spi_write_then_read(spi, priv->spi_tx_buf, 1,
-+					    priv->spi_rx_buf,
-+					    SPI_TRANSFER_BUF_LEN);
-+			memcpy(buf + 1, priv->spi_rx_buf,
-+			       SPI_TRANSFER_BUF_LEN - 1);
-+		} else {
-+			mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
-+			memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
-+		}
- 	}
- }
- 
+*sigh* sorry about that. I did verify yesterday's exynos build fix with
+COMPILE_TEST but it looks like I didn't have the new driver debugging
+option enabled.
+
+Kiwoong/Alim: Please fix!
+
 -- 
-2.7.4
-
+Martin K. Petersen	Oracle Linux Engineering
