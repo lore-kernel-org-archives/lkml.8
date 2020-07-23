@@ -6,110 +6,74 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBB5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BACC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C8F2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504372086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgGWKSg (ORCPT
+        id S1728274AbgGWKTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 06:19:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60252 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgGWKSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:18:35 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CA72065F;
-        Thu, 23 Jul 2020 10:18:33 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 11:18:31 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] raw_copy_from_user() semantics
-Message-ID: <20200723101831.GA7315@gaia>
-References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
- <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
- <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
- <20200722113707.GC27540@gaia>
- <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
- <20200722165346.GB4069@gaia>
- <9c22700a16db4a4f8ae9203efcaed27b@AcuMS.aculab.com>
+        id S1726867AbgGWKTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:19:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 38A75ACDF;
+        Thu, 23 Jul 2020 10:19:58 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 12:19:47 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     HORIGUCHI =?utf-8?B?TkFPWUEo5aCA5Y+j44CA55u05LmfKQ==?= 
+        <naoya.horiguchi@nec.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <MHocko@suse.com>,
+        linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
+        aneesh.kumar@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        Oscar Salvador <OSalvador@suse.com>
+Subject: Re: [PATCH v4 12/15] mm,hwpoison: Rework soft offline for in-use
+ pages
+Message-ID: <20200723101942.GA19826@linux>
+References: <20200716123810.25292-1-osalvador@suse.de>
+ <20200716123810.25292-13-osalvador@suse.de>
+ <f7387d64d0024d15a1bc821a8e19b8f0@DB7PR04MB5180.eurprd04.prod.outlook.com>
+ <c19693eb3600832976f44ffa746a263a@suse.de>
+ <3b2231bf69133bb7bb8936c74b4e9c9f@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c22700a16db4a4f8ae9203efcaed27b@AcuMS.aculab.com>
+In-Reply-To: <3b2231bf69133bb7bb8936c74b4e9c9f@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 08:37:27AM +0000, David Laight wrote:
-> From: Catalin Marinas
-> > Sent: 22 July 2020 17:54
-> > On Wed, Jul 22, 2020 at 01:14:21PM +0000, David Laight wrote:
-> > > From: Catalin Marinas
-> > > > Sent: 22 July 2020 12:37
-> > > > On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
-> > > > > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
-> > > > > <torvalds@linux-foundation.org> wrote:
-> > > > > > I think we should try to get rid of the exact semantics.
-> > > > >
-> > > > > Side note: I think one of the historical reasons for the exact
-> > > > > semantics was that we used to do things like the mount option copying
-> > > > > with a "copy_from_user()" iirc.
-> > > > >
-> > > > > And that could take a fault at the end of the stack etc, because
-> > > > > "copy_mount_options()" is nasty and doesn't get a size, and just
-> > > > > copies "up to 4kB" of data.
-> > > > >
-> > > > > It's a mistake in the interface, but it is what it is. But we've
-> > > > > always handled the inexact count there anyway by originally doing byte
-> > > > > accesses, and at some point you optimized it to just look at where
-> > > > > page boundaries might be..
-> > > >
-> > > > And we may have to change this again since, with arm64 MTE, the page
-> > > > boundary check is insufficient:
-> > > >
-> > > > https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
-> > > >
-> > > > While currently the fault path is unlikely to trigger, with MTE in user
-> > > > space it's a lot more likely since the buffer (e.g. a string) is
-> > > > normally less than 4K and the adjacent addresses would have a different
-> > > > colour.
-> > > >
-> > > > I looked (though briefly) into passing the copy_from_user() problem to
-> > > > filesystems that would presumably know better how much to copy. In most
-> > > > cases the options are string, so something like strncpy_from_user()
-> > > > would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
-> > > > has a better way to figure out how much to copy.
-> > >
-> > > What about changing the mount code to loop calling get_user()
-> > > to read aligned words until failure?
-> > > Mount is fairly uncommon and the extra cost is probably small compared
-> > > to the rest of doing a mount.
+On Wed, Jul 22, 2020 at 10:08:59AM +0200, osalvador@suse.de wrote:
+> On 2020-07-20 10:27, osalvador@suse.de wrote:
+> > > This means that some hugepages are dissolved, but the others not,
+> > > maybe which is not desirable.
+> > > I'll dig this more later but just let me share at first.
+> > > 
+> > > A few minor comment below ...
 > > 
-> > Before commit 12efec560274 ("saner copy_mount_options()"), it was using
-> > single-byte get_user(). That could have been optimised for aligned words
-> > reading but I don't really think it's worth the hassle. Since the source
-> > and destination don't have the same alignment and some architecture
-> > don't support unaligned accesses (for storing to the kernel buffer), it
-> > would just make this function unnecessarily complicated.
+> > 
+> > Uhm, weird.
+> > 
+> > I will be taking a look today.
 > 
-> It could do aligned words if the user buffer is aligned (it will be
-> most of the time) and bytes otherwise.
-> 
-> Or just fallback to a byte loop if the full 4k read fails.
+> After some digging up I __think__ I found the problem.
+> I will try to fix it up and I will be running tests.
 
-That's what I'm proposing here (needed for arm64 MTE):
+I found the problem.
+I re-ran the tests again with small and large memory and 
+the stats look correct this time.
 
-https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+After some more testing, I also fixed a list corruption that was happening
+due to the same problem.
+
+I am creating a git branch so you can re-run your tests on it as well.
 
 -- 
-Catalin
+Oscar Salvador
+SUSE L3
