@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5388C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6313C433F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C69DB2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F9B20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgGWKWo (ORCPT
+        id S1728484AbgGWKW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:22:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10622 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728402AbgGWKWm (ORCPT
+        Thu, 23 Jul 2020 06:22:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11232 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728468AbgGWKW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:22:42 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NA2a8w180188;
-        Thu, 23 Jul 2020 06:22:22 -0400
+        Thu, 23 Jul 2020 06:22:58 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NA3CkS151343;
+        Thu, 23 Jul 2020 06:22:31 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91x43q0-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e11p90ke-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 06:22:21 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06NA2kUl180815;
-        Thu, 23 Jul 2020 06:22:15 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91x43mc-1
+        Thu, 23 Jul 2020 06:22:31 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06NAIepN014039;
+        Thu, 23 Jul 2020 06:22:30 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e11p90ja-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 06:22:15 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NAHOHl010106;
-        Thu, 23 Jul 2020 10:22:10 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06fra.de.ibm.com with ESMTP id 32brbgu68r-1
+        Thu, 23 Jul 2020 06:22:30 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NAEgff031527;
+        Thu, 23 Jul 2020 10:22:28 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 32dbmn1wbq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 10:22:10 +0000
+        Thu, 23 Jul 2020 10:22:27 +0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NAKfGE63439106
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NAMNSu29491648
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 10:20:41 GMT
+        Thu, 23 Jul 2020 10:22:23 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E322FA4064;
-        Thu, 23 Jul 2020 10:22:05 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 2076DA4054;
+        Thu, 23 Jul 2020 10:22:23 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75FC9A4062;
-        Thu, 23 Jul 2020 10:22:02 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 17FD3A4060;
+        Thu, 23 Jul 2020 10:22:20 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.40.160])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 10:22:02 +0000 (GMT)
+        Thu, 23 Jul 2020 10:22:19 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, paulus@samba.org
 Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, npiggin@gmail.com,
@@ -62,9 +62,9 @@ Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, npiggin@gmail.com,
         pedromfc@br.ibm.com, rogealve@br.ibm.com, kvm@vger.kernel.org,
         kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/7] powerpc/watchpoint/kvm: Rename current DAWR macros and variables
-Date:   Thu, 23 Jul 2020 15:50:52 +0530
-Message-Id: <20200723102058.312282-2-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH 6/7] powerpc/selftests/perf-hwbreak: Add testcases for 2nd DAWR
+Date:   Thu, 23 Jul 2020 15:50:57 +0530
+Message-Id: <20200723102058.312282-7-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200723102058.312282-1-ravi.bangoria@linux.ibm.com>
 References: <20200723102058.312282-1-ravi.bangoria@linux.ibm.com>
@@ -73,271 +73,659 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-23_03:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015
- mlxlogscore=994 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230072
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2
+ impostorscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015 mlxscore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007230076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Power10 is introducing second DAWR. Use real register names (with
-suffix 0) from ISA for current macros and variables used by kvm.
+Extend perf-hwbreak.c selftest to test multiple DAWRs. Also add
+testcase for testing 512 byte boundary removal.
+
+Sample o/p:
+  # ./perf-hwbreak
+  ...
+  TESTED: Process specific, Two events, diff addr
+  TESTED: Process specific, Two events, same addr
+  TESTED: Process specific, Two events, diff addr, one is RO, other is WO
+  TESTED: Process specific, Two events, same addr, one is RO, other is WO
+  TESTED: Systemwide, Two events, diff addr
+  TESTED: Systemwide, Two events, same addr
+  TESTED: Systemwide, Two events, diff addr, one is RO, other is WO
+  TESTED: Systemwide, Two events, same addr, one is RO, other is WO
+  TESTED: Process specific, 512 bytes, unaligned
+  success: perf_hwbreak
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- Documentation/virt/kvm/api.rst            |  4 +--
- arch/powerpc/include/asm/kvm_host.h       |  4 +--
- arch/powerpc/include/uapi/asm/kvm.h       |  4 +--
- arch/powerpc/kernel/asm-offsets.c         |  4 +--
- arch/powerpc/kvm/book3s_hv.c              | 32 +++++++++++------------
- arch/powerpc/kvm/book3s_hv_nested.c       |  8 +++---
- arch/powerpc/kvm/book3s_hv_rmhandlers.S   | 20 +++++++-------
- tools/arch/powerpc/include/uapi/asm/kvm.h |  4 +--
- 8 files changed, 40 insertions(+), 40 deletions(-)
+ .../selftests/powerpc/ptrace/perf-hwbreak.c   | 568 +++++++++++++++++-
+ 1 file changed, 567 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 426f94582b7a..4dc18fe6a2bf 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -2219,8 +2219,8 @@ registers, find a list below:
-   PPC     KVM_REG_PPC_BESCR               64
-   PPC     KVM_REG_PPC_TAR                 64
-   PPC     KVM_REG_PPC_DPDES               64
--  PPC     KVM_REG_PPC_DAWR                64
--  PPC     KVM_REG_PPC_DAWRX               64
-+  PPC     KVM_REG_PPC_DAWR0               64
-+  PPC     KVM_REG_PPC_DAWRX0              64
-   PPC     KVM_REG_PPC_CIABR               64
-   PPC     KVM_REG_PPC_IC                  64
-   PPC     KVM_REG_PPC_VTB                 64
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-index 7e2d061d0445..9aa3854f0e1e 100644
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -582,8 +582,8 @@ struct kvm_vcpu_arch {
- 	u32 ctrl;
- 	u32 dabrx;
- 	ulong dabr;
--	ulong dawr;
--	ulong dawrx;
-+	ulong dawr0;
-+	ulong dawrx0;
- 	ulong ciabr;
- 	ulong cfar;
- 	ulong ppr;
-diff --git a/arch/powerpc/include/uapi/asm/kvm.h b/arch/powerpc/include/uapi/asm/kvm.h
-index 264e266a85bf..38d61b73f5ed 100644
---- a/arch/powerpc/include/uapi/asm/kvm.h
-+++ b/arch/powerpc/include/uapi/asm/kvm.h
-@@ -608,8 +608,8 @@ struct kvm_ppc_cpu_char {
- #define KVM_REG_PPC_BESCR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa7)
- #define KVM_REG_PPC_TAR		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa8)
- #define KVM_REG_PPC_DPDES	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa9)
--#define KVM_REG_PPC_DAWR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xaa)
--#define KVM_REG_PPC_DAWRX	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xab)
-+#define KVM_REG_PPC_DAWR0	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xaa)
-+#define KVM_REG_PPC_DAWRX0	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xab)
- #define KVM_REG_PPC_CIABR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xac)
- #define KVM_REG_PPC_IC		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xad)
- #define KVM_REG_PPC_VTB		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xae)
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 6657dc6b2336..e76bffe348e1 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -547,8 +547,8 @@ int main(void)
- 	OFFSET(VCPU_CTRL, kvm_vcpu, arch.ctrl);
- 	OFFSET(VCPU_DABR, kvm_vcpu, arch.dabr);
- 	OFFSET(VCPU_DABRX, kvm_vcpu, arch.dabrx);
--	OFFSET(VCPU_DAWR, kvm_vcpu, arch.dawr);
--	OFFSET(VCPU_DAWRX, kvm_vcpu, arch.dawrx);
-+	OFFSET(VCPU_DAWR0, kvm_vcpu, arch.dawr0);
-+	OFFSET(VCPU_DAWRX0, kvm_vcpu, arch.dawrx0);
- 	OFFSET(VCPU_CIABR, kvm_vcpu, arch.ciabr);
- 	OFFSET(VCPU_HFLAGS, kvm_vcpu, arch.hflags);
- 	OFFSET(VCPU_DEC, kvm_vcpu, arch.dec);
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 89afcc5f60ca..28200e4f5d27 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -778,8 +778,8 @@ static int kvmppc_h_set_mode(struct kvm_vcpu *vcpu, unsigned long mflags,
- 			return H_UNSUPPORTED_FLAG_START;
- 		if (value2 & DABRX_HYP)
- 			return H_P4;
--		vcpu->arch.dawr  = value1;
--		vcpu->arch.dawrx = value2;
-+		vcpu->arch.dawr0  = value1;
-+		vcpu->arch.dawrx0 = value2;
- 		return H_SUCCESS;
- 	case H_SET_MODE_RESOURCE_ADDR_TRANS_MODE:
- 		/* KVM does not support mflags=2 (AIL=2) */
-@@ -1724,11 +1724,11 @@ static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
- 	case KVM_REG_PPC_VTB:
- 		*val = get_reg_val(id, vcpu->arch.vcore->vtb);
- 		break;
--	case KVM_REG_PPC_DAWR:
--		*val = get_reg_val(id, vcpu->arch.dawr);
-+	case KVM_REG_PPC_DAWR0:
-+		*val = get_reg_val(id, vcpu->arch.dawr0);
- 		break;
--	case KVM_REG_PPC_DAWRX:
--		*val = get_reg_val(id, vcpu->arch.dawrx);
-+	case KVM_REG_PPC_DAWRX0:
-+		*val = get_reg_val(id, vcpu->arch.dawrx0);
- 		break;
- 	case KVM_REG_PPC_CIABR:
- 		*val = get_reg_val(id, vcpu->arch.ciabr);
-@@ -1938,11 +1938,11 @@ static int kvmppc_set_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
- 	case KVM_REG_PPC_VTB:
- 		vcpu->arch.vcore->vtb = set_reg_val(id, *val);
- 		break;
--	case KVM_REG_PPC_DAWR:
--		vcpu->arch.dawr = set_reg_val(id, *val);
-+	case KVM_REG_PPC_DAWR0:
-+		vcpu->arch.dawr0 = set_reg_val(id, *val);
- 		break;
--	case KVM_REG_PPC_DAWRX:
--		vcpu->arch.dawrx = set_reg_val(id, *val) & ~DAWRX_HYP;
-+	case KVM_REG_PPC_DAWRX0:
-+		vcpu->arch.dawrx0 = set_reg_val(id, *val) & ~DAWRX_HYP;
- 		break;
- 	case KVM_REG_PPC_CIABR:
- 		vcpu->arch.ciabr = set_reg_val(id, *val);
-@@ -3397,8 +3397,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	int trap;
- 	unsigned long host_hfscr = mfspr(SPRN_HFSCR);
- 	unsigned long host_ciabr = mfspr(SPRN_CIABR);
--	unsigned long host_dawr = mfspr(SPRN_DAWR0);
--	unsigned long host_dawrx = mfspr(SPRN_DAWRX0);
-+	unsigned long host_dawr0 = mfspr(SPRN_DAWR0);
-+	unsigned long host_dawrx0 = mfspr(SPRN_DAWRX0);
- 	unsigned long host_psscr = mfspr(SPRN_PSSCR);
- 	unsigned long host_pidr = mfspr(SPRN_PID);
+diff --git a/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c b/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c
+index bde475341c8a..5df08738884d 100644
+--- a/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c
++++ b/tools/testing/selftests/powerpc/ptrace/perf-hwbreak.c
+@@ -21,8 +21,13 @@
+ #include <assert.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <signal.h>
+ #include <string.h>
+ #include <sys/ioctl.h>
++#include <sys/wait.h>
++#include <sys/ptrace.h>
++#include <sys/sysinfo.h>
++#include <asm/ptrace.h>
+ #include <elf.h>
+ #include <pthread.h>
+ #include <sys/syscall.h>
+@@ -34,6 +39,12 @@
  
-@@ -3427,8 +3427,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	mtspr(SPRN_SPURR, vcpu->arch.spurr);
+ #define DAWR_LENGTH_MAX ((0x3f + 1) * 8)
  
- 	if (dawr_enabled()) {
--		mtspr(SPRN_DAWR0, vcpu->arch.dawr);
--		mtspr(SPRN_DAWRX0, vcpu->arch.dawrx);
-+		mtspr(SPRN_DAWR0, vcpu->arch.dawr0);
-+		mtspr(SPRN_DAWRX0, vcpu->arch.dawrx0);
++int nprocs;
++
++static volatile int a = 10;
++static volatile int b = 10;
++static volatile char c[512 + 8] __attribute__((aligned(512)));
++
+ static void perf_event_attr_set(struct perf_event_attr *attr,
+ 				__u32 type, __u64 addr, __u64 len,
+ 				bool exclude_user)
+@@ -68,6 +79,76 @@ static int perf_process_event_open(__u32 type, __u64 addr, __u64 len)
+ 	return syscall(__NR_perf_event_open, &attr, getpid(), -1, -1, 0);
+ }
+ 
++static int perf_cpu_event_open(long cpu, __u32 type, __u64 addr, __u64 len)
++{
++	struct perf_event_attr attr;
++
++	perf_event_attr_set(&attr, type, addr, len, 0);
++	return syscall(__NR_perf_event_open, &attr, -1, cpu, -1, 0);
++}
++
++static void close_fds(int *fd, int n)
++{
++	int i;
++
++	for (i = 0; i < n; i++)
++		close(fd[i]);
++}
++
++static unsigned long read_fds(int *fd, int n)
++{
++	int i;
++	unsigned long c = 0;
++	unsigned long count = 0;
++	size_t res;
++
++	for (i = 0; i < n; i++) {
++		res = read(fd[i], &c, sizeof(c));
++		assert(res == sizeof(unsigned long long));
++		count += c;
++	}
++	return count;
++}
++
++static void reset_fds(int *fd, int n)
++{
++	int i;
++
++	for (i = 0; i < n; i++)
++		ioctl(fd[i], PERF_EVENT_IOC_RESET);
++}
++
++static void enable_fds(int *fd, int n)
++{
++	int i;
++
++	for (i = 0; i < n; i++)
++		ioctl(fd[i], PERF_EVENT_IOC_ENABLE);
++}
++
++static void disable_fds(int *fd, int n)
++{
++	int i;
++
++	for (i = 0; i < n; i++)
++		ioctl(fd[i], PERF_EVENT_IOC_DISABLE);
++}
++
++static int perf_systemwide_event_open(int *fd, __u32 type, __u64 addr, __u64 len)
++{
++	int i = 0;
++
++	/* Assume online processors are 0 to nprocs for simplisity */
++	for (i = 0; i < nprocs; i++) {
++		fd[i] = perf_cpu_event_open(i, type, addr, len);
++		if (fd[i] < 0) {
++			close_fds(fd, i);
++			return fd[i];
++		}
++	}
++	return 0;
++}
++
+ static inline bool breakpoint_test(int len)
+ {
+ 	int fd;
+@@ -261,11 +342,483 @@ static int runtest_dar_outside(void)
+ 	return fail;
+ }
+ 
++static void multi_dawr_workload(void)
++{
++	a += 10;
++	b += 10;
++	c[512 + 1] += 'a';
++}
++
++static int test_process_multi_diff_addr(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int fd1, fd2;
++	char *desc = "Process specific, Two events, diff addr";
++	size_t res;
++
++	fd1 = perf_process_event_open(HW_BREAKPOINT_RW, (__u64)&a, (__u64)sizeof(a));
++	if (fd1 < 0) {
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	fd2 = perf_process_event_open(HW_BREAKPOINT_RW, (__u64)&b, (__u64)sizeof(b));
++	if (fd2 < 0) {
++		close(fd1);
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ioctl(fd1, PERF_EVENT_IOC_RESET);
++	ioctl(fd2, PERF_EVENT_IOC_RESET);
++	ioctl(fd1, PERF_EVENT_IOC_ENABLE);
++	ioctl(fd2, PERF_EVENT_IOC_ENABLE);
++	multi_dawr_workload();
++	ioctl(fd1, PERF_EVENT_IOC_DISABLE);
++	ioctl(fd2, PERF_EVENT_IOC_DISABLE);
++
++	res = read(fd1, &breaks1, sizeof(breaks1));
++	assert(res == sizeof(unsigned long long));
++	res = read(fd2, &breaks2, sizeof(breaks2));
++	assert(res == sizeof(unsigned long long));
++
++	close(fd1);
++	close(fd2);
++
++	if (breaks1 != 2 || breaks2 != 2) {
++		printf("FAILED: %s: %lld != 2 || %lld != 2\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_process_multi_same_addr(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int fd1, fd2;
++	char *desc = "Process specific, Two events, same addr";
++	size_t res;
++
++	fd1 = perf_process_event_open(HW_BREAKPOINT_RW, (__u64)&a, (__u64)sizeof(a));
++	if (fd1 < 0) {
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	fd2 = perf_process_event_open(HW_BREAKPOINT_RW, (__u64)&a, (__u64)sizeof(a));
++	if (fd2 < 0) {
++		close(fd1);
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ioctl(fd1, PERF_EVENT_IOC_RESET);
++	ioctl(fd2, PERF_EVENT_IOC_RESET);
++	ioctl(fd1, PERF_EVENT_IOC_ENABLE);
++	ioctl(fd2, PERF_EVENT_IOC_ENABLE);
++	multi_dawr_workload();
++	ioctl(fd1, PERF_EVENT_IOC_DISABLE);
++	ioctl(fd2, PERF_EVENT_IOC_DISABLE);
++
++	res = read(fd1, &breaks1, sizeof(breaks1));
++	assert(res == sizeof(unsigned long long));
++	res = read(fd2, &breaks2, sizeof(breaks2));
++	assert(res == sizeof(unsigned long long));
++
++	close(fd1);
++	close(fd2);
++
++	if (breaks1 != 2 || breaks2 != 2) {
++		printf("FAILED: %s: %lld != 2 || %lld != 2\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_process_multi_diff_addr_ro_wo(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int fd1, fd2;
++	char *desc = "Process specific, Two events, diff addr, one is RO, other is WO";
++	size_t res;
++
++	fd1 = perf_process_event_open(HW_BREAKPOINT_W, (__u64)&a, (__u64)sizeof(a));
++	if (fd1 < 0) {
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	fd2 = perf_process_event_open(HW_BREAKPOINT_R, (__u64)&b, (__u64)sizeof(b));
++	if (fd2 < 0) {
++		close(fd1);
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ioctl(fd1, PERF_EVENT_IOC_RESET);
++	ioctl(fd2, PERF_EVENT_IOC_RESET);
++	ioctl(fd1, PERF_EVENT_IOC_ENABLE);
++	ioctl(fd2, PERF_EVENT_IOC_ENABLE);
++	multi_dawr_workload();
++	ioctl(fd1, PERF_EVENT_IOC_DISABLE);
++	ioctl(fd2, PERF_EVENT_IOC_DISABLE);
++
++	res = read(fd1, &breaks1, sizeof(breaks1));
++	assert(res == sizeof(unsigned long long));
++	res = read(fd2, &breaks2, sizeof(breaks2));
++	assert(res == sizeof(unsigned long long));
++
++	close(fd1);
++	close(fd2);
++
++	if (breaks1 != 1 || breaks2 != 1) {
++		printf("FAILED: %s: %lld != 1 || %lld != 1\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_process_multi_same_addr_ro_wo(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int fd1, fd2;
++	char *desc = "Process specific, Two events, same addr, one is RO, other is WO";
++	size_t res;
++
++	fd1 = perf_process_event_open(HW_BREAKPOINT_R, (__u64)&a, (__u64)sizeof(a));
++	if (fd1 < 0) {
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	fd2 = perf_process_event_open(HW_BREAKPOINT_W, (__u64)&a, (__u64)sizeof(a));
++	if (fd2 < 0) {
++		close(fd1);
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ioctl(fd1, PERF_EVENT_IOC_RESET);
++	ioctl(fd2, PERF_EVENT_IOC_RESET);
++	ioctl(fd1, PERF_EVENT_IOC_ENABLE);
++	ioctl(fd2, PERF_EVENT_IOC_ENABLE);
++	multi_dawr_workload();
++	ioctl(fd1, PERF_EVENT_IOC_DISABLE);
++	ioctl(fd2, PERF_EVENT_IOC_DISABLE);
++
++	res = read(fd1, &breaks1, sizeof(breaks1));
++	assert(res == sizeof(unsigned long long));
++	res = read(fd2, &breaks2, sizeof(breaks2));
++	assert(res == sizeof(unsigned long long));
++
++	close(fd1);
++	close(fd2);
++
++	if (breaks1 != 1 || breaks2 != 1) {
++		printf("FAILED: %s: %lld != 1 || %lld != 1\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_syswide_multi_diff_addr(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int *fd1 = malloc(nprocs * sizeof(int));
++	int *fd2 = malloc(nprocs * sizeof(int));
++	char *desc = "Systemwide, Two events, diff addr";
++	int ret;
++
++	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_RW, (__u64)&a,
++					(__u64)sizeof(a));
++	if (ret) {
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_RW, (__u64)&b,
++					(__u64)sizeof(b));
++	if (ret) {
++		close_fds(fd1, nprocs);
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	reset_fds(fd1, nprocs);
++	reset_fds(fd2, nprocs);
++	enable_fds(fd1, nprocs);
++	enable_fds(fd2, nprocs);
++	multi_dawr_workload();
++	disable_fds(fd1, nprocs);
++	disable_fds(fd2, nprocs);
++
++	breaks1 = read_fds(fd1, nprocs);
++	breaks2 = read_fds(fd2, nprocs);
++
++	close_fds(fd1, nprocs);
++	close_fds(fd2, nprocs);
++
++	free(fd1);
++	free(fd2);
++
++	if (breaks1 != 2 || breaks2 != 2) {
++		printf("FAILED: %s: %lld != 2 || %lld != 2\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_syswide_multi_same_addr(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int *fd1 = malloc(nprocs * sizeof(int));
++	int *fd2 = malloc(nprocs * sizeof(int));
++	char *desc = "Systemwide, Two events, same addr";
++	int ret;
++
++	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_RW, (__u64)&a,
++					(__u64)sizeof(a));
++	if (ret) {
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_RW, (__u64)&a,
++					(__u64)sizeof(a));
++	if (ret) {
++		close_fds(fd1, nprocs);
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	reset_fds(fd1, nprocs);
++	reset_fds(fd2, nprocs);
++	enable_fds(fd1, nprocs);
++	enable_fds(fd2, nprocs);
++	multi_dawr_workload();
++	disable_fds(fd1, nprocs);
++	disable_fds(fd2, nprocs);
++
++	breaks1 = read_fds(fd1, nprocs);
++	breaks2 = read_fds(fd2, nprocs);
++
++	close_fds(fd1, nprocs);
++	close_fds(fd2, nprocs);
++
++	free(fd1);
++	free(fd2);
++
++	if (breaks1 != 2 || breaks2 != 2) {
++		printf("FAILED: %s: %lld != 2 || %lld != 2\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_syswide_multi_diff_addr_ro_wo(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int *fd1 = malloc(nprocs * sizeof(int));
++	int *fd2 = malloc(nprocs * sizeof(int));
++	char *desc = "Systemwide, Two events, diff addr, one is RO, other is WO";
++	int ret;
++
++	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_W, (__u64)&a,
++					(__u64)sizeof(a));
++	if (ret) {
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_R, (__u64)&b,
++					(__u64)sizeof(b));
++	if (ret) {
++		close_fds(fd1, nprocs);
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	reset_fds(fd1, nprocs);
++	reset_fds(fd2, nprocs);
++	enable_fds(fd1, nprocs);
++	enable_fds(fd2, nprocs);
++	multi_dawr_workload();
++	disable_fds(fd1, nprocs);
++	disable_fds(fd2, nprocs);
++
++	breaks1 = read_fds(fd1, nprocs);
++	breaks2 = read_fds(fd2, nprocs);
++
++	close_fds(fd1, nprocs);
++	close_fds(fd2, nprocs);
++
++	free(fd1);
++	free(fd2);
++
++	if (breaks1 != 1 || breaks2 != 1) {
++		printf("FAILED: %s: %lld != 1 || %lld != 1\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int test_syswide_multi_same_addr_ro_wo(void)
++{
++	unsigned long long breaks1 = 0, breaks2 = 0;
++	int *fd1 = malloc(nprocs * sizeof(int));
++	int *fd2 = malloc(nprocs * sizeof(int));
++	char *desc = "Systemwide, Two events, same addr, one is RO, other is WO";
++	int ret;
++
++	ret = perf_systemwide_event_open(fd1, HW_BREAKPOINT_W, (__u64)&a,
++					(__u64)sizeof(a));
++	if (ret) {
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ret = perf_systemwide_event_open(fd2, HW_BREAKPOINT_R, (__u64)&a,
++					(__u64)sizeof(a));
++	if (ret) {
++		close_fds(fd1, nprocs);
++		perror("perf_systemwide_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	reset_fds(fd1, nprocs);
++	reset_fds(fd2, nprocs);
++	enable_fds(fd1, nprocs);
++	enable_fds(fd2, nprocs);
++	multi_dawr_workload();
++	disable_fds(fd1, nprocs);
++	disable_fds(fd2, nprocs);
++
++	breaks1 = read_fds(fd1, nprocs);
++	breaks2 = read_fds(fd2, nprocs);
++
++	close_fds(fd1, nprocs);
++	close_fds(fd2, nprocs);
++
++	free(fd1);
++	free(fd2);
++
++	if (breaks1 != 1 || breaks2 != 1) {
++		printf("FAILED: %s: %lld != 1 || %lld != 1\n", desc,
++			breaks1, breaks2);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++static int runtest_multi_dawr(void)
++{
++	int ret = 0;
++
++	ret |= test_process_multi_diff_addr();
++	ret |= test_process_multi_same_addr();
++	ret |= test_process_multi_diff_addr_ro_wo();
++	ret |= test_process_multi_same_addr_ro_wo();
++	ret |= test_syswide_multi_diff_addr();
++	ret |= test_syswide_multi_same_addr();
++	ret |= test_syswide_multi_diff_addr_ro_wo();
++	ret |= test_syswide_multi_same_addr_ro_wo();
++
++	return ret;
++}
++
++static int runtest_unaligned_512bytes(void)
++{
++	unsigned long long breaks = 0;
++	int fd;
++	char *desc = "Process specific, 512 bytes, unaligned";
++	__u64 addr = (__u64)&c + 8;
++	size_t res;
++
++	fd = perf_process_event_open(HW_BREAKPOINT_RW, addr, 512);
++	if (fd < 0) {
++		perror("perf_process_event_open");
++		exit(EXIT_FAILURE);
++	}
++
++	ioctl(fd, PERF_EVENT_IOC_RESET);
++	ioctl(fd, PERF_EVENT_IOC_ENABLE);
++	multi_dawr_workload();
++	ioctl(fd, PERF_EVENT_IOC_DISABLE);
++
++	res = read(fd, &breaks, sizeof(breaks));
++	assert(res == sizeof(unsigned long long));
++
++	close(fd);
++
++	if (breaks != 2) {
++		printf("FAILED: %s: %lld != 2\n", desc, breaks);
++		return 1;
++	}
++
++	printf("TESTED: %s\n", desc);
++	return 0;
++}
++
++/* There is no perf api to find number of available watchpoints. Use ptrace. */
++static int get_nr_wps(bool *arch_31)
++{
++	struct ppc_debug_info dbginfo;
++	int child_pid;
++
++	child_pid = fork();
++	if (!child_pid) {
++		int ret = ptrace(PTRACE_TRACEME, 0, NULL, 0);
++		if (ret) {
++			perror("PTRACE_TRACEME failed\n");
++			exit(EXIT_FAILURE);
++		}
++		kill(getpid(), SIGUSR1);
++
++		sleep(1);
++		exit(EXIT_SUCCESS);
++	}
++
++	wait(NULL);
++	if (ptrace(PPC_PTRACE_GETHWDBGINFO, child_pid, NULL, &dbginfo)) {
++		perror("Can't get breakpoint info");
++		exit(EXIT_FAILURE);
++	}
++
++	*arch_31 = !!(dbginfo.features & PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31);
++	return dbginfo.num_data_bps;
++}
++
+ static int runtest(void)
+ {
+ 	int rwflag;
+ 	int exclude_user;
+ 	int ret;
++	bool dawr = dawr_supported();
++	bool arch_31 = false;
++	int nr_wps = get_nr_wps(&arch_31);
+ 
+ 	/*
+ 	 * perf defines rwflag as two bits read and write and at least
+@@ -278,7 +831,7 @@ static int runtest(void)
+ 				return ret;
+ 
+ 			/* if we have the dawr, we can do an array test */
+-			if (!dawr_supported())
++			if (!dawr)
+ 				continue;
+ 			ret = runtestsingle(rwflag, exclude_user, 1);
+ 			if (ret)
+@@ -287,6 +840,19 @@ static int runtest(void)
  	}
- 	mtspr(SPRN_CIABR, vcpu->arch.ciabr);
- 	mtspr(SPRN_IC, vcpu->arch.ic);
-@@ -3480,8 +3480,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	      (local_paca->kvm_hstate.fake_suspend << PSSCR_FAKE_SUSPEND_LG));
- 	mtspr(SPRN_HFSCR, host_hfscr);
- 	mtspr(SPRN_CIABR, host_ciabr);
--	mtspr(SPRN_DAWR0, host_dawr);
--	mtspr(SPRN_DAWRX0, host_dawrx);
-+	mtspr(SPRN_DAWR0, host_dawr0);
-+	mtspr(SPRN_DAWRX0, host_dawrx0);
- 	mtspr(SPRN_PID, host_pidr);
  
- 	/*
-diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
-index 2c849a65db77..629f74edab22 100644
---- a/arch/powerpc/kvm/book3s_hv_nested.c
-+++ b/arch/powerpc/kvm/book3s_hv_nested.c
-@@ -33,8 +33,8 @@ void kvmhv_save_hv_regs(struct kvm_vcpu *vcpu, struct hv_guest_state *hr)
- 	hr->dpdes = vc->dpdes;
- 	hr->hfscr = vcpu->arch.hfscr;
- 	hr->tb_offset = vc->tb_offset;
--	hr->dawr0 = vcpu->arch.dawr;
--	hr->dawrx0 = vcpu->arch.dawrx;
-+	hr->dawr0 = vcpu->arch.dawr0;
-+	hr->dawrx0 = vcpu->arch.dawrx0;
- 	hr->ciabr = vcpu->arch.ciabr;
- 	hr->purr = vcpu->arch.purr;
- 	hr->spurr = vcpu->arch.spurr;
-@@ -151,8 +151,8 @@ static void restore_hv_regs(struct kvm_vcpu *vcpu, struct hv_guest_state *hr)
- 	vc->pcr = hr->pcr | PCR_MASK;
- 	vc->dpdes = hr->dpdes;
- 	vcpu->arch.hfscr = hr->hfscr;
--	vcpu->arch.dawr = hr->dawr0;
--	vcpu->arch.dawrx = hr->dawrx0;
-+	vcpu->arch.dawr0 = hr->dawr0;
-+	vcpu->arch.dawrx0 = hr->dawrx0;
- 	vcpu->arch.ciabr = hr->ciabr;
- 	vcpu->arch.purr = hr->purr;
- 	vcpu->arch.spurr = hr->spurr;
-diff --git a/arch/powerpc/kvm/book3s_hv_rmhandlers.S b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-index 71943892c81c..e562a9acbc2a 100644
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -52,8 +52,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
- #define STACK_SLOT_PID		(SFS-32)
- #define STACK_SLOT_IAMR		(SFS-40)
- #define STACK_SLOT_CIABR	(SFS-48)
--#define STACK_SLOT_DAWR		(SFS-56)
--#define STACK_SLOT_DAWRX	(SFS-64)
-+#define STACK_SLOT_DAWR0	(SFS-56)
-+#define STACK_SLOT_DAWRX0	(SFS-64)
- #define STACK_SLOT_HFSCR	(SFS-72)
- #define STACK_SLOT_AMR		(SFS-80)
- #define STACK_SLOT_UAMOR	(SFS-88)
-@@ -711,8 +711,8 @@ BEGIN_FTR_SECTION
- 	mfspr	r7, SPRN_DAWRX0
- 	mfspr	r8, SPRN_IAMR
- 	std	r5, STACK_SLOT_CIABR(r1)
--	std	r6, STACK_SLOT_DAWR(r1)
--	std	r7, STACK_SLOT_DAWRX(r1)
-+	std	r6, STACK_SLOT_DAWR0(r1)
-+	std	r7, STACK_SLOT_DAWRX0(r1)
- 	std	r8, STACK_SLOT_IAMR(r1)
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
+ 	ret = runtest_dar_outside();
++	if (ret)
++		return ret;
++
++	if (dawr && nr_wps > 1) {
++		nprocs = get_nprocs();
++		ret = runtest_multi_dawr();
++		if (ret)
++			return ret;
++	}
++
++	if (dawr && arch_31)
++		ret = runtest_unaligned_512bytes();
++
+ 	return ret;
+ }
  
-@@ -801,8 +801,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
- 	lbz	r5, 0(r5)
- 	cmpdi	r5, 0
- 	beq	1f
--	ld	r5, VCPU_DAWR(r4)
--	ld	r6, VCPU_DAWRX(r4)
-+	ld	r5, VCPU_DAWR0(r4)
-+	ld	r6, VCPU_DAWRX0(r4)
- 	mtspr	SPRN_DAWR0, r5
- 	mtspr	SPRN_DAWRX0, r6
- 1:
-@@ -1759,8 +1759,8 @@ END_FTR_SECTION(CPU_FTR_TM | CPU_FTR_P9_TM_HV_ASSIST, 0)
- 	/* Restore host values of some registers */
- BEGIN_FTR_SECTION
- 	ld	r5, STACK_SLOT_CIABR(r1)
--	ld	r6, STACK_SLOT_DAWR(r1)
--	ld	r7, STACK_SLOT_DAWRX(r1)
-+	ld	r6, STACK_SLOT_DAWR0(r1)
-+	ld	r7, STACK_SLOT_DAWRX0(r1)
- 	mtspr	SPRN_CIABR, r5
- 	/*
- 	 * If the DAWR doesn't work, it's ok to write these here as
-@@ -2566,8 +2566,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 	rlwimi	r5, r4, 5, DAWRX_DR | DAWRX_DW
- 	rlwimi	r5, r4, 2, DAWRX_WT
- 	clrrdi	r4, r4, 3
--	std	r4, VCPU_DAWR(r3)
--	std	r5, VCPU_DAWRX(r3)
-+	std	r4, VCPU_DAWR0(r3)
-+	std	r5, VCPU_DAWRX0(r3)
- 	/*
- 	 * If came in through the real mode hcall handler then it is necessary
- 	 * to write the registers since the return path won't. Otherwise it is
-diff --git a/tools/arch/powerpc/include/uapi/asm/kvm.h b/tools/arch/powerpc/include/uapi/asm/kvm.h
-index 264e266a85bf..38d61b73f5ed 100644
---- a/tools/arch/powerpc/include/uapi/asm/kvm.h
-+++ b/tools/arch/powerpc/include/uapi/asm/kvm.h
-@@ -608,8 +608,8 @@ struct kvm_ppc_cpu_char {
- #define KVM_REG_PPC_BESCR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa7)
- #define KVM_REG_PPC_TAR		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa8)
- #define KVM_REG_PPC_DPDES	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xa9)
--#define KVM_REG_PPC_DAWR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xaa)
--#define KVM_REG_PPC_DAWRX	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xab)
-+#define KVM_REG_PPC_DAWR0	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xaa)
-+#define KVM_REG_PPC_DAWRX0	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xab)
- #define KVM_REG_PPC_CIABR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xac)
- #define KVM_REG_PPC_IC		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xad)
- #define KVM_REG_PPC_VTB		(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xae)
 -- 
 2.26.2
 
