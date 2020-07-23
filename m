@@ -2,136 +2,129 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFB2C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BCC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3418D206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B398220714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNZgxHPY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zxz2qd1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgGWV6x (ORCPT
+        id S1727975AbgGWWAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:58:53 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50226 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726697AbgGWV6w (ORCPT
+        Thu, 23 Jul 2020 18:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgGWWAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:58:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595541531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T3T05BblW5qcrnE9EzvsH5COWPH3G8n5S+3dyvDj4j8=;
-        b=NNZgxHPYs7IiJSENv23mZk1yvLJWyFHvx9PaUvtbFiATGc0fHdN/j3DhIep3IxgB5/Oqmo
-        I55Vg6aqdMmQt5WkO4PBr/ENZ0vLouZEYuSY2kdpYnxpfJx2384HcOMqaOyIvKfJ7C/vWp
-        JuCJ1bDLV+D2D5Y3yBT1m4y66grP22o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-1wwkHWrOOpOP_vwI3YSGQw-1; Thu, 23 Jul 2020 17:58:47 -0400
-X-MC-Unique: 1wwkHWrOOpOP_vwI3YSGQw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6195D80183C;
-        Thu, 23 Jul 2020 21:58:45 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-119-128.rdu2.redhat.com [10.10.119.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D6E245C1D3;
-        Thu, 23 Jul 2020 21:58:43 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
- SPLPAR
-To:     peterz@infradead.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <20200706043540.1563616-6-npiggin@gmail.com>
- <874kqhvu1v.fsf@mpe.ellerman.id.au>
- <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
- <20200723140011.GR5523@worktop.programming.kicks-ass.net>
- <845de183-56f5-2958-3159-faa131d46401@redhat.com>
- <20200723184759.GS119549@hirez.programming.kicks-ass.net>
- <6d6279ad-7432-63c1-14c3-18c4cff30bf8@redhat.com>
- <20200723195855.GU119549@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <4fbe47a5-dbc9-427a-5b21-b31b37bc751a@redhat.com>
-Date:   Thu, 23 Jul 2020 17:58:43 -0400
+        Thu, 23 Jul 2020 18:00:14 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F67C0619D3;
+        Thu, 23 Jul 2020 15:00:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t142so162249wmt.4;
+        Thu, 23 Jul 2020 15:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u4N8EQ4xAO0j5YF801GNNXppFCnjV9JwTLYq/iG9D9Q=;
+        b=Zxz2qd1Y5ni/7O1JAsWNS7sa8VEt09eyzu/HTRZM+JnycaMWDdMaj0V59s/RL8dopZ
+         +b7NvViEV+z7+gqWq8SS+QVWqJOCSsxIFGCQaAJhJ4rcCVhXMawBjP0VIAVatFLhEHvi
+         p1PtNbmNk8tHeMt1knN12aiudumMEWQK7Tyiq4aV9AZnBJw6B+JCQNfTWK1jdHgF+duc
+         p+xbvimvjNIp9SC5bNm37q6lrgHjYKTK9Ukz57ugCEEd7QknAqLCB9I2URJFjOzEeeGO
+         niFbRrrPlE3NDNbobISH8X3dgOUeJnm5qK6odeCtH/HPvGHH9WqhV2FZdz1VGYyhzswl
+         YfwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u4N8EQ4xAO0j5YF801GNNXppFCnjV9JwTLYq/iG9D9Q=;
+        b=tvhfTKm7/a0bs11s63ItUhzeatBrPPMXq7ImS/ftfP41mQrpPpaUzlb4BVBT90rxb4
+         QL5UK/c5cQXjfqMhOeskgiQFLnfp6SmkEmz9h5whUNNCHiE3hGIGenFEZmbsPuQc89x9
+         kTr+Pv2Ia48eMqAcQJUK7/rwMGMGI+M7gWs1I8ZBbdWGP4cVnNCzMIcqxUQrvjIv68lH
+         PmPBX+sG9OfrVc139jrGlUxLqdQAvZx49UA3YotsncdbW/HEHSnjw7tgK2Z8IGG9pzxI
+         KBuN6pKNad47QToIEkaD9JskwNvakHsfH6vJgzsWhybvx+WP1OZFO6wBfLHHYfGWCc8r
+         um7A==
+X-Gm-Message-State: AOAM530EXgvlWoEnyfiMiEQ05XBdOzw3Phfcuv7zP+27SLL46oxOpLrY
+        fDYoOLsiUiRhdIeQX5oA45M=
+X-Google-Smtp-Source: ABdhPJwNOvh9946MEw9EMO/orazFx6cCk/g8QgOoofUmSHdVRjPCLotEIurIVpqitAd7n8iySwVIEA==
+X-Received: by 2002:a1c:5f41:: with SMTP id t62mr6110703wmb.134.1595541612792;
+        Thu, 23 Jul 2020 15:00:12 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id t14sm5171171wrv.14.2020.07.23.15.00.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 15:00:12 -0700 (PDT)
+Subject: Re: [PATCH 3/4] watchdog: mt8192: add wdt support
+To:     Seiya Wang <seiya.wang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, srv_heupstream@mediatek.com,
+        Crystal Guo <crystal.guo@mediatek.com>
+References: <20200723090731.4482-1-seiya.wang@mediatek.com>
+ <20200723090731.4482-4-seiya.wang@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <bdd9f543-0fe0-af25-1843-aae95fcd4230@gmail.com>
+Date:   Fri, 24 Jul 2020 00:00:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200723195855.GU119549@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200723090731.4482-4-seiya.wang@mediatek.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 3:58 PM, peterz@infradead.org wrote:
-> On Thu, Jul 23, 2020 at 03:04:13PM -0400, Waiman Long wrote:
->> On 7/23/20 2:47 PM, peterz@infradead.org wrote:
->>> On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
->>>> BTW, do you have any comment on my v2 lock holder cpu info qspinlock patch?
->>>> I will have to update the patch to fix the reported 0-day test problem, but
->>>> I want to collect other feedback before sending out v3.
->>> I want to say I hate it all, it adds instructions to a path we spend an
->>> aweful lot of time optimizing without really getting anything back for
->>> it.
->> It does add some extra instruction that may slow it down slightly, but I
->> don't agree that it gives nothing back. The cpu lock holder information can
->> be useful in analyzing crash dumps and in some debugging situation. I think
->> it can be useful in RHEL for this readon. How about an x86 config option to
->> allow distros to decide if they want to have it enabled? I will make sure
->> that it will have no performance degradation if the option is not enabled.
-> Config knobs suck too; they create a maintenance burden (we get to make
-> sure all the permutations works/build/etc..) and effectively nobody uses
-> them, since world+dog uses what distros pick.
->
-> Anyway, instead of adding a second per-cpu variable, can you see how
-> horrible something like this is:
->
-> unsigned char adds(unsigned char var, unsigned char val)
-> {
-> 	unsigned short sat = 0xff, tmp = var;
->
-> 	asm ("addb	%[val], %b[var];"
-> 	     "cmovc	%[sat], %[var];"
-> 	     : [var] "+r" (tmp)
-> 	     : [val] "ir" (val), [sat] "r" (sat)
-> 	     );
->
-> 	return tmp;
-> }
->
-> Another thing to try is, instead of threading that lockval throughout
-> the thing, simply:
->
-> #define _Q_LOCKED_VAL	this_cpu_read_stable(cpu_sat)
->
-> or combined with the above
->
-> #define _Q_LOCKED_VAL	adds(this_cpu_read_stable(cpu_number), 2)
->
-> and see if the compiler really makes a mess of things.
->
-Thanks for the suggestion. I will try that out.
 
-Cheers,
-Longman
 
+On 23/07/2020 11:07, Seiya Wang wrote:
+> From: Crystal Guo <crystal.guo@mediatek.com>
+> 
+> add driver setting to support mt8192 wdt
+> 
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> ---
+>   drivers/watchdog/mtk_wdt.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
+> index d6a6393f609d..ad23596170af 100644
+> --- a/drivers/watchdog/mtk_wdt.c
+> +++ b/drivers/watchdog/mtk_wdt.c
+> @@ -76,6 +76,10 @@ static const struct mtk_wdt_data mt8183_data = {
+>   	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
+>   };
+>   
+> +static const struct mtk_wdt_data mt8192_data = {
+> +	.toprgu_sw_rst_num = 23,
+
+Should be defined in include/dt-bindings/reset-controller/mt8192-resets.h
+
+> +};
+> +
+>   static int toprgu_reset_update(struct reset_controller_dev *rcdev,
+>   			       unsigned long id, bool assert)
+>   {
+> @@ -322,6 +326,7 @@ static const struct of_device_id mtk_wdt_dt_ids[] = {
+>   	{ .compatible = "mediatek,mt2712-wdt", .data = &mt2712_data },
+>   	{ .compatible = "mediatek,mt6589-wdt" },
+>   	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
+> +	{ .compatible = "mediatek,mt8192-wdt", .data = &mt8192_data },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, mtk_wdt_dt_ids);
+> 
