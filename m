@@ -2,110 +2,102 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C32C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ACC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B633922B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CC420888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595466279;
-	bh=vuI1DM19pqZiO1W8ggE5LH1WTZ2Zpcgqkw+bo5G96Ck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fsoaH0FKuNuLpEx6warpbFFx7EUwVvkxdIGtcWxtCLaJlTYVkQVfsGSkXvMlQyawV
-	 0wNIMbiE8XH6JMOz5PURG9zELRqb2T1V/u8huI9GZNnjZnrDih/ZrOU3SvArmLs7OI
-	 83i0OyQeyYquwLMY+XVSYzbAWF0yy5S6vFNOi44Q=
+	s=default; t=1595466329;
+	bh=W2CYa/0UitifMAE40ODWZqF2evqHAMepGzJ4pFCBC0k=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=fPFTvaDkH8L8fT6n0+YUvSm6gfIp3szCH23glvg47f0FE9z8Ci+5Zdsd5Tznr/Rro
+	 m7ymgx4EW6pWsopP1Sa0m1YvFEw6Mdv2Kg9xT2+cHioXJC9lF6s5I7GzT62UhROZBr
+	 wPMmzxHn+sf1XqvNowJLTVu3sT6qpufjKxjJVPV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbgGWBEi (ORCPT
+        id S2387584AbgGWBF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51412 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 21:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733221AbgGWBEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:04:38 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1733270AbgGWBF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:05:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2304A2086A;
-        Thu, 23 Jul 2020 01:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0DEF2080D;
+        Thu, 23 Jul 2020 01:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595466277;
-        bh=vuI1DM19pqZiO1W8ggE5LH1WTZ2Zpcgqkw+bo5G96Ck=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MpOL3ZEwKycICyUmrC1pWvUtYaPqBRrm/poJm+Ttw+ilyCs2OunPnbiK0/+5wn6GA
-         iSX9250ee4qncolPYrWXRTazw378B+mZOYLVwC6ST85WE6hdohzUUcDhbCzYnSjxVD
-         7+Q7zIhhuaxjOKax49rs2eFqF0bQfD3akrbJvs1o=
-Date:   Wed, 22 Jul 2020 20:04:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Hancock <hancockrwd@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH] PCI: Disallow ASPM on ASMedia ASM1083/1085 PCIe-PCI
- bridge
-Message-ID: <20200723010435.GA1334095@bjorn-Precision-5520>
+        s=default; t=1595466327;
+        bh=W2CYa/0UitifMAE40ODWZqF2evqHAMepGzJ4pFCBC0k=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=0J1pLNs4srdlY758oP/2THuIFMZVT9hxJQSMive90bFdHGH6+nbirfrxeGSVL3LTd
+         FEDb7DfBOban1eIwGmg3oQ6s5N4HWHsvnHWpGitOtdFTll3xUArvAF+eU3pMkjpJ7h
+         NU+Nrqr8VQxmfC9GaSPK3UK+i9+JAROIxT8UX4Y8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADLC3L0b8zqJoHt7aA6z6hb3cYC2z-32vmQsQ3tR0gGduC8+-Q@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-3-git-send-email-tdas@codeaurora.org> <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com> <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Wed, 22 Jul 2020 18:05:27 -0700
+Message-ID: <159546632701.3847286.14646561815611231678@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 06:46:06PM -0600, Robert Hancock wrote:
-> On Wed, Jul 22, 2020 at 11:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Jul 21, 2020 at 08:18:03PM -0600, Robert Hancock wrote:
-> > > Recently ASPM handling was changed to no longer disable ASPM on all
-> > > PCIe to PCI bridges. Unfortunately these ASMedia PCIe to PCI bridge
-> > > devices don't seem to function properly with ASPM enabled, as they
-> > > cause the parent PCIe root port to cause repeated AER timeout errors.
-> > > In addition to flooding the kernel log, this also causes the machine
-> > > to wake up immediately after suspend is initiated.
-> >
-> > Hi Robert, thanks a lot for the report of this problem
-> > (https://lore.kernel.org/r/CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com
-> > and https://bugzilla.redhat.com/show_bug.cgi?id=1853960).
-> >
-> > I'm pretty sure Linux ASPM support is missing some things.  This
-> > problem might be a hardware problem where a quirk is the right
-> > solution, but it could also be that it's a result of a Linux defect
-> > that we should fix.
-> >
-> > Could you collect the dmesg log and "sudo lspci -vvxxxx" output
-> > somewhere (maybe a bugzilla.kernel.org issue)?  I want to figure out
-> > whether this L1 PM substates are enabled on this link, and whether
-> > that's configured correctly.
-> 
-> Created a Bugzilla entry and added dmesg and lspci output:
-> https://bugzilla.kernel.org/show_bug.cgi?id=208667
-> 
-> As I noted in that report, I subsequently found this page on ASMedia's
-> site: https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
-> which indicates this ASM1083 device has "No PCIe ASPM support".
+Quoting Taniya Das (2020-07-21 10:26:53)
+> Hi Stephen,
+>=20
+> Thanks for the review.
+>=20
+> On 7/21/2020 1:21 PM, Stephen Boyd wrote:
+>=20
+> >> +...
+> >> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-=
+bindings/clock/qcom,gcc-sc7180.h
+> >> index 992b67b..bdf43adc 100644
+> >> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> >> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> >> @@ -138,6 +138,7 @@
+> >>   #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
+> >>   #define GCC_MSS_SNOC_AXI_CLK                                   129
+> >>   #define GCC_SEC_CTRL_CLK_SRC                                   130
+> >> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
+> >>  =20
+> >>   /* GCC resets */
+> >>   #define GCC_QUSB2PHY_PRIM_BCR                                  0
+> >=20
+> > This hunk should be in the next patch. Oh but then that patch should co=
+me
+> > before this one so the binding can use it. Either way, shouldn't be part
+> > of this patch.
+> >=20
+>=20
+>=20
+> We had a problem with the bot complaining about the clock handles being=20
+> used in the example.
+>=20
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1582540703=
+-6328-4-git-send-email-tdas@codeaurora.org/
+>=20
+> Thus I have kept the GCC bindings in the same patch.
+>=20
 
-How nice.  According to your lspci, the device itself claims to
-support ASPM:
-
-  02:00.0 ... ASMedia Technology Inc. ASM1083/1085 PCIe to PCI Bridge
-    LnkCap: ... ASPM L0s L1 ...
-
-but the web page claims otherwise.  That would mean the device is
-defective for claiming something that's not true.  Or possibly those
-capability bits can be set by BIOS.
-
-> It's not clear why this problem isn't occurring on Windows however -
-> either it is not enabling ASPM, somehow it doesn't cause issues with
-> the PCIe link, or it is causing issues and just doesn't notify the
-> user in any way. I can try and check if this bridge device is ending
-> up with ASPM enabled under Windows 10 or not..
-
-If Windows *does* manage to enable ASPM, that would be interesting.  I
-don't know whether Windows has a similar quirk mechanism.  I suppose
-they must have *some* way to work around defective devices.
-
-Bjorn
+Ah ok. Well I'll fix it when you resend to fix the comment on patch 4.
