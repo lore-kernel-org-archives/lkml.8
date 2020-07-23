@@ -6,89 +6,82 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7060BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4133520737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465DE207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="jIyJlWeC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/slu0yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgGWSrv (ORCPT
+        id S1728041AbgGWSsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:47:51 -0400
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:24568 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgGWSru (ORCPT
+        Thu, 23 Jul 2020 14:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgGWSsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:47:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1595530068;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ZBGeT5meaENGUkHBjaTnLB8Wyc3JbNoxdGt3rTZZJuE=;
-        b=jIyJlWeC6htiBwmYGqOP3L/ZQy5QJxGPcPjCJ9yVLPmwCs32JQ8XQQpLCx+9mJBxgz
-        aFVsQRPypuOA2ENtiuKNUgTT+nQmxjE77xNEXrb/am0QqYBXF+x386dzc/s/bEGSpqe/
-        jTkNBWrN5484GastutkeIfu4kBoSiQZHBzA4I3oMivKUHbSm8fZFL3T4Ale78UeboToI
-        6ZTw/WfMCaHclJwnORFE59QU0+Vk3EmKhifZ+3rCh6250FOD72e/98Mm7/0stpC8HZge
-        kLUvJtoc5ka9mKMO5zFoiXzBmG4BI2m91RhLmGyBLNsrSEjh9hIQvQDxg5kXI2Y2z6Ev
-        Az0g==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7IczHboo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id Y0939ew6NIif5J4
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 23 Jul 2020 20:44:41 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 20:44:36 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, Ajit Pandey <ajitp@codeaurora.org>
-Subject: Re: [PATCH v2 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-Message-ID: <20200723184432.GA321518@gerhold.net>
-References: <20200721104422.369368-1-cychiang@chromium.org>
- <20200721104422.369368-3-cychiang@chromium.org>
- <ce029818-5082-643b-ff63-25aafea3de6c@linaro.org>
+        Thu, 23 Jul 2020 14:48:18 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ADBC0619DC;
+        Thu, 23 Jul 2020 11:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1f7jSo8LA10wBMQErGxZHBOUpBnSmikLw3twngiB9do=; b=F/slu0yrPHxiFr2ZrGc9sNP3ns
+        LfcamOV4YCSjJmAGql8AMoxgRpgB7ejoGOoyBLRe1+NSiLXfp9s6mu47IldFSbQMbbcbjzbuf5u9O
+        833qpQHg1wNCif0Lkq4328/WTptDw86N2VO7KfNGktPrwAGmjr8DSQjE1+eFSW1K8SBisHKNbRDV7
+        cmLO0EzWU8yk6Qi6ew5Fj8GFbqy5DhWcjYesQlU6LImS6PD+RqUFfZR8xNf4Vgk5d/STeIWcbrgB3
+        HEhT+oCJJ9EhcXF59Ajf1oGcNx4KwTMd9LXGPsPEGnP5wOjXWz5J0tqHK64RSquaQFlBJPTpvUZQp
+        TcS/d44Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jygG9-0004Wx-0f; Thu, 23 Jul 2020 18:48:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 28C213013E5;
+        Thu, 23 Jul 2020 20:47:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C4A532010461D; Thu, 23 Jul 2020 20:47:59 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 20:47:59 +0200
+From:   peterz@infradead.org
+To:     Waiman Long <longman@redhat.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks
+ for SPLPAR
+Message-ID: <20200723184759.GS119549@hirez.programming.kicks-ass.net>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <20200706043540.1563616-6-npiggin@gmail.com>
+ <874kqhvu1v.fsf@mpe.ellerman.id.au>
+ <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
+ <20200723140011.GR5523@worktop.programming.kicks-ass.net>
+ <845de183-56f5-2958-3159-faa131d46401@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ce029818-5082-643b-ff63-25aafea3de6c@linaro.org>
+In-Reply-To: <845de183-56f5-2958-3159-faa131d46401@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:25:14AM +0100, Srinivas Kandagatla wrote:
-> > +static int sc7180_parse_of(struct snd_soc_card *card)
-> > +{
-> 
-> This code is getting duplicated in various places like apq8016_sbc_parse_of,
-> it will be nice to common this up, if possible!
-> 
+On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
+> BTW, do you have any comment on my v2 lock holder cpu info qspinlock patch?
+> I will have to update the patch to fix the reported 0-day test problem, but
+> I want to collect other feedback before sending out v3.
 
-FYI, I started work on making apq8016_sbc use qcom_snd_parse_of()
-a while ago already, but didn't find the time to finish it up.
-I have now sent it, this should make it possible to use the common
-qcom_snd_parse_of() function in this driver as well.
+I want to say I hate it all, it adds instructions to a path we spend an
+aweful lot of time optimizing without really getting anything back for
+it.
 
-See: https://lore.kernel.org/alsa-devel/20200723183904.321040-1-stephan@gerhold.net/
-
-Stephan
-
+Will, how do you feel about it?
