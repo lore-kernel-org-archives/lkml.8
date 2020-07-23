@@ -2,114 +2,81 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E002207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77644207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595481905;
+	bh=po5+Z46HNZ22g6I6H/FxU75BvqaqDGGFkQvPXBB/drI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d2YhF/tQIiKyYUX20r+2psYrRoVcLHT0HNCdirn1Vl7MI0yruGSxfYSuX8SEecF7M
+	 ueuaWpJUWyAZu+zHWgR8ET9lOzjVaEQbKK1x/mMu89HyRIxo7h+yD588EKn21SEiEa
+	 78ZzrPzE+/VFX0iewvIkCossp2+BRbI0IBMVBM/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgGWFWB (ORCPT
+        id S1726330AbgGWFZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:22:01 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:46983 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgGWFWA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:22:00 -0400
-X-Originating-IP: 90.112.45.105
-Received: from [192.168.1.14] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 722BD60002;
-        Thu, 23 Jul 2020 05:21:51 +0000 (UTC)
-Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     mpe@ellerman.id.au, paulus@samba.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org
-References: <mhng-831c4073-aefa-4aa0-a583-6a17f9aff9b7@palmerdabbelt-glaptop1>
- <d7e3cbb7-c12a-bce2-f1db-c336d15f74bd@ghiti.fr>
- <7cb2285e-68ba-6827-5e61-e33a4b65ac03@ghiti.fr>
- <54af168083aee9dbda1b531227521a26b77ba2c8.camel@kernel.crashing.org>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <cade70e2-0179-2650-41c5-036679aaf30c@ghiti.fr>
-Date:   Thu, 23 Jul 2020 01:21:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 01:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbgGWFZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 01:25:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1600B20768;
+        Thu, 23 Jul 2020 05:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595481903;
+        bh=po5+Z46HNZ22g6I6H/FxU75BvqaqDGGFkQvPXBB/drI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CFKiDE2WzHIUG0cgm4xcvLClcmPYg9/s5hnwPsBNEjYeILs5fDx8nSD/L6VrUdgoM
+         J+6oFaoZWEPN7sZ+F0Ha6QGwoHZAIg0ACnfvG3fgNpzaJ38aj0RFbrKEytqFkVcxPy
+         Xg77/+lo34+iv0Xe2t4RbAiAhmq8vHAw79K1oQtY=
+Date:   Thu, 23 Jul 2020 07:25:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Weitao Wang(BJ-RD)" <WeitaoWang@zhaoxin.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>,
+        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
+        "efremov@linux.com" <efremov@linux.com>,
+        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
+        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
+        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
+        "wwt8723@163.com" <wwt8723@163.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= USB:Fix kernel
+ NULL pointer when unbind UHCI form vfio-pci
+Message-ID: <20200723052506.GA645747@kroah.com>
+References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
+ <20200722124414.GA3153105@kroah.com>
+ <20200722145913.GB1310843@rowland.harvard.edu>
+ <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
 MIME-Version: 1.0
-In-Reply-To: <54af168083aee9dbda1b531227521a26b77ba2c8.camel@kernel.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
-
-Le 7/21/20 à 7:11 PM, Benjamin Herrenschmidt a écrit :
-> On Tue, 2020-07-21 at 14:36 -0400, Alex Ghiti wrote:
->>>> I guess I don't understand why this is necessary at all.
->>>> Specifically: why
->>>> can't we just relocate the kernel within the linear map?  That would
->>>> let the
->>>> bootloader put the kernel wherever it wants, modulo the physical
->>>> memory size we
->>>> support.  We'd need to handle the regions that are coupled to the
->>>> kernel's
->>>> execution address, but we could just put them in an explicit memory
->>>> region
->>>> which is what we should probably be doing anyway.
->>>
->>> Virtual relocation in the linear mapping requires to move the kernel
->>> physically too. Zong implemented this physical move in its KASLR RFC
->>> patchset, which is cumbersome since finding an available physical spot
->>> is harder than just selecting a virtual range in the vmalloc range.
->>>
->>> In addition, having the kernel mapping in the linear mapping prevents
->>> the use of hugepage for the linear mapping resulting in performance loss
->>> (at least for the GB that encompasses the kernel).
->>>
->>> Why do you find this "ugly" ? The vmalloc region is just a bunch of
->>> available virtual addresses to whatever purpose we want, and as noted by
->>> Zong, arm64 uses the same scheme.
-> 
-> I don't get it :-)
-> 
-> At least on powerpc we move the kernel in the linear mapping and it
-> works fine with huge pages, what is your problem there ? You rely on
-> punching small-page size holes in there ?
-> 
-
-ARCH_HAS_STRICT_KERNEL_RWX prevents the use of a hugepage for the kernel 
-mapping in the direct mapping as it sets different permissions to 
-different part of the kernel (data, text..etc).
+On Thu, Jul 23, 2020 at 02:59:55AM +0000, Weitao Wang(BJ-RD) wrote:
+> CONFIDENTIAL NOTE:
+> This email contains confidential or legally privileged information and is for the sole use of its intended recipient. Any unauthorized review, use, copying or forwarding of this email or the content of this email is strictly prohibited.
 
 
-> At least in the old days, there were a number of assumptions that
-> the kernel text/data/bss resides in the linear mapping.
-> 
-> If you change that you need to ensure that it's still physically
-> contiguous and you'll have to tweak __va and __pa, which might induce
-> extra overhead.
-> 
+This footer is not compatible with Linux mailing lists, sorry, I am not
+allowed to respond to it.
 
-Yes that's done in this patch and indeed there is an overhead to those 
-functions.
-
-> Cheers,
-> Ben.
->   
-> 
-
-Thanks,
-
-Alex
+greg k-h
