@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87759C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E868FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A49920714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B979E20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dkjU3Lz2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Q+TYD5S7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgGWQss (ORCPT
+        id S1729925AbgGWQtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:48:48 -0400
-Received: from gateway20.websitewelcome.com ([192.185.52.45]:14970 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgGWQss (ORCPT
+        Thu, 23 Jul 2020 12:49:33 -0400
+Received: from gateway32.websitewelcome.com ([192.185.144.98]:19993 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbgGWQtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:48:48 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id D49CC400E142E
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 10:26:43 -0500 (CDT)
+        Thu, 23 Jul 2020 12:49:31 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 090BA28E714
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:49:28 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id yeOejXtb3Bb5dyeOejIZRI; Thu, 23 Jul 2020 11:48:40 -0500
+        id yePPjNyXrwgQAyePQjObcs; Thu, 23 Jul 2020 11:49:28 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,19 +36,19 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2bhrR5CX5A5ulNSBiogCSFRb0chiC1G/c4mHc4xJyPM=; b=dkjU3Lz2zT+WUZgKm8J71tQa7Q
-        ehrbWJYXFsTGv31bEJapTRDaW7H2iTvcOShr7gNVPzlACB50dusvTGjJnXW5eYRr8zyUCkyrn5KoG
-        BfqhBAm71KHPzdyJ6NR5LIU9zjl7gjoNzaoi/eaUi2SxWbO7J//jOjk+M78leswfw1slLfEuvE4cL
-        SaojQGWD3hjBNyf+/oDmmhCTdW9ywWKUQIDDUmy1dSjUh5acYuwuym3xRNVPrpAi1KTo+n3h0a8gI
-        saao36qxvcU5Er4G9V0Ga3qeQwxoJp9iiPgfTzrP+7do3+j50G8+7ya7CQlfFqeeJrNoNJSuYQyyg
-        dMGEpPug==;
-Received: from [201.162.245.27] (port=42556 helo=[192.168.43.132])
+        bh=mX9WbPR2A08lAhxlpv9nqKTZKz1fenNVDE+tR5xQ44Q=; b=Q+TYD5S7vFBz3TXmZyJys1Ag2u
+        48HcHd05NsTizQ1KY8e5i23+ZGgg+3NcoaThhzQ+5Lh3XqshtM2AqgxKcRAG5N6xMooYoIKRQUT0W
+        Ujcw1e+mxNNuw1XXqv0KSM5JEjHdSGoOUBW3emIV4izevVHPDYdvNaYP6jGngi+NNXYWpI58hQVqJ
+        b8DkJBwmyq9SNz9m9D5n99EUDT2fo55vmYkZK39CXVJvV+IDdCvL+ztU2c1wgF+gU2GagPRO+64Bx
+        hNNl+NHWA07Yt35hfzZhHWygWtsk0+TwE79YLPUic4etiAK1nFlzSeQO35W6b1FmnKUBqiSAmb8p/
+        drKd4pGg==;
+Received: from [201.162.245.27] (port=42558 helo=[192.168.43.132])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jyeOe-0040Ga-Az; Thu, 23 Jul 2020 11:48:40 -0500
-Subject: Re: [char-misc-next 4/6] mei: client: use sizeof of variable instead
- of struct type
+        id 1jyePP-0040ek-GZ; Thu, 23 Jul 2020 11:49:27 -0500
+Subject: Re: [char-misc-next 3/6] mei: bus: use sizeof of variable instead of
+ struct type
 To:     Tomas Winkler <tomas.winkler@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
@@ -56,7 +56,7 @@ Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>
 References: <20200723145927.882743-1-tomas.winkler@intel.com>
- <20200723145927.882743-5-tomas.winkler@intel.com>
+ <20200723145927.882743-4-tomas.winkler@intel.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -102,12 +102,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9ehGZEO3+gCDFmK
  rjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrSVtSixD1uOgyt
  AP7RWS474w==
-Message-ID: <67c7aeea-cfe6-a98b-bbe1-4881d8dc5ae0@embeddedor.com>
-Date:   Thu, 23 Jul 2020 11:54:24 -0500
+Message-ID: <cab66bcc-6b48-772e-9f16-41c1c076c42d@embeddedor.com>
+Date:   Thu, 23 Jul 2020 11:55:11 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200723145927.882743-5-tomas.winkler@intel.com>
+In-Reply-To: <20200723145927.882743-4-tomas.winkler@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -119,13 +119,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.162.245.27
 X-Source-L: No
-X-Exim-ID: 1jyeOe-0040Ga-Az
+X-Exim-ID: 1jyePP-0040ek-GZ
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42556
+X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:42558
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
+X-Email-Count: 22
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -149,46 +149,94 @@ Thanks
 Gustavo
 
 > ---
->  drivers/misc/mei/client.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/misc/mei/bus-fixup.c | 23 +++++++++++------------
+>  drivers/misc/mei/bus.c       |  2 +-
+>  2 files changed, 12 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
-> index b32c825a0945..2572887d99b6 100644
-> --- a/drivers/misc/mei/client.c
-> +++ b/drivers/misc/mei/client.c
+> diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
+> index 910f059b3384..07ba16d46690 100644
+> --- a/drivers/misc/mei/bus-fixup.c
+> +++ b/drivers/misc/mei/bus-fixup.c
 > @@ -1,6 +1,6 @@
 >  // SPDX-License-Identifier: GPL-2.0
 >  /*
-> - * Copyright (c) 2003-2019, Intel Corporation. All rights reserved.
-> + * Copyright (c) 2003-2020, Intel Corporation. All rights reserved.
+> - * Copyright (c) 2013-2019, Intel Corporation. All rights reserved.
+> + * Copyright (c) 2013-2020, Intel Corporation. All rights reserved.
 >   * Intel Management Engine Interface (Intel MEI) Linux driver
 >   */
 >  
-> @@ -369,7 +369,7 @@ static struct mei_cl_cb *mei_io_cb_init(struct mei_cl *cl,
+> @@ -159,17 +159,17 @@ static int mei_osver(struct mei_cl_device *cldev)
+>  static int mei_fwver(struct mei_cl_device *cldev)
 >  {
->  	struct mei_cl_cb *cb;
+>  	char buf[MKHI_FWVER_BUF_LEN];
+> -	struct mkhi_msg *req;
+> +	struct mkhi_msg req;
+> +	struct mkhi_msg *rsp;
+>  	struct mkhi_fw_ver *fwver;
+>  	int bytes_recv, ret, i;
 >  
-> -	cb = kzalloc(sizeof(struct mei_cl_cb), GFP_KERNEL);
-> +	cb = kzalloc(sizeof(*cb), GFP_KERNEL);
->  	if (!cb)
->  		return NULL;
+>  	memset(buf, 0, sizeof(buf));
 >  
-> @@ -552,7 +552,7 @@ int mei_cl_flush_queues(struct mei_cl *cl, const struct file *fp)
->   */
->  static void mei_cl_init(struct mei_cl *cl, struct mei_device *dev)
->  {
-> -	memset(cl, 0, sizeof(struct mei_cl));
-> +	memset(cl, 0, sizeof(*cl));
->  	init_waitqueue_head(&cl->wait);
->  	init_waitqueue_head(&cl->rx_wait);
->  	init_waitqueue_head(&cl->tx_wait);
-> @@ -575,7 +575,7 @@ struct mei_cl *mei_cl_allocate(struct mei_device *dev)
->  {
+> -	req = (struct mkhi_msg *)buf;
+> -	req->hdr.group_id = MKHI_GEN_GROUP_ID;
+> -	req->hdr.command = MKHI_GEN_GET_FW_VERSION_CMD;
+> +	req.hdr.group_id = MKHI_GEN_GROUP_ID;
+> +	req.hdr.command = MKHI_GEN_GET_FW_VERSION_CMD;
+>  
+> -	ret = __mei_cl_send(cldev->cl, buf, sizeof(struct mkhi_msg_hdr),
+> +	ret = __mei_cl_send(cldev->cl, (u8 *)&req, sizeof(req),
+>  			    MEI_CL_IO_TX_BLOCKING);
+>  	if (ret < 0) {
+>  		dev_err(&cldev->dev, "Could not send ReqFWVersion cmd\n");
+> @@ -188,7 +188,8 @@ static int mei_fwver(struct mei_cl_device *cldev)
+>  		return -EIO;
+>  	}
+>  
+> -	fwver = (struct mkhi_fw_ver *)req->data;
+> +	rsp = (struct mkhi_msg *)buf;
+> +	fwver = (struct mkhi_fw_ver *)rsp->data;
+>  	memset(cldev->bus->fw_ver, 0, sizeof(cldev->bus->fw_ver));
+>  	for (i = 0; i < MEI_MAX_FW_VER_BLOCKS; i++) {
+>  		if ((size_t)bytes_recv < MKHI_FWVER_LEN(i + 1))
+> @@ -329,16 +330,14 @@ static int mei_nfc_if_version(struct mei_cl *cl,
+>  
+>  	WARN_ON(mutex_is_locked(&bus->device_lock));
+>  
+> -	ret = __mei_cl_send(cl, (u8 *)&cmd, sizeof(struct mei_nfc_cmd),
+> -			    MEI_CL_IO_TX_BLOCKING);
+> +	ret = __mei_cl_send(cl, (u8 *)&cmd, sizeof(cmd), MEI_CL_IO_TX_BLOCKING);
+>  	if (ret < 0) {
+>  		dev_err(bus->dev, "Could not send IF version cmd\n");
+>  		return ret;
+>  	}
+>  
+>  	/* to be sure on the stack we alloc memory */
+> -	if_version_length = sizeof(struct mei_nfc_reply) +
+> -		sizeof(struct mei_nfc_if_version);
+> +	if_version_length = sizeof(*reply) + sizeof(*ver);
+>  
+>  	reply = kzalloc(if_version_length, GFP_KERNEL);
+>  	if (!reply)
+> @@ -352,7 +351,7 @@ static int mei_nfc_if_version(struct mei_cl *cl,
+>  		goto err;
+>  	}
+>  
+> -	memcpy(ver, reply->data, sizeof(struct mei_nfc_if_version));
+> +	memcpy(ver, reply->data, sizeof(*ver));
+>  
+>  	dev_info(bus->dev, "NFC MEI VERSION: IVN 0x%x Vendor ID 0x%x Type 0x%x\n",
+>  		ver->fw_ivn, ver->vendor_id, ver->radio_type);
+> diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+> index f476dbc7252b..a6dfc3ce1db2 100644
+> --- a/drivers/misc/mei/bus.c
+> +++ b/drivers/misc/mei/bus.c
+> @@ -931,7 +931,7 @@ static struct mei_cl_device *mei_cl_bus_dev_alloc(struct mei_device *bus,
+>  	struct mei_cl_device *cldev;
 >  	struct mei_cl *cl;
 >  
-> -	cl = kmalloc(sizeof(struct mei_cl), GFP_KERNEL);
-> +	cl = kmalloc(sizeof(*cl), GFP_KERNEL);
->  	if (!cl)
+> -	cldev = kzalloc(sizeof(struct mei_cl_device), GFP_KERNEL);
+> +	cldev = kzalloc(sizeof(*cldev), GFP_KERNEL);
+>  	if (!cldev)
 >  		return NULL;
 >  
 > 
