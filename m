@@ -2,54 +2,78 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0430C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A538EC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9547920888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B47206F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgGWHU3 (ORCPT
+        id S1726821AbgGWHVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:20:29 -0400
-Received: from out28-172.mail.aliyun.com ([115.124.28.172]:54199 "EHLO
-        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGWHU2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:20:28 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2752589|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.037033-0.00306303-0.959904;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.I6IjCRk_1595488814;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6IjCRk_1595488814)
-          by smtp.aliyun-inc.com(10.147.42.253);
-          Thu, 23 Jul 2020 15:20:24 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     tsbogend@alpha.franken.de
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        keescook@chromium.org, hns@goldelico.com, ebiederm@xmission.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: MIPS: CI20: Update defconfig for EFUSE.
-Date:   Thu, 23 Jul 2020 15:19:49 +0800
-Message-Id: <20200723071950.130007-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 23 Jul 2020 03:21:06 -0400
+Received: from 8bytes.org ([81.169.241.247]:58794 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgGWHVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:21:05 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id E2EE4346; Thu, 23 Jul 2020 09:21:03 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 09:21:02 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Mike Stunes <mstunes@vmware.com>
+Cc:     Joerg Roedel <jroedel@suse.de>, "x86@kernel.org" <x86@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v4 51/75] x86/sev-es: Handle MMIO events
+Message-ID: <20200723072102.GN27672@8bytes.org>
+References: <20200714120917.11253-1-joro@8bytes.org>
+ <20200714120917.11253-52-joro@8bytes.org>
+ <40D5C698-1ED2-4CCE-9C1D-07620A021A6A@vmware.com>
+ <20200722080530.GH6132@suse.de>
+ <7020C1D2-5900-4AD8-ADCD-04A571DF2EA7@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7020C1D2-5900-4AD8-ADCD-04A571DF2EA7@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-周琰杰 (Zhou Yanjie) (1):
-  MIPS: CI20: Update defconfig for EFUSE.
+Hi Mike,
 
- arch/mips/configs/ci20_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Jul 22, 2020 at 10:53:02PM +0000, Mike Stunes wrote:
+> Thanks Joerg! With that change in place, this kernel boots normally.
+> What was the problem?
 
--- 
-2.11.0
+The problem was that the code got its page-table from
+current->active_mm. But these pointers are not set up during early boot,
+so that the #VC handler can't walk the page-table and propagates a
+page-fault every time. This loops forever.
 
+Getting the page-table from CR3 instead works at all stages of the
+systems runtime.
+
+Regards,
+
+	Joerg
