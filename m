@@ -2,42 +2,43 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B11C38151
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5D4C4345B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECCB206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35E6206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mnzygY2x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lN7eNWaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgGWGJe (ORCPT
+        id S1728241AbgGWGMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
+        Thu, 23 Jul 2020 02:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGWGJb (ORCPT
+        with ESMTP id S1726854AbgGWGJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:09:31 -0400
+        Thu, 23 Jul 2020 02:09:38 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12214C0619DC;
-        Wed, 22 Jul 2020 23:09:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AC6C0619DC;
+        Wed, 22 Jul 2020 23:09:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=gIo3u97zH0JSQ3GhoDfa3dDtIgYeQtsIRo6GTGYyy+8=; b=mnzygY2xIJOplQLdTA5DuEH0ik
-        I+dSofdIWj5h6Q6sJXrxRQQH9lr8q8RznRktaWQgsjSk6tKhswT8dDrOuAKoDyVoNvpwziRMDygs5
-        V4f5W2mIHJSUYcOuW1p5Ir6U67Prk8VRUBRy8hjQ53gk5FH2pKOrOAD/RP/H1dTADr2OmbTj+6npM
-        7vG9oWid8LWVlZMGnM3G1KLxrq+C33rTvftxBYoCfkRRZmUpij+cYvZefhDKfixG8mJiKhqsX7AnE
-        al8lhKCsReWSNohktTvtZM7aCBVtmd7q9BjtTavU2c+SGMWI34+tsLChaRrBdfoinRvNTW8QTALA1
-        h8FbOCKA==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=j0L+Qk7oKcxnlURXcCS3zaGErKnPf8jGdSz60eAGoas=; b=lN7eNWaZOu87atnMUbHzJWJqYx
+        9VTfl4XKyJyRq2G2wIu5vUI1c2L12GBaNkg5vkoMmwImwuBROayVj9IqpKq9w5zKGwrB0eZXo5Ab6
+        S2lA51FcN9YpI3h0t9BU0w5tHX+bPhXHIzRD9E1b1IyHd93urFmI5TG1OgKJB+jlMZ8u2bj4EO6wE
+        3jDO3ESfOheqx/FWCkGzRua78BfYztAyCTvWSY558wY6SM8z3AX7s7E1LI72WTakoSjplNHYPp1tV
+        s+sKGiJuDkhC3K2JqnMU5vyfM5BlbqICGEWXhYIp4QfJT6DKNN1YdPUdrHPCRLzf7Wz6t2huOZ11H
+        aa4l/SMQ==;
 Received: from [2001:4bb8:18c:2acc:91df:aae8:fa3b:de9c] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyUPl-0003jb-F1; Thu, 23 Jul 2020 06:09:09 +0000
+        id 1jyUQ1-0003lc-PN; Thu, 23 Jul 2020 06:09:26 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -57,10 +58,12 @@ Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         mptcp@lists.01.org, lvs-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
         tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: get rid of the address_space override in setsockopt v2
-Date:   Thu, 23 Jul 2020 08:08:42 +0200
-Message-Id: <20200723060908.50081-1-hch@lst.de>
+Subject: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Date:   Thu, 23 Jul 2020 08:08:54 +0200
+Message-Id: <20200723060908.50081-13-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200723060908.50081-1-hch@lst.de>
+References: <20200723060908.50081-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -69,118 +72,536 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Pass a sockptr_t to prepare for set_fs-less handling of the kernel
+pointer from bpf-cgroup.
 
-setsockopt is the last place in architecture-independ code that still
-uses set_fs to force the uaccess routines to operate on kernel pointers.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/netfilter.h       |  6 ++++--
+ net/bridge/netfilter/ebtables.c | 37 +++++++++++++++------------------
+ net/decnet/af_decnet.c          |  3 ++-
+ net/ipv4/ip_sockglue.c          |  3 ++-
+ net/ipv4/netfilter/arp_tables.c | 28 ++++++++++++-------------
+ net/ipv4/netfilter/ip_tables.c  | 24 ++++++++++-----------
+ net/ipv6/ipv6_sockglue.c        |  3 ++-
+ net/ipv6/netfilter/ip6_tables.c | 24 ++++++++++-----------
+ net/netfilter/ipvs/ip_vs_ctl.c  |  4 ++--
+ net/netfilter/nf_sockopt.c      |  2 +-
+ 10 files changed, 68 insertions(+), 66 deletions(-)
 
-This series adds a new sockptr_t type that can contained either a kernel
-or user pointer, and which has accessors that do the right thing, and
-then uses it for setsockopt, starting by refactoring some low-level
-helpers and moving them over to it before finally doing the main
-setsockopt method.
+diff --git a/include/linux/netfilter.h b/include/linux/netfilter.h
+index 711b4d4486f042..0101747de54936 100644
+--- a/include/linux/netfilter.h
++++ b/include/linux/netfilter.h
+@@ -13,6 +13,7 @@
+ #include <linux/static_key.h>
+ #include <linux/netfilter_defs.h>
+ #include <linux/netdevice.h>
++#include <linux/sockptr.h>
+ #include <net/net_namespace.h>
+ 
+ static inline int NF_DROP_GETERR(int verdict)
+@@ -163,7 +164,8 @@ struct nf_sockopt_ops {
+ 	/* Non-inclusive ranges: use 0/0/NULL to never get called. */
+ 	int set_optmin;
+ 	int set_optmax;
+-	int (*set)(struct sock *sk, int optval, void __user *user, unsigned int len);
++	int (*set)(struct sock *sk, int optval, sockptr_t arg,
++		   unsigned int len);
+ 	int get_optmin;
+ 	int get_optmax;
+ 	int (*get)(struct sock *sk, int optval, void __user *user, int *len);
+@@ -338,7 +340,7 @@ NF_HOOK_LIST(uint8_t pf, unsigned int hook, struct net *net, struct sock *sk,
+ }
+ 
+ /* Call setsockopt() */
+-int nf_setsockopt(struct sock *sk, u_int8_t pf, int optval, char __user *opt,
++int nf_setsockopt(struct sock *sk, u_int8_t pf, int optval, sockptr_t opt,
+ 		  unsigned int len);
+ int nf_getsockopt(struct sock *sk, u_int8_t pf, int optval, char __user *opt,
+ 		  int *len);
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 12f8929667bf43..d35173e803d3fe 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1063,14 +1063,13 @@ static int do_replace_finish(struct net *net, struct ebt_replace *repl,
+ }
+ 
+ /* replace the table */
+-static int do_replace(struct net *net, const void __user *user,
+-		      unsigned int len)
++static int do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret, countersize;
+ 	struct ebt_table_info *newinfo;
+ 	struct ebt_replace tmp;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	if (len != sizeof(tmp) + tmp.entries_size)
+@@ -1286,12 +1285,11 @@ static int do_update_counters(struct net *net, const char *name,
+ 	return ret;
+ }
+ 
+-static int update_counters(struct net *net, const void __user *user,
+-			    unsigned int len)
++static int update_counters(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	struct ebt_replace hlp;
+ 
+-	if (copy_from_user(&hlp, user, sizeof(hlp)))
++	if (copy_from_sockptr(&hlp, arg, sizeof(hlp)))
+ 		return -EFAULT;
+ 
+ 	if (len != sizeof(hlp) + hlp.num_counters * sizeof(struct ebt_counter))
+@@ -2079,7 +2077,7 @@ static int compat_copy_entries(unsigned char *data, unsigned int size_user,
+ 
+ 
+ static int compat_copy_ebt_replace_from_user(struct ebt_replace *repl,
+-					    void __user *user, unsigned int len)
++					     sockptr_t arg, unsigned int len)
+ {
+ 	struct compat_ebt_replace tmp;
+ 	int i;
+@@ -2087,7 +2085,7 @@ static int compat_copy_ebt_replace_from_user(struct ebt_replace *repl,
+ 	if (len < sizeof(tmp))
+ 		return -EINVAL;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)))
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)))
+ 		return -EFAULT;
+ 
+ 	if (len != sizeof(tmp) + tmp.entries_size)
+@@ -2114,8 +2112,7 @@ static int compat_copy_ebt_replace_from_user(struct ebt_replace *repl,
+ 	return 0;
+ }
+ 
+-static int compat_do_replace(struct net *net, void __user *user,
+-			     unsigned int len)
++static int compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret, i, countersize, size64;
+ 	struct ebt_table_info *newinfo;
+@@ -2123,10 +2120,10 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 	struct ebt_entries_buf_state state;
+ 	void *entries_tmp;
+ 
+-	ret = compat_copy_ebt_replace_from_user(&tmp, user, len);
++	ret = compat_copy_ebt_replace_from_user(&tmp, arg, len);
+ 	if (ret) {
+ 		/* try real handler in case userland supplied needed padding */
+-		if (ret == -EINVAL && do_replace(net, user, len) == 0)
++		if (ret == -EINVAL && do_replace(net, arg, len) == 0)
+ 			ret = 0;
+ 		return ret;
+ 	}
+@@ -2217,17 +2214,17 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 	goto free_entries;
+ }
+ 
+-static int compat_update_counters(struct net *net, void __user *user,
++static int compat_update_counters(struct net *net, sockptr_t arg,
+ 				  unsigned int len)
+ {
+ 	struct compat_ebt_replace hlp;
+ 
+-	if (copy_from_user(&hlp, user, sizeof(hlp)))
++	if (copy_from_sockptr(&hlp, arg, sizeof(hlp)))
+ 		return -EFAULT;
+ 
+ 	/* try real handler in case userland supplied needed padding */
+ 	if (len != sizeof(hlp) + hlp.num_counters * sizeof(struct ebt_counter))
+-		return update_counters(net, user, len);
++		return update_counters(net, arg, len);
+ 
+ 	return do_update_counters(net, hlp.name, compat_ptr(hlp.counters),
+ 				  hlp.num_counters, len);
+@@ -2368,7 +2365,7 @@ static int do_ebt_get_ctl(struct sock *sk, int cmd, void __user *user, int *len)
+ 	return ret;
+ }
+ 
+-static int do_ebt_set_ctl(struct sock *sk, int cmd, void __user *user,
++static int do_ebt_set_ctl(struct sock *sk, int cmd, sockptr_t arg,
+ 		unsigned int len)
+ {
+ 	struct net *net = sock_net(sk);
+@@ -2381,18 +2378,18 @@ static int do_ebt_set_ctl(struct sock *sk, int cmd, void __user *user,
+ 	case EBT_SO_SET_ENTRIES:
+ #ifdef CONFIG_COMPAT
+ 		if (in_compat_syscall())
+-			ret = compat_do_replace(net, user, len);
++			ret = compat_do_replace(net, arg, len);
+ 		else
+ #endif
+-			ret = do_replace(net, user, len);
++			ret = do_replace(net, arg, len);
+ 		break;
+ 	case EBT_SO_SET_COUNTERS:
+ #ifdef CONFIG_COMPAT
+ 		if (in_compat_syscall())
+-			ret = compat_update_counters(net, user, len);
++			ret = compat_update_counters(net, arg, len);
+ 		else
+ #endif
+-			ret = update_counters(net, user, len);
++			ret = update_counters(net, arg, len);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/net/decnet/af_decnet.c b/net/decnet/af_decnet.c
+index 7d7ae2dd69b8ad..7d51ab608fb3f1 100644
+--- a/net/decnet/af_decnet.c
++++ b/net/decnet/af_decnet.c
+@@ -1332,7 +1332,8 @@ static int dn_setsockopt(struct socket *sock, int level, int optname, char __use
+ 	/* we need to exclude all possible ENOPROTOOPTs except default case */
+ 	if (err == -ENOPROTOOPT && optname != DSO_LINKINFO &&
+ 	    optname != DSO_STREAM && optname != DSO_SEQPACKET)
+-		err = nf_setsockopt(sk, PF_DECnet, optname, optval, optlen);
++		err = nf_setsockopt(sk, PF_DECnet, optname,
++				    USER_SOCKPTR(optval), optlen);
+ #endif
+ 
+ 	return err;
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index da933f99b5d517..42befbf12846c0 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -1422,7 +1422,8 @@ int ip_setsockopt(struct sock *sk, int level,
+ 			optname != IP_IPSEC_POLICY &&
+ 			optname != IP_XFRM_POLICY &&
+ 			!ip_mroute_opt(optname))
+-		err = nf_setsockopt(sk, PF_INET, optname, optval, optlen);
++		err = nf_setsockopt(sk, PF_INET, optname, USER_SOCKPTR(optval),
++				    optlen);
+ #endif
+ 	return err;
+ }
+diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
+index 6d24b686c7f00a..f5b26ef1782001 100644
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0-only
++
+ /*
+  * Packet matching code for ARP packets.
+  *
+@@ -947,8 +947,7 @@ static int __do_replace(struct net *net, const char *name,
+ 	return ret;
+ }
+ 
+-static int do_replace(struct net *net, const void __user *user,
+-		      unsigned int len)
++static int do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 	struct arpt_replace tmp;
+@@ -956,7 +955,7 @@ static int do_replace(struct net *net, const void __user *user,
+ 	void *loc_cpu_entry;
+ 	struct arpt_entry *iter;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	/* overflow check */
+@@ -972,8 +971,8 @@ static int do_replace(struct net *net, const void __user *user,
+ 		return -ENOMEM;
+ 
+ 	loc_cpu_entry = newinfo->entries;
+-	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp),
+-			   tmp.size) != 0) {
++	sockptr_advance(arg, sizeof(tmp));
++	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
+ 		ret = -EFAULT;
+ 		goto free_newinfo;
+ 	}
+@@ -1244,8 +1243,7 @@ static int translate_compat_table(struct net *net,
+ 	return ret;
+ }
+ 
+-static int compat_do_replace(struct net *net, void __user *user,
+-			     unsigned int len)
++static int compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 	struct compat_arpt_replace tmp;
+@@ -1253,7 +1251,7 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 	void *loc_cpu_entry;
+ 	struct arpt_entry *iter;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	/* overflow check */
+@@ -1269,7 +1267,8 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 		return -ENOMEM;
+ 
+ 	loc_cpu_entry = newinfo->entries;
+-	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp), tmp.size) != 0) {
++	sockptr_advance(arg, sizeof(tmp));
++	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
+ 		ret = -EFAULT;
+ 		goto free_newinfo;
+ 	}
+@@ -1401,7 +1400,8 @@ static int compat_get_entries(struct net *net,
+ }
+ #endif
+ 
+-static int do_arpt_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
++static int do_arpt_set_ctl(struct sock *sk, int cmd, sockptr_t arg,
++		unsigned int len)
+ {
+ 	int ret;
+ 
+@@ -1412,14 +1412,14 @@ static int do_arpt_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned
+ 	case ARPT_SO_SET_REPLACE:
+ #ifdef CONFIG_COMPAT
+ 		if (in_compat_syscall())
+-			ret = compat_do_replace(sock_net(sk), user, len);
++			ret = compat_do_replace(sock_net(sk), arg, len);
+ 		else
+ #endif
+-			ret = do_replace(sock_net(sk), user, len);
++			ret = do_replace(sock_net(sk), arg, len);
+ 		break;
+ 
+ 	case ARPT_SO_SET_ADD_COUNTERS:
+-		ret = do_add_counters(sock_net(sk), USER_SOCKPTR(user), len);
++		ret = do_add_counters(sock_net(sk), arg, len);
+ 		break;
+ 
+ 	default:
+diff --git a/net/ipv4/netfilter/ip_tables.c b/net/ipv4/netfilter/ip_tables.c
+index 4697d09c98dc3e..f2a9680303d8c0 100644
+--- a/net/ipv4/netfilter/ip_tables.c
++++ b/net/ipv4/netfilter/ip_tables.c
+@@ -1102,7 +1102,7 @@ __do_replace(struct net *net, const char *name, unsigned int valid_hooks,
+ }
+ 
+ static int
+-do_replace(struct net *net, const void __user *user, unsigned int len)
++do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 	struct ipt_replace tmp;
+@@ -1110,7 +1110,7 @@ do_replace(struct net *net, const void __user *user, unsigned int len)
+ 	void *loc_cpu_entry;
+ 	struct ipt_entry *iter;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	/* overflow check */
+@@ -1126,8 +1126,8 @@ do_replace(struct net *net, const void __user *user, unsigned int len)
+ 		return -ENOMEM;
+ 
+ 	loc_cpu_entry = newinfo->entries;
+-	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp),
+-			   tmp.size) != 0) {
++	sockptr_advance(arg, sizeof(tmp));
++	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
+ 		ret = -EFAULT;
+ 		goto free_newinfo;
+ 	}
+@@ -1484,7 +1484,7 @@ translate_compat_table(struct net *net,
+ }
+ 
+ static int
+-compat_do_replace(struct net *net, void __user *user, unsigned int len)
++compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 	struct compat_ipt_replace tmp;
+@@ -1492,7 +1492,7 @@ compat_do_replace(struct net *net, void __user *user, unsigned int len)
+ 	void *loc_cpu_entry;
+ 	struct ipt_entry *iter;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	/* overflow check */
+@@ -1508,8 +1508,8 @@ compat_do_replace(struct net *net, void __user *user, unsigned int len)
+ 		return -ENOMEM;
+ 
+ 	loc_cpu_entry = newinfo->entries;
+-	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp),
+-			   tmp.size) != 0) {
++	sockptr_advance(arg, sizeof(tmp));
++	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
+ 		ret = -EFAULT;
+ 		goto free_newinfo;
+ 	}
+@@ -1610,7 +1610,7 @@ compat_get_entries(struct net *net, struct compat_ipt_get_entries __user *uptr,
+ #endif
+ 
+ static int
+-do_ipt_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
++do_ipt_set_ctl(struct sock *sk, int cmd, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 
+@@ -1621,14 +1621,14 @@ do_ipt_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+ 	case IPT_SO_SET_REPLACE:
+ #ifdef CONFIG_COMPAT
+ 		if (in_compat_syscall())
+-			ret = compat_do_replace(sock_net(sk), user, len);
++			ret = compat_do_replace(sock_net(sk), arg, len);
+ 		else
+ #endif
+-			ret = do_replace(sock_net(sk), user, len);
++			ret = do_replace(sock_net(sk), arg, len);
+ 		break;
+ 
+ 	case IPT_SO_SET_ADD_COUNTERS:
+-		ret = do_add_counters(sock_net(sk), USER_SOCKPTR(user), len);
++		ret = do_add_counters(sock_net(sk), arg, len);
+ 		break;
+ 
+ 	default:
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index 56a74707c61741..85892b35cff7b3 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -996,7 +996,8 @@ int ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 	/* we need to exclude all possible ENOPROTOOPTs except default case */
+ 	if (err == -ENOPROTOOPT && optname != IPV6_IPSEC_POLICY &&
+ 			optname != IPV6_XFRM_POLICY)
+-		err = nf_setsockopt(sk, PF_INET6, optname, optval, optlen);
++		err = nf_setsockopt(sk, PF_INET6, optname, USER_SOCKPTR(optval),
++				    optlen);
+ #endif
+ 	return err;
+ }
+diff --git a/net/ipv6/netfilter/ip6_tables.c b/net/ipv6/netfilter/ip6_tables.c
+index a787aba30e2db7..1d52957a413f4a 100644
+--- a/net/ipv6/netfilter/ip6_tables.c
++++ b/net/ipv6/netfilter/ip6_tables.c
+@@ -1119,7 +1119,7 @@ __do_replace(struct net *net, const char *name, unsigned int valid_hooks,
+ }
+ 
+ static int
+-do_replace(struct net *net, const void __user *user, unsigned int len)
++do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 	struct ip6t_replace tmp;
+@@ -1127,7 +1127,7 @@ do_replace(struct net *net, const void __user *user, unsigned int len)
+ 	void *loc_cpu_entry;
+ 	struct ip6t_entry *iter;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	/* overflow check */
+@@ -1143,8 +1143,8 @@ do_replace(struct net *net, const void __user *user, unsigned int len)
+ 		return -ENOMEM;
+ 
+ 	loc_cpu_entry = newinfo->entries;
+-	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp),
+-			   tmp.size) != 0) {
++	sockptr_advance(arg, sizeof(tmp));
++	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
+ 		ret = -EFAULT;
+ 		goto free_newinfo;
+ 	}
+@@ -1493,7 +1493,7 @@ translate_compat_table(struct net *net,
+ }
+ 
+ static int
+-compat_do_replace(struct net *net, void __user *user, unsigned int len)
++compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 	struct compat_ip6t_replace tmp;
+@@ -1501,7 +1501,7 @@ compat_do_replace(struct net *net, void __user *user, unsigned int len)
+ 	void *loc_cpu_entry;
+ 	struct ip6t_entry *iter;
+ 
+-	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
++	if (copy_from_sockptr(&tmp, arg, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+ 	/* overflow check */
+@@ -1517,8 +1517,8 @@ compat_do_replace(struct net *net, void __user *user, unsigned int len)
+ 		return -ENOMEM;
+ 
+ 	loc_cpu_entry = newinfo->entries;
+-	if (copy_from_user(loc_cpu_entry, user + sizeof(tmp),
+-			   tmp.size) != 0) {
++	sockptr_advance(arg, sizeof(tmp));
++	if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
+ 		ret = -EFAULT;
+ 		goto free_newinfo;
+ 	}
+@@ -1619,7 +1619,7 @@ compat_get_entries(struct net *net, struct compat_ip6t_get_entries __user *uptr,
+ #endif
+ 
+ static int
+-do_ip6t_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
++do_ip6t_set_ctl(struct sock *sk, int cmd, sockptr_t arg, unsigned int len)
+ {
+ 	int ret;
+ 
+@@ -1630,14 +1630,14 @@ do_ip6t_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+ 	case IP6T_SO_SET_REPLACE:
+ #ifdef CONFIG_COMPAT
+ 		if (in_compat_syscall())
+-			ret = compat_do_replace(sock_net(sk), user, len);
++			ret = compat_do_replace(sock_net(sk), arg, len);
+ 		else
+ #endif
+-			ret = do_replace(sock_net(sk), user, len);
++			ret = do_replace(sock_net(sk), arg, len);
+ 		break;
+ 
+ 	case IP6T_SO_SET_ADD_COUNTERS:
+-		ret = do_add_counters(sock_net(sk), USER_SOCKPTR(user), len);
++		ret = do_add_counters(sock_net(sk), arg, len);
+ 		break;
+ 
+ 	default:
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 4af83f466dfc2c..bcac316addabe8 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -2434,7 +2434,7 @@ static void ip_vs_copy_udest_compat(struct ip_vs_dest_user_kern *udest,
+ }
+ 
+ static int
+-do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
++do_ip_vs_set_ctl(struct sock *sk, int cmd, sockptr_t ptr, unsigned int len)
+ {
+ 	struct net *net = sock_net(sk);
+ 	int ret;
+@@ -2458,7 +2458,7 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (copy_from_user(arg, user, len) != 0)
++	if (copy_from_sockptr(arg, ptr, len) != 0)
+ 		return -EFAULT;
+ 
+ 	/* Handle daemons since they have another lock */
+diff --git a/net/netfilter/nf_sockopt.c b/net/netfilter/nf_sockopt.c
+index 90469b1f628a8e..34afcd03b6f60e 100644
+--- a/net/netfilter/nf_sockopt.c
++++ b/net/netfilter/nf_sockopt.c
+@@ -89,7 +89,7 @@ static struct nf_sockopt_ops *nf_sockopt_find(struct sock *sk, u_int8_t pf,
+ 	return ops;
+ }
+ 
+-int nf_setsockopt(struct sock *sk, u_int8_t pf, int val, char __user *opt,
++int nf_setsockopt(struct sock *sk, u_int8_t pf, int val, sockptr_t opt,
+ 		  unsigned int len)
+ {
+ 	struct nf_sockopt_ops *ops;
+-- 
+2.27.0
 
-Note that apparently the eBPF selftests do not even cover this path, so
-the series has been tested with a testing patch that always copies the
-data first and passes a kernel pointer.  This is something that works for
-most common sockopts (and is something that the ePBF support relies on),
-but unfortunately in various corner cases we either don't use the passed
-in length, or in one case actually copy data back from setsockopt, or in
-case of bpfilter straight out do not work with kernel pointers at all.
-
-Against net-next/master.
-
-Changes since v1:
- - check that users don't pass in kernel addresses
- - more bpfilter cleanups
- - cosmetic mptcp tweak
-
-Diffstat:
- crypto/af_alg.c                           |    7 
- drivers/crypto/chelsio/chtls/chtls_main.c |   18 -
- drivers/isdn/mISDN/socket.c               |    4 
- include/linux/bpfilter.h                  |    6 
- include/linux/filter.h                    |    3 
- include/linux/mroute.h                    |    5 
- include/linux/mroute6.h                   |    8 
- include/linux/net.h                       |    4 
- include/linux/netfilter.h                 |    6 
- include/linux/netfilter/x_tables.h        |    4 
- include/linux/sockptr.h                   |  132 ++++++++++++
- include/net/inet_connection_sock.h        |    3 
- include/net/ip.h                          |    7 
- include/net/ipv6.h                        |    6 
- include/net/sctp/structs.h                |    2 
- include/net/sock.h                        |    7 
- include/net/tcp.h                         |    6 
- include/net/udp.h                         |    2 
- include/net/xfrm.h                        |    8 
- net/atm/common.c                          |    6 
- net/atm/common.h                          |    2 
- net/atm/pvc.c                             |    2 
- net/atm/svc.c                             |    6 
- net/ax25/af_ax25.c                        |    6 
- net/bluetooth/hci_sock.c                  |    8 
- net/bluetooth/l2cap_sock.c                |   22 +-
- net/bluetooth/rfcomm/sock.c               |   12 -
- net/bluetooth/sco.c                       |    6 
- net/bpfilter/bpfilter_kern.c              |   55 ++---
- net/bridge/netfilter/ebtables.c           |   46 +---
- net/caif/caif_socket.c                    |    8 
- net/can/j1939/socket.c                    |   12 -
- net/can/raw.c                             |   16 -
- net/core/filter.c                         |    6 
- net/core/sock.c                           |   36 +--
- net/dccp/dccp.h                           |    2 
- net/dccp/proto.c                          |   20 -
- net/decnet/af_decnet.c                    |   13 -
- net/ieee802154/socket.c                   |    6 
- net/ipv4/bpfilter/sockopt.c               |   16 -
- net/ipv4/ip_options.c                     |   43 +---
- net/ipv4/ip_sockglue.c                    |   66 +++---
- net/ipv4/ipmr.c                           |   14 -
- net/ipv4/netfilter/arp_tables.c           |   33 +--
- net/ipv4/netfilter/ip_tables.c            |   29 +-
- net/ipv4/raw.c                            |    8 
- net/ipv4/tcp.c                            |   30 +-
- net/ipv4/tcp_ipv4.c                       |    4 
- net/ipv4/udp.c                            |   11 -
- net/ipv4/udp_impl.h                       |    4 
- net/ipv6/ip6_flowlabel.c                  |  317 ++++++++++++++++--------------
- net/ipv6/ip6mr.c                          |   17 -
- net/ipv6/ipv6_sockglue.c                  |  203 +++++++++----------
- net/ipv6/netfilter/ip6_tables.c           |   28 +-
- net/ipv6/raw.c                            |   10 
- net/ipv6/tcp_ipv6.c                       |    4 
- net/ipv6/udp.c                            |    7 
- net/ipv6/udp_impl.h                       |    4 
- net/iucv/af_iucv.c                        |    4 
- net/kcm/kcmsock.c                         |    6 
- net/l2tp/l2tp_ppp.c                       |    4 
- net/llc/af_llc.c                          |    4 
- net/mptcp/protocol.c                      |    6 
- net/netfilter/ipvs/ip_vs_ctl.c            |    4 
- net/netfilter/nf_sockopt.c                |    2 
- net/netfilter/x_tables.c                  |   20 -
- net/netlink/af_netlink.c                  |    4 
- net/netrom/af_netrom.c                    |    4 
- net/nfc/llcp_sock.c                       |    6 
- net/packet/af_packet.c                    |   39 +--
- net/phonet/pep.c                          |    4 
- net/rds/af_rds.c                          |   30 +-
- net/rds/rdma.c                            |   14 -
- net/rds/rds.h                             |    6 
- net/rose/af_rose.c                        |    4 
- net/rxrpc/af_rxrpc.c                      |    8 
- net/rxrpc/ar-internal.h                   |    4 
- net/rxrpc/key.c                           |    9 
- net/sctp/socket.c                         |    4 
- net/smc/af_smc.c                          |    4 
- net/socket.c                              |   24 --
- net/tipc/socket.c                         |    8 
- net/tls/tls_main.c                        |   17 -
- net/vmw_vsock/af_vsock.c                  |    4 
- net/x25/af_x25.c                          |    4 
- net/xdp/xsk.c                             |    8 
- net/xfrm/xfrm_state.c                     |    6 
- 87 files changed, 894 insertions(+), 743 deletions(-)
