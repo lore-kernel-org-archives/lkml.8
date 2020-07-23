@@ -2,253 +2,202 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B89C35278
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB73C38146
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01FCD2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692FC2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gi7Go2u+"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XD6SGrXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgGWGLh (ORCPT
+        id S1728206AbgGWGMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgGWGJv (ORCPT
+        Thu, 23 Jul 2020 02:12:03 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55951 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728182AbgGWGMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:09:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA999C0619DC;
-        Wed, 22 Jul 2020 23:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=mHiWtESnfpmKOGnGR9J/VvKy447qDpvbyAZDADMp9hY=; b=Gi7Go2u+fkcKAHjWWVRHPnv63N
-        Y5wm/NGJ3YEIP3H54J9Y/ypxMj150A7NMUhmNveZRtZJ2pYVYRsZcmgKhuKhxVxC7Redsbb+O/81i
-        fGIlQ9tNAWdl1Hkfeec2Meb64han1DNgmxuwAULfzNG3E1PnD5gz87po+HuwjTdg6MQ4V5S64kIX1
-        XjSOF9i0AgfaeyNKUKwaUo7i9Of3zyl20novryBp7FE/7CQWJUWOhkuRXXwHIX/ieM/X8HDOQJicd
-        xfvPqnpZUvvRe7IhEIkxmwLayvXHLpSIjLSDPErKJIV6SzuPGnPxa5f+mzZafn/nkGGcW4k3MkZvM
-        w6+b9nNQ==;
-Received: from [2001:4bb8:18c:2acc:91df:aae8:fa3b:de9c] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyUQD-0003np-OJ; Thu, 23 Jul 2020 06:09:38 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: [PATCH 20/26] net/ipv6: factor out a ipv6_set_opt_hdr helper
-Date:   Thu, 23 Jul 2020 08:09:02 +0200
-Message-Id: <20200723060908.50081-21-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723060908.50081-1-hch@lst.de>
-References: <20200723060908.50081-1-hch@lst.de>
+        Thu, 23 Jul 2020 02:12:00 -0400
+X-UUID: ac9bb204490f43f38217e2922f505554-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bQtcOMa0mF3Q2c0oK8WxVLTlI5mEhwcVJUkkQzY9QLE=;
+        b=XD6SGrXH/ltk+Eq+U7Ya86FtKwPaij6AF5PwOtSgMtRyYOfjqB8bff1OjFrzdhezCMFXq0kV80kASYMM9h1orw412+6BhWqTBZAIZdnp4uZVU9MOiLCZ9VMEhwgYDrKtd02smhPiYC84f/gMMlmlvHLdn4R8csZInlORaQKCFGY=;
+X-UUID: ac9bb204490f43f38217e2922f505554-20200723
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1847186785; Thu, 23 Jul 2020 14:11:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Jul 2020 14:11:47 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 14:11:44 +0800
+Message-ID: <1595484707.26237.12.camel@mtkswgap22>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 23 Jul 2020 14:11:47 +0800
+In-Reply-To: <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+         <1595303971-8793-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+         <1595389756.20193.12.camel@mtkswgap22>
+         <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-TM-SNTS-SMTP: 3709D4D3ED79821D948DF8D1C26D38B0512BE44D2FF5BC86F07753523357A6A42000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factour out a helper to set the IPv6 option headers from
-do_ipv6_setsockopt.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- net/ipv6/ipv6_sockglue.c | 150 +++++++++++++++++++--------------------
- 1 file changed, 75 insertions(+), 75 deletions(-)
-
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 3897fb55372d38..90442c8366dff2 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -315,6 +315,80 @@ static int compat_ipv6_mcast_join_leave(struct sock *sk, int optname,
- 	return ipv6_sock_mc_drop(sk, gr32.gr_interface, &psin6->sin6_addr);
- }
- 
-+static int ipv6_set_opt_hdr(struct sock *sk, int optname, void __user *optval,
-+		int optlen)
-+{
-+	struct ipv6_pinfo *np = inet6_sk(sk);
-+	struct ipv6_opt_hdr *new = NULL;
-+	struct net *net = sock_net(sk);
-+	struct ipv6_txoptions *opt;
-+	int err;
-+
-+	/* hop-by-hop / destination options are privileged option */
-+	if (optname != IPV6_RTHDR && !ns_capable(net->user_ns, CAP_NET_RAW))
-+		return -EPERM;
-+
-+	/* remove any sticky options header with a zero option
-+	 * length, per RFC3542.
-+	 */
-+	if (optlen > 0) {
-+		if (!optval)
-+			return -EINVAL;
-+		if (optlen < sizeof(struct ipv6_opt_hdr) ||
-+		    optlen & 0x7 ||
-+		    optlen > 8 * 255)
-+			return -EINVAL;
-+
-+		new = memdup_user(optval, optlen);
-+		if (IS_ERR(new))
-+			return PTR_ERR(new);
-+		if (unlikely(ipv6_optlen(new) > optlen)) {
-+			kfree(new);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	opt = rcu_dereference_protected(np->opt, lockdep_sock_is_held(sk));
-+	opt = ipv6_renew_options(sk, opt, optname, new);
-+	kfree(new);
-+	if (IS_ERR(opt))
-+		return PTR_ERR(opt);
-+
-+	/* routing header option needs extra check */
-+	err = -EINVAL;
-+	if (optname == IPV6_RTHDR && opt && opt->srcrt) {
-+		struct ipv6_rt_hdr *rthdr = opt->srcrt;
-+		switch (rthdr->type) {
-+#if IS_ENABLED(CONFIG_IPV6_MIP6)
-+		case IPV6_SRCRT_TYPE_2:
-+			if (rthdr->hdrlen != 2 || rthdr->segments_left != 1)
-+				goto sticky_done;
-+			break;
-+#endif
-+		case IPV6_SRCRT_TYPE_4:
-+		{
-+			struct ipv6_sr_hdr *srh =
-+				(struct ipv6_sr_hdr *)opt->srcrt;
-+
-+			if (!seg6_validate_srh(srh, optlen, false))
-+				goto sticky_done;
-+			break;
-+		}
-+		default:
-+			goto sticky_done;
-+		}
-+	}
-+
-+	err = 0;
-+	opt = ipv6_update_options(sk, opt);
-+sticky_done:
-+	if (opt) {
-+		atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
-+		txopt_put(opt);
-+	}
-+	return err;
-+}
-+
- static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 		    char __user *optval, unsigned int optlen)
- {
-@@ -580,82 +654,8 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 	case IPV6_RTHDRDSTOPTS:
- 	case IPV6_RTHDR:
- 	case IPV6_DSTOPTS:
--	{
--		struct ipv6_txoptions *opt;
--		struct ipv6_opt_hdr *new = NULL;
--
--		/* hop-by-hop / destination options are privileged option */
--		retv = -EPERM;
--		if (optname != IPV6_RTHDR && !ns_capable(net->user_ns, CAP_NET_RAW))
--			break;
--
--		/* remove any sticky options header with a zero option
--		 * length, per RFC3542.
--		 */
--		if (optlen == 0)
--			optval = NULL;
--		else if (!optval)
--			goto e_inval;
--		else if (optlen < sizeof(struct ipv6_opt_hdr) ||
--			 optlen & 0x7 || optlen > 8 * 255)
--			goto e_inval;
--		else {
--			new = memdup_user(optval, optlen);
--			if (IS_ERR(new)) {
--				retv = PTR_ERR(new);
--				break;
--			}
--			if (unlikely(ipv6_optlen(new) > optlen)) {
--				kfree(new);
--				goto e_inval;
--			}
--		}
--
--		opt = rcu_dereference_protected(np->opt,
--						lockdep_sock_is_held(sk));
--		opt = ipv6_renew_options(sk, opt, optname, new);
--		kfree(new);
--		if (IS_ERR(opt)) {
--			retv = PTR_ERR(opt);
--			break;
--		}
--
--		/* routing header option needs extra check */
--		retv = -EINVAL;
--		if (optname == IPV6_RTHDR && opt && opt->srcrt) {
--			struct ipv6_rt_hdr *rthdr = opt->srcrt;
--			switch (rthdr->type) {
--#if IS_ENABLED(CONFIG_IPV6_MIP6)
--			case IPV6_SRCRT_TYPE_2:
--				if (rthdr->hdrlen != 2 ||
--				    rthdr->segments_left != 1)
--					goto sticky_done;
--
--				break;
--#endif
--			case IPV6_SRCRT_TYPE_4:
--			{
--				struct ipv6_sr_hdr *srh = (struct ipv6_sr_hdr *)
--							  opt->srcrt;
--
--				if (!seg6_validate_srh(srh, optlen, false))
--					goto sticky_done;
--				break;
--			}
--			default:
--				goto sticky_done;
--			}
--		}
--
--		retv = 0;
--		opt = ipv6_update_options(sk, opt);
--sticky_done:
--		if (opt) {
--			atomic_sub(opt->tot_len, &sk->sk_omem_alloc);
--			txopt_put(opt);
--		}
-+		retv = ipv6_set_opt_hdr(sk, optname, optval, optlen);
- 		break;
--	}
- 
- 	case IPV6_PKTINFO:
- 	{
--- 
-2.27.0
+SGkgQ2h1bi1LdWFuZywNCg0KT24gV2VkLCAyMDIwLTA3LTIyIGF0IDIyOjI1ICswODAwLCBDaHVu
+LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
+ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDIy5pelIOmAseS4iSDkuIrljYgxMTo0OeWvq+mB
+k++8mg0KPiA+DQo+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPg0KPiA+IE9uIFdlZCwgMjAyMC0wNy0y
+MiBhdCAwNzoyMSArMDgwMCwgQ2h1bi1LdWFuZyBIdSB3cm90ZToNCj4gPiA+IEhpLCBOZWFsOg0K
+PiA+ID4NCj4gPiA+IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0
+N+aciDIx5pelIOmAseS6jCDkuIvljYgxMjowMOWvq+mBk++8mg0KPiA+ID4gPg0KPiA+ID4NCj4g
+PiA+ID4gKw0KPiA+ID4gPiArLyoNCj4gPiA+ID4gKyAqIG10a19kZXZhcGNfZHVtcF92aW9fZGJn
+IC0gZ2V0IHRoZSB2aW9sYXRpb24gaW5kZXggYW5kIGR1bXAgdGhlIGZ1bGwgdmlvbGF0aW9uDQo+
+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgICAgIGRlYnVnIGluZm9ybWF0aW9uLg0K
+PiA+ID4gPiArICovDQo+ID4gPiA+ICtzdGF0aWMgYm9vbCBtdGtfZGV2YXBjX2R1bXBfdmlvX2Ri
+ZyhzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgsIHUzMiB2aW9faWR4KQ0KPiA+ID4gPiAr
+ew0KPiA+ID4gPiArICAgICAgIHUzMiBzaGlmdF9iaXQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAg
+ICAgICBpZiAoY2hlY2tfdmlvX21hc2soY3R4LCB2aW9faWR4KSkNCj4gPiA+ID4gKyAgICAgICAg
+ICAgICAgIHJldHVybiBmYWxzZTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGlmICghY2hl
+Y2tfdmlvX3N0YXR1cyhjdHgsIHZpb19pZHgpKQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0
+dXJuIGZhbHNlOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgc2hpZnRfYml0ID0gZ2V0X3No
+aWZ0X2dyb3VwKGN0eCwgdmlvX2lkeCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBpZiAo
+c3luY192aW9fZGJnKGN0eCwgc2hpZnRfYml0KSkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJl
+dHVybiBmYWxzZTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGRldmFwY19leHRyYWN0X3Zp
+b19kYmcoY3R4KTsNCj4gPiA+DQo+ID4gPiBJIHRoaW5rIGdldF9zaGlmdF9ncm91cCgpLCBzeW5j
+X3Zpb19kYmcoKSwgYW5kDQo+ID4gPiBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKCkgc2hvdWxkIGJl
+IG1vdmVkIG91dCBvZiB2aW9faWR4IGZvci1sb29wICh0aGUNCj4gPiA+IGxvb3AgaW4gZGV2YXBj
+X3Zpb2xhdGlvbl9pcnEoKSkgYmVjYXVzZSB0aGVzZSB0aHJlZSBmdW5jdGlvbiBpcyBub3QNCj4g
+PiA+IHJlbGF0ZWQgdG8gdmlvX2lkeC4NCj4gPiA+IEFub3RoZXIgcXVlc3Rpb246IHdoZW4gbXVs
+dGlwbGUgdmlvX2lkeCB2aW9sYXRpb24gb2NjdXIsIHZpb19hZGRyIGlzDQo+ID4gPiByZWxhdGVk
+IHRvIHdoaWNoIG9uZSB2aW9faWR4PyBUaGUgbGF0ZXN0IGhhcHBlbmVkIG9uZT8NCj4gPiA+DQo+
+ID4NCj4gPiBBY3R1YWxseSwgaXQncyByZWxhdGVkIHRvIHZpb19pZHguIEJ1dCB3ZSBkb24ndCB1
+c2UgaXQgZGlyZWN0bHkgb24gdGhlc2UNCj4gPiBmdW5jdGlvbi4gSSB0aGluayBiZWxvdyBzbmlw
+IGNvZGUgbWlnaHQgYmUgYmV0dGVyIHdheSB0byB1bmRlcnN0YW5kIGl0Lg0KPiA+DQo+ID4gZm9y
+ICguLi4pDQo+ID4gew0KPiA+ICAgICAgICAgY2hlY2tfdmlvX21hc2soKQ0KPiA+ICAgICAgICAg
+Y2hlY2tfdmlvX3N0YXR1cygpDQo+ID4NCj4gPiAgICAgICAgIC8vIGlmIGdldCB2aW9faWR4LCBt
+YXNrIGl0IHRlbXBvcmFyaWx5DQo+ID4gICAgICAgICBtYXNrX21vZHVsZV9pcnEodHJ1ZSkNCj4g
+PiAgICAgICAgIGNsZWFyX3Zpb19zdGF0dXMoKQ0KPiA+DQo+ID4gICAgICAgICAvLyBkdW1wIHZp
+b2xhdGlvbiBpbmZvDQo+ID4gICAgICAgICBnZXRfc2hpZnRfZ3JvdXAoKQ0KPiA+ICAgICAgICAg
+c3luY192aW9fZGJnKCkNCj4gPiAgICAgICAgIGRldmFwY19leHRyYWN0X3Zpb19kYmcoKQ0KPiA+
+DQo+ID4gICAgICAgICAvLyB1bm1hc2sNCj4gPiAgICAgICAgIG1hc2tfbW9kdWxlX2lycShmYWxz
+ZSkNCj4gPiB9DQo+IA0KPiBUaGlzIHNuaXAgY29kZSBkb2VzIG5vdCBleHBsYWluIGFueSB0aGlu
+Zy4gSSBjb3VsZCByZXdyaXRlIHRoaXMgY29kZSBhczoNCj4gDQo+IGZvciAoLi4uKQ0KPiB7DQo+
+ICAgICBjaGVja192aW9fbWFzaygpDQo+ICAgICBjaGVja192aW9fc3RhdHVzKCkNCj4gDQo+ICAg
+ICAvLyBpZiBnZXQgdmlvX2lkeCwgbWFzayBpdCB0ZW1wb3JhcmlseQ0KPiAgICAgbWFza19tb2R1
+bGVfaXJxKHRydWUpDQo+ICAgICBjbGVhcl92aW9fc3RhdHVzKCkNCj4gICAgIC8vIHVubWFzaw0K
+PiAgICAgbWFza19tb2R1bGVfaXJxKGZhbHNlKQ0KPiB9DQo+IA0KPiAvLyBkdW1wIHZpb2xhdGlv
+biBpbmZvDQo+IGdldF9zaGlmdF9ncm91cCgpDQo+IHN5bmNfdmlvX2RiZygpDQo+IGRldmFwY19l
+eHRyYWN0X3Zpb19kYmcoKQ0KPiANCj4gQW5kIG15IHZlcnNpb24gaXMgaWRlbnRpY2FsIHdpdGgg
+eW91ciB2ZXJzaW9uLCBpc24ndCBpdD8NCg0KU29ycnksIEkgZGlkIG5vdCBleHBsYWluIGl0IGNs
+ZWFybHkuIExldCdzIG1lIHRyeSBhZ2Fpbi4NClRoZSByZWFzb24gd2h5IEkgcHV0ICJkdW1wIHZp
+b2xhdGlvbiBpbmZvIiBiZXR3ZWVuIG1hc2sgJiB1bm1hc2sgY29udGV4dA0KaXMgYmVjYXVzZSBp
+dCBoYXMgdG8gc3RvcCBpbnRlcnJ1cHQgZmlyc3QgYmVmb3JlIGR1bXAgdmlvbGF0aW9uIGluZm8s
+DQphbmQgdGhlbiB1bm1hc2sgaXQgdG8gcHJlcGFyZSBuZXh0IHZpb2xhdGlvbi4NClRoZXNlIHNl
+cXVlbmNlIGd1YXJhbnRlZSB0aGF0IGlmIG11bHRpcGxlIHZpb2xhdGlvbiBpcyB0cmlnZ2VyZWQs
+IHdlDQpzdGlsbCBoYXZlIGluZm9ybWF0aW9uIHRvIGRlYnVnLg0KSWYgdGhlIGNvZGUgc2VxdWVu
+Y2UgaW4geW91ciB2ZXJzaW9uIGFuZCBtdWx0aXBsZSB2aW9sYXRpb24gaXMNCnRyaWdnZXJlZCwg
+dGhlcmUgbWlnaHQgYmUgbm8gYW55IGluZm9ybWF0aW9uIGJ1dCBrZWVwcyBlbnRlcmluZyBJU1Iu
+DQpGaW5hbGx5LCBzeXN0ZW0gbWlnaHQgYmUgYWJub3JtYWwgYW5kIHdhdGNoZG9nIHRpbWVvdXQu
+DQpJbiB0aGlzIGNhc2UsIHdlIHN0aWxsIGRvbid0IGhhdmUgYW55IGluZm9ybWF0aW9uIHRvIGRl
+YnVnLg0KDQo+IA0KPiA+DQo+ID4gQWJvdXQgeW91ciBxdWVzdGlvbiwgdmlvX2FkZHIgd291bGQg
+YmUgdGhlIGZpcnN0IG9uZS4NCj4gDQo+IFNvIG90aGVyIHZpb19hZGRyIHdvdWxkIGJlIGRyb3Bw
+ZWQ/IE9yIGhhcmR3YXJlIHdvdWxkIGtlZXAgYWxsDQo+IHZpb19hZGRyIGFuZCB5b3UgaGF2ZSBz
+b21lIHdheSB0byBnZXQgYWxsIHZpb19hZGRyPw0KPiANCg0KSW4gdGhpcyBjYXNlLCBoYXJkd2Fy
+ZSB3aWxsIGRyb3Agb3RoZXIgdmlvbGF0aW9uIGluZm8gYW5kIGtlZXAgdGhlIGZpcnN0DQpvbmUg
+dW50aWwgaXQgYmVlbiBoYW5kbGVkLg0KDQo+ID4NCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAg
+IHJldHVybiB0cnVlOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4g
+PiArICogZGV2YXBjX3Zpb2xhdGlvbl9pcnEgLSB0aGUgZGV2YXBjIEludGVycnVwdCBTZXJ2aWNl
+IFJvdXRpbmUgKElTUikgd2lsbCBkdW1wDQo+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAg
+ICAgIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBpbmNsdWRpbmcgd2hpY2ggbWFzdGVyIHZpb2xhdGVz
+DQo+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIGFjY2VzcyBzbGF2ZS4NCj4gPiA+
+ID4gKyAqLw0KPiA+ID4gPiArc3RhdGljIGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJx
+KGludCBpcnFfbnVtYmVyLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ID4gPiArew0KPiA+
+ID4gPiArICAgICAgIHUzMiB2aW9faWR4Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgZm9y
+ICh2aW9faWR4ID0gMDsgdmlvX2lkeCA8IGN0eC0+dmlvX2lkeF9udW07IHZpb19pZHgrKykgew0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgaWYgKCFtdGtfZGV2YXBjX2R1bXBfdmlvX2RiZyhjdHgs
+IHZpb19pZHgpKQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCj4g
+PiA+ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAgICAgLyogRW5zdXJlIHRoYXQgdmlvbGF0aW9u
+IGluZm8gYXJlIHdyaXR0ZW4gYmVmb3JlDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiBmdXJ0
+aGVyIG9wZXJhdGlvbnMNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ID4gPiArICAg
+ICAgICAgICAgICAgc21wX21iKCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
+IC8qDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiBNYXNrIHNsYXZlJ3MgaXJxIGJlZm9yZSBj
+bGVhcmluZyB2aW8gc3RhdHVzLg0KPiA+ID4gPiArICAgICAgICAgICAgICAgICogTXVzdCBkbyBp
+dCB0byBhdm9pZCBuZXN0ZWQgaW50ZXJydXB0IGFuZCBwcmV2ZW50DQo+ID4gPiA+ICsgICAgICAg
+ICAgICAgICAgKiB1bmV4cGVjdGVkIGJlaGF2aW9yLg0KPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICovDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBtYXNrX21vZHVsZV9pcnEoY3R4LCB2aW9faWR4
+LCB0cnVlKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgICAgICAgICAgY2xlYXJfdmlvX3N0
+YXR1cyhjdHgsIHZpb19pZHgpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBt
+YXNrX21vZHVsZV9pcnEoY3R4LCB2aW9faWR4LCBmYWxzZSk7DQo+ID4gPiA+ICsgICAgICAgfQ0K
+PiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ID4gPiAr
+fQ0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKg0KPiA+ID4gPiArICogc3RhcnRfZGV2YXBjIC0gaW5p
+dGlhbGl6ZSBkZXZhcGMgc3RhdHVzIGFuZCBzdGFydCByZWNlaXZpbmcgaW50ZXJydXB0DQo+ID4g
+PiA+ICsgKiAgICAgICAgICAgICAgICB3aGlsZSBkZXZhcGMgdmlvbGF0aW9uIGlzIHRyaWdnZXJl
+ZC4NCj4gPiA+ID4gKyAqLw0KPiA+ID4gPiArc3RhdGljIGludCBzdGFydF9kZXZhcGMoc3RydWN0
+IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ID4gPiArew0KPiA+ID4gPiArICAgICAgIHZv
+aWQgX19pb21lbSAqcGRfdmlvX3NoaWZ0X3N0YV9yZWc7DQo+ID4gPiA+ICsgICAgICAgdm9pZCBf
+X2lvbWVtICpwZF9hcGNfY29uX3JlZzsNCj4gPiA+ID4gKyAgICAgICB1MzIgdmlvX3NoaWZ0X3N0
+YTsNCj4gPiA+ID4gKyAgICAgICB1MzIgdmlvX2lkeDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAg
+ICAgIHBkX2FwY19jb25fcmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT5h
+cGNfY29uOw0KPiA+ID4gPiArICAgICAgIHBkX3Zpb19zaGlmdF9zdGFfcmVnID0gY3R4LT5kZXZh
+cGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0LT52aW9fc2hpZnRfc3RhOw0KPiA+ID4gPiArICAgICAg
+IGlmICghcGRfYXBjX2Nvbl9yZWcgfHwgIXBkX3Zpb19zaGlmdF9zdGFfcmVnKQ0KPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAg
+ICAvKiBDbGVhciBkZXZhcGMgdmlvbGF0aW9uIHN0YXR1cyAqLw0KPiA+ID4gPiArICAgICAgIHdy
+aXRlbChCSVQoMzEpLCBwZF9hcGNfY29uX3JlZyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAg
+ICAvKiBDbGVhciB2aW9sYXRpb24gc2hpZnQgc3RhdHVzICovDQo+ID4gPiA+ICsgICAgICAgdmlv
+X3NoaWZ0X3N0YSA9IHJlYWRsKHBkX3Zpb19zaGlmdF9zdGFfcmVnKTsNCj4gPiA+ID4gKyAgICAg
+ICBpZiAodmlvX3NoaWZ0X3N0YSkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHdyaXRlbCh2aW9f
+c2hpZnRfc3RhLCBwZF92aW9fc2hpZnRfc3RhX3JlZyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAg
+ICAgICAvKiBDbGVhciBzbGF2ZSB2aW9sYXRpb24gc3RhdHVzICovDQo+ID4gPiA+ICsgICAgICAg
+Zm9yICh2aW9faWR4ID0gMDsgdmlvX2lkeCA8IGN0eC0+dmlvX2lkeF9udW07IHZpb19pZHgrKykg
+ew0KPiA+ID4gPiArICAgICAgICAgICAgICAgY2xlYXJfdmlvX3N0YXR1cyhjdHgsIHZpb19pZHgp
+Ow0KPiA+ID4gPiArICAgICAgICAgICAgICAgbWFza19tb2R1bGVfaXJxKGN0eCwgdmlvX2lkeCwg
+ZmFsc2UpOw0KPiA+ID4gPiArICAgICAgIH0NCj4gPiA+ID4gKw0KPiA+ID4NCj4gPiA+IFdoeSBk
+byB5b3UgY2xlYXIgdGhlc2U/IEFmdGVyIHBvd2VyIG9uIGhhcmR3YXJlLCBJIHRoaW5rIHRoZXNl
+DQo+ID4gPiByZWdpc3RlciBzdGF0dXMgYXJlIGNvcnJlY3QuIElmIHRoZSBkZWZhdWx0IHZhbHVl
+IG9mIHRoZXNlIHJlZ2lzdGVyDQo+ID4gPiBhcmUgbm90IGNvcnJlY3QsIGFkZCBhIGNvbW1lbnQg
+Zm9yIHRoaXMuDQo+ID4gPg0KPiA+DQo+ID4gVGhlIHJlZ2lzdGVyIGRlZmF1bHQgdmFsdWUgd291
+bGQgYmUgY29ycmVjdCBhZnRlciBwb3dlciBvbi4NCj4gPiBCdXQgdGhlcmUgYXJlIG1hbnkgdGhp
+bmdzIGhhdmUgdG8gZG8gYmVmb3JlIGtlcm5lbCBkcml2ZXIgcHJvYmUuDQo+ID4gRHVyaW5nIHRo
+YXQgdGltZSwgZGV2YXBjIHJlZ2lzdGVyIHN0YXR1cyBtaWdodCBiZSBjaGFuZ2VkLiBCdXQgd2Ug
+YXJlDQo+ID4gZm9jdXNpbmcgb24gaGFuZGxpbmcgdmlvbGF0aW9uIGFmdGVyIGRyaXZlciBwcm9i
+ZSBpbnN0ZWFkLg0KPiA+IFNvIGNsZWFyaW5nIGFsbCByZWcgc3RhdHVzIHRvIG1ha2UgaXQgYXMg
+aW5pdGlhbCBzdGF0ZS4NCj4gDQo+IEFmdGVyIGhhcmR3YXJlIGlzIHBvd2VyZWQgb24gYW5kIHNv
+bWUgdmlvbGF0aW9uIGhhcHBlbiBiZWZvcmUgdGhpcw0KPiBkcml2ZXIgaW5pdCwgd2h5IGRvIHlv
+dSBub3QgY2FyZSBhYm91dCBpdD8gVGhhdCBpcyBhIHZpb2xhdGlvbiBpbiB0aGlzDQo+IHN5c3Rl
+bS4NCj4gRm9yIG9uZSBhcHBsaWNhdGlvbiwgSSBjb3VsZCBidWlsZCB0aGlzIGRyaXZlciBhcyBh
+IGtvIChrZXJuZWwNCj4gbW9kdWxlKS4gSSBkbyBub3QgaW5zZXJ0IHRoaXMga28gaW4gbm9ybWFs
+LCBidXQgSSBpbnNlcnQgaXQgYWZ0ZXINCj4gc29tZXRoaW5nIGlzIHdyb25nLiBTbyBJIG5lZWQg
+dG8gZ2V0IHRoZSBpbmZvcm1hdGlvbiBoYXBwZW5lZCBiZWZvcmUNCj4gdGhpcyBkcml2ZXIgaW5p
+dC4NCg0KWWVzLCB5b3UgYXJlIHJpZ2h0LiBJIHRoaW5rIGl0J3MgYSBiZXR0ZXIgd2F5IGZvciB1
+cHN0cmVhbSBwYXRjaC4NCkknbGwgcmVtb3ZlIGl0IGluIG5leHQgcGF0Y2guDQpUaGFua3MNCg0K
+PiANCj4gUmVnYXJkcywNCj4gQ2h1bi1LdWFuZy4NCj4gDQo+ID4NCj4gPiA+IFJlZ2FyZHMsDQo+
+ID4gPiBDaHVuLUt1YW5nLg0KPiA+ID4NCj4gPiA+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiA+
+ID4gK30NCj4gPiA+ID4gKw0KPiA+DQoNCg==
 
