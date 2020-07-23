@@ -2,110 +2,71 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6720C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0ABC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1C620888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E5F22B3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595464505;
+	bh=u1rSsbHPgNqoh0XeslusVlYRX+WU01DuBsImUOK0KhU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=YxOu3Bmu3OjLH2gCTiTKsW29OuS5L/G9TFH7DAijFVJrCl06cbIcNkLb+x88PVJYN
+	 fV2bgZcWuFBSvH1X7oucPtBd+QzF5g/Jc7I09eulASbQJG40Ia8cw1num2wUz85ZgG
+	 Ruxk7zfiFaPaVZKzTiqmSsB52O7F9+5MlcfDHT4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733285AbgGWAfC (ORCPT
+        id S2387417AbgGWAfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:35:02 -0400
-Received: from mga03.intel.com ([134.134.136.65]:22138 "EHLO mga03.intel.com"
+        Wed, 22 Jul 2020 20:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729198AbgGWAfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:35:02 -0400
-IronPort-SDR: 2Npd3pLB2nlZAVZMs9G2rsfCF3Goadu1dGCd43nNhYC2Tp+PUlrS0Wr9ai18YzN4J6WzUhKTJW
- 85FUKDcHpTkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="150430717"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="150430717"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 17:35:01 -0700
-IronPort-SDR: 5vXl87XkKg3yA6y0MCZeRK9JBL9vu4lNnWF29JJqkbvRh7kcDYVJxckXeBUvOAqChJ0FG3u+Gy
- LdtLVeVbMuQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="392842096"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Jul 2020 17:34:59 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v5 3/7] iommu/vt-d: Fix PASID devTLB invalidation
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1595445987-40095-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1595445987-40095-4-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <21f0c923-0e74-68d8-1fb3-67279b3fbd29@linux.intel.com>
-Date:   Thu, 23 Jul 2020 08:30:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <1595445987-40095-4-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1733289AbgGWAfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 20:35:03 -0400
+Subject: Re: [GIT PULL for v5.8-rc7] media fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595464503;
+        bh=u1rSsbHPgNqoh0XeslusVlYRX+WU01DuBsImUOK0KhU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=BEWCZjrPcfAqkaKBq4Vd8Oicx3KluK8hEx8LX+fRx8NyL9a0+CgpG4FCatCJZJ5mm
+         m2n9SoB+Kid/e9yVXAtkVM3xxPJZ7o/hvTO3ZSK1gggwvdOszoJBFoZFacz3K3bve4
+         oR6/O8v0e9F1Rmm8FbQFLLgbhyITiKlQWeLE3fDk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200722155727.06ab1692@coco.lan>
+References: <20200722155727.06ab1692@coco.lan>
+X-PR-Tracked-List-Id: <linux-media.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200722155727.06ab1692@coco.lan>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+ tags/media/v5.8-3
+X-PR-Tracked-Commit-Id: 0d6db85131e014c128e57649793aff5aa96e065f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d15be546031cf65a0fc34879beca02fd90fe7ac7
+Message-Id: <159546450312.19894.8311805112492546828.pr-tracker-bot@kernel.org>
+Date:   Thu, 23 Jul 2020 00:35:03 +0000
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 3:26 AM, Jacob Pan wrote:
-> DevTLB flush can be used for both DMA request with and without PASIDs.
-> The former uses PASID#0 (RID2PASID), latter uses non-zero PASID for SVA
-> usage.
-> 
-> This patch adds a check for PASID value such that devTLB flush with
-> PASID is used for SVA case. This is more efficient in that multiple
-> PASIDs can be used by a single device, when tearing down a PASID entry
-> we shall flush only the devTLB specific to a PASID.
-> 
-> Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table")
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+The pull request you sent on Wed, 22 Jul 2020 15:57:27 +0200:
 
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.8-3
 
-Best regards,
-baolu
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d15be546031cf65a0fc34879beca02fd90fe7ac7
 
-> ---
->   drivers/iommu/intel/pasid.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-> index c81f0f17c6ba..fa0154cce537 100644
-> --- a/drivers/iommu/intel/pasid.c
-> +++ b/drivers/iommu/intel/pasid.c
-> @@ -486,7 +486,16 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
->   	qdep = info->ats_qdep;
->   	pfsid = info->pfsid;
->   
-> -	qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-> +	/*
-> +	 * When PASID 0 is used, it indicates RID2PASID(DMA request w/o PASID),
-> +	 * devTLB flush w/o PASID should be used. For non-zero PASID under
-> +	 * SVA usage, device could do DMA with multiple PASIDs. It is more
-> +	 * efficient to flush devTLB specific to the PASID.
-> +	 */
-> +	if (pasid == PASID_RID2PASID)
-> +		qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-> +	else
-> +		qi_flush_dev_iotlb_pasid(iommu, sid, pfsid, pasid, qdep, 0, 64 - VTD_PAGE_SHIFT);
->   }
->   
->   void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct device *dev,
-> 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
