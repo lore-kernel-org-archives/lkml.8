@@ -2,121 +2,98 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466A9C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09272C433F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A86120714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBF32086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aICd1Jwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbgGWDJ0 (ORCPT
+        id S2387708AbgGWDGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 23:09:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30525 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733174AbgGWDJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 23:09:25 -0400
-IronPort-SDR: N0Nx5XEwCgD3Har9bFWnSQzoQ7YfZzw4o/boJIehiX2ISM9r/+9WaWkexwAWHA6bEEsdUuKust
- t2s32ZaJV1uA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="130530024"
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="130530024"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 20:09:24 -0700
-IronPort-SDR: j8q+kBYfG2WY13W/VoXp9gmaUbgwG4o3eCTc8iqA4iJnIb0J4L9Jk5VARQBEC8MCXE5YVOL4mt
- pBWU25YbCOrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="328414111"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga007.jf.intel.com with ESMTP; 22 Jul 2020 20:09:22 -0700
-Date:   Thu, 23 Jul 2020 11:17:49 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [RESEND PATCH v13 00/11] Introduce support for guest CET feature
-Message-ID: <20200723031749.GA31129@local-michael-cet-test.sh.intel.com>
-References: <20200716031627.11492-1-weijiang.yang@intel.com>
- <20200722194805.GB9114@linux.intel.com>
+        Wed, 22 Jul 2020 23:06:21 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:23327 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387668AbgGWDGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 23:06:17 -0400
+X-UUID: 4b0365745c2f4e9fa2c8b0fb7c80db01-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=2HC8KSULeKnTQu8TU3nMZXcQFZT55+m/f0oQcHcZGA8=;
+        b=aICd1JweCjIyccElcOuJCvGvy3dwEf0j08m43SWbb2NG3+JqAI5FGCqJTlxFplsHH3lLMpBmZ3+/iSr3RYwdDfsKVv9TmiZXlV/seWsGyFzh1RP99FWe1e85js7ZZ6+2C1MufUZwAqDqeH7u9IV2YD+ypIqm406sGK6PIEjHfKE=;
+X-UUID: 4b0365745c2f4e9fa2c8b0fb7c80db01-20200723
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1216919613; Thu, 23 Jul 2020 11:06:12 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Jul 2020 11:06:10 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 11:06:07 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH v10 07/28] media: platform: Improve the implementation of the system PM ops
+Date:   Thu, 23 Jul 2020 11:04:30 +0800
+Message-ID: <20200723030451.5616-8-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200723030451.5616-1-xia.jiang@mediatek.com>
+References: <20200723030451.5616-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722194805.GB9114@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 12:48:05PM -0700, Sean Christopherson wrote:
-> On Thu, Jul 16, 2020 at 11:16:16AM +0800, Yang Weijiang wrote:
-> > Control-flow Enforcement Technology (CET) provides protection against
-> > Return/Jump-Oriented Programming (ROP/JOP) attack. There're two CET
-> > sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
-> > SHSTK is to prevent ROP programming and IBT is to prevent JOP programming.
-> > 
-> > Several parts in KVM have been updated to provide VM CET support, including:
-> > CPUID/XSAVES config, MSR pass-through, user space MSR access interface, 
-> > vmentry/vmexit config, nested VM etc. These patches have dependency on CET
-> > kernel patches for xsaves support and CET definitions, e.g., MSR and related
-> > feature flags.
-> > 
-> > CET kernel patches are here:
-> > https://lkml.kernel.org/r/20200429220732.31602-1-yu-cheng.yu@intel.com
-> > 
-> > v13:
-> > - Added CET definitions as a separate patch to facilitate KVM test.
-> 
-> What I actually want to do is pull in actual kernel patches themselves so
-> that we can upstream KVM support without having to wait for the kernel to
-> sort out the ABI, which seems like it's going to drag on.
-That's an innovative idea and beyond my imagination, great!:-)
-> 
-> I was thinking that we'd only need the MSR/CR4/CPUID definitions, but forgot
-> that KVM also needs XSAVES context switching, so it's not as simple as I was
-> thinking.  It's still relatively simple, but it means there would be
-> functional changes in the kernel.
-> 
-> I'll respond to the main SSP series to pose the question of taking the two
-> small-ish kernel patches through the KVM tree.
-> 
-> >  arch/x86/include/asm/kvm_host.h      |   4 +-
-> >  arch/x86/include/asm/vmx.h           |   8 +
-> >  arch/x86/include/uapi/asm/kvm.h      |   1 +
-> >  arch/x86/include/uapi/asm/kvm_para.h |   7 +-
-> >  arch/x86/kvm/cpuid.c                 |  28 ++-
-> >  arch/x86/kvm/vmx/capabilities.h      |   5 +
-> >  arch/x86/kvm/vmx/nested.c            |  34 ++++
-> >  arch/x86/kvm/vmx/vmcs12.c            | 267 ++++++++++++++++-----------
-> >  arch/x86/kvm/vmx/vmcs12.h            |  14 +-
-> >  arch/x86/kvm/vmx/vmx.c               | 262 +++++++++++++++++++++++++-
-> >  arch/x86/kvm/x86.c                   |  53 +++++-
-> >  arch/x86/kvm/x86.h                   |   2 +-
-> >  include/linux/kvm_host.h             |  32 ++++
-> >  13 files changed, 590 insertions(+), 127 deletions(-)
-> 
-> I have quite a few comments/changes (will respond to individual patches),
-> but have done all the updates/rework and, assuming I haven't broken things,
-> we're nearing the point where I can carry this and push it past the finish
-> line, e.g. get acks from tip/x86 maintainers for the kernel patches and
-> send a pull request to Paolo.
-> 
-> I pushed the result to:
-> 
->   https://github.com/sean-jc/linux/releases/tag/kvm-cet-v14-rc1
-> 
-> can you please review and test?  If everything looks good, I'll post v14.
-> If not, I'll work offline with you to get it into shape.
->
-Thanks a lot for the efforts! I'll review and test the new patches and
-let you know the status.
+QWRkIHY0bDJfbTJtX3N1c3BlbmQoKSBmdW5jdGlvbiBjYWxsIGluIG10a19qcGVnX3N1c3BlbmQo
+KSB0byBtYWtlIHN1cmUNCnRoYXQgdGhlIGN1cnJlbnQgZnJhbWUgaXMgcHJvY2Vzc2VkIGNvbXBs
+ZXRlbHkgYmVmb3JlIHN1c3BlbmQuDQpBZGQgdjRsMl9tMm1fcmVzdW1lKCkgZnVuY3Rpb24gY2Fs
+bCBpbiBtdGtfanBlZ19yZXN1bWUoKSB0byB1bmJsb2NrIHRoZQ0KZHJpdmVyIGZyb20gc2NoZWR1
+bGluZyBuZXh0IGZyYW1lLg0KDQpTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5qaWFuZ0Bt
+ZWRpYXRlay5jb20+DQotLS0NCnYxMDogdXNlIHBtX3J1bnRpbWVfZm9yY2VfKiBoZWxwZXJzDQot
+LS0NCiAuLi4vbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jICAgIHwgMTgg
+KysrKysrKystLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMTAg
+ZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1q
+cGVnL210a19qcGVnX2NvcmUuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRr
+X2pwZWdfY29yZS5jDQppbmRleCA3Zjc0NTk3MjYyZmMuLmVlNGFhZjYxODU1MSAxMDA2NDQNCi0t
+LSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQorKysg
+Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KQEAgLTEy
+MDcsMjQgKzEyMDcsMjIgQEAgc3RhdGljIF9fbWF5YmVfdW51c2VkIGludCBtdGtfanBlZ19wbV9y
+ZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KIA0KIHN0YXRpYyBfX21heWJlX3VudXNlZCBpbnQg
+bXRrX2pwZWdfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KLQlpbnQgcmV0Ow0KLQ0K
+LQlpZiAocG1fcnVudGltZV9zdXNwZW5kZWQoZGV2KSkNCi0JCXJldHVybiAwOw0KKwlzdHJ1Y3Qg
+bXRrX2pwZWdfZGV2ICpqcGVnID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQogDQotCXJldCA9IG10
+a19qcGVnX3BtX3N1c3BlbmQoZGV2KTsNCi0JcmV0dXJuIHJldDsNCisJdjRsMl9tMm1fc3VzcGVu
+ZChqcGVnLT5tMm1fZGV2KTsNCisJcmV0dXJuIHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZChkZXYp
+Ow0KIH0NCiANCiBzdGF0aWMgX19tYXliZV91bnVzZWQgaW50IG10a19qcGVnX3Jlc3VtZShzdHJ1
+Y3QgZGV2aWNlICpkZXYpDQogew0KKwlzdHJ1Y3QgbXRrX2pwZWdfZGV2ICpqcGVnID0gZGV2X2dl
+dF9kcnZkYXRhKGRldik7DQogCWludCByZXQ7DQogDQotCWlmIChwbV9ydW50aW1lX3N1c3BlbmRl
+ZChkZXYpKQ0KLQkJcmV0dXJuIDA7DQotDQotCXJldCA9IG10a19qcGVnX3BtX3Jlc3VtZShkZXYp
+Ow0KKwlyZXQgPSBwbV9ydW50aW1lX2ZvcmNlX3Jlc3VtZShkZXYpOw0KKwlpZiAocmV0IDwgMCkN
+CisJCXJldHVybiByZXQ7DQogDQorCXY0bDJfbTJtX3Jlc3VtZShqcGVnLT5tMm1fZGV2KTsNCiAJ
+cmV0dXJuIHJldDsNCiB9DQogDQotLSANCjIuMTguMA0K
 
-> Thanks!
