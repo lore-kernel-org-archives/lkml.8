@@ -2,115 +2,131 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FA2C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034D7C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71EE4207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D581D207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4IHV0nX"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eyCP1Cl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgGWFzX (ORCPT
+        id S1726032AbgGWFzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgGWFzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:55:22 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901B1C0619DC;
-        Wed, 22 Jul 2020 22:55:22 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w2so2507084pgg.10;
-        Wed, 22 Jul 2020 22:55:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=etSFHncgg7r4mzGjmHt/9kGqiemZafuATTVFbIBTcFY=;
-        b=Q4IHV0nXh9SbmnWEKPn83HGJ1Z4tgKqIyB/e2fCbJqe3M22dTGrWizItChLKQaj/P5
-         NVxm9g2XljfQY+LsWzKZPwEN0Xg9fXOoCPPOEkWOcolrMKGvQBibRdGpzPcVUHNEUIiP
-         4gZMqcju8OsyljV40eJg0WGlJa3BcPi5LVe+pPWymrtrCUSWor2H6gethkDVX80dFxTP
-         0vNU6T1z6JnV+JpJ9j/SFGB7xXS50JBLnBDxJHMe9nS6mVBERTXx7UD4GausIlaxA+hQ
-         97ARxLycfWwT7biqyxeKLaAUpDS1V8xvQuBE8QMYZv3xOGnQvhfSUB+k5oPdJJ1JPgBy
-         s+4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=etSFHncgg7r4mzGjmHt/9kGqiemZafuATTVFbIBTcFY=;
-        b=B8rFYzY7I7fJGz8K8mX4fG7pUux8YK+fE+pX/UO/xfbtRhZyOaDhKx6Hac0TyQgZ59
-         qaOhXz/WX/46wDoCOYRiZrqaf0K1gLrniHorVcINjho3fKuli7zHcGf+Ht2DkoQDO2mH
-         gwEaaCfCkWQ9OE6kBPXs7JDwZNwyJkx1U4Z2f6q0Avn37p80A5XvKf+AinyPMQpZ2Ozz
-         nWg2gdcaLBA1g0BzaQQFGYpVR5pmkOl+waH65pVjEoLmoy4dKD/7RK2lIS93DeVXLD7N
-         hascjU31BxXPg3G1LtWuzRuqxV5P7efB5tBQuh1iZkqMUEK1CnPXjsV5rgv3umxDNl8I
-         yNSA==
-X-Gm-Message-State: AOAM533KezotoHysmG+JP2LBnw3G+ZjTpYQnj7j7/j7WoPXlo8CZjYfI
-        Q7czwW9lV/zf45X2eeVXztk=
-X-Google-Smtp-Source: ABdhPJwchaE7ldo73CSHbrS4ei8c2gGAwybeV4GQ0H5YOtWzMzh1pidGnm9KWKEvRQpvZoOMkJ410Q==
-X-Received: by 2002:a63:df56:: with SMTP id h22mr2815814pgj.140.1595483722008;
-        Wed, 22 Jul 2020 22:55:22 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:6cd6])
-        by smtp.gmail.com with ESMTPSA id a3sm1540743pgd.73.2020.07.22.22.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 22:55:20 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 22:55:18 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kernel-team@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org,
-        brouer@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v4 bpf-next 2/4] bpf: fail PERF_EVENT_IOC_SET_BPF when
- bpf_get_[stack|stackid] cannot work
-Message-ID: <20200723055518.onydx7uhmzomt7ud@ast-mbp.dhcp.thefacebook.com>
-References: <20200722184210.4078256-1-songliubraving@fb.com>
- <20200722184210.4078256-3-songliubraving@fb.com>
+        Thu, 23 Jul 2020 01:55:03 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57731 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgGWFzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 01:55:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BC1kr02xhz9sRR;
+        Thu, 23 Jul 2020 15:54:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595483701;
+        bh=/IB0vpapVOUYRDz1z+4C3rGvjCp6zj3WxW3V6jqUXHs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eyCP1Cl8fn2LeBCl3gin+7L/L5fKA33I6UZXWkTbZI4WcyUB+enp07hBEqe0fnT6F
+         yCs75LJhIvWAywXU2kDLcnQZ5iv0VfduN8PUQ/s8Di8/XQD6Eczs2E4mpB380epdt3
+         eKmLg5fo8hKgBEtVcyYpWnqgsGHpwpW8MFxlrBkqEXv8mwqpXGZNoBGqxPbhDrE/ac
+         DXW0Q07uHHsIEFTgUzN4/6aEsp1V6uut9jCBxkZ4MkmtL0sO7hj9DNBodjggz9vpCk
+         Q6V9+YZLDGNlHV7yPbrsToSQaxSXe/DTwEKjE8l2nrMjBp2UL5QSRDdcnkM9rXfYBu
+         wTvk6XBBjjDLA==
+Date:   Thu, 23 Jul 2020 15:54:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kiwoong Kim <kwmad.kim@samsung.com>
+Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
+Message-ID: <20200723155452.6dccd510@canb.auug.org.au>
+In-Reply-To: <20200721163045.50c205a5@canb.auug.org.au>
+References: <20200721163045.50c205a5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722184210.4078256-3-songliubraving@fb.com>
+Content-Type: multipart/signed; boundary="Sig_/a7I6O8Wp6phy6UFTMCqEdjk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:42:08AM -0700, Song Liu wrote:
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 856d98c36f562..f77d009fcce95 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9544,6 +9544,24 @@ static int perf_event_set_bpf_handler(struct perf_event *event, u32 prog_fd)
->  	if (IS_ERR(prog))
->  		return PTR_ERR(prog);
->  
-> +	if (event->attr.precise_ip &&
-> +	    prog->call_get_stack &&
-> +	    (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY) ||
-> +	     event->attr.exclude_callchain_kernel ||
-> +	     event->attr.exclude_callchain_user)) {
-> +		/*
-> +		 * On perf_event with precise_ip, calling bpf_get_stack()
-> +		 * may trigger unwinder warnings and occasional crashes.
-> +		 * bpf_get_[stack|stackid] works around this issue by using
-> +		 * callchain attached to perf_sample_data. If the
-> +		 * perf_event does not full (kernel and user) callchain
-> +		 * attached to perf_sample_data, do not allow attaching BPF
-> +		 * program that calls bpf_get_[stack|stackid].
-> +		 */
-> +		bpf_prog_put(prog);
-> +		return -EINVAL;
+--Sig_/a7I6O8Wp6phy6UFTMCqEdjk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I suspect this will be a common error. bpftrace and others will be hitting
-this issue and would need to fix how they do perf_event_open.
-But EINVAL is too ambiguous and sys_perf_event_open has no ability to
-return a string.
-So how about we pick some different errno here to make future debugging
-a bit less painful?
-May be EBADFD or EPROTO or EPROTOTYPE ?
-I think anything would be better than EINVAL.
+Hi all,
+
+On Tue, 21 Jul 2020 16:30:45 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the scsi-mkp tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> ERROR: modpost: "exynos_ufs_dump_info" [drivers/scsi/ufs/ufs-exynos.ko] u=
+ndefined!
+> ERROR: modpost: "exynos_ufs_init_dbg" [drivers/scsi/ufs/ufs-exynos.ko] un=
+defined!
+> ERROR: modpost: "exynos_ufs_cmd_log_start" [drivers/scsi/ufs/ufs-exynos.k=
+o] undefined!
+>=20
+> Caused by commits
+>=20
+>   c3b5e96ef515 ("scsi: ufs: exynos: Introduce command history")
+>   957ee40d413b ("scsi: ufs: exynos: Implement dbg_register_dump")
+>=20
+> I applied the following patch for now.
+>=20
+> From 6535b25fb253c7f25bf924655edb2b22fdaeb545 Mon Sep 17 00:00:00 2001
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 21 Jul 2020 16:26:05 +1000
+> Subject: [PATCH] scsi: ufs: exynos: mark debugging as broken
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/scsi/ufs/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+> index 2c31b33f0adc..925f8de62f6d 100644
+> --- a/drivers/scsi/ufs/Kconfig
+> +++ b/drivers/scsi/ufs/Kconfig
+> @@ -178,6 +178,7 @@ config SCSI_UFS_EXYNOS_DBG
+>  	bool "EXYNOS specific debug functions"
+>  	default n
+>  	depends on SCSI_UFS_EXYNOS
+> +	depends on BROKEN
+>  	help
+>  	  This selects EXYNOS specific functions to get and even print
+>  	  debug information to see what's happening at both command
+> --=20
+> 2.27.0
+
+This build failure now applies to the scsi tree.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/a7I6O8Wp6phy6UFTMCqEdjk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ZJiwACgkQAVBC80lX
+0Gx+vAf/TCAqCRaVWdH5doygJYRr3aY8Ll7xw1RsYLAKe4wzUyz6TY6Yx/wRpDMV
+uLe/5EvRGe7sIFMj0xebQI8W2ajCylUT1CvEXfb5lLd0KVaV7w3Y/9GTFJmxfCUD
+hyBRYXXYYCsCwydUnn7il1XbMM7p0AiaCldz2w+vLbHwrqnxjhXtAT/cM0hsOsBZ
+Qf3SfYQhoXs3Gj4KNjb+0J7EJgua3TFl+NtfKuXXZ9MCr7VY43F/kB44vH8Dhaqs
+gSzzJLQfbBu2gD+B5c78arryMbK5pzHsMTTu5g35VV5JyIcLzbwpnpUyKSubSy/Q
+9UzZyqu80lvCAwNED8CmTQ72YuKtvg==
+=G46E
+-----END PGP SIGNATURE-----
+
+--Sig_/a7I6O8Wp6phy6UFTMCqEdjk--
