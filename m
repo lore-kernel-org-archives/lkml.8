@@ -2,75 +2,140 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01397C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC642065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A882065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:45:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="pLHCSqyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgGWUnx (ORCPT
+        id S1728051AbgGWUpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:43:53 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42616 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726146AbgGWUnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:43:52 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B13782BA;
-        Thu, 23 Jul 2020 20:43:52 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 14:43:51 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        linux-doc@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 1/1] doc:it_IT: process: coding-style.rst: Correct
- __maybe_unused compiler label
-Message-ID: <20200723144351.333341d2@lwn.net>
-In-Reply-To: <20200715122328.3882187-1-lee.jones@linaro.org>
-References: <20200715122328.3882187-1-lee.jones@linaro.org>
-Organization: LWN.net
+        Thu, 23 Jul 2020 16:45:45 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:43608 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgGWUpp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:45:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ruJwf7Ro3+uAc9zzV6j4w1BSxRPxUSU5kKsGXa4Gea8=; b=pLHCSqyuXXl+1GfJe24xAIMduc
+        bg3KtDVktJMC6exdoVzhagEnH1uMsQ2ZwawZDd/JOqfYRA4v+pkAnejyHLGCuuKSJX/yBvgKsnTcK
+        KSSulOMzGNIjYqbZxg2wT5y1hyRNdak+rrFSFuN4FldHJRRNSYZlPBN2PqtdaRdWfPM+Ithtsz8F2
+        P3HIllDSBKU4gV7l1BABS04ZWYav6c3cvh96NEn2XawhqU2KHl8DlklM+Zw7bzt0mzPFqw7Fc7SX+
+        LnHRbBwPqzoH+dAQTFwg6sY/vysdXOsIKQi43ajabMDZtPzQ5UqPNh+vKXdblMcRSaJxlAX07pJHk
+        Uepjpocg==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jyi5z-0002yZ-BN; Thu, 23 Jul 2020 14:45:40 -0600
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200723195742.GA1447143@bjorn-Precision-5520>
+ <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
+ <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7d013200-3257-9f91-cace-4c43947a7f78@deltatee.com>
+Date:   Thu, 23 Jul 2020 14:45:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: hpa@zytor.com, andrew.maier@eideticom.com, ray.huang@amd.com, christian.koenig@amd.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, alexdeucher@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 13:23:28 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
 
-> Flag is __maybe_unused, not __maybe_used.
+
+On 2020-07-23 2:18 p.m., Alex Deucher wrote:
+> On Thu, Jul 23, 2020 at 4:11 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>
+>>
+>>
+>> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+>>> [+cc Andrew, Armen, hpa]
+>>>
+>>> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+>>>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>>>
+>>>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+>>>>> transactions between root ports and found to work. Therefore add it
+>>>>> to the list.
+>>>>>
+>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>>>> Cc: Christian König <christian.koenig@amd.com>
+>>>>> Cc: Huang Rui <ray.huang@amd.com>
+>>>>> Cc: Alex Deucher <alexdeucher@gmail.com>
+>>>>
+>>>> Starting with Zen, all AMD platforms support P2P for reads and writes.
+>>>
+>>> What's the plan for getting out of the cycle of "update this list for
+>>> every new chip"?  Any new _DSMs planned, for instance?
+>>
+>> Well there was an effort to add capabilities in the PCI spec to describe
+>> this but, as far as I know, they never got anywhere, and hardware still
+>> doesn't self describe with this.
+>>
+>>> A continuous trickle of updates like this is not really appealing.  So
+>>> far we have:
+>>>
+>>>   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
+>>>   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+>>>   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+>>>   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+>>>   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+>>>
+>>> And that's just from the last year, not including this patch.
+>>
+>> Yes, it's not ideal. But most of these are adding old devices as people
+>> test and care about running on those platforms -- a lot of this is
+>> bootstrapping the list. I'd expect this to slow down a bit as by now we
+>> have hopefully got a lot of the existing platforms people care about.
+>> But we'd still probably expect to be adding a new Intel and AMD devices
+>> about once a year as they produce new hardware designs.
+>>
+>> Unless, the Intel and AMD folks know of a way to detect this, or even to
+>> query if a root complex is newer than a certain generation, I'm not sure
+>> what else we can do here.
 > 
-> Cc: Federico Vaga <federico.vaga@vaga.pv.it>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: clang-built-linux@googlegroups.com
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  Documentation/translations/it_IT/process/coding-style.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/translations/it_IT/process/coding-style.rst b/Documentation/translations/it_IT/process/coding-style.rst
-> index 6f4f85832deea..a346f1f2ce21f 100644
-> --- a/Documentation/translations/it_IT/process/coding-style.rst
-> +++ b/Documentation/translations/it_IT/process/coding-style.rst
-> @@ -1097,7 +1097,7 @@ la direttiva condizionale su di esse.
->  
->  Se avete una variabile o funzione che potrebbe non essere usata in alcune
->  configurazioni, e quindi il compilatore potrebbe avvisarvi circa la definizione
-> -inutilizzata, marcate questa definizione come __maybe_used piuttosto che
-> +inutilizzata, marcate questa definizione come __maybe_unused piuttosto che
->  racchiuderla in una direttiva condizionale del preprocessore.  (Comunque,
+> I started a thread internally to see if I can find a way.  FWIW,
+> pre-ZEN parts also support p2p DMA, but only for writes.  If I can get
+> a definitive list, maybe we could switch to a blacklist for the old
+> ones?
 
-Applied, thanks.
+It would have to be an AMD specific list, falling back to the general
+whitelist.... I suppose we can also mine the pci_ids database for Intel
+root complexes and create a blacklist there too. But there are a lot
+more root complexes outside of the x86 world...
 
-jon
+Logan
