@@ -2,65 +2,109 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557E4C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767EFC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F4A206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5548120792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595534829;
+	bh=ENoIYBug+g53Ale1DfY97zU4FBYnGOgaNeHqmT6v+8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HV58ToigYLYjnB3KC/W3Pt86w4WRPyw6yGdTNll3KT54t9Qo5Ku8FWMVAofnTnuxH
+	 WBLpZ8SiR4tym1xRQxnqBZkuOOkGZftSGJ+M0AFINrf39rX5gqnGEOmDPFbFf8NnlA
+	 H9NjVwR1EEpDJj9ED6Al7TStTPWkvkhXRvKUsIeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGWUGu (ORCPT
+        id S1726812AbgGWUHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWUGu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:06:50 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E388C0619DC;
-        Thu, 23 Jul 2020 13:06:50 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
+        Thu, 23 Jul 2020 16:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgGWUHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:07:07 -0400
+Received: from localhost (p5486cde4.dip0.t-ipconnect.de [84.134.205.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 074922BA;
-        Thu, 23 Jul 2020 20:06:49 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 14:06:48 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Wang Long <w@laoqinren.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: driver-api: update kernel connector
-Message-ID: <20200723140648.6edb788f@lwn.net>
-In-Reply-To: <1595229852-114071-1-git-send-email-w@laoqinren.net>
-References: <1595229852-114071-1-git-send-email-w@laoqinren.net>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id B7EAA206F4;
+        Thu, 23 Jul 2020 20:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595534827;
+        bh=ENoIYBug+g53Ale1DfY97zU4FBYnGOgaNeHqmT6v+8c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NsAQI3dRb358P+uJJEhBaBGz9ZTfpjluRTp5g2Hn4XDwLzdSwlXQX3HNTuwaODv+7
+         S0a5kiFM1SAF6AAqdQx0dEn+T8SrQmf+zHFXETWN+DCtyl2wGhcjzSliSJW0kWbamj
+         p0Vza4Qnk6tnUUVF+EW0Nvo2ivak4wpniRMqjaNU=
+Date:   Thu, 23 Jul 2020 22:07:04 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
+Message-ID: <20200723200704.GB908@ninjato>
+References: <20200721233814.GA3058@embeddedor>
+ <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
+ <20200722143713.GB22267@embeddedor>
+ <20200722143814.GS1030@ninjato>
+ <20200722144848.GC22267@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Disposition: inline
+In-Reply-To: <20200722144848.GC22267@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 15:24:12 +0800
-Wang Long <w@laoqinren.net> wrote:
 
-> This patch changes:
-> 1) Fix typo in kernel connector documentation.
-> 	s/cn_netlink_send_multi/cn_netlink_send_mult/
-> 2) update definition of struct cn_msg
-> 
-> Signed-off-by: Wang Long <w@laoqinren.net>
-> ---
->  Documentation/driver-api/connector.rst | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+--nVMJ2NtxeReIH9PS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
 
-This sort of documentation would be better handled with kerneldoc
-comments, though...
+> > If you want to resend, please only one patch for all I2C drivers. The
+> > change is "cosmetic" enough to do that IMO.
+> >=20
+>=20
+> The reason why I'm sending separate patches for this is because
+> the drivers have different maintainers.
 
-jon
+I see. Still, people can ack parts of a patch they are responsible for.
+I ack this way every now and then for cleanup patches, too.
+
+That being said. All v2 and newer patches squashed into one and applied
+to for-next.
+
+
+--nVMJ2NtxeReIH9PS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8Z7egACgkQFA3kzBSg
+KbbBpQ/9FnepYAS89xiZarcBJQAWcb+Qn1NfNqRlKkWSJCBVVOXmFLuzzD5bVXvu
+OdvLxblLiJh+N/cxuKZPmyifCfmwWcTwyA4ybSKdKaOxfYb9xO2bpbPkFqGgEaHf
+O0/bid7pQ1fkZBtwe3gUuvT5t09keufVbI2bRnWavV03tVVqzS2xCZVSMUx/5ZLA
+6xM9yaBX2CXLT6aE3zyjQE6SmftaTW5vkJRm/fGJxZD3FREGM7E/REpDf8Te5Tm/
+KUm0sqaj7dtTCscJRXSNd0qeQ0lbUl8yUT2N14q+GKBreU/xw20oKgKoUfqA7DCd
+GOV7lv4B/G2QL/PAVCJ5MD/gyXKmYJ0tr8thG2ap+ZacLhnfSldZjHjOfY2NBLBe
+2LzDh2kWharLwZDG4A7u5cpMG/83ljvA5WL103hBj9HgE8qQFtc94s+C0braWsWx
+ez6D7SGH/PcJ43E5htmvLYofydn3xt6sJp3g/io1P18Z3TtT5+fVDaWZaiNhS8c+
+fc1WVlStQ1iaGzTo0zffWHQlGzC2eyugG52pphOEWnLBdImz/q0BPqo0od9ArogE
+NVbWNl6lrEGUz+0xVEQILMaKZdSc9NSaGrdqWRqr8oTxBfNN1w5/Pfi/jEH9wUVa
+nmjsw4DWsmvyI5kmYvd6kGMkgj9t2+ex9tZJXQL4mSCHJjdmevc=
+=1f8G
+-----END PGP SIGNATURE-----
+
+--nVMJ2NtxeReIH9PS--
