@@ -2,122 +2,118 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E03C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02008C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050E52080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="rGyvMeQ+"
+	by mail.kernel.org (Postfix) with ESMTP id D154820888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595493688;
+	bh=PheGDG4I+Sd5okWGMSuo1JWd9HXAe6/fNMBPEQNHz2w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t4K+qta+Ygkw+KYxoH586CjGuc21U4LyYu7Ftgb+ArIs/9lm4OG2nbQfKNCpYU8VA
+	 bzyzFKQqs9MXpUaOkTYEJkTgS+mRFJ+dgFpn5GmtF6KA5RWtmwOEBLmbrGfVeN7pOE
+	 QPxnJLs5n3McxWG75EANvZQJyoqRF0i45eyuJXhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgGWIkG (ORCPT
+        id S1727118AbgGWIl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:40:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728006AbgGWIkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:40:02 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140F4C03CA43
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:40:01 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n26so5528480ejx.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GBFjr2NO+tPwRt48f6bV0DAq1xVraB+4JvlLFlRB/+g=;
-        b=rGyvMeQ+RAXj0neMlTzU8uPVoGP++MmPyXW9rehNveFQBhF8dyYxv6AjBxtstq4TFV
-         4fm/sT4fngoHPtNhHHFkRlNaBXaqxFcoxzVPV4jnyhOEIxpE+8WP3v6Ys+mZIZHxnElm
-         3+HlzqlN3TTCQNBXVwfzvcuNngRHeRTj8yDoqfrZmGsvdvEkoWCKJ4G7hKyFMO63jS/1
-         vJu6u48QBIkiTQUHfssZnDO3TKFO/LYe7iUYcCJScMS5N6nkTfO2ZkCaQ5+U85Bpfz5I
-         QzSiZ0n35L2/+Xm7/99AiElI31daRjEc7Mt7bFjI3zXI8qtconQ7jAfr+lIgPePAz6Ta
-         OZpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GBFjr2NO+tPwRt48f6bV0DAq1xVraB+4JvlLFlRB/+g=;
-        b=lzud7hWh5b/4SHnhHB5HCCfkV0AJAfHi+kU1ooCEHpQ5wg52jcGFRKW/5CFRKKb9pX
-         NLg7U3m6DmfPxhtuc+mDJDd19zSB2MJTjSkFE+yzCtqMokERCqi020pCZ3MV6SqAfuTR
-         2swUtZg6ckIiaGTEyHfLzg1YkPAbUcE1vWWg8pXIYYARCSX/oHD5/4qIb7+Sd+hVXpFh
-         /8WQ8kb6UEEhz08X0Vl1NX6j4bCoes9m+zBIwWbk+5RPQnly61roZl7knpQGvHWxhHoM
-         VkoZXHBwwk9C7jZt4kbpNXGVybYrmMu+/59mBpKZSgv6nh3UAGTCWS44ArjVLTOdm+X9
-         HnaQ==
-X-Gm-Message-State: AOAM531SG/ebTPlRCupvmHD7A2XZ2Z16RalR057SxkfaG8Q7USjmPP++
-        jIpw23kjUXj1P42QN5EtLOtUIw==
-X-Google-Smtp-Source: ABdhPJxCoyR6XAi+VAaWwhsRGBR37Zk2lE1XCLCzXK9C/pnGAxIlGjt4DDu+Ll1G6Qz23LuzpAwjkw==
-X-Received: by 2002:a17:906:b0d3:: with SMTP id bk19mr3489955ejb.167.1595493599663;
-        Thu, 23 Jul 2020 01:39:59 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
-        by smtp.gmail.com with ESMTPSA id z22sm1634990edx.72.2020.07.23.01.39.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 01:39:59 -0700 (PDT)
-Subject: Re: [MPTCP] [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-To:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-26-hch@lst.de>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <1056b902-fd25-1c13-758d-cd4341dd403b@tessares.net>
-Date:   Thu, 23 Jul 2020 10:39:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 04:41:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgGWIl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:41:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 308BD2080D;
+        Thu, 23 Jul 2020 08:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595493686;
+        bh=PheGDG4I+Sd5okWGMSuo1JWd9HXAe6/fNMBPEQNHz2w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iTaq7h7RwfYMBoNmsxw1lVCjbC3pvPOFNRcvog+sxixmTbZKs668cWaGmUeAwTj7t
+         7HdJG9gPG8VPyMEAxwFOw7BYL4mliAKBHHxh1ylQodA/qmVRsqfS5KcKVXcuti5z7T
+         oGu9/+ZqLoJd0r6FnOohTSmOKYzaS5uPJ6uzEHfc=
+Date:   Thu, 23 Jul 2020 10:41:31 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
+        "efremov@linux.com" <efremov@linux.com>,
+        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
+        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
+        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
+        "wwt8723@163.com" <wwt8723@163.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= USB:Fix kernel
+ NULL pointer when unbind UHCI form vfio-pci
+Message-ID: <20200723084131.GA1753458@kroah.com>
+References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
+ <20200722215313.5a842b93@x1.home>
+ <371b3697614e4034aed8e9f340a7dbf1@zhaoxin.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723060908.50081-26-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <371b3697614e4034aed8e9f340a7dbf1@zhaoxin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-On 23/07/2020 08:09, Christoph Hellwig wrote:
-> Rework the remaining setsockopt code to pass a sockptr_t instead of a
-> plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
-> outside of architecture specific code.
+On Thu, Jul 23, 2020 at 08:36:25AM +0000, WeitaoWang-oc wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Stefan Schmidt <stefan@datenfreihafen.org> [ieee802154]
-> ---
->   net/mptcp/protocol.c                      | 12 +++----
+> On Thu,23 July 2020 04:18:00 +0000 Alex wrote:
+> > On Wed, 22 Jul 2020 19:57:48 +0800
+> > WeitaoWangoc <WeitaoWang-oc@zhaoxin.com> wrote:
+> > 
+> > >  drivers/usb/core/hcd-pci.c | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
+> > > index 1547aa6..484f2a0 100644
+> > > --- a/drivers/usb/core/hcd-pci.c
+> > > +++ b/drivers/usb/core/hcd-pci.c
+> > > @@ -34,6 +34,7 @@ static DECLARE_RWSEM(companions_rwsem);
+> > >  #define CL_OHCI                PCI_CLASS_SERIAL_USB_OHCI
+> > >  #define CL_EHCI                PCI_CLASS_SERIAL_USB_EHCI
+> > >
+> > > +#define PCI_DEV_DRV_FLAG       2
+> > >  static inline int is_ohci_or_uhci(struct pci_dev *pdev)  {
+> > >         return pdev->class == CL_OHCI || pdev->class == CL_UHCI; @@
+> > > -68,6 +69,8 @@ static void for_each_companion(struct pci_dev *pdev, struct
+> > usb_hcd *hcd,
+> > >                 if (companion->class != CL_UHCI && companion->class !=
+> > CL_OHCI &&
+> > >                                 companion->class != CL_EHCI)
+> > >                         continue;
+> > > +               if (!(companion->priv_flags & PCI_DEV_DRV_FLAG))
+> > 
+> > But pci_dev.priv_flags is private data for the driver that currently
+> > owns the device, which could be vfio-pci.  This is really no different
+> > than assuming the structure at device.driver_data.  If vfio-pci were to
+> > make legitimate use of pci_dev.priv_flags, this could simply blow up
+> > again.  Should there instead be some sort of registration interface
+> > where hcd complaint drivers register their devices and only those
+> > registered devices can have their driver private data arbitrarily poked
+> > by another driver?  Thanks,
+> 
+> Thanks for your explanation. Set pci_dev.priv_flags is really not a 
+> reasonable approach. Are there any more detailed suggestions 
+> to patch this issue?
 
-Thank you for the v2!
+This is not a kernel issue, it is a "do not do this in this way from
+userspace" issue :)
 
-For MPTCP-related code:
+thanks,
 
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+greg k-h
