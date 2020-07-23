@@ -7,39 +7,40 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7C9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 549B52080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A78822BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="k7sYziWW"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bNYYrZ5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgGWKzE (ORCPT
+        id S1728467AbgGWKzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 23 Jul 2020 06:55:04 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:13886 "EHLO
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:59394 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728408AbgGWKzD (ORCPT
+        by vger.kernel.org with ESMTP id S1728426AbgGWKzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:55:03 -0400
+        Thu, 23 Jul 2020 06:55:04 -0400
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NAiI97003765;
-        Thu, 23 Jul 2020 05:55:02 -0500
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NAiI98003765;
+        Thu, 23 Jul 2020 05:55:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=iYPOhlbAQrslvPoq2zdj9t8JKBjaXig009r3OUnE3UY=;
- b=k7sYziWWaz05wqvWHKf9qWmhKtEGX4QRV3m2rUuk0RXlbYokgdLUadl/G47dBlaaDqwt
- 5lldyMTADxLsM2dl4pSnWSeB1ixEbaJkhnHg0YGSFte6abP8p5qRXSaGPcuMg9MaC05O
- a3j7bZx0YhKerYOLj8hPTNLJ18hrl49paSF4PtEZ3aIwHhPgE9KsWN1CFdn7FkPLDeOj
- H7zXAcyAhHOCY+VSqZEyFCloq5vJvkfL2Pb66Q2IlCexsB8jiOsqHfQaBrG8uZSPFRrF
- kh4nUvTkn8dFboAoea8l+3IVEpckabu8EtpJufLkbQ752Xd1/BBloHqSUWNIHJLClEH1 AQ== 
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=U17bNxoNWi8qqSnjSrUhsMn9nJE+sQOjHBXNeVMYZKc=;
+ b=bNYYrZ5TJ/mMZnuhoHUq6AYvWVGMFrL/u1EO9PFW+cVqlCkE3X4OrqVm/BYjokyEwxDK
+ f825RVmuWkdzirrBa69KCPJj+vGKmt2mOP7KRt1sEZm3ALJScQvZvzT1tmf2RlARJQBb
+ DgpJGmFw6Y8EQBNaSxVobQDRt3wWKfahYztqWllaWXtCrZPsumTz02WOKr1x11C0Ol+L
+ vv9AVCEcztKR4FT/BmdKybNfTLb6//J/8h4d5pORviXza5talV0+w9DrdcupqubtxSfY
+ hQpjPxsHv+bTzk6ZhKEcRo7ga66JoJNT+r14ix4KIjQHHBMKBGMTyjxtQYYRUx6CUdg2 kA== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 32bxg1fd81-1
+        by mx0a-001ae601.pphosted.com with ESMTP id 32bxg1fd81-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 23 Jul 2020 05:55:02 -0500
+        Thu, 23 Jul 2020 05:55:03 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 23 Jul
@@ -48,23 +49,25 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Thu, 23 Jul 2020 11:55:00 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 12AED45;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2425B2C3;
         Thu, 23 Jul 2020 10:55:00 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <lee.jones@linaro.org>
 CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [RESEND PATCH v3 1/2] mfd: mfd-core: Add mechanism for removal of a subset of children
-Date:   Thu, 23 Jul 2020 11:54:58 +0100
-Message-ID: <20200723105459.5530-1-ckeepax@opensource.cirrus.com>
+Subject: [RESEND PATCH v3 2/2] mfd: madera: Improve handling of regulator unbinding
+Date:   Thu, 23 Jul 2020 11:54:59 +0100
+Message-ID: <20200723105459.5530-2-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200723105459.5530-1-ckeepax@opensource.cirrus.com>
+References: <20200723105459.5530-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-SPF-Result: fail
 X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
  ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 clxscore=1015
  adultscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0 malwarescore=0
+ spamscore=0 mlxlogscore=844 lowpriorityscore=0 phishscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007230082
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,100 +75,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the only way to remove MFD children is with a call to
-mfd_remove_devices, which will remove all the children. Under
-some circumstances it is useful to remove only a subset of the
-child devices. For example if some additional clean up is required
-between removal of certain child devices.
+The current unbinding process for Madera has some issues. The trouble
+is runtime PM is disabled as the first step of the process, but
+some of the drivers release IRQs causing regmap IRQ to issue a
+runtime get which fails. To allow runtime PM to remain enabled during
+mfd_remove_devices, the DCVDD regulator must remain available. In
+the case of external DCVDD's this is simple, the regulator can simply
+be disabled/put after the call to mfd_remove_devices. However, in
+the case of an internally supplied DCVDD the regulator needs to be
+released after the other MFD children depending on it.
 
-To accomplish this a level field is added to mfd_cell, the normal
-mfd_remove_devices is modified to not remove devices that are set
-to a higher level and a corresponding mfd_remove_devices_late
-function is added to remove those children.
+Use the new MFD mfd_remove_devices_late functionality to split
+the DCVDD regulator off from the other drivers.
 
-See further discussion at:
-https://lore.kernel.org/lkml/20200616075834.GF2608702@dell/
-
-Suggested-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- drivers/mfd/mfd-core.c   | 16 +++++++++++++++-
- include/linux/mfd/core.h |  5 +++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ drivers/mfd/madera-core.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index c51183209f82c..c3ef58a802bee 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -357,6 +357,7 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	struct platform_device *pdev;
- 	const struct mfd_cell *cell;
- 	struct mfd_of_node_entry *of_entry, *tmp;
-+	int *level = data;
+diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
+index 4724c1a01a39f..8a8d733fdce5b 100644
+--- a/drivers/mfd/madera-core.c
++++ b/drivers/mfd/madera-core.c
+@@ -44,7 +44,10 @@ static const char * const madera_core_supplies[] = {
+ };
  
- 	if (dev->type != &mfd_dev_type)
- 		return 0;
-@@ -364,6 +365,9 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	pdev = to_platform_device(dev);
- 	cell = mfd_get_cell(pdev);
+ static const struct mfd_cell madera_ldo1_devs[] = {
+-	{ .name = "madera-ldo1", },
++	{
++		.name = "madera-ldo1",
++		.level = MFD_DEP_LEVEL_HIGH,
++	},
+ };
  
-+	if (level && cell->level > *level)
-+		return 0;
+ static const char * const cs47l15_supplies[] = {
+@@ -743,18 +746,22 @@ int madera_dev_exit(struct madera *madera)
+ 	/* Prevent any IRQs being serviced while we clean up */
+ 	disable_irq(madera->irq);
+ 
+-	/*
+-	 * DCVDD could be supplied by a child node, we must disable it before
+-	 * removing the children, and prevent PM runtime from turning it back on
+-	 */
+-	pm_runtime_disable(madera->dev);
++	pm_runtime_get_sync(madera->dev);
+ 
+-	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
++	mfd_remove_devices(madera->dev);
 +
- 	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
- 					       cell->num_parent_supplies);
++	pm_runtime_disable(madera->dev);
  
-@@ -380,9 +384,19 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	return 0;
- }
+ 	regulator_disable(madera->dcvdd);
+ 	regulator_put(madera->dcvdd);
  
-+void mfd_remove_devices_late(struct device *parent)
-+{
-+	int level = MFD_DEP_LEVEL_HIGH;
+-	mfd_remove_devices(madera->dev);
++	mfd_remove_devices_late(madera->dev);
 +
-+	device_for_each_child_reverse(parent, &level, mfd_remove_devices_fn);
-+}
-+EXPORT_SYMBOL(mfd_remove_devices_late);
++	pm_runtime_set_suspended(madera->dev);
++	pm_runtime_put_noidle(madera->dev);
 +
- void mfd_remove_devices(struct device *parent)
- {
--	device_for_each_child_reverse(parent, NULL, mfd_remove_devices_fn);
-+	int level = MFD_DEP_LEVEL_NORMAL;
++	clk_disable_unprepare(madera->mclk[MADERA_MCLK2].clk);
 +
-+	device_for_each_child_reverse(parent, &level, mfd_remove_devices_fn);
- }
- EXPORT_SYMBOL(mfd_remove_devices);
+ 	madera_enable_hard_reset(madera);
  
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index 6d68f44a26a1c..4b35baa14d308 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -46,6 +46,9 @@
- #define MFD_CELL_NAME(_name) \
- 	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, false, NULL)
- 
-+#define MFD_DEP_LEVEL_NORMAL 0
-+#define MFD_DEP_LEVEL_HIGH 1
-+
- struct irq_domain;
- struct property_entry;
- 
-@@ -63,6 +66,7 @@ struct mfd_cell_acpi_match {
- struct mfd_cell {
- 	const char		*name;
- 	int			id;
-+	int			level;
- 
- 	int			(*enable)(struct platform_device *dev);
- 	int			(*disable)(struct platform_device *dev);
-@@ -150,6 +154,7 @@ static inline int mfd_add_hotplug_devices(struct device *parent,
- }
- 
- extern void mfd_remove_devices(struct device *parent);
-+extern void mfd_remove_devices_late(struct device *parent);
- 
- extern int devm_mfd_add_devices(struct device *dev, int id,
- 				const struct mfd_cell *cells, int n_devs,
+ 	regulator_bulk_disable(madera->num_core_supplies,
 -- 
 2.11.0
 
