@@ -2,145 +2,100 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ED6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A274CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B08020792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRFGlag/"
+	by mail.kernel.org (Postfix) with ESMTP id 7544620B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595535596;
+	bh=Y7nw8Vj09mHRDx3rm4JyQd5kgvD3ZNpz+G6aAJc4te0=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=OVqL2nIouMKMm13ulzH5bGh09X+5MeR4RjgLJHxOdp+hIAivdUv2u7iPhCJmQppGn
+	 O0lH440DYDYCpSmtQZRsYTtL23CMjd0CQ3UbP2SZN0SUePVGSwUdbOmrHRyjIdpIhY
+	 i9ZxAR6+/OVnyUW246IQwB3Dvt9vQdBDSx/3HDjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgGWUTF (ORCPT
+        id S1727112AbgGWUTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWUTF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:19:05 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B035CC0619DC;
-        Thu, 23 Jul 2020 13:19:04 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 184so6349034wmb.0;
-        Thu, 23 Jul 2020 13:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Jz1lbK5bI0Ctyh4QZXH3ZtjdTMxnzW49HE2H6bVsMxw=;
-        b=oRFGlag/zGU4CXXJ7XIQD7fPt8RRB94r0orMm2ytu8XHkavznqsppVIxVYbFUJ4DB0
-         IfMmUYmi7xuRXPTKzbqCXimVAZUaIddCNZMWWNCXg0YVl08GSZU1uLAxxZZnMGYNMemJ
-         lMi8RLkggLbM+U/a/ETnsoVAz2UHCnbVKiScXHLbI6T3FvividfJGqKaXYAvUQq33u5Y
-         uCyAuMZ6u0kE2Rjxv8KhezALPo9NmunRoMPN3gT77vNWNgozYC5Utxu9VNy+T1+IXJ5f
-         1gLPmCqmmnYIgn4b1fTLaMkHzVMRVHq4lhXBUoUPec+Ead0WNuo8hS1Tab/pEarMxiuP
-         aIeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Jz1lbK5bI0Ctyh4QZXH3ZtjdTMxnzW49HE2H6bVsMxw=;
-        b=kA9gzklvJSWsmtFbkx0P2Vplz9vyTYaF/BCskyQbiwJQ5Gh18SoZZ2c7COgqcRirdS
-         IL87bqrRJGthg/+nw8YBIqEXqAk254nQimy2eDxiYcI0e10L1HAPwCObgXsW/ZucYjYu
-         3/kO9vHiQxV5Ic1pV7brQWkrinD332S+3tF0MiFXWJichVdz08KVcZ1sAiiRTNQ9sIyv
-         +0f9C4XX0UfiX+H+ZUgo/tjbK7GIDZ+LCia1QWV2MzYd+Hya9IBvgsAjNDVEWrn/k4UY
-         2+5ohG0jI5GYcmwUJTPBCnJy5LK3Ypeg0hOdSMC6ucaftf4Mr79siV6MRPBGzsi7Ap8i
-         /FJQ==
-X-Gm-Message-State: AOAM530oN6GHEuaLQCiGUfTRJ39gCB9dvu5is8tmbLnGccPR1N9LKGcv
-        KHaIUpDJ8fRHMpVGJABcJfJ1rOfjilw2szxNG0V2FA==
-X-Google-Smtp-Source: ABdhPJwZ5ghVcpzgVD08jYmYRCKFxzaZXDMoXDwAnKc3VkUnx6aeY1yMm+lsM5vVRo5/EFxZ4Bj5gue9yJUmkyUiL10=
-X-Received: by 2002:a1c:2:: with SMTP id 2mr5654439wma.79.1595535543473; Thu,
- 23 Jul 2020 13:19:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200723195742.GA1447143@bjorn-Precision-5520> <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
-In-Reply-To: <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 23 Jul 2020 16:18:52 -0400
-Message-ID: <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
- allowed bridges
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Andrew Maier <andrew.maier@eideticom.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jul 2020 16:19:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgGWUTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:19:54 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3BE720792;
+        Thu, 23 Jul 2020 20:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595535594;
+        bh=Y7nw8Vj09mHRDx3rm4JyQd5kgvD3ZNpz+G6aAJc4te0=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Sr85O+3yxJUO8fWXvZDwDrg8K1cyNWE7lAskp1wdT4mHhoGLrLmHZNdOTjHA2qb70
+         Bmr4bN3gKnZ+mTEQomX12S2gdeAHORaIpsJHw9FOC1b1XTnWVb4aq+udfnNCGVXOVV
+         RX0wjNh34aSfg7xtVa6mPbGHgNjtv/trfEmXRoQ8=
+Date:   Thu, 23 Jul 2020 21:19:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     perex@perex.cz, nicoleotsuka@gmail.com,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        festevam@gmail.com, Xiubo.Lee@gmail.com, kernel@pengutronix.de,
+        shawnguo@kernel.org, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        lgirdwood@gmail.com, s.hauer@pengutronix.de, timur@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20200718111209.11760-1-grandmaster@al2klimov.de>
+References: <20200718111209.11760-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH] ASoC: fsl: Replace HTTP links with HTTPS ones
+Message-Id: <159553557415.41908.3982034267221660398.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 4:11 PM Logan Gunthorpe <logang@deltatee.com> wrote=
-:
->
->
->
-> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
-> > [+cc Andrew, Armen, hpa]
-> >
-> > On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
-> >> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> =
-wrote:
-> >>>
-> >>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
-> >>> transactions between root ports and found to work. Therefore add it
-> >>> to the list.
-> >>>
-> >>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >>> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> >>> Cc: Huang Rui <ray.huang@amd.com>
-> >>> Cc: Alex Deucher <alexdeucher@gmail.com>
-> >>
-> >> Starting with Zen, all AMD platforms support P2P for reads and writes.
-> >
-> > What's the plan for getting out of the cycle of "update this list for
-> > every new chip"?  Any new _DSMs planned, for instance?
->
-> Well there was an effort to add capabilities in the PCI spec to describe
-> this but, as far as I know, they never got anywhere, and hardware still
-> doesn't self describe with this.
->
-> > A continuous trickle of updates like this is not really appealing.  So
-> > far we have:
-> >
-> >   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to=
- whitelist")
-> >   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to=
- the whitelist")
-> >   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
-> >   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
-> >   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AM=
-D ZEN Root Complex")
-> >
-> > And that's just from the last year, not including this patch.
->
-> Yes, it's not ideal. But most of these are adding old devices as people
-> test and care about running on those platforms -- a lot of this is
-> bootstrapping the list. I'd expect this to slow down a bit as by now we
-> have hopefully got a lot of the existing platforms people care about.
-> But we'd still probably expect to be adding a new Intel and AMD devices
-> about once a year as they produce new hardware designs.
->
-> Unless, the Intel and AMD folks know of a way to detect this, or even to
-> query if a root complex is newer than a certain generation, I'm not sure
-> what else we can do here.
+On Sat, 18 Jul 2020 13:12:09 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-I started a thread internally to see if I can find a way.  FWIW,
-pre-ZEN parts also support p2p DMA, but only for writes.  If I can get
-a definitive list, maybe we could switch to a blacklist for the old
-ones?
+Applied to
 
-Alex
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
->
-> Logan
+Thanks!
+
+[1/1] ASoC: fsl: Replace HTTP links with HTTPS ones
+      commit: 1ce8f643ed875d754ff09bf2096dfac3b905ab80
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
