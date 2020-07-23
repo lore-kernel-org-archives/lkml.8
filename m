@@ -2,76 +2,96 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE48C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0AE720792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC4820792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j/CHcoXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgGWULC (ORCPT
+        id S1726834AbgGWULx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:11:02 -0400
-Received: from mail.fireflyinternet.com ([77.68.26.236]:52420 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726033AbgGWULB (ORCPT
+        Thu, 23 Jul 2020 16:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgGWULx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:11:01 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from build.alporthouse.com (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 21911950-1500050 
-        for multiple; Thu, 23 Jul 2020 21:10:44 +0100
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-To:     linux-kernel@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] sched: Warn if garbage is passed to default_wake_function()
-Date:   Thu, 23 Jul 2020 21:10:42 +0100
-Message-Id: <20200723201042.18861-1-chris@chris-wilson.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Thu, 23 Jul 2020 16:11:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5511AC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/rj5UU6tGdG+2asVe5JXVTkUwXIGY3WdZ5un4JY8Vf4=; b=j/CHcoXSsZZ0Um3pDllJCl9MsR
+        GGrruV7XTpUCFhljY3hAACYerSw70BI1nrteXRuzYmY63g3OYylzPw2vhagDSjgwzbHBbm4qyXuPD
+        F8QmY5mQoV+aZh7mQkCWm541BLB0CT7VwDLGhRqLngnzvO6cY1E4aetu8DL8iPtYAd+cGtucnMQWj
+        7HvgVtoIuiOkTrMoMYbnyeQdBxp+bVOyJoSPCjYFCuer22i4PBCx6j2qDmIzJO8gLZgF4kaLkvaMy
+        +nnmu7Zoye+MzV4vxpR9lY8TShCypEK+hkDnUoAp9th09bkhYGQaHAKipKmYVQ4ddZ47as9sFqMkL
+        VEctz0HQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyhYv-0000pD-Ou; Thu, 23 Jul 2020 20:11:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE673301A7A;
+        Thu, 23 Jul 2020 22:11:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C4D49200F77CC; Thu, 23 Jul 2020 22:11:28 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 22:11:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
+        torvalds@linux-foundation.org, hch@lst.de
+Subject: Re: [PATCH -v2 1/5] sched: Fix ttwu() race
+Message-ID: <20200723201128.GT10769@hirez.programming.kicks-ass.net>
+References: <20200622100122.477087977@infradead.org>
+ <20200622100825.726200103@infradead.org>
+ <159532854586.15672.5123219635720172265@build.alporthouse.com>
+ <20200721113719.GI119549@hirez.programming.kicks-ass.net>
+ <159541187604.15672.2433896906671712337@build.alporthouse.com>
+ <20200723182841.GS10769@hirez.programming.kicks-ass.net>
+ <159553326368.21069.3167204000119437062@build.alporthouse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159553326368.21069.3167204000119437062@build.alporthouse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the default_wake_function() passes its flags onto
-try_to_wake_up(), warn if those flags collide with internal values.
-Given that the supplied flags are garbage, no repair can be done but at
-least alert the user to the damage they are causing.
+On Thu, Jul 23, 2020 at 08:41:03PM +0100, Chris Wilson wrote:
 
-In the belief that these errors should be picked up during testing, the
-warning is only compiled in under CONFIG_SCHED_DEBUG.
+> I am very sorry for the wild goose chase.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/core.c | 1 +
- 1 file changed, 1 insertion(+)
+*phew*... all good then. I was starting to go a little ga-ga trying to
+make sense of things.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7b918059332b..4be209266d8a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4481,6 +4481,7 @@ asmlinkage __visible void __sched preempt_schedule_irq(void)
+Arguably we should probably do something like:
+
+
+@@ -4555,7 +4572,7 @@ asmlinkage __visible void __sched preempt_schedule_irq(void)
  int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flags,
  			  void *key)
  {
-+	WARN_ON_ONCE(IS_ENABLED(CONFIG_SCHED_DEBUG) && wake_flags & ~WF_SYNC);
- 	return try_to_wake_up(curr->private, mode, wake_flags);
+-	return try_to_wake_up(curr->private, mode, wake_flags);
++	return try_to_wake_up(curr->private, mode, wake_flags & WF_SYNC);
  }
  EXPORT_SYMBOL(default_wake_function);
--- 
-2.20.1
 
+
+Since I don't think anybody uses anything other than WF_SYNC, ever. And
+the rest of the WF_flags are used internally.
+
+Thanks Chris!
