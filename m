@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C147C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A20C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFED42080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9B42080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xpie9hxH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fk35wGEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgGWIhl (ORCPT
+        id S1727964AbgGWIho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        Thu, 23 Jul 2020 04:37:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgGWIhj (ORCPT
+        with ESMTP id S1727854AbgGWIhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:37:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D10CC0619E2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:37:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so4321036wrh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:37:38 -0700 (PDT)
+        Thu, 23 Jul 2020 04:37:40 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3960CC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:37:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so4313439wru.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:37:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=h/yM4jsYCAifUDfs6hudfcj/emQNOmj9c2iS2RlrIxw=;
-        b=Xpie9hxHzBq4jxqHPSf9F7wibwb3a9HP3clbkUc00eoy8pjV/W4Mf0LSEbRjtqH3bP
-         dqPWckK3wfcmpHLj9Zw7KsVNCOWjFzwvairARL4+0e1ygnFpI7pNK/izhnUhBYEC2IYC
-         HDgmGON72x4lKUZYVIferkCFvxag4hPQDBnJeXuFLjKJkJLOmHxi2MqnnPCcD4AbDdVP
-         akwbkWbNQq0UeQtVH2kRjdzcRFBbGU3SGXGwopU3tp94lDumwBCLk4+zKOhqTwrTeBPH
-         4Nx6D0VvaN8qHKyrcz1kCfel3ZNl5mMRqMx/ML11FX0CmmSjpSzYceyucs6iBKTYVO7K
-         JA3A==
+        bh=FsnuFGDVv4psbzCMdUgLWW9kRE3eTQu9xp4X3h9oaFY=;
+        b=Fk35wGEnjwq6EBu8VQPDLzPRCiOJHdN3EeqYfHB68aXvg5EbEis3sIMi4yxjthJxEp
+         EWf0NBo+Znqi0dwwpTvH6eA85ghs+StgkSwlu6Qp1aoaJOTJnr3Qmhr121yK4Z17j6iI
+         +GlCK64b78nUZ2aSUl+AFHRMIs/Tfsz+wQBYAfBGUyJiXVpE0i7m9mTh2u0OXY70c2mj
+         FVYcyMHOTL4vFMqwWLLVA/RflRDJgZGBXp3dlkdtnOPLwBhfXooCk3E9cngI0OHPhJGT
+         qg+7u0ui7gcdWGMWaSpzzpayf4N0Dq3q7OZRBzgX49Qy1PqfFvPYDH1Ojmwwfw8YS+DK
+         lfkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=h/yM4jsYCAifUDfs6hudfcj/emQNOmj9c2iS2RlrIxw=;
-        b=jYOGtIneRjh4NCik8HBhMzrW6C3DQv7dcDAh/+v3RoGNSqj5swVmO+7IEEfTrGUfZv
-         1j1AZrGNF8JVrHWGlGbxw5W+e4ikj5hF2ZOB0KVSX/FvaiZAAI4ih8WKgL8wLTcryTYe
-         9OIkMa2n2WNynoQvKPbiJe7x3cEBuvsvzGEItkAjisM12Kk2rNw5wjVWe5CTGEW4ANX/
-         ceoPhYEs3q7UxEtTVqVk37QgjpirTRbCrLARhEqy5lDfMl/nkN0vKd1WYrW8aLOOaHlx
-         wWJ8jL/bS1o6fWgl9/+eaRd+h2QQmQKOtBZ8h7JnPPuyArSf5J+oavQByClg1DGIZmAh
-         v0jw==
-X-Gm-Message-State: AOAM533MgRGMBfNHqfpYoInwF2lc+zkwalsEefEoVHLjI7rYsNCVh31x
-        ByiXjO+4F1JTrG5hAe1d7/pMMA==
-X-Google-Smtp-Source: ABdhPJz5TYIUOxOdMwwJ3R4WMNEjfODtAaiBr6SLeg0J5aER+9hW7ruo9M0zHJkynOvH+TQpUGelig==
-X-Received: by 2002:adf:d1b2:: with SMTP id w18mr8808wrc.235.1595493457671;
-        Thu, 23 Jul 2020 01:37:37 -0700 (PDT)
+        bh=FsnuFGDVv4psbzCMdUgLWW9kRE3eTQu9xp4X3h9oaFY=;
+        b=N/SAbLuzQmpRux/fL+ue5TqWoONfqtVEt8/Rwg3OgeFm6yLQsIu/TFJGkWOlQ81sAC
+         7X5o7F8hv+PDW2clHGi7w6eiFSSIusVPsYcJtsvef/G5C5GqpIx6djbH5B3p/tcvLTWz
+         1631o+HDh1g8H0iTwuaO9byChDLOPItytJ0h5YGeho1EnZ9/y47H9bg/k04T/9yCO/ZW
+         FpB7BaBJkPHfmvhuzshayeoRdFcyRsUf0vnfmlbZuyIbOkVoyaIqL5g4sQlPSM7W03zc
+         67EnqNlJFdW7AqsEX/bMF7DLJdbYRYHaeBS86zZyLkfdV0Ql30TwywsZUQboeZlbgwqr
+         RTBQ==
+X-Gm-Message-State: AOAM530YxuXHgEd8QyLDn23o+gULc53vYAQdueRSOwG43qunOTUr1Jud
+        sz8BVhz9K9Y6S+eWnw14g/L4DA==
+X-Google-Smtp-Source: ABdhPJzKn3ACYZScxU5ip96Xth5sdO8Dw4NeLV6xvdeJfoqBzUvJABpgi4BG0pgJ11sdybPSWBzC+w==
+X-Received: by 2002:a5d:490c:: with SMTP id x12mr2920636wrq.238.1595493458933;
+        Thu, 23 Jul 2020 01:37:38 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id h11sm3105039wrb.68.2020.07.23.01.37.36
+        by smtp.googlemail.com with ESMTPSA id h11sm3105039wrb.68.2020.07.23.01.37.37
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 01:37:37 -0700 (PDT)
+        Thu, 23 Jul 2020 01:37:38 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org, Atul Dhudase <adhudase@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 1/2] interconnect: Do not skip aggregation for disabled paths
-Date:   Thu, 23 Jul 2020 11:37:34 +0300
-Message-Id: <20200723083735.5616-2-georgi.djakov@linaro.org>
+        georgi.djakov@linaro.org, Jun Nie <jun.nie@linaro.org>,
+        Mike Tipton <mdtipton@codeaurora.org>
+Subject: [PATCH 2/2] interconnect: msm8916: Fix buswidth of pcnoc_s nodes
+Date:   Thu, 23 Jul 2020 11:37:35 +0300
+Message-Id: <20200723083735.5616-3-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200723083735.5616-1-georgi.djakov@linaro.org>
 References: <20200723083735.5616-1-georgi.djakov@linaro.org>
@@ -77,50 +78,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an interconnect path is being disabled, currently we don't aggregate
-the requests for it afterwards. But the re-aggregation step shouldn't be
-skipped, as it may leave the nodes with outdated bandwidth data. This
-outdated data may actually keep the path still enabled and prevent the
-device from going into lower power states.
+The buswidth of the pcnoc_s_* nodes is actually not 8, but
+4 bytes. Let's fix it.
 
-Reported-by: Atul Dhudase <adhudase@codeaurora.org>
-Fixes: 7d374b209083 ("interconnect: Add helpers for enabling/disabling a path")
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-Tested-by: Atul Dhudase <adhudase@codeaurora.org>
-Reviewed-by: Atul Dhudase <adhudase@codeaurora.org>
-Link: https://lore.kernel.org/r/20200721120740.3436-1-georgi.djakov@linaro.org
+Reported-by: Jun Nie <jun.nie@linaro.org>
+Reviewed-by: Mike Tipton <mdtipton@codeaurora.org>
+Fixes: 30c8fa3ec61a ("interconnect: qcom: Add MSM8916 interconnect provider driver")
+Link: https://lore.kernel.org/r/20200709130004.12462-1-georgi.djakov@linaro.org
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/core.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/interconnect/qcom/msm8916.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index e5f998744501..9e1ab701785c 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -243,6 +243,7 @@ static int aggregate_requests(struct icc_node *node)
- {
- 	struct icc_provider *p = node->provider;
- 	struct icc_req *r;
-+	u32 avg_bw, peak_bw;
- 
- 	node->avg_bw = 0;
- 	node->peak_bw = 0;
-@@ -251,9 +252,14 @@ static int aggregate_requests(struct icc_node *node)
- 		p->pre_aggregate(node);
- 
- 	hlist_for_each_entry(r, &node->req_list, req_node) {
--		if (!r->enabled)
--			continue;
--		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
-+		if (r->enabled) {
-+			avg_bw = r->avg_bw;
-+			peak_bw = r->peak_bw;
-+		} else {
-+			avg_bw = 0;
-+			peak_bw = 0;
-+		}
-+		p->aggregate(node, r->tag, avg_bw, peak_bw,
- 			     &node->avg_bw, &node->peak_bw);
- 	}
- 
+diff --git a/drivers/interconnect/qcom/msm8916.c b/drivers/interconnect/qcom/msm8916.c
+index e94f3c5228b7..42c6c5581662 100644
+--- a/drivers/interconnect/qcom/msm8916.c
++++ b/drivers/interconnect/qcom/msm8916.c
+@@ -197,13 +197,13 @@ DEFINE_QNODE(pcnoc_int_0, MSM8916_PNOC_INT_0, 8, -1, -1, MSM8916_PNOC_SNOC_MAS,
+ DEFINE_QNODE(pcnoc_int_1, MSM8916_PNOC_INT_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
+ DEFINE_QNODE(pcnoc_m_0, MSM8916_PNOC_MAS_0, 8, -1, -1, MSM8916_PNOC_INT_0);
+ DEFINE_QNODE(pcnoc_m_1, MSM8916_PNOC_MAS_1, 8, -1, -1, MSM8916_PNOC_SNOC_MAS);
+-DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 8, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
+-DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 8, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
+-DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 8, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
+-DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 8, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
+-DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 8, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
+-DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 8, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
+-DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 8, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
++DEFINE_QNODE(pcnoc_s_0, MSM8916_PNOC_SLV_0, 4, -1, -1, MSM8916_SLAVE_CLK_CTL, MSM8916_SLAVE_TLMM, MSM8916_SLAVE_TCSR, MSM8916_SLAVE_SECURITY, MSM8916_SLAVE_MSS);
++DEFINE_QNODE(pcnoc_s_1, MSM8916_PNOC_SLV_1, 4, -1, -1, MSM8916_SLAVE_IMEM_CFG, MSM8916_SLAVE_CRYPTO_0_CFG, MSM8916_SLAVE_MSG_RAM, MSM8916_SLAVE_PDM, MSM8916_SLAVE_PRNG);
++DEFINE_QNODE(pcnoc_s_2, MSM8916_PNOC_SLV_2, 4, -1, -1, MSM8916_SLAVE_SPDM, MSM8916_SLAVE_BOOT_ROM, MSM8916_SLAVE_BIMC_CFG, MSM8916_SLAVE_PNOC_CFG, MSM8916_SLAVE_PMIC_ARB);
++DEFINE_QNODE(pcnoc_s_3, MSM8916_PNOC_SLV_3, 4, -1, -1, MSM8916_SLAVE_MPM, MSM8916_SLAVE_SNOC_CFG, MSM8916_SLAVE_RBCPR_CFG, MSM8916_SLAVE_QDSS_CFG, MSM8916_SLAVE_DEHR_CFG);
++DEFINE_QNODE(pcnoc_s_4, MSM8916_PNOC_SLV_4, 4, -1, -1, MSM8916_SLAVE_VENUS_CFG, MSM8916_SLAVE_CAMERA_CFG, MSM8916_SLAVE_DISPLAY_CFG);
++DEFINE_QNODE(pcnoc_s_8, MSM8916_PNOC_SLV_8, 4, -1, -1, MSM8916_SLAVE_USB_HS, MSM8916_SLAVE_SDCC_1, MSM8916_SLAVE_BLSP_1);
++DEFINE_QNODE(pcnoc_s_9, MSM8916_PNOC_SLV_9, 4, -1, -1, MSM8916_SLAVE_SDCC_2, MSM8916_SLAVE_LPASS, MSM8916_SLAVE_GRAPHICS_3D_CFG);
+ DEFINE_QNODE(pcnoc_snoc_mas, MSM8916_PNOC_SNOC_MAS, 8, 29, -1, MSM8916_PNOC_SNOC_SLV);
+ DEFINE_QNODE(pcnoc_snoc_slv, MSM8916_PNOC_SNOC_SLV, 8, -1, 45, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC, MSM8916_SNOC_INT_1);
+ DEFINE_QNODE(qdss_int, MSM8916_SNOC_QDSS_INT, 8, -1, -1, MSM8916_SNOC_INT_0, MSM8916_SNOC_INT_BIMC);
