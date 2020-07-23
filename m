@@ -4,84 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598E7C433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0939C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6B020771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B331E20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595523422;
-	bh=sZclWHTvYQElDZfQbqDmaijz3/kQMoYx9mFMpuTuY80=;
+	s=default; t=1595523484;
+	bh=srOVX1Ay3FcD+kmtkJdzPdzlqH5EdiqUp3P3OxjCM08=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0u2tq6UvZbR0EHYcNedT/yVIa1OstSG5pBmu1uejl9i8NlmBqZxlhAtDAJVVOYrDK
-	 xV42N36pn7WXkiI7Ughthy0Oxv1doaCp/ObcZt32g+e5kUMcHEqKH4zV4bWSuVlN1M
-	 hbjeHp+namt7kKEImj0fVHCAupA1Oy6xiSp/bKJ8=
+	b=XpaxRRlJ3867W7Z8EEwlq0R0qr/4QrNzS1XQmW8VBX3exY5xs3o0e36SZCkv3U6oN
+	 aQRVWlWIznogb13A0Wfbi8B+CqUNcQJ9xhXaZjcHSsO0dCGkYRkt8M3CGfFOW2rpdY
+	 2XSt+c2WPFITaK3imbpEe1/1mOVUKmplQGcg9v7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgGWQ5B (ORCPT
+        id S1729994AbgGWQ6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:57:01 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36214 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGWQ5A (ORCPT
+        Thu, 23 Jul 2020 12:58:03 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35700 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbgGWQ6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:57:00 -0400
-Received: by mail-il1-f193.google.com with SMTP id x9so4928015ila.3;
-        Thu, 23 Jul 2020 09:57:00 -0700 (PDT)
+        Thu, 23 Jul 2020 12:58:03 -0400
+Received: by mail-il1-f195.google.com with SMTP id t18so4938731ilh.2;
+        Thu, 23 Jul 2020 09:58:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qkJiEOkbfEtZ6U8BrzXc3UILmFHYpQckFVC7GGEy+hw=;
-        b=foIsvSXdUBOB4URzPaRhOueiGii7r5v5FkeYqgWa7zTtVin7SpGTwwCJi1cBjmcpUz
-         NHlniv5STJvVaFn9eAZKJ6O0PhWIASdo0+ukQQy0Rsu/ik91+czKXDSXRFm0AKGsInBQ
-         ue4zXfW4aZLh4k/PmOWS9rPvV0JfDYFPDfxlDsV5ygLW19Zhm65YC05auksaZkogHTMw
-         YMNQj9jqpu4mBZ75sy0SmJZOHp4IrTE3CZmCyCmdvDBa0O+aPD6P8ZVWSfgt71kSHf9S
-         tc9KfFYSSl7mpkxSVrgkb9A+TcMOkLQf6BMu+W/u5CvWJ0gPzl+R7U8yl1Ek3CvmPaLx
-         vdeQ==
-X-Gm-Message-State: AOAM532bMga4chGsgdCEcmihiTi/CSu8cc2KGiGDCYxchBNKYJoqD1gT
-        1PM5SC/OllSujGdEi3VSzA==
-X-Google-Smtp-Source: ABdhPJxgpIx7lbszfuOpsa2ooYop0yyX5zAdCCqIFyhijPRxX77gge6X7qbtT5ElRCGaA5Nt9m968Q==
-X-Received: by 2002:a92:db01:: with SMTP id b1mr5727944iln.249.1595523420050;
-        Thu, 23 Jul 2020 09:57:00 -0700 (PDT)
+        bh=0LnwlI1S5EQWUCFb6m87YysKGHLu9NoBXK/tn34ZRrc=;
+        b=eRSWrrSl3XScYNTiROJ8uywP9IQiZjHz/3Lite4UMmJd/04k07wn0stuJfnUvl10Ld
+         9a9I/kn2qHQtREW4FZjoIXbNOJ7TWjAd8Wr7KgKVvsXI/9zP40KiKgB0NZ8+Pzuu/9hC
+         gfy8OS8c2udHFOxOVWad5JQg8AWDbQccPVaujyKJeYFrTl2VHKv8OWcfh8jvczwintH+
+         kmS0Qe3OsbGOcfUJvEc7qRb47iDSYKBf5Dhy1/Jx8JuFHSgjRQsUxtUhv2KNW4d1EpgV
+         qCjkXrFP/ohPEzGr8p3OS2foyD3hzXdySqlMDvfoisY0bvnRLb/mr7sD7MyPAyBQz+oI
+         mzqw==
+X-Gm-Message-State: AOAM532pBIRvtm7KDP98lelBVBNnQBvx9z66p5OgxUlOcgPQ7ACUFO4+
+        AVZC98AsRj2iFsmCYkRdlQ==
+X-Google-Smtp-Source: ABdhPJwQCiVULLsxm4VGGqM8O9N7yWxVLbkgy3IfVHRROofBGtaoCFRjZH3xwx9PT3bCh81k8FzNUA==
+X-Received: by 2002:a92:cd48:: with SMTP id v8mr6202422ilq.114.1595523482443;
+        Thu, 23 Jul 2020 09:58:02 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v10sm1726967ilj.40.2020.07.23.09.56.58
+        by smtp.gmail.com with ESMTPSA id d18sm1710697ils.34.2020.07.23.09.58.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 09:56:59 -0700 (PDT)
-Received: (nullmailer pid 527700 invoked by uid 1000);
-        Thu, 23 Jul 2020 16:56:58 -0000
-Date:   Thu, 23 Jul 2020 10:56:58 -0600
+        Thu, 23 Jul 2020 09:58:01 -0700 (PDT)
+Received: (nullmailer pid 529139 invoked by uid 1000);
+        Thu, 23 Jul 2020 16:58:00 -0000
+Date:   Thu, 23 Jul 2020 10:58:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Cc:     afd@ti.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmurphy@ti.com, sspatil@android.com,
-        sre@kernel.org, pali@kernel.org
-Subject: Re: [PATCH v17 2/4] dt-bindings: power: Convert battery.txt to
- battery.yaml
-Message-ID: <20200723165658.GA527644@bogus>
-References: <20200720204400.7351-1-r-rivera-matos@ti.com>
- <20200720204400.7351-3-r-rivera-matos@ti.com>
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, wsd_upstream@mediatek.com,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v9 1/7] pinctrl: mediatek: update pinmux definitions for
+ mt6779
+Message-ID: <20200723165800.GA529090@bogus>
+References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
+ <1595503197-15246-2-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720204400.7351-3-r-rivera-matos@ti.com>
+In-Reply-To: <1595503197-15246-2-git-send-email-hanks.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 15:43:58 -0500, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
+On Thu, 23 Jul 2020 19:19:51 +0800, Hanks Chen wrote:
+> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
 > 
-> Convert the battery.txt file to yaml and fix up the examples.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 > ---
->  .../bindings/power/supply/battery.txt         |  86 +---------
->  .../bindings/power/supply/battery.yaml        | 157 ++++++++++++++++++
->  2 files changed, 158 insertions(+), 85 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+>  include/dt-bindings/pinctrl/mt6779-pinfunc.h | 1242 ++++++++++++++++++
+>  1 file changed, 1242 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
