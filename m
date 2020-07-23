@@ -2,254 +2,337 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC87C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4D7207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC17207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jEsDtFvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgGWNyy (ORCPT
+        id S1728935AbgGWN4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:54:54 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23286 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgGWNyx (ORCPT
+        Thu, 23 Jul 2020 09:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgGWN4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:54:53 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-262--FYZ92gXNkydJSlG8cqdAQ-1; Thu, 23 Jul 2020 14:54:48 +0100
-X-MC-Unique: -FYZ92gXNkydJSlG8cqdAQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 14:54:47 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 Jul 2020 14:54:47 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0FggABJU4CAABlpkP//+uQAgAAU8xCAAAgogIABYH9g
-Date:   Thu, 23 Jul 2020 13:54:47 +0000
-Message-ID: <02938acd78fd40beb02ffc5a1b803d85@AcuMS.aculab.com>
-References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
- <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
- <20200722144213.GE2786714@ZenIV.linux.org.uk>
- <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
- <20200722155452.GF2786714@ZenIV.linux.org.uk>
- <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
- <20200722173903.GG2786714@ZenIV.linux.org.uk>
-In-Reply-To: <20200722173903.GG2786714@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 23 Jul 2020 09:56:04 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E89BC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:56:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=OKnWPXhKK/ImykNQZOuXNTzT4NqgyVCCOABx7DsyXC8=; b=jEsDtFvxDm0K4KpYEOX6fXKHoD
+        DOrCE2HqGVpCxJcsA7Bxz10Ic03ZMGEkw7SH0aONp7KFh5d+EYWJ5zeS/H8Kn64C411+vB1wlT0D1
+        Ia+BLkl3X3sOkaOCHFCATCeu7SsMF1yALaJWzQXgXD2d1VFymOnJLjZJVdGASyzcN+V7Nr9HOTL8A
+        QKoglTfUwtpxPF/U0L1VjBn/F+xQoQ20W9A5KnPt45l/Td3hJujYygUgFsu1PZYNzf3sH2GZE/Z2D
+        LbQ1qm0BmuaDooGcRfpFOj8BQgPDnIVy4OyBBF6jQ/WFSRf155Y4xeFiQDTcXsfbN/qOaXpzxG7oS
+        LXC68A0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jybhZ-0003QH-3q; Thu, 23 Jul 2020 13:56:01 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 80116983422; Thu, 23 Jul 2020 15:55:56 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 15:55:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
+        bigeasy@linutronix.de, frederic@kernel.org
+Subject: Re: [PATCH smp 2/2] kernel/smp: Provide CSD lock timeout diagnostics
+Message-ID: <20200723135556.GQ5523@worktop.programming.kicks-ass.net>
+References: <20200709235436.GA20922@paulmck-ThinkPad-P72>
+ <20200709235557.21080-2-paulmck@kernel.org>
+ <20200710103227.GD4800@hirez.programming.kicks-ass.net>
+ <20200710212834.GL9247@paulmck-ThinkPad-P72>
+ <20200710225849.GA6004@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: multipart/mixed;
-        boundary="_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200710225849.GA6004@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 10, 2020 at 03:58:49PM -0700, Paul E. McKenney wrote:
+> Sadly, the code creating the 32-bit VDSO became unhappy:
+> 
+> ------------------------------------------------------------------------
+> 
+> In file included from ././include/linux/compiler_types.h:59:0,
+>                  from <command-line>:0:
+> ./include/linux/smp.h:40:26: error: requested alignment is not a positive power of 2
+>   __aligned(sizeof(struct __call_single_data));
+>                           ^
+> ./include/linux/compiler_attributes.h:57:68: note: in definition of macro ‘__aligned’
+>  #define __aligned(x)                    __attribute__((__aligned__(x)))
+>                                                                     ^
+> scripts/Makefile.build:280: recipe for target 'arch/x86/entry/vdso/vdso32/vclock_gettime.o' failed
+> make[3]: *** [arch/x86/entry/vdso/vdso32/vclock_gettime.o] Error 1
+> 
 
-From: Al Viro
-> Sent: 22 July 2020 18:39
-> I would love to see your patch, anyway, along with the testcases and perf=
-ormance
-> comparison.
+*groan*, we have BUILD_VDSO* for that, but yeah, not pretty.
 
-See attached program.
-Compile and run (as root): csum_iov 1
+>  Thoughts?
 
-Unpatched (as shipped) 16 vectors of 1 byte take ~430 clocks on my haswell =
-cpu.
-With dsl_patch defined they take ~393.
+The biggest one is C++ comments and excessively long lines but let me go
+stare at more detail :-)
 
-The maximum throughput is ~1.16 clocks/word for 16 vectors of 1k.
-For longer vectors the data gets lost from the cache between the iterations=
-.
+> ------------------------------------------------------------------------
+> 
+> commit aba04e2ce05fbc6bb90e6fa238c22e491f6b95e3
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Tue Jun 30 13:22:54 2020 -0700
+> 
+>     kernel/smp: Provide CSD lock timeout diagnostics
+>     
+>     This commit causes csd_lock_wait() to emit diagnostics when a CPU
+>     fails to respond quickly enough to one of the smp_call_function()
+>     family of function calls.  These diagnostics are enabled by a new
+>     CSD_LOCK_WAIT_DEBUG Kconfig option that depends on DEBUG_KERNEL.
+>     
+>     This commit was inspired by an earlier patch by Josef Bacik.
+>     
+>     [ paulmck: Fix for syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com ]
+>     [ paulmck: Fix KASAN use-after-free issue reported by Qian Cai. ]
+>     [ paulmck: Fix botched nr_cpu_ids comparison per Dan Carpenter. ]
+>     [ paulmck: More #ifdef per Peter Zijlstra. ]
+>     [ paulmck: Print delays in ns rather than ms per Peter Zijlstra. ]
+>     [ paulmck: Use more CONFIG_CSD_LOCK_WAIT_DEBUG per Peter Zijlstra. ]
+>     Link: https://lore.kernel.org/lkml/00000000000042f21905a991ecea@google.com
+>     Link: https://lore.kernel.org/lkml/0000000000002ef21705a9933cf3@google.com
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: Ingo Molnar <mingo@kernel.org>
+>     Cc: Thomas Gleixner <tglx@linutronix.de>
+>     Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index 148d991..e1d8e52 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -20,6 +20,9 @@
+>  #include <linux/sched.h>
+>  #include <linux/sched/idle.h>
+>  #include <linux/hypervisor.h>
+> +#include <linux/sched/clock.h>
+> +#include <linux/nmi.h>
+> +#include <linux/sched/debug.h>
+>  
+>  #include "smpboot.h"
+>  #include "sched/smp.h"
+> @@ -34,6 +37,12 @@ struct call_function_data {
+>  
+>  static DEFINE_PER_CPU_ALIGNED(struct call_function_data, cfd_data);
+>  
+> +#ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+> +static DEFINE_PER_CPU(call_single_data_t *, cur_csd);
+> +static DEFINE_PER_CPU(smp_call_func_t, cur_csd_func);
+> +static DEFINE_PER_CPU(void *, cur_csd_info);
+> +#endif
 
-On an older Ivy Bridge cpu it never goes faster than 2 clocks/word.
-(Due to the implementation of ADC.)
+None of these are used before the other #ifdef block below, perhaps
+merge them into one?
 
-The absolute limit is 1 clock/word - limited by the memory write.
-I suspect that is achievable on Haswell with much less loop unrolling.
+>  static DEFINE_PER_CPU_SHARED_ALIGNED(struct llist_head, call_single_queue);
+>  
+>  static void flush_smp_call_function_queue(bool warn_cpu_offline);
+> @@ -96,6 +105,103 @@ void __init call_function_init(void)
+>  	smpcfd_prepare_cpu(smp_processor_id());
+>  }
+>  
+> +#ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+> +
+> +#define CSD_LOCK_TIMEOUT (5 * 1000ULL * 1000ULL * 1000ULL) /* Nanoseconds. */
 
-I had to replace the ror32() with __builtin_bswap32().
-The kernel object do contain the 'ror' instruction - even though I
-didn't find the asm for it.
+NSEC_PER_SEC, that also instantly obviates the comment
 
-=09David
+> +atomic_t csd_bug_count = ATOMIC_INIT(0);
+> +
+> +/* Record current CSD work for current CPU, NULL to erase. */
+> +static void csd_lock_record(call_single_data_t *csd)
+> +{
+> +	if (!csd) {
+> +		smp_mb(); // NULL cur_csd after unlock.
+> +		__this_cpu_write(cur_csd, NULL);
+> +		return;
+> +	}
+> +	__this_cpu_write(cur_csd, csd);
+> +	__this_cpu_write(cur_csd_func, csd->func);
+> +	__this_cpu_write(cur_csd_info, csd->info);
+> +	smp_mb(); // Update cur_csd before function call.
+> +		  // Or before unlock, as the case may be.
+> +}
+> +
+> +static __always_inline int csd_lock_wait_getcpu(call_single_data_t *csd)
+> +{
+> +	unsigned int csd_type;
+> +
+> +	csd_type = CSD_TYPE(csd);
+> +	if (csd_type == CSD_TYPE_ASYNC || csd_type == CSD_TYPE_SYNC)
+> +		return csd->dst; // Other CSD_TYPE_ values might not have ->dst.
+> +	return -1;
+> +}
+> +
+> +/*
+> + * Complain if too much time spent waiting.  Note that only
+> + * the CSD_TYPE_SYNC/ASYNC types provide the destination CPU,
+> + * so waiting on other types gets much less information.
+> + */
+> +static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1, int *bug_id)
+> +{
+> +	int cpu = -1;
+> +	call_single_data_t *cpu_cur_csd;
+> +	bool firsttime;
+> +	unsigned int flags = READ_ONCE(csd->flags);
+> +	u64 ts2, ts_delta;
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+x-mas tree ?
 
---_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_
-Content-Type: text/plain; name=csum_iov.c; charset=WINDOWS-1252
-Content-Description: csum_iov.c
-Content-Disposition: attachment; filename="csum_iov.c"; size=7804;
-	creation-date="Thu, 23 Jul 2020 13:40:14 GMT";
-	modification-date="Thu, 23 Jul 2020 13:40:14 GMT"
-Content-Transfer-Encoding: base64
+> +
+> +	if (!(flags & CSD_FLAG_LOCK)) {
+> +		if (!unlikely(*bug_id))
+> +			return true;
+> +		cpu = csd_lock_wait_getcpu(csd);
+> +		if (cpu >= 0)
+> +			pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, CPU#%02d released the lock after all. Phew!\n", *bug_id, raw_smp_processor_id(), cpu);
+> +		else
+> +			pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, the lock was released after all. Phew!\n", *bug_id, raw_smp_processor_id());
 
-LyogVGVzdCBwcm9ncmFtIGZvciBjaGVja3N1bStjb3B5CiAqCiAqIEV4ZWN1dGVzIGNzdW1fYW5k
-X2NvcHlfZnJvbV9pdGVyKCkgaW4gdXNlcnNwYWNlLgogKiBVc2VzIFBFUkZfQ09VTlRfSFdfQ1BV
-X0NZQ0xFUyB0byBzZWUgaG93IGZhc3QgaXQgcnVucy4KICogQWx3YXlzIGNvcGllcyBpNiBjb3Bp
-ZXMgb2YgdGhlIHNhbWUgYnVmZmVyIHRvIHRoZSB0YXJnZXQuCiAqIExlbmd0aCBvZiBlYWNoIGZy
-YWdtZW50IHRha2VuIGZyb20gYXJndlswXS4KICoKICogSXQgbmVlZHMgbGlua2luZyB3aXRoIGEg
-Y29weSBvZiBjc3VtLWNvcHlfNjQubyAoZWcgZnJvbSBhIGtlcm5lbCBidWlsZCkuCiAqCiAqIEZv
-ciBsYXJnZSBidWZmZXJzIHRoZSAnYWRjJyBsb29wIGRvbWluYXRlcy4KICogT24gYW55dGhpbmcg
-cHJpb3IgdG8gSGFzd2VsbCB0aGlzIGlzIDIgY2xvY2tzIHBlciBhZGMuCiAqIE9uIEhhc3dlbGwg
-YWRjIGlzIGZhc3RlciBhbmQgaXQgc2VlbXMgdG8gYXBwcm9hY2ggMS4xNiBjbG9ja3Mvd29yZC4K
-ICogSXQgb3VnaHQgdG8gYmUgcG9zc2libHkgdG8gZ2V0IHRvIDEgY2xvY2svd29yZCBvbiBJdnkg
-YnJpZGdlIChTYW5keT8pCiAqIG9yIGxhdGVyLgogKi8KLy8gZGVmaW5lIGZvciBteSB2ZXJzaW9u
-Ci8vICNkZWZpbmUgZHNsX3BhdGNoCgojaW5jbHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGlu
-dC5oPgojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxlcnJuby5oPgojaW5jbHVkZSA8dW5p
-c3RkLmg+CgojaW5jbHVkZSA8bGludXgvcGVyZl9ldmVudC5oPgojaW5jbHVkZSA8c3lzL21tYW4u
-aD4KI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CgojZGVmaW5lIGxpa2VseSh4KSAoeCkKI2RlZmlu
-ZSB1bmxpa2VseSh4KSAoeCkKCnR5cGVkZWYgdWludDMyX3QgX193c3VtOwoKc3RydWN0IGt2ZWMg
-ewoJc2l6ZV90IGlvdl9sZW47Cgl2b2lkICAgKmlvdl9iYXNlOwp9OwoKc3RydWN0IGlvdl9pdGVy
-IHsKCXVuc2lnbmVkIGludCBjb3VudDsKCXVuc2lnbmVkIGludCBucl9zZWdzOwoJY29uc3Qgc3Ry
-dWN0IGt2ZWMgKmt2ZWM7CglzaXplX3QgICAgICAgaW92X29mZnNldDsKfTsKCiNkZWZpbmUgbWlu
-KGEsYikgKChhKSA8IChiKSA/IChhKSA6IChiKSkKCnN0YXRpYyB1bnNpZ25lZCBzaG9ydCBmb2xk
-KHVuc2lnbmVkIGludCBjc3VtKQp7Cgljc3VtID0gKGNzdW0gJiAweGZmZmYpICsgKGNzdW0gPj4g
-MTYpOwoJcmV0dXJuIGNzdW0gKyAoY3N1bSA+PiAxNik7Cn0KCmV4dGVybiBfX3dzdW0gY3N1bV9w
-YXJ0aWFsX2NvcHlfZ2VuZXJpYyhjb25zdCB2b2lkICosIHZvaWQgKiwgc2l6ZV90LCBfX3dzdW0s
-IHZvaWQgKiwgdm9pZCAqKTsKCgpfX3dzdW0KY3N1bV9wYXJ0aWFsX2NvcHlfbm9jaGVjayhjb25z
-dCB2b2lkICpzcmMsIHZvaWQgKmRzdCwgaW50IGxlbiwgX193c3VtIHN1bSkKewogICAgICAgIHJl
-dHVybiBjc3VtX3BhcnRpYWxfY29weV9nZW5lcmljKHNyYywgZHN0LCBsZW4sIHN1bSwgTlVMTCwg
-TlVMTCk7Cn0KCnN0YXRpYyBpbmxpbmUgdW5zaWduZWQgYWRkMzJfd2l0aF9jYXJyeSh1bnNpZ25l
-ZCBhLCB1bnNpZ25lZCBiKQp7Cglhc20oImFkZGwgJTIsJTBcblx0IgoJICAgICJhZGNsICQwLCUw
-IgoJICAgIDogIj1yIiAoYSkKCSAgICA6ICIwIiAoYSksICJybSIgKGIpKTsKCXJldHVybiBhOwp9
-CgoKc3RhdGljIGlubGluZSBfX3dzdW0gY3N1bV9hZGQoX193c3VtIGNzdW0sIF9fd3N1bSBhZGRl
-bmQpCnsKCXJldHVybiBhZGQzMl93aXRoX2NhcnJ5KGNzdW0sIGFkZGVuZCk7Cn0KCnN0YXRpYyBp
-bmxpbmUgX193c3VtCmNzdW1fYmxvY2tfYWRkKF9fd3N1bSBjc3VtLCBfX3dzdW0gc3VtLCBpbnQg
-b2Zmc2V0KQp7CiAgICAgICAgLyogcm90YXRlIHN1bSB0byBhbGlnbiBpdCB3aXRoIGEgMTZiIGJv
-dW5kYXJ5ICovCiAgICAgICAgaWYgKG9mZnNldCAmIDEpCiAgICAgICAgICAgICAgICBzdW0gPSBf
-X2J1aWx0aW5fYnN3YXAzMihzdW0pOwoKICAgICAgICByZXR1cm4gY3N1bV9hZGQoY3N1bSwgc3Vt
-KTsKfQovLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
-Ly8vLy8vLy8vLy8vLy8vLy8vCgovKiBOZWNlc3NhcnkgYml0cyBmcm9tIGlvdl9pdGVyLmMgKi8K
-CiNkZWZpbmUgaXRlcmF0ZV9rdmVjKGksIG4sIF9fdiwgX19wLCBza2lwLCBTVEVQKSB7CVwKCXNp
-emVfdCB3YW50ZWQgPSBuOwkJCQlcCglfX3AgPSBpLT5rdmVjOwkJCQkJXAoJX192Lmlvdl9sZW4g
-PSBtaW4obiwgX19wLT5pb3ZfbGVuIC0gc2tpcCk7CVwKCWlmIChsaWtlbHkoX192Lmlvdl9sZW4p
-KSB7CQkJXAoJCV9fdi5pb3ZfYmFzZSA9IF9fcC0+aW92X2Jhc2UgKyBza2lwOwlcCgkJKHZvaWQp
-KFNURVApOwkJCQlcCgkJc2tpcCArPSBfX3YuaW92X2xlbjsJCQlcCgkJbiAtPSBfX3YuaW92X2xl
-bjsJCQlcCgl9CQkJCQkJXAoJd2hpbGUgKHVubGlrZWx5KG4pKSB7CQkJCVwKCQlfX3ArKzsJCQkJ
-CVwKCQlfX3YuaW92X2xlbiA9IG1pbihuLCBfX3AtPmlvdl9sZW4pOwlcCgkJaWYgKHVubGlrZWx5
-KCFfX3YuaW92X2xlbikpCQlcCgkJCWNvbnRpbnVlOwkJCVwKCQlfX3YuaW92X2Jhc2UgPSBfX3At
-Pmlvdl9iYXNlOwkJXAoJCSh2b2lkKShTVEVQKTsJCQkJXAoJCXNraXAgPSBfX3YuaW92X2xlbjsJ
-CQlcCgkJbiAtPSBfX3YuaW92X2xlbjsJCQlcCgl9CQkJCQkJXAoJbiA9IHdhbnRlZDsJCQkJCVwK
-fQoKCgojZGVmaW5lIGl0ZXJhdGVfYW5kX2FkdmFuY2UoaSwgbiwgdiwgSSwgQiwgSykgewkJCVwK
-CWlmICh1bmxpa2VseShpLT5jb3VudCA8IG4pKQkJCQlcCgkJbiA9IGktPmNvdW50OwkJCQkJXAoJ
-aWYgKGktPmNvdW50KSB7CQkJCQkJXAoJCXNpemVfdCBza2lwID0gaS0+aW92X29mZnNldDsJCQlc
-CgkJCWNvbnN0IHN0cnVjdCBrdmVjICprdmVjOwkJXAoJCQlzdHJ1Y3Qga3ZlYyB2OwkJCQlcCgkJ
-CWl0ZXJhdGVfa3ZlYyhpLCBuLCB2LCBrdmVjLCBza2lwLCAoSykpCVwKCQkJaWYgKHNraXAgPT0g
-a3ZlYy0+aW92X2xlbikgewkJXAoJCQkJa3ZlYysrOwkJCQlcCgkJCQlza2lwID0gMDsJCQlcCgkJ
-CX0JCQkJCVwKCQkJaS0+bnJfc2VncyAtPSBrdmVjIC0gaS0+a3ZlYzsJCVwKCQkJaS0+a3ZlYyA9
-IGt2ZWM7CQkJCVwKCQlpLT5jb3VudCAtPSBuOwkJCQkJXAoJCWktPmlvdl9vZmZzZXQgPSBza2lw
-OwkJCQlcCgl9CQkJCQkJCVwKfQoKCnN0YXRpYyBfX3dzdW0gY3N1bV9hbmRfbWVtY3B5KHZvaWQg
-KnRvLCBjb25zdCB2b2lkICpmcm9tLCBzaXplX3QgbGVuLAoJCQkgICAgICBfX3dzdW0gc3VtLCBz
-aXplX3Qgb2ZmKQp7CiNpZmRlZiBkc2xfcGF0Y2gKCXJldHVybiBjc3VtX3BhcnRpYWxfY29weV9u
-b2NoZWNrKGZyb20sIHRvLCBsZW4sIHN1bSk7CiNlbHNlCglfX3dzdW0gbmV4dCA9IGNzdW1fcGFy
-dGlhbF9jb3B5X25vY2hlY2soZnJvbSwgdG8sIGxlbiwgMCk7CglyZXR1cm4gY3N1bV9ibG9ja19h
-ZGQoc3VtLCBuZXh0LCBvZmYpOwojZW5kaWYKfQoKCgpzaXplX3QgY3N1bV9hbmRfY29weV9mcm9t
-X2l0ZXIodm9pZCAqYWRkciwgc2l6ZV90IGJ5dGVzLCBfX3dzdW0gKmNzdW0sCgkJCSAgICAgICBz
-dHJ1Y3QgaW92X2l0ZXIgKmkpCnsKCWNoYXIgKnRvID0gYWRkcjsKCV9fd3N1bSBzdW0sIG5leHQ7
-CglzaXplX3Qgb2ZmID0gMDsKCXN1bSA9ICpjc3VtOwoJaXRlcmF0ZV9hbmRfYWR2YW5jZShpLCBi
-eXRlcywgdiwgLCAsKHsKCQlzdW0gPSBjc3VtX2FuZF9tZW1jcHkoKHRvICs9IHYuaW92X2xlbikg
-LSB2Lmlvdl9sZW4sCgkJCQkgICAgICB2Lmlvdl9iYXNlLCB2Lmlvdl9sZW4sCgkJCQkgICAgICBz
-dW0sIG9mZik7CgkJb2ZmICs9IHYuaW92X2xlbjsKI2lmZGVmIGRzbF9wYXRjaAoJCWlmICh2Lmlv
-dl9sZW4gJiAxKQoJCQlzdW0gPSBfX2J1aWx0aW5fYnN3YXAzMihzdW0pOwojZW5kaWYKCQkJCgl9
-KQoJKQojaWZkZWYgZHNsX3BhdGNoCglpZiAob2ZmICYgMSkKCQlzdW0gPSBfX2J1aWx0aW5fYnN3
-YXAzMihzdW0pOwojZW5kaWYKCSpjc3VtID0gc3VtOwoJcmV0dXJuIGJ5dGVzOwp9CgovLy8vLy8v
-Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
-Ly8vLy8vCgp2b2lkIGV4X2hhbmRsZXJfdWFjY2Vzcyh2b2lkKSB7IH0Kdm9pZCBleF9oYW5kbGVy
-X2RlZmF1bHQodm9pZCkgeyB9CgpzdGF0aWMgY2hhciBkYXRhWzY1NTM2XSA9IHsKCjB4NDYsMHg1
-NiwweDIwLDB4MDQsMHgwMCwweDAyLDB4MDAsMHgwMCwweDcyLDB4NGQsMHhjNiwweDNkLDB4MzEs
-MHg4NSwweDJkLDB4YmQsCjB4ZTIsMHhlMCwweDlkLDB4M2UsMHgzYiwweDdhLDB4NzAsMHgzZCww
-eGQyLDB4ZmIsMHg4YywweGJmLDB4OTUsMHgxMCwweGE5LDB4YmUsCjB4ZWIsMHhmZCwweDI5LDB4
-NDAsMHhkNSwweDdhLDB4NjEsMHg0MCwweGRlLDB4Y2QsMHgxNCwweGJmLDB4ODEsMHgxYiwweGY2
-LDB4M2YsCjB4YmMsMHhmZiwweDE3LDB4M2YsMHg2NywweDFjLDB4NmUsMHhiZSwweGY0LDB4YzIs
-MHgwNSwweDQwLDB4MGIsMHgxMywweDc4LDB4M2YsCjB4ZmUsMHg0NywweGE3LDB4YmQsMHg1OSww
-eGMyLDB4MTUsMHgzZiwweDA3LDB4ZDAsMHhlYSwweGJmLDB4OTcsMHhmMSwweDNjLDB4M2YsCjB4
-Y2MsMHhmYSwweDZiLDB4NDAsMHg3MiwweDZhLDB4NGYsMHhiZSwweDBiLDB4ZTMsMHg3NSwweDNl
-LDB4M2MsMHg5YiwweDBlLDB4YmYsCjB4YTksMHhlYiwweGI3LDB4M2YsMHhlYiwweDRhLDB4ZWMs
-MHgzZSwweDMzLDB4OGMsMHgwYywweDNmLDB4NmEsMHhmMiwweGYzLDB4M2UsCjB4MmIsMHg0NSww
-eDg2LDB4M2YsMHg4MywweGNlLDB4OGEsMHgzZiwweGY2LDB4MDEsMHgxNiwweDQwLDB4OWMsMHgx
-NywweDQ3LDB4M2UsCjB4NDQsMHg4MywweDYxLDB4NDAsMHg3NCwweGM3LDB4NWMsMHgzZiwweGVj
-LDB4ZTcsMHg5NSwweDNmLDB4ZWUsMHgxOSwweGI1LDB4YmYsCjB4YjUsMHhmMCwweDAzLDB4YmYs
-MHhkMSwweDAyLDB4MWMsMHgzZSwweGEzLDB4NTUsMHg5MCwweGJlLDB4MWUsMHgwYiwweGExLDB4
-YmYsCjB4YTQsMHhhOCwweGI0LDB4M2YsMHhjNiwweDY4LDB4OTEsMHgzZiwweGQxLDB4YzUsMHhh
-YiwweDNmLDB4YjksMHgxNCwweDYyLDB4M2YsCjB4N2MsMHhlMCwweGI5LDB4YmYsMHhjMCwweGE0
-LDB4YjUsMHgzZCwweDZmLDB4ZDksMHhhNywweDNmLDB4OGYsMHhjNCwweGIwLDB4M2QsCjB4NDgs
-MHgyYywweDdhLDB4M2UsMHg4MywweGIyLDB4M2MsMHg0MCwweDM2LDB4ZDMsMHgxOCwweDQwLDB4
-YjcsMHhhOSwweDU3LDB4NDAsCjB4ZGEsMHhkMywweDk1LDB4M2YsMHg3NCwweDk1LDB4YzAsMHhi
-ZSwweGJiLDB4Y2UsMHg3MSwweDNlLDB4OTUsMHhlYywweDE4LDB4YmYsCjB4OTQsMHgxNywweGRk
-LDB4M2YsMHg5OCwweGE1LDB4MDIsMHgzZiwweGJiLDB4ZmIsMHhiYiwweDNlLDB4ZDAsMHg1YSww
-eDljLDB4M2YsCjB4ZDQsMHgwMCwweDliLDB4YmYsMHgzYiwweDlmLDB4MjAsMHhjMCwweDg0LDB4
-NWIsMHgwZiwweDQwLDB4NWUsMHg0OCwweDJjLDB4YmYsCgp9OwoKI2lmIDAKc3RydWN0IGt2ZWMg
-ewoJc2l6ZV90IGlvdl9sZW47Cgl2b2lkICAgKmlvdl9iYXNlOwp9OwoKc3RydWN0IGlvdl9pdGVy
-IHsKCXVuc2lnbmVkIGludCBjb3VudDsKCXVuc2lnbmVkIGludCBucl9zZWdzOwoJY29uc3Qgc3Ry
-dWN0IGt2ZWMgKmt2ZWM7CglzaXplX3QgICAgICAgaW92X29mZnNldDsKfTsKI2VuZGlmCgpzdGF0
-aWMgaW5saW5lIHVuc2lnbmVkIGludCByZHBtYyh1bnNpZ25lZCBpbnQgY291bnRlcikKewoJdW5z
-aWduZWQgaW50IGxvdywgaGlnaDsKCglhc20gdm9sYXRpbGUoInJkcG1jIiA6ICI9YSIgKGxvdyks
-ICI9ZCIgKGhpZ2gpIDogImMiIChjb3VudGVyKSk7CgoJLy8gcmV0dXJuIGxvdyBiaXRzLCBjb3Vu
-dGVyIG1pZ2h0IHRvIDMyIG9yIDQwIGJpdHMgd2lkZS4KCXJldHVybiBsb3c7Cn0KCnVuc2lnbmVk
-IGludCByZWFkX2NwdV9jeWNsZXModm9pZCkKewoJc3RhdGljIHN0cnVjdCBwZXJmX2V2ZW50X2F0
-dHIgcGVyZl9hdHRyID0gewoJCS50eXBlID0gUEVSRl9UWVBFX0hBUkRXQVJFLAoJCS5jb25maWcg
-PSBQRVJGX0NPVU5UX0hXX0NQVV9DWUNMRVMsCgkJLy8gLmNvbmZpZyA9IFBFUkZfQ09VTlRfSFdf
-SU5TVFJVQ1RJT05TLAoJCS5waW5uZWQgPSAxLAoJfTsKCXN0YXRpYyBzdHJ1Y3QgcGVyZl9ldmVu
-dF9tbWFwX3BhZ2UgKnBjOwoJdW5zaWduZWQgaW50IHNlcSwgaWR4LCBjb3VudDsKCglpZiAoIXBj
-KSB7CgkJaW50IHBlcmZfZmQ7CgkJcGVyZl9mZCA9IHN5c2NhbGwoX19OUl9wZXJmX2V2ZW50X29w
-ZW4sICZwZXJmX2F0dHIsIDAsIC0xLCAtMSwgMCk7CgkJaWYgKHBlcmZfZmQgPCAwKSB7CgkJCWZw
-cmludGYoc3RkZXJyLCAicGVyZl9ldmVudF9vcGVuIGZhaWxlZDogZXJybm8gJWRcbiIsIGVycm5v
-KTsKCQkJZXhpdCgxKTsKCQl9CgkJcGMgPSBtbWFwKE5VTEwsIDQwOTYsIFBST1RfUkVBRCwgTUFQ
-X1NIQVJFRCwgcGVyZl9mZCwgMCk7CgkJaWYgKHBjID09IE1BUF9GQUlMRUQpIHsKCQkJZnByaW50
-ZihzdGRlcnIsICJwZXJmX2V2ZW50IG1tYXAoKSBmYWlsZWQ6IGVycm5vICVkXG4iLCBlcnJubyk7
-CgkJCWV4aXQoMSk7CgkJfQoJfQoKCWRvIHsKCQlzZXEgPSBwYy0+bG9jazsKCQlhc20gdm9sYXRp
-bGUoIiI6OjoibWVtb3J5Iik7CgkJaWR4ID0gcGMtPmluZGV4OwoJCWlmICghaWR4KSAvLyAgfHwg
-IXBjLT5jYXBfdXNlcl9yZHBtYykKCQkJcmV0dXJuIDA7CgkJY291bnQgPSBwYy0+b2Zmc2V0ICsg
-cmRwbWMoaWR4IC0gMSk7CgkJYXNtIHZvbGF0aWxlKCIiOjo6Im1lbW9yeSIpOwoJfSB3aGlsZSAo
-cGMtPmxvY2sgIT0gc2VxKTsKCglyZXR1cm4gY291bnQ7Cn0KCgpzdGF0aWMgaW50IHRhcmdldFsx
-NiAqIHNpemVvZiBkYXRhIC8gNF07CgojZGVmaW5lIFBBU1NFUyAxNgppbnQgbWFpbihpbnQgYXJn
-YywgY2hhciAqKmFyZ3YpCnsKCXN0cnVjdCBrdmVjIGt2ZWNbMTZdOwoJc3RydWN0IGlvdl9pdGVy
-IGk7CglpbnQgbGVuOwoJdW5zaWduZWQgaW50IGNsb2Nrc1tQQVNTRVNdOwoJX193c3VtIGNzdW1b
-UEFTU0VTXSA9IHt9OwoJdW5zaWduZWQgaW50IHBhc3M7Cgl1bnNpZ25lZCBpbnQgZnJhZ19sZW47
-CgoJcmVhZF9jcHVfY3ljbGVzKCk7CgljbG9ja3NbMF0gPSByZWFkX2NwdV9jeWNsZXMoKTsKCglm
-cmFnX2xlbiA9IGFyZ3ZbMV0gPyBhdG9pKGFyZ3ZbMV0pIDogMDsKCWlmICghZnJhZ19sZW4gfHwg
-ZnJhZ19sZW4gPiBzaXplb2YgZGF0YSkKCQlmcmFnX2xlbiA9IHNpemVvZiBkYXRhOwoKCWZvciAo
-cGFzcyA9IDE7IHBhc3MgPCBQQVNTRVM7IHBhc3MrKykgewoJCS8qIFN1bSB0aGUgc2FtZSBkYXRh
-IDE2IHRpbWVzICovCgkJaS5jb3VudCA9IGZyYWdfbGVuICogMTY7CgkJaS5ucl9zZWdzID0gMTY7
-CgkJaS5rdmVjID0ga3ZlYzsKCQlpLmlvdl9vZmZzZXQgPSAwOwoKCQlmb3IgKGxlbiA9IDA7IGxl
-biA8IDE2OyBsZW4rKykgewoJCQlrdmVjW2xlbl0uaW92X2xlbiA9IGZyYWdfbGVuOwoJCQlrdmVj
-W2xlbl0uaW92X2Jhc2UgPSBkYXRhOwoJCX0KCQljc3VtX2FuZF9jb3B5X2Zyb21faXRlcih0YXJn
-ZXQsIGkuY291bnQsIGNzdW0gKyBwYXNzLCAmaSk7CgkJY2xvY2tzW3Bhc3NdID0gcmVhZF9jcHVf
-Y3ljbGVzKCk7Cgl9Cglmb3IgKHBhc3MgPSAxOyBwYXNzIDwgUEFTU0VTOyBwYXNzKyspIHsKCQl1
-bnNpZ25lZCBpbnQgZGVsdGEgPSBjbG9ja3NbcGFzc10gLSBjbG9ja3NbcGFzcyAtIDFdOwoJCXBy
-aW50ZigicGFzcyAlZDogbGVuZ3RoICVkLCBjc3VtICV4LCBjbG9ja3MgJWQsIGNsb2Nrcy93b3Jk
-ICU1ZlxuIiwKCQkJcGFzcywgZnJhZ19sZW4gKiAxNiwgZm9sZChjc3VtW3Bhc3NdKSwgZGVsdGEs
-IGRlbHRhIC8gKGZyYWdfbGVuICogMTYvOCArIDAuMCkpOwoJfQoKCXJldHVybiAwOwp9Cg==
---_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_--
+Excessively long line.
 
+Why not a single:
+		pr_alert("csd: CSD lock (%d) got unstuck on CPU%d, CPU%d released the lock.\n",
+			 *bug_id, raw_smp_processor_id(), cpu);
+
+Yes, it'll print CPU-1, but given you have to more or less know this
+code intimately to make sense of this stuff, that seems like a fair
+trade-off.
+
+> +		return true;
+> +	}
+> +
+> +	ts2 = sched_clock();
+> +	ts_delta = ts2 - *ts1;
+> +	if (likely(ts_delta <= CSD_LOCK_TIMEOUT)) {
+> +		cpu_relax();
+> +		return false;
+> +	}
+> +
+> +	firsttime = !*bug_id;
+> +	if (firsttime)
+> +		*bug_id = atomic_inc_return(&csd_bug_count);
+> +	cpu = csd_lock_wait_getcpu(csd);
+> +	smp_mb(); // No stale cur_csd values!
+
+> +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
+> +		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, 0));
+> +	else
+> +		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, cpu));
+
+This is a potential user-after-free, func() may free the csd when async.
+Although I don't believe anybody does so.
+
+> +	smp_mb(); // No refetching cur_csd values!
+
+The READ_ONCE() already ensures things aren't re-fetched, don't see why
+we'd need smp_mb() for that.
+
+The below is unreadable... espescially when smashed together without
+whitespace, also due to the stupid long lines it wraps and becomes a
+mangled mess of letters.
+
+> +#define CSD_FORMAT_PREFIX "csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %llu ns for CPU#%02d %pS(%ps), currently"
+> +#define CSD_ARGS_PREFIX firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), \
+> +	ts2 - ts0, cpu, csd->func, csd->info
+> +	if (cpu_cur_csd && csd != cpu_cur_csd)
+> +		pr_alert(CSD_FORMAT_PREFIX " handling prior %pS(%ps) request.\n",
+> +			 CSD_ARGS_PREFIX, cpu_cur_csd->func, cpu_cur_csd->info);
+> +	else
+> +		pr_alert(CSD_FORMAT_PREFIX " %s.\n", CSD_ARGS_PREFIX,
+> +			 !cpu_cur_csd ? "unresponsive" : "handling this request");
+
+definitely missing {}
+
+> +#undef CSD_FORMAT_PREFIX
+> +#undef CSD_ARGS_PREFIX
+
+Aside from it being unreadable, I've also completely lost the plot on
+what it's doing.
+
+> +	if (cpu >= 0) {
+> +		if (!trigger_single_cpu_backtrace(cpu))
+> +			dump_cpu_task(cpu);
+> +		if (!cpu_cur_csd) {
+> +			pr_alert("csd: Re-sending CSD lock (#%d) IPI from CPU#%02d to CPU#%02d\n", *bug_id, raw_smp_processor_id(), cpu);
+> +			arch_send_call_function_single_ipi(cpu);
+> +		}
+> +	}
+> +	dump_stack();
+> +	*ts1 = ts2;
+
+I was expecting:
+
+	*ts1 += CSD_LOCK_TIMEOUT;
+
+Not that it matters a great deal..
+
+> +	cpu_relax();
+> +
+> +	return false;
+> +}
+> +
+>  /*
+>   * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
+>   *
+> @@ -105,8 +211,26 @@ void __init call_function_init(void)
+>   */
+>  static __always_inline void csd_lock_wait(call_single_data_t *csd)
+>  {
+> +	int bug_id = 0;
+> +	u64 ts0, ts1;
+> +
+> +	ts1 = ts0 = sched_clock();
+> +	for (;;)
+> +		if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
+> +			break;
+
+This is lacking {}, also I think you can stick (at least) the
+cpu_relax() in this loop.
+
+	for (;;) {
+		if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
+			break;
+
+		cpu_relax();
+	}
+
+And possible even the wait loop itself:
+
+	for (;;) {
+		if (csd_got_unlocked(csd, ...))
+			break;
+
+		now = sched_clock();
+		if (now - ts1 > CSD_LOCK_TIMEOUT) {
+			csd_held_too_long(csd, ts0, ts1, now, ...);
+			ts1 += CSD_LOCK_TIMEOUT;
+		}
+
+		cpu_relax();
+	}
+
+that also allows breaking up that unreadable monster a bit.
+
+> +	smp_acquire__after_ctrl_dep();
+> +}
