@@ -2,123 +2,88 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A207CC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0CF22CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F9C207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TvV+b3pR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HfU7GCZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387448AbgGWDVG (ORCPT
+        id S2387536AbgGWDXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 23:21:06 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:39341 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728902AbgGWDVF (ORCPT
+        Wed, 22 Jul 2020 23:23:02 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60591 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733155AbgGWDXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 23:21:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595474465; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=GYUHQD9UFJd3/Ug179wafi2cUgd7wUBMj5u8vpLP3qU=;
- b=TvV+b3pRCLmWR0mkIEuKLKlxNcvjPEMq3eH+J/Q/dabzUFa6xGiYylcs0j1P1TnfdGTtHJmV
- h1zB5VK4sAR5oDuo00Er9tAmReHv5vA9tYTZj1/kRaXlFQGQNmCLnueuwUejRJ+e91f8O1WW
- hr/C78xIarsLtuaipNrpEUlqcbM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5f190214f9ca681bd095ffe3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 03:20:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1BF0EC43391; Thu, 23 Jul 2020 03:20:52 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 22 Jul 2020 23:23:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595474581;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=/cAlRa4t+4m+3uaHHv0KjsCFJbdWWUQ8JXAF4245fFo=;
+        b=HfU7GCZ3gShF3kia/ZHkRzXbRH6R8FdjcKXnhfP1M6kR46Gd3mNuo4oQdwTFUvF8mWWARw
+        gSGcpYPjPcLM+NnL9kAq6qkCjWc+tfkBPNbxD5ahPTnPTSf+fGPApXlso/o4dXVfhodWlV
+        L4PiWNG+vFGN6b/ZR0yT9rFiArOlgXA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-xtW9UXObMlObdaypLGxF0g-1; Wed, 22 Jul 2020 23:22:57 -0400
+X-MC-Unique: xtW9UXObMlObdaypLGxF0g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: hongwus)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22B10C433C9;
-        Thu, 23 Jul 2020 03:20:50 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 23 Jul 2020 11:20:50 +0800
-From:   hongwus@codeaurora.org
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, sh425.lee@samsung.com,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/9] scsi: ufs: Fix imbalanced scsi_block_reqs_cnt
- caused by ufshcd_hold()
-In-Reply-To: <1595471649-25675-3-git-send-email-cang@codeaurora.org>
-References: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
- <1595471649-25675-3-git-send-email-cang@codeaurora.org>
-Message-ID: <307b91fd2d7a59a3e1caa1819e2593e5@codeaurora.org>
-X-Sender: hongwus@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB83118A1DED;
+        Thu, 23 Jul 2020 03:22:55 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-13-53.pek2.redhat.com [10.72.13.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1D0D5C1BD;
+        Thu, 23 Jul 2020 03:22:49 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, mike.kravetz@oracle.com, david@redhat.com,
+        akpm@linux-foundation.org, bhe@redhat.com
+Subject: [PATCH v2 0/4] mm/hugetlb: Small cleanup and improvement
+Date:   Thu, 23 Jul 2020 11:22:44 +0800
+Message-Id: <20200723032248.24772-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Can,
-On 2020-07-23 10:34, Can Guo wrote:
-> The scsi_block_reqs_cnt increased in ufshcd_hold() is supposed to be
-> decreased back in ufshcd_ungate_work() in a paired way. However, if
-> specific ufshcd_hold/release sequences are met, it is possible that
-> scsi_block_reqs_cnt is increased twice but only one ungate work is
-> queued. To make sure scsi_block_reqs_cnt is handled by ufshcd_hold() 
-> and
-> ufshcd_ungate_work() in a paired way, increase it only if queue_work()
-> returns true.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 99bd3e4..2907828 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -1611,12 +1611,12 @@ int ufshcd_hold(struct ufs_hba *hba, bool 
-> async)
->  		 */
->  		/* fallthrough */
->  	case CLKS_OFF:
-> -		ufshcd_scsi_block_requests(hba);
->  		hba->clk_gating.state = REQ_CLKS_ON;
->  		trace_ufshcd_clk_gating(dev_name(hba->dev),
->  					hba->clk_gating.state);
-> -		queue_work(hba->clk_gating.clk_gating_workq,
-> -			   &hba->clk_gating.ungate_work);
-> +		if (queue_work(hba->clk_gating.clk_gating_workq,
-> +			       &hba->clk_gating.ungate_work))
-> +			ufshcd_scsi_block_requests(hba);
->  		/*
->  		 * fall through to check if we should wait for this
->  		 * work to be done or not.
+v1 is here:
+https://lore.kernel.org/linux-mm/20200720062623.13135-1-bhe@redhat.com/
 
-Yes, queue_work() may fail for some reasons. We should make sure 
-scsi_block_reqs_cnt is balanced. Your change looks good to me since it 
-touches scsi_block_reqs_cnt only when the condition is met.
+Patch 1~3 are small clean up.
 
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Patch 4 is adding warning message when the number of persistent huge
+pages is not changed to the exact value written to the sysfs or proc
+nr_hugepages file.
+
+v1->v2:
+  Drop the old patch 1/5 in v1 post, which was thought as typo, while
+  actually another kind of abbreviation.
+
+  Updated patch log of patch 4 which is rephrased by Mike. And move the
+  added message logging code after the hugetlb_lock dropping, this is
+  suggested by Mike.
+
+
+Baoquan He (4):
+  mm/hugetlb.c: make is_hugetlb_entry_hwpoisoned return bool
+  mm/hugetlb.c: Remove the unnecessary non_swap_entry()
+  doc/vm: fix typo in the hugetlb admin documentation
+  mm/hugetl.c: warn out if expected count of huge pages adjustment is
+    not achieved
+
+ Documentation/admin-guide/mm/hugetlbpage.rst |  2 +-
+ mm/hugetlb.c                                 | 27 +++++++++++++++-----
+ 2 files changed, 21 insertions(+), 8 deletions(-)
+
+-- 
+2.17.2
 
