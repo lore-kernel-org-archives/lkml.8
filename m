@@ -2,84 +2,84 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11695C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF89EC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25D72065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF01F2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595538451;
+	bh=TNfGXAveyZpzu10Q7xBJu2gjN/MC2AiNzJk2+KEQCt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E4Kpr7Nh8anhp4Kw2aFWY7eiu4xVQbYB6apS7PAYxEhSs7WETS2wmIjuYun3e0/Vt
+	 xqmAcsYvINjsH6y12V4+qUepFv8gJLqPhILyDycIOGt9fLw6biBKXItCqnpqAWITNn
+	 0PLM2ltx3ht9jhwa6gJf9J6Scn6iHLkIMMxhu4Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgGWVHK (ORCPT
+        id S1726666AbgGWVHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:07:10 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52195 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgGWVHJ (ORCPT
+        Thu, 23 Jul 2020 17:07:30 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33026 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgGWVHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:07:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id l1so4885942ioh.18
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:07:09 -0700 (PDT)
+        Thu, 23 Jul 2020 17:07:30 -0400
+Received: by mail-io1-f67.google.com with SMTP id d18so7779093ion.0;
+        Thu, 23 Jul 2020 14:07:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=xSJ7/AO/6lFKOpWNdlJkZ7IuUzYOAbFTfGyilIxrJTA=;
-        b=uVnV//Kl5t0WZHIET0H4OGB0pCMYq24XMhsFmrI5/PTpZf6+fGNKCiGg4NMpkT3Voi
-         Y0fmY9Hua+qINrHI2jq45S8tuRJaaoAR6VGULxIJYrgW8xpFcToUHd81Qg2NLO9N1byt
-         MATYYBNKE9oxVjMTCC8Jurx8P0f/OE8n11cO/3GYTy3m6vhi2Ki1ByNRn+xpPPADhBLC
-         WBbGDeVBl03+RDHZOsaWl9qfccLW1/GbikfUA5QS5k+XT3jVVZIZMTEPiFwLM5CfE0bW
-         xMXZMqFSrkJskffg3CBc9HZehE+G0Xezy5jBX2HYkuxO6I/QFeetMpbzIVFVkA8u1P7y
-         tgHw==
-X-Gm-Message-State: AOAM531NIhSP9iCMk1sjud0gBWKVOlnj/3Ex/xKQqKzUbH1/LOj/JQvT
-        vUPucgqnlqXEBNnZkV5W/IGIBqhP3rtf/iKX2WXc1DMCOL6+
-X-Google-Smtp-Source: ABdhPJxYUTSFYLbJirO5SmxzloqaeYADQ3DxhbFAabRldIzWkPHkVFQjpT7AWxxHG1jFZHTks11qkmQ3pLU2rwcKL+yfzctTrFuc
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DqiJg+iVm+KO76sfvCQ1PcB5FB3q5avv7am6yCHETiw=;
+        b=IszeoXuHRUWe7GB6szpC/jmrtFHFzEqAFOwCwzEHA6jNzdc+tQtNMrQaRWxyolnAdz
+         kfcr/VReUFqUQnWboe2G4tICjaBdVYdq96/mk7tulwOB0biRMUq2RkzW+46qCcmxQ8gm
+         1mrxhfnoZxdN+GM6vtXHpkPEu5fd1/wk44KAN+fNuNCCuW6M1FzMVO6sDtbuUNo03en1
+         lyctyo+F3blt196pkwge6GO+aRkhqGatpcyYMti5d0GmYX+/KuqWaWHrZkAsGFHQORGw
+         D1qmLhHJ/yUqf6f+b9JkG0IR3lj8npjGafQKmgP7SyB6zPmJdIeBnr3u0cScdJaVrr0K
+         n/kw==
+X-Gm-Message-State: AOAM531+v3YckeJvePTnHoPGTvtos5p05kQd8iOnFKDF6w9XPtEcn7hz
+        txfje9xMt9T346JgDEycNRY7l6g42g==
+X-Google-Smtp-Source: ABdhPJw41flIcVg/c3woDitOvrf2Wnz/THl1yI2iKhN3PaLn3hSvaeMmDaHtlOtXhqqQjr/qpfOk1Q==
+X-Received: by 2002:a5d:97d1:: with SMTP id k17mr6942837ios.100.1595538449560;
+        Thu, 23 Jul 2020 14:07:29 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id g1sm2001627ilk.51.2020.07.23.14.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 14:07:28 -0700 (PDT)
+Received: (nullmailer pid 860277 invoked by uid 1000);
+        Thu, 23 Jul 2020 21:07:26 -0000
+Date:   Thu, 23 Jul 2020 15:07:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christian Hewitt <christianshewitt@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: amlogic: add support for the
+ Beelink GS-King-X
+Message-ID: <20200723210726.GA860231@bogus>
+References: <20200718052258.2890-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:4f19:: with SMTP id d25mr219660iob.190.1595538428817;
- Thu, 23 Jul 2020 14:07:08 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 14:07:08 -0700
-In-Reply-To: <000000000000ba65ba05a2fd48d9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000467ece05ab223d81@google.com>
-Subject: Re: kernel BUG at net/core/dev.c:LINE! (3)
-From:   syzbot <syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com>
-To:     andriy.shevchenko@linux.intel.com, andy@greyhouse.net,
-        andy@infradead.org, arnd@arndb.de, davem@davemloft.net,
-        dvhart@infradead.org, gregkh@linuxfoundation.org,
-        j.vosburgh@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, platform-driver-x86@vger.kernel.org,
-        skunberg.kelsey@gmail.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vfalico@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718052258.2890-1-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+On Sat, 18 Jul 2020 05:22:57 +0000, Christian Hewitt wrote:
+> The Shenzen AZW (Beelink) GS-King-X is based on the Amlogic W400 reference
+> board with an S922X-H chip.
+> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-commit 5a707af10da95a53a55011a612e69063491020d4
-Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Fri Apr 21 13:36:06 2017 +0000
-
-    platform/x86: wmi: Describe function parameters
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a9ad40900000
-start commit:   994e99a9 Merge tag 'platform-drivers-x86-v5.8-2' of git://..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=16a9ad40900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a9ad40900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
-dashboard link: https://syzkaller.appspot.com/bug?extid=af23e7f3e0a7e10c8b67
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ea63cf100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14afdb9f100000
-
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-Fixes: 5a707af10da9 ("platform/x86: wmi: Describe function parameters")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Acked-by: Rob Herring <robh@kernel.org>
