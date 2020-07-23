@@ -2,407 +2,157 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2829C43463
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E2C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F9F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3D720658
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="KPoB8Ki2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgGWGRL (ORCPT
+        id S1726653AbgGWGSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:17:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37218 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbgGWGRK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:17:10 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N62qR9183755;
-        Thu, 23 Jul 2020 02:17:03 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f1gtcwjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 02:17:03 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N6FD8J002932;
-        Thu, 23 Jul 2020 06:17:00 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq85u7m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 06:17:00 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N6GwRU59572332
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 06:16:58 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5675542041;
-        Thu, 23 Jul 2020 06:16:58 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3147742045;
-        Thu, 23 Jul 2020 06:16:57 +0000 (GMT)
-Received: from bostonp9.aus.stglabs.ibm.com (unknown [9.3.23.179])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 06:16:57 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        ego@linux.vnet.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [RFC] cpuidle : Add support for pseudo-cpuidle driver
-Date:   Thu, 23 Jul 2020 01:13:39 -0500
-Message-Id: <20200723061339.9747-1-huntbag@linux.vnet.ibm.com>
+        Thu, 23 Jul 2020 02:18:10 -0400
+Received: from mail-am6eur05on2136.outbound.protection.outlook.com ([40.107.22.136]:10337
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725536AbgGWGSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 02:18:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J7tM9kM2Ebzs0jx8cCbXXKKT/bZq24hwpSaFP1DqPB2dUpO/zEajBmrEem3BgZZs4d4u2vvlj0U1lYnd1I8WIcP5nHXxjXc6CuRZyGoXvlXKBqtA8adDPzJvv8ZOMzTCiBqEtkvYrL3NNsuLbwuQoTr4E2FqhiixFStSItEMrliEBnVWaQQwf0Knzd98lBtGQp7mPtKlyHKHOOcNwej+vg1tjiU63FdipwD9gTNH0by0ljt3qlLYZURfFq7mtRINDxaflW8XRkyK4JycMHVwlGwI8nGQmCwWEqAZYK3ac7nN0wqA8rOX5b5SPtK3IssckVGAYA/CVSzR+T2hms0S9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KAYzWfbFvxnce6TWsJ8eKgE613lRZZGQApr+HX5A2ig=;
+ b=ib2jhf75+GcQ8F4m6Mn6jtRu4lktkVTv2m4S5mmhvSDY0vntSrKMDfeM2+lBFfbICm2zOmbzkj41tC7ueGoXxAB+FLX9wXumnQ5llix2lc5sIjfnn6WdF9kFh/2WLxa6PmzkUUFr6a5q7BvAUaOkzaF6KGeBZ5AE5VY5Zz/3lmFczPdjHRSAELZ83HSmNXktwfZ3VZFGNQePWrAq3CPYljJju1oWMwlsL65FZtXDNjZI5PY1fJWeslUvN6MwG3TpMtmeBZRvUpWAUo5Lcutb6rjL9ZUpSyPzK2yF1+qzLRRjvvQxWSTYi+owHN8wPs+EXkM9lJnR126BZ4+Xap7DNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KAYzWfbFvxnce6TWsJ8eKgE613lRZZGQApr+HX5A2ig=;
+ b=KPoB8Ki2MGoDQ6tpe0hnQL/d/norNeK1TZCcu7MYTVKxyl426ySVymNhU0K18+Siwd3ghyQ38lPKgr8jRVeEdh0wHl4fQUWjfIvsg8JRY0VJOAAyaQ3AQo/QKmNk2IzgkpqWSCLlAA5XpLlovdYMpfWICRgf9mmfHo4VUZiWVzM=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
+ by DB3PR0202MB3548.eurprd02.prod.outlook.com (2603:10a6:8:8::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Thu, 23 Jul
+ 2020 06:18:04 +0000
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::68d4:6b:d077:19a9]) by DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::68d4:6b:d077:19a9%4]) with mapi id 15.20.3216.020; Thu, 23 Jul 2020
+ 06:18:04 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     oded.gabbay@gmail.com
+Cc:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Subject: [PATCH] habanalabs: Fix memory leak in error flow of context init
+Date:   Thu, 23 Jul 2020 09:17:57 +0300
+Message-Id: <20200723061757.12906-1-ttayar@habana.ai>
 X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_01:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- phishscore=0 spamscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230048
+Content-Type: text/plain
+X-ClientProxiedBy: AM3PR07CA0082.eurprd07.prod.outlook.com
+ (2603:10a6:207:6::16) To DB8PR02MB5468.eurprd02.prod.outlook.com
+ (2603:10a6:10:ef::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ttayar-VM.habana-labs.com (213.57.90.10) by AM3PR07CA0082.eurprd07.prod.outlook.com (2603:10a6:207:6::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend Transport; Thu, 23 Jul 2020 06:18:03 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [213.57.90.10]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 57478071-b7b7-4e90-d680-08d82ed0287a
+X-MS-TrafficTypeDiagnostic: DB3PR0202MB3548:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB3PR0202MB3548516714B14CAA0FD0340ED2760@DB3PR0202MB3548.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DzC2JAHFIFvRURbTZhO8trbScpwCkoj/LpkNmNXHW7pKMilIOA8s7yLMHGoG9lkpw/m/E2Gtn8ktFbJ8PK2nTwol5E0ewOzZ4e0fa0iKjQRIyUekIFzBhi2aN6ipQdPJOkxqZSqC8v+DS4CqzvNqMi049oxMZEcK1XtJkLJ3EF00gY8MomtDQbajhvIET/g1WWftRYxfiAMQl79IMBSy8CaLkDp9oG0cOapXDDi9iDU17/xou8fD3wAahhg2x1JarHlF8JyH2JPFYmUG8G9vNNno4qI+LRSELcZmci4ZTMO0MmLmIMWkw/bhJPHN3EvzYhDLGhIAB778bbe1VClK8g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(39850400004)(396003)(366004)(107886003)(186003)(2906002)(6916009)(26005)(6512007)(16526019)(6486002)(8676002)(478600001)(6666004)(36756003)(83380400001)(52116002)(316002)(8936002)(1076003)(66476007)(2616005)(956004)(86362001)(55236004)(66946007)(6506007)(4326008)(5660300002)(66556008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: /hWMGiNwOQxubcBcCkJBzI+9FyOWL0/s8BUWm8Aagt55s0vrVt42kgEAK3hWV5uYI46VCa1VORfLe7J06thvybV9IxGhdrFQKxSuxpxspLh/rRsnqfOqhiT6I2Bg5x75InhmCJ0+vcqsyU8rb6sXkcmdfSV0FJu/eQePSGwtBB6m9CJX2IQDmp2FuBJruCfqtJAQb1HPn/bYMsuXBusI4v9zHY9BzjtbNC3p6wsxypXRbeYY1T1HzGRthcGW3ZxEcHz6BSInIEi7997Lm+qEGWkUQr+5HkSwdemDlnZ9q8fX2KR5koHgHHfRF3DcA+c7HE7hpUgVQXMsIyATb4JIkZsHUptr4IbX1uNwobyaKAjtrcN7bwlfVfXsKn4Iddy4zKqphd2dzT9bURQHrfaQrC4NCC9KDcxPviz51+xoEXlIxDB3/op6bzyr/MzUZRd98z5Qd0DG4KHzvlq1+Joodx94jL3vNosjPIh2fsVXN9A=
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57478071-b7b7-4e90-d680-08d82ed0287a
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 06:18:04.2667
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YfB7O3IA48NkCS6pyUdyF0RSXnVfmQYld2iJ9VWdzEZlKu/gVEB91mPxys71bCuRijFVes3dRZQlJzwT+0K/gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3548
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option adds support for a testing cpuidle driver, which allows
-user to define custom idle states with their respective latencies and
-residencies. This is useful for testing the behaviour of governors on
-customized set of idle states.
+Add a missing free of the cs_pending array in the error flow of context
+init.
 
-This can be used as of now by hard-coding the customized set of cpuidle
-states in the driver. Will add the capability of this driver to be used
-as a module in subsequent patches.
+Fixes: 4b49c5b118b9 ("habanalabs: Use pending cs amount per asic")
 
-Original idea and discussion for this patch can be found at:
-https://lkml.org/lkml/2019/12/17/655
-
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 ---
- drivers/cpuidle/Kconfig        |   9 ++
- drivers/cpuidle/Makefile       |   1 +
- drivers/cpuidle/cpuidle-test.c | 276 +++++++++++++++++++++++++++++++++
- 3 files changed, 286 insertions(+)
- create mode 100644 drivers/cpuidle/cpuidle-test.c
+ drivers/misc/habanalabs/common/context.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index c0aeedd66f02..1d73153a0e35 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -71,6 +71,15 @@ config HALTPOLL_CPUIDLE
- 	 before halting in the guest (more efficient than polling in the
- 	 host via halt_poll_ns for some scenarios).
+diff --git a/drivers/misc/habanalabs/common/context.c b/drivers/misc/habanalabs/common/context.c
+index b75a20364fad..3e375958e73b 100644
+--- a/drivers/misc/habanalabs/common/context.c
++++ b/drivers/misc/habanalabs/common/context.c
+@@ -138,36 +138,38 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+ 		rc = hl_mmu_ctx_init(ctx);
+ 		if (rc) {
+ 			dev_err(hdev->dev, "Failed to init mmu ctx module\n");
+-			goto mem_ctx_err;
++			goto err_free_cs_pending;
+ 		}
+ 	} else {
+ 		ctx->asid = hl_asid_alloc(hdev);
+ 		if (!ctx->asid) {
+ 			dev_err(hdev->dev, "No free ASID, failed to create context\n");
+-			return -ENOMEM;
++			rc = -ENOMEM;
++			goto err_free_cs_pending;
+ 		}
  
-+config TEST_CPUIDLE
-+	tristate "cpuidle test driver"
-+	default m
-+	help
-+	 This option enables a testing cpuidle driver, which allows to user
-+	 to define custom idle states with their respective latencies and residencies.
-+	 This is useful for testing the behaviour of governors on different
-+	 set of idle states.
-+
- endif
+ 		rc = hl_vm_ctx_init(ctx);
+ 		if (rc) {
+ 			dev_err(hdev->dev, "Failed to init mem ctx module\n");
+ 			rc = -ENOMEM;
+-			goto mem_ctx_err;
++			goto err_asid_free;
+ 		}
  
- config ARCH_NEEDS_CPU_IDLE_COUPLED
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index f07800cbb43f..68ea7dc257b5 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED) += coupled.o
- obj-$(CONFIG_DT_IDLE_STATES)		  += dt_idle_states.o
- obj-$(CONFIG_ARCH_HAS_CPU_RELAX)	  += poll_state.o
- obj-$(CONFIG_HALTPOLL_CPUIDLE)		  += cpuidle-haltpoll.o
-+obj-$(CONFIG_TEST_CPUIDLE)		  += cpuidle-test.o
+ 		rc = hdev->asic_funcs->ctx_init(ctx);
+ 		if (rc) {
+ 			dev_err(hdev->dev, "ctx_init failed\n");
+-			goto ctx_init_err;
++			goto err_vm_ctx_fini;
+ 		}
+ 	}
  
- ##################################################################################
- # ARM SoC drivers
-diff --git a/drivers/cpuidle/cpuidle-test.c b/drivers/cpuidle/cpuidle-test.c
-new file mode 100644
-index 000000000000..399729440569
---- /dev/null
-+++ b/drivers/cpuidle/cpuidle-test.c
-@@ -0,0 +1,276 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  cpuidle-test - Test driver for cpuidle.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/moduleparam.h>
-+#include <linux/cpuidle.h>
-+#include <linux/cpu.h>
-+#include <linux/module.h>
-+#include <linux/sched/idle.h>
-+#include <linux/sched/clock.h>
-+#include <linux/sched/idle.h>
-+
-+#define CPUIDLE_STATE_MAX	10
-+#define MAX_PARAM_LENGTH	100
-+
-+static unsigned int nr_states = 4;
-+static unsigned int sim_type = 1;
-+static char name[MAX_PARAM_LENGTH];
-+static char latency_us[MAX_PARAM_LENGTH];
-+static char residency_us[MAX_PARAM_LENGTH];
-+
-+
-+module_param(nr_states, uint, 0644);
-+module_param(sim_type, uint, 0644);
-+module_param_string(name, name, MAX_PARAM_LENGTH, 0644);
-+module_param_string(latency_us, latency_us, MAX_PARAM_LENGTH, 0644);
-+module_param_string(residency_us, residency_us, MAX_PARAM_LENGTH, 0644);
-+
-+static struct cpuidle_driver test_cpuidle_driver = {
-+	.name		= "test_cpuidle",
-+	.owner		= THIS_MODULE,
-+};
-+
-+static struct cpuidle_state *cpuidle_state_table __read_mostly;
-+
-+static struct cpuidle_device __percpu *test_cpuidle_devices;
-+static enum cpuhp_state test_hp_idlestate;
-+
-+
-+static int __cpuidle idle_loop(struct cpuidle_device *dev,
-+				struct cpuidle_driver *drv,
-+				int index)
-+{
-+	u64 time_start;
-+
-+	local_irq_enable();
-+	if (!current_set_polling_and_test()) {
-+		while (!need_resched())
-+			cpu_relax();
-+	}
-+
-+	time_start = local_clock();
-+
-+	while (local_clock() - time_start < drv->states[index].exit_latency)
-+
-+	current_clr_polling();
-+
-+	return index;
-+}
-+
-+static struct cpuidle_state cpuidle_states[CPUIDLE_STATE_MAX] = {
-+	{ /* Snooze */
-+		.name = "snooze",
-+		.exit_latency = 0,
-+		.target_residency = 0,
-+		.enter = idle_loop },
-+};
-+
-+static struct cpuidle_state cpuidle_states_ppc[] = {
-+	{	.name = "snooze",
-+		.exit_latency = 0,
-+		.target_residency = 0,
-+		.enter = idle_loop },
-+	{
-+		.name = "stop0",
-+		.exit_latency = 2,
-+		.target_residency = 20,
-+		.enter = idle_loop },
-+	{
-+		.name = "stop1",
-+		.exit_latency = 5,
-+		.target_residency = 50,
-+		.enter = idle_loop },
-+	{
-+		.name = "stop2",
-+		.exit_latency = 10,
-+		.target_residency = 100,
-+		.enter = idle_loop },
-+};
-+
-+static struct cpuidle_state cpuidle_states_intel[] = {
-+	{	.name = "poll",
-+		.exit_latency = 0,
-+		.target_residency = 0,
-+		.enter = idle_loop },
-+	{
-+		.name = "c1",
-+		.exit_latency = 2,
-+		.target_residency = 2,
-+		.enter = idle_loop },
-+	{
-+		.name = "c1e",
-+		.exit_latency = 10,
-+		.target_residency = 20,
-+		.enter = idle_loop },
-+	{
-+		.name = "c3",
-+		.exit_latency = 80,
-+		.target_residency = 211,
-+		.enter = idle_loop },
-+};
-+
-+int cpuidle_cpu_online(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev;
-+
-+	dev = per_cpu_ptr(test_cpuidle_devices, cpu);
-+	if (!dev->registered) {
-+		dev->cpu = cpu;
-+		if (cpuidle_register_device(dev)) {
-+			pr_notice("cpuidle_register_device %d failed!\n", cpu);
-+			return -EIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+int cpuidle_cpu_dead(unsigned int cpu)
-+{
-+	struct cpuidle_device *dev;
-+
-+	dev = per_cpu_ptr(test_cpuidle_devices, cpu);
-+	if (dev->registered)
-+		cpuidle_unregister_device(dev);
-+
-+	return 0;
-+}
-+
-+int cpuidle_driver_init(void)
-+{
-+	int idle_state;
-+	struct cpuidle_driver *drv = &test_cpuidle_driver;
-+
-+	drv->state_count = 0;
-+
-+	for (idle_state = 0; idle_state < nr_states; ++idle_state) {
-+		/* Is the state not enabled? */
-+		if (cpuidle_state_table[idle_state].enter == NULL)
-+			continue;
-+
-+		drv->states[drv->state_count] =	/* structure copy */
-+			cpuidle_state_table[idle_state];
-+
-+		drv->state_count += 1;
-+	}
-+
-+	return 0;
-+}
-+
-+int add_cpuidle_states(void)
-+{
-+	/* Parse the module param and initialize the idle states here
-+	 * in cpuidle_state_table.
-+	 */
-+	char *this_param;
-+	char *input_name = name;
-+	char *input_res = residency_us;
-+	char *input_lat = latency_us;
-+	int index = 1;
-+	long temp;
-+	int rc;
-+
-+	switch (sim_type) {
-+	case 1:
-+		cpuidle_state_table = cpuidle_states_ppc;
-+		return 0;
-+	case 2:
-+		cpuidle_state_table = cpuidle_states_intel;
-+		return 0;
-+	case 3:
-+		break;
-+	default:
-+		pr_warn("Sim value out of bound\n");
-+		break;
-+	}
-+
-+	if (strnlen(input_name, MAX_PARAM_LENGTH)) {
-+		while ((this_param = strsep(&input_name, ",")) && index <= nr_states) {
-+			strcpy(cpuidle_states[index].name, this_param);
-+			cpuidle_states[index].enter = idle_loop;
-+			index++;
-+		}
-+	}
-+
-+	if (strnlen(input_res, MAX_PARAM_LENGTH)) {
-+		index = 1;
-+		while ((this_param = strsep(&input_res, ",")) && index <= nr_states) {
-+			rc = kstrtol(this_param, 10, &temp);
-+			cpuidle_states[index].target_residency = temp;
-+			index++;
-+		}
-+	}
-+
-+	if (strnlen(input_lat, MAX_PARAM_LENGTH)) {
-+		index = 1;
-+		while ((this_param = strsep(&input_lat, ",")) && index <= nr_states) {
-+			rc = kstrtol(this_param, 10, &temp);
-+			cpuidle_states[index].exit_latency = temp;
-+			index++;
-+		}
-+	}
-+
-+	cpuidle_state_table = cpuidle_states;
-+	return nr_states;
-+}
-+
-+void test_cpuidle_uninit(void)
-+{
-+	if (test_hp_idlestate)
-+		cpuhp_remove_state(test_hp_idlestate);
-+	cpuidle_unregister_driver(&test_cpuidle_driver);
-+
-+	free_percpu(test_cpuidle_devices);
-+	test_cpuidle_devices = NULL;
-+}
-+
-+int __init test_cpuidle_init(void)
-+{
-+	int retval;
-+
-+	add_cpuidle_states();
-+	cpuidle_driver_init();
-+	retval = cpuidle_register(&test_cpuidle_driver, NULL);
-+	if (retval) {
-+		printk(KERN_DEBUG "Registration of test driver failed.\n");
-+		return retval;
-+	}
-+
-+	test_cpuidle_devices = alloc_percpu(struct cpuidle_device);
-+	if (test_cpuidle_devices == NULL) {
-+		cpuidle_unregister_driver(&test_cpuidle_driver);
-+		return -ENOMEM;
-+	}
-+
-+	retval = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+					   "cpuidle/powernv:online",
-+					   cpuidle_cpu_online,
-+					   cpuidle_cpu_dead);
-+
-+	if (retval < 0) {
-+		test_cpuidle_uninit();
-+	} else {
-+		test_hp_idlestate = retval;
-+		retval = 0;
-+	}
-+
-+	return retval;
-+}
-+
-+void __exit test_cpuidle_exit(void)
-+{
-+	test_cpuidle_uninit();
-+}
-+
-+module_init(test_cpuidle_init);
-+module_exit(test_cpuidle_exit);
-+MODULE_DESCRIPTION("Test Cpuidle Driver");
-+MODULE_AUTHOR("Abhishek Goel");
-+MODULE_LICENSE("GPL");
-+
+ 	return 0;
+ 
+-ctx_init_err:
++err_vm_ctx_fini:
+ 	hl_vm_ctx_fini(ctx);
+-mem_ctx_err:
+-	if (ctx->asid != HL_KERNEL_ASID_ID)
+-		hl_asid_free(hdev, ctx->asid);
++err_asid_free:
++	hl_asid_free(hdev, ctx->asid);
++err_free_cs_pending:
++	kfree(ctx->cs_pending);
+ 
+ 	return rc;
+ }
 -- 
 2.17.1
 
