@@ -2,131 +2,142 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408CCC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08910C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE1F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gjZSD2aV"
+	by mail.kernel.org (Postfix) with ESMTP id DD5002067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgGWT3f (ORCPT
+        id S1726381AbgGWT36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39456 "EHLO
+        Thu, 23 Jul 2020 15:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWT3f (ORCPT
+        with ESMTP id S1725894AbgGWT36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:29:35 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CAAC0619E2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:29:35 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z3so3516885pfn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:29:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=K/x2tOMHGvw/i83L77yt0mj2n5UBoDKQeUt3On2GUd4=;
-        b=gjZSD2aVJt8KcTJCKakJp6DrtQOApap9cF9iHFVrvOrrEw0QRXx03CQBbwXQHx54uT
-         NFg23hfGx0s1WUwhxJtK9P1CthK49t5QsPzXHaKkzri7vtgwnzKu6+FlAAhT/5ZLeGjg
-         l0RG+ahYtiYxkwdvLROyBjK9wk4sTbZuIHRX0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=K/x2tOMHGvw/i83L77yt0mj2n5UBoDKQeUt3On2GUd4=;
-        b=MAO+eHNCftky/zjtETPR32vNvcU2CZVENmh3MNwLtL9fv7nzUnxgjEeKOjuNLR7KyR
-         letyq0pDC8QrWDphxuj92Pjs74wBavSo4cvQPrpVveRyyXmIIk3jdhrb7WX8LQoafWeB
-         RThy0assutOFuG9hgk+cfXdzuHXc5h1nXIXyYLXDPjnWUGECfzYd/nooBsDEtul5Ee0q
-         ToshF2Bdkg/uWT8OvweAN5PK8FumUZWgeYjRde5mXnx3iXstMwCJj1dts/pqWPuj93CL
-         9xzmKMMWuOibkRlmO0EEEu2IfmTP6CMRdaSLTgRyDQbEFu3DqIOaEJ3FRo4GzShQquGb
-         EQSA==
-X-Gm-Message-State: AOAM530r9c/ZrMZymopo2ZSPszKsh/BPBpwU1uSd6forNKxOJAmXq8pi
-        P5VrK3kN9qiBdSXi2y0cgZ9q6g==
-X-Google-Smtp-Source: ABdhPJx0H6UfXHELhN9FOg1zfdumImKJnOs6681TwMRzBjmHidxeuFNbFoBWBYY0BxdEqhcGHRVd0A==
-X-Received: by 2002:a63:e04c:: with SMTP id n12mr5257110pgj.388.1595532574358;
-        Thu, 23 Jul 2020 12:29:34 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id b4sm3181271pjn.38.2020.07.23.12.29.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 12:29:33 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 Jul 2020 15:29:58 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85235C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:29:58 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id CEBFEBC1AD;
+        Thu, 23 Jul 2020 19:29:55 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] staging: comedi: cb: Replace HTTP links with HTTPS ones
+Date:   Thu, 23 Jul 2020 21:28:42 +0200
+Message-Id: <20200723192842.72124-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200414143536.v10.1.I30e2a8ff8cc4ad1ffb65df09ad933e5b4d9f16f8@changeid>
-References: <20200414143536.v10.1.I30e2a8ff8cc4ad1ffb65df09ad933e5b4d9f16f8@changeid>
-Subject: Re: [PATCH v10 1/2] dt-bindings: iio: Add bindings for sx9310 sensor
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org
-To:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 23 Jul 2020 12:29:33 -0700
-Message-ID: <159553257307.3847286.4297914412173341085@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Daniel Campello (2020-04-14 13:36:07)
-> Adds device tree bandings for sx9310 sensor.
->=20
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-I don't see this picked up anywhere in linux-next. Can we squash in this
-change? Typically the voltage regulator names match the data sheet, and
-in this case the datasheet names them vdd and svdd. Also, they're not
-strictly necessary to be in the binding if they're always on supplies so
-we can remove them from the required section and DT files can omit them
-if they don't care to actively power manage them.
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
----8<---
-diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310=
-.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-index b52ffdac678b..ba734ee868c7 100644
---- a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-+++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-@@ -31,12 +31,15 @@ properties:
-       available or that a close/far proximity event has happened.
-     maxItems: 1
-=20
--  power-supply: true
-+  vdd-supply:
-+    description: Main power supply
-+
-+  svdd-supply:
-+    description: Host interface power supply
-=20
- required:
-   - compatible
-   - reg
--  - power-supply
-=20
- additionalProperties: false
-=20
-@@ -51,6 +54,7 @@ examples:
-         reg =3D <0x28>;
-         interrupt-parent =3D <&pio>;
-         interrupts =3D <5 IRQ_TYPE_LEVEL_LOW 5>;
--        power-supply =3D <...>;
-+        vdd-supply =3D <&pp3300_a>;
-+        svdd-supply =3D <&pp1800_prox>;
-       };
-     };
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/staging/comedi/drivers/cb_pcidas.c   | 2 +-
+ drivers/staging/comedi/drivers/cb_pcidas64.c | 2 +-
+ drivers/staging/comedi/drivers/cb_pcidda.c   | 2 +-
+ drivers/staging/comedi/drivers/cb_pcimdas.c  | 6 +++---
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/comedi/drivers/cb_pcidas.c b/drivers/staging/comedi/drivers/cb_pcidas.c
+index 02ae00c95313..48ec2ee953dc 100644
+--- a/drivers/staging/comedi/drivers/cb_pcidas.c
++++ b/drivers/staging/comedi/drivers/cb_pcidas.c
+@@ -1493,6 +1493,6 @@ static struct pci_driver cb_pcidas_pci_driver = {
+ };
+ module_comedi_pci_driver(cb_pcidas_driver, cb_pcidas_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for MeasurementComputing PCI-DAS series");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/cb_pcidas64.c b/drivers/staging/comedi/drivers/cb_pcidas64.c
+index e1774e09a320..fa987bb0e7cd 100644
+--- a/drivers/staging/comedi/drivers/cb_pcidas64.c
++++ b/drivers/staging/comedi/drivers/cb_pcidas64.c
+@@ -4119,6 +4119,6 @@ static struct pci_driver cb_pcidas64_pci_driver = {
+ };
+ module_comedi_pci_driver(cb_pcidas64_driver, cb_pcidas64_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/cb_pcidda.c b/drivers/staging/comedi/drivers/cb_pcidda.c
+index 1d09dd265ab7..78cf1603638c 100644
+--- a/drivers/staging/comedi/drivers/cb_pcidda.c
++++ b/drivers/staging/comedi/drivers/cb_pcidda.c
+@@ -416,6 +416,6 @@ static struct pci_driver cb_pcidda_pci_driver = {
+ };
+ module_comedi_pci_driver(cb_pcidda_driver, cb_pcidda_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/cb_pcimdas.c b/drivers/staging/comedi/drivers/cb_pcimdas.c
+index a9d052bfda38..2292f69da4f4 100644
+--- a/drivers/staging/comedi/drivers/cb_pcimdas.c
++++ b/drivers/staging/comedi/drivers/cb_pcimdas.c
+@@ -28,8 +28,8 @@
+  * No interrupts, multi channel or FIFO AI,
+  * although the card looks like it could support this.
+  *
+- * http://www.mccdaq.com/PDFs/Manuals/pcim-das1602-16.pdf
+- * http://www.mccdaq.com/PDFs/Manuals/pcie-das1602-16.pdf
++ * https://www.mccdaq.com/PDFs/Manuals/pcim-das1602-16.pdf
++ * https://www.mccdaq.com/PDFs/Manuals/pcie-das1602-16.pdf
+  */
+ 
+ #include <linux/module.h>
+@@ -470,6 +470,6 @@ static struct pci_driver cb_pcimdas_pci_driver = {
+ };
+ module_comedi_pci_driver(cb_pcimdas_driver, cb_pcimdas_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for PCIM-DAS1602/16 and PCIe-DAS1602/16");
+ MODULE_LICENSE("GPL");
+-- 
+2.27.0
+
