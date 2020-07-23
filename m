@@ -2,515 +2,569 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17C1C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BAF2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVP2Tz2M"
+	by mail.kernel.org (Postfix) with ESMTP id 81AF52065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgGWTiJ (ORCPT
+        id S1726111AbgGWTlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40816 "EHLO
+        Thu, 23 Jul 2020 15:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWTiI (ORCPT
+        with ESMTP id S1725894AbgGWTlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:38:08 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F87C0619DC;
-        Thu, 23 Jul 2020 12:38:08 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id ga4so7590080ejb.11;
-        Thu, 23 Jul 2020 12:38:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JDT/GW195gcrpQDeuLwi/aaObJyknCL4YefNpOdS/qk=;
-        b=VVP2Tz2MJCwsS1wbRoxZCuFZE2UMPBn6sR+oP0qeSgY8kAUv9zyKlWi2zTLdJiHRF+
-         eHvtHYAh5MV2lUbDgcdFLVneQ/3MWsWg0utCSVC8+UJR2ZSJX2Nl/jz9zMfxSAaLZXVi
-         olkXxC1YLZtM827q21aGVG8MlIoRD+KcDpE+f2FAh1J2gExEagwzpK74mnIhzqrM5NBt
-         G8LyE75sv2rs+8C0y8lCLlzOG6QNAjG+c/HxGIHBaFAk943/EyOSqApNICwHWkNWD7w8
-         QlUh53bRJPu512+f/YgahZpFXc4uu1FiHWsTmrT0UXYrwySeXwUYcztKvdP9LfhfJdre
-         MEqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JDT/GW195gcrpQDeuLwi/aaObJyknCL4YefNpOdS/qk=;
-        b=V5oen8NfV05n9+L6fP/uVIbAXSgPRdoTf0G32O1kFJ6XCp/iKKfRIa0moOn3r6hOeK
-         SoeB7jM5VfoGaweevs+hfJeCfBrCWMSHiZZDpRi4syKN64tKAN4fMqP9m6MybkpagbbM
-         rNJcIqXHw3gV5JCij0whh7cBvIkbkqinpAkq2ilBFB8BQXuB4vtsYnfIipwID4iKh1S9
-         sz9HICLzJF9cFNzSKxNCwBvkRjGXebS+cCOREmK+zAGl2+4r7AQQBzb0z2IoxQKFooFC
-         5yuN0SuOz4sh96ji3OYI/L1N1YmsJtN19mZxARpuoCSb6AX/VfAA4b9/mFIQdKE23TC4
-         NRcQ==
-X-Gm-Message-State: AOAM533jrpF0FtmyjGuiBNOiD0fLbZnhged5E/L4YKePoZRZt9L0CGSr
-        10IYwxQAW/kQaf8Hfm54bnE=
-X-Google-Smtp-Source: ABdhPJy5Z5+c2Hs25WiRrwMmscEF2OfjF+zH2kBMq1qBkv7rCtIdM2JB+OIY2kx97tLBUTvY/byIvA==
-X-Received: by 2002:a17:907:20ba:: with SMTP id pw26mr5721261ejb.425.1595533085992;
-        Thu, 23 Jul 2020 12:38:05 -0700 (PDT)
-Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
-        by smtp.gmail.com with ESMTPSA id o20sm2655719ejr.64.2020.07.23.12.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 12:38:05 -0700 (PDT)
-From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, mani@kernel.org, a.fatoum@pengutronix.de,
-        marcin.sloniewski@gmail.com, sam@ravnborg.org,
-        linus.walleij@linaro.org, heiko.stuebner@theobroma-systems.com,
-        stephan@gerhold.net, lkundrak@v3.sk, broonie@kernel.org,
-        allen.chen@ite.com.tw, robh@kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] ARM: dts: stm32: add initial support for stm32mp157-odyssey board
-Date:   Thu, 23 Jul 2020 21:37:37 +0200
-Message-Id: <20200723193737.190291-3-marcin.sloniewski@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723193737.190291-1-marcin.sloniewski@gmail.com>
-References: <20200723193737.190291-1-marcin.sloniewski@gmail.com>
+        Thu, 23 Jul 2020 15:41:04 -0400
+Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70474C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:41:04 -0700 (PDT)
+Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
+        by smtp.al2klimov.de (Postfix) with ESMTPA id 7C7EBBC284;
+        Thu, 23 Jul 2020 19:40:59 +0000 (UTC)
+From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To:     abbotti@mev.co.uk, hsweeten@visionengravers.com,
+        gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
+        xiyuyang19@fudan.edu.cn, akpm@linux-foundation.org,
+        daniel.m.jordan@oracle.com, tanxin.ctf@gmail.com,
+        walken@google.com, nishkadg.linux@gmail.com, mh12gx2825@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] staging: comedi: Replace HTTP links with HTTPS ones
+Date:   Thu, 23 Jul 2020 21:40:53 +0200
+Message-Id: <20200723194053.72227-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: +++++
+Authentication-Results: smtp.al2klimov.de;
+        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Seeed Studio's stm32mp157c odyssey board.
-Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
-and carrier board with USB and ETH interfaces, SD card connector,
-wifi and BT chip AP6236.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-In this patch only basic kernel boot is supported and interfacing
-SD card and on-board eMMC.
-
-Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-Changes in v4:
-- add seeed,stm32mp157c-odyssey-som in compatible
-  for carrier board
-- fix sdmmc2 interface by changing one of the pins
-  to use
-- change eth phy address to 7
+ If there are any URLs to be removed completely
+ or at least not (just) HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
 
-Changes in v3:
-- fix compilation on tip of stm32-next
-  due to change in names for pinctrl
-- fix deprecated binding for led node
-- fix redundant "okay" statuses
-- add phy part number for eth in comment
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
 
-Changes in v2:
-- add new odyssey dts to Makefile
+ If you apply the patch, please let me know.
 
- arch/arm/boot/dts/Makefile                    |   3 +-
- .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi | 294 ++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-odyssey.dts     |  73 +++++
- 3 files changed, 369 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
- create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey.dts
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e6a1cac0bfc7..a3ea2301c82c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1047,7 +1047,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32mp157c-dk2.dtb \
- 	stm32mp157c-ed1.dtb \
- 	stm32mp157c-ev1.dtb \
--	stm32mp157c-lxa-mc1.dtb
-+	stm32mp157c-lxa-mc1.dtb \
-+	stm32mp157c-odyssey.dtb
- dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-a1000.dtb \
- 	sun4i-a10-ba10-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
-new file mode 100644
-index 000000000000..9875c93bb136
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
-+ */
-+
-+/dts-v1/;
-+
-+#include "stm32mp157.dtsi"
-+#include "stm32mp15xc.dtsi"
-+#include "stm32mp15-pinctrl.dtsi"
-+#include "stm32mp15xxac-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
-+/ {
-+	model = "Seeed Studio Odyssey-STM32MP157C SOM";
-+	compatible = "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
-+
-+	memory@c0000000 {
-+		device_type = "memory";
-+		reg = <0xc0000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		mcuram2: mcuram2@10000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10000000 0x40000>;
-+			no-map;
-+		};
-+
-+		vdev0vring0: vdev0vring0@10040000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10040000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0vring1: vdev0vring1@10041000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10041000 0x1000>;
-+			no-map;
-+		};
-+
-+		vdev0buffer: vdev0buffer@10042000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x10042000 0x4000>;
-+			no-map;
-+		};
-+
-+		mcuram: mcuram@30000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x30000000 0x40000>;
-+			no-map;
-+		};
-+
-+		retram: retram@38000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x38000000 0x10000>;
-+			no-map;
-+		};
-+
-+		gpu_reserved: gpu@d4000000 {
-+			reg = <0xd4000000 0x4000000>;
-+			no-map;
-+		};
-+	};
-+
-+	led {
-+		compatible = "gpio-leds";
-+		led-blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_HEARTBEAT;
-+			gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+&gpu {
-+	contiguous-area = <&gpu_reserved>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/* spare dmas for other usage */
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+
-+	pmic: stpmic@33 {
-+		compatible = "st,stpmic1";
-+		reg = <0x33>;
-+		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		regulators {
-+			compatible = "st,stpmic1-regulators";
-+			ldo1-supply = <&v3v3>;
-+			ldo3-supply = <&vdd_ddr>;
-+			ldo6-supply = <&v3v3>;
-+			pwr_sw1-supply = <&bst_out>;
-+			pwr_sw2-supply = <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name = "vddcore";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name = "vdd_ddr";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name = "vdd";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				st,mask-reset;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name = "v3v3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode = <0>;
-+			};
-+
-+			v1v8_audio: ldo1 {
-+				regulator-name = "v1v8_audio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				interrupts = <IT_CURLIM_LDO1 0>;
-+			};
-+
-+			v3v3_hdmi: ldo2 {
-+				regulator-name = "v3v3_hdmi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				interrupts = <IT_CURLIM_LDO2 0>;
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name = "vtt_ddr";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name = "vdd_usb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				interrupts = <IT_CURLIM_LDO4 0>;
-+			};
-+
-+			vdda: ldo5 {
-+				regulator-name = "vdda";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO5 0>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v2_hdmi: ldo6 {
-+				regulator-name = "v1v2_hdmi";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+				interrupts = <IT_CURLIM_LDO6 0>;
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name = "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			 bst_out: boost {
-+				regulator-name = "bst_out";
-+				interrupts = <IT_OCP_BOOST 0>;
-+			 };
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name = "vbus_otg";
-+				interrupts = <IT_OCP_OTG 0>;
-+			 };
-+
-+			 vbus_sw: pwr_sw2 {
-+				regulator-name = "vbus_sw";
-+				interrupts = <IT_OCP_SWOUT 0>;
-+				regulator-active-discharge;
-+			 };
-+		};
-+
-+		onkey {
-+			compatible = "st,stpmic1-onkey";
-+			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
-+			interrupt-names = "onkey-falling", "onkey-rising";
-+			power-off-time-sec = <10>;
-+		};
-+
-+		watchdog {
-+			compatible = "st,stpmic1-wdt";
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&ipcc {
-+	status = "okay";
-+};
-+
-+&iwdg2 {
-+	timeout-sec = <32>;
-+	status = "okay";
-+};
-+
-+&m4_rproc {
-+	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
-+			<&vdev0vring1>, <&vdev0buffer>;
-+	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
-+	mbox-names = "vq0", "vq1", "shutdown";
-+	interrupt-parent = <&exti>;
-+	interrupts = <68 1>;
-+	status = "okay";
-+};
-+
-+&rng1 {
-+	status = "okay";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&sdmmc2_d47_pins_a {
-+	pins {
-+		pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
-+			 <STM32_PINMUX('A', 9, AF10)>, /* SDMMC2_D5 */
-+			 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
-+			 <STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
-+	};
-+};
-+
-+&sdmmc2_d47_sleep_pins_a {
-+	pins {
-+		pinmux = <STM32_PINMUX('A', 8, ANALOG)>, /* SDMMC2_D4 */
-+			 <STM32_PINMUX('A', 9, ANALOG)>, /* SDMMC2_D5 */
-+			 <STM32_PINMUX('E', 5, ANALOG)>, /* SDMMC2_D6 */
-+			 <STM32_PINMUX('C', 7, ANALOG)>; /* SDMMC2_D7 */
-+	};
-+};
-+
-+&sdmmc2 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_a>;
-+	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_a>;
-+	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_a>;
-+	non-removable;
-+	no-sd;
-+	no-sdio;
-+	st,neg-edge;
-+	bus-width = <8>;
-+	vmmc-supply = <&v3v3>;
-+	vqmmc-supply = <&v3v3>;
-+	mmc-ddr-3_3v;
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
-new file mode 100644
-index 000000000000..619243807842
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
-+ */
-+
-+/dts-v1/;
-+
-+#include "stm32mp157c-odyssey-som.dtsi"
-+
-+/ {
-+	model = "Seeed Studio Odyssey-STM32MP157C Board";
-+	compatible = "seeed,stm32mp157c-odyssey",
-+		     "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
-+
-+	aliases {
-+		ethernet0 = &ethernet0;
-+		serial0 = &uart4;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&ethernet0 {
-+	status = "okay";
-+	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-+	pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
-+	pinctrl-names = "default", "sleep";
-+	phy-mode = "rgmii-id";
-+	max-speed = <1000>;
-+	phy-handle = <&phy0>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@7 { /* KSZ9031RN */
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	pinctrl-1 = <&i2c1_sleep_pins_a>;
-+	i2c-scl-rising-time-ns = <100>;
-+	i2c-scl-falling-time-ns = <7>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc1_b4_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-+	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-+	disable-wp;
-+	st,neg-edge;
-+	bus-width = <4>;
-+	vmmc-supply = <&v3v3>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins_a>;
-+	status = "okay";
-+};
-+
+
+ drivers/staging/comedi/comedi_fops.c                  | 2 +-
+ drivers/staging/comedi/comedi_pci.c                   | 2 +-
+ drivers/staging/comedi/comedi_pcmcia.c                | 2 +-
+ drivers/staging/comedi/comedi_usb.c                   | 2 +-
+ drivers/staging/comedi/drivers/8255.c                 | 2 +-
+ drivers/staging/comedi/drivers/8255_pci.c             | 2 +-
+ drivers/staging/comedi/drivers/adq12b.c               | 2 +-
+ drivers/staging/comedi/drivers/aio_aio12_8.c          | 2 +-
+ drivers/staging/comedi/drivers/aio_iiro_16.c          | 2 +-
+ drivers/staging/comedi/drivers/c6xdigio.c             | 2 +-
+ drivers/staging/comedi/drivers/comedi_8255.c          | 2 +-
+ drivers/staging/comedi/drivers/comedi_parport.c       | 2 +-
+ drivers/staging/comedi/drivers/comedi_test.c          | 2 +-
+ drivers/staging/comedi/drivers/contec_pci_dio.c       | 2 +-
+ drivers/staging/comedi/drivers/daqboard2000.c         | 4 ++--
+ drivers/staging/comedi/drivers/dmm32at.c              | 2 +-
+ drivers/staging/comedi/drivers/fl512.c                | 2 +-
+ drivers/staging/comedi/drivers/gsc_hpdi.c             | 2 +-
+ drivers/staging/comedi/drivers/icp_multi.c            | 2 +-
+ drivers/staging/comedi/drivers/ii_pci20kc.c           | 2 +-
+ drivers/staging/comedi/drivers/jr3_pci.c              | 4 ++--
+ drivers/staging/comedi/drivers/ke_counter.c           | 2 +-
+ drivers/staging/comedi/drivers/me4000.c               | 4 ++--
+ drivers/staging/comedi/drivers/me_daq.c               | 2 +-
+ drivers/staging/comedi/drivers/mite.c                 | 2 +-
+ drivers/staging/comedi/drivers/mpc624.c               | 2 +-
+ drivers/staging/comedi/drivers/multiq3.c              | 2 +-
+ drivers/staging/comedi/drivers/plx9052.h              | 2 +-
+ drivers/staging/comedi/drivers/quatech_daqp_cs.c      | 2 +-
+ drivers/staging/comedi/drivers/rtd520.c               | 2 +-
+ drivers/staging/comedi/drivers/rti800.c               | 2 +-
+ drivers/staging/comedi/drivers/rti802.c               | 2 +-
+ drivers/staging/comedi/drivers/s526.c                 | 2 +-
+ drivers/staging/comedi/drivers/ssv_dnp.c              | 2 +-
+ drivers/staging/comedi/drivers/tests/ni_routes_test.c | 2 +-
+ 35 files changed, 38 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
+index e85a99b68f31..4f96e3c9a228 100644
+--- a/drivers/staging/comedi/comedi_fops.c
++++ b/drivers/staging/comedi/comedi_fops.c
+@@ -3426,6 +3426,6 @@ static void __exit comedi_cleanup(void)
+ }
+ module_exit(comedi_cleanup);
+ 
+-MODULE_AUTHOR("http://www.comedi.org");
++MODULE_AUTHOR("https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi core module");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/comedi_pci.c b/drivers/staging/comedi/comedi_pci.c
+index 126048b03f43..54739af7eb71 100644
+--- a/drivers/staging/comedi/comedi_pci.c
++++ b/drivers/staging/comedi/comedi_pci.c
+@@ -223,6 +223,6 @@ static void __exit comedi_pci_exit(void)
+ }
+ module_exit(comedi_pci_exit);
+ 
+-MODULE_AUTHOR("http://www.comedi.org");
++MODULE_AUTHOR("https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi PCI interface module");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/comedi_pcmcia.c b/drivers/staging/comedi/comedi_pcmcia.c
+index e16f35eae343..bb273bb202e6 100644
+--- a/drivers/staging/comedi/comedi_pcmcia.c
++++ b/drivers/staging/comedi/comedi_pcmcia.c
+@@ -204,6 +204,6 @@ static void __exit comedi_pcmcia_exit(void)
+ }
+ module_exit(comedi_pcmcia_exit);
+ 
+-MODULE_AUTHOR("http://www.comedi.org");
++MODULE_AUTHOR("https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi PCMCIA interface module");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/comedi_usb.c b/drivers/staging/comedi/comedi_usb.c
+index c632c2bae722..eea8ebf32ed0 100644
+--- a/drivers/staging/comedi/comedi_usb.c
++++ b/drivers/staging/comedi/comedi_usb.c
+@@ -146,6 +146,6 @@ static void __exit comedi_usb_exit(void)
+ }
+ module_exit(comedi_usb_exit);
+ 
+-MODULE_AUTHOR("http://www.comedi.org");
++MODULE_AUTHOR("https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi USB interface module");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/8255.c b/drivers/staging/comedi/drivers/8255.c
+index 3d6105b5a11b..e23335c75867 100644
+--- a/drivers/staging/comedi/drivers/8255.c
++++ b/drivers/staging/comedi/drivers/8255.c
+@@ -120,6 +120,6 @@ static struct comedi_driver dev_8255_driver = {
+ };
+ module_comedi_driver(dev_8255_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for standalone 8255 devices");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/8255_pci.c b/drivers/staging/comedi/drivers/8255_pci.c
+index 9ed05f962fdb..5a810f0e532a 100644
+--- a/drivers/staging/comedi/drivers/8255_pci.c
++++ b/drivers/staging/comedi/drivers/8255_pci.c
+@@ -291,5 +291,5 @@ static struct pci_driver pci_8255_pci_driver = {
+ module_comedi_pci_driver(pci_8255_driver, pci_8255_pci_driver);
+ 
+ MODULE_DESCRIPTION("COMEDI - Generic PCI based 8255 Digital I/O boards");
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/adq12b.c b/drivers/staging/comedi/drivers/adq12b.c
+index 5d431573bcca..d719f76709ef 100644
+--- a/drivers/staging/comedi/drivers/adq12b.c
++++ b/drivers/staging/comedi/drivers/adq12b.c
+@@ -238,6 +238,6 @@ static struct comedi_driver adq12b_driver = {
+ };
+ module_comedi_driver(adq12b_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/aio_aio12_8.c b/drivers/staging/comedi/drivers/aio_aio12_8.c
+index f4beda1ed640..4829115921a3 100644
+--- a/drivers/staging/comedi/drivers/aio_aio12_8.c
++++ b/drivers/staging/comedi/drivers/aio_aio12_8.c
+@@ -272,6 +272,6 @@ static struct comedi_driver aio_aio12_8_driver = {
+ };
+ module_comedi_driver(aio_aio12_8_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Access I/O AIO12-8 Analog I/O Board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/aio_iiro_16.c b/drivers/staging/comedi/drivers/aio_iiro_16.c
+index 41c9c56816ef..fe3876235075 100644
+--- a/drivers/staging/comedi/drivers/aio_iiro_16.c
++++ b/drivers/staging/comedi/drivers/aio_iiro_16.c
+@@ -230,6 +230,6 @@ static struct comedi_driver aio_iiro_16_driver = {
+ };
+ module_comedi_driver(aio_iiro_16_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Access I/O Products 104-IIRO-16 board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/c6xdigio.c b/drivers/staging/comedi/drivers/c6xdigio.c
+index 41cc784320a9..786fd15698df 100644
+--- a/drivers/staging/comedi/drivers/c6xdigio.c
++++ b/drivers/staging/comedi/drivers/c6xdigio.c
+@@ -293,6 +293,6 @@ static struct comedi_driver c6xdigio_driver = {
+ };
+ module_comedi_driver(c6xdigio_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for the C6x_DIGIO DSP daughter card");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/comedi_8255.c b/drivers/staging/comedi/drivers/comedi_8255.c
+index 62baa0d79302..3298725b9ba5 100644
+--- a/drivers/staging/comedi/drivers/comedi_8255.c
++++ b/drivers/staging/comedi/drivers/comedi_8255.c
+@@ -271,6 +271,6 @@ static void __exit comedi_8255_module_exit(void)
+ }
+ module_exit(comedi_8255_module_exit);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi: Generic 8255 digital I/O support");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/comedi_parport.c b/drivers/staging/comedi/drivers/comedi_parport.c
+index efaa57372aeb..9361b2dcf949 100644
+--- a/drivers/staging/comedi/drivers/comedi_parport.c
++++ b/drivers/staging/comedi/drivers/comedi_parport.c
+@@ -300,6 +300,6 @@ static struct comedi_driver parport_driver = {
+ };
+ module_comedi_driver(parport_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi: Standard parallel port driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/comedi_test.c b/drivers/staging/comedi/drivers/comedi_test.c
+index ef4c7c8a2b71..cbc225eb1991 100644
+--- a/drivers/staging/comedi/drivers/comedi_test.c
++++ b/drivers/staging/comedi/drivers/comedi_test.c
+@@ -844,6 +844,6 @@ static void __exit comedi_test_exit(void)
+ }
+ module_exit(comedi_test_exit);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/contec_pci_dio.c b/drivers/staging/comedi/drivers/contec_pci_dio.c
+index 49be795b4971..b8fdd9c1f166 100644
+--- a/drivers/staging/comedi/drivers/contec_pci_dio.c
++++ b/drivers/staging/comedi/drivers/contec_pci_dio.c
+@@ -112,6 +112,6 @@ static struct pci_driver contec_pci_dio_pci_driver = {
+ };
+ module_comedi_pci_driver(contec_pci_dio_driver, contec_pci_dio_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/daqboard2000.c b/drivers/staging/comedi/drivers/daqboard2000.c
+index 28603dfadce2..f64e747078bd 100644
+--- a/drivers/staging/comedi/drivers/daqboard2000.c
++++ b/drivers/staging/comedi/drivers/daqboard2000.c
+@@ -18,7 +18,7 @@
+  * the source code for the Windows driver.
+  *
+  * The FPGA on the board requires firmware, which is available from
+- * http://www.comedi.org in the comedi_nonfree_firmware tarball.
++ * https://www.comedi.org in the comedi_nonfree_firmware tarball.
+  *
+  * Configuration options: not applicable, uses PCI auto config
+  */
+@@ -781,7 +781,7 @@ static struct pci_driver db2k_pci_driver = {
+ };
+ module_comedi_pci_driver(db2k_driver, db2k_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+ MODULE_FIRMWARE(DB2K_FIRMWARE);
+diff --git a/drivers/staging/comedi/drivers/dmm32at.c b/drivers/staging/comedi/drivers/dmm32at.c
+index 75693cdde313..17e6018918bb 100644
+--- a/drivers/staging/comedi/drivers/dmm32at.c
++++ b/drivers/staging/comedi/drivers/dmm32at.c
+@@ -611,6 +611,6 @@ static struct comedi_driver dmm32at_driver = {
+ };
+ module_comedi_driver(dmm32at_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi: Diamond Systems Diamond-MM-32-AT");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/fl512.c b/drivers/staging/comedi/drivers/fl512.c
+index 41c50c7a8f59..b715f30659fa 100644
+--- a/drivers/staging/comedi/drivers/fl512.c
++++ b/drivers/staging/comedi/drivers/fl512.c
+@@ -138,6 +138,6 @@ static struct comedi_driver fl512_driver = {
+ };
+ module_comedi_driver(fl512_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/gsc_hpdi.c b/drivers/staging/comedi/drivers/gsc_hpdi.c
+index dc62db1ee1dd..e35e4a743714 100644
+--- a/drivers/staging/comedi/drivers/gsc_hpdi.c
++++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
+@@ -718,6 +718,6 @@ static struct pci_driver gsc_hpdi_pci_driver = {
+ };
+ module_comedi_pci_driver(gsc_hpdi_driver, gsc_hpdi_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for General Standards PCI-HPDI32/PMC-HPDI32");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/icp_multi.c b/drivers/staging/comedi/drivers/icp_multi.c
+index b14aaed6b525..16d2b78de83c 100644
+--- a/drivers/staging/comedi/drivers/icp_multi.c
++++ b/drivers/staging/comedi/drivers/icp_multi.c
+@@ -331,6 +331,6 @@ static struct pci_driver icp_multi_pci_driver = {
+ };
+ module_comedi_pci_driver(icp_multi_driver, icp_multi_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Inova ICP_MULTI board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/ii_pci20kc.c b/drivers/staging/comedi/drivers/ii_pci20kc.c
+index 3eaf7c59de75..399255dbe388 100644
+--- a/drivers/staging/comedi/drivers/ii_pci20kc.c
++++ b/drivers/staging/comedi/drivers/ii_pci20kc.c
+@@ -519,6 +519,6 @@ static struct comedi_driver ii20k_driver = {
+ };
+ module_comedi_driver(ii20k_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Intelligent Instruments PCI-20001C");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/jr3_pci.c b/drivers/staging/comedi/drivers/jr3_pci.c
+index c3c88e6d298f..7a02c4fa3cda 100644
+--- a/drivers/staging/comedi/drivers/jr3_pci.c
++++ b/drivers/staging/comedi/drivers/jr3_pci.c
+@@ -24,7 +24,7 @@
+  * The DSP on the board requires initialization code, which can be
+  * loaded by placing it in /lib/firmware/comedi.  The initialization
+  * code should be somewhere on the media you got with your card.  One
+- * version is available from http://www.comedi.org in the
++ * version is available from https://www.comedi.org in the
+  * comedi_nonfree_firmware tarball.  The file is called "jr3pci.idm".
+  */
+ 
+@@ -810,7 +810,7 @@ static struct pci_driver jr3_pci_pci_driver = {
+ };
+ module_comedi_pci_driver(jr3_pci_driver, jr3_pci_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for JR3/PCI force sensor board");
+ MODULE_LICENSE("GPL");
+ MODULE_FIRMWARE("comedi/jr3pci.idm");
+diff --git a/drivers/staging/comedi/drivers/ke_counter.c b/drivers/staging/comedi/drivers/ke_counter.c
+index e612cf605700..bef1b20c1c8d 100644
+--- a/drivers/staging/comedi/drivers/ke_counter.c
++++ b/drivers/staging/comedi/drivers/ke_counter.c
+@@ -227,6 +227,6 @@ static struct pci_driver ke_counter_pci_driver = {
+ };
+ module_comedi_pci_driver(ke_counter_driver, ke_counter_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Kolter Electronic Counter Card");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/me4000.c b/drivers/staging/comedi/drivers/me4000.c
+index ee53571a8969..726e40dc17b6 100644
+--- a/drivers/staging/comedi/drivers/me4000.c
++++ b/drivers/staging/comedi/drivers/me4000.c
+@@ -26,7 +26,7 @@
+  *
+  * The firmware required by these boards is available in the
+  * comedi_nonfree_firmware tarball available from
+- * http://www.comedi.org.
++ * https://www.comedi.org.
+  */
+ 
+ #include <linux/module.h>
+@@ -1272,7 +1272,7 @@ static struct pci_driver me4000_pci_driver = {
+ };
+ module_comedi_pci_driver(me4000_driver, me4000_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Meilhaus ME-4000 series boards");
+ MODULE_LICENSE("GPL");
+ MODULE_FIRMWARE(ME4000_FIRMWARE);
+diff --git a/drivers/staging/comedi/drivers/me_daq.c b/drivers/staging/comedi/drivers/me_daq.c
+index 169742be17b8..ef18e387471b 100644
+--- a/drivers/staging/comedi/drivers/me_daq.c
++++ b/drivers/staging/comedi/drivers/me_daq.c
+@@ -550,7 +550,7 @@ static struct pci_driver me_daq_pci_driver = {
+ };
+ module_comedi_pci_driver(me_daq_driver, me_daq_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+ MODULE_FIRMWARE(ME2600_FIRMWARE);
+diff --git a/drivers/staging/comedi/drivers/mite.c b/drivers/staging/comedi/drivers/mite.c
+index cc9fc263573e..70960e3ba878 100644
+--- a/drivers/staging/comedi/drivers/mite.c
++++ b/drivers/staging/comedi/drivers/mite.c
+@@ -933,6 +933,6 @@ static void __exit mite_module_exit(void)
+ }
+ module_exit(mite_module_exit);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi helper for NI Mite PCI interface chip");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/mpc624.c b/drivers/staging/comedi/drivers/mpc624.c
+index bf3a3a08c7ab..646f4c086204 100644
+--- a/drivers/staging/comedi/drivers/mpc624.c
++++ b/drivers/staging/comedi/drivers/mpc624.c
+@@ -306,6 +306,6 @@ static struct comedi_driver mpc624_driver = {
+ };
+ module_comedi_driver(mpc624_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Micro/sys MPC-624 PC/104 board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/multiq3.c b/drivers/staging/comedi/drivers/multiq3.c
+index c85c9ab3655f..c1897aee9a9a 100644
+--- a/drivers/staging/comedi/drivers/multiq3.c
++++ b/drivers/staging/comedi/drivers/multiq3.c
+@@ -327,6 +327,6 @@ static struct comedi_driver multiq3_driver = {
+ };
+ module_comedi_driver(multiq3_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Quanser Consulting MultiQ-3 board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/plx9052.h b/drivers/staging/comedi/drivers/plx9052.h
+index 8ec5a5f2837d..e68a7afef025 100644
+--- a/drivers/staging/comedi/drivers/plx9052.h
++++ b/drivers/staging/comedi/drivers/plx9052.h
+@@ -2,7 +2,7 @@
+ /*
+  * Definitions for the PLX-9052 PCI interface chip
+  *
+- * Copyright (C) 2002 MEV Ltd. <http://www.mev.co.uk/>
++ * Copyright (C) 2002 MEV Ltd. <https://www.mev.co.uk/>
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 2000 David A. Schleef <ds@schleef.org>
+diff --git a/drivers/staging/comedi/drivers/quatech_daqp_cs.c b/drivers/staging/comedi/drivers/quatech_daqp_cs.c
+index 6daaacf7a26a..1b1efa4d31f6 100644
+--- a/drivers/staging/comedi/drivers/quatech_daqp_cs.c
++++ b/drivers/staging/comedi/drivers/quatech_daqp_cs.c
+@@ -7,7 +7,7 @@
+  *
+  * COMEDI - Linux Control and Measurement Device Interface
+  * Copyright (C) 1998 David A. Schleef <ds@schleef.org>
+- * http://www.comedi.org/
++ * https://www.comedi.org/
+  *
+  * Documentation for the DAQP PCMCIA cards can be found on Quatech's site:
+  *	ftp://ftp.quatech.com/Manuals/daqp-208.pdf
+diff --git a/drivers/staging/comedi/drivers/rtd520.c b/drivers/staging/comedi/drivers/rtd520.c
+index 8c04af09be2c..2d99a648b054 100644
+--- a/drivers/staging/comedi/drivers/rtd520.c
++++ b/drivers/staging/comedi/drivers/rtd520.c
+@@ -1360,6 +1360,6 @@ static struct pci_driver rtd520_pci_driver = {
+ };
+ module_comedi_pci_driver(rtd520_driver, rtd520_pci_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/rti800.c b/drivers/staging/comedi/drivers/rti800.c
+index f7c320c89ee6..327fd93b8b12 100644
+--- a/drivers/staging/comedi/drivers/rti800.c
++++ b/drivers/staging/comedi/drivers/rti800.c
+@@ -353,5 +353,5 @@ static struct comedi_driver rti800_driver = {
+ module_comedi_driver(rti800_driver);
+ 
+ MODULE_DESCRIPTION("Comedi: RTI-800 Multifunction Analog/Digital board");
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/rti802.c b/drivers/staging/comedi/drivers/rti802.c
+index c6cf92bfff73..195e2b1ac4c1 100644
+--- a/drivers/staging/comedi/drivers/rti802.c
++++ b/drivers/staging/comedi/drivers/rti802.c
+@@ -115,6 +115,6 @@ static struct comedi_driver rti802_driver = {
+ };
+ module_comedi_driver(rti802_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi driver for Analog Devices RTI-802 board");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/s526.c b/drivers/staging/comedi/drivers/s526.c
+index 5d567ae78f28..ba485f106c1e 100644
+--- a/drivers/staging/comedi/drivers/s526.c
++++ b/drivers/staging/comedi/drivers/s526.c
+@@ -624,6 +624,6 @@ static struct comedi_driver s526_driver = {
+ };
+ module_comedi_driver(s526_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/ssv_dnp.c b/drivers/staging/comedi/drivers/ssv_dnp.c
+index 0628060e42ca..016d315aa584 100644
+--- a/drivers/staging/comedi/drivers/ssv_dnp.c
++++ b/drivers/staging/comedi/drivers/ssv_dnp.c
+@@ -175,6 +175,6 @@ static struct comedi_driver dnp_driver = {
+ };
+ module_comedi_driver(dnp_driver);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi low-level driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/staging/comedi/drivers/tests/ni_routes_test.c b/drivers/staging/comedi/drivers/tests/ni_routes_test.c
+index f809051820ac..eaefaf596a37 100644
+--- a/drivers/staging/comedi/drivers/tests/ni_routes_test.c
++++ b/drivers/staging/comedi/drivers/tests/ni_routes_test.c
+@@ -607,7 +607,7 @@ static void __exit ni_routes_unittest_exit(void) { }
+ module_init(ni_routes_unittest);
+ module_exit(ni_routes_unittest_exit);
+ 
+-MODULE_AUTHOR("Comedi http://www.comedi.org");
++MODULE_AUTHOR("Comedi https://www.comedi.org");
+ MODULE_DESCRIPTION("Comedi unit-tests for ni_routes module");
+ MODULE_LICENSE("GPL");
+ /* **** END simple module entry/exit functions **** */
 -- 
 2.27.0
 
