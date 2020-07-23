@@ -2,108 +2,131 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00370C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304AAC43457
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0353207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rJ0fou/s"
+	by mail.kernel.org (Postfix) with ESMTP id 12DEF20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGWWh2 (ORCPT
+        id S1728296AbgGWWhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:37:28 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:61666 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727808AbgGWWg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:36:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595543816; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=iINkc3rMNLVdQlOmZx+AID6YeG69sbQ6zLYLGRqyuOc=; b=rJ0fou/sr4jDzM1l2hCClPixWYW3u4o02D3IATTJXbo6UrEmd/sBz/RyBdmhdGaGa0IS1lE4
- wFDrhlhsKDcOXB86P8VWuUAOTOlGt7pHQI6GG6Ir+i6CK89dKGv2VgL6HUEloRYPnWcHsC/R
- KdF+c2/fW03rooD+IJaipgMe55o=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f1a1107d3d6508422a27905 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 22:36:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3EC6AC433C6; Thu, 23 Jul 2020 22:36:55 +0000 (UTC)
-Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79367C433CB;
-        Thu, 23 Jul 2020 22:36:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79367C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v5 08/10] bus: mhi: core: Use counters to track MHI device state transitions
-Date:   Thu, 23 Jul 2020 15:36:40 -0700
-Message-Id: <1595543802-17859-9-git-send-email-bbhatt@codeaurora.org>
+        Thu, 23 Jul 2020 18:37:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61893 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbgGWWhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:37:33 -0400
+IronPort-SDR: uYU1abVSkjql+DCz576wkVhPpEXy8JIXAHBpJPFauwq7WzxAkHQG1wMzGA6bWqbQsivE2lllVL
+ NPQnajQOAY4g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148553145"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="148553145"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:37:32 -0700
+IronPort-SDR: EY9s5rW5U1aQy5GNQAR9ZgvrDr76Axq9ss9gxITH1EAgoJHJ+6EbSpbf8LmFYkpNc8X3sUts6d
+ rG4eADnva0VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="272425639"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.25])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2020 15:37:32 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>
+Cc:     Ashok Raj <ashok.raj@intel.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [PATCH v3 1/1] PCI/ATS: Check PRI supported on the PF device when SRIOV is enabled
+Date:   Thu, 23 Jul 2020 15:37:29 -0700
+Message-Id: <1595543849-19692-1-git-send-email-ashok.raj@intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595543802-17859-1-git-send-email-bbhatt@codeaurora.org>
-References: <1595543802-17859-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use counters to track MHI device state transitions such as those
-to M0, M2, or M3 states. This helps in better debug by allowing
-the user to see the number of transitions to a certain state when
-queried using the states debugfs entry.
+PASID and PRI capabilities are only enumerated in PF devices. VF devices
+do not enumerate these capabilites. IOMMU drivers also need to enumerate
+them before enabling features in the IOMMU. Extending the same support as
+PASID feature discovery (pci_pasid_features) for PRI.
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: Joerg Roedel <joro@8bytes.com>
+To: Lu Baolu <baolu.lu@intel.com>
+Cc: stable@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: iommu@lists.linux-foundation.org
 ---
- drivers/bus/mhi/core/pm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+v3: Added Fixes tag
+v2: Fixed build failure reported from lkp when CONFIG_PRI=n
 
-diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index 27bb471..ce4d969 100644
---- a/drivers/bus/mhi/core/pm.c
-+++ b/drivers/bus/mhi/core/pm.c
-@@ -256,6 +256,7 @@ int mhi_pm_m0_transition(struct mhi_controller *mhi_cntrl)
- 		dev_err(dev, "Unable to transition to M0 state\n");
- 		return -EIO;
+ drivers/iommu/intel/iommu.c |  2 +-
+ drivers/pci/ats.c           | 13 +++++++++++++
+ include/linux/pci-ats.h     |  4 ++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index d759e7234e98..276452f5e6a7 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -2560,7 +2560,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+ 			}
+ 
+ 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+-			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
++			    pci_pri_supported(pdev))
+ 				info->pri_supported = 1;
+ 		}
  	}
-+	mhi_cntrl->M0++;
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index b761c1f72f67..2e6cf0c700f7 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -325,6 +325,19 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
  
- 	/* Wake up the device */
- 	read_lock_bh(&mhi_cntrl->pm_lock);
-@@ -326,6 +327,8 @@ void mhi_pm_m1_transition(struct mhi_controller *mhi_cntrl)
- 		mhi_cntrl->dev_state = MHI_STATE_M2;
- 
- 		write_unlock_irq(&mhi_cntrl->pm_lock);
+ 	return pdev->pasid_required;
+ }
 +
-+		mhi_cntrl->M2++;
- 		wake_up_all(&mhi_cntrl->state_event);
++/**
++ * pci_pri_supported - Check if PRI is supported.
++ * @pdev: PCI device structure
++ *
++ * Returns true if PRI capability is present, false otherwise.
++ */
++bool pci_pri_supported(struct pci_dev *pdev)
++{
++	/* VFs share the PF PRI configuration */
++	return !!(pci_physfn(pdev)->pri_cap);
++}
++EXPORT_SYMBOL_GPL(pci_pri_supported);
+ #endif /* CONFIG_PCI_PRI */
  
- 		/* If there are any pending resources, exit M2 immediately */
-@@ -362,6 +365,7 @@ int mhi_pm_m3_transition(struct mhi_controller *mhi_cntrl)
- 		return -EIO;
- 	}
+ #ifdef CONFIG_PCI_PASID
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+index f75c307f346d..df54cd5b15db 100644
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+ void pci_disable_pri(struct pci_dev *pdev);
+ int pci_reset_pri(struct pci_dev *pdev);
+ int pci_prg_resp_pasid_required(struct pci_dev *pdev);
++bool pci_pri_supported(struct pci_dev *pdev);
++#else
++static inline bool pci_pri_supported(struct pci_dev *pdev)
++{ return false; }
+ #endif /* CONFIG_PCI_PRI */
  
-+	mhi_cntrl->M3++;
- 	wake_up_all(&mhi_cntrl->state_event);
- 
- 	return 0;
+ #ifdef CONFIG_PCI_PASID
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
 
