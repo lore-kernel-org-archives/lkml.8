@@ -2,139 +2,138 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CF5C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA68320714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:20:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wkpo7qVf"
+	by mail.kernel.org (Postfix) with ESMTP id BEF2E2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595514069;
+	bh=DwG9+pXoNYRP1xXdYl20/XfML1PesR93kEaPYXidrE4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tWmFVyEgQZkGqGa7yaK9Dsc4SeFikZFf3KydILHvRHWl5MbuUZby3DaKACdPUU+aX
+	 O4E7ratMZVkUD2qRYyt85FN5ZHG1a8nrgLSnlDACVBO/vVIwKPLxFfKLyi//h1Fnfs
+	 8CZ+LS7F2qJ9spsrQFbr96j7MODZOGYRFYz3oaQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgGWOUk (ORCPT
+        id S1729406AbgGWOVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgGWOUk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:20:40 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB21C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:20:38 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so5350200wrl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ntQu/VIUE9Ak1XWr+tVal7WWTvSlvV5WCmELVlSDg/A=;
-        b=wkpo7qVfmRQMPMxDfZe4UMyUKZbbfKfNEbl/ATyQ+ZamsFKEYkAJMnnsF70gm8MOJT
-         tIeMGGPN/oAeSvdffe4TFe9/EYgHs94i2eaGJHJCQYh0XOo512GHFUdIlei/g7RliGDx
-         D5O96c3ZwG2Bzr3+W5nwShYdzfOK89O4fKPNtmdk87x3U7ngJrYSSjHvTbZyfjO7Zf6H
-         Zxisg/HN2v9MGvbqicfa8OINsM2xCR3Vb98qLOSCA0bmAQIvu0YRJw2e8NO/+af+e4iw
-         fyjNMe4l21vet1zGIgwezkr5OkgUswi3wP/pJLcRDxHYQZkWCXdnNLYbhwozC9Ore0Tl
-         GAnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ntQu/VIUE9Ak1XWr+tVal7WWTvSlvV5WCmELVlSDg/A=;
-        b=HMXRv5dzFD9Pw+QGKM+WJRZ4i2Tbc+xDSgBk0yI88gwnM3gMy8zbrrKgpTxqtFzw5y
-         rvmqIyeWSheifCf3AF1aCI9pbbnaikPqkHdG4N7pHA/3y5Uo28ghGAHVP3AQLDCbicfb
-         Iaa8HKlQeRvqRQxloiXDSdYtU6aaPQ8JuhQUKgnopmt/Qo7qwh8JSTud+8TSEBzL3PED
-         cKNe6wJnCdZ6PNmfsD+CPtrid0qlyaB33miEcNxrhE1ryGJh2MUxZDiRtkiTt7QYIs3V
-         xXl4J7offQIV8ZBhopMpDhT1dQ2n4dxbcKsT3pOgop0woYqnw22+Z6B8sVvW4VgAdylC
-         D+Gw==
-X-Gm-Message-State: AOAM533rO+nz7J0vatPbDC7XN7jpVtAF2sChyS/bvXhfi2Y4mLQ7Uetx
-        8sQ/XbYEgQGkELEe1Yrd/v3WTg==
-X-Google-Smtp-Source: ABdhPJwPVH7gpTvD/ipnOWJvIHkx8CO3yNE7ijv4WaUQj7B8PPGPf7PeZuVShnyjBwPah/vGz1YMDg==
-X-Received: by 2002:a5d:4751:: with SMTP id o17mr4352832wrs.345.1595514036969;
-        Thu, 23 Jul 2020 07:20:36 -0700 (PDT)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id w2sm235204wre.5.2020.07.23.07.20.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 07:20:36 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH] ASoC: soc-component: don't report of_xlate_dai_name failures
-Date:   Thu, 23 Jul 2020 16:20:20 +0200
-Message-Id: <20200723142020.1338740-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 23 Jul 2020 10:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726815AbgGWOVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:21:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16BBD20759;
+        Thu, 23 Jul 2020 14:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595514067;
+        bh=DwG9+pXoNYRP1xXdYl20/XfML1PesR93kEaPYXidrE4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kxf2jh3n16Cqi842NE27sFgWtSWK+7ENJd5lTnUXfLSPQeqgXGOlI1AZdGACV/zJv
+         g4o6uamQTJm7iIu6ox+u4upCTlzSjSqqtGnVzjivV2q/uLDAyQwvV9PVMgpRjh7aAW
+         Vaff7IalES2a7kZ1v7zAgr7DMIOLBl2aXDSLZAuw=
+Date:   Thu, 23 Jul 2020 16:21:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        George Kennedy <george.kennedy@oracle.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v2] fbdev: Detect integer underflow at "struct
+ fbcon_ops"->clear_margins.
+Message-ID: <20200723142111.GA2377086@kroah.com>
+References: <20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200715094836.GD2571@kadam>
+ <9e6eac10-c5c3-f518-36cc-9ea32fb5d7fe@i-love.sakura.ne.jp>
+ <b50f85c7-80e5-89c5-0aca-31d8e9892665@i-love.sakura.ne.jp>
+ <20200715151220.GE2571@kadam>
+ <adfa8720-c411-dfe6-6b0f-7591dd95396c@i-love.sakura.ne.jp>
+ <20200716100006.GN3278063@phenom.ffwll.local>
+ <b202b74b-6a7b-e2be-2350-72144331303b@i-love.sakura.ne.jp>
+ <20200721160836.GA2109047@kroah.com>
+ <CAKMK7uGtDQKkSJhvr4YrGOmcbfVyTeEvSD-QSoHhUtH8=D856w@mail.gmail.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGtDQKkSJhvr4YrGOmcbfVyTeEvSD-QSoHhUtH8=D856w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With commit e2329eeba45f ("ASoC: soc-component: add soc_component_err()")
-every error different for ENOTSUPP or EPROBE_DEFER will log an error.
+On Wed, Jul 22, 2020 at 10:07:06AM +0200, Daniel Vetter wrote:
+> On Tue, Jul 21, 2020 at 6:08 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Jul 16, 2020 at 08:27:21PM +0900, Tetsuo Handa wrote:
+> > > On 2020/07/16 19:00, Daniel Vetter wrote:
+> > > > On Thu, Jul 16, 2020 at 12:29:00AM +0900, Tetsuo Handa wrote:
+> > > >> On 2020/07/16 0:12, Dan Carpenter wrote:
+> > > >>> I've complained about integer overflows in fbdev for a long time...
+> > > >>>
+> > > >>> What I'd like to see is something like the following maybe.  I don't
+> > > >>> know how to get the vc_data in fbmem.c so it doesn't include your checks
+> > > >>> for negative.
+> > > >>
+> > > >> Yes. Like I said "Thus, I consider that we need more sanity/constraints checks." at
+> > > >> https://lore.kernel.org/lkml/b1e7dd6a-fc22-bba8-0abb-d3e779329bce@i-love.sakura.ne.jp/ ,
+> > > >> we want basic checks. That's a task for fbdev people who should be familiar with
+> > > >> necessary constraints.
+> > > >
+> > > > I think the worldwide supply of people who understand fbdev and willing to
+> > > > work on it is roughly 0. So if someone wants to fix this mess properly
+> > > > (which likely means adding tons of over/underflow checks at entry points,
+> > > > since you're never going to catch the driver bugs, there's too many and
+> > > > not enough people who care) they need to fix this themselves.
+> > >
+> > > But I think we can enforce reasonable constraint which is much stricter than Dan's basic_checks()
+> > > (which used INT_MAX). For example, do we need to accept var->{xres,yres} >= 1048576, for
+> > > "32768 rows or cols" * "32 pixels per character" = 1045876 and vc_do_resize() accepts only
+> > > rows and cols < 32768 ?
+> > >
+> > > >
+> > > > Just to avoid confusion here.
+> > > >
+> > > >> Anyway, my two patches are small and low cost; can we apply these patches regardless
+> > > >> of basic checks?
+> > > >
+> > > > Which two patches where?
+> > >
+> > > [PATCH v3] vt: Reject zero-sized screen buffer size.
+> > >  from https://lkml.kernel.org/r/20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp
+> >
+> > This is now in my tree.
+> >
+> > > [PATCH v2] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+> > >  from https://lkml.kernel.org/r/20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp
+> >
+> > That should be taken by the fbdev maintainer, but I can take it too if
+> > people want.
+> 
+> Just missed this weeks pull request train and feeling like not worth
+> making this an exception (it's been broken forever after all), so
+> maybe best if you just add this to vt.
+> 
+> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> 
+> Also this avoids the impression I know what's going on in fbdev code,
+> maybe with sufficient abandon from my side someone will pop up who
+> cares an fixes the bazillion of syzkaller issues we seem to have
+> around console/vt and everything related.
 
-However, as explained in snd_soc_get_dai_name(), this callback may error
-to indicate that the DAI is not matched by the component tested. If the
-device provides other components, those may still match. Logging an error
-in this case is misleading.
+Great, will go queue it up now, thanks!
 
-Don't use soc_component_ret() in snd_soc_component_of_xlate_dai_name()
-to avoid spamming the log.
-
-Fixes: e2329eeba45f ("ASoC: soc-component: add soc_component_err()")
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
-
- If we wish to report an error when no name is found for dai phandle,
- I think it would be more approriate to it with with "struct device *"
- of the card, which is the one actually failing to get what it needs.
-
- These user of snd_soc_get_dai_name() are already reporting the error:
- * sound/soc/samsung/tm2_wm5110.c
- * sound/soc/rockchip/rk3288_hdmi_analog.c
-
- These could be silently failing:
- * Simple cards
- * Amlogic's cards
- * Samsumg odroid card
-
- sound/soc/soc-component.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/soc-component.c b/sound/soc/soc-component.c
-index 9565a0dd7cb6..fb6479b22d26 100644
---- a/sound/soc/soc-component.c
-+++ b/sound/soc/soc-component.c
-@@ -344,13 +344,15 @@ int snd_soc_component_of_xlate_dai_name(struct snd_soc_component *component,
- 					struct of_phandle_args *args,
- 					const char **dai_name)
- {
--	int ret = -ENOTSUPP;
--
- 	if (component->driver->of_xlate_dai_name)
--		ret = component->driver->of_xlate_dai_name(component,
--							   args, dai_name);
--
--	return soc_component_ret(component, ret);
-+		return component->driver->of_xlate_dai_name(component,
-+							    args, dai_name);
-+	/*
-+	 * Don't use soc_component_ret here because we may not want to report
-+	 * the error just yet. If a device has more than one component, the
-+	 * first may not match and we don't want spam the log with this.
-+	 */
-+	return -ENOTSUPP;
- }
- 
- void snd_soc_component_setup_regmap(struct snd_soc_component *component)
--- 
-2.25.4
-
+greg k-h
