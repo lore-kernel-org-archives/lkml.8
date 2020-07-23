@@ -2,91 +2,123 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A207CC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2652A20723
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0CF22CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:21:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TvV+b3pR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387546AbgGWDRp (ORCPT
+        id S2387448AbgGWDVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 23:17:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8254 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728902AbgGWDRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 23:17:44 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F226415FB4F193D458E8;
-        Thu, 23 Jul 2020 11:17:40 +0800 (CST)
-Received: from huawei.com (10.175.104.57) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Jul 2020
- 11:17:37 +0800
-From:   Li Heng <liheng40@huawei.com>
-To:     <axboe@kernel.dk>, <viro@zeniv.linux.org.uk>
-CC:     <io-uring@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] io_uring: Remove redundant NULL check
-Date:   Thu, 23 Jul 2020 11:19:10 +0800
-Message-ID: <1595474350-10039-1-git-send-email-liheng40@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 22 Jul 2020 23:21:06 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:39341 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728902AbgGWDVF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 23:21:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595474465; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GYUHQD9UFJd3/Ug179wafi2cUgd7wUBMj5u8vpLP3qU=;
+ b=TvV+b3pRCLmWR0mkIEuKLKlxNcvjPEMq3eH+J/Q/dabzUFa6xGiYylcs0j1P1TnfdGTtHJmV
+ h1zB5VK4sAR5oDuo00Er9tAmReHv5vA9tYTZj1/kRaXlFQGQNmCLnueuwUejRJ+e91f8O1WW
+ hr/C78xIarsLtuaipNrpEUlqcbM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5f190214f9ca681bd095ffe3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 03:20:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1BF0EC43391; Thu, 23 Jul 2020 03:20:52 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hongwus)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22B10C433C9;
+        Thu, 23 Jul 2020 03:20:50 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.57]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Jul 2020 11:20:50 +0800
+From:   hongwus@codeaurora.org
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, sh425.lee@samsung.com,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/9] scsi: ufs: Fix imbalanced scsi_block_reqs_cnt
+ caused by ufshcd_hold()
+In-Reply-To: <1595471649-25675-3-git-send-email-cang@codeaurora.org>
+References: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
+ <1595471649-25675-3-git-send-email-cang@codeaurora.org>
+Message-ID: <307b91fd2d7a59a3e1caa1819e2593e5@codeaurora.org>
+X-Sender: hongwus@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix below warnings reported by coccicheck:
-./fs/io_uring.c:1544:2-7: WARNING: NULL check before some freeing functions is not needed.
-./fs/io_uring.c:3095:2-7: WARNING: NULL check before some freeing functions is not needed.
-./fs/io_uring.c:3195:2-7: WARNING: NULL check before some freeing functions is not needed.
+Hi Can,
+On 2020-07-23 10:34, Can Guo wrote:
+> The scsi_block_reqs_cnt increased in ufshcd_hold() is supposed to be
+> decreased back in ufshcd_ungate_work() in a paired way. However, if
+> specific ufshcd_hold/release sequences are met, it is possible that
+> scsi_block_reqs_cnt is increased twice but only one ungate work is
+> queued. To make sure scsi_block_reqs_cnt is handled by ufshcd_hold() 
+> and
+> ufshcd_ungate_work() in a paired way, increase it only if queue_work()
+> returns true.
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 99bd3e4..2907828 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -1611,12 +1611,12 @@ int ufshcd_hold(struct ufs_hba *hba, bool 
+> async)
+>  		 */
+>  		/* fallthrough */
+>  	case CLKS_OFF:
+> -		ufshcd_scsi_block_requests(hba);
+>  		hba->clk_gating.state = REQ_CLKS_ON;
+>  		trace_ufshcd_clk_gating(dev_name(hba->dev),
+>  					hba->clk_gating.state);
+> -		queue_work(hba->clk_gating.clk_gating_workq,
+> -			   &hba->clk_gating.ungate_work);
+> +		if (queue_work(hba->clk_gating.clk_gating_workq,
+> +			       &hba->clk_gating.ungate_work))
+> +			ufshcd_scsi_block_requests(hba);
+>  		/*
+>  		 * fall through to check if we should wait for this
+>  		 * work to be done or not.
 
-Signed-off-by: Li Heng <liheng40@huawei.com>
----
- fs/io_uring.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Yes, queue_work() may fail for some reasons. We should make sure 
+scsi_block_reqs_cnt is balanced. Your change looks good to me since it 
+touches scsi_block_reqs_cnt only when the condition is met.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 6587935..71ac3f7 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1540,8 +1540,7 @@ static void io_dismantle_req(struct io_kiocb *req)
- {
- 	io_clean_op(req);
- 
--	if (req->io)
--		kfree(req->io);
-+	kfree(req->io);
- 	if (req->file)
- 		io_put_file(req, req->file, (req->flags & REQ_F_FIXED_FILE));
- 	io_req_clean_work(req);
-@@ -3091,8 +3090,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock,
- 		}
- 	}
- out_free:
--	if (iovec)
--		kfree(iovec);
-+	kfree(iovec);
- 	return ret;
- }
- 
-@@ -3191,8 +3189,7 @@ static int io_write(struct io_kiocb *req, bool force_nonblock,
- 		}
- 	}
- out_free:
--	if (iovec)
--		kfree(iovec);
-+	kfree(iovec);
- 	return ret;
- }
- 
--- 
-2.7.4
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
 
