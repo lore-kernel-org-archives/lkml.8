@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB21CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47244C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A83206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B9920737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oldN3uSz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mMVGCP0q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2+pWO0M6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vmiy3wfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgGWTJu (ORCPT
+        id S1728401AbgGWTJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:09:50 -0400
+        Thu, 23 Jul 2020 15:09:46 -0400
 Received: from Galois.linutronix.de ([193.142.43.55]:60504 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbgGWTJq (ORCPT
+        with ESMTP id S1728281AbgGWTJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:09:46 -0400
-Date:   Thu, 23 Jul 2020 19:09:44 -0000
+        Thu, 23 Jul 2020 15:09:45 -0400
+Date:   Thu, 23 Jul 2020 19:09:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595531385;
+        s=2020; t=1595531382;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6Mwt9NZqiGCWc/y/PwDNXa+V9bdnR9Bcgv963eoI4WQ=;
-        b=oldN3uSz3oj86BmkOiqqgH+4+fPiI1S9w3U6lpfNrAPEmMRdNkbQa6t3ANY5a6Nd51yRoc
-        KIcPKN5MEtDZNh5vBVd6SWdlomCCL6SEE06hezcob3pIfON134Hw7iU4067Q4WngtdjzV2
-        AXX05vpPhQ3XzUN4QJMUDdW2nvJbqIlUTsxerr0Owb7GuJP/wsHYikzALobdAYNdZ2FyUh
-        B2TjuN3HI4iCSlVq6wNYx2hRlVXbgZ/lTHlGQiksV2mKLTnQWbcQZ1TYKVJ/WF30UaVwkm
-        iLg0ZfLtvz1/tiBqga6Od833CR2cec0LzIl2/cz2giWZO0m0Sxm2U22fijzpWQ==
+        bh=XURIiBZeIQf48fZ8D2yW/iOUxTKm4roGT/PfgyGv4Mw=;
+        b=2+pWO0M6958CbLDUfICCEdPL3oJE746/vFpp52jcY91hLbeWAnxTaSOuY9XpRMQwGIemmG
+        lrSJ9WJ0Wv5a30oIPVrcxRNA30xrK+nMORTXCN51zzELTwjEquZMr6W5DIrWlrGru5Yc48
+        /oD/cUeRBTp3bLEJq4OQol1u6lN8j4zyaHNZUAO+anr57wJ2JlLtpxkKcsH2eW0NqGXgzI
+        jI98TkpPztGXyBdXnsWjXxE4zbS9AAPYj8eg5s0rUaIOmfTH647vR+L/VbnAO0ZfSCVSOp
+        A/HQw7mFUGFVsgMxNU1wgmOAaushmAo/hOlJ4j4mbxnoYBhb4mCcS70MsHw77g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595531385;
+        s=2020e; t=1595531382;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6Mwt9NZqiGCWc/y/PwDNXa+V9bdnR9Bcgv963eoI4WQ=;
-        b=mMVGCP0qIpIlSZ66jkfUoHKJ+wQ+eKQ3S0cZgeg7/xiYfR+H9fDxOszIwIVPYrWwkWSBX7
-        GrDXyuLuka+wZ/Dg==
+        bh=XURIiBZeIQf48fZ8D2yW/iOUxTKm4roGT/PfgyGv4Mw=;
+        b=Vmiy3wfSBD4+e+wXFPaSlMUZdV7GHBviG5eugFPL+CiZzW5XDCPfFFL7ppydyH5JnkTMSr
+        Mi8+RNnpQq8GWdAA==
 From:   "tip-bot2 for Alexandre Belloni" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-atmel-tcb: Rework 32khz
- clock selection
+Subject: [tip: timers/core] clocksource/drivers/timer-atmel-tcb: Add sama5d2 support
 Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200710230813.1005150-6-alexandre.belloni@bootlin.com>
-References: <20200710230813.1005150-6-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200710230813.1005150-10-alexandre.belloni@bootlin.com>
+References: <20200710230813.1005150-10-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Message-ID: <159553138460.4006.12847358392559063922.tip-bot2@tip-bot2>
+Message-ID: <159553138186.4006.16943754175654889381.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,65 +70,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     228e21848623e0ce54a1a3d7857b444813e49b2e
-Gitweb:        https://git.kernel.org/tip/228e21848623e0ce54a1a3d7857b444813e49b2e
+Commit-ID:     467ae18aa057c44417afc92896879c2fb37a8b65
+Gitweb:        https://git.kernel.org/tip/467ae18aa057c44417afc92896879c2fb37a8b65
 Author:        Alexandre Belloni <alexandre.belloni@bootlin.com>
-AuthorDate:    Sat, 11 Jul 2020 01:08:09 +02:00
+AuthorDate:    Sat, 11 Jul 2020 01:08:13 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 11 Jul 2020 18:57:58 +02:00
+CommitterDate: Sat, 11 Jul 2020 18:58:24 +02:00
 
-clocksource/drivers/timer-atmel-tcb: Rework 32khz clock selection
+clocksource/drivers/timer-atmel-tcb: Add sama5d2 support
 
-On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
-avoid looking it up and pass it directly to setup_clkevents.
+The first divisor for the sama5d2 is actually the gclk selector. Because
+the currently remaining divisors are fitting the use case, currently ensure
+it is skipped.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200710230813.1005150-6-alexandre.belloni@bootlin.com
+Link: https://lore.kernel.org/r/20200710230813.1005150-10-alexandre.belloni@bootlin.com
 ---
- drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index 7427b07..b255a4a 100644
+index 7fea134..787dbeb 100644
 --- a/drivers/clocksource/timer-atmel-tcb.c
 +++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
- 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
- }
+@@ -359,9 +359,15 @@ static struct atmel_tcb_config tcb_sam9x5_config = {
+ 	.counter_width = 32,
+ };
  
--static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
-+static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
- 
++static struct atmel_tcb_config tcb_sama5d2_config = {
++	.counter_width = 32,
++	.has_gclk = 1,
++};
++
  static const struct of_device_id atmel_tcb_of_match[] = {
- 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
-@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	u64 (*tc_sched_clock)(void);
- 	u32 rate, divided_rate = 0;
- 	int best_divisor_idx = -1;
--	int clk32k_divisor_idx = -1;
- 	int bits;
- 	int i;
- 	int ret;
-@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
+ 	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
++	{ .compatible = "atmel,sama5d2-tcb", .data = &tcb_sama5d2_config, },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -426,7 +432,10 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 
+ 	/* How fast will we be counting?  Pick something over 5 MHz.  */
+ 	rate = (u32) clk_get_rate(t0_clk);
+-	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
++	i = 0;
++	if (tc.tcb_config->has_gclk)
++		i = 1;
++	for (; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
  		unsigned divisor = atmel_tcb_divisors[i];
  		unsigned tmp;
- 
--		/* remember 32 KiHz clock for later */
--		if (!divisor) {
--			clk32k_divisor_idx = i;
--			continue;
--		}
--
- 		tmp = rate / divisor;
- 		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
- 		if (best_divisor_idx > 0) {
-@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		goto err_disable_t1;
- 
- 	/* channel 2:  periodic and oneshot timer support */
--	ret = setup_clkevents(&tc, clk32k_divisor_idx);
-+	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
- 	if (ret)
- 		goto err_unregister_clksrc;
  
