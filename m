@@ -2,170 +2,134 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A95C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7BFE207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED3C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:46:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="bImpdVRp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1NFcx22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgGWFkx (ORCPT
+        id S1726177AbgGWFqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:40:53 -0400
-Received: from mail-eopbgr20074.outbound.protection.outlook.com ([40.107.2.74]:43119
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725536AbgGWFkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:40:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jSmH1szUoLQ4zeuZTaUqMHFI53nELhNVmgERYr3mEuDT52TH8tYnsjnCMP0502IslY/NacXFcx+h+3VA/f17qsOkLoarIAZ190mpl4NeYSz3pKlF/zucEkZK/MHiuzRucoP9q/EsTot2Ty98FQP78KOcONo7YUlBW6GV44qj846lIUBxkwRJnY4FUYceBx+ZQDZM3fqVcOhRqSwI9qFuP9e9xxi/5S4MSoWVecYHCsyeo/R/INAmZHsI38dCTHwh03x2IdgG/KoZRPrGmeJrcPeqx6S6lQGgeEzIRjj9yMsEBE1mM1/Jv3CiLT8Xym7JtZ3yRCNA3aujJokgSGvOIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eaS/TlDo7cqi4FbDalwnmowouBaF73RbMKLUTJpPgcM=;
- b=RHZyHb8yQTJWZyWE/++6Q/79KwGyostRlDsTFZBXBkLhkPDZtGyMAZX1oIN3uUJ+fSxVHW2xVXhrLgxwl6HaLBW7l73HrRKK1w8HzEQf668r0sbBMJ0hdOXZUkYxBigitA01QQYpfgJm6h6weKbI3zV1OhB8fliejd2Cjhvz9keXpCquNYy/IpICKwyaV1uvQypR4eyQtavuHoTXp5kBlrqRQbftnjjO7lXrQGhisTinHXm8T2t2Uk2Zt+ApydXnXmV5xT4iX4+CTGAZ5ihrLQSJFY1NtCEJ7StbMEgtr7c9g1G6rR5szjyZ84osYo+eG/0dAumDCJYuYc6jzKLA+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eaS/TlDo7cqi4FbDalwnmowouBaF73RbMKLUTJpPgcM=;
- b=bImpdVRp/VzcFN4ysZDyAbWMJoYyYtBqk8JvB1X5V26CBHAeo9hKHbkbJTyY1pNrMa9vO6O0FcQqOH5e0G13q3rE97iTZpWzyvfNg2E6FH88q2L4OANMik1ademJaeXgRAWGoIbJX5Sq1M+CA7VhSvLarLtqzulh7TcaJcOb9O8=
-Received: from AM6PR04MB3976.eurprd04.prod.outlook.com (2603:10a6:209:3f::17)
- by AM6PR04MB5079.eurprd04.prod.outlook.com (2603:10a6:20b:4::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 23 Jul
- 2020 05:40:48 +0000
-Received: from AM6PR04MB3976.eurprd04.prod.outlook.com
- ([fe80::51e7:c810:fec7:6943]) by AM6PR04MB3976.eurprd04.prod.outlook.com
- ([fe80::51e7:c810:fec7:6943%3]) with mapi id 15.20.3174.030; Thu, 23 Jul 2020
- 05:40:48 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Radu-andrei Bulie <radu-andrei.bulie@nxp.com>,
-        "fido_max@inbox.ru" <fido_max@inbox.ru>
-Subject: RE: [PATCH devicetree 3/4] powerpc: dts: t1040rdb: put SGMII PHY
- under &mdio0 label
-Thread-Topic: [PATCH devicetree 3/4] powerpc: dts: t1040rdb: put SGMII PHY
- under &mdio0 label
-Thread-Index: AQHWYEz+LgZibInI10i2/O6ewv0daakUplWQ
-Date:   Thu, 23 Jul 2020 05:40:48 +0000
-Message-ID: <AM6PR04MB39763CA66048BD4F221D0DE4EC760@AM6PR04MB3976.eurprd04.prod.outlook.com>
-References: <20200722172422.2590489-1-olteanv@gmail.com>
- <20200722172422.2590489-4-olteanv@gmail.com>
-In-Reply-To: <20200722172422.2590489-4-olteanv@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [5.14.204.117]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 30811635-b75a-46a0-1b37-08d82ecaf405
-x-ms-traffictypediagnostic: AM6PR04MB5079:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5079AD348F569C950C4E48B8AD760@AM6PR04MB5079.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /Bv17ujXPqbg74Cv8yFInypvDL1dKa09B0vWwYrgJNpBwuDc14pPIeWHnURs+korboP21mBrOgjuxrFxZyiqqMz12riMx/m1/jp1gdUhb4JL7lRw/PQAzcsqPwRINAgUMamZGpeEaZeQW3ifQ/TB7zczvZexmi7o+z0TQeoNKhbdOWeai6FFcTeUOgH9n7VS3hHRhy4FcDyWZ2473qVQnrnyHPR8OA2goMYjJpntLgd/aB/d9mCFuVBliJ2egIm0OIibWkjaKJ80LCDLxAxJHbEQnoOrgZgmSDhiUVBPxfJnzx9UraWv1RCI2bYAH54+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB3976.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(186003)(8936002)(64756008)(66476007)(478600001)(83380400001)(66556008)(2906002)(5660300002)(66446008)(7696005)(7416002)(316002)(33656002)(76116006)(52536014)(8676002)(26005)(110136005)(54906003)(9686003)(86362001)(71200400001)(53546011)(4326008)(6506007)(66946007)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: JYal8yjGjhmUpyCL23LXjXcejFQTZ8ako1F/2UL7OOQg/n/HQ2Ew+kIZrKc0/MVxlaw5RSFcDC9XKfxDaCzl4rs6U/2bRo404kTjj+HoXI2r5Oj4++WH94xQdtyH3WnNtUbjS7G99jDnDNHbW6742skjsSM2MfI1kBw9/uFqOCEMH9RdX40JW60hEBY2H0lgkxJisxllhhQxGUneAK7mofLwqPDnz2Oe4gz/NF4KoR+ifqUAysSbbMREgRKQg9sNMGUOmw+kWKak1bL4JtMoxAY7Isi2xrVYj8ohi58kojpQmB4pCK7TQ1UtpQAus3pLSwvnkfCy3ndiP7V9rJg5uvhn10pVtb8gZqT6ttMOseixs+tJDr8YDlExMR2SFCkdbPLRoIuLEKUUskV2oUUHY9kph8L6mQogLDCK3ZrYgZl+D9VTA9m8IauTqDNMyxcgi6uGZM5ox09AWHeCFoQEWOJfa7kPKv5kg1/5EriKLsQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jul 2020 01:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgGWFql (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 01:46:41 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8889C0619DC;
+        Wed, 22 Jul 2020 22:46:41 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x9so2063398plr.2;
+        Wed, 22 Jul 2020 22:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4Bsv9nIgqKmSYSIOMPedKdrcSWXd/PYFSO2aIq/191g=;
+        b=h1NFcx22ZnIuEzuWbSbkC3x7IEN9Y2dN6+57CJu8RbnCZqVp91BCoOWxD1R6Zx93Sb
+         lo4nx9IxNGFCzW2Vz6QX3Plltlj4h16/LmJ0YIpIuapYsFxfeqrNXg9VDLvCy2d2UU/J
+         haOQ4c/cYL4G2Y4SES+dw1eVWHBr7SQGOS22NA2U1bvjwxKAggTPT31ZqEZ3WTNy+Z7d
+         PMLE8ufxcP4Y16XHvH3S/qkr0LjvrGNndguO5t1XbH1XujDd0rCNUBn2mcdMWQrhslMf
+         sTP8OF/bVRL/XHpQt9lGLV6hdQRH5BtFSe/3/rFD60TtGwM6GvYDM2P8XIPmb+ZLPh6Y
+         afdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4Bsv9nIgqKmSYSIOMPedKdrcSWXd/PYFSO2aIq/191g=;
+        b=Yp7JQ578EWkYzFUIa2gCG8TGI/oqUNRUYdWg0sf8a6jJazdl9m+oA6fqodEs+VGOd9
+         w9BgLbBfYNNw+ON391ULd+hJBQWvMDWY4gArPGK95ejaKhJ45yDewa1AfpqOubgH2mXx
+         a+/55VSIVSCEqfZCDXnemzqgYZhB6QXM81ow4Dku6xhtnmgH5/m7AjWgb6ZXj6lga+FK
+         I+bPM7A6KfHZ5FN0im20SfVo3GkWoqke3HRcp3TaYfibTF/EXlnNTsGdxWFjTu7E6tIU
+         hrCf59Fj89ocs9pvbtRkJHfcqfeg+otGJi/Hx4puOowwv1Pd3v/IJvJm4TqPFyy7bf2u
+         /4Pw==
+X-Gm-Message-State: AOAM532CgZSQRtcdITWo8FBuyXs7UgA6pblEmrMSBkQDwzwyDCN7LxEJ
+        7xIc0v6UcyvCTQmi+WZrM7I=
+X-Google-Smtp-Source: ABdhPJyIls34k7x9JFSOkkgOqf1QQEkFiI5YZQPlp/pPPicar1BpkkeJw1obLQi4kxe5E1ASY31oLg==
+X-Received: by 2002:a17:90a:1a02:: with SMTP id 2mr2574014pjk.150.1595483201112;
+        Wed, 22 Jul 2020 22:46:41 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id u16sm1295001pfn.52.2020.07.22.22.46.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jul 2020 22:46:40 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 22:46:07 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Cc:     kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 0/4] ASoC: fsl_asrc: allow selecting arbitrary clocks
+Message-ID: <20200723054604.GC5476@Asurada-Nvidia>
+References: <20200702142235.235869-1-arnaud.ferraris@collabora.com>
+ <20200702184226.GA23935@Asurada-Nvidia>
+ <abdd7265-43d2-49b5-6afd-70d65baac30e@collabora.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB3976.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30811635-b75a-46a0-1b37-08d82ecaf405
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 05:40:48.3732
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /Ov+hqQMBgJgE5yGTDeKqx9QweO+ZPr4vLyDMnKPW9WCiT5K6cPcI7WqIxksXVo8v49Y3q7v1RAyLmj3FhzUlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5079
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <abdd7265-43d2-49b5-6afd-70d65baac30e@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Vladimir Oltean <olteanv@gmail.com>
-> Sent: Wednesday, July 22, 2020 8:24 PM
-> To: robh+dt@kernel.org; shawnguo@kernel.org; mpe@ellerman.id.au;
-> devicetree@vger.kernel.org
-> Cc: benh@kernel.crashing.org; paulus@samba.org; linuxppc-
-> dev@lists.ozlabs.org; linux-kernel@vger.kernel.org;
-> netdev@vger.kernel.org; Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
-> Radu-andrei Bulie <radu-andrei.bulie@nxp.com>; fido_max@inbox.ru
-> Subject: [PATCH devicetree 3/4] powerpc: dts: t1040rdb: put SGMII PHY
-> under &mdio0 label
->=20
-> We're going to add 8 more PHYs in a future patch. It is easier to follow
-> the hardware description if we don't need to fish for the path of the
-> MDIO controllers inside the SoC and just use the labels.
->=20
+On Fri, Jul 17, 2020 at 01:16:42PM +0200, Arnaud Ferraris wrote:
+> Hi Nic,
+> 
+> Le 02/07/2020 à 20:42, Nicolin Chen a écrit :
+> > Hi Arnaud,
+> > 
+> > On Thu, Jul 02, 2020 at 04:22:31PM +0200, Arnaud Ferraris wrote:
+> >> The current ASRC driver hardcodes the input and output clocks used for
+> >> sample rate conversions. In order to allow greater flexibility and to
+> >> cover more use cases, it would be preferable to select the clocks using
+> >> device-tree properties.
+> > 
+> > We recent just merged a new change that auto-selecting internal
+> > clocks based on sample rates as the first option -- ideal ratio
+> > mode is the fallback mode now. Please refer to:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200702&id=d0250cf4f2abfbea64ed247230f08f5ae23979f0
+> 
+> While working on fixing the automatic clock selection (see my v3), I
+> came across another potential issue, which would be better explained
+> with an example:
+>   - Input has sample rate 8kHz and uses clock SSI1 with rate 512kHz
+>   - Output has sample rate 16kHz and uses clock SSI2 with rate 1024kHz
+> 
+> Let's say my v3 patch is merged, then the selected input clock will be
+> SSI1, while the selected output clock will be SSI2. In that case, it's
+> all good, as the driver will calculate the dividers right.
+> 
+> Now, suppose a similar board has the input wired to SSI2 and output to
+> SSI1, meaning we're now in the following case:
+>   - Input has sample rate 8kHz and uses clock SSI2 with rate 512kHz
+>   - Output has sample rate 16kHz and uses clock SSI1 with rate 1024kHz
+> (the same result is achieved during capture with the initial example
+> setup, as input and output properties are then swapped)
+> 
+> In that case, the selected clocks will still be SSI1 for input (just
+> because it appears first in the clock table), and SSI2 for output,
+> meaning the calculated dividers will be:
+>   - input: 512 / 16 => 32 (should be 64)
+>   - output: 1024 / 8 => 128 (should be 64 here too)
 
-Please align to the existing structure, it may be easier to add something
-without paying attention to that but it's better to keep things organized.
-This structure is used across all the device trees of the platforms using
-DPAA, let's not start diverging now.
-
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> ---
->  arch/powerpc/boot/dts/fsl/t1040rdb.dts | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-> b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-> index 65ff34c49025..40d7126dbe90 100644
-> --- a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-> +++ b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
-> @@ -59,12 +59,6 @@ ethernet@e4000 {
->  				phy-handle =3D <&phy_sgmii_2>;
->  				phy-connection-type =3D "sgmii";
->  			};
-> -
-> -			mdio@fc000 {
-> -				phy_sgmii_2: ethernet-phy@3 {
-> -					reg =3D <0x03>;
-> -				};
-> -			};
->  		};
->  	};
->=20
-> @@ -76,3 +70,9 @@ cpld@3,0 {
->  };
->=20
->  #include "t1040si-post.dtsi"
-> +
-> +&mdio0 {
-> +	phy_sgmii_2: ethernet-phy@3 {
-> +		reg =3D <0x3>;
-> +	};
-> +};
-> --
-> 2.25.1
-
+I don't get the 32, 128 and 64 parts. Would you please to elaborate
+a bit? What you said sounds to me like the driver calculates wrong
+dividers?
