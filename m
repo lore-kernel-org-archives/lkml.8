@@ -2,126 +2,130 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAE8C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D40620781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:42:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7L/ZNI6"
+	by mail.kernel.org (Postfix) with ESMTP id 803F122CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbgGWBm5 (ORCPT
+        id S2387573AbgGWBnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729198AbgGWBm4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:42:56 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7340DC0619DC;
-        Wed, 22 Jul 2020 18:42:56 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l6so3986539qkc.6;
-        Wed, 22 Jul 2020 18:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Hgi93fl+d8Jztwv9C8gs6eaqKANcCITr2o5G6xotyng=;
-        b=D7L/ZNI66qtNV5JuQnNjl0SDMvevUM3dgtVUc3cnxUfKR6te7KrNdPlqKJ1Ein65u9
-         N3BUT+aba14tAPV8r5EpRwSBTrSOidxRu0tvFHicS1i3b4rrrQwuI/zatq6iRtoAdOP1
-         n4nBfsIgNrvXpejJPUSk82EtwqoZ+RIErwzhBvTmUsz+l2ppEp4TzbUHNMvg3Ggs51yp
-         4ULdTCZBIuAcRu5fauMdldzyk8J8okz06GyatZcdIUvF/WIoW8yNM770AYGD8hcJxXNl
-         jFYaxrifYlQsd8MJkXraL5j9bZzTynkTH/5eCRfgu2WzVfSSAPTh3OW6JdckQUl5XoJT
-         6Q6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Hgi93fl+d8Jztwv9C8gs6eaqKANcCITr2o5G6xotyng=;
-        b=WIuaKZ99t6+07TnOGMVKsaKeAk+dRfelT4vYl2zq+z3MCvxjjV+JzS/RsFkbBO9WjK
-         2o+0xqzfeON3X3t8q6nD6ZOytHtSpNVtu9BRYO2x4C6LXN29GFej8UoKQyNVUFH3fVVU
-         FUh6I9WTQVbhCw4iCNkU8QEA/48ahgQHX5994adVL5KJKNtwjEp7DUshTyFz26uGDbRX
-         bBiZ2QWBtDZwqtHaK2lSoiKVVsz8nXnDMfAN83QiOzrez4pRZkjq8DLX4MQr0jKigZhX
-         6C+ayP4iCg4AJcloOUZxpKf45w8JuVyuwFCEXon/daOyY2J6xFBPqfMMH3GQAHZG9jva
-         ogvA==
-X-Gm-Message-State: AOAM531UqRucIacbVi1dnlvlK4GWzdhM4kdXxF0o8sDenz3S4QMLl8Sx
-        yI3WTMc1jhNyXHDSjM/+jTJFuKmahK7SA/LK7fQ=
-X-Google-Smtp-Source: ABdhPJx8VAfEHMvN7Qs5nLr0PCFEisdQTFTIrLgCPq5V5asR/gkL6ddOABn+KhrG/fW8UMQSRzNi5vC/24zVqfQ9BWc=
-X-Received: by 2002:a37:6d2:: with SMTP id 201mr2782563qkg.187.1595468575726;
- Wed, 22 Jul 2020 18:42:55 -0700 (PDT)
+        Wed, 22 Jul 2020 21:43:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35136 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729198AbgGWBnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:43:20 -0400
+IronPort-SDR: vGmSKqUiAwiT79TdRlYfUEzhn+QRTigIexKiuE57WYP+IshVvcWoYnVTzDgoGbgKjQO/xC2qOB
+ qeV1kVAWmHJw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="211994130"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="211994130"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 18:43:20 -0700
+IronPort-SDR: qzEgg29TJShS4o3Yp4JnojIJki6kfZSSgbAjaUh16Ol/Mp5LoUetM0bF3whgosZFuwAEP/+n5K
+ rYuL/eygxALg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="392853121"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Jul 2020 18:43:17 -0700
+Cc:     baolu.lu@linux.intel.com, Ashok Raj <ashok.raj@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Koba Ko <koba.ko@canonical.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Christian Kellner <ckellner@redhat.com>
+Subject: Re: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx dedicated
+ iommu
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200721001713.24282-1-baolu.lu@linux.intel.com>
+ <DM6PR19MB2636D1CC549743E2113C0EAFFA780@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <d8548318-ee2e-ca3f-cb0a-e219ce23d471@linux.intel.com>
+ <DM6PR19MB263622CA8CAA7CDA3973E0DBFA780@DM6PR19MB2636.namprd19.prod.outlook.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <2695916e-0dfd-6c8a-d4e7-1f4da372e123@linux.intel.com>
+Date:   Thu, 23 Jul 2020 09:38:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1595302129-23895-1-git-send-email-iamjoonsoo.kim@lge.com>
- <20200721120533.GD15516@casper.infradead.org> <4c484ce0-cfed-0c50-7a20-d1474ce9afee@suse.cz>
- <20200721124312.GE15516@casper.infradead.org>
-In-Reply-To: <20200721124312.GE15516@casper.infradead.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Thu, 23 Jul 2020 10:42:44 +0900
-Message-ID: <CAAmzW4NSQi016QH4rwZ4d5nCfS+9bpRZGd0wovaUSWnuySTvoQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <DM6PR19MB263622CA8CAA7CDA3973E0DBFA780@DM6PR19MB2636.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 21=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 9:43, M=
-atthew Wilcox <willy@infradead.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Tue, Jul 21, 2020 at 02:38:56PM +0200, Vlastimil Babka wrote:
-> > On 7/21/20 2:05 PM, Matthew Wilcox wrote:
-> > > On Tue, Jul 21, 2020 at 12:28:49PM +0900, js1304@gmail.com wrote:
-> > >> @@ -4619,8 +4631,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsign=
-ed int order,
-> > >>            wake_all_kswapds(order, gfp_mask, ac);
-> > >>
-> > >>    reserve_flags =3D __gfp_pfmemalloc_flags(gfp_mask);
-> > >> -  if (reserve_flags)
-> > >> +  if (reserve_flags) {
-> > >>            alloc_flags =3D reserve_flags;
-> > >> +          alloc_flags =3D current_alloc_flags(gfp_mask, alloc_flags=
-);
-> > >> +  }
-> > >
-> > > Is this right?  Shouldn't you be passing reserve_flags to
-> > > current_alloc_flags() here?  Also, there's no need to add { } here.
-> >
-> > Note the "alloc_flags =3D reserve_flags;" line is not being deleted her=
-e. But if
-> > it was, your points would be true, and yeah it would be a bit more tidy=
-.
->
-> Oh ... I should wake up a little more.
->
-> Yeah, I'd recommend just doing this:
->
-> -               alloc_flags =3D reserve_flags;
-> +               alloc_flags =3D current_alloc_flags(gfp_mask, reserve_fla=
-gs);
+On 7/22/20 7:45 AM, Limonciello, Mario wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Tuesday, July 21, 2020 6:07 PM
+>> To: Limonciello, Mario; Joerg Roedel
+>> Cc: baolu.lu@linux.intel.com; Ashok Raj; linux-kernel@vger.kernel.org;
+>> stable@vger.kernel.org; Koba Ko; iommu@lists.linux-foundation.org
+>> Subject: Re: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx dedicated
+>> iommu
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> Hi Limonciello,
+>>
+>> On 7/21/20 10:44 PM, Limonciello, Mario wrote:
+>>>> -----Original Message-----
+>>>> From: iommu<iommu-bounces@lists.linux-foundation.org>  On Behalf Of Lu
+>>>> Baolu
+>>>> Sent: Monday, July 20, 2020 7:17 PM
+>>>> To: Joerg Roedel
+>>>> Cc: Ashok Raj;linux-kernel@vger.kernel.org;stable@vger.kernel.org; Koba
+>>>> Ko;iommu@lists.linux-foundation.org
+>>>> Subject: [PATCH 1/1] iommu/vt-d: Skip TE disabling on quirky gfx dedicated
+>>>> iommu
+>>>>
+>>>> The VT-d spec requires (10.4.4 Global Command Register, TE field) that:
+>>>>
+>>>> Hardware implementations supporting DMA draining must drain any in-flight
+>>>> DMA read/write requests queued within the Root-Complex before completing
+>>>> the translation enable command and reflecting the status of the command
+>>>> through the TES field in the Global Status register.
+>>>>
+>>>> Unfortunately, some integrated graphic devices fail to do so after some
+>>>> kind of power state transition. As the result, the system might stuck in
+>>>> iommu_disable_translation(), waiting for the completion of TE transition.
+>>>>
+>>>> This provides a quirk list for those devices and skips TE disabling if
+>>>> the qurik hits.
+>>>>
+>>>> Fixes:https://bugzilla.kernel.org/show_bug.cgi?id=208363
+>>> That one is for TGL.
+>>>
+>>> I think you also want to add this one for ICL:
+>>> Fixes:https://bugzilla.kernel.org/show_bug.cgi?id=206571
+>>>
+>>
+>> Do you mean someone have tested that this patch also fixes the problem
+>> described in 206571?
+>>
+> 
+> Yes, confusingly https://bugzilla.kernel.org/show_bug.cgi?id=208363#c31 actually
+> is the XPS 9300 ICL system and issue.
+> 
+> I also have a private confirmation from another person that it resolves it for
+> them on another ICL platform.
+> 
 
-Okay. I will change it. Just note that the reason that I added it
-separately is that
-I think that separation is more readable since we can easily notice
-that alloc_flags
-is changed to reserve_flags without inspecting currect_alloc_flags() functi=
-on.
+Okay! Thank you very much! I just posted v2 with this tag added.
 
-Thanks.
+Best regards,
+baolu
