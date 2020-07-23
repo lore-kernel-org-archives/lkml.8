@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D46FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C41C433F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD0F420825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B9420825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="i5H4s+qv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XXcRiwmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgGWMTM (ORCPT
+        id S1728832AbgGWMT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:19:12 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19162 "EHLO
+        Thu, 23 Jul 2020 08:19:26 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19180 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgGWMTK (ORCPT
+        with ESMTP id S1728806AbgGWMTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:19:10 -0400
+        Thu, 23 Jul 2020 08:19:24 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f197fc40000>; Thu, 23 Jul 2020 05:17:08 -0700
+        id <B5f197fd10001>; Thu, 23 Jul 2020 05:17:21 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Jul 2020 05:19:10 -0700
+  Thu, 23 Jul 2020 05:19:23 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 05:19:10 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
- 2020 12:19:09 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 23 Jul 2020 12:19:09 +0000
+        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 05:19:23 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
+ 2020 12:19:23 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 23 Jul 2020 12:19:22 +0000
 Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f19803a0003>; Thu, 23 Jul 2020 05:19:09 -0700
+        id <B5f1980470000>; Thu, 23 Jul 2020 05:19:22 -0700
 From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
 To:     <digetx@gmail.com>, <linux-i2c@vger.kernel.org>,
         <thierry.reding@gmail.com>
@@ -46,69 +46,129 @@ CC:     <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <ldewangan@nvidia.com>,
         <smohammed@nvidia.com>, <rgumasta@nvidia.com>,
         Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [PATCH 2/7] i2c: tegra: Fix setting of controller ID
-Date:   Thu, 23 Jul 2020 17:48:48 +0530
-Message-ID: <1595506733-10307-2-git-send-email-kyarlagadda@nvidia.com>
+Subject: [PATCH 6/7] i2c: tegra: DMA support for t186 and t194
+Date:   Thu, 23 Jul 2020 17:48:52 +0530
+Message-ID: <1595506733-10307-6-git-send-email-kyarlagadda@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595506733-10307-1-git-send-email-kyarlagadda@nvidia.com>
 References: <1595506733-10307-1-git-send-email-kyarlagadda@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595506628; bh=dsjnuZOTtQt5TvQcOndJuqUXWxDoWmm74K7vWSQWQx0=;
+        t=1595506641; bh=lbncHwO3OLR/eiajOIMGJWlwqCWr+tFZpr51JViAPWc=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:Content-Type;
-        b=i5H4s+qvPEYh8/QWROqjl8QOSLkP6Gqz7k8JpCZ8E6DziSbMGY3pHC4cSlmanpk3E
-         RdHQ7reA2vv02xY7N6k9t/HjnOHB7qrKgB5wtR0hYHO1tmGjUX68oYGl98fWELGtCt
-         w7ROlpaiOotZYcSEr6UzMdSswK9NIp1c3JKlkwnlCa03IrDqmxJpHzOnQ/0krY/MlQ
-         K1Uxfn2rqtCjXwSLsS+fun7XK0HceIEr1eamXaT61L4O1807tTg94Teiauz6PfbBXn
-         0xYUtgX24wtLl/CMJ84Nv9k1MgaC8Kw4CV8SaazUukCgtPyI6yA1Y1DkvqxIIf1jhI
-         PvscGed9V1XDg==
+        b=XXcRiwmSauA6ff2cOSQpKunHfb2/28oVTWDfPcuWiebyd1kAp7nsalRWH2ugrBk3U
+         ZmkXutLc0gS9w3YWyC6LmKV7WWaXFDiyufiUQHLzetUtbjxBFgV4JD0DBE/atiOLts
+         CsTbaPPS9G6wYGRzWX/UHrC2ILIkrqIV2cpWGHsp+1O7O64d8IcZTsmMXn32Qhy8I8
+         TCkBxSwtuWBPrcf43j7QqrzCpU7lrW181xjBXbhT0etvMjYpmneG+FcgdlRpOPLFxA
+         mySbe2q1dADrBpOFFJL0VC8+msVsAzCJfWvbQSjFSZbL+qX9xacP3oeZidYHDkcr6R
+         JYb7cIHqQjtpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shardar Shariff Md <smohammed@nvidia.com>
+Enable GPC DMA support for Tegra186 and Tegra194
 
-Assign controller id with adapter number as it (cont_id) is passed
-through DT(through alias). Mask with controller id mask to avoid
-overflow other fields when single device is present and id is -1.
-
-Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
+Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
 Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-tegra.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index c6c870c..a841d6c 100644
+index 8ab968e..77198fc 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -83,6 +83,7 @@
- #define PACKET_HEADER0_CONT_ID			GENMASK(15, 12)
- #define PACKET_HEADER0_PROTOCOL			GENMASK(7, 4)
- #define PACKET_HEADER0_PROTOCOL_I2C		1
-+#define PACKET_HEADER0_CONT_ID_MASK		0xF
+@@ -236,6 +236,7 @@ struct tegra_i2c_hw_feature {
+ 	u32 setup_hold_time_hs_mode;
+ 	bool has_interface_timing_reg;
+ 	bool has_slcg_support;
++	bool has_gpc_dma;
+ };
  
- #define I2C_HEADER_CONT_ON_NAK			BIT(21)
- #define I2C_HEADER_READ				BIT(19)
-@@ -1669,7 +1670,6 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->adapter.retries = 1;
- 	i2c_dev->adapter.timeout = 6 * HZ;
- 	i2c_dev->irq = irq;
--	i2c_dev->cont_id = pdev->id;
- 	i2c_dev->dev = &pdev->dev;
+ /**
+@@ -432,11 +433,18 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
+ 	dma_addr_t dma_phys;
+ 	int err;
  
- 	i2c_dev->rst = devm_reset_control_get_exclusive(&pdev->dev, "i2c");
-@@ -1807,6 +1807,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto release_dma;
+-	if (!i2c_dev->hw->has_apb_dma)
+-		return 0;
+-
+-	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
+-		dev_dbg(i2c_dev->dev, "Support for APB DMA not enabled!\n");
++	if (i2c_dev->hw->has_gpc_dma) {
++		if (!IS_ENABLED(CONFIG_TEGRA_GPC_DMA)) {
++			dev_dbg(i2c_dev->dev, "Support for GPC DMA not enabled!\n");
++			return 0;
++		}
++	} else if (i2c_dev->hw->has_apb_dma) {
++		if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
++			dev_dbg(i2c_dev->dev, "Support for APB DMA not enabled!\n");
++			return 0;
++		}
++	} else {
++		dev_dbg(i2c_dev->dev, "DMA is not enabled!\n");
+ 		return 0;
+ 	}
  
-+	i2c_dev->cont_id = i2c_dev->adapter.nr & PACKET_HEADER0_CONT_ID_MASK;
- 	pm_runtime_put(&pdev->dev);
+@@ -1490,6 +1498,7 @@ static const struct tegra_i2c_hw_feature tegra20_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0x0,
+ 	.setup_hold_time_hs_mode = 0x0,
+ 	.has_interface_timing_reg = false,
++	.has_gpc_dma = false,
+ };
  
- 	return 0;
+ static const struct tegra_i2c_hw_feature tegra30_i2c_hw = {
+@@ -1519,6 +1528,7 @@ static const struct tegra_i2c_hw_feature tegra30_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0x0,
+ 	.setup_hold_time_hs_mode = 0x0,
+ 	.has_interface_timing_reg = false,
++	.has_gpc_dma = false,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra114_i2c_hw = {
+@@ -1548,6 +1558,7 @@ static const struct tegra_i2c_hw_feature tegra114_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0x0,
+ 	.setup_hold_time_hs_mode = 0x0,
+ 	.has_interface_timing_reg = false,
++	.has_gpc_dma = false,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra124_i2c_hw = {
+@@ -1577,6 +1588,7 @@ static const struct tegra_i2c_hw_feature tegra124_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0x0,
+ 	.setup_hold_time_hs_mode = 0x0,
+ 	.has_interface_timing_reg = true,
++	.has_gpc_dma = false,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra210_i2c_hw = {
+@@ -1606,6 +1618,7 @@ static const struct tegra_i2c_hw_feature tegra210_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0,
+ 	.setup_hold_time_hs_mode = 0,
+ 	.has_interface_timing_reg = true,
++	.has_gpc_dma = true,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra186_i2c_hw = {
+@@ -1635,6 +1648,7 @@ static const struct tegra_i2c_hw_feature tegra186_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0,
+ 	.setup_hold_time_hs_mode = 0,
+ 	.has_interface_timing_reg = true,
++	.has_gpc_dma = true,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra194_i2c_hw = {
+@@ -1664,6 +1678,7 @@ static const struct tegra_i2c_hw_feature tegra194_i2c_hw = {
+ 	.setup_hold_time_fast_fast_plus_mode = 0x02020202,
+ 	.setup_hold_time_hs_mode = 0x090909,
+ 	.has_interface_timing_reg = true,
++	.has_gpc_dma = true,
+ };
+ 
+ /* Match table for of_platform binding */
 -- 
 2.7.4
 
