@@ -2,66 +2,72 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06283C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B1CC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCC2722B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAE520771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387702AbgGWBMZ (ORCPT
+        id S2387499AbgGWBT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
+        Wed, 22 Jul 2020 21:19:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733203AbgGWBMY (ORCPT
+        with ESMTP id S1730837AbgGWBT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:12:24 -0400
+        Wed, 22 Jul 2020 21:19:26 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C58C0619DC;
-        Wed, 22 Jul 2020 18:12:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9856C0619DC;
+        Wed, 22 Jul 2020 18:19:26 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3D2B9126B58BC;
-        Wed, 22 Jul 2020 17:55:39 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 18:12:23 -0700 (PDT)
-Message-Id: <20200722.181223.1143301659120025502.davem@davemloft.net>
-To:     gustavoars@kernel.org
-Cc:     rmody@marvell.com, skalluru@marvell.com, kuba@kernel.org,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6BBE6126B5A23;
+        Wed, 22 Jul 2020 18:02:40 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 18:19:24 -0700 (PDT)
+Message-Id: <20200722.181924.45073818927713516.davem@davemloft.net>
+To:     alobakin@marvell.com
+Cc:     kuba@kernel.org, irusskikh@marvell.com,
+        michal.kalderon@marvell.com, aelior@marvell.com,
+        denis.bolotin@marvell.com, dledford@redhat.com, jgg@ziepe.ca,
+        ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, kpsingh@chromium.org,
+        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] bna: bfi.h: Avoid the use of one-element array
+Subject: Re: [PATCH v2 net-next 00/15] qed, qede: improve chain API and add
+ XDP_REDIRECT support
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200722185024.GA15894@embeddedor>
-References: <20200722185024.GA15894@embeddedor>
+In-Reply-To: <20200722221045.5436-1-alobakin@marvell.com>
+References: <20200722221045.5436-1-alobakin@marvell.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jul 2020 17:55:39 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jul 2020 18:02:41 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Date: Wed, 22 Jul 2020 13:50:24 -0500
+From: Alexander Lobakin <alobakin@marvell.com>
+Date: Thu, 23 Jul 2020 01:10:30 +0300
 
-> One-element arrays are being deprecated[1]. Replace the one-element
-> array with a simple value type 'u8 rsvd'[2], once it seems this is
-> just a placeholder for alignment.
+> This series adds missing XDP_REDIRECT case handling in QLogic Everest
+> Ethernet driver with all necessary prerequisites and ops.
+> QEDE Tx relies heavily on chain API, so make sure it is in its best
+> at first.
 > 
-> [1] https://github.com/KSPP/linux/issues/79
-> [2] https://github.com/KSPP/linux/issues/86
+> v2 (from [1]):
+>  - add missing includes to #003 to pass the build on Alpha;
+>  - no functional changes.
 > 
-> Tested-by: kernel test robot <lkp@intel.com>
-> Link: https://github.com/GustavoARSilva/linux-hardening/blob/master/cii/0-day/bfi-20200718.md
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> [1] https://lore.kernel.org/netdev/20200722155349.747-1-alobakin@marvell.com/
 
-Applied, thanks.
+Series applied, thank you.
