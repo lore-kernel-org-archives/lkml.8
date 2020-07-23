@@ -2,145 +2,121 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AE8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46319207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C06207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d991mgDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGWSRK (ORCPT
+        id S1726854AbgGWSVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:17:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29732 "EHLO mga17.intel.com"
+        Thu, 23 Jul 2020 14:21:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43141 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgGWSRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:17:10 -0400
-IronPort-SDR: PWMzL1apfzVz7GetJR44NNQV93E1AQ0WNwxtWaD1dcaWhRuKnHKVcI2vfAojDC3O7vroA5vTp+
- wqLYU9fE5qRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130673160"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="130673160"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 11:17:09 -0700
-IronPort-SDR: EUSG2qZA47jvxA+IO9sAgZj9nktgV7zdzP8xaw40VkuBXsUWbYTYqnhq3GqVfxTbviKZvmtLpH
- D+BJwXfmkSgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="311128920"
-Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 11:17:08 -0700
-Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jyfmG-0000ZW-2u; Thu, 23 Jul 2020 18:17:08 +0000
-Date:   Fri, 24 Jul 2020 02:16:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:irq/urgent] BUILD SUCCESS
- ec0160891e387f4771f953b888b1fe951398e5d9
-Message-ID: <5f19d418.yOFiRAl8YMgbhNYB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726643AbgGWSVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:21:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595528495; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=j/N4OgIpS8UJZ7Blrr8EIZX5QrRY20vZgZBo/jYgApY=; b=d991mgDjk3vpPqXRzetDVJrHOTkT4no08jiMLKy5ZimmNAXMwLrTvs2MtVjAngCK1V6qt340
+ 7/ehbDjKhmmrBOGxeV/qX7gnOK+KwTR8AGQe4dHWRR45WUOIWD2GGV4nXCrU0y5dLOaV2Dw9
+ KzCHbbbK2UEOe9XRG2bg6yUMFUI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f19d51d427cd55766bb5fa2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 18:21:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EED04C43395; Thu, 23 Jul 2020 18:21:16 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25907C433C9;
+        Thu, 23 Jul 2020 18:21:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 25907C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        "'Andrew Lunn'" <andrew@lunn.ch>
+Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kvalo@codeaurora.org>,
+        <johannes@sipsolutions.net>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <dianders@chromium.org>, <evgreen@chromium.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org> <20200721172514.GT1339445@lunn.ch> <f6d93d76-9e59-c257-9318-31c71df28018@gmail.com>
+In-Reply-To: <f6d93d76-9e59-c257-9318-31c71df28018@gmail.com>
+Subject: RE: [RFC 0/7] Add support to process rx packets in thread
+Date:   Thu, 23 Jul 2020 23:51:08 +0530
+Message-ID: <002e01d6611e$0d8ac640$28a052c0$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+        charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG1Bu1FBYi7G1oVhHY/01uT1gSslwJNiRkqAuFxkXipLrYw8A==
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
-branch HEAD: ec0160891e387f4771f953b888b1fe951398e5d9  irqdomain/treewide: Free firmware node after domain removal
 
-elapsed time: 1165m
 
-configs tested: 74
-configs skipped: 1
+> -----Original Message-----
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> Sent: Tuesday, July 21, 2020 11:35 PM
+> To: Andrew Lunn <andrew@lunn.ch>; Rakesh Pillai <pillair@codeaurora.org>
+> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> kernel@vger.kernel.org; kvalo@codeaurora.org; johannes@sipsolutions.net;
+> davem@davemloft.net; kuba@kernel.org; netdev@vger.kernel.org;
+> dianders@chromium.org; evgreen@chromium.org
+> Subject: Re: [RFC 0/7] Add support to process rx packets in thread
+> 
+> On 7/21/20 10:25 AM, Andrew Lunn wrote:
+> > On Tue, Jul 21, 2020 at 10:44:19PM +0530, Rakesh Pillai wrote:
+> >> NAPI gets scheduled on the CPU core which got the
+> >> interrupt. The linux scheduler cannot move it to a
+> >> different core, even if the CPU on which NAPI is running
+> >> is heavily loaded. This can lead to degraded wifi
+> >> performance when running traffic at peak data rates.
+> >>
+> >> A thread on the other hand can be moved to different
+> >> CPU cores, if the one on which its running is heavily
+> >> loaded. During high incoming data traffic, this gives
+> >> better performance, since the thread can be moved to a
+> >> less loaded or sometimes even a more powerful CPU core
+> >> to account for the required CPU performance in order
+> >> to process the incoming packets.
+> >>
+> >> This patch series adds the support to use a high priority
+> >> thread to process the incoming packets, as opposed to
+> >> everything being done in NAPI context.
+> >
+> > I don't see why this problem is limited to the ath10k driver. I expect
+> > it applies to all drivers using NAPI. So shouldn't you be solving this
+> > in the NAPI core? Allow a driver to request the NAPI core uses a
+> > thread?
+> 
+> What's more, you should be able to configure interrupt affinity to steer
+> RX processing onto a desired CPU core, is not that working for you
+> somehow?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi Florian,
+Yes, the affinity of IRQ does work for me.
+But the affinity of IRQ does not happen runtime based on load.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> --
+> Florian
+
