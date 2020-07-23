@@ -2,176 +2,325 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F226C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED191C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84F620737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C079B207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s3ca5fuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgGWSmE (ORCPT
+        id S1727113AbgGWSpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:42:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32172 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgGWSmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:42:03 -0400
-IronPort-SDR: +4SJG4PCEK8enOD99BjQsmSAyXjRrU5cQszby5uz2eflWk8GlmsyBcWCT6XZHALH6pUXRW54N3
- K0HuWh8oIx2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130677134"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="130677134"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 11:41:59 -0700
-IronPort-SDR: jGB4cEErDvqTBXYaJpiLuhXPNUnvDqW6o52V9x6+siwflUsYxrtIAUqs7TVF8bjHbvdr8CmU2h
- JXRT2PwjF2JA==
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="393092682"
-Received: from bhkleins-mobl.amr.corp.intel.com (HELO [10.252.140.192]) ([10.252.140.192])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 11:41:56 -0700
-Subject: Re: [PATCH v10 00/26] Control-flow Enforcement: Shadow Stack
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
- <20200723162531.GF21891@linux.intel.com>
- <2e9806a3-7485-a0d0-b63d-f112fcff954c@intel.com>
- <20200723165649.GG21891@linux.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <f38b5b34-8432-9531-01b5-d0ae924ffafe@intel.com>
-Date:   Thu, 23 Jul 2020 11:41:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 14:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgGWSpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:45:40 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEFEC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:45:39 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 1so3453599pfn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UR7P+fyHf9A6kuWvdMYE4bbXsulfV8lg4DAiwVHXuHw=;
+        b=s3ca5fuDl9tu2QDOQdNENTv+dhgOpKy3a0JLkQqpy0iTJWyf3OUdGUlrA+pEwchWH6
+         WW7Wpna86AVUWEqhtj3Bm9gNAeLlCbC8W/XOWyLB8YKEzPZ+NQ+/XKrIntyEdeNI5Wye
+         Uq/MPm+hPKt8vNbuxUimHWePfBh7gqSbBKaaOmaJSYJapQ0CeIfPKN+HZh4qZ0UbHmYe
+         k9SQsyeQqM39BruuNINtoLWDX3DD0Rn19Q/eiryQ62vcpgjmAUpZ0IJ11xY6QK3I51Qv
+         gwTPBmWsnyjNQY3FL45ZwsFhpn+kKk/zlj3j5F8B57jfJwW6ZEG33GVLm/X+gDM/7bXh
+         OFSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UR7P+fyHf9A6kuWvdMYE4bbXsulfV8lg4DAiwVHXuHw=;
+        b=QVdyAj81tUCql8jb8utOL/qXbt82Nl5eSOJhBrHUqRFT0g1qI4el7ZEK8xpDFTFj0g
+         GebAk6lMoltmmfnbC6cTtJLFwSorUD76AkrV1MeGf4l9OHvbNfX6ghzjSGfJZno392Il
+         YIhl040Tg5QnNQjPARK9H2x2ZKSGn5HkZqrgvUDCdQRlcoiCIpAYoKAdd7hlaOnksBmV
+         Seuz4NaMWCFL/VkaDK/6KkXMr1QpaQVCkdgOXQ6LVUM0n9z77pIYvE/RAU0SeJwqPAOp
+         OC7M4fABFHC0wrc8BmiWH+AC3Qo5F4sTvTtp1ZeT+17vKRxY3pFxmlQTwGgdZqAx2tUI
+         0O5Q==
+X-Gm-Message-State: AOAM530Z8VuWCU6iINvWHW/rcq7FwMpBeQLGoRRcc1It7D70Iy9xB3A4
+        baW/D/cMfWOQKD7K3z4DGHmMkP58uzkd0fTZsssqEg==
+X-Google-Smtp-Source: ABdhPJzX1Xd6FkBr2LEFlw1vXZV/iwXdCH5ywbduQwU9K7R68U0eZQnVnUbIFk2PVWDn9XG0l3Q6aUkpFu6tO1LTFMc=
+X-Received: by 2002:a63:a119:: with SMTP id b25mr5260107pgf.10.1595529938904;
+ Thu, 23 Jul 2020 11:45:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200723165649.GG21891@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAGG=3QUSOnosdPs7XMWdGdcOWNy_jYrFWT2evb9EwjWSUWaORQ@mail.gmail.com>
+ <20200722231045.1421735-1-nhuck@google.com>
+In-Reply-To: <20200722231045.1421735-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 23 Jul 2020 11:45:27 -0700
+Message-ID: <CAKwvOdnMS98=4Q_D0DTECGBv8i+A62xDjTS89WtkePr_wME=_A@mail.gmail.com>
+Subject: Re: [PATCH v5] Makefile: Add clang-tidy and static analyzer support
+ to makefile
+To:     Nathan Huckleberry <nhuck@google.com>,
+        Bill Wendling <morbo@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Pirama Arumuga Nainar <pirama@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 9:56 AM, Sean Christopherson wrote:
-> On Thu, Jul 23, 2020 at 09:41:37AM -0700, Dave Hansen wrote:
->> On 7/23/20 9:25 AM, Sean Christopherson wrote:
->>> How would people feel about taking the above two patches (02 and 03 in the
->>> series) through the KVM tree to enable KVM virtualization of CET before the
->>> kernel itself gains CET support?  I.e. add the MSR and feature bits, along
->>> with the XSAVES context switching.  The feature definitons could use "" to
->>> suppress displaying them in /proc/cpuinfo to avoid falsely advertising CET
->>> to userspace.
->>>
->>> AIUI, there are ABI issues that need to be sorted out, and that is likely
->>> going to drag on for some time. 
->>>
->>> Is this a "hell no" sort of idea, or something that would be feasible if we
->>> can show that there are no negative impacts to the kernel?
->> Negative impacts like bloating every task->fpu with XSAVE state that
->> will never get used? ;)
-> Gah, should have qualified that with "meaningful or measurable negative
-> impacts".  E.g. the extra 40 bytes for CET XSAVE state seems like it would
-> be acceptable overhead, but noticeably increasing the latency of XSAVES
-> and/or XRSTORS would not be acceptable.
+On Wed, Jul 22, 2020 at 4:11 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> This patch adds clang-tidy and the clang static-analyzer as make
+> targets. The goal of this patch is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+>
+> The current static analysis tools require intimate knowledge of the
+> internal workings of the static analysis. Clang-tidy and the clang
+> static analyzers expose an easy to use api and allow users unfamiliar
+> with clang to write new checks with relative ease.
+>
+> ===Clang-tidy===
+>
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+>
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis. (https://reviews.llvm.org/D65828)
+>
+> ===Clang static analyzer===
+>
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+>
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+>
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+>
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+> Changes v4->v5
+> * Use PEP8 style
+> * Other misc style fixes
+>  MAINTAINERS                                   |  1 +
+>  Makefile                                      |  3 +
+>  scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/run-clang-tools.py        | 76 +++++++++++++++++++
+>  5 files changed, 103 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/run-clang-tools.py
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1d4aa7f942de..a444564e5572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4198,6 +4198,7 @@ W:        https://clangbuiltlinux.github.io/
+>  B:     https://github.com/ClangBuiltLinux/linux/issues
+>  C:     irc://chat.freenode.net/clangbuiltlinux
+>  F:     Documentation/kbuild/llvm.rst
+> +F:     scripts/clang-tools/
+>  K:     \b(?i:clang|llvm)\b
+>
+>  CLEANCACHE API
+> diff --git a/Makefile b/Makefile
+> index fe0164a654c7..3e2df010b342 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -747,6 +747,7 @@ KBUILD_CFLAGS       += $(call cc-option,-fno-allow-store-data-races)
+>
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1543,6 +1544,8 @@ help:
+>         @echo  '  export_report   - List the usages of all exported symbols'
+>         @echo  '  headerdep       - Detect inclusion cycles in headers'
+>         @echo  '  coccicheck      - Check with Coccinelle'
+> +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> +       @echo  '  clang-tidy      - Check with clang-tidy'
+>         @echo  ''
+>         @echo  'Tools:'
+>         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..5c9d76f77595
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,23 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +PHONY += clang-tidy
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
+> +else
+> +       $(error clang-tidy requires CC=clang)
+> +endif
+> +
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +       $(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
+> +else
+> +       $(error clang-analyzer requires CC=clang)
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
+> new file mode 100755
+> index 000000000000..41ed15d99933
+> --- /dev/null
+> +++ b/scripts/clang-tools/run-clang-tools.py
+> @@ -0,0 +1,76 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2020
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine run clang-tidy and the clang static-analyzer on
+> +compile_commands.json.
+> +"""
+> +
+> +import argparse
+> +import json
+> +import logging
+> +import multiprocessing
+> +import os
+> +import subprocess
+> +import sys
+> +
+> +
+> +def parse_arguments():
+> +    """Set up and parses command-line arguments.
+> +    Returns:
+> +        args: Dict of parsed args
+> +        Has keys: [file, type]
+> +    """
+> +    usage = """Run clang-tidy or the clang static-analyzer on a
+> +        compilation database."""
+> +    parser = argparse.ArgumentParser(description=usage)
+> +
+> +    type_help = "Type of analysis to be performed"
+> +    parser.add_argument("type",
+> +                        choices=["clang-tidy", "clang-analyzer"],
+> +                        help=type_help)
+> +    file_path_help = "Path to the compilation database to parse"
+> +    parser.add_argument("file", type=str, help=file_path_help)
+> +
+> +    args = parser.parse_args()
+> +
+> +    return args
+> +
+> +
+> +def init(l, t):
+> +    global lock
+> +    global analysis_type
+> +    lock = l
+> +    analysis_type = t
+> +
+> +
+> +def run_analysis(entry):
+> +    filename = entry["file"]
+> +    # Disable all checks, then re-enable the ones we want
+> +    checks = "-checks=-*,{}".format("linuxkernel-*" if analysis_type ==
+> +                                    "clang-tidy" else "clang-analyzer-*")
 
-It's 40 bytes, but it's 40 bytes of just pure, unadulterated waste.  It
-would have no *chance* of being used.  It's also quite precisely
-measurable on a given system:
 
-	cat /proc/slabinfo | grep task_struct | awk '{print $3 * 40}'
+ugh, sorry, I have one last nit.  This line bothers me for two reasons:
+1. The use of ternary statements is preferred when it is more concise
+than than an if/else statement.  If the ternary doesn't fit on one
+line, is it still more concise?  The wrapping of the condition here
+is...upsetting.
+2. `format` is nice when string interpolation is needed within the
+middle of a string, but when you're simply appending to the end of a
+string, it might be more concise to use the `+=` operator.
 
-I don't expect it would do *much* to XSAVE/XRSTOR.  There's probably an
-extra conditional and jump in the ucode, but that's probably in the
-noise.  I assume that all the CET state has functioning init and
-modified trackers and we don't do anything to spoil their state.  It
-would be good to check that in practice, though it probably isn't the
-end of the world either way.  We've had some bugs in the past where we
-accidentally took things out of their init state.
+I think this statement would would be nicer as:
+```python
+checks = "-check=-*,"
+checks += "linuxkernel-*" if analysis_type == "clang-tidy" else
+"clang-analyzer-*"
+```
+If PEP8 requires line length <= 80; then maybe
+```python
+checks = "-check=-*,"
+if analysis_type == "clang-tidy":
+  checks += "linuxkernel-*"
+else:
+  checks += "clang-analyzer-*"
+```
+is more appropriate.  Bill, thoughts?
 
-It will make signal entry/return slower since we use a plain XSAVE
-without the init optimization.  But, that's just a single cacheline on
-average and some 0's to write.  Probably not noticeable, including the
-40 bytes of extra userspace signal stack space.
+> +    p = subprocess.run(
+> +        ["clang-tidy", "-p", os.getcwd(), checks, filename],
+> +        stdout=subprocess.PIPE,
+> +        stderr=subprocess.STDOUT)
+> +    with lock:
+> +        sys.stderr.buffer.write(p.stdout)
+> +
+> +
+> +def main():
+> +    args = parse_arguments()
+> +    filename = args.file
+> +
+> +    lock = multiprocessing.Lock()
+> +    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args.type))
+> +    # Read JSON data into the datastore variable
+> +    with open(filename, "r") as f:
+> +        datastore = json.load(f)
+> +        pool.map(run_analysis, datastore)
+> +
+> +
+> +if __name__ == "__main__":
+> +    main()
+> --
+> 2.28.0.rc0.105.gf9edc3c819-goog
+>
+> --
 
-I think that puts me in the "mildly annoyed" camp more than "hell no",
-but "mildly annoyed" is pretty much my resting state, so it doesn't
-really move the needle. :)
-
-Why the urgency, though?
-
-	https://windows-internals.com/cet-on-windows/
-
-?
+-- 
+Thanks,
+~Nick Desaulniers
