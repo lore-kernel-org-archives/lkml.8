@@ -2,121 +2,131 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E84EC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2ADC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36BFB20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E84B22CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgGWQKv convert rfc822-to-8bit (ORCPT
+        id S1729490AbgGWQKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:10:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54077 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGWQKv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:10:51 -0400
-Received: from mail-pj1-f71.google.com ([209.85.216.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jydo0-0003Al-OX
-        for linux-kernel@vger.kernel.org; Thu, 23 Jul 2020 16:10:48 +0000
-Received: by mail-pj1-f71.google.com with SMTP id g16so4180928pjz.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 09:10:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mloZu1UH6qYYfFGV+CjNmoEgB8w841kwWHgyCLqHBnk=;
-        b=KVVggFj4lcfsbAkLPJaQA9KPl72Tymm7eJ5lgQkmjzIyT9HWQOKSjyGFFK15KeU5Kw
-         S9aDsfc+alx+kOtauHAZ7rBIsP2bru6Ga88LIqUuB3fJp4phuGh8hr6gOWbU6w1rN7T0
-         bPOfdkg/0QOceE+CPKEjQiDmwWlAears5as7XCyqiQRh/3TlfF7swsuewtucIdxzwLnd
-         VWR6ra5bQnTgTjbwIMZuTvI5TpCDcGWXHLw5Vybuz7dBMK4fOrMzHzo8hGGBIVMBcIuc
-         fUKRNiQRrdot2VucZ4VTBzEra0+HhETMikDVojsUD8Zp6Im2nbMWtkwqB20wJkC30oAc
-         fZRA==
-X-Gm-Message-State: AOAM530YQJpHwy4JeltHc+q2X4Pb0h8w/SM5mUBYJGPZc+2QwiYogY6i
-        IgsEEEbEfMemEHGOSIp0ot6HOHpQ3trT9dRuFipCUBDGdb0EtOIFxTCj6Ru5KcTQIr5dTbwP0BZ
-        o06DgSeUzTw6N9mFqbKnqa0Bg4fwkyj35o63rZ6Si1w==
-X-Received: by 2002:a17:902:b7c8:: with SMTP id v8mr4419446plz.201.1595520647032;
-        Thu, 23 Jul 2020 09:10:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxUlKUEWiLCJJBN4W/MsSwrvF+0LVOXjMJ5iKUh8RFRcu39sl9LdmwE+p+bhw9APuhnDrjnBg==
-X-Received: by 2002:a17:902:b7c8:: with SMTP id v8mr4419410plz.201.1595520646672;
-        Thu, 23 Jul 2020 09:10:46 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id z11sm3393823pfk.46.2020.07.23.09.10.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 09:10:42 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH v2] nvme/pci: Add new quirk for SK hynix PC400 NLB
- off-by-one bug
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200723160325.GA17996@lst.de>
-Date:   Fri, 24 Jul 2020 00:10:39 +0800
-Cc:     kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
-        kyounghwan sohn <kyounghwan.sohn@sk.com>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <45DFD291-E6BF-48DE-A447-6FA4086D40A5@canonical.com>
-References: <20200417083641.28205-1-kai.heng.feng@canonical.com>
- <20200723155731.22313-1-kai.heng.feng@canonical.com>
- <20200723160325.GA17996@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
+        Thu, 23 Jul 2020 12:10:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10382 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbgGWQKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:10:41 -0400
+IronPort-SDR: QLuu9s7Hp+vjybC9uDZIpXvDMT3zW+g1vEq14+zK/uHNXmrWCvSpmqO98ZX0GjZDYYdAjSdTTB
+ gR4KiKIytJ7g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148056938"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="148056938"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:10:40 -0700
+IronPort-SDR: sMTr1T4Ot5Yvoa3Z7f6Gt+sLRJaAGqkGv0CKqHpKa6bv1iw8QUxMeH7wjKcme7VYbDmyD+KuPr
+ iT9q6o6QxZ5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="320703879"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Jul 2020 09:10:40 -0700
+Date:   Thu, 23 Jul 2020 09:10:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v10 03/26] x86/fpu/xstate: Introduce CET MSR XSAVES
+ supervisor states
+Message-ID: <20200723161039.GE21891@linux.intel.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+ <20200429220732.31602-4-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429220732.31602-4-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 29, 2020 at 03:07:09PM -0700, Yu-cheng Yu wrote:
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 12c9684d59ba..47f603729543 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -885,4 +885,22 @@
+>  #define MSR_VM_IGNNE                    0xc0010115
+>  #define MSR_VM_HSAVE_PA                 0xc0010117
+>  
+> +/* Control-flow Enforcement Technology MSRs */
+> +#define MSR_IA32_U_CET		0x6a0 /* user mode cet setting */
+> +#define MSR_IA32_S_CET		0x6a2 /* kernel mode cet setting */
+> +#define MSR_IA32_PL0_SSP	0x6a4 /* kernel shstk pointer */
+> +#define MSR_IA32_PL1_SSP	0x6a5 /* ring-1 shstk pointer */
+> +#define MSR_IA32_PL2_SSP	0x6a6 /* ring-2 shstk pointer */
+> +#define MSR_IA32_PL3_SSP	0x6a7 /* user shstk pointer */
+> +#define MSR_IA32_INT_SSP_TAB	0x6a8 /* exception shstk table */
+> +
+> +/* MSR_IA32_U_CET and MSR_IA32_S_CET bits */
+> +#define MSR_IA32_CET_SHSTK_EN		0x0000000000000001ULL
 
-> On Jul 24, 2020, at 00:03, Christoph Hellwig <hch@lst.de> wrote:
-> 
-> On Thu, Jul 23, 2020 at 11:57:31PM +0800, Kai-Heng Feng wrote:
->> After commit 6e02318eaea5 ("nvme: add support for the Write Zeroes
->> command"), SK hynix PC400 becomes very slow with the following error
->> message:
->> [  224.567695] blk_update_request: operation not supported error, dev nvme1n1, sector 499384320 op 0x9:(WRITE_ZEROES) flags 0x1000000 phys_seg 0 prio class 0]
->> 
->> SK Hynix PC400 has a buggy firmware that treats NLB as max value instead
->> of a range, so the NLB passed isn't a valid value to the firmware.
->> 
->> According to SK hynix there are three commands are affected:
->> - Write Zeroes
->> - Compare
->> - Write Uncorrectable
->> 
->> Write Uncorrectable isn't implemented yet, so add a new quirk to
->> workaround the former two commands.
-> 
-> compare isn't implemented either in the kernel, and we certainly
-> aren't going to do these quirks for passthrough.  So I think we really
-> want a "write zeroes is buggy" quirk and just disable issuing that
-> command from the driver.
+Can we drop the MSR_IA32 prefix for the individual bits?  Mostly to yield
+shorter line lengths, but also because it's more or less redundant info,
+and in some ways unhelpful as it's hard to quickly differentiate between
+"this is an MSR index" and "this is a bit/mask for an MSR".
 
-Ok, will send a new version based on your suggestion.
+My vote would also be to use BIT() or BIT_ULL().  The SDM defines the flags
+by their (decimal) bit number.  Manually converting the bits to masks makes
+it difficult to check for correctness.
 
-> 
->> 
->> BugLink: https://bugs.launchpad.net/bugs/1872383
->> Cc: kyounghwan sohn <kyounghwan.sohn@sk.com>
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> v2:
->> - SK hynix found the root cause so change the approach accordingly.
->> - lspci is wrong, the device is PC400 instead of SC300.
-> 
-> I don't remember seing a v1..
+E.g.
 
-Well, because it took some time for the vendor to find the root cause...
-Here's the v1:
-https://lkml.org/lkml/2020/4/17/169
+#define CET_SHSTK_EN		BIT(0)
+#define CET_WRSS_EN		BIT(1)
+#define CET_ENDBR_EN		BIT(2)
+#define CET_LEG_IW_EN		BIT(3)
+#define CET_NO_TRACK_EN		BIT(4)
+#define CET_WAIT_ENDBR		BIT(5)
 
-Kai-Heng
+> +#define MSR_IA32_CET_WRSS_EN		0x0000000000000002ULL
+> +#define MSR_IA32_CET_ENDBR_EN		0x0000000000000004ULL
+> +#define MSR_IA32_CET_LEG_IW_EN		0x0000000000000008ULL
+> +#define MSR_IA32_CET_NO_TRACK_EN	0x0000000000000010ULL
+> +#define MSR_IA32_CET_WAIT_ENDBR	0x00000000000000800UL
+> +#define MSR_IA32_CET_BITMAP_MASK	0xfffffffffffff000ULL
 
+This particular define, the so called BITMAP_MASK, is no longer used in the
+IBT series.  IMO it'd be better off dropping this mask as it's not clear
+from the name that this is really nothing more than a mask for a virtual
+address, e.g. at first glance (for someone without CET knowledge) it looks
+like bits 63:12 hold a bitmap as opposed to holding a pointer to a bitmap.
