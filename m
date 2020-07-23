@@ -2,155 +2,381 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61407C433F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55FEC433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33FAB2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9816A2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/ZVfk3u"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vt6rHfQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgGWLhQ (ORCPT
+        id S1728472AbgGWLhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:37:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54630 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728428AbgGWLhN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:37:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595504231;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=cut4QnIcrkt41QqkMvdydzME5f2nRZ3+Ar1gb+kat8E=;
-        b=Y/ZVfk3u8BV4DvXotgHATnt9eWf6Zdg2dP8sEJhSxd2vHk6kdM/t9BEkPIJMe/X68+Mfk8
-        Ne7BwnEIMnXi4sXssd+BNeIv/lxoTccn8xG1uQ4r/WfRi//uZnhxUdv+5LIn5aaTDUizaz
-        a32fRvXy4de3uFV7DjY01JDmC1xiJJE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-125-87lMikxXOdSzORwwInr4Ag-1; Thu, 23 Jul 2020 07:37:07 -0400
-X-MC-Unique: 87lMikxXOdSzORwwInr4Ag-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 23 Jul 2020 07:37:14 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11979 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728407AbgGWLhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:37:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595504230; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=m8+Ccr2nbe6itc9Lt2ql+DU4+nUx1iLxiVzOvrYWN4c=; b=Vt6rHfQQMpWS3qoQkE72FaAFofIMDcHQp18du5NbUj2nWY+/JdSM3tJfTl60aQg+tTJ46VAU
+ qqp3a8ZnQ/0VWrrLZsSKlTkHFNKhqTgFxMVva7Nzug7Y6vweRhecUPJlDDgDeE1LjcFMeXPe
+ gFSIGYlQ/qtwZvIvGWvu2v3V1O8=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f1976663dbcb593a93701d0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:37:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3DFB4C433B1; Thu, 23 Jul 2020 11:37:10 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [117.247.20.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA5A380BCA4;
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61C7CC433CB;
         Thu, 23 Jul 2020 11:37:05 +0000 (UTC)
-Received: from [10.36.114.90] (ovpn-114-90.ams2.redhat.com [10.36.114.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 233F65D9D3;
-        Thu, 23 Jul 2020 11:37:03 +0000 (UTC)
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        xen-devel@lists.xenproject.org, linux-mm@kvack.org
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
-Date:   Thu, 23 Jul 2020 13:37:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61C7CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 2/4] media: venus: core: Add support for opp
+ tables/perf voting
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org
+References: <1595228842-9826-1-git-send-email-rnayak@codeaurora.org>
+ <1595228842-9826-3-git-send-email-rnayak@codeaurora.org>
+ <840e20b6-186f-14c2-b0f0-fac7b61f1c50@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <d68a0fbe-a2ce-80fc-b550-f8bc37332ae0@codeaurora.org>
+Date:   Thu, 23 Jul 2020 17:07:01 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200723084523.42109-4-roger.pau@citrix.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <840e20b6-186f-14c2-b0f0-fac7b61f1c50@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.07.20 10:45, Roger Pau Monne wrote:
-> Add an extra option to add_memory_resource that overrides the memory
-> hotplug online behavior in order to force onlining of memory from
-> add_memory_resource unconditionally.
+Hey Stan,
+
+On 7/22/2020 1:57 PM, Stanimir Varbanov wrote:
+> Hi Rajendra,
 > 
-> This is required for the Xen balloon driver, that must run the
-> online page callback in order to correctly process the newly added
-> memory region, note this is an unpopulated region that is used by Linux
-> to either hotplug RAM or to map foreign pages from other domains, and
-> hence memory hotplug when running on Xen can be used even without the
-> user explicitly requesting it, as part of the normal operations of the
-> OS when attempting to map memory from a different domain.
+> Thanks for the patch!
 > 
-> Setting a different default value of memhp_default_online_type when
-> attaching the balloon driver is not a robust solution, as the user (or
-> distro init scripts) could still change it and thus break the Xen
-> balloon driver.
+> Sorry for last minute comments.
 
-I think we discussed this a couple of times before (even triggered by my
-request), and this is responsibility of user space to configure. Usually
-distros have udev rules to online memory automatically. Especially, user
-space should eb able to configure *how* to online memory.
+Thanks for reviewing the patch, I have addressed all your
+review feedback from below and repostd a v4 now [1]
 
-It's the admin/distro responsibility to configure this properly. In case
-this doesn't happen (or as you say, users change it), bad luck.
+cheers,
+Rajendra
 
-E.g., virtio-mem takes care to not add more memory in case it is not
-getting onlined. I remember hyper-v has similar code to at least wait a
-bit for memory to get onlined.
+[1] https://lore.kernel.org/patchwork/project/lkml/list/?series=454732
 
-Nacked-by: David Hildenbrand <david@redhat.com>
+> 
+> On 7/20/20 10:07 AM, Rajendra Nayak wrote:
+>> Add support to add OPP tables and perf voting on the OPP powerdomain.
+>> This is needed so venus votes on the corresponding performance state
+>> for the OPP powerdomain along with setting the core clock rate.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>>   drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
+>>   drivers/media/platform/qcom/venus/core.h       |  5 +++
+>>   drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
+>>   3 files changed, 92 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+>> index 203c653..b9f61a6 100644
+>> --- a/drivers/media/platform/qcom/venus/core.c
+>> +++ b/drivers/media/platform/qcom/venus/core.c
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/platform_device.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/types.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <media/videobuf2-v4l2.h>
+>>   #include <media/v4l2-mem2mem.h>
+>> @@ -216,21 +217,37 @@ static int venus_probe(struct platform_device *pdev)
+>>   	if (!core->pm_ops)
+>>   		return -ENODEV;
+>>   
+>> +	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
+>> +	if (IS_ERR(core->opp_table))
+>> +		return PTR_ERR(core->opp_table);
+>> +
+>> +	if (core->res->opp_pmdomain) {
+>> +		ret = dev_pm_opp_of_add_table(dev);
+>> +		if (!ret) {
+>> +			core->has_opp_table = true;
+>> +		} else if (ret != -ENODEV) {
+>> +			dev_err(dev, "invalid OPP table in device tree\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+> 
+> Can we move those dev_pm_opp_xxx invocations into pm_ops->core_get where
+> the other pmdomains are? The pm_ops abstarction is created exactly for
+> such pm and clks manipulations.
+> 
+>>   	if (core->pm_ops->core_get) {
+>>   		ret = core->pm_ops->core_get(dev);
+>>   		if (ret)
+>> -			return ret;
+>> +			goto err_opp_cleanup;
+>>   	}
+>>   
+>>   	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
+>>   	if (ret)
+>> -		return ret;
+>> +		goto err_opp_cleanup;
+>>   
+>>   	if (!dev->dma_parms) {
+>>   		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
+>>   					      GFP_KERNEL);
+>> -		if (!dev->dma_parms)
+>> -			return -ENOMEM;
+>> +		if (!dev->dma_parms) {
+>> +			ret = -ENOMEM;
+>> +			goto err_opp_cleanup;
+>> +		}
+>>   	}
+>>   	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+>>   
+>> @@ -242,11 +259,11 @@ static int venus_probe(struct platform_device *pdev)
+>>   					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>>   					"venus", core);
+>>   	if (ret)
+>> -		return ret;
+>> +		goto err_opp_cleanup;
+>>   
+>>   	ret = hfi_create(core, &venus_core_ops);
+>>   	if (ret)
+>> -		return ret;
+>> +		goto err_opp_cleanup;
+>>   
+>>   	pm_runtime_enable(dev);
+>>   
+>> @@ -302,6 +319,10 @@ static int venus_probe(struct platform_device *pdev)
+>>   	pm_runtime_set_suspended(dev);
+>>   	pm_runtime_disable(dev);
+>>   	hfi_destroy(core);
+>> +err_opp_cleanup:
+>> +	if (core->has_opp_table)
+>> +		dev_pm_opp_of_remove_table(dev);
+>> +	dev_pm_opp_put_clkname(core->opp_table);
+> 
+> this also belongs to pm_ops->core_put but it is missing in the .probe
+> error path.
+> 
+> +	if (core->pm_ops->core_put)
+> +		core->pm_ops->core_put(dev);
+> 
+> above addition should be separate patch I guess.
+> 
+>>   	return ret;
+>>   }
+>>   
+>> @@ -326,6 +347,10 @@ static int venus_remove(struct platform_device *pdev)
+>>   	pm_runtime_put_sync(dev);
+>>   	pm_runtime_disable(dev);
+>>   
+>> +	if (core->has_opp_table)
+>> +		dev_pm_opp_of_remove_table(dev);
+>> +	dev_pm_opp_put_clkname(core->opp_table);
+>> +
+> 
+> those also should be moved to core_put
+> 
+>>   	if (pm_ops->core_put)
+>>   		pm_ops->core_put(dev);
+>>   
+>> @@ -355,6 +380,10 @@ static __maybe_unused int venus_runtime_suspend(struct device *dev)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> +	/* Drop the performance state vote */
+>> +	if (core->opp_pmdomain)
+>> +		dev_pm_opp_set_rate(dev, 0);
+>> +
+> 
+> move this in core_power(OFF)
+> 
+>>   	if (pm_ops->core_power)
+>>   		ret = pm_ops->core_power(dev, POWER_OFF);
+>>   
+>> @@ -520,6 +549,7 @@ static const struct venus_resources sdm845_res_v2 = {
+>>   	.vcodec_clks_num = 2,
+>>   	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
+>>   	.vcodec_pmdomains_num = 3,
+>> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
+>>   	.vcodec_num = 2,
+>>   	.max_load = 3110400,	/* 4096x2160@90 */
+>>   	.hfi_version = HFI_VERSION_4XX,
+>> @@ -565,6 +595,7 @@ static const struct venus_resources sc7180_res = {
+>>   	.vcodec_clks_num = 2,
+>>   	.vcodec_pmdomains = { "venus", "vcodec0" },
+>>   	.vcodec_pmdomains_num = 2,
+>> +	.opp_pmdomain = (const char *[]) { "cx", NULL },
+>>   	.vcodec_num = 1,
+>>   	.hfi_version = HFI_VERSION_4XX,
+>>   	.vmem_id = VIDC_RESOURCE_NONE,
+>> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+>> index 7118612..b0cc544 100644
+>> --- a/drivers/media/platform/qcom/venus/core.h
+>> +++ b/drivers/media/platform/qcom/venus/core.h
+>> @@ -62,6 +62,7 @@ struct venus_resources {
+>>   	unsigned int vcodec_clks_num;
+>>   	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+>>   	unsigned int vcodec_pmdomains_num;
+>> +	const char **opp_pmdomain;
+>>   	unsigned int vcodec_num;
+>>   	enum hfi_version hfi_version;
+>>   	u32 max_load;
+>> @@ -145,8 +146,12 @@ struct venus_core {
+>>   	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
+>>   	struct icc_path *video_path;
+>>   	struct icc_path *cpucfg_path;
+>> +	struct opp_table *opp_table;
+>> +	bool has_opp_table;
+>>   	struct device_link *pd_dl_venus;
+>>   	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
+>> +	struct device_link *opp_dl_venus;
+>> +	struct device *opp_pmdomain;
+>>   	struct video_device *vdev_dec;
+>>   	struct video_device *vdev_enc;
+>>   	struct v4l2_device v4l2_dev;
+>> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+>> index abf9315..4149ab8 100644
+>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/iopoll.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/pm_domain.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/types.h>
+>>   #include <media/v4l2-mem2mem.h>
+>> @@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
+>>   
+>>   static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
+>>   {
+>> -	struct clk *clk = core->clks[0];
+>>   	int ret;
+>>   
+>> -	ret = clk_set_rate(clk, freq);
+>> +	ret = dev_pm_opp_set_rate(core->dev, freq);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> @@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
+>>   
+>>   static int vcodec_domains_get(struct device *dev)
+>>   {
+>> +	int ret;
+>> +	struct opp_table *opp_table;
+>> +	struct device **opp_virt_dev;
+>>   	struct venus_core *core = dev_get_drvdata(dev);
+>>   	const struct venus_resources *res = core->res;
+>>   	struct device *pd;
+>>   	unsigned int i;
+>>   
+>>   	if (!res->vcodec_pmdomains_num)
+>> -		return -ENODEV;
+>> +		goto skip_pmdomains;
+>>   
+>>   	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>>   		pd = dev_pm_domain_attach_by_name(dev,
+>> @@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
+>>   	if (!core->pd_dl_venus)
+>>   		return -ENODEV;
+>>   
+>> +skip_pmdomains:
+>> +	if (!core->has_opp_table)
+>> +		return 0;
+>> +
+>> +	/* Attach the power domain for setting performance state */
+>> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
+>> +	if (IS_ERR(opp_table)) {
+>> +		ret = PTR_ERR(opp_table);
+>> +		goto opp_attach_err;
+>> +	}
+>> +
+>> +	core->opp_pmdomain = *opp_virt_dev;
+>> +	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
+>> +					     DL_FLAG_RPM_ACTIVE |
+>> +					     DL_FLAG_PM_RUNTIME |
+>> +					     DL_FLAG_STATELESS);
+>> +	if (!core->opp_dl_venus) {
+>> +		ret = -ENODEV;
+>> +		goto opp_dl_add_err;
+>> +	}
+>> +
+>>   	return 0;
+>> +
+>> +opp_dl_add_err:
+>> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+>> +opp_attach_err:
+>> +	if (core->pd_dl_venus) {
+>> +		device_link_del(core->pd_dl_venus);
+>> +		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>> +			if (IS_ERR_OR_NULL(core->pmdomains[i]))
+>> +				continue;
+>> +			dev_pm_domain_detach(core->pmdomains[i], true);
+>> +		}
+>> +	}
+>> +	return ret;
+>>   }
+>>   
+>>   static void vcodec_domains_put(struct device *dev)
+>> @@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
+>>   	unsigned int i;
+>>   
+>>   	if (!res->vcodec_pmdomains_num)
+>> -		return;
+>> +		goto skip_pmdomains;
+>>   
+>>   	if (core->pd_dl_venus)
+>>   		device_link_del(core->pd_dl_venus);
+>> @@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
+>>   			continue;
+>>   		dev_pm_domain_detach(core->pmdomains[i], true);
+>>   	}
+>> +
+>> +skip_pmdomains:
+>> +	if (!core->has_opp_table)
+>> +		return;
+>> +
+>> +	if (core->opp_dl_venus)
+>> +		device_link_del(core->opp_dl_venus);
+>> +
+>> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+>>   }
+>>   
+>>   static int core_get_v4(struct device *dev)
+>>
+> 
 
 -- 
-Thanks,
-
-David / dhildenb
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
