@@ -2,91 +2,102 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6FAC433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B47C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A964520768
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595539892;
-	bh=jvPDRt6lKfqN7yiLEa6iBXDWn3sY7UGgcJScQdDeUGk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YMp5F/Cg1HgiEyWPEhFckoTtlblLg6QABMN1BL1ZJ+OSBe/dZ1dBdFqA1U5sghqzF
-	 +ufaSdX4cQpahU+qqFWJctYGC2N7bdynTTPOK9+V5WMRErsfjmyk7mAcWf0HcUGw66
-	 8u3fWUPnX3kH9bGc9giBWoYkAGIbdPru6/bk09Yw=
+	by mail.kernel.org (Postfix) with ESMTP id C4F8F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgGWVbb (ORCPT
+        id S1726838AbgGWVfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:31:31 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41354 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgGWVbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:31:31 -0400
-Received: by mail-il1-f196.google.com with SMTP id q3so5593249ilt.8;
-        Thu, 23 Jul 2020 14:31:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BIw6m41bEFoOKz4cgGIlpAZHm+JvVBbNbLNDcXn0BJE=;
-        b=DYOlVt3E4OUn6MVmEveVmhzJ9LgEmSVeI/V4tWM8mJ8o/ttQtZLqhBsU/rINVuV8N1
-         rykbbQZ3pk+bZwRiuekmkXyeW/htt2it5BAeYlngoXfd7ATYjTGjwcrkDTty7iGAFXAA
-         KOEHSplrUqWz/SbpdFiYw1XQ0Xz9zi3HzFTSuYyaMWrgGNAfBTVwJAzE9f8xG8/L5Vix
-         F0m5wOtPQ/piluPXnNP5ogk6rhwW1BNqKprkglpjBSL1MbMEPvdnhtuauv96SWeQLSYW
-         GsMyzvhJsfLmdbV1CFhiKG+83g793lyzqIA7ikqvjSf5n+Auqa0c7hFc1z3PSb4QLBE5
-         jUxA==
-X-Gm-Message-State: AOAM532pFZEt/BXrHPiIZ9l44X2+cb9Q3dveXMl2XhPvTFDN85QZ0KNj
-        smLsHe+94nd5A9AP6mUn9wtyHA2LNghq
-X-Google-Smtp-Source: ABdhPJy5nDdiGLJMan1qtQeNQE1tFghS/VAw2SDr5DSd0X01/uox2cHJXZa8Oq1fFecjqwJV15WgGA==
-X-Received: by 2002:a05:6e02:e89:: with SMTP id t9mr3438231ilj.292.1595539890313;
-        Thu, 23 Jul 2020 14:31:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l13sm2023466iob.28.2020.07.23.14.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:31:29 -0700 (PDT)
-Received: (nullmailer pid 894261 invoked by uid 1000);
-        Thu, 23 Jul 2020 21:31:27 -0000
-Date:   Thu, 23 Jul 2020 15:31:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: mfd: Add compatible for the MediaTek
- MT6359 PMIC
-Message-ID: <20200723213127.GA894209@bogus>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1595509133-5358-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 23 Jul 2020 17:35:48 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52272 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbgGWVfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 17:35:48 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jyisF-006aCj-2o; Thu, 23 Jul 2020 23:35:31 +0200
+Date:   Thu, 23 Jul 2020 23:35:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v2 1/1] net: phy: marvell: add
+ support for PHY LEDs via LED class
+Message-ID: <20200723213531.GK1553578@lunn.ch>
+References: <20200723181319.15988-1-marek.behun@nic.cz>
+ <20200723181319.15988-2-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1595509133-5358-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723181319.15988-2-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 20:58:47 +0800, Hsin-Hsiung Wang wrote:
-> This adds compatible for the MediaTek MT6359 PMIC.
+On Thu, Jul 23, 2020 at 08:13:19PM +0200, Marek Behún wrote:
+> This patch adds support for controlling the LEDs connected to several
+> families of Marvell PHYs via Linux' LED API. These families are:
+> 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can be
+> added.
 > 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> The code reads LEDs definitions from the device-tree node of the PHY.
 > 
+> Since the LEDs can be controlled by hardware, we add one LED-private LED
+> trigger named "hw-control". This trigger is private and displayed only
+> for Marvell PHY LEDs.
+> 
+> When this driver is activated, another sysfs file is created in that
+> LEDs sysfs directory, names "hw_control". This file contains space
+> separated list of possible HW controlled modes for this LED. The one
+> which is selected is enclosed by square brackets. To change HW control
+> mode the user has to write the name of desired mode to this "hw_control"
+> file.
+> 
+> This patch does not yet add support for compound LED modes. This could
+> be achieved via the LED multicolor framework (which is not yet in
+> upstream).
+> 
+> Settings such as HW blink rate or pulse stretch duration are not yet
+> supported, nor are LED polarity settings.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Marek
+
+I expect some of this should be moved into the phylib core. We don't
+want each PHY inventing its own way to do this. The core should
+provide a framework and the PHY driver fills in the gaps.
+
+Take a look at for example mscc_main.c and its LED information. It has
+pretty similar hardware to the Marvell. And microchip.c also has LED
+handling, etc.
+
+> +static int _marvell_led_brightness_set(struct led_classdev *cdev, enum led_brightness brightness,
+> +				       bool check_trigger)
+
+Please avoid _ functions. 
+
+> +{
+> +	struct phy_device *phydev = to_phy_device(cdev->dev->parent);
+> +	struct marvell_phy_led *led = to_marvell_phy_led(cdev);
+> +	u8 val;
+> +
+> +	/* don't do anything if HW control is enabled */
+> +	if (check_trigger && cdev->trigger == &marvell_hw_led_trigger)
+> +		return 0;
+
+I thought the brightness file disappeared when a trigger takes
+over. So is this possible?
+
+      Andrew
