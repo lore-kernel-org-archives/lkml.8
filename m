@@ -2,113 +2,254 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A22DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3982EC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3925420709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595510968;
-	bh=Y9M0W+BfmdtTnM0e0J3GLfjs1x+wBeItYSyisu7KkPc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PPn6VwCjQSRTxFR44JJ2OuaWyFjmMd7/+lj0dIcr1X5dvVQXjkEBx/fL24F0MAsfI
-	 t3yTID11pMon7XeLsurSasClri+81bwAd8JcdaM27e1/NNkGBiAzE3nV3hbgjgVQXE
-	 N8BVvgb86YZVLmjJ0EibzYcvUKeKctnzEP/HwmY4=
+	by mail.kernel.org (Postfix) with ESMTP id EB98C207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJOThBN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgGWN30 (ORCPT
+        id S1729144AbgGWNaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:29:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgGWN30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:29:26 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3AF3207BB;
-        Thu, 23 Jul 2020 13:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595510966;
-        bh=Y9M0W+BfmdtTnM0e0J3GLfjs1x+wBeItYSyisu7KkPc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DWVKT6c9NYCjiddttZOJ6OG/xc5jT2VPc+bWMlCqOxBdFbePXRRWS9VTXA3ZKcBsc
-         7KL4Pyme01xF4jrbcoNa6RNqw7WZnPQmGn2snAq2AfAxMi8LaTUFmlMX4WCDifnFxm
-         2+YGbUXIqRXCE9vSIsDUhWnvjkjxPr0x0t5sWVJA=
-Received: by mail-oi1-f170.google.com with SMTP id r8so4992148oij.5;
-        Thu, 23 Jul 2020 06:29:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530gfRSQx04hgaUb26ErM1a/IulrGD+RVMT34czSFA88itcnI3xf
-        zDY+No6UrrdjWdaa61MrOqXQ0EMTTHolmUkk7g==
-X-Google-Smtp-Source: ABdhPJzcB/cFTt7vTTQVfNrMjdoW6Nv8EO943+ZDWBiwiUB3GPKRlSX+NgDSnLYFvceFXdY7Qh/d8tEfdXsnFfdwmaU=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr3885042oif.106.1595510965163;
- Thu, 23 Jul 2020 06:29:25 -0700 (PDT)
+        Thu, 23 Jul 2020 09:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGWNaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:30:16 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD51C0619DC;
+        Thu, 23 Jul 2020 06:30:16 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a23so2999953pfk.13;
+        Thu, 23 Jul 2020 06:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=Td5n8VLQM5VzC3/ySr0x0FkE92YfVlucA4U3oDMBrpc=;
+        b=nJOThBN3e0u2wPmuKSDicZ+MnhpMP1D4iUV1NevDGUNLVV/pnTf9+zsjxy0Qbbio20
+         0MiiX36MZ0ZC4E71DLYgt/cADBAmI3H4MzayuAZG7DzEI7kaA9e9QwPC8lL1JqZQP+NL
+         9MGVBFha1s2QXAWnx1C1AGhlwjqS8hcx22i1c5WfIxY0DFbIb6mc4Y32KjmVk6PiLbeG
+         GoPigoJt0ecu9QSJzK2R1EDHjtsTbmfloVX4mn/0GnuomG5yEie0b35EjQ2/6Q5Wp5I4
+         n22LyNjNL9sMD5ZFQyhsBEiiaJmT4JxbN546p048mlxo3r6w7CQPF4aegWwn/eZpecgd
+         nubg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=Td5n8VLQM5VzC3/ySr0x0FkE92YfVlucA4U3oDMBrpc=;
+        b=U68f/gtFbtKvxUV4sgZu50k/fSeTm4DtrirRpfbUyK4su/4G5G1A3SNpQoHpSvyGVP
+         Rck4bvwmFQu0Nr4oJ4eWoprP1coRx4V4UiWGQWZCrzbNge2U8VwwIDRS6rP3sDjJFbxq
+         WtjrJ59/F3KwsklIx53SFAT9e8/Jj0iFyrnpOVc5d6XnGkcseyO4Ih25dP2AfzEeB6Hy
+         CwISqokUaL7Tz6h4pFAkKaujX/Iy5cfn+hAtHxDH6+wUccT4Bh3JELejirwfAeLB4DOy
+         bJBoCg0Kezux068UVQ4ATVF2YX5fFEeneRXxizBqhhGkQlSf+C0wl2VHCKHSpElk5Zrn
+         Nlcw==
+X-Gm-Message-State: AOAM533F0BAA4DNKQ5IgW/j+pZS8GXD8niPAepCJ3VrSjUncyO7cmP4G
+        gATIZPUhVTIAD5IDzPuio7I=
+X-Google-Smtp-Source: ABdhPJzDRciPPyx06p/TELG6ZbrzJ5oreW4i8vpZMSYQR38q69s9sCgkLuLjxZA90YTp1MLQk8mQMQ==
+X-Received: by 2002:a65:644d:: with SMTP id s13mr4226469pgv.103.1595511015960;
+        Thu, 23 Jul 2020 06:30:15 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id u26sm3148320pfn.54.2020.07.23.06.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 06:30:15 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 23:30:09 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Anton Blanchard <anton@ozlabs.org>,
+        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+        <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
+        <1594101082.hfq9x5yact.astroid@bobo.none>
+        <20200708084106.GE597537@hirez.programming.kicks-ass.net>
+        <1595327263.lk78cqolxm.astroid@bobo.none>
+        <eaabf501-80fe-dd15-c03c-f75ce4f75877@redhat.com>
+In-Reply-To: <eaabf501-80fe-dd15-c03c-f75ce4f75877@redhat.com>
 MIME-Version: 1.0
-References: <20200722201313.754671-1-saravanak@google.com> <20200722201313.754671-2-saravanak@google.com>
- <CAL_JsqJvhpghE=LR=ng-gL5ek-7LOC1CGfOx6Vr-iACu-TX_fQ@mail.gmail.com> <CAGETcx9eRQPTH8YVtqtDdLkwHYbTw=DhWfryY98ZQ4_NOvALxw@mail.gmail.com>
-In-Reply-To: <CAGETcx9eRQPTH8YVtqtDdLkwHYbTw=DhWfryY98ZQ4_NOvALxw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jul 2020 07:29:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJx+N-P8Ffnh+0+JWYUaFLwSO8qUyyfyx=Yjurxqmq+tQ@mail.gmail.com>
-Message-ID: <CAL_JsqJx+N-P8Ffnh+0+JWYUaFLwSO8qUyyfyx=Yjurxqmq+tQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] of: property: Add device link support for
- pinctrl-0 through pinctrl-8
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <1595510571.u39qfc8d1o.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 7:08 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Jul 22, 2020 at 2:09 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Wed, Jul 22, 2020 at 2:13 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
-> > > to add support for pinctrl-%d properties.
-> > >
-> > > Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
-> > > are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
-> > > (9486) are made up of pinctrl-[0-2].
-> > >
-> > > Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
-> > > unnecessarily complicated. So, just add support for pinctrl-[0-8] for
-> > > now. In the unlikely event we ever exceed pinctrl-8, we can come back
-> > > and improve this.
-> >
-> > It wasn't immediately clear from this that pinctrl-8 is the current
-> > max you found vs. a should be enough for a while.
->
-> Hmmm... I tried. Looks like I failed. Open to copy-pasting any commit
-> text that you think will make it clearer.
+Excerpts from Waiman Long's message of July 22, 2020 12:36 am:
+> On 7/21/20 7:08 AM, Nicholas Piggin wrote:
+>> diff --git a/arch/powerpc/include/asm/qspinlock.h b/arch/powerpc/include=
+/asm/qspinlock.h
+>> index b752d34517b3..26d8766a1106 100644
+>> --- a/arch/powerpc/include/asm/qspinlock.h
+>> +++ b/arch/powerpc/include/asm/qspinlock.h
+>> @@ -31,16 +31,57 @@ static inline void queued_spin_unlock(struct qspinlo=
+ck *lock)
+>>  =20
+>>   #else
+>>   extern void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)=
+;
+>> +extern void queued_spin_lock_slowpath_queue(struct qspinlock *lock);
+>>   #endif
+>>  =20
+>>   static __always_inline void queued_spin_lock(struct qspinlock *lock)
+>>   {
+>> -	u32 val =3D 0;
+>> -
+>> -	if (likely(atomic_try_cmpxchg_lock(&lock->val, &val, _Q_LOCKED_VAL)))
+>> +	atomic_t *a =3D &lock->val;
+>> +	u32 val;
+>> +
+>> +again:
+>> +	asm volatile(
+>> +"1:\t"	PPC_LWARX(%0,0,%1,1) "	# queued_spin_lock			\n"
+>> +	: "=3D&r" (val)
+>> +	: "r" (&a->counter)
+>> +	: "memory");
+>> +
+>> +	if (likely(val =3D=3D 0)) {
+>> +		asm_volatile_goto(
+>> +	"	stwcx.	%0,0,%1							\n"
+>> +	"	bne-	%l[again]						\n"
+>> +	"\t"	PPC_ACQUIRE_BARRIER "						\n"
+>> +		:
+>> +		: "r"(_Q_LOCKED_VAL), "r" (&a->counter)
+>> +		: "cr0", "memory"
+>> +		: again );
+>>   		return;
+>> -
+>> -	queued_spin_lock_slowpath(lock, val);
+>> +	}
+>> +
+>> +	if (likely(val =3D=3D _Q_LOCKED_VAL)) {
+>> +		asm_volatile_goto(
+>> +	"	stwcx.	%0,0,%1							\n"
+>> +	"	bne-	%l[again]						\n"
+>> +		:
+>> +		: "r"(_Q_LOCKED_VAL | _Q_PENDING_VAL), "r" (&a->counter)
+>> +		: "cr0", "memory"
+>> +		: again );
+>> +
+>> +		atomic_cond_read_acquire(a, !(VAL & _Q_LOCKED_MASK));
+>> +//		clear_pending_set_locked(lock);
+>> +		WRITE_ONCE(lock->locked_pending, _Q_LOCKED_VAL);
+>> +//		lockevent_inc(lock_pending);
+>> +		return;
+>> +	}
+>> +
+>> +	if (val =3D=3D _Q_PENDING_VAL) {
+>> +		int cnt =3D _Q_PENDING_LOOPS;
+>> +		val =3D atomic_cond_read_relaxed(a,
+>> +					       (VAL !=3D _Q_PENDING_VAL) || !cnt--);
+>> +		if (!(val & ~_Q_LOCKED_MASK))
+>> +			goto again;
+>> +        }
+>> +	queued_spin_lock_slowpath_queue(lock);
+>>   }
+>>   #define queued_spin_lock queued_spin_lock
+>>  =20
+>=20
+> I am fine with the arch code override some part of the generic code.
 
-Append to the 2nd paragraph: 'pinctrl-8' is the current maximum found
-in dts files.
+Cool.
 
-> > Pinctrl is also a bit special in that we have 100s of child nodes and
-> > only 1 to a few actual dependencies (the pinctrl node). I assume in
-> > the end here, it's just the pin controller node that's the dependency
-> > rather than creating lot's of dependencies?
->
-> Correct. In the end, it just links to the one (or few) pin controller
-> devices. Is there a requirement that all pinctrl-N properties point to
-> the child state nodes of the same pin-controller node? Or can
-> pinctrl-0 point to one and pinctrl-1 point to another pin controller
-> node? If the former, all I'd need to do is parse pinctrl-0.
+>> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+>> index b9515fcc9b29..ebcc6f5d99d5 100644
+>> --- a/kernel/locking/qspinlock.c
+>> +++ b/kernel/locking/qspinlock.c
+>> @@ -287,10 +287,14 @@ static __always_inline u32  __pv_wait_head_or_lock=
+(struct qspinlock *lock,
+>>  =20
+>>   #ifdef CONFIG_PARAVIRT_SPINLOCKS
+>>   #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
+>> +#define queued_spin_lock_slowpath_queue	native_queued_spin_lock_slowpat=
+h_queue
+>>   #endif
+>>  =20
+>>   #endif /* _GEN_PV_LOCK_SLOWPATH */
+>>  =20
+>> +void queued_spin_lock_slowpath_queue(struct qspinlock *lock);
+>> +static void __queued_spin_lock_slowpath_queue(struct qspinlock *lock);
+>> +
+>>   /**
+>>    * queued_spin_lock_slowpath - acquire the queued spinlock
+>>    * @lock: Pointer to queued spinlock structure
+>> @@ -314,12 +318,6 @@ static __always_inline u32  __pv_wait_head_or_lock(=
+struct qspinlock *lock,
+>>    */
+>>   void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>>   {
+>> -	struct mcs_spinlock *prev, *next, *node;
+>> -	u32 old, tail;
+>> -	int idx;
+>> -
+>> -	BUILD_BUG_ON(CONFIG_NR_CPUS >=3D (1U << _Q_TAIL_CPU_BITS));
+>> -
+>>   	if (pv_enabled())
+>>   		goto pv_queue;
+>>  =20
+>> @@ -397,6 +395,26 @@ void queued_spin_lock_slowpath(struct qspinlock *lo=
+ck, u32 val)
+>>   queue:
+>>   	lockevent_inc(lock_slowpath);
+>>   pv_queue:
+>> +	__queued_spin_lock_slowpath_queue(lock);
+>> +}
+>> +EXPORT_SYMBOL(queued_spin_lock_slowpath);
+>> +
+>> +void queued_spin_lock_slowpath_queue(struct qspinlock *lock)
+>> +{
+>> +	lockevent_inc(lock_slowpath);
+>> +	__queued_spin_lock_slowpath_queue(lock);
+>> +}
+>> +EXPORT_SYMBOL(queued_spin_lock_slowpath_queue);
+>> +
+>> +static void __queued_spin_lock_slowpath_queue(struct qspinlock *lock)
+>> +{
+>> +	struct mcs_spinlock *prev, *next, *node;
+>> +	u32 old, tail;
+>> +	u32 val;
+>> +	int idx;
+>> +
+>> +	BUILD_BUG_ON(CONFIG_NR_CPUS >=3D (1U << _Q_TAIL_CPU_BITS));
+>> +
+>>   	node =3D this_cpu_ptr(&qnodes[0].mcs);
+>>   	idx =3D node->count++;
+>>   	tail =3D encode_tail(smp_processor_id(), idx);
+>> @@ -559,7 +577,6 @@ void queued_spin_lock_slowpath(struct qspinlock *loc=
+k, u32 val)
+>>   	 */
+>>   	__this_cpu_dec(qnodes[0].mcs.count);
+>>   }
+>> -EXPORT_SYMBOL(queued_spin_lock_slowpath);
+>>  =20
+>>   /*
+>>    * Generate the paravirt code for queued_spin_unlock_slowpath().
+>>
+> I would prefer to extract out the pending bit handling code out into a=20
+> separate helper function which can be overridden by the arch code=20
+> instead of breaking the slowpath into 2 pieces.
 
-My initial thought was I'd expect the dependencies to be uniform
-across pinctrl-%d properties as each one is supposed to be a different
-mode of the same set of pins. However, the dra7 pathologic cases don't
-follow that exactly with the higher speed MMC modes having an
-additional i/o delay controller setting.
+You mean have the arch provide a queued_spin_lock_slowpath_pending=20
+function that the slow path calls?
 
-Rob
+I would actually prefer the pending handling can be made inline in
+the queued_spin_lock function, especially with out-of-line locks it=20
+makes sense to put it there.
+
+We could ifdef out queued_spin_lock_slowpath_queue if it's not used,
+then __queued_spin_lock_slowpath_queue would be inlined into the
+caller so there would be no split?
+
+Thanks,
+Nick
