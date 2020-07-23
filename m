@@ -2,88 +2,155 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8422C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61407C433F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2DC2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FAB2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/ZVfk3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgGWLg7 (ORCPT
+        id S1728533AbgGWLhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:36:59 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:54567 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725846AbgGWLg7 (ORCPT
+        Thu, 23 Jul 2020 07:37:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54630 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728428AbgGWLhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:36:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0U3a0ySa_1595504212;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U3a0ySa_1595504212)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 23 Jul 2020 19:36:52 +0800
-Date:   Thu, 23 Jul 2020 19:36:52 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     joro@8bytes.org, robin.murphy@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, matthias.bgg@gmail.com,
-        robdclark@gmail.com, robh@kernel.org, tomeu.vizoso@collabora.com,
-        steven.price@arm.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, baolin.wang7@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 2/2] iommu: Add gfp parameter to io_pgtable_ops->map()
-Message-ID: <20200723113652.GA104096@VM20190228-100.tbsite.net>
-Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-References: <cover.1591930156.git.baolin.wang@linux.alibaba.com>
- <3093df4cb95497aaf713fca623ce4ecebb197c2e.1591930156.git.baolin.wang@linux.alibaba.com>
- <20200714082821.GC4516@willie-the-truck>
+        Thu, 23 Jul 2020 07:37:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595504231;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=cut4QnIcrkt41QqkMvdydzME5f2nRZ3+Ar1gb+kat8E=;
+        b=Y/ZVfk3u8BV4DvXotgHATnt9eWf6Zdg2dP8sEJhSxd2vHk6kdM/t9BEkPIJMe/X68+Mfk8
+        Ne7BwnEIMnXi4sXssd+BNeIv/lxoTccn8xG1uQ4r/WfRi//uZnhxUdv+5LIn5aaTDUizaz
+        a32fRvXy4de3uFV7DjY01JDmC1xiJJE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-87lMikxXOdSzORwwInr4Ag-1; Thu, 23 Jul 2020 07:37:07 -0400
+X-MC-Unique: 87lMikxXOdSzORwwInr4Ag-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA5A380BCA4;
+        Thu, 23 Jul 2020 11:37:05 +0000 (UTC)
+Received: from [10.36.114.90] (ovpn-114-90.ams2.redhat.com [10.36.114.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 233F65D9D3;
+        Thu, 23 Jul 2020 11:37:03 +0000 (UTC)
+Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
+ hotplug memory
+To:     Roger Pau Monne <roger.pau@citrix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        xen-devel@lists.xenproject.org, linux-mm@kvack.org
+References: <20200723084523.42109-1-roger.pau@citrix.com>
+ <20200723084523.42109-4-roger.pau@citrix.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
+Date:   Thu, 23 Jul 2020 13:37:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714082821.GC4516@willie-the-truck>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200723084523.42109-4-roger.pau@citrix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 09:28:21AM +0100, Will Deacon wrote:
-> On Fri, Jun 12, 2020 at 11:39:55AM +0800, Baolin Wang wrote:
-> > Now the ARM page tables are always allocated by GFP_ATOMIC parameter,
-> > but the iommu_ops->map() function has been added a gfp_t parameter by
-> > commit 781ca2de89ba ("iommu: Add gfp parameter to iommu_ops::map"),
-> > thus io_pgtable_ops->map() should use the gfp parameter passed from
-> > iommu_ops->map() to allocate page pages, which can avoid wasting the
-> > memory allocators atomic pools for some non-atomic contexts.
-> > 
-> > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > ---
-> >  drivers/gpu/drm/panfrost/panfrost_mmu.c |  2 +-
-> >  drivers/iommu/arm-smmu-v3.c             |  2 +-
-> >  drivers/iommu/arm-smmu.c                |  2 +-
-> >  drivers/iommu/io-pgtable-arm-v7s.c      | 18 +++++++++---------
-> >  drivers/iommu/io-pgtable-arm.c          | 18 +++++++++---------
-> >  drivers/iommu/ipmmu-vmsa.c              |  2 +-
-> >  drivers/iommu/msm_iommu.c               |  2 +-
-> >  drivers/iommu/mtk_iommu.c               |  2 +-
-> >  drivers/iommu/qcom_iommu.c              |  2 +-
-> >  include/linux/io-pgtable.h              |  2 +-
-> >  10 files changed, 26 insertions(+), 26 deletions(-)
+On 23.07.20 10:45, Roger Pau Monne wrote:
+> Add an extra option to add_memory_resource that overrides the memory
+> hotplug online behavior in order to force onlining of memory from
+> add_memory_resource unconditionally.
 > 
-> I was a bit nervous about us passing GFP_KERNEL with a spinlock held, but
-> it looks like you've checked all the callsites and it looks fine to me, so:
+> This is required for the Xen balloon driver, that must run the
+> online page callback in order to correctly process the newly added
+> memory region, note this is an unpopulated region that is used by Linux
+> to either hotplug RAM or to map foreign pages from other domains, and
+> hence memory hotplug when running on Xen can be used even without the
+> user explicitly requesting it, as part of the normal operations of the
+> OS when attempting to map memory from a different domain.
 > 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
-> Joerg -- not sure what you want to do with this one, as it's likely to
-> conflict (trivially) with unrelated driver changes.
+> Setting a different default value of memhp_default_online_type when
+> attaching the balloon driver is not a robust solution, as the user (or
+> distro init scripts) could still change it and thus break the Xen
+> balloon driver.
 
-Thanks Will. Joerg, could you apply this 2 patches if no objection from
-your side? Thanks.
+I think we discussed this a couple of times before (even triggered by my
+request), and this is responsibility of user space to configure. Usually
+distros have udev rules to online memory automatically. Especially, user
+space should eb able to configure *how* to online memory.
+
+It's the admin/distro responsibility to configure this properly. In case
+this doesn't happen (or as you say, users change it), bad luck.
+
+E.g., virtio-mem takes care to not add more memory in case it is not
+getting onlined. I remember hyper-v has similar code to at least wait a
+bit for memory to get onlined.
+
+Nacked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Thanks,
+
+David / dhildenb
 
