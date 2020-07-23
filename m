@@ -2,108 +2,75 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A69CC207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477E620714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgGWWUB (ORCPT
+        id S1726689AbgGWWY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:20:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726436AbgGWWUB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:20:01 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NM1gjf192980;
-        Thu, 23 Jul 2020 18:19:51 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32facspxp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 18:19:51 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06NMGmHM046190;
-        Thu, 23 Jul 2020 18:19:50 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32facspxp2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 18:19:50 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NMF2Qn006935;
-        Thu, 23 Jul 2020 22:19:50 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01dal.us.ibm.com with ESMTP id 32brq9bnfr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 22:19:50 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NMJjQA56099282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 22:19:45 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A666CC6055;
-        Thu, 23 Jul 2020 22:19:48 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EF15C605B;
-        Thu, 23 Jul 2020 22:19:45 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.53.35])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 23 Jul 2020 22:19:44 +0000 (GMT)
-References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com> <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Thu, 23 Jul 2020 18:24:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11488 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbgGWWY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:24:59 -0400
+IronPort-SDR: 5ariW4NiwzVootpvbt0O5q9uXqwG9dZDPBPhZWuf9pegA+YOfXdik3sv9Clyyzk5ZLPmUL+98z
+ K5J9+xyQ2EHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138129196"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="138129196"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:24:58 -0700
+IronPort-SDR: zKgzapZCB5UJHSsy3nQZ6GSkGWrz0yYAHTsx6unny21M0x0GoIjIFkljULw2pjM59tiBuLli9p
+ swij7RTimQgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="302465808"
+Received: from abdelh1x-mobl.amr.corp.intel.com (HELO localhost) ([10.249.38.107])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2020 15:24:56 -0700
+Date:   Fri, 24 Jul 2020 01:24:55 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 04/12] ppc64/kexec_file: avoid stomping memory used by special regions
-In-reply-to: <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
-Date:   Thu, 23 Jul 2020 19:19:41 -0300
-Message-ID: <877dut6fia.fsf@morokweng.localdomain>
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
+Message-ID: <20200723222455.GB12405@linux.intel.com>
+References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
+ <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
+ <20200717175245.54758e3954abd1bcccfe5500@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- spamscore=0 mlxlogscore=808 bulkscore=0 adultscore=0 suspectscore=0
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230151
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717175245.54758e3954abd1bcccfe5500@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 17, 2020 at 05:52:45PM +0900, Masami Hiramatsu wrote:
+> On Fri, 17 Jul 2020 06:04:17 +0300
+> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> 
+> > Introduce functions for allocating memory for dynamic trampolines, such
+> > as kprobes. An arch can promote the availability of these functions with
+> > CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
+> > wrapping module_alloc() and module_memfree().
+> 
+> Doesn't it depend on CONFIG_MODULE?
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+The idea would be that arch specifically promotes that it has text
+allocator that is not dependent on module subsystem.
 
-> crashkernel region could have an overlap with special memory regions
-> like  opal, rtas, tce-table & such. These regions are referred to as
-> exclude memory ranges. Setup this ranges during image probe in order
-> to avoid them while finding the buffer for different kdump segments.
-> Override arch_kexec_locate_mem_hole() to locate a memory hole taking
-> these ranges into account.
->
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+E.g. like the patch set does for x86.
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+/Jarkko
