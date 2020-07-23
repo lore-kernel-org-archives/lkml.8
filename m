@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A39C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8EAC433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C744E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287D820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgGWHnd (ORCPT
+        id S1725846AbgGWHnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:43:33 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37046 "EHLO inva020.nxp.com"
+        Thu, 23 Jul 2020 03:43:37 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37076 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgGWHnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:43:31 -0400
+        id S1725911AbgGWHnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:43:32 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B1C61A0083;
-        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 686081A007F;
+        Thu, 23 Jul 2020 09:43:30 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F1AD71A007B;
-        Thu, 23 Jul 2020 09:43:28 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A01B1A006F;
+        Thu, 23 Jul 2020 09:43:30 +0200 (CEST)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 593FB202B6;
-        Thu, 23 Jul 2020 09:43:28 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B5CEF202B6;
+        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
@@ -43,9 +43,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
         linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v3 1/3] dt-bindings: crypto: fsl-sec4: add snvs clock to pwrkey
-Date:   Thu, 23 Jul 2020 10:43:12 +0300
-Message-Id: <20200723074314.3304-2-horia.geanta@nxp.com>
+Subject: [PATCH v3 3/3] Input: snvs_pwrkey - only IRQ_HANDLED for our own events
+Date:   Thu, 23 Jul 2020 10:43:14 +0300
+Message-Id: <20200723074314.3304-4-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200723074314.3304-1-horia.geanta@nxp.com>
 References: <20200723074314.3304-1-horia.geanta@nxp.com>
@@ -60,65 +60,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: André Draszik <git@andred.net>
 
-On i.MX7 and i.MX8M, the SNVS requires a clock. This is similar to the
-clock bound to the SNVS RTC node, but if the SNVS RTC driver isn't
-enabled, then SNVS doesn't work, and as such the pwrkey driver doesn't
-work (i.e. hangs the kernel, as the clock isn't enabled).
+The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
 
-Also see commit ec2a844ef7c1
-("ARM: dts: imx7s: add snvs rtc clock")
-for a similar fix.
+This driver here should only return IRQ_HANDLED if the status register
+indicates that the event we're handling in the irq handler was genuinely
+intended for this driver. Otheriwse the interrupt subsystem will
+assume the interrupt was handled successfully even though it wasn't
+at all.
 
 Signed-off-by: André Draszik <git@andred.net>
-Acked-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/input/keyboard/snvs_pwrkey.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index 8f359f473ada..1800d57edb66 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -449,6 +449,19 @@ System ON/OFF key driver
-       Value type: <phandle>
-       Definition: this is phandle to the register map node.
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+index 382d2ae82c9b..980867886b34 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -82,7 +82,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ 	clk_enable(pdata->clk);
  
-+   - clocks
-+      Usage: optional, required if SNVS LP requires explicit
-+          enablement of clocks
-+      Value type: <prop_encoded-array>
-+      Definition:  a clock specifier describing the clock required for
-+          enabling and disabling SNVS LP.
+ 	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+-	if (lp_status & SNVS_LPSR_SPO) {
++	lp_status &= SNVS_LPSR_SPO;
 +
-+   - clock-names
-+      Usage: optional, required if SNVS LP requires explicit
-+          enablement of clocks
-+      Value type: <string>
-+      Definition: clock name string should be "snvs-pwrkey".
-+
- EXAMPLE:
- 	snvs-pwrkey@020cc000 {
- 		compatible = "fsl,sec-v4.0-pwrkey";
-@@ -456,6 +469,8 @@ EXAMPLE:
- 		interrupts = <0 4 0x4>
- 	        linux,keycode = <116>; /* KEY_POWER */
- 		wakeup-source;
-+		clocks = <&clks IMX7D_SNVS_CLK>;
-+		clock-names = "snvs-pwrkey";
- 	};
++	if (lp_status) {
+ 		if (pdata->minor_rev == 0) {
+ 			/*
+ 			 * The first generation i.MX[6|7] SoCs only send an
+@@ -98,14 +100,14 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ 			mod_timer(&pdata->check_timer,
+ 			          jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
+ 		}
+-	}
  
- =====================================================================
-@@ -547,6 +562,8 @@ FULL EXAMPLE
- 			interrupts = <0 4 0x4>;
- 			linux,keycode = <116>; /* KEY_POWER */
- 			wakeup-source;
-+			clocks = <&clks IMX7D_SNVS_CLK>;
-+			clock-names = "snvs-pwrkey";
- 		};
- 	};
+-	/* clear SPO status */
+-	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
++		/* clear SPO status */
++		regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
++	}
  
+ 	clk_disable(pdata->clk);
+ 
+-	return IRQ_HANDLED;
++	return lp_status ? IRQ_HANDLED : IRQ_NONE;
+ }
+ 
+ static void imx_snvs_pwrkey_act(void *pdata)
 -- 
 2.17.1
 
