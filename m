@@ -2,97 +2,434 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCABC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B454A22B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K+SnKxwU"
+	by mail.kernel.org (Postfix) with ESMTP id E47962071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595524596;
+	bh=82CuT3B2oJEoMB9UO7PXa0HTJ/CZfmTTLpJVVu88vMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aH7BSB7IoILmHzYC14wa59sPSLeyV2LlEmSYWonlZk72KJVf2eYAMoOmgQjXU93Qm
+	 8RW2RQPyXzijORl/XUVy5cpAKOy6oNDcQCoWHJoG7L3G5aljaWlUWo8enmcGTqDHJU
+	 I3wbCl2wmaWMloM3yBeWMEEFGHdoZYt6/pbEHqXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgGWRPs (ORCPT
+        id S1729899AbgGWRQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgGWRPr (ORCPT
+        Thu, 23 Jul 2020 13:16:35 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35042 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgGWRQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:15:47 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5C3C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 10:15:47 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b79so6055664qkg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 10:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JXiuwKSxH1v6t1t/ryYYU7zLgRgpgLMrl8o3usa+ml4=;
-        b=K+SnKxwUrjhMdkKMznvv0/mSZpVVpR59yG77Q31rc69sjsc1uY1h2B4N81OGYgZcS1
-         fsFtjzCQh4qQJSYBpVJxnJiFdI0biFvC+sGyjDB0cDY0hG11MHJBwW2SK2RI7m2/rwyS
-         v1bd5wbArHaOuX4jaoWOMdBC00HeEJmfUwO1k=
+        Thu, 23 Jul 2020 13:16:34 -0400
+Received: by mail-il1-f196.google.com with SMTP id t18so4992668ilh.2;
+        Thu, 23 Jul 2020 10:16:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JXiuwKSxH1v6t1t/ryYYU7zLgRgpgLMrl8o3usa+ml4=;
-        b=FD8nWNyzDCLlf5u+MZREU1QQv5VhjdvEIH7Oq0O9d8HxPrKYC5fqdJI3UQJeC6Jfdc
-         kuVHCsf0bpCLTueyJLmpbHIzkamW1BnxHwHj+fRu0uQ1892fpIZMuXi4/TJJj4GGPcoz
-         LEpWTTQ2Kkp9uZE1akvwZQnrRcJXJzqEkToFR9eHGMnOMIAD1/oGQWHEEHLWb224b+Gg
-         K2D8cR5Dew6jPulpl8G/btWAm7wAmRk0uxSYPM5aMVvZqZ/FBSd5cgtjYNORj56OI9XA
-         Ty39g+s7Y4rXVVfZqqFSnN9A4bF2xm2deoWsGCmjrlXDq9sjQowGNndw0nIE1wTQiNg/
-         1ieg==
-X-Gm-Message-State: AOAM532aWlmShUCBpGFvIlYK9rMQ9mDBAntS4IV8HGPQxMfYZvHGTnIQ
-        Pzis80H+iduNNfxe15PiVi7b4KoMuxGgguGIe3Zugw==
-X-Google-Smtp-Source: ABdhPJxTfnoxWQUWdTg8raMcFvzXp1cWiOq8kQMMi+BDEmI/sCV1IYxPpZLXjsosKPeDkbkDYTHj+k9jFHSSpLw6ss4=
-X-Received: by 2002:ae9:e857:: with SMTP id a84mr6649837qkg.100.1595524546846;
- Thu, 23 Jul 2020 10:15:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZUMvuj8eAX170gQ9mGFNERiGRb24OFcJogsQlsHCEEc=;
+        b=NbVqjDi37fic83fWEaPcnbNCqZwZ/ZTk3FpqtS+0uajjuSdvGXFD2NzbM/HWl4kwY7
+         GWElE04iSqpi7AbGqzYKtSoyn7gBcmbQVKoXIR/Qt3yyjhWPyi77Z5rH+qbWa3Nsaa/o
+         SK8YZ+PW9BMbu6yWa3qKiMK1BEKbFHDot0rY0fmpYuzgd64yQePtuvcumZAL00srhzDw
+         +Jev+UV3TP2mT4sE9qQCu4KA91tYSIXcrkwJyJiun6NKmFeUnZbm1hY0K9uNmbMlJDG2
+         45UMFrQCjDfS2mmCQC3jdqVhYEq7hYMgfoYKBEIIbTO4m9pcPqScv9y2WkNUXvXunINS
+         z88Q==
+X-Gm-Message-State: AOAM532e+BAfj6Fgr5ANmq449x5YIbScV7GoIVpiRLjDxE9ZOyyf7Msn
+        /6HggbjCc7PA5OhKlwko4PMEzGxy3Q==
+X-Google-Smtp-Source: ABdhPJxiFoI0aTZugjHZ9P161oA5K6mViNl9PekuivKjxoewfHL+pHLtmo+tDNlrnAlTBWQ2wWOwNA==
+X-Received: by 2002:a05:6e02:501:: with SMTP id d1mr5642607ils.213.1595524591704;
+        Thu, 23 Jul 2020 10:16:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y2sm1753806iox.22.2020.07.23.10.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 10:16:31 -0700 (PDT)
+Received: (nullmailer pid 554254 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:16:29 -0000
+Date:   Thu, 23 Jul 2020 11:16:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rohit kumar <rohitkr@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 12/12] dt-bindings: sound: lpass-cpu: Move to yaml
+ format
+Message-ID: <20200723171629.GA547775@bogus>
+References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
+ <1595413915-17867-13-git-send-email-rohitkr@codeaurora.org>
 MIME-Version: 1.0
-References: <20200723073744.13400-1-krzk@kernel.org> <20200723073744.13400-17-krzk@kernel.org>
- <b9519b7f-9cf0-3715-bca9-05905035eada@gmail.com>
-In-Reply-To: <b9519b7f-9cf0-3715-bca9-05905035eada@gmail.com>
-From:   Markus Mayer <mmayer@broadcom.com>
-Date:   Thu, 23 Jul 2020 10:15:36 -0700
-Message-ID: <CAGt4E5v3mbY_S2Q=Tq5ZKSY450weu9kFZ9R3bkJ1=3VPobZGsg@mail.gmail.com>
-Subject: Re: [PATCH 16/23] memory: brcmstb_dpfe: Constify the contents of string
-To:     Florian Fainelli <f.fainelli@gmail.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595413915-17867-13-git-send-email-rohitkr@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 at 10:11, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 7/23/20 12:37 AM, Krzysztof Kozlowski wrote:
-> > The string itself can be made const for safety.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, Jul 22, 2020 at 04:01:55PM +0530, Rohit kumar wrote:
+> Update lpass-cpu binding with yaml formats.
+> 
+> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>  .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 130 ---------------
+>  .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 +++++++++++++++++++++
+>  2 files changed, 185 insertions(+), 130 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+> deleted file mode 100644
+> index c21392e..00000000
+> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+> +++ /dev/null
+> @@ -1,130 +0,0 @@
+> -* Qualcomm Technologies LPASS CPU DAI
+> -
+> -This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
+> -
+> -Required properties:
+> -
+> -- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
+> -			  "qcom,lpass-cpu-sc7180"
+> -- clocks		: Must contain an entry for each entry in clock-names.
+> -- clock-names		: A list which must include the following entries:
+> -				* "ahbix-clk"
+> -				* "mi2s-osr-clk"
+> -				* "mi2s-bit-clk"
+> -			: required clocks for "qcom,lpass-cpu-apq8016"
+> -				* "ahbix-clk"
+> -				* "mi2s-bit-clk0"
+> -				* "mi2s-bit-clk1"
+> -				* "mi2s-bit-clk2"
+> -				* "mi2s-bit-clk3"
+> -				* "pcnoc-mport-clk"
+> -				* "pcnoc-sway-clk"
+> -			: required clocks for "qcom,lpass-cpu-sc7180"
+> -				* "audio-core"
+> -				* "mclk0"
+> -				* "mi2s-bit-clk0"
+> -				* "mi2s-bit-clk1"
+> -				* "pcnoc-sway-clk"
+> -				* "pcnoc-mport-clk"
+> -
+> -- interrupts		: Must contain an entry for each entry in
+> -			  interrupt-names.
+> -- interrupt-names	: A list which must include the following entries:
+> -				* "lpass-irq-lpaif"
+> -- pinctrl-N		: One property must exist for each entry in
+> -			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
+> -			  for details of the property values.
+> -- pinctrl-names		: Must contain a "default" entry.
+> -- reg			: Must contain an address for each entry in reg-names.
+> -- reg-names		: A list which must include the following entries:
+> -				* "lpass-lpaif"
+> -- #address-cells	: Must be 1
+> -- #size-cells		: Must be 0
+> -
+> -
+> -
+> -Optional properties:
+> -
+> -- qcom,adsp		: Phandle for the audio DSP node
+> -
+> -By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
+> -The SD lines to use can be configured by adding subnodes for each of the DAIs.
+> -
+> -Required properties for each DAI (represented by a subnode):
+> -- reg			: Must be one of the DAI IDs
+> -			  (usually part of dt-bindings header)
+> -- qcom,playback-sd-lines: List of serial data lines to use for playback
+> -			  Each SD line should be represented by a number from 0-3.
+> -- qcom,capture-sd-lines	: List of serial data lines to use for capture
+> -			  Each SD line should be represented by a number from 0-3.
+> -
+> -Note that adding a subnode changes the default to "no lines configured",
+> -so both playback and capture lines should be configured when a subnode is added.
+> -
+> -Examples:
+> -1)
+> -
+> -lpass@28100000 {
+> -	compatible = "qcom,lpass-cpu";
+> -	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
+> -	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
+> -	interrupts = <0 85 1>;
+> -	interrupt-names = "lpass-irq-lpaif";
+> -	pinctrl-names = "default", "idle";
+> -	pinctrl-0 = <&mi2s_default>;
+> -	pinctrl-1 = <&mi2s_idle>;
+> -	reg = <0x28100000 0x10000>;
+> -	reg-names = "lpass-lpaif";
+> -	qcom,adsp = <&adsp>;
+> -
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -
+> -	/* Optional to set different MI2S SD lines */
+> -	dai@3 {
+> -		reg = <MI2S_QUATERNARY>;
+> -		qcom,playback-sd-lines = <0 1>;
+> -	};
+> -};
+> -
+> -2)
+> -
+> -#include <dt-bindings/sound/sc7180-lpass.h>
+> -
+> -lpass_cpu: lpass {
+> -	compatible = "qcom,lpass-cpu-sc7180";
+> -
+> -	reg = <0 0x62F00000 0 0x29000>;
+> -
+> -	iommus = <&apps_smmu 0x1020 0>;
+> -
+> -	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> -	clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
+> -		<&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
+> -		<&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
+> -		<&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
+> -		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
+> -		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
+> -	clock-names = "pcnoc-sway-clk", "audio-core",
+> -			"mclk0", "pcnoc-mport-clk",
+> -			"mi2s-bit-clk0", "mi2s-bit-clk1";
+> -	interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
+> -	interrupt-names = "lpass-irq-lpaif";
+> -
+> -
+> -	#sound-dai-cells = <1>;
+> -
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -
+> -	mi2s-primary@0 {
+> -		reg = <MI2S_PRIMARY>;
+> -		qcom,playback-sd-lines = <1>;
+> -		qcom,capture-sd-lines = <0>;
+> -	};
+> -
+> -	mi2s-secondary@1 {
+> -		reg = <MI2S_SECONDARY>;
+> -		qcom,playback-sd-lines = <0>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+> new file mode 100644
+> index 00000000..03c598f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+> @@ -0,0 +1,185 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Acked-by: Markus Mayer <mmayer@broadcom.com>
+If all the authors are QCom or Linaro please dual license.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm LPASS CPU dai driver bindings
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +  - Rohit kumar <rohitkr@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm SOC Low-Power Audio SubSystem (LPASS) that consist of MI2S interface
+> +  for audio data transfer on external codecs. LPASS cpu driver is a module to
+> +  configure Low-Power Audio Interface(LPAIF) core registers across different
+> +  IP versions.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: qcom,lpass-cpu
+> +        description: For IPQ806x
+> +
+> +      - const: qcom,apq8016-lpass-cpu
+> +        description: For APQ8016
+> +
+> +      - const: qcom,lpass-cpu-sc7180
+> +        description: For SC7180
+
+Use enum rather than oneOf+const
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: LPAIF core registers
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 6
+> +
+> +  clock-names:
+> +    minItems: 3
+> +    maxItems: 6
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: LPAIF DMA buffer interrupt
+> +
+> +  qcom,adsp:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle for the audio DSP node
+> +
+> +  iommus:
+> +    maxItems: 1
+> +    description: Phandle to apps_smmu node with sid mask
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  '#sound-dai-cells':
+> +    const: 1
+> +
+> +patternProperties:
+> +  "(^mi2s-[0-9a-f]$|mi2s)":
+> +    type: object
+> +    description: Required properties for each DAI
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +        description: Must be one of the DAI ID
+> +
+> +    required:
+> +      - reg
+> +
+> +
+
+Extra blank line.
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - '#sound-dai-cells'
+
+Add:
+
+additionalProperties: false
+
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,lpass-cpu-sc7180
+> +
+> +    then:
+> +      required:
+> +        - iommus
+> +        - power-domains
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,lpass-cpu
+> +
+> +    then:
+> +      properties:
+> +        clock-names:
+> +          items:
+> +            - const: ahbix-clk
+> +            - const: mi2s-osr-clk
+> +            - const: mi2s-bit-clk
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,apq8016-lpass-cpu
+> +
+> +    then:
+> +      properties:
+> +        clock-names:
+> +          items:
+> +            - const: ahbix-clk
+> +            - const: mi2s-bit-clk0
+> +            - const: mi2s-bit-clk1
+> +            - const: mi2s-bit-clk2
+> +            - const: mi2s-bit-clk3
+> +            - const: pcnoc-mport-clk
+> +            - const: pcnoc-sway-clk
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,lpass-cpu-sc7180
+
+You already have the same condition previously. Combine into 1.
+
+> +
+> +    then:
+> +      properties:
+> +        clock-names:
+> +          items:
+> +            - const: pcnoc-sway-clk
+> +            - const: audio-core
+> +            - const: mclk0
+> +            - const: pcnoc-mport-clk
+> +            - const: mi2s-bit-clk0
+> +            - const: mi2s-bit-clk1
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/sound/sc7180-lpass.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        lpass@62f00000 {
+> +            compatible = "qcom,lpass-cpu-sc7180";
+> +
+> +            reg = <0 0x62f00000  0 0x29000>;
+> +
+> +            iommus = <&apps_smmu 0x1020 0>;
+> +            power-domains = <&lpass_hm 0>;
+> +
+> +            clocks = <&gcc 131>,
+> +                 <&lpasscorecc 6>,
+> +                 <&lpasscorecc 7>,
+> +                 <&lpasscorecc 10>,
+> +                 <&lpasscorecc 8>,
+> +                 <&lpasscorecc 9>;
+> +
+> +            clock-names = "pcnoc-sway-clk", "audio-core",
+> +                          "mclk0", "pcnoc-mport-clk",
+> +                          "mi2s-bit-clk0", "mi2s-bit-clk1";
+> +
+> +            interrupts = <0 160 1>;
+> +
+> +            #sound-dai-cells = <1>;
+> +
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            /* Optional to set different MI2S SD lines */
+> +            mi2s-primary@0 {
+> +                reg = <MI2S_PRIMARY>;
+> +                qcom,playback-sd-lines = <1>;
+> +                qcom,capture-sd-lines = <0>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
