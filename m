@@ -2,95 +2,136 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D51AC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FE6C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5628620709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595532647;
-	bh=7InW/I38muM+u0qDvAzcUWvmPajbXN7K+EHKB8+aI98=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=g+jD8njKAET0qJgOTyg23SRQlENM+RilrR+Nj8VgAFXLdVSPWyPy7Fyp4MS2CqC5h
-	 U1s6yjw/5XoDuE1p+ehj3vFCaP2URplLbHIK4T1L7epi4O3UCnYrEqdOZvYYZNMaEw
-	 6wWknmIIW/dOGg9QKxZCfUycJ3H0xlHJYzeHZ9fE=
+	by mail.kernel.org (Postfix) with ESMTP id 006032067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBY7Ts0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgGWTaq (ORCPT
+        id S1726797AbgGWTat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgGWTao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:30:44 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B2B2067D;
-        Thu, 23 Jul 2020 19:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595532643;
-        bh=7InW/I38muM+u0qDvAzcUWvmPajbXN7K+EHKB8+aI98=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VoGkpg7/H/Gv5IFWFsnv3YGd9Frr08vHEFmbXvHV17HbCRv5l1QxuOEeN+84FkX9M
-         TiN0omh+WS5rh/FCKxAypSKymdubnrxE3f/EiI+4VGLZxy0A4lBLQBqFTt2r8ylvVJ
-         RVPy/b29uNx5A8yMwdwYNa6gxhM5VF+H99Mm6Bmg=
-Date:   Thu, 23 Jul 2020 14:30:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
-Message-ID: <20200723193041.GA1446817@bjorn-Precision-5520>
+        Thu, 23 Jul 2020 15:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgGWTar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 15:30:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5A6C0619DC;
+        Thu, 23 Jul 2020 12:30:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id l6so3032492plt.7;
+        Thu, 23 Jul 2020 12:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=n6QCGzWBzwdRunC88ZR2ssAXgvTx6O91V0TzBT8uQq0=;
+        b=cBY7Ts0Dn/yJ/+ZWE7VudkHnyuC7LqcXKcjymID4/kVhvNHMWHyBlg7WKRwPl4nCAC
+         fKOPRWgTo4uMNrEZeJy5QtwqGN+fBVV7jid7LmRih4/8V2miaRuOuqirisKXJCNotIdo
+         gwJH3149xT8gLHsmovNcEqSb+ojEmlb6UzMYo4b1MqZNTfP6kkRLAamanfCyy+mQWyp+
+         S83L5ElaPB4HqZxIY728sV+xGs2wYwBu63N8WTEUYKO3zaDYuqd6JVrA7fuLQZ+rfCO8
+         3lfTAWCQ2ZBKKay/yZ1CTV4zVhvpBlnPE1kboJUtT9icJ5/U7S9vBT+UdZVUlC5mthZD
+         qxZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=n6QCGzWBzwdRunC88ZR2ssAXgvTx6O91V0TzBT8uQq0=;
+        b=sw7GFTRtOgVNquZNd+fAFR8fixL1GN2xttYJGrh3YU0LAqCZZz+cGIan5UNMst8fBV
+         p9U7afQ8iAnP+EFePjpWfFVg6RQraaE3W2zCULFi1sd+j3axyDR4X6BNkWqkOHXf/HjJ
+         nWHP1y/lxpjNe/WdygyixpralCXOqmycfPgUpbiQqe+nXXGpEpTQ1UVwj0Pyq6MBT8Pp
+         bQjPwyMwUbGYt/xjV1FSy24t1V+VwEmusuvJnLlBglExpoQDA/ECTxGWzE8aeZgzHc/t
+         PzZS2PQXCarXzfSQ+ofUSX9mxJjd1rNeYbXa85zSk4tH3cGlDEZWd/NJ/puTeftd0mMm
+         mOdw==
+X-Gm-Message-State: AOAM532JbvqmuAaVFofHO8yNC4PFlOmBhcGPU5BQKIIPI4thBSlB0DRc
+        rAW5xLx1AbZK2jE4Wz9kE9fuJy9b70o=
+X-Google-Smtp-Source: ABdhPJxQQ6heHaCHmOcJzC/I8BU7mAcdErDTCHiBwrJsRscBZC+VPjo0YIwwQ+jbZRag/cOOHlDkMw==
+X-Received: by 2002:a17:902:7591:: with SMTP id j17mr5031015pll.286.1595532647100;
+        Thu, 23 Jul 2020 12:30:47 -0700 (PDT)
+Received: from nickserv.localdomain (c-98-33-101-203.hsd1.ca.comcast.net. [98.33.101.203])
+        by smtp.gmail.com with ESMTPSA id y18sm3794332pff.10.2020.07.23.12.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 12:30:46 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <terrelln@fb.com>
+Subject: [PATCH v8 5/7] x86: bump ZO_z_extra_bytes margin for zstd
+Date:   Thu, 23 Jul 2020 12:27:59 -0700
+Message-Id: <20200723192801.351114-6-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200723192801.351114-1-nickrterrell@gmail.com>
+References: <20200723192801.351114-1-nickrterrell@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723173819.GA345408@otc-nc-03>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:38:19AM -0700, Raj, Ashok wrote:
-> Hi Bjorn
-> 
-> On Tue, Jul 21, 2020 at 09:54:01AM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
-> > > PASID and PRI capabilities are only enumerated in PF devices. VF devices
-> > > do not enumerate these capabilites. IOMMU drivers also need to enumerate
-> > > them before enabling features in the IOMMU. Extending the same support as
-> > > PASID feature discovery (pci_pasid_features) for PRI.
-> > > 
-> > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > 
-> > Hi Ashok,
-> > 
-> > When you update this for the 0-day implicit declaration thing, can you
-> > update the subject to say what the patch *does*, as opposed to what it
-> > is solving?  Also, no need for a period at the end.
-> 
-> Yes, will update and resend. Goofed up a couple things, i'll update those
-> as well.
-> 
-> > Does this fix a regression?  Is it associated with a commit that we
-> > could add as a "Fixes:" tag so we know how far back to try to apply
-> > to stable kernels?
-> 
-> Yes, 
+From: Nick Terrell <terrelln@fb.com>
 
-Does that mean "yes, this fixes a regression"?
+Bump the ZO_z_extra_bytes margin for zstd.
 
-> but the iommu files moved location and git fixes tags only generates
-> for a few handful of commits and doesn't show the old ones. 
+Zstd needs 3 bytes per 128 KB, and has a 22 byte fixed overhead.
+Zstd needs to maintain 128 KB of space at all times, since that is
+the maximum block size. See the comments regarding in-place
+decompression added in lib/decompress_unzstd.c for details.
 
-Not sure how to interpret the rest of this.  I'm happy to include the
-SHA1 of the original commit that added the regression, even if the
-file has moved since then.
+The existing code is written so that all the compression algorithms use
+the same ZO_z_extra_bytes. It is taken to be the maximum of the growth
+rate plus the maximum fixed overhead. The comments just above this diff
+state that:
 
-Bjorn
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Nick Terrell <terrelln@fb.com>
+---
+ arch/x86/boot/header.S | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 735ad7f21ab0..6dbd7e9f74c9 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -539,8 +539,14 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred load addr
+ # the size-dependent part now grows so fast.
+ #
+ # extra_bytes = (uncompressed_size >> 8) + 65536
++#
++# ZSTD compressed data grows by at most 3 bytes per 128K, and only has a 22
++# byte fixed overhead but has a maximum block size of 128K, so it needs a
++# larger margin.
++#
++# extra_bytes = (uncompressed_size >> 8) + 131072
+ 
+-#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 65536)
++#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 131072)
+ #if ZO_z_output_len > ZO_z_input_len
+ # define ZO_z_extract_offset	(ZO_z_output_len + ZO_z_extra_bytes - \
+ 				 ZO_z_input_len)
+-- 
+2.27.0
+
