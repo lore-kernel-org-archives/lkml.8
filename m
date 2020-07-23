@@ -2,85 +2,104 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AFCC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2491C2071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B23820825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbgGWA3m (ORCPT
+        id S1733132AbgGWAeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:29:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28662 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729486AbgGWA3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:29:41 -0400
-IronPort-SDR: mQzAGlKCCuvKcm4vAyXPHgq61e5tIOzTfGMyNmsPqwwgsRMmSGoFu7ZpuarhEF5VrPewKV7ZgA
- TM5uLyLhpiRA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="149620646"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="149620646"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 17:29:41 -0700
-IronPort-SDR: dnI/EJGSOOebbW4BpM3U1cRyeFIY8G0LSZwYJ1J3OzLS4f724Ci4kCG0joZmj1jMOMpTa0xWBh
- 8p9rhiNwK9Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="288464413"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jul 2020 17:29:40 -0700
-Date:   Wed, 22 Jul 2020 17:29:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v11 02/13] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200723002940.GO9114@linux.intel.com>
-References: <20200708193408.242909-1-peterx@redhat.com>
- <20200708193408.242909-3-peterx@redhat.com>
+        Wed, 22 Jul 2020 20:34:08 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60736 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728607AbgGWAeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 20:34:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6AB198030816;
+        Thu, 23 Jul 2020 00:34:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jJq91sKe2DEP; Thu, 23 Jul 2020 03:34:00 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 2/4] serial: 8250_dw: Simplify the ref clock rate setting procedure
+Date:   Thu, 23 Jul 2020 03:33:55 +0300
+Message-ID: <20200723003357.26897-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200723003357.26897-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200723003357.26897-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708193408.242909-3-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 03:33:57PM -0400, Peter Xu wrote:
-> Originally, we have three code paths that can dirty a page without
-> vcpu context for X86:
-> 
->   - init_rmode_identity_map
->   - init_rmode_tss
->   - kvmgt_rw_gpa
-> 
-> init_rmode_identity_map and init_rmode_tss will be setup on
-> destination VM no matter what (and the guest cannot even see them), so
-> it does not make sense to track them at all.
-> 
-> To do this, allow __x86_set_memory_region() to return the userspace
-> address that just allocated to the caller.  Then in both of the
-> functions we directly write to the userspace address instead of
-> calling kvm_write_*() APIs.
-> 
-> Another trivial change is that we don't need to explicitly clear the
-> identity page table root in init_rmode_identity_map() because no
-> matter what we'll write to the whole page with 4M huge page entries.
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
+Really instead of twice checking the clk_round_rate() return value
+we could do it once, and if it isn't error the clock rate can be changed.
+By doing so we decrease a number of ret-value tests and remove a weird
+goto-based construction implemented in the dw8250_set_termios() method.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+
+---
+
+Changelog v3:
+- This is a new patch.
+---
+ drivers/tty/serial/8250/8250_dw.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index aab3cccc6789..12866083731d 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -282,20 +282,13 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
+ 
+ 	clk_disable_unprepare(d->clk);
+ 	rate = clk_round_rate(d->clk, baud * 16);
+-	if (rate < 0)
+-		ret = rate;
+-	else if (rate == 0)
+-		ret = -ENOENT;
+-	else
++	if (rate > 0) {
+ 		ret = clk_set_rate(d->clk, rate);
++		if (!ret)
++			p->uartclk = rate;
++	}
+ 	clk_prepare_enable(d->clk);
+ 
+-	if (ret)
+-		goto out;
+-
+-	p->uartclk = rate;
+-
+-out:
+ 	p->status &= ~UPSTAT_AUTOCTS;
+ 	if (termios->c_cflag & CRTSCTS)
+ 		p->status |= UPSTAT_AUTOCTS;
+-- 
+2.26.2
+
