@@ -2,96 +2,117 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C96832065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595538532;
-	bh=1QNGktzzDXW7iA21OjAPWe03EvWmJ49t19nWTtuo9Ks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vJVvbFt2i/bvtH1AYM5o/eaw2fnAZoXTM9LrDtiWB1bD4CjLEqz9cFciK6bFMjeE5
-	 cXLiBEOel8+zl+nzpl9nElU4DSeVXMkdPd9ArAfSFCrVDpOLIsf6nwArhWcc+kAZw6
-	 8UvMKA8a78e6GgJMkoWO7/gQUPy2h1edCu9IFh2s=
+	by mail.kernel.org (Postfix) with ESMTP id 90FFE2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="PqRfO9+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGWVIv (ORCPT
+        id S1726824AbgGWVKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:08:51 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45561 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGWVIv (ORCPT
+        Thu, 23 Jul 2020 17:10:21 -0400
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:12645 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgGWVKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:08:51 -0400
-Received: by mail-il1-f193.google.com with SMTP id b18so359983ilo.12;
-        Thu, 23 Jul 2020 14:08:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2VZH35DZAxRu1oS4+i4xalpCsqsecoySSiZlMELJnnM=;
-        b=P/fXSffMV1K3XObAUuAJJgfX2n7eWW8ZU+zPLwigkg6z3V/frB75DJK2A+AgxyMWu3
-         1n+UtQFMJJOyRJZnm5hBGTxwuSqCVarZ97fPdfhtK5nPd+feDN74My8YzTkuoB9Yf6Tm
-         rtHcqyGlcbS3XuoRCmxr0sSceF+rrau1+eot6owUZzskSi1KpYceofl23fOd1emj2P/4
-         xFAricn99ZPuHCA2Y+/JgFgv6Tij+vcp0TEP5NySWMHs6ePdN0DdB0GGwDOmZwx0eUcm
-         2dlJb+RtFB13aB1nfLFbuTza6IhIPo85NRxDnpsPiHL6hjQ71/o1Ko3qFpKYBnGVuMVu
-         acfQ==
-X-Gm-Message-State: AOAM530CkXpipQwEVNxJes4W65j7qIrA10DlDgFySSkT4iA5uvy4zzsm
-        0zKBCEZEQNlFauFG5NQMC7EsIg6eHw==
-X-Google-Smtp-Source: ABdhPJxZpIl6pBTL4WHNxrGxU8jZXWQ7Qf3Cvu5wBnHX10cKpBPsvdeQ/EcD+6EbXUrJP4UxylInSA==
-X-Received: by 2002:a92:d186:: with SMTP id z6mr7241487ilz.227.1595538530445;
-        Thu, 23 Jul 2020 14:08:50 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v15sm2146214ili.28.2020.07.23.14.08.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:08:49 -0700 (PDT)
-Received: (nullmailer pid 862353 invoked by uid 1000);
-        Thu, 23 Jul 2020 21:08:48 -0000
-Date:   Thu, 23 Jul 2020 15:08:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] dt-bindings: mux: mux.h: drop a duplicated word
-Message-ID: <20200723210848.GA862323@bogus>
-References: <20200719002816.20263-1-rdunlap@infradead.org>
+        Thu, 23 Jul 2020 17:10:20 -0400
+Date:   Thu, 23 Jul 2020 21:10:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1595538618;
+        bh=/v8hsn4vji93LSAwL+yRiHgNCReHoDDH4axY/SRPmKE=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=PqRfO9+GqZTufIG+oR4srHLcqDGsQQCoyux3C8Vt6Xz6kwNRHtX9CeN989yIimZ9w
+         A0+avVpS6Bn8ubJZ1TRxVT39JUxZbt5WngqQXKh1gn25FutDexD3jsLiaYILD0BGsd
+         4Tz6V6YIpKZZi6+ZvJ9EqR5blmY+mVmbPEEk6D6s=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "harry.wentland@amd.com" <harry.wentland@amd.com>,
+        "mnrzk@protonmail.com" <mnrzk@protonmail.com>,
+        "nicholas.kazlauskas@amd.com" <nicholas.kazlauskas@amd.com>,
+        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "1i5t5.duncan@cox.net" <1i5t5.duncan@cox.net>,
+        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
+        "regressions@leemhuis.info" <regressions@leemhuis.info>,
+        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
+        "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
+Message-ID: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719002816.20263-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 17:28:16 -0700, Randy Dunlap wrote:
-> Drop the repeated word "the" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  include/dt-bindings/mux/mux.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200717.orig/include/dt-bindings/mux/mux.h
-> +++ linux-next-20200717/include/dt-bindings/mux/mux.h
-> @@ -3,7 +3,7 @@
->   * This header provides constants for most Multiplexer bindings.
->   *
->   * Most Multiplexer bindings specify an idle state. In most cases, the
-> - * the multiplexer can be left as is when idle, and in some cases it can
-> + * multiplexer can be left as is when idle, and in some cases it can
->   * disconnect the input/output and leave the multiplexer in a high
->   * impedance state.
->   */
-> 
-> 
+When amdgpu_dm_atomic_commit_tail is running in the workqueue,
+drm_atomic_state_put will get called while amdgpu_dm_atomic_commit_tail is
+running, causing a race condition where state (and then dm_state) is
+sometimes freed while amdgpu_dm_atomic_commit_tail is running. This bug has
+occurred since 5.7-rc1 and is well documented among polaris11 users [1].
 
-Applied, thanks!
+Prior to 5.7, this was not a noticeable issue since the freelist pointer
+was stored at the beginning of dm_state (base), which was unused. After
+changing the freelist pointer to be stored in the middle of the struct, the
+freelist pointer overwrote the context, causing dc_state to become garbage
+data and made the call to dm_enable_per_frame_crtc_master_sync dereference
+a freelist pointer.
+
+This patch fixes the aforementioned issue by calling drm_atomic_state_get
+in amdgpu_dm_atomic_commit before drm_atomic_helper_commit is called and
+drm_atomic_state_put after amdgpu_dm_atomic_commit_tail is complete.
+
+According to my testing on 5.8.0-rc6, this should fix bug 207383 on
+Bugzilla [1].
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
+
+Fixes: 3202fa62f ("slub: relocate freelist pointer to middle of object")
+Reported-by: Duncan <1i5t5.duncan@cox.net>
+Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gp=
+u/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 86ffa0c2880f..86d6652872f2 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -7303,6 +7303,7 @@ static int amdgpu_dm_atomic_commit(struct drm_device =
+*dev,
+ =09 * unset legacy_cursor_update
+ =09 */
+
++=09drm_atomic_state_get(state);
+ =09return drm_atomic_helper_commit(dev, state, nonblock);
+
+ =09/*TODO Handle EINTR, reenable IRQ*/
+@@ -7628,6 +7629,8 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_a=
+tomic_state *state)
+
+ =09if (dc_state_temp)
+ =09=09dc_release_state(dc_state_temp);
++
++=09drm_atomic_state_put(state);
+ }
+
+
+--
+2.27.0
+
