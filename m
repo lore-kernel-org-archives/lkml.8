@@ -7,104 +7,64 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7D8C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DA8C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48BC3206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6382206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGWH5B (ORCPT
+        id S1727912AbgGWH5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:57:01 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34688 "EHLO fornost.hmeau.com"
+        Thu, 23 Jul 2020 03:57:19 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34718 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgGWH5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:57:00 -0400
+        id S1727845AbgGWH5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:57:17 -0400
 Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
         by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jyW5n-0005uU-C4; Thu, 23 Jul 2020 17:56:40 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 23 Jul 2020 17:56:39 +1000
-Date:   Thu, 23 Jul 2020 17:56:39 +1000
+        id 1jyW5M-0005ta-TO; Thu, 23 Jul 2020 17:56:14 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 23 Jul 2020 17:56:12 +1000
+Date:   Thu, 23 Jul 2020 17:56:12 +1000
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     trix@redhat.com
-Cc:     giovanni.cabiddu@intel.com, davem@davemloft.net,
-        wojciech.ziemba@intel.com, karen.xiang@intel.com,
-        bruce.w.allan@intel.com, bo.cui@intel.com,
-        pingchaox.yang@intel.com, qat-linux@intel.com,
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] crypto: qat: fix double free in
- qat_uclo_create_batch_init_list
-Message-ID: <20200723075639.GB14246@gondor.apana.org.au>
-References: <20200713140634.14730-1-trix@redhat.com>
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] x86: crypto: fix building crc32c with clang ias
+Message-ID: <20200723075612.GA14212@gondor.apana.org.au>
+References: <20200527141754.1850968-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200713140634.14730-1-trix@redhat.com>
+In-Reply-To: <20200527141754.1850968-1-arnd@arndb.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 07:06:34AM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
+On Wed, May 27, 2020 at 04:17:40PM +0200, Arnd Bergmann wrote:
+> The clang integrated assembler complains about movzxw:
 > 
-> clang static analysis flags this error
+> arch/x86/crypto/crc32c-pcl-intel-asm_64.S:173:2: error: invalid instruction mnemonic 'movzxw'
 > 
-> qat_uclo.c:297:3: warning: Attempt to free released memory
->   [unix.Malloc]
->                 kfree(*init_tab_base);
->                 ^~~~~~~~~~~~~~~~~~~~~
+> It seems that movzwq is the mnemonic that it expects instead,
+> and this is what objdump prints when disassembling the file.
 > 
-> When input *init_tab_base is null, the function allocates memory for
-> the head of the list.  When there is problem allocating other list
-> elements the list is unwound and freed.  Then a check is made if the
-> list head was allocated and is also freed.
-> 
-> Keeping track of the what may need to be freed is the variable 'tail_old'.
-> The unwinding/freeing block is
-> 
-> 	while (tail_old) {
-> 		mem_init = tail_old->next;
-> 		kfree(tail_old);
-> 		tail_old = mem_init;
-> 	}
-> 
-> The problem is that the first element of tail_old is also what was
-> allocated for the list head
-> 
-> 		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
-> 		...
-> 		*init_tab_base = init_header;
-> 		flag = 1;
-> 	}
-> 	tail_old = init_header;
-> 
-> So *init_tab_base/init_header are freed twice.
-> 
-> There is another problem.
-> When the input *init_tab_base is non null the tail_old is calculated by
-> traveling down the list to first non null entry.
-> 
-> 	tail_old = init_header;
-> 	while (tail_old->next)
-> 		tail_old = tail_old->next;
-> 
-> When the unwinding free happens, the last entry of the input list will
-> be freed.
-> 
-> So the freeing needs a general changed.
-> If locally allocated the first element of tail_old is freed, else it
-> is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
-> as null.
-> 
-> Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+> Fixes: 6a8ce1ef3940 ("crypto: crc32c - Optimize CRC32C calculation with PCLMULQDQ instruction")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/crypto/qat/qat_common/qat_uclo.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  arch/x86/crypto/crc32c-pcl-intel-asm_64.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Patch applied.  Thanks.
 -- 
