@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71762C433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A568C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADE520825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E83F20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387524AbgGWA7E (ORCPT
+        id S2387512AbgGWA7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:59:04 -0400
+        Wed, 22 Jul 2020 20:59:02 -0400
 Received: from mail.baikalelectronics.com ([87.245.175.226]:60954 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387494AbgGWA7A (ORCPT
+        with ESMTP id S2387474AbgGWA66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:59:00 -0400
+        Wed, 22 Jul 2020 20:58:58 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6513C8040A68;
-        Thu, 23 Jul 2020 00:58:58 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 41AED803202F;
+        Thu, 23 Jul 2020 00:58:55 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TVVPrDv645SK; Thu, 23 Jul 2020 03:58:57 +0300 (MSK)
+        with ESMTP id E40XOAQpIqlB; Thu, 23 Jul 2020 03:58:54 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -40,9 +40,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 10/10] dmaengine: dw: Initialize max_sg_burst capability
-Date:   Thu, 23 Jul 2020 03:58:48 +0300
-Message-ID: <20200723005848.31907-11-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v8 06/10] dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
+Date:   Thu, 23 Jul 2020 03:58:44 +0300
+Message-ID: <20200723005848.31907-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,61 +54,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multi-block support provides a way to map the kernel-specific SG-table so
-the DW DMA device would handle it as a whole instead of handling the
-SG-list items or so called LLP block items one by one. So if true LLP
-list isn't supported by the DW DMA engine, then soft-LLP mode will be
-utilized to load and execute each LLP-block one by one. The soft-LLP mode
-of the DMA transactions execution might not work well for some DMA
-consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
-initialize the max_sg_burst DMA channels capability based on the nollp
-flag state. If it's true, no hardware accelerated LLP is available and
-max_sg_burst should be set with 1, which means that the DMA engine
-can handle only a single SG list entry at a time. If noLLP is set to
-false, then hardware accelerated LLP is supported and the DMA engine
-can handle infinite number of SG entries in a single DMA transaction.
+Full multi-block transfers functionality is enabled in DW DMA
+controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
+can be executed only if hardcode channel x LLP register feature isn't
+enabled, which can be switched on at the IP core synthesis for
+optimization. If it's enabled then the LLP register is hardcoded to
+zero, so the blocks chaining based on the LLPs is unsupported.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 ---
 
+Changelog v2:
+- Rearrange SoBs.
+- Add comment about why hardware accelerated LLP list support depends
+  on both MBLK_EN and HC_LLP configs setting.
+- Use explicit bits state comparison operator.
+
 Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
-
-Changelog v4:
-- Use explicit if-else statement when assigning the max_sg_burst field.
-
-Changelog v8:
-- Replace max_sg_nents with max_sg_burst.
+- Move the patch to the head of the series.
 ---
- drivers/dma/dw/core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/dma/dw/core.c | 11 ++++++++++-
+ drivers/dma/dw/regs.h |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 588b9bae827c..eb9175133034 100644
+index 21cb2a58dbd2..33e99d95b3d3 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1059,6 +1059,18 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
- 
- 	caps->max_burst = dwc->max_burst;
+@@ -1178,8 +1178,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 			 */
+ 			dwc->block_size =
+ 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
 +
-+	/*
-+	 * It might be crucial for some devices to have the hardware
-+	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
-+	 * notation. So if LLPs are supported then max_sg_burst is set to
-+	 * zero which means unlimited number of SG entries can be handled in a
-+	 * single DMA transaction, otherwise it's just one SG entry.
-+	 */
-+	if (dwc->nollp)
-+		caps->max_sg_burst = 1;
-+	else
-+		caps->max_sg_burst = 0;
- }
++			/*
++			 * According to the DW DMA databook the true scatter-
++			 * gether LLPs aren't available if either multi-block
++			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
++			 * LLP register is hard-coded to zeros
++			 * (CHx_HC_LLP == 1).
++			 */
+ 			dwc->nollp =
+-				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
++				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
++				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
+ 		} else {
+ 			dwc->block_size = pdata->block_size;
+ 			dwc->nollp = !pdata->multi_block[i];
+diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
+index 3fce66ecee7a..1ab840b06e79 100644
+--- a/drivers/dma/dw/regs.h
++++ b/drivers/dma/dw/regs.h
+@@ -125,6 +125,7 @@ struct dw_dma_regs {
  
- int do_dma_probe(struct dw_dma_chip *chip)
+ /* Bitfields in DWC_PARAMS */
+ #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
++#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
+ 
+ /* bursts size */
+ enum dw_dma_msize {
 -- 
 2.26.2
 
