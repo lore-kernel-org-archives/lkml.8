@@ -2,135 +2,91 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB01C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2B4207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBqqAblt"
+	by mail.kernel.org (Postfix) with ESMTP id 20D46207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgGWNic (ORCPT
+        id S1729217AbgGWNjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWNib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:38:31 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB1BC0619DC;
-        Thu, 23 Jul 2020 06:38:31 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so6370884ljp.6;
-        Thu, 23 Jul 2020 06:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gbgUXJzoQmu/CyHCYX1gPrRyz6UxytrtLC+nHiKEIms=;
-        b=aBqqAbltM+xUguh9M2EcIA+vB5pJzYcXMV5fiW4zGf61niGUcbpW3cIHgEPvNA7sb+
-         1MyJ3xoYb84iLhvCsV5kvenqFl05rD+1Fi3Z4S5PEyS7b0JMoPVn8mCntT8XutBLkAYE
-         F6PQZybyGVUsAv541gjmniPmlHxoJONtO5lUESWACgtKovG4ZqZnkXbVD67VNoe1dDYu
-         wLtkRkRQthfaJqDlxTVSZMNsQhx8lpjaH91Lnn1TR9dNIc37j7U4nLjKP0dy31+y2+J0
-         7RluXMONkHpUC0OnOTaiua+r6AiE0vZ91Qmet1fvR+QcfPvSHDRxOlKAeAOeWsJZg4o8
-         P6OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gbgUXJzoQmu/CyHCYX1gPrRyz6UxytrtLC+nHiKEIms=;
-        b=K44QRLEBbxS6aN2Iw9PpuNE9hkIKTnLGzN6InNvQyGgBfsbFmNVh6yof7XplIgGdoI
-         k5WYPABLTcxHa77AXj6/EDDmLeqrWYGcCcTJaXaBIIgKJslvTlLmo+GTaWpXUUKAFTXk
-         XHFeZhIu+tY3qm0VMYZqXJuj/egidCzyP8I/d9svm3oS77ZFIZf6TGegwf6Z+AqqjYSY
-         bTCRrq5TcJwmTndY4MxTLxigNOOSS42bF9w0Oya3FvRI2BmDarDgyvZiK5HN9UPk1zCN
-         Zeh2jZZYVhOYW6MtoEkHCzlCirq7cGj3mmNhGSMPtkIiogjsrhA47TI24bL09FOzgpK0
-         pDFg==
-X-Gm-Message-State: AOAM532nRIGh0Sr3WoKELURbbjD1AtfF88+EYhyFXncDvGnUpms1KN97
-        ByxOyqZqAWcxSOZpIcX0oIs=
-X-Google-Smtp-Source: ABdhPJynw6GyobMp/esQBz7xcF000oGh7ygbZLr7nBdNnBkky7FVmbk0iWMPgEgaixlrJU4iDTjKLA==
-X-Received: by 2002:a2e:9957:: with SMTP id r23mr2131437ljj.127.1595511509830;
-        Thu, 23 Jul 2020 06:38:29 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id h6sm2861765lfc.84.2020.07.23.06.38.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 06:38:29 -0700 (PDT)
-Subject: Re: [PATCH 6/7] i2c: tegra: DMA support for t186 and t194
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        linux-i2c@vger.kernel.org, thierry.reding@gmail.com
-Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldewangan@nvidia.com,
-        smohammed@nvidia.com, rgumasta@nvidia.com
-References: <1595506733-10307-1-git-send-email-kyarlagadda@nvidia.com>
- <1595506733-10307-6-git-send-email-kyarlagadda@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <18e4e5df-3d8f-3e52-b9b2-ff0558d6196c@gmail.com>
-Date:   Thu, 23 Jul 2020 16:38:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 09:39:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726521AbgGWNjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:39:43 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 184198C5064C6EBF5F84;
+        Thu, 23 Jul 2020 21:39:40 +0800 (CST)
+Received: from huawei.com (10.175.104.82) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Jul 2020
+ 21:39:37 +0800
+From:   Huang Guobin <huangguobin4@huawei.com>
+To:     <haren@us.ibm.com>, <ddstreet@ieee.org>,
+        <herbert@gondor.apana.org.au>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH] lib: Verify array index is correct before using it
+Date:   Thu, 23 Jul 2020 09:48:07 -0400
+Message-ID: <20200723134807.35027-1-huangguobin4@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1595506733-10307-6-git-send-email-kyarlagadda@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.82]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.07.2020 15:18, Krishna Yarlagadda пишет:
-> Enable GPC DMA support for Tegra186 and Tegra194
-> 
-> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 8ab968e..77198fc 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -236,6 +236,7 @@ struct tegra_i2c_hw_feature {
->  	u32 setup_hold_time_hs_mode;
->  	bool has_interface_timing_reg;
->  	bool has_slcg_support;
-> +	bool has_gpc_dma;
->  };
->  
->  /**
-> @@ -432,11 +433,18 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
->  	dma_addr_t dma_phys;
->  	int err;
->  
-> -	if (!i2c_dev->hw->has_apb_dma)
-> -		return 0;
-> -
-> -	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
-> -		dev_dbg(i2c_dev->dev, "Support for APB DMA not enabled!\n");
-> +	if (i2c_dev->hw->has_gpc_dma) {
-> +		if (!IS_ENABLED(CONFIG_TEGRA_GPC_DMA)) {
+This code reads from the array before verifying that "c" is a valid
+index. Move test array offset code before use to fix it.
 
-Single line, please.
+Fixes: 2da572c959dd ("lib: add software 842 compression/decompression")
+Signed-off-by: Huang Guobin <huangguobin4@huawei.com>
+---
+ lib/842/842_compress.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> +			dev_dbg(i2c_dev->dev, "Support for GPC DMA not enabled!\n");
-> +			return 0;
-> +		}
-> +	} else if (i2c_dev->hw->has_apb_dma) {
-> +		if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
+diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
+index c02baa4168e1..10f9f8a0d05b 100644
+--- a/lib/842/842_compress.c
++++ b/lib/842/842_compress.c
+@@ -222,12 +222,13 @@ static int add_bits(struct sw842_param *p, u64 d, u8 n)
+ static int add_template(struct sw842_param *p, u8 c)
+ {
+ 	int ret, i, b = 0;
+-	u8 *t = comp_ops[c];
++	u8 *t = NULL;
+ 	bool inv = false;
+ 
+ 	if (c >= OPS_MAX)
+ 		return -EINVAL;
+ 
++	t = comp_ops[c];
+ 	pr_debug("template %x\n", t[4]);
+ 
+ 	ret = add_bits(p, t[4], OP_BITS);
+@@ -379,12 +380,14 @@ static int add_end_template(struct sw842_param *p)
+ 
+ static bool check_template(struct sw842_param *p, u8 c)
+ {
+-	u8 *t = comp_ops[c];
++	u8 *t = NULL;
+ 	int i, match, b = 0;
+ 
+ 	if (c >= OPS_MAX)
+ 		return false;
+ 
++	t = comp_ops[c];
++
+ 	for (i = 0; i < 4; i++) {
+ 		if (t[i] & OP_ACTION_INDEX) {
+ 			if (t[i] & OP_AMOUNT_2)
+-- 
+2.17.1
 
-Here too.
-
-> +			dev_dbg(i2c_dev->dev, "Support for APB DMA not enabled!\n");
-> +			return 0;
-> +		}
-> +	} else {
-> +		dev_dbg(i2c_dev->dev, "DMA is not enabled!\n");
-
-Also, please drop all the exclamation marks.
