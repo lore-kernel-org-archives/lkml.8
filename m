@@ -2,127 +2,73 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDD4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3C1207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595475561;
-	bh=epodE8uy0RW5ik94H3duPLrkIOhtXkGFiZe4rORNIq0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aYjRYmlmmdgQPX+SGHg8UqRrd3wgy+KX3wNIrfXivs65K+lZ6P312fPnhuiFSqIB2
-	 9YGsJK8TwmxUZQaKQ1pBK5sNrKRn78u0ehUx6uDE2KxwTgC1HxjxaItboy4jwH7n1g
-	 gSra5SMzh5amlGQ/MgBuBhEEgH0TMmdMb0s3fwSM=
+	by mail.kernel.org (Postfix) with ESMTP id 8EC5A206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MxWeYRK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbgGWDjU (ORCPT
+        id S2387781AbgGWDkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 23:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729401AbgGWDjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 23:39:20 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C37206F4;
-        Thu, 23 Jul 2020 03:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595475559;
-        bh=epodE8uy0RW5ik94H3duPLrkIOhtXkGFiZe4rORNIq0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iNEmb9oc6jfI1/PgI3HZAqnHR1dBwgO/4O7qqSJQHcLBSbjoVx6L1MyUxS8MQiIXc
-         lceOUzV1Fnw9GRdhq/4gYFCIJHOQKl/NEcVRaW5xLS2KLsvrH5BHqsR0cA+KCu+deZ
-         qoRy8QHfh+aMG4AnoY6ykoyhW+CnbaotJUBovZNw=
-Date:   Wed, 22 Jul 2020 20:39:19 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        andi.kleen@intel.com, ying.huang@intel.com,
-        andriy.shevchenko@intel.com
-Subject: Re: [RFC PATCH] makefile: add debug option to enable function
- aligned on 32 bytes
-Message-Id: <20200722203919.8b7c9b35ff51d66550c3846c@linux-foundation.org>
-In-Reply-To: <1595475001-90945-1-git-send-email-feng.tang@intel.com>
-References: <1595475001-90945-1-git-send-email-feng.tang@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Jul 2020 23:40:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13231 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729401AbgGWDkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 23:40:22 -0400
+X-UUID: 31fb2f3793914a77a8078d2faa36c60a-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ZbWETBCEtkhObmiJkYGQX/vsgV+SlSvzPQ6IFNLuifQ=;
+        b=MxWeYRK1rkv6h/Ves7Zbh+BEt2IxL+b/1k13wyOEpdcm2cIzPFdt+1h7b+bzviSVI0ijQMoHgoNsTvgaD4QZT6bdASWN6bfYRLLZUIWnxeRxBDnu9pWFlFrQXddH8CAl4taxYOBURRjYsM9kg5ndEeGwvRVzIaEdfFy//jGiclE=;
+X-UUID: 31fb2f3793914a77a8078d2faa36c60a-20200723
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1356488543; Thu, 23 Jul 2020 11:40:19 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Jul 2020 11:40:17 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 11:40:15 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Argus Lin <argus.lin@mediatek.com>
+CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: [PATCH v2 0/4] Add PMIC wrapper support for Mediatek MT6873/8192 SoC IC
+Date:   Thu, 23 Jul 2020 11:39:56 +0800
+Message-ID: <1595475600-23180-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 11:30:01 +0800 Feng Tang <feng.tang@intel.com> wrote:
-
-> Recently 0day reported many strange performance changes (regression
-> or improvement), in which there was no obvious relation between
-> the culprit commit and the benchmark at the first look, and it causes
-> people to doubt the test itself is wrong.
-> 
-> Upon further check, many of these cases are caused by the change
-> to the alignment of kernel text or data, as whole text/data of kernel
-> are linked together, change in one domain may affect alignments of
-> other domains.
-> 
-> gcc has an option '-falign-functions=n' to force text aligned, and with
-> that option enabled, some of those performance changes will be gone,
-> like [1][2][3].
-> 
-> Add this option so that developers and 0day can easily find performance
-> bump caused by text alignment change,
-
-Would they use it this way, or would they simply always enable the
-option to reduce the variability?
-
-It makes sense, but is it actually known that this does reduce the
-variability?
-
-> as tracking these strange bump
-> is quite time consuming. Though it can't help in other cases like data
-> alignment changes like [4].
-> 
-> Following is some size data for v5.7 kernel built with a RHEL config
-> used in 0day:
-> 
->     text      data      bss	 dec	   filename
->   19738771  13292906  5554236  38585913	 vmlinux.noalign
->   19758591  13297002  5529660  38585253	 vmlinux.align32
-> 
-> Raw vmlinux size in bytes:
-> 
-> 	v5.7		v5.7+align32
-> 	253950832	254018000	+0.02%
-> 
-> Some benchmark data, most of them have no big change:
-> 
->   * hackbench:		[ -1.8%,  +0.5%]
-> 
->   * fsmark:		[ -3.2%,  +3.4%]  # ext4/xfs/btrfs
-> 
->   * kbuild:		[ -2.0%,  +0.9%]
-> 
->   * will-it-scale:	[ -0.5%,  +1.8%]  # mmap1/pagefault3
-> 
->   * netperf:
->     - TCP_CRR		[+16.6%, +97.4%]
->     - TCP_RR		[-18.5%,  -1.8%]
->     - TCP_STREAM	[ -1.1%,  +1.9%]
-
-What do the numbers in [] mean?  The TCP_CRR results look remarkable?
-
-> [1] https://lore.kernel.org/lkml/20200114085637.GA29297@shao2-debian/
-> [2] https://lore.kernel.org/lkml/20200330011254.GA14393@feng-iot/
-> [3] https://lore.kernel.org/lkml/1d98d1f0-fe84-6df7-f5bd-f4cb2cdb7f45@intel.com/
-> [4] https://lore.kernel.org/lkml/20200205123216.GO12867@shao2-debian/
-> 
+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBuZXcgU29DIE1UNjg3My84MTkyIHRvIHRoZSBw
+bWljLXdyYXAgZHJpdmVyLg0KDQpjaGFuZ2VzIHNpbmNlIHYxOg0KLSBzZXBhcmF0ZSBQV1JBUF9D
+QVBfQVJCIHRvIGEgbmV3IHBhdGNoLg0KDQpIc2luLUhzaXVuZyBXYW5nICg0KToNCiAgc29jOiBt
+ZWRpYXRlazogcHdyYXA6IHVzZSBCSVQoKSBtYWNybw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDog
+YWRkIGFyYml0ZXIgY2FwYWJpbGl0eQ0KICBkdC1iaW5kaW5nczogbWVkaWF0ZWs6IGFkZCBjb21w
+YXRpYmxlIGZvciBNVDY4NzMvODE5MiBwd3JhcA0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDogYWRk
+IHB3cmFwIGRyaXZlciBmb3IgTVQ2ODczLzgxOTIgU29Dcw0KDQogLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCAgICAgfCAgIDEgKw0KIGRyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1wbWljLXdyYXAuYyAgICAgICAgICAgICAgIHwgMTAwICsrKysrKysrKysrKysr
+KysrKy0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgODggaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25z
+KC0pDQoNCi0tIA0KMi42LjQNCg==
 
