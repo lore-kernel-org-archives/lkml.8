@@ -2,190 +2,190 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2208FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25F0C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDBBB207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D4820759
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Cf1nGE5u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TIM5uT9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgGWNly (ORCPT
+        id S1728134AbgGWNrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:41:54 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.84]:33364 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726521AbgGWNlw (ORCPT
+        Thu, 23 Jul 2020 09:47:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57301 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726521AbgGWNrd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:41:52 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 62E0964475
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:41:50 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ybTqji5ffSxZVybTqjJpM1; Thu, 23 Jul 2020 08:41:50 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QAlwbz6nh8KUSfze0N2AnFsGMIkqol9EtWVVcnRVic4=; b=Cf1nGE5uZTjgp47vimUi6+AANA
-        c3YO2eFdR+LF9J9HLqoJtOGAct5WQes23k3WAEb83bD1K3C46007dMJ3PioCiq5Jvcg7pQ0mFYY5F
-        rLpGP7NtAIxWx/cZ9EJTIfOHezDUWdW5NsbRXbEWQx+Li/wqhkt4OWbdLfOuxq6m8Dvpy6eW8urqc
-        DpWiNfbsCtsqKJ3s1idWE3RVsJPymhshNMyZQPEjMaCPB1et5bLd59Arr7TJs7QSm02bM6uPQsTFR
-        UQY3RGMMNfd6w7/lWdEAH02AFujSxEiDzTprknnZOV7gfBIbTzSsRMnHDgGOr2/gYzTZpCjtcRTKB
-        R3OSg49g==;
-Received: from [201.162.245.27] (port=38002 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jybTp-0025XN-VZ; Thu, 23 Jul 2020 08:41:50 -0500
-Subject: Re: [PATCH][next] tty: Avoid the use of one-element arrays
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200716180858.GA30115@embeddedor>
- <f8aa0762-4af2-54a2-c9e8-8023a4b7aed5@kernel.org>
- <8dd6e3ae-7ab3-d829-0231-e436de3ad6a8@embeddedor.com>
- <6228681b-f601-597a-64c2-87cd048d2599@kernel.org>
- <20200723083237.GA1560114@kroah.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <cd7fae76-d8bb-560d-c7e8-a77822d11d8a@embeddedor.com>
-Date:   Thu, 23 Jul 2020 08:47:34 -0500
+        Thu, 23 Jul 2020 09:47:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595512050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=18jcLbWvrYiy04myeabqbt4ovzopAoj1RyaVCl5T6K4=;
+        b=TIM5uT9c49eWUImT5p9Uvwo5BUdj3X+NWFllI7Q0GCo53M0Gu/MFp0r4uD6ZsSFMnzVDiM
+        WXgu2jSARKFbm5q4B1EIsDzqOnSJVCg4JFIjyRXw6Np/yAQJM1BPiPARQ0hODKAGrDNutW
+        VDRzuQpD7v5+OXvIxwc0TDcwhBKgXaM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-33-xhZrJ9ZRO-qSQFh2Ax8U_A-1; Thu, 23 Jul 2020 09:47:26 -0400
+X-MC-Unique: xhZrJ9ZRO-qSQFh2Ax8U_A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2317800469;
+        Thu, 23 Jul 2020 13:47:24 +0000 (UTC)
+Received: from [10.36.114.90] (ovpn-114-90.ams2.redhat.com [10.36.114.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E56607855A;
+        Thu, 23 Jul 2020 13:47:22 +0000 (UTC)
+Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
+ hotplug memory
+From:   David Hildenbrand <david@redhat.com>
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        xen-devel@lists.xenproject.org, linux-mm@kvack.org
+References: <20200723084523.42109-1-roger.pau@citrix.com>
+ <20200723084523.42109-4-roger.pau@citrix.com>
+ <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
+ <20200723122300.GD7191@Air-de-Roger>
+ <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <429c2889-93c2-23b3-ba1e-da56e3a76ba4@redhat.com>
+Date:   Thu, 23 Jul 2020 15:47:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200723083237.GA1560114@kroah.com>
+In-Reply-To: <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.245.27
-X-Source-L: No
-X-Exim-ID: 1jybTp-0025XN-VZ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.245.27]:38002
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/23/20 03:32, Greg Kroah-Hartman wrote:
-> On Thu, Jul 23, 2020 at 08:30:47AM +0200, Jiri Slaby wrote:
->> On 22. 07. 20, 20:24, Gustavo A. R. Silva wrote:
->>>
->>>
->>> On 7/17/20 01:10, Jiri Slaby wrote:
->>>> On 16. 07. 20, 20:08, Gustavo A. R. Silva wrote:
->>>>> One-element arrays are being deprecated[1]. Replace the one-element arrays
->>>>> with simple value types 'char reserved_char' and 'compat_int_t reserved'[2],
->>>>> once it seems these are just placeholders for alignment.
->>>>>
->>>>> Also, while there, use the preferred form for passing a size of a struct.
->>>>> The alternative form where struct name is spelled out hurts readability
->>>>> and introduces an opportunity for a bug when the variable type is changed
->>>>> but the corresponding sizeof that is passed as argument is not.
->>>>>
->>>>> Lastly, fix the checkpatch.pl warnings below:
->>>>>
->>>>> ERROR: code indent should use tabs where possible
->>>>> +        char    reserved_char;$
->>>>>
->>>>> WARNING: please, no spaces at the start of a line
->>>>> +        char    reserved_char;$
->>>>>
->>>>> ERROR: code indent should use tabs where possible
->>>>> +        compat_int_t    reserved;$
->>>>>
->>>>> WARNING: please, no spaces at the start of a line
->>>>> +        compat_int_t    reserved;$
+On 23.07.20 15:22, David Hildenbrand wrote:
+> On 23.07.20 14:23, Roger Pau Monné wrote:
+>> On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
+>>> On 23.07.20 10:45, Roger Pau Monne wrote:
+>>>> Add an extra option to add_memory_resource that overrides the memory
+>>>> hotplug online behavior in order to force onlining of memory from
+>>>> add_memory_resource unconditionally.
 >>>>
->>>> May I ask you to send a follow-up patch to fix the whole structure's
->>>> indentation?
+>>>> This is required for the Xen balloon driver, that must run the
+>>>> online page callback in order to correctly process the newly added
+>>>> memory region, note this is an unpopulated region that is used by Linux
+>>>> to either hotplug RAM or to map foreign pages from other domains, and
+>>>> hence memory hotplug when running on Xen can be used even without the
+>>>> user explicitly requesting it, as part of the normal operations of the
+>>>> OS when attempting to map memory from a different domain.
 >>>>
+>>>> Setting a different default value of memhp_default_online_type when
+>>>> attaching the balloon driver is not a robust solution, as the user (or
+>>>> distro init scripts) could still change it and thus break the Xen
+>>>> balloon driver.
 >>>
->>> Hi Jiri,
+>>> I think we discussed this a couple of times before (even triggered by my
+>>> request), and this is responsibility of user space to configure. Usually
+>>> distros have udev rules to online memory automatically. Especially, user
+>>> space should eb able to configure *how* to online memory.
+>>
+>> Note (as per the commit message) that in the specific case I'm
+>> referring to the memory hotplugged by the Xen balloon driver will be
+>> an unpopulated range to be used internally by certain Xen subsystems,
+>> like the xen-blkback or the privcmd drivers. The addition of such
+>> blocks of (unpopulated) memory can happen without the user explicitly
+>> requesting it, and hence not even aware such hotplug process is taking
+>> place. To be clear: no actual RAM will be added to the system.
+> 
+> Okay, but there is also the case where XEN will actually hotplug memory
+> using this same handler IIRC (at least I've read papers about it). Both
+> are using the same handler, correct?
+> 
+>>
+>>> It's the admin/distro responsibility to configure this properly. In case
+>>> this doesn't happen (or as you say, users change it), bad luck.
 >>>
->>> Sure thing. I'll fix that up and send v2, shortly.
+>>> E.g., virtio-mem takes care to not add more memory in case it is not
+>>> getting onlined. I remember hyper-v has similar code to at least wait a
+>>> bit for memory to get onlined.
 >>
->> Hi,
->>
->> by a follow-up patch I meant a separate patch. Looking at it once again,
->> I would do 3 patches:
->> 1) remove [1] arrays
->> 2) change sizeofs
->> 3) fix white space
+>> I don't think VirtIO or Hyper-V use the hotplug system in the same way
+>> as Xen, as said this is done to add unpopulated memory regions that
+>> will be used to map foreign memory (from other domains) by Xen drivers
+>> on the system.
 > 
-> I agree, that would be the ideal series.
-> 
+> Indeed, if the memory is never exposed to the buddy (and all you need is
+> struct pages +  a kernel virtual mapping), I wonder if
+> memremap/ZONE_DEVICE is what you want? Then you won't have user-visible
+> memory blocks created with unclear online semantics, partially involving
+> the buddy.
 
-OK. No problem. I'll turn this into a patch series then. :)
+And just a note that there is also DCSS on s390x / z/VM which allows to
+map segments into the VM physical address space (e.g., you can share
+segments between VMs). They don't need any memmap (struct page) for that
+memory, though. All they do is create the identity mapping in the kernel
+virtual address space manually. Not sure what the exact requirements on
+the XEN side are. I assume you need a memmap for this memory.
 
-Thanks
---
-Gustavo
+-- 
+Thanks,
+
+David / dhildenb
+
