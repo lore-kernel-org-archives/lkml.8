@@ -2,69 +2,88 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506EFC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE13BC433F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 385FF22BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0A822CF8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GmQUEr4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgGWJMr (ORCPT
+        id S1728295AbgGWJNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:12:47 -0400
-Received: from elvis.franken.de ([193.175.24.41]:46183 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgGWJMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:12:45 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jyXHM-0001Ij-00; Thu, 23 Jul 2020 11:12:40 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 4FEDBC08DD; Thu, 23 Jul 2020 11:10:08 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 11:10:08 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     hauke@hauke-m.de, zajec5@gmail.com, robh+dt@kernel.org,
-        f.fainelli@gmail.com, jonas.gorski@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 7/9] mips: bmips: dts: add BCM6328 power domain support
-Message-ID: <20200723091008.GA2749@alpha.franken.de>
-References: <20200610171630.465579-1-noltari@gmail.com>
- <20200613082140.2009461-1-noltari@gmail.com>
- <20200613082140.2009461-8-noltari@gmail.com>
+        Thu, 23 Jul 2020 05:13:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20997 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725984AbgGWJNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 05:13:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595495589;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RSy4LtbaD8levFOBIayUOWSmIYzMSd7fCPXVTaSTU+s=;
+        b=GmQUEr4+dQja6pz2mgqL8Ngh079n357xDRIRI2dIEeP8aysYjaMcZDQ093LOyPeL9ur5w9
+        eNd4DErXvaj4qua6MQI4xKrO7aViGQLUl5H7dJ06i1CkjAkjrxAc4XgTTWW/kOavIKBBan
+        mONcz9PQUaOk+93Xppx3ucVn9sYfzWM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-2gLebz6nP6-9gOiGYakW6w-1; Thu, 23 Jul 2020 05:13:04 -0400
+X-MC-Unique: 2gLebz6nP6-9gOiGYakW6w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6809691271;
+        Thu, 23 Jul 2020 09:13:03 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-141.pek2.redhat.com [10.72.13.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D44870596;
+        Thu, 23 Jul 2020 09:12:58 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: [PATCH 1/2] vdpa: ifcvf: return err when fail to request config irq
+Date:   Thu, 23 Jul 2020 17:12:53 +0800
+Message-Id: <20200723091254.20617-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200613082140.2009461-8-noltari@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 10:21:38AM +0200, Álvaro Fernández Rojas wrote:
-> BCM6328 SoCs have a power domain controller to enable/disable certain
-> components in order to save power.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  v4: no changes.
->  v3: Separate dt-bindings definitions from power domain .dtsi support.
->  v2: Add dt-bindings header files.
-> 
->  arch/mips/boot/dts/brcm/bcm6328.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+We ignore the err of requesting config interrupt, fix this.
 
-Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: e7991f376a4d ("ifcvf: implement config interrupt in IFCVF")
+Cc: Zhu Lingshan <lingshan.zhu@intel.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vdpa/ifcvf/ifcvf_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
+index f5a60c14b979..ae7110955a44 100644
+--- a/drivers/vdpa/ifcvf/ifcvf_main.c
++++ b/drivers/vdpa/ifcvf/ifcvf_main.c
+@@ -76,6 +76,10 @@ static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
+ 	ret = devm_request_irq(&pdev->dev, irq,
+ 			       ifcvf_config_changed, 0,
+ 			       vf->config_msix_name, vf);
++	if (ret) {
++		IFCVF_ERR(pdev, "Failed to request config irq\n");
++		return ret;
++	}
+ 
+ 	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+ 		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.20.1
+
