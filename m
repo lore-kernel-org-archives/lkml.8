@@ -2,221 +2,351 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42BBC43445
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25758C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACA2E207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02031206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387679AbgGWCey (ORCPT
+        id S2387422AbgGWCgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 22:34:54 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:1953 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731405AbgGWCey (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 22:34:54 -0400
-IronPort-SDR: 4YMtuW61e2WoCBKgqyINgBtiI4yCbohLK63H0C/kmrEdBdrAPmBAbYVuTHVdxEamCPOJyDRjMt
- A1HX/6UspjFgPpm68KIly3g5J4U3IBY0fH2LesAJCT4FKPb8OaR/fptkzwdjhONYHDyUKQxk/d
- M2qdReeJWxfnXz8DAJVov96SkN+2VWVfKAJv6uxTqbcWQkZUqiJnIXY/HhX9odJ2+6LP48w25w
- jJcAy9tzOyBEClJhtkOQnlv4jlm3EVYYLNl29Bms34GEPvx4g/NqWsDirlAaSe2cNwLTkuPWM+
- 6xo=
+        Wed, 22 Jul 2020 22:36:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40530 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732755AbgGWCgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 22:36:41 -0400
+IronPort-SDR: JTHlfTpp7rBkVaaawh5U/Z+P2ewHcBhQkGsqFRrH6uInDbwVjQ+eHV7Fwcxdh7jL4Di6C2zPrR
+ 3EvGpZMapuTA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="149630943"
 X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="29047798"
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by labrats.qualcomm.com with ESMTP; 22 Jul 2020 19:34:53 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 22 Jul 2020 19:34:52 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id 6101C22A4D; Wed, 22 Jul 2020 19:34:52 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 9/9] scsi: ufs: Fix a racing problem btw error handler and runtime PM ops
-Date:   Wed, 22 Jul 2020 19:34:08 -0700
-Message-Id: <1595471649-25675-10-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
-References: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
+   d="scan'208";a="149630943"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 19:36:40 -0700
+IronPort-SDR: IDBCwYcd24hNIjqEs6G05qqqMzh9zJt0/ISxIU1GvdWwQQcCrLd8rWvXTJx1Limd50tNG9eXgi
+ oPOM+kOdsHkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="432586639"
+Received: from schwings-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.132])
+  by orsmga004.jf.intel.com with ESMTP; 22 Jul 2020 19:36:36 -0700
+Date:   Thu, 23 Jul 2020 05:36:34 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: Re: [PATCH v4 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
+Message-ID: <20200723023634.GI45081@linux.intel.com>
+References: <20200717084932.3449-1-masahisa.kojima@linaro.org>
+ <20200717084932.3449-2-masahisa.kojima@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717084932.3449-2-masahisa.kojima@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current IRQ handler blocks scsi requests before scheduling eh_work, when
-error handler calls pm_runtime_get_sync, if ufshcd_suspend/resume sends a
-scsi cmd, most likely the SSU cmd, since scsi requests are blocked,
-pm_runtime_get_sync() will never return because ufshcd_suspend/reusme is
-blocked by the scsi cmd. Some changes and code re-arrangement can be made
-to resolve it.
+On Fri, Jul 17, 2020 at 05:49:31PM +0900, Masahisa Kojima wrote:
+> When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
+> window that is backed by the SPI command sequencer in the SPI bus
+> controller. This arrangement has the limitation that only byte size
+> accesses are supported, and so we'll need to provide a separate module
+> that take this into account.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+> ---
+>  drivers/char/tpm/Kconfig             |  12 ++
+>  drivers/char/tpm/Makefile            |   1 +
+>  drivers/char/tpm/tpm_tis_synquacer.c | 209 +++++++++++++++++++++++++++
+>  3 files changed, 222 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
+> 
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 58b4c573d176..a18c314da211 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+>  	  If you have a H1 secure module running Cr50 firmware on SPI bus,
+>  	  say Yes and it will be accessible from within Linux.
+>  
+> +config TCG_TIS_SYNQUACER
+> +	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
+> +	depends on ARCH_SYNQUACER
+> +	select TCG_TIS_CORE
+> +	help
+> +	  If you have a TPM security chip that is compliant with the
+> +	  TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
+> +	  specification (TPM2.0) say Yes and it will be accessible from
+> +	  within Linux on Socionext SynQuacer platform.
+> +	  To compile this driver as a module, choose  M here;
+> +	  the module will be called tpm_tis_synquacer.
+> +
+>  config TCG_TIS_I2C_ATMEL
+>  	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+>  	depends on I2C
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9567e5197f74..84db4fb3a9c9 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
+>  tpm-$(CONFIG_OF) += eventlog/of.o
+>  obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
+>  obj-$(CONFIG_TCG_TIS) += tpm_tis.o
+> +obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
+>  
+>  obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+>  tpm_tis_spi-y := tpm_tis_spi_main.o
+> diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
+> new file mode 100644
+> index 000000000000..ac2a1d2a5001
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_tis_synquacer.c
+> @@ -0,0 +1,209 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Linaro Ltd.
+> + *
+> + * This device driver implements MMIO TPM on SynQuacer Platform.
+> + */
+> +#include <linux/acpi.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/kernel.h>
+> +#include "tpm.h"
+> +#include "tpm_tis_core.h"
+> +
+> +struct tpm_tis_synquacer_info {
+> +	struct resource res;
+> +	/* irq > 0 means: use irq $irq;
+> +	 * irq = 0 means: autoprobe for an irq;
+> +	 * irq = -1 means: no irq support
+> +	 */
+> +	int irq;
+> +};
 
-o In queuecommand path, hba->ufshcd_state check and ufshcd_send_command
-  should stay into the same spin lock. This is to make sure that no more
-  commands leak into doorbell after hba->ufshcd_state is changed.
-o Don't block scsi requests before scheduling eh_work, let error handler
-  block scsi requests when it is ready to start error recovery.
-o Don't let scsi layer keep requeuing the scsi cmds sent from hba runtime
-  PM ops, let them pass or fail them. Let them pass if eh_work is scheduled
-  due to non-fatal errors. Fail them fail if eh_work is scheduled due to
-  fatal errors, otherwise the cmds may eventually time out since UFS is in
-  bad state, which gets error handler blocked for too long. If we fail the
-  scsi cmds sent from hba runtime PM ops, hba runtime PM ops fails too, but
-  it does not hurt since error handler can recover hba runtime PM error.
+According to the coding style, multi-line comments must begin with an
+empty line.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 84 +++++++++++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 35 deletions(-)
+Also it would be preferable to have the comment prepending the struct
+for easier read:
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index ae78d5d..e9d8c4f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -126,7 +126,8 @@ enum {
- 	UFSHCD_STATE_RESET,
- 	UFSHCD_STATE_ERROR,
- 	UFSHCD_STATE_OPERATIONAL,
--	UFSHCD_STATE_EH_SCHEDULED,
-+	UFSHCD_STATE_EH_SCHEDULED_FATAL,
-+	UFSHCD_STATE_EH_SCHEDULED_NON_FATAL,
- };
- 
- /* UFSHCD error handling flags */
-@@ -2515,34 +2516,6 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	if (!down_read_trylock(&hba->clk_scaling_lock))
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 
--	spin_lock_irqsave(hba->host->host_lock, flags);
--	switch (hba->ufshcd_state) {
--	case UFSHCD_STATE_OPERATIONAL:
--		break;
--	case UFSHCD_STATE_EH_SCHEDULED:
--	case UFSHCD_STATE_RESET:
--		err = SCSI_MLQUEUE_HOST_BUSY;
--		goto out_unlock;
--	case UFSHCD_STATE_ERROR:
--		set_host_byte(cmd, DID_ERROR);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	default:
--		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
--				__func__, hba->ufshcd_state);
--		set_host_byte(cmd, DID_BAD_TARGET);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	}
--
--	/* if error handling is in progress, don't issue commands */
--	if (ufshcd_eh_in_progress(hba)) {
--		set_host_byte(cmd, DID_ERROR);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	}
--	spin_unlock_irqrestore(hba->host->host_lock, flags);
--
- 	hba->req_abort_count = 0;
- 
- 	err = ufshcd_hold(hba, true);
-@@ -2578,11 +2551,50 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	/* Make sure descriptors are ready before ringing the doorbell */
- 	wmb();
- 
--	/* issue command to the controller */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	switch (hba->ufshcd_state) {
-+	case UFSHCD_STATE_OPERATIONAL:
-+	case UFSHCD_STATE_EH_SCHEDULED_NON_FATAL:
-+		break;
-+	case UFSHCD_STATE_EH_SCHEDULED_FATAL:
-+		/*
-+		 * If we are here, eh_work is either scheduled or running.
-+		 * Before eh_work sets ufshcd_state to STATE_RESET, it flushes
-+		 * runtime PM ops by calling pm_runtime_get_sync(). If a scsi
-+		 * cmd, e.g. the SSU cmd, is sent by PM ops, it can never be
-+		 * finished if we let SCSI layer keep retrying it, which gets
-+		 * eh_work stuck forever. Neither can we let it pass, because
-+		 * ufs now is not in good status, so the SSU cmd may eventually
-+		 * time out, blocking eh_work for too long. So just let it fail.
-+		 */
-+		if (hba->pm_op_in_progress) {
-+			hba->force_reset = true;
-+			set_host_byte(cmd, DID_BAD_TARGET);
-+			goto out_compl_cmd;
-+		}
-+	case UFSHCD_STATE_RESET:
-+		err = SCSI_MLQUEUE_HOST_BUSY;
-+		goto out_compl_cmd;
-+	case UFSHCD_STATE_ERROR:
-+		set_host_byte(cmd, DID_ERROR);
-+		goto out_compl_cmd;
-+	default:
-+		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
-+				__func__, hba->ufshcd_state);
-+		set_host_byte(cmd, DID_BAD_TARGET);
-+		goto out_compl_cmd;
-+	}
- 	ufshcd_send_command(hba, tag);
--out_unlock:
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	goto out;
-+
-+out_compl_cmd:
-+	scsi_dma_unmap(lrbp->cmd);
-+	lrbp->cmd = NULL;
-+	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	ufshcd_release(hba);
-+	if (!err)
-+		cmd->scsi_done(cmd);
- out:
- 	up_read(&hba->clk_scaling_lock);
- 	return err;
-@@ -5553,7 +5565,11 @@ static inline void ufshcd_schedule_eh_work(struct ufs_hba *hba)
- {
- 	/* handle fatal errors only when link is not in error state */
- 	if (hba->ufshcd_state != UFSHCD_STATE_ERROR) {
--		hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED;
-+		if (hba->force_reset || ufshcd_is_link_broken(hba) ||
-+		    ufshcd_is_saved_err_fatal(hba))
-+			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_FATAL;
-+		else
-+			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_NON_FATAL;
- 		queue_work(hba->eh_wq, &hba->eh_work);
- 	}
- }
-@@ -5658,6 +5674,7 @@ static void ufshcd_err_handler(struct work_struct *work)
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 	ufshcd_err_handler_prepare(hba);
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	ufshcd_scsi_block_requests(hba);
- 	hba->ufshcd_state = UFSHCD_STATE_RESET;
- 
- 	/* Complete requests that have door-bell cleared by h/w */
-@@ -5911,9 +5928,6 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
- 		 */
- 		hba->saved_err |= hba->errors;
- 		hba->saved_uic_err |= hba->uic_error;
--
--		/* block commands from scsi mid-layer */
--		ufshcd_scsi_block_requests(hba);
- 		ufshcd_schedule_eh_work(hba);
- 		retval |= IRQ_HANDLED;
- 	}
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+/*
+ * irq > 0 means: use irq $irq;
+ * irq = 0 means: autoprobe for an irq;
+ * irq = -1 means: no irq support
+ */
+struct tpm_tis_synquacer_info {
 
+> +
+> +struct tpm_tis_synquacer_phy {
+> +	struct tpm_tis_data priv;
+> +	void __iomem *iobase;
+> +};
+> +
+> +static inline struct tpm_tis_synquacer_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
+> +{
+> +	return container_of(data, struct tpm_tis_synquacer_phy, priv);
+> +}
+> +
+> +static int tpm_tis_synquacer_read_bytes(struct tpm_tis_data *data, u32 addr,
+> +					u16 len, u8 *result)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +	while (len--)
+> +		*result++ = ioread8(phy->iobase + addr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tpm_tis_synquacer_write_bytes(struct tpm_tis_data *data, u32 addr,
+> +					 u16 len, const u8 *value)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +	while (len--)
+> +		iowrite8(*value++, phy->iobase + addr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tpm_tis_synquacer_read16_bw(struct tpm_tis_data *data,
+> +				       u32 addr, u16 *result)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +	/*
+> +	 * Due to the limitation of SPI controller on SynQuacer,
+> +	 * 16/32 bits access must be done in byte-wise and descending order.
+> +	 */
+> +	*result = (ioread8(phy->iobase + addr + 1) << 8) |
+> +		  (ioread8(phy->iobase + addr));
+> +
+> +	return 0;
+> +}
+> +
+> +static int tpm_tis_synquacer_read32_bw(struct tpm_tis_data *data,
+> +				       u32 addr, u32 *result)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +	/*
+> +	 * Due to the limitation of SPI controller on SynQuacer,
+> +	 * 16/32 bits access must be done in byte-wise and descending order.
+> +	 */
+> +	*result = (ioread8(phy->iobase + addr + 3) << 24) |
+> +		  (ioread8(phy->iobase + addr + 2) << 16) |
+> +		  (ioread8(phy->iobase + addr + 1) << 8) |
+> +		  (ioread8(phy->iobase + addr));
+> +
+> +	return 0;
+> +}
+> +
+> +static int tpm_tis_synquacer_write32_bw(struct tpm_tis_data *data,
+> +					u32 addr, u32 value)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
+> +
+> +	/*
+> +	 * Due to the limitation of SPI controller on SynQuacer,
+> +	 * 16/32 bits access must be done in byte-wise and descending order.
+> +	 */
+> +	iowrite8(value >> 24, phy->iobase + addr + 3);
+> +	iowrite8(value >> 16, phy->iobase + addr + 2);
+> +	iowrite8(value >> 8, phy->iobase + addr + 1);
+> +	iowrite8(value, phy->iobase + addr);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
+> +	.read_bytes	= tpm_tis_synquacer_read_bytes,
+> +	.write_bytes	= tpm_tis_synquacer_write_bytes,
+> +	.read16		= tpm_tis_synquacer_read16_bw,
+> +	.read32		= tpm_tis_synquacer_read32_bw,
+> +	.write32	= tpm_tis_synquacer_write32_bw,
+> +};
+> +
+> +static int tpm_tis_synquacer_init(struct device *dev,
+> +				  struct tpm_tis_synquacer_info *tpm_info)
+> +{
+> +	struct tpm_tis_synquacer_phy *phy;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(struct tpm_tis_synquacer_phy), GFP_KERNEL);
+> +	if (phy == NULL)
+> +		return -ENOMEM;
+> +
+> +	phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
+> +	if (IS_ERR(phy->iobase))
+> +		return PTR_ERR(phy->iobase);
+> +
+> +	return tpm_tis_core_init(dev, &phy->priv, tpm_info->irq, &tpm_tcg_bw,
+> +				 ACPI_HANDLE(dev));
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
+> +
+> +static int tpm_tis_synquacer_probe(struct platform_device *pdev)
+> +{
+> +	struct tpm_tis_synquacer_info tpm_info = {};
+> +	struct resource *res;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (res == NULL) {
+> +		dev_err(&pdev->dev, "no memory resource defined\n");
+> +		return -ENODEV;
+> +	}
+> +	tpm_info.res = *res;
+> +
+> +	tpm_info.irq = -1;
+> +
+> +	return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
+> +}
+> +
+> +static int tpm_tis_synquacer_remove(struct platform_device *pdev)
+> +{
+> +	struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
+> +
+> +	tpm_chip_unregister(chip);
+> +	tpm_tis_remove(chip);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tis_synquacer_of_platform_match[] = {
+> +	{.compatible = "socionext,synquacer-tpm-mmio"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
+> +#endif
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id tpm_synquacer_acpi_tbl[] = {
+> +	{ "SCX0009" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, tpm_synquacer_acpi_tbl);
+> +#endif
+> +
+> +static struct platform_driver tis_synquacer_drv = {
+> +	.probe = tpm_tis_synquacer_probe,
+> +	.remove = tpm_tis_synquacer_remove,
+> +	.driver = {
+> +		.name		= "tpm_tis_synquacer",
+> +		.pm		= &tpm_tis_synquacer_pm,
+> +		.of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
+> +		.acpi_match_table = ACPI_PTR(tpm_synquacer_acpi_tbl),
+> +	},
+> +};
+> +
+> +static int __init tpm_tis_synquacer_module_init(void)
+> +{
+> +	int rc;
+> +
+> +	rc = platform_driver_register(&tis_synquacer_drv);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit tpm_tis_synquacer_module_exit(void)
+> +{
+> +	platform_driver_unregister(&tis_synquacer_drv);
+> +}
+> +
+> +module_init(tpm_tis_synquacer_module_init);
+> +module_exit(tpm_tis_synquacer_module_exit);
+> +MODULE_AUTHOR("Masahisa Kojima (masahisa.kojima@linaro.org)");
+
+It is completely redundant field because authorship is part of the
+commit object itself. And it does not tell the truth after a while
+anyway. MODULE_AUTHOR() made more sense before there was any sort of
+legit versio control in place.
+
+I think it would be better not to have it as we don't have any use
+for this data. It is just cruft hanging there.
+
+> +MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
+> +MODULE_VERSION("2.0");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.20.1
+> 
+
+/Jarkko
