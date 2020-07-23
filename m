@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7136DC433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A7AC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449D220792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1E420792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BB8oAg6w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gPiSTZgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgGWMZF (ORCPT
+        id S1728942AbgGWMZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
+        Thu, 23 Jul 2020 08:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbgGWMZB (ORCPT
+        with ESMTP id S1728919AbgGWMZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:25:01 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABFEC0619E2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:00 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f1so4426075wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:00 -0700 (PDT)
+        Thu, 23 Jul 2020 08:25:06 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85224C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:06 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y24so830003wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OWikrHcjIEL13jknWWaUiCgmVBPYjsVQNgOhFstQ6kk=;
-        b=BB8oAg6wAh/txP2Zw6XlLsdMIMjiFCw3n8QNnz+5qnf/iAGYJvKlY8VFgS75Q/OPnW
-         0lhnnWlp8LgvU4zRh+u6mSS8gdNbN/fCyK6UC8LFWS7mC8bAJQ90U4rhEUTHLZr37zWY
-         0LQ7Es10351jkZU5W0m83pqKwZU8zj6e56ek1R76wpC9wa8HJAvrtfwDKeVOnnpTxNXz
-         HOVQ8iAivYVb0FCcO0xMuA1T1bWbgrn4SuB2fqgWspRAVWfknGcxyy8wcH8zCM4XzHbk
-         jxQfWwJXpOcAnH04XdrVg2G7KnMLip7J+DCE7A6Mutm9VOZ6qWqcdEd9957uDxpVIqGn
-         AtAA==
+        bh=h63LOgt+Dy9g/r9ZLeRwkVpd9spngRolp7BRUfjs04E=;
+        b=gPiSTZgQ6RVOnxc4T+m87zsgevXZ4/vwi6Yf3OWh3UnlrG/cYxRyuV8MqeTtANSA7V
+         nTPngr5LxGg1E9sY/xI/ULZ0VKbIHJqPl5mtUSEdz9tqIzywwy61U5+ShcSBPALBQL5z
+         lGWbxgDDdHb1OdvVc9Tya9fpObNJ4Bs/kP/DKylzQksw8IQqHt8g/g2sNQDmV+sLERNj
+         n0yXuZfidePc2w2gaZ4gdwasSMoIt0Me7VTOHm+E4enkBrVAlHvplwxLABQFbAEycqVq
+         bRxxmtcJewIv1+idmOiIFaeIv7CXcDrC6kVgs9bRTRdA/cR4wQMO7lq/AOYldXtTBHtV
+         ribg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OWikrHcjIEL13jknWWaUiCgmVBPYjsVQNgOhFstQ6kk=;
-        b=pY8ejrPA7N1N5nkiHD60y6MGXersz+BkUv8lQczPKAMGMDPg0iz7m3n7TM1CyTtz/7
-         HHOGT1Obn++a36QaPZNCI6zBICQ1HE81vfi6uSDt2r1eHz4mrJSyf8ZblcYrU8rZj+4B
-         79mINujDUMXtR3MY/Avuct8jsRChgGEMo4SpKv1tLUIeTWOt5q+p2/pOWbOTP5YY9saI
-         eoOQardAdh/OZ4/qZ40YhkoM/BG5+ftn1Ft8wOHN3dhUUmSuDsrO1n1ChMam0Sza+hQT
-         Y+3nviTHmhongWNk1l4HzJN8TYEgZkbtKxlD6BwdG3oasvKloXECRehyO2QrOrYuUYXx
-         /yXw==
-X-Gm-Message-State: AOAM532PAckmuiBKTRNVunXdtHqsIOzLzU+k8vYhpUqrvilSSaFTGqRP
-        Zu+oWSBRzpcp+wV9ubfLAu+6/w==
-X-Google-Smtp-Source: ABdhPJxhEY7+qPHjPhuX5V9UXTKocEiF3ZgSgjLNy48r0c8fWe4GAkvPRAdVDSpqXvIYiB7pHa/2iw==
-X-Received: by 2002:adf:b34a:: with SMTP id k10mr3801954wrd.402.1595507099540;
-        Thu, 23 Jul 2020 05:24:59 -0700 (PDT)
+        bh=h63LOgt+Dy9g/r9ZLeRwkVpd9spngRolp7BRUfjs04E=;
+        b=gyvFPmF14GOcwJR5ZOzE26qcLLbU+Ix/u1JJrLCJHRJIFw4v73rCD6kdGj46FhXEpU
+         FMc9MvhD0tAZS/oQAN6/JXknq/56ZbQuo2PWg1glJVyW6uIH6WxgyHAn4jl6Pc2JW1TQ
+         JM4WV9JTN/RyE5m/uGRMHjERbcjqSRYl2vPI+Hh8UophQgo6ifcrcIONDPdEahoicBAK
+         yh36piU/kkt/705TJMFwWKHWeai10fyNcTYiwpjb1QS+sbcbDk0uJXyo+rTUkTslurh1
+         IrxA+NLVTrwCblawHfD/10XeJBM4IYQRWws52VApUqyiuIY00Hh16ghcgsgCSFzZhzRT
+         jrFg==
+X-Gm-Message-State: AOAM530VSoSk5AtJueYjbC/GO3UGmMmyKV47Ch2ES3/aFJT309LY846i
+        LHjc2udU6GlHmXzHzkEwc2QquA==
+X-Google-Smtp-Source: ABdhPJwsIcwNe8dwuwe2OJqfzn2ZQ57y3/4mQvClR7t7daFL5f+jr6Jc5OuDYirzpKLdZtUGoAfWyw==
+X-Received: by 2002:a1c:7719:: with SMTP id t25mr4164947wmi.144.1595507105238;
+        Thu, 23 Jul 2020 05:25:05 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.58
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:24:58 -0700 (PDT)
+        Thu, 23 Jul 2020 05:25:04 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        QLogic-Storage-Upstream@qlogic.com,
-        Anil Veerabhadrappa <anilgv@broadcom.com>,
-        Eddie Wai <eddie.wai@broadcom.com>
-Subject: [PATCH 08/40] scsi: bnx2i: bnx2i_sysfs: Add missing descriptions for 'attr' parameter
-Date:   Thu, 23 Jul 2020 13:24:14 +0100
-Message-Id: <20200723122446.1329773-9-lee.jones@linaro.org>
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        ipslinux@adaptec.com, Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH 13/40] scsi: ips: Convert strnlen() to memcpy() since result should not be NUL terminated
+Date:   Thu, 23 Jul 2020 13:24:19 +0100
+Message-Id: <20200723122446.1329773-14-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
 References: <20200723122446.1329773-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,55 +81,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/bnx2i/bnx2i_sysfs.c:40: warning: Function parameter or member 'attr' not described in 'bnx2i_show_sq_info'
- drivers/scsi/bnx2i/bnx2i_sysfs.c:60: warning: Function parameter or member 'attr' not described in 'bnx2i_set_sq_info'
- drivers/scsi/bnx2i/bnx2i_sysfs.c:96: warning: Function parameter or member 'attr' not described in 'bnx2i_show_ccell_info'
- drivers/scsi/bnx2i/bnx2i_sysfs.c:114: warning: Function parameter or member 'attr' not described in 'bnx2i_set_ccell_info'
+ In file included from arch/arm/include/asm/io.h:23,
+ from drivers/scsi/ips.c:164:
+ In function ‘strncpy’,
+ inlined from ‘ips_send_cmd’ at drivers/scsi/ips.c:3522:6:
+ include/linux/string.h:297:30: warning: ‘__builtin_strncpy’ output
+ truncated before terminating nul cop ying 4 bytes from a string of the same length [-Wstringop-truncation]
+ 297 | #define __underlying_strncpy __builtin_strncpy
+ | ^
+ include/linux/string.h:307:9: note: in expansion of macro ‘__underlying_strncpy’
+ 307 | return __underlying_strncpy(p, q, size);
+ | ^~~~~~~~~~~~~~~~~~~~
+ NB: Lots of these - snipping for brevity
 
-Cc: QLogic-Storage-Upstream@qlogic.com
-Cc: Anil Veerabhadrappa <anilgv@broadcom.com>
-Cc: Eddie Wai <eddie.wai@broadcom.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: ipslinux@adaptec.com
+Cc: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/bnx2i/bnx2i_sysfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/ips.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/scsi/bnx2i/bnx2i_sysfs.c b/drivers/scsi/bnx2i/bnx2i_sysfs.c
-index 6d56fd60cb2b2..3dc790089f0fc 100644
---- a/drivers/scsi/bnx2i/bnx2i_sysfs.c
-+++ b/drivers/scsi/bnx2i/bnx2i_sysfs.c
-@@ -30,6 +30,7 @@ static inline struct bnx2i_hba *bnx2i_dev_to_hba(struct device *dev)
- /**
-  * bnx2i_show_sq_info - return(s currently configured send queue (SQ) size
-  * @dev:	device pointer
-+ * @attr:	device attribute (unused)
-  * @buf:	buffer to return current SQ size parameter
-  *
-  * Returns current SQ size parameter, this paramater determines the number
-@@ -47,6 +48,7 @@ static ssize_t bnx2i_show_sq_info(struct device *dev,
- /**
-  * bnx2i_set_sq_info - update send queue (SQ) size parameter
-  * @dev:	device pointer
-+ * @attr:	device attribute (unused)
-  * @buf:	buffer to return current SQ size parameter
-  * @count:	parameter buffer size
-  *
-@@ -87,6 +89,7 @@ static ssize_t bnx2i_set_sq_info(struct device *dev,
- /**
-  * bnx2i_show_ccell_info - returns command cell (HQ) size
-  * @dev:	device pointer
-+ * @attr:	device attribute (unused)
-  * @buf:	buffer to return current SQ size parameter
-  *
-  * returns per-connection TCP history queue size parameter
-@@ -103,6 +106,7 @@ static ssize_t bnx2i_show_ccell_info(struct device *dev,
- /**
-  * bnx2i_get_link_state - set command cell (HQ) size
-  * @dev:	device pointer
-+ * @attr:	device attribute (unused)
-  * @buf:	buffer to return current SQ size parameter
-  * @count:	parameter buffer size
-  *
+diff --git a/drivers/scsi/ips.c b/drivers/scsi/ips.c
+index ec85ccce96647..2e6077c502fc7 100644
+--- a/drivers/scsi/ips.c
++++ b/drivers/scsi/ips.c
+@@ -2239,7 +2239,7 @@ ips_get_bios_version(ips_ha_t * ha, int intr)
+ 	major = 0;
+ 	minor = 0;
+ 
+-	strncpy(ha->bios_version, "       ?", 8);
++	memcpy(ha->bios_version, "       ?", 8);
+ 
+ 	if (ha->pcidev->device == IPS_DEVICEID_COPPERHEAD) {
+ 		if (IPS_USE_MEMIO(ha)) {
+@@ -3515,11 +3515,11 @@ ips_send_cmd(ips_ha_t * ha, ips_scb_t * scb)
+ 					inquiry.Flags[1] =
+ 					    IPS_SCSI_INQ_WBus16 |
+ 					    IPS_SCSI_INQ_Sync;
+-					strncpy(inquiry.VendorId, "IBM     ",
++					memcpy(inquiry.VendorId, "IBM     ",
+ 						8);
+-					strncpy(inquiry.ProductId,
++					memcpy(inquiry.ProductId,
+ 						"SERVERAID       ", 16);
+-					strncpy(inquiry.ProductRevisionLevel,
++					memcpy(inquiry.ProductRevisionLevel,
+ 						"1.00", 4);
+ 
+ 					ips_scmd_buf_write(scb->scsi_cmd,
+@@ -4036,9 +4036,9 @@ ips_inquiry(ips_ha_t * ha, ips_scb_t * scb)
+ 	inquiry.Flags[0] = IPS_SCSI_INQ_Address16;
+ 	inquiry.Flags[1] =
+ 	    IPS_SCSI_INQ_WBus16 | IPS_SCSI_INQ_Sync | IPS_SCSI_INQ_CmdQue;
+-	strncpy(inquiry.VendorId, "IBM     ", 8);
+-	strncpy(inquiry.ProductId, "SERVERAID       ", 16);
+-	strncpy(inquiry.ProductRevisionLevel, "1.00", 4);
++	memcpy(inquiry.VendorId, "IBM     ", 8);
++	memcpy(inquiry.ProductId, "SERVERAID       ", 16);
++	memcpy(inquiry.ProductRevisionLevel, "1.00", 4);
+ 
+ 	ips_scmd_buf_write(scb->scsi_cmd, &inquiry, sizeof (inquiry));
+ 
+@@ -5620,10 +5620,10 @@ ips_write_driver_status(ips_ha_t * ha, int intr)
+ 	/* change values (as needed) */
+ 	ha->nvram->operating_system = IPS_OS_LINUX;
+ 	ha->nvram->adapter_type = ha->ad_type;
+-	strncpy((char *) ha->nvram->driver_high, IPS_VERSION_HIGH, 4);
+-	strncpy((char *) ha->nvram->driver_low, IPS_VERSION_LOW, 4);
+-	strncpy((char *) ha->nvram->bios_high, ha->bios_version, 4);
+-	strncpy((char *) ha->nvram->bios_low, ha->bios_version + 4, 4);
++	memcpy((char *) ha->nvram->driver_high, IPS_VERSION_HIGH, 4);
++	memcpy((char *) ha->nvram->driver_low, IPS_VERSION_LOW, 4);
++	memcpy((char *) ha->nvram->bios_high, ha->bios_version, 4);
++	memcpy((char *) ha->nvram->bios_low, ha->bios_version + 4, 4);
+ 
+ 	ha->nvram->versioning = 0;	/* Indicate the Driver Does Not Support Versioning */
+ 
 -- 
 2.25.1
 
