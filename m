@@ -7,144 +7,166 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A201FC433F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC376C433F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7936220792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFCC206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VLzuVAzw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C/HEfOZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgGWM1m (ORCPT
+        id S1729393AbgGWM1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
+        Thu, 23 Jul 2020 08:27:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728845AbgGWMY5 (ORCPT
+        with ESMTP id S1728775AbgGWMYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:24:57 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1902CC0619E3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:57 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y3so4976900wrl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:57 -0700 (PDT)
+        Thu, 23 Jul 2020 08:24:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315C2C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f2so4964295wrp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mCXO0Gr/A00l7Lne4sBK8Frz9I2gxXn2t7va3NQnE+k=;
-        b=VLzuVAzwLVM/dZrwghui32Cthrp/jLIjGRFYoekwj6rOfYdWN+Ca8euH5j0gmIclVA
-         DPGAmw1kGbUVZEsPzHiJS4mVA4nIS/w0UhXhvtODtvdzRx0u3R/sEMZwyCzDADT/E9iu
-         vLDxEbeoH+2JdqhS/3o/A9XdzqzYaakIGrL8NYVb3/bFEM+CIqVptPUaom3/SoHEeGNy
-         sLA228efpCsVu2LU5uwYHYJjtRMQQlQyjtUkunjK29dLPWUIqm6go4LnmxMhmQcTNcuN
-         K+Bn4hm1c0VKWz+h46vh5QR8aI/QuPomXCz/us8WLkqhjS4TOlcTzxWt1lj0K1kR4iqs
-         V2tA==
+        bh=ihdeGdGpgFkIzdF2x6is+yRXhsZbdmE+baPKtamOODg=;
+        b=C/HEfOZW2bHfFxf2HJjaIioq8YJFxQfJM9vjgsFwFUdLzkpjL8rfbLAnxrBChpmPhI
+         a0T+h39nKigPiDEkcIk7vlXAEYtuZNW5NHe6B5WJPVm95D9SOoezAGi9g2rMYu7DzLni
+         vX4jEccc5FiYXFLwoDQmOCrrVyYb0n7g05Q1mJ8l8Y7u36bdMXBzTkYNheQJ/VjntmCC
+         vVjkpHQlptkv0kJMiB8QUId2YOPfVUw91XTyYT0icpUhSoASPXCvwZcXaTJEPchLK0J3
+         FeRZQxmPx+atTDIjngKPD4MnFLwNA/NX0Och4/1FwVrMwkdWvJ69mBp6y/PLXg3kS2yX
+         NnJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mCXO0Gr/A00l7Lne4sBK8Frz9I2gxXn2t7va3NQnE+k=;
-        b=fjO5JJDWMsxUTeXinxpl8PJSFAB1LdSh37Uc6B/7Rdp3OH7hZxEDU1VEQ71/AtpKQ9
-         cQZc6b71xYZS/wr+qnBtAHATpsWUGyhgvUri2mxowQca0OVlyRxOZ0ZAdfhpL4suqDpz
-         Z7Z/YdZCzvWT0lLqmt633a+wU829xWPUMGbzH69V4ZeljT7J/3ZpOtPj0d9ZWP31vX7b
-         gzhGB6ZZo1J9jz7UVDbEZuwV11lSpD9ftNhl5lpLLACxs177zf96xXlQIlkjr8yIEn2d
-         0DCETMFdcqQyQDGxwl6jGYonovsQW72sYBo6Jt5iUJ2RxNYE+CXIOYTSf98OqQ4IMXDW
-         rymg==
-X-Gm-Message-State: AOAM530eKFG8T4/1lzuYmhYCkxNGNw6uOlTUVsG+4aVkjZ7MrnoNQFob
-        5yG9m9LGQ2fwE+vgsHiEn1ufOw==
-X-Google-Smtp-Source: ABdhPJyHdbt4arhYy1wxPK9DL4Wp99G0wUnJEmOEIFHYKnmyhpXMeS1JDOviOFALkqZ19VIiGO62Sw==
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr3829930wrj.265.1595507095851;
-        Thu, 23 Jul 2020 05:24:55 -0700 (PDT)
+        bh=ihdeGdGpgFkIzdF2x6is+yRXhsZbdmE+baPKtamOODg=;
+        b=O1VIa/BSk3qPO4IwJjDvIB5CnxzynVw4VnVImCSolIfKfZwDyUOvdHKymBx5a/KowR
+         dyzqGDyb2yB/W4JS6UZEjmnLeVJMqMsn7u12inbFQgAZ6nNh1268HS99iq3oEBI+vQ0h
+         m4oNwLw/Yfs84AFon65/XkbRX9nT4RMk5hJc+19c/QP21wAOyeiMAa6yP7GGAoVJDMTC
+         jMd1bgB1K0qrw7T/LjuRYpNNepC2PfrIWqHXMePknALMSBGuM6u9zq5VTMLo6LQUPSa1
+         MOrC+L1uLbxRJrKYyQe+GlVLXZsgJXf8/KiG2O10ZoZXp17KqZDNo1aPoOgf1zFtJt9J
+         Ewpg==
+X-Gm-Message-State: AOAM530Ks3i+gUic8LCasDk3yELO43wyETco7/Vap3XOsUOEK86jCSJw
+        8a5e3niwG5RNLM7xqtcXDL30Eg==
+X-Google-Smtp-Source: ABdhPJx/bi8f9Iyz4dlcIsq3N8F+lCeAvevX1AjO5UazBsvSxdcZAB5/UjE/vWFIW63WtnKDl3oLoQ==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr3755171wrj.273.1595507091857;
+        Thu, 23 Jul 2020 05:24:51 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.54
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:24:55 -0700 (PDT)
+        Thu, 23 Jul 2020 05:24:51 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kiwoong Kim <kwmad.kim@samsung.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 05/40] scsi: ufs: ufs-exynos: Make stubs 'static inline'
-Date:   Thu, 23 Jul 2020 13:24:11 +0100
-Message-Id: <20200723122446.1329773-6-lee.jones@linaro.org>
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Subject: [PATCH 02/40] scsi: lpfc: lpfc_hbadisc: Fix kerneldoc parameter formatting/misnaming/missing issues
+Date:   Thu, 23 Jul 2020 13:24:08 +0100
+Message-Id: <20200723122446.1329773-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
 References: <20200723122446.1329773-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Else the compiler complains of missing prototypes.
-
 Fixes the following W=1 kernel build warning(s):
 
- In file included from drivers/scsi/ufs/ufs-exynos.c:23:
- drivers/scsi/ufs/ufs-exynos.h:302:6: warning: no previous prototype for ‘exynos_ufs_cmd_log_start’ [-Wmissing-prototypes]
- 302 | void exynos_ufs_cmd_log_start(struct ufs_exynos_handle *handle,
- | ^~~~~~~~~~~~~~~~~~~~~~~~
- drivers/scsi/ufs/ufs-exynos.h:307:6: warning: no previous prototype for ‘exynos_ufs_cmd_log_end’ [-Wmissing-prototypes]
- 307 | void exynos_ufs_cmd_log_end(struct ufs_exynos_handle *handle,
- | ^~~~~~~~~~~~~~~~~~~~~~
- drivers/scsi/ufs/ufs-exynos.h:312:5: warning: no previous prototype for ‘exynos_ufs_init_dbg’ [-Wmissing-prototypes]
- 312 | int exynos_ufs_init_dbg(struct ufs_exynos_handle *handle, struct device *dev)
- | ^~~~~~~~~~~~~~~~~~~
- drivers/scsi/ufs/ufs-exynos.h:317:6: warning: no previous prototype for ‘exynos_ufs_dump_info’ [-Wmissing-prototypes]
- 317 | void exynos_ufs_dump_info(struct ufs_exynos_handle *handle, struct device *dev)
- | ^~~~~~~~~~~~~~~~~~~~
+ drivers/scsi/lpfc/lpfc_hbadisc.c:1209: warning: Function parameter or member 'phba' not described in 'lpfc_sli4_clear_fcf_rr_bmask'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:1309: warning: Function parameter or member 'sw_name' not described in 'lpfc_sw_name_match'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:1309: warning: Excess function parameter 'fab_name' description in 'lpfc_sw_name_match'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:1397: warning: Function parameter or member 'fcf_rec' not described in 'lpfc_copy_fcf_record'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:1397: warning: Excess function parameter 'fcf' description in 'lpfc_copy_fcf_record'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:1956: warning: Cannot understand  lpfc_sli4_fcf_record_match - testing new FCF record for matching existing FCF
+ on line 1956 - I thought it was a doc line
+ drivers/scsi/lpfc/lpfc_hbadisc.c:2078: warning: Function parameter or member 'fcf_index' not described in 'lpfc_sli4_fcf_pri_list_del'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:2109: warning: Function parameter or member 'fcf_index' not described in 'lpfc_sli4_set_fcf_flogi_fail'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:2135: warning: Function parameter or member 'fcf_index' not described in 'lpfc_sli4_fcf_pri_list_add'
+ drivers/scsi/lpfc/lpfc_hbadisc.c:2135: warning: Function parameter or member 'new_fcf_record' not described in 'lpfc_sli4_fcf_pri_list_add'
 
-Cc: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Avri Altman <avri.altman@wdc.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kiwoong Kim <kwmad.kim@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/ufs/ufs-exynos.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs-exynos.h b/drivers/scsi/ufs/ufs-exynos.h
-index d86d0a0f74780..0908283a76936 100644
---- a/drivers/scsi/ufs/ufs-exynos.h
-+++ b/drivers/scsi/ufs/ufs-exynos.h
-@@ -299,22 +299,22 @@ void exynos_ufs_cmd_log_end(struct ufs_exynos_handle *handle,
- int exynos_ufs_init_dbg(struct ufs_exynos_handle *handle, struct device *dev);
- void exynos_ufs_dump_info(struct ufs_exynos_handle *handle, struct device *dev);
- #else
--void exynos_ufs_cmd_log_start(struct ufs_exynos_handle *handle,
--			      struct ufs_hba *hba, int tag)
-+static inline void exynos_ufs_cmd_log_start(struct ufs_exynos_handle *handle,
-+					    struct ufs_hba *hba, int tag)
- {
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 1713349cec4f5..142a021144793 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -1198,7 +1198,7 @@ lpfc_mbx_cmpl_local_config_link(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 
+ /**
+  * lpfc_sli4_clear_fcf_rr_bmask
+- * @phba pointer to the struct lpfc_hba for this port.
++ * @phba: pointer to the struct lpfc_hba for this port.
+  * This fucnction resets the round robin bit mask and clears the
+  * fcf priority list. The list deletions are done while holding the
+  * hbalock. The ON_LIST flag and the FLOGI_FAILED flags are cleared
+@@ -1297,7 +1297,7 @@ lpfc_fab_name_match(uint8_t *fab_name, struct fcf_record *new_fcf_record)
+ 
+ /**
+  * lpfc_sw_name_match - Check if the fcf switch name match.
+- * @fab_name: pointer to fabric name.
++ * @sw_name: pointer to switch name.
+  * @new_fcf_record: pointer to fcf record.
+  *
+  * This routine compare the fcf record's switch name with provided
+@@ -1385,7 +1385,7 @@ __lpfc_update_fcf_record_pri(struct lpfc_hba *phba, uint16_t fcf_index,
+ 
+ /**
+  * lpfc_copy_fcf_record - Copy fcf information to lpfc_hba.
+- * @fcf: pointer to driver fcf record.
++ * @fcf_rec: pointer to driver fcf record.
+  * @new_fcf_record: pointer to fcf record.
+  *
+  * This routine copies the FCF information from the FCF
+@@ -1953,7 +1953,7 @@ lpfc_sli4_log_fcf_record_info(struct lpfc_hba *phba,
  }
  
--void exynos_ufs_cmd_log_end(struct ufs_exynos_handle *handle,
--			    struct ufs_hba *hba, int tag)
-+static inline void exynos_ufs_cmd_log_end(struct ufs_exynos_handle *handle,
-+					  struct ufs_hba *hba, int tag)
- {
- }
- 
--int exynos_ufs_init_dbg(struct ufs_exynos_handle *handle, struct device *dev)
-+static inline int exynos_ufs_init_dbg(struct ufs_exynos_handle *handle, struct device *dev)
- {
- 	return 0;
- }
- 
--void exynos_ufs_dump_info(struct ufs_exynos_handle *handle, struct device *dev)
-+static inline void exynos_ufs_dump_info(struct ufs_exynos_handle *handle, struct device *dev)
- {
- }
- 
+ /**
+- lpfc_sli4_fcf_record_match - testing new FCF record for matching existing FCF
++ * lpfc_sli4_fcf_record_match - testing new FCF record for matching existing FCF
+  * @phba: pointer to lpfc hba data structure.
+  * @fcf_rec: pointer to an existing FCF record.
+  * @new_fcf_record: pointer to a new FCF record.
+@@ -2067,7 +2067,7 @@ int lpfc_sli4_fcf_rr_next_proc(struct lpfc_vport *vport, uint16_t fcf_index)
+ /**
+  * lpfc_sli4_fcf_pri_list_del
+  * @phba: pointer to lpfc hba data structure.
+- * @fcf_index the index of the fcf record to delete
++ * @fcf_index: the index of the fcf record to delete
+  * This routine checks the on list flag of the fcf_index to be deleted.
+  * If it is one the list then it is removed from the list, and the flag
+  * is cleared. This routine grab the hbalock before removing the fcf
+@@ -2097,7 +2097,7 @@ static void lpfc_sli4_fcf_pri_list_del(struct lpfc_hba *phba,
+ /**
+  * lpfc_sli4_set_fcf_flogi_fail
+  * @phba: pointer to lpfc hba data structure.
+- * @fcf_index the index of the fcf record to update
++ * @fcf_index: the index of the fcf record to update
+  * This routine acquires the hbalock and then set the LPFC_FCF_FLOGI_FAILED
+  * flag so the the round robin slection for the particular priority level
+  * will try a different fcf record that does not have this bit set.
+@@ -2117,7 +2117,8 @@ lpfc_sli4_set_fcf_flogi_fail(struct lpfc_hba *phba, uint16_t fcf_index)
+ /**
+  * lpfc_sli4_fcf_pri_list_add
+  * @phba: pointer to lpfc hba data structure.
+- * @fcf_index the index of the fcf record to add
++ * @fcf_index: the index of the fcf record to add
++ * @new_fcf_record: pointer to a new FCF record.
+  * This routine checks the priority of the fcf_index to be added.
+  * If it is a lower priority than the current head of the fcf_pri list
+  * then it is added to the list in the right order.
 -- 
 2.25.1
 
