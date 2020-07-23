@@ -2,109 +2,72 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767EFC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82008C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5548120792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595534829;
-	bh=ENoIYBug+g53Ale1DfY97zU4FBYnGOgaNeHqmT6v+8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HV58ToigYLYjnB3KC/W3Pt86w4WRPyw6yGdTNll3KT54t9Qo5Ku8FWMVAofnTnuxH
-	 WBLpZ8SiR4tym1xRQxnqBZkuOOkGZftSGJ+M0AFINrf39rX5gqnGEOmDPFbFf8NnlA
-	 H9NjVwR1EEpDJj9ED6Al7TStTPWkvkhXRvKUsIeI=
+	by mail.kernel.org (Postfix) with ESMTP id 62234206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgGWUHI (ORCPT
+        id S1726899AbgGWUHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgGWUHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:07:07 -0400
-Received: from localhost (p5486cde4.dip0.t-ipconnect.de [84.134.205.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7EAA206F4;
-        Thu, 23 Jul 2020 20:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595534827;
-        bh=ENoIYBug+g53Ale1DfY97zU4FBYnGOgaNeHqmT6v+8c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NsAQI3dRb358P+uJJEhBaBGz9ZTfpjluRTp5g2Hn4XDwLzdSwlXQX3HNTuwaODv+7
-         S0a5kiFM1SAF6AAqdQx0dEn+T8SrQmf+zHFXETWN+DCtyl2wGhcjzSliSJW0kWbamj
-         p0Vza4Qnk6tnUUVF+EW0Nvo2ivak4wpniRMqjaNU=
-Date:   Thu, 23 Jul 2020 22:07:04 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH][next] i2c: designware: Use fallthrough pseudo-keyword
-Message-ID: <20200723200704.GB908@ninjato>
-References: <20200721233814.GA3058@embeddedor>
- <CAHp75VcinO2QrQfk-GqfFic=Ktah5s-ndLigmVNdfvfo5cS_Pw@mail.gmail.com>
- <20200722143713.GB22267@embeddedor>
- <20200722143814.GS1030@ninjato>
- <20200722144848.GC22267@embeddedor>
+        Thu, 23 Jul 2020 16:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWUHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:07:18 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D096EC0619DC;
+        Thu, 23 Jul 2020 13:07:17 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jyhUc-009mYg-5X; Thu, 23 Jul 2020 22:07:02 +0200
+Message-ID: <ce380ea1fd1f5db40a92f67673f070a1f88eee50.camel@sipsolutions.net>
+Subject: Re: [RFC 1/7] mac80211: Add check for napi handle before WARN_ON
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Rakesh Pillai <pillair@codeaurora.org>, ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org
+Date:   Thu, 23 Jul 2020 22:06:46 +0200
+In-Reply-To: <003201d6611e$c54a1c90$4fde55b0$@codeaurora.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+                 <1595351666-28193-2-git-send-email-pillair@codeaurora.org>
+         <0dbdef912f9d61521011f638200fd451a3530568.camel@sipsolutions.net>
+         <003201d6611e$c54a1c90$4fde55b0$@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
-Content-Disposition: inline
-In-Reply-To: <20200722144848.GC22267@embeddedor>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-07-23 at 23:56 +0530, Rakesh Pillai wrote:
 
---nVMJ2NtxeReIH9PS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > -	WARN_ON_ONCE(softirq_count() == 0);
+> > > +	WARN_ON_ONCE(napi && softirq_count() == 0);
+> > 
+> > FWIW, I'm pretty sure this is incorrect - we make assumptions on
+> > softirqs being disabled in mac80211 for serialization and in place of
+> > some locking, I believe.
+> > 
+> 
+> I checked this, but let me double confirm.
+> But after this change, no packet is submitted from driver in a softirq context.
+> So ideally this should take care of serialization.
 
+I'd guess that we have some reliance on BHs already being disabled, for
+things like u64 sync updates, or whatnot. I mean, we did "rx_ni()" for a
+reason ... Maybe lockdep can help catch some of the issues.
 
-> > If you want to resend, please only one patch for all I2C drivers. The
-> > change is "cosmetic" enough to do that IMO.
-> >=20
->=20
-> The reason why I'm sending separate patches for this is because
-> the drivers have different maintainers.
+But couldn't you be in a thread and have BHs disabled too?
 
-I see. Still, people can ack parts of a patch they are responsible for.
-I ack this way every now and then for cleanup patches, too.
+johannes
 
-That being said. All v2 and newer patches squashed into one and applied
-to for-next.
-
-
---nVMJ2NtxeReIH9PS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8Z7egACgkQFA3kzBSg
-KbbBpQ/9FnepYAS89xiZarcBJQAWcb+Qn1NfNqRlKkWSJCBVVOXmFLuzzD5bVXvu
-OdvLxblLiJh+N/cxuKZPmyifCfmwWcTwyA4ybSKdKaOxfYb9xO2bpbPkFqGgEaHf
-O0/bid7pQ1fkZBtwe3gUuvT5t09keufVbI2bRnWavV03tVVqzS2xCZVSMUx/5ZLA
-6xM9yaBX2CXLT6aE3zyjQE6SmftaTW5vkJRm/fGJxZD3FREGM7E/REpDf8Te5Tm/
-KUm0sqaj7dtTCscJRXSNd0qeQ0lbUl8yUT2N14q+GKBreU/xw20oKgKoUfqA7DCd
-GOV7lv4B/G2QL/PAVCJ5MD/gyXKmYJ0tr8thG2ap+ZacLhnfSldZjHjOfY2NBLBe
-2LzDh2kWharLwZDG4A7u5cpMG/83ljvA5WL103hBj9HgE8qQFtc94s+C0braWsWx
-ez6D7SGH/PcJ43E5htmvLYofydn3xt6sJp3g/io1P18Z3TtT5+fVDaWZaiNhS8c+
-fc1WVlStQ1iaGzTo0zffWHQlGzC2eyugG52pphOEWnLBdImz/q0BPqo0od9ArogE
-NVbWNl6lrEGUz+0xVEQILMaKZdSc9NSaGrdqWRqr8oTxBfNN1w5/Pfi/jEH9wUVa
-nmjsw4DWsmvyI5kmYvd6kGMkgj9t2+ex9tZJXQL4mSCHJjdmevc=
-=1f8G
------END PGP SIGNATURE-----
-
---nVMJ2NtxeReIH9PS--
