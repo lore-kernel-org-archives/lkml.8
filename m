@@ -2,181 +2,180 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19997C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABD7C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5635207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E44F2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IES0ATrS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eEbHXRdH";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cKX5L4Bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgGWNXB (ORCPT
+        id S1729220AbgGWNW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:23:01 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26516 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728289AbgGWNW7 (ORCPT
+        Thu, 23 Jul 2020 09:22:58 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56344 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728066AbgGWNW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:22:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595510577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=swJfYIy4gp/vFDkclYRL1u0h1aBED6tb1OvFVOnEUbw=;
-        b=IES0ATrSSrRpYc7e/VFXtVC2ix6zeGpmcYySuiFbsC8mJsQbGIZDLcVPJedMTM4jkx6R13
-        db8av/UbNZKD420XZ9gyFjgc54GIQsE8AnjDDn97pjevY+EhcnVi8xAJ5ALlwE/hgS5DxP
-        OwifJ+6zWzG1D7/l8bPPwQU2Z1tMlsM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-mCH6JL7LN-6NHAGzomymBA-1; Thu, 23 Jul 2020 09:22:53 -0400
-X-MC-Unique: mCH6JL7LN-6NHAGzomymBA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 23 Jul 2020 09:22:57 -0400
+Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD1E01083E83;
-        Thu, 23 Jul 2020 13:22:51 +0000 (UTC)
-Received: from [10.36.114.90] (ovpn-114-90.ams2.redhat.com [10.36.114.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1506F88F1F;
-        Thu, 23 Jul 2020 13:22:49 +0000 (UTC)
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        xen-devel@lists.xenproject.org, linux-mm@kvack.org
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
- <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
- <20200723122300.GD7191@Air-de-Roger>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
-Date:   Thu, 23 Jul 2020 15:22:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200723122300.GD7191@Air-de-Roger>
-Content-Type: text/plain; charset=utf-8
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4046FC0750;
+        Thu, 23 Jul 2020 13:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1595510576; bh=TCKAM6fOQI8fPcbDKZE86qRK1ALFRTrqacEw4RA8wQ0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=eEbHXRdHPjWAAlDpGXGf3lHe+wPl+upIuuWtoUJJvGzLYbh8B1LW4XOt+zs7d97+6
+         Ecpb4EwbAvmWZZewdpGmmTEoM9r7MxH/vu25tcjQbPVL4ym++f2pKBOMbRrW1WIz8F
+         hgVvW84ambQyqpNdPdFDnHsHZ7JO+mQpZzw1FPCPUynRqL1si+KqRy3CZohQBvyACP
+         ZfcMYdiJe57i9bnhM/eToUg6bfEN/bTWrnKIh2Bp/RJ7alSBPLlZdfW24/fHS1QRvV
+         8bFZenn7VNynTc2t0SvIl8jsgBpBBN8VK3w1WDsakqeOydrQ1hl/wvVASw+UCqiMv+
+         W57844C2750Yg==
+Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 3C957A0096;
+        Thu, 23 Jul 2020 13:22:54 +0000 (UTC)
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 86A72800CE;
+        Thu, 23 Jul 2020 13:22:53 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=hminas@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="cKX5L4Bi";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IrsP04SUqcLSCjXoBZ2au1H92/l+PTIrc4jPFj4WhoaTTQgYUOFounOoiVTKqGmxTCXW0xQ/udwtW9g/g2OqXUN80vpxlMwbPr8+P3iIhe6MNIU1T/JCApD+VG5dKj4O6/s693wMTUbu0pnkUN4q4xKCek8U3cwQfWKh0/89+7RpruANOeebOkXzPdBo5ZOmr9mA5B7iiVQOrfgbXylH1SFXqOk/JxFAcyVdnnK4IS0o6LivXSOCHgoUdkGor2cE57Eme/kBtz82IGrlnOS+Di0cvgm21IY3A9EOHG7nQ7m54OWgH/qvRoo5iJAhC/b7UN3jn06Y5ao5dfingWVUAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TCKAM6fOQI8fPcbDKZE86qRK1ALFRTrqacEw4RA8wQ0=;
+ b=ilw0mkZFCvqaQeCsH+gaKQ5PNr5hpBhTnCA6lGTRbtJWp+14MteClciclD/u3Pq09/fcnWNsqeZkZsIZ7jK68aJ/mc0Cn2kk4UXkziq+SLI3Q/7L3QGVpO4pNZuXJqOKhLS8SRDPEcAD0yDs3xYx8UQBqycR9EwvdH80txRnZGYwHBUDy4y1iAm4xgjTU2NZx9npAxRYuTfsPDpdyF27Stiy7h7FeMxdWlHbWm7MF58u2CaoBp+ZB+Rz+JXIoiU541p9SUSJ8TwECHugGgWL8CxEfjj8D2qmAz7z0lXjn+Q0lcB23M0+2gWYXMKtg7JlkIfCTrPHn4UxoaiTus6EVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TCKAM6fOQI8fPcbDKZE86qRK1ALFRTrqacEw4RA8wQ0=;
+ b=cKX5L4BiR/I/V8C8YeH+IzcaToqYD3xuh4xvLP11dN4q1HyC34fGKf9gzddgjF1TWiMWXFkcFFmMmAFSAzp1nL4gcd2KsoZJ3aZO6uqY6hEt16FN0S1nqpcGmi8UKEIxSIVH4xegHWFzHlHQVAxFQ5LzdRfqmDetwDf43GgSv/s=
+Received: from BN6PR12MB1428.namprd12.prod.outlook.com (2603:10b6:404:21::16)
+ by BN6PR12MB1346.namprd12.prod.outlook.com (2603:10b6:404:1e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
+ 2020 13:22:51 +0000
+Received: from BN6PR12MB1428.namprd12.prod.outlook.com
+ ([fe80::836:5425:da4d:cc8]) by BN6PR12MB1428.namprd12.prod.outlook.com
+ ([fe80::836:5425:da4d:cc8%4]) with mapi id 15.20.3216.023; Thu, 23 Jul 2020
+ 13:22:51 +0000
+X-SNPS-Relay: synopsys.com
+From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [RFC for-5.8] usb: dwc2: Cleanup debugfs when
+ usb_add_gadget_udc() fails
+Thread-Topic: [RFC for-5.8] usb: dwc2: Cleanup debugfs when
+ usb_add_gadget_udc() fails
+Thread-Index: AQHWTj+WdJa7ovkKfUm4iPONUJfWFKjyUoGAgCL0YwCAAAVWAA==
+Date:   Thu, 23 Jul 2020 13:22:51 +0000
+Message-ID: <29131fea-55c2-c87e-9112-6f6d3469e4f9@synopsys.com>
+References: <20200629180314.2878638-1-martin.blumenstingl@googlemail.com>
+ <0ba4b7ce-3551-0453-bac7-4d86c53dd2e8@synopsys.com>
+ <87eep2o027.fsf@kernel.org>
+In-Reply-To: <87eep2o027.fsf@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f094f031-c2d1-40e4-8b92-08d82f0b8019
+x-ms-traffictypediagnostic: BN6PR12MB1346:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR12MB1346ACCC2D24F2D262A5E53AA7760@BN6PR12MB1346.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2OO5J4+l0eAeTDgjeoFu42lMk+HZz9DwmZuz5LY5GYW5GYL0hdQceWQR2qV6eBd4N3nYeX0fSpOaIsj/clz/hLPgxYPRRHhyTtQEEklV7RcqTc68DmdvKG7Yfp+OhPyy/YlbB4IWn/E4loN6POhbbMIawbDqtTvk2xCMYoTm44h0HTc3ZYsi6Lx/OZezXpE7p8Qvqjoy9JPt/6am4KO/FRvZMM/JWZ+BX2srjbrOtWjA+7wG2iBIWZo85PSXnJOngVn34dExrnRcdVSzXjiFKaGGQzyPfISHz8uxtXWnrOZyzuJby0velKuquMptNTh6Ad8egh+9tahXzFtMZ9VyoTIiWkuzHDbU9EPGvPoN4B0m/4o731vSxHL7daLYFV6y
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR12MB1428.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(376002)(366004)(346002)(396003)(4326008)(53546011)(2616005)(316002)(54906003)(2906002)(110136005)(8936002)(6512007)(6506007)(71200400001)(36756003)(8676002)(5660300002)(31686004)(86362001)(66476007)(6486002)(478600001)(31696002)(91956017)(66946007)(66556008)(64756008)(66446008)(186003)(26005)(83380400001)(76116006)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: qDgbF1iSS8lm8b6T5u55ri0Le3IG3GgPn8rkUhQSP1/DE14YTk4lum6GirCyYqUTbcGWclVoXNNqUbN/B/LEpq/AA5wf4W+BF2e6vWgoF0zyTbPfQnIvUbJpK2TMM3YrTw8VBrnRxG6N61n5GR5DlB7KZF3ZsDsd/niYydScRYGfa8SMn8XjpVLXArmpdkhJ9gyKEe/9zRYm8s2ezn/s8mGZz9sWr6AbombZUyzXC3h5hvKCyU4ESBz/p8QkQA3Oy4gJUj80BYxDAM/m6W/dXmtHhozmyz6rH91X/z75b7RQLG7a7PdQv3luaFi/pKFvHvZyZnWITT3e+5BhOXpIFP/2oMG2pAZoRM3RczZD+O2JgxbMHtxN/pjcfJqr18/lKY0RHOqfW0AObIwyKZvYSx2+nb1R9YjuWIZ+xICpFQmUUmsnMDtBTHU18P39f+qUoYYHKcOqIECWHn5sLR9r8zVqcWg4avEGctbllh48XAFBZ82eTOI7XoHFcR910Hjt
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A1CAA405C1D0BE42AA632205D9D68955@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR12MB1428.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f094f031-c2d1-40e4-8b92-08d82f0b8019
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 13:22:51.1489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Her1vVr/xr0xOtMUvuKx+NFRgpbDoeVNNOmJLeT8NKkh7+EX/IattiE8mov0/fjx61osrqd9XTFGksaGTU+szg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1346
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.07.20 14:23, Roger Pau Monné wrote:
-> On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
->> On 23.07.20 10:45, Roger Pau Monne wrote:
->>> Add an extra option to add_memory_resource that overrides the memory
->>> hotplug online behavior in order to force onlining of memory from
->>> add_memory_resource unconditionally.
->>>
->>> This is required for the Xen balloon driver, that must run the
->>> online page callback in order to correctly process the newly added
->>> memory region, note this is an unpopulated region that is used by Linux
->>> to either hotplug RAM or to map foreign pages from other domains, and
->>> hence memory hotplug when running on Xen can be used even without the
->>> user explicitly requesting it, as part of the normal operations of the
->>> OS when attempting to map memory from a different domain.
->>>
->>> Setting a different default value of memhp_default_online_type when
->>> attaching the balloon driver is not a robust solution, as the user (or
->>> distro init scripts) could still change it and thus break the Xen
->>> balloon driver.
->>
->> I think we discussed this a couple of times before (even triggered by my
->> request), and this is responsibility of user space to configure. Usually
->> distros have udev rules to online memory automatically. Especially, user
->> space should eb able to configure *how* to online memory.
-> 
-> Note (as per the commit message) that in the specific case I'm
-> referring to the memory hotplugged by the Xen balloon driver will be
-> an unpopulated range to be used internally by certain Xen subsystems,
-> like the xen-blkback or the privcmd drivers. The addition of such
-> blocks of (unpopulated) memory can happen without the user explicitly
-> requesting it, and hence not even aware such hotplug process is taking
-> place. To be clear: no actual RAM will be added to the system.
-
-Okay, but there is also the case where XEN will actually hotplug memory
-using this same handler IIRC (at least I've read papers about it). Both
-are using the same handler, correct?
-
-> 
->> It's the admin/distro responsibility to configure this properly. In case
->> this doesn't happen (or as you say, users change it), bad luck.
->>
->> E.g., virtio-mem takes care to not add more memory in case it is not
->> getting onlined. I remember hyper-v has similar code to at least wait a
->> bit for memory to get onlined.
-> 
-> I don't think VirtIO or Hyper-V use the hotplug system in the same way
-> as Xen, as said this is done to add unpopulated memory regions that
-> will be used to map foreign memory (from other domains) by Xen drivers
-> on the system.
-
-Indeed, if the memory is never exposed to the buddy (and all you need is
-struct pages +  a kernel virtual mapping), I wonder if
-memremap/ZONE_DEVICE is what you want? Then you won't have user-visible
-memory blocks created with unclear online semantics, partially involving
-the buddy.
-
--- 
-Thanks,
-
-David / dhildenb
-
+SGkgRmVsaXBlLA0KDQpPbiA3LzIzLzIwMjAgNTowMyBQTSwgRmVsaXBlIEJhbGJpIHdyb3RlOg0K
+PiBNaW5hcyBIYXJ1dHl1bnlhbiA8TWluYXMuSGFydXR5dW55YW5Ac3lub3BzeXMuY29tPiB3cml0
+ZXM6DQo+IA0KPj4gSGkgTWFydGluLA0KPj4NCj4+IE9uIDYvMjkvMjAyMCAxMDowMyBQTSwgTWFy
+dGluIEJsdW1lbnN0aW5nbCB3cm90ZToNCj4+PiBDYWxsIGR3YzJfZGVidWdmc19leGl0KCkgd2hl
+biB1c2JfYWRkX2dhZGdldF91ZGMoKSBoYXMgZmFpbGVkLiBUaGlzDQo+Pj4gZW5zdXJlIHRoYXQg
+dGhlIGRlYnVnZnMgZW50cmllcyBjcmVhdGVkIGJ5IGR3YzJfZGVidWdmc19pbml0KCkgYXJlDQo+
+Pj4gY2xlYW5lZCB1cCBpbiB0aGUgZXJyb3IgcGF0aC4NCj4+Pg0KPj4+IEZpeGVzOiAyMDczMjRh
+MzIxYTg2NiAoInVzYjogZHdjMjogUG9zdHBvbmVkIGdhZGdldCByZWdpc3RyYXRpb24gdG8gdGhl
+IHVkYyBjbGFzcyBkcml2ZXIiKQ0KPj4+IFNpZ25lZC1vZmYtYnk6IE1hcnRpbiBCbHVtZW5zdGlu
+Z2wgPG1hcnRpbi5ibHVtZW5zdGluZ2xAZ29vZ2xlbWFpbC5jb20+DQo+Pj4gLS0tDQo+Pj4gVGhp
+cyBwYXRjaCBpcyBjb21waWxlLXRlc3RlZCBvbmx5LiBJIGZvdW5kIHRoaXMgd2hpbGUgdHJ5aW5n
+IHRvDQo+Pj4gdW5kZXJzdGFuZCB0aGUgbGF0ZXN0IGNoYW5nZXMgdG8gZHdjMi9wbGF0Zm9ybS5j
+Lg0KPj4+DQo+Pj4NCj4+PiAgICBkcml2ZXJzL3VzYi9kd2MyL3BsYXRmb3JtLmMgfCA0ICsrKy0N
+Cj4+PiAgICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMi9wbGF0Zm9ybS5jIGIvZHJpdmVy
+cy91c2IvZHdjMi9wbGF0Zm9ybS5jDQo+Pj4gaW5kZXggYzM0N2Q5M2VhZTY0Li4wMmI2ZGE3ZTIx
+ZDcgMTAwNjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy91c2IvZHdjMi9wbGF0Zm9ybS5jDQo+Pj4gKysr
+IGIvZHJpdmVycy91c2IvZHdjMi9wbGF0Zm9ybS5jDQo+Pj4gQEAgLTU4MiwxMiArNTgyLDE0IEBA
+IHN0YXRpYyBpbnQgZHdjMl9kcml2ZXJfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqZGV2
+KQ0KPj4+ICAgIAkJcmV0dmFsID0gdXNiX2FkZF9nYWRnZXRfdWRjKGhzb3RnLT5kZXYsICZoc290
+Zy0+Z2FkZ2V0KTsNCj4+PiAgICAJCWlmIChyZXR2YWwpIHsNCj4+PiAgICAJCQlkd2MyX2hzb3Rn
+X3JlbW92ZShoc290Zyk7DQo+Pj4gLQkJCWdvdG8gZXJyb3JfaW5pdDsNCj4+PiArCQkJZ290byBl
+cnJvcl9kZWJ1Z2ZzOw0KPj4+ICAgIAkJfQ0KPj4+ICAgIAl9DQo+Pj4gICAgI2VuZGlmIC8qIENP
+TkZJR19VU0JfRFdDMl9QRVJJUEhFUkFMIHx8IENPTkZJR19VU0JfRFdDMl9EVUFMX1JPTEUgKi8N
+Cj4+PiAgICAJcmV0dXJuIDA7DQo+Pj4gICAgDQo+Pj4gK2Vycm9yX2RlYnVnZnM6DQo+Pj4gKwlk
+d2MyX2RlYnVnZnNfZXhpdChoc290Zyk7DQo+Pj4gICAgZXJyb3JfaW5pdDoNCj4+PiAgICAJaWYg
+KGhzb3RnLT5wYXJhbXMuYWN0aXZhdGVfc3RtX2lkX3ZiX2RldGVjdGlvbikNCj4+PiAgICAJCXJl
+Z3VsYXRvcl9kaXNhYmxlKGhzb3RnLT51c2IzM2QpOw0KPj4+DQo+PiBJJ20gT2sgd2l0aCB0aGlz
+IGZpeC4gT25lIG1vcmUgdGhpbmcuIEkgbWlzc2VkIHRvIHJlbW92ZSBoY2QgYWxzbyBpbg0KPj4g
+ZmFpbCBjYXNlLiBDb3VsZCB5b3UgcGxlYXNlIGFkZCBkd2MyX2hjZF9yZW1vdmUoKSBjYWxsIGFm
+dGVyDQo+PiBkd2MyX2RlYnVnZnNfZXhpdChoc290ZykgYW5kIHN1Ym1pdCBhcyBwYXRjaDoNCj4+
+DQo+PiArZXJyb3JfZGVidWdmczoNCj4+ICsJZHdjMl9kZWJ1Z2ZzX2V4aXQoaHNvdGcpOw0KPj4g
+KwlpZiAoaHNvdGctPmhjZF9lbmFibGVkKQ0KPj4gKwkJZHdjMl9oY2RfcmVtb3ZlKGhzb3RnKTsN
+Cj4+ICAgICBlcnJvcl9pbml0Og0KPiANCj4gbG9va3MgbGlrZSBpdCBzaG91bGQgYmUgYSBzZXBh
+cmF0ZSBwYXRjaCB0aG91Z2guIFJpZ2h0Pw0KDQp2MiBvZiB0aGlzIHBhdGNoIGFscmVhZHkgc3Vi
+bWl0dGVkIGJ5IE1hcnRpbiBCbHVtZW5zdGluZ2wgDQo8bWFydGluLmJsdW1lbnN0aW5nbEBnb29n
+bGVtYWlsLmNvbT4gb24gNy80LzIwMjAgd2l0aCBmaXggcmVsYXRlZCB0byANCmR3YzJfaGNkX3Jl
+bW92ZSgpIGFuZCBJIGFja2VkIGl0Og0KDQpbUEFUQ0ggZm9yLTUuOCB2Ml0gdXNiOiBkd2MyOiBB
+ZGQgbWlzc2luZyBjbGVhbnVwcyB3aGVuIA0KdXNiX2FkZF9nYWRnZXRfdWRjKCkgZmFpbHMNCg0K
+DQpUaGFua3MsDQpNaW5hcw0KDQo+IA0K
