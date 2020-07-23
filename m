@@ -2,162 +2,226 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970EAC433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81406C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673E820771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AED220771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="RZ9tzfJO";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="AnG8zuLn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocSI4ZH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgGWPmc (ORCPT
+        id S1729689AbgGWPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:42:32 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:37994 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728306AbgGWPm3 (ORCPT
+        Thu, 23 Jul 2020 11:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbgGWPm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:42:29 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NFZgiK008032;
-        Thu, 23 Jul 2020 08:41:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=1psEQCMmjwM9uM70O8ZWFMEwmTJ5LhrvCuMyIyZDFX0=;
- b=RZ9tzfJO6/gJICbeQaA4roKSSt/64Zjoo3akFWeiGyqi+/hLfW+/jr5JMzLJq4CY0rJ1
- 8CCBXzsG9q96Ja2uOQbaaFIxSFXl+aC661TPN8zwQ0IK4OLJO5OW5m7OB41aCouywNcl
- 0UKtE6f7PYjWI3Zqg6dikqC9aijFljssHKrXfKMbF5p0qYyvoKDdXrueIWopQdps3L1w
- Edi8czPTJMxj6CYGw0y/aXJ/QtBXpp5FqQ034FhUdU8hmoXDpix6bKPtKpJBnFXCC6+p
- UQGDZrs5jQQwjB4FcS4LBiusQ3UKKKAMCSgF3IpSyI/uNDYqkiFfrOqMHEeQMLXmBqWe +g== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 32c0kkwg2s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 08:41:51 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul
- 2020 08:41:50 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Thu, 23 Jul 2020 08:41:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iMTlpXI9P0IWuqiq36Qm8c6wRy6mlHg/mu7BpYYBVfeyvRdGiMQAenFsXizBwC+HKjNpN2PEPiOKIw6nFGZiTK2+A6QYjYPY/+nkkSzXEyFiAh6HZsS7V23d2MReC9hYnlvJZkfY2vRjJs/UOy84+1cRSLIc9nGZc+pv3OI/UfGpR8D7ou7NbBlHsFxJiShl229Mo4dlVs/GVfI67ZlxOXqxvnMF6dLszPCMHEG46KylJYNr9CREvMXxz7DIMfBcJtZtUSOUrjcwuHagaymKG+KFBQM+fLOlXk3ka1aSEA1nLhCpxPJivHH73rUOHv55/iGj3c+gQvNi9ERwhVhqVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1psEQCMmjwM9uM70O8ZWFMEwmTJ5LhrvCuMyIyZDFX0=;
- b=cyR5EBOESBKnO0YHX0dKsMkNBkUGOfvc5y5w+tz7XgxrA6doEVmIbY0xgUJfW33f/sUUFrV/hfTgPbUZQie9HFljXYXy/D2G34JW1BgGgaJiA4Pd1AQ9qjpuIiO3KafSiuprldOHNm4+sYb5jdb0xCqavGdh97YivuD9mbK1AqVXmwBm5/ktJir5kXKDBHrVSyb35D/Ix98dzFbjIz1iTbe2AZhZByecRgdU8rsnqg1Io3rBDEb1TBzPXRncpcCAwsYK/YwUdJZ6OlwH2nSW49VElC70WK+SddUiAGeHRJ9mmsRmXMYFR+pcsC8qmRHcP+zRCAbgibOtWbQpTcjqWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Thu, 23 Jul 2020 11:42:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901F7C0619DC;
+        Thu, 23 Jul 2020 08:42:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c80so5391417wme.0;
+        Thu, 23 Jul 2020 08:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1psEQCMmjwM9uM70O8ZWFMEwmTJ5LhrvCuMyIyZDFX0=;
- b=AnG8zuLnUOlDRwe6OFQuNbgqFCuFfPbIBvQyiPL4vkT0pUMvRkiwC4eIQMr9H4nVolsCwARSeIe04E5/H3ZmsNEWqPrrcLbP6nHA+9pase/TgfNZH1tiVRMOr1ivLdTxeTBDlP8abkYf5zJQa54f15Ut22nfTbuwOyxLdrfo5yo=
-Received: from MW2PR18MB2267.namprd18.prod.outlook.com (2603:10b6:907:3::11)
- by MWHPR18MB0927.namprd18.prod.outlook.com (2603:10b6:300:9a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
- 2020 15:41:47 +0000
-Received: from MW2PR18MB2267.namprd18.prod.outlook.com
- ([fe80::b9a6:a3f2:2263:dc32]) by MW2PR18MB2267.namprd18.prod.outlook.com
- ([fe80::b9a6:a3f2:2263:dc32%4]) with mapi id 15.20.3195.026; Thu, 23 Jul 2020
- 15:41:47 +0000
-From:   Alex Belits <abelits@marvell.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "peterz@infradead.org" <peterz@infradead.org>
-CC:     "mingo@kernel.org" <mingo@kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "frederic@kernel.org" <frederic@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH v4 00/13] "Task_isolation" mode
-Thread-Topic: [EXT] Re: [PATCH v4 00/13] "Task_isolation" mode
-Thread-Index: AQHWYDagTVb+dYV8A0GKqxFlnWyBeKkVJq8AgAAUHACAABRRgA==
-Date:   Thu, 23 Jul 2020 15:41:46 +0000
-Message-ID: <670609a91be23ebb4f179850601439fbed844479.camel@marvell.com>
-References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com>
-         <87imeextf3.fsf@nanos.tec.linutronix.de>
-         <20200723142902.GT5523@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200723142902.GT5523@worktop.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=marvell.com;
-x-originating-ip: [173.228.7.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e79c19df-e3d8-498d-7320-08d82f1ee89f
-x-ms-traffictypediagnostic: MWHPR18MB0927:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR18MB09279D42442420D468EA4562BC760@MWHPR18MB0927.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YwN4/6EmwSCl7NSJXnF3E3fwH2Pev7JFlQG813uAh+xc448aOEndXMSg0TrZCnslyM7OKlfLR68NNP+nzRLSpi9UDTGotgbHMLwRh7/qGAGRXBji+6350UHUXEa0aiMVIh3gwOHEIrilPGM++aE12DZowHW9DRmRU+3/IRxplOkJARq2WOPfM4WXUvl5rBB+YbnHsrDrbOWC2VHufFyn9mMYSyFbdyQt2nn8rN1Qsy6AJjIhwlpUSoKD+ZSoqh7jb7d4sMZW0n4pefE12IS7aP1hGs2FhT8XMwTHMJjY1cekqzI6ZmMRltAwp9Ck46QDjQgNFygLQ0Dn59zuPZkmDQzcFoDfhfFDTiTKMAWqCSyU9GRBOm+uvf2mRozv0c0DCMZJ66vgLbNMEnId7M/bHQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR18MB2267.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(136003)(376002)(366004)(396003)(4326008)(36756003)(7416002)(5660300002)(66476007)(66946007)(66446008)(64756008)(66556008)(110136005)(91956017)(8936002)(6506007)(54906003)(26005)(2616005)(86362001)(2906002)(966005)(6486002)(71200400001)(316002)(478600001)(186003)(8676002)(6512007)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: WMDnPAtTKfDN7K2Ga8iTCHzOxQ60r2BznRAVHnkl94jmg/DzcSalbHQiI21Y9FEbXl+lRqFicnhIaB4vXvCDYzIqq24IRSujC2YNk7dCDwzv4VJKdSkaAcSgumZTVLaWzgVG4d0sAUk4NZNPRsNaTN+WZ4QKnzFebTWkyRhovsPoI2xYCOyxZxLZd+JshtrNJIRMkh4JdIS0ISjdKoSQPhTwyNdrQe1RvL0EGyiFsJDvd9bakNXgReaIGajFHBBanz5GYIdllBr6ik2IMidltlhScWonQAbG3GRV2Jdgh9WalA+d5RMaZIi5OzBFyWvSsYIFN6fpH2JQxFI1wUEZ3Nqn19FcYqeN7sC6h0mZo0+ugOmLyyDn22k5YeIxttxG2AIJTuqVMPeMzLtQ7ND/O0CMT4ovi0NjNosOGthXaXjNP/kKyOFJeWnwWnWBRQ31+r+TMeLU2YFPrnxZBV3kipGb35E49nkDbirc0fjkeFI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <338E0FC799BFDC42AFD75D748BE872A0@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WmpEF3wAK9MyQIycfqRtOyPcqi5ldyWuyIoAHJsmiPk=;
+        b=ocSI4ZH0PyYIM68bnC8T89tdDC4qku8Q6bns0IbSeRi1ZgVm3N/GxGxVS9OvbcFBTz
+         oN7uSgt2lKmq43lzIsDXJYDBJAwxxzPHxYg2X68/7Y4M6QFcG5OpgmJQJcIwmCwq8Pbn
+         X4yNeIg2evOKg9vwfUFM8w8zPvrBzqIsA/CLeb0RYbFvC5tedw0VnpZ+y5W8cdkQvVQB
+         B4qW9aI40iuWv9mIQka7e5M7rF5xN9BydSf+BcZtfkZ1XkUzYMg7gRBGOk5N+mR+G7fn
+         Tvq7pFmLlgjBzYZ7VZb3Jn4W762go9m09GdcVOeNhbmfyH3c/Bf1FddziFKl6cFlCC8U
+         bv2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WmpEF3wAK9MyQIycfqRtOyPcqi5ldyWuyIoAHJsmiPk=;
+        b=B118zAt6ee3ByheGglFCQFbj2Xt4fxe5R39ch0iEdosW+o9uQKamvBEzRMOdzxkCD4
+         mmNqhz9O+rN2cDIaImPrYjZHi60E10nBS70JYHStNzBVmUPyeq2841qmcFuo2IxafQOL
+         0ZpghNhPn5xc+6BQeYsA5HBbJnFWgniLKSxD1DLItUxRw8Aser2VmbpFp78ZdVsYSz31
+         o0QzU+4cEZ+ReAmYyzE0Tj+pbqbNmT87uX8279OH5TDovnW2GACsE6li2WbeCvhYihuw
+         ycOe5igpGddAUzTk4/pBq0dyt9CdyyeJMzAc2xD4Q9RLbgX/cnitXmdtmUctnY8FcR/R
+         bl4g==
+X-Gm-Message-State: AOAM531vHAB0CwI96Ct62axw3bgjBUqS+AohNR3ZbBOwynDNtfapAkht
+        0QX8bHC16N5FSMQQACMWnWY=
+X-Google-Smtp-Source: ABdhPJyX2JfGZsL+cpAXob0aVplIVs631ETGzU1KEWsj2v12UjMXeteDcjRnFvXcYr5gn4WVKyOiOQ==
+X-Received: by 2002:a1c:49c6:: with SMTP id w189mr2301255wma.97.1595518946327;
+        Thu, 23 Jul 2020 08:42:26 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id d18sm4238353wrj.8.2020.07.23.08.42.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 08:42:25 -0700 (PDT)
+Subject: Re: [v7, PATCH 5/7] arm64: dts: add display nodes for mt8183
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1595469798-3824-6-git-send-email-yongqiang.niu@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <a8a7232c-6c2b-b606-2091-da540e5cb79e@gmail.com>
+Date:   Thu, 23 Jul 2020 17:42:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR18MB2267.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e79c19df-e3d8-498d-7320-08d82f1ee89f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 15:41:46.9554
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jx9bP8LAi3qyDGr44VzjNGvzZx/rtvbgcyx8VYOycXT/yt1YPOjNsebcai2WVI0cr/W4nA18Nto8Q4+78Kzf+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR18MB0927
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_08:2020-07-23,2020-07-23 signatures=0
+In-Reply-To: <1595469798-3824-6-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUaHUsIDIwMjAtMDctMjMgYXQgMTY6MjkgKzAyMDAsIFBldGVyIFppamxzdHJhIHdyb3Rl
-Og0KPiAuDQo+IA0KPiBUaGlzLi4gYXMgcHJlc2VudGVkIGl0IGlzIGFuIGFic29sdXRlbHkgdW5y
-ZXZpZXdhYmxlIHBpbGUgb2YganVuay4gSXQNCj4gcHJlc2VudHMgY29kZSB3aXRvdXQgYW55IGNv
-aGVyZW50IHByb2JsZW0gZGVzY3JpcHRpb24gYW5kIGFuYWx5c2lzLg0KPiBBbmQNCj4gdGhlIHBh
-dGNoZXMgYXJlIG5vdCBzcGxpdCBzYW5lbHkgZWl0aGVyLg0KDQpUaGVyZSBpcyBhIG1vcmUgY29t
-cGxldGUgYW5kIHNsaWdodGx5IG91dGRhdGVkIGRlc2NyaXB0aW9uIGluIHRoZQ0KcHJldmlvdXMg
-dmVyc2lvbiBvZiB0aGUgcGF0Y2ggYXQgDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzA3
-YzI1YzI0NmM1NTAxMjk4MWVjMDI5NmVlZTIzZTY4YzcxOTMzM2EuY2FtZWxAbWFydmVsbC5jb20v
-DQogLg0KDQpJdCBhbGxvd3MgdXNlcnNwYWNlIGFwcGxpY2F0aW9uIHRvIHRha2UgYSBDUFUgY29y
-ZSBmb3IgaXRzZWxmIGFuZCBydW4NCmNvbXBsZXRlbHkgaXNvbGF0ZWQsIHdpdGggbm8gZGlzdHVy
-YmFuY2VzLiBUaGVyZSBpcyB3b3JrIGluIHByb2dyZXNzDQp0aGF0IGFsc28gZGlzYWJsZXMgYW5k
-IHJlLWVuYWJsZXMgVExCIGZsdXNoZXMsIGFuZCBkZXBlbmRpbmcgb24gQ1BVIGl0DQptYXkgYmUg
-cG9zc2libGUgdG8gYWxzbyBwcmUtYWxsb2NhdGUgY2FjaGUsIHNvIGl0IHdvdWxkIG5vdCBiZSBh
-ZmZlY3RlZA0KYnkgdGhlIHJlc3Qgb2YgdGhlIHN5c3RlbS4gRXZlbnRzIHRoYXQgY2F1c2UgaW50
-ZXJhY3Rpb24gd2l0aCBpc29sYXRlZA0KdGFzaywgY2F1c2UgaXNvbGF0aW9uIGJyZWFraW5nLCB0
-dXJuaW5nIHRoZSB0YXNrIGludG8gYSByZWd1bGFyDQp1c2Vyc3BhY2UgdGFzayB0aGF0IGNhbiBj
-b250aW51ZSBydW5uaW5nIG5vcm1hbGx5IGFuZCBlbnRlciBpc29sYXRlZA0Kc3RhdGUgYWdhaW4g
-aWYgbmVjZXNzYXJ5Lg0KDQpUbyBtYWtlIHRoaXMgZmVhdHVyZSBzdWl0YWJsZSBmb3IgYW55IHBy
-YWN0aWNhbCB1c2UsIG1hbnkgbWVjaGFuaXNtcw0KdGhhdCBub3JtYWxseSB3b3VsZCBjYXVzZSBl
-dmVudHMgb24gYSBDUFUsIHNob3VsZCBleGNsdWRlIENQVSBjb3JlcyBpbg0KdGhpcyBzdGF0ZSwg
-YW5kIHN5bmNocm9uaXphdGlvbiBzaG91bGQgaGFwcGVuIGxhdGVyLCBhdCB0aGUgdGltZSBvZg0K
-aXNvbGF0aW9uIGJyZWFraW5nLg0KDQpUaGVyZSBhcmUgdGhyZWUgYXJjaGl0ZWN0dXJlcyBzdXBw
-b3J0ZWQsIHg4NiwgYXJtIGFuZCBhcm02NCwgYW5kIGl0DQpzaG91bGQgYmUgcG9zc2libGUgdG8g
-ZXh0ZW5kIGl0IHRvIG90aGVycy4gVW5mb3J0dW5hdGVseSBrZXJuZWwgZW50cnkNCnByb2NlZHVy
-ZXMgYXJlIG5laXRoZXIgdW5pZmllZCwgbm9yIHN0cmFpZ2h0Zm9yd2FyZCwgc28gaW50cm9kdWNp
-bmcgbmV3DQpmZWF0dXJlIHRvIHRoZW0gY2F1c2VzIGFuIGFwcGVhcmFuY2Ugb2YgYSBtZXNzLg0K
-DQotLSANCkFsZXgNCg==
+
+
+On 23/07/2020 04:03, Yongqiang Niu wrote:
+> This patch add display nodes for mt8183
+> 
+
+In comparison, DTS patches should go last in a series as you will need the 
+driver patches to make it work.
+
+Regards,
+Matthias
+
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8183.dtsi | 98 ++++++++++++++++++++++++++++++++
+>   1 file changed, 98 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 7b781eb..440cf22 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -31,6 +31,11 @@
+>   		i2c9 = &i2c9;
+>   		i2c10 = &i2c10;
+>   		i2c11 = &i2c11;
+> +		ovl0 = &ovl0;
+> +		ovl_2l0 = &ovl_2l0;
+> +		ovl_2l1 = &ovl_2l1;
+> +		rdma0 = &rdma0;
+> +		rdma1 = &rdma1;
+>   	};
+>   
+>   	cpus {
+> @@ -707,9 +712,102 @@
+>   		mmsys: syscon@14000000 {
+>   			compatible = "mediatek,mt8183-mmsys", "syscon";
+>   			reg = <0 0x14000000 0 0x1000>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+>   			#clock-cells = <1>;
+>   		};
+>   
+> +		ovl0: ovl@14008000 {
+> +			compatible = "mediatek,mt8183-disp-ovl";
+> +			reg = <0 0x14008000 0 0x1000>;
+> +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_OVL0>;
+> +		};
+> +
+> +		ovl_2l0: ovl@14009000 {
+> +			compatible = "mediatek,mt8183-disp-ovl-2l";
+> +			reg = <0 0x14009000 0 0x1000>;
+> +			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_OVL0_2L>;
+> +		};
+> +
+> +		ovl_2l1: ovl@1400a000 {
+> +			compatible = "mediatek,mt8183-disp-ovl-2l";
+> +			reg = <0 0x1400a000 0 0x1000>;
+> +			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_OVL1_2L>;
+> +		};
+> +
+> +		rdma0: rdma@1400b000 {
+> +			compatible = "mediatek,mt8183-disp-rdma";
+> +			reg = <0 0x1400b000 0 0x1000>;
+> +			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
+> +			mediatek,rdma_fifo_size = <5120>;
+> +		};
+> +
+> +		rdma1: rdma@1400c000 {
+> +			compatible = "mediatek,mt8183-disp-rdma";
+> +			reg = <0 0x1400c000 0 0x1000>;
+> +			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
+> +			mediatek,rdma_fifo_size = <2048>;
+> +		};
+> +
+> +		color0: color@1400e000 {
+> +			compatible = "mediatek,mt8183-disp-color",
+> +				     "mediatek,mt8173-disp-color";
+> +			reg = <0 0x1400e000 0 0x1000>;
+> +			interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
+> +		};
+> +
+> +		ccorr0: ccorr@1400f000 {
+> +			compatible = "mediatek,mt8183-disp-ccorr";
+> +			reg = <0 0x1400f000 0 0x1000>;
+> +			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_CCORR0>;
+> +		};
+> +
+> +		aal0: aal@14010000 {
+> +			compatible = "mediatek,mt8183-disp-aal",
+> +				     "mediatek,mt8173-disp-aal";
+> +			reg = <0 0x14010000 0 0x1000>;
+> +			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_AAL0>;
+> +		};
+> +
+> +		gamma0: gamma@14011000 {
+> +			compatible = "mediatek,mt8183-disp-gamma",
+> +				     "mediatek,mt8173-disp-gamma";
+> +			reg = <0 0x14011000 0 0x1000>;
+> +			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_GAMMA0>;
+> +		};
+> +
+> +		dither0: dither@14012000 {
+> +			compatible = "mediatek,mt8183-disp-dither";
+> +			reg = <0 0x14012000 0 0x1000>;
+> +			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +			clocks = <&mmsys CLK_MM_DISP_DITHER0>;
+> +		};
+> +
+> +		mutex: mutex@14016000 {
+> +			compatible = "mediatek,mt8183-disp-mutex";
+> +			reg = <0 0x14016000 0 0x1000>;
+> +			interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_LOW>;
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +		};
+> +
+>   		smi_common: smi@14019000 {
+>   			compatible = "mediatek,mt8183-smi-common", "syscon";
+>   			reg = <0 0x14019000 0 0x1000>;
+> 
