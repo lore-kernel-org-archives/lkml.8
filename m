@@ -2,160 +2,125 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD70BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11A52067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B012065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkkFB+Fm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgGWT0w (ORCPT
+        id S1726178AbgGWTf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:26:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726666AbgGWT0w (ORCPT
+        Thu, 23 Jul 2020 15:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWTf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:26:52 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NJGGOk047201;
-        Thu, 23 Jul 2020 15:26:50 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32fadfc2cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 15:26:50 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NJQmA5001297;
-        Thu, 23 Jul 2020 19:26:48 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7wrgj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 19:26:48 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NJPLca64225548
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 19:25:21 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A24CEAE051;
-        Thu, 23 Jul 2020 19:26:45 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53C44AE04D;
-        Thu, 23 Jul 2020 19:26:45 +0000 (GMT)
-Received: from osiris (unknown [9.171.43.182])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 23 Jul 2020 19:26:45 +0000 (GMT)
-Date:   Thu, 23 Jul 2020 21:26:43 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.8-rc7
-Message-ID: <20200723192643.GA7038@osiris>
+        Thu, 23 Jul 2020 15:35:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9040C0619DC;
+        Thu, 23 Jul 2020 12:35:26 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so3675654pgb.6;
+        Thu, 23 Jul 2020 12:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EriDlxJbLUx9YWDVqlIDiRYGXreOTYLExqGTTF3O8SI=;
+        b=gkkFB+Fmhaiipy43B1F7PJbZguA/fY2N72/IseI2ow3Se2ao9ZkXgtmz0NXUL3PKuE
+         KN9xvFLjqjNEFzeMwzHC0NM4kzMjnwmRTwbERHnXCbYtNrkjBLP4Vh/nyqO8A3n+4jTB
+         KagJzQDpOvnYc5JTiAAQNi5Sx6QDxIDfUWk2l8f2tRRGGwtwoPbpSbmXx7WwR4UCds1q
+         hQJ2v91Os5x7shbbpcJ7hi7SrvOowZSvPnZzYFIcRvzbHeEfFyNYuzHx/YCjFLjdZqZk
+         oSZHGli6NNrLQ/LNi4ilGxJgNA3mN+exRZAzUWMX9HokzE1+zVGL1nh1PYnT62EXyfGc
+         0ZMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EriDlxJbLUx9YWDVqlIDiRYGXreOTYLExqGTTF3O8SI=;
+        b=DBtu51mvlEAn3FQanO3cAsr76c1orz8xGdtwvJ3gTgdBhcQcu1XctNqhP77+kVSSCK
+         ckvLJshQ0AT8wlLhZMWWwTATNZeN+iGmbwHbotveo6+lcYZOkQPiYLNpmaI8xXTMZjXF
+         pJ3HwuG7ufoiVKKvFv+y7Jv+9CRqruKxhUmtR2klJC0JVqOrOeASnyFCEC2IY7hzvlS8
+         8bPabP4lzf4vxEQPi0Mvjy301OGJJE3pE2PCa9GtH8bnPU5AaMpw6tqhgjN8uE21MFgv
+         K2EpU71nTbxecAnZ5N/zmebL9tTqKVFicDwryJeIgRBOCHKyBV+wW+P+hqdDdhJHdYL5
+         c1YA==
+X-Gm-Message-State: AOAM533CJiEtzdlkSSqp4VySfT7pr4PawuHOdkuVwehejGNOYBrIBKJm
+        +RyvU10zVQC0V78qgjKvDeE=
+X-Google-Smtp-Source: ABdhPJwj9YlYDUE6feFrSgms/8G69BVK00Z4/Lm7wRgtAERUbjbbweYgGphlNhrDYp609GVkimpqUw==
+X-Received: by 2002:a62:1646:: with SMTP id 67mr5464187pfw.281.1595532926516;
+        Thu, 23 Jul 2020 12:35:26 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id m20sm3835140pgn.62.2020.07.23.12.35.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 12:35:25 -0700 (PDT)
+Subject: Re: [PATCH] netlink: add buffer boundary checking
+To:     Mark Salyzyn <salyzyn@android.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Thomas Graf <tgraf@suug.ch>
+References: <20200723182136.2550163-1-salyzyn@android.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <09cd1829-8e41-bef5-ba5e-1c446c166778@gmail.com>
+Date:   Thu, 23 Jul 2020 12:35:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 suspectscore=2 mlxscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0 clxscore=1015
- mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007230133
+In-Reply-To: <20200723182136.2550163-1-salyzyn@android.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
 
-please pull s390 updates for 5.8-rc7.
 
-Thanks,
-Heiko
+On 7/23/20 11:21 AM, Mark Salyzyn wrote:
+> Many of the nla_get_* inlines fail to check attribute's length before
+> copying the content resulting in possible out-of-boundary accesses.
+> Adjust the inlines to perform nla_len checking, for the most part
+> using the nla_memcpy function to faciliate since these are not
+> necessarily performance critical and do not need a likely fast path.
+> 
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@android.com
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Thomas Graf <tgraf@suug.ch>
+> Fixes: bfa83a9e03cf ("[NETLINK]: Type-safe netlink messages/attributes interface")
+> ---
+>  include/net/netlink.h | 66 +++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 54 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/net/netlink.h b/include/net/netlink.h
+> index c0411f14fb53..11c0f153be7c 100644
+> --- a/include/net/netlink.h
+> +++ b/include/net/netlink.h
+> @@ -1538,7 +1538,11 @@ static inline int nla_put_bitfield32(struct sk_buff *skb, int attrtype,
+>   */
+>  static inline u32 nla_get_u32(const struct nlattr *nla)
+>  {
+> -	return *(u32 *) nla_data(nla);
+> +	u32 tmp;
+> +
+> +	nla_memcpy(&tmp, nla, sizeof(tmp));
+> +
+> +	return tmp;
 
-The following changes since commit ba47d845d715a010f7b51f6f89bae32845e6acb7:
+I believe this will hide bugs, that syzbot was able to catch.
 
-  Linux 5.8-rc6 (2020-07-19 15:41:18 -0700)
+Instead, you could perhaps introduce a CONFIG_DEBUG_NETLINK option,
+and add a WARN_ON_ONCE(nla_len(nla) < sizeof(u32)) so that we can detect bugs in callers.
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-6
-
-for you to fetch changes up to 0cfa112b33aba4473b00151c75b87818a835702a:
-
-  MAINTAINERS: add Matthew for s390 IOMMU (2020-07-22 17:01:23 +0200)
-
-----------------------------------------------------------------
-- Change cpum_cf/perf counter name from DFLT_CCERROR to DFLT_CCFINISH
-  to reflect reality and avoid further confusion. This is a user space
-  visible change therefore the commit has also a stable tag for 5.7,
-  where this counter was introduced.
-
-- Add Matthew Rosato as s390 IOMMU maintainer.
-
-----------------------------------------------------------------
-Gerald Schaefer (1):
-      MAINTAINERS: add Matthew for s390 IOMMU
-
-Thomas Richter (1):
-      s390/cpum_cf,perf: change DFLT_CCERROR counter name
-
- MAINTAINERS                                          | 1 +
- arch/s390/kernel/perf_cpum_cf_events.c               | 4 ++--
- tools/perf/pmu-events/arch/s390/cf_z15/extended.json | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d53db30d1365..df5fc5625ec8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14862,6 +14862,7 @@ F:	drivers/s390/block/dasd*
- F:	include/linux/dasd_mod.h
- 
- S390 IOMMU (PCI)
-+M:	Matthew Rosato <mjrosato@linux.ibm.com>
- M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
-diff --git a/arch/s390/kernel/perf_cpum_cf_events.c b/arch/s390/kernel/perf_cpum_cf_events.c
-index 1e3df52b2b65..37265f551a11 100644
---- a/arch/s390/kernel/perf_cpum_cf_events.c
-+++ b/arch/s390/kernel/perf_cpum_cf_events.c
-@@ -292,7 +292,7 @@ CPUMF_EVENT_ATTR(cf_z15, TX_C_TABORT_SPECIAL, 0x00f5);
- CPUMF_EVENT_ATTR(cf_z15, DFLT_ACCESS, 0x00f7);
- CPUMF_EVENT_ATTR(cf_z15, DFLT_CYCLES, 0x00fc);
- CPUMF_EVENT_ATTR(cf_z15, DFLT_CC, 0x00108);
--CPUMF_EVENT_ATTR(cf_z15, DFLT_CCERROR, 0x00109);
-+CPUMF_EVENT_ATTR(cf_z15, DFLT_CCFINISH, 0x00109);
- CPUMF_EVENT_ATTR(cf_z15, MT_DIAG_CYCLES_ONE_THR_ACTIVE, 0x01c0);
- CPUMF_EVENT_ATTR(cf_z15, MT_DIAG_CYCLES_TWO_THR_ACTIVE, 0x01c1);
- 
-@@ -629,7 +629,7 @@ static struct attribute *cpumcf_z15_pmu_event_attr[] __initdata = {
- 	CPUMF_EVENT_PTR(cf_z15, DFLT_ACCESS),
- 	CPUMF_EVENT_PTR(cf_z15, DFLT_CYCLES),
- 	CPUMF_EVENT_PTR(cf_z15, DFLT_CC),
--	CPUMF_EVENT_PTR(cf_z15, DFLT_CCERROR),
-+	CPUMF_EVENT_PTR(cf_z15, DFLT_CCFINISH),
- 	CPUMF_EVENT_PTR(cf_z15, MT_DIAG_CYCLES_ONE_THR_ACTIVE),
- 	CPUMF_EVENT_PTR(cf_z15, MT_DIAG_CYCLES_TWO_THR_ACTIVE),
- 	NULL,
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
-index 2df2e231e9ee..24c4ba2a9ae5 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
-@@ -380,7 +380,7 @@
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "265",
--		"EventName": "DFLT_CCERROR",
-+		"EventName": "DFLT_CCFINISH",
- 		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2",
- 		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2"
- 	},
