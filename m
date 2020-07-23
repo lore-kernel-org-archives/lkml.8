@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668CBC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6933DC433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4037220737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485262071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKJuJgi3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNsqvlR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgGWXFy (ORCPT
+        id S1728122AbgGWXF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
+        Thu, 23 Jul 2020 19:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgGWXFv (ORCPT
+        with ESMTP id S1726818AbgGWXFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:05:51 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B918C0619D3;
-        Thu, 23 Jul 2020 16:05:51 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x72so3933038pfc.6;
-        Thu, 23 Jul 2020 16:05:51 -0700 (PDT)
+        Thu, 23 Jul 2020 19:05:52 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8FFAC0619D3;
+        Thu, 23 Jul 2020 16:05:52 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g67so4066019pgc.8;
+        Thu, 23 Jul 2020 16:05:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Zf3sEMsL0DPGCRUnLMz+Lz6K06ydPn+rQ+/2py+7OzE=;
-        b=oKJuJgi3jXl0gFItYfYerp5IuxM+KnI/XCd+fqR7+VKJwnwOZTDB3UxG9XC0UQsCey
-         aDPdu2Tb4JXmd/J3I3KcbxapdceIy8bznltwlbQ8vZwa9+AmhyO1CmAUB725E4bM+ONW
-         N35jTF8ny1KZpsWHE9VhjuTaL8xYOqD89qq8JhTpL7zr0v8iks0nyKknj1CGvux++7KH
-         Yidx/P7DfYyVOHv75uZniLyB3n8qhOKGM+QbYGd14sPARZXev81Aor5ml30g/SoWG/Po
-         N7VZlNg+8snGhUFW4i1OCn66fvIe7Kg4UGMo7Ox7uCWzukia7dSWj7ifSpIh1GmuPLRc
-         Q55g==
+        bh=lVepU+ZwtLg61EekGifFvcWIHx8/75YvPPQTkYbwJr8=;
+        b=NNsqvlR3R/ebOXczP2pa2IDEyMN0WNJyDr9UhwB/4qENFd+cLas/Dgp5yds2vqV8w5
+         8wZrsTnhFfLyN40fhTbzZrb/1NCwNjK67Dvh5cWniM/F8I6u9MwtScNx3mBjcJ5G1/mP
+         tgWTMtKnfVcIm6opPG/3h0K/16DXVJ3KaN2fHxs9VMRbDCHoEVztRo1pinCryuZtXw+R
+         kpPuvWQH71NWFAkLdvsbfVB4E9DxT0NpohOQeNq7ssE7Yu2upjLR55OR9Vxh0dEFxgwk
+         6EWQayW6LYAy53OcOTl3SYnZUkjO0qj7uq3KzdLkr90Aa8A0KabDJp4ZnuUaobeHtI9m
+         2Cig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Zf3sEMsL0DPGCRUnLMz+Lz6K06ydPn+rQ+/2py+7OzE=;
-        b=XXZt/2YzoyE4slaTWi/d8WEpzqVcnpJ7Vgi4fJlevv+v6z20ht+mz67dt/w9D88xsM
-         O1jTjafKFBTpa7eBhBRr0JXhoqzJh1+6LVo1VRFdH66Iq8YAznyE5uU+jD3qRu15+VUv
-         UhtXLwyyp1x7277KYagoQ2GZXSA/fh8Xbo6V3wEha9f4PFSAPbm/g15DGahCOcBCjPG0
-         YkVbqrXFUhTnwwF8lnSrzHi7OvH6GtcowOucXBCSXDwkwQ7GQjyBanMm2zXQ/DZGGArg
-         sdQ5lYBot5h3Ug0Oqzz4XorPifgLlggS+B3Afxv9osOo80/lGY62gt2JhQPP1FNZZxDh
-         h+kA==
-X-Gm-Message-State: AOAM5329Z6UPbGDrR32x5s8Wy3Sb94y1qOx81mm6LpdvyUA1QJXFMa5C
-        mFc9IZb0wTubBWu5SwFG+qc=
-X-Google-Smtp-Source: ABdhPJzSr/qRS6pTZToh9J+O+BKWXJaU9VYurAj++Srk/ErDDZN8/HehZ/qFCw5K6+UHcK0Q1jzQfQ==
-X-Received: by 2002:a05:6a00:782:: with SMTP id g2mr6316942pfu.126.1595545550863;
-        Thu, 23 Jul 2020 16:05:50 -0700 (PDT)
+        bh=lVepU+ZwtLg61EekGifFvcWIHx8/75YvPPQTkYbwJr8=;
+        b=CJDs/vRzFuhnafCAsxugYaQDnxR2jpWxLaLuJGUJdyp0tbnH+9TnkEj13wvlIugDQ9
+         E9hKBVwTholE3VyJkNPmp9NeKCoafXPITRn1a0EBdOKMqso5CdMsdj18vGXbVUP0Cz0e
+         427pKtJVNmdjHxuUe5aVshoNJPtbyMT7tmF4Sr5kBCeBIDvP7d9mgyxQcLG5+/Jd6s3E
+         EgGdxq3/rFa606GccCENoKM39t3Laitw4aGax5n5iItNEQThTEG/aXxC1ggZpQpt6W/x
+         ltu0FFr0teDP6rd1Ob19xBqdJWAsDbQcnFKh4XUhKFCiIEDgxph623+iZ2XgQtxMSWQQ
+         1scA==
+X-Gm-Message-State: AOAM532UWyPZxAU7ST9SDA7l9Yl7vh5924kH5CMGnY7w4b/kq/caFrLI
+        kKI3J/RlWPO77bG8QdHbh8o=
+X-Google-Smtp-Source: ABdhPJx4kMBNnslf9Qu63+wKCjksfkfXgOJnn1caCxGQDWIOybaTSq5CmdnP2Xv5ovGfX7C2Gd/ucg==
+X-Received: by 2002:a62:3246:: with SMTP id y67mr5914578pfy.131.1595545552160;
+        Thu, 23 Jul 2020 16:05:52 -0700 (PDT)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id gn5sm3644742pjb.23.2020.07.23.16.05.49
+        by smtp.gmail.com with ESMTPSA id gn5sm3644742pjb.23.2020.07.23.16.05.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 16:05:50 -0700 (PDT)
+        Thu, 23 Jul 2020 16:05:51 -0700 (PDT)
 From:   rentao.bupt@gmail.com
 To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
         Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         openbmc@lists.ozlabs.org, taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 2/3] ARM: dts: aspeed: wedge40: enable adc device
-Date:   Thu, 23 Jul 2020 16:05:38 -0700
-Message-Id: <20200723230539.17860-3-rentao.bupt@gmail.com>
+Subject: [PATCH v2 3/3] ARM: dts: aspeed: wedge40: enable pwm_tacho device
+Date:   Thu, 23 Jul 2020 16:05:39 -0700
+Message-Id: <20200723230539.17860-4-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200723230539.17860-1-rentao.bupt@gmail.com>
 References: <20200723230539.17860-1-rentao.bupt@gmail.com>
@@ -79,8 +79,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Enable adc controller and corresponding voltage sensoring channels for
-Wedge40.
+Enable pwm_tacho device for fan control and monitoring in Wedge40.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 ---
@@ -88,32 +87,45 @@ Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
    - Nothing changed. Resending the patch just in case the previous
      email was not delivered.
 
- arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
-index aea23c313088..1049cfa80ac2 100644
+index 1049cfa80ac2..8ac23ff6b09e 100644
 --- a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
 +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
-@@ -27,6 +27,11 @@
- 	memory@40000000 {
- 		reg = <0x40000000 0x20000000>;
- 	};
-+
-+	ast-adc-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 5>, <&adc 6>, <&adc 7>, <&adc 8>, <&adc 9>;
-+	};
- };
- 
- &wdt1 {
-@@ -126,3 +131,7 @@
- &vhub {
+@@ -135,3 +135,32 @@
+ &adc {
  	status = "okay";
  };
 +
-+&adc {
++&pwm_tacho {
 +	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default
++		     &pinctrl_pwm1_default
++		     &pinctrl_pwm6_default
++		     &pinctrl_pwm7_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00 0x01>;
++	};
++
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02 0x03>;
++	};
++
++	fan@6 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04 0x05>;
++	};
++
++	fan@7 {
++		reg = <0x07>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06 0x07>;
++	};
 +};
 -- 
 2.17.1
