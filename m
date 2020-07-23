@@ -2,72 +2,167 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74D0C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB32120714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CCF20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgGWQok (ORCPT
+        id S1729885AbgGWQkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:44:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:60887 "EHLO verein.lst.de"
+        Thu, 23 Jul 2020 12:40:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:13808 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgGWQoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:44:38 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8C74368AFE; Thu, 23 Jul 2020 18:44:32 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 18:44:32 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 04/26] net: add a new sockptr_t type
-Message-ID: <20200723164432.GA20917@lst.de>
-References: <20200723060908.50081-1-hch@lst.de> <20200723060908.50081-5-hch@lst.de> <CANn89iJ3LKth-iWwh0+P3D3RqtDNv4AyXkkzhXr0oSEvE_JoRQ@mail.gmail.com>
+        id S1726761AbgGWQkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:40:01 -0400
+IronPort-SDR: Ps6lxktqZPzDG6aOhdjcaafItVwSOONYr5McH+7oR+KDCLfdeBEBavuLPpe+g+xJ/P99HAneEN
+ egw0JG2dSxwg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148064756"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="148064756"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:40:01 -0700
+IronPort-SDR: 5GmwT65orXDGe/5uyfIvoLiiaO+4SJDsyX02gvYQXFqHlM1JMTR5mSOVsf/Os6ZLLSLCAm4TV6
+ 06oammawXIOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="432797443"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jul 2020 09:39:59 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH v4 06/10] net: eth: altera: Add missing identifier names
+ to function declarations
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
+ <20200708072401.169150-7-joyce.ooi@intel.com>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <74536ddf-f268-937a-8d06-f91cbc0879d6@linux.intel.com>
+Date:   Thu, 23 Jul 2020 11:40:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89iJ3LKth-iWwh0+P3D3RqtDNv4AyXkkzhXr0oSEvE_JoRQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200708072401.169150-7-joyce.ooi@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 09:40:27AM -0700, Eric Dumazet wrote:
-> I am not sure why you chose sockptr_t   for something that really seems generic.
+On 7/8/20 2:23 AM, Ooi, Joyce wrote:
+> From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 > 
-> Or is it really meant to be exclusive to setsockopt() and/or getsockopt() ?
+> The sgdma and msgdma header files included function declarations
+> without identifier names for pointers.  Add appropriate identifier
+> names.
 > 
-> If the first user of this had been futex code, we would have used
-> futexptr_t, I guess.
-
-It was originally intended to be generic and called uptr_t, based
-on me misunderstanding that Linus wanted a file operation for it,
-which he absolutely didn't and hate with passion.  So the plan is to
-only use it for setsockopt for now, although there are some arguments
-for also using it in sendmsg/recvmsg.  There is no need to use it for
-getsockopt.
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> ---
+> v2: this patch is added in patch version 2
+> v3: no change
+> v4: no change
+> ---
+>   drivers/net/ethernet/altera/altera_msgdma.h | 30 ++++++++++++++-------------
+>   drivers/net/ethernet/altera/altera_sgdma.h  | 32 +++++++++++++++--------------
+>   2 files changed, 33 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/altera/altera_msgdma.h b/drivers/net/ethernet/altera/altera_msgdma.h
+> index 9813fbfff4d3..23f5b2a13898 100644
+> --- a/drivers/net/ethernet/altera/altera_msgdma.h
+> +++ b/drivers/net/ethernet/altera/altera_msgdma.h
+> @@ -6,19 +6,21 @@
+>   #ifndef __ALTERA_MSGDMA_H__
+>   #define __ALTERA_MSGDMA_H__
+>   
+> -void msgdma_reset(struct altera_tse_private *);
+> -void msgdma_enable_txirq(struct altera_tse_private *);
+> -void msgdma_enable_rxirq(struct altera_tse_private *);
+> -void msgdma_disable_rxirq(struct altera_tse_private *);
+> -void msgdma_disable_txirq(struct altera_tse_private *);
+> -void msgdma_clear_rxirq(struct altera_tse_private *);
+> -void msgdma_clear_txirq(struct altera_tse_private *);
+> -u32 msgdma_tx_completions(struct altera_tse_private *);
+> -void msgdma_add_rx_desc(struct altera_tse_private *, struct tse_buffer *);
+> -int msgdma_tx_buffer(struct altera_tse_private *, struct tse_buffer *);
+> -u32 msgdma_rx_status(struct altera_tse_private *);
+> -int msgdma_initialize(struct altera_tse_private *);
+> -void msgdma_uninitialize(struct altera_tse_private *);
+> -void msgdma_start_rxdma(struct altera_tse_private *);
+> +void msgdma_reset(struct altera_tse_private *priv);
+> +void msgdma_enable_txirq(struct altera_tse_private *priv);
+> +void msgdma_enable_rxirq(struct altera_tse_private *priv);
+> +void msgdma_disable_rxirq(struct altera_tse_private *priv);
+> +void msgdma_disable_txirq(struct altera_tse_private *priv);
+> +void msgdma_clear_rxirq(struct altera_tse_private *priv);
+> +void msgdma_clear_txirq(struct altera_tse_private *priv);
+> +u32 msgdma_tx_completions(struct altera_tse_private *priv);
+> +void msgdma_add_rx_desc(struct altera_tse_private *priv,
+> +			struct tse_buffer *buffer);
+> +int msgdma_tx_buffer(struct altera_tse_private *priv,
+> +		     struct tse_buffer *buffer);
+> +u32 msgdma_rx_status(struct altera_tse_private *priv);
+> +int msgdma_initialize(struct altera_tse_private *priv);
+> +void msgdma_uninitialize(struct altera_tse_private *priv);
+> +void msgdma_start_rxdma(struct altera_tse_private *priv);
+>   
+>   #endif /*  __ALTERA_MSGDMA_H__ */
+> diff --git a/drivers/net/ethernet/altera/altera_sgdma.h b/drivers/net/ethernet/altera/altera_sgdma.h
+> index 08afe1c9994f..3fb201417820 100644
+> --- a/drivers/net/ethernet/altera/altera_sgdma.h
+> +++ b/drivers/net/ethernet/altera/altera_sgdma.h
+> @@ -6,20 +6,22 @@
+>   #ifndef __ALTERA_SGDMA_H__
+>   #define __ALTERA_SGDMA_H__
+>   
+> -void sgdma_reset(struct altera_tse_private *);
+> -void sgdma_enable_txirq(struct altera_tse_private *);
+> -void sgdma_enable_rxirq(struct altera_tse_private *);
+> -void sgdma_disable_rxirq(struct altera_tse_private *);
+> -void sgdma_disable_txirq(struct altera_tse_private *);
+> -void sgdma_clear_rxirq(struct altera_tse_private *);
+> -void sgdma_clear_txirq(struct altera_tse_private *);
+> -int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *);
+> -u32 sgdma_tx_completions(struct altera_tse_private *);
+> -void sgdma_add_rx_desc(struct altera_tse_private *priv, struct tse_buffer *);
+> -void sgdma_status(struct altera_tse_private *);
+> -u32 sgdma_rx_status(struct altera_tse_private *);
+> -int sgdma_initialize(struct altera_tse_private *);
+> -void sgdma_uninitialize(struct altera_tse_private *);
+> -void sgdma_start_rxdma(struct altera_tse_private *);
+> +void sgdma_reset(struct altera_tse_private *priv);
+> +void sgdma_enable_txirq(struct altera_tse_private *priv);
+> +void sgdma_enable_rxirq(struct altera_tse_private *priv);
+> +void sgdma_disable_rxirq(struct altera_tse_private *priv);
+> +void sgdma_disable_txirq(struct altera_tse_private *priv);
+> +void sgdma_clear_rxirq(struct altera_tse_private *priv);
+> +void sgdma_clear_txirq(struct altera_tse_private *priv);
+> +int sgdma_tx_buffer(struct altera_tse_private *priv,
+> +		    struct tse_buffer *buffer);
+> +u32 sgdma_tx_completions(struct altera_tse_private *priv);
+> +void sgdma_add_rx_desc(struct altera_tse_private *priv,
+> +		       struct tse_buffer *buffer);
+> +void sgdma_status(struct altera_tse_private *priv);
+> +u32 sgdma_rx_status(struct altera_tse_private *priv);
+> +int sgdma_initialize(struct altera_tse_private *priv);
+> +void sgdma_uninitialize(struct altera_tse_private *priv);
+> +void sgdma_start_rxdma(struct altera_tse_private *priv);
+>   
+>   #endif /*  __ALTERA_SGDMA_H__ */
+> 
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
