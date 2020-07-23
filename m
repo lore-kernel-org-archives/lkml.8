@@ -2,148 +2,125 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79895C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E651C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5597820737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75BDE206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQGIGFIa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5Atn+Wl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgGWES0 (ORCPT
+        id S1726021AbgGWEPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 00:18:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37007 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726115AbgGWES0 (ORCPT
+        Thu, 23 Jul 2020 00:15:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGWEP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 00:18:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595477905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wwl4F50oKkswHT9apgjy+aI/48kVRlBCaDpskw3i4WE=;
-        b=MQGIGFIav5djzroqLzt1XT+1rRoYcbfwn1fCytFcbXOjgiy5STlZdZAkMKNZTvG8DNC81h
-        rQf72zuW5nWCdX1cOGMKCw6zoSnZPFZB0C2MmpV/x9CzMpHjB7zGc8vRy1aYIt+HbXqFxC
-        bLSFlEpHDvJo3bvf0sElZaCuR44DdcQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-dBpKknZyOf2oV-LpXVbrVg-1; Thu, 23 Jul 2020 00:18:21 -0400
-X-MC-Unique: dBpKknZyOf2oV-LpXVbrVg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5706106B245;
-        Thu, 23 Jul 2020 04:18:18 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 918D888D41;
-        Thu, 23 Jul 2020 04:18:17 +0000 (UTC)
-Date:   Wed, 22 Jul 2020 22:18:17 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Weitao Wang(BJ-RD)" <WeitaoWang@zhaoxin.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>,
-        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "hslester96@gmail.com" <hslester96@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
-        "efremov@linux.com" <efremov@linux.com>,
-        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
-        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
-        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
-        "wwt8723@163.com" <wwt8723@163.com>
-Subject: Re: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
- vfio-pci
-Message-ID: <20200722221817.542971a2@x1.home>
-In-Reply-To: <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
-References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
-        <20200722124414.GA3153105@kroah.com>
-        <20200722145913.GB1310843@rowland.harvard.edu>
-        <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
-Organization: Red Hat
+        Thu, 23 Jul 2020 00:15:29 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEC9C0619DC;
+        Wed, 22 Jul 2020 21:15:27 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l23so4251985qkk.0;
+        Wed, 22 Jul 2020 21:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KW20rhBVBSG/GA3kSdVk0F7HWn+qvQaEdDjsOp4a1J0=;
+        b=P5Atn+Wlu/TuNhxO3NMCdukgTqLt+JBrLbqJAtk2KYnqs9KyGtbPX646lYVH7fspi7
+         f0KpFIwn0rHQnu1mewOb6pKEc7NSspm4wBCKsnTQ/l+ODPGQA7I9NjXJM7nOQ4jJ0I+B
+         YBHU+Q0Ir7g55cMVZeHfwA1pbI7vQAKJ5M0Iqkq9o2S+wlKjTqzCPLeNiQV0PaXe7oEN
+         4ERQDnPwprD681Z1Hyj3T1e25koJjUT46i4uCT+6rVd0oyzLskCuq0g/PXM2qh6shnND
+         EPK/ICcCcj7Aux3EMk3GK+P9AQR4RiYdmAwVBJPuo4WDuVK7YS1vgHmnC1CTxWTj6ahP
+         W6SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KW20rhBVBSG/GA3kSdVk0F7HWn+qvQaEdDjsOp4a1J0=;
+        b=sPVqKNAVwaj5SidEqQFJbcQiLk8RlAlqz8zwh5tbscuuNOaYD+0TEJLv+h7+KAz6la
+         F0a4RRnXW5Fxv9XuqmEFBmRHKLMV3uyx8xVZe4pGmJi8fKKGOuE6dFX87j6zQlnOJr8A
+         4G8ldiy3aH8gMLWJLbbp9tdEy/WI9kKZ4wcBqxGZzoucmG5WwlBtDTufOQZzGgg5/ckG
+         3+3hqxg+53deA1bOpnfGjbPjUoEKPndanghRpNjnm0ottS86POJzXoweem1rPS0zobgq
+         ny8xSctDwGlWHQh3ibsx51mlsIO/zJPukvTbFB1sbIyBQatQQd+4gAyxyWa4/08lZFOj
+         n3pQ==
+X-Gm-Message-State: AOAM531qXLPFRCRLQzTbr5vjL8l/kT53L/6t5oTnR7lvv+0JCTQkRm97
+        FCeRYtqwf3oG7nYFNJAdDkw=
+X-Google-Smtp-Source: ABdhPJwelgVlZJ/230DMQrEfRCs8dSIaYYAz3DZZHRMyEoiTKhOYK9d9T2s0OmCmd1bPQ06S/l1VHw==
+X-Received: by 2002:a05:620a:1315:: with SMTP id o21mr3400085qkj.227.1595477727009;
+        Wed, 22 Jul 2020 21:15:27 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id o4sm1662852qkm.25.2020.07.22.21.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 21:15:26 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] arm64: vdso32: Fix '--prefix=' value for newer versions of clang
+Date:   Wed, 22 Jul 2020 21:15:10 -0700
+Message-Id: <20200723041509.400450-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.28.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 02:59:55 +0000
-"Weitao Wang(BJ-RD)" <WeitaoWang@zhaoxin.com> wrote:
+Newer versions of clang only look for $(COMPAT_GCC_TOOLCHAIN_DIR)as [1],
+rather than $(COMPAT_GCC_TOOLCHAIN_DIR)$(CROSS_COMPILE_COMPAT)as,
+resulting in the following build error:
 
-> On , Jul 22, 2020 at 02:44:14PM +0200, Alan wrote:
-> > On Wed, Jul 22, 2020 at 02:44:14PM +0200, Greg KH wrote: =20
-> > > On Wed, Jul 22, 2020 at 07:57:48PM +0800, WeitaoWangoc wrote: =20
-> > > > This bug is found in Zhaoxin platform, but it's a commom code bug.
-> > > > Fail sequence:
-> > > > step1: Unbind UHCI controller from native driver;
-> > > > step2: Bind UHCI controller to vfio-pci, which will put UHCI contro=
-ller in one =20
-> > vfio =20
-> > > >        group's device list and set UHCI's dev->driver_data to struc=
-t =20
-> > vfio-pci(for UHCI) =20
-> > >
-> > > Hah, that works?  How do you do that properly?  What code does that? =
-=20
-> >
-> > Yeah, that can't possibly work.  The USB core expects that any host
-> > controller device (or at least, any PCI host controller device) has its
-> > driver_data set to point to a struct usb_hcd.  It doesn't expect a host
-> > controller to be bound to anything other than a host controller driver.
-> >
-> > Things could easily go very wrong here.  For example, suppose at this
-> > point the ehci-hcd driver just happens to bind to the EHCI controller.
-> > When this happens, the EHCI controller hardware takes over all the USB
-> > connections that were routed to the UHCI controller.  How will vfio-pci
-> > deal with that?  Pretty ungracefully, I imagine.
+$ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+CROSS_COMPILE_COMPAT=arm-linux-gnueabi- LLVM=1 O=out/aarch64 distclean \
+defconfig arch/arm64/kernel/vdso32/
+...
+/home/nathan/cbl/toolchains/llvm-binutils/bin/as: unrecognized option '-EL'
+clang-12: error: assembler command failed with exit code 1 (use -v to see invocation)
+make[3]: *** [arch/arm64/kernel/vdso32/Makefile:181: arch/arm64/kernel/vdso32/note.o] Error 1
+...
 
-The issue I believe we're seeing here is not with vfio-pci trying to do
-anything with the device, the IOMMU grouping would prevent a user from
-opening any device within the group while other devices within the
-group are bound to host drivers.  So it should be fine if the EHCI
-device takes over the other ports, but it's not ok that ehci-hcd
-assumes the driver private data for any other UHCI/OHCI/EHCI device in
-the same slot is something that it's free to modify.  It really seems
-there should be some sort of companion device registration/opt-in
-rather than modifying unvalidated data.
+Adding the value of CROSS_COMPILE_COMPAT (adding notdir to account for a
+full path for CROSS_COMPILE_COMPAT) fixes this issue, which matches the
+solution done for the main Makefile [2].
 
-> > The only way to make this work at all is to unbind both uhci-hcd and
-> > ehci-hcd first.  Then after both are finished you can safely bind
-> > vfio-pci to the EHCI controller and the UHCI controllers (in that
-> > order).
-> > =20
-> I'm agree with you, unbind both uhci-hcd and ehci-hcd first then bind to
-> vfio-pci is a more reasonable sequence. Our experiments prove that this
-> sequence is indeed good as expected.
-> However, I did not find a formal document to prescribe this order.
-> Unfortunately, some application software such as virt-manager/qemu assign
-> UHCI/EHCI to guest OS has the same bind/unbind sequence as test =E2=80=9C=
-by hand=E2=80=9D.
-> Do we need to consider compatibility with this application scenario?
+[1]: https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90
+[2]: https://lore.kernel.org/lkml/20200721173125.1273884-1-maskray@google.com/
 
-Unbinding all functions first, before binding any to vfio-pci should
-indeed work, thanks to the for_each_companion() function at least
-testing for null private data before going further.  I'd still argue
-though that these hcd drivers are overstepping their authority by
-walking the PCI bus and assuming any device in the same slot, matching
-a set of class codes, is making use of a driver with a known data
-structure that they're allowed to modify.  Even if we claim that the
-user needs to know what they're doing when they change driver binding,
-that's a pretty subtle interaction with no validation.  Thanks,
+Cc: stable@vger.kernel.org
+Link: https://github.com/ClangBuiltLinux/linux/issues/1099
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ arch/arm64/kernel/vdso32/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alex
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index d88148bef6b0..5139a5f19256 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -14,7 +14,7 @@ COMPAT_GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE_COMPAT)elfedit))
+ COMPAT_GCC_TOOLCHAIN := $(realpath $(COMPAT_GCC_TOOLCHAIN_DIR)/..)
+ 
+ CC_COMPAT_CLANG_FLAGS := --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
+-CC_COMPAT_CLANG_FLAGS += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
++CC_COMPAT_CLANG_FLAGS += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE_COMPAT))
+ CC_COMPAT_CLANG_FLAGS += -no-integrated-as -Qunused-arguments
+ ifneq ($(COMPAT_GCC_TOOLCHAIN),)
+ CC_COMPAT_CLANG_FLAGS += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
+
+base-commit: d15be546031cf65a0fc34879beca02fd90fe7ac7
+-- 
+2.28.0.rc1
 
