@@ -2,89 +2,101 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB700C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A41C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFEB32067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595538777;
-	bh=Uc67512T8JH00FHtvtj5w8YdSkeYsHhk9jgY0xY516Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Mbmg36VPtPDwVIoBG85yNjYPWcj81q0zaJSKFhm3heOrs12IwrrlIdrbdSawTTWmM
-	 3FBwK1+7p0ObQu5h4DaZ7iVf7fpzo0bODfi26mGZc0Zh5YHzOw0bBnPI+QhWRsDoJB
-	 V6JpFLP7acjkCKeF4zND4OFehj0ClKhaQ4IlgWHI=
+	by mail.kernel.org (Postfix) with ESMTP id 2DA5F206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="JrB9faxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGWVM4 (ORCPT
+        id S1726650AbgGWVQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:12:56 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42633 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGWVM4 (ORCPT
+        Thu, 23 Jul 2020 17:16:28 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45993 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgGWVQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:12:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so7777976ioi.9;
-        Thu, 23 Jul 2020 14:12:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IMBnZKsh48SKsX8jjKgPA2bqoA7i2K6aQrR+811fDqM=;
-        b=bvwJB7x8wssdiT3s3ZdWFCz4E+2N8qLeaH1y13r7mFeEmemf60ert7TF0gzweRG2QF
-         yKL8tsleFXjGASAMIRS/P7vzAvjc9Reg8rZhsX/+NmWlXi77RUrdRyjmJTv3DkS+us/r
-         N5/Mud2xAYKz5383PqaLw0tNGR4zODcgHZE2OH+11zqKmpGQfkPo8jinRcKFQ6TvGrS3
-         aQBdXt4cHxY7QWYuMf0wPsupxEyBJnj3qwsYBZw/b6/yzU0CFPiSk4elGtBVQLP0/jWR
-         3vVzQRi386ekmOnlYDGoWhjrT1eEoZn52RDE4/RF0ZUIZRDt6Fysx6KAmmRUGUdfrjuL
-         RqkQ==
-X-Gm-Message-State: AOAM530ScqY+zpBim/PpQNYEJrtDY+06URX6meapU26enP3Ke/M0TrDd
-        /PeKoq01NvWDeIslyRU4rQ==
-X-Google-Smtp-Source: ABdhPJxloVcHKJ9XFGl9lzOl5yMefFdfF+hhlnC+m1/0kOnxSi4LDMpW6iKiBRM2GLSrNZ05MUVAPQ==
-X-Received: by 2002:a02:cb92:: with SMTP id u18mr7016893jap.143.1595538775491;
-        Thu, 23 Jul 2020 14:12:55 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r13sm1821041ila.85.2020.07.23.14.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:12:55 -0700 (PDT)
-Received: (nullmailer pid 867917 invoked by uid 1000);
-        Thu, 23 Jul 2020 21:12:53 -0000
-Date:   Thu, 23 Jul 2020 15:12:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] dt-bindings: ili9881c: add compatible string for
- Feixin K101-IM2BYL02
-Message-ID: <20200723211253.GA867872@bogus>
-References: <20200719170411.275812-1-icenowy@aosc.io>
- <20200719171007.276383-1-icenowy@aosc.io>
+        Thu, 23 Jul 2020 17:16:27 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4231E891B2;
+        Fri, 24 Jul 2020 09:16:24 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595538984;
+        bh=eguEpkhykd4TVznsCAaweomuNXn3vwlz0+mIEn2QBIs=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=JrB9faxhK1GfGM5vYVJu68BQgecf90TPvxidwLeChIqFQZuRUHarRKakaH31uqytm
+         8IA/vOcN1VIYf2eK2AADeniCBrG9X3PfUQKNbe48PDoYMwUgEFtzDhuICMxlcTppI6
+         /pD2HBbne629o08shuPjGiEhKntyTYtNJC6WtGJUXNZEUT8kUs/d7AxnS1xbuZskxr
+         lZIhL/sXZDBkaQMM6+Vtsl/US+V3CvwovtxqVYeBGdCdupS0eRmA34uPmOmVbglhMC
+         D71aOA01UzFLTfARPhqtDdTfrqNfIJJ58WkM0LXwTg7SF4Y5ktVQDm+DuDgsFDsdWl
+         cwF1YdxWl/hWw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f19fe260001>; Fri, 24 Jul 2020 09:16:22 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 24 Jul 2020 09:16:23 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Fri, 24 Jul 2020 09:16:23 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] net: dsa: mv88e6xxx: Implement
+ .port_change_mtu/.port_max_mtu
+Thread-Topic: [PATCH 3/4] net: dsa: mv88e6xxx: Implement
+ .port_change_mtu/.port_max_mtu
+Thread-Index: AQHWYKW3b1TNxAifGUKdmWah9S8H2akUYKYAgAB6rYCAAANngIAAA9cA
+Date:   Thu, 23 Jul 2020 21:16:22 +0000
+Message-ID: <bbd66a44-900c-68cf-244d-4d8e505d05eb@alliedtelesis.co.nz>
+References: <20200723035942.23988-1-chris.packham@alliedtelesis.co.nz>
+ <20200723035942.23988-4-chris.packham@alliedtelesis.co.nz>
+ <20200723133122.GB1553578@lunn.ch>
+ <e10da452-c04a-b519-6c30-c94e60101f92@alliedtelesis.co.nz>
+ <20200723210237.GJ1553578@lunn.ch>
+In-Reply-To: <20200723210237.GJ1553578@lunn.ch>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <075193D067491340833A828706413737@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719171007.276383-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 01:10:04 +0800, Icenowy Zheng wrote:
-> Feixin K101-IM2BYL02 is a drop-in replacement of K101-IM2BA02 panel
-> (which is already supported by panel-feixin-k101-im2ba02 driver) with
-> the same pinout. It utilizes an Ilitek ILI9881C controller chip, so its
-> compatible string should be added to ilitek,ili9881c file.
-> 
-> Add the compatible string for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  .../devicetree/bindings/display/panel/ilitek,ili9881c.yaml       | 1 +
->  1 file changed, 1 insertion(+)
-> 
-
-Acked-by: Rob Herring <robh@kernel.org>
+DQpPbiAyNC8wNy8yMCA5OjAyIGFtLCBBbmRyZXcgTHVubiB3cm90ZToNCj4gT24gVGh1LCBKdWwg
+MjMsIDIwMjAgYXQgMDg6NTA6MjdQTSArMDAwMCwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+IE9u
+IDI0LzA3LzIwIDE6MzEgYW0sIEFuZHJldyBMdW5uIHdyb3RlOg0KPj4+IE9uIFRodSwgSnVsIDIz
+LCAyMDIwIGF0IDAzOjU5OjQxUE0gKzEyMDAsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+Pj4+IEFk
+ZCBpbXBsZW1lbnRhdGlvbnMgZm9yIHRoZSBtdjg4ZTZ4eHggc3dpdGNoZXMgdG8gY29ubmVjdCB3
+aXRoIHRoZQ0KPj4+PiBnZW5lcmljIGRzYSBvcGVyYXRpb25zIGZvciBjb25maWd1cmluZyB0aGUg
+cG9ydCBNVFUuDQo+Pj4gSGkgQ2hyaXMNCj4+Pg0KPj4+IFdoYXQgdHJlZSBpcyB0aGlzIGFnYWlu
+c3Q/DQo+PiAkIGdpdCBjb25maWcgcmVtb3RlLm9yaWdpbi51cmwNCj4+IGdpdDovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQNCj4+ICQg
+Z2l0IGRlc2NyaWJlIGBnaXQgbWVyZ2UtYmFzZSBIRUFEIG9yaWdpbi9tYXN0ZXJgDQo+IEhpIENo
+cmlzDQo+DQo+IE5ldHdvcmtpbmcgcGF0Y2hlcyBhcmUgZXhwZWN0ZWQgdG8gYmUgYWdhaW5zdCBu
+ZXQtbmV4dC4gT3IgbmV0IGlmIHRoZXkNCj4gYXJlIGZpeGVzLiBQbGVhc2UgZG9uJ3Qgc3VibWl0
+IHBhdGNoZXMgdG8gbmV0ZGV2IGFnYWluc3Qgb3RoZXIgdHJlZXMuDQoNCk9LLiBJJ2xsIHRyeSB0
+byByZW1lbWJlciB0aGF0IGZvciBuZXh0IHRpbWUuIEZvciB0aGlzIHNlcmllcyBpbiANCnBhcnRp
+Y3VsYXIgaXQncyBhIGxpdHRsZSBoYXJkIGZvciBtZSB0byB0ZXN0IG5ldC1uZXh0IGJlY2F1c2Ug
+dGhlIA0KaGFyZHdhcmUgaW4gcXVlc3Rpb24gcmVsaWVzIG9uIGEgYnVuY2ggb2YgY29kZSB0aGF0
+IGlzIG5vdCB1cHN0cmVhbS4NCg0KDQo=
