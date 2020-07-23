@@ -6,73 +6,134 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA21C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760D0C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2CB20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DAC8208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGWKea convert rfc822-to-8bit (ORCPT
+        id S1728320AbgGWKeb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:34:30 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49589 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbgGWKe3 (ORCPT
+        Thu, 23 Jul 2020 06:34:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:21788 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726786AbgGWKe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 06:34:29 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8D6EB20014;
-        Thu, 23 Jul 2020 10:34:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-112-AklHWXKMPmK7pD_kEP6s_A-1; Thu, 23 Jul 2020 11:34:23 +0100
+X-MC-Unique: AklHWXKMPmK7pD_kEP6s_A-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 11:34:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 Jul 2020 11:34:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Catalin Marinas' <catalin.marinas@arm.com>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC] raw_copy_from_user() semantics
+Thread-Topic: [RFC] raw_copy_from_user() semantics
+Thread-Index: AQHWYBxygAO6HUS840aFW/LsMa1rTakTksjwgAAtkICAARbBwIAADSSAgAAU6KA=
+Date:   Thu, 23 Jul 2020 10:34:23 +0000
+Message-ID: <aef4985d744a4dcdac74f7a5360ec83b@AcuMS.aculab.com>
+References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
+ <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
+ <20200722113707.GC27540@gaia>
+ <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
+ <20200722165346.GB4069@gaia>
+ <9c22700a16db4a4f8ae9203efcaed27b@AcuMS.aculab.com>
+ <20200723101831.GA7315@gaia>
+In-Reply-To: <20200723101831.GA7315@gaia>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-In-Reply-To: <b86d9dbf-f7b0-e741-4dfa-2d76972d38f1@amazon.com>
-References: <20200324104918.29578-1-hhhawa@amazon.com> <158946977180.3480.12435085393834819053@kwain> <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com> <b86d9dbf-f7b0-e741-4dfa-2d76972d38f1@amazon.com>
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     "Hawa, Hanna" <hhhawa@amazon.com>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
-Cc:     benh@amazon.com, arm-soc <arm@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Talel Shenhar <talel@amazon.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        jonnyc@amazon.com, ronenk@amazon.com, hanochu@amazon.com,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Tsahee Zidenberg <tsahee@annapurnalabs.com>
-Message-ID: <159550046312.2959327.11902585526151715310@kwain>
-Date:   Thu, 23 Jul 2020 12:34:23 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Hanna, Arnd,
+From: Catalin Marinas 
+> Sent: 23 July 2020 11:19
+> On Thu, Jul 23, 2020 at 08:37:27AM +0000, David Laight wrote:
+> > From: Catalin Marinas
+> > > Sent: 22 July 2020 17:54
+> > > On Wed, Jul 22, 2020 at 01:14:21PM +0000, David Laight wrote:
+> > > > From: Catalin Marinas
+> > > > > Sent: 22 July 2020 12:37
+> > > > > On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
+> > > > > > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
+> > > > > > <torvalds@linux-foundation.org> wrote:
+> > > > > > > I think we should try to get rid of the exact semantics.
+> > > > > >
+> > > > > > Side note: I think one of the historical reasons for the exact
+> > > > > > semantics was that we used to do things like the mount option copying
+> > > > > > with a "copy_from_user()" iirc.
+> > > > > >
+> > > > > > And that could take a fault at the end of the stack etc, because
+> > > > > > "copy_mount_options()" is nasty and doesn't get a size, and just
+> > > > > > copies "up to 4kB" of data.
+> > > > > >
+> > > > > > It's a mistake in the interface, but it is what it is. But we've
+> > > > > > always handled the inexact count there anyway by originally doing byte
+> > > > > > accesses, and at some point you optimized it to just look at where
+> > > > > > page boundaries might be..
+> > > > >
+> > > > > And we may have to change this again since, with arm64 MTE, the page
+> > > > > boundary check is insufficient:
+> > > > >
+> > > > > https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+> > > > >
+> > > > > While currently the fault path is unlikely to trigger, with MTE in user
+> > > > > space it's a lot more likely since the buffer (e.g. a string) is
+> > > > > normally less than 4K and the adjacent addresses would have a different
+> > > > > colour.
+> > > > >
+> > > > > I looked (though briefly) into passing the copy_from_user() problem to
+> > > > > filesystems that would presumably know better how much to copy. In most
+> > > > > cases the options are string, so something like strncpy_from_user()
+> > > > > would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
+> > > > > has a better way to figure out how much to copy.
+> > > >
+> > > > What about changing the mount code to loop calling get_user()
+> > > > to read aligned words until failure?
+> > > > Mount is fairly uncommon and the extra cost is probably small compared
+> > > > to the rest of doing a mount.
+> > >
+> > > Before commit 12efec560274 ("saner copy_mount_options()"), it was using
+> > > single-byte get_user(). That could have been optimised for aligned words
+> > > reading but I don't really think it's worth the hassle. Since the source
+> > > and destination don't have the same alignment and some architecture
+> > > don't support unaligned accesses (for storing to the kernel buffer), it
+> > > would just make this function unnecessarily complicated.
+> >
+> > It could do aligned words if the user buffer is aligned (it will be
+> > most of the time) and bytes otherwise.
+> >
+> > Or just fallback to a byte loop if the full 4k read fails.
+> 
+> That's what I'm proposing here (needed for arm64 MTE):
+> 
+> https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
 
-Quoting Hawa, Hanna (2020-07-23 12:20:02)
-> On 7/23/2020 1:10 PM, Arnd Bergmann wrote:
-> > 
-> > I just came across this old series and noticed we had never merged it.
-> > 
-> > I don't know if the patches all still apply. Could you check and perhaps
-> > resend tosoc@kernel.org  if they are still good to go into the coming
-> > merge window?
+Seems not unreasonable...
 
-> Sure, will rebase the patches and send ASAP.
+	David
 
-Thanks Hanna!
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-It seems Tsahee, the original Alpine maintainer, is not active anymore;
-I guess I'll need to do better and set up everything required to send
-real pull requests for next releases as activity on Alpine happens from
-time to time.
-
-Thanks,
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
