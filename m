@@ -2,131 +2,169 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24DAC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4709820825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E832068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgGWW2j (ORCPT
+        id S1727823AbgGWW3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:28:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61172 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgGWW2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:28:39 -0400
-IronPort-SDR: fDaO3YeD9eLDbsj7iS/hg6PkrvMUutGPAvxAefIoqrEsP9JsfYd3kFBHwLiQEZlMY/C8s4d7Km
- /t0bG2aI1CHw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148552515"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="148552515"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:28:38 -0700
-IronPort-SDR: 12e5EXJKPrvHJpozBK7ppGhRLaekf3U7FE30h8xFNpdgHvX/QEGaM+J0OQPJ444D8waIBIFc/X
- YFSHVKtVhWNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="272424091"
-Received: from abdelh1x-mobl.amr.corp.intel.com (HELO localhost) ([10.249.38.107])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2020 15:28:36 -0700
-Date:   Fri, 24 Jul 2020 01:28:35 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
-Message-ID: <20200723222835.GC12405@linux.intel.com>
-References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
- <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
- <20200718162359.GA2919062@kernel.org>
+        Thu, 23 Jul 2020 18:29:07 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:36640 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726922AbgGWW3F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:29:05 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14EAF634C87;
+        Fri, 24 Jul 2020 01:28:35 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jyjha-0000Tg-Pi; Fri, 24 Jul 2020 01:28:34 +0300
+Date:   Fri, 24 Jul 2020 01:28:34 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
+Message-ID: <20200723222834.GC829@valkosipuli.retiisi.org.uk>
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
+ <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200718162359.GA2919062@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 07:23:59PM +0300, Mike Rapoport wrote:
-> On Fri, Jul 17, 2020 at 06:04:17AM +0300, Jarkko Sakkinen wrote:
-> > Introduce functions for allocating memory for dynamic trampolines, such
-> > as kprobes. An arch can promote the availability of these functions with
-> > CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
-> > wrapping module_alloc() and module_memfree().
-> > 
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  include/linux/vmalloc.h | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> > index 0221f852a7e1..e981436e30b6 100644
-> > --- a/include/linux/vmalloc.h
-> > +++ b/include/linux/vmalloc.h
-> > @@ -9,6 +9,7 @@
-> >  #include <asm/page.h>		/* pgprot_t */
-> >  #include <linux/rbtree.h>
-> >  #include <linux/overflow.h>
-> > +#include <linux/moduleloader.h>
-> >  
-> >  #include <asm/vmalloc.h>
-> >  
-> > @@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
-> >  int register_vmap_purge_notifier(struct notifier_block *nb);
-> >  int unregister_vmap_purge_notifier(struct notifier_block *nb);
-> >  
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +/*
-> > + * Allocate memory to be used for dynamic trampoline code.
-> > + */
-> > +void *text_alloc(unsigned long size);
-> > +
-> > +/*
-> > + * Free memory returned from text_alloc().
-> > + */
-> > +void text_free(void *region);
-> > +#else
-> > +static inline void *text_alloc(unsigned long size)
-> > +{
-> > +	return module_alloc(size);
-> > +}
-> > +
-> > +static inline void text_free(void *region)
-> > +{
-> > +	module_memfree(region);
-> > +}
+Hi Kieran,
+
+On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
+> Hi Sakari,
 > 
-> Using module_alloc() as the default implementation of generic
-> text_alloc() does not sound right to me.
+> This is the output of checkpatch --strict on this driver. Sorry for not
+> detailing this in the commit or cover letter.
+
+No worries.
+
 > 
-> I would suggest rename module_alloc() to text_alloc() on x86, as Peter
-> proposed and then add text_alloc_kprobes() that can be overridden by the
-> architectures. x86 could use text_alloc(), arm64 vmalloc() with options
-> of their choice and the fallback would remain module_alloc(). Something
-> like (untested) patch below:
+> > ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
+> > --------------------------------------------------------------
+> > ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
+> > --------------------------------------------------------------
+> > CHECK: Prefer using the BIT macro
+> > #246: FILE: drivers/media/i2c/max9286.c:40:
+> > +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #251: FILE: drivers/media/i2c/max9286.c:45:
+> > +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #262: FILE: drivers/media/i2c/max9286.c:56:
+> > +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #268: FILE: drivers/media/i2c/max9286.c:62:
+> > +#define MAX9286_HVSRC_D14		(1 << 0)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #286: FILE: drivers/media/i2c/max9286.c:80:
+> > +#define MAX9286_DATATYPE_RGB565		(1 << 0)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #304: FILE: drivers/media/i2c/max9286.c:98:
+> > +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #312: FILE: drivers/media/i2c/max9286.c:106:
+> > +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
+> > 
+> > CHECK: Prefer using the BIT macro
+> > #316: FILE: drivers/media/i2c/max9286.c:110:
+> > +#define MAX9286_I2CSLVTO_256US		(1 << 0)
+> 
+> None of those are appropriate to use the BIT() macro, as they are all
+> entries of a specific field with a shift, such as:
+> 
+> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
+> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
+> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
+> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
+> 
+> Checkpatch is only picking up on the "1 << x" variant of each entry.
 
-I'm not exactly sure which of the below is relevant as the patch set
-includes the exact same changes with maybe different phrasing:
+Ideally you should use "1U << x" everywhere. If you happen to have a
+register with 31st bit signifying something, mayhem would follow. So the
+practice is to make all such definitions unsigned.
 
-https://lore.kernel.org/lkml/20200717030422.679972-1-jarkko.sakkinen@linux.intel.com/
+> 
+> 
+> > CHECK: Macro argument reuse 'source' - possible side-effects?
+> > #399: FILE: drivers/media/i2c/max9286.c:193:
+> > +#define for_each_source(priv, source) \
+> > +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
+> 
+> This warns against possible side effects, but the 're-use' effects are
+> desired ;-)
+> 
+> If you'd prefer this macro to be re-written please let me know.
 
-If there is something that these patches are missing, please do remark
-but these seven patches have been at least tested and split in
-reasonable manner.
+Works for me. Some warnigns are just not useful. I bet quite a few macros
+elsewhere in the kernel would trigger this.
 
-/Jarkko
+> 
+> 
+> > CHECK: Lines should not end with a '('
+> > #1372: FILE: drivers/media/i2c/max9286.c:1166:
+> > +			ret = v4l2_fwnode_endpoint_parse(
+> 
+> Full code block:
+> 
+> >                         ret = v4l2_fwnode_endpoint_parse(
+> >                                         of_fwnode_handle(node), &vep);
+> >                         if (ret) {
+> >                                 of_node_put(node);
+> >                                 return ret;
+> >                         }
+> 
+> That one is awkward, and I chose to keep it as a lesser evil.
+> Of course now that we can officially go up to 120 chars, I could move
+> this line up.
+> 
+> If you'd like this to be moved to a single line now we can go over 80
+> chars, please confirm.
+
+I don't mind that. Mauro, any thoughts on this?
+
+-- 
+Kind regards,
+
+Sakari Ailus
