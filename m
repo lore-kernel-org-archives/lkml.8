@@ -2,72 +2,74 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8164C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C779C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE6ED22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F6E207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jLHhwfMg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEnGsBWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgGWNJo (ORCPT
+        id S1729029AbgGWNJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
+        Thu, 23 Jul 2020 09:09:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWNJo (ORCPT
+        with ESMTP id S1728914AbgGWNJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:09:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC66C0619E2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so4561315wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+        Thu, 23 Jul 2020 09:09:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D18C0619E3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so5149194wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:09:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oHNOabgTTNbh6uri8W4VPeDNkD37Z9qVynqApQA8NN4=;
-        b=jLHhwfMgxxeLyGX9Vu5obKFeM6cJuGW5m219rJLASk42B8yCuiSrbsYu9g4Om3CrQO
-         u8+PhnKSL74Rqrmjsn7QSzvAuZWPYtNlJ5c4JvYRPf9ug+ThVMEr6OQiOaSvx39H6D6K
-         +dAXBolNwP9SldzHVxjetuVWbdFFkOk3DerVI9CYHiOh8s8cAhVMlWL2jpEZW3SwmNbl
-         VWdbomN2X2NbtU7jNJeyYRxauMv+gmJWqdsbiEUHdhc5maNRJGqc8ce7NbyXNT1EarIT
-         CCkawWMZ5O6qDOcq2Mmr8jZa4RGPQ28pS7aAM/1nsoEHccPsCL8DblVhkak/i6PPUViD
-         z94A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R+lee8B7JFfBYPKyFP3yz/BoNx5eAb9WaQRkbumGc3E=;
+        b=vEnGsBWqxZP6Q+KXwBLvSyX1MOrqEdZzzqFXcnrqx1GiSKetgbLJOiMySAywIL80yq
+         ZpW5g3USJh6jrO++XvlweFAMbDjZnX+Lv5ibi4oNbnAEY160dsY8mvIbjDmrwhhn2cg+
+         YwkpCWfCtcW/u/hxnf95mzfHcp7Wq0Sn7CE8BABd4jMGroI16PoBrbXXQch9K/6WV9sE
+         Ng754Q4m097X0MDwn1Oh1giyud6/+GDKLTwDPMXaZ9hAxE94yHcxa7WNxn+MxAMYcD98
+         mpzJytXYhOZEul8gtsTierUiFbxBjspzIbbKM5J+UuujnJ2rAYZljscT+099Z+2TXElu
+         lddA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oHNOabgTTNbh6uri8W4VPeDNkD37Z9qVynqApQA8NN4=;
-        b=GRUZPG484yHF2VISPiGehNDEPG/krqdFE3Pzo9AvxgJBeoJLqFAxIwYNnIMf1Z3qcX
-         W/VEXM67eOmp5dpWIqVMrXsgKtfjwtR3KvDtywsSj9jTUdvVVonTiOuC2oFW1tmIaQOn
-         Domn72SOz2Lo7W+9K5fzVg2VmHxdlgXK9/2NaJTnWmoq3MQ0xb4lgdhvhgi6E7oO1Zxy
-         kXMPYbIfWaHlcNMpJ2uOub9zGXmABLL53clAceopmSGqf5G/RAqVW2BqsWZMKXrIv7rj
-         A27BlVa3Mikb48yj8O20NV2+O5EzwPww0Ky6g5JNj7BGA7zlvJmylkf0wwGhbAZrHvcy
-         QmJA==
-X-Gm-Message-State: AOAM530vq6DOq9nJmvBHfhbxB2yQy7xDrep9NkAmM9WF9n5PKVFTb0iB
-        dvEzwfSH1q/8xQIttUhQex2yCQ==
-X-Google-Smtp-Source: ABdhPJyn9q77KWRk28k9ReYpgP1tzCRLEjDCCty8oAulmC1LG1zHc+TAu26s0hrwLaOIgaDbxOXoaQ==
-X-Received: by 2002:adf:ee06:: with SMTP id y6mr4020677wrn.225.1595509782303;
-        Thu, 23 Jul 2020 06:09:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=R+lee8B7JFfBYPKyFP3yz/BoNx5eAb9WaQRkbumGc3E=;
+        b=H+chqN/uHBidWv8ers2vyi88+StV+nGUstQ+ZwK1nuvJIITCSVlJkQFifWUVq2E4iF
+         BPErAyq8loBsqCUI2JvBmb0wiQ9Y30l8BqcC2LTCOCZ4XC+kRpNjSpqlSPTJpi/xTKBk
+         CjQcxkAmYS/1JRbq/eXABS36FhlKAKejWSqY/EwJBfMLlRDIi00ZUIfKp2zOQgeT5ef2
+         y7RSWM2017PM/wnOpMyWHOzF/40Jsr+gnA1B8uaGM80EM9DIWfODAUQiom5n2Vet+z4T
+         fWyp/kppXEWT7oL0J+rVcgB2LoS0Kz6piV7X0OlyXvokQXKAmSBLDZh1PLmqq2UoTqPw
+         xBFw==
+X-Gm-Message-State: AOAM530XVUopvHQxnslESy0+G6S8hFs44yLNaWooNHM+X0UtwOUBo7mw
+        aXAfCBZU4xCVaYLq1e/NpBs8dw==
+X-Google-Smtp-Source: ABdhPJwgrZG+M6VvSuuefuXl0h1Zce5N82Kr5wnaXUw8uuGBWCxPV5wjRudOmF7cOpH6h97vM6pjZg==
+X-Received: by 2002:a1c:1f85:: with SMTP id f127mr1894728wmf.154.1595509786042;
+        Thu, 23 Jul 2020 06:09:46 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.41
+        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 06:09:41 -0700 (PDT)
+        Thu, 23 Jul 2020 06:09:45 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
         sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
         georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] interconnect: Introduce xlate_extended()
-Date:   Thu, 23 Jul 2020 16:09:36 +0300
-Message-Id: <20200723130942.28491-1-georgi.djakov@linaro.org>
+Subject: [PATCH 3/6] interconnect: qcom: sdm845: Replace xlate with xlate_extended
+Date:   Thu, 23 Jul 2020 16:09:39 +0300
+Message-Id: <20200723130942.28491-4-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200723130942.28491-1-georgi.djakov@linaro.org>
+References: <20200723130942.28491-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,43 +77,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the interconnect framework provides the xlate() callback for
-mapping the endpoints from phandle arguments in DT. This is implemented
-by the provider drivers. But the endpoints (or the path between the
-endpoints) might have an additional attributes, which should be parsed
-and populated. During previous discussions [1], it was suggested that
-adding more and more DT properties will not scale very well. So instead
-of adding DT properties, such data should be put into the 'interconnects'
-arguments.
+Use the qcom_icc_xlate_extended() in order to parse tags, that are
+specified as an additional arguments to the path endpoints in DT.
 
-This patchset is introducing a new xlate_extended() callback, which
-would allow the interconnect provider drivers to parse additional data
-(such as path tags) and allow the framework to make use of them.
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/qcom/sdm845.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks to Sibi for the preliminary feedback and testing this patchset
-on the sc7180 platform.
-
-The patchset is based on linux-next (next-20200723).
-
-[1]. https://lore.kernel.org/linux-devicetree/20200519185836.GA469006@bogus/
-
-Georgi Djakov (4):
-  interconnect: Introduce xlate_extended() callback
-  interconnect: qcom: Implement xlate_extended() to parse tags
-  interconnect: qcom: sdm845: Replace xlate with xlate_extended
-  arm64: dts: qcom: sdm845: Increase the number of interconnect cells
-
-Sibi Sankar (2):
-  interconnect: qcom: sc7180: Replace xlate with xlate_extended
-  arm64: dts: qcom: sc7180: Increase the number of interconnect cells
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi  | 216 +++++++++++++-------------
- arch/arm64/boot/dts/qcom/sdm845.dtsi  |  44 +++---
- drivers/interconnect/core.c           |  73 ++++++---
- drivers/interconnect/qcom/icc-rpmh.c  |  27 ++++
- drivers/interconnect/qcom/icc-rpmh.h  |   1 +
- drivers/interconnect/qcom/sc7180.c    |   2 +-
- drivers/interconnect/qcom/sdm845.c    |   2 +-
- include/linux/interconnect-provider.h |  17 +-
- 8 files changed, 225 insertions(+), 157 deletions(-)
-
+diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+index f6c7b969520d..3b81dbb71b0b 100644
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -469,7 +469,7 @@ static int qnoc_probe(struct platform_device *pdev)
+ 	provider->set = qcom_icc_set;
+ 	provider->pre_aggregate = qcom_icc_pre_aggregate;
+ 	provider->aggregate = qcom_icc_aggregate;
+-	provider->xlate = of_icc_xlate_onecell;
++	provider->xlate_extended = qcom_icc_xlate_extended;
+ 	INIT_LIST_HEAD(&provider->nodes);
+ 	provider->data = data;
+ 
