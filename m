@@ -2,118 +2,88 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81022C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6B3C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3DE2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0FC2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595506240;
-	bh=eSF1O/MPFAgzk9HDIMFIg1UmW6izaaYh4M3av+WBB5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2HxyieFHPrT22FY4RIKal8RO+Yq+DiyMQT2b0/RADxwnTAaQ0LEg2PPOF7fcO84Fr
-	 EDCViOiC39xPKULuIaMauuZ5f98p1W311vs2EKeoM94upsBmrqsjvcGKVKMKDrzHbT
-	 SglBKV3DW59C/tpTWriLbxVT3VxTEOD+yAP0rxWc=
+	s=default; t=1595506490;
+	bh=bYrlcCSHr/YIcvZWAcG/xTEkqshBiAPuQ6O2BsFM5SY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0HuMJP/UAT85TwEAWSXcASAqfxecRlt/7NLGPEI/PvaAp6TJ5NN3W//mvkYEOphK+
+	 IqMO1SXHgtrDADgZph4EpWaFSXigZEhvX/3tjupHq+eJJsrSYWCAoBxR+yPp73ei3z
+	 dG6V8CzrfLQz/aa4ckhXE5SCq3fkYkd1fWXCwMpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgGWMKj (ORCPT
+        id S1728595AbgGWMOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgGWMKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:10:39 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820F420709;
-        Thu, 23 Jul 2020 12:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595506238;
-        bh=eSF1O/MPFAgzk9HDIMFIg1UmW6izaaYh4M3av+WBB5M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eUBlib0URNNKizHNTmWwA3Xtv4n94Sey+jkjk4xuo7gmwo8/sFTNwigwF9osh7DiH
-         Rq6Kk68saahw0pWsizNtXauDaTtpxrFnolD2FQirpFRvc9saBEUznu5BvsmZADMgPN
-         Ar07tvoXy492obYkCnxgJ4tSBrHgUi8Oh5/AJaIA=
-Date:   Thu, 23 Jul 2020 17:40:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200723121034.GA12965@vkoul-mobl>
-References: <20200708103559.132300-1-vkoul@kernel.org>
- <20200708103559.132300-4-vkoul@kernel.org>
- <20200719171806.GA55541@ravnborg.org>
- <20200722131430.GJ5833@pendragon.ideasonboard.com>
- <20200723104151.GY12965@vkoul-mobl>
- <20200723113912.GA535520@ravnborg.org>
+        Thu, 23 Jul 2020 08:14:49 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35790 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgGWMOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 08:14:44 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u12so3151143lff.2;
+        Thu, 23 Jul 2020 05:14:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rH77oDgMAQJxZnttfdKkk4QTDEhbVsA8vngN2ZlyQT0=;
+        b=DyRkoqcUem8xb3i5NgpL1hM7GucESxDQ1aZdSKtIz9ZDyImEcNYedmiAjMHghub1aT
+         Ly8PHFc64safBEmgWr5vnmwGM9prQvWWV7jw3GFU0bqcBuw0zFLlhfJJFkkUtG56s2TH
+         PgQJ3DQ3XetwFixTsMa9nVB5KZqf5KcFez1hQTq7t06tLBK9Gr8VZlr+mX8txDNkwfCE
+         dhWtIHXghk4EtCGG6CbAG6PBCnUYW0zlU0qTXDoT1V6oQJgcsYDVuKO5K2JmRVi2ntRF
+         kAW6WaBqYTSUkOtKIM/n6eNrKm3/Ygcx3nDzJ5yixT7duhi+bvfM4hTgnT7Eba0XVlKZ
+         sulw==
+X-Gm-Message-State: AOAM533iuWCnrLUAKxzrRKTrd5m4pP1IumuSnPOGL6SUYB2+j5+8n409
+        n5bkzrIa9vBPEW49qm+8SsEcJqP3
+X-Google-Smtp-Source: ABdhPJxkMh9MBsG8HGKMrOw0tN+Z+JuYyw5Fm26lnVczdLH2D20Cy78zps614MtRfrwxdK84Gbx1cg==
+X-Received: by 2002:a19:7e42:: with SMTP id z63mr2178747lfc.36.1595506482172;
+        Thu, 23 Jul 2020 05:14:42 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id r19sm2654642ljm.32.2020.07.23.05.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 05:14:39 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1jya7O-0006JN-5e; Thu, 23 Jul 2020 14:14:34 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/2] serial: add sparse context annotation
+Date:   Thu, 23 Jul 2020 14:14:21 +0200
+Message-Id: <20200723121423.24217-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723113912.GA535520@ravnborg.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-07-20, 13:39, Sam Ravnborg wrote:
-> On Thu, Jul 23, 2020 at 04:11:51PM +0530, Vinod Koul wrote:
-> > Hi Sam, Laurent,
-> > 
-> > On 22-07-20, 16:14, Laurent Pinchart wrote:
-> > > > > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> > > > > +				enum drm_bridge_attach_flags flags)
-> > > > > +{
-> > > > > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
-> > > > > +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
-> > > > > +		return -EINVAL;
-> > > > > +	}
-> > > >
-> > > > This should say that the display driver should be fixed.
-> > > > If a display driver expects this bridge to create the connector
-> > > > it would not work.
-> > > 
-> > > Actually, for new bridge drivers, connector creation should be optional
-> > > from the start. We don't want a failure in that case, the feature should
-> > > be implemented.
-> > 
-> > Yes this is causing issues for me now !. The patch 4/4 adds support in
-> > msm/dsi but causes regression on qualcomm laptops with ti-sn65dsi86 eDP
-> > bridge. I tried to fix that up with changes like Laurent has done for
-> > adv7511, but it hasnt worked yet for me (remote debug of this is bit
-> > painful)
-> > 
-> > So I am going to drop patch 4 from this series and add support for both
-> > DRM_BRIDGE_ATTACH_NO_CONNECTOR set and cleared (like we have in adv7511)
-> > so that it can work in both cases, while I fix all bridge uses of
-> > msm/dsi and then we can drop these. Does that sound okay to you folks?
-> Yes, sounds like a good plan.
-> Only when all display drivers are migrated over can we drop all the
-> workarounds in the bridge drivers.
-> I had hoped all users of this bridge was converted - alas that was not
-> the case.
+The Intel test robot reported a new sparse warning in pmac_zilog, which
+wasn't actually new.
 
-Thanks, I will send updated patchset fixing the nits and supporting both
-the cases and will drop msm/dsi patch for now
+Add sparse annotation to the two drivers that release and reacquire the
+port lock in their receive handlers to suppress these warnings.
+
+Johan
+
+
+Johan Hovold (2):
+  serial: pmac_zilog: add sparse context annotation
+  serial: msm_serial: add sparse context annotation
+
+ drivers/tty/serial/msm_serial.c | 2 ++
+ drivers/tty/serial/pmac_zilog.c | 1 +
+ 2 files changed, 3 insertions(+)
 
 -- 
-~Vinod
+2.26.2
+
