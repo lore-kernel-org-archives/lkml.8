@@ -2,174 +2,161 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E92C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1593C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE6020792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A20F20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:24:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IxVfFjzc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9xIRc8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgGWMYv (ORCPT
+        id S1728811AbgGWMYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+        Thu, 23 Jul 2020 08:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgGWMYv (ORCPT
+        with ESMTP id S1728767AbgGWMYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:24:51 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD92C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:50 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o8so4782107wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:50 -0700 (PDT)
+        Thu, 23 Jul 2020 08:24:52 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B403C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:52 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id y3so4976640wrl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BPw5bYTRkWKKW36iChvzFRop+ogNWWiA3XJP8U5i27Y=;
-        b=IxVfFjzc90ZE0V7MFR8NfaEYB9JHKcZIMZdbKq4KLTagYPrOG1mlQC3gxGvqi0Yj6r
-         fbyoyqlMiyOrbVtvGp3v06QOhZDmHOofagIqc55BgP3lzMa5kIyWCipigINpEtv4CCZF
-         fZOC8tZ5rUKQ6MkyTl+MPCWNYwWASf1r1dhlMAXvu+rDxJLozKY90z6ENo6uFZabB3CN
-         X3Fbh3R7xgEz9Gh/3JpDiB44LnZeQ+O44/hYgdFXtyNTw7erLm9KUGDeW1N1/KLe9T9c
-         wcafyoStGp+tCwJo5X52iPPhoBK11cOZHeqcIIW/mstNyPsAjxzGL+USrF3YRz/AMO09
-         S5+g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+9PaEaIsKMEWOx7bFf6DhjJ/McDAgdpRr9jNHocJ3y8=;
+        b=x9xIRc8BVSrl8u01AVESZka58nbBj/IF2Fz01LeRW4iALYH5DCoZhDGPChOk3qObyy
+         rOQ/9Nbg01O5qNl88YLq/bXG9CqzZrOFN9HsgQ8T3ziBms2XgeTqcg+6DC48zLBUfEDh
+         byKy80r1fA+dzpmUJIIY88iP59VNpB44KOBGx4ksSAkW8BCmBNkYQym9U7W+5zkzcUaF
+         eI2XEwK3Bc84JDcqut2qMkk0N3WnPTf18IkVx5hyv65PcUhyYZCrjl3HtBFLogOt+/ds
+         014uj/v92QKwNOJQOQAs4HUUlEwuVF9SSTMljevPGgYpfK2Y2ra/LqE6BcDHh6S5DzQ5
+         goWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BPw5bYTRkWKKW36iChvzFRop+ogNWWiA3XJP8U5i27Y=;
-        b=S0mGHfVjp4JED9B5yt+2iN+TTp7WqyV/xx2LmQyE7iaadUlEKBbZoW+llGT/Hz9VVn
-         xhDHyCIzgZWaztTJcT/RleflPYkU8/xdmf6RDezAulwFuk7biHhZvQip43nnP3dywSsu
-         sOn62pCOxZFTqOq57KYTLHZLBeLi/sPoXX0SkyeOQnaS2JjlFTAs0qBvLVIRvYn7atjF
-         +j+HxjxASW2i2g7YeqzD9FgCCI8G2PnBOBtbw4IDkG/IPXLkJMfr1VDv0NXVT0PvvFMa
-         zytTWI7UO4fWMTwWagrGOxVwyDTxaGQTxTywbZrEudB14Laty5sBtRti2sddVuoCVO/H
-         5cqg==
-X-Gm-Message-State: AOAM532JwZsMGdWl1YzUuq/ibFJdsU4KNXh+OtaM9FXwxi1mOeW7JsRY
-        RLCoqe4PR7hEHbltg6sWX4J40w==
-X-Google-Smtp-Source: ABdhPJyi2akDr13wv4WdZAQ8D0TzOORRcG3bV+ePeDoJcjJciQPgzzjLm1w3nJubU/pr8wMYeguX3A==
-X-Received: by 2002:a7b:c054:: with SMTP id u20mr3899527wmc.2.1595507089612;
-        Thu, 23 Jul 2020 05:24:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+9PaEaIsKMEWOx7bFf6DhjJ/McDAgdpRr9jNHocJ3y8=;
+        b=LlrqrtYyIseENocJ9jcY2Hxyietw3Se+BSbXOj2nehiLGgavU374ig+JgoCW4r3nr1
+         j5xzGI0UiJcmY2phKEmocLfvEkLLx/H5XxvmhPIBV76t+Od6RAJLcsOUvj/GVKc6dfYF
+         ThY+ewINHJFjIvOcwQbSq+yF5N9JDUCLdYzZCI9pKcONOJsa887/+H487M/ATg7AlCs5
+         A++dGpWaJgA1QEWY5YHKTufQVwGtPDizYmcKH3n8V3E85AtDZkm2xtKszHRYjtDD3H7I
+         Qm+O1zhggEhbk38mMg9miGYya96/8fsL1hkjqbx/8cJIfZtYOz+28nWgxvuW/6amljz5
+         11/w==
+X-Gm-Message-State: AOAM5326Dkt5HJESos6QYeR2z2ITq5oYKjb5vJN1sUF5B8mfqaB+K9Wf
+        WThW1/l4StNZpP7pU0w6e2Ry+w==
+X-Google-Smtp-Source: ABdhPJy4rm9x5OFypqUgzUWnvxNthkU6Bnh96rSEPmDGgbkWO/TH4z9TD8CCUy9bDeZvExf70BCczQ==
+X-Received: by 2002:adf:e98c:: with SMTP id h12mr3772971wrm.3.1595507090720;
+        Thu, 23 Jul 2020 05:24:50 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.48
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:24:48 -0700 (PDT)
+        Thu, 23 Jul 2020 05:24:50 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/40] Set 5: Penultimate set of SCSI related W=1 warnings
-Date:   Thu, 23 Jul 2020 13:24:06 +0100
-Message-Id: <20200723122446.1329773-1-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Subject: [PATCH 01/40] scsi: lpfc: lpfc_els: Fix some function parameter descriptions
+Date:   Thu, 23 Jul 2020 13:24:07 +0100
+Message-Id: <20200723122446.1329773-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
+References: <20200723122446.1329773-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+Fixes the following W=1 kernel build warning(s):
 
-Hopefully this is the penultimate set.
+ drivers/scsi/lpfc/lpfc_els.c:3619: warning: Function parameter or member 't' not described in 'lpfc_els_retry_delay'
+ drivers/scsi/lpfc/lpfc_els.c:3619: warning: Excess function parameter 'ptr' description in 'lpfc_els_retry_delay'
+ drivers/scsi/lpfc/lpfc_els.c:4877: warning: Function parameter or member 'rejectError' not described in 'lpfc_els_rsp_reject'
+ drivers/scsi/lpfc/lpfc_els.c:7900: warning: Function parameter or member 't' not described in 'lpfc_els_timeout'
+ drivers/scsi/lpfc/lpfc_els.c:7900: warning: Excess function parameter 'ptr' description in 'lpfc_els_timeout'
+ drivers/scsi/lpfc/lpfc_els.c:8272: warning: Function parameter or member 'payload' not described in 'lpfc_send_els_event'
+ drivers/scsi/lpfc/lpfc_els.c:8272: warning: Excess function parameter 'cmd' description in 'lpfc_send_els_event'
+ drivers/scsi/lpfc/lpfc_els.c:8355: warning: Function parameter or member 'tlv' not described in 'lpfc_els_rcv_fpin_li'
+ drivers/scsi/lpfc/lpfc_els.c:8355: warning: Excess function parameter 'lnk_not' description in 'lpfc_els_rcv_fpin_li'
+ drivers/scsi/lpfc/lpfc_els.c:9688: warning: Function parameter or member 't' not described in 'lpfc_fabric_block_timeout'
+ drivers/scsi/lpfc/lpfc_els.c:9688: warning: Excess function parameter 'ptr' description in 'lpfc_fabric_block_timeout'
 
-Lee Jones (40):
-  scsi: lpfc: lpfc_els: Fix some function parameter descriptions
-  scsi: lpfc: lpfc_hbadisc: Fix kerneldoc parameter
-    formatting/misnaming/missing issues
-  scsi: ufs: ufs-qcom: Demote nonconformant kerneldoc headers
-  scsi: bnx2i: bnx2i_init: Fix parameter misnaming in function header
-  scsi: ufs: ufs-exynos: Make stubs 'static inline'
-  scsi: ufs: ufs-exynos: Demote seemingly unintentional kerneldoc header
-  scsi: bfa: bfa_port: Staticify local functions
-  scsi: bnx2i: bnx2i_sysfs: Add missing descriptions for 'attr'
-    parameter
-  scsi: bfa: bfa_fcpim: Remove set but unused variable 'rp'
-  scsi: bfa: bfa_fcpim: Demote seemingly unintentional kerneldoc header
-  scsi: qedi: qedi_main: Remove 2 set but unused variables
-  scsi: ips: Remove some set but unused variables
-  scsi: ips: Convert strnlen() to memcpy() since result should not be
-    NUL terminated
-  scsi: qla4xxx: ql4_83xx: Remove set but unused variable 'status'
-  scsi: lpfc: lpfc_init: Use __printf() format notation
-  scsi: lpfc: lpfc_init: Add and rename a whole bunch of function
-    parameter descriptions
-  scsi: qla4xxx: ql4_bsg: Rename function parameter descriptions
-  scsi: lpfc: lpfc_mbox: Fix a bunch of kerneldoc misdemeanours
-  scsi: lpfc: lpfc_nportdisc: Add description for lpfc_release_rpi()'s
-    'ndlpl param
-  scsi: bfa: bfa_ioc: Remove a few unused variables 'pgoff' and 't'
-  scsi: csiostor: csio_hw: Mark known unused variable as __always_unused
-  scsi: csiostor: csio_hw_t5: Remove 2 unused variables
-    {mc,edc}_bist_status_rdata_reg
-  scsi: bfa: bfa_ioc: Staticify non-external functions
-  scsi: csiostor: csio_rnode: Add missing description for
-    csio_rnode_fwevt_handler()'s 'fwevt' param
-  scsi: bfa: bfa_ioc_ct: Demote non-compliant kerneldoc headers to
-    standard comments
-  scsi: mvsas: mv_init: Place 'core_nr' inside correct clause
-  scsi: bfa: bfa_fcs_rport: Remove unused variable 'adisc'
-  scsi: bnx2i: bnx2i_hwi: Fix a whole host of kerneldoc issues
-  scsi: bnx2i: bnx2i_iscsi: Add, remove and edit some function parameter
-    descriptions
-  scsi: be2iscsi: be_iscsi: Correct misdocumentation of function param
-    'ep'
-  scsi: qedi: qedi_fw: Remove set but unused variable 'tmp'
-  scsi: esas2r: esas2r: Add braces around the one-line if()
-  scsi: bfa: bfa_ioc: Demote non-kerneldoc headers down to standard
-    comment blocks
-  scsi: bfa: bfa_core: Demote seemingly unintentional kerneldoc header
-  scsi: bfa: bfa_svc: Demote seemingly unintentional kerneldoc header
-  scsi: qedi: qedi_main: Demote seemingly unintentional kerneldoc header
-  scsi: qedi: qedi_iscsi: Staticify non-external function
-    'qedi_get_iscsi_error'
-  scsi: bfa: bfa_ioc: Ensure a blank line precedes next function/header
-  scsi: bnx2i: bnx2i_iscsi: Add parameter description and rename another
-  scsi: esas2r: esas2r_log: Demote a few non-conformant kerneldoc
-    headers
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/scsi/lpfc/lpfc_els.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
- drivers/scsi/be2iscsi/be_iscsi.c   |  2 +-
- drivers/scsi/bfa/bfa_core.c        |  2 +-
- drivers/scsi/bfa/bfa_fcpim.c       | 10 ++----
- drivers/scsi/bfa/bfa_fcs_rport.c   |  3 --
- drivers/scsi/bfa/bfa_ioc.c         | 57 +++++++++++++-----------------
- drivers/scsi/bfa/bfa_ioc_ct.c      |  6 ++--
- drivers/scsi/bfa/bfa_port.c        |  4 +--
- drivers/scsi/bfa/bfa_svc.c         |  4 +--
- drivers/scsi/bnx2i/bnx2i_hwi.c     | 53 +++++++++++++--------------
- drivers/scsi/bnx2i/bnx2i_init.c    |  2 +-
- drivers/scsi/bnx2i/bnx2i_iscsi.c   | 19 +++++-----
- drivers/scsi/bnx2i/bnx2i_sysfs.c   |  4 +++
- drivers/scsi/csiostor/csio_hw.c    |  2 +-
- drivers/scsi/csiostor/csio_hw_t5.c |  6 ++--
- drivers/scsi/csiostor/csio_rnode.c |  2 +-
- drivers/scsi/esas2r/esas2r.h       |  3 +-
- drivers/scsi/esas2r/esas2r_log.c   | 10 +++---
- drivers/scsi/ips.c                 | 34 +++++++-----------
- drivers/scsi/lpfc/lpfc_els.c       | 12 +++----
- drivers/scsi/lpfc/lpfc_hbadisc.c   | 15 ++++----
- drivers/scsi/lpfc/lpfc_init.c      | 46 +++++++++++++-----------
- drivers/scsi/lpfc/lpfc_mbox.c      | 12 ++++---
- drivers/scsi/lpfc/lpfc_nportdisc.c |  1 +
- drivers/scsi/mvsas/mv_init.c       |  1 -
- drivers/scsi/qedi/qedi_fw.c        |  5 ++-
- drivers/scsi/qedi/qedi_iscsi.c     |  2 +-
- drivers/scsi/qedi/qedi_main.c      |  9 ++---
- drivers/scsi/qla4xxx/ql4_83xx.c    | 34 +++++++-----------
- drivers/scsi/qla4xxx/ql4_bsg.c     |  4 +--
- drivers/scsi/ufs/ufs-exynos.c      |  2 +-
- drivers/scsi/ufs/ufs-exynos.h      | 12 +++----
- drivers/scsi/ufs/ufs-qcom.c        |  6 ++--
- 32 files changed, 178 insertions(+), 206 deletions(-)
-
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 23adf76e9aa8b..85d4e4000c25f 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -3602,7 +3602,7 @@ lpfc_cancel_retry_delay_tmo(struct lpfc_vport *vport, struct lpfc_nodelist *nlp)
+ 
+ /**
+  * lpfc_els_retry_delay - Timer function with a ndlp delayed function timer
+- * @ptr: holder for the pointer to the timer function associated data (ndlp).
++ * @t: pointer to the timer function associated data (ndlp).
+  *
+  * This routine is invoked by the ndlp delayed-function timer to check
+  * whether there is any pending ELS retry event(s) with the node. If not, it
+@@ -4851,7 +4851,7 @@ lpfc_els_rsp_acc(struct lpfc_vport *vport, uint32_t flag,
+ /**
+  * lpfc_els_rsp_reject - Propare and issue a rjt response iocb command
+  * @vport: pointer to a virtual N_Port data structure.
+- * @rejectError:
++ * @rejectError: reject response to issue
+  * @oldiocb: pointer to the original lpfc command iocb data structure.
+  * @ndlp: pointer to a node-list data structure.
+  * @mbox: pointer to the driver internal queue element for mailbox command.
+@@ -7887,7 +7887,7 @@ lpfc_els_rcv_fan(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
+ 
+ /**
+  * lpfc_els_timeout - Handler funciton to the els timer
+- * @ptr: holder for the timer function associated data.
++ * @t: timer context used to obtain the vport.
+  *
+  * This routine is invoked by the ELS timer after timeout. It posts the ELS
+  * timer timeout event by setting the WORKER_ELS_TMO bit to the work port
+@@ -8260,7 +8260,7 @@ lpfc_send_els_failure_event(struct lpfc_hba *phba,
+  * lpfc_send_els_event - Posts unsolicited els event
+  * @vport: Pointer to vport object.
+  * @ndlp: Pointer FC node object.
+- * @cmd: ELS command code.
++ * @payload: ELS command code type.
+  *
+  * This function posts an event when there is an incoming
+  * unsolicited ELS command.
+@@ -8345,7 +8345,7 @@ DECLARE_ENUM2STR_LOOKUP(lpfc_get_fpin_li_event_nm, fc_fpin_li_event_types,
+ /**
+  * lpfc_els_rcv_fpin_li - Process an FPIN Link Integrity Event.
+  * @vport: Pointer to vport object.
+- * @lnk_not:  Pointer to the Link Integrity Notification Descriptor.
++ * @tlv:  Pointer to the Link Integrity Notification Descriptor.
+  *
+  * This function processes a link integrity FPIN event by
+  * logging a message
+@@ -9674,7 +9674,7 @@ lpfc_issue_els_npiv_logo(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp)
+ 
+ /**
+  * lpfc_fabric_block_timeout - Handler function to the fabric block timer
+- * @ptr: holder for the timer function associated data.
++ * @t: timer context used to obtain the lpfc hba.
+  *
+  * This routine is invoked by the fabric iocb block timer after
+  * timeout. It posts the fabric iocb block timeout event by setting the
 -- 
 2.25.1
 
