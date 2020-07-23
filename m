@@ -2,109 +2,93 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DA4C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7649A2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595546450;
-	bh=i+Ceq41gViZl1zByQdcr9xsP75TCnNB51e/Bimh3Pr0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rpsgOcQg+bPeUyRu6H1CiEneTv2DiGB/bw9ZRJSNhi5w6Ba4OxWZqYGx3GyYtwJIt
-	 k3eubKfqHpjm72P/x/9G6K+3LT5FBuJNqjOHtLN3TJPaubDqzXC6q5pMMQSU0sxVzq
-	 lTqSGs+EKHKuzMknDOGVc2auVmmci7JmYgL4y3lI=
+	by mail.kernel.org (Postfix) with ESMTP id 5252420792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="mT+3gEYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgGWXUt (ORCPT
+        id S1728186AbgGWXVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbgGWXUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:20:49 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        Thu, 23 Jul 2020 19:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgGWXV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 19:21:28 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A64C0619E3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:21:27 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A13F206E3;
-        Thu, 23 Jul 2020 23:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595546448;
-        bh=i+Ceq41gViZl1zByQdcr9xsP75TCnNB51e/Bimh3Pr0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EUcPK8R06MB++pnG74f+WhK4FLoWCqF2rEiQLgNYL6JcGZD/G19DSnX331wUy8Qt6
-         N9OBWObPxdpH6xfO/UyAsdwJwaERNeXFdian/Vl7i5UotFzUK6JbN1kYjXmpRD7NIP
-         1OxYe9M0ym7P3o3cjtxrd8hEvHPW6wIJK3byTYqU=
-Date:   Thu, 23 Jul 2020 18:20:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
-        james.morse@arm.com, lenb@kernel.org, tony.luck@intel.com,
-        dan.carpenter@oracle.com, zhangliguang@linux.alibaba.com,
-        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
-        jroedel@suse.de, linuxarm@huawei.com, yangyicong@hisilicon.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
-Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
- (vendor) CPER records
-Message-ID: <20200723232046.GA1468652@bjorn-Precision-5520>
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 344AA891B1;
+        Fri, 24 Jul 2020 11:21:24 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595546484;
+        bh=T1NDCOv0skNanugiuqRd6tsZXmRq6oJXFqorxiFMMaU=;
+        h=From:To:Cc:Subject:Date;
+        b=mT+3gEYAZh6OeAx89PqpsyP8ik4duX2l7atrsGdH7+cIHPt4Sjlt2+J9y3yhrlCyE
+         3B8B85+M1GOL5zN9Ipbupf5Z2Oyz1CPOwNKePTjcl8gE4R/sdEGJVQ3/v6RjiMTpRy
+         4RKErm3BR3Ajm58DVGt3W15VVpVy/uIXhSjVvA1DiiMy0qHbV6gTWi4cgni91GEG2n
+         6dZLQV0HV8dMV0wt8gveIeO36T8FHvc2tDRP21uG7z7ATS+h1iq2yYgAC2GVqCGjAi
+         IsZYKULDWIudrkW8XcocA6018QZD78aQ9nINflGthAXdlIdC5r4MxwbWwLU1TCiMjR
+         nmJnnkc98rBBg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f1a1b720001>; Fri, 24 Jul 2020 11:21:22 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id C7A0313EEB7;
+        Fri, 24 Jul 2020 11:21:23 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id EE543280079; Fri, 24 Jul 2020 11:21:23 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/3] net: dsa: mv88e6xxx: port mtu support
+Date:   Fri, 24 Jul 2020 11:21:19 +1200
+Message-Id: <20200723232122.5384-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722103952.1009-2-shiju.jose@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
-> CPER records describing a firmware-first error are identified by GUID.
-> The ghes driver currently logs, but ignores any unknown CPER records.
-> This prevents describing errors that can't be represented by a standard
-> entry, that would otherwise allow a driver to recover from an error.
-> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-> version 2.8).
+This series connects up the mv88e6xxx switches to the dsa infrastructure =
+for
+configuring the port MTU. The first patch is also a bug fix which might b=
+e a
+candiatate for stable.
 
-> +#ifdef CONFIG_ACPI_APEI_GHES
-> +/**
-> + * ghes_register_vendor_record_notifier - register a notifier for vendor
-> + * records that the kernel would otherwise ignore.
-> + * @nb: pointer to the notifier_block structure of the event handler.
-> + *
-> + * return 0 : SUCCESS, non-zero : FAIL
-> + */
-> +int ghes_register_vendor_record_notifier(struct notifier_block *nb);
-> +
-> +/**
-> + * ghes_unregister_vendor_record_notifier - unregister the previously
-> + * registered vendor record notifier.
-> + * @nb: pointer to the notifier_block structure of the vendor record handler.
-> + */
-> +void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
-> +#else
-> +static inline int ghes_register_vendor_record_notifier(struct notifier_block *nb)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
-> +{
-> +}
+I've rebased this series on top of net-next/master to pick up Andrew's ch=
+ange
+for the gigabit switches. Patch 1 and 2 are unchanged (aside from adding
+Andrew's Reviewed-by). Patch 3 is reworked to make use of the existing mt=
+u
+support.
 
-If you made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES,
-you'd be able to get rid of these stubs, wouldn't you?  It doesn't
-look like there's any point in building pcie-hisi-error.c at all
-unless CONFIG_ACPI_APEI_GHES is enabled.
+Chris Packham (3):
+  net: dsa: mv88e6xxx: MV88E6097 does not support jumbo configuration
+  net: dsa: mv88e6xxx: Support jumbo configuration on 6190/6190X
+  net: dsa: mv88e6xxx: Use chip-wide max frame size for MTU
 
-> +#endif
-> +
->  int ghes_estatus_pool_init(int num_ghes);
->  
->  /* From drivers/edac/ghes_edac.c */
-> -- 
-> 2.17.1
-> 
-> 
+ drivers/net/dsa/mv88e6xxx/chip.c    | 12 +++++++++++-
+ drivers/net/dsa/mv88e6xxx/chip.h    |  3 +++
+ drivers/net/dsa/mv88e6xxx/global1.c | 17 +++++++++++++++++
+ drivers/net/dsa/mv88e6xxx/global1.h |  2 ++
+ 4 files changed, 33 insertions(+), 1 deletion(-)
+
+--=20
+2.27.0
+
