@@ -2,153 +2,94 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB23C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083EA206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orwpt5cL"
+	by mail.kernel.org (Postfix) with ESMTP id 4C2FA206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595530770;
+	bh=8vbG20awn8KNpkhjnzQc1miCHWUCbrmIEj1rZZ3dr3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rXPF2jC4BQTXcg7f/spExuX4ojDirVK0/U0KfYq08FDZmrr4ozsf6uJvFciKFj7mB
+	 YhVO3fhvvlDCSZ8SOtEz0z/a0UKsaOc00pyjPuYgaMkSBiMX/U5cyPBYsTN5SmUl1x
+	 Lb7f4WsoBoc7mtURMcx52M2Jt3nBmb2nhYwsdr+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgGWS4S (ORCPT
+        id S1726993AbgGWS73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgGWS4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:56:17 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF950C0619DC;
-        Thu, 23 Jul 2020 11:56:16 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o2so6157913wmh.2;
-        Thu, 23 Jul 2020 11:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZnaXj0ngdZFKrJB580uCcw0Oj43wvhvWC7VrYpP5gZU=;
-        b=orwpt5cLVUtoaESuy2bI32ImQL7VJocu0f1aU4/Hxw4TofwG/28ss5VjS9iVotdKmf
-         fFdVZzVbj+PbaX52L+ak/7KLiyBVOGIf+Acnr9CfeEIoH/+84RUCbMw2dsnlySF2C2Bz
-         ekkCcb37dlgl72fT2X9WqYj0ihKNyZ3swK9gg7iXiNGoRlVcBBP9MhQkUJjkDbTYZk0h
-         LKsNKWelhxQNJqs8WdDDPVZHG3HWqchiqHu/I3oEEAIdW+Gi3YCi9lRns5oQ9bEf/R/J
-         QKpws7aYbfL/mFivXQcbVydgmCXmdyKp//LBDnWlV71L0C9Ul+G0St9ibZx7TOtAtSWT
-         wkMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZnaXj0ngdZFKrJB580uCcw0Oj43wvhvWC7VrYpP5gZU=;
-        b=Vw+2fpl9oIutN0VoN9RQA286sdNcyrIBILDVOUWSXN9wZoiZB128UuytRe29D7NOdq
-         /zyW0v7tbjAWhh60Iy4gpA1wSGIANdsbKGA1U+7L06YJ8ob+WRcaZAIcLDGkDHdp6hLP
-         1dHw3U2WMcbCW6BTHh5kZyZxGu77MQFOYXr1CNkncntCdUsClDc8ZNG/mzhkSIXwmawp
-         D7AKx0ZmABF2w1grlMdvaoJs9e7g2faXTJePUfSntXrKUbFmhmqL7kS1bcPQbGrJBuIb
-         +QayJ49AAzJ//y55IcX7GM3qbrpqgkLYyzZKC6BM/IJrSD73MshgXlIDIiP6qx6fw/g/
-         XchA==
-X-Gm-Message-State: AOAM530L98mArJj8yfAb3Ob7o+6LgaZGJx0A7kbRjrrvXTcICjnRVvdD
-        9UXwMGcPZk8T6Tj2ZRj9Cn8=
-X-Google-Smtp-Source: ABdhPJwTkfxDEqsq8MMB7mz3IddV08YDmDLD8QJFEDGToZLFGAmqshzALQu6ZCRAa86Z+k+cONiINQ==
-X-Received: by 2002:a7b:c4d8:: with SMTP id g24mr5051855wmk.127.1595530575508;
-        Thu, 23 Jul 2020 11:56:15 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id y17sm5035522wrh.63.2020.07.23.11.56.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 11:56:14 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 2/7] dt-bindings: net: macb: use an MDIO node
- as a container for PHY nodes
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
-        davem@davemloft.net, kuba@kernel.org, andrew@lunn.ch,
-        robh+dt@kernel.org, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com
-References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
- <20200721171316.1427582-3-codrin.ciubotariu@microchip.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <ef46586e-2f75-00cc-a1b4-4d1574286ce4@gmail.com>
-Date:   Thu, 23 Jul 2020 11:56:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 14:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbgGWS72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:59:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DA3206F4;
+        Thu, 23 Jul 2020 18:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595530768;
+        bh=8vbG20awn8KNpkhjnzQc1miCHWUCbrmIEj1rZZ3dr3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=083T7vXqCCTQqNq8eFr+N7rLF9tqNCFrOj2so8SUtuZz/aS8Gd3D/vtQ7KKxckAay
+         gkRbFYIWqb+F4ZeW9esJmJwLgys+5PUmXlGmTU2XK9xZdZOYcZwvg+dTNsaQKPowAu
+         oCrm7L+W+DX7WxYlGMuXlmTUtyT8iaAPOzk6/hHk=
+Date:   Thu, 23 Jul 2020 20:59:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs pull request for kernel 5.9-rc1
+Message-ID: <20200723185931.GC3768907@kroah.com>
+References: <20200723152938.GA17799@ogabbay-VM>
 MIME-Version: 1.0
-In-Reply-To: <20200721171316.1427582-3-codrin.ciubotariu@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723152938.GA17799@ogabbay-VM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 10:13 AM, Codrin Ciubotariu wrote:
-> The MACB driver embeds an MDIO bus controller and for this reason there
-> was no need for an MDIO sub-node present to contain the PHY nodes. Adding
-> MDIO devies directly under an Ethernet node is deprecated, so an MDIO node
-> is included to contain of the PHY nodes (and other MDIO devices' nodes).
+On Thu, Jul 23, 2020 at 06:29:38PM +0300, Oded Gabbay wrote:
+> Hello Greg,
 > 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> This is habanalabs pull request for the merge window of kernel 5.9. It
+> contains many small improvements to common and GAUDI code. Details are in
+> the tag.
+> 
+> Thanks,
+> Oded
+> 
+> The following changes since commit 7a4462a96777b64b22412f782de226c90290bf75:
+> 
+>   misc: rtsx: Use standard PCI definitions (2020-07-22 13:39:31 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-07-23
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+My scripts spit out the following error when I tried to push this out:
+
+ Commit: fc83dc9787ce ("habanalabs: Fix memory leak in error flow of context init")
+	Fixes tag: Fixes: "habanalabs: Use pending cs amount per asic"
+	Has these problem(s):
+	        - No SHA1 recognised
+
+
+Your line:
+	Fixes: "habanalabs: Use pending cs amount per asic"
+
+should have a sha1 in it :(
+
+And use the proper format as well.
+
+Can you fix this up and resend the pull request?
+
+thanks,
+
+greg k-h
