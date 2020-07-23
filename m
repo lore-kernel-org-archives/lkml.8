@@ -2,62 +2,114 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC91C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAE5C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 359CC20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3784D20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q/FHCbVw"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F3BMSeBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgGWIAh (ORCPT
+        id S1727769AbgGWIB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45428 "EHLO
+        Thu, 23 Jul 2020 04:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgGWIAg (ORCPT
+        with ESMTP id S1726109AbgGWIB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:00:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E83FC0619DC;
-        Thu, 23 Jul 2020 01:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zdzKrLJWVt7aMT8LFFNV0HicuVIyoT4jgGhxcP12oPc=; b=Q/FHCbVwm0YHTtgQLQ5AVmewfb
-        Hvzq4sdK6evanSAHQMeTP1LqZHGbgot3dRZExQsR4mY1pu5mYt+ItperI9xhV6pb4pnTls4q7pOHL
-        Zoa7c/ohOdZAFmJkDlS5H05aYM1GUHPrvorQtuBayB56sFIakTWqXlWKmszV7CAsOBtZyPsxUk6cf
-        VPnddPyyv7lFdF9NQ4mNTdEU/OFeBqA1OflcOWRlJUQhIDEH0+SFZTPrVBatv+JB1XFv8g8ceLjqj
-        pp0giyLjTxQYboaG68RRB7PzVSD3L7CyZD7OGFbsKBshK21vrgRuzDMmcsbZHqGaK/SnGys8ziTbx
-        SDoixo2Q==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyW9V-0001aZ-UH; Thu, 23 Jul 2020 08:00:29 +0000
-Date:   Thu, 23 Jul 2020 09:00:29 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: Re: [RFC][PATCHSET] regset ->get() rework
-Message-ID: <20200723080029.GA5815@infradead.org>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+        Thu, 23 Jul 2020 04:01:29 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FF9C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:01:29 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id n24so3705675otr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 01:01:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=udszHcSXsT4dQ3NuGugQMUyp4GH9Oigj4Zp+/fN1xeE=;
+        b=F3BMSeBeZ+HLzAI3wwQ4zN4ZWw/DyqownjHjQ82cXNtIE4vpJJqqetNX2gv3IYaMA+
+         ca0/0T0EScyio7LiFBuNI9iQsjtXOFjgfsPRlHr0SD+rbwohcgmxftm9s5PlgDrtdvAl
+         0GondLm/gxwNQCtw0IDwQVLM24CSsULefWPyw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=udszHcSXsT4dQ3NuGugQMUyp4GH9Oigj4Zp+/fN1xeE=;
+        b=my1s4r554QRMu4gvti6o4WPaGpbwcmYUzrVtwrRyleGlimJY05Y4mRdHKf21MyoM5J
+         PMkpoUfsl+KgwjwSOvLVuMoVkYcsDRM9XLhonUAYSrK5sxEMkturbswp61ydeEZAfogv
+         6dm4hIwE18WUAJPSvgnOFmwN0DsoGaJA+8dHTvhGY5F+8iYRkGNvGsGk4f7+K4ylZMLm
+         l5FEOuhzb2ztvhIcW3BqgtkZY+A7El/CVHJFmr9UP/XxyyuobzdD9IrvgrJuhG5K0inW
+         wcQmf2xU6tAW137lnogi7gjI+eP2G3cXEeVg8fS19vNc4MS+SP4TmHfmhDy17IftoPSJ
+         qCGw==
+X-Gm-Message-State: AOAM530+Cr+zvHxRUOPwxllpffmmJa/CFEaU46Lj5ZsEfbT6h2TBkwwD
+        tsPjiYKSXj8thm+HVv2jHoIuyZ5gMh28bekap5xC+w==
+X-Google-Smtp-Source: ABdhPJyErzT5Y8MQ0PTeEY2azu7bSVDw5wjEK5u+1316FD7VE3IPZHbIJjK4KSESg+aThLWlAYcVH2ah+V7lo4STqC8=
+X-Received: by 2002:a05:6830:1d0:: with SMTP id r16mr3416440ota.188.1595491288375;
+ Thu, 23 Jul 2020 01:01:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629182349.GA2786714@ZenIV.linux.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200722143417.42b52c73@canb.auug.org.au>
+In-Reply-To: <20200722143417.42b52c73@canb.auug.org.au>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 23 Jul 2020 10:01:16 +0200
+Message-ID: <CAKMK7uGZ4qdtkD6r_RzRUiEXrumkdAwENuKfKmfsuscQZtkWqA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the amdgpu tree with Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
+On Wed, Jul 22, 2020 at 6:34 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> [I can't find a previous email about this, sorry ...]
+>
+> There is a semantic conflict between Linus' tree and the amdgpu tree
+> between commit
+>
+>   d7a6634a4cfb ("drm/amdgpu/atomfirmware: fix vram_info fetching for renoir")
+>
+> from Linus' tree and commts
+>
+>   fe098a5d6443 ("drm/amdgpu/atomfirmware: fix vram_info fetching for renoir")
+>   836dab851903 ("drm/amdgpu/atomfirmware: update vram info handling for renoir")
+>
+> The automted git merge leaves two "case 12" labels.  I have been
+> reverting commit d7a6634a4cfb since July 3 ... This will need to be
+> fixed up when the amdgpu tree is next merged into the drm tree, or a back
+> merge of d7a6634a4cfb could be done into the amdgpu tree and the older
+> "case 12" label removed in that merge.
 
-what's the state of the series?  I noticed it hasn't shown up in
-linux-next so far.
+Yeah this is a bit nasty, I just crashed over it too (btw moved to
+drm-next now). Alex is this the right conflict resolution for -next? I
+think we should bake this in with a backmerge ...
+-Daniel
+
+>
+> --
+> Cheers,
+> Stephen Rothwell
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
