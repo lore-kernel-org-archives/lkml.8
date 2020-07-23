@@ -7,58 +7,61 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FB7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4AEC433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0090620709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED1A20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vr6f3/bX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pLhjXMU0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eFMeajpC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z9wT+dzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgGWTJo (ORCPT
+        id S1728363AbgGWTJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:09:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60504 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728262AbgGWTJm (ORCPT
+        Thu, 23 Jul 2020 15:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgGWTJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:09:42 -0400
+        Thu, 23 Jul 2020 15:09:41 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3637CC0619DC;
+        Thu, 23 Jul 2020 12:09:41 -0700 (PDT)
 Date:   Thu, 23 Jul 2020 19:09:39 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595531380;
+        s=2020; t=1595531379;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lOpsCe+bi6vV8+jAPqDgk29th7WfmTe9j2iURiMnsKs=;
-        b=vr6f3/bX00TxU3NhXEZighrlCfFJklvgdlFqUGrDeWzdSF6y5OBnm7UnqGIYrSHhJTlrMq
-        IaU6sDZt9gHvb5PgRXXrDR0QHLyqJqjZJvK0T4m1O147vtZynjmBbKDayzGE/jLDtA9mZQ
-        9j1AUZ1DbONBIIipN/ClbgUJYXZUmOn/cUbpl6a9Ml55ul493y+eaqYy6TNms2obt5IWQv
-        XVuwC/4SRjWu3ubzUm96xO6+baDwXW0PRdM6Lydwxq+VAGUgbc1L5/Sce4THhNFNd1Dj7w
-        fPLeDy6WMbFuHIb4FpEv6tK6mqbYlFWzf5Ik4T76IT3xziYZlvxd/wCBgulcHw==
+        bh=jHAEzeXiywKr0hwihLh1/TPPBoNTspu1YlA6nyxknew=;
+        b=eFMeajpCGibecWAOvzzkVzm7y+R6ye6Vrza+PpJd+MPINwcrSguLrY9s/1PZthJFUMFJ0F
+        Q7/iyGvk7kBQAgODwn1xJrA4MMsy2Ts8AqqI7fOyuBUhYZSH5gy9tyGLmDIfMhGXuhRDL2
+        cZM0jXhOS3Q9YiXSXm7S8bRn0GoNCgIonOBWHqL/18RGG8jCkYDD7eeN7lk3dkxqDRLiZ3
+        ndd5FXbNkS2r6ohd82HUm6nvWUoWQjsaEz2vw+ohsJAMpO12o6+4cEKLIMCR8RQAKHrCSc
+        56pS7eToh/OQvXDDvYi5aVL9QBfUQ2pji9UEudTYF6im6kq/3ejXkARFyRJUwA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595531380;
+        s=2020e; t=1595531379;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lOpsCe+bi6vV8+jAPqDgk29th7WfmTe9j2iURiMnsKs=;
-        b=pLhjXMU0MeJ0rn3J+SPi1badOBOM6TPnqomMfdko7JXwp0q1YkzTo9GyW/kit1Ix0SZq5e
-        IQRzV/H0NbdECMAw==
-From:   "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+        bh=jHAEzeXiywKr0hwihLh1/TPPBoNTspu1YlA6nyxknew=;
+        b=Z9wT+dzhSDoisJ8J+5esyP/2M28kz3mVifY+U/0n7QfVkAelJeF/zZvGmvWes/MzOrzz5S
+        8md9Qb1M8HqkNmBg==
+From:   "tip-bot2 for Linus Walleij" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/sh_cmt: Use "kHz" for kilohertz
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+Subject: [tip: timers/core] clocksource/drivers/nomadik-mtu: Handle 32kHz clock
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200618080212.16560-1-geert+renesas@glider.be>
-References: <20200618080212.16560-1-geert+renesas@glider.be>
+In-Reply-To: <20200628220153.67011-1-linus.walleij@linaro.org>
+References: <20200628220153.67011-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Message-ID: <159553137978.4006.7240080497666806907.tip-bot2@tip-bot2>
+Message-ID: <159553137912.4006.8159842673078944988.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,34 +73,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     ad7794d4dd0c3f03a81a0dbec3e9e3906edb9893
-Gitweb:        https://git.kernel.org/tip/ad7794d4dd0c3f03a81a0dbec3e9e3906edb9893
-Author:        Geert Uytterhoeven <geert+renesas@glider.be>
-AuthorDate:    Thu, 18 Jun 2020 10:02:12 +02:00
+Commit-ID:     aaea0b83458cdb3467e27deb7403b4403152dbd6
+Gitweb:        https://git.kernel.org/tip/aaea0b83458cdb3467e27deb7403b4403152dbd6
+Author:        Linus Walleij <linus.walleij@linaro.org>
+AuthorDate:    Mon, 29 Jun 2020 00:01:53 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Thu, 23 Jul 2020 16:57:43 +02:00
 
-clocksource/drivers/sh_cmt: Use "kHz" for kilohertz
+clocksource/drivers/nomadik-mtu: Handle 32kHz clock
 
-"K" stands for "kelvin".
+It happens on the U8420-sysclk Ux500 PRCMU firmware
+variant that the MTU clock is just 32768 Hz, and in this
+mode the minimum ticks is 5 rather than two.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I think this is simply so that there is enough time
+for the register write to propagate through the
+interconnect to the registers.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200618080212.16560-1-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20200628220153.67011-1-linus.walleij@linaro.org
 ---
- drivers/clocksource/sh_cmt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/nomadik-mtu.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-index 12ac75f..7607774 100644
---- a/drivers/clocksource/sh_cmt.c
-+++ b/drivers/clocksource/sh_cmt.c
-@@ -349,7 +349,7 @@ static int sh_cmt_enable(struct sh_cmt_channel *ch)
+diff --git a/drivers/clocksource/nomadik-mtu.c b/drivers/clocksource/nomadik-mtu.c
+index f49a631..1cf3304 100644
+--- a/drivers/clocksource/nomadik-mtu.c
++++ b/drivers/clocksource/nomadik-mtu.c
+@@ -186,6 +186,7 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
+ {
+ 	unsigned long rate;
+ 	int ret;
++	int min_ticks;
+ 
+ 	mtu_base = base;
+ 
+@@ -194,7 +195,8 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
  
  	/*
- 	 * According to the sh73a0 user's manual, as CMCNT can be operated
--	 * only by the RCLK (Pseudo 32 KHz), there's one restriction on
-+	 * only by the RCLK (Pseudo 32 kHz), there's one restriction on
- 	 * modifying CMCNT register; two RCLK cycles are necessary before
- 	 * this register is either read or any modification of the value
- 	 * it holds is reflected in the LSI's actual operation.
+ 	 * Tick rate is 2.4MHz for Nomadik and 2.4Mhz, 100MHz or 133 MHz
+-	 * for ux500.
++	 * for ux500, and in one specific Ux500 case 32768 Hz.
++	 *
+ 	 * Use a divide-by-16 counter if the tick rate is more than 32MHz.
+ 	 * At 32 MHz, the timer (with 32 bit counter) can be programmed
+ 	 * to wake-up at a max 127s a head in time. Dividing a 2.4 MHz timer
+@@ -230,7 +232,12 @@ static int __init nmdk_timer_init(void __iomem *base, int irq,
+ 		pr_err("%s: request_irq() failed\n", "Nomadik Timer Tick");
+ 	nmdk_clkevt.cpumask = cpumask_of(0);
+ 	nmdk_clkevt.irq = irq;
+-	clockevents_config_and_register(&nmdk_clkevt, rate, 2, 0xffffffffU);
++	if (rate < 100000)
++		min_ticks = 5;
++	else
++		min_ticks = 2;
++	clockevents_config_and_register(&nmdk_clkevt, rate, min_ticks,
++					0xffffffffU);
+ 
+ 	mtu_delay_timer.read_current_timer = &nmdk_timer_read_current_timer;
+ 	mtu_delay_timer.freq = rate;
