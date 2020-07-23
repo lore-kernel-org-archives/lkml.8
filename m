@@ -2,75 +2,128 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09646C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4AEC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E45832086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C20820888
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a1xQ4wLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733307AbgGWBCk (ORCPT
+        id S2387432AbgGWBDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:02:40 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:35547 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729423AbgGWBCj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:02:39 -0400
-Received: (qmail 1334263 invoked by uid 1000); 22 Jul 2020 21:02:38 -0400
-Date:   Wed, 22 Jul 2020 21:02:38 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ldv-project@linuxtesting.org" <ldv-project@linuxtesting.org>
-Subject: Re: [PATCH] usb: gadget: net2280: fix memory leak on probe error
- handling paths
-Message-ID: <20200723010238.GB1333715@rowland.harvard.edu>
-References: <20200721201558.20069-1-novikov@ispras.ru>
- <20200722141741.GA1310843@rowland.harvard.edu>
- <2097231595446720@mail.yandex.ru>
- <35a367f7d71014cf9a6890abc248e18a3d07bc35.camel@kernel.crashing.org>
+        Wed, 22 Jul 2020 21:03:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50965 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729401AbgGWBDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:03:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BBvFz3kvCz9sSd;
+        Thu, 23 Jul 2020 11:03:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595466184;
+        bh=IpD6VASULktpgHAHi1GVOnJ74823SFgCA3i2WxV+1Kk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a1xQ4wLuWfoRGLg8np7TIAVD4uiBTmWI3nruA7UADurrWX5LwSX6JnAyAJZQExRCR
+         8jj0yABmLfarfuT9J1Qqkdvb2FrITsVOdfsXnX/mcd2RBab78VgSBjNXnAissr2fFj
+         ByPgEY4JBWSlt/mOqRWlr8fNxpC3VYMvdvHUblkJLDDPhcJcuNbNcEuJ0qVJ96mqms
+         PPX30b879VrC6IqpFvd+THvwjHYvQrmd2lk8HIPu+JsAU3ZA/kRHWbSnhWkcIC47+R
+         Gheb8BEuMQ5qtJ/Ildo3kfl9DtLfaKvaPwMAXNei//ZA/iKrrO8MKNQbN125ruhZqO
+         cF58QUCayUXeg==
+Date:   Thu, 23 Jul 2020 11:03:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Subject: Re: linux-next: manual merge of the block tree with the fscrypt
+ tree
+Message-ID: <20200723110300.0d7f5d98@canb.auug.org.au>
+In-Reply-To: <20200709130254.65d3f234@canb.auug.org.au>
+References: <20200709130254.65d3f234@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35a367f7d71014cf9a6890abc248e18a3d07bc35.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/kS+tRa/ul1qUe/tvyrK57iD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:59:06AM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2020-07-22 at 22:56 +0300, Evgeny Novikov wrote:
-> > Hi Alan,
-> > 
-> > I have neither an appropriate hardware nor an experience to deal with
-> > issues that you mentioned. Our framework does not allow to detect
-> > them as well at the moment. At last, it seems that rather many
-> > drivers can suffer from these issues. So, it would be much better if
-> > somebody else will suggest necessary fixes and test them carefully.
-> > 
-> > BTW, you have already discussed the race within net2280_remove() with
-> > my colleague about 3 years ago. But you did not achieve a consensus
-> > at that time and no fixes were made after all.
-> > 
-> > Anyway, one can consider both issues independently on the one fixed
-> > by the patch.
-> 
-> FYI. It looks like I'm likely to resume my work on that driver in the
-> next few weeks in which case I could probably look into these Alan.
+--Sig_/kS+tRa/ul1qUe/tvyrK57iD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That probably won't be needed, although thanks for the offer.  I'll CC 
-you on any patches when they are submitted.
+Hi all,
 
-Alan Stern
+On Thu, 9 Jul 2020 13:02:54 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Today's linux-next merge of the block tree got a conflict in:
+>=20
+>   fs/buffer.c
+>=20
+> between commit:
+>=20
+>   4f74d15fe408 ("ext4: add inline encryption support")
+>=20
+> from the fscrypt tree and commit:
+>=20
+>   ed9b3196d2b2 ("fs: remove a weird comment in submit_bh_wbc")
+>=20
+> from the block tree.
+>=20
+>=20
+> diff --cc fs/buffer.c
+> index dc5e05b47646,2725ebbcfdc2..000000000000
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@@ -3039,14 -3040,7 +3039,10 @@@ static int submit_bh_wbc(int op, int op
+>   	if (test_set_buffer_req(bh) && (op =3D=3D REQ_OP_WRITE))
+>   		clear_buffer_write_io_error(bh);
+>  =20
+> - 	/*
+> - 	 * from here on down, it's all bio -- do the initial mapping,
+> - 	 * submit_bio -> generic_make_request may further map this bio around
+> - 	 */
+>   	bio =3D bio_alloc(GFP_NOIO, 1);
+>  +
+>  +	fscrypt_set_bio_crypt_ctx_bh(bio, bh, GFP_NOIO);
+>  +
+>   	bio->bi_iter.bi_sector =3D bh->b_blocknr * (bh->b_size >> 9);
+>   	bio_set_dev(bio, bh->b_bdev);
+>   	bio->bi_write_hint =3D write_hint;
+
+This is now also a conflict between the zonefs tree and the fscrypt
+tree (since the zonefs tree has merged part of the block tree).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kS+tRa/ul1qUe/tvyrK57iD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8Y4cQACgkQAVBC80lX
+0Gweygf9FJ3c1ht6rbyCJXGjUn57BgOxed25qetWYDKHtfvJf0AYWX+jOjwU0oUZ
+0XRnb6MnzmY+OYHytG415rX02M1JNG0XIsqJ6yFnUhsn7APFSJrLBmcve87ggfNK
+BWMx5zJxqANAvFvRyabE0x3ECrbgsFtGWe3ZdgeEFEWISMDY8Or5I8giTilKFV4x
+lTkD1jO6WDJkNnE0RIkSIAzkANK9cKfREJBvhcrpLcAGHmZAbBNkoCq/7+PQr+ZF
+mS0LLLtP85+wG3UENGBNxOhzfZ/QAK3AXgE5gF9V267ObcpXNh8g7MoxNBqFT7u4
+06fDHfQ96HfuF6HPoNGc9EcKfZT2hw==
+=jT3c
+-----END PGP SIGNATURE-----
+
+--Sig_/kS+tRa/ul1qUe/tvyrK57iD--
