@@ -2,64 +2,68 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AEDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5142C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6BDF20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0920206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595507622;
-	bh=9HstnzmZcOCVCvgAC527JidOXxjBwfFmBGK/5Rpv/18=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nmTp2CnJRe+i33ZnOJ3065Rqa+QpROVs+ZoecHEs/XBdwMOlG2VgxcJvRuXnBjMiH
-	 /fPj/SzbT7UwxaxS8eKvpw2XXSOTo7ihfoVvdOa6qM4I6VUbmshQx6u5Mg1ZuPLO1C
-	 NyKcN5Sv2buGV0Ed6k7YvasIKbqoD569h7beudFM=
+	s=default; t=1595507625;
+	bh=yafdt/L+/c8WtubqlGnlrh8tMDAtkM861vx4x6jumyw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KxMsdrudZnjftRFY+iu0qR95hzduuwM8FSfqU+koOLYHJLyia3VX2JzP1pdjh6aTT
+	 Eu98lpdnCw2uVDVQRXHBodDk5v9uG7c2EUgFbzXdVUrGuuWKjCzjZqdSs5flKAgtgV
+	 nudEvtI1kiGu8ofvUL6Tsa1FID0ovhEGh7sDdMEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgGWMdl (ORCPT
+        id S1728723AbgGWMdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:33:41 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44678 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbgGWMdk (ORCPT
+        Thu, 23 Jul 2020 08:33:44 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35922 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgGWMdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:33:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id s9so6111515ljm.11;
+        Thu, 23 Jul 2020 08:33:41 -0400
+Received: by mail-lf1-f65.google.com with SMTP id k17so3173135lfg.3;
         Thu, 23 Jul 2020 05:33:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wMPlcuFyKdJLBiTEiO5YJmGRmI6e1gfKTxMuztQbyO0=;
-        b=OhWbS3PMnMrAcV9jtFi+bkw5OHibH6JIEnfEeGg16IGJh8SdILL60k7f50J1AQOn6J
-         ++nUED9nIM8a0QQIBW0AIOkSDpB445Nptp9/2snxuiRqohcYKwgLb9AfGNkJPJjn4QAI
-         c0a0/w8HItIhVf5TQdVjSzaUuqBGoapOncREsM2A6uURXjYkB4XIM44dISYp7C9pBfln
-         fxDGSa8TP85GWsNikpVy+7v4Uj/a+o2l1NiewGlQOTlWt4JMTRdbcSlMe3KcP2R5DDYe
-         whsJ9DyOmJ4tmAl3oO+tU+qV6mHDUn7mRrtZo3xTVxYeQJqXyoatoY7b7OTSNlmy2dkq
-         pVHg==
-X-Gm-Message-State: AOAM531DO22oLFs3rlSY93VWUB69GtOT+0oFwn9Eri8kBAS+W+WnmCD4
-        TjomU9tU8xJMPDjebYP2PW4=
-X-Google-Smtp-Source: ABdhPJyoC4mBT/d9KVur1jULEN6NlGEFHQrgs23Yv/DCfWZjkoyuzoTvbMV72BCX1GBZfYC/+lwkzA==
-X-Received: by 2002:a2e:9853:: with SMTP id e19mr1959498ljj.436.1595507618786;
-        Thu, 23 Jul 2020 05:33:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RgoK4kANOOog4NgFMgyLLEn/I8CQdmvG2ET0K3WbRyc=;
+        b=LSQ1wCBmJ3/jm0bNAbTqTlbrfOet+xi56DeqkAvVfonGsdZ23bHDq4t+Kxe2tDpejZ
+         rSu8v852tpzZ606kaVhjr7mVSXspG4wfNnK1onFxxUferjMS4UIHuF8iPlqpTKaazh94
+         bo2Cyf2AgADKETh/dv6sVaG+C4OCq6+v79wRBHmCeBv/+IP1Ji/6LnPTqPglZ4OFy5su
+         Mo820azT257RnbESxy5FFJP32xCsirTQpgwId55xgunGReDs7srunZ4E69W9eTzN8Fk0
+         hmgQII+oEHE3/SCO4MXmbniSH06l96McMq6TgiMsK0HMlsMkfBJsPPNAwfiD78/sCd18
+         k/Iw==
+X-Gm-Message-State: AOAM530+H6Z0ko0P/MCMWD+3ycfmiOWDYM3AwDfX5O8J2xROvBE38oHy
+        tcc8R49biTnFH0A/xosfTHU=
+X-Google-Smtp-Source: ABdhPJyolhNlVhCLc4LVaa2llaCC2EUR2vpuIjWWfxU2JlmgPqar+w2QmQ1zQbWLBX5iaX9MNSiVGA==
+X-Received: by 2002:ac2:494c:: with SMTP id o12mr1375163lfi.181.1595507619215;
+        Thu, 23 Jul 2020 05:33:39 -0700 (PDT)
 Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id r19sm2675192ljn.40.2020.07.23.05.33.37
+        by smtp.gmail.com with ESMTPSA id e12sm2630851ljk.74.2020.07.23.05.33.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 23 Jul 2020 05:33:38 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.93.0.4)
         (envelope-from <johan@xi.terra>)
-        id 1jyaPk-0001X0-IM; Thu, 23 Jul 2020 14:33:32 +0200
+        id 1jyaPk-0001X3-MZ; Thu, 23 Jul 2020 14:33:32 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 0/2] serial: add sparse context annotation
-Date:   Thu, 23 Jul 2020 14:33:25 +0200
-Message-Id: <20200723123327.5843-1-johan@kernel.org>
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v2 1/2] serial: pmac_zilog: add sparse context annotation
+Date:   Thu, 23 Jul 2020 14:33:26 +0200
+Message-Id: <20200723123327.5843-2-johan@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200723123327.5843-1-johan@kernel.org>
+References: <20200723123327.5843-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,27 +71,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Intel test robot reported a new sparse warning in pmac_zilog, which
-wasn't actually new.
+Add sparse context annotation to the receive handler, which releases and
+reacquires the port lock, to silence a sparse warning:
 
-Add sparse annotation to the two drivers that release and reacquire the
-port lock in their receive handlers to suppress these warnings.
+	drivers/tty/serial/pmac_zilog.c:255:36: sparse: sparse: context imbalance in 'pmz_receive_chars' - unexpected unlock
 
-Johan
-
-Changes in v2:
- - let's use the right context expression even if sparse doesn't seem to
-   care (add the missing ampersand)
-
-
-Johan Hovold (2):
-  serial: pmac_zilog: add sparse context annotation
-  serial: msm_serial: add sparse context annotation
-
- drivers/tty/serial/msm_serial.c | 2 ++
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
  drivers/tty/serial/pmac_zilog.c | 1 +
- 2 files changed, 3 insertions(+)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/tty/serial/pmac_zilog.c b/drivers/tty/serial/pmac_zilog.c
+index ba65a3bbd72a..96e7aa479961 100644
+--- a/drivers/tty/serial/pmac_zilog.c
++++ b/drivers/tty/serial/pmac_zilog.c
+@@ -213,6 +213,7 @@ static void pmz_interrupt_control(struct uart_pmac_port *uap, int enable)
+ }
+ 
+ static bool pmz_receive_chars(struct uart_pmac_port *uap)
++	__must_hold(&uap->port.lock)
+ {
+ 	struct tty_port *port;
+ 	unsigned char ch, r1, drop, flag;
 -- 
 2.26.2
 
