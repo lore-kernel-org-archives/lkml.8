@@ -7,68 +7,63 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDADEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB21CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8082B22B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A83206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ECkIRQ+U";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ObSUhpNM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oldN3uSz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mMVGCP0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgGWTJl (ORCPT
+        id S1728452AbgGWTJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgGWTJk (ORCPT
+        Thu, 23 Jul 2020 15:09:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60504 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbgGWTJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:09:40 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E636C0619DC;
-        Thu, 23 Jul 2020 12:09:40 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 19:09:37 -0000
+        Thu, 23 Jul 2020 15:09:46 -0400
+Date:   Thu, 23 Jul 2020 19:09:44 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595531378;
+        s=2020; t=1595531385;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wZfFSsxHAB5cwoZHqlCIGgBvLiRHmrE/NCnCF5aUK5w=;
-        b=ECkIRQ+UW6lqGVVagCpAEV90zL0T9vnILT8CSgmzuv+J5nZpfUdvbvjwNE9sqYv+W159r9
-        B7n3zyCW2nkg3EBfbYRZFgBq1AInD4JlDb7dQbbx8TpOo+55pPy4zXK0K2soTz5cJtKID5
-        CY1rtU1Z6Ykhf6WjfcGllYvUbgTixGIS/33yxxvXRiblF2OuOHMK/3CdkTsaFolHb3QRKb
-        MDr6Nfa5HwnZOzmu/dK4NVDWMJkcgeqjbB1oxpcxsyMJRmKq9xAbjxukuJeA8wdF4tn4EV
-        /WJqk6fvN7V3d0pU6ywIJZRxmOgkJe+6zsGX5j0XMtjMUglBUyf0Nl6syxwhkA==
+        bh=6Mwt9NZqiGCWc/y/PwDNXa+V9bdnR9Bcgv963eoI4WQ=;
+        b=oldN3uSz3oj86BmkOiqqgH+4+fPiI1S9w3U6lpfNrAPEmMRdNkbQa6t3ANY5a6Nd51yRoc
+        KIcPKN5MEtDZNh5vBVd6SWdlomCCL6SEE06hezcob3pIfON134Hw7iU4067Q4WngtdjzV2
+        AXX05vpPhQ3XzUN4QJMUDdW2nvJbqIlUTsxerr0Owb7GuJP/wsHYikzALobdAYNdZ2FyUh
+        B2TjuN3HI4iCSlVq6wNYx2hRlVXbgZ/lTHlGQiksV2mKLTnQWbcQZ1TYKVJ/WF30UaVwkm
+        iLg0ZfLtvz1/tiBqga6Od833CR2cec0LzIl2/cz2giWZO0m0Sxm2U22fijzpWQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595531378;
+        s=2020e; t=1595531385;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wZfFSsxHAB5cwoZHqlCIGgBvLiRHmrE/NCnCF5aUK5w=;
-        b=ObSUhpNM3f4qnrEX2XP/90jaKbiPh8uLuJP5wUh9VoXyoCc4FDYo9Wr9G5DmKXO1jEAKdX
-        MUEE/A4zzxDLDFCg==
-From:   tip-bot2 for =?utf-8?b?5ZGo55Cw5p2w?= (Zhou Yanjie) 
-        <tip-bot2@linutronix.de>
+        bh=6Mwt9NZqiGCWc/y/PwDNXa+V9bdnR9Bcgv963eoI4WQ=;
+        b=mMVGCP0qIpIlSZ66jkfUoHKJ+wQ+eKQ3S0cZgeg7/xiYfR+H9fDxOszIwIVPYrWwkWSBX7
+        GrDXyuLuka+wZ/Dg==
+From:   "tip-bot2 for Alexandre Belloni" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] dt-bindings: timer: Add Ingenic X1000 OST bindings.
-Cc:     sernia.zhou@foxmail.com, zhouyanjie@wanyeetech.com,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh@kernel.org>,
+Subject: [tip: timers/core] clocksource/drivers/timer-atmel-tcb: Rework 32khz
+ clock selection
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200722171804.97559-2-zhouyanjie@wanyeetech.com>
-References: <20200722171804.97559-2-zhouyanjie@wanyeetech.com>
+In-Reply-To: <20200710230813.1005150-6-alexandre.belloni@bootlin.com>
+References: <20200710230813.1005150-6-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Message-ID: <159553137772.4006.12727287721506810751.tip-bot2@tip-bot2>
+Message-ID: <159553138460.4006.12847358392559063922.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,121 +71,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     ac756d05c468e535380c7b4b102105793c5d095e
-Gitweb:        https://git.kernel.org/tip/ac756d05c468e535380c7b4b102105793c5=
-d095e
-Author:        =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeete=
-ch.com>
-AuthorDate:    Thu, 23 Jul 2020 01:18:03 +08:00
+Commit-ID:     228e21848623e0ce54a1a3d7857b444813e49b2e
+Gitweb:        https://git.kernel.org/tip/228e21848623e0ce54a1a3d7857b444813e49b2e
+Author:        Alexandre Belloni <alexandre.belloni@bootlin.com>
+AuthorDate:    Sat, 11 Jul 2020 01:08:09 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Thu, 23 Jul 2020 16:58:09 +02:00
+CommitterDate: Sat, 11 Jul 2020 18:57:58 +02:00
 
-dt-bindings: timer: Add Ingenic X1000 OST bindings.
+clocksource/drivers/timer-atmel-tcb: Rework 32khz clock selection
 
-Add the OST bindings for the X1000 SoC from Ingenic.
+On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
+avoid looking it up and pass it directly to setup_clkevents.
 
-Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeete=
-ch.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200722171804.97559-2-zhouyanjie@wanyeetech.=
-com
+Link: https://lore.kernel.org/r/20200710230813.1005150-6-alexandre.belloni@bootlin.com
 ---
- Documentation/devicetree/bindings/timer/ingenic,sysost.yaml | 63 +++++++-
- include/dt-bindings/clock/ingenic,sysost.h                  | 12 +-
- 2 files changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.ya=
-ml
- create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Do=
-cumentation/devicetree/bindings/timer/ingenic,sysost.yaml
-new file mode 100644
-index 0000000..df3eb76
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for SYSOST in Ingenic XBurst family SoCs
-+
-+maintainers:
-+  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+
-+description:
-+  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
-+  and one or more 32bit timers for clockevent.
-+
-+properties:
-+  "#clock-cells":
-+    const: 1
-+
-+  compatible:
-+    enum:
-+      - ingenic,x1000-ost
-+      - ingenic,x2000-ost
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ost
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/x1000-cgu.h>
-+
-+    ost: timer@12000000 {
-+        compatible =3D "ingenic,x1000-ost";
-+        reg =3D <0x12000000 0x3c>;
-+
-+        #clock-cells =3D <1>;
-+
-+        clocks =3D <&cgu X1000_CLK_OST>;
-+        clock-names =3D "ost";
-+
-+        interrupt-parent =3D <&cpuintc>;
-+        interrupts =3D <3>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings=
-/clock/ingenic,sysost.h
-new file mode 100644
-index 0000000..9ac88e9
---- /dev/null
-+++ b/include/dt-bindings/clock/ingenic,sysost.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,tcu DT binding.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-+#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-+
-+#define OST_CLK_PERCPU_TIMER	0
-+#define OST_CLK_GLOBAL_TIMER	1
-+
-+#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
+index 7427b07..b255a4a 100644
+--- a/drivers/clocksource/timer-atmel-tcb.c
++++ b/drivers/clocksource/timer-atmel-tcb.c
+@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
+ 
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
+ 
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+-	int clk32k_divisor_idx = -1;
+ 	int bits;
+ 	int i;
+ 	int ret;
+@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+-		/* remember 32 KiHz clock for later */
+-		if (!divisor) {
+-			clk32k_divisor_idx = i;
+-			continue;
+-		}
+-
+ 		tmp = rate / divisor;
+ 		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
+ 		if (best_divisor_idx > 0) {
+@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(&tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
