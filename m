@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297B5C433E4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60496C433E8
 	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09C00207BB
+	by mail.kernel.org (Postfix) with ESMTP id 41C47207BB
 	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733258AbgGWAoI (ORCPT
+        id S1733279AbgGWAoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:44:08 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:58990 "EHLO
+        Wed, 22 Jul 2020 20:44:09 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:58982 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgGWAoH (ORCPT
+        with ESMTP id S1733150AbgGWAoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:44:07 -0400
+        Wed, 22 Jul 2020 20:44:08 -0400
 Received: from localhost (unknown [192.168.167.209])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 20FE2C5767;
-        Thu, 23 Jul 2020 08:44:03 +0800 (CST)
+        by lucky1.263xmail.com (Postfix) with ESMTP id 43ADDC571D;
+        Thu, 23 Jul 2020 08:44:02 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,9 +31,9 @@ X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P17009T140099499042560S1595465038112439_;
-        Thu, 23 Jul 2020 08:44:02 +0800 (CST)
+        Thu, 23 Jul 2020 08:44:01 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <41dae99cf031fc69e412229f78683b26>
+X-UNIQUE-TAG: <f73ad779b029db30ddd48caac0ab4cfc>
 X-RL-SENDER: jon.lin@rock-chips.com
 X-SENDER: jon.lin@rock-chips.com
 X-LOGIN-NAME: jon.lin@rock-chips.com
@@ -48,9 +48,9 @@ Cc:     heiko@sntech.de, linux-spi@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@esmil.dk, Jon Lin <jon.lin@rock-chips.com>
-Subject: [PATCH v3 3/3] spi: rockchip: Fix error in SPI slave pio read
-Date:   Thu, 23 Jul 2020 08:43:56 +0800
-Message-Id: <20200723004356.6390-3-jon.lin@rock-chips.com>
+Subject: [PATCH v3 2/3] spi: rockchip: Support 64-location deep FIFOs
+Date:   Thu, 23 Jul 2020 08:43:55 +0800
+Message-Id: <20200723004356.6390-2-jon.lin@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200723004356.6390-1-jon.lin@rock-chips.com>
 References: <20200723004356.6390-1-jon.lin@rock-chips.com>
@@ -59,30 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RXFLR is possible larger than rx_left in Rockchip SPI, fix it.
+The FIFO depth of SPI V2 is 64 instead of 32, add support for it.
 
-Fixes: 01b59ce5dac8 ("spi: rockchip: use irq rather than polling")
 Signed-off-by: Jon Lin <jon.lin@rock-chips.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
 Tested-by: Emil Renner Berthing <kernel@esmil.dk>
 ---
- drivers/spi/spi-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-rockchip.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index a451dacab5cf..75a8a9428ff8 100644
+index 63593a5b87fa..a451dacab5cf 100644
 --- a/drivers/spi/spi-rockchip.c
 +++ b/drivers/spi/spi-rockchip.c
-@@ -291,7 +291,7 @@ static void rockchip_spi_pio_writer(struct rockchip_spi *rs)
- static void rockchip_spi_pio_reader(struct rockchip_spi *rs)
- {
- 	u32 words = readl_relaxed(rs->regs + ROCKCHIP_SPI_RXFLR);
--	u32 rx_left = rs->rx_left - words;
-+	u32 rx_left = (rs->rx_left > words) ? rs->rx_left - words : 0;
+@@ -39,8 +39,9 @@
+ #define ROCKCHIP_SPI_RISR			0x0034
+ #define ROCKCHIP_SPI_ICR			0x0038
+ #define ROCKCHIP_SPI_DMACR			0x003c
+-#define ROCKCHIP_SPI_DMATDLR		0x0040
+-#define ROCKCHIP_SPI_DMARDLR		0x0044
++#define ROCKCHIP_SPI_DMATDLR			0x0040
++#define ROCKCHIP_SPI_DMARDLR			0x0044
++#define ROCKCHIP_SPI_VERSION			0x0048
+ #define ROCKCHIP_SPI_TXDR			0x0400
+ #define ROCKCHIP_SPI_RXDR			0x0800
  
- 	/* the hardware doesn't allow us to change fifo threshold
- 	 * level while spi is enabled, so instead make sure to leave
+@@ -156,6 +157,8 @@
+ #define ROCKCHIP_SPI_MAX_TRANLEN		0xffff
+ 
+ #define ROCKCHIP_SPI_MAX_CS_NUM			2
++#define ROCKCHIP_SPI_VER2_TYPE1			0x05EC0002
++#define ROCKCHIP_SPI_VER2_TYPE2			0x00110002
+ 
+ struct rockchip_spi {
+ 	struct device *dev;
+@@ -206,17 +209,17 @@ static inline void wait_for_idle(struct rockchip_spi *rs)
+ 
+ static u32 get_fifo_len(struct rockchip_spi *rs)
+ {
+-	u32 fifo;
++	u32 ver;
+ 
+-	for (fifo = 2; fifo < 32; fifo++) {
+-		writel_relaxed(fifo, rs->regs + ROCKCHIP_SPI_TXFTLR);
+-		if (fifo != readl_relaxed(rs->regs + ROCKCHIP_SPI_TXFTLR))
+-			break;
+-	}
+-
+-	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_TXFTLR);
++	ver = readl_relaxed(rs->regs + ROCKCHIP_SPI_VERSION);
+ 
+-	return (fifo == 31) ? 0 : fifo;
++	switch (ver) {
++	case ROCKCHIP_SPI_VER2_TYPE1:
++	case ROCKCHIP_SPI_VER2_TYPE2:
++		return 64;
++	default:
++		return 32;
++	}
+ }
+ 
+ static void rockchip_spi_set_cs(struct spi_device *spi, bool enable)
 -- 
 2.17.1
 
