@@ -2,103 +2,99 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E37C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7378C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4459C2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83137206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WXaqbpyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgGWLjW (ORCPT
+        id S1728461AbgGWLkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:39:22 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:50804 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgGWLjW (ORCPT
+        Thu, 23 Jul 2020 07:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgGWLkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:39:22 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8E93320053;
-        Thu, 23 Jul 2020 13:39:14 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 13:39:12 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200723113912.GA535520@ravnborg.org>
-References: <20200708103559.132300-1-vkoul@kernel.org>
- <20200708103559.132300-4-vkoul@kernel.org>
- <20200719171806.GA55541@ravnborg.org>
- <20200722131430.GJ5833@pendragon.ideasonboard.com>
- <20200723104151.GY12965@vkoul-mobl>
+        Thu, 23 Jul 2020 07:40:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4763DC0619DC;
+        Thu, 23 Jul 2020 04:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kdvkLlB0WIqKZ1XY1QVM6XMLE4+I3RIvWx6RmMkENUQ=; b=WXaqbpyDkFyXzYWsaKmxUO6XOJ
+        NHsi5kiF8SRTNR0efEuOMP5FTHTzkRIaNCVFEdC5pHGcz/+eMpoPOelGZxPcLn0+/n3RGFhPV/HrR
+        YTFn/Bcrr9RL4JHs0NpbYeXnb+iYXKEEXzWvkTHy3eo3Wm1hYnCDil4KbawSbsyUH7BuvckQ9wQOl
+        JSZcc0IE8OqaY3/6zoC8D8rSkfQSpObAfunyAuqz8Ee5zQrEnks0ZVf8k5oHHgWkNt2Zqjias8Kci
+        5yzCJpOVEsqPUYYaaXTvQIU99DSjitCb13t7fPHUI6CwDAFcq8M7sdabKU1Fr63w/nwpKj/sPvYUM
+        in7glj0A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyZa8-0005JF-MA; Thu, 23 Jul 2020 11:40:12 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 988F49821EE; Thu, 23 Jul 2020 13:40:10 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 13:40:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
+ synchronisation with actual irq state
+Message-ID: <20200723114010.GO5523@worktop.programming.kicks-ass.net>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200723104151.GY12965@vkoul-mobl>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=MEg9e8l0tn4fy5IhjskA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20200723105615.1268126-1-npiggin@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 04:11:51PM +0530, Vinod Koul wrote:
-> Hi Sam, Laurent,
-> 
-> On 22-07-20, 16:14, Laurent Pinchart wrote:
-> > > > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> > > > +				enum drm_bridge_attach_flags flags)
-> > > > +{
-> > > > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
-> > > > +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > >
-> > > This should say that the display driver should be fixed.
-> > > If a display driver expects this bridge to create the connector
-> > > it would not work.
-> > 
-> > Actually, for new bridge drivers, connector creation should be optional
-> > from the start. We don't want a failure in that case, the feature should
-> > be implemented.
-> 
-> Yes this is causing issues for me now !. The patch 4/4 adds support in
-> msm/dsi but causes regression on qualcomm laptops with ti-sn65dsi86 eDP
-> bridge. I tried to fix that up with changes like Laurent has done for
-> adv7511, but it hasnt worked yet for me (remote debug of this is bit
-> painful)
-> 
-> So I am going to drop patch 4 from this series and add support for both
-> DRM_BRIDGE_ATTACH_NO_CONNECTOR set and cleared (like we have in adv7511)
-> so that it can work in both cases, while I fix all bridge uses of
-> msm/dsi and then we can drop these. Does that sound okay to you folks?
-Yes, sounds like a good plan.
-Only when all display drivers are migrated over can we drop all the
-workarounds in the bridge drivers.
-I had hoped all users of this bridge was converted - alas that was not
-the case.
+On Thu, Jul 23, 2020 at 08:56:14PM +1000, Nicholas Piggin wrote:
 
-	Sam
+> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+> index 3a0db7b0b46e..35060be09073 100644
+> --- a/arch/powerpc/include/asm/hw_irq.h
+> +++ b/arch/powerpc/include/asm/hw_irq.h
+> @@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
+>  #define powerpc_local_irq_pmu_save(flags)			\
+>  	 do {							\
+>  		raw_local_irq_pmu_save(flags);			\
+> -		trace_hardirqs_off();				\
+> +		if (!raw_irqs_disabled_flags(flags))		\
+> +			trace_hardirqs_off();			\
+>  	} while(0)
+>  #define powerpc_local_irq_pmu_restore(flags)			\
+>  	do {							\
+> -		if (raw_irqs_disabled_flags(flags)) {		\
+> -			raw_local_irq_pmu_restore(flags);	\
+> -			trace_hardirqs_off();			\
+> -		} else {					\
+> +		if (!raw_irqs_disabled_flags(flags))		\
+>  			trace_hardirqs_on();			\
+> -			raw_local_irq_pmu_restore(flags);	\
+> -		}						\
+> +		raw_local_irq_pmu_restore(flags);		\
+>  	} while(0)
+
+You shouldn't be calling lockdep from NMI context! That is, I recently
+added suport for that on x86:
+
+  https://lkml.kernel.org/r/20200623083721.155449112@infradead.org
+  https://lkml.kernel.org/r/20200623083721.216740948@infradead.org
+
+But you need to be very careful on how you order things, as you can see
+the above relies on preempt_count() already having been incremented with
+NMI_MASK.
