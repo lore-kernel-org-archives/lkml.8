@@ -2,67 +2,100 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA2FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2000FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8D020825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3934207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbgGWCdz (ORCPT
+        id S2387436AbgGWCkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 22:33:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:37338 "EHLO foss.arm.com"
+        Wed, 22 Jul 2020 22:40:02 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50097 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbgGWCdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 22:33:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7DD231B;
-        Wed, 22 Jul 2020 19:33:54 -0700 (PDT)
-Received: from [10.163.85.73] (unknown [10.163.85.73])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08D203F718;
-        Wed, 22 Jul 2020 19:33:49 -0700 (PDT)
-Subject: Re: [PATCH] arm64: mm: free unused memmap for sparse memory model
- that define VMEMMAP
-To:     Wei Li <liwei213@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org
-Cc:     song.bao.hua@hisilicon.com, sujunfei2@hisilicon.com,
-        saberlily.xia@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-        steve.capper@arm.com, puck.chen@hisilicon.com,
-        linux-kernel@vger.kernel.org, rppt@linux.ibm.com,
-        fengbaopeng2@hisilicon.com, nsaenzjulienne@suse.de,
-        butao@hisilicon.com
-References: <20200721073203.107862-1-liwei213@huawei.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <dce65cf2-399b-28a7-8375-c8d5a69a9c81@arm.com>
-Date:   Thu, 23 Jul 2020 08:03:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1730837AbgGWCkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 22:40:01 -0400
+IronPort-SDR: Fszeu6/UJJqPZtklAQCYq2uF4CH5pvsyt4zBRsFo22vW+mTu+hvApetUh1EPkuoiU0Tl0qjnhf
+ +MYcKjR0lsaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="235325252"
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="235325252"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 19:40:01 -0700
+IronPort-SDR: v7v2cW3YGBSNRm4IH61Nw2j81BfF4tn9vG2sDk9InOKJE689Puu7Ck4QnV1pPg5MtQ24gVHIFc
+ LXr0CbCTfWBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="462682361"
+Received: from schwings-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.132])
+  by orsmga005.jf.intel.com with ESMTP; 22 Jul 2020 19:39:56 -0700
+Date:   Thu, 23 Jul 2020 05:39:54 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Tom Rix <trix@redhat.com>, dhowells@redhat.com, jmorris@namei.org,
+        serge@hallyn.com, denkenz@gmail.com, marcel@holtmann.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] KEYS: remove redundant memset
+Message-ID: <20200723023954.GJ45081@linux.intel.com>
+References: <20200722134610.31947-1-trix@redhat.com>
+ <2bdd6b8ec731d180023d593b679afc66def19b4f.camel@perches.com>
+ <e36c364e-22f4-c520-04da-ca1196fec049@redhat.com>
+ <b60f9b3e07b86d0f8631f6990f61b5172c43841f.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721073203.107862-1-liwei213@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b60f9b3e07b86d0f8631f6990f61b5172c43841f.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 07/21/2020 01:02 PM, Wei Li wrote:
-> For the memory hole, sparse memory model that define SPARSEMEM_VMEMMAP
-> do not free the reserved memory for the page map, this patch do it.
+On Wed, Jul 22, 2020 at 01:20:00PM -0700, Joe Perches wrote:
+> On Wed, 2020-07-22 at 13:10 -0700, Tom Rix wrote:
+> > On 7/22/20 1:02 PM, Joe Perches wrote:
+> > > On Wed, 2020-07-22 at 06:46 -0700, trix@redhat.com wrote:
+> > > > From: Tom Rix <trix@redhat.com>
+> > > > 
+> > > > Reviewing use of memset in keyctrl_pkey.c
+> > > > 
+> > > > keyctl_pkey_params_get prologue code to set params up
+> > > > 
+> > > > 	memset(params, 0, sizeof(*params));
+> > > > 	params->encoding = "raw";
+> > > > 
+> > > > keyctl_pkey_query has the same prologue
+> > > > and calls keyctl_pkey_params_get.
+> > > > 
+> > > > So remove the prologue.
+> > > > 
+> > > > Fixes: 00d60fd3b932 ("KEYS: Provide keyctls to drive the new key type ops for asymmetric keys [ver #2]")
+> > > At best, this is a micro optimization.
+> > Yes
+> > > How is this appropriate for a Fixes: line?
+> > Removing unneeded code is not a fix?
 > 
-> Signed-off-by: Wei Li <liwei213@huawei.com>
-> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
-> Signed-off-by: Xia Qing <saberlily.xia@hisilicon.com>
-> ---
->  arch/arm64/mm/init.c | 81 +++++++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 71 insertions(+), 10 deletions(-)
+> IMO: there's no "bug" here.
+> 
+> It's not a logic defect causing some unintended outcome.
+> It doesn't need backporting to stable branches.
+> 
+> Documentation/process/submitting-patches.rst-If your patch fixes a bug in a specific commit, e.g. you found an issue using
+> Documentation/process/submitting-patches.rst:``git bisect``, please use the 'Fixes:' tag with the first 12 characters of
+> Documentation/process/submitting-patches.rst-the SHA-1 ID, and the one line summary.
 
-This patch does not compile on 5.8-rc6 with defconfig.
+I agree.
+
+At worst it can cause unnecessary merge conflicts when backporting
+bug fixes.
+
+No measurable gain merging it.
+
+/Jarkko
