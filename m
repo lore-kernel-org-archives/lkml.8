@@ -2,195 +2,122 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8B6C433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E2CC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3EC82071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076842071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BRankmmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgGWIwR (ORCPT
+        id S1727769AbgGWI5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:52:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23526 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbgGWIv5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:51:57 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N8XFF7177784;
-        Thu, 23 Jul 2020 04:51:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32bvqxerpm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 04:51:43 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N8XbF1178769;
-        Thu, 23 Jul 2020 04:51:42 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32bvqxerny-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 04:51:42 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N8o28D002270;
-        Thu, 23 Jul 2020 08:51:40 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 32brq7wds8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 08:51:40 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N8pcJd26935656
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 08:51:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CC75AE055;
-        Thu, 23 Jul 2020 08:51:38 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 969D1AE059;
-        Thu, 23 Jul 2020 08:51:34 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.56.65])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 08:51:34 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v3 02/10] powerpc/smp: Merge Power9 topology with Power topology
-Date:   Thu, 23 Jul 2020 14:21:08 +0530
-Message-Id: <20200723085116.4731-3-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
-References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230065
+        Thu, 23 Jul 2020 04:57:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:30907 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgGWI5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:57:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595494668; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=uMsXblhmzZzd8eLTAl6l9gS/3WdMrBZGhkBeFqbIlWs=; b=BRankmmJbYW+rKO+7az1eAFuWdItT/GqvaL9sfkgpMIansMasYhfRWP2XGdp5fs9w0DuQomf
+ p6COjumNdKZICCOsj98HKRvL/wkB1k6ZlKZQAlwX393HLzPvrI9EHYetdQtWAdIjFxF1NUPn
+ xIU4gDF3jIiNl742igbRhloj5TA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f1950fb1e603dbb447eb6a3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 08:57:31
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 91BA2C433CB; Thu, 23 Jul 2020 08:57:30 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [123.201.159.88])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: msavaliy)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5997AC433C9;
+        Thu, 23 Jul 2020 08:57:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5997AC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=msavaliy@codeaurora.org
+Subject: Re: [PATCH] soc: qcom-geni-se: Don't use relaxed writes when writing
+ commands
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-kernel@vger.kernel.org
+References: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
+From:   "Mukesh, Savaliya" <msavaliy@codeaurora.org>
+Message-ID: <c41ccd0e-e18b-02eb-79b7-2cad604b5090@codeaurora.org>
+Date:   Thu, 23 Jul 2020 14:27:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new sched_domain_topology_level was added just for Power9. However the
-same can be achieved by merging powerpc_topology with power9_topology
-and makes the code more simpler especially when adding a new sched
-domain.
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v1 -> v2:
-	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
-	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
-
- arch/powerpc/kernel/smp.c | 33 ++++++++++-----------------------
- 1 file changed, 10 insertions(+), 23 deletions(-)
-
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index edf94ca64eea..283a04e54f52 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -1313,7 +1313,7 @@ int setup_profiling_timer(unsigned int multiplier)
- }
- 
- #ifdef CONFIG_SCHED_SMT
--/* cpumask of CPUs with asymetric SMT dependancy */
-+/* cpumask of CPUs with asymmetric SMT dependency */
- static int powerpc_smt_flags(void)
- {
- 	int flags = SD_SHARE_CPUCAPACITY | SD_SHARE_PKG_RESOURCES;
-@@ -1326,14 +1326,6 @@ static int powerpc_smt_flags(void)
- }
- #endif
- 
--static struct sched_domain_topology_level powerpc_topology[] = {
--#ifdef CONFIG_SCHED_SMT
--	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
--#endif
--	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
--	{ NULL, },
--};
--
- /*
-  * P9 has a slightly odd architecture where pairs of cores share an L2 cache.
-  * This topology makes it *much* cheaper to migrate tasks between adjacent cores
-@@ -1351,7 +1343,13 @@ static int powerpc_shared_cache_flags(void)
-  */
- static const struct cpumask *shared_cache_mask(int cpu)
- {
--	return cpu_l2_cache_mask(cpu);
-+	if (shared_caches)
-+		return cpu_l2_cache_mask(cpu);
-+
-+	if (has_big_cores)
-+		return cpu_smallcore_mask(cpu);
-+
-+	return per_cpu(cpu_sibling_map, cpu);
- }
- 
- #ifdef CONFIG_SCHED_SMT
-@@ -1361,7 +1359,7 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
- }
- #endif
- 
--static struct sched_domain_topology_level power9_topology[] = {
-+static struct sched_domain_topology_level powerpc_topology[] = {
- #ifdef CONFIG_SCHED_SMT
- 	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
- #endif
-@@ -1386,21 +1384,10 @@ void __init smp_cpus_done(unsigned int max_cpus)
- #ifdef CONFIG_SCHED_SMT
- 	if (has_big_cores) {
- 		pr_info("Big cores detected but using small core scheduling\n");
--		power9_topology[0].mask = smallcore_smt_mask;
- 		powerpc_topology[0].mask = smallcore_smt_mask;
- 	}
- #endif
--	/*
--	 * If any CPU detects that it's sharing a cache with another CPU then
--	 * use the deeper topology that is aware of this sharing.
--	 */
--	if (shared_caches) {
--		pr_info("Using shared cache scheduler topology\n");
--		set_sched_topology(power9_topology);
--	} else {
--		pr_info("Using standard scheduler topology\n");
--		set_sched_topology(powerpc_topology);
--	}
-+	set_sched_topology(powerpc_topology);
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
--- 
-2.18.2
-
+On 7/23/2020 3:31 AM, Douglas Anderson wrote:
+> Writing the command is the final step in kicking off a transfer.
+> Let's use writel() to ensure that any other memory accesses are done
+> before the command kicks off.  It's expected that this is mostly
+> relevant if we're in DMA mode but since it doesn't appear to regress
+> performance in a measurable way [1] even in PIO mode and it's easier
+> to reason about then let's just always use it.
+>
+> NOTE: this patch came about due to code inspection.  No actual
+> problems were observed that this patch fixes.
+>
+> [1] Tested by timing "flashrom -p ec" on a Chromebook which stresses
+> GENI SPI a lot.
+>
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
+> ---
+>
+>   include/linux/qcom-geni-se.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd464943f717..f50c73be1428 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -262,7 +262,7 @@ static inline void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
+>   	u32 m_cmd;
+>   
+>   	m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
+> -	writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
+> +	writel(m_cmd, se->base + SE_GENI_M_CMD0);
+>   }
+>   
+>   /**
+> @@ -282,7 +282,7 @@ static inline void geni_se_setup_s_cmd(struct geni_se *se, u32 cmd, u32 params)
+>   	s_cmd &= ~(S_OPCODE_MSK | S_PARAMS_MSK);
+>   	s_cmd |= (cmd << S_OPCODE_SHFT);
+>   	s_cmd |= (params & S_PARAMS_MSK);
+> -	writel_relaxed(s_cmd, se->base + SE_GENI_S_CMD0);
+> +	writel(s_cmd, se->base + SE_GENI_S_CMD0);
+>   }
+>   
+>   /**
