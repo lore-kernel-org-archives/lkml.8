@@ -2,144 +2,194 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC1EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9236206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD69B206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="GwwRckPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgGWQWQ (ORCPT
+        id S1729747AbgGWQXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:22:16 -0400
-Received: from mga11.intel.com ([192.55.52.93]:24631 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgGWQWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:22:16 -0400
-IronPort-SDR: z5N4fbWKImmiwnK71WXZ2HciV2+Fi7Ne4dFvWX4g0NZstESE075S9iwvLaNEWnJbUkyR3aDGFn
- Tsf5zY0DKn0g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148496987"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="148496987"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:22:15 -0700
-IronPort-SDR: OJt4vWrnoAP6pK5ymUZfgjDLP5rmH9XKLAPLTI79wcTcZb9YrBtgh2IIbZMntAMNwYvSx0bkCH
- eLMX9JaGcUSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="363096816"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga001.jf.intel.com with ESMTP; 23 Jul 2020 09:22:14 -0700
-Message-ID: <2590914945c04d7758f54a9c51dfc6b82924b4e6.camel@intel.com>
-Subject: Re: [PATCH v10 03/26] x86/fpu/xstate: Introduce CET MSR XSAVES
- supervisor states
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Date:   Thu, 23 Jul 2020 09:21:16 -0700
-In-Reply-To: <20200723161039.GE21891@linux.intel.com>
-References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
-         <20200429220732.31602-4-yu-cheng.yu@intel.com>
-         <20200723161039.GE21891@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 23 Jul 2020 12:23:05 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:55996 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgGWQXF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:23:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1595521385;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=pnROkcEpzt5hqqMgmqaKRrmNaTL4b1rnk61ZyREWxOE=;
+  b=GwwRckPuN9CZXV0JIapMxBsl4NokNF+orfmrVvOSUgMU5CQXygZKXV3y
+   nBSHGlc/G6T7lvGffPF8/Gzduey/TSkZzcOjrEI3PzeVXUUGatUycgDx5
+   rtj17PZbSaZ0psZLvYwKZsuCctMwGUuThe8mhvIXcRKN5rRixKeu7/QoG
+   U=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: SWN1Qv9Vg9UuCVerUDK4H3bgKeOadVxeZGsvJXl6PnccOSKOYBTcvN9I6wjT6IwJFkPdhXIRw0
+ kFcKo29eMjnJoS2WsGGcaZyca03MQjcyw9U9320DxG5Asn9dsHmVHne9Bb6/eAg5+tv33V2pMR
+ vEJbAaT3x6DNSYYJ7UfUjgvb+4YbrSOkcFVfMSfCiq8087EDxZOi+vssGJbntjDi+9FJZH7Mfe
+ PdndOJ+pY4J7QtauKXpYcPYITi03og2YKjxGzu/uKM3rK82oV5/A3wPsVz9EOMq3DVQzMSI2KP
+ Ebg=
+X-SBRS: 2.7
+X-MesageID: 23391925
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.75,387,1589256000"; 
+   d="scan'208";a="23391925"
+Date:   Thu, 23 Jul 2020 18:22:56 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        David Hildenbrand <david@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>
+Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
+ hotplug memory
+Message-ID: <20200723162256.GI7191@Air-de-Roger>
+References: <20200723084523.42109-1-roger.pau@citrix.com>
+ <20200723084523.42109-4-roger.pau@citrix.com>
+ <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
+ <20200723122300.GD7191@Air-de-Roger>
+ <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
+ <20200723135930.GH7191@Air-de-Roger>
+ <82b131f4-8f50-cd49-65cf-9a87d51b5555@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <82b131f4-8f50-cd49-65cf-9a87d51b5555@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-23 at 09:10 -0700, Sean Christopherson wrote:
-> On Wed, Apr 29, 2020 at 03:07:09PM -0700, Yu-cheng Yu wrote:
-> > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> > index 12c9684d59ba..47f603729543 100644
-> > --- a/arch/x86/include/asm/msr-index.h
-> > +++ b/arch/x86/include/asm/msr-index.h
-> > @@ -885,4 +885,22 @@
-> >  #define MSR_VM_IGNNE                    0xc0010115
-> >  #define MSR_VM_HSAVE_PA                 0xc0010117
-> >  
-> > +/* Control-flow Enforcement Technology MSRs */
-> > +#define MSR_IA32_U_CET		0x6a0 /* user mode cet setting */
-> > +#define MSR_IA32_S_CET		0x6a2 /* kernel mode cet setting */
-> > +#define MSR_IA32_PL0_SSP	0x6a4 /* kernel shstk pointer */
-> > +#define MSR_IA32_PL1_SSP	0x6a5 /* ring-1 shstk pointer */
-> > +#define MSR_IA32_PL2_SSP	0x6a6 /* ring-2 shstk pointer */
-> > +#define MSR_IA32_PL3_SSP	0x6a7 /* user shstk pointer */
-> > +#define MSR_IA32_INT_SSP_TAB	0x6a8 /* exception shstk table */
-> > +
-> > +/* MSR_IA32_U_CET and MSR_IA32_S_CET bits */
-> > +#define MSR_IA32_CET_SHSTK_EN		0x0000000000000001ULL
+On Thu, Jul 23, 2020 at 05:10:03PM +0200, Jürgen Groß wrote:
+> On 23.07.20 15:59, Roger Pau Monné wrote:
+> > On Thu, Jul 23, 2020 at 03:22:49PM +0200, David Hildenbrand wrote:
+> > > On 23.07.20 14:23, Roger Pau Monné wrote:
+> > > > On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
+> > > > > On 23.07.20 10:45, Roger Pau Monne wrote:
+> > > > > > Add an extra option to add_memory_resource that overrides the memory
+> > > > > > hotplug online behavior in order to force onlining of memory from
+> > > > > > add_memory_resource unconditionally.
+> > > > > > 
+> > > > > > This is required for the Xen balloon driver, that must run the
+> > > > > > online page callback in order to correctly process the newly added
+> > > > > > memory region, note this is an unpopulated region that is used by Linux
+> > > > > > to either hotplug RAM or to map foreign pages from other domains, and
+> > > > > > hence memory hotplug when running on Xen can be used even without the
+> > > > > > user explicitly requesting it, as part of the normal operations of the
+> > > > > > OS when attempting to map memory from a different domain.
+> > > > > > 
+> > > > > > Setting a different default value of memhp_default_online_type when
+> > > > > > attaching the balloon driver is not a robust solution, as the user (or
+> > > > > > distro init scripts) could still change it and thus break the Xen
+> > > > > > balloon driver.
+> > > > > 
+> > > > > I think we discussed this a couple of times before (even triggered by my
+> > > > > request), and this is responsibility of user space to configure. Usually
+> > > > > distros have udev rules to online memory automatically. Especially, user
+> > > > > space should eb able to configure *how* to online memory.
+> > > > 
+> > > > Note (as per the commit message) that in the specific case I'm
+> > > > referring to the memory hotplugged by the Xen balloon driver will be
+> > > > an unpopulated range to be used internally by certain Xen subsystems,
+> > > > like the xen-blkback or the privcmd drivers. The addition of such
+> > > > blocks of (unpopulated) memory can happen without the user explicitly
+> > > > requesting it, and hence not even aware such hotplug process is taking
+> > > > place. To be clear: no actual RAM will be added to the system.
+> > > 
+> > > Okay, but there is also the case where XEN will actually hotplug memory
+> > > using this same handler IIRC (at least I've read papers about it). Both
+> > > are using the same handler, correct?
+> > 
+> > Yes, it's used by this dual purpose, which I have to admit I don't
+> > like that much either.
+> > 
+> > One set of pages should be clearly used for RAM memory hotplug, and
+> > the other to map foreign pages that are not related to memory hotplug,
+> > it's just that we happen to need a physical region with backing struct
+> > pages.
+> > 
+> > > > 
+> > > > > It's the admin/distro responsibility to configure this properly. In case
+> > > > > this doesn't happen (or as you say, users change it), bad luck.
+> > > > > 
+> > > > > E.g., virtio-mem takes care to not add more memory in case it is not
+> > > > > getting onlined. I remember hyper-v has similar code to at least wait a
+> > > > > bit for memory to get onlined.
+> > > > 
+> > > > I don't think VirtIO or Hyper-V use the hotplug system in the same way
+> > > > as Xen, as said this is done to add unpopulated memory regions that
+> > > > will be used to map foreign memory (from other domains) by Xen drivers
+> > > > on the system.
+> > > 
+> > > Indeed, if the memory is never exposed to the buddy (and all you need is
+> > > struct pages +  a kernel virtual mapping), I wonder if
+> > > memremap/ZONE_DEVICE is what you want?
+> > 
+> > I'm certainly not familiar with the Linux memory subsystem, but if
+> > that gets us a backing struct page and a kernel mapping then I would
+> > say yes.
+> > 
+> > > Then you won't have user-visible
+> > > memory blocks created with unclear online semantics, partially involving
+> > > the buddy.
+> > 
+> > Seems like a fine solution.
+> > 
+> > Juergen: would you be OK to use a separate page-list for
+> > alloc_xenballooned_pages on HVM/PVH using the logic described by
+> > David?
+> > 
+> > I guess I would leave PV as-is, since it already has this reserved
+> > region to map foreign pages.
 > 
-> Can we drop the MSR_IA32 prefix for the individual bits?  Mostly to yield
-> shorter line lengths, but also because it's more or less redundant info,
-> and in some ways unhelpful as it's hard to quickly differentiate between
-> "this is an MSR index" and "this is a bit/mask for an MSR".
+> I would really like a common solution, especially as it would enable
+> pv driver domains to use that feature, too.
 
-Agree!
+I think PV is much more easy on that regard, as it doesn't have MMIO
+holes except when using PCI passthrough, and in that case it's
+trivial to identify those.
 
-> 
-> My vote would also be to use BIT() or BIT_ULL().  The SDM defines the flags
-> by their (decimal) bit number.  Manually converting the bits to masks makes
-> it difficult to check for correctness.
-> 
-> E.g.
-> 
-> #define CET_SHSTK_EN		BIT(0)
-> #define CET_WRSS_EN		BIT(1)
-> #define CET_ENDBR_EN		BIT(2)
-> #define CET_LEG_IW_EN		BIT(3)
-> #define CET_NO_TRACK_EN		BIT(4)
-> #define CET_WAIT_ENDBR		BIT(5)
+However on HVM/PVH this is not so trivial. I'm certainly not opposing
+to a solution that covers both, but ATM I would really like to get
+something working for PVH dom0, or else it's not usable on Linux IMO.
 
-I will change them.
+> And finding a region for this memory zone in PVH dom0 should be common
+> with PV dom0 after all. We don't want to collide with either PCI space
+> or hotplug memory.
 
-> 
-> > +#define MSR_IA32_CET_WRSS_EN		0x0000000000000002ULL
-> > +#define MSR_IA32_CET_ENDBR_EN		0x0000000000000004ULL
-> > +#define MSR_IA32_CET_LEG_IW_EN		0x0000000000000008ULL
-> > +#define MSR_IA32_CET_NO_TRACK_EN	0x0000000000000010ULL
-> > +#define MSR_IA32_CET_WAIT_ENDBR	0x00000000000000800UL
-> > +#define MSR_IA32_CET_BITMAP_MASK	0xfffffffffffff000ULL
-> 
-> This particular define, the so called BITMAP_MASK, is no longer used in the
-> IBT series.  IMO it'd be better off dropping this mask as it's not clear
-> from the name that this is really nothing more than a mask for a virtual
-> address, e.g. at first glance (for someone without CET knowledge) it looks
-> like bits 63:12 hold a bitmap as opposed to holding a pointer to a bitmap.
+Right, we could use the native memory map for that on dom0, and maybe
+create a custom resource for the Xen balloon driver instead of
+allocating from iomem_resource?
 
-I will remove this.
+DomUs are more tricky as a guest has no idea where mappings can be
+safely placed, maybe we will have to resort to iomem_resource in that
+case, as I don't see much other option due to the lack of information
+from Xen.
 
-Thanks,
-Yu-cheng
+I also think that ZONE_DEVICE will need some adjustments, for once the
+types in memory_type don't seem to be suitable for Xen, as they are
+either specific to DAX or PCI. I gave a try at using allocate_resource
+plus memremap_pages but that didn't seem to fly, I will need to
+investigate further.
 
+Maybe we can resort to something even simpler than memremap_pages? I
+certainly have very little idea of how this is supposed to be used,
+but dev_pagemap seems overly complex for what we are trying to
+achieve.
+
+Thanks, Roger.
