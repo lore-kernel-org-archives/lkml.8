@@ -2,101 +2,167 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2030C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD8320792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5228820771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="C48UkXkp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a3F1dORF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgGWQwG (ORCPT
+        id S1729810AbgGWQyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:52:06 -0400
-Received: from mga14.intel.com ([192.55.52.115]:61707 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgGWQwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:52:06 -0400
-IronPort-SDR: eCpyblb3JAmn3MY34CfejmwRB9+PzBIrn8b1CDJcbBYQD0+8KJyFZZooXQG75tywt3x9pNah9e
- nHh2xletJfIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="149757227"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="149757227"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:52:05 -0700
-IronPort-SDR: mAmrUitOfiAg5CS/tsz6tCarSLviqTRzcFRleZL+GG/v8x+OPGmFN8FiKB+3GU/TO5dndgquAI
- CuGW8cd61NtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="311100155"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 09:52:05 -0700
-Date:   Thu, 23 Jul 2020 09:52:04 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Weiny Ira <ira.weiny@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
- exceptions
-Message-ID: <20200723165204.GB77434@romley-ivt3.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-18-ira.weiny@intel.com>
- <CALCETrVe1i5JdyzD_BcctxQJn+ZE3T38EFPgjxN1F577M36g+w@mail.gmail.com>
- <20200723161818.GA77434@romley-ivt3.sc.intel.com>
- <1cdb358b-861a-5f74-8cd0-84ee5265035c@intel.com>
+        Thu, 23 Jul 2020 12:54:54 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:52905 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbgGWQyx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:54:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E37AE5C00FE;
+        Thu, 23 Jul 2020 12:54:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 23 Jul 2020 12:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=N
+        aypVAu5q5bWw5EDqU/ZD81JjsTy8wVq+ErZYa1wjzg=; b=C48UkXkpzRRFWsN/y
+        HQ2mVp4+rpu2C+IMnrWrkji+n0JtRvMgMNv3GB4zInYZU7lVJYtk0J/JnkRFXnlv
+        JHlhk8g8Pdxj8J0hJvATwtBhJLGXmZR90bN+Zbn+YBMmuPKIXeJfbqPQWsJwGLyQ
+        /FwozXDMTIa1ggWeRYuymmxdByEbKC+MYLbqH0Q3/Mx0p56LpZLljQl4TS24RsEP
+        XGeRJlTIsXkJf6P3mnHb/DjQu5Asjg8p5c3epM3oDaJfEtoKNND4UQNIAnpoTpIu
+        4iw5WWLBjalxxCLDBmoPMkmu3fcUL+JoKIb7RrphxTEK/9ItYd5EcEDFCFwPiWPy
+        M/uAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=NaypVAu5q5bWw5EDqU/ZD81JjsTy8wVq+ErZYa1wj
+        zg=; b=a3F1dORFPnqjQCWf/vHtmHFsDqp6pRf6LdBIOkgwR1kpzOKu7fLycwb8i
+        WjrBJi1//rDrKzAg2SRGH2LnABR7jrvIK8dlW3DL3YDMdQvs1beUDV6j3HX/dj/L
+        vqVdtOq+yemGqrnTh5RAEsRwKjEgHuGV9+FRRbjhihNsZytEApIeIrIJ5ZZw/DWa
+        jTt/QLvBQvjV2RRwbMG1uT9qsn9AtfZcPVG0yt5dSH6ivWkjp1KNBmDY8lhFp38C
+        Em5VEItyFes0F2A8TKifNZsjAUnQvrLRXoOLK5P/hPo7tSiFbyrWlb3qEkJIJMaS
+        77NCyZZPzyhXxTMMXBe+k5xkdjodQ==
+X-ME-Sender: <xms:2sAZX1xZgiYvlOQpmBUKsx-Uqg92lS4ZvlBDaWDqec9oiO8WwDPu6Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedugdduuddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
+    gedvudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:2sAZX1TQjvIMb6bUbjt_aHp8bJkIaGXt60Wpa7ZFeSKDYdxkJhBAuQ>
+    <xmx:2sAZX_WDynJ77bQg6qss3VXagrKspPxGf87_7O--xJ3dImYE5kxiXQ>
+    <xmx:2sAZX3i5hzPonsdp63bRrIleGztI5MJECIRcET9iWR09ZHniXgHtPw>
+    <xmx:3MAZXy5xg--258A-Q9bapyxLZCCCx6JT1ZEReeFdxU181qgcxYCHXA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7C7853280064;
+        Thu, 23 Jul 2020 12:54:50 -0400 (EDT)
+Date:   Thu, 23 Jul 2020 18:54:48 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v4 14/16] arm64: allwinner: A100: add the basical
+ Allwinner A100 DTSI file
+Message-ID: <20200723165448.crdc4fc5jwqmsret@gilmour.lan>
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1cdb358b-861a-5f74-8cd0-84ee5265035c@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Dave,
+Hi,
 
-On Thu, Jul 23, 2020 at 09:23:13AM -0700, Dave Hansen wrote:
-> On 7/23/20 9:18 AM, Fenghua Yu wrote:
-> > The PKRS MSR has been preserved in thread_info during kernel entry. We
-> > don't need to preserve it in another place (i.e. idtentry_state).
-> 
-> I'm missing how the PKRS MSR gets preserved in thread_info.  Could you
-> explain the mechanism by which this happens and point to the code
-> implementing it, please?
+On Tue, Jul 14, 2020 at 03:20:29PM +0800, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
+>=20
+> Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
+> the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
+> nmi, and UART support.
+>=20
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> ---
+>  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 364 ++++++++++++++++++
+>  1 file changed, 364 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-a100.dtsi
+> new file mode 100644
+> index 000000000000..3fb2443f2121
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+> @@ -0,0 +1,364 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/sun50i-a100-ccu.h>
+> +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
+> +
+> +/ {
+> +	interrupt-parent =3D <&gic>;
+> +	#address-cells =3D <2>;
+> +	#size-cells =3D <2>;
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible =3D "arm,armv8";
 
-[Sorry, my mistake: I mean "thread_struct" instead of "thread_info".
-Hopefully the typo doesn't change the essential part in my last email.]
+You should use the arm,cortex-a53 compatible here, arm,armv8 is for
+software models.
 
-The "saved_pkrs" is defined in thread_struct and context switched in
-patch 04/17:
-https://lore.kernel.org/lkml/20200717072056.73134-5-ira.weiny@intel.com/
+> +		sid@3006000 {
 
-Because there is no XSAVE support the PKRS MSR, we preserve it in
-"saved_pkrs" in thread_struct. It's initialized as 0 (init state, no
-protection key) in fork() or exec(). It's updated to a right protection
-value when a driver calls the updating API. The PKRS MSR is context
-switched by "saved_pkrs" when switching to a task (unless optimized if the
-cached MSR is the same as the saved one).
+The node name is supposed to be the class of the device, and the DT spec
+defines a list of them already. eeprom would be better suited here.
 
-Thanks.
+> +	thermal-zones {
+> +		cpu-thermal-zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 0>;
+> +		};
+> +
+> +		gpu-thermal-zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 1>;
+> +		};
+> +
+> +		ddr-thermal-zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 2>;
+> +		};
+> +	};
 
--Fenghua
+Ideally, the nodes here should be ordered by alphabetical order (so ddr
+before GPU).
+
+Thanks!
+Maxime
