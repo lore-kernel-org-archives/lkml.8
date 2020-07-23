@@ -2,189 +2,102 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D41C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE102080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A9D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:02:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RVPyEEp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgGWOHD (ORCPT
+        id S1729388AbgGWOCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:07:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12540 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727111AbgGWOHD (ORCPT
+        Thu, 23 Jul 2020 10:02:43 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45214 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727111AbgGWOCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:07:03 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NE3QnP061533;
-        Thu, 23 Jul 2020 10:06:50 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23g9dtm-1
+        Thu, 23 Jul 2020 10:02:42 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NDrCdw019917;
+        Thu, 23 Jul 2020 16:02:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=2s9++maMnmQlaHoFweGqpleGAEqmizK6DFBHoz7LIV4=;
+ b=RVPyEEp93S5zGSAdEbIBRtATQnRmu2fwnM3B+KN55e564gWntEnnsFdrugQOZJGBNqCY
+ 0AOs7cPq9KbLg3rG8oc9Ogi2iwyTzKLJbwgdzu/uiN4x1Sr2Pv/E/fDwY8jznUXpnk9Z
+ tXtxY28F1NFZSNN3K/pwQ36ylU29Cg+Luz8NU7CzhUGGyMkh8+71Um8Aa07y2tylfHqV
+ Opn96A4NwmtmUhj+1C3VbbX3xkrXX58iQ+Mll6GOa49hm6xH0VL5YwVO3OoOCa9UUjsY
+ Yda7aJ9UiCL7Gth0GwNXS3Hv0BnzLGGimrfDMJwimBMb6JL/gBWjgQHIVHs7scHOPPLD xQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsahb4as-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 10:06:49 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NE0Ltc010223;
-        Thu, 23 Jul 2020 14:06:47 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03fra.de.ibm.com with ESMTP id 32brq83ch9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 14:06:46 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NE6heE59834608
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 14:06:44 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF6B411C04C;
-        Thu, 23 Jul 2020 14:06:43 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64F5711C04A;
-        Thu, 23 Jul 2020 14:06:43 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.31.161])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 14:06:43 +0000 (GMT)
-Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: rework secure mem slot
- dropping
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     bharata@linux.ibm.com, linuxram@us.ibm.com
-Cc:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        paulus@samba.org, sukadev@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, bauerman@linux.ibm.com
-References: <20200721104202.15727-1-ldufour@linux.ibm.com>
- <20200721104202.15727-3-ldufour@linux.ibm.com>
- <20200723033600.GS7902@in.ibm.com>
- <4a3caeaf-cd0c-fcd7-0a97-f367a5f78dac@linux.ibm.com>
-Message-ID: <0631397b-44af-ea3b-b70b-e4a0dc2c0366@linux.ibm.com>
-Date:   Thu, 23 Jul 2020 16:06:43 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Thu, 23 Jul 2020 16:02:36 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6C5E210002A;
+        Thu, 23 Jul 2020 16:02:35 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5DFDA2B8A05;
+        Thu, 23 Jul 2020 16:02:35 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Jul
+ 2020 16:02:33 +0200
+Subject: Re: [PATCH] pinctrl: stm32: use the hwspin_lock_timeout_in_atomic()
+ API
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200615124456.27328-1-alexandre.torgue@st.com>
+ <CACRpkdbWUop6hyKM80zxaz85oQ8BfDLCtxBTzjOypnDpUm-a4Q@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <7f9648bd-6dcc-de70-a713-e889caf021ba@st.com>
+Date:   Thu, 23 Jul 2020 16:02:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <4a3caeaf-cd0c-fcd7-0a97-f367a5f78dac@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CACRpkdbWUop6hyKM80zxaz85oQ8BfDLCtxBTzjOypnDpUm-a4Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-23_06:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- adultscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 23/07/2020 à 14:32, Laurent Dufour a écrit :
-> Le 23/07/2020 à 05:36, Bharata B Rao a écrit :
->> On Tue, Jul 21, 2020 at 12:42:02PM +0200, Laurent Dufour wrote:
->>> When a secure memslot is dropped, all the pages backed in the secure device
->>> (aka really backed by secure memory by the Ultravisor) should be paged out
->>> to a normal page. Previously, this was achieved by triggering the page
->>> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
->>>
->>> This can't work when hot unplugging a memory slot because the memory slot
->>> is flagged as invalid and gfn_to_pfn() is then not trying to access the
->>> page, so the page fault mechanism is not triggered.
->>>
->>> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
->>> simpler to directly calling it instead of triggering such a mechanism. This
->>> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
->>> memslot.
->>>
->>> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
->>> the call to __kvmppc_svm_page_out() is made.
->>> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
->>> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
->>> addition, the mmap_sem is help in read mode during that time, not in write
->>> mode since the virual memory layout is not impacted, and
->>> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
->>>
->>> Cc: Ram Pai <linuxram@us.ibm.com>
->>> Cc: Bharata B Rao <bharata@linux.ibm.com>
->>> Cc: Paul Mackerras <paulus@ozlabs.org>
->>> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->>> ---
->>>   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
->>>   1 file changed, 37 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c 
->>> b/arch/powerpc/kvm/book3s_hv_uvmem.c
->>> index 5a4b02d3f651..ba5c7c77cc3a 100644
->>> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
->>> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
->>> @@ -624,35 +624,55 @@ static inline int kvmppc_svm_page_out(struct 
->>> vm_area_struct *vma,
->>>    * fault on them, do fault time migration to replace the device PTEs in
->>>    * QEMU page table with normal PTEs from newly allocated pages.
->>>    */
->>> -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
->>> +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
->>>                    struct kvm *kvm, bool skip_page_out)
->>>   {
->>>       int i;
->>>       struct kvmppc_uvmem_page_pvt *pvt;
->>> -    unsigned long pfn, uvmem_pfn;
->>> -    unsigned long gfn = free->base_gfn;
->>> +    struct page *uvmem_page;
->>> +    struct vm_area_struct *vma = NULL;
->>> +    unsigned long uvmem_pfn, gfn;
->>> +    unsigned long addr, end;
->>> +
->>> +    mmap_read_lock(kvm->mm);
->>> +
->>> +    addr = slot->userspace_addr;
->>
->> We typically use gfn_to_hva() for that, but that won't work for a
->> memslot that is already marked INVALID which is the case here.
->> I think it is ok to access slot->userspace_addr here of an INVALID
->> memslot, but just thought of explictly bringing this up.
-> 
-> Which explicitly mentioned above in the patch's description:
-> 
-> This can't work when hot unplugging a memory slot because the memory slot
-> is flagged as invalid and gfn_to_pfn() is then not trying to access the
-> page, so the page fault mechanism is not triggered.
-> 
->>
->>> +    end = addr + (slot->npages * PAGE_SIZE);
->>> -    for (i = free->npages; i; --i, ++gfn) {
->>> -        struct page *uvmem_page;
->>> +    gfn = slot->base_gfn;
->>> +    for (i = slot->npages; i; --i, ++gfn, addr += PAGE_SIZE) {
->>> +
->>> +        /* Fetch the VMA if addr is not in the latest fetched one */
->>> +        if (!vma || (addr < vma->vm_start || addr >= vma->vm_end)) {
->>> +            vma = find_vma_intersection(kvm->mm, addr, end);
->>> +            if (!vma ||
->>> +                vma->vm_start > addr || vma->vm_end < end) {
->>> +                pr_err("Can't find VMA for gfn:0x%lx\n", gfn);
->>> +                break;
->>> +            }
->>> +        }
->>
->> In Ram's series, kvmppc_memslot_page_merge() also walks the VMAs spanning
->> the memslot, but it uses a different logic for the same. Why can't these
->> two cases use the same method to walk the VMAs? Is there anything subtly
->> different between the two cases?
-> 
-> This is probably doable. At the time I wrote that patch, the 
-> kvmppc_memslot_page_merge() was not yet introduced AFAIR.
-> 
-> This being said, I'd help a lot to factorize that code... I let Ram dealing with 
-> that ;)
 
-Indeed I don't think this is relevant, the loop in kvmppc_memslot_page_merge() 
-deals with one call (to ksm_advise) per VMA, while this code is dealing with one 
-call per page of the VMA, which completely different.
 
-I don't think merging the both will be a good idea.
+On 7/23/20 3:20 PM, Linus Walleij wrote:
+> On Mon, Jun 15, 2020 at 2:44 PM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+> 
+>> From: Fabien Dessenne <fabien.dessenne@st.com>
+>>
+>> Use the hwspin_lock_timeout_in_atomic() API which is the most appropriated
+>> here. Indeed:
+>> - hwspin_lock_() is called after spin_lock_irqsave()
+>> - the hwspin_lock_timeout() API relies on jiffies count which won't work
+>>    if IRQs are disabled which is the case here.
+>>
+>> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
+> Patch applied, sorry for missing this one.
 
-Cheers,
-Laurent.
+No pb, thanks.
+
+> 
+> Yours,
+> Linus Walleij
+> 
