@@ -2,128 +2,163 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AA6C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFA720771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQMxms0g"
+	by mail.kernel.org (Postfix) with ESMTP id A4E1A2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgGWPN7 (ORCPT
+        id S1729411AbgGWPOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:13:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbgGWPN6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:13:58 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B675DC0619DC;
-        Thu, 23 Jul 2020 08:13:58 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id h7so5639873qkk.7;
-        Thu, 23 Jul 2020 08:13:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xCacgrFd+CeqplPw/FPP7QZv3RakcaPw1XtaPxtRK50=;
-        b=FQMxms0gk4BtYkF+Y6xdMqkO0brMc/N8YVyqawJqvFtfXFvc046VUcsbgj+WOdAm1T
-         WUDKxyAUhmQfN6W5fvASZTemKcusm7wHucBr94ZycBwuW9w6iKnCRn/WLUGVxcbtfb1M
-         mNMnDldvsYdph8NM8+YjqrHdeMTlRkPbN2/ISI2FZwZKcS5ef88aWR2tSm4t+FO+2X1J
-         f5xbnGbQz8HmhCfGkMBNQoL9hGsD5oddptelhjP5eovSQ6awnHSRxTfWRooTEAoGMlrk
-         8BmHSiQGEnEmvw+nWZEAt6SsUWwpJ2MVmgl5VGhMMNjioMtsYGA3ye9KbkB6lkTaVzRC
-         QH/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xCacgrFd+CeqplPw/FPP7QZv3RakcaPw1XtaPxtRK50=;
-        b=hAghnxvw/7hAl66ZP8X/rLnPeK84ui+1P7R6t1PC+VyfQLfPcY5xQHrL742Qw1A/cq
-         f5+H8q8bMnfe+JUoshw8ACPZpLdbzX1gwvUq92sF2Z4O62s7fL/pKPCV+y84GYrSU/dH
-         Vn1HYsvYFV3cdNqE53TgC2d443SfZ0giclCm8fraxe4Wyexn4yog3HbaKcPh4EQMv/U8
-         X/igy+OJj608B7mi7wKH25N8PYW0fbHXJXHujmAqSBRwR4f6sybSwiMWIPaBGbaxzcbD
-         2OioySIwomaAYRsNgYOei7JzP3ZOASNeXzdkz9Tl7a2DhdFzSctitOr+mSFm0AvUEEiO
-         zxNQ==
-X-Gm-Message-State: AOAM53249/3hIKyS1QdToFxAEL/TuywCJVBU7WJ6C3MOUIVNCjS5gfk7
-        FgyVoN1iXa/czwx7QVa5CA==
-X-Google-Smtp-Source: ABdhPJxivZbrfCP5ExQeiI6WKCZdjsoaMPpewN0v8CCULqzXhfcbfWpMqJpbdHv9GLrKaIDB/AIiHg==
-X-Received: by 2002:a37:4fd1:: with SMTP id d200mr5530244qkb.163.1595517237913;
-        Thu, 23 Jul 2020 08:13:57 -0700 (PDT)
-Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id c33sm2778547qtk.40.2020.07.23.08.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 08:13:57 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 11:13:55 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Joerg Reuter <jreuter@yaina.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hams@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] AX.25: Fix out-of-bounds read
- in ax25_connect()
-Message-ID: <20200723151355.GA412829@PWN>
-References: <20200722151901.350003-1-yepeilin.cs@gmail.com>
- <20200723142814.GQ2549@kadam>
+        Thu, 23 Jul 2020 11:14:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:51929 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbgGWPOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:14:48 -0400
+IronPort-SDR: 5G2M003UceErVsk3p6ATBPBY2rbA4PNfNbJ5NqYa5bYdbS6Yh4jb9i2A/xU6sixFuWeaByckfA
+ wEC4IOburP8g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="151845430"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="151845430"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 08:14:47 -0700
+IronPort-SDR: r3bS4zNkkuxRt6SNlMxkmWcHoswUpag2goFswFQmWdu5Rdv79cXsTE31lWw9/oB0eZuAUxZ9TO
+ /FYaEdrrmu7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="432770101"
+Received: from lkp-server01.sh.intel.com (HELO bd1a4a62506a) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jul 2020 08:14:46 -0700
+Received: from kbuild by bd1a4a62506a with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jycvl-0000Uw-KC; Thu, 23 Jul 2020 15:14:45 +0000
+Date:   Thu, 23 Jul 2020 23:14:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:sched/core] BUILD SUCCESS
+ e17ae7fea8714caa743aa0d5e446a25a999ad726
+Message-ID: <5f19a953.lSueys67obwD5PIk%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723142814.GQ2549@kadam>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 05:28:15PM +0300, Dan Carpenter wrote:
-> On Wed, Jul 22, 2020 at 11:19:01AM -0400, Peilin Ye wrote:
-> > Checks on `addr_len` and `fsa->fsa_ax25.sax25_ndigis` are insufficient.
-> > ax25_connect() can go out of bounds when `fsa->fsa_ax25.sax25_ndigis`
-> > equals to 7 or 8. Fix it.
-> > 
-> > This issue has been reported as a KMSAN uninit-value bug, because in such
-> > a case, ax25_connect() reaches into the uninitialized portion of the
-> > `struct sockaddr_storage` statically allocated in __sys_connect().
-> > 
-> > It is safe to remove `fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS` because
-> > `addr_len` is guaranteed to be less than or equal to
-> > `sizeof(struct full_sockaddr_ax25)`.
-> > 
-> > Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
-> > Link: https://syzkaller.appspot.com/bug?id=55ef9d629f3b3d7d70b69558015b63b48d01af66
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > ---
-> >  net/ax25/af_ax25.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-> > index fd91cd34f25e..ef5bf116157a 100644
-> > --- a/net/ax25/af_ax25.c
-> > +++ b/net/ax25/af_ax25.c
-> > @@ -1187,7 +1187,9 @@ static int __must_check ax25_connect(struct socket *sock,
-> >  	if (addr_len > sizeof(struct sockaddr_ax25) &&
-> >  	    fsa->fsa_ax25.sax25_ndigis != 0) {
-> >  		/* Valid number of digipeaters ? */
-> > -		if (fsa->fsa_ax25.sax25_ndigis < 1 || fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS) {
-> > +		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
-> > +		    addr_len < sizeof(struct sockaddr_ax25) +
-> > +		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
-> 
-> The "sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis" can have an
-> integer overflow so you still need the
-> "fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS" check.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
+branch HEAD: e17ae7fea8714caa743aa0d5e446a25a999ad726  arm, arm64: Select CONFIG_SCHED_THERMAL_PRESSURE
 
-Thank you for fixing this up! I did some math but I didn't think of
-that. Will be more careful when removing things.
+elapsed time: 1846m
 
-Peilin Ye
+configs tested: 92
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                              defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+microblaze                        allnoconfig
+sh                                allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20200723
+x86_64               randconfig-a004-20200723
+x86_64               randconfig-a003-20200723
+x86_64               randconfig-a002-20200723
+x86_64               randconfig-a006-20200723
+x86_64               randconfig-a001-20200723
+i386                 randconfig-a003-20200723
+i386                 randconfig-a005-20200723
+i386                 randconfig-a004-20200723
+i386                 randconfig-a006-20200723
+i386                 randconfig-a002-20200723
+i386                 randconfig-a001-20200723
+i386                 randconfig-a001-20200719
+i386                 randconfig-a006-20200719
+i386                 randconfig-a002-20200719
+i386                 randconfig-a005-20200719
+i386                 randconfig-a003-20200719
+i386                 randconfig-a004-20200719
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
