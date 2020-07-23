@@ -2,101 +2,221 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE28C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2789C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41CA92071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A960020737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ehcBOTHT"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="cY3fCz08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGWXLn (ORCPT
+        id S1727880AbgGWXGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbgGWXLn (ORCPT
+        Thu, 23 Jul 2020 19:06:55 -0400
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:51446 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbgGWXGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:11:43 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37179C0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:11:43 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id k22so6544199oib.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 16:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=VYyVyx7yovkjycsaTkx7hlbmqO5yCk7NHwwjU5rwd9Y=;
-        b=ehcBOTHT4yiii4tgvJJfpHNVbsyQEcDBLieJjsvPHE09Jc0XpP7sGCrlPE+EmHdei0
-         YAIYQ9tYJGfRTDAdI6wowyl21gm6DyMbFi9BeQXsM4balelQ1Z553HjCkYSD9LrJQU8F
-         GzbhlCoMvul+ak2MrFuFunDWo8vzv0Ym3rrk+IC/0Lc+zndqoUm/U00XFQppXO+vCxhy
-         ajlGD7Z7E86P0ArbKEwl9wwLMGPm0MUfcieAbN2uBHz/2turwTEwaUAkDtVPHLFYUMWu
-         IyrZ2ASZK/QSAV15vvQYCl0VolqqrpC9a0GucJ+Z8KyeHiDYzCJaO015LPM0B07/+Sxa
-         lp/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=VYyVyx7yovkjycsaTkx7hlbmqO5yCk7NHwwjU5rwd9Y=;
-        b=T+CfgTYZnslBCrxfolgk+82iZJSSoyBhoXRgrkT2f2XDPzrG0v4pmfjUvtb902TVG5
-         d3zltS9vQ0YeCyjI22STd2AukKwNZMHbDqAAExXiiHlAlmafGWAeSQ+tKYx2U1hXg/9z
-         jO48BzyFghbBlsV4+ldNkmbpFGSf/L6TjlhsPJKD5tZdjeodFYpsFfh0fGK4L4m4vZp6
-         tFp5+q1U0OhTR+/MBwXlGCUDvky4jjGauRgQ4ltf5yb6DF2Ia7mdrSKUI4219F6lmuT1
-         i8ND80f8OeGxJajp7HhtBCvwh0lmjFq5sa3DDA9yE7z+dckZxXlbfriEyN9LtX5uFCH5
-         jnYw==
-X-Gm-Message-State: AOAM530+ow81snrjOCD2pjdgHHegHSfEJlp61WORze6pZj79ahfnG45P
-        kxLNJTJ+afr0vleYIPWoINd9Kg==
-X-Google-Smtp-Source: ABdhPJyICL8bD0C+xYcrw9YKR/nEo2l025VRHU/xLRKffI0eI/ccnkXzzzjzeOMLJoTLd/K93kM2Nw==
-X-Received: by 2002:aca:dfc1:: with SMTP id w184mr439503oig.79.1595545902189;
-        Thu, 23 Jul 2020 16:11:42 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id m13sm925823otf.43.2020.07.23.16.11.39
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 23 Jul 2020 16:11:40 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 16:11:27 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Oleg Nesterov <oleg@redhat.com>, Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-In-Reply-To: <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
-Message-ID: <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
-References: <20200721063258.17140-1-mhocko@kernel.org> <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com> <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com> <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
- <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com> <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com> <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Thu, 23 Jul 2020 19:06:55 -0400
+Date:   Thu, 23 Jul 2020 22:57:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1595545043;
+        bh=IABwxqdCkkyTX2FsPRq3CfvvI2V2JvrQN6xMWEn3Gqk=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=cY3fCz08bQWMC0o839WkTCbTakJcgyG6Xh1y41VGLjk2CzbFXp/8ffHda8rI975IM
+         T9g+Cs9lHlwDosw51K1BeYcVm8UzDmuHgrdBYy7ru6KSaqwN5un2xUrL6XORzT20qW
+         IVMFM63KgBXnyrNHRPS9tNT6Yjum+vN3UYYZMaEI=
+To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     Mazin Rezk <mnrzk@protonmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "harry.wentland@amd.com" <harry.wentland@amd.com>,
+        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "1i5t5.duncan@cox.net" <1i5t5.duncan@cox.net>,
+        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
+        "regressions@leemhuis.info" <regressions@leemhuis.info>,
+        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
+        "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
+Message-ID: <3iDgskt5iP3y77MHUJ2_5uSThyUteHxPvVqoL5SpnpTIpz5cdkifyDOynpiVukS_peaYGOkn9bHSpvRYa-vFOCjUYH68taIuKyZqhOByAVI=@protonmail.com>
+In-Reply-To: <ccd5d51b-b018-a3db-169b-ba6278a7be9f@amd.com>
+References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com> <ccd5d51b-b018-a3db-169b-ba6278a7be9f@amd.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020, Linus Torvalds wrote:
-> 
-> I'll send a new version after I actually test it.
+It seems that I spoke too soon. I ran the system for another hour after
+submitting the patch and the bug just occurred. :/
 
-I'll give it a try when you're happy with it. I did try yesterday's
-with my swapping loads on home machines (3 of 4 survived 16 hours),
-and with some google stresstests on work machines (0 of 10 survived).
+Sadly, that means the bug isn't really fixed and that I have to go
+investigate further.
 
-I've not spent long analyzing the crashes, all of them in or below
-__wake_up_common() called from __wake_up_locked_key_bookmark():
-sometimes gets to run the curr->func() and crashes on something
-inside there (often list_del's lib/list_debug.c:53!), sometimes
-cannot get that far. Looks like the wait queue entries on the list
-were not entirely safe with that patch.
+At the very least, this patch seems to delay the occurrence of the bug
+significantly which may help in further discovering the cause.
 
-Hugh
+On Thursday, July 23, 2020 6:16 PM, Kazlauskas, Nicholas <nicholas.kazlausk=
+as@amd.com> wrote:
+
+> On 2020-07-23 5:10 p.m., Mazin Rezk wrote:
+>
+> > When amdgpu_dm_atomic_commit_tail is running in the workqueue,
+> > drm_atomic_state_put will get called while amdgpu_dm_atomic_commit_tail=
+ is
+> > running, causing a race condition where state (and then dm_state) is
+> > sometimes freed while amdgpu_dm_atomic_commit_tail is running. This bug=
+ has
+> > occurred since 5.7-rc1 and is well documented among polaris11 users [1]=
+.
+> > Prior to 5.7, this was not a noticeable issue since the freelist pointe=
+r
+> > was stored at the beginning of dm_state (base), which was unused. After
+> > changing the freelist pointer to be stored in the middle of the struct,=
+ the
+> > freelist pointer overwrote the context, causing dc_state to become garb=
+age
+> > data and made the call to dm_enable_per_frame_crtc_master_sync derefere=
+nce
+> > a freelist pointer.
+> > This patch fixes the aforementioned issue by calling drm_atomic_state_g=
+et
+> > in amdgpu_dm_atomic_commit before drm_atomic_helper_commit is called an=
+d
+> > drm_atomic_state_put after amdgpu_dm_atomic_commit_tail is complete.
+> > According to my testing on 5.8.0-rc6, this should fix bug 207383 on
+> > Bugzilla [1].
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
+> > Fixes: 3202fa62f ("slub: relocate freelist pointer to middle of object"=
+)
+> > Reported-by: Duncan 1i5t5.duncan@cox.net
+> > Signed-off-by: Mazin Rezk mnrzk@protonmail.com
+>
+> Thanks for the investigation and your patch. I appreciate the help in
+> trying to narrow down the root cause as this issue has been difficult to
+> reproduce on my setups.
+>
+> Though I'm not sure this really resolves the issue - we make use of the
+> drm_atomic_helper_commit helper function from DRM which internally does
+> what you're doing with this patch:
+>
+> drm_atomic_state_get(state);
+> if (nonblock)
+> queue_work(system_unbound_wq, &state->commit_work);
+>
+>     else
+>     =09commit_tail(state);
+>
+>
+> So even when it gets queued off to the unbound workqueue we still have a
+> reference on the state.
+>
+> That reference gets dropped as part of commit tail helper in DRM as well:
+>
+> if (funcs && funcs->atomic_commit_tail)
+>
+>     =09funcs->atomic_commit_tail(old_state);
+>
+>     else
+>     =09drm_atomic_helper_commit_tail(old_state);
+>
+>
+> commit_time_ms =3D ktime_ms_delta(ktime_get(), start);
+> if (commit_time_ms > 0)
+>
+>     =09drm_self_refresh_helper_update_avg_times(old_state,
+>     =09=09=09=09=09 (unsigned long)commit_time_ms,
+>     =09=09=09=09=09 new_self_refresh_mask);
+>
+>
+> drm_atomic_helper_commit_cleanup_done(old_state);
+>
+> drm_atomic_state_put(old_state);
+>
+
+I initially noticed that right after I wrote this patch so I was expecting
+the patch to fail. However, after several hours of testing, the crash just
+didn't occur so I believed the bug was fixed.
+
+> So instead of a use after free happening when we access the state we get
+> a double-free happening later at the end of commit tail in DRM.
+>
+> What I think would be the right next step here is to actually determine
+> what sequence of IOCTLs and atomic commits are happening under your
+> setup with a very verbose dmesg log. You can set a debug level for DRM
+> in your kernel parameters with something like:
+>
+> drm.debug=3D0x54
+>
+> I don't see anything in amdgpu_dm.c that looks like it would be freeing
+> the state so I suspect something in the core is this doing this.
+
+Going through the KASAN use-after-free bug report in the Bugzilla
+attachments, it appears that the state is being freed at the end of
+commit_tail. Perhaps amdgpu_dm_atomic_commit_tail is being called on the
+the same old state twice? I can't quite think of any other possible
+explanation as to why that happens.
+
+>
+> > drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
+> > 1 file changed, 3 insertions(+)
+> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/driver=
+s/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > index 86ffa0c2880f..86d6652872f2 100644
+> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > @@ -7303,6 +7303,7 @@ static int amdgpu_dm_atomic_commit(struct drm_dev=
+ice *dev,
+> > * unset legacy_cursor_update
+> > */
+> >
+> > -   drm_atomic_state_get(state);
+>
+> Also note that if the drm_atomic_helper_commit() call fails here then
+> we're going to never free this structure. So we should really be
+> checking the return code here below before trying to do this, if at all.
+
+Oh right, that's true. I looked at amdgpu_dm_atomic_commit_tail and didn't
+see any return statements in there, so I thought it was safe.
+
+>
+> Regards,
+> Nicholas Kazlauskas
+>
+> >       return drm_atomic_helper_commit(dev, state, nonblock);
+> >
+> >       /*TODO Handle EINTR, reenable IRQ*/
+> >
+> >
+> > @@ -7628,6 +7629,8 @@ static void amdgpu_dm_atomic_commit_tail(struct d=
+rm_atomic_state *state)
+> >
+> >       if (dc_state_temp)
+> >       =09dc_release_state(dc_state_temp);
+> >
+> >
+> > -
+> > -   drm_atomic_state_put(state);
+> >     }
+> >
+> >
+> > --
+> > 2.27.0
+
+Thanks,
+Mazin Rezk
