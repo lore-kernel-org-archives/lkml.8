@@ -2,144 +2,94 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5674C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDE620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40FB2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595517072;
+	bh=lou3FzXpILjbYCI2pCqDsP5iW+uI60hWnt6VY6f+T1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GOSSCffubI+/bz9UgEJrIspKeKEIwJ6w6qH1YVBWjFZFYDW+xjfATN/+aIfhyBrSK
+	 VElAy/zVllXlIA2sm03IOfMUwle+IxdCzg5ocROS3wQ/PIFR/cG8a4GWoi3/mtMJVb
+	 Tw9rP8OM3wd2GcgtWeBaWzRMu4uPHZaCU3P3WsD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgGWPKG (ORCPT
+        id S1728918AbgGWPLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:10:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60978 "EHLO mx2.suse.de"
+        Thu, 23 Jul 2020 11:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbgGWPKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:10:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 050F5AE91;
-        Thu, 23 Jul 2020 15:10:12 +0000 (UTC)
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        David Hildenbrand <david@redhat.com>
+        id S1727940AbgGWPLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:11:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AD1C20771;
+        Thu, 23 Jul 2020 15:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595517070;
+        bh=lou3FzXpILjbYCI2pCqDsP5iW+uI60hWnt6VY6f+T1k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S/CnPJohw4SwWxEh9+nl4JiRDRW9qOvCptekC2LJ8toUnt9kaHIranDC0G1jrEKJs
+         Wu6csYX0EZRXTVZwUo2/3hnVAK5nvdHRjIeNb5RwXNvgu7dlg55W+05MREWzpVJ2oj
+         B7Zh8lsCKWmkoGf1Jb6DXXLeP7hGOMFmUUFcPVTA=
+Date:   Thu, 23 Jul 2020 17:11:14 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Peter Enderborg <peter.enderborg@sony.com>
 Cc:     linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        xen-devel@lists.xenproject.org, linux-mm@kvack.org
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
- <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
- <20200723122300.GD7191@Air-de-Roger>
- <e94d9556-f615-bbe2-07d2-08958969ee5f@redhat.com>
- <20200723135930.GH7191@Air-de-Roger>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <82b131f4-8f50-cd49-65cf-9a87d51b5555@suse.com>
-Date:   Thu, 23 Jul 2020 17:10:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v8 0/2] debugfs: Add access restriction option
+Message-ID: <20200723151114.GA2793748@kroah.com>
+References: <20200617133738.6631-1-peter.enderborg@sony.com>
+ <20200716071511.26864-1-peter.enderborg@sony.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723135930.GH7191@Air-de-Roger>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716071511.26864-1-peter.enderborg@sony.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.07.20 15:59, Roger Pau Monné wrote:
-> On Thu, Jul 23, 2020 at 03:22:49PM +0200, David Hildenbrand wrote:
->> On 23.07.20 14:23, Roger Pau Monné wrote:
->>> On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
->>>> On 23.07.20 10:45, Roger Pau Monne wrote:
->>>>> Add an extra option to add_memory_resource that overrides the memory
->>>>> hotplug online behavior in order to force onlining of memory from
->>>>> add_memory_resource unconditionally.
->>>>>
->>>>> This is required for the Xen balloon driver, that must run the
->>>>> online page callback in order to correctly process the newly added
->>>>> memory region, note this is an unpopulated region that is used by Linux
->>>>> to either hotplug RAM or to map foreign pages from other domains, and
->>>>> hence memory hotplug when running on Xen can be used even without the
->>>>> user explicitly requesting it, as part of the normal operations of the
->>>>> OS when attempting to map memory from a different domain.
->>>>>
->>>>> Setting a different default value of memhp_default_online_type when
->>>>> attaching the balloon driver is not a robust solution, as the user (or
->>>>> distro init scripts) could still change it and thus break the Xen
->>>>> balloon driver.
->>>>
->>>> I think we discussed this a couple of times before (even triggered by my
->>>> request), and this is responsibility of user space to configure. Usually
->>>> distros have udev rules to online memory automatically. Especially, user
->>>> space should eb able to configure *how* to online memory.
->>>
->>> Note (as per the commit message) that in the specific case I'm
->>> referring to the memory hotplugged by the Xen balloon driver will be
->>> an unpopulated range to be used internally by certain Xen subsystems,
->>> like the xen-blkback or the privcmd drivers. The addition of such
->>> blocks of (unpopulated) memory can happen without the user explicitly
->>> requesting it, and hence not even aware such hotplug process is taking
->>> place. To be clear: no actual RAM will be added to the system.
->>
->> Okay, but there is also the case where XEN will actually hotplug memory
->> using this same handler IIRC (at least I've read papers about it). Both
->> are using the same handler, correct?
+On Thu, Jul 16, 2020 at 09:15:09AM +0200, Peter Enderborg wrote:
+> Since debugfs include sensitive information it need to be treated
+> carefully. But it also has many very useful debug functions for userspace.
+> With this option we can have same configuration for system with
+> need of debugfs and a way to turn it off. This gives a extra protection
+> for exposure on systems where user-space services with system
+> access are attacked.
 > 
-> Yes, it's used by this dual purpose, which I have to admit I don't
-> like that much either.
+> v2. Removed MOUNT as part of restrictions. Added API's restrictions as
+>     separate restriction.
+> v3  Updated Documentation after Randy Dunlap reviews and suggestions.
+> v4  Removed #ifdefs from inode.c and using internal.h for configuration
+>     and now using BIT() for that. Function is now always on, and are
+>     instead selected by a built in default or command line parameter.
+>     Changed return value on debug_mount
+>     Reported-by: kernel test robot <lkp@intel.com>
+>     Im not sure about that it is right
+> v5  Added notes to config help suggested by GregKH.
+>     Removed _BIT from names, white-space and tab.
+>     (checkpatch did not complain).
+> v6  Using ALLOW instead of ACCESS as name on BIT's. Change the fs to
+>     mount to make it clear and easy to understand.
+> v7  Updated Kconfig.debug with Randy Dunlap corrections.
+> v8  Spell fixes from Randy and using else-if for command argument
+>     parser.
+>     
 > 
-> One set of pages should be clearly used for RAM memory hotplug, and
-> the other to map foreign pages that are not related to memory hotplug,
-> it's just that we happen to need a physical region with backing struct
-> pages.
-> 
->>>
->>>> It's the admin/distro responsibility to configure this properly. In case
->>>> this doesn't happen (or as you say, users change it), bad luck.
->>>>
->>>> E.g., virtio-mem takes care to not add more memory in case it is not
->>>> getting onlined. I remember hyper-v has similar code to at least wait a
->>>> bit for memory to get onlined.
->>>
->>> I don't think VirtIO or Hyper-V use the hotplug system in the same way
->>> as Xen, as said this is done to add unpopulated memory regions that
->>> will be used to map foreign memory (from other domains) by Xen drivers
->>> on the system.
->>
->> Indeed, if the memory is never exposed to the buddy (and all you need is
->> struct pages +  a kernel virtual mapping), I wonder if
->> memremap/ZONE_DEVICE is what you want?
-> 
-> I'm certainly not familiar with the Linux memory subsystem, but if
-> that gets us a backing struct page and a kernel mapping then I would
-> say yes.
-> 
->> Then you won't have user-visible
->> memory blocks created with unclear online semantics, partially involving
->> the buddy.
-> 
-> Seems like a fine solution.
-> 
-> Juergen: would you be OK to use a separate page-list for
-> alloc_xenballooned_pages on HVM/PVH using the logic described by
-> David?
-> 
-> I guess I would leave PV as-is, since it already has this reserved
-> region to map foreign pages.
 
-I would really like a common solution, especially as it would enable
-pv driver domains to use that feature, too.
+Thanks for sticking with this, now queued up!
 
-And finding a region for this memory zone in PVH dom0 should be common
-with PV dom0 after all. We don't want to collide with either PCI space
-or hotplug memory.
-
-
-Juergen
+greg k-h
