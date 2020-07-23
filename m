@@ -2,221 +2,144 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3ECC433F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF57FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D61D20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8933A2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WSQzUz/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgGWLrG (ORCPT
+        id S1728358AbgGWLtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:47:06 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:38539 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgGWLrE (ORCPT
+        Thu, 23 Jul 2020 07:49:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37171 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727828AbgGWLtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:47:04 -0400
-IronPort-SDR: ychC/TbzUTb7TEV2/BZYRAvGhNVTDuIibCmoF+Ne3UtmSiEgpxyP8MjtDl35vA9ZzreYCBpf3O
- 0FJruqDdg5NVAtaSvvHfi/nK50/onJSN94zE1eQd57kW0fXvZbz7tOL1p/LXX3iFaRoouTum2b
- ANe2EHyFyBchjNypBE8TALQ+t6jENF3VX+sDreGtykrzyacR48I93+P1GCtuSuH1dRuUwwNVLj
- 5DCeqViYql6SjahhR5aUko/+T/ZkicBP+VhD4+A6b0UYaOKonsrwPY9oVUdaMCcHUsIv28v+XE
- iH0=
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="29048257"
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by labrats.qualcomm.com with ESMTP; 23 Jul 2020 04:47:04 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 23 Jul 2020 04:47:03 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id A959722E23; Thu, 23 Jul 2020 04:47:03 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 8/8] scsi: ufs: Fix a racing problem btw error handler and runtime PM ops
-Date:   Thu, 23 Jul 2020 04:46:26 -0700
-Message-Id: <1595504787-19429-9-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595504787-19429-1-git-send-email-cang@codeaurora.org>
-References: <1595504787-19429-1-git-send-email-cang@codeaurora.org>
+        Thu, 23 Jul 2020 07:49:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595504948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kMLp2I5AZsxuR1NLK4/4GFJLvuNxJmG+poCU1eMdup4=;
+        b=WSQzUz/dGIQPBXiMgpqpvEnbnLPUM9i7CdkSJELGFy+dHYrNslxcDWv8yUUjkWsmbaOOpo
+        eR+8X+pvpdvTjSCPLzYBYxOnkl65ojSGB0RdFlthJ2eNKZZTRonPNMEOetlVWVoBMr0YHB
+        Pg+1tKlbGWZJSpnLlzKcN9PlIEeLuvA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-zTuSXR6pO2-EVAOEXrMJjw-1; Thu, 23 Jul 2020 07:49:05 -0400
+X-MC-Unique: zTuSXR6pO2-EVAOEXrMJjw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC39F80183C;
+        Thu, 23 Jul 2020 11:49:03 +0000 (UTC)
+Received: from [10.36.112.205] (ovpn-112-205.ams2.redhat.com [10.36.112.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B78B819C4F;
+        Thu, 23 Jul 2020 11:49:01 +0000 (UTC)
+From:   "Eelco Chaudron" <echaudro@redhat.com>
+To:     "Hillf Danton" <hdanton@sina.com>
+Cc:     syzbot <syzbot+2c4ff3614695f75ce26c@syzkaller.appspotmail.com>,
+        davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Paolo Abeni" <pabeni@redhat.com>, pshelar@ovn.org,
+        syzkaller-bugs@googlegroups.com,
+        "Markus Elfring" <Markus.Elfring@web.de>
+Subject: Re: INFO: task hung in ovs_exit_net
+Date:   Thu, 23 Jul 2020 13:48:59 +0200
+Message-ID: <35ADBFE5-87FF-4E9E-A8FD-BB586E9F663F@redhat.com>
+In-Reply-To: <20200723110655.12856-1-hdanton@sina.com>
+References: <20200723110655.12856-1-hdanton@sina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current IRQ handler blocks scsi requests before scheduling eh_work, when
-error handler calls pm_runtime_get_sync, if ufshcd_suspend/resume sends a
-scsi cmd, most likely the SSU cmd, since scsi requests are blocked,
-pm_runtime_get_sync() will never return because ufshcd_suspend/reusme is
-blocked by the scsi cmd. Some changes and code re-arrangement can be made
-to resolve it.
 
-o In queuecommand path, hba->ufshcd_state check and ufshcd_send_command
-  should stay into the same spin lock. This is to make sure that no more
-  commands leak into doorbell after hba->ufshcd_state is changed.
-o Don't block scsi requests before scheduling eh_work, let error handler
-  block scsi requests when it is ready to start error recovery.
-o Don't let scsi layer keep requeuing the scsi cmds sent from hba runtime
-  PM ops, let them pass or fail them. Let them pass if eh_work is scheduled
-  due to non-fatal errors. Fail them fail if eh_work is scheduled due to
-  fatal errors, otherwise the cmds may eventually time out since UFS is in
-  bad state, which gets error handler blocked for too long. If we fail the
-  scsi cmds sent from hba runtime PM ops, hba runtime PM ops fails too, but
-  it does not hurt since error handler can recover hba runtime PM error.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 84 +++++++++++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 35 deletions(-)
+On 23 Jul 2020, at 13:06, Hillf Danton wrote:
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index b2bafa3..9c8c43f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -126,7 +126,8 @@ enum {
- 	UFSHCD_STATE_RESET,
- 	UFSHCD_STATE_ERROR,
- 	UFSHCD_STATE_OPERATIONAL,
--	UFSHCD_STATE_EH_SCHEDULED,
-+	UFSHCD_STATE_EH_SCHEDULED_FATAL,
-+	UFSHCD_STATE_EH_SCHEDULED_NON_FATAL,
- };
- 
- /* UFSHCD error handling flags */
-@@ -2515,34 +2516,6 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	if (!down_read_trylock(&hba->clk_scaling_lock))
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 
--	spin_lock_irqsave(hba->host->host_lock, flags);
--	switch (hba->ufshcd_state) {
--	case UFSHCD_STATE_OPERATIONAL:
--		break;
--	case UFSHCD_STATE_EH_SCHEDULED:
--	case UFSHCD_STATE_RESET:
--		err = SCSI_MLQUEUE_HOST_BUSY;
--		goto out_unlock;
--	case UFSHCD_STATE_ERROR:
--		set_host_byte(cmd, DID_ERROR);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	default:
--		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
--				__func__, hba->ufshcd_state);
--		set_host_byte(cmd, DID_BAD_TARGET);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	}
--
--	/* if error handling is in progress, don't issue commands */
--	if (ufshcd_eh_in_progress(hba)) {
--		set_host_byte(cmd, DID_ERROR);
--		cmd->scsi_done(cmd);
--		goto out_unlock;
--	}
--	spin_unlock_irqrestore(hba->host->host_lock, flags);
--
- 	hba->req_abort_count = 0;
- 
- 	err = ufshcd_hold(hba, true);
-@@ -2578,11 +2551,50 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	/* Make sure descriptors are ready before ringing the doorbell */
- 	wmb();
- 
--	/* issue command to the controller */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	switch (hba->ufshcd_state) {
-+	case UFSHCD_STATE_OPERATIONAL:
-+	case UFSHCD_STATE_EH_SCHEDULED_NON_FATAL:
-+		break;
-+	case UFSHCD_STATE_EH_SCHEDULED_FATAL:
-+		/*
-+		 * If we are here, eh_work is either scheduled or running.
-+		 * Before eh_work sets ufshcd_state to STATE_RESET, it flushes
-+		 * runtime PM ops by calling pm_runtime_get_sync(). If a scsi
-+		 * cmd, e.g. the SSU cmd, is sent by PM ops, it can never be
-+		 * finished if we let SCSI layer keep retrying it, which gets
-+		 * eh_work stuck forever. Neither can we let it pass, because
-+		 * ufs now is not in good status, so the SSU cmd may eventually
-+		 * time out, blocking eh_work for too long. So just let it fail.
-+		 */
-+		if (hba->pm_op_in_progress) {
-+			hba->force_reset = true;
-+			set_host_byte(cmd, DID_BAD_TARGET);
-+			goto out_compl_cmd;
-+		}
-+	case UFSHCD_STATE_RESET:
-+		err = SCSI_MLQUEUE_HOST_BUSY;
-+		goto out_compl_cmd;
-+	case UFSHCD_STATE_ERROR:
-+		set_host_byte(cmd, DID_ERROR);
-+		goto out_compl_cmd;
-+	default:
-+		dev_WARN_ONCE(hba->dev, 1, "%s: invalid state %d\n",
-+				__func__, hba->ufshcd_state);
-+		set_host_byte(cmd, DID_BAD_TARGET);
-+		goto out_compl_cmd;
-+	}
- 	ufshcd_send_command(hba, tag);
--out_unlock:
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	goto out;
-+
-+out_compl_cmd:
-+	scsi_dma_unmap(lrbp->cmd);
-+	lrbp->cmd = NULL;
-+	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	ufshcd_release(hba);
-+	if (!err)
-+		cmd->scsi_done(cmd);
- out:
- 	up_read(&hba->clk_scaling_lock);
- 	return err;
-@@ -5553,7 +5565,11 @@ static inline void ufshcd_schedule_eh_work(struct ufs_hba *hba)
- {
- 	/* handle fatal errors only when link is not in error state */
- 	if (hba->ufshcd_state != UFSHCD_STATE_ERROR) {
--		hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED;
-+		if (hba->force_reset || ufshcd_is_link_broken(hba) ||
-+		    ufshcd_is_saved_err_fatal(hba))
-+			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_FATAL;
-+		else
-+			hba->ufshcd_state = UFSHCD_STATE_EH_SCHEDULED_NON_FATAL;
- 		queue_work(hba->eh_wq, &hba->eh_work);
- 	}
- }
-@@ -5659,6 +5675,7 @@ static void ufshcd_err_handler(struct work_struct *work)
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 	ufshcd_err_handling_prepare(hba);
- 	spin_lock_irqsave(hba->host->host_lock, flags);
-+	ufshcd_scsi_block_requests(hba);
- 	hba->ufshcd_state = UFSHCD_STATE_RESET;
- 
- 	/* Complete requests that have door-bell cleared by h/w */
-@@ -5912,9 +5929,6 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
- 		 */
- 		hba->saved_err |= hba->errors;
- 		hba->saved_uic_err |= hba->uic_error;
--
--		/* block commands from scsi mid-layer */
--		ufshcd_scsi_block_requests(hba);
- 		ufshcd_schedule_eh_work(hba);
- 		retval |= IRQ_HANDLED;
- 	}
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> Wed, 22 Jul 2020 23:27:19 -0700
+>> syzbot found the following issue on:
+  <SNIP>
+>
+> Fixes: eac87c413bf9 ("net: openvswitch: reorder masks array based on 
+> usage")
+> by moving cancel_delayed_work_sync() in to the rcu cb, therefore out 
+> of ovs
+> lock. To facilitate that, add a flag in datapath to inform the kworker 
+> that
+> there is no more work needed.
+
+I was thinking of re-working the patch and move the handling to the 
+“struct ovs_net” instead of the datapath. This way the rebalance 
+worker can rebalance all datapaths in the netns. Than I can move 
+cancel_delayed_work_sync() from __dp_destroy()
+to ovs_exit_net(), i.e. outside the ovs lock scope.
+
+However, your fix would be way less intrusive. Are you planning on 
+sending it as a patch? If so, maybe add a comment around the called_rcu 
+variable to be more clear where it’s used for, or maybe rename it to 
+something like called_destory_rcu?
+
+If you think my approach would be better let me know, and I work on a 
+patch.
+
+Feedback anyone?
+
+> --- a/net/openvswitch/datapath.h
+> +++ b/net/openvswitch/datapath.h
+> @@ -82,6 +82,7 @@ struct datapath {
+>
+>  	u32 max_headroom;
+>
+> +	int called_rcu;
+>  	/* Switch meters. */
+>  	struct dp_meter_table meter_tbl;
+>
+> --- a/net/openvswitch/datapath.c
+> +++ b/net/openvswitch/datapath.c
+> @@ -161,6 +161,7 @@ static void destroy_dp_rcu(struct rcu_he
+>  {
+>  	struct datapath *dp = container_of(rcu, struct datapath, rcu);
+>
+> +	cancel_delayed_work_sync(&dp->masks_rebalance);
+>  	ovs_flow_tbl_destroy(&dp->table);
+>  	free_percpu(dp->stats_percpu);
+>  	kfree(dp->ports);
+> @@ -1760,11 +1761,9 @@ static void __dp_destroy(struct datapath
+>  	 */
+>  	ovs_dp_detach_port(ovs_vport_ovsl(dp, OVSP_LOCAL));
+>
+> +	dp->called_rcu = true;
+>  	/* RCU destroy the flow table */
+>  	call_rcu(&dp->rcu, destroy_dp_rcu);
+> -
+> -	/* Cancel remaining work. */
+> -	cancel_delayed_work_sync(&dp->masks_rebalance);
+>  }
+>
+>  static int ovs_dp_cmd_del(struct sk_buff *skb, struct genl_info 
+> *info)
+> @@ -2356,6 +2355,8 @@ static void ovs_dp_masks_rebalance(struc
+>  	ovs_flow_masks_rebalance(&dp->table);
+>  	ovs_unlock();
+>
+> +	if (dp->called_rcu)
+> +		return;
+>  	schedule_delayed_work(&dp->masks_rebalance,
+>  			      msecs_to_jiffies(DP_MASKS_REBALANCE_INTERVAL));
+>  }
 
