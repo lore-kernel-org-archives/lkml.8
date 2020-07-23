@@ -2,189 +2,139 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F546C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CCD2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595494317;
-	bh=IRF2/hQ81/fJN2jLe+emwgKLQGhbq9l8YIf8OxkkSik=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=gu0EAEqCJrPnrRG8gtL+ZhwEFSROkAyL7SvsBHNghGuvhhrZ9cU8+C3FoWoESIDxW
-	 9t0YCUQEsz/OK105qzyGW2/Pz8TTmyVkTPicGlJQIi+Yrp2c9mVC2iE1ybu/plnBsw
-	 NPUG+QV7+Tl+zWqcbXVWiTZ5CAYZBYnZvyC/rIuA=
+	by mail.kernel.org (Postfix) with ESMTP id 5EC5322B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGWIv4 (ORCPT
+        id S1727916AbgGWIv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 Jul 2020 04:51:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727769AbgGWIv4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 04:51:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgGWIvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:51:55 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3B72071A;
-        Thu, 23 Jul 2020 08:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595494314;
-        bh=IRF2/hQ81/fJN2jLe+emwgKLQGhbq9l8YIf8OxkkSik=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JoLsejGOUeUv83nQAMznfUoFwoaNSxjbwr27sVlLosQjoq8SM2k7dgTUgxUvKR+8r
-         zYhfXQFkgR18bjjIH+98j5xi2EK4WyKJq63OkADl9v+HxRRQj9Pgwx7OxMUDW18eS2
-         5B4NMpR85PDvoLQsxH3EtQR8ml/ZXD0/LjkdFNnk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jyWxE-00EDOw-Q3; Thu, 23 Jul 2020 09:51:52 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 23 Jul 2020 09:51:52 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-In-Reply-To: <20200722195928.GN2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <cfb8191e364e77f352b1483c415a83a5@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jgg@mellanox.com, dave.jiang@intel.com, vkoul@kernel.org, megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com, kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com, dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com, yan.y.zhao@linux.intel.com, pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N8WPm6077415;
+        Thu, 23 Jul 2020 04:51:38 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32f718gnwx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 04:51:38 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N8WbSq078197;
+        Thu, 23 Jul 2020 04:51:38 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32f718gnw8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 04:51:38 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N8frml001291;
+        Thu, 23 Jul 2020 08:51:36 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 32brbh5v59-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 08:51:36 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N8pYt147120586
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 08:51:34 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 090C2AE051;
+        Thu, 23 Jul 2020 08:51:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98A1EAE04D;
+        Thu, 23 Jul 2020 08:51:30 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.199.56.65])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Jul 2020 08:51:30 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: [PATCH v3 01/10] powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
+Date:   Thu, 23 Jul 2020 14:21:07 +0530
+Message-Id: <20200723085116.4731-2-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
+References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 adultscore=0
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-22 20:59, Jason Gunthorpe wrote:
-> On Wed, Jul 22, 2020 at 07:52:33PM +0100, Marc Zyngier wrote:
-> 
->> Which is exactly what platform-MSI already does. Why do we need
->> something else?
-> 
-> It looks to me like all the code is around managing the
-> dev->msi_domain of the devices.
-> 
-> The intended use would have PCI drivers create children devices using
-> mdev or virtbus and those devices wouldn't have a msi_domain from the
-> platform. Looks like platform_msi_alloc_priv_data() fails immediately
-> because dev->msi_domain will be NULL for these kinds of devices.
-> 
-> Maybe that issue should be handled directly instead of wrappering
-> platform_msi_*?
-> 
-> For instance a trivial addition to the platform_msi API:
-> 
->   platform_msi_assign_domain(struct_device 
-> *newly_created_virtual_device,
->                              struct device *physical_device);
-> 
-> Which could set the msi_domain of new device using the topology of
-> physical_device to deduce the correct domain?
+Fix a build warning in a non CONFIG_NEED_MULTIPLE_NODES
+"error: _numa_cpu_lookup_table_ undeclared"
 
-That would seem like a sensible course of action, as losing
-the topology information will likely result in problems down
-the line.
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+Changelog v2 -> v3:
+	Removed node caching part. Rewrote the Commit msg (Michael Ellerman)
+	Renamed to powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
 
-> Then the question is how to properly create a domain within the
-> hardware topology of physical_device with the correct parameters for
-> the platform.
-> 
-> Why do we need a dummy msi_domain anyhow? Can this just use
-> physical_device->msi_domain directly? (I'm at my limit here of how
-> much of this I remember, sorry)
+ arch/powerpc/kernel/smp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The parent device would be a PCI device, if I follow you correctly.
-It would thus expect to be able to program the MSI the PCI way,
-which wouldn't work. So we end-up with this custom MSI domain
-that knows about *this* particular family of devices.
-
-> If you solve that it should solve the remapping problem too, as the
-> physical_device is already assigned by the platform to a remapping irq
-> domain if that is what the platform wants.
-> 
->>> +	parent = irq_get_default_host();
->> Really? How is it going to work once you have devices sending their
->> MSIs to two different downstream blocks? This looks rather
->> short-sighted.
-> 
-> .. and fix this too, the parent domain should be derived from the
-> topology of the physical_device which is originating the interrupt
-> messages.
-> 
->> On the other hand, masking an interrupt is an irqchip operation, and
->> only concerns the irqchip level. Here, you seem to be making it an
->> end-point operation, which doesn't really make sense to me. Or is this
->> device its own interrupt controller as well? That would be extremely
->> surprising, and I'd expect some block downstream of the device to be
->> able to control the masking of the interrupt.
-> 
-> These are message interrupts so they originate directly from the
-> device and generally travel directly to the CPU APIC. On the wire
-> there is no difference between a MSI, MSI-X and a device using the
-> dev-msi approach.
-
-I understand that.
-
-> IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
-
-Really? So you can't shut a device with a screaming interrupt,
-for example, should it become otherwise unresponsive?
-
-> So the model for MSI is always "mask at source". The closest mapping
-> to the Linux IRQ model is to say the end device has a irqchip that
-> encapsulates the ability of the device to generate the MSI in the
-> first place.
-
-This is an x86'ism, I'm afraid. Systems I deal with can mask any
-interrupt at the interrupt controller level, MSI or not.
-
-> It looks like existing platform_msi drivers deal with "masking"
-> implicitly by halting the device interrupt generation before releasing
-> the interrupt and have no way for the generic irqchip layer to mask
-> the interrupt.
-
-No. As I said above, the interrupt controller is perfectly capable
-of masking interrupts on its own, without touching the device.
-
-> I suppose the motivation to make it explicit is related to vfio using
-> the generic mask/unmask functionality?
-> 
-> Explicit seems better, IMHO.
-
-If masking at the source is the only way to shut the device up,
-and assuming that the device provides the expected semantics
-(a MSI raised by the device while the interrupt is masked
-isn't lost and gets sent when unmasked), that's fair enough.
-It's just ugly.
-
-Thanks,
-
-         M.
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index 73199470c265..edf94ca64eea 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -860,6 +860,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 					GFP_KERNEL, cpu_to_node(cpu));
+ 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
+ 					GFP_KERNEL, cpu_to_node(cpu));
++#ifdef CONFIG_NEED_MULTIPLE_NODES
+ 		/*
+ 		 * numa_node_id() works after this.
+ 		 */
+@@ -868,6 +869,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 			set_cpu_numa_mem(cpu,
+ 				local_memory_node(numa_cpu_lookup_table[cpu]));
+ 		}
++#endif
+ 	}
+ 
+ 	/* Init the cpumasks so the boot CPU is related to itself */
 -- 
-Jazz is not dead. It just smells funny...
+2.18.2
+
