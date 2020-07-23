@@ -2,148 +2,148 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7798BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79895C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625E920737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5597820737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 04:18:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQGIGFIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgGWEQZ (ORCPT
+        id S1726454AbgGWES0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 00:16:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:44677 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgGWEQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 00:16:24 -0400
-IronPort-SDR: 9GOXqDrua+V07IoOz1oMITzw90rxZP5GDtO6pjusCC1cm116jh36SsT4jRY0Np7k2dlZAz96Ez
- 9AOdGy3+wjhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="212005799"
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="212005799"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 21:16:22 -0700
-IronPort-SDR: rpHIBZB6bPuv3oNaM50bZUknBDy+sYwfmQRnelBJL17bUfJOpOoX8J3DFyk6Szu4intgGr9/2i
- DVGSuZxFmu8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="288509462"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jul 2020 21:16:22 -0700
-Received: from [10.226.38.18] (unknown [10.226.38.18])
-        by linux.intel.com (Postfix) with ESMTP id AEE69580299;
-        Wed, 22 Jul 2020 21:16:19 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
- <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
- <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
-Date:   Thu, 23 Jul 2020 12:16:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 00:18:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37007 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726115AbgGWES0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 00:18:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595477905;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wwl4F50oKkswHT9apgjy+aI/48kVRlBCaDpskw3i4WE=;
+        b=MQGIGFIav5djzroqLzt1XT+1rRoYcbfwn1fCytFcbXOjgiy5STlZdZAkMKNZTvG8DNC81h
+        rQf72zuW5nWCdX1cOGMKCw6zoSnZPFZB0C2MmpV/x9CzMpHjB7zGc8vRy1aYIt+HbXqFxC
+        bLSFlEpHDvJo3bvf0sElZaCuR44DdcQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-dBpKknZyOf2oV-LpXVbrVg-1; Thu, 23 Jul 2020 00:18:21 -0400
+X-MC-Unique: dBpKknZyOf2oV-LpXVbrVg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5706106B245;
+        Thu, 23 Jul 2020 04:18:18 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 918D888D41;
+        Thu, 23 Jul 2020 04:18:17 +0000 (UTC)
+Date:   Wed, 22 Jul 2020 22:18:17 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Weitao Wang(BJ-RD)" <WeitaoWang@zhaoxin.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>,
+        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
+        "efremov@linux.com" <efremov@linux.com>,
+        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
+        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
+        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
+        "wwt8723@163.com" <wwt8723@163.com>
+Subject: Re: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
+ vfio-pci
+Message-ID: <20200722221817.542971a2@x1.home>
+In-Reply-To: <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
+References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
+        <20200722124414.GA3153105@kroah.com>
+        <20200722145913.GB1310843@rowland.harvard.edu>
+        <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 23 Jul 2020 02:59:55 +0000
+"Weitao Wang(BJ-RD)" <WeitaoWang@zhaoxin.com> wrote:
 
-Hi Uwe,
+> On , Jul 22, 2020 at 02:44:14PM +0200, Alan wrote:
+> > On Wed, Jul 22, 2020 at 02:44:14PM +0200, Greg KH wrote: =20
+> > > On Wed, Jul 22, 2020 at 07:57:48PM +0800, WeitaoWangoc wrote: =20
+> > > > This bug is found in Zhaoxin platform, but it's a commom code bug.
+> > > > Fail sequence:
+> > > > step1: Unbind UHCI controller from native driver;
+> > > > step2: Bind UHCI controller to vfio-pci, which will put UHCI contro=
+ller in one =20
+> > vfio =20
+> > > >        group's device list and set UHCI's dev->driver_data to struc=
+t =20
+> > vfio-pci(for UHCI) =20
+> > >
+> > > Hah, that works?  How do you do that properly?  What code does that? =
+=20
+> >
+> > Yeah, that can't possibly work.  The USB core expects that any host
+> > controller device (or at least, any PCI host controller device) has its
+> > driver_data set to point to a struct usb_hcd.  It doesn't expect a host
+> > controller to be bound to anything other than a host controller driver.
+> >
+> > Things could easily go very wrong here.  For example, suppose at this
+> > point the ehci-hcd driver just happens to bind to the EHCI controller.
+> > When this happens, the EHCI controller hardware takes over all the USB
+> > connections that were routed to the UHCI controller.  How will vfio-pci
+> > deal with that?  Pretty ungracefully, I imagine.
 
-Thanks for the feedback.
+The issue I believe we're seeing here is not with vfio-pci trying to do
+anything with the device, the IOMMU grouping would prevent a user from
+opening any device within the group while other devices within the
+group are bound to host drivers.  So it should be fine if the EHCI
+device takes over the other ports, but it's not ok that ehci-hcd
+assumes the driver private data for any other UHCI/OHCI/EHCI device in
+the same slot is something that it's free to modify.  It really seems
+there should be some sort of companion device registration/opt-in
+rather than modifying unvalidated data.
 
-On 14/7/2020 3:10 am, Uwe Kleine-König wrote:
-> Hello,
->
-> On Tue, Jun 30, 2020 at 03:55:32PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
->> This PWM controller does not have any other consumer, it is a
->> dedicated PWM controller for fan attached to the system. Add
->> driver for this PWM fan controller.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/pwm/Kconfig         |  11 ++
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-intel-lgm.c | 266 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 278 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+> > The only way to make this work at all is to unbind both uhci-hcd and
+> > ehci-hcd first.  Then after both are finished you can safely bind
+> > vfio-pci to the EHCI controller and the UHCI controllers (in that
+> > order).
+> > =20
+> I'm agree with you, unbind both uhci-hcd and ehci-hcd first then bind to
+> vfio-pci is a more reasonable sequence. Our experiments prove that this
+> sequence is indeed good as expected.
+> However, I did not find a formal document to prescribe this order.
+> Unfortunately, some application software such as virt-manager/qemu assign
+> UHCI/EHCI to guest OS has the same bind/unbind sequence as test =E2=80=9C=
+by hand=E2=80=9D.
+> Do we need to consider compatibility with this application scenario?
 
-[...]
+Unbinding all functions first, before binding any to vfio-pci should
+indeed work, thanks to the for_each_companion() function at least
+testing for null private data before going further.  I'd still argue
+though that these hcd drivers are overstepping their authority by
+walking the PCI bus and assuming any device in the same slot, matching
+a set of class codes, is making use of a driver with a known data
+structure that they're allowed to modify.  Even if we claim that the
+user needs to know what they're doing when they change driver binding,
+that's a pretty subtle interaction with no validation.  Thanks,
 
->> +
->> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			 const struct pwm_state *state)
->> +{
->> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
->> +	u32 duty_cycle, val;
->> +	unsigned int period;
->> +
->> +	if (!state->enabled) {
->> +		lgm_pwm_enable(chip, 0);
->> +		return 0;
->> +	}
->> +
->> +	period = min_t(u64, state->period, pc->period);
->> +
->> +	if (state->polarity != PWM_POLARITY_NORMAL ||
->> +	    period < pc->period)
->> +		return -EINVAL;
-> This check looks wrong. If you refuse period < pc->period there isn't
-> much configuration possible.
+Alex
 
-I am kind of stuck here. I made this change of adding a check
-period < pc->period based on your feedback on v2 patch.
-In fact, you had specified this code in v2 review feedback
-and i used the same exact code.
-
-How should we handle it when the hardware supports fixed period.
-We don't want user to change period and allow just changing
-duty_cycle. With that intention, i had first added a strict check
-which refused configuration if period != pc->period. Period is
-intended to be a read only value.
-
-How do you suggest we handle the fixed period hardware support?
-Would you have any reference example of other drivers which also
-supports fixed period? Thanks.
-
-[...]
->> +static int lgm_pwm_remove(struct platform_device *pdev)
->> +{
->> +	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
->> +	int ret;
->> +
->> +	ret = pwmchip_remove(&pc->chip);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	clk_disable_unprepare(pc->clk);
->> +	reset_control_assert(pc->rst);
-> Please swap the two previous lines to match the error patch of .probe.
-
-Again, i had made this change based on your below review feedback
-for v1. IMO, reverse of probe makes more sense.
-
-"In .probe() you first release reset and then enable the clock. It's good
-style to do it the other way round in .remove()."
-
-Regards,
-Rahul
