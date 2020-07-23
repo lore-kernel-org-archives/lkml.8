@@ -2,182 +2,167 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18ECC43445
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC42C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE3820768
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NGUo9ftA"
+	by mail.kernel.org (Postfix) with ESMTP id 85AE820768
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595509438;
+	bh=2g8Dg1i214iLUOXoBKrzt5z4UAkDeN1GTifKnpiP+Lo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=c253eVaPt3TrfvstrI7gGzTBdH6tUbJTA4OsmC03sYzg9viW59RWOBl5kwK0XmRUi
+	 YTy7alnOjJWvYufu0X8XJ3RVyO7fpDDJSwX+yBEwRn2p1R4KT6n7rGKTSVaXXtghM8
+	 j9aCxabv2FEHVgTHSmpEUbfABTU554acB1oIO7vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgGWM7k (ORCPT
+        id S1728918AbgGWND5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:59:40 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:6419 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726521AbgGWM7M (ORCPT
+        Thu, 23 Jul 2020 09:03:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgGWND5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:59:12 -0400
-X-UUID: ade07837e5614dd197fca847f0645e61-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0aqTZVk9bRmcAMVjVp+RRfkroYKT6fTuKxtG5i1XBcY=;
-        b=NGUo9ftA23GH2kfKjPlDSO66ye6Vrhz61wK/byq8BbeGmvQ0NCNuWjNN3Q1y3QGfK244exOLdB/bZE6BG5SB58sqOZc8V/K9zLYkE37BtsdKrSxkp57i8rsS+0u5Qg/bmXToVZkMAUiP0cbrqln940RSAMUTZi7fKkLe1BZ910Y=;
-X-UUID: ade07837e5614dd197fca847f0645e61-20200723
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2096626807; Thu, 23 Jul 2020 20:59:07 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 20:59:04 +0800
-Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 20:59:06 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: [PATCH 1/8] mfd: mt6358: refine interrupt code
-Date:   Thu, 23 Jul 2020 20:58:46 +0800
-Message-ID: <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 23 Jul 2020 09:03:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6DEC0619DC;
+        Thu, 23 Jul 2020 06:03:55 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id r19so6202115ljn.12;
+        Thu, 23 Jul 2020 06:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=LJEiKpz9gp0StAjHhoJ8pMMagIDPpkqONOHADySk4U4=;
+        b=YEzntdnUXljzr15iYUbd6vBzxKa267iPGPD/lVBvxqTTEwKSO7OuvVL+CYq4ppbo7R
+         W3dy8IK/C9LyYhF3QOqQXs6JWhdKxBX4qdPnawLzvwpMcR2ytmiTHbVHrA+DAetqje9r
+         jyGVel+Sl6xbQnXTjtyWHZXZ5GQrqQf/z24JPZzOz3iiUgDUKmbxEFZ/ozkTXlnjLZEo
+         XR642R1fCqfbHPhAqyIoUrQ2vmh2SRcDguX5zwiu1aOLZTc1+5PNhEi+sCSZRA+gxa07
+         +mhIW0Lwj7TnlNoLblwV4CwTGhL6dBckanWyWZCiczl1obxIGAPuclV5G6Go0B+Gr/uF
+         6yww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=LJEiKpz9gp0StAjHhoJ8pMMagIDPpkqONOHADySk4U4=;
+        b=joemrnRYuiynWnhyGxpINmf7Rbw6uHbQrpxXOGcRktO8zP8qfr22mKeR+RdbQsdFgj
+         O+ZaX7D0+RZyJozhzq+hzHZ+e4YpbC0AdyVdQv51C5G8cexBfePpQpn8TKjc+rI59Il7
+         WFlKGAJZn3ymxYyhAVZ6nR/53QT71cGcRMstfEkIrOht5xBBmCfH3vaYweRCdPUtBxE+
+         BKJUA4b+N7sVapJ8jxwveWkxC+GvDQv/M4TqQJEPCzhXGIz2PT+y+u6MXLffBLEs2nir
+         DQw3we6xW+a4nBod4H7CtccLzvvEhX/Y7fZ27PXy6laY7p5dtIIC0mxZ2VV1Lhwp4udm
+         eqXQ==
+X-Gm-Message-State: AOAM530uHzgPFW7ILySrcfOvb0sefWnoYrRLMDVgvdhMwwl96tqeUFKx
+        2yLBX0SG4X5kwBGsjCYfJqNnRWmM7/lApQ==
+X-Google-Smtp-Source: ABdhPJxCwiR2AKqYY6rSABJHjcYSrfJ+FUm4ZucYt8nRU6zBJR3m4T8FUl37r7vmIHub8TT1WAi28w==
+X-Received: by 2002:a2e:b17a:: with SMTP id a26mr1871564ljm.342.1595509429663;
+        Thu, 23 Jul 2020 06:03:49 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id k14sm2742886ljc.48.2020.07.23.06.03.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 06:03:48 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marex\@denx.de" <marex@denx.de>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [RFC for-5.8] usb: dwc2: Cleanup debugfs when usb_add_gadget_udc() fails
+In-Reply-To: <0ba4b7ce-3551-0453-bac7-4d86c53dd2e8@synopsys.com>
+References: <20200629180314.2878638-1-martin.blumenstingl@googlemail.com> <0ba4b7ce-3551-0453-bac7-4d86c53dd2e8@synopsys.com>
+Date:   Thu, 23 Jul 2020 16:03:44 +0300
+Message-ID: <87eep2o027.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCByZWZpbmVzIHRoZSBpbnRlcnJ1cHQgcmVsYXRlZCBjb2RlIHRvIHN1cHBvcnQg
-bmV3IGNoaXBzLg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVu
-Zy53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbWZkL210NjM1OC1pcnEuYyAgICAg
-ICAgfCA2NSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLQ0KIGluY2x1
-ZGUvbGludXgvbWZkL210NjM1OC9jb3JlLmggfCAgOCArKy0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwg
-NDEgaW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L21mZC9tdDYzNTgtaXJxLmMgYi9kcml2ZXJzL21mZC9tdDYzNTgtaXJxLmMNCmluZGV4IGRiNzM0
-ZjIuLjRiMDk0ZTUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21mZC9tdDYzNTgtaXJxLmMNCisrKyBi
-L2RyaXZlcnMvbWZkL210NjM1OC1pcnEuYw0KQEAgLTEzLDcgKzEzLDkgQEANCiAjaW5jbHVkZSA8
-bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KIA0K
-LXN0YXRpYyBzdHJ1Y3QgaXJxX3RvcF90IG10NjM1OF9pbnRzW10gPSB7DQorI2RlZmluZSBNVEtf
-UE1JQ19SRUdfV0lEVEggMTYNCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IGlycV90b3BfdCBtdDYz
-NThfaW50c1tdID0gew0KIAlNVDYzNThfVE9QX0dFTihCVUNLKSwNCiAJTVQ2MzU4X1RPUF9HRU4o
-TERPKSwNCiAJTVQ2MzU4X1RPUF9HRU4oUFNDKSwNCkBAIC0yNCw2ICsyNiwxMyBAQCBzdGF0aWMg
-c3RydWN0IGlycV90b3BfdCBtdDYzNThfaW50c1tdID0gew0KIAlNVDYzNThfVE9QX0dFTihNSVND
-KSwNCiB9Ow0KIA0KK3N0YXRpYyBzdHJ1Y3QgcG1pY19pcnFfZGF0YSBtdDYzNThfaXJxZCA9IHsN
-CisJLm51bV90b3AgPSBBUlJBWV9TSVpFKG10NjM1OF9pbnRzKSwNCisJLm51bV9wbWljX2lycXMg
-PSBNVDYzNThfSVJRX05SLA0KKwkudG9wX2ludF9zdGF0dXNfcmVnID0gTVQ2MzU4X1RPUF9JTlRf
-U1RBVFVTMCwNCisJLnBtaWNfaW50cyA9IG10NjM1OF9pbnRzLA0KK307DQorDQogc3RhdGljIHZv
-aWQgcG1pY19pcnFfZW5hYmxlKHN0cnVjdCBpcnFfZGF0YSAqZGF0YSkNCiB7DQogCXVuc2lnbmVk
-IGludCBod2lycSA9IGlycWRfdG9faHdpcnEoZGF0YSk7DQpAQCAtNjIsMTUgKzcxLDE1IEBAIHN0
-YXRpYyB2b2lkIHBtaWNfaXJxX3N5bmNfdW5sb2NrKHN0cnVjdCBpcnFfZGF0YSAqZGF0YSkNCiAJ
-CS8qIEZpbmQgb3V0IHRoZSBJUlEgZ3JvdXAgKi8NCiAJCXRvcF9ncCA9IDA7DQogCQl3aGlsZSAo
-KHRvcF9ncCArIDEpIDwgaXJxZC0+bnVtX3RvcCAmJg0KLQkJICAgICAgIGkgPj0gbXQ2MzU4X2lu
-dHNbdG9wX2dwICsgMV0uaHdpcnFfYmFzZSkNCisJCSAgICAgICBpID49IGlycWQtPnBtaWNfaW50
-c1t0b3BfZ3AgKyAxXS5od2lycV9iYXNlKQ0KIAkJCXRvcF9ncCsrOw0KIA0KIAkJLyogRmluZCB0
-aGUgSVJRIHJlZ2lzdGVycyAqLw0KLQkJZ3Bfb2Zmc2V0ID0gaSAtIG10NjM1OF9pbnRzW3RvcF9n
-cF0uaHdpcnFfYmFzZTsNCi0JCWludF9yZWdzID0gZ3Bfb2Zmc2V0IC8gTVQ2MzU4X1JFR19XSURU
-SDsNCi0JCXNoaWZ0ID0gZ3Bfb2Zmc2V0ICUgTVQ2MzU4X1JFR19XSURUSDsNCi0JCWVuX3JlZyA9
-IG10NjM1OF9pbnRzW3RvcF9ncF0uZW5fcmVnICsNCi0JCQkgKG10NjM1OF9pbnRzW3RvcF9ncF0u
-ZW5fcmVnX3NoaWZ0ICogaW50X3JlZ3MpOw0KKwkJZ3Bfb2Zmc2V0ID0gaSAtIGlycWQtPnBtaWNf
-aW50c1t0b3BfZ3BdLmh3aXJxX2Jhc2U7DQorCQlpbnRfcmVncyA9IGdwX29mZnNldCAvIE1US19Q
-TUlDX1JFR19XSURUSDsNCisJCXNoaWZ0ID0gZ3Bfb2Zmc2V0ICUgTVRLX1BNSUNfUkVHX1dJRFRI
-Ow0KKwkJZW5fcmVnID0gaXJxZC0+cG1pY19pbnRzW3RvcF9ncF0uZW5fcmVnICsNCisJCQkgKGly
-cWQtPnBtaWNfaW50c1t0b3BfZ3BdLmVuX3JlZ19zaGlmdCAqIGludF9yZWdzKTsNCiANCiAJCXJl
-Z21hcF91cGRhdGVfYml0cyhjaGlwLT5yZWdtYXAsIGVuX3JlZywgQklUKHNoaWZ0KSwNCiAJCQkJ
-ICAgaXJxZC0+ZW5hYmxlX2h3aXJxW2ldIDw8IHNoaWZ0KTsNCkBAIC05NSwxMCArMTA0LDExIEBA
-IHN0YXRpYyB2b2lkIG10NjM1OF9pcnFfc3BfaGFuZGxlcihzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNo
-aXAsDQogCXVuc2lnbmVkIGludCBpcnFfc3RhdHVzLCBzdGFfcmVnLCBzdGF0dXM7DQogCXVuc2ln
-bmVkIGludCBod2lycSwgdmlycTsNCiAJaW50IGksIGosIHJldDsNCisJc3RydWN0IHBtaWNfaXJx
-X2RhdGEgKmlycWQgPSBjaGlwLT5pcnFfZGF0YTsNCiANCi0JZm9yIChpID0gMDsgaSA8IG10NjM1
-OF9pbnRzW3RvcF9ncF0ubnVtX2ludF9yZWdzOyBpKyspIHsNCi0JCXN0YV9yZWcgPSBtdDYzNThf
-aW50c1t0b3BfZ3BdLnN0YV9yZWcgKw0KLQkJCW10NjM1OF9pbnRzW3RvcF9ncF0uc3RhX3JlZ19z
-aGlmdCAqIGk7DQorCWZvciAoaSA9IDA7IGkgPCBpcnFkLT5wbWljX2ludHNbdG9wX2dwXS5udW1f
-aW50X3JlZ3M7IGkrKykgew0KKwkJc3RhX3JlZyA9IGlycWQtPnBtaWNfaW50c1t0b3BfZ3BdLnN0
-YV9yZWcgKw0KKwkJCWlycWQtPnBtaWNfaW50c1t0b3BfZ3BdLnN0YV9yZWdfc2hpZnQgKiBpOw0K
-IA0KIAkJcmV0ID0gcmVnbWFwX3JlYWQoY2hpcC0+cmVnbWFwLCBzdGFfcmVnLCAmaXJxX3N0YXR1
-cyk7DQogCQlpZiAocmV0KSB7DQpAQCAtMTE0LDggKzEyNCw4IEBAIHN0YXRpYyB2b2lkIG10NjM1
-OF9pcnFfc3BfaGFuZGxlcihzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAsDQogCQlkbyB7DQogCQkJ
-aiA9IF9fZmZzKHN0YXR1cyk7DQogDQotCQkJaHdpcnEgPSBtdDYzNThfaW50c1t0b3BfZ3BdLmh3
-aXJxX2Jhc2UgKw0KLQkJCQlNVDYzNThfUkVHX1dJRFRIICogaSArIGo7DQorCQkJaHdpcnEgPSBp
-cnFkLT5wbWljX2ludHNbdG9wX2dwXS5od2lycV9iYXNlICsNCisJCQkJTVRLX1BNSUNfUkVHX1dJ
-RFRIICogaSArIGo7DQogDQogCQkJdmlycSA9IGlycV9maW5kX21hcHBpbmcoY2hpcC0+aXJxX2Rv
-bWFpbiwgaHdpcnEpOw0KIAkJCWlmICh2aXJxKQ0KQEAgLTEzMSwxMiArMTQxLDEyIEBAIHN0YXRp
-YyB2b2lkIG10NjM1OF9pcnFfc3BfaGFuZGxlcihzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAsDQog
-c3RhdGljIGlycXJldHVybl90IG10NjM1OF9pcnFfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpkYXRh
-KQ0KIHsNCiAJc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0gZGF0YTsNCi0Jc3RydWN0IHBtaWNf
-aXJxX2RhdGEgKm10NjM1OF9pcnFfZGF0YSA9IGNoaXAtPmlycV9kYXRhOw0KKwlzdHJ1Y3QgcG1p
-Y19pcnFfZGF0YSAqaXJxZCA9IGNoaXAtPmlycV9kYXRhOw0KIAl1bnNpZ25lZCBpbnQgYml0LCBp
-LCB0b3BfaXJxX3N0YXR1cyA9IDA7DQogCWludCByZXQ7DQogDQogCXJldCA9IHJlZ21hcF9yZWFk
-KGNoaXAtPnJlZ21hcCwNCi0JCQkgIG10NjM1OF9pcnFfZGF0YS0+dG9wX2ludF9zdGF0dXNfcmVn
-LA0KKwkJCSAgaXJxZC0+dG9wX2ludF9zdGF0dXNfcmVnLA0KIAkJCSAgJnRvcF9pcnFfc3RhdHVz
-KTsNCiAJaWYgKHJldCkgew0KIAkJZGV2X2VycihjaGlwLT5kZXYsDQpAQCAtMTQ0LDggKzE1NCw4
-IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdDYzNThfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9pZCAq
-ZGF0YSkNCiAJCXJldHVybiBJUlFfTk9ORTsNCiAJfQ0KIA0KLQlmb3IgKGkgPSAwOyBpIDwgbXQ2
-MzU4X2lycV9kYXRhLT5udW1fdG9wOyBpKyspIHsNCi0JCWJpdCA9IEJJVChtdDYzNThfaW50c1tp
-XS50b3Bfb2Zmc2V0KTsNCisJZm9yIChpID0gMDsgaSA8IGlycWQtPm51bV90b3A7IGkrKykgew0K
-KwkJYml0ID0gQklUKGlycWQtPnBtaWNfaW50c1tpXS50b3Bfb2Zmc2V0KTsNCiAJCWlmICh0b3Bf
-aXJxX3N0YXR1cyAmIGJpdCkgew0KIAkJCW10NjM1OF9pcnFfc3BfaGFuZGxlcihjaGlwLCBpKTsN
-CiAJCQl0b3BfaXJxX3N0YXR1cyAmPSB+Yml0Ow0KQEAgLTE4MCwxNyArMTkwLDE4IEBAIGludCBt
-dDYzNThfaXJxX2luaXQoc3RydWN0IG10NjM5N19jaGlwICpjaGlwKQ0KIAlpbnQgaSwgaiwgcmV0
-Ow0KIAlzdHJ1Y3QgcG1pY19pcnFfZGF0YSAqaXJxZDsNCiANCi0JaXJxZCA9IGRldm1fa3phbGxv
-YyhjaGlwLT5kZXYsIHNpemVvZigqaXJxZCksIEdGUF9LRVJORUwpOw0KLQlpZiAoIWlycWQpDQot
-CQlyZXR1cm4gLUVOT01FTTsNCisJc3dpdGNoIChjaGlwLT5jaGlwX2lkKSB7DQorCWNhc2UgTVQ2
-MzU4X0NISVBfSUQ6DQorCQljaGlwLT5pcnFfZGF0YSA9ICZtdDYzNThfaXJxZDsNCisJCWJyZWFr
-Ow0KIA0KLQljaGlwLT5pcnFfZGF0YSA9IGlycWQ7DQorCWRlZmF1bHQ6DQorCQlkZXZfZXJyKGNo
-aXAtPmRldiwgInVuc3VwcG9ydGVkIGNoaXA6IDB4JXhcbiIsIGNoaXAtPmNoaXBfaWQpOw0KKwkJ
-cmV0dXJuIC1FTk9ERVY7DQorCX0NCiANCiAJbXV0ZXhfaW5pdCgmY2hpcC0+aXJxbG9jayk7DQot
-CWlycWQtPnRvcF9pbnRfc3RhdHVzX3JlZyA9IE1UNjM1OF9UT1BfSU5UX1NUQVRVUzA7DQotCWly
-cWQtPm51bV9wbWljX2lycXMgPSBNVDYzNThfSVJRX05SOw0KLQlpcnFkLT5udW1fdG9wID0gQVJS
-QVlfU0laRShtdDYzNThfaW50cyk7DQotDQorCWlycWQgPSBjaGlwLT5pcnFfZGF0YTsNCiAJaXJx
-ZC0+ZW5hYmxlX2h3aXJxID0gZGV2bV9rY2FsbG9jKGNoaXAtPmRldiwNCiAJCQkJCSAgaXJxZC0+
-bnVtX3BtaWNfaXJxcywNCiAJCQkJCSAgc2l6ZW9mKCppcnFkLT5lbmFibGVfaHdpcnEpLA0KQEAg
-LTIwNywxMCArMjE4LDEwIEBAIGludCBtdDYzNThfaXJxX2luaXQoc3RydWN0IG10NjM5N19jaGlw
-ICpjaGlwKQ0KIA0KIAkvKiBEaXNhYmxlIGFsbCBpbnRlcnJ1cHRzIGZvciBpbml0aWFsaXppbmcg
-Ki8NCiAJZm9yIChpID0gMDsgaSA8IGlycWQtPm51bV90b3A7IGkrKykgew0KLQkJZm9yIChqID0g
-MDsgaiA8IG10NjM1OF9pbnRzW2ldLm51bV9pbnRfcmVnczsgaisrKQ0KKwkJZm9yIChqID0gMDsg
-aiA8IGlycWQtPnBtaWNfaW50c1tpXS5udW1faW50X3JlZ3M7IGorKykNCiAJCQlyZWdtYXBfd3Jp
-dGUoY2hpcC0+cmVnbWFwLA0KLQkJCQkgICAgIG10NjM1OF9pbnRzW2ldLmVuX3JlZyArDQotCQkJ
-CSAgICAgbXQ2MzU4X2ludHNbaV0uZW5fcmVnX3NoaWZ0ICogaiwgMCk7DQorCQkJCSAgICAgaXJx
-ZC0+cG1pY19pbnRzW2ldLmVuX3JlZyArDQorCQkJCSAgICAgaXJxZC0+cG1pY19pbnRzW2ldLmVu
-X3JlZ19zaGlmdCAqIGosIDApOw0KIAl9DQogDQogCWNoaXAtPmlycV9kb21haW4gPSBpcnFfZG9t
-YWluX2FkZF9saW5lYXIoY2hpcC0+ZGV2LT5vZl9ub2RlLA0KZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-bGludXgvbWZkL210NjM1OC9jb3JlLmggYi9pbmNsdWRlL2xpbnV4L21mZC9tdDYzNTgvY29yZS5o
-DQppbmRleCBjNWExMWI3Li42ODU3OGUyIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9tZmQv
-bXQ2MzU4L2NvcmUuaA0KKysrIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L2NvcmUuaA0KQEAg
-LTYsMTIgKzYsOSBAQA0KICNpZm5kZWYgX19NRkRfTVQ2MzU4X0NPUkVfSF9fDQogI2RlZmluZSBf
-X01GRF9NVDYzNThfQ09SRV9IX18NCiANCi0jZGVmaW5lIE1UNjM1OF9SRUdfV0lEVEggMTYNCi0N
-CiBzdHJ1Y3QgaXJxX3RvcF90IHsNCiAJaW50IGh3aXJxX2Jhc2U7DQogCXVuc2lnbmVkIGludCBu
-dW1faW50X3JlZ3M7DQotCXVuc2lnbmVkIGludCBudW1faW50X2JpdHM7DQogCXVuc2lnbmVkIGlu
-dCBlbl9yZWc7DQogCXVuc2lnbmVkIGludCBlbl9yZWdfc2hpZnQ7DQogCXVuc2lnbmVkIGludCBz
-dGFfcmVnOw0KQEAgLTI1LDYgKzIyLDcgQEAgc3RydWN0IHBtaWNfaXJxX2RhdGEgew0KIAl1bnNp
-Z25lZCBzaG9ydCB0b3BfaW50X3N0YXR1c19yZWc7DQogCWJvb2wgKmVuYWJsZV9od2lycTsNCiAJ
-Ym9vbCAqY2FjaGVfaHdpcnE7DQorCWNvbnN0IHN0cnVjdCBpcnFfdG9wX3QgKnBtaWNfaW50czsN
-CiB9Ow0KIA0KIGVudW0gbXQ2MzU4X2lycV90b3Bfc3RhdHVzX3NoaWZ0IHsNCkBAIC0xNDYsOCAr
-MTQ0LDggQEAgZW51bSBtdDYzNThfaXJxX251bWJlcnMgew0KIHsJXA0KIAkuaHdpcnFfYmFzZSA9
-IE1UNjM1OF9JUlFfIyNzcCMjX0JBU0UsCVwNCiAJLm51bV9pbnRfcmVncyA9CVwNCi0JCSgoTVQ2
-MzU4X0lSUV8jI3NwIyNfQklUUyAtIDEpIC8gTVQ2MzU4X1JFR19XSURUSCkgKyAxLAlcDQotCS5u
-dW1faW50X2JpdHMgPSBNVDYzNThfSVJRXyMjc3AjI19CSVRTLCBcDQorCQkoKE1UNjM1OF9JUlFf
-IyNzcCMjX0JJVFMgLSAxKSAvCVwNCisJCU1US19QTUlDX1JFR19XSURUSCkgKyAxLAlcDQogCS5l
-bl9yZWcgPSBNVDYzNThfIyNzcCMjX1RPUF9JTlRfQ09OMCwJXA0KIAkuZW5fcmVnX3NoaWZ0ID0g
-MHg2LAlcDQogCS5zdGFfcmVnID0gTVQ2MzU4XyMjc3AjI19UT1BfSU5UX1NUQVRVUzAsCVwNCi0t
-IA0KMi42LjQNCg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+
+> Hi Martin,
+>
+> On 6/29/2020 10:03 PM, Martin Blumenstingl wrote:
+>> Call dwc2_debugfs_exit() when usb_add_gadget_udc() has failed. This
+>> ensure that the debugfs entries created by dwc2_debugfs_init() are
+>> cleaned up in the error path.
+>>=20
+>> Fixes: 207324a321a866 ("usb: dwc2: Postponed gadget registration to the =
+udc class driver")
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>> This patch is compile-tested only. I found this while trying to
+>> understand the latest changes to dwc2/platform.c.
+>>=20
+>>=20
+>>   drivers/usb/dwc2/platform.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+>> index c347d93eae64..02b6da7e21d7 100644
+>> --- a/drivers/usb/dwc2/platform.c
+>> +++ b/drivers/usb/dwc2/platform.c
+>> @@ -582,12 +582,14 @@ static int dwc2_driver_probe(struct platform_devic=
+e *dev)
+>>   		retval =3D usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
+>>   		if (retval) {
+>>   			dwc2_hsotg_remove(hsotg);
+>> -			goto error_init;
+>> +			goto error_debugfs;
+>>   		}
+>>   	}
+>>   #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
+>>   	return 0;
+>>=20=20=20
+>> +error_debugfs:
+>> +	dwc2_debugfs_exit(hsotg);
+>>   error_init:
+>>   	if (hsotg->params.activate_stm_id_vb_detection)
+>>   		regulator_disable(hsotg->usb33d);
+>>=20
+> I'm Ok with this fix. One more thing. I missed to remove hcd also in=20
+> fail case. Could you please add dwc2_hcd_remove() call after=20
+> dwc2_debugfs_exit(hsotg) and submit as patch:
+>
+> +error_debugfs:
+> +	dwc2_debugfs_exit(hsotg);
+> +	if (hsotg->hcd_enabled)
+> +		dwc2_hcd_remove(hsotg);
+>    error_init:
+
+looks like it should be a separate patch though. Right?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8ZirAACgkQzL64meEa
+mQZQyBAAimttABmkTUf86JY2PCKMEFEnH584bnAZoAFs91mjC+hr5OKZA9EJWYx5
+YJpw8OYHCfoydCEuDllipCcsb4WFrvqU6CaY9VeCuKdpzLzfbiZGQGzWuWS6j+5N
+qBx/TXVMWZB7xe1flZJtM8w8/G/o2wot24rzZKU8x0nHggWzl/s53CsK/9q5XASb
+ljqZVGbUTbDfG89c0EIr9XpV89qwYbiJZWRR0Ei5Q3dHJnzMytGtWEZv3yhXlirS
+hm4gO9m1SiDT04nYr9gcXJvzFjaucAD88frXEY0wNlFIagv3TWoERnw6gI3DnHqj
+sKqcuI8sKsk/ZkIfoKnF6tdWELXT3YXhat79cxbPpxC4w6UkNoV62o2xz4OYGgrg
+VZfubNaQVcFIJBeV1hpcKu7Z1REd3qdujtwFg/vG4qEwD1KXHs/zqfA7akUV75wf
+QjD4S8O4sVUFMLsZGjt9Wgme3MCIak5T3EjiRhGjMI2cboYbbbvEarYhJTlcAARM
+9jBHXWvIyXtsl0sTS/z+kCiz0DFLY3V8Ny9eR/U0ES/vpKZXsKidsC8udfjebvuH
+voDAied98JbvS8Nnby/+JXEKA8ecZF7QywQGTXbzFIIjOk4YV6dieINVsezy7KIM
+ath5HSKuqkV7igte2NG3n2ZcJJ7cCROlbS/7w1leg5J9c/8i0dY=
+=GxaY
+-----END PGP SIGNATURE-----
+--=-=-=--
