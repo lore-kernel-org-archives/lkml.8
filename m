@@ -2,107 +2,152 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0935AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A03C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D86E620771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSaAtD1G"
+	by mail.kernel.org (Postfix) with ESMTP id BF9B72086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595517406;
+	bh=szFLu258j08zQXqiUyqA9Ac8Lg3qcsQPt0RQeuVKbRs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HbX1f9OEwb3B/MpLOvSvnt0Ygc4B6OK5GB6xAEA82MWd9j74cQUXc4KLB5b5HB9v4
+	 rwoSpGjFm2v/fInxj52rpfDnSm5OohPKqXQiUWIcALMJV52oc9OQvyuC5PzJcWNnXa
+	 gbO36ewUOk6jqcWvvtujkQpkw9jN8im6trw4mQP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgGWPPw (ORCPT
+        id S1729203AbgGWPQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgGWPPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:15:52 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F953C0619DC;
-        Thu, 23 Jul 2020 08:15:52 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id m9so2718801qvx.5;
-        Thu, 23 Jul 2020 08:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KyocJ093PD2YbzDHrbxPUouVLOVe2BF7XP9Bhi4fh1o=;
-        b=tSaAtD1GxyjwJ2PveArLh3Q+zJiVlHY6dLhLVtfSYNs73jjvOW8FF2WUoYGV52TyF5
-         w8aPxeDiojYhblWMBFz02zV1w6Xd1ml0awr2xDX/AFPMteUXKTsIak19BG96adtMz3MO
-         5ZHY6tGyTtyoEeWRR78YZFU6j4sJCYTOQVV+qs+z5KdElgT+chPzvvtap+zIlyfcrQKa
-         w5xF7uvPrCfBQazolZFSFxVgYNIV8pNwTRSwqvbrkDvsgfPy70jBTm28ZHkRFaKhnoFj
-         xlDMrAlsRVRRsS3e01/MPCvlTb+GBwj7HY8moxVImB/lcRbD2h+XAOWOlY8Dj1oOc9QC
-         MM9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KyocJ093PD2YbzDHrbxPUouVLOVe2BF7XP9Bhi4fh1o=;
-        b=QhBxO02SdSDMGzfhQyyhtK0k9QWY8jcTbs9R6vDKR3fjpRvkABg9oJ5FTxDIj5goa2
-         i2ODSN1dRKCBXCpjhz2b7TDQDlbwDlyDHVcSdUzkz2wwMa0TVT1h9htgmD2XgQJaXNls
-         FJQfR4penvnkNMtyhjgHAgq0QQp8ybTbRjGUPgQrjFru82cveqkiK56/VkmNsAF6kgOG
-         pLsdY1oIWq4Ie5Vuej16wuhKBGNs1BBhhf+qDZ+wnyddmo5802OACrq/K+0b1a8OkFjz
-         rwTYQJH1QBDVSvunxat0j92gD/TDyCPbVfDPNZBKLvXdy2nzyQ3Gcabs2zDtUAtTlIxN
-         fTfA==
-X-Gm-Message-State: AOAM53262P6cFj+QVGmaFWdaLhB3wFle4VCOdLLAslzUY78morXN/133
-        xY45+C42P89S6gMQE6/qJg==
-X-Google-Smtp-Source: ABdhPJzWD5cPz+PppE7bcUfnZGrw4meoQmK3sWtAMYS+kEQC7kvitfKpmB8shezAhiME4IeXhYMgbA==
-X-Received: by 2002:a0c:ee4a:: with SMTP id m10mr5012504qvs.41.1595517351389;
-        Thu, 23 Jul 2020 08:15:51 -0700 (PDT)
-Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id t187sm2725394qkf.73.2020.07.23.08.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 08:15:50 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 11:15:48 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     jreuter@yaina.de, ralf@linux-mips.org, gregkh@linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, kuba@kernel.org,
-        linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] AX.25: Fix out-of-bounds read
- in ax25_connect()
-Message-ID: <20200723151548.GB412829@PWN>
-References: <20200722151901.350003-1-yepeilin.cs@gmail.com>
- <20200722.175714.1713497446730685740.davem@davemloft.net>
+        Thu, 23 Jul 2020 11:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbgGWPQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:16:45 -0400
+Received: from lenoir.home (lfbn-ncy-1-317-216.w83-196.abo.wanadoo.fr [83.196.152.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E97C920771;
+        Thu, 23 Jul 2020 15:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595517404;
+        bh=szFLu258j08zQXqiUyqA9Ac8Lg3qcsQPt0RQeuVKbRs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=G/iJXNxPTYQT+KfV4HSn84YZnGbrF88s8jB2Ty8QJepvZE4j4qGhPXHhGVl07ovOJ
+         BeHe2QogKJ1VVfr32mw+danQrXLzOehVtOk7RSN+tw8k6txlqhkyXAOuoYlvdJb8R9
+         feaK7kRTKWQCYVkEOH5ukRYf7qY4yVGvP1RYDH0Q=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH v2] timers: Recalculate next timer interrupt only when necessary
+Date:   Thu, 23 Jul 2020 17:16:41 +0200
+Message-Id: <20200723151641.12236-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722.175714.1713497446730685740.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 05:57:14PM -0700, David Miller wrote:
-> From: Peilin Ye <yepeilin.cs@gmail.com>
-> Date: Wed, 22 Jul 2020 11:19:01 -0400
-> 
-> > Checks on `addr_len` and `fsa->fsa_ax25.sax25_ndigis` are insufficient.
-> > ax25_connect() can go out of bounds when `fsa->fsa_ax25.sax25_ndigis`
-> > equals to 7 or 8. Fix it.
-> > 
-> > This issue has been reported as a KMSAN uninit-value bug, because in such
-> > a case, ax25_connect() reaches into the uninitialized portion of the
-> > `struct sockaddr_storage` statically allocated in __sys_connect().
-> > 
-> > It is safe to remove `fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS` because
-> > `addr_len` is guaranteed to be less than or equal to
-> > `sizeof(struct full_sockaddr_ax25)`.
-> > 
-> > Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
-> > Link: https://syzkaller.appspot.com/bug?id=55ef9d629f3b3d7d70b69558015b63b48d01af66
-> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> 
-> Applied and queued up for -stable, thanks.
+The nohz tick code recalculates the timer wheel's next expiry on each
+idle loop iteration.
 
-Thank you for reviewing my patch!
+On the other hand, the base next expiry is now always cached and updated
+upon timer enqueue and execution. Only timer dequeue may leave
+base->next_expiry out of date (but then its stale value won't ever go
+past the actual next expiry to be recalculated).
 
-Peilin Ye
+Since recalculating the next_expiry isn't a free operation, especially
+when the last wheel level is reached to find out that no timer has
+been enqueued at all, reuse the next expiry cache when it is known to be
+reliable, which it is most of the time.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
+---
+Changes since v1:
+_ Fix changelog's ramblings
+_ Fix structure layout
+
+ kernel/time/timer.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 77e21e98ec32..96d802e9769e 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -204,6 +204,7 @@ struct timer_base {
+ 	unsigned long		clk;
+ 	unsigned long		next_expiry;
+ 	unsigned int		cpu;
++	bool			next_expiry_recalc;
+ 	bool			is_idle;
+ 	DECLARE_BITMAP(pending_map, WHEEL_SIZE);
+ 	struct hlist_head	vectors[WHEEL_SIZE];
+@@ -593,6 +594,7 @@ static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
+ 		 * can reevaluate the wheel:
+ 		 */
+ 		base->next_expiry = bucket_expiry;
++		base->next_expiry_recalc = false;
+ 		trigger_dyntick_cpu(base, timer);
+ 	}
+ }
+@@ -836,8 +838,10 @@ static int detach_if_pending(struct timer_list *timer, struct timer_base *base,
+ 	if (!timer_pending(timer))
+ 		return 0;
+ 
+-	if (hlist_is_singular_node(&timer->entry, base->vectors + idx))
++	if (hlist_is_singular_node(&timer->entry, base->vectors + idx)) {
+ 		__clear_bit(idx, base->pending_map);
++		base->next_expiry_recalc = true;
++	}
+ 
+ 	detach_timer(timer, clear_pending);
+ 	return 1;
+@@ -1571,6 +1575,9 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 		clk >>= LVL_CLK_SHIFT;
+ 		clk += adj;
+ 	}
++
++	base->next_expiry_recalc = false;
++
+ 	return next;
+ }
+ 
+@@ -1631,9 +1638,11 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+ 		return expires;
+ 
+ 	raw_spin_lock(&base->lock);
+-	nextevt = __next_timer_interrupt(base);
++	if (base->next_expiry_recalc)
++		base->next_expiry = __next_timer_interrupt(base);
++	nextevt = base->next_expiry;
+ 	is_max_delta = (nextevt == base->clk + NEXT_TIMER_MAX_DELTA);
+-	base->next_expiry = nextevt;
++
+ 	/*
+ 	 * We have a fresh next event. Check whether we can forward the
+ 	 * base. We can only do that when @basej is past base->clk
+@@ -1725,6 +1734,12 @@ static inline void __run_timers(struct timer_base *base)
+ 	while (time_after_eq(jiffies, base->clk) &&
+ 	       time_after_eq(jiffies, base->next_expiry)) {
+ 		levels = collect_expired_timers(base, heads);
++		/*
++		 * The only possible reason for not finding any expired
++		 * timer at this clk is that all matching timers have been
++		 * dequeued.
++		 */
++		WARN_ON_ONCE(!levels && !base->next_expiry_recalc);
+ 		base->clk++;
+ 		base->next_expiry = __next_timer_interrupt(base);
+ 
+-- 
+2.26.2
+
