@@ -2,138 +2,105 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165BAC433FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80524C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D8020759
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:41:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SkYe2Adf"
+	by mail.kernel.org (Postfix) with ESMTP id 5F46B206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595518933;
+	bh=t/FsGNH1SS/qkGkjppISShve4TWHx01yCVIwqCDWFcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kpshg7eGk0r+vJsTiTarvzdpKUnULvH4xkh1oooDe+HJ7gaHnx+5wzEUbFT+Ut2wN
+	 xiKFoF6qBzomtXx+Xm+26hNWZ18xsfrC8DXdpLTjonfzW4K5Sfn7/pSBIyt2qVjr9R
+	 igNktHkw2vTEm4MY44bgL6JBs2TBD3//mq/YG6lE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgGWPll (ORCPT
+        id S1729678AbgGWPmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729551AbgGWPlk (ORCPT
+        Thu, 23 Jul 2020 11:42:12 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45590 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbgGWPmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:41:40 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2508AC0619DC;
-        Thu, 23 Jul 2020 08:41:40 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z18so2050227wrm.12;
-        Thu, 23 Jul 2020 08:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AcBqtfKEF6k5xr/VSNWblkqKGVnRPP3ztKfalGbMQTA=;
-        b=SkYe2AdfwGFlttVB8ifdFjjVZf8HGW9GVwFpei2V5+07UZ2DNP+x0zYdNcOp8FUCsF
-         gNXqpKEzsxBa+Qu3MJcUipZBHqhct/OgxsNrCmknYegj38zb4BF2SLJq3N6WGMTWmraB
-         B68nHR+yUFADlOABBYYUgvoAkPtscNgsZOPSOjA4kSDdAHEAMlH5xjOW4Li3I3Ulpxw8
-         NpDGKc4G1rDb3mUtFK0bLrfZt7zexmcZSZBdtVbhxJgFeyBs7EUV/734GMksnuNBjAF6
-         gSyn+dIOifPnVGrHxRnFVBYWGXbrkoW77cJycp0pqhWeA+sedQIrQ1DJF+nHSyDhmOw/
-         Yrvg==
+        Thu, 23 Jul 2020 11:42:12 -0400
+Received: by mail-io1-f65.google.com with SMTP id e64so6680576iof.12;
+        Thu, 23 Jul 2020 08:42:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AcBqtfKEF6k5xr/VSNWblkqKGVnRPP3ztKfalGbMQTA=;
-        b=kUrupn4h9Y5In2uQFptoHfdEyTJfxQtIRCKEB1IOwOOePEJRAo7PWMjIehSFZuLnqY
-         ifmUWHho1oMePX/XCFYw6TDsErWAOFTTTtegP2lP5x1mdovIMI9zyDph57vnABxW/XJW
-         C4cv9u/6thzlQ9Ddy4qiHnfQRhBa3UNGJRhb+1vfdWFiUk7ajueRuKMn884PV53NfO23
-         yWlSNdhGoLfGU2qSW+BBfH+WpCL3rZoQfBiU9rnmk+Mjsg+V8a/nqL0dJHVc0QjSQVhN
-         hMy58MQmfGeyWE6vDxwOxDwbcKh7IL8mE4rtbUkxXsNc8lbjgROvAcexafcSIponD7zA
-         FlFQ==
-X-Gm-Message-State: AOAM533GK04kGXcNm38CC/XRbfIcxc9JeSxIA/yUn7IMbUnpTJ5INuDI
-        kQGyzwwBsErIdtie56Q4s7o=
-X-Google-Smtp-Source: ABdhPJxo8GvOapToh6OIkdSOCYVuIFV3tlBpD96mQIzsqG+h/NUdrRmgV0G9vYZUqr5+YsUfvS6bxA==
-X-Received: by 2002:adf:eccd:: with SMTP id s13mr4915144wro.217.1595518898886;
-        Thu, 23 Jul 2020 08:41:38 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id o7sm4169352wrv.50.2020.07.23.08.41.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 08:41:38 -0700 (PDT)
-Subject: Re: [v7, PATCH 4/7] dt-bindings: mediatek: add rdma_fifo_size
- description for mt8183 display
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
- <1595469798-3824-5-git-send-email-yongqiang.niu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <b3f97fc8-d95e-8245-1178-9a70353d379c@gmail.com>
-Date:   Thu, 23 Jul 2020 17:41:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4/r//SGeOvyYqdm3KFCJEPRLwChEzcw9P3j+tQ9l1GM=;
+        b=krSqcU7bZtXWedvVrbKlFTG2CvLEgbj66hpBwn36kgq0iXczVaWAkp+sgmZTSeYX2k
+         Z1C7fi+tCOzlWUm8woA5Xl8j4bkSvB48SnAp+uVEibQT9IN8VIDMAi50eBrLlApRhiif
+         LptkYEBCLIBYmk01+hO4NwQV3r5EYyHGpn6eiRVYHKXsCKNf1LWZJvVRII9HFGNc85Fk
+         TMCgd7XGV6cBxOyS44Cqpaz88N07vv+5eduCzZAtZPi4sL+5mm8f9/27rUoMEtQRvlHz
+         LaIhQSBMipHXozYfGTUaf9HTFpYPyl9SZpJ1uvA01jq/CXvR4AL5C/Et4udVv9c7hjfb
+         5heA==
+X-Gm-Message-State: AOAM530cu0DQNXeXqClNff0vktMI9LDLZ0uMsBR/xAtLKJTHR8QNXbfF
+        cIqVPAj6fbzCEhM7hzGRHA==
+X-Google-Smtp-Source: ABdhPJyu7dCC40pS3m3VGtulYcPWj9w5pZwdD/pIp2nf+CHvZH/74gGY6dIlYDld1KB4rGo2fLuU8Q==
+X-Received: by 2002:a02:c903:: with SMTP id t3mr5494425jao.30.1595518930907;
+        Thu, 23 Jul 2020 08:42:10 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id d9sm1602131ios.33.2020.07.23.08.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 08:42:10 -0700 (PDT)
+Received: (nullmailer pid 424433 invoked by uid 1000);
+        Thu, 23 Jul 2020 15:42:09 -0000
+Date:   Thu, 23 Jul 2020 09:42:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        rahul.tanwar.linux@gmail.com, songjun.Wu@intel.com,
+        linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        qi-ming.wu@intel.com, p.zabel@pengutronix.de
+Subject: Re: [PATCH v5 1/2] Add DT bindings YAML schema for PWM fan
+ controller of LGM SoC
+Message-ID: <20200723154209.GA423699@bogus>
+References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+ <4e975206fcbddedc746e8d39b620336d5fab8b14.1595489518.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1595469798-3824-5-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e975206fcbddedc746e8d39b620336d5fab8b14.1595489518.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 23/07/2020 04:03, Yongqiang Niu wrote:
-> Update device tree binding document for rdma_fifo_size
+On Thu, 23 Jul 2020 15:44:17 +0800, Rahul Tanwar wrote:
+> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+> which is only used to control the fan attached to the system. This
+> PWM controller does not have any other consumer other than fan.
+> Add DT bindings documentation for this PWM fan controller.
 > 
-
-Please explain better what you are doing in the patch.
-Also DT binding patches should normally go as the first of a series, as this 
-helps Rob to review them.
-
-Regards,
-Matthias
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > ---
->   .../devicetree/bindings/display/mediatek/mediatek,disp.txt | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
+>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> index b91e709..e6bbe32 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> @@ -66,6 +66,11 @@ Required properties (DMA function blocks):
->     argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
->     for details.
->   
-> +Optional properties (RDMA function blocks):
-> +- mediatek,rdma_fifo_size: rdma fifo size may be different even in same SOC, add this
-> +  property to the corresponding rdma
-> +  the value is the Max value which defined in hardware data sheet.
-> +
->   Examples:
->   
->   mmsys: clock-controller@14000000 {
-> @@ -207,3 +212,12 @@ od@14023000 {
->   	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->   	clocks = <&mmsys CLK_MM_DISP_OD>;
->   };
-> +
-> +rdma1: rdma@1400c000 {
-> +	compatible = "mediatek,mt8183-disp-rdma";
-> +	reg = <0 0x1400c000 0 0x1000>;
-> +	interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +	power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +	clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +	mediatek,rdma_fifo_size = <2048>;
-> +};
-> 
+
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml: pwm@e0d00000: '#pwm-cells' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.example.dt.yaml: pwm@e0d00000: '#pwm-cells' is a required property
+
+
+See https://patchwork.ozlabs.org/patch/1334579
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
