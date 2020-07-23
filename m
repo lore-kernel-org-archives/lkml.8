@@ -2,99 +2,318 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B03C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD2E2071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BA72071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbgGWQih (ORCPT
+        id S1729879AbgGWQjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:38:37 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:58361 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727044AbgGWQig (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:38:36 -0400
-Received: (qmail 1358681 invoked by uid 1000); 23 Jul 2020 12:38:35 -0400
-Date:   Thu, 23 Jul 2020 12:38:35 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Weitao Wang\(BJ-RD\)" <WeitaoWang@zhaoxin.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>,
-        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "hslester96@gmail.com" <hslester96@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
-        "efremov@linux.com" <efremov@linux.com>,
-        "Tony W. Wang\(XA-RD\)" <TonyWWang@zhaoxin.com>,
-        "Cobe Chen\(BJ-RD\)" <CobeChen@zhaoxin.com>,
-        "Tim Guo\(BJ-RD\)" <TimGuo@zhaoxin.com>,
-        "wwt8723@163.com" <wwt8723@163.com>
-Subject: Re: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
- vfio-pci
-Message-ID: <20200723163835.GA1357775@rowland.harvard.edu>
-References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
- <20200722124414.GA3153105@kroah.com>
- <20200722145913.GB1310843@rowland.harvard.edu>
- <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
- <20200722221817.542971a2@x1.home>
- <20200723153821.GC1352396@rowland.harvard.edu>
- <20200723101735.3222c289@w520.home>
+        Thu, 23 Jul 2020 12:39:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18382 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbgGWQjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:39:03 -0400
+IronPort-SDR: T/vaNr0i++vssk5z+hMTwyfvFFf6X02oTk+dqzulhfg/2c+RLDkNstCsyZzJ2yGfxkUAbI6Gq0
+ 3up1Mty23PeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130645846"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="130645846"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:38:55 -0700
+IronPort-SDR: 82caIWkwnXhub7UaQfxmQvI2LX7Kjo7m5xbS4S+sgwiAoKWx41Hwrl1ri9b9mKCALuF3DvaZtD
+ LjvxekVeLMtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="432797009"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jul 2020 09:38:54 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCH v4 05/10] net: eth: altera: Move common functions to
+ altera_utils
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>
+References: <20200708072401.169150-1-joyce.ooi@intel.com>
+ <20200708072401.169150-6-joyce.ooi@intel.com>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <790a146f-5bb3-6e11-d80f-b63aaf9a5531@linux.intel.com>
+Date:   Thu, 23 Jul 2020 11:39:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723101735.3222c289@w520.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200708072401.169150-6-joyce.ooi@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:17:35AM -0600, Alex Williamson wrote:
-> The IOMMU grouping restriction does solve the hardware issue, so long
-> as one driver doesn't blindly assume the driver private data for
-> another device and modify it.
-
-Correction: The IOMMU grouping restriction solves the hardware issue for 
-vfio-pci.  It won't necessarily help if some other driver comes along 
-and wants to bind to this hardware.
-
->   I do agree that your solution would
-> work, requiring all devices are unbound before any can be bound, but it
-> also seems difficult to manage.  The issue is largely unique to USB
-> AFAIK.  On the other hand, drivers coordinating with each other to
-> register their _private_ data as share-able within a set of drivers
-> seems like a much more direct and explicit interaction between the
-> drivers.  Thanks,
-
-Yes, that makes sense.  But it would have to be implemented in the 
-driver core, not in particular subsystems like USB or PCI.  And it might 
-be seen as overkill, given that only UHCI/OHCI/EHCI devices require this 
-sort of sharing AFAIK.
-
-Also, when you think about it, what form would such coordination among 
-drivers take?  From your description, it sounds like the drivers would 
-agree to avoid accessing each other's private data if the proper 
-registration wasn't in place.
-
-On the other hand, a stronger and perhaps more robust approach would be 
-to enforce the condition that non-cooperating drivers are never bound to 
-devices in the same group at the same time.  That's basically what I'm 
-proposing here -- the question is whether the enforcement should be 
-instituted in the kernel or should merely be part of a standard protocol 
-followed by userspace drivers.
-
-Given that it's currently needed in only one place, it seems reasonable 
-to leave this as a "gentlemen's agreement" in userspace for the time 
-being instead of adding it to the kernel.
-
-Alan Stern
+On 7/8/20 2:23 AM, Ooi, Joyce wrote:
+> From: Dalon Westergreen <dalon.westergreen@intel.com>
+> 
+> Move request_and_map and other shared functions to altera_utils. This
+> is the first step to moving common code out of tse specific code so
+> that it can be shared with future altera ethernet ip.
+> 
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> ---
+> v2: no change
+> v3: no change
+> v4: no change
+> ---
+>   drivers/net/ethernet/altera/altera_tse.h         | 45 ---------------------
+>   drivers/net/ethernet/altera/altera_tse_ethtool.c |  1 +
+>   drivers/net/ethernet/altera/altera_tse_main.c    | 32 +--------------
+>   drivers/net/ethernet/altera/altera_utils.c       | 29 ++++++++++++++
+>   drivers/net/ethernet/altera/altera_utils.h       | 51 ++++++++++++++++++++++++
+>   5 files changed, 82 insertions(+), 76 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
+> index 26c5541fda27..fa24ab3c7d6a 100644
+> --- a/drivers/net/ethernet/altera/altera_tse.h
+> +++ b/drivers/net/ethernet/altera/altera_tse.h
+> @@ -489,49 +489,4 @@ struct altera_tse_private {
+>    */
+>   void altera_tse_set_ethtool_ops(struct net_device *);
+>   
+> -static inline
+> -u32 csrrd32(void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -	return readl(paddr);
+> -}
+> -
+> -static inline
+> -u16 csrrd16(void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -	return readw(paddr);
+> -}
+> -
+> -static inline
+> -u8 csrrd8(void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -	return readb(paddr);
+> -}
+> -
+> -static inline
+> -void csrwr32(u32 val, void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -
+> -	writel(val, paddr);
+> -}
+> -
+> -static inline
+> -void csrwr16(u16 val, void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -
+> -	writew(val, paddr);
+> -}
+> -
+> -static inline
+> -void csrwr8(u8 val, void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -
+> -	writeb(val, paddr);
+> -}
+> -
+>   #endif /* __ALTERA_TSE_H__ */
+> diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
+> index 4299f1301149..420d77f00eab 100644
+> --- a/drivers/net/ethernet/altera/altera_tse_ethtool.c
+> +++ b/drivers/net/ethernet/altera/altera_tse_ethtool.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/phy.h>
+>   
+>   #include "altera_tse.h"
+> +#include "altera_utils.h"
+>   
+>   #define TSE_STATS_LEN	31
+>   #define TSE_NUM_REGS	128
+> diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+> index 0a724e4d2c8c..c9100ce24b0a 100644
+> --- a/drivers/net/ethernet/altera/altera_tse_main.c
+> +++ b/drivers/net/ethernet/altera/altera_tse_main.c
+> @@ -23,7 +23,6 @@
+>   #include <linux/if_vlan.h>
+>   #include <linux/init.h>
+>   #include <linux/interrupt.h>
+> -#include <linux/io.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/mii.h>
+> @@ -33,7 +32,7 @@
+>   #include <linux/of_net.h>
+>   #include <linux/of_platform.h>
+>   #include <linux/phy.h>
+> -#include <linux/platform_device.h>
+> +#include <linux/ptp_classify.h>
+>   #include <linux/skbuff.h>
+>   #include <asm/cacheflush.h>
+>   
+> @@ -1320,35 +1319,6 @@ static struct net_device_ops altera_tse_netdev_ops = {
+>   	.ndo_validate_addr	= eth_validate_addr,
+>   };
+>   
+> -static int request_and_map(struct platform_device *pdev, const char *name,
+> -			   struct resource **res, void __iomem **ptr)
+> -{
+> -	struct resource *region;
+> -	struct device *device = &pdev->dev;
+> -
+> -	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> -	if (*res == NULL) {
+> -		dev_err(device, "resource %s not defined\n", name);
+> -		return -ENODEV;
+> -	}
+> -
+> -	region = devm_request_mem_region(device, (*res)->start,
+> -					 resource_size(*res), dev_name(device));
+> -	if (region == NULL) {
+> -		dev_err(device, "unable to request %s\n", name);
+> -		return -EBUSY;
+> -	}
+> -
+> -	*ptr = devm_ioremap(device, region->start,
+> -				    resource_size(region));
+> -	if (*ptr == NULL) {
+> -		dev_err(device, "ioremap of %s failed!", name);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>   /* Probe Altera TSE MAC device
+>    */
+>   static int altera_tse_probe(struct platform_device *pdev)
+> diff --git a/drivers/net/ethernet/altera/altera_utils.c b/drivers/net/ethernet/altera/altera_utils.c
+> index e6a7fc9d8fb1..c9bc7d0ea02a 100644
+> --- a/drivers/net/ethernet/altera/altera_utils.c
+> +++ b/drivers/net/ethernet/altera/altera_utils.c
+> @@ -31,3 +31,32 @@ int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask)
+>   	u32 value = csrrd32(ioaddr, offs);
+>   	return (value & bit_mask) ? 0 : 1;
+>   }
+> +
+> +int request_and_map(struct platform_device *pdev, const char *name,
+> +		    struct resource **res, void __iomem **ptr)
+> +{
+> +	struct resource *region;
+> +	struct device *device = &pdev->dev;
+> +
+> +	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> +	if (!*res) {
+> +		dev_err(device, "resource %s not defined\n", name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	region = devm_request_mem_region(device, (*res)->start,
+> +					 resource_size(*res), dev_name(device));
+> +	if (!region) {
+> +		dev_err(device, "unable to request %s\n", name);
+> +		return -EBUSY;
+> +	}
+> +
+> +	*ptr = devm_ioremap(device, region->start,
+> +			    resource_size(region));
+> +	if (!*ptr) {
+> +		dev_err(device, "ioremap of %s failed!", name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/net/ethernet/altera/altera_utils.h b/drivers/net/ethernet/altera/altera_utils.h
+> index b7d772f2dcbb..fbe985099a44 100644
+> --- a/drivers/net/ethernet/altera/altera_utils.h
+> +++ b/drivers/net/ethernet/altera/altera_utils.h
+> @@ -3,7 +3,9 @@
+>    * Copyright (C) 2014 Altera Corporation. All rights reserved
+>    */
+>   
+> +#include <linux/platform_device.h>
+>   #include <linux/kernel.h>
+> +#include <linux/io.h>
+>   
+>   #ifndef __ALTERA_UTILS_H__
+>   #define __ALTERA_UTILS_H__
+> @@ -12,5 +14,54 @@ void tse_set_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+>   void tse_clear_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+>   int tse_bit_is_set(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+>   int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+> +int request_and_map(struct platform_device *pdev, const char *name,
+> +		    struct resource **res, void __iomem **ptr);
+>   
+> +static inline
+> +u32 csrrd32(void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	return readl(paddr);
+> +}
+> +
+> +static inline
+> +u16 csrrd16(void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	return readw(paddr);
+> +}
+> +
+> +static inline
+> +u8 csrrd8(void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	return readb(paddr);
+> +}
+> +
+> +static inline
+> +void csrwr32(u32 val, void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	writel(val, paddr);
+> +}
+> +
+> +static inline
+> +void csrwr16(u16 val, void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	writew(val, paddr);
+> +}
+> +
+> +static inline
+> +void csrwr8(u8 val, void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	writeb(val, paddr);
+> +}
+>   #endif /* __ALTERA_UTILS_H__*/
+> 
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
