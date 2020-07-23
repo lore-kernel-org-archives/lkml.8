@@ -2,257 +2,181 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0081E2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F38720771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xemi9yha"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mBSWTnQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgGWP1o (ORCPT
+        id S1729169AbgGWPYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
+        Thu, 23 Jul 2020 11:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbgGWP1D (ORCPT
+        with ESMTP id S1727108AbgGWPYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:27:03 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503B3C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:27:03 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r4so2608515wrx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:27:03 -0700 (PDT)
+        Thu, 23 Jul 2020 11:24:52 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F63C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:24:52 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f18so5589093wrs.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 08:24:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7i5aCeoYGYSqIOTMXORInZCKzVcS5GG+dOuM60dxhZQ=;
-        b=xemi9yha2Bu2YaifaLGhS8NaMOJSI8JL+5c7Tcnb09hBqkStXsci5/GPJLpG0iu/rq
-         vhiineqjdk6tfQmkwgtPHA0WArw10U7D8AGp58CIUb+m2MXoUY+gUEVnn3bafuhEQP3l
-         IpanFQgH+FMkgiffo24b68yeQQKTUzxB8ccdv1HNWicUZcoodOPBioYI2f8V3Qx1ZKuY
-         bWDiGf/TB9deRhjwtEJHRezYi0cwy+x12EMYIrWCampfcUdrbInVC60mC7gktETGWOU9
-         chHLQOOeHWybHBzB1PLQ4weCJBK05dcopHYtGeqK8yw42dlBvbxPR1N2DAyescEylFdZ
-         +U8A==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=ECUeWXBnH6Ls28u3v/vFokxJ6Lu+MnV78i4ugGzpyXg=;
+        b=mBSWTnQ0+ij26HSOgetG7KoPPONHCmzcu36q3QRa+gK7mf4lCVdG+9bNA+RRC8QEOi
+         sMH4eA41PxJramrpIT2VBGltHP2N24Fhte5hLnfK9rQsZI/UC0a27PvdhD0Fj7nuZa7X
+         UiIp8DTZxaCv2V98TLIxN4Omo7CR76KxfS3PVcTn73GjFzQTNe4e3UZa1U3IRQ6rtEqP
+         VS2Oc+ECzN6Cf9qa/pgrBaExdAx6ba7crtzDpV23jCAVQ7wVRGUprmIdJhDjDJ35w+YT
+         t2qPNNdUOEMyCXcqATt+meabstLIEdwexo3CQvE4CGFna3Czg06EkD4n+enVRAxcNUfl
+         D/Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7i5aCeoYGYSqIOTMXORInZCKzVcS5GG+dOuM60dxhZQ=;
-        b=IlNkUnYjCp3pr/TXBW5VcnPpXzQRtfbWvswYagaiv2CmJt2mH19vgP/j+XuB2QXGv6
-         DBRSC8Ak0GyPJJZNh6v0CvO9PwjQ9gSi+euqr0+ajPsvLGX2HromXDJLe6FiNulwnhl4
-         GTd4yrNemrkOjg12IrdIDJIZgczbv4Qh6iVUvrH5WOGtil0x7I6JgoAC7/rDd5GlqM2t
-         cgHasNZYRnImKB1JuTtRy2Jh5uGR0jp4megFQ0bHQrrjowPewJIYmoINS4TuQpMglX0j
-         9ZOe70AZB6SVbxzt+I84L6j5pm1yS7vu9W1EhzXyvzbbjNLTok/P9/y8TmP0iJNUa9y2
-         WZKw==
-X-Gm-Message-State: AOAM532OwBEjC6lEI5Kj1cQ6bTWEejBl5lXs1zdYhkrPuWLPJM4D8BER
-        aK7u2OcPtJKWfFu0uvruKSyNiQ==
-X-Google-Smtp-Source: ABdhPJw7BQRyrbXR6RkFmX7taaPIvp1bgn/wVN3bL3Kqz8/9jzo2eGS5IZfe6ngpBkTCqn86tu6c7w==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr4446980wrc.257.1595518021896;
-        Thu, 23 Jul 2020 08:27:01 -0700 (PDT)
-Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:dca7:8d30:33fa:daac])
-        by smtp.gmail.com with ESMTPSA id g145sm5963491wmg.23.2020.07.23.08.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 08:27:01 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=ECUeWXBnH6Ls28u3v/vFokxJ6Lu+MnV78i4ugGzpyXg=;
+        b=bPHWG9uopZDqacS7++ZFSd4/YemCoUdKR/4n2YjpCZm7Q+zuJL/kToJoxqu8iEY+q7
+         LlWpQNxH42+JoIxD8EBgVA3Ah/X106rNztqM/kWflnvHXk2CQh9Ek0fEAmHfv/xBjUNa
+         DToWL8Jqzr1BRKNyFaVTFCC8OOASdop8wl9cFy7BXAhCQFH+BBQy8kHu1WQ5mjXlZf9u
+         DlqexEdsW/Yjde+/AYCGPFDn2CK7Bozo8G7t5fMeVYriNZpZxDMgQQxjpi2BJDd1Dlea
+         4idHbGjOfLC6fN4juKLKaqNCVlRcUj339fd5dJHya3kBOJnNW22uDwMnetur6IGWVoRJ
+         mdpg==
+X-Gm-Message-State: AOAM533+f8APMwPJ5ctdFL4bY0up0AezXmggCPub60Aqijy0i8yaWGcE
+        3OHanYRzuE1UrnZbIFdWaOB9MQ==
+X-Google-Smtp-Source: ABdhPJwKRVlltMvJgs8RzbIAXNM8uDIewInYaBXqPcxnHJQLCeeCGXcVMfmBay137X8LDBTFMGsPjw==
+X-Received: by 2002:adf:df91:: with SMTP id z17mr4954984wrl.149.1595517890903;
+        Thu, 23 Jul 2020 08:24:50 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:dca7:8d30:33fa:daac? ([2a01:e34:ed2f:f020:dca7:8d30:33fa:daac])
+        by smtp.googlemail.com with ESMTPSA id g3sm4689193wrb.59.2020.07.23.08.24.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 08:24:50 -0700 (PDT)
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Zhou Yanjie <zhouyanjie@wanyeetech.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     tglx@linutronix.de
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-kernel@vger.kernel.org (open list:CLOCKSOURCE, CLOCKEVENT DRIVERS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Microchip
-        (AT91) SoC support)
-Subject: [PATCH 07/16] clocksource/drivers/timer-atmel-tcb: Stop using the 32kHz for clockevents
-Date:   Thu, 23 Jul 2020 17:26:27 +0200
-Message-Id: <20200723152639.639771-7-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200723152639.639771-1-daniel.lezcano@linaro.org>
-References: <1b1122f4-bce9-f349-e602-ed8e14cbb501@linaro.org>
- <20200723152639.639771-1-daniel.lezcano@linaro.org>
+Subject: [GIT PULL] timer drives for v5.9
+Message-ID: <1b1122f4-bce9-f349-e602-ed8e14cbb501@linaro.org>
+Date:   Thu, 23 Jul 2020 17:24:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The following changes since commit 809eb4e9bf9d84eb5b703358afd0d564d514f6d2:
 
-Stop using the slow clock as the clock source for 32 bit counters because
-even at 10MHz, they are able to handle delays up to two minutes. This
-provides a way better resolution.
+  dt-bindings: timer: Add renesas,em-sti bindings (2020-05-23 00:03:37
++0200)
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200710230813.1005150-8-alexandre.belloni@bootlin.com
----
- drivers/clocksource/timer-atmel-tcb.c | 63 ++++++++++++++-------------
- 1 file changed, 33 insertions(+), 30 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index 423af2f9835f..7a6474acc774 100644
---- a/drivers/clocksource/timer-atmel-tcb.c
-+++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -27,9 +27,10 @@
-  *   - Some chips support 32 bit counter. A single channel is used for
-  *     this 32 bit free-running counter. the second channel is not used.
-  *
-- *   - The third channel may be used to provide a 16-bit clockevent
-- *     source, used in either periodic or oneshot mode.  This runs
-- *     at 32 KiHZ, and can handle delays of up to two seconds.
-+ *   - The third channel may be used to provide a clockevent source, used in
-+ *   either periodic or oneshot mode. For 16-bit counter its runs at 32 KiHZ,
-+ *   and can handle delays of up to two seconds. For 32-bit counters, it runs at
-+ *   the same rate as the clocksource
-  *
-  * REVISIT behavior during system suspend states... we should disable
-  * all clocks and save the power.  Easily done for clockevent devices,
-@@ -47,6 +48,8 @@ static struct
- } tcb_cache[3];
- static u32 bmr_cache;
- 
-+static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
-+
- static u64 tc_get_cycles(struct clocksource *cs)
- {
- 	unsigned long	flags;
-@@ -143,6 +146,7 @@ static unsigned long notrace tc_delay_timer_read32(void)
- struct tc_clkevt_device {
- 	struct clock_event_device	clkevt;
- 	struct clk			*clk;
-+	u32				rate;
- 	void __iomem			*regs;
- };
- 
-@@ -151,13 +155,6 @@ static struct tc_clkevt_device *to_tc_clkevt(struct clock_event_device *clkevt)
- 	return container_of(clkevt, struct tc_clkevt_device, clkevt);
- }
- 
--/* For now, we always use the 32K clock ... this optimizes for NO_HZ,
-- * because using one of the divided clocks would usually mean the
-- * tick rate can never be less than several dozen Hz (vs 0.5 Hz).
-- *
-- * A divided clock could be good for high resolution timers, since
-- * 30.5 usec resolution can seem "low".
-- */
- static u32 timer_clock;
- 
- static int tc_shutdown(struct clock_event_device *d)
-@@ -183,7 +180,7 @@ static int tc_set_oneshot(struct clock_event_device *d)
- 
- 	clk_enable(tcd->clk);
- 
--	/* slow clock, count up to RC, then irq and stop */
-+	/* count up to RC, then irq and stop */
- 	writel(timer_clock | ATMEL_TC_CPCSTOP | ATMEL_TC_WAVE |
- 		     ATMEL_TC_WAVESEL_UP_AUTO, regs + ATMEL_TC_REG(2, CMR));
- 	writel(ATMEL_TC_CPCS, regs + ATMEL_TC_REG(2, IER));
-@@ -205,10 +202,10 @@ static int tc_set_periodic(struct clock_event_device *d)
- 	 */
- 	clk_enable(tcd->clk);
- 
--	/* slow clock, count up to RC, then irq and restart */
-+	/* count up to RC, then irq and restart */
- 	writel(timer_clock | ATMEL_TC_WAVE | ATMEL_TC_WAVESEL_UP_AUTO,
- 		     regs + ATMEL_TC_REG(2, CMR));
--	writel((32768 + HZ / 2) / HZ, tcaddr + ATMEL_TC_REG(2, RC));
-+	writel((tcd->rate + HZ / 2) / HZ, tcaddr + ATMEL_TC_REG(2, RC));
- 
- 	/* Enable clock and interrupts on RC compare */
- 	writel(ATMEL_TC_CPCS, regs + ATMEL_TC_REG(2, IER));
-@@ -256,47 +253,55 @@ static irqreturn_t ch2_irq(int irq, void *handle)
- 	return IRQ_NONE;
- }
- 
--static int __init setup_clkevents(struct atmel_tc *tc, int clk32k_divisor_idx)
-+static int __init setup_clkevents(struct atmel_tc *tc, int divisor_idx)
- {
- 	int ret;
- 	struct clk *t2_clk = tc->clk[2];
- 	int irq = tc->irq[2];
--
--	ret = clk_prepare_enable(tc->slow_clk);
--	if (ret)
--		return ret;
-+	int bits = tc->tcb_config->counter_width;
- 
- 	/* try to enable t2 clk to avoid future errors in mode change */
- 	ret = clk_prepare_enable(t2_clk);
--	if (ret) {
--		clk_disable_unprepare(tc->slow_clk);
-+	if (ret)
- 		return ret;
--	}
--
--	clk_disable(t2_clk);
- 
- 	clkevt.regs = tc->regs;
- 	clkevt.clk = t2_clk;
- 
--	timer_clock = clk32k_divisor_idx;
-+	if (bits == 32) {
-+		timer_clock = divisor_idx;
-+		clkevt.rate = clk_get_rate(t2_clk) / atmel_tcb_divisors[divisor_idx];
-+	} else {
-+		ret = clk_prepare_enable(tc->slow_clk);
-+		if (ret) {
-+			clk_disable_unprepare(t2_clk);
-+			return ret;
-+		}
-+
-+		clkevt.rate = clk_get_rate(tc->slow_clk);
-+		timer_clock = ATMEL_TC_TIMER_CLOCK5;
-+	}
-+
-+	clk_disable(t2_clk);
- 
- 	clkevt.clkevt.cpumask = cpumask_of(0);
- 
- 	ret = request_irq(irq, ch2_irq, IRQF_TIMER, "tc_clkevt", &clkevt);
- 	if (ret) {
- 		clk_unprepare(t2_clk);
--		clk_disable_unprepare(tc->slow_clk);
-+		if (bits != 32)
-+			clk_disable_unprepare(tc->slow_clk);
- 		return ret;
- 	}
- 
--	clockevents_config_and_register(&clkevt.clkevt, 32768, 1, 0xffff);
-+	clockevents_config_and_register(&clkevt.clkevt, clkevt.rate, 1, BIT(bits) - 1);
- 
- 	return ret;
- }
- 
- #else /* !CONFIG_GENERIC_CLOCKEVENTS */
- 
--static int __init setup_clkevents(struct atmel_tc *tc, int clk32k_divisor_idx)
-+static int __init setup_clkevents(struct atmel_tc *tc, int divisor_idx)
- {
- 	/* NOTHING */
- 	return 0;
-@@ -346,8 +351,6 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
- 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
- }
- 
--static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
--
- static struct atmel_tcb_config tcb_rm9200_config = {
- 	.counter_width = 16,
- };
-@@ -472,7 +475,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		goto err_disable_t1;
- 
- 	/* channel 2:  periodic and oneshot timer support */
--	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
-+	ret = setup_clkevents(&tc, best_divisor_idx);
- 	if (ret)
- 		goto err_unregister_clksrc;
- 
+  https://git.linaro.org/people/daniel.lezcano/linux.git tags/timers-v5.9
+
+for you to fetch changes up to 5ecafc120bbea614c9d29d0ee2cbb77bbb786059:
+
+  clocksource/drivers/ingenic: Add support for the Ingenic X1000 OST.
+(2020-07-23 16:58:09 +0200)
+
+----------------------------------------------------------------
+- Add sama5d2 support and rework the 32kHz clock handling (Alexandre
+Belloni)
+
+- Add the high resolution support for SMP/SMT on the Ingenic timer (Zhou
+Yanjie)
+
+- Add support for i.MX TPM driver with ARM64 (Anson Huang)
+
+- Fix typo by replacing KHz to kHz (Geert Uytterhoeven)
+
+- Add 32kHz support by setting the minimum ticks to 5 on Nomadik MTU
+(Linus Walleij)
+
+- Replace HTTP links with HTTPS ones for security reasons (Alexander A.
+Klimov)
+
+- Add support for the Ingenic X1000 OST (Zhou Yanjie)
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      clocksource/drivers: Replace HTTP links with HTTPS ones
+
+Alexandre Belloni (8):
+      dt-bindings: atmel-tcb: convert bindings to json-schema
+      dt-bindings: microchip: atmel,at91rm9200-tcb: add sama5d2 compatible
+      ARM: dts: at91: sama5d2: add TCB GCLK
+      clocksource/drivers/timer-atmel-tcb: Rework 32khz clock selection
+      clocksource/drivers/timer-atmel-tcb: Fill tcb_config
+      clocksource/drivers/timer-atmel-tcb: Stop using the 32kHz for
+clockevents
+      clocksource/drivers/timer-atmel-tcb: Allow selecting first divider
+      clocksource/drivers/timer-atmel-tcb: Add sama5d2 support
+
+Anson Huang (1):
+      clocksource/drivers/imx: Add support for i.MX TPM driver with ARM64
+
+Geert Uytterhoeven (1):
+      clocksource/drivers/sh_cmt: Use "kHz" for kilohertz
+
+Kamel Bouhara (1):
+      ARM: at91: add atmel tcb capabilities
+
+Linus Walleij (1):
+      clocksource/drivers/nomadik-mtu: Handle 32kHz clock
+
+周琰杰 (Zhou Yanjie) (3):
+      clocksource/drivers/ingenic: Add high resolution timer support for
+SMP/SMT.
+      dt-bindings: timer: Add Ingenic X1000 OST bindings.
+      clocksource/drivers/ingenic: Add support for the Ingenic X1000 OST.
+
+ .../devicetree/bindings/mfd/atmel-tcb.txt          |  56 ---
+ .../soc/microchip/atmel,at91rm9200-tcb.yaml        | 155 ++++++
+ .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
+ .../bindings/timer/ti,keystone-timer.txt           |   2 +-
+ arch/arm/boot/dts/sama5d2.dtsi                     |  12 +-
+ drivers/clocksource/Kconfig                        |  15 +-
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/ingenic-sysost.c               | 539
++++++++++++++++++++++
+ drivers/clocksource/ingenic-timer.c                | 182 ++++---
+ drivers/clocksource/nomadik-mtu.c                  |  11 +-
+ drivers/clocksource/sh_cmt.c                       |   2 +-
+ drivers/clocksource/timer-atmel-tcb.c              | 103 ++--
+ drivers/clocksource/timer-ti-32k.c                 |   2 +-
+ drivers/clocksource/timer-ti-dm.c                  |   2 +-
+ include/dt-bindings/clock/ingenic,sysost.h         |  12 +
+ include/soc/at91/atmel_tcb.h                       |   5 +
+ 16 files changed, 990 insertions(+), 172 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+ create mode 100644
+Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
+ create mode 100644
+Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+ create mode 100644 drivers/clocksource/ingenic-sysost.c
+ create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+
 -- 
-2.25.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
