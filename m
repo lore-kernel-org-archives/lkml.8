@@ -2,129 +2,84 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE344C43445
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A06C433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E20A22BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B9C20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tBh0SDxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgGWJJB (ORCPT
+        id S1728244AbgGWJIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:09:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49418 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbgGWJJB (ORCPT
+        Thu, 23 Jul 2020 05:08:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:19453 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726127AbgGWJIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:09:01 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N94TEZ094086;
-        Thu, 23 Jul 2020 05:08:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e11p77bn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 05:08:33 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N98XEH111182;
-        Thu, 23 Jul 2020 05:08:33 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e11p77a9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 05:08:33 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N969i9017384;
-        Thu, 23 Jul 2020 09:08:30 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06fra.de.ibm.com with ESMTP id 32brbgu511-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 09:08:30 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N98QUs60031040
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 09:08:26 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56CD44C044;
-        Thu, 23 Jul 2020 09:08:26 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAAF84C04A;
-        Thu, 23 Jul 2020 09:08:20 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.40.160])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 09:08:20 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     ravi.bangoria@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
-        fweisbec@gmail.com, mingo@kernel.org, pedromfc@br.ibm.com,
-        miltonm@us.ibm.com, jniethe5@gmail.com, rogealve@br.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 00/10] powerpc/watchpoint: Enable 2nd DAWR on baremetal and powervm
-Date:   Thu, 23 Jul 2020 14:38:03 +0530
-Message-Id: <20200723090813.303838-1-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 23 Jul 2020 05:08:43 -0400
+X-UUID: a394200657ba4bb49d41679fa2ec77aa-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=LkLD6rKD+tyfSOxJ/tFfCgfVHNHDHHwbNbevew2fYZ4=;
+        b=tBh0SDxEkPPTeQ8bV8EjBxN5n90HlyJbdD7ZbLv5syW+VDbcyoOtwWcvqh81YHLZ3gVivyEM1qE1trsYssbaB/uMOTPIX+y5mKBQ54kCYOlkSpBXl9e4NZvbDYGN8n2dzDs5V2bUtR6+QvoDkcs4JOVvmSagTjS0S6C+n/o/hSU=;
+X-UUID: a394200657ba4bb49d41679fa2ec77aa-20200723
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <seiya.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 125551253; Thu, 23 Jul 2020 17:08:39 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Jul 2020 17:08:36 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 17:08:37 +0800
+From:   Seiya Wang <seiya.wang@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Crystal Guo <crystal.guo@mediatek.com>
+Subject: [PATCH 4/4] dt-binding: mediatek: mt8192: update mtk-wdt document
+Date:   Thu, 23 Jul 2020 17:07:31 +0800
+Message-ID: <20200723090731.4482-5-seiya.wang@mediatek.com>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <20200723090731.4482-1-seiya.wang@mediatek.com>
+References: <20200723090731.4482-1-seiya.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_03:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 phishscore=0 bulkscore=0 mlxlogscore=735
- priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007230069
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Last series[1] was to add basic infrastructure support for more than
-one watchpoint on Book3S powerpc. This series actually enables the 2nd 
-DAWR for baremetal and powervm. Kvm guest is still not supported.
-
-v4: https://lore.kernel.org/r/20200717040958.70561-1-ravi.bangoria@linux.ibm.com
-
-v4->v5:
- - Using hardcoded values instead of macros HBP_NUM_ONE and HBP_NUM_TWO.
-   Comment above HBP_NUM_MAX changed to explain it's value.
- - Included CPU_FTR_DAWR1 into CPU_FTRS_POWER10
- - Using generic function feat_enable() instead of
-   feat_enable_debug_facilities_v31() to enable CPU_FTR_DAWR1.
- - ISA still includes 512B boundary in match criteria. But that's a
-   documentation mistake. Mentioned about this in the last patch.
- - Rebased to powerpc/next
- - Added Jordan's Reviewed-by/Tested-by tags
-
-[1]: https://lore.kernel.org/linuxppc-dev/20200514111741.97993-1-ravi.bangoria@linux.ibm.com/
-
-Ravi Bangoria (10):
-  powerpc/watchpoint: Fix 512 byte boundary limit
-  powerpc/watchpoint: Fix DAWR exception constraint
-  powerpc/watchpoint: Fix DAWR exception for CACHEOP
-  powerpc/watchpoint: Enable watchpoint functionality on power10 guest
-  powerpc/dt_cpu_ftrs: Add feature for 2nd DAWR
-  powerpc/watchpoint: Set CPU_FTR_DAWR1 based on pa-features bit
-  powerpc/watchpoint: Rename current H_SET_MODE DAWR macro
-  powerpc/watchpoint: Guest support for 2nd DAWR hcall
-  powerpc/watchpoint: Return available watchpoints dynamically
-  powerpc/watchpoint: Remove 512 byte boundary
-
- arch/powerpc/include/asm/cputable.h       |  8 +-
- arch/powerpc/include/asm/hvcall.h         |  3 +-
- arch/powerpc/include/asm/hw_breakpoint.h  |  4 +-
- arch/powerpc/include/asm/machdep.h        |  2 +-
- arch/powerpc/include/asm/plpar_wrappers.h |  7 +-
- arch/powerpc/kernel/dawr.c                |  2 +-
- arch/powerpc/kernel/dt_cpu_ftrs.c         |  1 +
- arch/powerpc/kernel/hw_breakpoint.c       | 98 +++++++++++++++--------
- arch/powerpc/kernel/prom.c                |  2 +
- arch/powerpc/kvm/book3s_hv.c              |  2 +-
- arch/powerpc/platforms/pseries/setup.c    |  7 +-
- 11 files changed, 91 insertions(+), 45 deletions(-)
-
--- 
-2.26.2
+RnJvbTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3VvQG1lZGlhdGVrLmNvbT4NCg0KdXBkYXRlIG10
+ay13ZHQgZG9jdW1lbnQgZm9yIE1UODE5MiBwbGF0Zm9ybQ0KDQpTaWduZWQtb2ZmLWJ5OiBDcnlz
+dGFsIEd1byA8Y3J5c3RhbC5ndW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0IHwgMiArKw0KIDEgZmlsZSBj
+aGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dA0KaW5kZXggNGRkMzZiZDNmMWFk
+Li5kNzYwY2E4YTYzMGUgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dA0KQEAgLTEyLDYgKzEyLDggQEAgUmVxdWly
+ZWQgcHJvcGVydGllczoNCiAJIm1lZGlhdGVrLG10NzYyOS13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5
+LXdkdCI6IGZvciBNVDc2MjkNCiAJIm1lZGlhdGVrLG10ODE4My13ZHQiLCAibWVkaWF0ZWssbXQ2
+NTg5LXdkdCI6IGZvciBNVDgxODMNCiAJIm1lZGlhdGVrLG10ODUxNi13ZHQiLCAibWVkaWF0ZWss
+bXQ2NTg5LXdkdCI6IGZvciBNVDg1MTYNCisJIm1lZGlhdGVrLG10ODE5Mi13ZHQiOiBmb3IgTVQ4
+MTkyDQorDQogDQogLSByZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBz
+aXplIG9mIHRoZSByZWdpc3RlcnMuDQogDQotLSANCjIuMTQuMQ0K
 
