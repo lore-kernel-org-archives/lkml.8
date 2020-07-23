@@ -7,119 +7,77 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A84C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1240EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C97C207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E823D20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGWT6B (ORCPT
+        id S1726862AbgGWT6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:58:01 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:51549 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWT6B (ORCPT
+        Thu, 23 Jul 2020 15:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWT6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:58:01 -0400
-X-Originating-IP: 90.65.108.121
-Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id EE163E0005;
-        Thu, 23 Jul 2020 19:57:55 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 21:57:55 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     miguelborgesdefreitas@gmail.com, a.zummo@towertech.it,
-        baruch@tkos.co.il, linux@armlinux.org.uk, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-Message-ID: <20200723195755.GV3428@piout.net>
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus>
+        Thu, 23 Jul 2020 15:58:31 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C3BC0619DC;
+        Thu, 23 Jul 2020 12:58:31 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 929862BA;
+        Thu, 23 Jul 2020 19:58:30 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 13:58:29 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH -resend] Documentation: fb, fix path to modedb.c
+Message-ID: <20200723135829.35b44922@lwn.net>
+In-Reply-To: <20200723103454.26167-1-jslaby@suse.cz>
+References: <20200723103454.26167-1-jslaby@suse.cz>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723174905.GA596242@bogus>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2020 11:49:05-0600, Rob Herring wrote:
-> On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
-> > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > 
-> > This adds direct-switching mode as a configurable DT flag for
-> > RTC modules supporting it (e.g. nxp pcf8523).
-> > DSM switches the power source to the battery supply whenever the
-> > VDD drops below VBAT. The option is recommended for hw designs
-> > where VDD is always expected to be higher than VBAT.
-> > 
-> > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > ---
-> > Changes in v2:
-> > - Added extended commit message for git history
-> > - Separate dt bindings documentation into a single patch
-> > 
-> >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
-> >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
-> >  2 files changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > index 0b1080c..f715a8f 100644
-> > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > @@ -4,10 +4,14 @@ Required properties:
-> >  - compatible: Should contain "nxp,pcf8523".
-> >  - reg: I2C address for chip.
-> >  
-> > -Optional property:
-> > +Optional properties:
-> >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-> >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> >    Default value (if no value is specified) is 12500fF.
-> > +- pm-enable-dsm: battery switch-over function is enabled in direct
-> > +  switching mode. The power failure condition happens when VDD < VBAT,
-> > +  without requiring VDD to drop below Vth(sw)bat.
-> > +  Default value (if not provided) is the standard mode.
-> >  
-> >  Example:
-> >  
-> > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
-> >  	compatible = "nxp,pcf8523";
-> >  	reg = <0x68>;
-> >  	quartz-load-femtofarads = <7000>;
-> > +	pm-enable-dsm;
-> >  };
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > index ee237b2..a0048f4 100644
-> > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > @@ -47,4 +47,11 @@ properties:
-> >      description:
-> >        Enables wake up of host system on alarm.
-> >  
-> > +  pm-enable-dsm:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description:
-> > +      Enables the battery switch-over function in direct switching
-> > +      mode. Should be set in systems where VDD is higher than VBAT
-> > +      at all times.
+On Thu, 23 Jul 2020 12:34:54 +0200
+Jiri Slaby <jslaby@suse.cz> wrote:
+
+> modedb.c was moved twice since the modedb documentation was written.
+> Update the path to the current one.
 > 
-> I'm all for common properties, but is this common across vendors?
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> ---
+>  Documentation/fb/modedb.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/fb/modedb.rst b/Documentation/fb/modedb.rst
+> index 624d08fd2856..4d2411e32ebb 100644
+> --- a/Documentation/fb/modedb.rst
+> +++ b/Documentation/fb/modedb.rst
+> @@ -152,7 +152,7 @@ To specify a video mode at bootup, use the following boot options::
+>      video=<driver>:<xres>x<yres>[-<bpp>][@refresh]
+>  
+>  where <driver> is a name from the table below.  Valid default modes can be
+> -found in linux/drivers/video/modedb.c.  Check your driver's documentation.
+> +found in drivers/video/fbdev/core/modedb.c.  Check your driver's documentation.
+>  There may be more modes::
 
-This is but this shouldn't be a DT property as it has to be changed
-dynamically. I'm working on an ioctl interface to change this
-configuration.
+"resend" but I've never seen it before...in any case I've applied it now.
 
+Thanks,
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+jon
