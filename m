@@ -2,93 +2,178 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363F5C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9131C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 123CC20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5ZB3El9"
+	by mail.kernel.org (Postfix) with ESMTP id B7FE5207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGWFgN (ORCPT
+        id S1726521AbgGWFgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgGWFgM (ORCPT
+        Thu, 23 Jul 2020 01:36:53 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:50393 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgGWFgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:36:12 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66DBC0619DC;
-        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so2479385pgc.5;
-        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tFcZGTVxEOvpoeXkUsiN4vBy9B3kLzwfdLU6/Bk7M20=;
-        b=o5ZB3El9NmbYAUMnVLSF4MIKU/vBZ/hxFH6zt/eg3JEdcrIYxBDT5DdYf4FaDNM7tc
-         HYHjiAVqeSntdb6shGkwKcnEkageOOeoE6zxzESicOczUGrZEhoT9DaQHtjx5/yB4OYY
-         1OfErF+AkU8/UiZFKOriS/yecoTRi9lBcCUC/2ZIbRJXr9gJb3RmlQPOYZ41m93EV/vV
-         5IpLOGY1BcxzSVSF8CQu+FUYZ9Top4dkOSr5fM3ywCobxPGrAjWg/PmOn0Kf5mKXlZJM
-         +KDrpfzLSI7/vaIf0f5ZMCVlZlPjz80SNScDW+gU0Jy0JQX9zaLqvfvb7wJLkqaSg4DE
-         Jotw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tFcZGTVxEOvpoeXkUsiN4vBy9B3kLzwfdLU6/Bk7M20=;
-        b=YhSYjfClc9Uw+P3XUqBWsV1ZptSpwHGBCoHaJJlbW3irveS5WqA47eCATJnrjpmc6M
-         5iqmcqu+CS5lwdberf55yQ0LAnqpywEVSHS/WTxWoIvt4yrAsGkodZpHIhamUepm+Qc8
-         A30+xe5zHuvB4YUBYK9zwN8F8vceHnSYYorwWpoRP6VJChXVwgpc/VEErt1kUfN6Yv9I
-         oM8Vi42YSO+Z2Oz+c8GU8taYNKhCeQLlhQlCIhWf4uRwWt1s7jCBQwB4nsiEIdN8RTp9
-         HEezyc0IlDi7vbiMni/cY7c+TkCMNbWc990ARwwjC08RPM60eD3+jhVjp5k1e+v4M4aQ
-         sDCw==
-X-Gm-Message-State: AOAM533Gt/zHFzml6PkZVut7R/vYJZVMGigUooAo7VojSkaUk5or1cs8
-        icTwGqpoK9zXa5j42l5mOpI=
-X-Google-Smtp-Source: ABdhPJwFIlyfJWb07kcj58BziwubzU5I4KohZd4uiMgJMQI1YstOLbnS44kIKgEb1P7Wi4W5qBcaaw==
-X-Received: by 2002:a65:6554:: with SMTP id a20mr2447316pgw.301.1595482572334;
-        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id o128sm1414392pfg.127.2020.07.22.22.36.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jul 2020 22:36:11 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 22:35:39 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ASoC: fsl-asoc-card: Support configuring dai fmt
- from DT
-Message-ID: <20200723053538.GB5476@Asurada-Nvidia>
-References: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
+        Thu, 23 Jul 2020 01:36:53 -0400
+X-Originating-IP: 90.112.45.105
+Received: from [192.168.1.14] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E2EA91BF206;
+        Thu, 23 Jul 2020 05:36:45 +0000 (UTC)
+Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
+To:     Palmer Dabbelt <palmer@dabbelt.com>, benh@kernel.crashing.org
+Cc:     mpe@ellerman.id.au, paulus@samba.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>, zong.li@sifive.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-mm@kvack.org
+References: <mhng-4b49d09a-0267-4879-849f-30c24f26e2c3@palmerdabbelt-glaptop1>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <970adad4-6eec-dffe-ad1c-bf74646229ad@ghiti.fr>
+Date:   Thu, 23 Jul 2020 01:36:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <mhng-4b49d09a-0267-4879-849f-30c24f26e2c3@palmerdabbelt-glaptop1>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:41:49AM +0800, Shengjiu Wang wrote:
-> Support same propeties as simple card for configuring fmt
-> from DT.
-> In order to make this change compatible with old DT, these
-> properties are optional.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-For both changes:
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Le 7/21/20 à 7:36 PM, Palmer Dabbelt a écrit :
+> On Tue, 21 Jul 2020 16:11:02 PDT (-0700), benh@kernel.crashing.org wrote:
+>> On Tue, 2020-07-21 at 14:36 -0400, Alex Ghiti wrote:
+>>> > > I guess I don't understand why this is necessary at all.
+>>> > > Specifically: why
+>>> > > can't we just relocate the kernel within the linear map?  That would
+>>> > > let the
+>>> > > bootloader put the kernel wherever it wants, modulo the physical
+>>> > > memory size we
+>>> > > support.  We'd need to handle the regions that are coupled to the
+>>> > > kernel's
+>>> > > execution address, but we could just put them in an explicit memory
+>>> > > region
+>>> > > which is what we should probably be doing anyway.
+>>> >
+>>> > Virtual relocation in the linear mapping requires to move the kernel
+>>> > physically too. Zong implemented this physical move in its KASLR RFC
+>>> > patchset, which is cumbersome since finding an available physical spot
+>>> > is harder than just selecting a virtual range in the vmalloc range.
+>>> >
+>>> > In addition, having the kernel mapping in the linear mapping prevents
+>>> > the use of hugepage for the linear mapping resulting in performance 
+>>> loss
+>>> > (at least for the GB that encompasses the kernel).
+>>> >
+>>> > Why do you find this "ugly" ? The vmalloc region is just a bunch of
+>>> > available virtual addresses to whatever purpose we want, and as 
+>>> noted by
+>>> > Zong, arm64 uses the same scheme.
+>>
+>> I don't get it :-)
+>>
+>> At least on powerpc we move the kernel in the linear mapping and it
+>> works fine with huge pages, what is your problem there ? You rely on
+>> punching small-page size holes in there ?
+> 
+> That was my original suggestion, and I'm not actually sure it's 
+> invalid.  It
+> would mean that both the kernel's physical and virtual addresses are set 
+> by the
+> bootloader, which may or may not be workable if we want to have an 
+> sv48+sv39
+> kernel.  My initial approach to sv48+sv39 kernels would be to just throw 
+> away
+> the sv39 memory on sv48 kernels, which would preserve the linear map but 
+> mean
+> that there is no single physical address that's accessible for both.  That
+> would require some coordination between the bootloader and the kernel as to
+> where it should be loaded, but maybe there's a better way to design the 
+> linear
+> map.  Right now we have a bunch of unwritten rules about where things 
+> need to
+> be loaded, which is a recipe for disaster.
+> 
+> We could copy the kernel around, but I'm not sure I really like that 
+> idea.  We
+> do zero the BSS right now, so it's not like we entirely rely on the 
+> bootloader
+> to set up the kernel image, but with the hart race boot scheme we have 
+> right
+> now we'd at least need to leave a stub sitting around.  Maybe we just throw
+> away SBI v0.1, though, that's why we called it all legacy in the first 
+> place.
+> 
+> My bigger worry is that anything that involves running the kernel at 
+> arbitrary
+> virtual addresses means we need a PIC kernel, which means every global 
+> symbol
+> needs an indirection.  That's probably not so bad for shared libraries, 
+> but the
+> kernel has a lot of global symbols.  PLT references probably aren't so 
+> scary,
+> as we have an incoherent instruction cache so the virtual function 
+> predictor
+> isn't that hard to build, but making all global data accesses GOT-relative
+> seems like a disaster for performance.  This fixed-VA thing really just 
+> exists
+> so we don't have to be full-on PIC.
+> 
+> In theory I think we could just get away with pretending that medany is 
+> PIC,
+> which I believe works as long as the data and text offset stays 
+> constant, you
+> you don't have any symbols between 2GiB and -2GiB (as those may stay fixed,
+> even in medany), and you deal with GP accordingly (which should work 
+> itself out
+> in the current startup code).  We rely on this for some of the early 
+> boot code
+> (and will soon for kexec), but that's a very controlled code base and we've
+> already had some issues.  I'd be much more comfortable adding an explicit
+> semi-PIC code model, as I tend to miss something when doing these sorts of
+> things and then we could at least add it to the GCC test runs and 
+> guarantee it
+> actually works.  Not really sure I want to deal with that, though.  It 
+> would,
+> however, be the only way to get random virtual addresses during kernel
+> execution.
+> 
+>> At least in the old days, there were a number of assumptions that
+>> the kernel text/data/bss resides in the linear mapping.
+> 
+> Ya, it terrified me as well.  Alex says arm64 puts the kernel in the 
+> vmalloc
+> region, so assuming that's the case it must be possible.  I didn't get that
+> from reading the arm64 port (I guess it's no secret that pretty much all 
+> I do
+> is copy their code)
+
+See https://elixir.bootlin.com/linux/latest/source/arch/arm64/mm/mmu.c#L615.
+
+> 
+>> If you change that you need to ensure that it's still physically
+>> contiguous and you'll have to tweak __va and __pa, which might induce
+>> extra overhead.
+> 
+> I'm operating under the assumption that we don't want to add an 
+> additional load
+> to virt2phys conversions.  arm64 bends over backwards to avoid the load, 
+> and
+> I'm assuming they have a reason for doing so.  Of course, if we're PIC then
+> maybe performance just doesn't matter, but I'm not sure I want to just 
+> give up.
+> Distros will probably build the sv48+sv39 kernels as soon as they show 
+> up, even
+> if there's no sv48 hardware for a while.
