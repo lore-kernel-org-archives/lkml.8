@@ -2,167 +2,98 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC42C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85AE820768
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A27F2068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595509438;
-	bh=2g8Dg1i214iLUOXoBKrzt5z4UAkDeN1GTifKnpiP+Lo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=c253eVaPt3TrfvstrI7gGzTBdH6tUbJTA4OsmC03sYzg9viW59RWOBl5kwK0XmRUi
-	 YTy7alnOjJWvYufu0X8XJ3RVyO7fpDDJSwX+yBEwRn2p1R4KT6n7rGKTSVaXXtghM8
-	 j9aCxabv2FEHVgTHSmpEUbfABTU554acB1oIO7vQ=
+	s=default; t=1595509529;
+	bh=D93rNzAL3USHhE9CiOsmWZA4GSaCfM1HHTv9GxgV/TQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s6CfV9Ce+6b89nJXgkXahU2IdEZGWW+D2vsqYuw529EbcfxNye81VkZwYt/hHbNZc
+	 IFmyVYjF/YdUrhBugvMEb4DlFWzep4Ts/tBPZDrPerebLIlhBZy3Gf3KXlCbBa4wFM
+	 r0jjYHnSg8KSZw+95jEzuuBSegV1QbUi4tCEKxL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgGWND5 (ORCPT
+        id S1728872AbgGWNF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWND5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:03:57 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6DEC0619DC;
-        Thu, 23 Jul 2020 06:03:55 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r19so6202115ljn.12;
-        Thu, 23 Jul 2020 06:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=LJEiKpz9gp0StAjHhoJ8pMMagIDPpkqONOHADySk4U4=;
-        b=YEzntdnUXljzr15iYUbd6vBzxKa267iPGPD/lVBvxqTTEwKSO7OuvVL+CYq4ppbo7R
-         W3dy8IK/C9LyYhF3QOqQXs6JWhdKxBX4qdPnawLzvwpMcR2ytmiTHbVHrA+DAetqje9r
-         jyGVel+Sl6xbQnXTjtyWHZXZ5GQrqQf/z24JPZzOz3iiUgDUKmbxEFZ/ozkTXlnjLZEo
-         XR642R1fCqfbHPhAqyIoUrQ2vmh2SRcDguX5zwiu1aOLZTc1+5PNhEi+sCSZRA+gxa07
-         +mhIW0Lwj7TnlNoLblwV4CwTGhL6dBckanWyWZCiczl1obxIGAPuclV5G6Go0B+Gr/uF
-         6yww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=LJEiKpz9gp0StAjHhoJ8pMMagIDPpkqONOHADySk4U4=;
-        b=joemrnRYuiynWnhyGxpINmf7Rbw6uHbQrpxXOGcRktO8zP8qfr22mKeR+RdbQsdFgj
-         O+ZaX7D0+RZyJozhzq+hzHZ+e4YpbC0AdyVdQv51C5G8cexBfePpQpn8TKjc+rI59Il7
-         WFlKGAJZn3ymxYyhAVZ6nR/53QT71cGcRMstfEkIrOht5xBBmCfH3vaYweRCdPUtBxE+
-         BKJUA4b+N7sVapJ8jxwveWkxC+GvDQv/M4TqQJEPCzhXGIz2PT+y+u6MXLffBLEs2nir
-         DQw3we6xW+a4nBod4H7CtccLzvvEhX/Y7fZ27PXy6laY7p5dtIIC0mxZ2VV1Lhwp4udm
-         eqXQ==
-X-Gm-Message-State: AOAM530uHzgPFW7ILySrcfOvb0sefWnoYrRLMDVgvdhMwwl96tqeUFKx
-        2yLBX0SG4X5kwBGsjCYfJqNnRWmM7/lApQ==
-X-Google-Smtp-Source: ABdhPJxCwiR2AKqYY6rSABJHjcYSrfJ+FUm4ZucYt8nRU6zBJR3m4T8FUl37r7vmIHub8TT1WAi28w==
-X-Received: by 2002:a2e:b17a:: with SMTP id a26mr1871564ljm.342.1595509429663;
-        Thu, 23 Jul 2020 06:03:49 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id k14sm2742886ljc.48.2020.07.23.06.03.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jul 2020 06:03:48 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marex\@denx.de" <marex@denx.de>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [RFC for-5.8] usb: dwc2: Cleanup debugfs when usb_add_gadget_udc() fails
-In-Reply-To: <0ba4b7ce-3551-0453-bac7-4d86c53dd2e8@synopsys.com>
-References: <20200629180314.2878638-1-martin.blumenstingl@googlemail.com> <0ba4b7ce-3551-0453-bac7-4d86c53dd2e8@synopsys.com>
-Date:   Thu, 23 Jul 2020 16:03:44 +0300
-Message-ID: <87eep2o027.fsf@kernel.org>
+        Thu, 23 Jul 2020 09:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726521AbgGWNF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:05:26 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCA752064C;
+        Thu, 23 Jul 2020 13:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595509526;
+        bh=D93rNzAL3USHhE9CiOsmWZA4GSaCfM1HHTv9GxgV/TQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OzkjyiaWEP47zA/ArSXhwj8fLX4f+WunUlSeYwjiPe/ckQr0mmOcvq1LRK6nJqXtu
+         DbKe/qBCHhSjtSwCH/baM6gChe+fAftSzYxX22ms5Ayh3VNCURT7gZ5rpiU5sxhCuJ
+         36CAOZH6TKlC9u4hTeGeCwvTrtzy6qwXShSDQMXY=
+Date:   Thu, 23 Jul 2020 18:35:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, ckeepax@opensource.cirrus.com
+Subject: Re: [RFC PATCH v2 0/6] ALSA: compress: add support to change codec
+ profile in gapless playback
+Message-ID: <20200723130522.GB12965@vkoul-mobl>
+References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org>
+ <s5hpn8mqudq.wl-tiwai@suse.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hpn8mqudq.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 23-07-20, 14:38, Takashi Iwai wrote:
+> On Tue, 21 Jul 2020 19:00:01 +0200,
+> Srinivas Kandagatla wrote:
+> > 
+> > For gapless playback it is possible that each track can have different
+> > codec profile with same decoder, for example we have WMA album,
+> > we may have different tracks as WMA v9, WMA v10 and so on
+> > Or if DSP's like QDSP have abililty to switch decoders on single stream
+> > for each track, then this call could be used to set new codec parameters.
+> > 
+> > Existing code does not allow to change this profile while doing gapless
+> > playback.
+> > 
+> > This patchset adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL along with
+> > flags in capablity structure to allow userspace to set this new
+> > parameters required which switching codec profile, either for gapless
+> > or cross fade usecase.
+> 
+> One idea that came up at the previous audio conference regarding this
+> implementation was to just allow SET_PARAMS during the stream is
+> running (only if the driver sets the capability) instead of
+> introducing yet a new ioctl and an ops.
+> Would it make sense?
 
-Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> writes:
+That does sound good but only issue would be that we need to somehow
+mark/document that buffer info is useless and would be discarded, how do
+we do that?
 
-> Hi Martin,
->
-> On 6/29/2020 10:03 PM, Martin Blumenstingl wrote:
->> Call dwc2_debugfs_exit() when usb_add_gadget_udc() has failed. This
->> ensure that the debugfs entries created by dwc2_debugfs_init() are
->> cleaned up in the error path.
->>=20
->> Fixes: 207324a321a866 ("usb: dwc2: Postponed gadget registration to the =
-udc class driver")
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> ---
->> This patch is compile-tested only. I found this while trying to
->> understand the latest changes to dwc2/platform.c.
->>=20
->>=20
->>   drivers/usb/dwc2/platform.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
->> index c347d93eae64..02b6da7e21d7 100644
->> --- a/drivers/usb/dwc2/platform.c
->> +++ b/drivers/usb/dwc2/platform.c
->> @@ -582,12 +582,14 @@ static int dwc2_driver_probe(struct platform_devic=
-e *dev)
->>   		retval =3D usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
->>   		if (retval) {
->>   			dwc2_hsotg_remove(hsotg);
->> -			goto error_init;
->> +			goto error_debugfs;
->>   		}
->>   	}
->>   #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
->>   	return 0;
->>=20=20=20
->> +error_debugfs:
->> +	dwc2_debugfs_exit(hsotg);
->>   error_init:
->>   	if (hsotg->params.activate_stm_id_vb_detection)
->>   		regulator_disable(hsotg->usb33d);
->>=20
-> I'm Ok with this fix. One more thing. I missed to remove hcd also in=20
-> fail case. Could you please add dwc2_hcd_remove() call after=20
-> dwc2_debugfs_exit(hsotg) and submit as patch:
->
-> +error_debugfs:
-> +	dwc2_debugfs_exit(hsotg);
-> +	if (hsotg->hcd_enabled)
-> +		dwc2_hcd_remove(hsotg);
->    error_init:
+> I have no big objection to add a new ioctl if other people agree,
+> though.
+> 
+> 
+> thanks,
+> 
+> Takashi
 
-looks like it should be a separate patch though. Right?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8ZirAACgkQzL64meEa
-mQZQyBAAimttABmkTUf86JY2PCKMEFEnH584bnAZoAFs91mjC+hr5OKZA9EJWYx5
-YJpw8OYHCfoydCEuDllipCcsb4WFrvqU6CaY9VeCuKdpzLzfbiZGQGzWuWS6j+5N
-qBx/TXVMWZB7xe1flZJtM8w8/G/o2wot24rzZKU8x0nHggWzl/s53CsK/9q5XASb
-ljqZVGbUTbDfG89c0EIr9XpV89qwYbiJZWRR0Ei5Q3dHJnzMytGtWEZv3yhXlirS
-hm4gO9m1SiDT04nYr9gcXJvzFjaucAD88frXEY0wNlFIagv3TWoERnw6gI3DnHqj
-sKqcuI8sKsk/ZkIfoKnF6tdWELXT3YXhat79cxbPpxC4w6UkNoV62o2xz4OYGgrg
-VZfubNaQVcFIJBeV1hpcKu7Z1REd3qdujtwFg/vG4qEwD1KXHs/zqfA7akUV75wf
-QjD4S8O4sVUFMLsZGjt9Wgme3MCIak5T3EjiRhGjMI2cboYbbbvEarYhJTlcAARM
-9jBHXWvIyXtsl0sTS/z+kCiz0DFLY3V8Ny9eR/U0ES/vpKZXsKidsC8udfjebvuH
-voDAied98JbvS8Nnby/+JXEKA8ecZF7QywQGTXbzFIIjOk4YV6dieINVsezy7KIM
-ath5HSKuqkV7igte2NG3n2ZcJJ7cCROlbS/7w1leg5J9c/8i0dY=
-=GxaY
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+~Vinod
