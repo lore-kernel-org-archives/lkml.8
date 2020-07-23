@@ -2,381 +2,140 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB04C433F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A79C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A7722B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEA420714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="PB2ohY9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbgGWRTB (ORCPT
+        id S1730066AbgGWRU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:19:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:65333 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729811AbgGWRS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:18:57 -0400
-IronPort-SDR: 7cJu+3lJNUBOi/ud4fi2WXDACCRFX/rqeHP3sGD+f0fl3rH88c6D3yL2MoUV+h5qUXnrsDBav7
- BY1LI9U793fA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="151880963"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="151880963"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:18:55 -0700
-IronPort-SDR: 8ssdZmrgyUQZslE6gdIt9RKxi2biCkXCNV+naNyVJtk5qnBzjDZkDw9qV8iinQ46gnuyyKQpRP
- KDs5XGOUnI8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="462933858"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jul 2020 10:18:55 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Lu Baolu" <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v6 5/6] iommu/uapi: Handle data and argsz filled by users
-Date:   Thu, 23 Jul 2020 10:25:39 -0700
-Message-Id: <1595525140-23899-6-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595525140-23899-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1595525140-23899-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        Thu, 23 Jul 2020 13:20:56 -0400
+Received: from mail-eopbgr10065.outbound.protection.outlook.com ([40.107.1.65]:41280
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727044AbgGWRU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 13:20:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SkadnWytPMKaqWUqE/hNBbXIdmlkUv/3PBQWZxdEAodDO5t7MaPJLEVlThk0Ld91qcUrR47QzRKo6LAGGZisPdmNcQe+4+82QRe+zIJypBvRduYIlHNBOhIwYEKnxWujluItsg7OBqub1NJrQqw4YFDqt+73Zk94zabzI9JeLM3AiHNgz/OPnh7v5HloeTtfeMggjRJ9MZHv7EjtnkwHkOIHYUrZ3zib8DigBr98czVy0UKaUrj4vOfveYLbsy9PfiPcfn+yFie4cvFJhCF2iNPzvHSQO8EiacKsRPeQjzF0iZyuTcFhc1mCKZ7/k8K1Di63pk3prrxkaZPrvsvlEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+44xVhRCa9KxkG5uPst6GMEsSVkgIiFEgCsYek+7Crk=;
+ b=cKWzaTuqVVmDvJiUrIrC5y84VWPUlkPmG94w6mkw4zK3nvfy+tqPnshluMm5ZWoHaA2bL/S3e5U9qLZMSC4iw3/92/W2PYEHDTwQV7Ism9a9k6he/no+q0eGjgc7r6xm9WmPt4bkRmdn3bJKQ3gGyvVY34rtY2N/V70i/oCmksSvWkn0yCKK1l4gixKtY4HXLRMkXEHM8jKceSDKruJT3Dzm5dZN5K92D+v32Ztkz6DnesEnGHxvsPsKLFW9qS3Q3fJZ+EO5o40P1nrs6txOXNWGEsBwvlV3/AQaNimy0AcjqlHs3nmbehZlxDfWbqwzPjIfhA9J/qXQtJfDqb+tsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 193.240.239.45) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=diasemi.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+44xVhRCa9KxkG5uPst6GMEsSVkgIiFEgCsYek+7Crk=;
+ b=PB2ohY9mdpD/uUbeqzq9PVYBKIksrenf5rl6LZkKuqA/Vuk2lperonIcnUW5g7MpQRVluw3gotYQdueQvrDSNqdgjBSlTB+zuhccV0V8f1FFWh8uodVpQ6y8XKGhheyXsu63xrF+RpGiWKa9+CohppxPhqFHas/QT4kdfW58s7U=
+Received: from AM5PR0701CA0012.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::22) by AM0PR10MB2868.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15d::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 23 Jul
+ 2020 17:20:52 +0000
+Received: from HE1EUR02FT049.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:203:51:cafe::a6) by AM5PR0701CA0012.outlook.office365.com
+ (2603:10a6:203:51::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend
+ Transport; Thu, 23 Jul 2020 17:20:52 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; linuxfoundation.org; dkim=none
+ (message not signed) header.d=none;linuxfoundation.org; dmarc=fail
+ action=none header.from=diasemi.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ HE1EUR02FT049.mail.protection.outlook.com (10.152.11.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3216.10 via Frontend Transport; Thu, 23 Jul 2020 17:20:52 +0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 23 Jul 2020 19:20:49 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 9FFEB13F672; Fri, 24 Jul 2020 02:20:47 +0900 (KST)
+Message-ID: <cover.1595516501.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Fri, 24 Jul 2020 00:01:41 +0900
+Subject: [PATCH v17 0/3]  da7280: haptic driver submission
+To:     "David S. Miller" <davem@davemloft.net>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 21a6e378-507f-4227-f271-08d82f2cc066
+X-MS-TrafficTypeDiagnostic: AM0PR10MB2868:
+X-Microsoft-Antispam-PRVS: <AM0PR10MB2868013D41ABB324AE2C16B0A2760@AM0PR10MB2868.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vJ7M/LVDfzQ9QIJvxstlMNInIomNL+wCh8cC/hH85x4kWs/JzZssNUn0oobfUP1wZfH3IaA5w+9gvy7TmHfzBwN2PgtXlRyktKnW6eBEazH7PFkx9uEV/VhMWRbn3qGb0NAQT+UqTurnAyCwIokvDTBZvNsTrhXXAyFHeoAI1iRlvw8QwkYesWBUZW95jhIhaKGQWPUBe+2sV0apREsDHH5Ml32MAHpG/q+vHaLxxjVq5FQp/VN6YywzouhYwhgn3jmVs1GJZykYjofnk0fR+eA1zoGOp6M+VjJYsyELYDPhf4kmA+Ca2JaW9FBBeUrC2E6HIT0g+ad+CjH2qZPueCL77/hT5RnS8Vg0aHGUTGN2cNL/jF7ovm74RSApbcyhEHlqfDsP5Yv2b6WVPWklLbqp4o6eIUQaK1XAD0S+Ac7HM6fzdEIKwaz8lEOD7mpb
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(396003)(376002)(46966005)(6666004)(36756003)(36906005)(8936002)(2616005)(6266002)(4326008)(5660300002)(70206006)(426003)(8676002)(336012)(86362001)(26005)(83380400001)(478600001)(186003)(47076004)(2906002)(4744005)(42186006)(82310400002)(82740400003)(33310700002)(316002)(54906003)(81166007)(356005)(70586007)(110136005)(7416002)(921003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 17:20:52.2835
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21a6e378-507f-4227-f271-08d82f2cc066
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT049.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2868
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOMMU user APIs are responsible for processing user data. This patch
-changes the interface such that user pointers can be passed into IOMMU
-code directly. Separate kernel APIs without user pointers are introduced
-for in-kernel users of the UAPI functionality.
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-IOMMU UAPI data has a user filled argsz field which indicates the data
-length of the structure. User data is not trusted, argsz must be
-validated based on the current kernel data size, mandatory data size,
-and feature flags.
+In this patch set the following is provided:
 
-User data may also be extended, resulting in possible argsz increase.
-Backward compatibility is ensured based on size and flags (or
-the functional equivalent fields) checking.
+[PATCH v17 1/3] MAINTAINERS file update for DA7280
+[PATCH v17 2/3] DA7280 DT Binding
+[PATCH v17 3/3] DA7280 Driver
 
-This patch adds sanity checks in the IOMMU layer. In addition to argsz,
-reserved/unused fields in padding, flags, and version are also checked.
-Details are documented in Documentation/userspace-api/iommu.rst
+This patch applies against linux-next and v5.8-rc6
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/iommu.c | 202 ++++++++++++++++++++++++++++++++++++++++++++++++--
- include/linux/iommu.h |  28 ++++---
- 2 files changed, 213 insertions(+), 17 deletions(-)
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3a913ce94a3d..1ce2a61058c6 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1950,33 +1950,219 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
- }
- EXPORT_SYMBOL_GPL(iommu_attach_device);
- 
-+/*
-+ * Check flags and other user provided data for valid combinations. We also
-+ * make sure no reserved fields or unused flags are set. This is to ensure
-+ * not breaking userspace in the future when these fields or flags are used.
-+ */
-+static int iommu_check_cache_invl_data(struct iommu_cache_invalidate_info *info)
-+{
-+	u32 mask;
-+	int i;
-+
-+	if (info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
-+		return -EINVAL;
-+
-+	mask = (1 << IOMMU_CACHE_INV_TYPE_NR) - 1;
-+	if (info->cache & ~mask)
-+		return -EINVAL;
-+
-+	if (info->granularity >= IOMMU_INV_GRANU_NR)
-+		return -EINVAL;
-+
-+	switch (info->granularity) {
-+	case IOMMU_INV_GRANU_ADDR:
-+		if (info->cache & IOMMU_CACHE_INV_TYPE_PASID)
-+			return -EINVAL;
-+
-+		mask = IOMMU_INV_ADDR_FLAGS_PASID |
-+			IOMMU_INV_ADDR_FLAGS_ARCHID |
-+			IOMMU_INV_ADDR_FLAGS_LEAF;
-+
-+		if (info->granu.addr_info.flags & ~mask)
-+			return -EINVAL;
-+		break;
-+	case IOMMU_INV_GRANU_PASID:
-+		mask = IOMMU_INV_PASID_FLAGS_PASID |
-+			IOMMU_INV_PASID_FLAGS_ARCHID;
-+		if (info->granu.pasid_info.flags & ~mask)
-+			return -EINVAL;
-+
-+		break;
-+	case IOMMU_INV_GRANU_DOMAIN:
-+		if (info->cache & IOMMU_CACHE_INV_TYPE_DEV_IOTLB)
-+			return -EINVAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	/* Check reserved padding fields */
-+	for (i = 0; i < 6; i++) {
-+		if (info->padding[i])
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- int iommu_uapi_cache_invalidate(struct iommu_domain *domain, struct device *dev,
--				struct iommu_cache_invalidate_info *inv_info)
-+				void __user *uinfo)
- {
-+	struct iommu_cache_invalidate_info inv_info = { 0 };
-+	u32 minsz;
-+	int ret = 0;
-+
- 	if (unlikely(!domain->ops->cache_invalidate))
- 		return -ENODEV;
- 
--	return domain->ops->cache_invalidate(domain, dev, inv_info);
-+	/*
-+	 * No new spaces can be added before the variable sized union, the
-+	 * minimum size is the offset to the union.
-+	 */
-+	minsz = offsetof(struct iommu_cache_invalidate_info, granu);
-+
-+	/* Copy minsz from user to get flags and argsz */
-+	if (copy_from_user(&inv_info, uinfo, minsz))
-+		return -EFAULT;
-+
-+	/* Fields before variable size union is mandatory */
-+	if (inv_info.argsz < minsz)
-+		return -EINVAL;
-+
-+	/* PASID and address granu require additional info beyond minsz */
-+	if (inv_info.argsz == minsz &&
-+	    ((inv_info.granularity == IOMMU_INV_GRANU_PASID) ||
-+		    (inv_info.granularity == IOMMU_INV_GRANU_ADDR)))
-+		return -EINVAL;
-+
-+	if (inv_info.granularity == IOMMU_INV_GRANU_PASID &&
-+	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info, granu.pasid_info))
-+		return -EINVAL;
-+
-+	if (inv_info.granularity == IOMMU_INV_GRANU_ADDR &&
-+	    inv_info.argsz < offsetofend(struct iommu_cache_invalidate_info, granu.addr_info))
-+		return -EINVAL;
-+
-+	/*
-+	 * User might be using a newer UAPI header which has a larger data
-+	 * size, we shall support the existing flags within the current
-+	 * size. Copy the remaining user data _after_ minsz but not more
-+	 * than the current kernel supported size.
-+	 */
-+	if (copy_from_user((void *)&inv_info + minsz, uinfo + minsz,
-+			   min(inv_info.argsz, (u32)sizeof(inv_info)) - minsz))
-+		return -EFAULT;
-+
-+	/* Now the argsz is validated, check the content */
-+	ret = iommu_check_cache_invl_data(&inv_info);
-+	if (ret)
-+		return ret;
-+
-+	return domain->ops->cache_invalidate(domain, dev, &inv_info);
- }
- EXPORT_SYMBOL_GPL(iommu_uapi_cache_invalidate);
- 
--int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
--			       struct device *dev, struct iommu_gpasid_bind_data *data)
-+static int iommu_check_bind_data(struct iommu_gpasid_bind_data *data)
-+{
-+	u32 mask;
-+	int i;
-+
-+	if (data->version != IOMMU_GPASID_BIND_VERSION_1)
-+		return -EINVAL;
-+
-+	/* Check all supported format, for now just VT-d */
-+	mask = IOMMU_PASID_FORMAT_INTEL_VTD;
-+	if (data->format & ~mask)
-+		return -EINVAL;
-+
-+	/* Check all flags */
-+	mask = IOMMU_SVA_GPASID_VAL;
-+	if (data->flags & ~mask)
-+		return -EINVAL;
-+
-+	/* Check reserved padding fields */
-+	for (i = 0; i < 8; i++) {
-+		if (data->padding[i])
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int iommu_sva_prepare_bind_data(void __user *udata,
-+				       struct iommu_gpasid_bind_data *data)
- {
-+	u32 minsz;
-+
-+	/*
-+	 * No new spaces can be added before the variable sized union, the
-+	 * minimum size is the offset to the union.
-+	 */
-+	minsz = offsetof(struct iommu_gpasid_bind_data, vendor);
-+
-+	/* Copy minsz from user to get flags and argsz */
-+	if (copy_from_user(data, udata, minsz))
-+		return -EFAULT;
-+
-+	/* Fields before variable size union is mandatory */
-+	if (data->argsz < minsz)
-+		return -EINVAL;
-+	/*
-+	 * User might be using a newer UAPI header, we shall let IOMMU vendor
-+	 * driver decide on what size it needs. Since the guest PASID bind data
-+	 * can be vendor specific, larger argsz could be the result of extension
-+	 * for one vendor but it should not affect another vendor.
-+	 * Copy the remaining user data _after_ minsz
-+	 */
-+	if (copy_from_user((void *)data + minsz, udata + minsz,
-+			   min(data->argsz, (u32)sizeof(*data)) - minsz))
-+		return -EFAULT;
-+
-+	return iommu_check_bind_data(data);
-+}
-+
-+int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain, struct device *dev,
-+			       void __user *udata)
-+{
-+	struct iommu_gpasid_bind_data data = { 0 };
-+	int ret;
-+
- 	if (unlikely(!domain->ops->sva_bind_gpasid))
- 		return -ENODEV;
- 
--	return domain->ops->sva_bind_gpasid(domain, dev, data);
-+	ret = iommu_sva_prepare_bind_data(udata, &data);
-+	if (ret)
-+		return ret;
-+
-+	return domain->ops->sva_bind_gpasid(domain, dev, &data);
- }
- EXPORT_SYMBOL_GPL(iommu_uapi_sva_bind_gpasid);
- 
--int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
--				 ioasid_t pasid)
-+int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-+			    struct iommu_gpasid_bind_data *data)
- {
- 	if (unlikely(!domain->ops->sva_unbind_gpasid))
- 		return -ENODEV;
- 
--	return domain->ops->sva_unbind_gpasid(dev, pasid);
-+	return domain->ops->sva_unbind_gpasid(dev, data->hpasid);
-+}
-+EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
-+
-+int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
-+				 void __user *udata)
-+{
-+	struct iommu_gpasid_bind_data data = { 0 };
-+	int ret;
-+
-+	if (unlikely(!domain->ops->sva_bind_gpasid))
-+		return -ENODEV;
-+
-+	ret = iommu_sva_prepare_bind_data(udata, &data);
-+	if (ret)
-+		return ret;
-+
-+	return iommu_sva_unbind_gpasid(domain, dev, &data);
- }
- EXPORT_SYMBOL_GPL(iommu_uapi_sva_unbind_gpasid);
- 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 2dcc1a33f6dc..4a02c9e09048 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -432,11 +432,14 @@ extern void iommu_detach_device(struct iommu_domain *domain,
- 				struct device *dev);
- extern int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
- 				       struct device *dev,
--				       struct iommu_cache_invalidate_info *inv_info);
-+				       void __user *uinfo);
-+
- extern int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
--				      struct device *dev, struct iommu_gpasid_bind_data *data);
-+				      struct device *dev, void __user *udata);
- extern int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
--					struct device *dev, ioasid_t pasid);
-+					struct device *dev, void __user *udata);
-+extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-+				   struct device *dev, struct iommu_gpasid_bind_data *data);
- extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
- extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
-@@ -1054,22 +1057,29 @@ static inline int iommu_sva_get_pasid(struct iommu_sva *handle)
- 	return IOMMU_PASID_INVALID;
- }
- 
--static inline int iommu_uapi_cache_invalidate(struct iommu_domain *domain,
--					      struct device *dev,
--					      struct iommu_cache_invalidate_info *inv_info)
-+static inline int
-+iommu_uapi_cache_invalidate(struct iommu_domain *domain,
-+			    struct device *dev,
-+			    struct iommu_cache_invalidate_info *inv_info)
- {
- 	return -ENODEV;
- }
- 
- static inline int iommu_uapi_sva_bind_gpasid(struct iommu_domain *domain,
--					     struct device *dev,
--					     struct iommu_gpasid_bind_data *data)
-+					     struct device *dev, void __user *udata)
- {
- 	return -ENODEV;
- }
- 
- static inline int iommu_uapi_sva_unbind_gpasid(struct iommu_domain *domain,
--					       struct device *dev, int pasid)
-+					       struct device *dev, void __user *udata)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
-+					  struct device *dev,
-+					  struct iommu_gpasid_bind_data *data)
- {
- 	return -ENODEV;
- }
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1840 ++++++++++++++++++++
+ 5 files changed, 1965 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+
 -- 
-2.7.4
+end-of-patch for PATCH v17
 
