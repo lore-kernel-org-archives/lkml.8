@@ -2,100 +2,67 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9DDC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13470C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C5820771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iDYVlM2Z"
+	by mail.kernel.org (Postfix) with ESMTP id E8769206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgGWGZE (ORCPT
+        id S1726850AbgGWGZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgGWGZE (ORCPT
+        Thu, 23 Jul 2020 02:25:31 -0400
+Received: from mail142-22.mail.alibaba.com ([198.11.142.22]:61415 "EHLO
+        mail142-22.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726667AbgGWGZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:25:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A6AC0619DC;
-        Wed, 22 Jul 2020 23:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=pjr5iP/6E7OeZxRztKUO1s2/ZLCAyytKnlW4zOJ8uI4=; b=iDYVlM2ZhdXKhXn0ZvMLEHaUJw
-        laOWedbmPiFJHZTC0btCQKGCljV6+OT+V9tEG07dZfQIxGoUt6xEO6H+TIv7+aCZeAljHRJG/S3rr
-        4nwz8MZV+M7YFBXMDnacBGBCKfcHNGghJ+9OlcxBwEfgWfrRHridy/Ly5uYn459gazYqHAmpWba+8
-        5kCNpwDiTPOHNdH0gy/6FF5Om9RgjXAqowauFNQqUB/QoSAuasEc7zxiv5w7A3LyvlsdunQFYmCIX
-        769JTlvalr2v1PGKHBfobKSH0RC8/ySucxDcpA232H6ec9B+kqHzAuNOfAQv4kg8tHL2P7BoV54zh
-        byFp+//A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyUf3-00065W-Dr; Thu, 23 Jul 2020 06:24:57 +0000
-Subject: Re: [RFC] cpuidle : Add support for pseudo-cpuidle driver
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        ego@linux.vnet.ibm.com
-References: <20200723061339.9747-1-huntbag@linux.vnet.ibm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1be8a3d4-52cc-c91c-2560-25e0af41dd5c@infradead.org>
-Date:   Wed, 22 Jul 2020 23:24:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 02:25:30 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4074689|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.00508361-6.35577e-05-0.994853;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.I6H7HEV_1595485508;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6H7HEV_1595485508)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Thu, 23 Jul 2020 14:25:15 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org, mpm@selenic.com,
+        herbert@gondor.apana.org.au, robh+dt@kernel.org
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, hadar.gat@arm.com,
+        prasannatsmkumar@gmail.com, krzk@kernel.org, masahiroy@kernel.org,
+        rdunlap@infradead.org, xuzaibo@huawei.com,
+        daniel.thompson@linaro.org, tmaimon77@gmail.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: [PATCH v2 0/2] Add support for the RNG in Ingenic JZ4780 and X1000.
+Date:   Thu, 23 Jul 2020 14:24:44 +0800
+Message-Id: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200723061339.9747-1-huntbag@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/20 11:13 PM, Abhishek Goel wrote:
-> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-> index c0aeedd66f02..1d73153a0e35 100644
-> --- a/drivers/cpuidle/Kconfig
-> +++ b/drivers/cpuidle/Kconfig
-> @@ -71,6 +71,15 @@ config HALTPOLL_CPUIDLE
->  	 before halting in the guest (more efficient than polling in the
->  	 host via halt_poll_ns for some scenarios).
->  
-> +config TEST_CPUIDLE
-> +	tristate "cpuidle test driver"
-> +	default m
+v1->v2:
+Use "help" instead "---help---" in Kconfig.
 
-No default, please.
-We don't enable unneeded drivers for the fun of it.
+周琰杰 (Zhou Yanjie) (2):
+  dt-bindings: RNG: Add Ingenic RNG bindings.
+  crypto: Ingenic: Add hardware RNG for Ingenic JZ4780 and X1000.
 
-> +	help
+ .../devicetree/bindings/rng/ingenic,rng.yaml       |  36 +++++
+ drivers/char/hw_random/Kconfig                     |  15 ++
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/ingenic-rng.c               | 154 +++++++++++++++++++++
+ 4 files changed, 206 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/ingenic,rng.yaml
+ create mode 100644 drivers/char/hw_random/ingenic-rng.c
 
-Indent the following help text with one tab + 2 spaces.
-
-> +	 This option enables a testing cpuidle driver, which allows to user
-
-	                                                     allows the user  [or a user]
-
-> +	 to define custom idle states with their respective latencies and residencies.
-> +	 This is useful for testing the behaviour of governors on different
-> +	 set of idle states.
-
-	 sets
-
-> +
->  endif
->  
->  config ARCH_NEEDS_CPU_IDLE_COUPLED
-
-thanks.
 -- 
-~Randy
+2.11.0
 
