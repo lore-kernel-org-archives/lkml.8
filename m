@@ -2,122 +2,173 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E445C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1DAC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71304206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EB0206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGWJbX (ORCPT
+        id S1728068AbgGWJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:31:23 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:45559 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgGWJbW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:31:22 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mj8iJ-1kUHxK3jCH-00f836; Thu, 23 Jul 2020 11:31:20 +0200
-Received: by mail-qk1-f182.google.com with SMTP id 2so607145qkf.10;
-        Thu, 23 Jul 2020 02:31:19 -0700 (PDT)
-X-Gm-Message-State: AOAM531m6YSVcAVLPAhciE0ftVMoiBVgRqWccZ5f61GKJl+cTwlmGGR+
-        oYi0gZYgTWdUEaTJYLaSLg9X9MkSoKNwBXwIErA=
-X-Google-Smtp-Source: ABdhPJxJKdRsJa6yWByxQwxyQoyASSDoGeaJ3XhjqBQJAJYOQ5ZDK2hqTVqfgEw11DfZTk4S2OABG3feavWNTF9x3Gw=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr4153205qkf.394.1595496678583;
- Thu, 23 Jul 2020 02:31:18 -0700 (PDT)
+        Thu, 23 Jul 2020 05:31:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:42600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbgGWJbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 05:31:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57609D6E;
+        Thu, 23 Jul 2020 02:31:43 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34AE13F66F;
+        Thu, 23 Jul 2020 02:31:41 -0700 (PDT)
+Subject: [SchedulerWakeupLatency] Skip energy aware task placement
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Josef Bacik <jbacik@fb.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Quentin Perret <qperret@google.com>
+References: <87v9kv2545.derkling@matbug.com> <87h7wd15v2.derkling@matbug.net>
+ <87imgrlrqi.derkling@matbug.net> <87mu5sqwkt.derkling@matbug.net>
+ <87eer42clt.derkling@matbug.net> <87imfi2qbk.derkling@matbug.net>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <2aa4b838-c298-ec7d-08f3-caa50cc87dc2@arm.com>
+Date:   Thu, 23 Jul 2020 11:31:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200723073744.13400-1-krzk@kernel.org>
-In-Reply-To: <20200723073744.13400-1-krzk@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 23 Jul 2020 11:31:02 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0hcVhBbKCBDSZYXChmPpRVsEi_G6+oj5quC6uUiPeeiA@mail.gmail.com>
-Message-ID: <CAK8P3a0hcVhBbKCBDSZYXChmPpRVsEi_G6+oj5quC6uUiPeeiA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/23] memory: Cleanup, improve and compile test
- memory drivers
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xza7jWz1c8aPhmAtfydo55zMN6nXghvI+kIiSgoPURVQEC6YCGp
- DeWnirmVGuMOJzV9kAyXbcrzshzQf/Kf/PXeu0P/t6ssjnN76lje8N6OdfJB255AabbRGIL
- c7Ww/g1fXWkCyMMqZXJavAG9P2OOuOJbyq3V+/svM8FZJYtpJCDkvGvW41z3yX0QHUkI8PD
- fJlAte4vAXi9rcuTJCHjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n6Z7PsH2R04=:RKo8v0lVqvfYGT9lZUjbsp
- Tab1Qv6SKjM8kYsCxmFWSmMK/kUQ+HC/PHQN6Eekj+vlcq+nJ2kIUtkCdyducJwYYXMcX7W0K
- gUppSPBJktLXnaWm+ojRxpZp8ol0qrnDUW4UsiHSHxZTZuXS0B7zK12jtaAfjZ4ZDqzZWkB9l
- aHGIzK3COetLnsSIXFZhXh9l0Icl+5DsG4ZF2bSKGxDkzNgh0mtWPc5CQYQGEpcQMKvEM1QGM
- LEVzrXSUIB92V29Bjk1Hh7TCtNCtubCtIq9TW0ZI1dnBvcFVmN7eOgMsHHhGiJ/pQoMeWPwI5
- gDu9mBYvmnK7pTce6rI9EcOE9/0cX/Vqa3KqKS1CgFHiUiz2EC1WT3mUi/SuoRdQqQSqhTZ6g
- 6TnpOB76WfTsHgYsLmZqgYWGwD+5boNP18gNuV4xTzpLNRTfXTiaqyzm4mEymLPFABMJjGwHW
- cey1EEiUk5Qun1NOWmGRLLhZ7mk9qit1UlpSJ5RNEfPemUOCiQR8J6MJtoTQNHJQQJmb3qpNh
- 1uilts7hOKKkPCAfSbzGg3VKMyzirwKSYQtdNBIxdLJs/q0XtXTXfoc6i2d6rykYf4AyqXp07
- j36YUbuDnd/FI+ElVsXTcgpv/5qi3eVaRWj0X3bGmDoHX0wv6AVNuUhKCGCcdA7ZnzE7NyF3p
- CKrhopW5jYUWIApqWjVZRdVMnSsnXTfflG1xhW2weeoIztsqfwDldMVUcehmnUiUGaCLNhCGP
- ivROThRBIcWmjXpK/OYIuog8WL0sx4RkzuUypEnFqmPRi4H+hxIx0QlhsEcT3OqoNsk7CxUIt
- 7lhZMMdzmnWo+/AoIn5WUPzZljwmXbaNJ/AsReTOLQ9974NpuMVMuWENYFg4SEndoBqu5eDLu
- 6D1OFLv2qEx/G4muURSf+FP2G3kPzI+st+qUi8pb+4gjyp2t2ZJLH99tiKQTAcxGCuTT4eXhT
- vLLojN9DP59akORzI0iwWDLhrzJDrK52cAcXnYc/jwv1rHByWB+0A
+In-Reply-To: <87imfi2qbk.derkling@matbug.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:37 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Dear All,
->
-> The drivers/memory directory contains generic code (of_memory.c) and a
-> bunch of drivers.  Changes to generic code were coming usually through
-> different trees with the driver code.
->
-> Over last days, memory drivers grew in numbers but not necessarily in
-> quality.  They lacked compile testing and code cleanup.  Also lacked
-> maintainer.
->
-> I would be happy to take care about this part.
->
-> If there are no objections, the patches could go either to Linus or to
-> arm-soc (most of drivers are ARM specific).
->
-> Driver-specific changes in the patchset were only compile-tested. Tests
-> are welcome. The generic code was tested on ARMv7 Exynos based boards
-> with a exynos5422-dmc memory controller driver.
+On 23/06/2020 09:29, Patrick Bellasi wrote:
 
-Overall this looks great, I had a look through the patches and commented
-on the few things that seemed slightly odd though harmless.
+> .:: Scheduler Wakeup Path Requirements Collection Template
+> ==========================================================
+> 
+> A) Name: unique one-liner name for the proposed use-case
 
-Thanks for picking up the subsystem. How do you want to proceed
-in the long run? I suppose you can send a pull request to soc@kernel.org
-to be picked up for the coming merge window as the normal way, since
-you are not yet listed as the maintained until the end of the series.
+[SchedulerWakeupLatency] Skip energy aware task placement
 
-Afterwards you could either send the pull requests to Linus directly,
-or send them to the soc team (or to Greg) as well, the way we handle
-a couple of other subsystems like drivers/reset and drivers/tee that
-usually only have a handful of patches per release.
+> B) Target behaviour: one paragraph to describe the wakeup path issue
 
-     Arnd
+The search for the most energy-efficient CPU over the Performance
+Domains (PDs) by consulting the Energy Model (EM), i.e. the estimation
+on how much energy a PD consumes if the task migrates to one of its
+CPUs, adds a certain amount of latency to task placement.
+
+For some tasks this extra latency could be too high. A good example here
+are the Android display pipeline tasks, UIThread and RenderThread. They
+have to be placed on idle CPUs with a faster wakeup mechanism than the
+energy aware wakeup path (A) to guarantee the smallest amount of dropped
+or delayed frames (a.k.a. jank).
+
+In Linux kernel mainline there is currently no mechanism for latency
+sensitive tasks to allow that the energy aware wakeup path (A) is
+skipped and the fast path (B) taken instead.
+
+> C) Existing control paths: reference to code paths to justify B)
+
+select_task_rq_fair()
+{
+        ...
+
+	if (wakeup)
+		if (asym_cpucapacity && EM && schedutil)
+			new_cpu = find_energy_efficient_cpu();    <- (A)
+			if (new_cpu >= 0)
+				return new_cpu;
+	
+        ...
+
+	if (unlikely(sd))
+		/* slow path */
+	else if (sd_flag & wakeup)
+                /* fast path */
+		new_cpu = select_idle_sibling() {
+			if (asym_cpucapacity)
+				new_cpu = select_idle_capacity(); <- (B)
+				if (new_cpu >= 0)
+					return new_cpu;
+		}
+
+        ...
+
+        return new_cpu;
+}
+
+> D) Desired behaviour: one paragraph to describe the desired update
+
+A mechanism for a task to skip the energy aware wakeup (A) and fallback
+into the fast path (B).
+
+> E) Existing knobs (if any): reference to whatever existing tunable
+
+There are no existing ways to control this behaviour in Linux kernel
+mainline.
+
+There is the concept of 'prefer idle' in Android which is tightly
+coupled with the proprietary cgroup controller schedtune.
+
+> F) Existing knobs (if any): one paragraph description of the limitations
+
+Schedtune will be replaced by mainline uclamp in upcoming Android
+releases. There is no per-task 'prefer idle' interface.
+
+> G) Proportionality Analysis: check the nature of the target behavior
+
+The use case requires that a task either cares about latency or not.
+
+> H) Range Analysis: identify meaningful ranges
+
+The knob can be defined as latency sensitive (i.e. prefer an idle CPU)
+or as not latency sensitive.
+
+Mapping Analysis:
+
+If required by other use-cases, the binary range requirement can easily
+be covered by a wider, more fine grained latency sensitive range.
+
+> I) System-Wide tuning: which knobs are required
+
+No system-wide tuning required.
+
+> J) Per-Task tuning: which knobs are required
+
+The proposal is a per-task flag, indicating whether the task is latency
+sensitive or not.
+
+> K) Task-Group tuning: which knobs are required
+
+Currently Android uses the 'prefer idle' mechanism only on task-groups
+and not on individual tasks.
+
+Therefore a per task-group implementation would be required. The
+implementation should respect the cgroup resource distribution models
+[1], [2].
+
+> .:: References
+> ==============
+
+[1] LWN: The many faces of "latency nice"
+    https://lwn.net/Articles/820659
+
+[2] Control Group v2: Resource Distribution Models
+    https://www.kernel.org/doc/Documentation/admin-guide/cgroup-v2.rst
