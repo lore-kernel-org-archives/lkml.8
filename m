@@ -2,83 +2,124 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DDBC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5118820792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F84D20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2vwCspbL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1i1Qe7Tl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGWXlN (ORCPT
+        id S1728189AbgGWXlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:41:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33453 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgGWXlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:41:13 -0400
-IronPort-SDR: bexZn88eOt8+lqqfi9shkMOnsyLC6DJ5J2DMYj+ycIVmlnwLis6yJ/olbuVKGvioqVfucjWzAC
- paQqTXDgqCkg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130199797"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="130199797"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:41:11 -0700
-IronPort-SDR: ICl9mgStiUUD/7UH+Kc2+eojWglyclCDDkUGQAAjpjA/mPm4pmzkAPxio+t1ahqQIU2AdsR+4b
- 4GK4HVqXdTxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="302485243"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2020 16:41:11 -0700
-Date:   Thu, 23 Jul 2020 16:41:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V5 08/15] x86/entry: Move user return notifier out of loop
-Message-ID: <20200723234111.GJ21891@linux.intel.com>
-References: <20200722215954.464281930@linutronix.de>
- <20200722220520.159112003@linutronix.de>
+        Thu, 23 Jul 2020 19:41:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33860 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgGWXlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 19:41:25 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595547681;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4EvAkRC4BPL7n1n7Kr+wNjah1Z1o4ZKLr91LS2HGWWY=;
+        b=2vwCspbL9kpSyGS1BGvqDAv6arPrdN6uebhNpupdJ/Nn23YX0YiC6tJKrVUbNSQOxVVVmO
+        Lph51+YJtFQUbiSISOJmFASMBSiN8PMF0bpewFvN9bAhpTx7krb8X/UfhL7sWBiv548p3Z
+        PRPQMeQ7Jy/EXAecfFRdV07zdklINIOfIwMwIpzLnyPvaKuGSXmT819fjboFMWZ7w6n2X6
+        Gqp2tDYXDem/r0cGqrEq1egE3thRCzbTOFRUMuHc/UakCIAyd/JFXaXCjUzhHwTQHH+q6+
+        H0RYZRgMVUI9n2QrfyjwXRdUgbTYj8df4hTGzLrH/lYUyqxn1eTKhnhzSSkrfw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595547681;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4EvAkRC4BPL7n1n7Kr+wNjah1Z1o4ZKLr91LS2HGWWY=;
+        b=1i1Qe7Tlu3AEqraTlPmchPk0txy7Maf8ZebbpTycWER2HDP339mkPH7e+5pvMpFo57aUlv
+        ZyK7mxLjfcT3B2Aw==
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
+In-Reply-To: <20200723220435.GI844235@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com> <87r1t2vwi7.fsf@nanos.tec.linutronix.de> <20200723220435.GI844235@iweiny-DESK2.sc.intel.com>
+Date:   Fri, 24 Jul 2020 01:41:20 +0200
+Message-ID: <87mu3pvly7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722220520.159112003@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 12:00:02AM +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Guests and user space share certain MSRs. KVM sets these MSRs to guest
-> values once and does not set them back to user space values on every VM
-> exit to spare the costly MSR operations.
-> 
-> User return notifiers ensure that these MSRs are set back to the correct
-> values before returning to user space in exit_to_usermode_loop().
-> 
-> There is no reason to evaluate the TIF flag indicating that user return
-> notifiers need to be invoked in the loop. The important point is that they
-> are invoked before returning to user space.
-> 
-> Move the invocation out of the loop into the section which does the last
-> preperatory steps before returning to user space. That section is not
-> preemptible and runs with interrupts disabled until the actual return.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Ira,
 
-Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Ira Weiny <ira.weiny@intel.com> writes:
+> On Thu, Jul 23, 2020 at 09:53:20PM +0200, Thomas Gleixner wrote:
+> I think, after fixing my code (see below), using idtentry_state could still
+> work.  If the per-cpu cache and the MSR is updated in idtentry_exit() that
+> should carry the state to the new cpu, correct?
+
+I'm way too tired to think about that now. Will have a look tomorrow
+with brain awake.
+
+>> > It seems like we should start passing this by reference instead of
+>> > value.  But for now this works as an RFC.  Comments?
+>> 
+>> Works as in compiles, right?
+>> 
+>> static void noinstr idt_save_pkrs(idtentry_state_t state)
+>> {
+>>         state.foo = 1;
+>> }
+>> 
+>> How is that supposed to change the caller state? C programming basics.
+>
+> <sigh>  I am so stupid.  I was not looking at this particular case but you are
+> 100% correct...  I can't believe I did not see this.
+>
+> In the above statement I was only thinking about the extra overhead I was
+> adding to idtentry_enter() and the callers of it.
+
+Fun. That statement immediately caught my attention and made me look at
+that function.
+
+> "C programming basics" indeed... Once again sorry...
+
+Don't worry.
+
+One interesting design bug of the human brain is that it tricks you into
+seeing what you expect to see no matter how hard you try not to fall for
+that. You can spend days staring at the obvious without seeing it. The
+saying 'you can't see the forest for the trees' exists for a reason.
+
+Yes, I know it's embarrassing, but that happens and it happens to all of
+us no matter how experienced we are. Just search the LKML archives for
+'brown paperbag'. You'll find amazing things.
+
+If you show your problem to people who are not involved in that at all
+there is a high propability that it immediately snaps for one of
+them. But there is no guarantee, just look at this mail thread and the
+number of people who did not notice.
+
+Move on and accept the fact that it will happen again :)
+
+Thanks,
+
+        tglx
