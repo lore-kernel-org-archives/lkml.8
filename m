@@ -2,78 +2,90 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28872C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AB8207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA3520737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbgGWBUt (ORCPT
+        id S2387592AbgGWBVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:20:49 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:39278 "EHLO mxhk.zte.com.cn"
+        Wed, 22 Jul 2020 21:21:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50738 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbgGWBUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:20:48 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 7199DB71BF8CE8DB887D;
-        Thu, 23 Jul 2020 09:20:46 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id 06N1KcUm028418;
-        Thu, 23 Jul 2020 09:20:38 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020072309210422-4367468 ;
-          Thu, 23 Jul 2020 09:21:04 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH] ARM: milbeaut: Add missing of_node_put()
-Date:   Thu, 23 Jul 2020 09:24:10 +0800
-Message-Id: <1595467450-13488-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-07-23 09:21:04,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-07-23 09:20:42,
-        Serialize complete at 2020-07-23 09:20:42
-X-MAIL: mse-fl1.zte.com.cn 06N1KcUm028418
+        id S1728914AbgGWBVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:21:15 -0400
+IronPort-SDR: GT/C+Styor6hPrZ88Qj96gqDYDflTniPtm6aifAIjkJViyala+10u14b2mhHy7vBu5RWoQjiSr
+ TZ3mzCNoGLkg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="147942735"
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="147942735"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 18:21:15 -0700
+IronPort-SDR: q6D+IaEAS1EI1MqdrpHWpV55XW9bqt5jIXgd2Q5xtVMLieKpFCZrGPe4T19dPHD1C+M7guLyZt
+ f0qsYL4cISJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="270906609"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Jul 2020 18:21:14 -0700
+Date:   Wed, 22 Jul 2020 18:21:14 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
+Message-ID: <20200723012114.GP9114@linux.intel.com>
+References: <20200628085341.5107-1-chenyi.qiang@intel.com>
+ <20200628085341.5107-3-chenyi.qiang@intel.com>
+ <878sg3bo8b.fsf@vitty.brq.redhat.com>
+ <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
+ <87366bbe1y.fsf@vitty.brq.redhat.com>
+ <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
+ <87zh8j9to2.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zh8j9to2.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liao Pingfang <liao.pingfang@zte.com.cn>
+On Wed, Jul 01, 2020 at 04:49:49PM +0200, Vitaly Kuznetsov wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> > So you want an exit to userspace for every bus lock and leave it all to 
+> > userspace. Yes, it's doable.
+> 
+> In some cases we may not even want to have a VM exit: think
+> e.g. real-time/partitioning case when even in case of bus lock we may
+> not want to add additional latency just to count such events.
 
-After finishing using device node got from of_find_compatible_node(),
-of_node_put() needs to be called.
+Hmm, I suspect this isn't all that useful for real-time cases because they'd
+probably want to prevent the split lock in the first place, e.g. would prefer
+to use the #AC variant in fatal mode.  Of course, the availability of split
+lock #AC is a whole other can of worms.
 
-Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- arch/arm/mach-milbeaut/platsmp.c | 1 +
- 1 file changed, 1 insertion(+)
+But anyways, I 100% agree that this needs either an off-by-default module
+param or an opt-in per-VM capability.
 
-diff --git a/arch/arm/mach-milbeaut/platsmp.c b/arch/arm/mach-milbeaut/platsmp.c
-index 3ea880f..1f1ff21 100644
---- a/arch/arm/mach-milbeaut/platsmp.c
-+++ b/arch/arm/mach-milbeaut/platsmp.c
-@@ -53,6 +53,7 @@ static void m10v_smp_init(unsigned int max_cpus)
- 		return;
- 
- 	m10v_smp_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!m10v_smp_base)
- 		return;
- 
--- 
-2.9.5
+> I'd suggest we make the new capability tri-state:
+> - disabled (no vmexit, default)
+> - stats only (what this patch does)
+> - userspace exit
+> But maybe this is an overkill, I'd like to hear what others think.
 
+Userspace exit would also be interesting for debug.  Another throttling
+option would be schedule() or cond_reched(), though that's probably getting
+into overkill territory.
