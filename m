@@ -4,101 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADCF22CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E80E20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387482AbgGWBg3 (ORCPT
+        id S2387565AbgGWBjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:36:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:43875 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbgGWBg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:36:28 -0400
-IronPort-SDR: hM2SfAXARxKwbMxSk6JaOHkSl/70rntNggy4kLVTWpRYjv4Oou8Q4MsN0IQX8LJ+6Xjzq9PbD5
- 3tCZ6iWZFBYg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="151761096"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="151761096"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 18:36:27 -0700
-IronPort-SDR: OCxofJAfgBSRpuQqcUhQpDfslXUhmaxClJafopr1zuUTivfh3c0/hmltsjqykrtxffYelxX4xJ
- z9sGg/9Dc+MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="310842811"
-Received: from schwings-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.132])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Jul 2020 18:36:23 -0700
-Date:   Thu, 23 Jul 2020 04:36:22 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org,
-        Wei Yongjun <weiyongjun1@huawei.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] keys: asymmetric: fix error return code in
- software_key_query()
-Message-ID: <20200723013622.GB45081@linux.intel.com>
-References: <159485211858.2340757.9890754969922775496.stgit@warthog.procyon.org.uk>
- <20200723013223.GA45081@linux.intel.com>
+        Wed, 22 Jul 2020 21:39:08 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32878 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbgGWBjH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:39:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6976480307C2;
+        Thu, 23 Jul 2020 01:39:05 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4bjGn95U7J2Z; Thu, 23 Jul 2020 04:39:04 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/7] dt-bindings: gpio: dwapb: Add ngpios property support
+Date:   Thu, 23 Jul 2020 04:38:52 +0300
+Message-ID: <20200723013858.10766-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723013223.GA45081@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 04:32:38AM +0300, Jarkko Sakkinen wrote:
-> On Wed, Jul 15, 2020 at 11:28:38PM +0100, David Howells wrote:
-> > From: Wei Yongjun <weiyongjun1@huawei.com>
-> > 
-> > Fix to return negative error code -ENOMEM from kmalloc() error handling
-> > case instead of 0, as done elsewhere in this function.
-> > 
-> > Fixes: f1774cb8956a ("X.509: parse public key parameters from x509 for akcipher")
-> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> > Signed-off-by: David Howells <dhowells@redhat.com>
-> 
-> Why f1774cb8956a lacked any possible testing? It extends ABI anyway.
-> 
-> I think it is a kind of change that would require more screening before
-> getting applied.
-> 
-> > ---
-> > 
-> >  crypto/asymmetric_keys/public_key.c |    1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
-> > index d7f43d4ea925..e5fae4e838c0 100644
-> > --- a/crypto/asymmetric_keys/public_key.c
-> > +++ b/crypto/asymmetric_keys/public_key.c
-> > @@ -119,6 +119,7 @@ static int software_key_query(const struct kernel_pkey_params *params,
-> >  	if (IS_ERR(tfm))
-> >  		return PTR_ERR(tfm);
-> >  
-> > +	ret = -ENOMEM;
-> 
-> This is extremely confusing to read way to handle 'ret'.
-> 
-> Would be way more cleaner to be just simple and stupid:
-> 
-> 	if (!key) {
-> 		ret = -ENOMEM;
-> 		goto error_free_tfm;
-> 	}
+It's redundant to have a vendor-specific property describing a number of
+GPIOS while there is a generic one. Let's mark the former one as
+deprecated and define the "ngpios" property supported with constraints
+of being within [1; 32] range.
 
-To rationalize why the 2nd way is better: the diff would tell the
-whole story. Now this commit requires to check *both* the diff and
-the source file to get the full understanding what is going on.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+---
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-/Jarkko
+diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+index 1240f6289249..b391cc1b4590 100644
+--- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+@@ -61,8 +61,14 @@ patternProperties:
+       '#gpio-cells':
+         const: 2
+ 
++      ngpios:
++        default: 32
++        minimum: 1
++        maximum: 32
++
+       snps,nr-gpios:
+         description: The number of GPIO pins exported by the port.
++        deprecated: true
+         $ref: /schemas/types.yaml#/definitions/uint32
+         default: 32
+         minimum: 1
+-- 
+2.26.2
+
