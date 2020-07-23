@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE4C433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C74EC433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1386A2071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A2D20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387410AbgGWAeT (ORCPT
+        id S1733259AbgGWAeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:34:19 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60780 "EHLO
+        Wed, 22 Jul 2020 20:34:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60686 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729198AbgGWAeJ (ORCPT
+        with ESMTP id S1728914AbgGWAeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:34:09 -0400
+        Wed, 22 Jul 2020 20:34:08 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7A7F6803202F;
-        Thu, 23 Jul 2020 00:34:03 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CF1628040A68;
+        Thu, 23 Jul 2020 00:34:00 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3BovykwKELW8; Thu, 23 Jul 2020 03:34:01 +0300 (MSK)
+        with ESMTP id AXi9grj894nC; Thu, 23 Jul 2020 03:34:00 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>,
@@ -42,9 +42,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Russell King <linux@armlinux.org.uk>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 4/4] serial: 8250_dw: Fix common clocks usage race condition
-Date:   Thu, 23 Jul 2020 03:33:57 +0300
-Message-ID: <20200723003357.26897-5-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v9 1/4] serial: 8250: Add 8250 port clock update method
+Date:   Thu, 23 Jul 2020 03:33:54 +0300
+Message-ID: <20200723003357.26897-2-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200723003357.26897-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200723003357.26897-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -56,220 +56,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The race condition may happen if the UART reference clock is shared with
-some other device (on Baikal-T1 SoC it's another DW UART port). In this
-case if that device changes the clock rate while serial console is using
-it the DW 8250 UART port might not only end up with an invalid uartclk
-value saved, but may also experience a distorted output data since
-baud-clock could have been changed. In order to fix this lets at least
-try to adjust the 8250 port setting like UART clock rate in case if the
-reference clock rate change is discovered. The driver will call the new
-method to update 8250 UART port clock rate settings. It's done by means of
-the clock event notifier registered at the port startup and unregistered
-in the shutdown callback method.
-
-Note 1. In order to avoid deadlocks we had to execute the UART port update
-method in a dedicated deferred work. This is due to (in my opinion
-redundant) the clock update implemented in the dw8250_set_termios()
-method.
-Note 2. Before the ref clock is manually changed by the custom
-set_termios() function we swap the port uartclk value with new rate
-adjusted to be suitable for the requested baud. It is necessary in
-order to effectively disable a functionality of the ref clock events
-handler for the current UART port, since uartclk update will be done
-a bit further in the generic serial8250_do_set_termios() function.
+Some platforms can be designed in a way so the UART port reference clock
+might be asynchronously changed at some point. In Baikal-T1 SoC this may
+happen due to the reference clock being shared between two UART ports, on
+the Allwinner SoC the reference clock is derived from the CPU clock, so
+any CPU frequency change should get to be known/reflected by/in the UART
+controller as well. But it's not enough to just update the
+uart_port->uartclk field of the corresponding UART port, the 8250
+controller reference clock divisor should be altered so to preserve
+current baud rate setting. All of these things is done in a coherent
+way by calling the serial8250_update_uartclk() method provided in this
+patch. Though note that it isn't supposed to be called from within the
+UART port callbacks because the locks using to the protect the UART port
+data are already taken in there.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
 ---
 
-Changelog v2:
-- Move exclusive ref clock lock/unlock precudures to the 8250 port
-  startup/shutdown methods.
-- The changelog message has also been slightly modified due to the
-  alteration.
-- Remove Alexey' SoB tag.
-- Cc someone from ARM who might be concerned regarding this change.
-- Cc someone from Clocks Framework to get their comments on this patch.
+Changelog v4:
+- Export serial8250_update_uartclk() symbol for GPL modules only.
 
-Changelog v3:
-- Refactor the original patch to adjust the UART port divisor instead of
-  requesting an exclusive ref clock utilization.
-
-Changelog v5:
-- Refactor dw8250_clk_work_cb() function cheking the clk_get_rate()
-  return value for being erroneous and exit if it is.
-- Don't update p->uartclk on the port startup. It will be updated later in
-  the same procedure at the set_termios() function being invoked by the
-  serial_core anyway.
+Changelog v7:
+- Wake the device up on the serial port divider update.
 ---
- drivers/tty/serial/8250/8250_dw.c | 103 +++++++++++++++++++++++++++++-
- 1 file changed, 101 insertions(+), 2 deletions(-)
+ drivers/tty/serial/8250/8250_port.c | 40 +++++++++++++++++++++++++++++
+ include/linux/serial_8250.h         |  2 ++
+ 2 files changed, 42 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index c1511f9244bb..87f450b7c177 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -19,6 +19,8 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+#include <linux/notifier.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/clk.h>
-@@ -43,6 +45,8 @@ struct dw8250_data {
- 	int			msr_mask_off;
- 	struct clk		*clk;
- 	struct clk		*pclk;
-+	struct notifier_block	clk_notifier;
-+	struct work_struct	clk_work;
- 	struct reset_control	*rst;
- 
- 	unsigned int		skip_autocfg:1;
-@@ -54,6 +58,16 @@ static inline struct dw8250_data *to_dw8250_data(struct dw8250_port_data *data)
- 	return container_of(data, struct dw8250_data, data);
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 1632f7d25acc..f19757ef4999 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2631,6 +2631,46 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 				  (port->uartclk + tolerance) / 16);
  }
  
-+static inline struct dw8250_data *clk_to_dw8250_data(struct notifier_block *nb)
++/*
++ * Note in order to avoid the tty port mutex deadlock don't use the next method
++ * within the uart port callbacks. Primarily it's supposed to be utilized to
++ * handle a sudden reference clock rate change.
++ */
++void serial8250_update_uartclk(struct uart_port *port, unsigned int uartclk)
 +{
-+	return container_of(nb, struct dw8250_data, clk_notifier);
-+}
++	struct uart_8250_port *up = up_to_u8250p(port);
++	unsigned int baud, quot, frac = 0;
++	struct ktermios *termios;
++	unsigned long flags;
 +
-+static inline struct dw8250_data *work_to_dw8250_data(struct work_struct *work)
-+{
-+	return container_of(work, struct dw8250_data, clk_work);
-+}
++	mutex_lock(&port->state->port.mutex);
 +
- static inline int dw8250_modify_msr(struct uart_port *p, int offset, int value)
- {
- 	struct dw8250_data *d = to_dw8250_data(p->private_data);
-@@ -260,6 +274,46 @@ static int dw8250_handle_irq(struct uart_port *p)
- 	return 0;
- }
++	if (port->uartclk == uartclk)
++		goto out_lock;
++
++	port->uartclk = uartclk;
++	termios = &port->state->port.tty->termios;
++
++	baud = serial8250_get_baud_rate(port, termios, NULL);
++	quot = serial8250_get_divisor(port, baud, &frac);
++
++	serial8250_rpm_get(up);
++	spin_lock_irqsave(&port->lock, flags);
++
++	uart_update_timeout(port, termios->c_cflag, baud);
++
++	serial8250_set_divisor(port, baud, quot, frac);
++	serial_port_out(port, UART_LCR, up->lcr);
++	serial8250_out_MCR(up, UART_MCR_DTR | UART_MCR_RTS);
++
++	spin_unlock_irqrestore(&port->lock, flags);
++	serial8250_rpm_put(up);
++
++out_lock:
++	mutex_unlock(&port->state->port.mutex);
++}
++EXPORT_SYMBOL_GPL(serial8250_update_uartclk);
++
+ void
+ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 			  struct ktermios *old)
+diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+index 6545f8cfc8fa..2b70f736b091 100644
+--- a/include/linux/serial_8250.h
++++ b/include/linux/serial_8250.h
+@@ -155,6 +155,8 @@ extern int early_serial_setup(struct uart_port *port);
  
-+static void dw8250_clk_work_cb(struct work_struct *work)
-+{
-+	struct dw8250_data *d = work_to_dw8250_data(work);
-+	struct uart_8250_port *up;
-+	unsigned long rate;
-+
-+	rate = clk_get_rate(d->clk);
-+	if (rate <= 0)
-+		return;
-+
-+	up = serial8250_get_port(d->data.line);
-+
-+	serial8250_update_uartclk(&up->port, rate);
-+}
-+
-+static int dw8250_clk_notifier_cb(struct notifier_block *nb,
-+				  unsigned long event, void *data)
-+{
-+	struct dw8250_data *d = clk_to_dw8250_data(nb);
-+
-+	/*
-+	 * We have no choice but to defer the uartclk update due to two
-+	 * deadlocks. First one is caused by a recursive mutex lock which
-+	 * happens when clk_set_rate() is called from dw8250_set_termios().
-+	 * Second deadlock is more tricky and is caused by an inverted order of
-+	 * the clk and tty-port mutexes lock. It happens if clock rate change
-+	 * is requested asynchronously while set_termios() is executed between
-+	 * tty-port mutex lock and clk_set_rate() function invocation and
-+	 * vise-versa. Anyway if we didn't have the reference clock alteration
-+	 * in the dw8250_set_termios() method we wouldn't have needed this
-+	 * deferred event handling complication.
-+	 */
-+	if (event == POST_RATE_CHANGE) {
-+		queue_work(system_unbound_wq, &d->clk_work);
-+		return NOTIFY_OK;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static void
- dw8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
- {
-@@ -283,9 +337,16 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
- 	clk_disable_unprepare(d->clk);
- 	rate = clk_round_rate(d->clk, newrate);
- 	if (rate > 0) {
-+		/*
-+		 * Premilinary set the uartclk to the new clock rate so the
-+		 * clock update event handler caused by the clk_set_rate()
-+		 * calling wouldn't actually update the UART divisor since
-+		 * we about to do this anyway.
-+		 */
-+		swap(p->uartclk, rate);
- 		ret = clk_set_rate(d->clk, newrate);
--		if (!ret)
--			p->uartclk = rate;
-+		if (ret)
-+			swap(p->uartclk, rate);
- 	}
- 	clk_prepare_enable(d->clk);
- 
-@@ -312,6 +373,39 @@ static void dw8250_set_ldisc(struct uart_port *p, struct ktermios *termios)
- 	serial8250_do_set_ldisc(p, termios);
- }
- 
-+static int dw8250_startup(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+	int ret;
-+
-+	/*
-+	 * Some platforms may provide a reference clock shared between several
-+	 * devices. In this case before using the serial port first we have to
-+	 * make sure that any clock state change is known to the UART port at
-+	 * least post factum.
-+	 */
-+	if (d->clk) {
-+		ret = clk_notifier_register(d->clk, &d->clk_notifier);
-+		if (ret)
-+			dev_warn(p->dev, "Failed to set the clock notifier\n");
-+	}
-+
-+	return serial8250_do_startup(p);
-+}
-+
-+static void dw8250_shutdown(struct uart_port *p)
-+{
-+	struct dw8250_data *d = to_dw8250_data(p->private_data);
-+
-+	serial8250_do_shutdown(p);
-+
-+	if (d->clk) {
-+		clk_notifier_unregister(d->clk, &d->clk_notifier);
-+
-+		flush_work(&d->clk_work);
-+	}
-+}
-+
- /*
-  * dw8250_fallback_dma_filter will prevent the UART from getting just any free
-  * channel on platforms that have DMA engines, but don't have any channels
-@@ -407,6 +501,8 @@ static int dw8250_probe(struct platform_device *pdev)
- 	p->serial_out	= dw8250_serial_out;
- 	p->set_ldisc	= dw8250_set_ldisc;
- 	p->set_termios	= dw8250_set_termios;
-+	p->startup	= dw8250_startup;
-+	p->shutdown	= dw8250_shutdown;
- 
- 	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
- 	if (!p->membase)
-@@ -468,6 +564,9 @@ static int dw8250_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->clk))
- 		return PTR_ERR(data->clk);
- 
-+	INIT_WORK(&data->clk_work, dw8250_clk_work_cb);
-+	data->clk_notifier.notifier_call = dw8250_clk_notifier_cb;
-+
- 	err = clk_prepare_enable(data->clk);
- 	if (err)
- 		dev_warn(dev, "could not enable optional baudclk: %d\n", err);
+ extern int early_serial8250_setup(struct earlycon_device *device,
+ 					 const char *options);
++extern void serial8250_update_uartclk(struct uart_port *port,
++				      unsigned int uartclk);
+ extern void serial8250_do_set_termios(struct uart_port *port,
+ 		struct ktermios *termios, struct ktermios *old);
+ extern void serial8250_do_set_ldisc(struct uart_port *port,
 -- 
 2.26.2
 
