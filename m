@@ -2,110 +2,106 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2E0C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0031AC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D65220888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="niMgtu2U"
+	by mail.kernel.org (Postfix) with ESMTP id D9A4D20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbgGWA6q (ORCPT
+        id S2387472AbgGWA6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:58:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58652 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgGWA6p (ORCPT
+        Wed, 22 Jul 2020 20:58:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60876 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387460AbgGWA6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:58:45 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1046)
-        id D288C20B4908; Wed, 22 Jul 2020 17:58:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D288C20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1595465924;
-        bh=COad48i7F7Ppim6j74aTQgCPv4ntgv9CarhdXkZqMSI=;
-        h=Date:To:Subject:Cc:References:In-Reply-To:From:From;
-        b=niMgtu2U1MhpmWIEO3cGbPKV10cWPPsqIFr07inBG1vKDl0zmHzqzlc8qrAmggp2N
-         5mGg9NdqEaGD+eIpTEWZ0ouRM1eH5z9gQbJNjRSwV9FBMxtwI2d29qezbxuw6rvMwg
-         +KIyK7esmDdlGvp/2oHrdVwlXhUvjNel8nOaNzEg=
-Date:   Wed, 22 Jul 2020 17:58:43 -0700
-To:     wsa@kernel.org, ray.jui@broadcom.com
-Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
-Cc:     rjui@broadcom.com, rayagonda.kokatanur@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        dphadke@linux.microsoft.com, bcm-kernel-feedback-list@broadcom.com
-References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
- <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
- <20200722104128.GK1030@ninjato>
- <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
-In-Reply-To: <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
-User-Agent: Heirloom mailx 12.5 7/5/10
+        Wed, 22 Jul 2020 20:58:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 52C088040A6A;
+        Thu, 23 Jul 2020 00:58:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YE4OEVgZcVG2; Thu, 23 Jul 2020 03:58:51 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH v8 02/10] dt-bindings: dma: dw: Add max burst transaction length property
+Date:   Thu, 23 Jul 2020 03:58:40 +0300
+Message-ID: <20200723005848.31907-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200723005844.D288C20B4908@linux.microsoft.com>
-From:   dphadke@linux.microsoft.com (Dhananjay Phadke)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ray Jui <ray.jui@broadcom.com> wrote:
+This array property is used to indicate the maximum burst transaction
+length supported by each DMA channel.
 
->
-> On 7/22/2020 3:41 AM, Wolfram Sang wrote:
-> > 
-> >>> +	synchronize_irq(iproc_i2c->irq);
-> >>
-> >> If one takes a look at the I2C slave ISR routine, there are places where
-> >> IRQ can be re-enabled in the ISR itself. What happens after we mask all
-> >> slave interrupt and when 'synchronize_irq' is called, which I suppose is
-> >> meant to wait for inflight interrupt to finish where there's a chance
-> >> the interrupt can be re-enable again? How is one supposed to deal with that?
-> > 
-> > I encountered the same problem with the i2c-rcar driver before I left
-> > for my holidays.
-> > 
->
-> I think the following sequence needs to be implemented to make this
-> safe, i.e., after 'synchronize_irq', no further slave interrupt will be
-> fired.
->
-> In 'bcm_iproc_i2c_unreg_slave':
->
-> 1. Set an atomic variable 'unreg_slave' (I'm bad in names so please come
-> up with a better name than this)
->
-> 2. Disable all slave interrupts
->
-> 3. synchronize_irq
->
-> 4. Set slave to NULL
->
-> 5. Erase slave addresses
->
-> In the ISR routine, it should always check against 'unreg_slave' before
-> enabling any slave interrupt. If 'unreg_slave' is set, no slave
-> interrupt should be re-enabled from within the ISR.
->
-> I think the above sequence can ensure no further slave interrupt after
-> 'synchronize_irq'. I suggested using an atomic variable instead of
-> variable + spinlock due to the way how sync irq works, i.e., "If you use
-> this function while holding a resource the IRQ handler may need you will
-> deadlock.".
->
-> Thanks,
->
-> Ray
->
-> >>> +	iproc_i2c->slave = NULL;
-> >>> +
-> >>>  	/* Erase the slave address programmed */
-> >>>  	tmp = iproc_i2c_rd_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET);
-> >>>  	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
-> >>>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+---
+
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do with the
+  constraints.
+- Set default max-burst-len to 256 TR-WIDTH words.
+
+Changelog v3:
+- Add more details into the property description about what limitations
+  snps,max-burst-len defines.
+---
+ .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index e7611840a7cf..20870f5c14dd 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -120,6 +120,21 @@ properties:
+         enum: [0, 1]
+         default: 1
+ 
++  snps,max-burst-len:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Maximum length of the burst transactions supported by the controller.
++      This property defines the upper limit of the run-time burst setting
++      (CTLx.SRC_MSIZE/CTLx.DST_MSIZE fields) so the allowed burst length
++      will be from 1 to max-burst-len words. It's an array property with one
++      cell per channel in the units determined by the value set in the
++      CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
++    items:
++      maxItems: 8
++      items:
++        enum: [4, 8, 16, 32, 64, 128, 256]
++        default: 256
++
+   snps,dma-protection-control:
+     $ref: /schemas/types.yaml#definitions/uint32
+     description: |
+-- 
+2.26.2
+
