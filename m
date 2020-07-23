@@ -2,103 +2,94 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7825C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CD6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9D720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:22:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os/0wGVh"
+	by mail.kernel.org (Postfix) with ESMTP id 3D1E0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgGWIWi (ORCPT
+        id S1726884AbgGWI1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgGWIWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:22:38 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3593C0619DC;
-        Thu, 23 Jul 2020 01:22:37 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id p14so3771910wmg.1;
-        Thu, 23 Jul 2020 01:22:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QE10UDZQ3r5KctDFG038ZVtepXURxKEMA8qw8LlWSEY=;
-        b=Os/0wGVhINaT50kNjojm42n5UockuOvesYAtUK3exVVbKcF5f/N0XQJlTarczwHRKU
-         uy4WrGbGX1HgDZMJHOdn3+fUrZAGtEXkfou9SSW+pVYhvrjkV2mNzquCZEHE3xVGY5bX
-         yb8pittSkp1e5A7ZkSg9Y0HFp6327SPU3I6nl0kxxOUfWE3jePiiSvpBvwpvjKVJKel/
-         kTZsuoKzZsMGOPRrf49CbzEGxqQbmm04QK+emJHbt/jYHbzENz/h8MGC9vyIFLZOOhFJ
-         S5/Oh3RUNtI9ver6zN0JtaKBYLBePUSrdcKiCcOCRTMnMZ/BIC8k+OZ6URKGLL3aY+NT
-         ERrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QE10UDZQ3r5KctDFG038ZVtepXURxKEMA8qw8LlWSEY=;
-        b=ZD6NV0l0SYzTpTsC16dBODK7W6HIq0v+c5QFdpxjI+8zzUX/SHFHBnivqTQW+alIAW
-         EyVfCK+9OK6rEQsF9dpCnC/QBdliWSpAPsZxuYqHFUm/woapcljieP3cwXENfHRzIcpM
-         IXfzojmrcxbgGVamm6FlxX34MV8F2DzO4/D09TjkNLsM539kr2Uy3DNQhJCnce2+uV8D
-         H54H0NV5kBvbgFz23RehSTFR2cDzNCMh5zT/UWIkpXOZ+QTjNi54fYODn0Ouu2Ztj0Xk
-         ujjWVzc3wAydxopIkwkvlUCeZcMydVoKAZTmuiVdfI15SgvpC8KFc7khvpMG8IFLroCz
-         DneA==
-X-Gm-Message-State: AOAM533kscGaWDPiZhieARFKRDHuqflnT38EaNc3r61FCOveZS12NsvM
-        Ivx+njqkKMIdBDpqbC1SsWA=
-X-Google-Smtp-Source: ABdhPJzRo2CpLckZ5BybV2p2mZPEKIPpKjjoDDNVlus8LUvOzoTI2kUV/qOMer0ffg8TPEA8+n5kqQ==
-X-Received: by 2002:a1c:df02:: with SMTP id w2mr436740wmg.137.1595492556305;
-        Thu, 23 Jul 2020 01:22:36 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id f12sm2805882wrj.48.2020.07.23.01.22.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 01:22:35 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
-To:     Mark Brown <broonie@kernel.org>, Leilk Liu <leilk.liu@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-References: <20200721024819.7150-1-leilk.liu@mediatek.com>
- <20200721094859.GB4845@sirena.org.uk>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2a1cfaf2-0c58-e0c9-7c70-20a2f84321f9@gmail.com>
-Date:   Thu, 23 Jul 2020 10:22:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 23 Jul 2020 04:27:22 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:52126 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbgGWI1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:27:21 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jyWZP-0000Xo-ET; Thu, 23 Jul 2020 10:27:15 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: arm: rockchip: Add ROCKPi 4B binding
+Date:   Thu, 23 Jul 2020 10:27:14 +0200
+Message-ID: <6968987.cG2su2sgyb@diego>
+In-Reply-To: <CAMty3ZDk28-wg_=wdf_Ps-5RaHK1T-+h0Jn43aK5ReWAz+GTGw@mail.gmail.com>
+References: <20200722190949.215656-1-jagan@amarulasolutions.com> <3893924.cuH9TW0V3R@phil> <CAMty3ZDk28-wg_=wdf_Ps-5RaHK1T-+h0Jn43aK5ReWAz+GTGw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721094859.GB4845@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21/07/2020 11:48, Mark Brown wrote:
-> On Tue, Jul 21, 2020 at 10:48:19AM +0800, Leilk Liu wrote:
->> From: "leilk.liu" <leilk.liu@mediatek.com>
->>
->> Add a DT binding documentation for the MT8192 soc.
+Am Donnerstag, 23. Juli 2020, 08:34:12 CEST schrieb Jagan Teki:
+> Hi Heiko,
 > 
-> I'd expect to see a matching driver patch.
+> On Thu, Jul 23, 2020 at 4:43 AM Heiko Stuebner <heiko@sntech.de> wrote:
+> >
+> > Hi Jagan,
+> >
+> > Am Mittwoch, 22. Juli 2020, 21:09:46 CEST schrieb Jagan Teki:
+> > > Add dt-bindings for ROCKPi 4B which is similar to 4A with
+> > > additional AP6256 Wifi/BT, PoE.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > > Changes for v2:
+> > > - new patch
+> > >
+> > >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > > index 36057c9e4b83..7250adb43d24 100644
+> > > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > > @@ -448,6 +448,12 @@ properties:
+> > >            - const: radxa,rockpi4a
+> > >            - const: rockchip,rk3399
+> > >
+> > > +      - description: Radxa ROCK Pi 4B
+> > > +        items:
+> > > +          - const: radxa,rockpi4
+> > > +          - const: radxa,rockpi4b
+> > > +          - const: rockchip,rk3399
+> > > +
+> >
+> > Please do all RockPi4 variants into one entry, so we want something like:
+> >
+> >       - description: Radxa ROCK Pi 4
 > 
+> What if the description has something like below.
+> 
+>           - description: Radxa ROCK Pi 4A/B/C
 
-Well for now the device would match against the "mediatek,mt6765-spi" as it is 
-the same chip. We just want to define the binding so that we could add a special 
-case for mt8192 in the future, if needed.
+That's also ok :-)
 
-Regards,
-Matthias
+
