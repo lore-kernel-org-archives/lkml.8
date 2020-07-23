@@ -2,97 +2,59 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3349C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC9C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4C51207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595530415;
-	bh=3MN8t8y9ZPzg2hd+nYHHKUypvzn6YowNfDxcV2ZUaZI=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=1uXoxuqayNxYW43ZX4hqvms1D6fY7SZs/6px8YpFNsyJqMH/KP0EnbZRrbOgs/urG
-	 U7Czt6D/9PArs+mzDzHmr5FKtSGDZwforWPYpqp/umQp0JQtYAKsRrWM8s7osx0B9x
-	 GXHyd9YXbPcMM0Z2WlSjP8kGbzIWQVHl8dPRUvaY=
+	by mail.kernel.org (Postfix) with ESMTP id C49BF20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgGWSxe (ORCPT
+        id S1728408AbgGWSuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgGWSxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:53:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB7C206D8;
-        Thu, 23 Jul 2020 18:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595530414;
-        bh=3MN8t8y9ZPzg2hd+nYHHKUypvzn6YowNfDxcV2ZUaZI=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=X/7uRGMTKucKW1k1ALs6UQAv0cSyAdndk3Z39eeG9B0NVh8R00KqFaKijIrUWPJtM
-         7SZd3On9XXgkgvrqEZ8dppSVIxeAcjm5jf09qMsVsUURRGfAjS+mJCFpFq959LO/KH
-         Y4ZRcqa/lDiZOPm6v3EZ9Jb2Ek5wgDImDsRNszGY=
-Date:   Thu, 23 Jul 2020 19:53:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     robh+dt@kernel.org, lgirdwood@gmail.com,
-        linux-omap@vger.kernel.org, tony@atomide.com,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200719200623.61524-1-grandmaster@al2klimov.de>
-References: <20200719200623.61524-1-grandmaster@al2klimov.de>
-Subject: Re: [PATCH for v5.9] regulator: Replace HTTP links with HTTPS ones
-Message-Id: <159553039921.39979.10054073177417218787.b4-ty@kernel.org>
+        Thu, 23 Jul 2020 14:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgGWSuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:50:06 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE4AAC0619DC;
+        Thu, 23 Jul 2020 11:50:05 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2C75A13AFBAB6;
+        Thu, 23 Jul 2020 11:33:20 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 11:50:04 -0700 (PDT)
+Message-Id: <20200723.115004.624564919773772119.davem@davemloft.net>
+To:     linmiaohe@huawei.com
+Cc:     sam@mendozajonas.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/ncsi: use eth_zero_addr() to clear mac address
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1595502823-9672-1-git-send-email-linmiaohe@huawei.com>
+References: <1595502823-9672-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 Jul 2020 11:33:20 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jul 2020 22:06:23 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+From: linmiaohe <linmiaohe@huawei.com>
+Date: Thu, 23 Jul 2020 19:13:43 +0800
+
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> Use eth_zero_addr() to clear mac address insetad of memset().
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
-
-Thanks!
-
-[1/1] regulator: Replace HTTP links with HTTPS ones
-      commit: 2ca76b3e4954ea6bbb365005edc8d5237b488cf1
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Applied.
