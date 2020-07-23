@@ -2,129 +2,130 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B8AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF31C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E965206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595537629;
-	bh=EftTCbC48jF4smaLeRLgfpq6KkfgpZYPW2rijTjCEP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qj5S0OLENYHLJgy7JbdLdXD4rexqBzyML53Iaoe8Yydtxc0U4WsWLToXLi2CMw2GC
-	 NrGPRgm5o3l28cqaEEe2wwQ2cF63Ep7hi9+aPUCDXFzXpMttghL/2ad4oA8vbhpwUi
-	 q9s3HEptM+P2I4hVtfRllIzeXW3p6PnEZg9H6M+k=
+	by mail.kernel.org (Postfix) with ESMTP id C479020737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S70VTYJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGWUxr (ORCPT
+        id S1728119AbgGWUx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:53:47 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45367 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgGWUxr (ORCPT
+        Thu, 23 Jul 2020 16:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgGWUx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:53:47 -0400
-Received: by mail-io1-f67.google.com with SMTP id e64so7696417iof.12;
-        Thu, 23 Jul 2020 13:53:46 -0700 (PDT)
+        Thu, 23 Jul 2020 16:53:57 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5ABC0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:53:57 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id v16so4780399qka.18
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=jAHIqv7D3hXB60XxP9GMGsxVao6b4A29Qsn40xA3zUE=;
+        b=S70VTYJEbr1kzIoy7Yuf5LoVsfgbYkUu6JPa1/T5IQjjnF7P0uY/wcBJ4VMlGHLiq7
+         rh2Zvyeu7TO3rYxWNsR48gwgbXQ36bTiWiYTpH9qt+r87rOJGXTJzdtVaU2gC2BDS8TN
+         kMJvXf9v0pn0nVz0IY96x5Bw/up5TKO7kVANtjnpUfw3HjaxHXbV2vfrTF75MgsnKwJK
+         liloKVkjPfoWk4ikiOw9zpEl6PUB8tlQ818X0SF/LkW8cJjwciLyqXQsmhHv8oLj4lDs
+         FV7ZyMGkKEyevpnBUuIUqPw+SakFmgWVTlJFUsKDaN6r+cg2uBHd8KI9vmRuMGN1tF1b
+         01Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ITHgt7Rp1pUPvPasYbFEExd3q0/gLF5DZdscQLiQgEw=;
-        b=OUNkVzCSN9oe61GvhoaIMNGOMxVK+Q3M9E2jcoR3LEWe2Hx/wZPVuF/zbGewE5VRa6
-         /YY2Wq6oomPndl2gb71rR5/uubobILK/rZjy2MEb1C1GAGKnXWtZBWRNHwFTbgHY2QG7
-         Dz4HIl4LFD4lpt4ctOvet+++QfvTgMVJwCknwNPdPPn+d/smbjNapVnbcBFsuLKc/aVD
-         6Hd/dw76mpuoslKu7vx1pitoRk0ErSXq4GDnupoxclwuro8rqDL9OqjuGtAzU2uUATsr
-         qvi6WDS4Oq0eDeSJAaBiImkXm3OQrS+F/oMJ7XTjPIgsxf4RlJk25/c+MnPigcbtCbum
-         vYQg==
-X-Gm-Message-State: AOAM530cvrTsVISjGDQ+votVeWrV+5m07u8tb3cswx6eU6TrkCBODo2M
-        R9IWZBVLpe9OjmpTFJYK2g==
-X-Google-Smtp-Source: ABdhPJwu8e69Y0kSTAIspRpvODB+BldtXHqBKiEe/jpBPO0AO31cywRDT52VomisXuK/kACvFQX/aw==
-X-Received: by 2002:a05:6602:2f88:: with SMTP id u8mr6878032iow.120.1595537626501;
-        Thu, 23 Jul 2020 13:53:46 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d9sm2004036ios.33.2020.07.23.13.53.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:53:45 -0700 (PDT)
-Received: (nullmailer pid 841658 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:53:43 -0000
-Date:   Thu, 23 Jul 2020 14:53:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Huihui Wang <huihui.wang@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v1 1/2] dt-bindings: dma: mediatek: mark useless items as
- decrepted
-Message-ID: <20200723205343.GA839415@bogus>
-References: <20200717030203.14872-1-huihui.wang@mediatek.com>
- <20200717030203.14872-2-huihui.wang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200717030203.14872-2-huihui.wang@mediatek.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=jAHIqv7D3hXB60XxP9GMGsxVao6b4A29Qsn40xA3zUE=;
+        b=c6MDbVgHb1nQmT0aS7tMqe5wIPS/Jugav+7h0jeLNGuFKiSPi5Na2i4WgLD/v5MH4U
+         gk7Cjfb4g7pFHPuwd/+Q3UBDNCn/jEWwngQrZA9KMGk7wn/LuvWw1tfQsJq7P4GuA1QL
+         6qKFosVof0D665PVtyqOWLvQY2x6cGA7tf5zThNa9Ox9LsssLBzipeMwEOouoSmM7naU
+         mdAiux8gD4wfjpOO1oENWR1HMmtPGp/dlxYLUgEnMNUJDe5bq/19NhgQaPU+FWunzZjV
+         Zf2S+rElBYHsbl9A99mmgtLlBDZsxdMn++Yyt5uJKrqKWsWKrh3AJLBdnISRZIisdCks
+         vQlw==
+X-Gm-Message-State: AOAM533T+/oswbzjyV78o3c1IzLCLt+nBIyBJqDi5MdKPFsrpu4Dna92
+        WGznOzFWeJlMro5aapLbMlNPLGu8kuIXQzY66Fw=
+X-Google-Smtp-Source: ABdhPJzfU4XLHeS13NfuwAFsURxlpXzmukj3ghhC6pSPJjcr1W6XdbEzIwbpSEG+oINpMlrHNVyteGTmg+E8KQE/eOQ=
+X-Received: by 2002:a0c:e554:: with SMTP id n20mr6610346qvm.14.1595537636287;
+ Thu, 23 Jul 2020 13:53:56 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 13:53:40 -0700
+In-Reply-To: <20200723205341.1099742-1-ndesaulniers@google.com>
+Message-Id: <20200723205341.1099742-2-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200723205341.1099742-1-ndesaulniers@google.com>
+X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+Subject: [PATCH 1/2] tracepoint: mark __tracepoint_string's __used
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Tim Murray <timmurray@google.com>,
+        Simon MacMullen <simonmacm@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:02:03AM +0800, Huihui Wang wrote:
-> From: huihui wang <huihui.wang@mediatek.com>
-> 
-> Because we move dma address bits config to mtk-uart-apdma.c,
-> it is unnecessary to be configured in device tree.
-> Update the document at the same time.
-> 
-> Signed-off-by: huihui wang <huihui.wang@mediatek.com>
-> ---
->  .../devicetree/bindings/dma/mtk-uart-apdma.txt        | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> index 2117db0ce4f2..926c86b21e8c 100644
-> --- a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> @@ -2,8 +2,9 @@
->  
->  Required properties:
->  - compatible should contain:
-> -  * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
-> -  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
-> +  * "mediatek,mt2712-uart-dma" for MediaTek MT2712
-> +  * "mediatek,mt6577-uart-dma" for MediaTek MT6577
-> +  * "mediatek,mt6779-uart-dma" for MediaTek MT6779
+__tracepoint_string's have their string data stored in .rodata, and an
+address to that data stored in the "__tracepoint_str" section. Functions
+that refer to those strings refer to the symbol of the address. Compiler
+optimization can replace those address references with references
+directly to the string data. If the address doesn't appear to have other
+uses, then it appears dead to the compiler and is removed. This can
+break the /tracing/printk_formats sysfs node which iterates the
+addresses stored in the "__tracepoint_str" section.
 
-This looks like an unrelated change.
+Like other strings stored in custom sections in this header, mark these
+__used to inform the compiler that there are other non-obvious users of
+the address, so they should still be emitted.
 
->  
->  - reg: The base address of the APDMA register bank.
->  
-> @@ -16,13 +17,12 @@ Required properties:
->    See ../clocks/clock-bindings.txt for details.
->  - clock-names: The APDMA clock for register accesses
->  
-> -- mediatek,dma-33bits: Present if the DMA requires support
-> +- mediatek,dma-33bits: Present if the DMA requires support (deprecated)
->  
->  Examples:
->  
->  	apdma: dma-controller@11000400 {
-> -		compatible = "mediatek,mt2712-uart-dma",
-> -			     "mediatek,mt6577-uart-dma";
-> +		compatible = "mediatek,mt6779-uart-dma";
->  		reg = <0 0x11000400 0 0x80>,
->  		      <0 0x11000480 0 0x80>,
->  		      <0 0x11000500 0 0x80>,
-> @@ -50,6 +50,5 @@ Examples:
->  		dma-requests = <12>;
->  		clocks = <&pericfg CLK_PERI_AP_DMA>;
->  		clock-names = "apdma";
-> -		mediatek,dma-33bits;
->  		#dma-cells = <1>;
->  	};
-> -- 
-> 2.18.0
+Cc: stable@vger.kernel.org
+Reported-by: Tim Murray <timmurray@google.com>
+Reported-by: Simon MacMullen <simonmacm@google.com>
+Suggested-by: Greg Hackmann <ghackmann@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+We observe this in Clang; it seems that GCC doesn't do the "cleanup" of
+the dead address.
+
+Specifically, the Clang passes "Interprocedural Sparse Conditional
+Constant Propagation" (IPSCCP) and GlobalOpt both try to removed the
+address if no other uses exist after inlining the reference directly to
+the string data.
+
+We don't want to change the linkage of these variables, but we kind of
+want optimization behavior to treat these function static strings as if
+they had `extern` linkage, at least by not removing the address of the
+string data from the custom section.
+
+ include/linux/tracepoint.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index a1fecf311621..3a5b717d92e8 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -361,7 +361,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 		static const char *___tp_str __tracepoint_string = str; \
+ 		___tp_str;						\
+ 	})
+-#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
++#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
+ #else
+ /*
+  * tracepoint_string() is used to save the string address for userspace
+-- 
+2.28.0.rc0.105.gf9edc3c819-goog
+
