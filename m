@@ -2,105 +2,126 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F71C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB61D20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0583A20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595519505;
-	bh=s7fnhlfkAZ4BDqciAV1UteqeFEi6PoF3meXFtsJ2XFc=;
+	s=default; t=1595519516;
+	bh=zMWSJizp4P4FI2PLdeym4OuU829+C1a0LVKY61WFaiY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VnU9ZAKqHftctf1gWVGhoSarux7NWTQGyRRjv/OLeuevndw0DuQAtmSIuJdgXYqCX
-	 2CadcBu5UdDWiIX/m27FI9ogK7vRnOe2RobSLM4l2EFxE9z3pn+J6Cv2VzHbAUc6WW
-	 KBNFIZHTqAxwrpeTZIRt9MFHsPxN1b90LfhcyUms=
+	b=QatqGKhpOrcYqWAs0rOf9ZEyqkNPHCB7z8Qt1VBrwHY04WErlhx6vFwa81ZXjPCvc
+	 Jz5PefOK1vmDzak6mUyciDwN9m4+tsrFVa65Rh37YKvVh8vsXP8ZKmuS0hbItW31NF
+	 +yhULjidDiICacrv+qy9toIF3u2IDF73/Yn39tqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgGWPvo (ORCPT
+        id S1729714AbgGWPvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgGWPvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:51:44 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4902071A;
-        Thu, 23 Jul 2020 15:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595519503;
-        bh=s7fnhlfkAZ4BDqciAV1UteqeFEi6PoF3meXFtsJ2XFc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pbdjRk7AcTzuJnPWMqvcsWQgsIHa3kfOVWA+356lKqVZTJjaILnpro156gOY6GZbc
-         5cDbaDxYKYjar5G12tA63PKyQeaPpJcZ0A5jAEhJLrIDbYXonDtHAi7YUI6ASXKOxP
-         BZtEIIII3j49elO102+UnQihS0xM3XF34dQkue7E=
-Date:   Thu, 23 Jul 2020 08:51:42 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk, v9fs-developer@lists.sourceforge.net,
-        syzbot <syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com>
-Subject: Re: WARNING in __kernel_read
-Message-ID: <20200723155142.GA870@sol.localdomain>
-References: <00000000000003d32b05aa4d493c@google.com>
- <20200714110239.GE16178@lst.de>
- <455c6bf929ea197a7c18ba3f9e8464148b333297.camel@kernel.wtf>
+        Thu, 23 Jul 2020 11:51:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45944 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgGWPvy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:51:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id e64so6715912iof.12;
+        Thu, 23 Jul 2020 08:51:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NbSdHK3uJS+qqL6vrqQbHy+2Anft4wIWgOtjJFjijYg=;
+        b=UXhi1lXa5W/abt1AtrfVQJiKTsyu9rEcQyMx5iG5MXyk6jeLzQyT4C1lDVsU0+M39y
+         ZPXUmWLJO2iT8V8BO3mAK3s/FsWUc5A+vrIM9oFT47B2veX4V/fHoAviDkti+2iDlEYd
+         FKcEgNPP5vd6e4UowqJfjCGpxrY6p3EUTWZugJX1us5f8gAGEiQytdjXtQAXysiKFLpW
+         TvKmnkyC0tywu4t4gYKPRdkitTUNLO81mP9SYuzqdfEfuAc4Yfov4doQydHq6PREdMqS
+         nUlNznnMyUsLnL3rbazbKy5LEqUq4diuPz4YW3B2KB0L4njqRPFZoLF2lr3gaUW8nPVc
+         oOyw==
+X-Gm-Message-State: AOAM533bdXTDeMJmmfZbuet0RGeVJ8VZBNav7rciQrdleFq0bEbu3bmC
+        08XJZVL0k1+HG30YLWAl5Q==
+X-Google-Smtp-Source: ABdhPJzIGK0WM0f/vwsNRxuo8j8mErlyCWIqu1SV6ppAJYTQ2bSFq72hCWI+k2Pgg/xIlXhZlztyrg==
+X-Received: by 2002:a5d:8ac3:: with SMTP id e3mr5728872iot.9.1595519513344;
+        Thu, 23 Jul 2020 08:51:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id 5sm1633003ion.7.2020.07.23.08.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 08:51:52 -0700 (PDT)
+Received: (nullmailer pid 437306 invoked by uid 1000);
+        Thu, 23 Jul 2020 15:51:49 -0000
+Date:   Thu, 23 Jul 2020 09:51:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     linux-rockchip@lists.infradead.org,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/4] dt-bindings: arm: rockchip: Update ROCKPi 4
+ binding
+Message-ID: <20200723155149.GA436360@bogus>
+References: <20200723090210.41201-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <455c6bf929ea197a7c18ba3f9e8464148b333297.camel@kernel.wtf>
+In-Reply-To: <20200723090210.41201-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cengiz,
-
-On Thu, Jul 23, 2020 at 05:17:25PM +0300, Cengiz Can wrote:
-> Hello,
+On Thu, 23 Jul 2020 14:32:07 +0530, Jagan Teki wrote:
+> ROCKPi 4 has 3 variants of hardware platforms called
+> ROCKPi 4A, 4B, and 4C.
 > 
-> I'm trying to help clean up syzkaller submissions and this caught my
-> attention and I wanted to get your advice.
+> - ROCKPi 4A has no Wif/BT.
+> - ROCKPi 4B has AP6256 Wifi/BT, PoE.
+> - ROCKPi 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
+>   GPIO pin change compared to 4B, 4C
 > 
-> With commit: 6209dd9132e8ea5545cffc84483841e88ea8cc5b `kernel_read` was
-> modified to use `__kernel_read` by Christoph Hellwig.
+> So, update the existing ROCKPi 4 binding to support
+> ROCKPi 4A/B/C hardware platforms.
 > 
-> One of the syzkaller tests executes following system calls:
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v3:
+> - new patch
 > 
-> open("./file0", O_WRONLY|O_CREAT|O_EXCL|O_DIRECT|0x4, 000) = 5
-> open("/dev/char/4:1", O_RDWR)           = 6
-> mount(NULL, "./file0", "9p", 0,
-> "trans=fd,rfdno=0x0000000000000005,wfdno=0x0000000000000006,"
-> 
-> This initiates a `__kernel_read` call from `p9_read_work` (and
-> `p9_fd_read`) and since the `file->f_mode` does not contain FMODE_READ
-> , a WARN_ON_ONCE is thrown.
-> 
-> ```
-> if (WARN_ON_ONCE(!(file->f_mode & FMODE_READ)))
->          return -EINVAL;
-> ```
-> 
-> Can you help me understand what's wrong and fix this issue? 
-> Is it already being worked on?
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
 
-Looks like this was already fixed in linux-next by:
 
-	commit a39c46067c845a8a2d7144836e9468b7f072343e
-	Author: Christoph Hellwig <hch@lst.de>
-	Date:   Fri Jul 10 10:57:22 2020 +0200
+My bot found errors running 'make dt_binding_check' on your patch:
 
-	    net/9p: validate fds in p9_fd_open
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: properties:compatible:oneOf:48:items: [{'enum': [{'const': 'radxa,rockpi4a'}, {'const': 'radxa,rockpi4b'}, {'const': 'radxa,rockpi4c'}]}, {'const': 'radxa,rockpi4'}, {'const': 'rockchip,rk3399'}] is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: properties:compatible:oneOf:48:items: [{'enum': [{'const': 'radxa,rockpi4a'}, {'const': 'radxa,rockpi4b'}, {'const': 'radxa,rockpi4c'}]}, {'const': 'radxa,rockpi4'}, {'const': 'rockchip,rk3399'}] is not of type 'object'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: properties:compatible:oneOf:48:items:0:enum:0: {'const': 'radxa,rockpi4a'} is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: properties:compatible:oneOf:48:items:0:enum:1: {'const': 'radxa,rockpi4b'} is not of type 'string'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: properties:compatible:oneOf:48:items:0:enum:2: {'const': 'radxa,rockpi4c'} is not of type 'string'
 
-Let's tell syzbot so that it closes this bug report:
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/arm/rockchip.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/arm/rockchip.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: ignoring, error in schema: properties: compatible: oneOf: 48: items
+warning: no schema found in file: ./Documentation/devicetree/bindings/arm/rockchip.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/rockchip.yaml: ignoring, error in schema: properties: compatible: oneOf: 48: items
+warning: no schema found in file: ./Documentation/devicetree/bindings/arm/rockchip.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-#syz fix: net/9p: validate fds in p9_fd_open
+
+See https://patchwork.ozlabs.org/patch/1334641
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
