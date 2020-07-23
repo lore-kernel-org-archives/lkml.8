@@ -2,100 +2,103 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032B2C43619
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FC0C4361B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D726822CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ATPIX3sY"
+	by mail.kernel.org (Postfix) with ESMTP id 18E7822D02
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGWGNv (ORCPT
+        id S1728310AbgGWGN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgGWGJ3 (ORCPT
+        Thu, 23 Jul 2020 02:13:58 -0400
+Received: from out28-98.mail.aliyun.com ([115.124.28.98]:55206 "EHLO
+        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgGWGNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:09:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83229C0619E2;
-        Wed, 22 Jul 2020 23:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=gCUb2KALoHVqEKu8rEH+C8lWt+ULTZIwW5IcTvAPZOE=; b=ATPIX3sYRFhC7WaiE9BzREZuc5
-        cG3sYs1eD725v8winTFEqlUitrKu3d6dcE2QNeb9tLQS/xlmm+Lwc0xkgmGNIgb7JCD4ezErd4DBn
-        9p9aTwTzEYw6D+be9JrRR3QEczOkzAWwyArehyn1eSvNMr3ISxeuRa3IuGi295j1EfVowQZ2UjQ6Z
-        wd/YxGdW+I/jDCW8g89M+AqOLZGJjGXcpB6wuML4/ZE+SDzzAPZHP5kRGWH+QfxuKxtAkaxPtP+/f
-        DwmcusSufm/WG/k6lNStK4mo9aHpGpQgKtHqEHIsnJOzGYTQzluUkSiXxr4PmmMJafDnLDnRNxnsh
-        i+hp3mvg==;
-Received: from [2001:4bb8:18c:2acc:91df:aae8:fa3b:de9c] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyUPp-0003jz-GJ; Thu, 23 Jul 2020 06:09:13 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: [PATCH 03/26] bpfilter: reject kernel addresses
-Date:   Thu, 23 Jul 2020 08:08:45 +0200
-Message-Id: <20200723060908.50081-4-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723060908.50081-1-hch@lst.de>
-References: <20200723060908.50081-1-hch@lst.de>
+        Thu, 23 Jul 2020 02:13:55 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.6997842|0.7739751;CH=green;DM=|SPAM|false|;DS=CONTINUE|ham_regular_dialog|0.0117991-0.00267069-0.98553;FP=16928395198620438954|2|2|8|0|-1|-1|-1;HT=e02c03293;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I6H78tB_1595484804;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6H78tB_1595484804)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Thu, 23 Jul 2020 14:13:52 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: [PATCH v5 1/4] dt-bindings: USB: Add bindings for new Ingenic SoCs.
+Date:   Thu, 23 Jul 2020 14:12:58 +0800
+Message-Id: <20200723061301.82583-2-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200723061301.82583-1-zhouyanjie@wanyeetech.com>
+References: <20200723061301.82583-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bpfilter user mode helper processes the optval address using
-process_vm_readv.  Don't send it kernel addresses fed under
-set_fs(KERNEL_DS) as that won't work.
+Add the USB PHY bindings for the JZ4780 SoC, the X1000 SoC and
+the X1830 SoC from Ingenic.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- net/bpfilter/bpfilter_kern.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
-index 78d561f2c54da7..00540457e5f4d3 100644
---- a/net/bpfilter/bpfilter_kern.c
-+++ b/net/bpfilter/bpfilter_kern.c
-@@ -70,6 +70,10 @@ static int bpfilter_process_sockopt(struct sock *sk, int optname,
- 		.addr		= (uintptr_t)optval,
- 		.len		= optlen,
- 	};
-+	if (uaccess_kernel()) {
-+		pr_err("kernel access not supported\n");
-+		return -EFAULT;
-+	}
- 	return bpfilter_send_req(&req);
- }
+Notes:
+    v1->v2:
+    Add bindings for the JZ4780 SoC.
+    
+    v2->v3:
+    No change.
+    
+    v3->v4:
+    No change.
+    
+    v4->v5:
+    No change.
+
+ Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+index a81b0b1a2226..2d61166ea5cf 100644
+--- a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+@@ -4,10 +4,11 @@
+ $id: http://devicetree.org/schemas/usb/ingenic,jz4770-phy.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
+-title: Ingenic JZ4770 USB PHY devicetree bindings
++title: Ingenic SoCs USB PHY devicetree bindings
+ 
+ maintainers:
+   - Paul Cercueil <paul@crapouillou.net>
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+ 
+ properties:
+   $nodename:
+@@ -16,6 +17,9 @@ properties:
+   compatible:
+     enum:
+       - ingenic,jz4770-phy
++      - ingenic,jz4780-phy
++      - ingenic,x1000-phy
++      - ingenic,x1830-phy
+ 
+   reg:
+     maxItems: 1
 -- 
-2.27.0
+2.11.0
 
