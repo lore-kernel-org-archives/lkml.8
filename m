@@ -2,150 +2,114 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66419C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4445620888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595499402;
-	bh=VnzcZLFGnsxp85PUUBE7PocFXWkFbr9DuBTdyYBhgPk=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=B14tYgQq7d3EbR/pPVrWISatdE/TfMJtkTnsN2xg2XaU49hLoa/Q91Y5DZQeF7a+c
-	 qfBRSEFpaLZQRJxHhMCli2IZPASznsX9QsuLewRm5+H+ulxky+VFXawJOmnn+iZViJ
-	 T+hiDcnLy9FTNuDw0DrEWQHZjeKeiMoRDKikggJo=
+	by mail.kernel.org (Postfix) with ESMTP id A8C8F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgGWKQl (ORCPT
+        id S1728242AbgGWKSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:16:41 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:44577 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgGWKQk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:16:40 -0400
-Received: by mail-ej1-f67.google.com with SMTP id ga4so5751437ejb.11;
-        Thu, 23 Jul 2020 03:16:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dnWqbbfyoTOE1v2/nsDrkVQKi2TdYuhkczsrtV9Tj/A=;
-        b=NtC5oSEYS63EEfhdQWLyY0hoLsqGLZMOIcQD3MP1xs6q12+e2JwulyF/k3ABp3031u
-         5qIx5ABNhz4g7yDccFUQvWuxT9a7RfPmj8/d554pnTal6Okd1EgvCrleJIQOKtBAU75u
-         0D8J6qK1IBDlBrSH9nGlP9yse/xZwdm9oyFZqpL6OVfsKkucaEPV7qEXtM2YhPja3kJ/
-         4JHDhqPr6ICy8988bR0cGcqeQBnMgfvNS/QOWOIdlmduskW3bQvA8Kyn1JJBhlav5e+g
-         DQTHchwMn8xMqdhaCJF92814zXagOvNXogyNXrWvFq3D0LVf+T8WxoSV0wpcZGKMgSjA
-         ajGg==
-X-Gm-Message-State: AOAM533XQYVR40CiFN3SNvsxsmKzDHhlokyKBUMf3l3jSafiXSZ1Soc/
-        MGjgDdzz5W19PINoQ1INup8=
-X-Google-Smtp-Source: ABdhPJxFOO+eX3VP5KW+75n2zsTc3LGcB7+QqfGOKNwpQ7g2yIGn/n4uVf5RddsxBNhVVCNRNqRwLw==
-X-Received: by 2002:a17:906:2e83:: with SMTP id o3mr3639213eji.261.1595499398253;
-        Thu, 23 Jul 2020 03:16:38 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id ah1sm841926ejc.43.2020.07.23.03.16.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jul 2020 03:16:37 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 12:16:34 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 19/23] memory: omap-gpmc: Enclose macro statements in
- do-while
-Message-ID: <20200723101634.GD30472@kozik-lap>
-References: <20200723073744.13400-1-krzk@kernel.org>
- <20200723073744.13400-20-krzk@kernel.org>
- <CAK8P3a3emZd=Tz5JhxevkX3OJMMEn_2Nb+_LQtGZJ9-GWNpd2g@mail.gmail.com>
+        Thu, 23 Jul 2020 06:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgGWKSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:18:35 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CA72065F;
+        Thu, 23 Jul 2020 10:18:33 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 11:18:31 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] raw_copy_from_user() semantics
+Message-ID: <20200723101831.GA7315@gaia>
+References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
+ <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
+ <20200722113707.GC27540@gaia>
+ <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
+ <20200722165346.GB4069@gaia>
+ <9c22700a16db4a4f8ae9203efcaed27b@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3emZd=Tz5JhxevkX3OJMMEn_2Nb+_LQtGZJ9-GWNpd2g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9c22700a16db4a4f8ae9203efcaed27b@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 11:09:40AM +0200, Arnd Bergmann wrote:
-> On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > do-while is a preferred way for complex macros because of safety
-> > reasons.  This fixes checkpatch error:
-> >
-> >     ERROR: Macros starting with if should be enclosed by a do - while
-> >         loop to avoid possible if/else logic defects
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Thu, Jul 23, 2020 at 08:37:27AM +0000, David Laight wrote:
+> From: Catalin Marinas
+> > Sent: 22 July 2020 17:54
+> > On Wed, Jul 22, 2020 at 01:14:21PM +0000, David Laight wrote:
+> > > From: Catalin Marinas
+> > > > Sent: 22 July 2020 12:37
+> > > > On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
+> > > > > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
+> > > > > <torvalds@linux-foundation.org> wrote:
+> > > > > > I think we should try to get rid of the exact semantics.
+> > > > >
+> > > > > Side note: I think one of the historical reasons for the exact
+> > > > > semantics was that we used to do things like the mount option copying
+> > > > > with a "copy_from_user()" iirc.
+> > > > >
+> > > > > And that could take a fault at the end of the stack etc, because
+> > > > > "copy_mount_options()" is nasty and doesn't get a size, and just
+> > > > > copies "up to 4kB" of data.
+> > > > >
+> > > > > It's a mistake in the interface, but it is what it is. But we've
+> > > > > always handled the inexact count there anyway by originally doing byte
+> > > > > accesses, and at some point you optimized it to just look at where
+> > > > > page boundaries might be..
+> > > >
+> > > > And we may have to change this again since, with arm64 MTE, the page
+> > > > boundary check is insufficient:
+> > > >
+> > > > https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+> > > >
+> > > > While currently the fault path is unlikely to trigger, with MTE in user
+> > > > space it's a lot more likely since the buffer (e.g. a string) is
+> > > > normally less than 4K and the adjacent addresses would have a different
+> > > > colour.
+> > > >
+> > > > I looked (though briefly) into passing the copy_from_user() problem to
+> > > > filesystems that would presumably know better how much to copy. In most
+> > > > cases the options are string, so something like strncpy_from_user()
+> > > > would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
+> > > > has a better way to figure out how much to copy.
+> > >
+> > > What about changing the mount code to loop calling get_user()
+> > > to read aligned words until failure?
+> > > Mount is fairly uncommon and the extra cost is probably small compared
+> > > to the rest of doing a mount.
+> > 
+> > Before commit 12efec560274 ("saner copy_mount_options()"), it was using
+> > single-byte get_user(). That could have been optimised for aligned words
+> > reading but I don't really think it's worth the hassle. Since the source
+> > and destination don't have the same alignment and some architecture
+> > don't support unaligned accesses (for storing to the kernel buffer), it
+> > would just make this function unnecessarily complicated.
 > 
-> This is an improvement, but the macro still has other issues that
-> are just as bad as the one you address:
+> It could do aligned words if the user buffer is aligned (it will be
+> most of the time) and bytes otherwise.
 > 
-> - Using the # operator to avoid the "" in the invocation seems confusing
+> Or just fallback to a byte loop if the full 4k read fails.
 
-I guess it was useful for debugging.
+That's what I'm proposing here (needed for arm64 MTE):
 
-> - it implicitly uses the 'cs' and 't' variables of the calling function instead
->   of passing them as arguments.
+https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
 
-Actually another reason to convert it to just a function.
-
-> - it calls 'return -1' in a function that otherwise uses errno-style
->   return codes, so this gets interpreted as EPERM "Operation not
->   permitted".
-
-The users of this macro also do it (gpmc_cs_set_timings()) so this
-wrong practice is consistent with the driver. :)
-
-> 
-> I would probably just open-code the entire thing and remove the
-> macro like:
-> 
-> ret = 0;
-> ret |= set_gpmc_timing_reg(cs, GPMC_CS_CONFIG2,  0,  3, 0, t->cs_on,
-> GPMC_CD_FCLK, "cs_on");
-> ret |= set_gpmc_timing_reg(cs, GPMC_CS_CONFIG2,  8,  12, 0,
-> t->cs_rd_off, GPMC_CD_FCLK, "cs_rd_off");
-> ret |= set_gpmc_timing_reg(cs, GPMC_CS_CONFIG2,  16,  20, 0,
-> t->cs_wr_off, GPMC_CD_FCLK, "cs_wr_off);
-> ...
-> if (ret)
->      return -ENXIO;a
-
-I like this approach because it also removes the 'return' from macro
-which is not desired.
-
-> 
-> Of maybe leave the macro, but remove the if/return part and use
-> the "ret |= GPMC_SET_ONE(...)" trick to avoid some of the problems.
-
-I could probably then keep it as a function.  This would be the safest
-and remove most of the problems here.
-
-Best regards,
-Krzysztof
-
+-- 
+Catalin
