@@ -8,121 +8,116 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF31C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D93C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C479020737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7BE206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S70VTYJE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nfKcDMyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgGWUx5 (ORCPT
+        id S1728160AbgGWUyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
+        Thu, 23 Jul 2020 16:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgGWUx5 (ORCPT
+        with ESMTP id S1726146AbgGWUyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:53:57 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5ABC0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:53:57 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id v16so4780399qka.18
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:53:57 -0700 (PDT)
+        Thu, 23 Jul 2020 16:54:07 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37C7C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:54:07 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 7so5678326ybl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=jAHIqv7D3hXB60XxP9GMGsxVao6b4A29Qsn40xA3zUE=;
-        b=S70VTYJEbr1kzIoy7Yuf5LoVsfgbYkUu6JPa1/T5IQjjnF7P0uY/wcBJ4VMlGHLiq7
-         rh2Zvyeu7TO3rYxWNsR48gwgbXQ36bTiWiYTpH9qt+r87rOJGXTJzdtVaU2gC2BDS8TN
-         kMJvXf9v0pn0nVz0IY96x5Bw/up5TKO7kVANtjnpUfw3HjaxHXbV2vfrTF75MgsnKwJK
-         liloKVkjPfoWk4ikiOw9zpEl6PUB8tlQ818X0SF/LkW8cJjwciLyqXQsmhHv8oLj4lDs
-         FV7ZyMGkKEyevpnBUuIUqPw+SakFmgWVTlJFUsKDaN6r+cg2uBHd8KI9vmRuMGN1tF1b
-         01Eg==
+        bh=kdI8VUHfhgihOmQy3Iyr0hZYwpxzmdhJFeUTHTnZFGA=;
+        b=nfKcDMyPVy6NhFDMWTrUuajEjaivWMTHnhcCslK0roB8C/wpec1UXvKA8nvv5E/g2I
+         Ik52Is34VC3xAIW94icyp0k1pP7F6+0P2OM0YV7shMnYAxZoXpjspjteyNJUsMfCjG9E
+         rRPLBUMOeWUkBIt+EGUOeuIfMmZU0vJpvRckH5UjnoRjR2Fmq6/sOhBpNc7gF9ajXqg5
+         gIGmeZknjvxOY20tTtMclA22ysTEPGwbNJj+oIllnH0+fI4qBYHM17bVfjww/SjkerM8
+         3Yc+27PwSUy03KTNEAfsBngMdZjz3RDAmOYqVi+N2qAAengHadOy/te6Y69tyNhgPvvT
+         rVdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=jAHIqv7D3hXB60XxP9GMGsxVao6b4A29Qsn40xA3zUE=;
-        b=c6MDbVgHb1nQmT0aS7tMqe5wIPS/Jugav+7h0jeLNGuFKiSPi5Na2i4WgLD/v5MH4U
-         gk7Cjfb4g7pFHPuwd/+Q3UBDNCn/jEWwngQrZA9KMGk7wn/LuvWw1tfQsJq7P4GuA1QL
-         6qKFosVof0D665PVtyqOWLvQY2x6cGA7tf5zThNa9Ox9LsssLBzipeMwEOouoSmM7naU
-         mdAiux8gD4wfjpOO1oENWR1HMmtPGp/dlxYLUgEnMNUJDe5bq/19NhgQaPU+FWunzZjV
-         Zf2S+rElBYHsbl9A99mmgtLlBDZsxdMn++Yyt5uJKrqKWsWKrh3AJLBdnISRZIisdCks
-         vQlw==
-X-Gm-Message-State: AOAM533T+/oswbzjyV78o3c1IzLCLt+nBIyBJqDi5MdKPFsrpu4Dna92
-        WGznOzFWeJlMro5aapLbMlNPLGu8kuIXQzY66Fw=
-X-Google-Smtp-Source: ABdhPJzfU4XLHeS13NfuwAFsURxlpXzmukj3ghhC6pSPJjcr1W6XdbEzIwbpSEG+oINpMlrHNVyteGTmg+E8KQE/eOQ=
-X-Received: by 2002:a0c:e554:: with SMTP id n20mr6610346qvm.14.1595537636287;
- Thu, 23 Jul 2020 13:53:56 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 13:53:40 -0700
+        bh=kdI8VUHfhgihOmQy3Iyr0hZYwpxzmdhJFeUTHTnZFGA=;
+        b=W3/urMiSdOQpnk/vSzIt4aAMtplPlBPVpWHD8s2Ie6hAWsSGpsdcuaFUHtwloTPNY4
+         0g19mD7MfmsswH+Yy+hSt6YtaOddXro3kbO8OkuIBQTm/ihFc9BCf3i/J963d7AAwQup
+         +80AN62kTXcKJrMoEGQ9EmDIem0X+hqxFwVmJCrhvZQuKB1MGks3duzGNP775rsdcBf3
+         XSNFrrGZJ/+gXo27V3//vwx52TpOlQHZEjsaRFSrfls608s/PuYgXocvPUlBdhOUaKPR
+         YSS+pbff+7fQ97M/lhYsCQkWrxdRdoUANosAIuv3mUMlEGurvk3+ajidBbF+HKoMGBZq
+         2CcQ==
+X-Gm-Message-State: AOAM531+3gXnUGQE4/n4JAjlzGN7mLT/rToOHSSUKG4YnIbj1fEg6coz
+        OxVivPck/IUAKMVSLuL7o1VkvKAaz8B94PNcKwc=
+X-Google-Smtp-Source: ABdhPJzTomNZmxQkDKDUaOgi6iM6xnjutxLFdDnNFS0z2K8+f1arYg36P6fZg+r/T6x0QA8VvBHLCOUnJXhbuCSovlE=
+X-Received: by 2002:a25:4c45:: with SMTP id z66mr9855584yba.175.1595537646880;
+ Thu, 23 Jul 2020 13:54:06 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 13:53:41 -0700
 In-Reply-To: <20200723205341.1099742-1-ndesaulniers@google.com>
-Message-Id: <20200723205341.1099742-2-ndesaulniers@google.com>
+Message-Id: <20200723205341.1099742-3-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20200723205341.1099742-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH 1/2] tracepoint: mark __tracepoint_string's __used
+Subject: [PATCH 2/2] tracepoint: used attribute definitions from compiler_attributes.h
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>
 Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        Simon MacMullen <simonmacm@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__tracepoint_string's have their string data stored in .rodata, and an
-address to that data stored in the "__tracepoint_str" section. Functions
-that refer to those strings refer to the symbol of the address. Compiler
-optimization can replace those address references with references
-directly to the string data. If the address doesn't appear to have other
-uses, then it appears dead to the compiler and is removed. This can
-break the /tracing/printk_formats sysfs node which iterates the
-addresses stored in the "__tracepoint_str" section.
+Just a small cleanup while I was touching this header.
+compiler_attributes.h does feature detection of these __attributes__(())
+and provides more concise ways to invoke them.
 
-Like other strings stored in custom sections in this header, mark these
-__used to inform the compiler that there are other non-obvious users of
-the address, so they should still be emitted.
-
-Cc: stable@vger.kernel.org
-Reported-by: Tim Murray <timmurray@google.com>
-Reported-by: Simon MacMullen <simonmacm@google.com>
-Suggested-by: Greg Hackmann <ghackmann@google.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
-We observe this in Clang; it seems that GCC doesn't do the "cleanup" of
-the dead address.
-
-Specifically, the Clang passes "Interprocedural Sparse Conditional
-Constant Propagation" (IPSCCP) and GlobalOpt both try to removed the
-address if no other uses exist after inlining the reference directly to
-the string data.
-
-We don't want to change the linkage of these variables, but we kind of
-want optimization behavior to treat these function static strings as if
-they had `extern` linkage, at least by not removing the address of the
-string data from the custom section.
-
- include/linux/tracepoint.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/tracepoint.h | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a1fecf311621..3a5b717d92e8 100644
+index 3a5b717d92e8..598fec9f9dbf 100644
 --- a/include/linux/tracepoint.h
 +++ b/include/linux/tracepoint.h
-@@ -361,7 +361,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+@@ -116,8 +116,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 
+ #define __TRACEPOINT_ENTRY(name)					 \
+ 	static tracepoint_ptr_t __tracepoint_ptr_##name __used		 \
+-	__attribute__((section("__tracepoints_ptrs"))) =		 \
+-		&__tracepoint_##name
++	__section(__tracepoints_ptrs) = &__tracepoint_##name
+ #endif
+ 
+ #endif /* _LINUX_TRACEPOINT_H */
+@@ -280,9 +279,9 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+  */
+ #define DEFINE_TRACE_FN(name, reg, unreg)				 \
+ 	static const char __tpstrtab_##name[]				 \
+-	__attribute__((section("__tracepoints_strings"))) = #name;	 \
+-	struct tracepoint __tracepoint_##name				 \
+-	__attribute__((section("__tracepoints"), used)) =		 \
++	__section(__tracepoints_strings) = #name;			 \
++	struct tracepoint __tracepoint_##name __used			 \
++	__section(__tracepoints) =					 \
+ 		{ __tpstrtab_##name, STATIC_KEY_INIT_FALSE, reg, unreg, NULL };\
+ 	__TRACEPOINT_ENTRY(name);
+ 
+@@ -361,7 +360,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
  		static const char *___tp_str __tracepoint_string = str; \
  		___tp_str;						\
  	})
--#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
-+#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
+-#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
++#define __tracepoint_string	__used __section(__tracepoint_str)
  #else
  /*
   * tracepoint_string() is used to save the string address for userspace
