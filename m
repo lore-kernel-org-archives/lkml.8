@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3A1C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0574BC433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 816B920825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E076E2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgGWLqe (ORCPT
+        id S1728791AbgGWLqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:46:34 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:3550 "EHLO
+        Thu, 23 Jul 2020 07:46:43 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:40380 "EHLO
         labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgGWLqd (ORCPT
+        with ESMTP id S1728635AbgGWLqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:46:33 -0400
-IronPort-SDR: RJG1xERsJG8YQ1Y/d6EGWuKKoxg6brdsgOlmzVu5LeYDgm53YL3XWVSE0H93f88cFq9OGpiUQi
- 4hCIWwK6fa14hDOMBc5X15NC/E5SmbA5YIw0wnWcrGo7Z523v+M7Hmt3a4Bu5OBuFeavt//MnE
- GdVgui8pbAC1vQKApRTxl0jfjCEmTCStMiAzi0aoHT8peCQj2yVcIJfxKQ4nsEZRAAH3ht9SiQ
- +zNJwhdEUw4Zjdzn9alEaqIoJSsvZKsgjpbqrMmRfVqlaCk4LwTW8QZmLm6m01wAkmlLQPQw4A
- 5+E=
+        Thu, 23 Jul 2020 07:46:42 -0400
+IronPort-SDR: JI+AmEGeb1Z/NrbPIniY8pr3b8OI9t00AniDh6sJOhcsShrxPKuQn89B3OyoUM99AlAuJ0vHoG
+ 6AtQOjhLbZG7zy6FDKAr2ZPaa7kfwte8XYsQul3ZAtbfjrcW8Mmy+bcoiTaJmJPDdDjL0m5AtD
+ 5wn5Fz6H52b2atjVcRCX2/i7LvtsH9b362HDVJvRKPqYLSllO9GcZPtTEDRB5zyzGTu1cK/nNa
+ NjRH9B5BFRXNZLdAr105C+5B/ijqaTTcAjUp3hSHUWHGM7IAh2/3vd7FuCL3HpYqx6IXhPYpb8
+ t30=
 X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="29048251"
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by labrats.qualcomm.com with ESMTP; 23 Jul 2020 04:46:34 -0700
+   d="scan'208";a="29048253"
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by labrats.qualcomm.com with ESMTP; 23 Jul 2020 04:46:41 -0700
 Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 23 Jul 2020 04:46:32 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP; 23 Jul 2020 04:46:40 -0700
 Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id ACA0622E23; Thu, 23 Jul 2020 04:46:32 -0700 (PDT)
+        id 55FE722E23; Thu, 23 Jul 2020 04:46:40 -0700 (PDT)
 From:   Can Guo <cang@codeaurora.org>
 To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
@@ -47,10 +47,11 @@ Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
         Stanley Chu <stanley.chu@mediatek.com>,
         Bean Huo <beanhuo@micron.com>,
         Bart Van Assche <bvanassche@acm.org>,
+        Satya Tangirala <satyat@google.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 1/8] scsi: ufs: Add checks before setting clk-gating states
-Date:   Thu, 23 Jul 2020 04:46:19 -0700
-Message-Id: <1595504787-19429-2-git-send-email-cang@codeaurora.org>
+Subject: [PATCH v6 4/8] scsi: ufs: Add some debug infos to ufshcd_print_host_state
+Date:   Thu, 23 Jul 2020 04:46:22 -0700
+Message-Id: <1595504787-19429-5-git-send-email-cang@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595504787-19429-1-git-send-email-cang@codeaurora.org>
 References: <1595504787-19429-1-git-send-email-cang@codeaurora.org>
@@ -59,66 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock gating features can be turned on/off selectively which means its
-state information is only important if it is enabled. This change makes
-sure that we only look at state of clk-gating if it is enabled.
+The infos of the last interrupt status and its timestamp are very helpful
+when debug system stability issues, e.g. IRQ starvation, so add them to
+ufshcd_print_host_state. Meanwhile, UFS device infos like model name and
+its FW version also come in handy during debug. In addition, this change
+makes cleanup to some prints in ufshcd_print_host_regs as similar prints
+are already available in ufshcd_print_host_state.
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 31 ++++++++++++++++++-------------
+ drivers/scsi/ufs/ufshcd.h |  5 +++++
+ 2 files changed, 23 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index cdff7e5..99bd3e4 100644
+index 99bd3e4..eda4dc6 100644
 --- a/drivers/scsi/ufs/ufshcd.c
 +++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1839,6 +1839,8 @@ static void ufshcd_init_clk_gating(struct ufs_hba *hba)
- 	if (!ufshcd_is_clkgating_allowed(hba))
- 		return;
+@@ -411,15 +411,6 @@ static void ufshcd_print_err_hist(struct ufs_hba *hba,
+ static void ufshcd_print_host_regs(struct ufs_hba *hba)
+ {
+ 	ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
+-	dev_err(hba->dev, "hba->ufs_version = 0x%x, hba->capabilities = 0x%x\n",
+-		hba->ufs_version, hba->capabilities);
+-	dev_err(hba->dev,
+-		"hba->outstanding_reqs = 0x%x, hba->outstanding_tasks = 0x%x\n",
+-		(u32)hba->outstanding_reqs, (u32)hba->outstanding_tasks);
+-	dev_err(hba->dev,
+-		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt = %d\n",
+-		ktime_to_us(hba->ufs_stats.last_hibern8_exit_tstamp),
+-		hba->ufs_stats.hibern8_exit_cnt);
  
-+	hba->clk_gating.state = CLKS_ON;
+ 	ufshcd_print_err_hist(hba, &hba->ufs_stats.pa_err, "pa_err");
+ 	ufshcd_print_err_hist(hba, &hba->ufs_stats.dl_err, "dl_err");
+@@ -438,8 +429,6 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
+ 	ufshcd_print_err_hist(hba, &hba->ufs_stats.host_reset, "host_reset");
+ 	ufshcd_print_err_hist(hba, &hba->ufs_stats.task_abort, "task_abort");
+ 
+-	ufshcd_print_clk_freqs(hba);
+-
+ 	ufshcd_vops_dbg_register_dump(hba);
+ }
+ 
+@@ -499,6 +488,8 @@ static void ufshcd_print_tmrs(struct ufs_hba *hba, unsigned long bitmap)
+ 
+ static void ufshcd_print_host_state(struct ufs_hba *hba)
+ {
++	struct scsi_device *sdev_ufs = hba->sdev_ufs_device;
 +
- 	hba->clk_gating.delay_ms = 150;
- 	INIT_DELAYED_WORK(&hba->clk_gating.gate_work, ufshcd_gate_work);
- 	INIT_WORK(&hba->clk_gating.ungate_work, ufshcd_ungate_work);
-@@ -2541,7 +2543,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 		err = SCSI_MLQUEUE_HOST_BUSY;
- 		goto out;
- 	}
--	WARN_ON(hba->clk_gating.state != CLKS_ON);
-+	WARN_ON(ufshcd_is_clkgating_allowed(hba) &&
-+		(hba->clk_gating.state != CLKS_ON));
+ 	dev_err(hba->dev, "UFS Host state=%d\n", hba->ufshcd_state);
+ 	dev_err(hba->dev, "outstanding reqs=0x%lx tasks=0x%lx\n",
+ 		hba->outstanding_reqs, hba->outstanding_tasks);
+@@ -511,12 +502,24 @@ static void ufshcd_print_host_state(struct ufs_hba *hba)
+ 	dev_err(hba->dev, "Auto BKOPS=%d, Host self-block=%d\n",
+ 		hba->auto_bkops_enabled, hba->host->host_self_blocked);
+ 	dev_err(hba->dev, "Clk gate=%d\n", hba->clk_gating.state);
++	dev_err(hba->dev,
++		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt=%d\n",
++		ktime_to_us(hba->ufs_stats.last_hibern8_exit_tstamp),
++		hba->ufs_stats.hibern8_exit_cnt);
++	dev_err(hba->dev, "last intr at %lld us, last intr status=0x%x\n",
++		ktime_to_us(hba->ufs_stats.last_intr_ts),
++		hba->ufs_stats.last_intr_status);
+ 	dev_err(hba->dev, "error handling flags=0x%x, req. abort count=%d\n",
+ 		hba->eh_flags, hba->req_abort_count);
+-	dev_err(hba->dev, "Host capabilities=0x%x, caps=0x%x\n",
+-		hba->capabilities, hba->caps);
++	dev_err(hba->dev, "hba->ufs_version=0x%x, Host capabilities=0x%x, caps=0x%x\n",
++		hba->ufs_version, hba->capabilities, hba->caps);
+ 	dev_err(hba->dev, "quirks=0x%x, dev. quirks=0x%x\n", hba->quirks,
+ 		hba->dev_quirks);
++	if (sdev_ufs)
++		dev_err(hba->dev, "UFS dev info: %.8s %.16s rev %.4s\n",
++			sdev_ufs->vendor, sdev_ufs->model, sdev_ufs->rev);
++
++	ufshcd_print_clk_freqs(hba);
+ }
  
- 	lrbp = &hba->lrb[tag];
+ /**
+@@ -5951,6 +5954,8 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
  
-@@ -8315,8 +8318,11 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 		/* If link is active, device ref_clk can't be switched off */
- 		__ufshcd_setup_clocks(hba, false, true);
+ 	spin_lock(hba->host->host_lock);
+ 	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
++	hba->ufs_stats.last_intr_status = intr_status;
++	hba->ufs_stats.last_intr_ts = ktime_get();
  
--	hba->clk_gating.state = CLKS_OFF;
--	trace_ufshcd_clk_gating(dev_name(hba->dev), hba->clk_gating.state);
-+	if (ufshcd_is_clkgating_allowed(hba)) {
-+		hba->clk_gating.state = CLKS_OFF;
-+		trace_ufshcd_clk_gating(dev_name(hba->dev),
-+					hba->clk_gating.state);
-+	}
+ 	/*
+ 	 * There could be max of hba->nutrs reqs in flight and in worst case
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 656c069..5b2cdaf 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -406,6 +406,8 @@ struct ufs_err_reg_hist {
  
- 	/* Put the host controller in low power mode if possible */
- 	ufshcd_hba_vreg_set_lpm(hba);
-@@ -8456,6 +8462,11 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 	if (hba->clk_scaling.is_allowed)
- 		ufshcd_suspend_clkscaling(hba);
- 	ufshcd_setup_clocks(hba, false);
-+	if (ufshcd_is_clkgating_allowed(hba)) {
-+		hba->clk_gating.state = CLKS_OFF;
-+		trace_ufshcd_clk_gating(dev_name(hba->dev),
-+					hba->clk_gating.state);
-+	}
- out:
- 	hba->pm_op_in_progress = 0;
- 	if (ret)
+ /**
+  * struct ufs_stats - keeps usage/err statistics
++ * @last_intr_status: record the last interrupt status.
++ * @last_intr_ts: record the last interrupt timestamp.
+  * @hibern8_exit_cnt: Counter to keep track of number of exits,
+  *		reset this after link-startup.
+  * @last_hibern8_exit_tstamp: Set time after the hibern8 exit.
+@@ -425,6 +427,9 @@ struct ufs_err_reg_hist {
+  * @tsk_abort: tracks task abort events
+  */
+ struct ufs_stats {
++	u32 last_intr_status;
++	ktime_t last_intr_ts;
++
+ 	u32 hibern8_exit_cnt;
+ 	ktime_t last_hibern8_exit_tstamp;
+ 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
