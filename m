@@ -2,613 +2,189 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A12EC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFC620709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:06:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qIBll1AE"
+	by mail.kernel.org (Postfix) with ESMTP id 0CE102080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgGWOG2 (ORCPT
+        id S1729418AbgGWOHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:06:28 -0400
-Received: from mail-dm6nam10on2088.outbound.protection.outlook.com ([40.107.93.88]:22640
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727111AbgGWOGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:06:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YVAuYZ8vFfHXWMxKULlBCqNZW6nFEE4suluA0fRuj6bQGnQg+jiXzGXq3oIRFFnozY8zRadF40ZV7c+ms+uP/Vv4rEUdqX6IdafO7hOfLqZu5UEGktjE195JlCmwm5kSS+wCJ7pPwUaE3TFaB5kGnHEoTLRcquHMg1RLaY16Z4qsC9OxI1ww0xDqf798ATYeiNs3tMQ9MIXFF6eIjbNky+X3TnxA+cPM17w0Tx7ehx2xAwr+jbIpuKXNusZeV+K3FquSFFI+jRkDTvYJ65mgMbv22GKw+qu9YORIpSS5ChhCi/st6FtlIEpMsUgL/sXLq+Vnb2D1HX1ARWk92vgxTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=26BrNPLQDVRxPyqG4SbXzSjiLN/MzxCXQ6FN/JNp2WU=;
- b=kFBuKhOmIEwh2EibEtvHYXVaQAFu35hrrLKTkoUH7XMPyRpNko80AZF7PTQo635JdnOOShpp1s26spxGrtXCLWR0UQO34Th1DctZ672210cYgt2ESFPVX+YHZ9MQI1qJwqhpuKfkm3ZuUpl+g/VNHl4fr40bqo3/WSMrIvdQ0U6GEWfVfjkjhknWrZWfirx1B5/DZdJhi7Adaq3NmyA54cVMvgllCJxKOkiO3ENLsT3aOA2spjAYd4qGZnhmGPy2W0roJQwdtTG43uHYVK3kFAh74rdx5CTtrm4FZJwmZtLK4GTzpYQq7AY58u5n32Ygnt1aKHpCLNMoNqYi7mC7Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=26BrNPLQDVRxPyqG4SbXzSjiLN/MzxCXQ6FN/JNp2WU=;
- b=qIBll1AE0FcYbWZPf4yA4faFhDT5KR1j9wZZsIYfYij6SYEEcJDmUUrua6jNaDIi3Spo6Js+REQ3u34GM5PPyeigQp8+T6WB41EfC6NYBfJUQ3TOinrUsop9Er1D5Nj/NnYLds8kUerWDiGEH5cw/RRXn+IhS7ojQY/Rv3t4rjE=
-Received: from CY4PR19CA0037.namprd19.prod.outlook.com (2603:10b6:903:103::23)
- by SN6PR02MB4382.namprd02.prod.outlook.com (2603:10b6:805:aa::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Thu, 23 Jul
- 2020 14:06:19 +0000
-Received: from CY1NAM02FT055.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:103:cafe::ec) by CY4PR19CA0037.outlook.office365.com
- (2603:10b6:903:103::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend
- Transport; Thu, 23 Jul 2020 14:06:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT055.mail.protection.outlook.com (10.152.74.80) with Microsoft SMTP
- Server id 15.20.3216.10 via Frontend Transport; Thu, 23 Jul 2020 14:06:19
- +0000
-Received: from [149.199.38.66] (port=56799 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybpg-0004H3-Q4; Thu, 23 Jul 2020 07:04:24 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybrW-0005RQ-QC; Thu, 23 Jul 2020 07:06:18 -0700
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06NE6HS0004468;
-        Thu, 23 Jul 2020 07:06:17 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jybrU-0005Q2-Na; Thu, 23 Jul 2020 07:06:17 -0700
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
-Date:   Thu, 23 Jul 2020 19:36:07 +0530
-Message-Id: <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        Thu, 23 Jul 2020 10:07:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12540 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727111AbgGWOHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:07:03 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NE3QnP061533;
+        Thu, 23 Jul 2020 10:06:50 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23g9dtm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 10:06:49 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NE0Ltc010223;
+        Thu, 23 Jul 2020 14:06:47 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03fra.de.ibm.com with ESMTP id 32brq83ch9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 14:06:46 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NE6heE59834608
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 14:06:44 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF6B411C04C;
+        Thu, 23 Jul 2020 14:06:43 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64F5711C04A;
+        Thu, 23 Jul 2020 14:06:43 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.31.161])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Jul 2020 14:06:43 +0000 (GMT)
+Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: rework secure mem slot
+ dropping
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     bharata@linux.ibm.com, linuxram@us.ibm.com
+Cc:     linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        paulus@samba.org, sukadev@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, bauerman@linux.ibm.com
+References: <20200721104202.15727-1-ldufour@linux.ibm.com>
+ <20200721104202.15727-3-ldufour@linux.ibm.com>
+ <20200723033600.GS7902@in.ibm.com>
+ <4a3caeaf-cd0c-fcd7-0a97-f367a5f78dac@linux.ibm.com>
+Message-ID: <0631397b-44af-ea3b-b70b-e4a0dc2c0366@linux.ibm.com>
+Date:   Thu, 23 Jul 2020 16:06:43 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: a94913b7-25cb-4f84-357a-08d82f11926b
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4382:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB4382CA3C7FD5D528CC17BA70AF760@SN6PR02MB4382.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a11w/U+gDISswNY7sSl6X4qUeVnJ3KseCJnAqFfunzS9RbTjmWl6JdWzUEoNmrvBh17l25g3Efo5U4VIcdMqYQzSwHiAwN+iMWyLBCoQgVYTkY0Otx1VUA/0CmM23R2F9bg3V7MiWbJ2HEyR5Phqzg7TSxLeG/RWDp1Un4xhyrvPl2atVimtO2wvt4IusNajvj0DZ/q9jcNdepTiBiCnManSahof0uCxFdmj/PwNfYXYL2RRecITTkfS3Fv/m5tMKXm0DjE59fHDIWB7IxS6VMrGlVH/5Gm5WB3z5q3TvtzxxeQ8fPdezDjY6Q9HsK0CdkCW7qVWU7wr6KmSLcf4fe+og8JjayKW8/NL1EVdTgAVDOKdBsw2Zq06ojOMZiwYc8QqPDOeGntHMUnzLglM/Q==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(346002)(39860400002)(396003)(376002)(46966005)(47076004)(316002)(44832011)(82740400003)(6666004)(2616005)(356005)(81166007)(478600001)(2906002)(30864003)(82310400002)(70206006)(5660300002)(426003)(70586007)(7696005)(6636002)(8936002)(8676002)(336012)(9786002)(107886003)(26005)(83380400001)(36756003)(186003)(4326008);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 14:06:19.0304
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a94913b7-25cb-4f84-357a-08d82f11926b
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT055.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4382
+In-Reply-To: <4a3caeaf-cd0c-fcd7-0a97-f367a5f78dac@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_06:2020-07-23,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007230105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds interrupt support to the Xilinx GPIO driver so that rising and
-falling edge line events can be supported. Since interrupt support is
-an optional feature in the Xilinx IP, the driver continues to support
-devices which have no interrupt provided.
+Le 23/07/2020 à 14:32, Laurent Dufour a écrit :
+> Le 23/07/2020 à 05:36, Bharata B Rao a écrit :
+>> On Tue, Jul 21, 2020 at 12:42:02PM +0200, Laurent Dufour wrote:
+>>> When a secure memslot is dropped, all the pages backed in the secure device
+>>> (aka really backed by secure memory by the Ultravisor) should be paged out
+>>> to a normal page. Previously, this was achieved by triggering the page
+>>> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
+>>>
+>>> This can't work when hot unplugging a memory slot because the memory slot
+>>> is flagged as invalid and gfn_to_pfn() is then not trying to access the
+>>> page, so the page fault mechanism is not triggered.
+>>>
+>>> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
+>>> simpler to directly calling it instead of triggering such a mechanism. This
+>>> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
+>>> memslot.
+>>>
+>>> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
+>>> the call to __kvmppc_svm_page_out() is made.
+>>> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
+>>> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
+>>> addition, the mmap_sem is help in read mode during that time, not in write
+>>> mode since the virual memory layout is not impacted, and
+>>> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
+>>>
+>>> Cc: Ram Pai <linuxram@us.ibm.com>
+>>> Cc: Bharata B Rao <bharata@linux.ibm.com>
+>>> Cc: Paul Mackerras <paulus@ozlabs.org>
+>>> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+>>> ---
+>>>   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
+>>>   1 file changed, 37 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c 
+>>> b/arch/powerpc/kvm/book3s_hv_uvmem.c
+>>> index 5a4b02d3f651..ba5c7c77cc3a 100644
+>>> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+>>> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+>>> @@ -624,35 +624,55 @@ static inline int kvmppc_svm_page_out(struct 
+>>> vm_area_struct *vma,
+>>>    * fault on them, do fault time migration to replace the device PTEs in
+>>>    * QEMU page table with normal PTEs from newly allocated pages.
+>>>    */
+>>> -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
+>>> +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
+>>>                    struct kvm *kvm, bool skip_page_out)
+>>>   {
+>>>       int i;
+>>>       struct kvmppc_uvmem_page_pvt *pvt;
+>>> -    unsigned long pfn, uvmem_pfn;
+>>> -    unsigned long gfn = free->base_gfn;
+>>> +    struct page *uvmem_page;
+>>> +    struct vm_area_struct *vma = NULL;
+>>> +    unsigned long uvmem_pfn, gfn;
+>>> +    unsigned long addr, end;
+>>> +
+>>> +    mmap_read_lock(kvm->mm);
+>>> +
+>>> +    addr = slot->userspace_addr;
+>>
+>> We typically use gfn_to_hva() for that, but that won't work for a
+>> memslot that is already marked INVALID which is the case here.
+>> I think it is ok to access slot->userspace_addr here of an INVALID
+>> memslot, but just thought of explictly bringing this up.
+> 
+> Which explicitly mentioned above in the patch's description:
+> 
+> This can't work when hot unplugging a memory slot because the memory slot
+> is flagged as invalid and gfn_to_pfn() is then not trying to access the
+> page, so the page fault mechanism is not triggered.
+> 
+>>
+>>> +    end = addr + (slot->npages * PAGE_SIZE);
+>>> -    for (i = free->npages; i; --i, ++gfn) {
+>>> -        struct page *uvmem_page;
+>>> +    gfn = slot->base_gfn;
+>>> +    for (i = slot->npages; i; --i, ++gfn, addr += PAGE_SIZE) {
+>>> +
+>>> +        /* Fetch the VMA if addr is not in the latest fetched one */
+>>> +        if (!vma || (addr < vma->vm_start || addr >= vma->vm_end)) {
+>>> +            vma = find_vma_intersection(kvm->mm, addr, end);
+>>> +            if (!vma ||
+>>> +                vma->vm_start > addr || vma->vm_end < end) {
+>>> +                pr_err("Can't find VMA for gfn:0x%lx\n", gfn);
+>>> +                break;
+>>> +            }
+>>> +        }
+>>
+>> In Ram's series, kvmppc_memslot_page_merge() also walks the VMAs spanning
+>> the memslot, but it uses a different logic for the same. Why can't these
+>> two cases use the same method to walk the VMAs? Is there anything subtly
+>> different between the two cases?
+> 
+> This is probably doable. At the time I wrote that patch, the 
+> kvmppc_memslot_page_merge() was not yet introduced AFAIR.
+> 
+> This being said, I'd help a lot to factorize that code... I let Ram dealing with 
+> that ;)
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
----
-Changes in V2:
-Updated code to support rising edge and falling edge.
-Added xgpio_xlate() API to support gpio-keys.
-Updated code to check return value of of_property_read_u32.
----
- drivers/gpio/Kconfig       |   1 +
- drivers/gpio/gpio-xilinx.c | 295 ++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 277 insertions(+), 19 deletions(-)
+Indeed I don't think this is relevant, the loop in kvmppc_memslot_page_merge() 
+deals with one call (to ksm_advise) per VMA, while this code is dealing with one 
+call per page of the VMA, which completely different.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 05e0801c6a78..239f8eb7a8eb 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -652,6 +652,7 @@ config GPIO_XGENE_SB
- 
- config GPIO_XILINX
- 	tristate "Xilinx GPIO support"
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to support the Xilinx FPGA GPIO device
- 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index d103613e787a..509606e92a1c 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -16,6 +16,9 @@
- #include <linux/slab.h>
- #include <linux/pm_runtime.h>
- #include <linux/clk.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
- 
- /* Register Offset Definitions */
- #define XGPIO_DATA_OFFSET   (0x0)	/* Data register  */
-@@ -23,6 +26,11 @@
- 
- #define XGPIO_CHANNEL_OFFSET	0x8
- 
-+#define XGPIO_GIER_OFFSET      0x11c /* Global Interrupt Enable */
-+#define XGPIO_GIER_IE          BIT(31)
-+#define XGPIO_IPISR_OFFSET     0x120 /* IP Interrupt Status */
-+#define XGPIO_IPIER_OFFSET     0x128 /* IP Interrupt Enable */
-+
- /* Read/Write access to the GPIO registers */
- #if defined(CONFIG_ARCH_ZYNQ) || defined(CONFIG_X86)
- # define xgpio_readreg(offset)		readl(offset)
-@@ -37,9 +45,14 @@
-  * @gc: GPIO chip
-  * @regs: register block
-  * @gpio_width: GPIO width for every channel
-- * @gpio_state: GPIO state shadow register
-+ * @gpio_state: GPIO write state shadow register
-+ * @gpio_last_irq_read: GPIO read state register from last interrupt
-  * @gpio_dir: GPIO direction shadow register
-  * @gpio_lock: Lock used for synchronization
-+ * @irq: IRQ used by GPIO device
-+ * @irq_enable: GPIO irq enable/disable bitfield
-+ * @irq_rising_edge: GPIO irq rising edge enable/disable bitfield
-+ * @irq_falling_edge: GPIO irq falling edge enable/disable bitfield
-  * @clk: clock resource for this driver
-  */
- struct xgpio_instance {
-@@ -47,8 +60,13 @@ struct xgpio_instance {
- 	void __iomem *regs;
- 	unsigned int gpio_width[2];
- 	u32 gpio_state[2];
-+	u32 gpio_last_irq_read[2];
- 	u32 gpio_dir[2];
--	spinlock_t gpio_lock[2];	/* For serializing operations */
-+	spinlock_t gpio_lock;	/* For serializing operations */
-+	int irq;
-+	u32 irq_enable[2];
-+	u32 irq_rising_edge[2];
-+	u32 irq_falling_edge[2];
- 	struct clk *clk;
- };
- 
-@@ -114,7 +132,7 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	int index =  xgpio_index(chip, gpio);
- 	int offset =  xgpio_offset(chip, gpio);
- 
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
- 
- 	/* Write to GPIO signal and set its direction to output */
- 	if (val)
-@@ -125,7 +143,7 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 		       xgpio_regoffset(chip, gpio), chip->gpio_state[index]);
- 
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
- }
- 
- /**
-@@ -145,7 +163,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 	int index = xgpio_index(chip, 0);
- 	int offset, i;
- 
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
- 
- 	/* Write to GPIO signals */
- 	for (i = 0; i < gc->ngpio; i++) {
-@@ -156,9 +174,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 				       index * XGPIO_CHANNEL_OFFSET,
- 				       chip->gpio_state[index]);
--			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
- 			index =  xgpio_index(chip, i);
--			spin_lock_irqsave(&chip->gpio_lock[index], flags);
- 		}
- 		if (__test_and_clear_bit(i, mask)) {
- 			offset =  xgpio_offset(chip, i);
-@@ -172,7 +188,7 @@ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
- 		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
- 
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
- }
- 
- /**
-@@ -191,14 +207,14 @@ static int xgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
- 	int index =  xgpio_index(chip, gpio);
- 	int offset =  xgpio_offset(chip, gpio);
- 
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
- 
- 	/* Set the GPIO bit in shadow register and set direction as input */
- 	chip->gpio_dir[index] |= BIT(offset);
- 	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET +
- 		       xgpio_regoffset(chip, gpio), chip->gpio_dir[index]);
- 
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
- 
- 	return 0;
- }
-@@ -222,7 +238,7 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 	int index =  xgpio_index(chip, gpio);
- 	int offset =  xgpio_offset(chip, gpio);
- 
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
- 
- 	/* Write state of GPIO signal */
- 	if (val)
-@@ -237,7 +253,7 @@ static int xgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 	xgpio_writereg(chip->regs + XGPIO_TRI_OFFSET +
- 			xgpio_regoffset(chip, gpio), chip->gpio_dir[index]);
- 
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
- 
- 	return 0;
- }
-@@ -294,6 +310,45 @@ static int __maybe_unused xgpio_suspend(struct device *dev)
- 	return 0;
- }
- 
-+/**
-+ * xgpio_xlate - Translate gpio_spec to the GPIO number and flags
-+ * @gc: Pointer to gpio_chip device structure.
-+ * @gpiospec:  gpio specifier as found in the device tree
-+ * @flags: A flags pointer based on binding
-+ *
-+ * Return:
-+ * irq number otherwise -EINVAL
-+ */
-+static int xgpio_xlate(struct gpio_chip *gc,
-+		       const struct of_phandle_args *gpiospec, u32 *flags)
-+{
-+	if (gc->of_gpio_n_cells < 2) {
-+		WARN_ON(1);
-+		return -EINVAL;
-+	}
-+
-+	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
-+		return -EINVAL;
-+
-+	if (gpiospec->args[0] >= gc->ngpio)
-+		return -EINVAL;
-+
-+	if (flags)
-+		*flags = gpiospec->args[1];
-+
-+	return gpiospec->args[0];
-+}
-+
-+/**
-+ * xgpio_irq_ack - Acknowledge a child GPIO interrupt.
-+ * This currently does nothing, but irq_ack is unconditionally called by
-+ * handle_edge_irq and therefore must be defined.
-+ * @irq_data: per irq and chip data passed down to chip functions
-+ */
-+static void xgpio_irq_ack(struct irq_data *irq_data)
-+{
-+}
-+
- static int __maybe_unused xgpio_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
-@@ -338,6 +393,176 @@ static const struct dev_pm_ops xgpio_dev_pm_ops = {
- };
- 
- /**
-+ * xgpio_irq_mask - Write the specified signal of the GPIO device.
-+ * @irq_data: per irq and chip data passed down to chip functions
-+ */
-+static void xgpio_irq_mask(struct irq_data *irq_data)
-+{
-+	unsigned long flags;
-+	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
-+	int irq_offset = irqd_to_hwirq(irq_data);
-+	int index = xgpio_index(chip, irq_offset);
-+	int offset = xgpio_offset(chip, irq_offset);
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+
-+	chip->irq_enable[index] &= ~BIT(offset);
-+
-+	dev_dbg(chip->gc.parent, "Disable %d irq, irq_enable_mask 0x%x\n",
-+		irq_offset, chip->irq_enable[index]);
-+
-+	if (!chip->irq_enable[index]) {
-+		/* Disable per channel interrupt */
-+		u32 temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
-+
-+		temp &= ~BIT(index);
-+		xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, temp);
-+	}
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+}
-+
-+/**
-+ * xgpio_irq_unmask - Write the specified signal of the GPIO device.
-+ * @irq_data: per irq and chip data passed down to chip functions
-+ */
-+static void xgpio_irq_unmask(struct irq_data *irq_data)
-+{
-+	unsigned long flags;
-+	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
-+	int irq_offset = irqd_to_hwirq(irq_data);
-+	int index = xgpio_index(chip, irq_offset);
-+	int offset = xgpio_offset(chip, irq_offset);
-+	u32 old_enable = chip->irq_enable[index];
-+
-+	spin_lock_irqsave(&chip->gpio_lock, flags);
-+
-+	chip->irq_enable[index] |= BIT(offset);
-+
-+	dev_dbg(chip->gc.parent, "Enable %d irq, irq_enable_mask 0x%x\n",
-+		irq_offset, chip->irq_enable[index]);
-+
-+	if (!old_enable) {
-+		/* Clear any existing per-channel interrupts */
-+		u32 val = xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET) &
-+			BIT(index);
-+
-+		if (val)
-+			xgpio_writereg(chip->regs + XGPIO_IPISR_OFFSET, val);
-+
-+		/* Update GPIO IRQ read data before enabling interrupt*/
-+		val = xgpio_readreg(chip->regs + XGPIO_DATA_OFFSET +
-+				    index * XGPIO_CHANNEL_OFFSET);
-+		chip->gpio_last_irq_read[index] = val;
-+
-+		/* Enable per channel interrupt */
-+		val = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
-+		val |= BIT(index);
-+		xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, val);
-+	}
-+
-+	spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+}
-+
-+/**
-+ * xgpio_set_irq_type - Write the specified signal of the GPIO device.
-+ * @irq_data: Per irq and chip data passed down to chip functions
-+ * @type: Interrupt type that is to be set for the gpio pin
-+ *
-+ * Return:
-+ * 0 if interrupt type is supported otherwise otherwise -EINVAL
-+ */
-+static int xgpio_set_irq_type(struct irq_data *irq_data, unsigned int type)
-+{
-+	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
-+	int irq_offset = irqd_to_hwirq(irq_data);
-+	int index = xgpio_index(chip, irq_offset);
-+	int offset = xgpio_offset(chip, irq_offset);
-+
-+	/* The Xilinx GPIO hardware provides a single interrupt status
-+	 * indication for any state change in a given GPIO channel (bank).
-+	 * Therefore, only rising edge or falling edge triggers are
-+	 * supported.
-+	 */
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_BOTH:
-+		chip->irq_rising_edge[index] |= BIT(offset);
-+		chip->irq_falling_edge[index] |= BIT(offset);
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		chip->irq_rising_edge[index] |= BIT(offset);
-+		chip->irq_falling_edge[index] &= ~BIT(offset);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		chip->irq_rising_edge[index] &= ~BIT(offset);
-+		chip->irq_falling_edge[index] |= BIT(offset);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	irq_set_handler_locked(irq_data, handle_edge_irq);
-+	return 0;
-+}
-+
-+static struct irq_chip xgpio_irqchip = {
-+	.name           = "gpio-xilinx",
-+	.irq_ack	= xgpio_irq_ack,
-+	.irq_mask       = xgpio_irq_mask,
-+	.irq_unmask     = xgpio_irq_unmask,
-+	.irq_set_type   = xgpio_set_irq_type,
-+};
-+
-+/**
-+ * xgpio_irqhandler - Gpio interrupt service routine
-+ * @desc: Pointer to interrupt description
-+ */
-+static void xgpio_irqhandler(struct irq_desc *desc)
-+{
-+	struct xgpio_instance *chip = irq_desc_get_handler_data(desc);
-+	struct irq_chip *irqchip = irq_desc_get_chip(desc);
-+	u32 num_channels = chip->gpio_width[1] ? 2 : 1;
-+	u32 offset = 0, index;
-+	u32 status = xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET);
-+
-+	xgpio_writereg(chip->regs + XGPIO_IPISR_OFFSET, status);
-+
-+	chained_irq_enter(irqchip, desc);
-+	for (index = 0; index < num_channels; index++) {
-+		if ((status & BIT(index))) {
-+			unsigned long rising_events, falling_events, all_events;
-+			unsigned long flags;
-+			u32 data, bit;
-+
-+			spin_lock_irqsave(&chip->gpio_lock, flags);
-+			data = xgpio_readreg(chip->regs + XGPIO_DATA_OFFSET +
-+					     index * XGPIO_CHANNEL_OFFSET);
-+			rising_events = data &
-+					~chip->gpio_last_irq_read[index] &
-+					chip->irq_enable[index] &
-+					chip->irq_rising_edge[index];
-+			falling_events = ~data &
-+					 chip->gpio_last_irq_read[index] &
-+					 chip->irq_enable[index] &
-+					 chip->irq_falling_edge[index];
-+			dev_dbg(chip->gc.parent,
-+				"IRQ chan %u rising 0x%lx falling 0x%lx\n",
-+				index, rising_events, falling_events);
-+			all_events = rising_events | falling_events;
-+			chip->gpio_last_irq_read[index] = data;
-+			spin_unlock_irqrestore(&chip->gpio_lock, flags);
-+
-+			for_each_set_bit(bit, &all_events, 32) {
-+				generic_handle_irq(irq_find_mapping
-+					(chip->gc.irq.domain, offset + bit));
-+			}
-+		}
-+		offset += chip->gpio_width[index];
-+	}
-+
-+	chained_irq_exit(irqchip, desc);
-+}
-+
-+/**
-  * xgpio_of_probe - Probe method for the GPIO device.
-  * @pdev: pointer to the platform device
-  *
-@@ -350,7 +575,8 @@ static int xgpio_probe(struct platform_device *pdev)
- 	struct xgpio_instance *chip;
- 	int status = 0;
- 	struct device_node *np = pdev->dev.of_node;
--	u32 is_dual;
-+	u32 is_dual = 0;
-+	u32 cells = 2;
- 
- 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
-@@ -359,12 +585,18 @@ static int xgpio_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, chip);
- 
- 	/* Update GPIO state shadow register with default value */
--	of_property_read_u32(np, "xlnx,dout-default", &chip->gpio_state[0]);
-+	if (of_property_read_u32(np, "xlnx,dout-default",
-+				 &chip->gpio_state[0]))
-+		dev_info(&pdev->dev, "Missing xlnx,dout-default property\n");
- 
- 	/* Update GPIO direction shadow register with default value */
- 	if (of_property_read_u32(np, "xlnx,tri-default", &chip->gpio_dir[0]))
- 		chip->gpio_dir[0] = 0xFFFFFFFF;
- 
-+	/* Update cells with gpio-cells value */
-+	if (of_property_read_u32(np, "#gpio-cells", &cells))
-+		dev_info(&pdev->dev, "Missing gpio-cells property\n");
-+
- 	/*
- 	 * Check device node and parent device node for device width
- 	 * and assume default width of 32
-@@ -372,15 +604,17 @@ static int xgpio_probe(struct platform_device *pdev)
- 	if (of_property_read_u32(np, "xlnx,gpio-width", &chip->gpio_width[0]))
- 		chip->gpio_width[0] = 32;
- 
--	spin_lock_init(&chip->gpio_lock[0]);
-+	spin_lock_init(&chip->gpio_lock);
- 
- 	if (of_property_read_u32(np, "xlnx,is-dual", &is_dual))
- 		is_dual = 0;
- 
- 	if (is_dual) {
- 		/* Update GPIO state shadow register with default value */
--		of_property_read_u32(np, "xlnx,dout-default-2",
--				     &chip->gpio_state[1]);
-+		if (of_property_read_u32(np, "xlnx,dout-default-2",
-+					 &chip->gpio_state[1]))
-+			dev_info(&pdev->dev,
-+				 "Missing xlnx,dout-default-2 property\n");
- 
- 		/* Update GPIO direction shadow register with default value */
- 		if (of_property_read_u32(np, "xlnx,tri-default-2",
-@@ -394,8 +628,6 @@ static int xgpio_probe(struct platform_device *pdev)
- 		if (of_property_read_u32(np, "xlnx,gpio2-width",
- 					 &chip->gpio_width[1]))
- 			chip->gpio_width[1] = 32;
--
--		spin_lock_init(&chip->gpio_lock[1]);
- 	}
- 
- 	chip->gc.base = -1;
-@@ -403,6 +635,8 @@ static int xgpio_probe(struct platform_device *pdev)
- 	chip->gc.parent = &pdev->dev;
- 	chip->gc.direction_input = xgpio_dir_in;
- 	chip->gc.direction_output = xgpio_dir_out;
-+	chip->gc.of_gpio_n_cells = cells;
-+	chip->gc.of_xlate = xgpio_xlate;
- 	chip->gc.get = xgpio_get;
- 	chip->gc.set = xgpio_set;
- 	chip->gc.request = xgpio_request;
-@@ -435,6 +669,29 @@ static int xgpio_probe(struct platform_device *pdev)
- 
- 	xgpio_save_regs(chip);
- 
-+	chip->irq = platform_get_irq_optional(pdev, 0);
-+	if (chip->irq <= 0) {
-+		dev_info(&pdev->dev, "GPIO IRQ not set\n");
-+	} else {
-+		u32 temp;
-+
-+		/* Disable per-channel interrupts */
-+		xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, 0);
-+		/* Clear any existing per-channel interrupts */
-+		temp = xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET);
-+		xgpio_writereg(chip->regs + XGPIO_IPISR_OFFSET, temp);
-+		/* Enable global interrupts */
-+		xgpio_writereg(chip->regs + XGPIO_GIER_OFFSET, XGPIO_GIER_IE);
-+
-+		chip->gc.irq.chip = &xgpio_irqchip;
-+		chip->gc.irq.handler = handle_bad_irq;
-+		chip->gc.irq.default_type = IRQ_TYPE_NONE;
-+		chip->gc.irq.parent_handler = xgpio_irqhandler;
-+		chip->gc.irq.parent_handler_data = chip;
-+		chip->gc.irq.parents = (unsigned int *)&chip->irq;
-+		chip->gc.irq.num_parents = 1;
-+	}
-+
- 	status = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
- 	if (status) {
- 		dev_err(&pdev->dev, "failed to add GPIO chip\n");
--- 
-2.7.4
+I don't think merging the both will be a good idea.
 
+Cheers,
+Laurent.
