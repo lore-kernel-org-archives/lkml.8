@@ -2,125 +2,84 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E57C433F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B6EC43446
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E74420709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8958520709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XwV8Ppgy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EUBfvEjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgGWL1t (ORCPT
+        id S1728656AbgGWL2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:27:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:17270 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728542AbgGWL1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:27:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595503666; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=MOuUpg+RsZZ6Dijxt0uuA6eqckA+O2zG103ZtZ+NQvI=; b=XwV8Ppgy2CF9U4Kv5VkEu69ZL3B/X/Etc3eHAAcPH6NlTtDdi8gzVkC4lXZRJPz6X8naxIqe
- ztbDTtzawh/qKitFkX52OlvQuuCE6bCGoOuIBwdAwOlgVQBZ5nWgT342+J+9tvDKTIMcebcl
- 4dgmlMVQ7MtqEnyFf2oHqhhbd+o=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f19741f3dbcb593a933ca8e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1750C433C9; Thu, 23 Jul 2020 11:27:26 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3057C43395;
-        Thu, 23 Jul 2020 11:27:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3057C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v4 2/5] media: venus: core: Fix error handling in probe
-Date:   Thu, 23 Jul 2020 16:56:49 +0530
-Message-Id: <1595503612-2901-3-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+        Thu, 23 Jul 2020 07:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728636AbgGWL2K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:28:10 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722E8C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YgkYb9+mXjx9AMiNkQHw9z5f5bsoHW0FayfQqrx0gm0=; b=EUBfvEjYINo6zYXuS9AtgTymxc
+        sEF9uWBo6EyK2/TPvNKF85iyrdfBvpdqDIzEwuz4kuiewJP/ezm3Mf2KAl1UyNBCA7aXRv6dgiJ1L
+        IHfr2HvF06zF20qFJWNjoeI6CSfKMDi4enYRs/uTES1Klo9qQa5tPfSWkPdI+MpRdJCQcESoVC4sJ
+        CVet2ZxMAYHrQDUIadl07rmXJxx18/EeiFZzjKNgqBI1sVFqvidM3x00NVNm/2TbB3pSK+ZQChQ45
+        VV7GdFGp631uydfecF15dCkgst18fi5KZtepSH6EmHHsQag0JLzB0vJNFREoD3asWQZxLemIaZOWM
+        VD7lExUA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyZOL-00013u-Sb; Thu, 23 Jul 2020 11:28:02 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4E49B9821EE; Thu, 23 Jul 2020 13:27:57 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 13:27:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Peter Oskolkov <posk@posk.io>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Oskolkov <posk@google.com>,
+        Andrei Vagin <avagin@google.com>, Paul Turner <pjt@google.com>,
+        Ben Segall <bsegall@google.com>, Aaron Lu <aaron.lwe@gmail.com>
+Subject: Re: [PATCH for 5.9 1/3] futex: introduce FUTEX_SWAP operation
+Message-ID: <20200723112757.GN5523@worktop.programming.kicks-ass.net>
+References: <20200722234538.166697-1-posk@posk.io>
+ <20200722234538.166697-2-posk@posk.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722234538.166697-2-posk@posk.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Post a successful pm_ops->core_get, an error in probe
-should exit by doing a pm_ops->core_put which seems
-to be missing. So fix it.
+On Wed, Jul 22, 2020 at 04:45:36PM -0700, Peter Oskolkov wrote:
+> This patchset is the first step to open-source this work. As explained
+> in the linked pdf and video, SwitchTo API has three core operations: wait,
+> resume, and swap (=switch). So this patchset adds a FUTEX_SWAP operation
+> that, in addition to FUTEX_WAIT and FUTEX_WAKE, will provide a foundation
+> on top of which user-space threading libraries can be built.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- drivers/media/platform/qcom/venus/core.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+The PDF and video can go pound sand; you get to fully explain things
+here.
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 203c653..bfcaba3 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -224,13 +224,15 @@ static int venus_probe(struct platform_device *pdev)
- 
- 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
- 	if (ret)
--		return ret;
-+		goto err_core_put;
- 
- 	if (!dev->dma_parms) {
- 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
- 					      GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		if (!dev->dma_parms) {
-+			ret = -ENOMEM;
-+			goto err_core_put;
-+		}
- 	}
- 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
- 
-@@ -242,11 +244,11 @@ static int venus_probe(struct platform_device *pdev)
- 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
- 					"venus", core);
- 	if (ret)
--		return ret;
-+		goto err_core_put;
- 
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
--		return ret;
-+		goto err_core_put;
- 
- 	pm_runtime_enable(dev);
- 
-@@ -302,6 +304,9 @@ static int venus_probe(struct platform_device *pdev)
- 	pm_runtime_set_suspended(dev);
- 	pm_runtime_disable(dev);
- 	hfi_destroy(core);
-+err_core_put:
-+	if (core->pm_ops->core_put)
-+		core->pm_ops->core_put(dev);
- 	return ret;
- }
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+What worries me is how FUTEX_SWAP would interact with the future
+FUTEX_LOCK / FUTEX_UNLOCK. When we implement pthread_mutex with those,
+there's very few WAIT/WAKE left.
 
+Also, why would we commit to an ABI without ever having seen the rest?
+
+On another note: wake_up_process_prefer_current_cpu() is a horrific
+function name :/ That's half to a third of the line limit.
