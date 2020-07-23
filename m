@@ -2,119 +2,106 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC80C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A56DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA39F20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D0620714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="iYT0D/NV"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RwS3AWQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgGWSNX (ORCPT
+        id S1726852AbgGWSJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgGWSNW (ORCPT
+        Thu, 23 Jul 2020 14:09:56 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5804 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726455AbgGWSJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:13:22 -0400
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8EEDC0619DC;
-        Thu, 23 Jul 2020 11:13:22 -0700 (PDT)
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 465F414095F;
-        Thu, 23 Jul 2020 20:13:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1595528000; bh=rtASGdLvDrbQsydf5qpS4cE/gpinx1PykETCA3yanMQ=;
-        h=From:To:Date;
-        b=iYT0D/NVq7H6fwgB5MlLkOyEyYxArNwUA0vNhiH0kZqx4eQE2MYQ5rsd+3VjFBh0K
-         bhMVUfLQc2pYeay95fEXN0aAaT1PXP/59jTKsnW5oas2KpdrAQ492XiM0V3DD+k1mE
-         /D5+Y2VLotUlC4IZ2iXn9HEAzZa2XF49dDPMENng=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     linux-leds@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH RFC leds + net-next v2 0/1] Add support for LEDs on Marvell PHYs
-Date:   Thu, 23 Jul 2020 20:13:18 +0200
-Message-Id: <20200723181319.15988-1-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
+        Thu, 23 Jul 2020 14:09:56 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NHrfdG021948
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:09:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=OSYQXum1ZUSOus2pzbijxGAz08dWSHRpUo7YeYxklVA=;
+ b=RwS3AWQXEJlHx2XI9jFPh1C6P4Hwbm6u1YU+MSDU7J9FCmzM49Cd119lj2LI7IB9UxDa
+ IICvdJvrmfc/hx9Uo+BFChHSVPX+xid6vJgDcKEHVdrcyDMeGNCn2ynoUCfb9tClHk0h
+ jWQ3NVOVUs5UNNa9r8HdDY90Gp8JAxzWZF8= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32et5kwmwy-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:09:55 -0700
+Received: from intmgw003.08.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 23 Jul 2020 11:09:54 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 765E962E5064; Thu, 23 Jul 2020 11:07:00 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v5 bpf-next 3/5] libbpf: print hint when PERF_EVENT_IOC_SET_BPF returns -EPROTO
+Date:   Thu, 23 Jul 2020 11:06:46 -0700
+Message-ID: <20200723180648.1429892-4-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200723180648.1429892-1-songliubraving@fb.com>
+References: <20200723180648.1429892-1-songliubraving@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ impostorscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 bulkscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007230132
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The kernel prevents potential unwinder warnings and crashes by blocking
+BPF program with bpf_get_[stack|stackid] on perf_event without
+PERF_SAMPLE_CALLCHAIN, or with exclude_callchain_[kernel|user]. Print a
+hint message in libbpf to help the user debug such issues.
 
-this is v2 of my RFC adding support for LEDs connected to Marvell PHYs.
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ tools/lib/bpf/libbpf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The LED subsystem patches are not contained:
-- the patch adding support for LED private triggers is already accepted
-  in Pavel Machek's for-next tree.
-  If you want to try this patch on top of net-next, please also apply
-  https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/commit/?h=for-next&id=93690cdf3060c61dfce813121d0bfc055e7fa30d
-- the other led-trigger patch is not needed in this version of the RFC
-
-The main difference from v1 is that only one trigger, named
-"hw-control", is added to the /sys/class/leds/<LED>/trigger file.
-
-When this trigger is activated, another file called "hw_control" is
-created in the /sys/class/leds/<LED>/ directory. This file lists
-available HW control modes for this LED in the same way the trigger
-file does for triggers.
-
-Example:
-
-  # cd /sys/class/leds/eth0\:green\:link/
-  # cat trigger
-  [none] hw-control timer oneshot heartbeat ...
-  # echo hw-control >trigger
-  # cat trigger
-  none [hw-control] timer oneshot heartbeat ...
-  # cat hw_control
-  link/nolink link/act/nolink 1000/100/10/nolink act/noact
-  blink-act/noact transmit/notransmit copperlink/else [1000/else]
-  force-hi-z force-blink
-  # echo 1000/100/10/nolink >hw_control
-  # cat hw_control
-  link/nolink link/act/nolink [1000/100/10/nolink] act/noact
-  blink-act/noact transmit/notransmit copperlink/else 1000/else
-  force-hi-z force-blink
-
-The benefit here is that only one trigger is registered via LED API.
-I guess there are other PHY drivers which too support HW controlled
-blinking modes. So of this way of controlling PHY LED HW controlled
-modes is accepted, the code creating the hw-control trigger and
-hw_control file should be made into library code so that it can be
-reused.
-
-What do you think?
-
-Marek
-
-Marek Behún (1):
-  net: phy: marvell: add support for PHY LEDs via LED class
-
- drivers/net/phy/Kconfig   |   7 +
- drivers/net/phy/marvell.c | 423 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 429 insertions(+), 1 deletion(-)
-
--- 
-2.26.2
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 846164c79df1c..484e50d49a4cf 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -7833,6 +7833,9 @@ struct bpf_link *bpf_program__attach_perf_event(str=
+uct bpf_program *prog,
+ 		pr_warn("program '%s': failed to attach to pfd %d: %s\n",
+ 			bpf_program__title(prog, false), pfd,
+ 			   libbpf_strerror_r(err, errmsg, sizeof(errmsg)));
++		if (err =3D=3D -EPROTO)
++			pr_warn("program '%s': try add PERF_SAMPLE_CALLCHAIN to or remove exc=
+lude_callchain_[kernel|user] from pfd %d\n",
++				bpf_program__title(prog, false), pfd);
+ 		return ERR_PTR(err);
+ 	}
+ 	if (ioctl(pfd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
+--=20
+2.24.1
 
