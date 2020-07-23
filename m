@@ -2,223 +2,95 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D38C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA2DA20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NWdiga2H"
+	by mail.kernel.org (Postfix) with ESMTP id 92331207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgGWWQT (ORCPT
+        id S1727045AbgGWWU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:16:19 -0400
-Received: from mail-eopbgr750042.outbound.protection.outlook.com ([40.107.75.42]:51590
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgGWWQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:16:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f4ApQ8PNVUn9V56eIKQXiKaUdxwZrQF/dQLEUbyu0JHfYsBcXCrcO10zcSKqyrwFgMFQxiIC4p2K7sGdgzPT4jzw+Cth13nEvbUJua/XsV1RBF4rVmujXY4+L1T+LzQr4NvRmw+LHjOOjoSK5QTzQSvYFgeS5JfpnQ2qbdovCz89EaZSZ5TRacdYKOolef44c2SpgLPwjO9sC7nOpK9dqcEDKSmb7KnH8pPG85fq4u5trDtgtVvFirHK7xPNiVwTk/YK9OMyiHBPJeEOZAqsIdGczkC4HZ2OUC5let6oMjTKI880R4CsdofCqbz1aumLgIwDcHp2j/O/D0ITMpshCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wV0Uapo9sQyIhz3RCYErPRQdQ6xWKRWP/EZr1b+FbK0=;
- b=hGdUbI85baH0pimdF7Zz9if/iqqsNZFrxsPyl7lKsFZSBKsAkgzl5LOIBR1UD5/vCTiN/ddSO0/ovMS3rz9tBnvkksYmPc3ljDiA/l+M/8ZzEx9qjiE96iMfFybZ5+CTkAC1pcNSWW302pKuFRAjhx60KhvsTmTJ0HEJCnPZjRuVRO0SKL+CRRY8KyubXqgeprszHNbi4CG6YT+8g3VK6PK9oorEbooQFumtrjX61MKDUSUb5AtUjyia2FFFSkB+oFMBpwzN9BQNVmum7DuAI/fGRSgt1U+EPPCz4n9Cp/9t36r35jbCpYfe/HZgorUfshwnRVCoT4ia2TqXUIYe+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wV0Uapo9sQyIhz3RCYErPRQdQ6xWKRWP/EZr1b+FbK0=;
- b=NWdiga2HfnUzpI2g3xFGQ4lA/6Mj5ATWa29dM6E4XY5uEMaZd87vSDd/UtsNYqQz4m7LAkr3HuUXBt9OSolbsrFKYHc3AOYy8IZXNa/GZ0K5cS+3oYfl5evIawEg8DDRjLVr2w+6e4yOhSeKT7D2hML4dwDsUNsWWXwj4BP+HrU=
-Authentication-Results: molgen.mpg.de; dkim=none (message not signed)
- header.d=none;molgen.mpg.de; dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
- by BY5PR12MB3780.namprd12.prod.outlook.com (2603:10b6:a03:1a2::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22; Thu, 23 Jul
- 2020 22:16:13 +0000
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::7d42:c932:e35f:71b1]) by BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::7d42:c932:e35f:71b1%7]) with mapi id 15.20.3216.020; Thu, 23 Jul 2020
- 22:16:13 +0000
-Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
-To:     Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "harry.wentland@amd.com" <harry.wentland@amd.com>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "1i5t5.duncan@cox.net" <1i5t5.duncan@cox.net>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>
-References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
-From:   "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Message-ID: <ccd5d51b-b018-a3db-169b-ba6278a7be9f@amd.com>
-Date:   Thu, 23 Jul 2020 18:16:09 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQXPR01CA0100.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::29) To BYAPR12MB3560.namprd12.prod.outlook.com
- (2603:10b6:a03:ae::10)
+        Thu, 23 Jul 2020 18:20:27 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35839 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgGWWU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:20:26 -0400
+IronPort-SDR: t4OO8tqPfFYciiZuw1MIksYkpFU3i/ZXYf7aRuTzcPjCCZBjZFpf0q3aMF8WO2oHxiid77Tyeg
+ sAb4nUaV0+kQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235507883"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="235507883"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:20:25 -0700
+IronPort-SDR: yU7OE+rmgHw4khpoV1uJpTIgloiygbWArkgqlvE0P1BFb7MbmA2T43gtMfduXZR7tMZMrZHO2d
+ S0nJLK4emQ0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="327149689"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Jul 2020 15:20:22 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jyjZd-003i9Q-IK; Fri, 24 Jul 2020 01:20:21 +0300
+Date:   Fri, 24 Jul 2020 01:20:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     syzbot <syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com>
+Cc:     andy@greyhouse.net, andy@infradead.org, arnd@arndb.de,
+        davem@davemloft.net, dvhart@infradead.org,
+        gregkh@linuxfoundation.org, j.vosburgh@gmail.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, platform-driver-x86@vger.kernel.org,
+        skunberg.kelsey@gmail.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vfalico@gmail.com
+Subject: Re: kernel BUG at net/core/dev.c:LINE! (3)
+Message-ID: <20200723222021.GY3703480@smile.fi.intel.com>
+References: <000000000000ba65ba05a2fd48d9@google.com>
+ <000000000000467ece05ab223d81@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.180] (24.212.165.133) by YQXPR01CA0100.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c00:41::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Thu, 23 Jul 2020 22:16:11 +0000
-X-Originating-IP: [24.212.165.133]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6270b484-1cb9-43b6-2de9-08d82f560290
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3780:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR12MB378063A5C388F3C1FBDBDC96EC760@BY5PR12MB3780.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: quVr1n2BqyTrsH20QEBaktWi24eYzboV56VkfWyzNiMEcTVCSsn9HIlOpIOk4ylxWQTc0a0mGBxqIiUcoUGJkQ/rvYiSx/Q85SAPZ6jTMRLZ16BvwixORQ4gwdNyh7yrNqFdpaINNFv/IUn/hhr6Vic2G7OL5bqq1rchFT/GlyUEQJiilzgvUfR6dfMlBITqk0LyoI0rYkAQc17K6yeLnR+zLmkJw4H84pJ+6UKivzycXMLvZdBRJ77nr2EIoblmzNxXx/0TPGgsoqEuxRcaaB41BsLsEOdOOGAp9Pl2yhUSwwOn2cHklcCZWOyEObl3Usc5vCMDpk4PGfFO8G321wImeZINWwPfTbW9fFgzs8B6ds3CqIQrkzrbhS8tOln6Q0/x43dZD1get9GufOPmeiDonKp1B6XO/MpXXsoQuEF/vf/i0qGIWlzGR08X5b6BSRN2jFhuOB4/A6E4dvkXaA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(66946007)(2906002)(66556008)(66476007)(6486002)(52116002)(8936002)(31686004)(186003)(110136005)(54906003)(86362001)(26005)(16526019)(316002)(16576012)(53546011)(8676002)(31696002)(36756003)(478600001)(5660300002)(4326008)(7416002)(83380400001)(966005)(956004)(2616005)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: OARquHn5enyEYYKP5IJeC143qevG3PUSUUaB+bAbc9hUgN0egdjgXyxru+hmKwGdwPG4tlDijqaRCrRQG7vStF3xwcT33BZ71rvY0bC9vASgqMqz5UBccGCvVqb01ayAh1cNaHKw7LEhcyA9wIowcYpo7ByE9A2Iv94IN2ovoRC4PVpCa/+B3TdCtWpkDiXwyV35a4EoHwxXryyaqENetwivL39i/PEtD0V3lJhtNShd1zAEabkodJr5gJ15oOpj78V1pqsIK8nF9SMHyGOm1ENYU2ydHR+BupOXesqG2fNdxMJYGLVShXO2DuVHJUZ2I5EFm16hDQ5al5DleflI0BtB8IW4YiLhX+9eqD4mZs5DUQThMWRnT5SXEeBMIWEB/ppM+dcly+wFd28xu1boqYU036frzhkvIuXm3tZ2eEof3AJJKkTzEJSrtY2ml2rpC+RAkK3yECPbPMaSu+QOXN61NuZsXwQYEq2v/UE7mjm2qg2Qkp7231dlcRqakOfl
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6270b484-1cb9-43b6-2de9-08d82f560290
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3560.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 22:16:13.2899
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SNAm1FyK4NOgATjoPCsbLd59AKoVyuddkjGDhJP6+2iV3hsWVfjZz4rl3DgKPXa+6VFEO0ktJ9kHN08ttst3Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3780
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000467ece05ab223d81@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-23 5:10 p.m., Mazin Rezk wrote:
-> When amdgpu_dm_atomic_commit_tail is running in the workqueue,
-> drm_atomic_state_put will get called while amdgpu_dm_atomic_commit_tail is
-> running, causing a race condition where state (and then dm_state) is
-> sometimes freed while amdgpu_dm_atomic_commit_tail is running. This bug has
-> occurred since 5.7-rc1 and is well documented among polaris11 users [1].
+On Thu, Jul 23, 2020 at 02:07:08PM -0700, syzbot wrote:
+> syzbot has bisected this issue to:
 > 
-> Prior to 5.7, this was not a noticeable issue since the freelist pointer
-> was stored at the beginning of dm_state (base), which was unused. After
-> changing the freelist pointer to be stored in the middle of the struct, the
-> freelist pointer overwrote the context, causing dc_state to become garbage
-> data and made the call to dm_enable_per_frame_crtc_master_sync dereference
-> a freelist pointer.
+> commit 5a707af10da95a53a55011a612e69063491020d4
+> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date:   Fri Apr 21 13:36:06 2017 +0000
 > 
-> This patch fixes the aforementioned issue by calling drm_atomic_state_get
-> in amdgpu_dm_atomic_commit before drm_atomic_helper_commit is called and
-> drm_atomic_state_put after amdgpu_dm_atomic_commit_tail is complete.
+>     platform/x86: wmi: Describe function parameters
+
+Seems like random commit for known problem.
+
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a9ad40900000
+> start commit:   994e99a9 Merge tag 'platform-drivers-x86-v5.8-2' of git://..
+> git tree:       upstream
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=16a9ad40900000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12a9ad40900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
+> dashboard link: https://syzkaller.appspot.com/bug?extid=af23e7f3e0a7e10c8b67
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ea63cf100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14afdb9f100000
 > 
-> According to my testing on 5.8.0-rc6, this should fix bug 207383 on
-> Bugzilla [1].
+> Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+> Fixes: 5a707af10da9 ("platform/x86: wmi: Describe function parameters")
 > 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=207383
-> 
-> Fixes: 3202fa62f ("slub: relocate freelist pointer to middle of object")
-> Reported-by: Duncan <1i5t5.duncan@cox.net>
-> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Thanks for the investigation and your patch. I appreciate the help in 
-trying to narrow down the root cause as this issue has been difficult to 
-reproduce on my setups.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Though I'm not sure this really resolves the issue - we make use of the 
-drm_atomic_helper_commit helper function from DRM which internally does 
-what you're doing with this patch:
-
-	drm_atomic_state_get(state);
-	if (nonblock)
-		queue_work(system_unbound_wq, &state->commit_work);
-	else
-		commit_tail(state);
-
-So even when it gets queued off to the unbound workqueue we still have a 
-reference on the state.
-
-That reference gets dropped as part of commit tail helper in DRM as well:
-
-if (funcs && funcs->atomic_commit_tail)
-		funcs->atomic_commit_tail(old_state);
-	else
-		drm_atomic_helper_commit_tail(old_state);
-
-	commit_time_ms = ktime_ms_delta(ktime_get(), start);
-	if (commit_time_ms > 0)
-		drm_self_refresh_helper_update_avg_times(old_state,
-						 (unsigned long)commit_time_ms,
-						 new_self_refresh_mask);
-
-	drm_atomic_helper_commit_cleanup_done(old_state);
-
-	drm_atomic_state_put(old_state);
-
-So instead of a use after free happening when we access the state we get 
-a double-free happening later at the end of commit tail in DRM.
-
-What I think would be the right next step here is to actually determine 
-what sequence of IOCTLs and atomic commits are happening under your 
-setup with a very verbose dmesg log. You can set a debug level for DRM 
-in your kernel parameters with something like:
-
-drm.debug=0x54
-
-I don't see anything in amdgpu_dm.c that looks like it would be freeing 
-the state so I suspect something in the core is this doing this.
-
-> ---
->   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 86ffa0c2880f..86d6652872f2 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -7303,6 +7303,7 @@ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
->   	 * unset legacy_cursor_update
->   	 */
-> 
-> +	drm_atomic_state_get(state);
-
-Also note that if the drm_atomic_helper_commit() call fails here then 
-we're going to never free this structure. So we should really be 
-checking the return code here below before trying to do this, if at all.
-
-Regards,
-Nicholas Kazlauskas
-
->   	return drm_atomic_helper_commit(dev, state, nonblock);
-> 
->   	/*TODO Handle EINTR, reenable IRQ*/
-> @@ -7628,6 +7629,8 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_atomic_state *state)
-> 
->   	if (dc_state_temp)
->   		dc_release_state(dc_state_temp);
-> +
-> +	drm_atomic_state_put(state);
->   }
-> 
-> 
-> --
-> 2.27.0
-> 
 
