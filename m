@@ -2,116 +2,97 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B02C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA8220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qY7x/OH9"
+	by mail.kernel.org (Postfix) with ESMTP id A2AF3207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgGWQM2 (ORCPT
+        id S1729421AbgGWQOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGWQM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:12:28 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3894AC0619DC;
-        Thu, 23 Jul 2020 09:12:28 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id a14so3247611pfi.2;
-        Thu, 23 Jul 2020 09:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=VfbbwGv4m75EPfOW0baUXWN1YgZZBJIPGp1WqmJP8lg=;
-        b=qY7x/OH9vNFSKZgAYfY6d0dn2o0FMZq+yslW+XFUxSS1ssfzwjJfnfDLJJz84VlOz6
-         FPD5cVIIybdkZMWJ4OOnUqDLrl4fF4X24m/j769nnmiJsLn6LBjp37/nChKDD9EUZljz
-         6dZoJG7phYQEZ8iU2fgjOjmHJHaygLKU4nNZb+JttbZn+9JZeXJy6B0yia9MH0Tp0cV+
-         w6t52FrabMZwKTBfKVKaQx3eXb0AiAUV3lb7M+RIqfDaaYjI/UyhqwoowTCW0syaa86J
-         Q+OoKNzCb2/DOBgNqaJXQKaNHd3UPmPnXrUgxodi/nq0w+y9beA/xQhR7vfQXQwUomi3
-         0Wfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=VfbbwGv4m75EPfOW0baUXWN1YgZZBJIPGp1WqmJP8lg=;
-        b=DSPjwtnpObFRySPMvCt9LwOSf9XRBO7HBxQkRBxrAfsKP+V009bYoHJ/GZLXVEuZRI
-         TUZoFjaWpN8wcGssngqjTGrQEiBrz5DMLdM5O3bSJXrvP15/QOBytR3z8pug339ld/+q
-         uAOGf9u3OXOyE+M+9m+SQyJoKG+vn2ocyM+9P/Rlz3BcRsWJ10nSxKFDLzd49TQVPQX0
-         SVdKq7bAWOdRmASJywaOyJk5+F6LO/2dy9MQD5xM8BMhyII1B5HggfrMPX7M0fdBinMk
-         o6l9SKczGnNWK282RD9gjKu9FHpLa+X9cMgwZ5itFo34d7H5PZxEGApWfRArfeHv7B+R
-         GsOg==
-X-Gm-Message-State: AOAM5322toWaaUc6iy3TtCo+E3718nP7o6jP5HpnkAXQhjWEjgC+A6SL
-        JnzK8dq9ntXSu6vE9v8U/oI=
-X-Google-Smtp-Source: ABdhPJwIS9sYrpZx7WWejQg+HhPLCX9upAMrSJWiKfOQ5V/wrdWIq5BPjwMO92bm7X0aGfua7RM/kg==
-X-Received: by 2002:a62:768d:: with SMTP id r135mr5113582pfc.198.1595520747713;
-        Thu, 23 Jul 2020 09:12:27 -0700 (PDT)
-Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id np5sm3527975pjb.43.2020.07.23.09.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 09:12:27 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 02:12:21 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 0/6] powerpc: queued spinlocks and rwlocks
-To:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Anton Blanchard <anton@ozlabs.org>,
-        Boqun Feng <boqun.feng@gmail.com>, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
-        <24f75d2c-60cd-2766-4aab-1a3b1c80646e@redhat.com>
-        <1594101082.hfq9x5yact.astroid@bobo.none>
-        <20200708084106.GE597537@hirez.programming.kicks-ass.net>
-        <1595327263.lk78cqolxm.astroid@bobo.none>
-        <eaabf501-80fe-dd15-c03c-f75ce4f75877@redhat.com>
-        <1595510571.u39qfc8d1o.astroid@bobo.none>
-        <af825bce-ecf3-66e4-ad63-a844dbd2e775@redhat.com>
-In-Reply-To: <af825bce-ecf3-66e4-ad63-a844dbd2e775@redhat.com>
+        Thu, 23 Jul 2020 12:14:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:15492 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbgGWQOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:14:10 -0400
+IronPort-SDR: lE4Ge1XMALuqv/iJ+Wyd6Ws2Gn98E9isY5FmyReICy4x0qxleUUXyCXU8udY5KYtNZ065ZuxuJ
+ QXbHohQz7RhA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130638072"
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="130638072"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:14:10 -0700
+IronPort-SDR: hSdGVxE6AQ8tvikdKjXnStT0/WntneULyJ9PFHgMkn6qq7qFiUZNVbSkdPUh8duuYKf4mOqT0X
+ y6tFGrLNHSrg==
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="488421556"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:14:10 -0700
+From:   ira.weiny@intel.com
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Tony Luck <tony.luck@intel.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] x86: Correct noinstr qualifiers
+Date:   Thu, 23 Jul 2020 09:14:05 -0700
+Message-Id: <20200723161405.852613-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.28.0.rc0.12.gb6a658bd00c9
 MIME-Version: 1.0
-Message-Id: <1595520724.nzha5zvbid.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Waiman Long's message of July 24, 2020 12:29 am:
-> On 7/23/20 9:30 AM, Nicholas Piggin wrote:
->>> I would prefer to extract out the pending bit handling code out into a
->>> separate helper function which can be overridden by the arch code
->>> instead of breaking the slowpath into 2 pieces.
->> You mean have the arch provide a queued_spin_lock_slowpath_pending
->> function that the slow path calls?
->>
->> I would actually prefer the pending handling can be made inline in
->> the queued_spin_lock function, especially with out-of-line locks it
->> makes sense to put it there.
->>
->> We could ifdef out queued_spin_lock_slowpath_queue if it's not used,
->> then __queued_spin_lock_slowpath_queue would be inlined into the
->> caller so there would be no split?
->=20
-> The pending code is an optimization for lightly contended locks. That is=20
-> why I think it is appropriate to extract it into a helper function and=20
-> mark it as such.
->=20
-> You can certainly put the code in the arch's spin_lock code, you just=20
-> has to override the generic pending code by a null function.
+From: Ira Weiny <ira.weiny@intel.com>
 
-I see what you mean. I guess that would work fine.
+The noinstr qualifier is to be specified before the return type in the
+same way inline is used.
 
-Thanks,
-Nick
+These 2 cases were missed by previous patches.
+
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ arch/x86/kernel/alternative.c  | 2 +-
+ arch/x86/kernel/cpu/mce/core.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 20e07feb4064..4b7b980c87df 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1046,7 +1046,7 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
+ 	return 0;
+ }
+ 
+-int noinstr poke_int3_handler(struct pt_regs *regs)
++noinstr int poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct bp_patching_desc *desc;
+ 	struct text_poke_loc *tp;
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 1a0139d9a34b..c5204d7bca2b 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1214,7 +1214,7 @@ static void kill_me_maybe(struct callback_head *cb)
+  * backing the user stack, tracing that reads the user stack will cause
+  * potentially infinite recursion.
+  */
+-void noinstr do_machine_check(struct pt_regs *regs)
++noinstr void do_machine_check(struct pt_regs *regs)
+ {
+ 	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
+ 	DECLARE_BITMAP(toclear, MAX_NR_BANKS);
+-- 
+2.25.1
+
