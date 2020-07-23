@@ -2,139 +2,137 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71E8C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5926AC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2E0206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332902086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595539822;
+	bh=LjPYQXYCMq01OkWf8ZVQxeTp9Qz+blIk2hR6fIzeLNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ldhl7HAP9C26rspS5ai2HpXVE7YDh8lYR8FkArPbhatCBScR7BviM5LmzwuWJZnGY
+	 /f9rf9QyEUUrcbSdFkk6S61tXoL5ce+soB/gGZYDS1QI1YRcEJBit7qVAE0rxfZX17
+	 /Rbgeqty06lVj2B69/5uYibCCj9jCcBzcVocdKTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgGWVaJ (ORCPT
+        id S1727786AbgGWVaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:30:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49973 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGWVaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:30:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id l7so4949664ioq.16
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=iJhRwEB1xHBmgw6l/JGnS6BQGfboMUGTe4J+3YIhjrY=;
-        b=l8OSn07MWD7M6j85VfD9MxJipbpXjsx2YlyGOISg6F/c2I+kdpGpSDDifgD2i0mTLQ
-         M306ay8mawPSz4uoyKfVQ6OjG6vvjnxLDs1sYg9Bnn4BO/EvsGHdIAbxdL9KeQcI5YtJ
-         WMcVkUCZMPLX6z1j0YtJqOd9/el8Has7C5eVksZmcbyI/fPsxcKn+W783PZJSBmHSzm1
-         JLwxofKqDopy3RC6Ex+HniSu7xWHuXd+kPTKR3KCeEI4pmRN+599FQ7NjAbnjf/mxYoe
-         UaXvYMcLd3dsq3qOETwdMnrHXonkSF0aOm2RMUSicjXQeo1DQtw2jOlNiCzUWUgqzyxw
-         odyw==
-X-Gm-Message-State: AOAM533BVEzZxZx77hR/ao3WLRmkxjUMDBatFvWtPSE3tro3AKlgeT5p
-        YdTXcM0t77vbnNxSHEPsHEtmeN96KlEgfmorgRm5B+2T6sr4
-X-Google-Smtp-Source: ABdhPJwzg4AcXVHS74igdyEENBPIPx4X3QHdLVDcd8HF8wK0jLWE1igjbSfZQ522tmQtsAdQ3QKfceaajl9hJTRpS5Sa5vToljm3
+        Thu, 23 Jul 2020 17:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbgGWVaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 17:30:21 -0400
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0A2C22CF7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 21:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595539820;
+        bh=LjPYQXYCMq01OkWf8ZVQxeTp9Qz+blIk2hR6fIzeLNs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QinynW2K93EXrPR6DHoUgxUGXaHWzMH146Nrrve6MhpMPCFwGDoURTCwZW01w2nig
+         yjJRiHvrDGxPpz7uOlli64G8+T1vxQUU9Hzaz9+hUdIyI0JcVCYuSGY1wFgfAPnSa/
+         Qz1ISBhK19OBZO0AlIkHeM5E1hrKxyuX0nsm1UII=
+Received: by mail-wr1-f47.google.com with SMTP id b6so6474929wrs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 14:30:19 -0700 (PDT)
+X-Gm-Message-State: AOAM533pQzHigWhIg4TKPZQmbpU6z1pZfqkjn5H2J3/xw0dD8QsfFnNB
+        XBK/Q4xtkiEexgoFEC/HLASDcbiWppJHwaA9iGpNcQ==
+X-Google-Smtp-Source: ABdhPJxkIDtPFawZcWsduLG2ySWexVRWYEyTMNYsD2OEQFrKOENShjDryhjYBkc7VXix4cqL0MKNzSQ5LIQb5iHR31E=
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr5578852wrc.257.1595539818063;
+ Thu, 23 Jul 2020 14:30:18 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:50:: with SMTP id i16mr399043ilr.173.1595539807520;
- Thu, 23 Jul 2020 14:30:07 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 14:30:07 -0700
-In-Reply-To: <CAM_iQpXq9dYj67Lrv73UazJWG5UVVuMO0iFwJJWg7S_H-z1YcA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000073cea505ab228feb@google.com>
-Subject: Re: KASAN: use-after-free Read in vlan_dev_get_iflink
-From:   syzbot <syzbot+d702fd2351989927037c@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+References: <20200723165204.GB77434@romley-ivt3.sc.intel.com>
+ <C03DA782-BD1A-42E3-B118-ABB34BC5F2AF@amacapital.net> <87imeevv6b.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87imeevv6b.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 23 Jul 2020 14:30:06 -0700
+X-Gmail-Original-Message-ID: <CALCETrUdxpVP3dZgsZBpCODxW8yaiHguxTu=aHg_AkRbs91dWg@mail.gmail.com>
+Message-ID: <CALCETrUdxpVP3dZgsZBpCODxW8yaiHguxTu=aHg_AkRbs91dWg@mail.gmail.com>
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Weiny Ira <ira.weiny@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> On Jul 23, 2020, at 1:22 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> =EF=BB=BFAndy Lutomirski <luto@amacapital.net> writes:
+>
+>> Suppose some kernel code (a syscall or kernel thread) changes PKRS
+>> then takes a page fault. The page fault handler needs a fresh
+>> PKRS. Then the page fault handler (say a VMA=E2=80=99s .fault handler) c=
+hanges
+>> PKRS.  The we get an interrupt. The interrupt *also* needs a fresh
+>> PKRS and the page fault value needs to be saved somewhere.
+>>
+>> So we have more than one saved value per thread, and thread_struct
+>> isn=E2=80=99t going to solve this problem.
+>
+> A stack of 7 entries and an index needs 32bytes total which is a
+> reasonable amount and solves the problem including scheduling from #PF
+> nicely. Make it 15 and it's still only 64 bytes.
+>
+>> But idtentry_state is also not great for a couple reasons.  Not all
+>> entries have idtentry_state, and the unwinder can=E2=80=99t find it for
+>> debugging. For that matter, the page fault logic probably wants to
+>> know the previous PKRS, so it should either be stashed somewhere
+>> findable or it should be explicitly passed around.
+>>
+>> My suggestion is to enlarge pt_regs.  The save and restore logic can
+>> probably be in C, but pt_regs is the logical place to put a register
+>> that is saved and restored across all entries.
+>
+> Kinda, but that still sucks because schedule from #PF will get it wrong
+> unless you do extra nasties.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-general protection fault in vlan_get_link_net
-
-general protection fault, probably for non-canonical address 0xdffffc00000000b3: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000598-0x000000000000059f]
-CPU: 1 PID: 8207 Comm: syz-executor.3 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:read_pnet include/net/net_namespace.h:330 [inline]
-RIP: 0010:dev_net include/linux/netdevice.h:2261 [inline]
-RIP: 0010:vlan_get_link_net+0x46/0x70 net/8021q/vlan_netlink.c:279
-Code: fa 48 c1 ea 03 80 3c 02 00 75 2e 48 8b 9b 70 0c 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bb 98 05 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 10 48 8b 83 98 05 00 00 5b c3 e8 86 1f 63 fa eb cb
-RSP: 0018:ffffc90004706eb8 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888092c85230
-RDX: 00000000000000b3 RSI: ffffffff874ffe39 RDI: 0000000000000598
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff8a7b8647
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90004706f80
-R13: 0000000000000030 R14: ffff8880930ba900 R15: ffff8880930cc000
-FS:  00007f4a9113a700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005643b6ad2140 CR3: 000000009335e000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rtnl_fill_link_netnsid net/core/rtnetlink.c:1569 [inline]
- rtnl_fill_ifinfo+0x1bc5/0x3c40 net/core/rtnetlink.c:1758
- rtmsg_ifinfo_build_skb+0xcd/0x1a0 net/core/rtnetlink.c:3706
- rollback_registered_many+0xb7d/0xf60 net/core/dev.c:8972
- unregister_netdevice_many.part.0+0x1a/0x2f0 net/core/dev.c:10113
- unregister_netdevice_many+0x36/0x50 net/core/dev.c:10112
- __rtnl_newlink+0x13bd/0x1750 net/core/rtnetlink.c:3381
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c1f9
-Code: Bad RIP value.
-RSP: 002b:00007f4a91139c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000000000002b580 RCX: 000000000045c1f9
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000006
-RBP: 000000000078bfe0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
-R13: 00007ffc004cce8f R14: 00007f4a9113a9c0 R15: 000000000078bfac
-Modules linked in:
----[ end trace e42f7b565341dee6 ]---
-RIP: 0010:read_pnet include/net/net_namespace.h:330 [inline]
-RIP: 0010:dev_net include/linux/netdevice.h:2261 [inline]
-RIP: 0010:vlan_get_link_net+0x46/0x70 net/8021q/vlan_netlink.c:279
-Code: fa 48 c1 ea 03 80 3c 02 00 75 2e 48 8b 9b 70 0c 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bb 98 05 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 10 48 8b 83 98 05 00 00 5b c3 e8 86 1f 63 fa eb cb
-RSP: 0018:ffffc90004706eb8 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffff888092c85230
-RDX: 00000000000000b3 RSI: ffffffff874ffe39 RDI: 0000000000000598
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff8a7b8647
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90004706f80
-R13: 0000000000000030 R14: ffff8880930ba900 R15: ffff8880930cc000
-FS:  00007f4a9113a700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005643b6ad2140 CR3: 000000009335e000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+This seems like we=E2=80=99re reinventing the wheel.  PKRS is not
+fundamentally different from, say, RSP.  If we want to save it across
+exceptions, we save it on entry and context-switch-out and restore it
+on exit and context-switch-in.
 
 
-Tested on:
+>
+>> Whoever does this work will have the delightful job of figuring out
+>> whether BPF thinks that the layout of pt_regs is ABI and, if so,
+>> fixing the resulting mess.
+>>
+>> The fact the new fields will go at the beginning of pt_regs will make
+>> this an entertaining prospect.
+>
+> Good luck with all of that.
 
-commit:         9506a941 net: fix a race condition in dev_get_iflink()
-git tree:       https://github.com/congwang/linux.git net
-console output: https://syzkaller.appspot.com/x/log.txt?x=158bd540900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dddbcb5a9f4192db
-dashboard link: https://syzkaller.appspot.com/bug?extid=d702fd2351989927037c
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+We can always cheat like this:
 
+struct real_pt_regs {
+  unsigned long pkrs;
+  struct pt_regs regs;
+};
+
+and pass a pointer to regs around.  What BPF doesn't know about can't hurt =
+it.
