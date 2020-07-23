@@ -2,162 +2,115 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB202065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NU0SiGyA"
+	by mail.kernel.org (Postfix) with ESMTP id 58C312065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgGWKFT (ORCPT
+        id S1728265AbgGWKGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:05:19 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59231 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727828AbgGWKFT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:05:19 -0400
-X-UUID: 98bf441f4f364f28b43fc4dc64c536c7-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:Reply-To:From:Subject:Message-ID; bh=nIqgvQpS3VAhbyseetbTsl4br2KGKeKt/w/IWi2RGrk=;
-        b=NU0SiGyAI4hlwm4enjiBB2qWC+KyXn1ijbG1UoqaD/M422CwQx/2VjE18vRsEKaXnKTgXnLWdLpSW3lZ1ihiWV1fm8nQT+kWpi+f220b6zszD9ph/VTKW28qmHft1Br2wdc6F8Dl7MDW8SMO0vbhs+g7wZFqs9bzS1nO3r7JLkM=;
-X-UUID: 98bf441f4f364f28b43fc4dc64c536c7-20200723
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1215864354; Thu, 23 Jul 2020 18:05:13 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
- (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul
- 2020 18:05:11 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 18:05:12 +0800
-Message-ID: <1595498644.13250.2.camel@mhfsdcap03>
-Subject: Re: [v7, PATCH 1/7] drm/mediatek: move ddp component defint into
- mtk_mmsys.h
-From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reply-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-CC:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 23 Jul 2020 18:04:04 +0800
-In-Reply-To: <CAFqH_50=MkBLHJ23hJo--RG=4560ttOUOjHuEwpevghFZ59xQQ@mail.gmail.com>
-References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1595469798-3824-2-git-send-email-yongqiang.niu@mediatek.com>
-         <CAFqH_50=MkBLHJ23hJo--RG=4560ttOUOjHuEwpevghFZ59xQQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 23 Jul 2020 06:06:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:14040 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgGWKGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:06:37 -0400
+IronPort-SDR: nfl2vYjqNDfPW7GROQU4Se+knnMcbKs3roeRScpJ0iT63YuGk4dOS4HuhkHBgJM5oxbn5jMumS
+ Rh2CFkDOF1hw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="130059714"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="130059714"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 03:06:37 -0700
+IronPort-SDR: 08hu/07UEbSbUKViBCKQSar54I/4i7troQu9GdoNbRTapjQ6XbGlt9barFjCMs8S5gbpZwEPjA
+ G8LYFcwvhjLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="328512965"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 23 Jul 2020 03:06:34 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jyY7W-003QJJ-LJ; Thu, 23 Jul 2020 13:06:34 +0300
+Date:   Thu, 23 Jul 2020 13:06:34 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] gpio: dwapb: Refactor GPIO resources initialization
+Message-ID: <20200723100634.GK3703480@smile.fi.intel.com>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTIzIGF0IDExOjM0ICswMjAwLCBFbnJpYyBCYWxsZXRibyBTZXJyYSB3
-cm90ZToNCj4gSGkgWW9uZ3FpYW4gTml1LA0KPiANCj4gVGhhbmsgeW91IGZvciB5b3VyIHBhdGNo
-DQo+IA0KPiBNaXNzYXRnZSBkZSBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVr
-LmNvbT4gZGVsIGRpYSBkai4sIDIzDQo+IGRlIGp1bC4gMjAyMCBhIGxlcyA0OjA1Og0KPiA+DQo+
-ID4gbW92ZSBkZHAgY29tcG9uZW50IGRlZmludCBpbnRvIG10a19tbXN5cy5oDQo+ID4NCj4gDQo+
-IFRoZXJlIGlzIGEgdHlwbywgc2hvdWxkIGJlICJkZWZpbmVzIi4gQnV0IHdoeSB5b3Ugc2hvdWxk
-IG1vdmUgdGhlc2UNCj4gZGVmaW5lcyB0byBtdGstbW1zeXM/DQo+IA0KDQpjayBkbyBub3QgbGlr
-ZSB0aGlzIDoNCj4gLSNpbmNsdWRlICIuLi8uLi9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-LmgiDQo+IC0jaW5jbHVkZSAiLi4vLi4vZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
-LmgiDQoNCmFmdGVyIHJlbW92ZSB0aGlzLCB3ZSBuZWVkIG1vdmUgdGhlIGRkcCBjb21wb25lbnQg
-ZGVmaW5lDQoNCnR5cGUgZXJyb3Igd2lsbCBmaXhlZCBpbiBuZXh0IHZlcnNpb24uDQoNCg0KPiAN
-Cj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRp
-YXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcF9jb21wLmggfCAzNCArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICBkcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1zeXMuYyAgICAgICAgICAgIHwgIDQgKy0tLQ0KPiA+ICBp
-bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaCAgICAgIHwgMzMgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDM1IGluc2VydGlvbnMo
-KyksIDM2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kZHBfY29tcC5oDQo+ID4gaW5kZXggZGViZTM2My4uMTYxMjAxZiAxMDA2NDQNCj4g
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQo+ID4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KPiA+IEBA
-IC03LDYgKzcsNyBAQA0KPiA+ICAjZGVmaW5lIE1US19EUk1fRERQX0NPTVBfSA0KPiA+DQo+ID4g
-ICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVr
-L210ay1tbXN5cy5oPg0KPiA+DQo+ID4gIHN0cnVjdCBkZXZpY2U7DQo+ID4gIHN0cnVjdCBkZXZp
-Y2Vfbm9kZTsNCj4gPiBAQCAtMzUsMzkgKzM2LDYgQEAgZW51bSBtdGtfZGRwX2NvbXBfdHlwZSB7
-DQo+ID4gICAgICAgICBNVEtfRERQX0NPTVBfVFlQRV9NQVgsDQo+ID4gIH07DQo+ID4NCj4gPiAt
-ZW51bSBtdGtfZGRwX2NvbXBfaWQgew0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9BQUwwLA0K
-PiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9BQUwxLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVO
-VF9CTFMsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX0NDT1JSLA0KPiA+IC0gICAgICAgRERQ
-X0NPTVBPTkVOVF9DT0xPUjAsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX0NPTE9SMSwNCj4g
-PiAtICAgICAgIEREUF9DT01QT05FTlRfRElUSEVSLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVO
-VF9EUEkwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9EUEkxLA0KPiA+IC0gICAgICAgRERQ
-X0NPTVBPTkVOVF9EU0kwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9EU0kxLA0KPiA+IC0g
-ICAgICAgRERQX0NPTVBPTkVOVF9EU0kyLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9EU0kz
-LA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9HQU1NQSwNCj4gPiAtICAgICAgIEREUF9DT01Q
-T05FTlRfT0QwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9PRDEsDQo+ID4gLSAgICAgICBE
-RFBfQ09NUE9ORU5UX09WTDAsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX09WTF8yTDAsDQo+
-ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX09WTF8yTDEsDQo+ID4gLSAgICAgICBERFBfQ09NUE9O
-RU5UX09WTDEsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX1BXTTAsDQo+ID4gLSAgICAgICBE
-RFBfQ09NUE9ORU5UX1BXTTEsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX1BXTTIsDQo+ID4g
-LSAgICAgICBERFBfQ09NUE9ORU5UX1JETUEwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9S
-RE1BMSwNCj4gPiAtICAgICAgIEREUF9DT01QT05FTlRfUkRNQTIsDQo+ID4gLSAgICAgICBERFBf
-Q09NUE9ORU5UX1VGT0UsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX1dETUEwLA0KPiA+IC0g
-ICAgICAgRERQX0NPTVBPTkVOVF9XRE1BMSwNCj4gPiAtICAgICAgIEREUF9DT01QT05FTlRfSURf
-TUFYLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RydWN0IG10a19kZHBfY29tcDsNCj4gPiAgc3Ry
-dWN0IGNtZHFfcGt0Ow0KPiA+ICBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIHsNCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMgYi9kcml2ZXJzL3NvYy9t
-ZWRpYXRlay9tdGstbW1zeXMuYw0KPiA+IGluZGV4IGE1NWYyNTUuLjM2YWQ2NmIgMTAwNjQ0DQo+
-ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMNCj4gPiArKysgYi9kcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1zeXMuYw0KPiA+IEBAIC01LDEzICs1LDExIEBADQo+ID4g
-ICAqLw0KPiA+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUg
-PGxpbnV4L2lvLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gPiAgI2lu
-Y2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc29j
-L21lZGlhdGVrL210ay1tbXN5cy5oPg0KPiA+DQo+ID4gLSNpbmNsdWRlICIuLi8uLi9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwLmgiDQo+ID4gLSNpbmNsdWRlICIuLi8uLi9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCINCj4gPiAtDQo+ID4gICNkZWZpbmUgRElTUF9SRUdf
-Q09ORklHX0RJU1BfT1ZMMF9NT1VUX0VOICAgICAgMHgwNDANCj4gPiAgI2RlZmluZSBESVNQX1JF
-R19DT05GSUdfRElTUF9PVkwxX01PVVRfRU4gICAgICAweDA0NA0KPiA+ICAjZGVmaW5lIERJU1Bf
-UkVHX0NPTkZJR19ESVNQX09EX01PVVRfRU4gICAgICAgICAgICAgICAgMHgwNDgNCj4gPiBkaWZm
-IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmggYi9pbmNsdWRl
-L2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaA0KPiA+IGluZGV4IDdiYWI1ZDkuLjIyMjhi
-ZjYgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lz
-LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaA0KPiA+
-IEBAIC05LDYgKzksMzkgQEANCj4gPiAgZW51bSBtdGtfZGRwX2NvbXBfaWQ7DQo+ID4gIHN0cnVj
-dCBkZXZpY2U7DQo+ID4NCj4gPiArZW51bSBtdGtfZGRwX2NvbXBfaWQgew0KPiA+ICsgICAgICAg
-RERQX0NPTVBPTkVOVF9BQUwwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9BQUwxLA0KPiA+
-ICsgICAgICAgRERQX0NPTVBPTkVOVF9CTFMsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX0ND
-T1JSLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9DT0xPUjAsDQo+ID4gKyAgICAgICBERFBf
-Q09NUE9ORU5UX0NPTE9SMSwNCj4gPiArICAgICAgIEREUF9DT01QT05FTlRfRElUSEVSLA0KPiA+
-ICsgICAgICAgRERQX0NPTVBPTkVOVF9EUEkwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9E
-UEkxLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9EU0kwLA0KPiA+ICsgICAgICAgRERQX0NP
-TVBPTkVOVF9EU0kxLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9EU0kyLA0KPiA+ICsgICAg
-ICAgRERQX0NPTVBPTkVOVF9EU0kzLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9HQU1NQSwN
-Cj4gPiArICAgICAgIEREUF9DT01QT05FTlRfT0QwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVO
-VF9PRDEsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX09WTDAsDQo+ID4gKyAgICAgICBERFBf
-Q09NUE9ORU5UX09WTF8yTDAsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX09WTF8yTDEsDQo+
-ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX09WTDEsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5U
-X1BXTTAsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX1BXTTEsDQo+ID4gKyAgICAgICBERFBf
-Q09NUE9ORU5UX1BXTTIsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX1JETUEwLA0KPiA+ICsg
-ICAgICAgRERQX0NPTVBPTkVOVF9SRE1BMSwNCj4gPiArICAgICAgIEREUF9DT01QT05FTlRfUkRN
-QTIsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX1VGT0UsDQo+ID4gKyAgICAgICBERFBfQ09N
-UE9ORU5UX1dETUEwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9XRE1BMSwNCj4gPiArICAg
-ICAgIEREUF9DT01QT05FTlRfSURfTUFYLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgdm9pZCBtdGtf
-bW1zeXNfZGRwX2Nvbm5lY3Qoc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwNCj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0KTsNCj4gPiAtLQ0KPiA+IDEu
-OC4xLjEuZGlydHkNCg0K
+On Thu, Jul 23, 2020 at 04:38:51AM +0300, Serge Semin wrote:
+> This series is about the DW APB GPIO device initialization procedure
+> cleaning up. First of all it has been discovered that having a
+> vendor-specific "snps,nr-gpios" property isn't only redundant but also
+> might be dangerous (see the commit log for details). Instead we suggest to
+> use the generic "ngpios" property to define a number of GPIOs each DW APB
+> GPIO controller port supports. Secondly seeing a tendency of the other
+> GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
+> interface this series provides a patch, which replaces the DW APB GPIO
+> driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
+> Finally the DW APB GPIO device probe procedure is simplified by
+> converting the code to be using the device managed resources for the
+> reference clocks initialization, reset control assertion/de-assertion
+> and GPIO-chip registration.
+
+Thanks! For non-commented patches, excluding DT one,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (7):
+>   dt-bindings: gpio: dwapb: Add ngpios property support
+>   gpio: dwapb: Add ngpios DT-property support
+>   gpio: dwapb: Move MFD-specific IRQ handler
+>   gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip
+>   gpio: dwapb: Get reset control by means of resource managed interface
+>   gpio: dwapb: Get clocks by means of resource managed interface
+>   gpio: dwapb: Use resource managed GPIO-chip add data method
+> 
+>  .../bindings/gpio/snps,dw-apb-gpio.yaml       |   6 +
+>  drivers/gpio/Kconfig                          |   2 +-
+>  drivers/gpio/gpio-dwapb.c                     | 324 +++++++++---------
+>  3 files changed, 161 insertions(+), 171 deletions(-)
+> 
+> -- 
+> 2.26.2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
