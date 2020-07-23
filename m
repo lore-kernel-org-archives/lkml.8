@@ -2,93 +2,87 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E4FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E1BC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349E5207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A278D20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgGWIEV (ORCPT
+        id S1727855AbgGWIEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:04:21 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44620 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgGWIEU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:04:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id F394928D80B
-Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_proto: check for missing
- EC_CMD_HOST_EVENT_GET_WAKE_MASK
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-References: <20200722015732.1720840-1-briannorris@chromium.org>
- <20200722015732.1720840-2-briannorris@chromium.org>
- <5ebf1534-8045-9894-9c1c-b92b9c6d8479@collabora.com>
- <CA+ASDXMk7Tg7Lwqt8Pv5BQT0J40dpJtqrL9TAn8y5Nj3TCkj6Q@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <59657973-cdef-eaf2-47f2-368205015750@collabora.com>
-Date:   Thu, 23 Jul 2020 10:04:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 04:04:50 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59156 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgGWIEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:04:50 -0400
+IronPort-SDR: rrZ+scjNfuk1lDb9hf8nl2RkFJDv8BG7g3qzfWpNsGdS8EYbNK1cHb5TyiN4ZX3cTQuxN+xa0n
+ bDS+j0CRKG0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="137981058"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="137981058"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 01:04:48 -0700
+IronPort-SDR: 4g07lofFm/wx2Qvqdq5W0HHQtsEwXsbuBkxr+Ya88F0tNcUn942NqXJvZVUK5IX5NFfF4tr4H3
+ zATUMg/MTEjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="310940898"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 01:04:45 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jyWDc-003PA8-G0; Thu, 23 Jul 2020 11:04:44 +0300
+Date:   Thu, 23 Jul 2020 11:04:44 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, fkostenzer@live.at,
+        geert@linux-m68k.org, paul.gortmaker@windriver.com,
+        akpm@linux-foundation.org, torvalds@linux-foundation.org
+Subject: Re: [PATCH] lib: kunit: Convert test_sort to KUnit test
+Message-ID: <20200723080444.GE3703480@smile.fi.intel.com>
+References: <20200723000807.171940-1-vitor@massaru.org>
 MIME-Version: 1.0
-In-Reply-To: <CA+ASDXMk7Tg7Lwqt8Pv5BQT0J40dpJtqrL9TAn8y5Nj3TCkj6Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723000807.171940-1-vitor@massaru.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brian,
-
-On 22/7/20 22:50, Brian Norris wrote:
-> On Wed, Jul 22, 2020 at 3:19 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
->>
->> Hi Brian,
->>
->> Thank you for your patch, I'll take a look soon but I'd like to ask if you can
->> join the discussion with this patchset [1], specially this one [2]. We're trying
->> to match EC errors with standard linux kernel errors because we think can be
->> helpful.
->>
->> [1] https://lore.kernel.org/patchwork/cover/1276734/
->> [2] https://lore.kernel.org/patchwork/patch/1276738/
+On Wed, Jul 22, 2020 at 09:08:07PM -0300, Vitor Massaru Iha wrote:
+> This adds the conversion of the test_sort.c to KUnit test.
 > 
-> Hi Enric,
-> 
-> Thanks, I'll do that. I do wonder sometimes how non-maintainers should
-> best support "community" around these things, for subsystems that
-> don't have a dedicated mailing list and are therefore sent only to
-> maintainers + LKML-fire-hose. I could probably subscribe to LKML and
-> filter it, but something tells me my mailbox will still manage to
-> explode somehow... Anyway, I digress.
-> 
+> Please apply this commit first (linux-kselftest/kunit-fixes):
+> 3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
 
-We talked sometimes on having a dedicated ML, but for one reason or the other,
-and as we don't have a lot of volume, we didn't set up (could be an option).
+...
 
-Another thing that we can do (although this is specific for you and doesn't
-solve the problem with people like you that are interested on this), is add you
-as a reviewer in the MAINTAINERS file. The CrOS EC has a lot of subtleties, and
-having more ChromeOS people involved in the reviewing upstream is more than welcome.
+>  lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
 
-Regards,
-Enric
+Is it established practice to put kunit as a suffix?
+For me much better to do
+	ls .../test* # and note shell completions
+then drop shell completions and always do something like
+	ls .../*_kunit.[cSsh]
 
-> Other than perhaps taking a lesson not to propagate -ENOTSUPP, I don't
-> think this series should block on that, as this is a bugfix IMO.
-> 
-> Regards,
-> Brian
-> 
+Consider this, please.
+
+P.S. Same question to KUnit folks.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
