@@ -2,98 +2,179 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC97C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A9220709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:12:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGzWAHNp"
+	by mail.kernel.org (Postfix) with ESMTP id D5A38206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgGWOML (ORCPT
+        id S1728545AbgGWORc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGWOMK (ORCPT
+        Thu, 23 Jul 2020 10:17:32 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:35077 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgGWORc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:12:10 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE6CC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:12:10 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id w1so1135340ooj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NYds3Nco1psIbFhxscSbi5hgJh8BjumXm2M9T6KAWQM=;
-        b=AGzWAHNpaimo3sPQx/8NtCk0U0hKvSJMPiU2ONe6dgO+wiQunz4CKjUA//5cAVVjYG
-         jJlwmT4WVOzgrxS+HuHVU0IIFXDnkHlLzBNaxMmYTr02HD+ajOcF2Qpsn6kzGo7M9dwN
-         6+PcwiZNcNzSV9fJD/r/mCwR5ERf17J+87FW12kyg6NbhHkxI262lrPlBTCStTUKfy+M
-         AJD9XbqxHZj92W2AH3So2qmRGoixRa/dg0OSMdI6nEcZczUZhG1sK55WPTVLTMTbbJvw
-         +mITnPUnog5V/8e+DZIWDsKN30AK6BcH2zjfF9EDRzDe02GA5zpGhhzyG0tYINwkQAk6
-         TLwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NYds3Nco1psIbFhxscSbi5hgJh8BjumXm2M9T6KAWQM=;
-        b=YnkH+Xg8jfvW391qiOjY9y0qSYyTGqWKcRa0RrNtYQA5L/sv5qmKGncOO3KoGhBofn
-         /ZCHmFhgKIyO6FLsiVChvAWUkJEpqLQzdxYLxVH90raoOwZjw97a0dAZ80ZRT1DNSzRa
-         E3N6PDgK7W7NJRd8ixilLKMblanxI4R71p+sEmk+OtUZn1FTrsJZG2cFQseTvaedVkiz
-         I4Psdi6Ljdt5aApJWCC8GsnizJGf0E3E1hJ/j1I16Yj1ESmrUb7R70fSlKkvraN/W0mQ
-         yfu1QVPDQVD+d2fh4YOqDqTJ6oM2Bl6NFZAHYLQjvkMK6NbPB5Mqh8nURTnvCakH48OV
-         4CnQ==
-X-Gm-Message-State: AOAM533GuR1uF8HLxTAdJ+FiEcX7WFVEiiXNeBmCkZxEHA5U0OipEQJj
-        SYKp0F2YbvuuIxAinG41B1b6v89MBtHcxwOd8aY=
-X-Google-Smtp-Source: ABdhPJx/eCa/cCkHFK4V7yMOs9HWmf3XPR+0/9I8VV7VAy+217aZBKqr8yOOSwln4XDNgOaFCk739p6JLnOpwvfQOu4=
-X-Received: by 2002:a4a:d4d9:: with SMTP id r25mr4653363oos.51.1595513530264;
- Thu, 23 Jul 2020 07:12:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <1595480041-10597-1-git-send-email-qianjun.kernel@gmail.com> <87d04mxs9t.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87d04mxs9t.fsf@nanos.tec.linutronix.de>
-From:   jun qian <qianjun.kernel@gmail.com>
-Date:   Thu, 23 Jul 2020 22:11:59 +0800
-Message-ID: <CAKc596LwF3UNrasZcm46wQX8JSEht4oxx+sDqRKfSkM3Ld0Fjw@mail.gmail.com>
-Subject: Re: [PATCH V3] Softirq:avoid large sched delay from the pending softirqs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     peterz@infradead.org, will@kernel.org, luto@kernel.org,
-        Uladzislau Rezki <urezki@gmail.com>,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
+        Thu, 23 Jul 2020 10:17:32 -0400
+X-Originating-IP: 84.44.14.226
+Received: from nexussix (unknown [84.44.14.226])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 70E95E0009;
+        Thu, 23 Jul 2020 14:17:26 +0000 (UTC)
+Message-ID: <455c6bf929ea197a7c18ba3f9e8464148b333297.camel@kernel.wtf>
+Subject: Re: WARNING in __kernel_read
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk, v9fs-developer@lists.sourceforge.net,
+        syzbot <syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com>
+Date:   Thu, 23 Jul 2020 17:17:25 +0300
+In-Reply-To: <20200714110239.GE16178@lst.de>
+References: <00000000000003d32b05aa4d493c@google.com>
+         <20200714110239.GE16178@lst.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:41 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> qianjun.kernel@gmail.com writes:
-> > From: jun qian <qianjun.kernel@gmail.com>
-> > +             /*
-> > +              * the softirq's action has been running for too much time
-> > +              * so it may need to wakeup the ksoftirqd
-> > +              */
-> > +             if (need_resched() && ktime_get() > end)
-> > +                     break;
->
-> As per my reply on V2 this is leaking non handled pending bits. If you
-> do a V4, can you please use sched_clock() instead of ktime_get()?
->
-The reason why the non handled pending bits leaked is
-set_softirq_pending(0) called in the start, if the
-loop is broken, the not handled bit will leak. This is my
-understanding, I am not sure if it is correct or not.
-Looking forward to your reply.
+Hello,
 
-Thank you so much.
+I'm trying to help clean up syzkaller submissions and this caught my
+attention and I wanted to get your advice.
 
-> Thanks,
->
->         tglx
+With commit: 6209dd9132e8ea5545cffc84483841e88ea8cc5b `kernel_read` was
+modified to use `__kernel_read` by Christoph Hellwig.
+
+One of the syzkaller tests executes following system calls:
+
+open("./file0", O_WRONLY|O_CREAT|O_EXCL|O_DIRECT|0x4, 000) = 5
+open("/dev/char/4:1", O_RDWR)           = 6
+mount(NULL, "./file0", "9p", 0,
+"trans=fd,rfdno=0x0000000000000005,wfdno=0x0000000000000006,"
+
+This initiates a `__kernel_read` call from `p9_read_work` (and
+`p9_fd_read`) and since the `file->f_mode` does not contain FMODE_READ
+, a WARN_ON_ONCE is thrown.
+
+```
+if (WARN_ON_ONCE(!(file->f_mode & FMODE_READ)))
+         return -EINVAL;
+```
+
+Can you help me understand what's wrong and fix this issue? 
+Is it already being worked on?
+
+Thank you
+
+Cengiz Can
+
+On Tue, 2020-07-14 at 13:02 +0200, Christoph Hellwig wrote:
+> On Mon, Jul 13, 2020 at 12:03:17AM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> 
+> This is not a crash, but a WARN_ON_ONCE, someone really needs to fix
+> syzbot to report this correctly.
+> 
+> The fix should be queued up by the 9p maintainers.
+> 
+> > HEAD commit:    a581387e Merge tag 'io_uring-5.8-2020-07-10' of
+> > git://git...
+> > git tree:       upstream
+> > console output: 
+> > https://syzkaller.appspot.com/x/log.txt?x=13e730eb100000
+> > kernel config:  
+> > https://syzkaller.appspot.com/x/.config?x=66ad203c2bb6d8b
+> > dashboard link: 
+> > https://syzkaller.appspot.com/bug?extid=d012ca3f813739c37c25
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > syz repro:      
+> > https://syzkaller.appspot.com/x/repro.syz?x=12e0222b100000
+> > C reproducer:   
+> > https://syzkaller.appspot.com/x/repro.c?x=162a004f100000
+> > 
+> > The bug was bisected to:
+> > 
+> > commit 6209dd9132e8ea5545cffc84483841e88ea8cc5b
+> > Author: Christoph Hellwig <hch@lst.de>
+> > Date:   Fri May 8 07:00:28 2020 +0000
+> > 
+> >     fs: implement kernel_read using __kernel_read
+> > 
+> > bisection log:  
+> > https://syzkaller.appspot.com/x/bisect.txt?x=152d91fb100000
+> > final crash:    
+> > https://syzkaller.appspot.com/x/report.txt?x=172d91fb100000
+> > console output: 
+> > https://syzkaller.appspot.com/x/log.txt?x=132d91fb100000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the
+> > commit:
+> > Reported-by: syzbot+d012ca3f813739c37c25@syzkaller.appspotmail.com
+> > Fixes: 6209dd9132e8 ("fs: implement kernel_read using
+> > __kernel_read")
+> > 
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 5 at fs/read_write.c:427
+> > __kernel_read+0x41d/0x4d0 fs/read_write.c:427
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc4-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine,
+> > BIOS Google 01/01/2011
+> > Workqueue: events p9_read_work
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+> >  panic+0x2e3/0x75c kernel/panic.c:231
+> >  __warn.cold+0x20/0x45 kernel/panic.c:600
+> >  report_bug+0x1bd/0x210 lib/bug.c:198
+> >  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:235
+> >  exc_invalid_op+0x13/0x40 arch/x86/kernel/traps.c:255
+> >  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:542
+> > RIP: 0010:__kernel_read+0x41d/0x4d0 fs/read_write.c:427
+> > Code: fd ff ff e8 75 19 b6 ff 45 31 c9 45 31 c0 b9 01 00 00 00 4c
+> > 89 f2 89 ee 4c 89 ef e8 5d 22 12 00 e9 46 ff ff ff e8 53 19 b6 ff
+> > <0f> 0b 49 c7 c4 ea ff ff ff e9 11 fe ff ff 4c 89 f7 e8 2d 76 f5 ff
+> > RSP: 0018:ffffc90000cbfbc8 EFLAGS: 00010293
+> > RAX: 0000000000000000 RBX: ffff8880a9786ac0 RCX: ffffffff81bd9ac4
+> > RDX: ffff8880a95a2140 RSI: ffffffff81bd9e3d RDI: 0000000000000005
+> > RBP: ffff888096bc8060 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 1ffffffff1829bdd R12: 00000000081d801e
+> > R13: ffffc90000cbfc98 R14: ffff8880a9786b44 R15: 0000000000000007
+> >  kernel_read+0x52/0x70 fs/read_write.c:457
+> >  p9_fd_read net/9p/trans_fd.c:263 [inline]
+> >  p9_read_work+0x2ac/0xff0 net/9p/trans_fd.c:298
+> >  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+> >  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+> >  kthread+0x3b5/0x4a0 kernel/kthread.c:291
+> >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> > 
+> > 
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > For information about bisection process see: 
+> > https://goo.gl/tpsmEJ#bisection
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+> ---end quoted text---
+
