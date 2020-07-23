@@ -2,118 +2,128 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02008C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA99C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D154820888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595493688;
-	bh=PheGDG4I+Sd5okWGMSuo1JWd9HXAe6/fNMBPEQNHz2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t4K+qta+Ygkw+KYxoH586CjGuc21U4LyYu7Ftgb+ArIs/9lm4OG2nbQfKNCpYU8VA
-	 bzyzFKQqs9MXpUaOkTYEJkTgS+mRFJ+dgFpn5GmtF6KA5RWtmwOEBLmbrGfVeN7pOE
-	 QPxnJLs5n3McxWG75EANvZQJyoqRF0i45eyuJXhM=
+	by mail.kernel.org (Postfix) with ESMTP id ACFB522CF8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgGWIl1 (ORCPT
+        id S1727023AbgGWIhc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:41:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgGWIl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:41:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308BD2080D;
-        Thu, 23 Jul 2020 08:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595493686;
-        bh=PheGDG4I+Sd5okWGMSuo1JWd9HXAe6/fNMBPEQNHz2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iTaq7h7RwfYMBoNmsxw1lVCjbC3pvPOFNRcvog+sxixmTbZKs668cWaGmUeAwTj7t
-         7HdJG9gPG8VPyMEAxwFOw7BYL4mliAKBHHxh1ylQodA/qmVRsqfS5KcKVXcuti5z7T
-         oGu9/+ZqLoJd0r6FnOohTSmOKYzaS5uPJ6uzEHfc=
-Date:   Thu, 23 Jul 2020 10:41:31 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "hslester96@gmail.com" <hslester96@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
-        "efremov@linux.com" <efremov@linux.com>,
-        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
-        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
-        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
-        "wwt8723@163.com" <wwt8723@163.com>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= USB:Fix kernel
- NULL pointer when unbind UHCI form vfio-pci
-Message-ID: <20200723084131.GA1753458@kroah.com>
-References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
- <20200722215313.5a842b93@x1.home>
- <371b3697614e4034aed8e9f340a7dbf1@zhaoxin.com>
+        Thu, 23 Jul 2020 04:37:32 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60334 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725846AbgGWIhc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:37:32 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-80-5MUK7J35NxGiTT6rTbxaSA-1; Thu, 23 Jul 2020 09:37:27 +0100
+X-MC-Unique: 5MUK7J35NxGiTT6rTbxaSA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 09:37:27 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 Jul 2020 09:37:27 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Catalin Marinas' <catalin.marinas@arm.com>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC] raw_copy_from_user() semantics
+Thread-Topic: [RFC] raw_copy_from_user() semantics
+Thread-Index: AQHWYBxygAO6HUS840aFW/LsMa1rTakTksjwgAAtkICAARbBwA==
+Date:   Thu, 23 Jul 2020 08:37:27 +0000
+Message-ID: <9c22700a16db4a4f8ae9203efcaed27b@AcuMS.aculab.com>
+References: <20200719031733.GI2786714@ZenIV.linux.org.uk>
+ <CAHk-=wi7f5vG+s=aFsskzcTRs+f7MVHK9yJFZtUEfndy6ScKRQ@mail.gmail.com>
+ <CAHk-=wirA7zJJB17KJPCE-V9pKwn8VKxXTeiaM+F+Sa1Xd2SWA@mail.gmail.com>
+ <20200722113707.GC27540@gaia>
+ <8fde1b9044a34ff59eb5ff3dafbf2b97@AcuMS.aculab.com>
+ <20200722165346.GB4069@gaia>
+In-Reply-To: <20200722165346.GB4069@gaia>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <371b3697614e4034aed8e9f340a7dbf1@zhaoxin.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 08:36:25AM +0000, WeitaoWang-oc wrote:
+From: Catalin Marinas
+> Sent: 22 July 2020 17:54
 > 
-> On Thu,23 July 2020 04:18:00 +0000 Alex wrote:
-> > On Wed, 22 Jul 2020 19:57:48 +0800
-> > WeitaoWangoc <WeitaoWang-oc@zhaoxin.com> wrote:
-> > 
-> > >  drivers/usb/core/hcd-pci.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
+> On Wed, Jul 22, 2020 at 01:14:21PM +0000, David Laight wrote:
+> > From: Catalin Marinas
+> > > Sent: 22 July 2020 12:37
+> > > On Sun, Jul 19, 2020 at 12:34:11PM -0700, Linus Torvalds wrote:
+> > > > On Sun, Jul 19, 2020 at 12:28 PM Linus Torvalds
+> > > > <torvalds@linux-foundation.org> wrote:
+> > > > > I think we should try to get rid of the exact semantics.
+> > > >
+> > > > Side note: I think one of the historical reasons for the exact
+> > > > semantics was that we used to do things like the mount option copying
+> > > > with a "copy_from_user()" iirc.
+> > > >
+> > > > And that could take a fault at the end of the stack etc, because
+> > > > "copy_mount_options()" is nasty and doesn't get a size, and just
+> > > > copies "up to 4kB" of data.
+> > > >
+> > > > It's a mistake in the interface, but it is what it is. But we've
+> > > > always handled the inexact count there anyway by originally doing byte
+> > > > accesses, and at some point you optimized it to just look at where
+> > > > page boundaries might be..
 > > >
-> > > diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
-> > > index 1547aa6..484f2a0 100644
-> > > --- a/drivers/usb/core/hcd-pci.c
-> > > +++ b/drivers/usb/core/hcd-pci.c
-> > > @@ -34,6 +34,7 @@ static DECLARE_RWSEM(companions_rwsem);
-> > >  #define CL_OHCI                PCI_CLASS_SERIAL_USB_OHCI
-> > >  #define CL_EHCI                PCI_CLASS_SERIAL_USB_EHCI
+> > > And we may have to change this again since, with arm64 MTE, the page
+> > > boundary check is insufficient:
 > > >
-> > > +#define PCI_DEV_DRV_FLAG       2
-> > >  static inline int is_ohci_or_uhci(struct pci_dev *pdev)  {
-> > >         return pdev->class == CL_OHCI || pdev->class == CL_UHCI; @@
-> > > -68,6 +69,8 @@ static void for_each_companion(struct pci_dev *pdev, struct
-> > usb_hcd *hcd,
-> > >                 if (companion->class != CL_UHCI && companion->class !=
-> > CL_OHCI &&
-> > >                                 companion->class != CL_EHCI)
-> > >                         continue;
-> > > +               if (!(companion->priv_flags & PCI_DEV_DRV_FLAG))
-> > 
-> > But pci_dev.priv_flags is private data for the driver that currently
-> > owns the device, which could be vfio-pci.  This is really no different
-> > than assuming the structure at device.driver_data.  If vfio-pci were to
-> > make legitimate use of pci_dev.priv_flags, this could simply blow up
-> > again.  Should there instead be some sort of registration interface
-> > where hcd complaint drivers register their devices and only those
-> > registered devices can have their driver private data arbitrarily poked
-> > by another driver?  Thanks,
+> > > https://lore.kernel.org/linux-fsdevel/20200715170844.30064-25-catalin.marinas@arm.com/
+> > >
+> > > While currently the fault path is unlikely to trigger, with MTE in user
+> > > space it's a lot more likely since the buffer (e.g. a string) is
+> > > normally less than 4K and the adjacent addresses would have a different
+> > > colour.
+> > >
+> > > I looked (though briefly) into passing the copy_from_user() problem to
+> > > filesystems that would presumably know better how much to copy. In most
+> > > cases the options are string, so something like strncpy_from_user()
+> > > would work. For mount options as binary blobs (IIUC btrfs) maybe the fs
+> > > has a better way to figure out how much to copy.
+> >
+> > What about changing the mount code to loop calling get_user()
+> > to read aligned words until failure?
+> > Mount is fairly uncommon and the extra cost is probably small compared
+> > to the rest of doing a mount.
 > 
-> Thanks for your explanation. Set pci_dev.priv_flags is really not a 
-> reasonable approach. Are there any more detailed suggestions 
-> to patch this issue?
+> Before commit 12efec560274 ("saner copy_mount_options()"), it was using
+> single-byte get_user(). That could have been optimised for aligned words
+> reading but I don't really think it's worth the hassle. Since the source
+> and destination don't have the same alignment and some architecture
+> don't support unaligned accesses (for storing to the kernel buffer), it
+> would just make this function unnecessarily complicated.
 
-This is not a kernel issue, it is a "do not do this in this way from
-userspace" issue :)
+It could do aligned words if the user buffer is aligned (it will be
+most of the time) and bytes otherwise.
 
-thanks,
+Or just fallback to a byte loop if the full 4k read fails.
 
-greg k-h
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
