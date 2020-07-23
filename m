@@ -2,76 +2,76 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78018C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C63206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471622065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKFHLOUj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0eMLBNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgGWS4M (ORCPT
+        id S1727898AbgGWTCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
+        Thu, 23 Jul 2020 15:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgGWS4M (ORCPT
+        with ESMTP id S1726425AbgGWTCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:56:12 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63EDC0619DC;
-        Thu, 23 Jul 2020 11:56:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f2so6144838wrp.7;
-        Thu, 23 Jul 2020 11:56:11 -0700 (PDT)
+        Thu, 23 Jul 2020 15:02:54 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06800C0619DC;
+        Thu, 23 Jul 2020 12:02:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b6so6153366wrs.11;
+        Thu, 23 Jul 2020 12:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jF7KlZeIFETBUP6S7hMmCkkTQ3kpYA6BiAUjxPrWI9w=;
-        b=LKFHLOUjoBzD4nj8VGQkRyg/s/2fEVVzgijX+442ZbhU4n8I2zAsCbqQyh0ocQLWcb
-         yLKstI7XVJSRp5EWVJ3al6euJQ1TOTdw37/nMaAk6P6T7Q7qBzVGqOwN+u0iBzEf69V4
-         KN4XoBjWS4cPKTIOOPAMbvrfp6Dc6bynKAj8ffZqBDautMqx2z98DxN7RD1S6xplLfDR
-         v+2s9FFXoftUpkd7wOO5V1l+mX7KaBL2z/d4tEgPFubcDfnmak3pEFesyP5m0HsayfdX
-         6RH5aidIalFjtXvDa3yv38xg/md8JQf5Hhmgnjv/qbHKoW3H6UMzY+i4XS1Hp48UPimL
-         +HGg==
+        bh=PKPyxdsT1i1xdkaqcT2QwJWHG5Gos11psRoYlqmPZgw=;
+        b=Q0eMLBNFPvAvhwbItWc2kwC4ETNxft+dMu95I6FvImrDTZ/2a2UsYE03Vj2Q/rrva/
+         y1wCahM8NYNwNAQyuo1QfkkCpjUrj5fIr/eISPuMxzOqAySelVVPdSAXNgPDpPUx2Ywu
+         GnYDpcctIFN5s1AiYo21iVDoJLG7/P+gM75+SRmLJJfYW6Hwk8JUcQvmf0v9OP1VsQaB
+         /8nqh9y3jKAeDaK3+00e/G5wl8Y97/e56LSdUcEVGEx/0ovl1oAej9WCkarGdvdTABkS
+         hkToIPc4F6dI5kEfHvThmgeqHgsfR/rUWmyB6m1/j6lXIr4GMnkI7GaSwKfrPxHHEln3
+         kp1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=jF7KlZeIFETBUP6S7hMmCkkTQ3kpYA6BiAUjxPrWI9w=;
-        b=L2HpTmxOEeY+PwECz6ee/BIZOCWXAMZLJ0mvfQTbXhPHP1VAuPLxvseng6q+iVkksB
-         G1UZPjMS+RX1NFh4WVEBtlux2aUYWjZB1TaeTA1a3fTmk580c9pppUZEWbRMwNCVU0m7
-         ubvUOyX/dfJlV6+kygnYpvfhUgrrxcSU2/SDo45/CldCtMsYaIki4r5yND6gD5fgyKyR
-         ukCafc1PxdmEcNg4YVdQGdJA9gwlBhUxXAIbzL/L7rW4EY/NUQF0zlP5i6G57rlZd6Zk
-         bVkU+0pNI0f2OgbjikMM4B1UTcBJnW7yv2frTN0aU23q4IAu8kk4dglvTNaGKdf70DDR
-         43ew==
-X-Gm-Message-State: AOAM532O7kXYRFieTgiQpOeeILntEeTxrZzz83bmE7WDtkTwwpcMgRqK
-        ydOXb6XWeR92qAa6d6VQeKA=
-X-Google-Smtp-Source: ABdhPJyxZozzLHfoJi8Kj9wOw/LAy7KbJgZJ0zBp5mH6JHdX0f+Iwcx27Nek/lynuN7z9L4J/+AqXQ==
-X-Received: by 2002:a5d:5681:: with SMTP id f1mr4995090wrv.192.1595530570299;
-        Thu, 23 Jul 2020 11:56:10 -0700 (PDT)
+        bh=PKPyxdsT1i1xdkaqcT2QwJWHG5Gos11psRoYlqmPZgw=;
+        b=KStEFSTJg0w/EpnJ9elvruMn23ZBJZM/T3Mqj0sChf1bqHD7TMUYpPVKbJbMyzZP6f
+         5aJezkXKVGPd8WgJ+OV03eAeaPdOkdorMFmutf9RH3naS7ZlwZ5UcqSxcLIDKXnTyE9d
+         WXUU0efv8LF73s16lPYXzFmRAW8sYv+f+EVLwM03s30J9CCmYQwLj4WImB9i1+GYtUKx
+         42eePfdBS0xcXsFvRZJTg+2UMZqZ1RX7sU8SMKYHMBmRxemeFLJBXquPmpDHow+Nya9T
+         RhQ6BkL02OVQ5SYD3M732PHFFNOZDkiAY69QddKSG7/G9YPD6zz8qydY5V5BheS8G1+q
+         SO6g==
+X-Gm-Message-State: AOAM531Wi6MWPv71luxXNoEymPazEpLwrlAxgwFJ5THOKFw+J9wd6+MM
+        QmqCWj1crd2ziF+klWzrOJVlGeey
+X-Google-Smtp-Source: ABdhPJzMAEoIx5xcExHoQvLcQ/ko2LaJnU8zur3V7dnM7LOhP/cCTJgnWZxb3OnckMTxlCFrtfNOog==
+X-Received: by 2002:a5d:6b08:: with SMTP id v8mr5465144wrw.2.1595530972656;
+        Thu, 23 Jul 2020 12:02:52 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id e5sm5210355wrc.37.2020.07.23.11.56.06
+        by smtp.googlemail.com with ESMTPSA id u1sm6195681wrb.78.2020.07.23.12.02.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 11:56:09 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 1/7] net: macb: use device-managed
- devm_mdiobus_alloc()
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
-        davem@davemloft.net, kuba@kernel.org, andrew@lunn.ch,
-        robh+dt@kernel.org, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com
-References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
- <20200721171316.1427582-2-codrin.ciubotariu@microchip.com>
+        Thu, 23 Jul 2020 12:02:51 -0700 (PDT)
+Subject: Re: [RFC 0/7] Add support to process rx packets in thread
+To:     Rakesh Pillai <pillair@codeaurora.org>,
+        'Andrew Lunn' <andrew@lunn.ch>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
+        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <20200721172514.GT1339445@lunn.ch>
+ <f6d93d76-9e59-c257-9318-31c71df28018@gmail.com>
+ <002e01d6611e$0d8ac640$28a052c0$@codeaurora.org>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -127,12 +127,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <67d873d0-bfe4-1568-9714-f37c3a959abb@gmail.com>
-Date:   Thu, 23 Jul 2020 11:55:54 -0700
+Message-ID: <fdedf787-1bb0-601c-0959-6f1bfb38e5d7@gmail.com>
+Date:   Thu, 23 Jul 2020 12:02:40 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721171316.1427582-2-codrin.ciubotariu@microchip.com>
+In-Reply-To: <002e01d6611e$0d8ac640$28a052c0$@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -141,12 +141,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 10:13 AM, Codrin Ciubotariu wrote:
-> Use the device-managed variant for the allocating the MDIO bus. This
-> cleans-up the code a little on the remove and error paths.
+On 7/23/20 11:21 AM, Rakesh Pillai wrote:
 > 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> 
+>> -----Original Message-----
+>> From: Florian Fainelli <f.fainelli@gmail.com>
+>> Sent: Tuesday, July 21, 2020 11:35 PM
+>> To: Andrew Lunn <andrew@lunn.ch>; Rakesh Pillai <pillair@codeaurora.org>
+>> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; kvalo@codeaurora.org; johannes@sipsolutions.net;
+>> davem@davemloft.net; kuba@kernel.org; netdev@vger.kernel.org;
+>> dianders@chromium.org; evgreen@chromium.org
+>> Subject: Re: [RFC 0/7] Add support to process rx packets in thread
+>>
+>> On 7/21/20 10:25 AM, Andrew Lunn wrote:
+>>> On Tue, Jul 21, 2020 at 10:44:19PM +0530, Rakesh Pillai wrote:
+>>>> NAPI gets scheduled on the CPU core which got the
+>>>> interrupt. The linux scheduler cannot move it to a
+>>>> different core, even if the CPU on which NAPI is running
+>>>> is heavily loaded. This can lead to degraded wifi
+>>>> performance when running traffic at peak data rates.
+>>>>
+>>>> A thread on the other hand can be moved to different
+>>>> CPU cores, if the one on which its running is heavily
+>>>> loaded. During high incoming data traffic, this gives
+>>>> better performance, since the thread can be moved to a
+>>>> less loaded or sometimes even a more powerful CPU core
+>>>> to account for the required CPU performance in order
+>>>> to process the incoming packets.
+>>>>
+>>>> This patch series adds the support to use a high priority
+>>>> thread to process the incoming packets, as opposed to
+>>>> everything being done in NAPI context.
+>>>
+>>> I don't see why this problem is limited to the ath10k driver. I expect
+>>> it applies to all drivers using NAPI. So shouldn't you be solving this
+>>> in the NAPI core? Allow a driver to request the NAPI core uses a
+>>> thread?
+>>
+>> What's more, you should be able to configure interrupt affinity to steer
+>> RX processing onto a desired CPU core, is not that working for you
+>> somehow?
+> 
+> Hi Florian,
+> Yes, the affinity of IRQ does work for me.
+> But the affinity of IRQ does not happen runtime based on load.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+It can if you also run irqbalance.
 -- 
 Florian
