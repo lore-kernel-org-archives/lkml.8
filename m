@@ -2,96 +2,111 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A62C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC4820792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B469A20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j/CHcoXS"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="VKul/k4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgGWULx (ORCPT
+        id S1726945AbgGWUNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46014 "EHLO
+        Thu, 23 Jul 2020 16:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWULx (ORCPT
+        with ESMTP id S1726029AbgGWUNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:11:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5511AC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/rj5UU6tGdG+2asVe5JXVTkUwXIGY3WdZ5un4JY8Vf4=; b=j/CHcoXSsZZ0Um3pDllJCl9MsR
-        GGrruV7XTpUCFhljY3hAACYerSw70BI1nrteXRuzYmY63g3OYylzPw2vhagDSjgwzbHBbm4qyXuPD
-        F8QmY5mQoV+aZh7mQkCWm541BLB0CT7VwDLGhRqLngnzvO6cY1E4aetu8DL8iPtYAd+cGtucnMQWj
-        7HvgVtoIuiOkTrMoMYbnyeQdBxp+bVOyJoSPCjYFCuer22i4PBCx6j2qDmIzJO8gLZgF4kaLkvaMy
-        +nnmu7Zoye+MzV4vxpR9lY8TShCypEK+hkDnUoAp9th09bkhYGQaHAKipKmYVQ4ddZ47as9sFqMkL
-        VEctz0HQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyhYv-0000pD-Ou; Thu, 23 Jul 2020 20:11:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE673301A7A;
-        Thu, 23 Jul 2020 22:11:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C4D49200F77CC; Thu, 23 Jul 2020 22:11:28 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 22:11:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
-        torvalds@linux-foundation.org, hch@lst.de
-Subject: Re: [PATCH -v2 1/5] sched: Fix ttwu() race
-Message-ID: <20200723201128.GT10769@hirez.programming.kicks-ass.net>
-References: <20200622100122.477087977@infradead.org>
- <20200622100825.726200103@infradead.org>
- <159532854586.15672.5123219635720172265@build.alporthouse.com>
- <20200721113719.GI119549@hirez.programming.kicks-ass.net>
- <159541187604.15672.2433896906671712337@build.alporthouse.com>
- <20200723182841.GS10769@hirez.programming.kicks-ass.net>
- <159553326368.21069.3167204000119437062@build.alporthouse.com>
+        Thu, 23 Jul 2020 16:13:20 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5244C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:13:20 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i4so7580183iov.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=gFizQjOKr5jXpuq3CMiC/MyvKNZKW89IBlFK0gpQRGw=;
+        b=VKul/k4WuY4FAW1C7Zu50+qEBB4obEEQCu8NsE1fl1lzAlnzvAEe+y/5mwvIfC12gY
+         +b4v81O1fL5ihAXeYryDqD1S7LClzt5tOl6F7RXHywXQE432rtVfBqRxIAm021afhy+t
+         IV2JV8HmjQ5phugaXciPaYPsLU2QzN8KOV2Uz7K54J3xlnubg4QuDdy7dmbGKz5s14/7
+         UxRDu9Nic6fHVVPP0CctglM4WDRLLfupxvQV9GIIcakwHi5YRzQ0oJLOqrgvJ/gogggm
+         FkGaA+YnHEYLb7vk2PGsQ41FX6Rqagp4znv/ea62rIgOLKQdJUwKBPvk0SMmJrw7HG+r
+         QGZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=gFizQjOKr5jXpuq3CMiC/MyvKNZKW89IBlFK0gpQRGw=;
+        b=V+3GTnM9i7YlmeTVg6huObVUp3qmoELgQfInzMG3A0z3Z9DEo1WLWcoad9n9j3f0Es
+         3+L26mh+gJIa1cAJG31dEurARcGJQWI4KE3ECYsXQF8pIhwCUiWqBB4/fAtJhBbyw24P
+         RVMBiV5dkPiSqAU6vII0FpcA7uzYhd7SIk9d/lMV/iIc9anq/z5povOYQFk2rUJbk1O/
+         oqR2Z2/YtOXfRz9iRbk6r3S+8/q3YvC6HMijUJ0Pr/jmiwbRaS4hwM6fbBgaxdk5ANex
+         ik49TYGaoqFl3MByOxjIy66nDlM3EoM0TD2Q600QxmY8JnpVNO5QSxjGHSDC09YYLdP9
+         6Z/Q==
+X-Gm-Message-State: AOAM530P02arKaRDekUCOpBUqgUeiyyUPuIaP+MY4EG9J2XJmw8DYLuh
+        ZZ8bKE727sV3fJi3Z9mxTSSWig==
+X-Google-Smtp-Source: ABdhPJwpKj+HbJPbd8zd5yvfZWDP7GA8HomCKEBfCXBUfQkauTtT0nuk0MCO1SKCpY7YQiNtFSxMbA==
+X-Received: by 2002:a5d:97d9:: with SMTP id k25mr6758601ios.42.1595535200007;
+        Thu, 23 Jul 2020 13:13:20 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:0:4a0f:cfff:fe35:d61b])
+        by smtp.googlemail.com with ESMTPSA id h1sm2045324iob.8.2020.07.23.13.13.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 13:13:19 -0700 (PDT)
+Subject: Re: [PATCH] netlink: add buffer boundary checking
+To:     Eric Dumazet <eric.dumazet@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Thomas Graf <tgraf@suug.ch>
+References: <20200723182136.2550163-1-salyzyn@android.com>
+ <09cd1829-8e41-bef5-ba5e-1c446c166778@gmail.com>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <f3d2eedc-23eb-0b45-4c15-15b887e05164@android.com>
+Date:   Thu, 23 Jul 2020 13:13:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159553326368.21069.3167204000119437062@build.alporthouse.com>
+In-Reply-To: <09cd1829-8e41-bef5-ba5e-1c446c166778@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 08:41:03PM +0100, Chris Wilson wrote:
+On 7/23/20 12:35 PM, Eric Dumazet wrote:
+> I believe this will hide bugs, that syzbot was able to catch.
 
-> I am very sorry for the wild goose chase.
+syzbot failed to catch the problem because of padding u8, u16 and u32 
+were all immune because they would go out of bounds into a padded buffer :-(
 
-*phew*... all good then. I was starting to go a little ga-ga trying to
-make sense of things.
+On 7/23/20 12:19 PM, David Miller wrote:
+> Now it is going to be expensive to move several small attributes,
+> which is common.  And there's a multiplier when dumping, for example,
+> thousands of networking devices, routes, or whatever, and all of their
+> attributes in a dump.
+So it _is_ performance critical (!)
+> If you can document actual out of bounds accesses, let's fix them.  Usually
+> contextually the attribute type and size has been validated by the time we
+> execute these accessors.
 
-Arguably we should probably do something like:
+A PoC was written for nl80211_tdls_mgmt supplied no bytes for 
+NL80211_ATTR_STATUS_CODE and instrumented code could report back OOB.
 
+I was initially considering pushback because padding bytes were being 
+read and considered it harmless. Best way to find out if it is really a 
+problem probably was to ask, but as Linus said once 'show me the code' 
+and that is just as effective in the asking ;->
 
-@@ -4555,7 +4572,7 @@ asmlinkage __visible void __sched preempt_schedule_irq(void)
- int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flags,
- 			  void *key)
- {
--	return try_to_wake_up(curr->private, mode, wake_flags);
-+	return try_to_wake_up(curr->private, mode, wake_flags & WF_SYNC);
- }
- EXPORT_SYMBOL(default_wake_function);
+My Gut remains to respond WAI unless you'all reading padding is 'bad'
 
+-- Mark
 
-Since I don't think anybody uses anything other than WF_SYNC, ever. And
-the rest of the WF_flags are used internally.
-
-Thanks Chris!
