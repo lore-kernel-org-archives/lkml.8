@@ -2,106 +2,118 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B526A20759
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4301620771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cbuvro59"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CeYogT9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgGWOWX (ORCPT
+        id S1729427AbgGWOXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:22:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35461 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726815AbgGWOWV (ORCPT
+        Thu, 23 Jul 2020 10:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgGWOXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:22:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595514140;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=zSZAhL25JSXHpF0bAbKJRfBjeCgJ6YYI4dxlYgSnMIw=;
-        b=Cbuvro597snkLvrAHWM+a9elIWOJgEr0VAHsxk9dk5zy/VNpalTniVsbmh0gGJp15JLIaQ
-        OPm5R/VyR8TiHV6cIrh4rh8nrO2KAJN2dHZxeQZFKZfhlxbJeWAnzptrKflHz+SKtKUzW8
-        K+uI6hiLd+CN3J2zxetuI0uqhEE3Eno=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-7R6QeyniNQ2a-anay2-ICg-1; Thu, 23 Jul 2020 10:22:16 -0400
-X-MC-Unique: 7R6QeyniNQ2a-anay2-ICg-1
-Received: by mail-qt1-f198.google.com with SMTP id i5so3775566qtw.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:22:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zSZAhL25JSXHpF0bAbKJRfBjeCgJ6YYI4dxlYgSnMIw=;
-        b=OzN587deUf8whyb/QdCCZ8I27Qv2BxpOpXbhrrSclQgo7scKT7lSN05fpJu9rIHHTi
-         w2id6dHpuE8CZvu9tg/8tDbm6+fmK0umxeF1yyyzJ+kRxI5glR+ve0kvc6BImaDOrGY8
-         6DaRGm6kHYToyBgMe6aYEZY40FMI6ArUYXv3CDoizuYyZu7KZU8odRdgtDRL81qvySvM
-         NtFZejs88b4fGMai/66mrw3t3hPSuaZ2zE/ACwrGRnWdZ/9pPx/318TbENyk1bWF9QhK
-         2lQz1z4UhNTkiklTzUNlW07NGWyRJH63Hy+RAs2oqNnu3tQYk6vp6VxikP3Cj5+mmH4v
-         LMPg==
-X-Gm-Message-State: AOAM530pJwt/yeaTBeAdIxVKeJ9UTFPXAmScVVYs7og9xqExSONfQism
-        PVPIf4/NnMBUgDU3Y+Lh+875py8YapiUMZgm+CyLb10/LaxvYBGdVCJcBp4yavtq4ewk5gd6HKZ
-        y3qom3Nlg9+Ki6drrcJOdRRDj
-X-Received: by 2002:ad4:4bb0:: with SMTP id i16mr5099826qvw.42.1595514136253;
-        Thu, 23 Jul 2020 07:22:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw+P4z/SKan23uckp0U4ZwHA1Evj9o8JlarlIuBAqm40uOmGWRZUthDHWilRj8lh/rxbybNZQ==
-X-Received: by 2002:ad4:4bb0:: with SMTP id i16mr5099803qvw.42.1595514136058;
-        Thu, 23 Jul 2020 07:22:16 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id f53sm2225651qta.84.2020.07.23.07.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 07:22:15 -0700 (PDT)
-From:   trix@redhat.com
-To:     davem@davemloft.net, kuba@kernel.org, masahiroy@kernel.org
-Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] net: cdc_ncm: USB_NET_CDC_NCM selects USB_NET_CDCETHER
-Date:   Thu, 23 Jul 2020 07:22:10 -0700
-Message-Id: <20200723142210.21274-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Thu, 23 Jul 2020 10:23:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D06C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=fd23tMQ4fScQVgcj20AlO1yCA9h4LPjFStij0v1Yu5U=; b=CeYogT9eTNmmAHwL/FSrc5y4pP
+        ZKr9+eb6oYAgoi83p8vGg1EQ/Q8e3r6BjNrUx2XcRYmLtSwgY6sri/RvN9jFBpoSozSVaK2H93Oxc
+        EjyhGPc47RX/wYp9ocKfb5EQamC+aAvUTP5fcIwGCzyMZ07L/9z8WLGPaVKaPNsl84WJaLsDDjgUN
+        ZBEvaEIhln5LKtaqVEVu9RppdVAqTTUmTTtqInChZVTuZcVVo0XD29EcIYvRNsxsEO6p6BQ3X0LMA
+        zbBaelghCNqoK5bEvhJDOtSTGbBdU7UgURXXj6iiDe403RU5ZF6XCI8RAgxWjRfsVGbtiiky1iFu1
+        oF58oY7Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyc7d-0006As-B6; Thu, 23 Jul 2020 14:22:57 +0000
+Subject: Re: [PATCH] lib: Verify array index is correct before using it
+To:     Huang Guobin <huangguobin4@huawei.com>, haren@us.ibm.com,
+        ddstreet@ieee.org, herbert@gondor.apana.org.au
+Cc:     linux-kernel@vger.kernel.org
+References: <20200723134807.35027-1-huangguobin4@huawei.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <08cc095f-bf31-c4e3-0658-f4dfec1d4958@infradead.org>
+Date:   Thu, 23 Jul 2020 07:22:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200723134807.35027-1-huangguobin4@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On 7/23/20 6:48 AM, Huang Guobin wrote:
+> This code reads from the array before verifying that "c" is a valid
+> index. Move test array offset code before use to fix it.
+> 
+> Fixes: 2da572c959dd ("lib: add software 842 compression/decompression")
+> Signed-off-by: Huang Guobin <huangguobin4@huawei.com>
 
-A link error
+Hi,
+Why shouldn't these locations use array_index_nospec() from
+#include <linux/nospec.h>
+?
 
-ld: drivers/net/usb/cdc_ncm.o:
-  undefined reference to `usbnet_cdc_update_filter'
 
-usbnet_cdc_update_filter is defined in cdc_ether.c
-Building of cdc_ether.o is controlled by USB_NET_CDCETHER
+> ---
+>  lib/842/842_compress.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
+> index c02baa4168e1..10f9f8a0d05b 100644
+> --- a/lib/842/842_compress.c
+> +++ b/lib/842/842_compress.c
+> @@ -222,12 +222,13 @@ static int add_bits(struct sw842_param *p, u64 d, u8 n)
+>  static int add_template(struct sw842_param *p, u8 c)
+>  {
+>  	int ret, i, b = 0;
+> -	u8 *t = comp_ops[c];
+> +	u8 *t = NULL;
+>  	bool inv = false;
+>  
+>  	if (c >= OPS_MAX)
+>  		return -EINVAL;
+>  
+> +	t = comp_ops[c];
+>  	pr_debug("template %x\n", t[4]);
+>  
+>  	ret = add_bits(p, t[4], OP_BITS);
+> @@ -379,12 +380,14 @@ static int add_end_template(struct sw842_param *p)
+>  
+>  static bool check_template(struct sw842_param *p, u8 c)
+>  {
+> -	u8 *t = comp_ops[c];
+> +	u8 *t = NULL;
+>  	int i, match, b = 0;
+>  
+>  	if (c >= OPS_MAX)
+>  		return false;
+>  
+> +	t = comp_ops[c];
+> +
+>  	for (i = 0; i < 4; i++) {
+>  		if (t[i] & OP_ACTION_INDEX) {
+>  			if (t[i] & OP_AMOUNT_2)
+> 
 
-Building of cdc_ncm.o is controlled by USB_NET_CDC_NCM
-
-So add a select USB_NET_CDCETHER to USB_NET_CDC_NCM
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/net/usb/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
-index a7fbc3ccd29e..c7bcfca7d70b 100644
---- a/drivers/net/usb/Kconfig
-+++ b/drivers/net/usb/Kconfig
-@@ -252,6 +252,7 @@ config USB_NET_CDC_EEM
- config USB_NET_CDC_NCM
- 	tristate "CDC NCM support"
- 	depends on USB_USBNET
-+	select USB_NET_CDCETHER
- 	default y
- 	help
- 	  This driver provides support for CDC NCM (Network Control Model
+thanks.
 -- 
-2.18.1
+~Randy
 
