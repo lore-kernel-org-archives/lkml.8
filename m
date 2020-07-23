@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B887CC433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F56EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 965B8206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23212065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADcNFt/h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8v78qRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGWS74 (ORCPT
+        id S1728255AbgGWTAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34808 "EHLO
+        Thu, 23 Jul 2020 15:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgGWS74 (ORCPT
+        with ESMTP id S1726455AbgGWTAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:59:56 -0400
+        Thu, 23 Jul 2020 15:00:17 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F81C0619DC;
-        Thu, 23 Jul 2020 11:59:56 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a15so6146601wrh.10;
-        Thu, 23 Jul 2020 11:59:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424D9C0619DC;
+        Thu, 23 Jul 2020 12:00:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f2so6154956wrp.7;
+        Thu, 23 Jul 2020 12:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
         bh=bxQ7tQ6z3mNBLFtLdG+90Disq7Kpghx+V15fQV2DmfA=;
-        b=ADcNFt/hL/S2Bfy/XiygdhiABZ3QqmWxM6cqizk2p33AkfzIOEQyL1akStOQVnmEHn
-         GM52kcU3sEPsR+rgjzQcN/CpN+szv5TCxoSvsnua6C3MNe1HrTYWJRTYjea2kvg3k4d9
-         4n49f7Px2/zzGIounCbR8Ml8RKNKlZJPJTZB5sAqo+tQqN4OK1i53Ge7AeUb3lvUi4xi
-         Yuc5Us0x4xNcEtSJdu2mGUCPXSpXfEETxCx8Z2NQkf/H6q3o5TnBzaCgg4D5qVLc8+32
-         GQNgV3wBgCY8mMn8l7EHcgRhwikkyLpqxAEIXBSpETqonBl5o9flWL4f3GssMjewje1a
-         si8g==
+        b=f8v78qRZElIVBsgOTD9ia6t44AdaCc0HGSn59uGxyQlcOFYUEEZSh3SHrUBFHuWzPb
+         9kpR2N8GAdlJKyWe82fnh5x1ba6Bn3VxaKYYIF5A84Ce7z6XEkjmloyNT6vUVmI9JfN3
+         SJIY7KHgBynfS24DHUAuKrua2Zc9VEJNDU0/bhS2N7nUZ5NON9v4qpZ6IfBx5aiMBfP7
+         l6bYfc77aoQY3svzeX9UDJmkF3+iBZv3/kFWjkqUMopJcuKjvrXjRLwezRW3Kfgjj6Zt
+         nm6thylALp3vvKcdmJ/hf0FdZcsaX1eRoVZY1B1XRXGuh/pxhx7s2KxhSypZtHyZnDt4
+         jPPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
         bh=bxQ7tQ6z3mNBLFtLdG+90Disq7Kpghx+V15fQV2DmfA=;
-        b=QLDc7jYEnCF1fJk6vKYm2z057qpKpOjlkS/G5iiqCl1zoGtTQC54m2JUg94tqRqjYK
-         F0QqO7UBprykomrjhasW9PLZSxL0Yf4Y4sv4sWJAnSImAzZBcQv1IMKIqnTD3A3Pw/j9
-         5QPGw3gS7rFTEltiv5ZA14WK2W61w59E0wswPKuetlahOygwQhUyUIpbreSDfERJfzDN
-         YHDpcqIAIjeUj3HxZ5gxMtNkoG508wEqZY4q3nlyDjtQrPpix5Q6qHZyIYqrvaXB/pPv
-         HkQWUaBhG89PNBVm8SyOofwLG/tMxtuX19GTqzaOXVEpECYuTVJ0S9isk6JXRcvVJCiE
-         My6g==
-X-Gm-Message-State: AOAM532GF8Ca28gTPD/Y/olocR+3VnF8p0fz4CeRmI9dqIo2kCIbc7t2
-        17gPIDoMaPqWu2kaQDOq84c=
-X-Google-Smtp-Source: ABdhPJzhsGgALwe0nVnimz4+kPoWBa0nOisb3f0O2pYmbeA++FaBXXs0icm0j5qGbBaLqzKs1oEKXQ==
-X-Received: by 2002:adf:e98c:: with SMTP id h12mr5145336wrm.3.1595530794770;
-        Thu, 23 Jul 2020 11:59:54 -0700 (PDT)
+        b=pmRhSKUsiEWDv7GSctlDtgrmYUNNUlvUGZp4FwMPsMZl5vCxy0KKQqzioySBmxlOKy
+         J+n+4fjPs2OwHD3KBl/SInHDj+H2p4Ls+7ARDQ7/q32pDw4PqObCthwp8DXULxAckYtA
+         8Jy/2szpHgMaWANnhnF6K5IvRA7DJf+dE+KhfuVTf8J+qHtcAISoNcGU2RDvnWka+XuT
+         FZAdUIXZTPx/OKAx8T0NFCFyIDnndxpebbrCKfCfJZ+MBIje4wozgyGUroWGD+rWlUDm
+         jF2hazH9nBv30SNREaw25dM/Qk9wamRsKzGkq4DtZrcGAty2mI7S5zLV7/mrExMhERsJ
+         fkkg==
+X-Gm-Message-State: AOAM530QwwT/FW+cTlTDzIua1KZQzLC+mEyTQrq8EJO4Cc3hU5jvejom
+        68z7uvlIbDT8MZZfQiEk7bcvHgsi
+X-Google-Smtp-Source: ABdhPJwEY1V628mnrPMPpXGj8ccTi/rkerAhjQ/iUtNpmAdpPmT5C8hzwm8iuY83m63D4+G7r2dUfw==
+X-Received: by 2002:adf:80a4:: with SMTP id 33mr3241085wrl.112.1595530815977;
+        Thu, 23 Jul 2020 12:00:15 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id t2sm4777407wmb.25.2020.07.23.11.59.51
+        by smtp.googlemail.com with ESMTPSA id y77sm4651638wmd.36.2020.07.23.12.00.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 11:59:53 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 4/7] ARM: dts: at91: sama5d2: add an mdio
+        Thu, 23 Jul 2020 12:00:15 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 5/7] ARM: dts: at91: sama5d3: add an mdio
  sub-node to macb
 To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
@@ -71,7 +71,7 @@ Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
         robh+dt@kernel.org, alexandre.belloni@bootlin.com,
         ludovic.desroches@microchip.com
 References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
- <20200721171316.1427582-5-codrin.ciubotariu@microchip.com>
+ <20200721171316.1427582-6-codrin.ciubotariu@microchip.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -127,12 +127,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <d7b5ebe1-8790-3be3-d538-938eeb16a11a@gmail.com>
-Date:   Thu, 23 Jul 2020 11:59:49 -0700
+Message-ID: <458a6fab-330c-19bd-d946-ff449f5481d7@gmail.com>
+Date:   Thu, 23 Jul 2020 12:00:07 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721171316.1427582-5-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20200721171316.1427582-6-codrin.ciubotariu@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
