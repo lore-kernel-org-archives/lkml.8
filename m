@@ -2,115 +2,115 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C312065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDB82065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595498901;
+	bh=LNIFgfSeb956ZPjUnkKfsbDOTVn6RrQz+gRobXJOuoQ=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=pmUouBlSjScu4/yT2ZlLWAsBypqjcG/E80xoUpoApEpaQtSsvmUvtoUpJFRUbM56t
+	 O9RSe+AHTKXHBTYYJj7Y79gciOatHt8ejc5/ZlcJG4Z2UhNw7pZXHghTXa3Y6Yp+OT
+	 oXJNKZnBEIoj6+X3E6SLTd2mi9T7ZRV1tPMv9qrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGWKGi (ORCPT
+        id S1728282AbgGWKIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:06:38 -0400
-Received: from mga12.intel.com ([192.55.52.136]:14040 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbgGWKGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:06:37 -0400
-IronPort-SDR: nfl2vYjqNDfPW7GROQU4Se+knnMcbKs3roeRScpJ0iT63YuGk4dOS4HuhkHBgJM5oxbn5jMumS
- Rh2CFkDOF1hw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="130059714"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="130059714"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 03:06:37 -0700
-IronPort-SDR: 08hu/07UEbSbUKViBCKQSar54I/4i7troQu9GdoNbRTapjQ6XbGlt9barFjCMs8S5gbpZwEPjA
- G8LYFcwvhjLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="328512965"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 23 Jul 2020 03:06:34 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jyY7W-003QJJ-LJ; Thu, 23 Jul 2020 13:06:34 +0300
-Date:   Thu, 23 Jul 2020 13:06:34 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] gpio: dwapb: Refactor GPIO resources initialization
-Message-ID: <20200723100634.GK3703480@smile.fi.intel.com>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 23 Jul 2020 06:08:20 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:38099 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbgGWKIT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:08:19 -0400
+Received: by mail-ej1-f68.google.com with SMTP id br7so5758547ejb.5;
+        Thu, 23 Jul 2020 03:08:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XDRXKhZ8bECB/0hKnCNux0bgmgLiM0R8AAOfy3Lf7I4=;
+        b=caioMgqV5eeMM4Rm0Jt8AH0aAQHRzzaZElsKfRJCPi+ihDEAL3GzFD7FjegRfWd7Ak
+         V7Zea0zEaxHOXlAB7XW09mhhPM6MXSNfJbMujMdHaCkEeg1l5DkGqnEZm0fDKL0UfyKj
+         eNt+4MYSNHRjDqlOl8j4lmKW1fD0slsMW9D7GQ0bSC8kcy0xBFYom58eBz3AWVU3X4V5
+         B52WKrxDStbWKY0ZdAjQKVf/QKSa5ynykqc8DqoQvULUI1UBMQgMXSQG2W50R32mvdfn
+         y8OnU27UvUkpSDLpCpv/3PU5KsgS/0SHhHBPuoaILePWonWGek5HIv3KxKjW6Uq5Aw1g
+         tsKA==
+X-Gm-Message-State: AOAM533gHUr/d0U2bTlFfc47z+RJhPrKf/PdKrMh2/dlg+Yneld19oyc
+        YWRA2oeOGAGdjZ7nLaeQgwk=
+X-Google-Smtp-Source: ABdhPJzgAgG+vnt1QaigoG55Zk1ZcSQLRHkD+NArOZpeGKQIdaJNSffWJFnJuyD3vyPvmz52dwBm7A==
+X-Received: by 2002:a17:906:6852:: with SMTP id a18mr3546617ejs.348.1595498897021;
+        Thu, 23 Jul 2020 03:08:17 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id d19sm1693779ejk.47.2020.07.23.03.08.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 03:08:16 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 12:08:12 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 20/23] memory: omap-gpmc: Fix whitespace issue
+Message-ID: <20200723100812.GC30472@kozik-lap>
+References: <20200723073744.13400-1-krzk@kernel.org>
+ <20200723073744.13400-21-krzk@kernel.org>
+ <CAK8P3a1=WCQ5326Et5RRK7yiOYeHH7uUkQ+T3YPtj2XRh+gkgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAK8P3a1=WCQ5326Et5RRK7yiOYeHH7uUkQ+T3YPtj2XRh+gkgA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 04:38:51AM +0300, Serge Semin wrote:
-> This series is about the DW APB GPIO device initialization procedure
-> cleaning up. First of all it has been discovered that having a
-> vendor-specific "snps,nr-gpios" property isn't only redundant but also
-> might be dangerous (see the commit log for details). Instead we suggest to
-> use the generic "ngpios" property to define a number of GPIOs each DW APB
-> GPIO controller port supports. Secondly seeing a tendency of the other
-> GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
-> interface this series provides a patch, which replaces the DW APB GPIO
-> driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
-> Finally the DW APB GPIO device probe procedure is simplified by
-> converting the code to be using the device managed resources for the
-> reference clocks initialization, reset control assertion/de-assertion
-> and GPIO-chip registration.
-
-Thanks! For non-commented patches, excluding DT one,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+On Thu, Jul 23, 2020 at 11:11:08AM +0200, Arnd Bergmann wrote:
+> On Thu, Jul 23, 2020 at 9:39 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > 
-> Serge Semin (7):
->   dt-bindings: gpio: dwapb: Add ngpios property support
->   gpio: dwapb: Add ngpios DT-property support
->   gpio: dwapb: Move MFD-specific IRQ handler
->   gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip
->   gpio: dwapb: Get reset control by means of resource managed interface
->   gpio: dwapb: Get clocks by means of resource managed interface
->   gpio: dwapb: Use resource managed GPIO-chip add data method
+> > @@ -1756,7 +1756,7 @@ static int gpmc_calc_common_timings(struct gpmc_timings *gpmc_t,
+> >  /* TODO: remove this function once all peripherals are confirmed to
+> >   * work with generic timing. Simultaneously gpmc_cs_set_timings()
+> >   * has to be modified to handle timings in ps instead of ns
+> > -*/
+> > + */
 > 
->  .../bindings/gpio/snps,dw-apb-gpio.yaml       |   6 +
->  drivers/gpio/Kconfig                          |   2 +-
->  drivers/gpio/gpio-dwapb.c                     | 324 +++++++++---------
->  3 files changed, 161 insertions(+), 171 deletions(-)
+> This still doesn't follow the normal coding style for multi-line comments.
 > 
-> -- 
-> 2.26.2
+> I don't think it's worth fixing, but if you think it should be changed, then
+> make it
 > 
+>      /*
+>       * mult-line comment
+>       * ...
+>       */
 
--- 
-With Best Regards,
-Andy Shevchenko
+Sure, thanks for feedback.
 
+Best regards,
+Krzysztof
 
