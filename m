@@ -2,213 +2,162 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC967C433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C492120888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB202065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NU0SiGyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgGWKDV (ORCPT
+        id S1728222AbgGWKFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:03:21 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1494 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgGWKDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:03:20 -0400
-IronPort-SDR: vkKEu+rcROaRaTcaNbshnowUPMWMg3QlraKr3GbieQHnjQ+XYrgqall1rxUiV4GVBn836cLhe3
- +qnDf5iAP3Pw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="150479763"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="150479763"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 03:03:19 -0700
-IronPort-SDR: Mo9g3aqn+5pESbGSA+ASuLdLj4ZXqCS0K16NlHhCzhJf+HIO3tLFI4k2zdn6TmF0T/uTj3bdwU
- dx41dlQknhrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="362998701"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 23 Jul 2020 03:03:17 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jyY4L-003QHj-2p; Thu, 23 Jul 2020 13:03:17 +0300
-Date:   Thu, 23 Jul 2020 13:03:17 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200723100317.GJ3703480@smile.fi.intel.com>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+        Thu, 23 Jul 2020 06:05:19 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59231 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727828AbgGWKFT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:05:19 -0400
+X-UUID: 98bf441f4f364f28b43fc4dc64c536c7-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:Reply-To:From:Subject:Message-ID; bh=nIqgvQpS3VAhbyseetbTsl4br2KGKeKt/w/IWi2RGrk=;
+        b=NU0SiGyAI4hlwm4enjiBB2qWC+KyXn1ijbG1UoqaD/M422CwQx/2VjE18vRsEKaXnKTgXnLWdLpSW3lZ1ihiWV1fm8nQT+kWpi+f220b6zszD9ph/VTKW28qmHft1Br2wdc6F8Dl7MDW8SMO0vbhs+g7wZFqs9bzS1nO3r7JLkM=;
+X-UUID: 98bf441f4f364f28b43fc4dc64c536c7-20200723
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1215864354; Thu, 23 Jul 2020 18:05:13 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
+ (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul
+ 2020 18:05:11 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 18:05:12 +0800
+Message-ID: <1595498644.13250.2.camel@mhfsdcap03>
+Subject: Re: [v7, PATCH 1/7] drm/mediatek: move ddp component defint into
+ mtk_mmsys.h
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+Reply-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+CC:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 23 Jul 2020 18:04:04 +0800
+In-Reply-To: <CAFqH_50=MkBLHJ23hJo--RG=4560ttOUOjHuEwpevghFZ59xQQ@mail.gmail.com>
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1595469798-3824-2-git-send-email-yongqiang.niu@mediatek.com>
+         <CAFqH_50=MkBLHJ23hJo--RG=4560ttOUOjHuEwpevghFZ59xQQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
-> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> top of a GPIO chip. It's better from maintainability and readability
-> point of view to use one instead of supporting a hand-written Generic
-> IRQ-chip-based implementation. Moreover the new implementation won't
-> cause much functional overhead but will provide a cleaner driver code.
-> All of that makes the DW APB GPIO driver conversion pretty much justified
-> especially seeing a tendency of the other GPIO drivers getting converted
-> too.
-> 
-> Here is what we do in the framework of this commit to convert the driver
-> to using the GPIO-lib-based IRQ-chip interface:
-> 1) IRQ ack, mask and unmask callbacks are locally defined instead of
-> using the Generic IRQ-chip ones.
-> 2) An irq_chip structure instance is embedded into the dwapb_gpio
-> private data. Note we can't have a static instance of that structure since
-> GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
-> A warning about that would have been printed by the GPIO-lib code if we
-> used a single irq_chip structure instance for multiple DW APB GPIO
-> controllers.
-> 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
-> descriptor. By default there is no IRQ enabled so any event raised will be
-> handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
-> is synthesized to have non-shared reference IRQ-lines, then as before the
-> hierarchical and cascaded cases are distinguished by checking how many
-> parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
-> initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
-> is used on a platform with shared IRQ line, then we simply won't let the
-> GPIO-lib to initialize the parental IRQs, but will handle them locally in
-> the driver.
-> 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
-> GPIO-lib IRQ-chip interface will create a new domain and accept a standard
-> IRQ-chip structure pointer based on the setting we provided in the
-> gpio_irq_chip structure.
-> 5) Manually select a proper IRQ flow handler directly in the
-> irq_set_type() callback by calling irq_set_handler_locked() method, since
-> an ordinary (not Generic) irq_chip descriptor is now utilized.
-
-Can you also emphasize that this make no regression to the 6a2f4b7dadd5 ("gpio:
-dwapb: use a second irq chip")?
-
-(And I hope you have means to test that scenario, because in my case I have
- only one IRQ and it's actually as input from other GPIO IRQ chip).
-
-> 6) Discard the custom GPIO-to-IRQ mapping function since GPIO-lib defines
-> the standard method gpiochip_to_irq(), which will be used anyway no matter
-> whether the custom to_irq callback is specified or not.
-> 7) Discard the acpi_gpiochip_{request,free}_interrupts()
-> invocations, since they will be called from
-> gpiochip_add_irqchip()/gpiochip_irqchip_remove() anyway.
-> 8) Alter CONFIG_GPIO_DWAPB kernel config to select
-> CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
-
-I like the idea, but is it possible to split this?
-
-...
-
->  static int dwapb_irq_set_type(struct irq_data *d, u32 type)
->  {
-> -	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
-> -	struct dwapb_gpio *gpio = igc->private;
-> -	struct gpio_chip *gc = &gpio->ports[0].gc;
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
->  	irq_hw_number_t bit = irqd_to_hwirq(d);
->  	unsigned long level, polarity, flags;
-> +	irq_flow_handler_t handler;
->  
->  	if (type & ~IRQ_TYPE_SENSE_MASK)
->  		return -EINVAL;
-> @@ -274,26 +304,31 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
->  	case IRQ_TYPE_EDGE_BOTH:
->  		level |= BIT(bit);
->  		dwapb_toggle_trigger(gpio, bit);
-> +		handler = handle_edge_irq;
->  		break;
->  	case IRQ_TYPE_EDGE_RISING:
->  		level |= BIT(bit);
->  		polarity |= BIT(bit);
-> +		handler = handle_edge_irq;
->  		break;
->  	case IRQ_TYPE_EDGE_FALLING:
->  		level |= BIT(bit);
->  		polarity &= ~BIT(bit);
-> +		handler = handle_edge_irq;
->  		break;
->  	case IRQ_TYPE_LEVEL_HIGH:
->  		level &= ~BIT(bit);
->  		polarity |= BIT(bit);
-> +		handler = handle_level_irq;
->  		break;
->  	case IRQ_TYPE_LEVEL_LOW:
->  		level &= ~BIT(bit);
->  		polarity &= ~BIT(bit);
-> +		handler = handle_level_irq;
->  		break;
->  	}
->  
-> -	irq_setup_alt_chip(d, type);
-> +	irq_set_handler_locked(d, handler);
-
-Can we rather do like other GPIO IRQ chip implementations are doing, i.e.
-instead of repeating same handler in each branch, use one conditional:
-
-	if (type & IRQ_TYPE_LEVEL_MASK) {
-		...
-		irq_set_handler_locked(d, handle_level_irq);
-	} else if (type & IRQ_TYPE_EDGE_BOTH) {
-		...
-		irq_set_handler_locked(d, handle_edge_irq);
-	}
-
-?
-
-...
-
-> +		/*
-> +		 * If more than one IRQ line is specified then try to
-> +		 * initialize the hierarchical interrupts. Otherwise it's
-> +		 * a simple cascaded case with a common IRQ signal.
-> +		 */
-> +		girq->num_parents = pp->irq[1] ? pp->ngpio : 1;
-
-Can it be sparse in the array? (It's actually the main point why I went with
-memchr_inv() instead of doing something like above)
-
-> +		girq->parents = pp->irq;
-> +		girq->parent_handler_data = gpio;
-> +		girq->parent_handler = dwapb_irq_handler;
-
-...
-
-+ blank line.
-
-> +		/* This will let us handle the parent IRQ in the driver */
-> +		girq->parents = NULL;
-> +		girq->num_parents = 0;
-> +		girq->parent_handler = NULL;
-
-Shan't we do this before request_irq() call (at least for consistency with the
-rest of the drivers)?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+T24gVGh1LCAyMDIwLTA3LTIzIGF0IDExOjM0ICswMjAwLCBFbnJpYyBCYWxsZXRibyBTZXJyYSB3
+cm90ZToNCj4gSGkgWW9uZ3FpYW4gTml1LA0KPiANCj4gVGhhbmsgeW91IGZvciB5b3VyIHBhdGNo
+DQo+IA0KPiBNaXNzYXRnZSBkZSBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVr
+LmNvbT4gZGVsIGRpYSBkai4sIDIzDQo+IGRlIGp1bC4gMjAyMCBhIGxlcyA0OjA1Og0KPiA+DQo+
+ID4gbW92ZSBkZHAgY29tcG9uZW50IGRlZmludCBpbnRvIG10a19tbXN5cy5oDQo+ID4NCj4gDQo+
+IFRoZXJlIGlzIGEgdHlwbywgc2hvdWxkIGJlICJkZWZpbmVzIi4gQnV0IHdoeSB5b3Ugc2hvdWxk
+IG1vdmUgdGhlc2UNCj4gZGVmaW5lcyB0byBtdGstbW1zeXM/DQo+IA0KDQpjayBkbyBub3QgbGlr
+ZSB0aGlzIDoNCj4gLSNpbmNsdWRlICIuLi8uLi9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
+LmgiDQo+IC0jaW5jbHVkZSAiLi4vLi4vZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
+LmgiDQoNCmFmdGVyIHJlbW92ZSB0aGlzLCB3ZSBuZWVkIG1vdmUgdGhlIGRkcCBjb21wb25lbnQg
+ZGVmaW5lDQoNCnR5cGUgZXJyb3Igd2lsbCBmaXhlZCBpbiBuZXh0IHZlcnNpb24uDQoNCg0KPiAN
+Cj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRp
+YXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcF9jb21wLmggfCAzNCArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICBkcml2
+ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1zeXMuYyAgICAgICAgICAgIHwgIDQgKy0tLQ0KPiA+ICBp
+bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaCAgICAgIHwgMzMgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDM1IGluc2VydGlvbnMo
+KyksIDM2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kZHBfY29tcC5oDQo+ID4gaW5kZXggZGViZTM2My4uMTYxMjAxZiAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oDQo+ID4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KPiA+IEBA
+IC03LDYgKzcsNyBAQA0KPiA+ICAjZGVmaW5lIE1US19EUk1fRERQX0NPTVBfSA0KPiA+DQo+ID4g
+ICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVr
+L210ay1tbXN5cy5oPg0KPiA+DQo+ID4gIHN0cnVjdCBkZXZpY2U7DQo+ID4gIHN0cnVjdCBkZXZp
+Y2Vfbm9kZTsNCj4gPiBAQCAtMzUsMzkgKzM2LDYgQEAgZW51bSBtdGtfZGRwX2NvbXBfdHlwZSB7
+DQo+ID4gICAgICAgICBNVEtfRERQX0NPTVBfVFlQRV9NQVgsDQo+ID4gIH07DQo+ID4NCj4gPiAt
+ZW51bSBtdGtfZGRwX2NvbXBfaWQgew0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9BQUwwLA0K
+PiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9BQUwxLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVO
+VF9CTFMsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX0NDT1JSLA0KPiA+IC0gICAgICAgRERQ
+X0NPTVBPTkVOVF9DT0xPUjAsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX0NPTE9SMSwNCj4g
+PiAtICAgICAgIEREUF9DT01QT05FTlRfRElUSEVSLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVO
+VF9EUEkwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9EUEkxLA0KPiA+IC0gICAgICAgRERQ
+X0NPTVBPTkVOVF9EU0kwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9EU0kxLA0KPiA+IC0g
+ICAgICAgRERQX0NPTVBPTkVOVF9EU0kyLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9EU0kz
+LA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9HQU1NQSwNCj4gPiAtICAgICAgIEREUF9DT01Q
+T05FTlRfT0QwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9PRDEsDQo+ID4gLSAgICAgICBE
+RFBfQ09NUE9ORU5UX09WTDAsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX09WTF8yTDAsDQo+
+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX09WTF8yTDEsDQo+ID4gLSAgICAgICBERFBfQ09NUE9O
+RU5UX09WTDEsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX1BXTTAsDQo+ID4gLSAgICAgICBE
+RFBfQ09NUE9ORU5UX1BXTTEsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX1BXTTIsDQo+ID4g
+LSAgICAgICBERFBfQ09NUE9ORU5UX1JETUEwLA0KPiA+IC0gICAgICAgRERQX0NPTVBPTkVOVF9S
+RE1BMSwNCj4gPiAtICAgICAgIEREUF9DT01QT05FTlRfUkRNQTIsDQo+ID4gLSAgICAgICBERFBf
+Q09NUE9ORU5UX1VGT0UsDQo+ID4gLSAgICAgICBERFBfQ09NUE9ORU5UX1dETUEwLA0KPiA+IC0g
+ICAgICAgRERQX0NPTVBPTkVOVF9XRE1BMSwNCj4gPiAtICAgICAgIEREUF9DT01QT05FTlRfSURf
+TUFYLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RydWN0IG10a19kZHBfY29tcDsNCj4gPiAgc3Ry
+dWN0IGNtZHFfcGt0Ow0KPiA+ICBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzIHsNCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMgYi9kcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstbW1zeXMuYw0KPiA+IGluZGV4IGE1NWYyNTUuLjM2YWQ2NmIgMTAwNjQ0DQo+
+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMNCj4gPiArKysgYi9kcml2
+ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1zeXMuYw0KPiA+IEBAIC01LDEzICs1LDExIEBADQo+ID4g
+ICAqLw0KPiA+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUg
+PGxpbnV4L2lvLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gPiAgI2lu
+Y2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc29j
+L21lZGlhdGVrL210ay1tbXN5cy5oPg0KPiA+DQo+ID4gLSNpbmNsdWRlICIuLi8uLi9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fZGRwLmgiDQo+ID4gLSNpbmNsdWRlICIuLi8uLi9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCINCj4gPiAtDQo+ID4gICNkZWZpbmUgRElTUF9SRUdf
+Q09ORklHX0RJU1BfT1ZMMF9NT1VUX0VOICAgICAgMHgwNDANCj4gPiAgI2RlZmluZSBESVNQX1JF
+R19DT05GSUdfRElTUF9PVkwxX01PVVRfRU4gICAgICAweDA0NA0KPiA+ICAjZGVmaW5lIERJU1Bf
+UkVHX0NPTkZJR19ESVNQX09EX01PVVRfRU4gICAgICAgICAgICAgICAgMHgwNDgNCj4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmggYi9pbmNsdWRl
+L2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaA0KPiA+IGluZGV4IDdiYWI1ZDkuLjIyMjhi
+ZjYgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lz
+LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaA0KPiA+
+IEBAIC05LDYgKzksMzkgQEANCj4gPiAgZW51bSBtdGtfZGRwX2NvbXBfaWQ7DQo+ID4gIHN0cnVj
+dCBkZXZpY2U7DQo+ID4NCj4gPiArZW51bSBtdGtfZGRwX2NvbXBfaWQgew0KPiA+ICsgICAgICAg
+RERQX0NPTVBPTkVOVF9BQUwwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9BQUwxLA0KPiA+
+ICsgICAgICAgRERQX0NPTVBPTkVOVF9CTFMsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX0ND
+T1JSLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9DT0xPUjAsDQo+ID4gKyAgICAgICBERFBf
+Q09NUE9ORU5UX0NPTE9SMSwNCj4gPiArICAgICAgIEREUF9DT01QT05FTlRfRElUSEVSLA0KPiA+
+ICsgICAgICAgRERQX0NPTVBPTkVOVF9EUEkwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9E
+UEkxLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9EU0kwLA0KPiA+ICsgICAgICAgRERQX0NP
+TVBPTkVOVF9EU0kxLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9EU0kyLA0KPiA+ICsgICAg
+ICAgRERQX0NPTVBPTkVOVF9EU0kzLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9HQU1NQSwN
+Cj4gPiArICAgICAgIEREUF9DT01QT05FTlRfT0QwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVO
+VF9PRDEsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX09WTDAsDQo+ID4gKyAgICAgICBERFBf
+Q09NUE9ORU5UX09WTF8yTDAsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX09WTF8yTDEsDQo+
+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX09WTDEsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5U
+X1BXTTAsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX1BXTTEsDQo+ID4gKyAgICAgICBERFBf
+Q09NUE9ORU5UX1BXTTIsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX1JETUEwLA0KPiA+ICsg
+ICAgICAgRERQX0NPTVBPTkVOVF9SRE1BMSwNCj4gPiArICAgICAgIEREUF9DT01QT05FTlRfUkRN
+QTIsDQo+ID4gKyAgICAgICBERFBfQ09NUE9ORU5UX1VGT0UsDQo+ID4gKyAgICAgICBERFBfQ09N
+UE9ORU5UX1dETUEwLA0KPiA+ICsgICAgICAgRERQX0NPTVBPTkVOVF9XRE1BMSwNCj4gPiArICAg
+ICAgIEREUF9DT01QT05FTlRfSURfTUFYLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgdm9pZCBtdGtf
+bW1zeXNfZGRwX2Nvbm5lY3Qoc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwNCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0KTsNCj4gPiAtLQ0KPiA+IDEu
+OC4xLjEuZGlydHkNCg0K
 
