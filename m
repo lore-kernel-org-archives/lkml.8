@@ -2,172 +2,95 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D51AC433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E8020709
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="if0tqqlT"
+	by mail.kernel.org (Postfix) with ESMTP id 5628620709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595532647;
+	bh=7InW/I38muM+u0qDvAzcUWvmPajbXN7K+EHKB8+aI98=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=g+jD8njKAET0qJgOTyg23SRQlENM+RilrR+Nj8VgAFXLdVSPWyPy7Fyp4MS2CqC5h
+	 U1s6yjw/5XoDuE1p+ehj3vFCaP2URplLbHIK4T1L7epi4O3UCnYrEqdOZvYYZNMaEw
+	 6wWknmIIW/dOGg9QKxZCfUycJ3H0xlHJYzeHZ9fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgGWTan (ORCPT
+        id S1726754AbgGWTaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWTam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:30:42 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A4BC0619E2;
-        Thu, 23 Jul 2020 12:30:42 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id k1so3667751pjt.5;
-        Thu, 23 Jul 2020 12:30:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fmIcvsol2hVEYD4hslBcgfIPlSJK4NAnFqyLqCM1gdk=;
-        b=if0tqqlT1PKw4Xb47pom4OOkDXy+0T4tdEWtgS3Ih1Ig6xIL7ov/Jq0JscLE5vZDTx
-         Yq2UvbDv72LkIoBetdhbFLenWST4WfBepw0f2QWBt+ZISpRzsmSNteQvfZOAPzHAMtd8
-         yYQ90PN3OJH7/S8H7h2gJvZ7kO31VUVXqFWVa6COWh3VifhzQlwrUN+hkaqjlKj/wZju
-         V94aGPZPkZycFnopZiEppnBpHGuiRt6DIsiS5s6B/dMhxuhjwhAUj6VuFtdGX8JRFtDQ
-         G+kzkIYZwyh8epLh/OQnKWECtorTjU0sbyxX9vnWmeByT/3Whhn0EGYjgBJFsib+4VZJ
-         GkWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fmIcvsol2hVEYD4hslBcgfIPlSJK4NAnFqyLqCM1gdk=;
-        b=anqfcLJdHcx9+3S+QP8630u7PeF3YyNntEYK/Gedn59DW6t/ezmW4lTkye9TH3UH5K
-         2x4hbL7ojLebe7KwhQDxHeQBIgMYE+6s7S8SXaL+2LAWX/UoeMniy1bHbiyqQ/vIYxfM
-         dhKTLJC9pYWrSwNPdoH8TcxvmjFmJ11/u/N4HFcGZf6GNplsHRLnmJNzyFslIXk7wMYC
-         RfcYE0F15PVNtSmL3wguVegTgNDXldY1DG5LpC9v2vwEnFKN+v1i9riWjf19E/oqVdLW
-         LKcGd65mqekgvoqiWDLms2ZmxWRm0aStyhF2mufonnSDK1h/IsgxO/VGSujZTRAjcarG
-         Zc2g==
-X-Gm-Message-State: AOAM5314yvZH6Gn4jDODMIaO3SDKAkMe9gaRuUNpngDNsl8ZYZLVO9Gs
-        H9wf/mtLsWudpRergw6c77Q=
-X-Google-Smtp-Source: ABdhPJz6sphPv0Zw/qp5Yu8f/Iq5fMurNOXlKQkAi23Rye8cMijzfZFujF68rwFtVLBZDTyrlJLYyg==
-X-Received: by 2002:a17:90a:1f81:: with SMTP id x1mr1645438pja.115.1595532642072;
-        Thu, 23 Jul 2020 12:30:42 -0700 (PDT)
-Received: from nickserv.localdomain (c-98-33-101-203.hsd1.ca.comcast.net. [98.33.101.203])
-        by smtp.gmail.com with ESMTPSA id y18sm3794332pff.10.2020.07.23.12.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 12:30:41 -0700 (PDT)
-From:   Nick Terrell <nickrterrell@gmail.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Nick Terrell <nickrterrell@gmail.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Terrell <terrelln@fb.com>
-Subject: [PATCH v8 4/7] usr: add support for zstd compressed initramfs
-Date:   Thu, 23 Jul 2020 12:27:58 -0700
-Message-Id: <20200723192801.351114-5-nickrterrell@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723192801.351114-1-nickrterrell@gmail.com>
-References: <20200723192801.351114-1-nickrterrell@gmail.com>
+        Thu, 23 Jul 2020 15:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbgGWTao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 15:30:44 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B2B2067D;
+        Thu, 23 Jul 2020 19:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595532643;
+        bh=7InW/I38muM+u0qDvAzcUWvmPajbXN7K+EHKB8+aI98=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VoGkpg7/H/Gv5IFWFsnv3YGd9Frr08vHEFmbXvHV17HbCRv5l1QxuOEeN+84FkX9M
+         TiN0omh+WS5rh/FCKxAypSKymdubnrxE3f/EiI+4VGLZxy0A4lBLQBqFTt2r8ylvVJ
+         RVPy/b29uNx5A8yMwdwYNa6gxhM5VF+H99Mm6Bmg=
+Date:   Thu, 23 Jul 2020 14:30:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Lu Baolu <baolu.lu@intel.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] PCI/ATS: PASID and PRI are only enumerated in PF devices.
+Message-ID: <20200723193041.GA1446817@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723173819.GA345408@otc-nc-03>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Terrell <terrelln@fb.com>
+On Thu, Jul 23, 2020 at 10:38:19AM -0700, Raj, Ashok wrote:
+> Hi Bjorn
+> 
+> On Tue, Jul 21, 2020 at 09:54:01AM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jul 20, 2020 at 09:43:00AM -0700, Ashok Raj wrote:
+> > > PASID and PRI capabilities are only enumerated in PF devices. VF devices
+> > > do not enumerate these capabilites. IOMMU drivers also need to enumerate
+> > > them before enabling features in the IOMMU. Extending the same support as
+> > > PASID feature discovery (pci_pasid_features) for PRI.
+> > > 
+> > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > 
+> > Hi Ashok,
+> > 
+> > When you update this for the 0-day implicit declaration thing, can you
+> > update the subject to say what the patch *does*, as opposed to what it
+> > is solving?  Also, no need for a period at the end.
+> 
+> Yes, will update and resend. Goofed up a couple things, i'll update those
+> as well.
+> 
+> > Does this fix a regression?  Is it associated with a commit that we
+> > could add as a "Fixes:" tag so we know how far back to try to apply
+> > to stable kernels?
+> 
+> Yes, 
 
-* Add support for a zstd compressed initramfs.
-* Add compression for compressing built-in initramfs with zstd.
+Does that mean "yes, this fixes a regression"?
 
-I have tested this patch by boot testing with buildroot and QEMU.
-Specifically, I booted the kernel with both a zstd and gzip compressed
-initramfs, both built into the kernel and separate. I ensured that the
-correct compression algorithm was used. I tested on arm, aarch64, i386,
-and x86_64.
+> but the iommu files moved location and git fixes tags only generates
+> for a few handful of commits and doesn't show the old ones. 
 
-This patch has been tested in production on aarch64 and x86_64 devices.
+Not sure how to interpret the rest of this.  I'm happy to include the
+SHA1 of the original commit that added the regression, even if the
+file has moved since then.
 
-Additionally, I have performance measurements from internal use in
-production. On an aarch64 device we saw 19 second boot time improvement
-from switching from lzma to zstd (27 seconds to 8 seconds). On an x86_64
-device we saw a 9 second boot time reduction from switching from xz to
-zstd.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nick Terrell <terrelln@fb.com>
----
- usr/Kconfig  | 20 ++++++++++++++++++++
- usr/Makefile |  1 +
- 2 files changed, 21 insertions(+)
-
-diff --git a/usr/Kconfig b/usr/Kconfig
-index 96afb03b65f9..2599bc21c1b2 100644
---- a/usr/Kconfig
-+++ b/usr/Kconfig
-@@ -100,6 +100,15 @@ config RD_LZ4
- 	  Support loading of a LZ4 encoded initial ramdisk or cpio buffer
- 	  If unsure, say N.
- 
-+config RD_ZSTD
-+	bool "Support initial ramdisk/ramfs compressed using ZSTD"
-+	default y
-+	depends on BLK_DEV_INITRD
-+	select DECOMPRESS_ZSTD
-+	help
-+	  Support loading of a ZSTD encoded initial ramdisk or cpio buffer.
-+	  If unsure, say N.
-+
- choice
- 	prompt "Built-in initramfs compression mode"
- 	depends on INITRAMFS_SOURCE != ""
-@@ -196,6 +205,17 @@ config INITRAMFS_COMPRESSION_LZ4
- 	  If you choose this, keep in mind that most distros don't provide lz4
- 	  by default which could cause a build failure.
- 
-+config INITRAMFS_COMPRESSION_ZSTD
-+	bool "ZSTD"
-+	depends on RD_ZSTD
-+	help
-+	  ZSTD is a compression algorithm targeting intermediate compression
-+	  with fast decompression speed. It will compress better than GZIP and
-+	  decompress around the same speed as LZO, but slower than LZ4.
-+
-+	  If you choose this, keep in mind that you may need to install the zstd
-+	  tool to be able to compress the initram.
-+
- config INITRAMFS_COMPRESSION_NONE
- 	bool "None"
- 	help
-diff --git a/usr/Makefile b/usr/Makefile
-index c12e6b15ce72..b1a81a40eab1 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -15,6 +15,7 @@ compress-$(CONFIG_INITRAMFS_COMPRESSION_LZMA)	:= lzma
- compress-$(CONFIG_INITRAMFS_COMPRESSION_XZ)	:= xzmisc
- compress-$(CONFIG_INITRAMFS_COMPRESSION_LZO)	:= lzo
- compress-$(CONFIG_INITRAMFS_COMPRESSION_LZ4)	:= lz4
-+compress-$(CONFIG_INITRAMFS_COMPRESSION_ZSTD)	:= zstd
- 
- obj-$(CONFIG_BLK_DEV_INITRD) := initramfs_data.o
- 
--- 
-2.27.0
-
+Bjorn
