@@ -2,165 +2,121 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F31C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46516C433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 498C020888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FFC2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgGWHne (ORCPT
+        id S1727045AbgGWHo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:43:34 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33812 "EHLO inva021.nxp.com"
+        Thu, 23 Jul 2020 03:44:26 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57096 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgGWHnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:43:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B9EB5200024;
-        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AAE93200A42;
-        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D995202B6;
-        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v3 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Date:   Thu, 23 Jul 2020 10:43:13 +0300
-Message-Id: <20200723074314.3304-3-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200723074314.3304-1-horia.geanta@nxp.com>
-References: <20200723074314.3304-1-horia.geanta@nxp.com>
+        id S1725911AbgGWHoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:44:25 -0400
+IronPort-SDR: gUqfeC/UCMCYIIpoYwC/eZ/69fOrjB1K/uf8xLhwUDN2zIDE0fVxZmIa4lZkv+9ZrUatFaKOpb
+ qKjDHiwUf1Qg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="137978889"
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="137978889"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 00:44:24 -0700
+IronPort-SDR: CbufD7Mhkp5Kw7TdKN24b9meL/Ov70j6yVSll5UkkqtiuSbM2koxkRdd3zLj9oLBVognjxxN5X
+ kXAY3507eE+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="310935025"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 00:44:21 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v5 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Thu, 23 Jul 2020 15:44:16 +0800
+Message-Id: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: AndrÃ© Draszik <git@andred.net>
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-At the moment, enabling this driver without the SNVS RTC driver
-being active will hang the kernel as soon as the power button
-is pressed.
+Patch series is baselined on linux 5.8-rc5.
 
-The reason is that in that case the SNVS isn't enabled, and
-any attempt to read the SNVS registers will simply hang forever.
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
 
-Ensure the clock is enabled (during the interrupt handler) to
-make this driver work.
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
 
-Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
-and commit edb190cb1734
-("rtc: snvs: make sure clock is enabled for interrupt handle")
-for similar updates to the snvs rtc driver.
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
 
-Signed-off-by: AndrÃ© Draszik <git@andred.net>
-Reviewed-by: Horia GeantÄƒ <horia.geanta@nxp.com>
-Signed-off-by: Horia GeantÄƒ <horia.geanta@nxp.com>
----
- drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
 
-diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-index 2f5e3ab5ed63..382d2ae82c9b 100644
---- a/drivers/input/keyboard/snvs_pwrkey.c
-+++ b/drivers/input/keyboard/snvs_pwrkey.c
-@@ -16,6 +16,7 @@
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/pm_wakeirq.h>
-+#include <linux/clk.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- 
-@@ -38,6 +39,7 @@ struct pwrkey_drv_data {
- 	int wakeup;
- 	struct timer_list check_timer;
- 	struct input_dev *input;
-+	struct clk *clk;
- 	u8 minor_rev;
- };
- 
-@@ -47,7 +49,10 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
- 	struct input_dev *input = pdata->input;
- 	u32 state;
- 
-+	clk_enable(pdata->clk);
- 	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
-+	clk_disable(pdata->clk);
-+
- 	state = state & SNVS_HPSR_BTN ? 1 : 0;
- 
- 	/* only report new event if status changed */
-@@ -74,11 +79,13 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
- 
- 	pm_wakeup_event(input->dev.parent, 0);
- 
-+	clk_enable(pdata->clk);
-+
- 	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
- 	if (lp_status & SNVS_LPSR_SPO) {
- 		if (pdata->minor_rev == 0) {
- 			/*
--			 * The first generation i.MX6 SoCs only sends an
-+			 * The first generation i.MX[6|7] SoCs only send an
- 			 * interrupt on button release. To mimic power-key
- 			 * usage, we'll prepend a press event.
- 			 */
-@@ -96,6 +103,8 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
- 	/* clear SPO status */
- 	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
- 
-+	clk_disable(pdata->clk);
-+
- 	return IRQ_HANDLED;
- }
- 
-@@ -140,6 +149,23 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
- 	if (pdata->irq < 0)
- 		return -EINVAL;
- 
-+	pdata->clk = devm_clk_get_optional(&pdev->dev, "snvs-pwrkey");
-+	if (IS_ERR(pdata->clk))
-+		return PTR_ERR(pdata->clk);
-+
-+	error = clk_prepare(pdata->clk);
-+	if (error) {
-+		dev_err(&pdev->dev, "failed to prepare the snvs clock\n");
-+		return error;
-+	}
-+	error = devm_add_action_or_reset(&pdev->dev,
-+			(void(*)(void *))clk_unprepare,
-+			pdata->clk);
-+	if (error) {
-+		dev_err(&pdev->dev, "failed to add reset action on 'snvs-pwrkey'");
-+		return error;
-+	}
-+
- 	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
- 	pdata->minor_rev = vid & 0xff;
- 
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  40 +++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 269 +++++++++++++++++++++
+ 4 files changed, 321 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
 -- 
-2.17.1
+2.11.0
 
