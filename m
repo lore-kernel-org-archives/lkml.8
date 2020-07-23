@@ -2,118 +2,67 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73587C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C74C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4141220771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EFB20771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGWRCg (ORCPT
+        id S1728117AbgGWRE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:02:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55378 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGWRCf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:02:35 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jyebz-0007Ya-Q9; Thu, 23 Jul 2020 17:02:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] video: fbdev: fix setting of pixclock because a pass-by-value error
-Date:   Thu, 23 Jul 2020 18:02:27 +0100
-Message-Id: <20200723170227.996229-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Jul 2020 13:04:59 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:36826 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgGWRE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 13:04:58 -0400
+Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
+        by mail.ispras.ru (Postfix) with ESMTPS id 3F98C40A2040;
+        Thu, 23 Jul 2020 17:04:56 +0000 (UTC)
+From:   Evgeny Novikov <novikov@ispras.ru>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ldv-project@linuxtesting.org
+Subject: [PATCH] media: davinci: vpif_capture: fix potential double free
+Date:   Thu, 23 Jul 2020 20:04:53 +0300
+Message-Id: <20200723170453.432-1-novikov@ispras.ru>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
+and unregisters the V4L2 device. But then this is done again by
+vpif_probe() itself. The patch removes the cleaning from
+vpif_probe_complete().
 
-The pixclock is being set locally because it is being passed as a
-pass-by-value argument rather than pass-by-reference, so the computed
-pixclock is never being set in var->pixclock. Fix this by passing
-by reference.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-[This dates back to 2002, I found the offending commit from the git
-history git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git ]
-
-Addresses-Coverity: ("Unused value")
-Fixes: 115f4504a64a ("Removed currcon and other console related code. Very little is now left.")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
 ---
- drivers/video/fbdev/vga16fb.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/media/platform/davinci/vpif_capture.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/vga16fb.c b/drivers/video/fbdev/vga16fb.c
-index a20eeb8308ff..52f273af6cae 100644
---- a/drivers/video/fbdev/vga16fb.c
-+++ b/drivers/video/fbdev/vga16fb.c
-@@ -243,7 +243,7 @@ static void vga16fb_update_fix(struct fb_info *info)
- }
- 
- static void vga16fb_clock_chip(struct vga16fb_par *par,
--			       unsigned int pixclock,
-+			       unsigned int *pixclock,
- 			       const struct fb_info *info,
- 			       int mul, int div)
- {
-@@ -259,14 +259,14 @@ static void vga16fb_clock_chip(struct vga16fb_par *par,
- 		{     0 /* bad */,    0x00, 0x00}};
- 	int err;
- 
--	pixclock = (pixclock * mul) / div;
-+	*pixclock = (*pixclock * mul) / div;
- 	best = vgaclocks;
--	err = pixclock - best->pixclock;
-+	err = *pixclock - best->pixclock;
- 	if (err < 0) err = -err;
- 	for (ptr = vgaclocks + 1; ptr->pixclock; ptr++) {
- 		int tmp;
- 
--		tmp = pixclock - ptr->pixclock;
-+		tmp = *pixclock - ptr->pixclock;
- 		if (tmp < 0) tmp = -tmp;
- 		if (tmp < err) {
- 			err = tmp;
-@@ -275,7 +275,7 @@ static void vga16fb_clock_chip(struct vga16fb_par *par,
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index d9ec439faefa..72a0e94e2e21 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1482,8 +1482,6 @@ static int vpif_probe_complete(void)
+ 		/* Unregister video device */
+ 		video_unregister_device(&ch->video_dev);
  	}
- 	par->misc |= best->misc;
- 	par->clkdiv = best->seq_clock_mode;
--	pixclock = (best->pixclock * div) / mul;		
-+	*pixclock = (best->pixclock * div) / mul;
- }
- 			       
- #define FAIL(X) return -EINVAL
-@@ -497,10 +497,10 @@ static int vga16fb_check_var(struct fb_var_screeninfo *var,
+-	kfree(vpif_obj.sd);
+-	v4l2_device_unregister(&vpif_obj.v4l2_dev);
  
- 	if (mode & MODE_8BPP)
- 		/* pixel clock == vga clock / 2 */
--		vga16fb_clock_chip(par, var->pixclock, info, 1, 2);
-+		vga16fb_clock_chip(par, &var->pixclock, info, 1, 2);
- 	else
- 		/* pixel clock == vga clock */
--		vga16fb_clock_chip(par, var->pixclock, info, 1, 1);
-+		vga16fb_clock_chip(par, &var->pixclock, info, 1, 1);
- 	
- 	var->red.offset = var->green.offset = var->blue.offset = 
- 	var->transp.offset = 0;
+ 	return err;
+ }
 -- 
-2.27.0
+2.16.4
 
