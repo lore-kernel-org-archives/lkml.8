@@ -2,104 +2,103 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AC0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7825C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A0820888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:20:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595492438;
-	bh=EaBKgkLVab34uO4dsoqXLnPdlRXSsluTsnqow7VZchE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0Y69ZxlOHABjC9+7XIfZADr7pGHxF2bL4KPm7YjyFsPzOPe3r/FHdR2T77B66+jbS
-	 1i686L9OOT0+0ERsRxkOb29dM6lrcbROHeDGaoyPrYrzvS0P1VpHUn9Xu69riDGdLd
-	 7Aax7XnHxrtxT/OKbfD7wSKp5qQOGhupQhE311yE=
+	by mail.kernel.org (Postfix) with ESMTP id 8F9D720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:22:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os/0wGVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgGWIUh (ORCPT
+        id S1726737AbgGWIWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:20:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgGWIUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:20:36 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C97206E3;
-        Thu, 23 Jul 2020 08:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595492436;
-        bh=EaBKgkLVab34uO4dsoqXLnPdlRXSsluTsnqow7VZchE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z1MEhJ4bQgkvAUr6y16w81kHSJmgHmA6HbXKHjoAIODeLC0/kSWI+X688OQm+afPa
-         kmgxZhHGOOQXioIAvgVtivokLsuq7owOOk5T+OmsVuhxxuMWPrLV0xgrDcm8gISY0r
-         GZgGEdwFzriRGrjdwGRDSU10GjB9GkQqvCuvFHs4=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] sh: clk: Fix assignment from incompatible pointer type for ioreadX()
-Date:   Thu, 23 Jul 2020 10:20:17 +0200
-Message-Id: <20200723082017.24053-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Jul 2020 04:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgGWIWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:22:38 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3593C0619DC;
+        Thu, 23 Jul 2020 01:22:37 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id p14so3771910wmg.1;
+        Thu, 23 Jul 2020 01:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QE10UDZQ3r5KctDFG038ZVtepXURxKEMA8qw8LlWSEY=;
+        b=Os/0wGVhINaT50kNjojm42n5UockuOvesYAtUK3exVVbKcF5f/N0XQJlTarczwHRKU
+         uy4WrGbGX1HgDZMJHOdn3+fUrZAGtEXkfou9SSW+pVYhvrjkV2mNzquCZEHE3xVGY5bX
+         yb8pittSkp1e5A7ZkSg9Y0HFp6327SPU3I6nl0kxxOUfWE3jePiiSvpBvwpvjKVJKel/
+         kTZsuoKzZsMGOPRrf49CbzEGxqQbmm04QK+emJHbt/jYHbzENz/h8MGC9vyIFLZOOhFJ
+         S5/Oh3RUNtI9ver6zN0JtaKBYLBePUSrdcKiCcOCRTMnMZ/BIC8k+OZ6URKGLL3aY+NT
+         ERrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QE10UDZQ3r5KctDFG038ZVtepXURxKEMA8qw8LlWSEY=;
+        b=ZD6NV0l0SYzTpTsC16dBODK7W6HIq0v+c5QFdpxjI+8zzUX/SHFHBnivqTQW+alIAW
+         EyVfCK+9OK6rEQsF9dpCnC/QBdliWSpAPsZxuYqHFUm/woapcljieP3cwXENfHRzIcpM
+         IXfzojmrcxbgGVamm6FlxX34MV8F2DzO4/D09TjkNLsM539kr2Uy3DNQhJCnce2+uV8D
+         H54H0NV5kBvbgFz23RehSTFR2cDzNCMh5zT/UWIkpXOZ+QTjNi54fYODn0Ouu2Ztj0Xk
+         ujjWVzc3wAydxopIkwkvlUCeZcMydVoKAZTmuiVdfI15SgvpC8KFc7khvpMG8IFLroCz
+         DneA==
+X-Gm-Message-State: AOAM533kscGaWDPiZhieARFKRDHuqflnT38EaNc3r61FCOveZS12NsvM
+        Ivx+njqkKMIdBDpqbC1SsWA=
+X-Google-Smtp-Source: ABdhPJzRo2CpLckZ5BybV2p2mZPEKIPpKjjoDDNVlus8LUvOzoTI2kUV/qOMer0ffg8TPEA8+n5kqQ==
+X-Received: by 2002:a1c:df02:: with SMTP id w2mr436740wmg.137.1595492556305;
+        Thu, 23 Jul 2020 01:22:36 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id f12sm2805882wrj.48.2020.07.23.01.22.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 01:22:35 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
+To:     Mark Brown <broonie@kernel.org>, Leilk Liu <leilk.liu@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+References: <20200721024819.7150-1-leilk.liu@mediatek.com>
+ <20200721094859.GB4845@sirena.org.uk>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <2a1cfaf2-0c58-e0c9-7c70-20a2f84321f9@gmail.com>
+Date:   Thu, 23 Jul 2020 10:22:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721094859.GB4845@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ioreadX() helpers accept now pointer to const memory so declaration
-of read function needs updating.
 
-This fixes build errors like:
 
-    drivers/sh/clk/cpg.c: In function ‘sh_clk_mstp_enable’:
-    drivers/sh/clk/cpg.c:49:9: error: assignment from incompatible pointer type [-Werror=incompatible-pointer-types]
-        read = ioread8;
+On 21/07/2020 11:48, Mark Brown wrote:
+> On Tue, Jul 21, 2020 at 10:48:19AM +0800, Leilk Liu wrote:
+>> From: "leilk.liu" <leilk.liu@mediatek.com>
+>>
+>> Add a DT binding documentation for the MT8192 soc.
+> 
+> I'd expect to see a matching driver patch.
+> 
 
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Well for now the device would match against the "mediatek,mt6765-spi" as it is 
+the same chip. We just want to define the binding so that we could add a special 
+case for mt8192 in the future, if needed.
 
----
-
-Dear Andrew,
-
-This was part of my v3 patchset commit 9ab7fb303cc1 ("iomap: Constify
-ioreadX() iomem argument (as in generic implementation)") but I think it
-was skipped when applying to your tree.
-
-Maybe because it depends on commit 58c4d8659186 ("sh: clkfwk: remove
-r8/r16/r32") which landed later?  Anyway it should go through your tree,
-I think.
----
- drivers/sh/clk/cpg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/sh/clk/cpg.c b/drivers/sh/clk/cpg.c
-index a5cacfe24a42..fd72d9088bdc 100644
---- a/drivers/sh/clk/cpg.c
-+++ b/drivers/sh/clk/cpg.c
-@@ -40,7 +40,7 @@ static int sh_clk_mstp_enable(struct clk *clk)
- {
- 	sh_clk_write(sh_clk_read(clk) & ~(1 << clk->enable_bit), clk);
- 	if (clk->status_reg) {
--		unsigned int (*read)(void __iomem *addr);
-+		unsigned int (*read)(const void __iomem *addr);
- 		int i;
- 		void __iomem *mapped_status = (phys_addr_t)clk->status_reg -
- 			(phys_addr_t)clk->enable_reg + clk->mapped_reg;
--- 
-2.17.1
-
+Regards,
+Matthias
