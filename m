@@ -2,91 +2,103 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65363C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30E5C433EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6642065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8F222C9E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1jhXPCQJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MQsGZUsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgGWUWx (ORCPT
+        id S1728057AbgGWUXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:22:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGWUWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:22:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8326AAB55;
-        Thu, 23 Jul 2020 20:22:59 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 1D40A604C9; Thu, 23 Jul 2020 22:22:51 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 22:22:51 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Chi Song <Song.Chi@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
- ethtool regs
-Message-ID: <20200723202251.vwh4xr7ogp72gcsg@lion.mk-sys.cz>
-References: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
- <20200723193542.6vwu4cbokbihw3nh@lion.mk-sys.cz>
- <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
+        Thu, 23 Jul 2020 16:23:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32818 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgGWUXc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:23:32 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595535810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=13eX65NKhTLwr4wa9nwWsPlfdutzeNj03w02PC/5rs4=;
+        b=1jhXPCQJstdH9CtCCpLyVZrksLIJXuuhxFGZnUfU+3pOZrI2KPqYgwbQ0Sm6xJAm0rqb84
+        MHefvsezd2XnqxVHrgIgYMxqPKxJw66D6fHc3dzQpiqG2CEqUFsp0YBLPVaaHTntLvme+H
+        /Q8NDd4wYx6RFEtIrLe9e6gf5/SxK6E6ht8GAnl2/bGnX2DS7v/GfkzPP8deRI3nk6JNGz
+        27vZK5cyaZYNrHexeR5733cnor3v8w+8CWKk5ger8jF9c2FgL5I5wddjdqqVfWk25QGE2H
+        3ASkgTxi1JE5c3gbGfZu716QRCpJgAIHFiydJcxvc3hVBjjwb9YihZ2FZYZpkg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595535810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=13eX65NKhTLwr4wa9nwWsPlfdutzeNj03w02PC/5rs4=;
+        b=MQsGZUsaQ6TJWdR6X93SMfni2qTkk1ixXSwjPCEB5I6pgQ0aMVt+vX2XZ7ErADgwbnwtgk
+        5MptZ2mJQ+GxetAg==
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Weiny Ira <ira.weiny@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        X86 ML <x86@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
+In-Reply-To: <71f0e3d8-6dfa-742d-eaa7-330b59611e2f@intel.com>
+References: <20200723165204.GB77434@romley-ivt3.sc.intel.com> <C03DA782-BD1A-42E3-B118-ABB34BC5F2AF@amacapital.net> <71f0e3d8-6dfa-742d-eaa7-330b59611e2f@intel.com>
+Date:   Thu, 23 Jul 2020 22:23:29 +0200
+Message-ID: <87ft9ivv3y.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR2101MB09308AB4F78EA5B1B27B1CCBCA760@BL0PR2101MB0930.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 07:55:20PM +0000, Haiyang Zhang wrote:
-> > -----Original Message-----
-> > From: Michal Kubecek <mkubecek@suse.cz>
-> > Sent: Thursday, July 23, 2020 3:36 PM
-> > To: Chi Song <Song.Chi@microsoft.com>
-> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> > Wei Liu <wei.liu@kernel.org>; David S. Miller <davem@davemloft.net>; Jakub
-> > Kicinski <kuba@kernel.org>; linux-hyperv@vger.kernel.org;
-> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v7 net-next] net: hyperv: dump TX indirection table to
-> > ethtool regs
-> > 
-> > On Wed, Jul 22, 2020 at 11:59:09PM -0700, Chi Song wrote:
-> > > An imbalanced TX indirection table causes netvsc to have low
-> > > performance. This table is created and managed during runtime. To help
-> > > better diagnose performance issues caused by imbalanced tables, it needs
-> > > make TX indirection tables visible.
-> > >
-> > > Because TX indirection table is driver specified information, so
-> > > display it via ethtool register dump.
-> > 
-> > Is the Tx indirection table really unique to netvsc or can we expect
-> > other drivers to support similar feature? Also, would it make sense to
-> > allow also setting the table with ethtool? (AFAICS it can be only set
-> > from hypervisor at the moment.)
-> 
-> Currently, TX indirection table is only used by the Hyper-V synthetic NIC. I'm 
-> not aware of any other NIC planning to use this.
-> This table is created by host dynamically based on host side CPU usage, 
-> and provided to the VM periodically. Our protocol doesn't let the guest side 
-> to change it.
+Dave Hansen <dave.hansen@intel.com> writes:
 
-If host is expected to rewrite the table periodically, it would indeed
-be of little use to set it on guest side. OK, let's do it as register
-dump and see if someone else comes with similar feature.
+> On 7/23/20 10:08 AM, Andy Lutomirski wrote:
+>> Suppose some kernel code (a syscall or kernel thread) changes PKRS
+>> then takes a page fault. The page fault handler needs a fresh PKRS.
+>> Then the page fault handler (say a VMA=E2=80=99s .fault handler) changes
+>> PKRS.  The we get an interrupt. The interrupt *also* needs a fresh
+>> PKRS and the page fault value needs to be saved somewhere.
+>>=20
+>> So we have more than one saved value per thread, and thread_struct
+>> isn=E2=80=99t going to solve this problem.
+>
+> Taking a step back...  This is all true only if we decide that we want
+> protection keys to provide protection during exceptions and interrupts.
+>  Right now, the code supports nesting:
+>
+> 	kmap(foo);
+> 		kmap(bar);
+> 		kunmap(bar);
+> 	kunmap(foo);
+>
+> with a reference count.  So, the nested kmap() will see the count
+> elevated and do nothing.
 
-Michal
+Hopefully with a big fat warning if the nested map requires a different
+key than the outer one.
