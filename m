@@ -2,121 +2,117 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB1AC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8348FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A13206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6275E206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:38:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hn1PUNyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbgGWDga (ORCPT
+        id S2387767AbgGWDiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 23:36:30 -0400
-Received: from regular1.263xmail.com ([211.150.70.205]:41462 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733169AbgGWDg3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 23:36:29 -0400
-Received: from localhost (unknown [192.168.167.235])
-        by regular1.263xmail.com (Postfix) with ESMTP id D0411626;
-        Thu, 23 Jul 2020 11:36:18 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P26708T140361068414720S1595475377813196_;
-        Thu, 23 Jul 2020 11:36:18 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <456395a23dbaab454e0c8d02710fb0dc>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: kever.yang@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH v1] clk: Export __clk_lookup()
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, xxx@rock-chips.com,
-        xf@rock-chips.com, huangtao@rock-chips.com,
-        kever.yang@rock-chips.com
-References: <20200722023230.10826-1-zhangqing@rock-chips.com>
- <14639646.VOZsFJ8Tpa@phil>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <ecff8b61-f16e-c1ca-3b92-9c90867e73a7@rock-chips.com>
-Date:   Thu, 23 Jul 2020 11:36:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 23:38:11 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:46824 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729401AbgGWDiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 23:38:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595475490; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=6YpbNPayyumGwfyiflw7K8aKpehYKy6/dGMhIEqlhuw=;
+ b=hn1PUNyndPRXnjfnF1dvW3po5q7SJNAQ97bhllU6hQy0GirCKjbGUo3r0fb/FXNBhvowAgD/
+ Yc3tfXhZFVXCVmAt6KDnr9IUjpaZfJczEDJEJgQCCnSAB6iZo4FCDnK2uHd9Pc9bNa9wVEHL
+ pYfQ5JDsmPEupqUMz2gSelnmcPU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f1906218e9b2c49c6699960 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 03:38:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CE49AC433CB; Thu, 23 Jul 2020 03:38:09 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: hongwus)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44A1EC433C9;
+        Thu, 23 Jul 2020 03:38:08 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <14639646.VOZsFJ8Tpa@phil>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Jul 2020 11:38:08 +0800
+From:   hongwus@codeaurora.org
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, sh425.lee@samsung.com,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/9] ufs: ufs-qcom: Fix race conditions caused by func
+ ufs_qcom_testbus_config
+In-Reply-To: <1595471649-25675-4-git-send-email-cang@codeaurora.org>
+References: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
+ <1595471649-25675-4-git-send-email-cang@codeaurora.org>
+Message-ID: <f8a94108c8d063336f844a812e59020e@codeaurora.org>
+X-Sender: hongwus@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-ÔÚ 2020/7/23 ÉÏÎç2:26, Heiko Stuebner Ð´µÀ:
-> Hi Elaine,
->
-> Am Mittwoch, 22. Juli 2020, 04:32:30 CEST schrieb Elaine Zhang:
->> Export __clk_lookup() to support user built as module.
->>
->> ERROR:
->> drivers/clk/rockchip/clk.ko: In function
->> `rockchip_clk_protect_critical':
->> drivers/clk/rockchip/clk.c:741:
->> undefined reference to `__clk_lookup'
-> can you elaborate a bit more on why this would be needed?
->
-> Because right now the Rockchip clocks are of course built into
-> the main kernel image (especially due to them being needed during early
-> boot) and __clk_lookup actually is a pretty deep part of the clock-
-> framework itself, as probably also denoted by the "__" in the function
-> name.
-
-Rockchip clocks are of course support to built as module(to support GKI),These changes will be pushed soon.
-In drivers/clk/rockchip/clk.c and drivers/clk/rockchip/clk-cpu.c use the __clk_lookup.
-
->
->
-> Heiko
->
->> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
->> ---
->>   drivers/clk/clk.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index 3f588ed06ce3..600284fbb257 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -618,6 +618,7 @@ struct clk *__clk_lookup(const char *name)
->>   
->>   	return !core ? NULL : core->hw->clk;
->>   }
->> +EXPORT_SYMBOL_GPL(__clk_lookup);
->>   
->>   static void clk_core_get_boundaries(struct clk_core *core,
->>   				    unsigned long *min_rate,
->>
->
->
->
->
->
+On 2020-07-23 10:34, Can Guo wrote:
+> If ufs_qcom_dump_dbg_regs() calls ufs_qcom_testbus_config() from
+> ufshcd_suspend/resume and/or clk gate/ungate context, 
+> pm_runtime_get_sync()
+> and ufshcd_hold() will cause racing problems. Fix this by removing the
+> unnecessary calls of pm_runtime_get_sync() and ufshcd_hold().
+> 
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs-qcom.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 2e6ddb5..7da27ee 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -1604,9 +1604,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host 
+> *host)
+>  	 */
+>  	}
+>  	mask <<= offset;
+> -
+> -	pm_runtime_get_sync(host->hba->dev);
+> -	ufshcd_hold(host->hba, false);
+>  	ufshcd_rmwl(host->hba, TEST_BUS_SEL,
+>  		    (u32)host->testbus.select_major << 19,
+>  		    REG_UFS_CFG1);
+> @@ -1619,8 +1616,6 @@ int ufs_qcom_testbus_config(struct ufs_qcom_host 
+> *host)
+>  	 * committed before returning.
+>  	 */
+>  	mb();
+> -	ufshcd_release(host->hba);
+> -	pm_runtime_put_sync(host->hba->dev);
+> 
+>  	return 0;
+>  }
 
 
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
