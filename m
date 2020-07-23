@@ -2,337 +2,197 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC87C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A6AC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCC17207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jEsDtFvx"
+	by mail.kernel.org (Postfix) with ESMTP id F189E207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgGWN4F (ORCPT
+        id S1729373AbgGWN4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGWN4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:56:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E89BC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=OKnWPXhKK/ImykNQZOuXNTzT4NqgyVCCOABx7DsyXC8=; b=jEsDtFvxDm0K4KpYEOX6fXKHoD
-        DOrCE2HqGVpCxJcsA7Bxz10Ic03ZMGEkw7SH0aONp7KFh5d+EYWJ5zeS/H8Kn64C411+vB1wlT0D1
-        Ia+BLkl3X3sOkaOCHFCATCeu7SsMF1yALaJWzQXgXD2d1VFymOnJLjZJVdGASyzcN+V7Nr9HOTL8A
-        QKoglTfUwtpxPF/U0L1VjBn/F+xQoQ20W9A5KnPt45l/Td3hJujYygUgFsu1PZYNzf3sH2GZE/Z2D
-        LbQ1qm0BmuaDooGcRfpFOj8BQgPDnIVy4OyBBF6jQ/WFSRf155Y4xeFiQDTcXsfbN/qOaXpzxG7oS
-        LXC68A0w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jybhZ-0003QH-3q; Thu, 23 Jul 2020 13:56:01 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 80116983422; Thu, 23 Jul 2020 15:55:56 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 15:55:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
-        bigeasy@linutronix.de, frederic@kernel.org
-Subject: Re: [PATCH smp 2/2] kernel/smp: Provide CSD lock timeout diagnostics
-Message-ID: <20200723135556.GQ5523@worktop.programming.kicks-ass.net>
-References: <20200709235436.GA20922@paulmck-ThinkPad-P72>
- <20200709235557.21080-2-paulmck@kernel.org>
- <20200710103227.GD4800@hirez.programming.kicks-ass.net>
- <20200710212834.GL9247@paulmck-ThinkPad-P72>
- <20200710225849.GA6004@paulmck-ThinkPad-P72>
+        Thu, 23 Jul 2020 09:56:08 -0400
+Received: from mga07.intel.com ([134.134.136.100]:31940 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728310AbgGWN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:56:06 -0400
+IronPort-SDR: PIQ3QiaNhlzLGinTIuwfnAj8MDytEyW6XEHbKNzPz/48h2zNztC1XlBC1LHzmWH1tr6dFLXs6K
+ pwZTJbubijWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215132657"
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="215132657"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 06:56:04 -0700
+IronPort-SDR: SIAukGYZbjWvyy0aLs0D8OR6l46I51tDLGzOil9oSQS2xiBwpLatn3fS4/poyVdi7TcZ0H+Rpp
+ 6RyeS99Yu2Ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
+   d="scan'208";a="488375975"
+Received: from ychan16-mobl1.ccr.corp.intel.com (HELO [10.255.29.206]) ([10.255.29.206])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2020 06:56:00 -0700
+Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] iommu aux-domain APIs extensions
+To:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f5f3e7bc-6c88-5680-ad6f-f1eb721a7445@linux.intel.com>
+Date:   Thu, 23 Jul 2020 21:55:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200710225849.GA6004@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 03:58:49PM -0700, Paul E. McKenney wrote:
-> Sadly, the code creating the 32-bit VDSO became unhappy:
+Hi Joerg and Alex,
+
+Any comments for this series?
+
+Just check to see whether we could make it for v5.9. The first aux-
+domain capable device driver has been posted [1].
+
+[1] 
+https://lore.kernel.org/linux-pci/159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com/
+
+Best regards,
+baolu
+
+On 2020/7/14 13:56, Lu Baolu wrote:
+> This series aims to extend the IOMMU aux-domain API set so that it
+> could be more friendly to vfio/mdev usage. The interactions between
+> vfio/mdev and iommu during mdev creation and passthr are:
 > 
-> ------------------------------------------------------------------------
+> 1. Create a group for mdev with iommu_group_alloc();
+> 2. Add the device to the group with
 > 
-> In file included from ././include/linux/compiler_types.h:59:0,
->                  from <command-line>:0:
-> ./include/linux/smp.h:40:26: error: requested alignment is not a positive power of 2
->   __aligned(sizeof(struct __call_single_data));
->                           ^
-> ./include/linux/compiler_attributes.h:57:68: note: in definition of macro ‘__aligned’
->  #define __aligned(x)                    __attribute__((__aligned__(x)))
->                                                                     ^
-> scripts/Makefile.build:280: recipe for target 'arch/x86/entry/vdso/vdso32/vclock_gettime.o' failed
-> make[3]: *** [arch/x86/entry/vdso/vdso32/vclock_gettime.o] Error 1
+>         group = iommu_group_alloc();
+>         if (IS_ERR(group))
+>                 return PTR_ERR(group);
 > 
-
-*groan*, we have BUILD_VDSO* for that, but yeah, not pretty.
-
->  Thoughts?
-
-The biggest one is C++ comments and excessively long lines but let me go
-stare at more detail :-)
-
-> ------------------------------------------------------------------------
+>         ret = iommu_group_add_device(group, &mdev->dev);
+>         if (!ret)
+>                 dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+>                          iommu_group_id(group));
 > 
-> commit aba04e2ce05fbc6bb90e6fa238c22e491f6b95e3
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Tue Jun 30 13:22:54 2020 -0700
+> 3. Allocate an aux-domain with iommu_domain_alloc();
+> 4. Attach the aux-domain to the iommu_group.
 > 
->     kernel/smp: Provide CSD lock timeout diagnostics
->     
->     This commit causes csd_lock_wait() to emit diagnostics when a CPU
->     fails to respond quickly enough to one of the smp_call_function()
->     family of function calls.  These diagnostics are enabled by a new
->     CSD_LOCK_WAIT_DEBUG Kconfig option that depends on DEBUG_KERNEL.
->     
->     This commit was inspired by an earlier patch by Josef Bacik.
->     
->     [ paulmck: Fix for syzbot+0f719294463916a3fc0e@syzkaller.appspotmail.com ]
->     [ paulmck: Fix KASAN use-after-free issue reported by Qian Cai. ]
->     [ paulmck: Fix botched nr_cpu_ids comparison per Dan Carpenter. ]
->     [ paulmck: More #ifdef per Peter Zijlstra. ]
->     [ paulmck: Print delays in ns rather than ms per Peter Zijlstra. ]
->     [ paulmck: Use more CONFIG_CSD_LOCK_WAIT_DEBUG per Peter Zijlstra. ]
->     Link: https://lore.kernel.org/lkml/00000000000042f21905a991ecea@google.com
->     Link: https://lore.kernel.org/lkml/0000000000002ef21705a9933cf3@google.com
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Ingo Molnar <mingo@kernel.org>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+>         iommu_group_for_each_dev {
+>                 if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+>                         return iommu_aux_attach_device(domain, iommu_device);
+>                 else
+>                         return iommu_attach_device(domain, iommu_device);
+>          }
 > 
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 148d991..e1d8e52 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -20,6 +20,9 @@
->  #include <linux/sched.h>
->  #include <linux/sched/idle.h>
->  #include <linux/hypervisor.h>
-> +#include <linux/sched/clock.h>
-> +#include <linux/nmi.h>
-> +#include <linux/sched/debug.h>
->  
->  #include "smpboot.h"
->  #include "sched/smp.h"
-> @@ -34,6 +37,12 @@ struct call_function_data {
->  
->  static DEFINE_PER_CPU_ALIGNED(struct call_function_data, cfd_data);
->  
-> +#ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
-> +static DEFINE_PER_CPU(call_single_data_t *, cur_csd);
-> +static DEFINE_PER_CPU(smp_call_func_t, cur_csd_func);
-> +static DEFINE_PER_CPU(void *, cur_csd_info);
-> +#endif
-
-None of these are used before the other #ifdef block below, perhaps
-merge them into one?
-
->  static DEFINE_PER_CPU_SHARED_ALIGNED(struct llist_head, call_single_queue);
->  
->  static void flush_smp_call_function_queue(bool warn_cpu_offline);
-> @@ -96,6 +105,103 @@ void __init call_function_init(void)
->  	smpcfd_prepare_cpu(smp_processor_id());
->  }
->  
-> +#ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
-> +
-> +#define CSD_LOCK_TIMEOUT (5 * 1000ULL * 1000ULL * 1000ULL) /* Nanoseconds. */
-
-NSEC_PER_SEC, that also instantly obviates the comment
-
-> +atomic_t csd_bug_count = ATOMIC_INIT(0);
-> +
-> +/* Record current CSD work for current CPU, NULL to erase. */
-> +static void csd_lock_record(call_single_data_t *csd)
-> +{
-> +	if (!csd) {
-> +		smp_mb(); // NULL cur_csd after unlock.
-> +		__this_cpu_write(cur_csd, NULL);
-> +		return;
-> +	}
-> +	__this_cpu_write(cur_csd, csd);
-> +	__this_cpu_write(cur_csd_func, csd->func);
-> +	__this_cpu_write(cur_csd_info, csd->info);
-> +	smp_mb(); // Update cur_csd before function call.
-> +		  // Or before unlock, as the case may be.
-> +}
-> +
-> +static __always_inline int csd_lock_wait_getcpu(call_single_data_t *csd)
-> +{
-> +	unsigned int csd_type;
-> +
-> +	csd_type = CSD_TYPE(csd);
-> +	if (csd_type == CSD_TYPE_ASYNC || csd_type == CSD_TYPE_SYNC)
-> +		return csd->dst; // Other CSD_TYPE_ values might not have ->dst.
-> +	return -1;
-> +}
-> +
-> +/*
-> + * Complain if too much time spent waiting.  Note that only
-> + * the CSD_TYPE_SYNC/ASYNC types provide the destination CPU,
-> + * so waiting on other types gets much less information.
-> + */
-> +static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1, int *bug_id)
-> +{
-> +	int cpu = -1;
-> +	call_single_data_t *cpu_cur_csd;
-> +	bool firsttime;
-> +	unsigned int flags = READ_ONCE(csd->flags);
-> +	u64 ts2, ts_delta;
-
-x-mas tree ?
-
-> +
-> +	if (!(flags & CSD_FLAG_LOCK)) {
-> +		if (!unlikely(*bug_id))
-> +			return true;
-> +		cpu = csd_lock_wait_getcpu(csd);
-> +		if (cpu >= 0)
-> +			pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, CPU#%02d released the lock after all. Phew!\n", *bug_id, raw_smp_processor_id(), cpu);
-> +		else
-> +			pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, the lock was released after all. Phew!\n", *bug_id, raw_smp_processor_id());
-
-Excessively long line.
-
-Why not a single:
-		pr_alert("csd: CSD lock (%d) got unstuck on CPU%d, CPU%d released the lock.\n",
-			 *bug_id, raw_smp_processor_id(), cpu);
-
-Yes, it'll print CPU-1, but given you have to more or less know this
-code intimately to make sense of this stuff, that seems like a fair
-trade-off.
-
-> +		return true;
-> +	}
-> +
-> +	ts2 = sched_clock();
-> +	ts_delta = ts2 - *ts1;
-> +	if (likely(ts_delta <= CSD_LOCK_TIMEOUT)) {
-> +		cpu_relax();
-> +		return false;
-> +	}
-> +
-> +	firsttime = !*bug_id;
-> +	if (firsttime)
-> +		*bug_id = atomic_inc_return(&csd_bug_count);
-> +	cpu = csd_lock_wait_getcpu(csd);
-> +	smp_mb(); // No stale cur_csd values!
-
-> +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
-> +		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, 0));
-> +	else
-> +		cpu_cur_csd = READ_ONCE(per_cpu(cur_csd, cpu));
-
-This is a potential user-after-free, func() may free the csd when async.
-Although I don't believe anybody does so.
-
-> +	smp_mb(); // No refetching cur_csd values!
-
-The READ_ONCE() already ensures things aren't re-fetched, don't see why
-we'd need smp_mb() for that.
-
-The below is unreadable... espescially when smashed together without
-whitespace, also due to the stupid long lines it wraps and becomes a
-mangled mess of letters.
-
-> +#define CSD_FORMAT_PREFIX "csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %llu ns for CPU#%02d %pS(%ps), currently"
-> +#define CSD_ARGS_PREFIX firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), \
-> +	ts2 - ts0, cpu, csd->func, csd->info
-> +	if (cpu_cur_csd && csd != cpu_cur_csd)
-> +		pr_alert(CSD_FORMAT_PREFIX " handling prior %pS(%ps) request.\n",
-> +			 CSD_ARGS_PREFIX, cpu_cur_csd->func, cpu_cur_csd->info);
-> +	else
-> +		pr_alert(CSD_FORMAT_PREFIX " %s.\n", CSD_ARGS_PREFIX,
-> +			 !cpu_cur_csd ? "unresponsive" : "handling this request");
-
-definitely missing {}
-
-> +#undef CSD_FORMAT_PREFIX
-> +#undef CSD_ARGS_PREFIX
-
-Aside from it being unreadable, I've also completely lost the plot on
-what it's doing.
-
-> +	if (cpu >= 0) {
-> +		if (!trigger_single_cpu_backtrace(cpu))
-> +			dump_cpu_task(cpu);
-> +		if (!cpu_cur_csd) {
-> +			pr_alert("csd: Re-sending CSD lock (#%d) IPI from CPU#%02d to CPU#%02d\n", *bug_id, raw_smp_processor_id(), cpu);
-> +			arch_send_call_function_single_ipi(cpu);
-> +		}
-> +	}
-> +	dump_stack();
-> +	*ts1 = ts2;
-
-I was expecting:
-
-	*ts1 += CSD_LOCK_TIMEOUT;
-
-Not that it matters a great deal..
-
-> +	cpu_relax();
-> +
-> +	return false;
-> +}
-> +
->  /*
->   * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
+>     where, iommu_device is the aux-domain-capable device. The mdev's in
+>     the group are all derived from it.
+> 
+> In the whole process, an iommu group was allocated for the mdev and an
+> iommu domain was attached to the group, but the group->domain leaves
+> NULL. As the result, iommu_get_domain_for_dev() (or other similar
+> interfaces) doesn't work anymore.
+> 
+> The iommu_get_domain_for_dev() is a necessary interface for device
+> drivers that want to support vfio/mdev based aux-domain. For example,
+> 
+>          unsigned long pasid;
+>          struct iommu_domain *domain;
+>          struct device *dev = mdev_dev(mdev);
+>          struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+> 
+>          domain = iommu_get_domain_for_dev(dev);
+>          if (!domain)
+>                  return -ENODEV;
+> 
+>          pasid = iommu_aux_get_pasid(domain, iommu_device);
+>          if (pasid <= 0)
+>                  return -EINVAL;
+> 
+>           /* Program the device context */
+>           ....
+> 
+> We tried to address this by extending iommu_aux_at(de)tach_device() so that
+> the users could pass in an optional device pointer (for example vfio/mdev).
+> (v2 of this series)
+> 
+> https://lore.kernel.org/linux-iommu/20200707013957.23672-1-baolu.lu@linux.intel.com/
+> 
+> But that will cause a lock issue as group->mutex has been applied in
+> iommu_group_for_each_dev(), but has to be reapplied again in the
+> iommu_aux_attach_device().
+> 
+> This version tries to address this by introducing two new APIs into the
+> aux-domain API set:
+> 
+> /**
+>   * iommu_aux_attach_group - attach an aux-domain to an iommu_group which
+>   *                          contains sub-devices (for example mdevs)
+>   *                          derived from @dev.
+>   * @domain: an aux-domain;
+>   * @group:  an iommu_group which contains sub-devices derived from @dev;
+>   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
 >   *
-> @@ -105,8 +211,26 @@ void __init call_function_init(void)
+>   * Returns 0 on success, or an error value.
 >   */
->  static __always_inline void csd_lock_wait(call_single_data_t *csd)
->  {
-> +	int bug_id = 0;
-> +	u64 ts0, ts1;
-> +
-> +	ts1 = ts0 = sched_clock();
-> +	for (;;)
-> +		if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
-> +			break;
-
-This is lacking {}, also I think you can stick (at least) the
-cpu_relax() in this loop.
-
-	for (;;) {
-		if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
-			break;
-
-		cpu_relax();
-	}
-
-And possible even the wait loop itself:
-
-	for (;;) {
-		if (csd_got_unlocked(csd, ...))
-			break;
-
-		now = sched_clock();
-		if (now - ts1 > CSD_LOCK_TIMEOUT) {
-			csd_held_too_long(csd, ts0, ts1, now, ...);
-			ts1 += CSD_LOCK_TIMEOUT;
-		}
-
-		cpu_relax();
-	}
-
-that also allows breaking up that unreadable monster a bit.
-
-> +	smp_acquire__after_ctrl_dep();
-> +}
+> int iommu_aux_attach_group(struct iommu_domain *domain,
+>                             struct iommu_group *group, struct device *dev)
+> 
+> /**
+>   * iommu_aux_detach_group - detach an aux-domain from an iommu_group
+>   *
+>   * @domain: an aux-domain;
+>   * @group:  an iommu_group which contains sub-devices derived from @dev;
+>   * @dev:    the physical device which supports IOMMU_DEV_FEAT_AUX.
+>   *
+>   * @domain must have been attached to @group via
+>   * iommu_aux_attach_group().
+>   */
+> void iommu_aux_detach_group(struct iommu_domain *domain,
+>                              struct iommu_group *group, struct device *dev)
+> 
+> This version is evolved according to feedbacks from Robin(v1) and
+> Alex(v2). Your comments are very appreciated.
+> 
+> Best regards,
+> baolu
+> 
+> ---
+> Change log:
+>   - v1->v2:
+>     - https://lore.kernel.org/linux-iommu/20200627031532.28046-1-baolu.lu@linux.intel.com/
+>     - Suggested by Robin.
+> 
+>   - v2->v3:
+>     - https://lore.kernel.org/linux-iommu/20200707013957.23672-1-baolu.lu@linux.intel.com/
+>     - Suggested by Alex
+> 
+> Lu Baolu (4):
+>    iommu: Check IOMMU_DEV_FEAT_AUX feature in aux api's
+>    iommu: Add iommu_aux_at(de)tach_group()
+>    iommu: Add iommu_aux_get_domain_for_dev()
+>    vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+> 
+>   drivers/iommu/iommu.c           | 92 ++++++++++++++++++++++++++++++---
+>   drivers/vfio/vfio_iommu_type1.c | 44 +++-------------
+>   include/linux/iommu.h           | 24 +++++++++
+>   3 files changed, 116 insertions(+), 44 deletions(-)
+> 
