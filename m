@@ -2,88 +2,99 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36700C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBD6C433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8562065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1702065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595536227;
+	bh=E/Oxvfkr47jBI1VhvqGZmOrSGj84gilYpon+jDgqMas=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wvS8xtKc7/EZlqs4DNAc28ltv3jD8dAiwknHmococTn6udDu20H+LAojjgX8NMap3
+	 tUewv1jWwAMY60oPzP5aat9UfOymbiBRCKEapsn9U+4GMN7i6QrgmQg8AinBZvBrS0
+	 qKodAYZdjfMqii5jWXGbGAD+sOtBaP3sC92/QUjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgGWU3n (ORCPT
+        id S1727854AbgGWUa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWU3m (ORCPT
+        Thu, 23 Jul 2020 16:30:26 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40223 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgGWUa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:29:42 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC3DC0619DC;
-        Thu, 23 Jul 2020 13:29:42 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 250F62CD;
-        Thu, 23 Jul 2020 20:29:41 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 14:29:40 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] docs: core-api/printk-formats.rst: use literal block
- syntax
-Message-ID: <20200723142940.2867e864@lwn.net>
-In-Reply-To: <20200718165107.625847-8-dwlsalmeida@gmail.com>
-References: <20200718165107.625847-1-dwlsalmeida@gmail.com>
-        <20200718165107.625847-8-dwlsalmeida@gmail.com>
-Organization: LWN.net
+        Thu, 23 Jul 2020 16:30:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id l17so7637914iok.7;
+        Thu, 23 Jul 2020 13:30:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yHb+xD8ynAN011pr7vNrT4LxhN7rPIg+zVnoTdpnl/8=;
+        b=Vd3Nohh0FjXOs7SvKxpAppcuekz9ydi7Vkpu5k788T6BVmxXpPo4gB+YU8jJrdj/0m
+         OGExj2yQvxMBj72+xJjVechOU2GqnmR17q5RVE934XJ6Rp7Zhv3EYVKxscZ0YIPwVL4V
+         dUEdJvz2hS/GodICTMYTx2mT6C81tssZWU/exfnM1ALWPCqOy0yO4TGD899R3B9qB085
+         5t8RC2je3C+2xv5VyP3Dl+B1X5eabukii32lVheudp2KdqkF0iPrWBmIEH93LfJlQ+K2
+         B3QMk92p4UHAqD2vPL9sFXPn/bqWG5BHTHTZlOG3m3VJoltrdijVssVrcxOy33gf8z2w
+         o0Ww==
+X-Gm-Message-State: AOAM531PXbHmkQmftkVZ+aUlT28+UJrEHNr6wcJkAARtPJ5bDxMbmQXi
+        XR/atKKurnPjUIcKIuHxsQ==
+X-Google-Smtp-Source: ABdhPJyKres8M7XsIvRrG9U45Hb5uUqG04rfhkHiyYS7JQZbdnlz6SZ0M1ugFCGGbHxX22nAI/WepQ==
+X-Received: by 2002:a6b:5a04:: with SMTP id o4mr3923450iob.171.1595536224893;
+        Thu, 23 Jul 2020 13:30:24 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id f18sm2001506ion.47.2020.07.23.13.30.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 13:30:23 -0700 (PDT)
+Received: (nullmailer pid 810072 invoked by uid 1000);
+        Thu, 23 Jul 2020 20:30:22 -0000
+Date:   Thu, 23 Jul 2020 14:30:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     rick.tyliu@ingenic.com, hadar.gat@arm.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        dongsheng.qiu@ingenic.com, sernia.zhou@foxmail.com,
+        robh+dt@kernel.org, prasannatsmkumar@gmail.com, xuzaibo@huawei.com,
+        krzk@kernel.org, arnd@arndb.de, rdunlap@infradead.org,
+        mpm@selenic.com, tmaimon77@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, yanfei.li@ingenic.com,
+        daniel.thompson@linaro.org, aric.pzqi@ingenic.com,
+        gregkh@linuxfoundation.org, zhenwenjin@gmail.com,
+        masahiroy@kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: RNG: Add Ingenic RNG bindings.
+Message-ID: <20200723203022.GA810026@bogus>
+References: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
+ <20200723062446.84013-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723062446.84013-2-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 13:51:02 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
-
-> Fix the following warning:
+On Thu, 23 Jul 2020 14:24:45 +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Add the RNG bindings for the JZ4780 SoC and
+> the X1000 SoC from Ingenic.
 > 
-> WARNING: Definition list ends without a blank line;
-> unexpected unindent.
-> 
-> By switching to the literal block syntax.
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 > ---
->  Documentation/core-api/printk-formats.rst | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index 1beac4719e437..6d26c5c6ac485 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -494,9 +494,11 @@ Time and date
->  	%pt[RT]t		HH:MM:SS
->  	%pt[RT][dt][r]
->  
-> -For printing date and time as represented by
-> +For printing date and time as represented by::
-> +
->  	R  struct rtc_time structure
->  	T  time64_t type
-> +
->  in human readable format.
+> Notes:
+>     v1->v2:
+>     No change.
+> 
+>  .../devicetree/bindings/rng/ingenic,rng.yaml       | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/ingenic,rng.yaml
+> 
 
-Applied, thanks.
-
-jon
+Reviewed-by: Rob Herring <robh@kernel.org>
