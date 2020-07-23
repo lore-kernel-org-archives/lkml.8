@@ -7,71 +7,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C6FC433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7136DC433F2
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D9622B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449D220792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TEW85Fn3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BB8oAg6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgGWMZE (ORCPT
+        id S1728924AbgGWMZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58094 "EHLO
+        Thu, 23 Jul 2020 08:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgGWMY6 (ORCPT
+        with ESMTP id S1728889AbgGWMZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:24:58 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471DAC0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:58 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so5019225wmh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:58 -0700 (PDT)
+        Thu, 23 Jul 2020 08:25:01 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABFEC0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:00 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f1so4426075wro.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iSQMgw7xYhZP3UZf5+lasa+UwlT/7rt+vW8/trm4LDo=;
-        b=TEW85Fn3KvlR1/ox+9FOgeQrHl+00ZEyopmW1JEMK9KRKelWc5NrGfaJxN3lqQocjt
-         /+ShTwf5bTX2B+t6pqrYrI0KFMv9Dy23MZNTSixscwlbOkK3Ho1pyXLoFWHN2C+ljKrq
-         b88pJwHa3bXMFQivxA9BDoKSj78A328Fg4ZDi4/iXLEOi7kBWi31zoh1V9xLfyCXG4dZ
-         ikvg9Gybxxno9+ZFPsTJsZxt8wucOKmp51JMFPFHcTNOlIxGRxLbe+aSTfm78e+cFxCK
-         aRAMxjv/PwVmKYVTywGo+sOkMNKX0GngEhlkJgd6OCBvWN5t7Enh9PZTm+CaZezzer93
-         veOg==
+        bh=OWikrHcjIEL13jknWWaUiCgmVBPYjsVQNgOhFstQ6kk=;
+        b=BB8oAg6wAh/txP2Zw6XlLsdMIMjiFCw3n8QNnz+5qnf/iAGYJvKlY8VFgS75Q/OPnW
+         0lhnnWlp8LgvU4zRh+u6mSS8gdNbN/fCyK6UC8LFWS7mC8bAJQ90U4rhEUTHLZr37zWY
+         0LQ7Es10351jkZU5W0m83pqKwZU8zj6e56ek1R76wpC9wa8HJAvrtfwDKeVOnnpTxNXz
+         HOVQ8iAivYVb0FCcO0xMuA1T1bWbgrn4SuB2fqgWspRAVWfknGcxyy8wcH8zCM4XzHbk
+         jxQfWwJXpOcAnH04XdrVg2G7KnMLip7J+DCE7A6Mutm9VOZ6qWqcdEd9957uDxpVIqGn
+         AtAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iSQMgw7xYhZP3UZf5+lasa+UwlT/7rt+vW8/trm4LDo=;
-        b=DTSCKXBCyTtuDl+Q3x0bMuwhP5has7reh04UZZZGB4mIF5qdOajiRTa1UmkA0z92av
-         opKNPoWXG4blwNf61ZEmtELKgPDKMGoyMNx0+ik3AkDByCVoJQ/qUpNnMRbQMY9v+EEq
-         IqENpRVLbPfm/kLnChBVdCFFG9MfGZIE+W5h3FZibCUdSjWYM2XSzw7DKO2+HT6ucabF
-         EM+nIcbJcggGZ8wln3lzXszAJyUk7hB1qV/E4TX303L5hUHQEr+KkZqTz4IH9MGqn03I
-         0NbKajKDRrtkX/pgCDMs9Il3//TOtMCjF6U2aUEoUgDdsnZUeW4j7vxR820n0COhQ3w8
-         woYA==
-X-Gm-Message-State: AOAM533e5wUmP4atBmYHjH0WnzbUAwTB7NETJTdRgqlhUO0PI7ssVc3Y
-        vq7+FG6I2IB7hQhshUREVhes7F2e2Bo=
-X-Google-Smtp-Source: ABdhPJx+PZHTVIJ+E7nFbXTBN0DlXtTyzH9UQgfnehGYyyVKdjsGVbuV9soY3017Ateok39CNTwCIw==
-X-Received: by 2002:a1c:7719:: with SMTP id t25mr4164471wmi.144.1595507097059;
-        Thu, 23 Jul 2020 05:24:57 -0700 (PDT)
+        bh=OWikrHcjIEL13jknWWaUiCgmVBPYjsVQNgOhFstQ6kk=;
+        b=pY8ejrPA7N1N5nkiHD60y6MGXersz+BkUv8lQczPKAMGMDPg0iz7m3n7TM1CyTtz/7
+         HHOGT1Obn++a36QaPZNCI6zBICQ1HE81vfi6uSDt2r1eHz4mrJSyf8ZblcYrU8rZj+4B
+         79mINujDUMXtR3MY/Avuct8jsRChgGEMo4SpKv1tLUIeTWOt5q+p2/pOWbOTP5YY9saI
+         eoOQardAdh/OZ4/qZ40YhkoM/BG5+ftn1Ft8wOHN3dhUUmSuDsrO1n1ChMam0Sza+hQT
+         Y+3nviTHmhongWNk1l4HzJN8TYEgZkbtKxlD6BwdG3oasvKloXECRehyO2QrOrYuUYXx
+         /yXw==
+X-Gm-Message-State: AOAM532PAckmuiBKTRNVunXdtHqsIOzLzU+k8vYhpUqrvilSSaFTGqRP
+        Zu+oWSBRzpcp+wV9ubfLAu+6/w==
+X-Google-Smtp-Source: ABdhPJxhEY7+qPHjPhuX5V9UXTKocEiF3ZgSgjLNy48r0c8fWe4GAkvPRAdVDSpqXvIYiB7pHa/2iw==
+X-Received: by 2002:adf:b34a:: with SMTP id k10mr3801954wrd.402.1595507099540;
+        Thu, 23 Jul 2020 05:24:59 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.55
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:24:56 -0700 (PDT)
+        Thu, 23 Jul 2020 05:24:58 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Seungwon Jeon <essuuj@gmail.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 06/40] scsi: ufs: ufs-exynos: Demote seemingly unintentional kerneldoc header
-Date:   Thu, 23 Jul 2020 13:24:12 +0100
-Message-Id: <20200723122446.1329773-7-lee.jones@linaro.org>
+        QLogic-Storage-Upstream@qlogic.com,
+        Anil Veerabhadrappa <anilgv@broadcom.com>,
+        Eddie Wai <eddie.wai@broadcom.com>
+Subject: [PATCH 08/40] scsi: bnx2i: bnx2i_sysfs: Add missing descriptions for 'attr' parameter
+Date:   Thu, 23 Jul 2020 13:24:14 +0100
+Message-Id: <20200723122446.1329773-9-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
 References: <20200723122446.1329773-1-lee.jones@linaro.org>
@@ -82,39 +79,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the only use of kerneldoc in the source file and no
-descriptions are provided.
-
 Fixes the following W=1 kernel build warning(s):
 
-In file included from  drivers/scsi/ufs/ufs-exynos.c:23:
- drivers/scsi/ufs/ufs-exynos.c:234: warning: Function parameter or member 'ufs' not described in 'exynos_ufs_auto_ctrl_hcc'
- drivers/scsi/ufs/ufs-exynos.c:234: warning: Function parameter or member 'en' not described in 'exynos_ufs_auto_ctrl_hcc'
+ drivers/scsi/bnx2i/bnx2i_sysfs.c:40: warning: Function parameter or member 'attr' not described in 'bnx2i_show_sq_info'
+ drivers/scsi/bnx2i/bnx2i_sysfs.c:60: warning: Function parameter or member 'attr' not described in 'bnx2i_set_sq_info'
+ drivers/scsi/bnx2i/bnx2i_sysfs.c:96: warning: Function parameter or member 'attr' not described in 'bnx2i_show_ccell_info'
+ drivers/scsi/bnx2i/bnx2i_sysfs.c:114: warning: Function parameter or member 'attr' not described in 'bnx2i_set_ccell_info'
 
-Cc: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Avri Altman <avri.altman@wdc.com>
-Cc: Kukjin Kim <kgene@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Seungwon Jeon <essuuj@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org
+Cc: QLogic-Storage-Upstream@qlogic.com
+Cc: Anil Veerabhadrappa <anilgv@broadcom.com>
+Cc: Eddie Wai <eddie.wai@broadcom.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/ufs/ufs-exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/bnx2i/bnx2i_sysfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufs-exynos.c b/drivers/scsi/ufs/ufs-exynos.c
-index 3c0a50b7e3560..9151c7455acda 100644
---- a/drivers/scsi/ufs/ufs-exynos.c
-+++ b/drivers/scsi/ufs/ufs-exynos.c
-@@ -224,7 +224,7 @@ static int exynos7_ufs_post_pwr_change(struct exynos_ufs *ufs,
- 	return 0;
- }
- 
--/**
-+/*
-  * exynos_ufs_auto_ctrl_hcc - HCI core clock control by h/w
-  * Control should be disabled in the below cases
-  * - Before host controller S/W reset
+diff --git a/drivers/scsi/bnx2i/bnx2i_sysfs.c b/drivers/scsi/bnx2i/bnx2i_sysfs.c
+index 6d56fd60cb2b2..3dc790089f0fc 100644
+--- a/drivers/scsi/bnx2i/bnx2i_sysfs.c
++++ b/drivers/scsi/bnx2i/bnx2i_sysfs.c
+@@ -30,6 +30,7 @@ static inline struct bnx2i_hba *bnx2i_dev_to_hba(struct device *dev)
+ /**
+  * bnx2i_show_sq_info - return(s currently configured send queue (SQ) size
+  * @dev:	device pointer
++ * @attr:	device attribute (unused)
+  * @buf:	buffer to return current SQ size parameter
+  *
+  * Returns current SQ size parameter, this paramater determines the number
+@@ -47,6 +48,7 @@ static ssize_t bnx2i_show_sq_info(struct device *dev,
+ /**
+  * bnx2i_set_sq_info - update send queue (SQ) size parameter
+  * @dev:	device pointer
++ * @attr:	device attribute (unused)
+  * @buf:	buffer to return current SQ size parameter
+  * @count:	parameter buffer size
+  *
+@@ -87,6 +89,7 @@ static ssize_t bnx2i_set_sq_info(struct device *dev,
+ /**
+  * bnx2i_show_ccell_info - returns command cell (HQ) size
+  * @dev:	device pointer
++ * @attr:	device attribute (unused)
+  * @buf:	buffer to return current SQ size parameter
+  *
+  * returns per-connection TCP history queue size parameter
+@@ -103,6 +106,7 @@ static ssize_t bnx2i_show_ccell_info(struct device *dev,
+ /**
+  * bnx2i_get_link_state - set command cell (HQ) size
+  * @dev:	device pointer
++ * @attr:	device attribute (unused)
+  * @buf:	buffer to return current SQ size parameter
+  * @count:	parameter buffer size
+  *
 -- 
 2.25.1
 
