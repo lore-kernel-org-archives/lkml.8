@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E1EC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D61C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1199522CF8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A23E22B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGWRMM (ORCPT
+        id S1730150AbgGWRMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:12:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6620 "EHLO mga05.intel.com"
+        Thu, 23 Jul 2020 13:12:13 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6628 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbgGWRMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:12:00 -0400
-IronPort-SDR: Wl5yuD45WskL4lhuse5VdPaYNT1gMT1iIOG9X70mDuGh1oGGzz7g5VxNUpQFFLAMuKdq3Ax2oV
- LmmfVbrp37/Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235456880"
+        id S1730093AbgGWRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 13:12:01 -0400
+IronPort-SDR: S1B5f32zhdfWorDOfRi8ItVC5+vvYBuj6Sz1BDZKjMME4bWh0clyHmLGXFmjdj5VEf7ckWiVXh
+ E51vcXrPpeEA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235456850"
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="235456880"
+   d="scan'208";a="235456850"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:11:55 -0700
-IronPort-SDR: 5kALMA9XdNjpg2/BQaifeWNnRDX3BVy9b/gZb86aBnEMLegmHDBCT+20QLl1iNnwwlNsNCPjI4
- SE5TvR+2Jt+Q==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:11:53 -0700
+IronPort-SDR: Fz/L4XyJKE7Z8R8jPR3+XxKNROSwnIsqYMv+JyjpU9XrzoaTYIaNFq7u9xhs1QnM2rjMMh1EmO
+ yFgjPUCTpz9A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="488904323"
+   d="scan'208";a="488904305"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2020 10:11:55 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2020 10:11:52 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         like.xu@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V7 13/14] perf, tools, stat: Check Topdown Metric group
-Date:   Thu, 23 Jul 2020 10:11:16 -0700
-Message-Id: <20200723171117.9918-14-kan.liang@linux.intel.com>
+Subject: [PATCH V7 11/14] perf/x86/intel: Support per-thread RDPMC TopDown metrics
+Date:   Thu, 23 Jul 2020 10:11:14 -0700
+Message-Id: <20200723171117.9918-12-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200723171117.9918-1-kan.liang@linux.intel.com>
 References: <20200723171117.9918-1-kan.liang@linux.intel.com>
@@ -55,109 +55,228 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The slots event is required in a Topdown Metric group.
+Starts from Ice Lake, the TopDown metrics are directly available as
+fixed counters and do not require generic counters. Also, the TopDown
+metrics can be collected per thread. Extend the RDPMC usage to support
+per-thread TopDown metrics.
 
-Add a check to examine the Topdown Metric group. Error out if there is
-no slots event detected.
+The RDPMC index of the PERF_METRICS will be output if RDPMC users ask
+for the RDPMC index of the metrics events.
 
-Only check the group on the platform which using topdown_metric_attrs,
-e.g. Ice Lake.
+To support per thread RDPMC TopDown, the metrics and slots counters have
+to be saved/restored during the context switching.
+
+The last_period and period_left are not used in the counting mode. Use
+the fields for saved_metric and saved_slots.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/builtin-stat.c | 72 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ arch/x86/events/core.c       |  5 +-
+ arch/x86/events/intel/core.c | 91 +++++++++++++++++++++++++++++++-----
+ include/linux/perf_event.h   | 29 ++++++++----
+ 3 files changed, 102 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 078ea1485317..9886aef78440 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1441,6 +1441,72 @@ static int topdown_filter_events(const char **attr, char **str, bool use_group)
- 	return 0;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index ebf723f33794..0f3d01562ded 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2257,7 +2257,10 @@ static int x86_pmu_event_idx(struct perf_event *event)
+ 	if (!(hwc->flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+ 		return 0;
+ 
+-	return hwc->event_base_rdpmc + 1;
++	if (is_metric_idx(hwc->idx))
++		return INTEL_PMC_FIXED_RDPMC_METRICS + 1;
++	else
++		return hwc->event_base_rdpmc + 1;
  }
  
-+/* Event encoding for Topdown Metric events */
-+#define TOPDOWN_SLOTS		0x0400
-+#define TOPDOWN_RETIRE		0x8000
-+#define TOPDOWN_BAD_SPEC	0x8100
-+#define TOPDOWN_FE_BOUND	0x8200
-+#define TOPDOWN_BE_BOUND	0x8300
-+
-+static bool is_topdown_metric_event(struct evsel *counter)
-+{
-+	if (!counter->pmu_name)
-+		return false;
-+
-+	if (strcmp(counter->pmu_name, "cpu"))
-+		return false;
-+
-+	if ((counter->core.attr.config == TOPDOWN_RETIRE) ||
-+	    (counter->core.attr.config == TOPDOWN_BAD_SPEC) ||
-+	    (counter->core.attr.config == TOPDOWN_FE_BOUND) ||
-+	    (counter->core.attr.config == TOPDOWN_BE_BOUND))
-+		return true;
-+
-+	return false;
-+}
-+
-+static bool is_topdown_slots_event(struct evsel *counter)
-+{
-+	if (!counter->pmu_name)
-+		return false;
-+
-+	if (strcmp(counter->pmu_name, "cpu"))
-+		return false;
-+
-+	if (counter->core.attr.config == TOPDOWN_SLOTS)
-+		return true;
-+
-+	return false;
-+}
-+
-+static bool topdown_check_group_member(void)
-+{
-+	struct evsel *counter, *leader, *member;
-+	bool has_slots;
-+
-+	if (!pmu_have_event("cpu", topdown_metric_attrs[0]))
-+		return true;
-+
-+	evlist__for_each_entry(evsel_list, counter) {
-+		if (!is_topdown_metric_event(counter))
-+			continue;
-+
-+		leader = counter->leader;
-+		has_slots = false;
-+
-+		for_each_group_evsel(member, leader) {
-+			if (is_topdown_slots_event(member))
-+				has_slots = true;
-+			counter = member;
-+		}
-+
-+		if (!has_slots)
-+			return false;
+ static ssize_t get_attr_rdpmc(struct device *cdev,
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e7d6c3b79772..b0ab638e48ee 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2258,7 +2258,13 @@ static int icl_set_topdown_event_period(struct perf_event *event)
+ 	if (left == x86_pmu.max_period) {
+ 		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
+ 		wrmsrl(MSR_PERF_METRICS, 0);
+-		local64_set(&hwc->period_left, 0);
++		hwc->saved_slots = 0;
++		hwc->saved_metric = 0;
 +	}
 +
-+	return true;
-+}
-+
- __weak bool arch_topdown_check_group(bool *warn)
- {
- 	*warn = false;
-@@ -2024,6 +2090,12 @@ int cmd_stat(int argc, const char **argv)
- 					(const char **) stat_usage,
- 					PARSE_OPT_STOP_AT_NON_OPTION);
- 	perf_stat__collect_metric_expr(evsel_list);
-+
-+	if (!topdown_check_group_member()) {
-+		fprintf(stderr, "Topdown group must include slots event\n");
-+		goto out;
-+	}
-+
- 	perf_stat__init_shadow_stats();
++	if ((hwc->saved_slots) && is_slots_event(event)) {
++		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, hwc->saved_slots);
++		wrmsrl(MSR_PERF_METRICS, hwc->saved_metric);
+ 	}
  
- 	if (stat_config.csv_sep) {
+ 	perf_event_update_userpage(event);
+@@ -2279,7 +2285,7 @@ static inline u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
+ 	return  mul_u64_u32_div(slots, val, 0xff);
+ }
+ 
+-static void __icl_update_topdown_event(struct perf_event *event,
++static u64 icl_get_topdown_value(struct perf_event *event,
+ 				       u64 slots, u64 metrics)
+ {
+ 	int idx = event->hw.idx;
+@@ -2290,7 +2296,50 @@ static void __icl_update_topdown_event(struct perf_event *event,
+ 	else
+ 		delta = slots;
+ 
+-	local64_add(delta, &event->count);
++	return delta;
++}
++
++static void __icl_update_topdown_event(struct perf_event *event,
++				       u64 slots, u64 metrics,
++				       u64 last_slots, u64 last_metrics)
++{
++	u64 delta, last = 0;
++
++	delta = icl_get_topdown_value(event, slots, metrics);
++	if (last_slots)
++		last = icl_get_topdown_value(event, last_slots, last_metrics);
++
++	/*
++	 * The 8bit integer fraction of metric may be not accurate,
++	 * especially when the changes is very small.
++	 * For example, if only a few bad_spec happens, the fraction
++	 * may be reduced from 1 to 0. If so, the bad_spec event value
++	 * will be 0 which is definitely less than the last value.
++	 * Avoid update event->count for this case.
++	 */
++	if (delta > last) {
++		delta -= last;
++		local64_add(delta, &event->count);
++	}
++}
++
++static void update_saved_topdown_regs(struct perf_event *event,
++				      u64 slots, u64 metrics)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	struct perf_event *other;
++	int idx;
++
++	event->hw.saved_slots = slots;
++	event->hw.saved_metric = metrics;
++
++	for_each_set_bit(idx, cpuc->active_mask, INTEL_PMC_IDX_TD_BE_BOUND + 1) {
++		if (!is_topdown_idx(idx))
++			continue;
++		other = cpuc->events[idx];
++		other->hw.saved_slots = slots;
++		other->hw.saved_metric = metrics;
++	}
+ }
+ 
+ /*
+@@ -2304,6 +2353,7 @@ static u64 icl_update_topdown_event(struct perf_event *event)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct perf_event *other;
+ 	u64 slots, metrics;
++	bool reset = true;
+ 	int idx;
+ 
+ 	/* read Fixed counter 3 */
+@@ -2318,19 +2368,39 @@ static u64 icl_update_topdown_event(struct perf_event *event)
+ 		if (!is_topdown_idx(idx))
+ 			continue;
+ 		other = cpuc->events[idx];
+-		__icl_update_topdown_event(other, slots, metrics);
++		__icl_update_topdown_event(other, slots, metrics,
++					   event ? event->hw.saved_slots : 0,
++					   event ? event->hw.saved_metric : 0);
+ 	}
+ 
+ 	/*
+ 	 * Check and update this event, which may have been cleared
+ 	 * in active_mask e.g. x86_pmu_stop()
+ 	 */
+-	if (event && !test_bit(event->hw.idx, cpuc->active_mask))
+-		__icl_update_topdown_event(event, slots, metrics);
++	if (event && !test_bit(event->hw.idx, cpuc->active_mask)) {
++		__icl_update_topdown_event(event, slots, metrics,
++					   event->hw.saved_slots,
++					   event->hw.saved_metric);
+ 
+-	/* The fixed counter 3 has to be written before the PERF_METRICS. */
+-	wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
+-	wrmsrl(MSR_PERF_METRICS, 0);
++		/*
++		 * In x86_pmu_stop(), the event is cleared in active_mask first,
++		 * then drain the delta, which indicates context switch for
++		 * counting.
++		 * Save metric and slots for context switch.
++		 * Don't need to reset the PERF_METRICS and Fixed counter 3.
++		 * Because the values will be restored in next schedule in.
++		 */
++		update_saved_topdown_regs(event, slots, metrics);
++		reset = false;
++	}
++
++	if (reset) {
++		/* The fixed counter 3 has to be written before the PERF_METRICS. */
++		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
++		wrmsrl(MSR_PERF_METRICS, 0);
++		if (event)
++			update_saved_topdown_regs(event, 0, 0);
++	}
+ 
+ 	return slots;
+ }
+@@ -3591,9 +3661,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
+ 
+ 			event->event_caps |= PERF_EV_CAP_COEXIST;
+-
+-			if (is_metric_event(event))
+-				event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
+ 		}
+ 	}
+ 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 93631e5389bf..aa60a1381aa1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -212,17 +212,26 @@ struct hw_perf_event {
+ 	 */
+ 	u64				sample_period;
+ 
+-	/*
+-	 * The period we started this sample with.
+-	 */
+-	u64				last_period;
++	union {
++		struct { /* Sampling */
++			/*
++			 * The period we started this sample with.
++			 */
++			u64				last_period;
+ 
+-	/*
+-	 * However much is left of the current period; note that this is
+-	 * a full 64bit value and allows for generation of periods longer
+-	 * than hardware might allow.
+-	 */
+-	local64_t			period_left;
++			/*
++			 * However much is left of the current period;
++			 * note that this is a full 64bit value and
++			 * allows for generation of periods longer
++			 * than hardware might allow.
++			 */
++			local64_t			period_left;
++		};
++		struct { /* Topdown events counting for context switch */
++			u64				saved_metric;
++			u64				saved_slots;
++		};
++	};
+ 
+ 	/*
+ 	 * State for throttling the event, see __perf_event_overflow() and
 -- 
 2.17.1
 
