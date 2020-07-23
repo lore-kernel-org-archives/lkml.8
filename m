@@ -2,260 +2,149 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83351C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6586F20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCF420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="g5vyr8Pl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TVPUQGzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgGWOLR (ORCPT
+        id S1729375AbgGWOL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:11:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgGWOLQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:11:16 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51E2C0619DC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:11:16 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w126so2901997pfw.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ysWuWF6gqJ2pHJaZJm1QwqnHU9OdxaAIZL3B1hN90eM=;
-        b=g5vyr8Pl/p/lEI7Y8guC1W1L4781mToGXliNVuzvXS0kFNtodOXVVvsX1yFSlPNR5I
-         hwrVEzMo9wIA3sm4LFYqkFqkqTcNlWLqGv4I0S64Jr0XpAY0Nj+GUWZugKttc86psCYR
-         cXy1suut9ECSC8XV0aPk7bp2Fo+3oL7Kp5kEw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ysWuWF6gqJ2pHJaZJm1QwqnHU9OdxaAIZL3B1hN90eM=;
-        b=rofosekCiqIgl84XQ9YSb1xxYLUwrd0aNPd8YyPiBOIkC2Dmz+dXkKRwuXqM40F3Ec
-         uBe5JCIbWGbnvEX9og54cTgCZZIi4DASF2AsQ1/JAt7k5mnQQ67DFob5Qq87aiafO6gg
-         I2XitXgRPjDZrU4erMq7XkCapZW++zXPIPpy+H6Gt/FF0ZgivtKtBRZIR06NJtw0S11i
-         VT0MGiyfEQSQGovt0C4j8lHoQe0I3WtW1nTkjup7BZYrrboAs7rrzgMTCtfEL+LQErrA
-         JigJlTagKvU+UrUpE+lz5ci55M+4Mj9b5DqS6+F/YCd0xf/etux6W9ecPgmmpg/nMC/Q
-         iZiA==
-X-Gm-Message-State: AOAM531x7y9vNHwoXbSsH84JZowWwJcUOC1eXD9loSZGjg5FUtQwQzmN
-        Ykm/JfcrCEqLPzCLK37lXhOWrDJKFvI=
-X-Google-Smtp-Source: ABdhPJz4p+KRDLB+MZxus77/edll9JJWc9jVmufPxWveQCofgvnnK+IJ9fSnEeHcIcq6nicvT2wK7Q==
-X-Received: by 2002:a63:eb52:: with SMTP id b18mr4209245pgk.434.1595513476033;
-        Thu, 23 Jul 2020 07:11:16 -0700 (PDT)
-Received: from localhost (2001-44b8-111e-5c00-8915-8b02-da60-7583.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:8915:8b02:da60:7583])
-        by smtp.gmail.com with ESMTPSA id l4sm2893791pjr.46.2020.07.23.07.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 07:11:15 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hughd@google.com
-Subject: Re: [RFC PATCH 4/5] powerpc/mm: Remove custom stack expansion checking
-In-Reply-To: <20200703141327.1732550-4-mpe@ellerman.id.au>
-References: <20200703141327.1732550-1-mpe@ellerman.id.au> <20200703141327.1732550-4-mpe@ellerman.id.au>
-Date:   Fri, 24 Jul 2020 00:11:12 +1000
-Message-ID: <878sfatj7j.fsf@dja-thinkpad.axtens.net>
+        Thu, 23 Jul 2020 10:11:27 -0400
+Received: from mail-am6eur05on2078.outbound.protection.outlook.com ([40.107.22.78]:9697
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726089AbgGWOLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:11:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h+wG1p/ijGdgOJW2qmFMkNYZ4X2ZBBEMZeZNv3fxvv7Ef8th4PgbBAExm6FkmWApdB/BxKd98gaQa2i6X/aBryRgtJFh16vcWX3K+LxgoR9Owa9Z/3xRTbZyo6tXPXap7v5Qm4Y5TGFV1A63YCjMXNbb1IqnmbshO36byicUIPzXsxKNsx9hOPSncM+Z4grkt9HjTJ5SF9C64CpJPsINuJYZ8PtwhFyomC1+niFxTnVQKK+Oohl62uRCCtDnRF4p6QtQTjVBAzJ5O09H+SR50IPvOR4rbMmZ+J98cE09+R+uM1EYyot+d1J8pWCJwr656dNVaVIq0vONP/xN40YqfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TpClA+EViGrEPTaSmvfJxJ1mrmCFpz3tfA0TYhDTxVk=;
+ b=TuglgvNlAl+Kh81ai5Mun9Jlb0L6cgZLluhnfB0pieDW1OR+VHnwJYHLYloLddr5KgF7FgRjVtCx47ja0ZlVeChFXjSYgin93Av5orwZjrN70UN+nZFUU45prKKGIS0kOYb6XMaKp2bvNj8HBoBABtCOkl8PA383aRHecXL9uvDg7Zll5WuwMDoCjfguKhL+73We2iY4U89Sb+q9rNOTEMF6iKdRXEz+CMFmfUPWYGXOni0jA4uVs5px4m5vS2gT/e2QklAbbpPhOBkxpVfyLpNVFLQcZfPkkqCUIsnrxYfFq3XhB/uVJFccbWQqyLD6lk1+Ktp14x8OW/jFANAJyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TpClA+EViGrEPTaSmvfJxJ1mrmCFpz3tfA0TYhDTxVk=;
+ b=TVPUQGzctYiRmkRe7XztPjbMC043Vo4FIc3gvLPPLg8x+x+uXQhUu7KnIBv4P130L1dWU33qU2EObMsIEsE9pPkYVPFKxuGUwll7ieKgs9fmrmKekxN4slevt/VOOd2rVRvVWqDqxdRg843PkR3c4q9l6XyFzYSbEZQJp89ns1I=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6511.eurprd04.prod.outlook.com (2603:10a6:803:11f::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
+ 2020 14:11:19 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3195.028; Thu, 23 Jul 2020
+ 14:11:19 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Frieder Schrempf <frieder.schrempf@kontron.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+Thread-Topic: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+Thread-Index: AQHWTp7JbcJo/3lJ0kuBP+xQgJ1yA6kVAw+AgAAOScCAAAwKMIAAFKYAgAAgFWA=
+Date:   Thu, 23 Jul 2020 14:11:19 +0000
+Message-ID: <VE1PR04MB6638FFA76076ECCA9CE8F2C289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
+ <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
+ <1b04e4e6-ca26-3f45-e353-af81e03f85a7@kontron.de>
+ <VE1PR04MB66385FC4FE591EAFA8CB7D8289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
+In-Reply-To: <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kontron.de; dkim=none (message not signed)
+ header.d=none;kontron.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.236.25]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cbb2c035-07c4-4709-ef1c-08d82f124556
+x-ms-traffictypediagnostic: VE1PR04MB6511:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6511D0BECC90D5027EECAA6B89760@VE1PR04MB6511.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PoZ28h6ZHrhUV39FpcC+9olHZhRbH2Ngx42zJ86BzRwa27fUVbtR8MR5kKE0zSUdFFU1f9lLtg468qUFeJwDCpEiGfSTH00jlkyFXuLuTnd63OwHawVESn6domOoewOAp73oiZTzi8ny7HHMDDksQNRi3yZJ+1HQY8M/KsKFj6XDymh7BKKT8zJl7/hYXMQUxY1N7yIi9wioCo9NATsARaRtzawVY3teKSM9H/LTL5mZuTDTsEFl+0Lv/J+olNZCsKwYS4mmRMC2U4wihfJvOnx+9PEo3GxF3OTKcj6ogJr7roPUUP2HCs3AEs+Y68wLcq5UxkVmGKqN4G0aYZVcy3uI8Wp81e9BMUPv4JzQMj/CVlIPhvAeitgJdlarmaQ7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(39860400002)(346002)(136003)(396003)(52536014)(8936002)(76116006)(66946007)(64756008)(110136005)(66446008)(7416002)(8676002)(5660300002)(33656002)(2906002)(54906003)(7696005)(66476007)(66556008)(478600001)(4326008)(53546011)(316002)(26005)(71200400001)(6506007)(186003)(55016002)(83380400001)(9686003)(86362001)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: uG4N8KATOS5JiRifBeIMlKLNlJAqZcDEah669+VtTdQshQsouejIPJpV0JPHidLmcsLgTvrJ/ZP4R5MKboFPOsqeusDeZ3hys5YQ/yPFgP0+bRY62LV9NEjUY20KPVmad2ewSoOaESOhVZIqhodmZ537WZv7jUsCJZDOugpkAl1UlKCdLUnZ/aVhghWiVzaH35vIU1dRWjhHVo2rF9OTMgLF4/wgZRrnGMW6cWiQ9zr4hlFaJ5zzVX/9Iil/MIbOM8i4w6QA/m/jAi4Xnyk8A6zBFWs1FeZ/TLFraEwWjMyufsxZI5H7QKQGY431Ju9LTZqtkGaRYeYjafwIXlfgc82JxZHeFft5PX8hrApr6Wgd7Hf+4sw6RgbSL9TtiZf9JIJPgEnweN8wL2r+GaOWkjjh8JV26vexV5fnTss7mPrfn00RDBF/6vV9dS+ohtMB9jJY6bLbisZpu/wuTZpdgKI8Rl0GzW6tvRT0hhN0Pu6c3g3+dHysVa7W3uvMhrzC
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbb2c035-07c4-4709-ef1c-08d82f124556
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 14:11:19.0448
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FDqm/PiPSYaqxMG9/DLr6jloqxMppLV0b+tHIJbATe/VV5g3w2bw1bEJtVbFk1FFaDYtF7aoBESDae137VIXUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6511
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-> We have powerpc specific logic in our page fault handling to decide if
-> an access to an unmapped address below the stack pointer should expand
-> the stack VMA.
->
-> The logic aims to prevent userspace from doing bad accesses below the
-> stack pointer. However as long as the stack is < 1MB in size, we allow
-> all accesses without further checks. Adding some debug I see that I
-> can do a full kernel build and LTP run, and not a single process has
-> used more than 1MB of stack. So for the majority of processes the
-> logic never even fires.
->
-> We also recently found a nasty bug in this code which could cause
-> userspace programs to be killed during signal delivery. It went
-> unnoticed presumably because most processes use < 1MB of stack.
->
-> The generic mm code has also grown support for stack guard pages since
-> this code was originally written, so the most heinous case of the
-> stack expanding into other mappings is now handled for us.
->
-> Finally although some other arches have special logic in this path,
-> from what I can tell none of x86, arm64, arm and s390 impose any extra
-> checks other than those in expand_stack().
->
-> So drop our complicated logic and like other architectures just let
-> the stack expand as long as its within the rlimit.
->
-
-I applied and tested this. While I wouldn't call my testing
-comprehensive, I have not been able to reproduce the crash with this
-patch applied.
-
-Kind regards,
-Daniel
-
-
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> ---
->  arch/powerpc/mm/fault.c | 106 ++--------------------------------------
->  1 file changed, 5 insertions(+), 101 deletions(-)
->
-> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> index ed01329dd12b..925a7231abb3 100644
-> --- a/arch/powerpc/mm/fault.c
-> +++ b/arch/powerpc/mm/fault.c
-> @@ -42,39 +42,7 @@
->  #include <asm/kup.h>
->  #include <asm/inst.h>
->  
-> -/*
-> - * Check whether the instruction inst is a store using
-> - * an update addressing form which will update r1.
-> - */
-> -static bool store_updates_sp(struct ppc_inst inst)
-> -{
-> -	/* check for 1 in the rA field */
-> -	if (((ppc_inst_val(inst) >> 16) & 0x1f) != 1)
-> -		return false;
-> -	/* check major opcode */
-> -	switch (ppc_inst_primary_opcode(inst)) {
-> -	case OP_STWU:
-> -	case OP_STBU:
-> -	case OP_STHU:
-> -	case OP_STFSU:
-> -	case OP_STFDU:
-> -		return true;
-> -	case OP_STD:	/* std or stdu */
-> -		return (ppc_inst_val(inst) & 3) == 1;
-> -	case OP_31:
-> -		/* check minor opcode */
-> -		switch ((ppc_inst_val(inst) >> 1) & 0x3ff) {
-> -		case OP_31_XOP_STDUX:
-> -		case OP_31_XOP_STWUX:
-> -		case OP_31_XOP_STBUX:
-> -		case OP_31_XOP_STHUX:
-> -		case OP_31_XOP_STFSUX:
-> -		case OP_31_XOP_STFDUX:
-> -			return true;
-> -		}
-> -	}
-> -	return false;
-> -}
-> +
->  /*
->   * do_page_fault error handling helpers
->   */
-> @@ -267,54 +235,6 @@ static bool bad_kernel_fault(struct pt_regs *regs, unsigned long error_code,
->  	return false;
->  }
->  
-> -static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
-> -				struct vm_area_struct *vma, unsigned int flags,
-> -				bool *must_retry)
-> -{
-> -	/*
-> -	 * N.B. The POWER/Open ABI allows programs to access up to
-> -	 * 288 bytes below the stack pointer.
-> -	 * The kernel signal delivery code writes up to 4KB
-> -	 * below the stack pointer (r1) before decrementing it.
-> -	 * The exec code can write slightly over 640kB to the stack
-> -	 * before setting the user r1.  Thus we allow the stack to
-> -	 * expand to 1MB without further checks.
-> -	 */
-> -	if (address + 0x100000 < vma->vm_end) {
-> -		struct ppc_inst __user *nip = (struct ppc_inst __user *)regs->nip;
-> -		/* get user regs even if this fault is in kernel mode */
-> -		struct pt_regs *uregs = current->thread.regs;
-> -		if (uregs == NULL)
-> -			return true;
-> -
-> -		/*
-> -		 * A user-mode access to an address a long way below
-> -		 * the stack pointer is only valid if the instruction
-> -		 * is one which would update the stack pointer to the
-> -		 * address accessed if the instruction completed,
-> -		 * i.e. either stwu rs,n(r1) or stwux rs,r1,rb
-> -		 * (or the byte, halfword, float or double forms).
-> -		 *
-> -		 * If we don't check this then any write to the area
-> -		 * between the last mapped region and the stack will
-> -		 * expand the stack rather than segfaulting.
-> -		 */
-> -		if (address + 4096 >= uregs->gpr[1])
-> -			return false;
-> -
-> -		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
-> -		    access_ok(nip, sizeof(*nip))) {
-> -			struct ppc_inst inst;
-> -
-> -			if (!probe_user_read_inst(&inst, nip))
-> -				return !store_updates_sp(inst);
-> -			*must_retry = true;
-> -		}
-> -		return true;
-> -	}
-> -	return false;
-> -}
-> -
->  #ifdef CONFIG_PPC_MEM_KEYS
->  static bool access_pkey_error(bool is_write, bool is_exec, bool is_pkey,
->  			      struct vm_area_struct *vma)
-> @@ -480,7 +400,6 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
->  	int is_user = user_mode(regs);
->  	int is_write = page_fault_is_write(error_code);
->  	vm_fault_t fault, major = 0;
-> -	bool must_retry = false;
->  	bool kprobe_fault = kprobe_page_fault(regs, 11);
->  
->  	if (unlikely(debugger_fault_handler(regs) || kprobe_fault))
-> @@ -569,30 +488,15 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
->  	vma = find_vma(mm, address);
->  	if (unlikely(!vma))
->  		return bad_area(regs, address);
-> -	if (likely(vma->vm_start <= address))
-> -		goto good_area;
-> -	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
-> -		return bad_area(regs, address);
->  
-> -	/* The stack is being expanded, check if it's valid */
-> -	if (unlikely(bad_stack_expansion(regs, address, vma, flags,
-> -					 &must_retry))) {
-> -		if (!must_retry)
-> +	if (unlikely(vma->vm_start > address)) {
-> +		if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
->  			return bad_area(regs, address);
->  
-> -		mmap_read_unlock(mm);
-> -		if (fault_in_pages_readable((const char __user *)regs->nip,
-> -					    sizeof(unsigned int)))
-> -			return bad_area_nosemaphore(regs, address);
-> -		goto retry;
-> +		if (unlikely(expand_stack(vma, address)))
-> +			return bad_area(regs, address);
->  	}
->  
-> -	/* Try to expand it */
-> -	if (unlikely(expand_stack(vma, address)))
-> -		return bad_area(regs, address);
-> -
-> -good_area:
-> -
->  #ifdef CONFIG_PPC_MEM_KEYS
->  	if (unlikely(access_pkey_error(is_write, is_exec,
->  				       (error_code & DSISR_KEYFAULT), vma)))
-> -- 
-> 2.25.1
+T24gMjAyMC8wNy8yMyAxOTo1MiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtv
+bnRyb24uZGU+IHdyb3RlOg0KPiANCj4gPiBUaGUgd2FybmluZyBsb2cgY29tZXMgb3V0IGR1cmlu
+ZyBzcGkNCj4gPiB0cmFuc2ZlciBzdGFydCBhbmQgc2RtYSBmaXJtd2FyZSBsb2FkaW5nIGRvbmUs
+IGJ1dCBpZiBzZG1hIGRyaXZlcg0KPiA+IGJ1aWxkaW5nIGFzIG1vZHVsZSBjb3VsZCBlbnN1cmUg
+ZmlybXdhcmUgbG9hZGluZyBkb25lIGluDQo+ID4gc2RtYV9kcml2ZXJfcHJvYmVfcGhhc2UtPiBz
+cGlfaW14X3Byb2JlX3BoYXNlLCB3aGljaCBtZWFucyBzZG1hDQo+ID4gZmlybXdhcmUgbG9hZGlu
+ZyBoYXMgYmVlbiByZWFkeSBiZWZvcmUgc3BpIHRyYW5zZmVyIHN0YXJ0LCBoZW5jZSBubyBzdWNo
+DQo+IHdhcm5pbmcgbWVzc2FnZS4NCj4gPg0KPiA+IEJ1dCBJIGFtIG5vdCBzdXJlIGlmIGFsbCBj
+bGllbnQgZHJpdmVycyBleGNlcHQgc3BpIGFyZSBpbiBnb29kIHNoYXBlDQo+ID4gdG8gc3VwcG9y
+dCAnIENPTkZJR19JTVhfU0RNQT1tICcuDQo+IA0KPiBJJ20gcHJldHR5IHN1cmUgdGhhdCBDT05G
+SUdfSU1YX1NETUE9bSBpcyBzdXBwb3J0ZWQgYW5kIGNvbW1vbi4NCj4gT3RoZXJ3aXNlIGl0IHdv
+dWxkbid0IGJlIGFuIG9wdGlvbiBpbiBLY29uZmlnLg0KU29ycnksIEkgbWVhbiBvdGhlciBkcml2
+ZXJzIHVzaW5nIHNkbWEgc3VjaCBhcyBhdWRpby91YXJ0Li5ldGMsIEkga25vdw0Kc2RtYSBkcml2
+ZXIgc3VwcG9ydCB0byBidWlsZCBhcyBtb2R1bGUuIEJ1dCBJJ20gbm90IHN1cmUgaWYgdGhlcmUg
+YXJlIHNvbWUNCnBvdGVudGlhbCBpc3N1ZXMgaGVyZSB3aXRoIGNoYW5naW5nIHRvIHNkbWEgbW9k
+dWxlLiBGb3Igbm93LCBjb3VsZCB3ZQ0KanVzdCBsZWF2ZSBpdCBmb3IgYW5vdGhlciBwYXRjaCB3
+aGF0ZXZlciBpdCdzIGJldHRlciBzb2x1dGlvbiBvciBub3Q/DQo+IA0KPiA+IEJlc2lkZXMsIGRv
+IHlvdSB0aGluayAnZGV2X2Vycl9vbmNlICcgaW5zdGVhZCBvZiAnZGV2X2VycicgaXMgb2theSBm
+b3IgeW91Pw0KPiANCj4gSSBjYW4ndCByZWFsbHkganVkZ2UgaWYgdGhpcyBpcyBhIHByb3BlciBm
+aXggYXMgSSBoYXZlbid0IGxvb2tlZCBhdCB0aGUgY29kZSBpbiBkZXRhaWwsDQo+IGJ1dCBpZiB5
+b3Ugd2FudCB0byB1c2UgZGV2X2Vycl9vbmNlKCksIHRoYXQgd291bGQgYmUgb2sgZm9yIG1lLCBt
+YXliZSBldmVuDQo+IGJldHRlciBkZXZfd2Fybl9vbmNlKCkuDQo+IEFzIGNoYW5jZXMgYXJlIHRo
+YXQgZXZlbiB3aXRob3V0IGZpcm13YXJlIHRyYW5zZmVycyB3aWxsIHdvcmsgYSB3YXJuaW5nDQo+
+IGluc3RlYWQgb2YgYW4gZXJyb3IgbWFrZXMgbW9yZSBzZW5zZSB0byBtZS4NCk9rYXksIEknbGwg
+Y2hhbmdlIGl0IGluIGxhdGVyIHZlcnNpb24uIEFueXdheSwgdGhhbmtzIGZvciB5b3VyIHRlc3Qu
+DQo=
