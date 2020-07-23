@@ -2,121 +2,228 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB35C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF336C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD7520825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595462416;
-	bh=qR5Eq1BercnCXvvQ8dDOJRkLZbzeTnJgz4nvdEMwtTE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ZliE0LoDCt8sdVLr0zofRngQmu8ZlIv3N4WN6SEmM9h67cE5y6ItSVBvnVy/uN3CV
-	 Capri8B4ppiB5efdHvR6peh8G4EWTsVHBIfE/ZXgUq4Nu6doB2DCxcY6O13+BZzPeM
-	 n0rIZ5nXoX6VJhdYLgsy/x+MIonYdo8kNxuliHI8=
+	by mail.kernel.org (Postfix) with ESMTP id CC20C2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:08:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="iFlAbOWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbgGWAAP (ORCPT
+        id S1733152AbgGWAIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbgGWAAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:00:14 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAB02080D;
-        Thu, 23 Jul 2020 00:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595462414;
-        bh=qR5Eq1BercnCXvvQ8dDOJRkLZbzeTnJgz4nvdEMwtTE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E6ws/PZfoxEU+IFafd8yFUq7Hh1Uk6qzAQ75Gl52bYOmFmQOb49XZR2MpLkijulCP
-         bn05E7kPch7jBputAARe/DKfIUAAJ6GfObdGWL6U1BDKFCNQGAAZwg3W2m1oS/eGFX
-         QP8Cm3oHSh7pQGDyi1iXEvrAJ53Fg8+qdT7aajB0=
-Date:   Wed, 22 Jul 2020 19:00:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>, jroedel@suse.de,
-        Myron Stowe <myron.stowe@redhat.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
-        Khalid Aziz <khalid@gonehiking.org>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200723000012.GA1325359@bjorn-Precision-5520>
+        Wed, 22 Jul 2020 20:08:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbgGWAIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 20:08:17 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73103C0619E1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 17:08:17 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id b25so3248279qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 17:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wIJE53JQkkzN5LFSQElzrK2dsjCi+Qx4vXk/TwFFyZo=;
+        b=iFlAbOWWbZfvrAlTvRFOi3RUaabnAITRT/KxJ3GYUkN5crnBC9miqwoa7Dqh5p5y2z
+         NKO8hTYz5votR4D2q68XcqzIyL/TO+DfLeGNdyHYPL9LATmCFjVXa1YoUwh9+HwA9UX0
+         r4qWmmQmkpQ6xkp4rdjwJY8rGAHAU9oHeotOxdedTu3jMXvUi4UEO90IFexVLhyxR3Ee
+         0aP7eKaSHwHQPIeS0qqONOFhW36Jol0SrQZi/UouQxm4V7FkfpdiEbpzurlf3yYs4N1y
+         OJnlLFCcS7f616yGhk5fTAN96LD/4ARV8G84+aqrer7EWgemmNZcBzOTToP6xmmY9d9a
+         EB1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wIJE53JQkkzN5LFSQElzrK2dsjCi+Qx4vXk/TwFFyZo=;
+        b=kcmFNRLspEsElryIt9IyVA9lHdfUvOMmofA+BaUhHrUSL04aHCtsmYLECySpJrk0TO
+         tDM9clcUYeP6Ta4CTRWB9LvTI/B5tW0qlCZJbeRqgqNv6Qn9QQ1at/B0jBHoubURSJbQ
+         9oS5m8P+eMDDIHWkWS2x4edfK+LEMaUJ5yDpAmwMmB3G+CxbPSR2PyMXXkGsDi08wkwB
+         PIZRp1oiE7SfH4hKO9GTNd9M1TmESl4d5ZlhbrtOXIzb72nFpruvOe5NDd5zQP1WEG5J
+         NCSs8Jx9i+bz0v4p1Psq9CUZGdSy0hV5Kircn5z3fMFiaUgjSxLayC40ozkbYdt1F3R9
+         0y3w==
+X-Gm-Message-State: AOAM530uflN5DDsotsv6Q7SRN1uwNEWfwMkwbWGo29kIykhTtH7groNY
+        W8odu3VI0jwS+E6P+eOepCuLCw==
+X-Google-Smtp-Source: ABdhPJyoCLDw96+G5vz569EAbwZkgms47TpFmM8GeL89ABrUkEkgBQQH2U2yceS+o56uKcTJOxf4tA==
+X-Received: by 2002:ac8:3963:: with SMTP id t32mr1962263qtb.152.1595462896422;
+        Wed, 22 Jul 2020 17:08:16 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id l67sm1160598qkd.7.2020.07.22.17.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 17:08:15 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, fkostenzer@live.at,
+        andriy.shevchenko@linux.intel.com, geert@linux-m68k.org,
+        paul.gortmaker@windriver.com, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: [PATCH] lib: kunit: Convert test_sort to KUnit test
+Date:   Wed, 22 Jul 2020 21:08:07 -0300
+Message-Id: <20200723000807.171940-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722215048.GL220876@anatevka.americas.hpqcorp.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 03:50:48PM -0600, Jerry Hoemann wrote:
-> On Wed, Jul 22, 2020 at 10:21:23AM -0500, Bjorn Helgaas wrote:
-> > On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
+This adds the conversion of the test_sort.c to KUnit test.
 
-> > > I think I didn't make one thing clear, The PCI UR error never arrives
-> > > in kernel, it's the iLo BMC on that HPE machine caught the error, and
-> > > send kernel an NMI. kernel is panicked by NMI, I'm still trying to
-> > > figure out why the NMI hanged kernel, even with panic=-1,
-> > > panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
-> > > NMI by shutdown the devices in right order, that's also a solution.
+Please apply this commit first (linux-kselftest/kunit-fixes):
+3f37d14b8a3152441f36b6bc74000996679f0998 kunit: kunit_config: Fix parsing of CONFIG options with space
 
-ACPI v6.3, chapter 18, does mention NMIs several times, e.g., Table
-18-394 and sec 18.4.  I'm not familiar enough with APEI to know
-whether Linux correctly supports all those cases.  Maybe this is a
-symptom that we don't?
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+ lib/Kconfig.debug                 | 26 +++++++++++++++++---------
+ lib/Makefile                      |  2 +-
+ lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
+ 3 files changed, 33 insertions(+), 26 deletions(-)
+ rename lib/{test_sort.c => sort_kunit.c} (55%)
 
-> > I'm not sure how much sympathy to have for this situation.  A PCIe UR
-> > is fatal for the transaction and maybe even the device, but from the
-> > overall system point of view, it *should* be a recoverable error and
-> > we shouldn't panic.
-> > 
-> > Errors like that should be reported via the normal AER or ACPI/APEI
-> > mechanisms.  It sounds like in this case, the platform has decided
-> > these aren't enough and it is trying to force a reboot?  If this is
-> > "special" platform behavior, I'm not sure how much we need to cater
-> > for it.
-> 
-> Are these AER errors the type processed by the GHES code?
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..1fe19e78d7ca 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1874,15 +1874,6 @@ config TEST_MIN_HEAP
 
-My understanding from ACPI v6.3, sec 18.3.2, is that the Hardware
-Error Source Table may contain Error Source Descriptors of types like:
+ 	  If unsure, say N.
 
-  IA-32 Machine Check Exception
-  IA-32 Corrected Machine Check
-  IA-32 Non-Maskable Interrupt
-  PCIe Root Port AER
-  PCIe Device AER
-  Generic Hardware Error Source (GHES)
-  Hardware Error Notification
-  IA-32 Deferred Machine Check
+-config TEST_SORT
+-	tristate "Array-based sort test"
+-	depends on DEBUG_KERNEL || m
+-	help
+-	  This option enables the self-test function of 'sort()' at boot,
+-	  or at module load time.
+-
+-	  If unsure, say N.
+-
+ config KPROBES_SANITY_TEST
+ 	bool "Kprobes sanity tests"
+ 	depends on DEBUG_KERNEL
+@@ -2185,6 +2176,23 @@ config LINEAR_RANGES_TEST
 
-I would naively expect PCIe UR errors to be reported via one of the
-PCIe Error Sources, not GHES, but maybe there's some reason to use
-GHES.
+ 	  If unsure, say N.
 
-The kernel should already know how to deal with the PCIe AER errors,
-but we'd have to add new device-specific code to handle things
-reported via GHES, along the lines of what Shiju is doing here:
++config SORT_KUNIT
++	tristate "KUnit test for Array-based sort"
++	depends on DEBUG_KERNEL || m
++	help
++	  This option enables the KUnit function of 'sort()' at boot,
++	  or at module load time.
++
++	  KUnit tests run during boot and output the results to the debug log
++	  in TAP format (http://testanything.org/). Only useful for kernel devs
++	  running the KUnit test harness, and not intended for inclusion into a
++	  production build.
++
++	  For more information on KUnit and unit tests in general please refer
++	  to the KUnit documentation in Documentation/dev-tools/kunit/.
++
++	  If unsure, say N.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index b1c42c10073b..c22bb13b0a08 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -77,7 +77,6 @@ obj-$(CONFIG_TEST_LKM) += test_module.o
+ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+ obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+ obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+-obj-$(CONFIG_TEST_SORT) += test_sort.o
+ obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+@@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+ # KUnit tests
+ obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+ obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
++obj-$(CONFIG_SORT_KUNIT) += sort_kunit.o
+diff --git a/lib/test_sort.c b/lib/sort_kunit.c
+similarity index 55%
+rename from lib/test_sort.c
+rename to lib/sort_kunit.c
+index 52edbe10f2e5..03ba1cf1285c 100644
+--- a/lib/test_sort.c
++++ b/lib/sort_kunit.c
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/sort.h>
+-#include <linux/slab.h>
+-#include <linux/module.h>
++#include <kunit/test.h>
 
-  https://lore.kernel.org/r/20200722104245.1060-1-shiju.jose@huawei.com
+ /* a simple boot-time regression test */
 
-> I'll note that RedHat runs their crash kernel with:  hest_disable.
-> So, the ghes code is disabled in the crash kernel.
+@@ -12,13 +11,12 @@ static int __init cmpint(const void *a, const void *b)
+ 	return *(int *)a - *(int *)b;
+ }
 
-That would disable all the HEST error sources, including the PCIe AER
-ones as well as GHES ones.  If we turn off some of the normal error
-handling mechanisms, I guess we have to expect that some errors won't
-be handled correctly.
+-static int __init test_sort_init(void)
++static void __init sort_test(struct kunit *test)
+ {
+-	int *a, i, r = 1, err = -ENOMEM;
++	int *a, i, r = 1;
 
-Bjorn
+ 	a = kmalloc_array(TEST_LEN, sizeof(*a), GFP_KERNEL);
+-	if (!a)
+-		return err;
++	KUNIT_ASSERT_FALSE_MSG(test, a == NULL, "kmalloc_array failed");
+
+ 	for (i = 0; i < TEST_LEN; i++) {
+ 		r = (r * 725861) % 6599;
+@@ -27,24 +25,25 @@ static int __init test_sort_init(void)
+
+ 	sort(a, TEST_LEN, sizeof(*a), cmpint, NULL);
+
+-	err = -EINVAL;
+ 	for (i = 0; i < TEST_LEN-1; i++)
+ 		if (a[i] > a[i+1]) {
+-			pr_err("test has failed\n");
++			KUNIT_FAIL(test, "test has failed");
+ 			goto exit;
+ 		}
+-	err = 0;
+-	pr_info("test passed\n");
+ exit:
+ 	kfree(a);
+-	return err;
+ }
+
+-static void __exit test_sort_exit(void)
+-{
+-}
++static struct kunit_case sort_test_cases[] = {
++	KUNIT_CASE(sort_test),
++	{}
++};
++
++static struct kunit_suite sort_test_suite = {
++	.name = "sort",
++	.test_cases = sort_test_cases,
++};
+
+-module_init(test_sort_init);
+-module_exit(test_sort_exit);
++kunit_test_suites(&sort_test_suite);
+
+ MODULE_LICENSE("GPL");
+
+base-commit: d43c7fb05765152d4d4a39a8ef957c4ea14d8847
+--
+2.26.2
+
