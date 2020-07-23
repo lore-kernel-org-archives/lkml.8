@@ -2,130 +2,124 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFAEC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3FAC433EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5002086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED97420771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJ/MMS9N"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="clyq7lFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgGWPWe (ORCPT
+        id S1729560AbgGWPWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgGWPWd (ORCPT
+        Thu, 23 Jul 2020 11:22:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50976 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgGWPWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:22:33 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B82C0619DC;
-        Thu, 23 Jul 2020 08:22:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k17so3482958lfg.3;
-        Thu, 23 Jul 2020 08:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L81wTFA53gfp7hYtms3C94J0jBeZGUSiKMHUeZoLf74=;
-        b=EJ/MMS9NJ0fa7vp2B2cpL8GsEZFuIK04OhTRyhJVsY5qLLm+Jldv7Rx2TXbULPN2Cs
-         62Ct2jJU+poxwYVG1TUtpgXqlGVsODkX4GlAkQPnxR7RPRPGgZN5xnIQLvA7DD8fCA1E
-         ETgwAwT/t1vrZwjgmkv2WzX0igbmKVqkS8OBnvMiQ9ix8UkR1sq93/djIqJTg0iwAIK2
-         vZZ5z1yBdGJoJxcL+fwkFmoTESEbAg5oOahR3NrMqCyTYphW2oUjaENHITHjuGcecNIj
-         cFOMDsr/5kXwCuiY71153T9y2zbuN4IGZIwlFnBbGWf3K1f3vSJgg8UVtgMa2bwOXjb+
-         +tFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L81wTFA53gfp7hYtms3C94J0jBeZGUSiKMHUeZoLf74=;
-        b=hEiR1RdSL8uKi1wQSMKIHlHacnaerOvU8wOQqyWWf7GBNZLIsFf9MOieoeOCy2vWpv
-         iGVqjqgPF/P9V3A//lAuTTXQ7UBOTKJ93Pk1CifIh8p37CLQyC9oimS/4kN7NfztO5QB
-         zpOUlH8Ht4KSLcfbpURFbxdYoN30rp/xT/zbYmoWZPCbI+us8B5s2YyScZjtmz0cCNQg
-         RFTcCLGuzUD1mZ5OaFN4n7Dh5iYZ088do7rlz5TQ5d2XI2HOnbsSGSiS/qpwB9PLIUAG
-         b6MhDvhMh3K96Rp6sz4etzCXeHf7Qnd4XuE4sUt343kLePn9PhQn8yXXLsA3sbl3WsEz
-         V+zQ==
-X-Gm-Message-State: AOAM530MMzvZ9oCwPT8KstW1e7Re0+pgVxkadu3SBUaSf5ZkFAMHjiY/
-        LRbs/5QsYRflAJ/XbV1OIfc7y9oY1XD9aEjJMeE=
-X-Google-Smtp-Source: ABdhPJxuvwgfuAanQGNYX7PvikPhn/NQCxwDohI9W4Y893EwG29iNI4LFtdnK9U3931oOB6GvwOtBKz8kki1RW+GZso=
-X-Received: by 2002:ac2:5f48:: with SMTP id 8mr2469875lfz.157.1595517751613;
- Thu, 23 Jul 2020 08:22:31 -0700 (PDT)
+        Thu, 23 Jul 2020 11:22:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NFMPO7079280;
+        Thu, 23 Jul 2020 15:22:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=FQoH8PZdFrtXDF0CKE9wBRE+k2081C1vXYNww8W4egE=;
+ b=clyq7lFojSeJAVNdRMUhev37xl1pPQTz7bRboKM8hgZzqDGHiTgt7vnM5+5aZAKojQnC
+ S2KNq8/yb3jRYYpwBrKb7wwZWY0hzF608Urf44QhAMZaEt6dHXEDm1s7vZh2khu7+dYL
+ FJF1Nc6HG94fJRYUDSFFBcdESghhaH7ZUAYanzEGGBjHpiuqWIaKdmRZMOE8XCEMZeLF
+ 05Dxaw1zq9+cw/RSUSAdB7Nfc56bc5ZQ+FsrEPwB7b3UUcbaDTDLmDxAFvv4qjWPepCq
+ PfNd38a4j83RRXYSxQcI0D3QryUPfsNgsMmFy6ShSbKM6EeoEO6RChG+2zE8FmDHcstI Ng== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32brgrt2g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jul 2020 15:22:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NFEPsc117761;
+        Thu, 23 Jul 2020 15:22:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32fc5nn4u2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 15:22:28 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06NFMQZb032275;
+        Thu, 23 Jul 2020 15:22:26 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jul 2020 08:22:25 -0700
+Date:   Thu, 23 Jul 2020 18:22:19 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: [PATCH 1/2] Smack: fix another vsscanf out of bounds
+Message-ID: <20200723152219.GA302005@mwanda>
 MIME-Version: 1.0
-References: <20200722184210.4078256-1-songliubraving@fb.com>
- <20200722184210.4078256-3-songliubraving@fb.com> <20200723055518.onydx7uhmzomt7ud@ast-mbp.dhcp.thefacebook.com>
- <684DA506-6780-4CB5-B99C-24D939CDE6DF@fb.com>
-In-Reply-To: <684DA506-6780-4CB5-B99C-24D939CDE6DF@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 23 Jul 2020 08:22:19 -0700
-Message-ID: <CAADnVQK+xX8oKF5f=FzmE+xxbSovJ+rbZD6TRxTAtdH+-ockEw@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 2/4] bpf: fail PERF_EVENT_IOC_SET_BPF when
- bpf_get_[stack|stackid] cannot work
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000d282bd05ab0bf532@google.com>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 mlxscore=0 suspectscore=0 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1011 mlxlogscore=999
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007230115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:20 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Jul 22, 2020, at 10:55 PM, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Wed, Jul 22, 2020 at 11:42:08AM -0700, Song Liu wrote:
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index 856d98c36f562..f77d009fcce95 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -9544,6 +9544,24 @@ static int perf_event_set_bpf_handler(struct perf_event *event, u32 prog_fd)
-> >>      if (IS_ERR(prog))
-> >>              return PTR_ERR(prog);
-> >>
-> >> +    if (event->attr.precise_ip &&
-> >> +        prog->call_get_stack &&
-> >> +        (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY) ||
-> >> +         event->attr.exclude_callchain_kernel ||
-> >> +         event->attr.exclude_callchain_user)) {
-> >> +            /*
-> >> +             * On perf_event with precise_ip, calling bpf_get_stack()
-> >> +             * may trigger unwinder warnings and occasional crashes.
-> >> +             * bpf_get_[stack|stackid] works around this issue by using
-> >> +             * callchain attached to perf_sample_data. If the
-> >> +             * perf_event does not full (kernel and user) callchain
-> >> +             * attached to perf_sample_data, do not allow attaching BPF
-> >> +             * program that calls bpf_get_[stack|stackid].
-> >> +             */
-> >> +            bpf_prog_put(prog);
-> >> +            return -EINVAL;
-> >
-> > I suspect this will be a common error. bpftrace and others will be hitting
-> > this issue and would need to fix how they do perf_event_open.
-> > But EINVAL is too ambiguous and sys_perf_event_open has no ability to
-> > return a string.
-> > So how about we pick some different errno here to make future debugging
-> > a bit less painful?
-> > May be EBADFD or EPROTO or EPROTOTYPE ?
-> > I think anything would be better than EINVAL.
->
-> I like EPROTO most. I will change it to EPROTO if we don't have better ideas.
->
-> Btw, this is not the error code on sys_perf_event_open(). It is the ioctl()
-> on the perf_event fd. So debugging this error will be less painful than
-> debugging sys_perf_event_open() errors.
+This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
+vsscanf") where we added a bounds check on "rule".
 
-ahh. right. Could you also add a string hint to libbpf when it sees this errno?
+Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
+Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+This check is very straight forward and should fix the bug.  But if you
+look at the fixes tag we used to rely on the check:
+
+	if (count != (SMK_CIPSOMIN + catlen * SMK_DIGITLEN))
+
+and now that has been changed to:
+
+	if (format == SMK_FIXED24_FMT &&
+	    count != (SMK_CIPSOMIN + catlen * SMK_DIGITLEN))
+                goto out;
+
+so it doesn't apply for every format.
+
+ security/smack/smackfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index c21b656b3263..81c6ceeaa4f9 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -905,6 +905,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
+ 
+ 	for (i = 0; i < catlen; i++) {
+ 		rule += SMK_DIGITLEN;
++		if (rule > data + count) {
++			rc = -EOVERFLOW;
++			goto out;
++		}
+ 		ret = sscanf(rule, "%u", &cat);
+ 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+ 			goto out;
+-- 
+2.27.0
+
