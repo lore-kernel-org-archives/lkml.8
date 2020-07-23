@@ -2,127 +2,266 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E21C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08FDC433F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7964322B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE333208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595522110;
+	bh=pH9hCqHfdlU+w6Ab8i9hBud2GdbD3VXacsj5zyagtEA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jsRwXWs4Y1YT9o69O3lRdGBFigKRK8AEcyB72bdZ7N73uMIBVR6OiZQkYAzK7TSze
+	 qkVnnBVyTF2osLPluTuQM+ICYfEY7UOV5o9Vhb1HNOaFLf3aKIvBtbxpjnTc9+fzh6
+	 V4jBZjEZ9s+I8o8UW8JTC8LHvWOzfvPt59xpIwH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbgGWQe4 (ORCPT
+        id S1729921AbgGWQfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:34:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1834 "EHLO mga05.intel.com"
+        Thu, 23 Jul 2020 12:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgGWQez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:34:55 -0400
-IronPort-SDR: vyL+NYt2ZliHRJRxL72e/ahPc7G4EE9VaxJ+UuM8hBgJ2hmx8gy+XrUo3YgeLRskcAHNr1pHsm
- b5y1V1mcwhgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235445608"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="235445608"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:34:53 -0700
-IronPort-SDR: hFYas6QKNxTOrvEjECjOw3UCjMCf0bwK7XQddFbktkt1InLwc36SCtegqV7XT10e6Occd/2a3J
- fvubPKBrLB2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="432795981"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by orsmga004.jf.intel.com with ESMTP; 23 Jul 2020 09:34:52 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH v4 04/10] net: eth: altera: add optional function to start
- tx dma
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>
-References: <20200708072401.169150-1-joyce.ooi@intel.com>
- <20200708072401.169150-5-joyce.ooi@intel.com>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <8d16280c-af08-ac70-dcee-2646ccefc820@linux.intel.com>
-Date:   Thu, 23 Jul 2020 11:35:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726649AbgGWQfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:35:09 -0400
+Received: from localhost.localdomain (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DDC1206F4;
+        Thu, 23 Jul 2020 16:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595522108;
+        bh=pH9hCqHfdlU+w6Ab8i9hBud2GdbD3VXacsj5zyagtEA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pF/lpfQcCUEM1QqI/hAXZ3itOtpGN4oLPtO9LyfQe2joZPHbk9I07M0PJDasd8el4
+         R+aATZmGeDt9POXRR5TOXwwejLFztu9XWWNcOzxRTXXci9WFVgL/0qxoo4FlhryyKq
+         LAc6zM8mgUvpYt9aVWJAnAuvSKc8gw1FQ+bsyEFM=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH v6 2/3] dt-bindings: display: bridge: Add documentation for LT9611
+Date:   Thu, 23 Jul 2020 22:04:41 +0530
+Message-Id: <20200723163442.1280414-3-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200723163442.1280414-1-vkoul@kernel.org>
+References: <20200723163442.1280414-1-vkoul@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200708072401.169150-5-joyce.ooi@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/20 2:23 AM, Ooi, Joyce wrote:
-> From: Dalon Westergreen <dalon.westergreen@intel.com>
-> 
-> Allow for optional start up of tx dma if the start_txdma
-> function is defined in altera_dmaops.
-> 
-> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-> ---
-> v2: no change
-> v3: no change
-> v4: no change
-> ---
->   drivers/net/ethernet/altera/altera_tse.h      | 1 +
->   drivers/net/ethernet/altera/altera_tse_main.c | 5 +++++
->   2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-> index 7d0c98fc103e..26c5541fda27 100644
-> --- a/drivers/net/ethernet/altera/altera_tse.h
-> +++ b/drivers/net/ethernet/altera/altera_tse.h
-> @@ -401,6 +401,7 @@ struct altera_dmaops {
->   	int (*init_dma)(struct altera_tse_private *priv);
->   	void (*uninit_dma)(struct altera_tse_private *priv);
->   	void (*start_rxdma)(struct altera_tse_private *priv);
-> +	void (*start_txdma)(struct altera_tse_private *priv);
->   };
->   
->   /* This structure is private to each device.
-> diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-> index a3749ffdcac9..0a724e4d2c8c 100644
-> --- a/drivers/net/ethernet/altera/altera_tse_main.c
-> +++ b/drivers/net/ethernet/altera/altera_tse_main.c
-> @@ -1244,6 +1244,9 @@ static int tse_open(struct net_device *dev)
->   
->   	priv->dmaops->start_rxdma(priv);
->   
-> +	if (priv->dmaops->start_txdma)
-> +		priv->dmaops->start_txdma(priv);
-> +
->   	/* Start MAC Rx/Tx */
->   	spin_lock(&priv->mac_cfg_lock);
->   	tse_set_mac(priv, true);
-> @@ -1646,6 +1649,7 @@ static const struct altera_dmaops altera_dtype_sgdma = {
->   	.init_dma = sgdma_initialize,
->   	.uninit_dma = sgdma_uninitialize,
->   	.start_rxdma = sgdma_start_rxdma,
-> +	.start_txdma = NULL,
->   };
->   
->   static const struct altera_dmaops altera_dtype_msgdma = {
-> @@ -1665,6 +1669,7 @@ static const struct altera_dmaops altera_dtype_msgdma = {
->   	.init_dma = msgdma_initialize,
->   	.uninit_dma = msgdma_uninitialize,
->   	.start_rxdma = msgdma_start_rxdma,
-> +	.start_txdma = NULL,
->   };
->   
->   static const struct of_device_id altera_tse_ids[] = {
-> 
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
+and I2S port as input and one HDMI port as output
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ .../display/bridge/lontium,lt9611.yaml        | 176 ++++++++++++++++++
+ 1 file changed, 176 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+new file mode 100644
+index 000000000000..d60208359234
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+@@ -0,0 +1,176 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lontium LT9611 2 Port MIPI to HDMI Bridge
++
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
++
++description: |
++  The LT9611 is a bridge device which converts DSI to HDMI
++
++properties:
++  compatible:
++    enum:
++      - lontium,lt9611
++
++  reg:
++    maxItems: 1
++
++  "#sound-dai-cells":
++    const: 1
++
++  interrupts:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++    description: GPIO connected to active high RESET pin.
++
++  vdd-supply:
++    description: Regulator for 1.8V MIPI phy power.
++
++  vcc-supply:
++    description: Regulator for 3.3V IO power.
++
++  ports:
++    type: object
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description: |
++          Primary MIPI port-1 for MIPI input
++
++        properties:
++          reg:
++            const: 0
++
++        patternProperties:
++          "^endpoint(@[0-9])$":
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint:
++                $ref: /schemas/types.yaml#/definitions/phandle
++
++        required:
++          - reg
++
++      port@1:
++        type: object
++        description: |
++          Additional MIPI port-2 for MIPI input, used in combination
++          with primary MIPI port-1 to drive higher resolution displays
++
++        properties:
++          reg:
++            const: 1
++
++        patternProperties:
++          "^endpoint(@[0-9])$":
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint:
++                $ref: /schemas/types.yaml#/definitions/phandle
++
++        required:
++          - reg
++
++      port@2:
++        type: object
++        description: |
++          HDMI port for HDMI output
++
++        properties:
++          reg:
++            const: 2
++
++        patternProperties:
++          "^endpoint(@[0-9])$":
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint:
++                $ref: /schemas/types.yaml#/definitions/phandle
++
++        required:
++          - reg
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - port@0
++      - port@2
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - vdd-supply
++  - vcc-supply
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c10 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      hdmi-bridge@3b {
++        compatible = "lontium,lt9611";
++        reg = <0x3b>;
++
++        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
++        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
++
++        vdd-supply = <&lt9611_1v8>;
++        vcc-supply = <&lt9611_3v3>;
++
++        ports {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          port@0 {
++            reg = <0>;
++            lt9611_a: endpoint {
++              remote-endpoint = <&dsi0_out>;
++            };
++          };
++
++          port@1 {
++            reg = <1>;
++            lt9611_b: endpoint {
++              remote-endpoint = <&dsi1_out>;
++            };
++          };
++
++          port@2 {
++            reg = <2>;
++            lt9611_out: endpoint {
++              remote-endpoint = <&hdmi_con>;
++            };
++          };
++        };
++      };
++    };
++
++...
+-- 
+2.26.2
+
