@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCC3C433F2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170E4C433FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435082084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F278A2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387567AbgGWCea (ORCPT
+        id S2387601AbgGWCee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 22:34:30 -0400
+        Wed, 22 Jul 2020 22:34:34 -0400
 Received: from labrats.qualcomm.com ([199.106.110.90]:37589 "EHLO
         labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387483AbgGWCe1 (ORCPT
+        with ESMTP id S2387483AbgGWCec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 22:34:27 -0400
-IronPort-SDR: JH+ei7YBQ/788tY+baRbOlK3VAlitNkgs2budKTVu0/ai/suVWej6BcIN+Zz6//UVDZslCBFKH
- +ZqWaH4qAULHQ5nbnOKrZ6L4yyjImmP4GBSVMkPloa1TDJRJ9SSCuBssHf8ITKY/FRn+pcriyH
- 9RvXdAc/z9h+4bfoBXXPKLXvAD+jHsYimllx2cASMebJg+VbhHCfrJiHAfCYqzPqXhoUnrWrzj
- gi8pG/qzz89UbvAR/qyP+PPed5weSKjME0PZblOGseMWwhuVFisKERmd5aRPLX9+ZKMicZnGc2
- npQ=
+        Wed, 22 Jul 2020 22:34:32 -0400
+IronPort-SDR: SEaBUIS7QFVySKDz6MH5gNsusfxBz1WgLsI4esHeAUNXPgVAQSsxyXqstH2TmrKaN/uPuuBFPn
+ fJunmBM/ZbtkiNo50oQhEM8NPiyYBcRpxEsgkmDkd8wibOg4LIcD99aABdaEWzDzRphwCCVGDU
+ I/5bcChh9Rm81GqxZmlKnz4C3823U4dv0pKfD4iZfKQhlgh7Jv/7ptpEjPRY31pbM5UdF3zVuG
+ 6iDTA1szGsst+inAqwc7TevudPpM5SIx3Ydn7JK0q7NnIMfbeu4oIzcgbtSGw5DKcXgmDrmVuQ
+ 2TM=
 X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="29047796"
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by labrats.qualcomm.com with ESMTP; 22 Jul 2020 19:34:27 -0700
+   d="scan'208";a="29047797"
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by labrats.qualcomm.com with ESMTP; 22 Jul 2020 19:34:31 -0700
 Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 22 Jul 2020 19:34:26 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP; 22 Jul 2020 19:34:27 -0700
 Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id 84D1522A4D; Wed, 22 Jul 2020 19:34:26 -0700 (PDT)
+        id ACBCC22E1F; Wed, 22 Jul 2020 19:34:20 -0700 (PDT)
 From:   Can Guo <cang@codeaurora.org>
 To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
         hongwus@codeaurora.org, rnayak@codeaurora.org,
         sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
         kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
         cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Avri Altman <avri.altman@wdc.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Satya Tangirala <satyat@google.com>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 5/9] scsi: ufs: Add some debug infos to ufshcd_print_host_state
-Date:   Wed, 22 Jul 2020 19:34:04 -0700
-Message-Id: <1595471649-25675-6-git-send-email-cang@codeaurora.org>
+Subject: [PATCH v5 4/9] scsi: ufs-qcom: Fix schedule while atomic error in ufs_qcom_dump_dbg_regs
+Date:   Wed, 22 Jul 2020 19:34:03 -0700
+Message-Id: <1595471649-25675-5-git-send-email-cang@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
 References: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
@@ -60,116 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The infos of the last interrupt status and its timestamp are very helpful
-when debug system stability issues, e.g. IRQ starvation, so add them to
-ufshcd_print_host_state. Meanwhile, UFS device infos like model name and
-its FW version also come in handy during debug. In addition, this change
-makes cleanup to some prints in ufshcd_print_host_regs as similar prints
-are already available in ufshcd_print_host_state.
+Dumping testbus registers needs to sleep a bit intermittently as there are
+too many of them. Skip them for those contexts where sleep is not allowed.
 
 Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 31 ++++++++++++++++++-------------
- drivers/scsi/ufs/ufshcd.h |  5 +++++
- 2 files changed, 23 insertions(+), 13 deletions(-)
+ drivers/scsi/ufs/ufs-qcom.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2907828..a22414b 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -411,15 +411,6 @@ static void ufshcd_print_err_hist(struct ufs_hba *hba,
- static void ufshcd_print_host_regs(struct ufs_hba *hba)
- {
- 	ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
--	dev_err(hba->dev, "hba->ufs_version = 0x%x, hba->capabilities = 0x%x\n",
--		hba->ufs_version, hba->capabilities);
--	dev_err(hba->dev,
--		"hba->outstanding_reqs = 0x%x, hba->outstanding_tasks = 0x%x\n",
--		(u32)hba->outstanding_reqs, (u32)hba->outstanding_tasks);
--	dev_err(hba->dev,
--		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt = %d\n",
--		ktime_to_us(hba->ufs_stats.last_hibern8_exit_tstamp),
--		hba->ufs_stats.hibern8_exit_cnt);
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 7da27ee..7831b2b 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1651,13 +1651,16 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+ 	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
+ 			 "HCI Vendor Specific Registers ");
  
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.pa_err, "pa_err");
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.dl_err, "dl_err");
-@@ -438,8 +429,6 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.host_reset, "host_reset");
- 	ufshcd_print_err_hist(hba, &hba->ufs_stats.task_abort, "task_abort");
- 
--	ufshcd_print_clk_freqs(hba);
--
- 	ufshcd_vops_dbg_register_dump(hba);
- }
- 
-@@ -499,6 +488,8 @@ static void ufshcd_print_tmrs(struct ufs_hba *hba, unsigned long bitmap)
- 
- static void ufshcd_print_host_state(struct ufs_hba *hba)
- {
-+	struct scsi_device *sdev_ufs = hba->sdev_ufs_device;
+-	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+-	udelay(1000);
+-	ufs_qcom_testbus_read(hba);
+-	udelay(1000);
+-	ufs_qcom_print_unipro_testbus(hba);
+-	udelay(1000);
 +
- 	dev_err(hba->dev, "UFS Host state=%d\n", hba->ufshcd_state);
- 	dev_err(hba->dev, "outstanding reqs=0x%lx tasks=0x%lx\n",
- 		hba->outstanding_reqs, hba->outstanding_tasks);
-@@ -511,12 +502,24 @@ static void ufshcd_print_host_state(struct ufs_hba *hba)
- 	dev_err(hba->dev, "Auto BKOPS=%d, Host self-block=%d\n",
- 		hba->auto_bkops_enabled, hba->host->host_self_blocked);
- 	dev_err(hba->dev, "Clk gate=%d\n", hba->clk_gating.state);
-+	dev_err(hba->dev,
-+		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt=%d\n",
-+		ktime_to_us(hba->ufs_stats.last_hibern8_exit_tstamp),
-+		hba->ufs_stats.hibern8_exit_cnt);
-+	dev_err(hba->dev, "last intr at %lld us, last intr status=0x%x\n",
-+		ktime_to_us(hba->ufs_stats.last_intr_ts),
-+		hba->ufs_stats.last_intr_status);
- 	dev_err(hba->dev, "error handling flags=0x%x, req. abort count=%d\n",
- 		hba->eh_flags, hba->req_abort_count);
--	dev_err(hba->dev, "Host capabilities=0x%x, caps=0x%x\n",
--		hba->capabilities, hba->caps);
-+	dev_err(hba->dev, "hba->ufs_version=0x%x, Host capabilities=0x%x, caps=0x%x\n",
-+		hba->ufs_version, hba->capabilities, hba->caps);
- 	dev_err(hba->dev, "quirks=0x%x, dev. quirks=0x%x\n", hba->quirks,
- 		hba->dev_quirks);
-+	if (sdev_ufs)
-+		dev_err(hba->dev, "UFS dev info: %.8s %.16s rev %.4s\n",
-+			sdev_ufs->vendor, sdev_ufs->model, sdev_ufs->rev);
-+
-+	ufshcd_print_clk_freqs(hba);
++	if (in_task()) {
++		/* sleep a bit intermittently as we are dumping too much data */
++		usleep_range(1000, 1100);
++		ufs_qcom_testbus_read(hba);
++		usleep_range(1000, 1100);
++		ufs_qcom_print_unipro_testbus(hba);
++		usleep_range(1000, 1100);
++	}
  }
  
  /**
-@@ -5951,6 +5954,8 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 
- 	spin_lock(hba->host->host_lock);
- 	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
-+	hba->ufs_stats.last_intr_status = intr_status;
-+	hba->ufs_stats.last_intr_ts = ktime_get();
- 
- 	/*
- 	 * There could be max of hba->nutrs reqs in flight and in worst case
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 656c069..5b2cdaf 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -406,6 +406,8 @@ struct ufs_err_reg_hist {
- 
- /**
-  * struct ufs_stats - keeps usage/err statistics
-+ * @last_intr_status: record the last interrupt status.
-+ * @last_intr_ts: record the last interrupt timestamp.
-  * @hibern8_exit_cnt: Counter to keep track of number of exits,
-  *		reset this after link-startup.
-  * @last_hibern8_exit_tstamp: Set time after the hibern8 exit.
-@@ -425,6 +427,9 @@ struct ufs_err_reg_hist {
-  * @tsk_abort: tracks task abort events
-  */
- struct ufs_stats {
-+	u32 last_intr_status;
-+	ktime_t last_intr_ts;
-+
- 	u32 hibern8_exit_cnt;
- 	ktime_t last_hibern8_exit_tstamp;
- 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
