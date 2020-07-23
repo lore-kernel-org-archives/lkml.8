@@ -2,103 +2,111 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68734C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4681D206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869FE206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 03:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtNAZUXm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SW9/QPma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbgGWC6v (ORCPT
+        id S2387477AbgGWDBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 22:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55288 "EHLO
+        Wed, 22 Jul 2020 23:01:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728902AbgGWC6u (ORCPT
+        with ESMTP id S1728902AbgGWDBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 22:58:50 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E831C0619DC;
-        Wed, 22 Jul 2020 19:58:50 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id k6so3133353ili.6;
-        Wed, 22 Jul 2020 19:58:50 -0700 (PDT)
+        Wed, 22 Jul 2020 23:01:33 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD61C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 20:01:33 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id o22so2362942pjw.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 20:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pCEmXUzqxk9okJ46w5/kqnzWiON/PCFBw3SwsJJjA2o=;
-        b=NtNAZUXmro3U0W/eNGRzVoBsxEYtYMLzoPj5l7VxYOpm/X0b/0EZvb11cK+dng1tOF
-         E5Dycrk89GiRbg83zdDDoMo2b4l96xYzWE/5tg8t/1QIK2x5HoYNxuMO68sMnbji6uWX
-         e9HVv1kIU5XGUGy9X0evv0fqoe3+qEj3o7Gl6JA222lS9SASteFBbfH764ZQcDTgqFd/
-         kVAe6ARC88PVePDdbPFw4if1xI2H921HfOLjdo22ZG/ewvzAt6EUhDtxklaOVKY0vVo7
-         gCnN2JQHGYn7OacZrRV1OMfGWPSjuz84SR1dOA0M/Roy1/q5AkN5aDc5IAagW8xepZbG
-         kIFg==
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2y+I6PwwxSElCmcFQvxr1HYP5aFtMrEZ6V7jnXGLsO0=;
+        b=SW9/QPmazUCR7LyWcHbbpG03Z3ogWE4FsXtmL4pW6n0Mvj6SzTFZTf10zY1lGn1oKl
+         6p2yFixjjpZa90mM8m6dd02rEYgr2wz9tyydVW5O5vs4q+u3j/rwH+HoWn3HaAP5lPJZ
+         45Xwh6yvxU8GfZRBlILyHIX2BFbOGGOvEfHEA7Z4oMEWYu04Ha0DgC99aEGo176pyctP
+         /Rn4NmOPxaAnVu3pvY+/l2q6F6meSft/CpX3o66udTo2DYpYN4/ZcP3CJinJJH8n/7jK
+         OFZoBTODT1+oXnVJn5X+80+GKPoQ1KMsPQqHld/xjlvDb3USvK+XDZQzpku3OUu0UC9i
+         kfKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pCEmXUzqxk9okJ46w5/kqnzWiON/PCFBw3SwsJJjA2o=;
-        b=nnkhTAqvx5LzReS2NSix/gBAjF5rCCmcVXf+zQpBeeqU1NUh9RB4e1LwLrMKJ+zKXX
-         AF+u0bbJiCvxUtU1kQmELuUAomF8KA0HaN3U3inwDwaOk+vy2D52IV/hpe+qlDxOo8yh
-         4UrzQSfKGydRb5acooEpOqH/qnLHOWQFE2JAyem+SzisHGYis1ifdgGjEWtNrgeK2T6d
-         MwZW8FcYtRncFJX/3cXSluDVodd9B1lO6MpQbjdrXBSdIIpPCmCzD58e1VZWPSCRNDB8
-         0GmBquIZV8fFTWKg4HXPYppcA++ifS6xILC3ZDYUNZtK4u4eDfjbU1HijvH93rzPgm5C
-         c8LA==
-X-Gm-Message-State: AOAM532Of/Tb1IwUnJsSI8n29gKKZQf/DhMzQOkCrCx9LbPC/SAB1H7o
-        KOPZS8EUMHM3M9MEKqRpB24=
-X-Google-Smtp-Source: ABdhPJwAoE8fRLdmHRlsEZEJYMK7ZYOKfvLS/NusuyNuU49d0EFTv0opFhb1XqOR7WOyHLulJ1S3vA==
-X-Received: by 2002:a92:794f:: with SMTP id u76mr2747797ilc.215.1595473130030;
-        Wed, 22 Jul 2020 19:58:50 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [160.94.145.20])
-        by smtp.googlemail.com with ESMTPSA id c3sm744628ilj.31.2020.07.22.19.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 19:58:49 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH v3] cxgb4: add missing release on skb in uld_send()
-Date:   Wed, 22 Jul 2020 21:58:39 -0500
-Message-Id: <20200723025841.22535-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200722.181436.414462601873878102.davem@davemloft.net>
-References: <20200722.181436.414462601873878102.davem@davemloft.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2y+I6PwwxSElCmcFQvxr1HYP5aFtMrEZ6V7jnXGLsO0=;
+        b=GKlxYebZgirkZFyX38cu97EbVvAOwiZ2K49EIClLNx03ca9j3+es2d7WVeKLIoztB3
+         4KEV0L/UAiY6M3EWGoT+OwuJmkfl6QzvzdX5d8UWVRM/gWMdpjwHHQeNutfK0zhXi6Ic
+         zRDO5tVHQgPGv7MY6smlS3aWZngZ15nmZqMtyxzWSVh/14gjovLkSaZv32GB6N95fO2B
+         9qgiYJiZaRgwcrgEhbETiCyFnTKWHb9rmny5RneTNg5V3ENXoGtnghOTa8rc9ElspIk1
+         UVC+Sg0q3t4MaOg5KbQxoLMgJfc2KTCvFHBwA2TrRa+5ZZUkELrOlJgJZX9vP5ZiSTH1
+         vvGA==
+X-Gm-Message-State: AOAM5331qKboAXLOMZaPT07yMm0/X4msG+l00G9DxHxldPI17GSnqtdR
+        7k2XS0IyRK2V4VDA2gdAgvU=
+X-Google-Smtp-Source: ABdhPJxG1oVrZ6RSheJ2/LLYoXDKajjvT7utaHFeGlxYAKCFHgiZq/iAlRziL1FEBJGsV85rFE6lJQ==
+X-Received: by 2002:a17:902:a708:: with SMTP id w8mr2187711plq.128.1595473292727;
+        Wed, 22 Jul 2020 20:01:32 -0700 (PDT)
+Received: from localhost ([103.29.143.67])
+        by smtp.gmail.com with ESMTPSA id 198sm1004255pfb.27.2020.07.22.20.01.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jul 2020 20:01:32 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 11:01:23 +0800
+From:   Yue Hu <zbestahu@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org, huyue2@yulong.com,
+        zbestahu@163.com
+Subject: Re: [PATCH] sysrq: use only one slot for loglevels in key table
+Message-ID: <20200723110123.000017e1.zbestahu@gmail.com>
+In-Reply-To: <20200722104952.GB2827860@kroah.com>
+References: <20200722092610.11504-1-zbestahu@gmail.com>
+        <20200722104952.GB2827860@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of uld_send(), the skb is consumed on all
-execution paths except one. Release skb when returning NET_XMIT_DROP.
+On Wed, 22 Jul 2020 12:49:52 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-v3:
-	- fixed the base problem, and used kfree_skb
----
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Wed, Jul 22, 2020 at 05:26:09PM +0800, Yue Hu wrote:
+> > From: Yue Hu <huyue2@yulong.com>
+> > 
+> > Currently, sysrq_key_table[] has 10 slots for same interface to change
+> > console loglevel. No specific purpose to do that. Let's use only one slot
+> > to save memory space. Also, update the key2index calculation. And remove
+> > needless code in help message print path to make the logic simpler.  
+> 
+> That sounds like a lot of different things being all done at once.  Can
+> you break this up into individual patches, each only doing one type of
+> thing at a time.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index 32a45dc51ed7..92eee66cbc84 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -2938,6 +2938,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
- 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
- 	if (unlikely(!txq_info)) {
- 		WARN_ON(true);
-+		kfree_skb(skb);
- 		return NET_XMIT_DROP;
- 	}
- 
--- 
-2.17.1
+Should be not. The different command key(0 - 9) share same operation which is just
+setting loglevel. And the code will find the operation via key2index calculation.
+So one index/slot is enough to represent it. rt?
+
+> 
+> And if you are saving memory, please show how much you really are
+> saving.
+
+The key table is consuming global memory, decrease the array size should be more
+better. It will save 9 slots space. The memory saving is 72 bytes via
+sizeof(sysrq_key_table) tested under arm64.
+
+> 
+> thanks,
+> 
+> greg k-h
 
