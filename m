@@ -7,215 +7,109 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F8AC433F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F132DC433FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00D2220792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE67F2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyiVKBqF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DSA8Goh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgGWM0F (ORCPT
+        id S1729211AbgGWM0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58284 "EHLO
+        Thu, 23 Jul 2020 08:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728828AbgGWMZb (ORCPT
+        with ESMTP id S1729055AbgGWMZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:25:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 582E0C0619E4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:31 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id p14so4412439wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:31 -0700 (PDT)
+        Thu, 23 Jul 2020 08:25:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26021C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:30 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y3so4978434wrl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B2RqnTIG0uteLiyJB2KJla0FyHDSlH3XX5iZpJkogwU=;
-        b=kyiVKBqFHyRIZ1JMpgAVtFSaEM23aouz0l5QQ49XYc2VCwG+/kgIftAS8DqXDBL5AU
-         qd6V5yeI3N5++kJJJmHDEXW5XzlDzOX1DHnPr7NLQAktoJDF3hM1dro0LkJNM9WeVNva
-         +BcwpmB1t2NLLGafuFKHrCF2cHKxiyC6AncSTxHOQrASL25IkuYpPuQzAdRtZ6zpWvGt
-         zCxZ9yOUH9ZUCLSt7qrc2IwPEYpxxUeg703CkVjjWjGEkw90tzfXLIM1lLsgmskzaGwL
-         uEruf6nUfzvy42sacxgrTTJ0r7+6fu39ReYjNpmtC5OYJcgypdXM5lHeAYropnacPtvs
-         VRWg==
+        bh=KfRjcVBQyIVpnmla/CO/rMmBV1Hu/Ib2qrKAPkp0wCE=;
+        b=DSA8Goh5xSOvhp7gnzWJuGcX7RYXFFEc1KuCxdCEqA3DFTXzzlZCpu24uIQcE1ETxN
+         WGqf7bnJ6O8tRMJh376Te3uLSd6JUNozEnnO4034E6o5Ay6++hq1s5zqCyzQMd0gIYQs
+         LqQv2JY4Xe1KHsv4gbaN/LFGrH/MdgP7i06vAOKu4n8A7fCYCI60Kr+poaI20VmqmEV3
+         v9mEFsDfU5pE2WcIY2AOzc5L+r6BFDrDoT/6SBLLan4gqWQvtVab/CRb8gGemagLkVfM
+         FEeYhuHITJqIkYfxwFAZGuTThQGZ7IwpHDjrfb5DBymj15B3uK2FxttvmVYeih+SAnX7
+         N+1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B2RqnTIG0uteLiyJB2KJla0FyHDSlH3XX5iZpJkogwU=;
-        b=jkZx0YKJP8escd9d/2SQv+zpIk+XhTmvEb6FpV4vLYW5IFr9CzvDcD+Pr8M3MmxOKO
-         8NeuTqlzjDkyzb7s6OPhA9wYS18f/erKz/XFJOQKVK7tQwrp3cuTuFZ4/3NS1bN+xHDe
-         r1YRTaIRHZfo6e2EdDdkvOw6xUn2RpnKdWvRd5y8MsA/prEFOPmyfWikrCSk2WEUFOx9
-         V0hHsaksMaFBzJ+YgPCdB3CQ2ZpdLKb6pffI50lgEaquKFyCR58nAXgK4EBp7kccltPn
-         4Wp4mct28/KHRX5i2SWtOgc8lU3ypjWutcF2IG7avSM9hI3WuSjOEV5sLglmO2wM94vW
-         tVCw==
-X-Gm-Message-State: AOAM532MUT9wx294Gj1olYwoCKypVLUwMRKstEmlqv0pn6etglZqIYKp
-        lS4+oivQ2rjUdb2tnGUOY0ecaQ==
-X-Google-Smtp-Source: ABdhPJy/2FZPI2tqrty53VNSn9/ithCZuQ+O91QiKWyLh6bBIfkjYia8sXFXtYA1gT9kiyO+t+M/qQ==
-X-Received: by 2002:a1c:7719:: with SMTP id t25mr4166425wmi.144.1595507130048;
-        Thu, 23 Jul 2020 05:25:30 -0700 (PDT)
+        bh=KfRjcVBQyIVpnmla/CO/rMmBV1Hu/Ib2qrKAPkp0wCE=;
+        b=YO9oZ8qDtnuKq6R68WNGAQr78iSkhS/KCIDAD8vau3Y/CwyIzgymS/Us0y1/sxIIgD
+         Xl5tqa3AGgmsTGs9kL81w+8bEgn9bJKoOkpR0Xj7jEo7RGYn95yOaFffttYVB4NIY9A2
+         4c65tOBGa5GcJnLsFdDAfziWHfMum50atnZ1/W2ucXnB37+DSOExXxFXQzvcWUOWCbTC
+         7T8MKMKZLEA3xQgJqSh9X8dX4FNsh8ixrFGycMdNT8C6akjD76eOTDTjOq+xK1/+crAi
+         5u1px/UOe+gFBbwmOpXHoNakn9pyb2ZYI5MKyaTyoNSRDYiAKYhtKnr59Eo+USr1+A6/
+         SRuw==
+X-Gm-Message-State: AOAM530Vh18xFUf5OKbyxXOp0N3Bj1ZLLZKETHnukmPpRGfaTJ7C5/VE
+        ZD2eR8eCfplSw8t/NIAQOrxzfA==
+X-Google-Smtp-Source: ABdhPJwUDa3jAas4QHzpdFeBjvzWKbSJh44OokxCvtuT5rUq+RvFpNpBowdKGw7jam8C/fw0zKeLhg==
+X-Received: by 2002:adf:90ea:: with SMTP id i97mr3870556wri.102.1595507128920;
+        Thu, 23 Jul 2020 05:25:28 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.29
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:25:29 -0700 (PDT)
+        Thu, 23 Jul 2020 05:25:28 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
-Subject: [PATCH 33/40] scsi: bfa: bfa_ioc: Demote non-kerneldoc headers down to standard comment blocks
-Date:   Thu, 23 Jul 2020 13:24:39 +0100
-Message-Id: <20200723122446.1329773-34-lee.jones@linaro.org>
+        Bradley Grove <linuxdrivers@attotech.com>
+Subject: [PATCH 32/40] scsi: esas2r: esas2r: Add braces around the one-line if()
+Date:   Thu, 23 Jul 2020 13:24:38 +0100
+Message-Id: <20200723122446.1329773-33-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
 References: <20200723122446.1329773-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is probably historical (Doxygen?).
+In certain configurations esas2r_bugon() is sometimes NULLed by the compiler.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/scsi/bfa/bfa_ioc.c:6646: warning: Cannot understand  * @brief hardware error definition
- drivers/scsi/bfa/bfa_ioc.c:6661: warning: Cannot understand  * @brief flash command register data structure
- drivers/scsi/bfa/bfa_ioc.c:6685: warning: Cannot understand  * @brief flash device status register data structure
- drivers/scsi/bfa/bfa_ioc.c:6711: warning: Cannot understand  * @brief flash address register data structure
- drivers/scsi/bfa/bfa_ioc.c:6732: warning: Function parameter or member 'pci_bar' not described in 'bfa_flash_set_cmd'
- drivers/scsi/bfa/bfa_ioc.c:6732: warning: Function parameter or member 'wr_cnt' not described in 'bfa_flash_set_cmd'
- drivers/scsi/bfa/bfa_ioc.c:6732: warning: Function parameter or member 'rd_cnt' not described in 'bfa_flash_set_cmd'
- drivers/scsi/bfa/bfa_ioc.c:6732: warning: Function parameter or member 'ad_cnt' not described in 'bfa_flash_set_cmd'
- drivers/scsi/bfa/bfa_ioc.c:6732: warning: Function parameter or member 'op' not described in 'bfa_flash_set_cmd'
- drivers/scsi/bfa/bfa_ioc.c:6768: warning: Cannot understand  * @brief
- drivers/scsi/bfa/bfa_ioc.c:6807: warning: Cannot understand  * @brief
- drivers/scsi/bfa/bfa_ioc.c:6852: warning: Cannot understand  * @brief
- drivers/scsi/bfa/bfa_ioc.c:6898: warning: Cannot understand  * @brief
- drivers/scsi/bfa/bfa_ioc.c:6914: warning: Cannot understand  * @brief
- drivers/scsi/bfa/bfa_ioc.c:6940: warning: Cannot understand  * @brief
+ In file included from drivers/scsi/esas2r/esas2r_log.c:44:
+ drivers/scsi/esas2r/esas2r.h: In function ‘esas2r_rq_init_request’:
+ drivers/scsi/esas2r/esas2r.h:1229:17: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 1229 | esas2r_bugon();
+ | ^
+ NB: Lots of these - snipped for brevity
 
-Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
-Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Cc: Bradley Grove <linuxdrivers@attotech.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/bfa/bfa_ioc.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/scsi/esas2r/esas2r.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
-index 10c12b5a36b84..be48a7e31e803 100644
---- a/drivers/scsi/bfa/bfa_ioc.c
-+++ b/drivers/scsi/bfa/bfa_ioc.c
-@@ -6642,8 +6642,8 @@ enum bfa_flash_cmd {
- 	BFA_FLASH_READ_STATUS	= 0x05,	/* read status */
- };
+diff --git a/drivers/scsi/esas2r/esas2r.h b/drivers/scsi/esas2r/esas2r.h
+index 7f43b95f4e945..e30d2f1f53685 100644
+--- a/drivers/scsi/esas2r/esas2r.h
++++ b/drivers/scsi/esas2r/esas2r.h
+@@ -1225,8 +1225,9 @@ static inline void esas2r_rq_init_request(struct esas2r_request *rq,
  
--/**
-- * @brief hardware error definition
-+/*
-+ * Hardware error definition
-  */
- enum bfa_flash_err {
- 	BFA_FLASH_NOT_PRESENT	= -1,	/*!< flash not present */
-@@ -6657,8 +6657,8 @@ enum bfa_flash_err {
- 	BFA_FLASH_ERR_LEN	= -9,	/*!< invalid length */
- };
+ 	/* req_table entry should be NULL at this point - if not, halt */
  
--/**
-- * @brief flash command register data structure
-+/*
-+ * Flash command register data structure
-  */
- union bfa_flash_cmd_reg_u {
- 	struct {
-@@ -6681,8 +6681,8 @@ union bfa_flash_cmd_reg_u {
- 	u32	i;
- };
+-	if (a->req_table[LOWORD(vrq->scsi.handle)])
++	if (a->req_table[LOWORD(vrq->scsi.handle)]) {
+ 		esas2r_bugon();
++	}
  
--/**
-- * @brief flash device status register data structure
-+/*
-+ * Flash device status register data structure
-  */
- union bfa_flash_dev_status_reg_u {
- 	struct {
-@@ -6707,8 +6707,8 @@ union bfa_flash_dev_status_reg_u {
- 	u32	i;
- };
- 
--/**
-- * @brief flash address register data structure
-+/*
-+ * Flash address register data structure
-  */
- union bfa_flash_addr_reg_u {
- 	struct {
-@@ -6723,7 +6723,7 @@ union bfa_flash_addr_reg_u {
- 	u32	i;
- };
- 
--/**
-+/*
-  * dg flash_raw_private Flash raw private functions
-  */
- static void
-@@ -6764,7 +6764,7 @@ bfa_flash_cmd_act_check(void __iomem *pci_bar)
- 	return 0;
- }
- 
--/**
-+/*
-  * @brief
-  * Flush FLI data fifo.
-  *
-@@ -6803,7 +6803,7 @@ bfa_flash_fifo_flush(void __iomem *pci_bar)
- 	return 0;
- }
- 
--/**
-+/*
-  * @brief
-  * Read flash status.
-  *
-@@ -6848,7 +6848,7 @@ bfa_flash_status_read(void __iomem *pci_bar)
- 	return ret_status;
- }
- 
--/**
-+/*
-  * @brief
-  * Start flash read operation.
-  *
-@@ -6894,7 +6894,7 @@ bfa_flash_read_start(void __iomem *pci_bar, u32 offset, u32 len,
- 	return 0;
- }
- 
--/**
-+/*
-  * @brief
-  * Check flash read operation.
-  *
-@@ -6910,7 +6910,7 @@ bfa_flash_read_check(void __iomem *pci_bar)
- 
- 	return 0;
- }
--/**
-+/*
-  * @brief
-  * End flash read operation.
-  *
-@@ -6936,7 +6936,7 @@ bfa_flash_read_end(void __iomem *pci_bar, u32 len, char *buf)
- 	bfa_flash_fifo_flush(pci_bar);
- }
- 
--/**
-+/*
-  * @brief
-  * Perform flash raw read.
-  *
+ 	/* fill in the table for this handle so we can get back to the
+ 	 * request.
 -- 
 2.25.1
 
