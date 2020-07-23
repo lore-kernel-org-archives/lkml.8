@@ -2,130 +2,62 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78898C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF96FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5714C20771
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SIdFDBZU"
+	by mail.kernel.org (Postfix) with ESMTP id C4E7720759
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgGWOa5 (ORCPT
+        id S1729434AbgGWO1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:30:57 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59942 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbgGWOa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:30:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NETc5f177210;
-        Thu, 23 Jul 2020 14:30:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=sC9ikgxCdAId2FjwuAiIMWAdpmWMyGPubI1xPl1Ci74=;
- b=SIdFDBZUeQfxAJn2svTXpXwgZNNciCu1DUh7fq6b8KCb49Zf7f6z/Y1T2E7NA/UNpYvP
- pIIEYqWYl+/apLvEGx4+sWp+8ORDdOkk2UhKeoS8Gcdcc75aRZrU+TvuE6wEgfiCYHvo
- UegwsySFybvAMf7PJ1CKN1GY58g4WuoC6FwR9twka5FQBzQoUetCnCJjpDWtXltXJ5PH
- LFhdCFw1kAWuqUFY1FN+WvAWOlqt0Gi8csmGpUiEREPK1IiQKvjVqpk6R8Uexvgeb+Fx
- 3Bobs8VVJmID+kUba8DZXsSbVpHiKHQgLqUH7vOG6rOPI3LOGxVEQ1bfryMxdh/bRdxN NA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32brgrsq45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 14:30:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06NESUwT081469;
-        Thu, 23 Jul 2020 14:28:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 32fc4qgfae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 14:28:33 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06NESOmL023964;
-        Thu, 23 Jul 2020 14:28:25 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Jul 2020 14:28:24 +0000
-Date:   Thu, 23 Jul 2020 17:28:15 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Joerg Reuter <jreuter@yaina.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-hams@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] AX.25: Fix out-of-bounds read
- in ax25_connect()
-Message-ID: <20200723142814.GQ2549@kadam>
-References: <20200722151901.350003-1-yepeilin.cs@gmail.com>
+        Thu, 23 Jul 2020 10:27:39 -0400
+Received: from verein.lst.de ([213.95.11.211]:60460 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgGWO1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:27:38 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 146E468AFE; Thu, 23 Jul 2020 16:27:35 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 16:27:34 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 16/23] initramfs: simplify clean_rootfs
+Message-ID: <20200723142734.GA11080@lst.de>
+References: <20200714190427.4332-1-hch@lst.de> <20200714190427.4332-17-hch@lst.de> <CGME20200717205549eucas1p13fca9a8496836faa71df515524743648@eucas1p1.samsung.com> <7f37802c-d8d9-18cd-7394-df51fa785988@samsung.com> <20200718100035.GA8856@lst.de> <20200723092200.GA19922@lst.de> <dleftjblk6b95t.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722151901.350003-1-yepeilin.cs@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9690 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9690 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1011 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230107
+In-Reply-To: <dleftjblk6b95t.fsf%l.stelmach@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:19:01AM -0400, Peilin Ye wrote:
-> Checks on `addr_len` and `fsa->fsa_ax25.sax25_ndigis` are insufficient.
-> ax25_connect() can go out of bounds when `fsa->fsa_ax25.sax25_ndigis`
-> equals to 7 or 8. Fix it.
+On Thu, Jul 23, 2020 at 04:25:34PM +0200, Lukasz Stelmach wrote:
+> >> Can you comment out the call to d_genocide?  It seems like for your
+> >> the fact that clean_rootfs didn't actually clean up was a feature and
+> >> not a bug.
+> >> 
+> >> I guess the old, pre-2008 code also wouldn't have worked for you in
+> >> that case.
+> >
+> > Did you get a chance to try this?
 > 
-> This issue has been reported as a KMSAN uninit-value bug, because in such
-> a case, ax25_connect() reaches into the uninitialized portion of the
-> `struct sockaddr_storage` statically allocated in __sys_connect().
-> 
-> It is safe to remove `fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS` because
-> `addr_len` is guaranteed to be less than or equal to
-> `sizeof(struct full_sockaddr_ax25)`.
-> 
-> Reported-by: syzbot+c82752228ed975b0a623@syzkaller.appspotmail.com
-> Link: https://syzkaller.appspot.com/bug?id=55ef9d629f3b3d7d70b69558015b63b48d01af66
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
->  net/ax25/af_ax25.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/ax25/af_ax25.c b/net/ax25/af_ax25.c
-> index fd91cd34f25e..ef5bf116157a 100644
-> --- a/net/ax25/af_ax25.c
-> +++ b/net/ax25/af_ax25.c
-> @@ -1187,7 +1187,9 @@ static int __must_check ax25_connect(struct socket *sock,
->  	if (addr_len > sizeof(struct sockaddr_ax25) &&
->  	    fsa->fsa_ax25.sax25_ndigis != 0) {
->  		/* Valid number of digipeaters ? */
-> -		if (fsa->fsa_ax25.sax25_ndigis < 1 || fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS) {
-> +		if (fsa->fsa_ax25.sax25_ndigis < 1 ||
-> +		    addr_len < sizeof(struct sockaddr_ax25) +
-> +		    sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis) {
+> Indeed, commenting out d_genocide() helps.
 
-The "sizeof(ax25_address) * fsa->fsa_ax25.sax25_ndigis" can have an
-integer overflow so you still need the
-"fsa->fsa_ax25.sax25_ndigis > AX25_MAX_DIGIS" check.
+So given that people have relied on at least the basic device nodes
+like /dev/console to not go away since 2008, I wonder if we should just
+remove clean_rootfs entirely
 
-regards,
-dan carpenter
-
+Linus, Al?
