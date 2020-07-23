@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7881EC433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD014C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 556D520792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9CD20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oud/p3Pa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="X/yMRbfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgGWXWU (ORCPT
+        id S1728248AbgGWXWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:22:20 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:53896 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgGWXWT (ORCPT
+        Thu, 23 Jul 2020 19:22:34 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:1491 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgGWXWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:22:19 -0400
+        Thu, 23 Jul 2020 19:22:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1595546539; x=1627082539;
+  t=1595546553; x=1627082553;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=/iyoglcxkS318Sg6qJHiPt3/SwDfA+JjozFFVeV5pMY=;
-  b=oud/p3PaQA2IdECPHtFnsW/vYe9neqgVM0hNfVbUTDAGNNyXIvlL6h44
-   XL5hQaOolJNAFw/Wvx6ys11fJa6frBG1q8kADPZVeWLPtkSZxf85ZOwuz
-   jwfVzVX8522wBpaL/TwuRxGhmvoU3qT5tseW8yZ3zS2zEdZXgbEEUdenK
-   VpWONNnA4qnoRsradMe5p9/tmHz3kJ8h8g2U3E36lP2NMa0hPnqBAewoo
-   gLSBx/sMIgF5WQNa+V+LulvRzcOS1ojsvAfUzC8bKqjoNVgXZrsRuK34j
-   6kogCB15refiqLv9fOhJuiUI/DUB2MINi98HVbyFlACgqgf6GRGJuNk4i
-   Q==;
-IronPort-SDR: E6xkxJhAvk9IlxlmmSNdZvH60YJz0d86nUEb+WOlVOVOWlmPoC1UU1Z7TvxOeXJ7whK45egdpJ
- mZfBUXqp2OA3qVlY+oVog6Ouusc80hYpMzTCg+q1x7LPlnO7rKVD9lkmQUrOfmX2Ve8NxS5kWm
- 3+O1Weph0AMGPrwFAZo1JxFn7vopuVLZjr3kn9CxlpPrVxqalFOGB4I1BFyvJ0rij95RRKknlc
- 4tnj3cgA2cF08C2Jrhor8mVUMydx3dTDcblT76YB9dY4OKsVo5TQNMJ/iuC7HbUAGM+szMz2Cx
- SR4=
+  bh=unRYGB3JD9VvX1/PIcQEqDOVGoOR6BJzAhuSTskpzt8=;
+  b=X/yMRbfg6BPrnc3Jt3Gfgh+4A1G+YfssKfDoLtYwQIBiBybWTd6xCbAX
+   xhqF2rnSDL3Jh3iu2MhU4Ek6gQaw9JmEwHuyjKDD+577VbCfbvCNrtBju
+   lWk/QR0Nwk7GQT0YYPOpoy/vaqjMtrDhjSBqInoXsPFLFijdduHuMz80h
+   qD7e3kO2miFxR3DI+JNYviCE/KvfIWpZPV50ZyMO6E3p3mMdrJUi1nLQy
+   4mfcKKR5ClCARIad8Xzc92YqVkU7VttPgmQoLK5V7NGTO0oFogwv6EvpP
+   mWuvhTwK3SkCK/mnRSVvfgafan522jJoZTVZAcgXOX1Oa3/6EChPiOM0S
+   w==;
+IronPort-SDR: lBenQvUOczxdl2dgCzJEJeYW9kIZGBE9ei0+1nXFTGiuP02Fd3SAM7ieS4SjiW60d7kDOuOfhi
+ XF0o26CSEcFgGNEo/xe/pPu8Fnxp/Oh6MJXurKM1uP+YLQsgcp7gjW+0zD3lpOP10dEdcwrkto
+ GdKTMiWAJrA4544rXfpzmSbNbC4m71S551zu74zVqzFxPAgvZ7p1O76tbFvuYLFOsQOAtaK02d
+ Jms3Rv0+ykmxn8+BjA/Mk1YLQ2eiZPbC8aHu/6C+lh+A5tmfYKM+D6hYSSASIdoy9vjiN2Q6tt
+ 7E8=
 X-IronPort-AV: E=Sophos;i="5.75,388,1589212800"; 
-   d="scan'208";a="252546067"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Jul 2020 07:22:19 +0800
-IronPort-SDR: IdIlcPUalfm/E3xDxAJnovdA1QJlRREpBk3ZaOD4vPpIxTIfYPQ/TrBqH5v1IZyPLH7Ot5Hsgj
- MSVAd6M7mz/vKe12i5bB53cZ9xXT/Rk8E=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:10:33 -0700
-IronPort-SDR: jN5CtwZpnd+5N/goMHUWZJYQbmHItg8c2A91kwQxZACRbomktFOQsOgxQ5XD6qEzTP31o6d/nC
- A3tRmg5flFsg==
+   d="scan'208";a="147549744"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Jul 2020 07:22:33 +0800
+IronPort-SDR: 1qT7NVjvQagALM5k50Wy6mDtAtm8WRMPrJIOtNX0tZ/6FeMjkb2yIoOf/m1XL1lcozEzlYYzb6
+ NCewQiF0dW2FEf+Ky1SjHJR6Qe3+7ed2A=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:10:12 -0700
+IronPort-SDR: kn1K8tzOhML+h1sFQtgcxeTtQDCepy93j2k8G6/vZ7GpGpOfzi9q/EmKzgYoOtRZ0w97z92dm4
+ Z4SO0nqSzC0g==
 WDCIronportException: Internal
 Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:22:18 -0700
-Date:   Fri, 24 Jul 2020 00:22:15 +0100 (BST)
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:22:32 -0700
+Date:   Fri, 24 Jul 2020 00:22:30 +0100 (BST)
 From:   "Maciej W. Rozycki" <macro@wdc.com>
 To:     linux-riscv@lists.infradead.org
 cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr' access
+        Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] riscv: ptrace: Improve the style in NT_PRFPREG regset
+ handling
 In-Reply-To: <alpine.LFD.2.21.2007232038170.24175@redsun52.ssa.fujisawa.hgst.com>
-Message-ID: <alpine.DEB.2.20.2007232213510.4462@tpp.orcam.me.uk>
+Message-ID: <alpine.DEB.2.20.2007232216420.4462@tpp.orcam.me.uk>
 References: <alpine.LFD.2.21.2007232038170.24175@redsun52.ssa.fujisawa.hgst.com>
 User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
@@ -73,61 +73,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust the calls to `user_regset_copyout' and `user_regset_copyin' in 
-`riscv_fpr_get' and `riscv_fpr_set' respectively so as to use @start_pos 
-and @end_pos according to API documentation in <linux/regset.h>, that is 
-to point at the beginning and the end respectively of the data chunk to 
-be copied.  Update @data accordingly, also for the first call, to make 
-it clear which structure member is accessed.
-
-We currently have @start_pos fixed at 0 across all calls, which works as 
-a result of the implementation, in particular because we have no padding 
-between the FP general registers and the FP control and status register, 
-but appears not to have been the intent of the API and is not what other 
-ports do, requiring one to study the copy handlers to understand what is 
-going on here.
+Use an auxiliary variable for the size taken by floating point general 
+registers in `struct __riscv_d_ext_state' to improve the readability of 
+code in the `riscv_fpr_get' and `riscv_fpr_set' handlers, by avoiding 
+excessive line wrapping and extending beyond 80 columns.  Also shuffle 
+local variables in the reverse Christmas tree order.  No functional 
+change.
 
 Signed-off-by: Maciej W. Rozycki <macro@wdc.com>
-Fixes: b8c8a9590e4f ("RISC-V: Add FP register ptrace support for gdb.")
-Cc: stable@vger.kernel.org # 4.20+
 ---
- arch/riscv/kernel/ptrace.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/riscv/kernel/ptrace.c |   24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
-linux-riscv-ptrace-fcsr.diff
+linux-riscv-ptrace-fpr-style.diff
 Index: linux-hv/arch/riscv/kernel/ptrace.c
 ===================================================================
 --- linux-hv.orig/arch/riscv/kernel/ptrace.c
 +++ linux-hv/arch/riscv/kernel/ptrace.c
-@@ -61,10 +61,13 @@ static int riscv_fpr_get(struct task_str
- 	int ret;
+@@ -58,18 +58,16 @@ static int riscv_fpr_get(struct task_str
+ 			 unsigned int pos, unsigned int count,
+ 			 void *kbuf, void __user *ubuf)
+ {
+-	int ret;
++	const size_t fgr_size = offsetof(struct __riscv_d_ext_state, fcsr);
  	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
++	int ret;
  
--	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, fstate, 0,
-+	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &fstate->f, 0,
- 				  offsetof(struct __riscv_d_ext_state, fcsr));
+ 	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &fstate->f, 0,
+-				  offsetof(struct __riscv_d_ext_state, fcsr));
++				  fgr_size);
  	if (!ret) {
--		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, fstate, 0,
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+					  &fstate->fcsr,
-+					  offsetof(struct __riscv_d_ext_state,
-+						   fcsr),
- 					  offsetof(struct __riscv_d_ext_state, fcsr) +
- 					  sizeof(fstate->fcsr));
+ 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &fstate->fcsr,
+-					  offsetof(struct __riscv_d_ext_state,
+-						   fcsr),
+-					  offsetof(struct __riscv_d_ext_state, fcsr) +
+-					  sizeof(fstate->fcsr));
++					  &fstate->fcsr, fgr_size,
++					  fgr_size + sizeof(fstate->fcsr));
  	}
-@@ -80,10 +83,13 @@ static int riscv_fpr_set(struct task_str
- 	int ret;
+ 
+ 	return ret;
+@@ -80,18 +78,16 @@ static int riscv_fpr_set(struct task_str
+ 			 unsigned int pos, unsigned int count,
+ 			 const void *kbuf, const void __user *ubuf)
+ {
+-	int ret;
++	const size_t fgr_size = offsetof(struct __riscv_d_ext_state, fcsr);
  	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
++	int ret;
  
--	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, fstate, 0,
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &fstate->f, 0,
- 				 offsetof(struct __riscv_d_ext_state, fcsr));
+ 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &fstate->f, 0,
+-				 offsetof(struct __riscv_d_ext_state, fcsr));
++				 fgr_size);
  	if (!ret) {
--		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, fstate, 0,
-+		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+					 &fstate->fcsr,
-+					 offsetof(struct __riscv_d_ext_state,
-+						  fcsr),
- 					 offsetof(struct __riscv_d_ext_state, fcsr) +
- 					 sizeof(fstate->fcsr));
+ 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-					 &fstate->fcsr,
+-					 offsetof(struct __riscv_d_ext_state,
+-						  fcsr),
+-					 offsetof(struct __riscv_d_ext_state, fcsr) +
+-					 sizeof(fstate->fcsr));
++					 &fstate->fcsr, fgr_size,
++					 fgr_size + sizeof(fstate->fcsr));
  	}
+ 
+ 	return ret;
