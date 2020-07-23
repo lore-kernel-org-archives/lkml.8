@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A746CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71762C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B5120825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADE520825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbgGWA67 (ORCPT
+        id S2387524AbgGWA7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:58:59 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60914 "EHLO
+        Wed, 22 Jul 2020 20:59:04 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60954 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387462AbgGWA65 (ORCPT
+        with ESMTP id S2387494AbgGWA7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 20:58:57 -0400
+        Wed, 22 Jul 2020 20:59:00 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7DC3E8030807;
-        Thu, 23 Jul 2020 00:58:54 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6513C8040A68;
+        Thu, 23 Jul 2020 00:58:58 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jwYvZ_mpQCHZ; Thu, 23 Jul 2020 03:58:53 +0300 (MSK)
+        with ESMTP id TVVPrDv645SK; Thu, 23 Jul 2020 03:58:57 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -40,9 +40,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 05/10] dmaengine: Introduce DMA-device device_caps callback
-Date:   Thu, 23 Jul 2020 03:58:43 +0300
-Message-ID: <20200723005848.31907-6-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v8 10/10] dmaengine: dw: Initialize max_sg_burst capability
+Date:   Thu, 23 Jul 2020 03:58:48 +0300
+Message-ID: <20200723005848.31907-11-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,12 +54,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are DMA devices (like ours version of Synopsys DW DMAC) which have
-DMA capabilities non-uniformly redistributed between the device channels.
-In order to provide a way of exposing the channel-specific parameters to
-the DMA engine consumers, we introduce a new DMA-device callback. In case
-if provided it gets called from the dma_get_slave_caps() method and is
-able to override the generic DMA-device capabilities.
+Multi-block support provides a way to map the kernel-specific SG-table so
+the DW DMA device would handle it as a whole instead of handling the
+SG-list items or so called LLP block items one by one. So if true LLP
+list isn't supported by the DW DMA engine, then soft-LLP mode will be
+utilized to load and execute each LLP-block one by one. The soft-LLP mode
+of the DMA transactions execution might not work well for some DMA
+consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
+initialize the max_sg_burst DMA channels capability based on the nollp
+flag state. If it's true, no hardware accelerated LLP is available and
+max_sg_burst should be set with 1, which means that the DMA engine
+can handle only a single SG list entry at a time. If noLLP is set to
+false, then hardware accelerated LLP is supported and the DMA engine
+can handle infinite number of SG entries in a single DMA transaction.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -67,60 +74,41 @@ Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
 
 Changelog v3:
-- This is a new patch created as a result of the discussion with Vinod and
+- This is a new patch created as a result of the discussion with Vinud and
   Andy in the framework of DW DMA burst and LLP capabilities.
 
-Changelog v5:
-- Add in-line comment at the point of the device_caps callback invocation.
-- Add doc-comment for the device_caps member of struct dma_device.
----
- drivers/dma/dmaengine.c   | 10 ++++++++++
- include/linux/dmaengine.h |  4 ++++
- 2 files changed, 14 insertions(+)
+Changelog v4:
+- Use explicit if-else statement when assigning the max_sg_burst field.
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 8177f78faeda..a53e71d2bbd4 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -601,6 +601,16 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	caps->cmd_resume = !!device->device_resume;
- 	caps->cmd_terminate = !!device->device_terminate_all;
+Changelog v8:
+- Replace max_sg_nents with max_sg_burst.
+---
+ drivers/dma/dw/core.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 588b9bae827c..eb9175133034 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -1059,6 +1059,18 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+ 	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
  
-+	/*
-+	 * DMA engine device might be configured with non-uniformly
-+	 * distributed slave capabilities per device channels. In this
-+	 * case the corresponding driver may provide the device_caps
-+	 * callback to override the generic capabilities with
-+	 * channel-specific ones.
-+	 */
-+	if (device->device_caps)
-+		device->device_caps(chan, caps);
+ 	caps->max_burst = dwc->max_burst;
 +
- 	return 0;
++	/*
++	 * It might be crucial for some devices to have the hardware
++	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
++	 * notation. So if LLPs are supported then max_sg_burst is set to
++	 * zero which means unlimited number of SG entries can be handled in a
++	 * single DMA transaction, otherwise it's just one SG entry.
++	 */
++	if (dwc->nollp)
++		caps->max_sg_burst = 1;
++	else
++		caps->max_sg_burst = 0;
  }
- EXPORT_SYMBOL_GPL(dma_get_slave_caps);
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index c7e76e0ab7e1..c8d06e166371 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -799,6 +799,8 @@ struct dma_filter {
-  *	be called after period_len bytes have been transferred.
-  * @device_prep_interleaved_dma: Transfer expression in a generic way.
-  * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the dst address
-+ * @device_caps: May be used to override the generic DMA slave capabilities
-+ *	with per-channel specific ones
-  * @device_config: Pushes a new configuration to a channel, return 0 or an error
-  *	code
-  * @device_pause: Pauses any transfer happening on a channel. Returns
-@@ -899,6 +901,8 @@ struct dma_device {
- 		struct dma_chan *chan, dma_addr_t dst, u64 data,
- 		unsigned long flags);
  
-+	void (*device_caps)(struct dma_chan *chan,
-+			    struct dma_slave_caps *caps);
- 	int (*device_config)(struct dma_chan *chan,
- 			     struct dma_slave_config *config);
- 	int (*device_pause)(struct dma_chan *chan);
+ int do_dma_probe(struct dw_dma_chip *chip)
 -- 
 2.26.2
 
