@@ -2,86 +2,115 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD84C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465DE207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE0A20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/slu0yr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YeTlFGlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgGWSsT (ORCPT
+        id S1728072AbgGWStM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbgGWSsS (ORCPT
+        Thu, 23 Jul 2020 14:49:12 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57893 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgGWStM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:48:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ADBC0619DC;
-        Thu, 23 Jul 2020 11:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1f7jSo8LA10wBMQErGxZHBOUpBnSmikLw3twngiB9do=; b=F/slu0yrPHxiFr2ZrGc9sNP3ns
-        LfcamOV4YCSjJmAGql8AMoxgRpgB7ejoGOoyBLRe1+NSiLXfp9s6mu47IldFSbQMbbcbjzbuf5u9O
-        833qpQHg1wNCif0Lkq4328/WTptDw86N2VO7KfNGktPrwAGmjr8DSQjE1+eFSW1K8SBisHKNbRDV7
-        cmLO0EzWU8yk6Qi6ew5Fj8GFbqy5DhWcjYesQlU6LImS6PD+RqUFfZR8xNf4Vgk5d/STeIWcbrgB3
-        HEhT+oCJJ9EhcXF59Ajf1oGcNx4KwTMd9LXGPsPEGnP5wOjXWz5J0tqHK64RSquaQFlBJPTpvUZQp
-        TcS/d44Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jygG9-0004Wx-0f; Thu, 23 Jul 2020 18:48:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 28C213013E5;
-        Thu, 23 Jul 2020 20:47:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C4A532010461D; Thu, 23 Jul 2020 20:47:59 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 20:47:59 +0200
-From:   peterz@infradead.org
-To:     Waiman Long <longman@redhat.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks
- for SPLPAR
-Message-ID: <20200723184759.GS119549@hirez.programming.kicks-ass.net>
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <20200706043540.1563616-6-npiggin@gmail.com>
- <874kqhvu1v.fsf@mpe.ellerman.id.au>
- <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
- <20200723140011.GR5523@worktop.programming.kicks-ass.net>
- <845de183-56f5-2958-3159-faa131d46401@redhat.com>
+        Thu, 23 Jul 2020 14:49:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595530152; x=1627066152;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rOfZiTKlOiTMXtkPiJ4sia8QYSro0nSiFyXXBuqWpiw=;
+  b=YeTlFGlK8aBPghK80iqx2SqGujBmoANPjVf1SKUbg2mxcD4upAlcyYyr
+   UdmWcmFI83ZeJCzb14vR6uLcCbuG2reit2wC8c+F7mvoTuKFsogOi17Uw
+   2lb/3vvwVZJFHNWWMZYx2GMmbzZ2xa07mzQfmWt70akg22xoURywLbZ3h
+   oDtjDp5c0Ygs1SlIoJO9bPJW4ZsoGo947kz1WPXSbEf1Y4/4JWm5lVbgH
+   2gkgr7O1l963khV75+61XNVqSISK7HNNpqzNLf9BPh23IycoIsuLwp/IX
+   SBVsewBxkGsZBY54wWmSa6uhkktMkkmmvSNv+Qg20EtG4ANa91XmNB5jM
+   A==;
+IronPort-SDR: rPmmgBacQNRffjywLrPLQpxZHMs8POFBcGKcT+um8sd8DqPF7pHK1eJa9fM98VTW4f916KGlwB
+ TudAaM+LYxgTXVOD2Mh6yr9rU3q1PTYj+hb9tMy6LsnlFua0vfG9oQMkePpAOXDfoi9MHhpIzt
+ BQ6Xr1iBjpvMiWP/RNI/ZJVHCNgxioWyCIw+6nhhtKEdTToDR/qY24OtWo5Q1OJJ26+kmsL52G
+ ++m4FfAmmHnp2qjQCnIWHX8c6WgXkKdJzxoSXYGGHH0lviDCwAA9IsUI8SKdogZslolvmQ2XNL
+ p7E=
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="85153632"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 11:49:11 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 23 Jul 2020 11:48:29 -0700
+Received: from cristi-P53.lan (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 23 Jul 2020 11:48:28 -0700
+From:   <cristian.birsan@microchip.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Cristian Birsan <cristian.birsan@microchip.com>
+Subject: [PATCH v4 0/6] usb: gadget: udc: atmel: add usb device support for SAM9x60 SoC
+Date:   Thu, 23 Jul 2020 21:48:56 +0300
+Message-ID: <20200723184902.416705-1-cristian.birsan@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <845de183-56f5-2958-3159-faa131d46401@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
-> BTW, do you have any comment on my v2 lock holder cpu info qspinlock patch?
-> I will have to update the patch to fix the reported 0-day test problem, but
-> I want to collect other feedback before sending out v3.
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-I want to say I hate it all, it adds instructions to a path we spend an
-aweful lot of time optimizing without really getting anything back for
-it.
+This patch set adds usb device support for SAM9x60 SoC.
+The DPRAM memory for the USB High Speed Device Port (UDPHS) hardware
+block was increased and the allocation method is changed. This patch
+series simplifies the endpoint allocation scheme to acomodate this SoC
+and the old ones.
 
-Will, how do you feel about it?
+Changes in v4:
+- rebase on top of testing/next
+- add pp variable to access pmc
+
+Changes in v3:
+- rebase on top of testing/next
+- depends on https://lore.kernel.org/linux-arm-kernel/cover.1594231056.git.mirq-linux@rere.qmqm.pl/
+- extend usba_udc_config structure with endpoint preallocaion flag
+- collect acked-by tags
+
+Changes in v2:
+- drop the patch that adds reference to pmc for sam9x60
+- use dt-bindings: usb prefix
+- enable usb device in device tree
+
+Claudiu Beznea (1):
+  usb: gadget: udc: atmel: use of_find_matching_node_and_match
+
+Cristian Birsan (5):
+  dt-bindings: usb: atmel: Update DT bindings documentation for sam9x60
+  usb: gadget: udc: atmel: simplify endpoint allocation
+  usb: gadget: udc: atmel: use 1 bank endpoints for control transfers
+  usb: gadget: udc: atmel: update endpoint allocation for sam9x60
+  ARM: dts: at91: sam9x60ek: enable usb device
+
+ .../devicetree/bindings/usb/atmel-usb.txt     |  1 +
+ arch/arm/boot/dts/at91-sam9x60ek.dts          | 13 ++++
+ arch/arm/boot/dts/sam9x60.dtsi                | 14 ++++
+ drivers/usb/gadget/udc/atmel_usba_udc.c       | 68 ++++++++++++-------
+ drivers/usb/gadget/udc/atmel_usba_udc.h       |  3 +-
+ 5 files changed, 75 insertions(+), 24 deletions(-)
+
+-- 
+2.25.1
+
