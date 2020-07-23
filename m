@@ -2,157 +2,144 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A562FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810E420792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D838A20792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFRhdGJb"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OCOu6FnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbgGWB2V (ORCPT
+        id S2387478AbgGWB3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbgGWB2U (ORCPT
+        Wed, 22 Jul 2020 21:29:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55566 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728607AbgGWB3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:28:20 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD154C0619DC;
-        Wed, 22 Jul 2020 18:28:20 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id z15so3940743qki.10;
-        Wed, 22 Jul 2020 18:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ISvgzxoJxaqtfEN4cCxmEtaBa4qO2/WEkfAYC32QJPQ=;
-        b=KFRhdGJbHHLCEpmHHLiG8973VYDa+If4ydc/+E7duJ0NcIOOohAB/Qq59dynEm/Z8u
-         eI8gL/jMkd33ppjnq6XGc3cGCGg0z0UCZrue73FNRJQbh+bR63igYlsuAPjuLas6GkOj
-         UGEjgg4jV5GycvGZnBbftdXpr7hGHa5QSDUUMik+oLF6sUncqyzdTsv+Al7+ACGJxMUu
-         pIq9vE1pmgaFKjR8Y9UJa8v4lqxzRKyXWWQRNb5MB7WlnwISi2LhNii2TyI/EGZGavZk
-         zABZ+wKNWg/hPMvm+PmKK3XEnyGIgZow1KaF/DjkvQRXrWBJZWa6C7ov6gCqPdzvOw3N
-         Crmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ISvgzxoJxaqtfEN4cCxmEtaBa4qO2/WEkfAYC32QJPQ=;
-        b=PdlwSf0PLa1smg4EhJ7hyIDW3QvNu8OZV3/Nrd6hJxFGx/Zi2NcoSJRs0xcOdhN+oG
-         WqzSnORrlYBfz3JUOlcHdEB7OG5QTu5ScHQ4AXmDgZRswT/51dioVK+6Ww+kAJgwOqqc
-         fKP6WSl11t8/IYdboZS/6Vc5oxWGttrpB23QQKhCL4QvMI266JMsbKkHroyGwyR+kThj
-         RCNmY8EEGA8mFoTyIgGSlpXFsQD1qGsgMMOMZ+u6VlYl2PYMGkH+R/X4yPo/mMsXa5o0
-         vtEZVw5x0zQquJRJvzla5UGl6L34n1WW8XKB4LASDJ8FF2dlfZ1iFQl1DizXmgEmzu14
-         CF8A==
-X-Gm-Message-State: AOAM530B7rh3bSUOCN25vn2PcHhgwjwW2rJUHpL2vEpMeAcxUyPsYeMd
-        G7QtmfJiuztG4PtREHs7I78=
-X-Google-Smtp-Source: ABdhPJwioK3vBm5SNOB4zOe+LvL66NxrJ+j/NpajF6LJW3yIwImr04wvzo/wZHJ54a7mVYssu3SROw==
-X-Received: by 2002:ae9:ef8d:: with SMTP id d135mr2836947qkg.109.1595467699964;
-        Wed, 22 Jul 2020 18:28:19 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id t5sm1423180qkh.46.2020.07.22.18.28.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jul 2020 18:28:19 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id EF10927C0054;
-        Wed, 22 Jul 2020 21:28:17 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 22 Jul 2020 21:28:17 -0400
-X-ME-Sender: <xms:sOcYX8onqX89VS5RHmezV31Yf9HDdqVO0WXYrlVckW4-Zon4tL8TKQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedtgdegkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepsghoqhhunhdr
-    fhgvnhhgsehgmhgrihhlrdgtohhmnecuggftrfgrthhtvghrnhepuddvgfeutdeuhefggf
-    fhlefggeevueeliefgvdfggeeukeehleelueeiiedukedunecukfhppeehvddrudehhedr
-    udduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeg
-    hedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomh
-    esfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:sOcYXyqJ83aJq9JSKwOU3pzUui55376a6Ia7uEZ4GwHrcBHiJckPrg>
-    <xmx:sOcYXxN7BUlFTfjNa_2Lz08krILI5ZM0BKkXyUr57G-T_vqkVyL33g>
-    <xmx:sOcYXz7lTzi0PUP1FaUdejEUOVu9bTqzo7k1LZyegGfQjcmW2SPRpA>
-    <xmx:secYX6TBZ0AIjtnDiQ3nXBsWvGO7UEY2EdxZkpJ_NlpHsLijiCBU85QunPQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0FE8F30600A3;
-        Wed, 22 Jul 2020 21:28:15 -0400 (EDT)
-Date:   Thu, 23 Jul 2020 09:28:14 +0800
-From:   boqun.feng@gmail.com
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [RFC 09/11] HID: hyperv: Make ringbuffer at least take two pages
-Message-ID: <20200723012814.GD35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200721014135.84140-1-boqun.feng@gmail.com>
- <20200721014135.84140-10-boqun.feng@gmail.com>
- <MW2PR2101MB10524E4C2DB9FBADEF887165D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Wed, 22 Jul 2020 21:29:23 -0400
+X-UUID: 1764c80b3e4d4e459de8dbae5a349029-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=oycTkft2mwefXZk5AYB5xFnKDtMkFEialikk/qYIZMc=;
+        b=OCOu6FnJuSgfzcOFdFbHVJn8UyTUGpEZq8J1kf2Z+UE16JDIQG4nFkA13eXpNH0LqHoC3IcJmNABZyYfHqBHG+d339MNNF83l4XBzkoSfk/3iCmtaF9lh0YIALrW3KeDgLFmnCNispXdq3tM9nGRf++iOf83phYMACgQpfSP0/I=;
+X-UUID: 1764c80b3e4d4e459de8dbae5a349029-20200723
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2074606877; Thu, 23 Jul 2020 09:29:17 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Jul 2020 09:29:16 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 09:29:12 +0800
+Message-ID: <1595467756.7332.7.camel@mtksdaap41>
+Subject: Re: [PATCH 1/4] i2c: mediatek: Add apdma sync in i2c driver
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Qii Wang <qii.wang@mediatek.com>
+CC:     <wsa@the-dreams.de>, <qiangming.xia@mediatek.com>,
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <leilk.liu@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 23 Jul 2020 09:29:16 +0800
+In-Reply-To: <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
+References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
+         <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB10524E4C2DB9FBADEF887165D7790@MW2PR2101MB1052.namprd21.prod.outlook.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:36:15PM +0000, Michael Kelley wrote:
-> From: Boqun Feng <boqun.feng@gmail.com> Sent: Monday, July 20, 2020 6:42 PM
-> > 
-> > When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
-> > least 2 * PAGE_SIZE: one page for the header and at least one page of
-> > the data part (because of the alignment requirement for double mapping).
-> > 
-> > So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
-> > using vmbus_open() to establish the vmbus connection.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  drivers/hid/hid-hyperv.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-> > index 0b6ee1dee625..36c5e157c691 100644
-> > --- a/drivers/hid/hid-hyperv.c
-> > +++ b/drivers/hid/hid-hyperv.c
-> > @@ -104,8 +104,8 @@ struct synthhid_input_report {
-> > 
-> >  #pragma pack(pop)
-> > 
-> > -#define INPUTVSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
-> > -#define INPUTVSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
-> > +#define INPUTVSC_SEND_RING_BUFFER_SIZE		(128 * 1024)
-> > +#define INPUTVSC_RECV_RING_BUFFER_SIZE		(128 * 1024)
-> 
-> Use max(40 * 1024, 2 * PAGE_SIZE) like in patch 8 of the series?
-> 
+T24gV2VkLCAyMDIwLTA3LTIyIGF0IDIwOjMxICswODAwLCBRaWkgV2FuZyB3cm90ZToNCj4gV2l0
+aCB0aGUgYXBkbWEgcmVtb3ZlIGhhbmQtc2hha2Ugc2lnbmFsLCBpdCBuZWVkIHRvIGtlZXAgaTJj
+IGFuZA0KPiBhcGRtYSBpbiBzeW5jIG1hbnVhbGx5Lg0KPiANCg0KTG9va3MgZ29vZCB0byBtZSwN
+Cg0KUmV2aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4N
+Cg0KDQpKdXN0IGEgcmVtaW5kZXIsIHdlIGhhdmUgYW5vdGhlciBwYXRjaCAnaTJjOiBtZWRpYXRl
+azogQWRkIHRvIHN1cHBvcnQNCmNvbnRpbnVvdXMgbW9kZScgdW5kZXIgcmV2aWV3IG5vdy4gUGxl
+YXNlIHJlbWVtYmVyIHRvIHVwZGF0ZSBPRkZTRVRfQ09ODQphY2Nlc3MgY29kZSBpbiB0aGF0IHBh
+dGNoLg0KDQpKb2UuQw0KDQoNCg0KPiBTaWduZWQtb2ZmLWJ5OiBRaWkgV2FuZyA8cWlpLndhbmdA
+bWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMg
+fCAyMyArKysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2Vy
+dGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMv
+YnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4g
+aW5kZXggZGVlZjY5ZS4uZTZiOTg0YSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2Vz
+L2kyYy1tdDY1eHguYw0KPiArKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+
+IEBAIC00OCw2ICs0OCw5IEBADQo+ICANCj4gICNkZWZpbmUgSTJDX0RNQV9DT05fVFgJCQkweDAw
+MDANCj4gICNkZWZpbmUgSTJDX0RNQV9DT05fUlgJCQkweDAwMDENCj4gKyNkZWZpbmUgSTJDX0RN
+QV9BU1lOQ19NT0RFCQkweDAwMDQNCj4gKyNkZWZpbmUgSTJDX0RNQV9TS0lQX0NPTkZJRwkJMHgw
+MDEwDQo+ICsjZGVmaW5lIEkyQ19ETUFfRElSX0NIQU5HRQkJMHgwMjAwDQo+ICAjZGVmaW5lIEky
+Q19ETUFfU1RBUlRfRU4JCTB4MDAwMQ0KPiAgI2RlZmluZSBJMkNfRE1BX0lOVF9GTEFHX05PTkUJ
+CTB4MDAwMA0KPiAgI2RlZmluZSBJMkNfRE1BX0NMUl9GTEFHCQkweDAwMDANCj4gQEAgLTIwNSw2
+ICsyMDgsNyBAQCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIHsNCj4gIAl1bnNpZ25lZCBjaGFy
+IHRpbWluZ19hZGp1c3Q6IDE7DQo+ICAJdW5zaWduZWQgY2hhciBkbWFfc3luYzogMTsNCj4gIAl1
+bnNpZ25lZCBjaGFyIGx0aW1pbmdfYWRqdXN0OiAxOw0KPiArCXVuc2lnbmVkIGNoYXIgYXBkbWFf
+c3luYzogMTsNCj4gIH07DQo+ICANCj4gIHN0cnVjdCBtdGtfaTJjX2FjX3RpbWluZyB7DQo+IEBA
+IC0zMTEsNiArMzE1LDcgQEAgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7DQo+ICAJLnRpbWluZ19h
+ZGp1c3QgPSAxLA0KPiAgCS5kbWFfc3luYyA9IDAsDQo+ICAJLmx0aW1pbmdfYWRqdXN0ID0gMCwN
+Cj4gKwkuYXBkbWFfc3luYyA9IDAsDQo+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0
+IG10a19pMmNfY29tcGF0aWJsZSBtdDY1NzdfY29tcGF0ID0gew0KPiBAQCAtMzI0LDYgKzMyOSw3
+IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KPiAgCS50aW1pbmdfYWRqdXN0ID0gMCwNCj4g
+IAkuZG1hX3N5bmMgPSAwLA0KPiAgCS5sdGltaW5nX2FkanVzdCA9IDAsDQo+ICsJLmFwZG1hX3N5
+bmMgPSAwLA0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBh
+dGlibGUgbXQ2NTg5X2NvbXBhdCA9IHsNCj4gQEAgLTMzNyw2ICszNDMsNyBAQCBzdHJ1Y3QgaTJj
+X3NwZWNfdmFsdWVzIHsNCj4gIAkudGltaW5nX2FkanVzdCA9IDAsDQo+ICAJLmRtYV9zeW5jID0g
+MCwNCj4gIAkubHRpbWluZ19hZGp1c3QgPSAwLA0KPiArCS5hcGRtYV9zeW5jID0gMCwNCj4gIH07
+DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10NzYyMl9j
+b21wYXQgPSB7DQo+IEBAIC0zNTAsNiArMzU3LDcgQEAgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7
+DQo+ICAJLnRpbWluZ19hZGp1c3QgPSAwLA0KPiAgCS5kbWFfc3luYyA9IDAsDQo+ICAJLmx0aW1p
+bmdfYWRqdXN0ID0gMCwNCj4gKwkuYXBkbWFfc3luYyA9IDAsDQo+ICB9Ow0KPiAgDQo+ICBzdGF0
+aWMgY29uc3Qgc3RydWN0IG10a19pMmNfY29tcGF0aWJsZSBtdDgxNzNfY29tcGF0ID0gew0KPiBA
+QCAtMzYyLDYgKzM3MCw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KPiAgCS50aW1pbmdf
+YWRqdXN0ID0gMCwNCj4gIAkuZG1hX3N5bmMgPSAwLA0KPiAgCS5sdGltaW5nX2FkanVzdCA9IDAs
+DQo+ICsJLmFwZG1hX3N5bmMgPSAwLA0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ4MTgzX2NvbXBhdCA9IHsNCj4gQEAgLTM3NSw2ICszODQs
+NyBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCj4gIAkudGltaW5nX2FkanVzdCA9IDEsDQo+
+ICAJLmRtYV9zeW5jID0gMSwNCj4gIAkubHRpbWluZ19hZGp1c3QgPSAxLA0KPiArCS5hcGRtYV9z
+eW5jID0gMCwNCj4gIH07DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
+IG10a19pMmNfb2ZfbWF0Y2hbXSA9IHsNCj4gQEAgLTc5OCw2ICs4MDgsNyBAQCBzdGF0aWMgaW50
+IG10a19pMmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cg
+Km1zZ3MsDQo+ICAJdTE2IHN0YXJ0X3JlZzsNCj4gIAl1MTYgY29udHJvbF9yZWc7DQo+ICAJdTE2
+IHJlc3RhcnRfZmxhZyA9IDA7DQo+ICsJdTE2IGRtYV9zeW5jID0gMDsNCj4gIAl1MzIgcmVnXzRn
+X21vZGU7DQo+ICAJdTggKmRtYV9yZF9idWYgPSBOVUxMOw0KPiAgCXU4ICpkbWFfd3JfYnVmID0g
+TlVMTDsNCj4gQEAgLTg1MSwxMCArODYyLDE2IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFu
+c2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gIAkJbXRr
+X2kyY193cml0ZXcoaTJjLCBudW0sIE9GRlNFVF9UUkFOU0FDX0xFTik7DQo+ICAJfQ0KPiAgDQo+
+ICsJaWYgKGkyYy0+ZGV2X2NvbXAtPmFwZG1hX3N5bmMpIHsNCj4gKwkJZG1hX3N5bmMgPSBJMkNf
+RE1BX1NLSVBfQ09ORklHIHwgSTJDX0RNQV9BU1lOQ19NT0RFOw0KPiArCQlpZiAoaTJjLT5vcCA9
+PSBJMkNfTUFTVEVSX1dSUkQpDQo+ICsJCQlkbWFfc3luYyB8PSBJMkNfRE1BX0RJUl9DSEFOR0U7
+DQo+ICsJfQ0KPiArDQo+ICAJLyogUHJlcGFyZSBidWZmZXIgZGF0YSB0byBzdGFydCB0cmFuc2Zl
+ciAqLw0KPiAgCWlmIChpMmMtPm9wID09IEkyQ19NQVNURVJfUkQpIHsNCj4gIAkJd3JpdGVsKEky
+Q19ETUFfSU5UX0ZMQUdfTk9ORSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9JTlRfRkxBRyk7DQo+
+IC0JCXdyaXRlbChJMkNfRE1BX0NPTl9SWCwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9DT04pOw0K
+PiArCQl3cml0ZWwoSTJDX0RNQV9DT05fUlggfCBkbWFfc3luYywgaTJjLT5wZG1hYmFzZSArIE9G
+RlNFVF9DT04pOw0KPiAgDQo+ICAJCWRtYV9yZF9idWYgPSBpMmNfZ2V0X2RtYV9zYWZlX21zZ19i
+dWYobXNncywgMSk7DQo+ICAJCWlmICghZG1hX3JkX2J1ZikNCj4gQEAgLTg3Nyw3ICs4OTQsNyBA
+QCBzdGF0aWMgaW50IG10a19pMmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3Ry
+dWN0IGkyY19tc2cgKm1zZ3MsDQo+ICAJCXdyaXRlbChtc2dzLT5sZW4sIGkyYy0+cGRtYWJhc2Ug
+KyBPRkZTRVRfUlhfTEVOKTsNCj4gIAl9IGVsc2UgaWYgKGkyYy0+b3AgPT0gSTJDX01BU1RFUl9X
+Uikgew0KPiAgCQl3cml0ZWwoSTJDX0RNQV9JTlRfRkxBR19OT05FLCBpMmMtPnBkbWFiYXNlICsg
+T0ZGU0VUX0lOVF9GTEFHKTsNCj4gLQkJd3JpdGVsKEkyQ19ETUFfQ09OX1RYLCBpMmMtPnBkbWFi
+YXNlICsgT0ZGU0VUX0NPTik7DQo+ICsJCXdyaXRlbChJMkNfRE1BX0NPTl9UWCB8IGRtYV9zeW5j
+LCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQo+ICANCj4gIAkJZG1hX3dyX2J1ZiA9IGky
+Y19nZXRfZG1hX3NhZmVfbXNnX2J1Zihtc2dzLCAxKTsNCj4gIAkJaWYgKCFkbWFfd3JfYnVmKQ0K
+PiBAQCAtOTAwLDcgKzkxNyw3IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFuc2ZlcihzdHJ1
+Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gIAkJd3JpdGVsKG1zZ3Mt
+PmxlbiwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9UWF9MRU4pOw0KPiAgCX0gZWxzZSB7DQo+ICAJ
+CXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0lOVF9GTEFH
+KTsNCj4gLQkJd3JpdGVsKEkyQ19ETUFfQ0xSX0ZMQUcsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRf
+Q09OKTsNCj4gKwkJd3JpdGVsKEkyQ19ETUFfQ0xSX0ZMQUcgfCBkbWFfc3luYywgaTJjLT5wZG1h
+YmFzZSArIE9GRlNFVF9DT04pOw0KPiAgDQo+ICAJCWRtYV93cl9idWYgPSBpMmNfZ2V0X2RtYV9z
+YWZlX21zZ19idWYobXNncywgMSk7DQo+ICAJCWlmICghZG1hX3dyX2J1ZikNCg0K
 
-Sure! Will change it in next version.
-
-Regards,
-Boqun
-
-> > 
-> > 
-> >  enum pipe_prot_msg_type {
-> > --
-> > 2.27.0
-> 
