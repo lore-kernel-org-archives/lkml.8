@@ -2,121 +2,138 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E57C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5178DC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37AD520888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ewi7Gb4w"
+	by mail.kernel.org (Postfix) with ESMTP id 395A520737
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgGWNQT (ORCPT
+        id S1729124AbgGWNQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgGWNQS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:16:20 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8260 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726521AbgGWNQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 09:16:18 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA91C0619E2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:16:18 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k71so3160965pje.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 06:16:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ePu2DQifrSypcKw3c6HDysOl6wZIG3mL9ysnlkjPzpE=;
-        b=Ewi7Gb4wAt29Y1el687HjMUlmBNi0VZIMdhklA/O/vcmU3tD45R50AO9Q80T+OTOm9
-         c+4LstGwg00MY4C6qBcinL9fAPsI3RxCxikAbXfC8G2uZtdQQ1GrXyIaf6SDtmhN3yR3
-         j7v2zgArlooh2K3TaXEuD5+4MvI7fZIZ4n1deAYC/51SO6x5IQklaYy2slaIbFUkczU9
-         cTs8W6qTDds4v0A+wz17iitfv3XQV1g0kbUrLKndLFywDkXdoCx6Lfg97Bra24RZsR1P
-         expVFr7rLA4lpnnZlD0FJrok+I19gx3LHgdoo0PGXBdFSOrbB7DbaC3pEO7aznatwWR3
-         UvaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ePu2DQifrSypcKw3c6HDysOl6wZIG3mL9ysnlkjPzpE=;
-        b=hsp+4WbOy9LSysG6du7OCZLBq+cycIbM07qvdagGvOPZidCgQkPP6ZpwGJTn9fuj47
-         HOjDxQdpTXgeTizES04b+TPPCo4E5AjI1wA8kBCPcyXs8kCDBeVqCD4kI1Lr2+xQ30D/
-         lPGzlv91YlAGfnA8oAB4gAH381zYhTDVJAK3nGE7kFXksVj+YWpvaecyG8BACOKf1A0M
-         Cn3GpTQygKGd9V4tsY8rimZ6IYAAdVMkIa8lVPl/YHf24IDq1pMGbljEJftuBAc3e2xM
-         yN17VrB1zmIKRAEMFrWjOWmeWCPKmaPeTvCr9S8uSGPLqDnqoEEe9EbGtKlj3rMqeGwf
-         Fybg==
-X-Gm-Message-State: AOAM532WYzeBHq8iKk/hx/b6VNVtZHptFG0qyWxehH/djbCPXp9V9Xig
-        kr0rJgeIgS4+YpA5Mlij4zkCKw==
-X-Google-Smtp-Source: ABdhPJxJpfqGOnbg0xA8HsHA154EtCmp9G7TiNwpsst4qATzbOdPWrKM3zxg4Lw4KSO6gB0TVCTDZw==
-X-Received: by 2002:a17:90a:d684:: with SMTP id x4mr377489pju.62.1595510177991;
-        Thu, 23 Jul 2020 06:16:17 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 129sm3085243pfv.161.2020.07.23.06.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 06:16:17 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 06:14:26 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kathiravan T <kathirav@codeaurora.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sivaprak@codeaurora.org, sricharan@codeaurora.org
-Subject: Re: [PATCH V3 0/4] Add frequency / voltage scaling support for
- IPQ6018 SoC
-Message-ID: <20200723131426.GK1218486@builder.lan>
-References: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 06CE15201532D799B7EC;
+        Thu, 23 Jul 2020 21:16:15 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.202.55) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Jul 2020 21:16:05 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
+        <will@kernel.org>, <ganapatrao.kulkarni@cavium.com>,
+        <catalin.marinas@arm.com>
+CC:     <iommu@lists.linux-foundation.org>, <linuxarm@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <prime.zeng@hisilicon.com>,
+        <huangdaode@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>
+Subject: [PATCH v4 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
+Date:   Fri, 24 Jul 2020 01:13:42 +1200
+Message-ID: <20200723131344.41472-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.202.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 19 Jul 23:12 PDT 2020, Kathiravan T wrote:
+Ganapatrao Kulkarni has put some effort on making arm-smmu-v3 use local
+memory to save command queues[1]. I also did similar job in patch
+"iommu/arm-smmu-v3: allocate the memory of queues in local numa node"
+[2] while not realizing Ganapatrao has done that before.
 
-> IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator of MP5496
-> controls the APSS and SDCC voltage scaling respectively. Add support
-> for the same.
-> 
+But it seems it is much better to make dma_alloc_coherent() to be
+inherently NUMA-aware on NUMA-capable systems.
 
-Picked up patch 1-3 for v5.10
+Right now, smmu is using dma_alloc_coherent() to get memory to save queues
+and tables. Typically, on ARM64 server, there is a default CMA located at
+node0, which could be far away from node2, node3 etc.
+Saving queues and tables remotely will increase the latency of ARM SMMU
+significantly. For example, when SMMU is at node2 and the default global
+CMA is at node0, after sending a CMD_SYNC in an empty command queue, we
+have to wait more than 550ns for the completion of the command CMD_SYNC.
+However, if we save them locally, we only need to wait for 240ns.
 
-Thanks,
-Bjorn
+with per-numa CMA, smmu will get memory from local numa node to save command
+queues and page tables. that means dma_unmap latency will be shrunk much.
 
-> changes since V2:
-> 	- Rebased on top of linux-next 20200717 tag
-> 	- Addressed Rob's comment to drop the 'syscon' node in qcom,smd-rpm.yaml
-> 	- Picked up the Reviewed-by tag for qcom,smd-rpm-regulator.yaml
-> 	- Regulator patches part of V2 was picked up by Mark and it's available in linux-next tree
-> 
-> changes since V1:
-> 	- Moved YAML conversion to the last as per Mark's comments
-> 
-> Kathiravan T (4):
->   dt-bindings: soc: qcom: Add IPQ6018 compatible
->   soc: qcom: smd-rpm: Add IPQ6018 compatible
->   dt-bindings: soc: qcom: convert the SMD-RPM document to YAML schema
->   dt-bindings: regulator: convert QCOM SMD-RPM regulator document to
->     YAML schema
-> 
->  .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 321 ---------------------
->  .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 106 +++++++
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  |  64 ----
->  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml |  87 ++++++
->  drivers/soc/qcom/smd-rpm.c                         |   1 +
->  5 files changed, 194 insertions(+), 385 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
->  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Meanwhile, when iommu.passthrough is on, device drivers which call dma_
+alloc_coherent() will also get local memory and avoid the travel between
+numa nodes.
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2017-October/024455.html
+[2] https://www.spinics.net/lists/iommu/msg44767.html
+
+-v4:
+ * rebase on top of Christoph Hellwig's patch:
+ [PATCH v2] dma-contiguous: cleanup dma_alloc_contiguous
+ https://lore.kernel.org/linux-iommu/20200723120133.94105-1-hch@lst.de/
+ * cleanup according to Christoph's comment
+ * patch 2/2 rebased on top of linux-next to avoid arch/arm64 conflicts
+ * reserve cma by checking N_MEMORY rather than N_ONLINE
+
+-v3:
+  * move to use page_to_nid() while freeing cma with respect to Robin's
+  comment, but this will only work after applying my below patch:
+  "mm/cma.c: use exact_nid true to fix possible per-numa cma leak"
+  https://marc.info/?l=linux-mm&m=159333034726647&w=2
+
+  * handle the case count <= 1 more properly according to Robin's
+  comment;
+
+  * add pernuma_cma parameter to support dynamic setting of per-numa
+  cma size;
+  ideally we can leverage the CMA_SIZE_MBYTES, CMA_SIZE_PERCENTAGE and
+  "cma=" kernel parameter and avoid a new paramter separately for per-
+  numa cma. Practically, it is really too complicated considering the
+  below problems:
+  (1) if we leverage the size of default numa for per-numa, we have to
+  avoid creating two cma with same size in node0 since default cma is
+  probably on node0.
+  (2) default cma can consider the address limitation for old devices
+  while per-numa cma doesn't support GFP_DMA and GFP_DMA32. all
+  allocations with limitation flags will fallback to default one.
+  (3) hard to apply CMA_SIZE_PERCENTAGE to per-numa. it is hard to
+  decide if the percentage should apply to the whole memory size
+  or only apply to the memory size of a specific numa node.
+  (4) default cma size has CMA_SIZE_SEL_MIN and CMA_SIZE_SEL_MAX, it
+  makes things even more complicated to per-numa cma.
+
+  I haven't figured out a good way to leverage the size of default cma
+  for per-numa cma. it seems a separate parameter for per-numa could
+  make life easier.
+
+  * move dma_pernuma_cma_reserve() after hugetlb_cma_reserve() to
+  reuse the comment before hugetlb_cma_reserve() with respect to
+  Robin's comment
+
+-v2: 
+  * fix some issues reported by kernel test robot
+  * fallback to default cma while allocation fails in per-numa cma
+     free memory properly
+
+Barry Song (2):
+  dma-direct: provide the ability to reserve per-numa CMA
+  arm64: mm: reserve per-numa CMA to localize coherent dma buffers
+
+ .../admin-guide/kernel-parameters.txt         |  9 ++
+ arch/arm64/mm/init.c                          |  2 +
+ include/linux/dma-contiguous.h                |  4 +
+ kernel/dma/Kconfig                            | 10 ++
+ kernel/dma/contiguous.c                       | 94 +++++++++++++++++--
+ 5 files changed, 109 insertions(+), 10 deletions(-)
+
+-- 
+2.27.0
+
+
