@@ -2,127 +2,138 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ACDC433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF99BC433F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6772071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FDF2071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 01:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387657AbgGWBte (ORCPT
+        id S2387675AbgGWBtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:49:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:35650 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729198AbgGWBte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 21:49:34 -0400
-IronPort-SDR: YlR3QaPbj5FXFizj8d1UwsMb8q3DyyccbG/crMscL69aj4nxolIxplDt7kRdSUw7wbbxrGssAo
- cVeUI6O78h6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="211994602"
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="211994602"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 18:49:33 -0700
-IronPort-SDR: QNP5KVt6QKgtWmoKOqeRoCIe45AqIHZRKo7xbNWyj+G+DYPdMKxxIdxZ6DQosE8B7coErHBY0h
- jolHgiunVirA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="270910468"
-Received: from schwings-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.132])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Jul 2020 18:49:17 -0700
-Date:   Thu, 23 Jul 2020 04:49:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Marco Elver <elver@google.com>,
-        Brian Gerst <brgerst@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v3 1/3] kprobes: Add text_alloc() and text_free()
-Message-ID: <20200723014916.GD45081@linux.intel.com>
-References: <20200714223239.1543716-1-jarkko.sakkinen@linux.intel.com>
- <20200714223239.1543716-2-jarkko.sakkinen@linux.intel.com>
- <20200716090253.GP10769@hirez.programming.kicks-ass.net>
+        Wed, 22 Jul 2020 21:49:39 -0400
+Received: from regular1.263xmail.com ([211.150.70.201]:39588 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbgGWBtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:49:39 -0400
+Received: from localhost (unknown [192.168.167.225])
+        by regular1.263xmail.com (Postfix) with ESMTP id D7FF0A54;
+        Thu, 23 Jul 2020 09:49:36 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.236] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P17824T139851630368512S1595468975533575_;
+        Thu, 23 Jul 2020 09:49:36 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <556b12a816981c0b51110575844fb20a>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: kever.yang@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Subject: Re: [PATCH v1] clk: Export __clk_lookup()
+From:   "elaine.zhang" <zhangqing@rock-chips.com>
+To:     Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
+        kever.yang@rock-chips.com
+References: <20200722023230.10826-1-zhangqing@rock-chips.com>
+ <14639646.VOZsFJ8Tpa@phil>
+ <159546549321.3847286.4678382117195983280@swboyd.mtv.corp.google.com>
+ <f3e7b8f3-e4d4-9965-703d-aa4b96f50f6d@rock-chips.com>
+Organization: rockchip
+Message-ID: <99eebfa5-e775-37a8-6c76-90ae2444b253@rock-chips.com>
+Date:   Thu, 23 Jul 2020 09:49:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716090253.GP10769@hirez.programming.kicks-ass.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <f3e7b8f3-e4d4-9965-703d-aa4b96f50f6d@rock-chips.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:02:53AM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 15, 2020 at 01:32:27AM +0300, Jarkko Sakkinen wrote:
-> > +void *text_alloc(unsigned long size)
-> > +{
-> > +	void *p;
-> > +
-> > +	if (PAGE_ALIGN(size) > MODULES_LEN)
-> > +		return NULL;
-> > +
-> > +	p = __vmalloc_node_range(size, MODULE_ALIGN,
-> > +				    MODULES_VADDR + get_module_load_offset(),
-> > +				    MODULES_END, GFP_KERNEL,
-> > +				    PAGE_KERNEL, 0, NUMA_NO_NODE,
-> > +				    __builtin_return_address(0));
-> > +	if (p && (kasan_module_alloc(p, size) < 0)) {
-> > +		vfree(p);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return p;
-> > +}
-> > +
-> > +void text_free(void *region)
-> > +{
-> > +	/*
-> > +	 * This memory may be RO, and freeing RO memory in an interrupt is not
-> > +	 * supported by vmalloc.
-> > +	 */
-> > +	WARN_ON(in_interrupt());
-> 
-> I think that wants to be:
-> 
-> 	lockdep_assert_irqs_enabled();
-> 
-> in_interrupt() isn't sufficient, interrupts must also not be disabled
-> when issuesing TLB invalidations.
 
-Shouldn't it be then also fixed in the module_memfree() fallback
-implementation (kernel/module.c)?
+在 2020/7/23 上午9:42, elaine.zhang 写道:
+>
+> 在 2020/7/23 上午8:51, Stephen Boyd 写道:
+>> Quoting Heiko Stuebner (2020-07-22 11:26:50)
+>>> Hi Elaine,
+>>>
+>>> Am Mittwoch, 22. Juli 2020, 04:32:30 CEST schrieb Elaine Zhang:
+>>>> Export __clk_lookup() to support user built as module.
+>>>>
+>>>> ERROR:
+>>>> drivers/clk/rockchip/clk.ko: In function
+>>>> `rockchip_clk_protect_critical':
+>>>> drivers/clk/rockchip/clk.c:741:
+>>>> undefined reference to `__clk_lookup'
+>>> can you elaborate a bit more on why this would be needed?
+>>>
+>>> Because right now the Rockchip clocks are of course built into
+>>> the main kernel image (especially due to them being needed during early
+>>> boot) and __clk_lookup actually is a pretty deep part of the clock-
+>>> framework itself, as probably also denoted by the "__" in the function
+>>> name.
+>>>
+>> Can you stop using __clk_lookup()? The plan is to remove it.
+>
+> Rk use  __clk_lookup() as:
+>
+> drivers/clk/rockchip/clk.c
+>
+> void __init rockchip_clk_protect_critical(const char *const clocks[],
+>                                           int nclocks)
+> {
+>         int i;
+>
+>         /* Protect the clocks that needs to stay on */
+>         for (i = 0; i < nclocks; i++) {
+>                 struct clk *clk = __clk_lookup(clocks[i]);
+>
+>                 if (clk)
+>                         clk_prepare_enable(clk);
+>         }
+> }
+> e.g:
+>
+> drivers/clk/rockchip/clk-rk3328.c
+>
+> static const char *const rk3328_critical_clocks[] __initconst = {
+>         "aclk_bus",
+>         "aclk_bus_niu",
+>         "pclk_bus",
+>         "pclk_bus_niu",
+>         "hclk_bus",
+>         "hclk_bus_niu",
+>         "aclk_peri",
+> ............
+>
+> };
+>
+> If have plan to remove the __clk_lookup, I need to replace the 
+> rockchip_clk_protect_critical, and use the flag CLK_IS_CRITICAL.(but 
+> use flag CLK_IS_CRITICAL, the enable count is always "0")
+Use the CLK_IS_CRITICAL, there is no guarantee that the parent clk is 
+enabled, So the flag CLK_IS_CRITICAL need to be added to all special 
+clks according to the clk tree.
+>
+>>
+>>
 
-/Jarkko
+
