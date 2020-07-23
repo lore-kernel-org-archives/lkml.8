@@ -2,75 +2,77 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE554C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477E620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C022A20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595543107;
+	bh=Ffa0UUL/xpJ/nxtbCjUwo2iMiLWWnTrAOJN+u9GLnzI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Wc5IFZMQ3aHDn8xgbEGmfyh1IokbHruCH8c1naoP6Dcp6ZEsfyYWKoxLJsQScgpVr
+	 Qi55CCdCELufbGlb6rPdHX2XpbSZ14P/PHaCY6tVvQIwx3eO6Jk/bS3h9tTHm4YWnI
+	 ei1PIwtMMebFLelXQ+mMRKVEF5W+gLwbiULUqfyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgGWWY7 (ORCPT
+        id S1726975AbgGWWZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:24:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11488 "EHLO mga18.intel.com"
+        Thu, 23 Jul 2020 18:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgGWWY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:24:59 -0400
-IronPort-SDR: 5ariW4NiwzVootpvbt0O5q9uXqwG9dZDPBPhZWuf9pegA+YOfXdik3sv9Clyyzk5ZLPmUL+98z
- K5J9+xyQ2EHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138129196"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="138129196"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 15:24:58 -0700
-IronPort-SDR: zKgzapZCB5UJHSsy3nQZ6GSkGWrz0yYAHTsx6unny21M0x0GoIjIFkljULw2pjM59tiBuLli9p
- swij7RTimQgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="302465808"
-Received: from abdelh1x-mobl.amr.corp.intel.com (HELO localhost) ([10.249.38.107])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2020 15:24:56 -0700
-Date:   Fri, 24 Jul 2020 01:24:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
-Message-ID: <20200723222455.GB12405@linux.intel.com>
-References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
- <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
- <20200717175245.54758e3954abd1bcccfe5500@kernel.org>
+        id S1726417AbgGWWZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:25:06 -0400
+Received: from embeddedor (unknown [201.162.245.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2923520714;
+        Thu, 23 Jul 2020 22:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595543106;
+        bh=Ffa0UUL/xpJ/nxtbCjUwo2iMiLWWnTrAOJN+u9GLnzI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=1WlAGbGura2Mywk7fAeHMZpDaNL9uYqONbbPFaqcR1wUBKdEaJYbJmnsL1Q6xu6kP
+         t3PUw70GJIavlFtmR/RMfem4YSbpRFXkBhY/ASTayUPxIb4tJ8J9323KOmU2vsQcuK
+         DY7Lit9pbMv3iJmEYbaX5uE4DNIXkXQ11uPQ7BDQ=
+Date:   Thu, 23 Jul 2020 17:30:48 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH 0/3] Avoid the use of one-element arrays
+Message-ID: <cover.1595543280.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717175245.54758e3954abd1bcccfe5500@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 05:52:45PM +0900, Masami Hiramatsu wrote:
-> On Fri, 17 Jul 2020 06:04:17 +0300
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > Introduce functions for allocating memory for dynamic trampolines, such
-> > as kprobes. An arch can promote the availability of these functions with
-> > CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
-> > wrapping module_alloc() and module_memfree().
-> 
-> Doesn't it depend on CONFIG_MODULE?
+Hi,
 
-The idea would be that arch specifically promotes that it has text
-allocator that is not dependent on module subsystem.
+This series aims to:
 
-E.g. like the patch set does for x86.
+1. Remove one-element arrays.
+2. Fix identation issues in struct serial_struct32
+3. Use the preferred form for passing a size of a structure type
 
-/Jarkko
+Thanks
+
+Gustavo A. R. Silva (3):
+  tty: Avoid the use of one-element arrays
+  tty: Fix identation issues in struct serial_struct32
+  tty: Use the preferred form for passing the size of a structure type
+
+ drivers/tty/tty_io.c | 52 ++++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+-- 
+2.27.0
+
