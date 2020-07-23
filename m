@@ -2,126 +2,174 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5935C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E92C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6C720792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE6020792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Gryz+W9C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IxVfFjzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGWMXK (ORCPT
+        id S1728761AbgGWMYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:23:10 -0400
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:21524 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgGWMXI (ORCPT
+        Thu, 23 Jul 2020 08:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbgGWMYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:23:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595506987;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j6qul/NVIhOo7e+TLhNG7ehnkX4T5gKRyU+jhvsVBOU=;
-  b=Gryz+W9CwsOe3o1rsuphzIi9TWKuXXwnykYNQXn7Xg/Ofw53Tr32aF8y
-   3is8rq9mnVXtpCIDveKhgkRzkKw/JxzTbmkhfWeseEyJidpoZf+417dpS
-   n2DhPZr7mGVUGksHvL08CkIKDqS733r64sGQjbsK+/UHdzGJTolEnWQWB
-   0=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: ky2qICr6DqkiBG7KlBXtd8Nsu9X16KtCcJpdaQl2eTun6se982M36cWHvyEBpZRpb7rH+JG/KC
- m6C22yVSuSt1y3f7cVBJ/RCRwq062uamwwz6G27s1MRDsXFja6WtxfdFAr6thhDLxt1I3WpQIc
- eRrGfyDqy2MQ5l0ZSzYYNTtUfJUZ9TIanmdgQ9JBuerBzX2SHfUIg4YXga4CA3F4eViEcIUa4a
- s2Oj410dcO+gDBI1Oz2vpjMxYehXG2ooG1W38YV5EjT9bxPSEr0U2K5GMu8tZYVE6dvhkgBanA
- 3fc=
-X-SBRS: 2.7
-X-MesageID: 23358347
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,386,1589256000"; 
-   d="scan'208";a="23358347"
-Date:   Thu, 23 Jul 2020 14:23:00 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>
-Subject: Re: [PATCH 3/3] memory: introduce an option to force onlining of
- hotplug memory
-Message-ID: <20200723122300.GD7191@Air-de-Roger>
-References: <20200723084523.42109-1-roger.pau@citrix.com>
- <20200723084523.42109-4-roger.pau@citrix.com>
- <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
+        Thu, 23 Jul 2020 08:24:51 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD92C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:50 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so4782107wmh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BPw5bYTRkWKKW36iChvzFRop+ogNWWiA3XJP8U5i27Y=;
+        b=IxVfFjzc90ZE0V7MFR8NfaEYB9JHKcZIMZdbKq4KLTagYPrOG1mlQC3gxGvqi0Yj6r
+         fbyoyqlMiyOrbVtvGp3v06QOhZDmHOofagIqc55BgP3lzMa5kIyWCipigINpEtv4CCZF
+         fZOC8tZ5rUKQ6MkyTl+MPCWNYwWASf1r1dhlMAXvu+rDxJLozKY90z6ENo6uFZabB3CN
+         X3Fbh3R7xgEz9Gh/3JpDiB44LnZeQ+O44/hYgdFXtyNTw7erLm9KUGDeW1N1/KLe9T9c
+         wcafyoStGp+tCwJo5X52iPPhoBK11cOZHeqcIIW/mstNyPsAjxzGL+USrF3YRz/AMO09
+         S5+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BPw5bYTRkWKKW36iChvzFRop+ogNWWiA3XJP8U5i27Y=;
+        b=S0mGHfVjp4JED9B5yt+2iN+TTp7WqyV/xx2LmQyE7iaadUlEKBbZoW+llGT/Hz9VVn
+         xhDHyCIzgZWaztTJcT/RleflPYkU8/xdmf6RDezAulwFuk7biHhZvQip43nnP3dywSsu
+         sOn62pCOxZFTqOq57KYTLHZLBeLi/sPoXX0SkyeOQnaS2JjlFTAs0qBvLVIRvYn7atjF
+         +j+HxjxASW2i2g7YeqzD9FgCCI8G2PnBOBtbw4IDkG/IPXLkJMfr1VDv0NXVT0PvvFMa
+         zytTWI7UO4fWMTwWagrGOxVwyDTxaGQTxTywbZrEudB14Laty5sBtRti2sddVuoCVO/H
+         5cqg==
+X-Gm-Message-State: AOAM532JwZsMGdWl1YzUuq/ibFJdsU4KNXh+OtaM9FXwxi1mOeW7JsRY
+        RLCoqe4PR7hEHbltg6sWX4J40w==
+X-Google-Smtp-Source: ABdhPJyi2akDr13wv4WdZAQ8D0TzOORRcG3bV+ePeDoJcjJciQPgzzjLm1w3nJubU/pr8wMYeguX3A==
+X-Received: by 2002:a7b:c054:: with SMTP id u20mr3899527wmc.2.1595507089612;
+        Thu, 23 Jul 2020 05:24:49 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 05:24:48 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 00/40] Set 5: Penultimate set of SCSI related W=1 warnings
+Date:   Thu, 23 Jul 2020 13:24:06 +0100
+Message-Id: <20200723122446.1329773-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <21490d49-b2cf-a398-0609-8010bdb0b004@redhat.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 01:37:03PM +0200, David Hildenbrand wrote:
-> On 23.07.20 10:45, Roger Pau Monne wrote:
-> > Add an extra option to add_memory_resource that overrides the memory
-> > hotplug online behavior in order to force onlining of memory from
-> > add_memory_resource unconditionally.
-> > 
-> > This is required for the Xen balloon driver, that must run the
-> > online page callback in order to correctly process the newly added
-> > memory region, note this is an unpopulated region that is used by Linux
-> > to either hotplug RAM or to map foreign pages from other domains, and
-> > hence memory hotplug when running on Xen can be used even without the
-> > user explicitly requesting it, as part of the normal operations of the
-> > OS when attempting to map memory from a different domain.
-> > 
-> > Setting a different default value of memhp_default_online_type when
-> > attaching the balloon driver is not a robust solution, as the user (or
-> > distro init scripts) could still change it and thus break the Xen
-> > balloon driver.
-> 
-> I think we discussed this a couple of times before (even triggered by my
-> request), and this is responsibility of user space to configure. Usually
-> distros have udev rules to online memory automatically. Especially, user
-> space should eb able to configure *how* to online memory.
+This set is part of a larger effort attempting to clean-up W=1
+kernel builds, which are currently overwhelmingly riddled with
+niggly little warnings.
 
-Note (as per the commit message) that in the specific case I'm
-referring to the memory hotplugged by the Xen balloon driver will be
-an unpopulated range to be used internally by certain Xen subsystems,
-like the xen-blkback or the privcmd drivers. The addition of such
-blocks of (unpopulated) memory can happen without the user explicitly
-requesting it, and hence not even aware such hotplug process is taking
-place. To be clear: no actual RAM will be added to the system.
+Hopefully this is the penultimate set.
 
-Failure to online such blocks using the Xen specific online handler
-(which does not handle back the memory to the allocator in any way)
-will result in the system getting stuck and malfunctioning.
+Lee Jones (40):
+  scsi: lpfc: lpfc_els: Fix some function parameter descriptions
+  scsi: lpfc: lpfc_hbadisc: Fix kerneldoc parameter
+    formatting/misnaming/missing issues
+  scsi: ufs: ufs-qcom: Demote nonconformant kerneldoc headers
+  scsi: bnx2i: bnx2i_init: Fix parameter misnaming in function header
+  scsi: ufs: ufs-exynos: Make stubs 'static inline'
+  scsi: ufs: ufs-exynos: Demote seemingly unintentional kerneldoc header
+  scsi: bfa: bfa_port: Staticify local functions
+  scsi: bnx2i: bnx2i_sysfs: Add missing descriptions for 'attr'
+    parameter
+  scsi: bfa: bfa_fcpim: Remove set but unused variable 'rp'
+  scsi: bfa: bfa_fcpim: Demote seemingly unintentional kerneldoc header
+  scsi: qedi: qedi_main: Remove 2 set but unused variables
+  scsi: ips: Remove some set but unused variables
+  scsi: ips: Convert strnlen() to memcpy() since result should not be
+    NUL terminated
+  scsi: qla4xxx: ql4_83xx: Remove set but unused variable 'status'
+  scsi: lpfc: lpfc_init: Use __printf() format notation
+  scsi: lpfc: lpfc_init: Add and rename a whole bunch of function
+    parameter descriptions
+  scsi: qla4xxx: ql4_bsg: Rename function parameter descriptions
+  scsi: lpfc: lpfc_mbox: Fix a bunch of kerneldoc misdemeanours
+  scsi: lpfc: lpfc_nportdisc: Add description for lpfc_release_rpi()'s
+    'ndlpl param
+  scsi: bfa: bfa_ioc: Remove a few unused variables 'pgoff' and 't'
+  scsi: csiostor: csio_hw: Mark known unused variable as __always_unused
+  scsi: csiostor: csio_hw_t5: Remove 2 unused variables
+    {mc,edc}_bist_status_rdata_reg
+  scsi: bfa: bfa_ioc: Staticify non-external functions
+  scsi: csiostor: csio_rnode: Add missing description for
+    csio_rnode_fwevt_handler()'s 'fwevt' param
+  scsi: bfa: bfa_ioc_ct: Demote non-compliant kerneldoc headers to
+    standard comments
+  scsi: mvsas: mv_init: Place 'core_nr' inside correct clause
+  scsi: bfa: bfa_fcs_rport: Remove unused variable 'adisc'
+  scsi: bnx2i: bnx2i_hwi: Fix a whole host of kerneldoc issues
+  scsi: bnx2i: bnx2i_iscsi: Add, remove and edit some function parameter
+    descriptions
+  scsi: be2iscsi: be_iscsi: Correct misdocumentation of function param
+    'ep'
+  scsi: qedi: qedi_fw: Remove set but unused variable 'tmp'
+  scsi: esas2r: esas2r: Add braces around the one-line if()
+  scsi: bfa: bfa_ioc: Demote non-kerneldoc headers down to standard
+    comment blocks
+  scsi: bfa: bfa_core: Demote seemingly unintentional kerneldoc header
+  scsi: bfa: bfa_svc: Demote seemingly unintentional kerneldoc header
+  scsi: qedi: qedi_main: Demote seemingly unintentional kerneldoc header
+  scsi: qedi: qedi_iscsi: Staticify non-external function
+    'qedi_get_iscsi_error'
+  scsi: bfa: bfa_ioc: Ensure a blank line precedes next function/header
+  scsi: bnx2i: bnx2i_iscsi: Add parameter description and rename another
+  scsi: esas2r: esas2r_log: Demote a few non-conformant kerneldoc
+    headers
 
-> It's the admin/distro responsibility to configure this properly. In case
-> this doesn't happen (or as you say, users change it), bad luck.
-> 
-> E.g., virtio-mem takes care to not add more memory in case it is not
-> getting onlined. I remember hyper-v has similar code to at least wait a
-> bit for memory to get onlined.
+ drivers/scsi/be2iscsi/be_iscsi.c   |  2 +-
+ drivers/scsi/bfa/bfa_core.c        |  2 +-
+ drivers/scsi/bfa/bfa_fcpim.c       | 10 ++----
+ drivers/scsi/bfa/bfa_fcs_rport.c   |  3 --
+ drivers/scsi/bfa/bfa_ioc.c         | 57 +++++++++++++-----------------
+ drivers/scsi/bfa/bfa_ioc_ct.c      |  6 ++--
+ drivers/scsi/bfa/bfa_port.c        |  4 +--
+ drivers/scsi/bfa/bfa_svc.c         |  4 +--
+ drivers/scsi/bnx2i/bnx2i_hwi.c     | 53 +++++++++++++--------------
+ drivers/scsi/bnx2i/bnx2i_init.c    |  2 +-
+ drivers/scsi/bnx2i/bnx2i_iscsi.c   | 19 +++++-----
+ drivers/scsi/bnx2i/bnx2i_sysfs.c   |  4 +++
+ drivers/scsi/csiostor/csio_hw.c    |  2 +-
+ drivers/scsi/csiostor/csio_hw_t5.c |  6 ++--
+ drivers/scsi/csiostor/csio_rnode.c |  2 +-
+ drivers/scsi/esas2r/esas2r.h       |  3 +-
+ drivers/scsi/esas2r/esas2r_log.c   | 10 +++---
+ drivers/scsi/ips.c                 | 34 +++++++-----------
+ drivers/scsi/lpfc/lpfc_els.c       | 12 +++----
+ drivers/scsi/lpfc/lpfc_hbadisc.c   | 15 ++++----
+ drivers/scsi/lpfc/lpfc_init.c      | 46 +++++++++++++-----------
+ drivers/scsi/lpfc/lpfc_mbox.c      | 12 ++++---
+ drivers/scsi/lpfc/lpfc_nportdisc.c |  1 +
+ drivers/scsi/mvsas/mv_init.c       |  1 -
+ drivers/scsi/qedi/qedi_fw.c        |  5 ++-
+ drivers/scsi/qedi/qedi_iscsi.c     |  2 +-
+ drivers/scsi/qedi/qedi_main.c      |  9 ++---
+ drivers/scsi/qla4xxx/ql4_83xx.c    | 34 +++++++-----------
+ drivers/scsi/qla4xxx/ql4_bsg.c     |  4 +--
+ drivers/scsi/ufs/ufs-exynos.c      |  2 +-
+ drivers/scsi/ufs/ufs-exynos.h      | 12 +++----
+ drivers/scsi/ufs/ufs-qcom.c        |  6 ++--
+ 32 files changed, 178 insertions(+), 206 deletions(-)
 
-I don't think VirtIO or Hyper-V use the hotplug system in the same way
-as Xen, as said this is done to add unpopulated memory regions that
-will be used to map foreign memory (from other domains) by Xen drivers
-on the system.
+-- 
+2.25.1
 
-Maybe this should somehow use a different mechanism to hotplug such
-empty memory blocks? I don't mind doing this differently, but I would
-need some pointers. Allowing user-space to change a (seemingly
-unrelated) parameter and as a result produce failures on Xen drivers
-is not an acceptable solution IMO.
-
-Thanks, Roger.
