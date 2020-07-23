@@ -2,205 +2,310 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F50C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DABFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6BD206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4A207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 07:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BEGTTY/X";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="VhNb8S9U"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JOBHXil0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGWHvy (ORCPT
+        id S1727887AbgGWHwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:51:54 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:51686 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgGWHvx (ORCPT
+        Thu, 23 Jul 2020 03:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgGWHwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:51:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595490712; x=1627026712;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=hiuPNBGi4RXNNjGG2ixGTRRVmKDTjodCCcyFSr034T8=;
-  b=BEGTTY/Xn/GNLu+riu+CwH2vLLEpMweBWNe0DwYCCE0D5TuywAw29Rjj
-   3PLoiAsIE0C6HikugTgZgWP3AUUr0mKdzZDY7PeLjftqPYoM56ljcSzvM
-   KRBhJn9RiFanvRw/rcTUnMPZDJKhc0ghW6zi47S7BubvS+IR+FqZQW+PX
-   2ZBm74Eyimc3D9hy3WCHt4sZQT9ZkYa6ZAwzzdTCEGiba5oByLEMsPz3k
-   LE9O1ckJqxgoOKFDQyrxu8OA3kRQpwFHaAVLd+T7vwaiY8ueL6ObOATh2
-   Trdfo+wYS1Dn+Pd9armZXLDeIHJ1PPvXNjva7cg5GvJPvRM0CnC/0WeRQ
-   A==;
-IronPort-SDR: 3sSb+N1kW/HIFdAFPuFvfDFPRzGtFO4vJauphphqqsOx12+UG8JZ7oreuLN0LyTwYoRRLLm5aI
- oeDidev9WrENzq+qvwMxDmLiS4yBA93vgSC/L8g/Oh10H0Iqj014o05GD2nurikxRUwiv9Tqst
- 7mjYsj9bdLcvy2Lbj2HbaTAz8EcNa3Mvsbdpa+OImJnrB2vvBYvJUuJq2lYWaQAbYTXjJ4jofH
- 3aUk8E4QCnr5KcDBwDktzpkwhRt+IJ7JcyUFQXhK6quEj9YMZntJn7AnspgY2wFOwGJwrumP/c
- Aek=
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="82939593"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 00:51:51 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 23 Jul 2020 00:51:51 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Thu, 23 Jul 2020 00:51:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oQ5QBpYE7B0PZfnDPjPN9xC9oHP36oyQ5KIa7hJk4pR3ubb6JNKxHBrcjSJFqHEMeY/lMubKrqSqSGyKSI5vmDlW59sJrga/G5qGpz00jJh5GcTdLXMoBH1wFPjyJuz3El9lGVYl7lhIag8SaakmfHV7+SnfNZXykb7skVkBKhwTASO3Nes9GQO+V1KUJpxNp3p33K13pscrr9qdHIygdj+msKd0OJIKO9YNIQ6iso77odHYO1b90HxIScG3CupupsxHXPO3bJuaUgenYD8OMDiYGnk+TngJ/Ee4sKZ6gOZTbV7FLlENh+5S0K0nM8cRSSb8CdoXK33ezDyGnBwWoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hiuPNBGi4RXNNjGG2ixGTRRVmKDTjodCCcyFSr034T8=;
- b=UuaXMYIcZMjbuHhwCUvsZpXOrTB8fZo/Hmq8yaACGHkpeiJhbvPg90aA2dV7HYNyXnt6dnJazE3B9MsPwTcfP8D4p4gcOoDyVOt1Noh8II9gS5cCjdawEqMUL1FzfvJaCG2MpRDMj0UZ5wbWs/dIwZjMX7jCxoZucWBBQsndGs6PY4ZstnaY5Qx+I7GmGOifaixkxUXrPD90UJVJ9fCUoN0mt+igVGFRrQKd+YtFIKOLTPox3XrP4db+bf1bI66FLGnE9bVndiKmaWNSiNR6VXVmJDfZz/7RVga8P65PkSfXyvzDsmPDV8o3FM2w1X1pMFeNeR4A8q/fFiocHYkmpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Thu, 23 Jul 2020 03:52:02 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8309AC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:52:02 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id r63so1501580uar.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 00:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hiuPNBGi4RXNNjGG2ixGTRRVmKDTjodCCcyFSr034T8=;
- b=VhNb8S9UjCOS3lZwW2yWrxs/gkivTkhgb4Ixarc8d7Fqc1Juxmq2+jHou8w8GFq8x/ghsbHFlZZZw52Elu4fTzLmj58aOVYPj/xdUlWN7yRKn04wX2wd89Raqwv7KyHtH4gYLhOl0D3za8dR4Irkcgdsq35SgKSI0RAjmXHeTMw=
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
- DM5PR11MB1578.namprd11.prod.outlook.com (2603:10b6:4:e::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.23; Thu, 23 Jul 2020 07:51:48 +0000
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3216.024; Thu, 23 Jul 2020
- 07:51:48 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <Codrin.Ciubotariu@microchip.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <Nicolas.Ferre@microchip.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
-Thread-Topic: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
-Thread-Index: AQHWYBNhIyVBpIRYr0OAbjzWw9KOlQ==
-Date:   Thu, 23 Jul 2020 07:51:48 +0000
-Message-ID: <8a78218a-9fbe-889d-8501-ad67ccb6e59b@microchip.com>
-References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
- <0ec99957-57e9-b384-425a-ccf0e877f1a1@microchip.com>
- <7cab13f6-ac54-8f5c-c1bf-35e6c3b5d9db@microchip.com>
-In-Reply-To: <7cab13f6-ac54-8f5c-c1bf-35e6c3b5d9db@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: microchip.com; dkim=none (message not signed)
- header.d=none;microchip.com; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [213.233.110.107]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e28297b-f1ab-4235-3d05-08d82edd40f4
-x-ms-traffictypediagnostic: DM5PR11MB1578:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB157892AE227824BC6673944187760@DM5PR11MB1578.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dMN1S7M8sH8DjdAkUxSMcNY0+iQ6IC/hkxpgrV50yxt5zDjWQ/JK7BWobPSwpgtKe5udrbnH5cm8vrSmp4p8S2qnBNmS5CJrCsfuHH90bUBEWLbWHBW4UTXzirqqHjdcMJptRAKJ5Lo+9Pxw4kGKo3LYET4cejl/m2i6lm2XZ6o8TQSwFTBS8AV85KGZalMNnyB6zsMI+5RcIXOxINeVBDELGtx4dAi/6QEQzhG/eVvhsmswSW7504obegdnaDKEDsjkx+pojn+i9y9Gv/URyqMPkzcPyn8C1OyV8AG2mSs6hoziw5YLt0YI5Wu+VborWLNynvPtM3cFZm6Xy+AYveTYChqwJd7zzVQfj10L4H9jVjQoWX/fwPlr1YocntZv
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(366004)(136003)(39860400002)(396003)(2616005)(26005)(53546011)(478600001)(6486002)(31686004)(6506007)(110136005)(186003)(83380400001)(71200400001)(66476007)(66446008)(64756008)(66556008)(91956017)(76116006)(8936002)(107886003)(31696002)(4326008)(316002)(54906003)(8676002)(86362001)(7416002)(6512007)(66946007)(2906002)(36756003)(5660300002)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: KCz6ex+hXqI0FAH/3jmGpNh7UafUFWy35KWD0oZYvqb3EoEX5MWDiJH4lZc3p6F3MZPbVhqGDFN+JHy8pYVXIMUG535O++iKUAFdOM1LM3uIvzwsoFcVu0rsEV25K4WlN5z83/Q96B9ZCmxT1oNiowIL502ymMxuS7wYghcNH909aFoFsk2Gk48bUrsbkMPCq2UP52DWNUlWO51/6RMxjBhHIXkyMclfdemEYqP+7zTpntv35woH6gqNtqeXLtcnqA4DCwBG4ExokKWVAoqQjZVzrixvotuM6nztbaTNMQ6zeQP9R1CBXYeTAXJ82OiZlu1CuxxKYZiPLLNdxP+mw5foLrf/3gxAz8eJSckAKvpyg0YFN44/pdjcc2yMAf6CMx21M1nMPkg8mI5ZXLCusUB2OyH3C4pBYliEjySej89/1wXpXInFllJQ1PV9KZU9moERyP+i623dsZbv4Vqvf9bwjb2EzFKz9XKzXNXOOWJXo8meXx0u5V9VvqaJGQ5Q
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <283181F64A83D845874B94714A0D4929@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z9xX1l7Vei7TNjVZF3Wex9lJJLRz3b9T5V+7MzClC/Y=;
+        b=JOBHXil0Q8t2jmxCibCxIZZZYyuw3DVM0slT+REWTKAp/9AOQ28anOa7F6thdWR/py
+         j02RkMHNrIZ/nyuvSkrqhp6c9u3cR5DPfkzSDtjExGX7LXeXMzNohAGsnn8FoxLcWTme
+         hJF78GsoZ2pTvdTq15H07Cdr3Pnz3vIuCiuhY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z9xX1l7Vei7TNjVZF3Wex9lJJLRz3b9T5V+7MzClC/Y=;
+        b=gjG4DwsteCVs9gfVG1lZjaeBqMrZoXx97lAdVY4W7fbFBrxDSWM5UPEdCMfWqKCHVG
+         Cw24cgOuE2JcoeOD4Uok7mU6XAwFyWBKeSD9JU4tpFy0yH/zX8PnUyW2yTi4vQW9aVFf
+         HV96M0fqHNDZy090KwNxh5M1TyLzyp+VPrFoc/Mtikb1SjHo0CB22ap0mjO0a1cmkTGV
+         uPks1icFnxPpLXVNmKvKe88wD1keDO+0H6DrsDawrD8K4bF+jHqqqPawq2bcCjU6a22v
+         mqP11UcYhjw/PWV8X5Tladl5CKLtf6CIht9MrG6yHWi4dRFJILaXywmvl5urjsJP6M5z
+         aOiQ==
+X-Gm-Message-State: AOAM531hY7Mfsa96zP979TkLfgncmJkCMM/g7BimIxV5Poo6FrLzr/T6
+        0CAnK76z9D2/Lk72YM2ZBzV2uSxjobodjzHRjWQEGA==
+X-Google-Smtp-Source: ABdhPJyru1ZxhrdLhgiWdGjkN1uAYJkvsnqlPq22GsPf6iLqWQi/M/gwclh+4l2zaYJKdqz7KszdfCqLPWWLYu+GxC8=
+X-Received: by 2002:a9f:3113:: with SMTP id m19mr2930373uab.77.1595490721549;
+ Thu, 23 Jul 2020 00:52:01 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e28297b-f1ab-4235-3d05-08d82edd40f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 07:51:48.3694
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zRw1JD05J480xnGSzDNcnRmUn1vYmCHxBDCjG2aMngLRTfGtltZDXpDLI3l2lk1ROVCLkwHjbrSDD8cPlvTBUj0vw4LYbaOR+0SwuOL3+JI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1578
+References: <1595400601-26220-1-git-send-email-weiyi.lu@mediatek.com>
+ <1595400601-26220-4-git-send-email-weiyi.lu@mediatek.com> <CANMq1KC5i8GU2zMxk+NvY5hF7Qvd-Jx-+pvY2cXfqzb=X-BWRQ@mail.gmail.com>
+ <1595473043.5077.8.camel@mtksdaap41>
+In-Reply-To: <1595473043.5077.8.camel@mtksdaap41>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 23 Jul 2020 15:51:50 +0800
+Message-ID: <CANMq1KDzmeMcVQU=i89sa-B4EQbz6OxZP3tDasV-Q__qB_7_9g@mail.gmail.com>
+Subject: Re: [PATCH 3/4] clk: mediatek: Add configurable enable control to mtk_pll_data
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, linux-clk@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>,
+        Ikjoon Jang <ikjn@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDIyLjA3LjIwMjAgMTQ6MzgsIENvZHJpbiBDaXVib3Rhcml1IC0gTTE5OTQwIHdyb3Rl
-Og0KPiBPbiAyMi4wNy4yMDIwIDEzOjMyLCBDbGF1ZGl1IEJlem5lYSAtIE0xODA2MyB3cm90ZToN
-Cj4+DQo+Pg0KPj4gT24gMjEuMDcuMjAyMCAyMDoxMywgQ29kcmluIENpdWJvdGFyaXUgd3JvdGU6
-DQo+Pj4gQWRkaW5nIHRoZSBQSFkgbm9kZXMgZGlyZWN0bHkgdW5kZXIgdGhlIEV0aGVybmV0IG5v
-ZGUgYmVjYW1lIGRlcHJlY2F0ZWQsDQo+Pj4gc28gdGhlIGFpbSBvZiB0aGlzIHBhdGNoIHNlcmll
-cyBpcyB0byBtYWtlIE1BQ0IgdXNlIGFuIE1ESU8gbm9kZSBhcw0KPj4+IGNvbnRhaW5lciBmb3Ig
-TURJTyBkZXZpY2VzLg0KPj4+IFRoaXMgcGF0Y2ggc2VyaWVzIHN0YXJ0cyB3aXRoIGEgc21hbGwg
-cGF0Y2ggdG8gdXNlIHRoZSBkZXZpY2UtbWFuYWdlZA0KPj4+IGRldm1fbWRpb2J1c19hbGxvYygp
-LiBJbiB0aGUgbmV4dCB0d28gcGF0Y2hlcyB3ZSB1cGRhdGUgdGhlIGJpbmRpbmdzIGFuZA0KPj4+
-IGFkYXB0IG1hY2IgZHJpdmVyIHRvIHBhcnNlIHRoZSBkZXZpY2UtdHJlZSBQSFkgbm9kZXMgZnJv
-bSB1bmRlciBhbiBNRElPDQo+Pj4gbm9kZS4gVGhlIGxhc3QgcGF0Y2hlcyBhZGQgdGhlIE1ESU8g
-bm9kZSBpbiB0aGUgZGV2aWNlLXRyZWVzIG9mIHNhbWE1ZDIsDQo+Pj4gc2FtYTVkMywgc2FtYWQ0
-IGFuZCBzYW05eDYwIGJvYXJkcy4NCj4+Pg0KPj4NCj4+IFRlc3RlZCB0aGlzIHNlcmllcyBvbiBz
-YW1hNWQyX3hwbGFpbmVkIGluIHRoZSBmb2xsb3dpbmcgc2NlbmFyaW9zOg0KPj4NCj4+IDEvIFBI
-WSBiaW5kaW5ncyBmcm9tIHBhdGNoIDQvNzoNCj4+IG1kaW8gew0KPj4gCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+Ow0KPj4gCSNzaXplLWNlbGxzID0gPDA+Ow0KPj4gCWV0aGVybmV0LXBoeUAxIHsNCj4+
-IAkJcmVnID0gPDB4MT47DQo+PiAJCWludGVycnVwdC1wYXJlbnQgPSA8JnBpb0E+Ow0KPj4gCQlp
-bnRlcnJ1cHRzID0gPFBJTl9QQzkgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4+IH07DQo+Pg0KPj4g
-Mi8gUEhZIGJpbmRpbmdzIGJlZm9yZSB0aGlzIHNlcmllczoNCj4+IGV0aGVybmV0LXBoeUAxIHsN
-Cj4+IAlyZWcgPSA8MHgxPjsNCj4+IAlpbnRlcnJ1cHQtcGFyZW50ID0gPCZwaW9BPjsNCj4+IAlp
-bnRlcnJ1cHRzID0gPFBJTl9QQzkgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4+IH07DQo+Pg0KPj4g
-My8gTm8gUEhZIGJpbmRpbmdzIGF0IGFsbC4NCj4+DQo+PiBBbGwgMyBjYXNlcyB3ZW50IE9LLg0K
-Pj4NCj4+IFlvdSBjYW4gYWRkOg0KPj4gVGVzdGVkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRp
-dS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4+IEFja2VkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xh
-dWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4gDQo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggQ2xh
-dWRpdSENCj4gVGhlcmUgaXMgc3RpbGwgb25lIG1vcmUgY2FzZSBpbiBteSBtaW5kLiBtYWNiIGNv
-dWxkIGJlIGEgZml4ZWQtbGluayB3aXRoIA0KPiBhbiBNRElPIERTQSBzd2l0Y2guIFdoaWxlIHRo
-ZSBtYWNiIHdvdWxkIGhhdmUgYSBmaXhlZCBjb25uZWN0aW9uIHdpdGggYSANCj4gcG9ydCBmcm9t
-IHRoZSBEU0Egc3dpdGNoLCB0aGUgc3dpdGNoIGNvdWxkIGJlIGNvbmZpZ3VyZWQgdXNpbmcgbWFj
-YidzIA0KPiBNRElPLiBUaGUgZHQgd291bGQgYmUgc29tZXRoaW5nIGxpa2U6DQo+IA0KPiBtYWNi
-IHsNCj4gCWZpeGVkLWxpbmsgew0KPiAJCS4uLg0KPiAJfTsNCj4gCW1kaW8gew0KPiAJCXN3aXRj
-aEAwIHsNCj4gCQkJLi4uDQo+IAkJfTsNCj4gCX07DQo+IH07DQoNCkRvIHlvdSBoYXZlIGEgc2V0
-dXAgZm9yIHRlc3RpbmcgdGhpcz8gQXQgdGhlIG1vbWVudCBJIGRvbid0IGtub3cgYQ0KY29uZmln
-dXJhdGlvbiBsaWtlIHRoaXMgdGhhdCBtYWNiIGlzIHdvcmtpbmcgd2l0aC4NCg0KPiANCj4gVG8g
-c3VwcG9ydCB0aGlzLCBpbiBwYXRjaCAzLzcgSSBzaG91bGQgZmlyc3QgY2hlY2sgZm9yIHRoZSBt
-ZGlvIG5vZGUgdG8gDQo+IHJldHVybiBvZl9tZGlvYnVzX3JlZ2lzdGVyKCkgYW5kIHRoZW4gY2hl
-Y2sgaWYgaXQncyBhIGZpeGVkLWxpbmsgdG8gDQo+IHJldHVybiBzaW1wbGUgbWRpb2J1c19yZWdp
-c3RlcigpLiBJIHdpbGwgYWRkcmVzcyB0aGlzIGluIHYzLi4uPiANCj4gVGhhbmtzIGFuZCBiZXN0
-IHJlZ2FyZHMsDQo+IENvZHJpbg0KPiANCj4+DQo+PiBUaGFuayB5b3UsDQo+PiBDbGF1ZGl1IEJl
-em5lYQ0KPj4NCj4+PiBDaGFuZ2VzIGluIHYyOg0KPj4+ICAgLSByZW5hbWVkIHBhdGNoIDIvNyBm
-cm9tICJtYWNiOiBiaW5kaW5ncyBkb2M6IHVzZSBhbiBNRElPIG5vZGUgYXMgYQ0KPj4+ICAgICBj
-b250YWluZXIgZm9yIFBIWSBub2RlcyIgdG8gImR0LWJpbmRpbmdzOiBuZXQ6IG1hY2I6IHVzZSBh
-biBNRElPDQo+Pj4gICAgIG5vZGUgYXMgYSBjb250YWluZXIgZm9yIFBIWSBub2RlcyINCj4+PiAg
-IC0gYWRkZWQgYmFjayBhIG5ld2xpbmUgcmVtb3ZlZCBieSBtaXN0YWtlIGluIHBhdGNoIDMvNw0K
-Pj4+DQo+Pj4gQ29kcmluIENpdWJvdGFyaXUgKDcpOg0KPj4+ICAgIG5ldDogbWFjYjogdXNlIGRl
-dmljZS1tYW5hZ2VkIGRldm1fbWRpb2J1c19hbGxvYygpDQo+Pj4gICAgZHQtYmluZGluZ3M6IG5l
-dDogbWFjYjogdXNlIGFuIE1ESU8gbm9kZSBhcyBhIGNvbnRhaW5lciBmb3IgUEhZIG5vZGVzDQo+
-Pj4gICAgbmV0OiBtYWNiOiBwYXJzZSBQSFkgbm9kZXMgZm91bmQgdW5kZXIgYW4gTURJTyBub2Rl
-DQo+Pj4gICAgQVJNOiBkdHM6IGF0OTE6IHNhbWE1ZDI6IGFkZCBhbiBtZGlvIHN1Yi1ub2RlIHRv
-IG1hY2INCj4+PiAgICBBUk06IGR0czogYXQ5MTogc2FtYTVkMzogYWRkIGFuIG1kaW8gc3ViLW5v
-ZGUgdG8gbWFjYg0KPj4+ICAgIEFSTTogZHRzOiBhdDkxOiBzYW1hNWQ0OiBhZGQgYW4gbWRpbyBz
-dWItbm9kZSB0byBtYWNiDQo+Pj4gICAgQVJNOiBkdHM6IGF0OTE6IHNhbTl4NjA6IGFkZCBhbiBt
-ZGlvIHN1Yi1ub2RlIHRvIG1hY2INCj4+Pg0KPj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL25ldC9tYWNiLnR4dCB8IDE1ICsrKysrKysrKysrKy0tLQ0KPj4+ICAgYXJjaC9h
-cm0vYm9vdC9kdHMvYXQ5MS1zYW05eDYwZWsuZHRzICAgICAgICAgICB8ICA4ICsrKysrKy0tDQo+
-Pj4gICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDI3X3NvbTEuZHRzaSAgICAgIHwgMTYg
-KysrKysrKysrKy0tLS0tLQ0KPj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyN193
-bHNvbTEuZHRzaSAgICB8IDE3ICsrKysrKysrKystLS0tLS0tDQo+Pj4gICBhcmNoL2FybS9ib290
-L2R0cy9hdDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyAgICAgIHwgMTMgKysrKysrKystLS0tLQ0KPj4+
-ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyX3hwbGFpbmVkLmR0cyAgICB8IDEyICsr
-KysrKysrLS0tLQ0KPj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQzX3hwbGFpbmVk
-LmR0cyAgICB8IDE2ICsrKysrKysrKysrKy0tLS0NCj4+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2F0
-OTEtc2FtYTVkNF94cGxhaW5lZC5kdHMgICAgfCAxMiArKysrKysrKy0tLS0NCj4+PiAgIGRyaXZl
-cnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMgICAgICAgfCAxOCArKysrKysrKysr
-KystLS0tLS0NCj4+PiAgIDkgZmlsZXMgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKSwgNDEgZGVs
-ZXRpb25zKC0pDQo+IA==
+On Thu, Jul 23, 2020 at 10:57 AM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+>
+> On Wed, 2020-07-22 at 16:51 +0800, Nicolas Boichat wrote:
+> > On Wed, Jul 22, 2020 at 2:50 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+> > >
+> > > In all MediaTek PLL design, bit 0 of CON0 register is always
+> > > the enable bit.
+> > > However, there's a special case of usbpll on MT8192.
+> > > The enable bit of usbpll is moved to bit 2 of other register.
+> > > Add configurable en_reg and base_en_bit for enable control or
+> > > using the default if without setting in pll data.
+> > >
+> > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> > > ---
+> > >  drivers/clk/mediatek/clk-mtk.h |  2 ++
+> > >  drivers/clk/mediatek/clk-pll.c | 26 ++++++++++++++++++++++----
+> > >  2 files changed, 24 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
+> > > index c3d6756..8bb0b3d 100644
+> > > --- a/drivers/clk/mediatek/clk-mtk.h
+> > > +++ b/drivers/clk/mediatek/clk-mtk.h
+> > > @@ -233,6 +233,8 @@ struct mtk_pll_data {
+> > >         uint32_t pcw_chg_reg;
+> > >         const struct mtk_pll_div_table *div_table;
+> > >         const char *parent_name;
+> > > +       uint32_t en_reg;
+> > > +       uint8_t base_en_bit;
+> > >  };
+> > >
+> > >  void mtk_clk_register_plls(struct device_node *node,
+> > > diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
+> > > index f440f2cd..b8ccd42 100644
+> > > --- a/drivers/clk/mediatek/clk-pll.c
+> > > +++ b/drivers/clk/mediatek/clk-pll.c
+> > > @@ -44,6 +44,7 @@ struct mtk_clk_pll {
+> > >         void __iomem    *tuner_en_addr;
+> > >         void __iomem    *pcw_addr;
+> > >         void __iomem    *pcw_chg_addr;
+> > > +       void __iomem    *en_addr;
+> > >         const struct mtk_pll_data *data;
+> > >  };
+> > >
+> > > @@ -56,7 +57,10 @@ static int mtk_pll_is_prepared(struct clk_hw *hw)
+> > >  {
+> > >         struct mtk_clk_pll *pll = to_mtk_clk_pll(hw);
+> > >
+> > > -       return (readl(pll->base_addr + REG_CON0) & CON0_BASE_EN) != 0;
+> > > +       if (pll->en_addr)
+> > > +               return (readl(pll->en_addr) & BIT(pll->data->base_en_bit)) != 0;
+> > > +       else
+> > > +               return (readl(pll->base_addr + REG_CON0) & CON0_BASE_EN) != 0;
+> > >  }
+> > >
+> > >  static unsigned long __mtk_pll_recalc_rate(struct mtk_clk_pll *pll, u32 fin,
+> > > @@ -251,6 +255,12 @@ static int mtk_pll_prepare(struct clk_hw *hw)
+> > >         r |= pll->data->en_mask;
+> > >         writel(r, pll->base_addr + REG_CON0);
+> > >
+> >
+> > This is not a new change, but I'm wondering if the asymmetry is
+> > intentional here, that is, prepare sets bit pll->data->en_mask of
+> > REG_CON0; unprepare clears CON0_BASE_EN of REG_CON0.
+> >
+> > With this patch, if pll->en_addr is set, you set both
+> > pll->data->en_mask _and_ pll->data->base_en_bit, and clear only
+> > pll->data->base_en_bit.
+> >
+>
+> Hi Nicolas,
+>
+> AFAIK, the asymmetry was intentional.
+> en_mask is actually a combination of divider enable mask and the pll
+> enable bit(CON0_BASE_EN).
+> Even without my patch, it still sets divider enable mask and en_bit, and
+> only clears en_bit.
+> You could see the pll_data in clk-mt8192.c of patch [4/4]
+> Take mainpll as an example,
+> the enable mask of mainpll is 0xff000001, where 0xff000000 is the
+> divider enable mask and 0x1 is the en_bit
+>
+> For usbpll in special case, usbpll doesn't have divider enable mask on
+> MT8192 so I give nothing(0x00000000) in the en_mask field.
+> However, the main reason why I don't skip setting the en_mask of MT8192
+> usbpll is that I'd just like to reserve the divider enable mask for any
+> special plls with divider enable mask in near future.
+
+Argh, I see, it's a bit of a can of worms, with many special cases...
+
+So I played a bit with 3 examples.
+
+Current situation looks like this:
+
+8183 CLK_APMIXED_ARMPLL_LL
+  en_mask = 0x00000001
+  en_reg = 0
+  base_en_bit = 0
+
+prepare: REG_CON0 |= en_mask
+unprepare: REG_CON0 &= ~CON0_BASE_EN (BIT(1))
+
+8192 CLK_APMIXED_UNIVPLL
+  en_mask = 0xff000001
+  en_reg = 0x039c
+  base_en_bit = 0
+
+prepare:
+  REG_CON0 |= en_mask
+  en_reg |= base_en_bit
+unprepare:
+  en_reg &= ~base_en_bit
+
+8192 CLK_APMIXED_USBPLL
+  en_mask = 0x00000000
+  en_reg = 0x03cc
+  base_en_bit = 2
+
+prepare:
+  REG_CON0 |= en_mask (0)
+  en_reg |= base_en_bit
+unprepare:
+  en_reg &= ~base_en_bit
+
+And I think the logic could still be simplified by _not_ putting
+CON0_BASE_EN in en_mask, and updating the CON0 in 2 steps: first all
+the bits that are not CON0_BASE_EN, then CON0_BASE_EN. Of course I
+assume that's it's fine to do so, but I have no idea.
+
+register_pll() {
+   if (!en_addr) {
+     en_reg = REG_CON0
+     base_en_bit = CON0_BASE_EN
+   }
+}
+
+prepare() {
+    REG_CON0 |= en_mask
+    en_reg |= base_en_bit
+}
+
+unprepare() {
+    en_reg &= ~base_en_bit
+}
+
+Then the new clock data:
+
+8183 CLK_APMIXED_ARMPLL_LL
+  en_mask = 0x00000000 (CON0_BASE_EN is implicit, but other bits could be set)
+  en_reg = 0
+  base_en_bit = 0
+
+prepare: {
+    REG_CON0 |= en_mask (0x00000000, here, we can skip, but other bits
+could be set)
+    en_reg |= base_en_bit (REG_CON0 |= CON0_BASE_EN)
+}
+unprepare: en_reg &= ~base_en_bit (REG_CON0 &= ~CON0_BASE_EN)
+
+8192 CLK_APMIXED_UNIVPLL
+  en_mask = 0xff000001 (Note the bit 1 is _not_ dropped here, as it
+needs to be set too)
+  en_reg = 0x039c
+  base_en_bit = 0
+(same as above)
+
+8192 CLK_APMIXED_USBPLL
+  en_mask = 0x00000000
+  en_reg = 0x03cc
+  base_en_bit = 2
+(same as above)
+
+Now, maybe this is also a bit overcomplicated. Maybe a simpler
+solution is just to add a comment in prepare that "r |=
+pll->data->en_mask;" is meant to include CON0_BASE_EN in most cases,
+and then the code could be ok as-is (just to make sure that the next
+person who looks at this code does not think there is a bug...).
+
+>
+> > > +       if (pll->en_addr) {
+> > > +               r = readl(pll->en_addr);
+> > > +               r |= BIT(pll->data->base_en_bit);
+> > > +               writel(r, pll->en_addr);
+> > > +       }
+> > > +
+> > >         __mtk_pll_tuner_enable(pll);
+> > >
+> > >         udelay(20);
+> > > @@ -277,9 +287,15 @@ static void mtk_pll_unprepare(struct clk_hw *hw)
+> > >
+> > >         __mtk_pll_tuner_disable(pll);
+> > >
+> > > -       r = readl(pll->base_addr + REG_CON0);
+> > > -       r &= ~CON0_BASE_EN;
+> > > -       writel(r, pll->base_addr + REG_CON0);
+> > > +       if (pll->en_addr) {
+> > > +               r = readl(pll->en_addr);
+> > > +               r &= ~BIT(pll->data->base_en_bit);
+> > > +               writel(r, pll->en_addr);
+> > > +       } else {
+> > > +               r = readl(pll->base_addr + REG_CON0);
+> > > +               r &= ~CON0_BASE_EN;
+> > > +               writel(r, pll->base_addr + REG_CON0);
+> > > +       }
+> > >
+> > >         r = readl(pll->pwr_addr) | CON0_ISO_EN;
+> > >         writel(r, pll->pwr_addr);
+> > > @@ -321,6 +337,8 @@ static struct clk *mtk_clk_register_pll(const struct mtk_pll_data *data,
+> > >                 pll->tuner_addr = base + data->tuner_reg;
+> > >         if (data->tuner_en_reg)
+> > >                 pll->tuner_en_addr = base + data->tuner_en_reg;
+> > > +       if (data->en_reg)
+> > > +               pll->en_addr = base + data->en_reg;
+> >
+> > If the answer to my question above holds (asymmetry is not
+> > intentional), this patch/the code could be simplified a lot if you
+> > also added a pll->en_bit member, and, here, did this:
+> >
+> > if (pll->en_reg) {
+> >    pll->en_addr = base + data->en_reg;
+> >    pll->end_bit = data->en_bit;
+> > } else {
+> >    pll->en_addr = pll->base_addr + REG_CON0;
+> >    pll->en_bit = CON0_BASE_EN;
+> > }
+> >
+> > >         pll->hw.init = &init;
+> > >         pll->data = data;
+> > >
+> > > --
+> > > 1.8.1.1.dirty
+>
