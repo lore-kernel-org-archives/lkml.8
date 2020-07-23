@@ -2,123 +2,76 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535CDC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE48C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A121207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="F15X1O9w"
+	by mail.kernel.org (Postfix) with ESMTP id E0AE720792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGWULA (ORCPT
+        id S1727041AbgGWULC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:11:00 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:43046 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWULA (ORCPT
+        Thu, 23 Jul 2020 16:11:02 -0400
+Received: from mail.fireflyinternet.com ([77.68.26.236]:52420 "EHLO
+        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726033AbgGWULB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:11:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=v1ayK2JNh09cbcXMchXBkeJUQfzVRgEw+NVUe/9qPvM=; b=F15X1O9wGoAqnElKkbPU/X/h7P
-        0QrI67MnbBQtdFQ06AWBIGKgDvDuXhUWVxuFLEcaI9M8N5cKBVaUIUJYfH2pBLYQSdgebxw/GcSJD
-        twcHe8RmiW7EF923JFIMQZhgKYkv21HvAd1feR5/W6AaC5qM/uyhKzzhJIBh42Ew8WuQldAJWRLta
-        rm7ZCNBtUQcz5FQH80GfIpCxvkJVh21oqcVhNNVoV2tz7V4tpVte9p/dqrIbALLW2FPrwsaIQtKwv
-        /qwlXyK1WuAEQCBuUioWRt2bppy2e6n8qCBtfQD3PGudulEZnZUfv/vHX1VlPQ8lsfTH2PoQgGgq2
-        GS9x3Lpg==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jyhYM-0002SK-JP; Thu, 23 Jul 2020 14:10:55 -0600
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Andrew Maier <andrew.maier@eideticom.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20200723195742.GA1447143@bjorn-Precision-5520>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
-Date:   Thu, 23 Jul 2020 14:10:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 16:11:01 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from build.alporthouse.com (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 21911950-1500050 
+        for multiple; Thu, 23 Jul 2020 21:10:44 +0100
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+To:     linux-kernel@vger.kernel.org
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched: Warn if garbage is passed to default_wake_function()
+Date:   Thu, 23 Jul 2020 21:10:42 +0100
+Message-Id: <20200723201042.18861-1-chris@chris-wilson.co.uk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200723195742.GA1447143@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: hpa@zytor.com, andrew.maier@eideticom.com, ray.huang@amd.com, christian.koenig@amd.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, alexdeucher@gmail.com, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
- allowed bridges
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since the default_wake_function() passes its flags onto
+try_to_wake_up(), warn if those flags collide with internal values.
+Given that the supplied flags are garbage, no repair can be done but at
+least alert the user to the damage they are causing.
 
+In the belief that these errors should be picked up during testing, the
+warning is only compiled in under CONFIG_SCHED_DEBUG.
 
-On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
-> [+cc Andrew, Armen, hpa]
-> 
-> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
->> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>
->>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
->>> transactions between root ports and found to work. Therefore add it
->>> to the list.
->>>
->>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>> Cc: Christian König <christian.koenig@amd.com>
->>> Cc: Huang Rui <ray.huang@amd.com>
->>> Cc: Alex Deucher <alexdeucher@gmail.com>
->>
->> Starting with Zen, all AMD platforms support P2P for reads and writes.
-> 
-> What's the plan for getting out of the cycle of "update this list for
-> every new chip"?  Any new _DSMs planned, for instance?
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Well there was an effort to add capabilities in the PCI spec to describe
-this but, as far as I know, they never got anywhere, and hardware still
-doesn't self describe with this.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7b918059332b..4be209266d8a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4481,6 +4481,7 @@ asmlinkage __visible void __sched preempt_schedule_irq(void)
+ int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flags,
+ 			  void *key)
+ {
++	WARN_ON_ONCE(IS_ENABLED(CONFIG_SCHED_DEBUG) && wake_flags & ~WF_SYNC);
+ 	return try_to_wake_up(curr->private, mode, wake_flags);
+ }
+ EXPORT_SYMBOL(default_wake_function);
+-- 
+2.20.1
 
-> A continuous trickle of updates like this is not really appealing.  So
-> far we have:
-> 
->   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
->   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
->   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
->   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
->   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
-> 
-> And that's just from the last year, not including this patch.
-
-Yes, it's not ideal. But most of these are adding old devices as people
-test and care about running on those platforms -- a lot of this is
-bootstrapping the list. I'd expect this to slow down a bit as by now we
-have hopefully got a lot of the existing platforms people care about.
-But we'd still probably expect to be adding a new Intel and AMD devices
-about once a year as they produce new hardware designs.
-
-Unless, the Intel and AMD folks know of a way to detect this, or even to
-query if a root complex is newer than a certain generation, I'm not sure
-what else we can do here.
-
-Logan
