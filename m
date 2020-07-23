@@ -2,99 +2,91 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2376C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9272BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71AAB20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C909206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="XSJZhWfT"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0w7ILuCO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H0KeTd5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgGWLEt (ORCPT
+        id S1728423AbgGWLFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:04:49 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:27683 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgGWLEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:04:48 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jul 2020 07:04:47 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1440; q=dns/txt; s=axis-central1;
-  t=1595502288; x=1627038288;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oQK1kdpUpuXo4gTgNIO2CBHLpqsKEGJmibRBMJIDPFs=;
-  b=XSJZhWfTdw0By26/hWhbd/BhDqzycrxKi5uIp7co4O6TsnpCIktyOgFl
-   qzMgp8XX/5oJO/OvkmIuO+v77MzBStaKxkKvmL23W6SR2gzB745lfOvA3
-   3EpUqWBk/xPdrX4mRpltRXypTA7Ovu81+Ns77LURX1usgn3iatkVWaQgB
-   //4No+CnNipFTHg+x7vIFmWrrVYqBvyVrX1uZZvdcdRrVdhQ/ebV7BXfO
-   i6Z0NPRZBWYwWtmLXnboVrErEyed2r4O7d6aFMD2I/ngFabUqFs+Vh4AD
-   xZUTvs8IooKJU+sdKcJ0vmFawz4Z3VuabC/4YAWL25zwKpb9yFAMnX+5+
-   g==;
-IronPort-SDR: 8w+4+M/QNSnOyVfaTn5eXV7ay9eFeN6MldZVb7DNZXNOO03+CNRr84npzdcOFzTX1iYLbxTRjZ
- v246GEz9OVu3aGBtELz9oxUPPVUoUUhkM5++FH0wHA7BR4lmLPoDQGo5gKU3qdxFk1v4nMO0tc
- XbD8SkekSMW+m8ih5GRuvfGAWmWLCS7Nvutv65sjy96JsgilBch0lti7IwTMmISFqz21YP6wfo
- xyX4eWRqTRmpTow6qdw5/ji/TtXDT+dUOE8L0+f711gWXdGFUPBebU/W53NzRst9KPIdf7hpUt
- JPY=
-X-IronPort-AV: E=Sophos;i="5.75,386,1589234400"; 
-   d="scan'208";a="10822194"
-Date:   Thu, 23 Jul 2020 12:57:35 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     John Ogness <john.ogness@linutronix.de>,
-        "jbaron@akamai.com" <jbaron@akamai.com>,
-        "mingo@redhat.com" <mingo@redhat.com>, kernel <kernel@axis.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH] dynamic debug: allow printing to trace event
-Message-ID: <20200723105735.mqfkfbljjda7qz7n@axis.com>
-References: <20200721141105.16034-1-vincent.whitchurch@axis.com>
- <20200721173045.540ae500@oasis.local.home>
- <87eep3zmg9.fsf@jogness.linutronix.de>
- <20200722144952.2mewrgebgkyr2zyf@axis.com>
- <20200722112823.3ba72d31@oasis.local.home>
+        Thu, 23 Jul 2020 07:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgGWLFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:05:45 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9B2C0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:05:45 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595502343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fjNQnRr+PLXGWuqJIRgfEY3dHkkwSU6OeDLEJC6zHaU=;
+        b=0w7ILuCOsU+q6cAvnFciKIjC6lOtkPOdP1mFAlaPIa3RCbQ0kiqregseFWaOUQwlaalsbi
+        tL225qNfXtK2OTjUGv3RKCEoVuT5AEmNfBzNhIU6TDpJro70xfDGzpHvmH3vpCjLzUTb9j
+        NZyrpTsSCNVCdDQp/OyQ7SgztxbVqNwzu/8LB2ErQ7kFoH79z3TP/wYiFwWd4cB/o4Y7P4
+        bNfGgGYpOz/mGuyOqRtgj7EtSah5pFt1bphEghiwCrXtkHpcevcVZPCd1bG7I6OKMonDsS
+        EnWylYPHXNjReLjVZGFIwVWWXIHAHBgxGh0Cm+6FvjcGFB4QDHFDdZMXzxBVHQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595502343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fjNQnRr+PLXGWuqJIRgfEY3dHkkwSU6OeDLEJC6zHaU=;
+        b=H0KeTd5M266Wi2nZjS0oCiCykvFLQ+TgQGVsAS8NNlVYTj8niILORkwgLsKryYY2090Lxj
+        21A6xj/owiKao5Cg==
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "H.J. Lu" <hjl.tools@gmail.com>, x86@kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] x86/dumpstack: Dump user space code correctly again
+In-Reply-To: <20200723081900.GA16138@lst.de>
+References: <bug-208655-6666@https.bugzilla.kernel.org/> <87h7tz306w.fsf@nanos.tec.linutronix.de> <20200723081900.GA16138@lst.de>
+Date:   Thu, 23 Jul 2020 13:05:43 +0200
+Message-ID: <87sgdixzi0.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200722112823.3ba72d31@oasis.local.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 05:28:23PM +0200, Steven Rostedt wrote:
-> For you, I made this quick patch. If this works for you, I can make it
-> into a formal patch. It includes a test use case in do_sys_openat2() to
-> show the file name and file descriptor. Obviously, that wont be part of
-> the final patch.
+Christoph Hellwig <hch@lst.de> writes:
+> On Wed, Jul 22, 2020 at 07:54:15PM +0200, Thomas Gleixner wrote:
+>> +	/*
+>> +	 * Make sure userspace isn't trying to trick us into dumping kernel
+>> +	 * memory by pointing the userspace instruction pointer at it.
+>> +	 */
+>> +	if (__chk_range_not_ok(src, nbytes, TASK_SIZE_MAX))
+>> +		return -EINVAL;
+>> +
+>> +	return copy_from_user_nmi(buf, (void __user *)src, nbytes);
+>
+> copy_from_user_nmi already contains a:
+>
+> 	if (__range_not_ok(from, n, TASK_SIZE))
+> 		return n;
+>
+> what is the reason it checks for TASK_SIZE vs TASK_SIZE_MAX, and why
+> do we need both checks?
 
-Thank you.  I had to replace the inline with an __attribute__((unused))
-because otherwise my GCC errors out with "error: function
-'find_vprintk_len' can never be inlined because it uses variable
-argument lists".
+TBH, I just kept it because being lazy. But you are right, the check is
+redundant and TASK_SIZE_MAX is inaccurate as it does not take compat
+tasks into account. I'll rip that out.
 
-Apart from that it works fine, but the several calls to vsnprintf() take
-their toll and this method is twice as slow as the buffer-on-stack
-implementation (and ftrace_vprintk()).  If I pass in a fixed size for
-the __dynamic_array I get the same performance as the buffer-on-stack
-method, but that's probably not surprising.
+Thanks,
 
-I know a dedicated trace event or a binary trace_printk() at the call
-site of pr_debug() is always going to be more performant, but it would
-be nice to avoid the extra slowdown if possible.
-
-It's hard to guarantee that 256 bytes on the stack is safe on all
-systems since these functions are called from lots of places.  
-
-Would it be acceptable to just use a fixed size for the event?  At least
-for my own debugging use cases it's preferable to just have to increase
-the trace buffer size in case it's insufficient, rather than to have to
-restort to one-off debugging code.
+        tglx
