@@ -2,100 +2,167 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34638C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467C4C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E01620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE6D206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t+lpyZ3B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPZoKCnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgGWFOT (ORCPT
+        id S1726303AbgGWFPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:14:19 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:34588 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725773AbgGWFOT (ORCPT
+        Thu, 23 Jul 2020 01:15:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgGWFPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:14:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595481258; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=L8urZGZji+YiLr59Yc6bfwfReJYjnRXe3+RKFtKbzFU=; b=t+lpyZ3BUNH7Ro6hRxu8Bf+2J1znv9prJRvxJkayNku09GLydsGRZBQAwPkrw85hTrX2KCaQ
- cILPMRMi+zOIBI3+38AnClq3mJQVx9XELBGUi7O2vlFVXxySHzdSlq03fesN6bzCqpaGkaTr
- fmB5xoQEYuHnj8oudUyuqeJu0XQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5f191ca2ed710aec620f7ec6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 05:14:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C8AB2C43395; Thu, 23 Jul 2020 05:14:10 +0000 (UTC)
-Received: from [192.168.0.13] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D823AC433C6;
-        Thu, 23 Jul 2020 05:14:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D823AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH] soc: qcom-geni-se: Don't use relaxed writes when writing
- commands
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Wolfram Sang <wsa@the-dreams.de>, msavaliy@codeaurora.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <7a4dcef8-fd2a-e714-8b05-724c77c7a012@codeaurora.org>
-Date:   Thu, 23 Jul 2020 10:43:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 01:15:36 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D91C0619DC
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 22:15:36 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f139so3977522wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jul 2020 22:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bX4hF15fb4QpI7ClXOhtVIgAOWzu+DtBaB8S3WsGu9Y=;
+        b=FPZoKCncFCCOJIrOpOgeYJ4kwY9n/6s988T1EfCLMfwVfkXTc1B/+umcAHDY9RbS5v
+         n0yR1Psi9ZEBb94v+PLNbqE0Z/x11MuCmKkzCx04Lqx+I43COT0M9YuPsODgB1VWTUbv
+         4max/Y3eQAsiiTUnHHr2ha0hg+Y15p3TrX+6OHrE4ZA2eRkdkwKO77G2fVxY/m2V6zQi
+         R7ZZYOAoP2ROJd/cMz7m6/WeGFlzS9BgdTAhTL868K5xaXmzLzU1PupiMH3bSNQlb6mw
+         4deqkHRoCPfmT7cY5c/ZgnJrWgqJXZu16pSRLn3Ul7kcu4TfMowa1z4aB5RIfUBsZ/QL
+         IUpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bX4hF15fb4QpI7ClXOhtVIgAOWzu+DtBaB8S3WsGu9Y=;
+        b=Vk+DOTbcEJmlKbhjF0MJYsmmFg3b772xOwrXT+pOZxKhZTDkVK9QjRqa1fZLp3lnWR
+         Q3/qx1nTlPg9+bE5Hgf2ijpnZGmSSIFCp8G8odaE0iXFWQXpaGXBWXZv6mH3oBoYamQ8
+         3IRrjhsXI5r6fuxArgdCrMOESNNOTk31s9CePSSJGxr1eB0fz/P+WGdvHDAyotGPz6V8
+         5PvnIV84KcQjmW6N0TagNZPUeHaGjjQuypoJYipo5kKG1Mwykdm+PU0JaexRTt6dTvqX
+         C/AYoqXANF02xXnu4sBclzjtOSrLYwJ61C3uYokki220fGqEOl3p1vcBArwUKp5DzP20
+         FgPw==
+X-Gm-Message-State: AOAM530yppajMDJjeT2cryqwYf5rhCNx0MYhx4hBcq+VtBEGQ32iiKXv
+        GfD+GhQjGc+hLJedx/Tx0AWVgXGtFmbpG+CdNbmY3w==
+X-Google-Smtp-Source: ABdhPJwQKeWViofbSLvDDVtSH5ftjWOqVCzRvEn5jLpMrBww8td7Otzpsuum4Q6T2K7Dp674XwXYZ44UkJOEB44u0CQ=
+X-Received: by 2002:a05:600c:2209:: with SMTP id z9mr2452342wml.70.1595481334259;
+ Wed, 22 Jul 2020 22:15:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200722150113.1.Ia50ab5cb8a6d3a73d302e6bdc25542d48ffd27f4@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200708164936.9340-1-nsaenzjulienne@suse.de> <CAMi1Hd35tRM=cnmzwX=SDgu-OoXi1Xj+twFkoULaVZBbTpe6sw@mail.gmail.com>
+ <550b30a86c0785049d24c945e2c6628d491cee3a.camel@suse.de> <CAMi1Hd2V2pJjP=USS4r-Z3vK-aq7_aBy-jcVNk1GvbdEQAuzWg@mail.gmail.com>
+ <011994f8a717a00dcd9ed7682a1ddeb421c2c43f.camel@suse.de> <CAMi1Hd0=ZsGhTkSy221EP9Vb3GMOcS0UMczX2u5X9qK37_ea1A@mail.gmail.com>
+ <01831596e4a2a6c9c066138b23bd30435f8e5569.camel@suse.de> <CAMi1Hd3C6kh5E49EgytBAQ_2AE_jvnp+eSNsxBYaux+exSvdbg@mail.gmail.com>
+ <6db722947546221ed99d3f473f78e1a6de65d7d6.camel@suse.de>
+In-Reply-To: <6db722947546221ed99d3f473f78e1a6de65d7d6.camel@suse.de>
+From:   Amit Pundir <amit.pundir@linaro.org>
+Date:   Thu, 23 Jul 2020 10:44:58 +0530
+Message-ID: <CAMi1Hd0Xz6kOJFpA5PEpi6RDDGOcz0RmQ7tTOkuXq4QneOO_vQ@mail.gmail.com>
+Subject: Re: [PATCH] dma-pool: Do not allocate pool memory from CMA
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-rpi-kernel@lists.infradead.org, jeremy.linton@arm.com,
+        iommu@lists.linux-foundation.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nicolas,
 
-On 7/23/2020 3:31 AM, Douglas Anderson wrote:
-> Writing the command is the final step in kicking off a transfer.
-> Let's use writel() to ensure that any other memory accesses are done
-> before the command kicks off.  It's expected that this is mostly
-> relevant if we're in DMA mode but since it doesn't appear to regress
-> performance in a measurable way [1] even in PIO mode and it's easier
-> to reason about then let's just always use it.
->
-> NOTE: this patch came about due to code inspection.  No actual
-> problems were observed that this patch fixes.
->
-> [1] Tested by timing "flashrom -p ec" on a Chromebook which stresses
-> GENI SPI a lot.
->
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+Sorry I got stuck on other things yesterday.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+On Tue, 21 Jul 2020 at 21:57, Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Tue, 2020-07-21 at 20:52 +0530, Amit Pundir wrote:
+>
+> [...]
+>
+> > > > > Can you try booting *without* my patch and this in the kernel
+> > > > > command
+> > > > > line: "cma=16M@0x100000000-0x200000000".
+> > > >
+> > > > It doesn't boot with this added kernel command line.
+> > >
+> > > For the record, this placed the CMA in the [4GB, 8GB] address space
+> > > instead of you setup's default: [3GB, 4GB]. All atomic pools fall
+> > > in
+> > > that memory area without my patch, which makes me think some of the
+> > > devices on your board might not like higher addresses.
+> > >
+> >
+> > Thank you Nicolas for the details. Though we don't set the CMA
+> > alloc-ranges explicitly in upstream sdm845 dts, but I dug around and
+> > found that CMA alloc-ranges in the downstream kernel are indeed in
+> > lower address space.
+> > https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/dipper-q-oss/arch/arm64/boot/dts/qcom/sdm845.dtsi#L662
+> >
+> > /* global autoconfigured region for contiguous allocations */
+> > linux,cma {
+> >         compatible = "shared-dma-pool";
+> >         alloc-ranges = <0 0x00000000 0 0xffffffff>;
+> >         reusable;
+> >         alignment = <0 0x400000>;
+> >         size = <0 0x2000000>;
+> >         linux,cma-default;
+> > };
+>
+> Pretty standard, and similar to what it's being used upstream by
+> default.
+>
+> >
+> > > What happens if you boot with my troublesome patch with this in
+> > > your
+> > > device tree? (insert it at the bottom of sdm845-beryllium.dts)
+> > >
+> > > &soc {
+> > >         dma-ranges = <0 0 0 0 0x1 0>;
+> > > };
+> > >
+> >
+> > Device still doesn't boot up to adb shell.
+>
+> Let's get a bigger hammer, I'm just looking for clues here. Can you
+> apply this and provide the dmesg output.
+>
+> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+> index 6bc74a2d5127..2160676bf488 100644
+> --- a/kernel/dma/pool.c
+> +++ b/kernel/dma/pool.c
+> @@ -268,6 +268,8 @@ void *dma_alloc_from_pool(struct device *dev, size_t size,
+>                         schedule_work(&atomic_pool_work);
+>         }
+>
+> +       dev_info(dev, "%s: size %lx, phys addr %llx, flags 0x%x\n", __func__, size, phys, flags);
+> +
+>         return ptr;
+>  }
 
+I never made it to dma_alloc_from_pool() call from
+dma_direct_alloc_pages(), dma_should_alloc_from_pool() returns False
+from gfpflags_allow_blocking() block.
+
+
+Regards,
+Amit Pundir
+
+>
+>
+> Regards,
+> Nicolas
+>
