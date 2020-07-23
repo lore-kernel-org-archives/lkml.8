@@ -2,122 +2,132 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFD5C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D94D020825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3252084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595497936;
+	bh=8lDQsNqQsQ7Kjkw/k/ScK7GK158Y8O/gAS+e32SRg8g=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=qEo8uJXE4hbL5NeNzpcWAL4S74XfLxfnqT8hRg5s7OBq7UAzFp3k2tv/mMeRC9W76
+	 Mde2lgXveeFETXuPN0M1uG4bh9z4zxhC0b4D67jjcw5LKMVflPSOlASKdYM1z6SgjT
+	 EIHB/CirytRiUNsim2quh6olK5rqT9uBtfZTNZw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgGWJsM (ORCPT
+        id S1728209AbgGWJwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:48:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11995 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbgGWJsL (ORCPT
+        Thu, 23 Jul 2020 05:52:16 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:34222 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgGWJwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:48:11 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N9XWE8045943;
-        Thu, 23 Jul 2020 05:47:55 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yc0v15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 05:47:55 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N9XwQK047495;
-        Thu, 23 Jul 2020 05:47:55 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yc0v0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 05:47:55 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N9fL8G013581;
-        Thu, 23 Jul 2020 09:47:52 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06fra.de.ibm.com with ESMTP id 32brbgu5q0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 09:47:52 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N9loTk29360560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 09:47:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E8FF52052;
-        Thu, 23 Jul 2020 09:47:50 +0000 (GMT)
-Received: from [9.145.184.33] (unknown [9.145.184.33])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A543052057;
-        Thu, 23 Jul 2020 09:47:49 +0000 (GMT)
-Subject: Re: [PATCH V6] GCOV: Add config to check the preqequisites situation
-To:     Cixi Geng <gengcixi@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        linux-serial@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Cixi Geng1 <cixi.geng1@unisoc.com>,
-        Orson Zhai <orsonzhai@gmail.com>, zhang.lyra@gmail.com
-References: <20200618100852.13715-1-gengcixi@gmail.com>
- <2fae67c7637f4e978cb54c3b96090788@BJMBX01.spreadtrum.com>
- <CAF12kFseC4MMbEUk6CgW=Hpz_Hg-+fjwbLZKFdPu0K_EGtcPDw@mail.gmail.com>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-Message-ID: <a5c4018c-a0fd-7855-1ee9-dc0c4e7251e7@linux.ibm.com>
-Date:   Thu, 23 Jul 2020 11:47:51 +0200
+        Thu, 23 Jul 2020 05:52:15 -0400
+Received: by mail-ej1-f67.google.com with SMTP id y10so5732037eje.1;
+        Thu, 23 Jul 2020 02:52:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=puQQ+kEDvp4d2ixkulEX0wUmGQuAZ6n3qHTJVU/5Rzc=;
+        b=uOaVaHGMj3MZOOD2eGbtuDLkfJAHe6Lo5uitQQlTO2Sr8T2r0qfpm3mng8NNaCNtea
+         OSE2UC9euL0ZUBKNoyzwWKiXT3REURpKNthjsWA6PBcbpB1foMQXAm4+cQmE73A3XdBC
+         YrE3yJZdCrTMS6SYZ5YUm1bbvdKyed94No6xfHK+hyWGkAvygJoIE5tGAEtl69hXITG+
+         cMRFO6t8v46DXydYLRyC+uH0mdAziK6gEgkwY7n4c2mnX5WksI1v/uZxDKSRwWRD5vH+
+         JNzeAfQyeJbw7B0+gukxS2xrk9xSQyNZBExGNHYywf8YIDul040xd0tNSiF1l5bHbSFd
+         PvJg==
+X-Gm-Message-State: AOAM530OfWYM9n6U7Ksi7ANr70/0fUXfUncdZ0PdtFynyLOjKv5Y1d1k
+        bXju0dNCl+Exp8DF0pyOFtkPw4251ug=
+X-Google-Smtp-Source: ABdhPJyu48ABbekwvtALO2JO+gDw0IjhchbBRuiUgpHvsnkMl605uS9uQX1F3s0EVoraFKz+/aPreg==
+X-Received: by 2002:a17:906:d9d9:: with SMTP id qk25mr3760460ejb.448.1595497933238;
+        Thu, 23 Jul 2020 02:52:13 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id bn7sm1713556ejb.100.2020.07.23.02.52.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 02:52:12 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 11:52:09 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH 00/23] memory: Cleanup, improve and compile test
+ memory drivers
+Message-ID: <20200723095209.GA30472@kozik-lap>
+References: <20200723073744.13400-1-krzk@kernel.org>
+ <CAK8P3a0hcVhBbKCBDSZYXChmPpRVsEi_G6+oj5quC6uUiPeeiA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAF12kFseC4MMbEUk6CgW=Hpz_Hg-+fjwbLZKFdPu0K_EGtcPDw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_03:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 suspectscore=1 bulkscore=0 adultscore=0 clxscore=1011
- priorityscore=1501 mlxscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230072
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0hcVhBbKCBDSZYXChmPpRVsEi_G6+oj5quC6uUiPeeiA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.07.2020 14:38, Cixi Geng wrote:
-> Hi All:
-> Does this patch need more modification?
+On Thu, Jul 23, 2020 at 11:31:02AM +0200, Arnd Bergmann wrote:
+> On Thu, Jul 23, 2020 at 9:37 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Dear All,
+> >
+> > The drivers/memory directory contains generic code (of_memory.c) and a
+> > bunch of drivers.  Changes to generic code were coming usually through
+> > different trees with the driver code.
+> >
+> > Over last days, memory drivers grew in numbers but not necessarily in
+> > quality.  They lacked compile testing and code cleanup.  Also lacked
+> > maintainer.
+> >
+> > I would be happy to take care about this part.
+> >
+> > If there are no objections, the patches could go either to Linus or to
+> > arm-soc (most of drivers are ARM specific).
+> >
+> > Driver-specific changes in the patchset were only compile-tested. Tests
+> > are welcome. The generic code was tested on ARMv7 Exynos based boards
+> > with a exynos5422-dmc memory controller driver.
+> 
+> Overall this looks great, I had a look through the patches and commented
+> on the few things that seemed slightly odd though harmless.
+> 
+> Thanks for picking up the subsystem. How do you want to proceed
+> in the long run? I suppose you can send a pull request to soc@kernel.org
+> to be picked up for the coming merge window as the normal way, since
+> you are not yet listed as the maintained until the end of the series.
+> 
+> Afterwards you could either send the pull requests to Linus directly,
+> or send them to the soc team (or to Greg) as well, the way we handle
+> a couple of other subsystems like drivers/reset and drivers/tee that
+> usually only have a handful of patches per release.
 
-Yes. As it is now there's still a prompt for the prereq symbol. There
-should be no prompt for this symbol in the config dialog.
+Most of the drivers are for ARM architecture so arm-soc seems like the
+way to do it.  However BT1_L2_CTL and JZ4780_NEMC are MIPS specific and
+maybe more would come in the future.  Are you fine taking them as well?
 
-[...]
+Best regards,
+Krzysztof
 
-
->> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
->> index 3941a9c48f83..f415c4aaf0ab 100644
->> --- a/kernel/gcov/Kconfig
->> +++ b/kernel/gcov/Kconfig
->> @@ -51,6 +51,16 @@ config GCOV_PROFILE_ALL
->>         larger and run slower. Also be sure to exclude files from profiling
->>         which are not linked to the kernel image to prevent linker errors.
->>
->> +config GCOV_PROFILE_PREREQS
->> +       bool "Profile Kernel for prereqs"
->> +       default y if GCOV_KERNEL && !COMPILE_TEST
->> +       help
->> +         This options activates profiling for the specified kernel modules.
->> +
->> +         When some modules need Gcov data, enable this config, then configure
->> +         with gcov on the corresponding modules,The directories or files of
->> +         these modules will be added profiling flags after kernel compile.
->> +
-
-Replace the portion above with these lines:
-
-config GCOV_PROFILE_PREREQS
-        def_bool y if GCOV_KERNEL && !COMPILE_TEST
-
-
-
--- 
-Peter Oberparleiter
-Linux on Z Development - IBM Germany
