@@ -2,176 +2,121 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59951C433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C15C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3292071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013322080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ros5dEWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgGWIwN (ORCPT
+        id S1727900AbgGWIrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:52:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48546 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgGWIwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:52:12 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N8Vtg3103615;
-        Thu, 23 Jul 2020 04:51:55 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vsrqv2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 04:51:55 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N8oYNp153206;
-        Thu, 23 Jul 2020 04:51:54 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vsrquj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 04:51:54 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N8lJcN002652;
-        Thu, 23 Jul 2020 08:51:52 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 32brbgu4p8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 08:51:52 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N8pnA150266338
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 08:51:49 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1B52AE045;
-        Thu, 23 Jul 2020 08:51:49 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25745AE053;
-        Thu, 23 Jul 2020 08:51:46 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.56.65])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 08:51:45 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v3 05/10] powerpc/smp: Dont assume l2-cache to be superset of sibling
-Date:   Thu, 23 Jul 2020 14:21:11 +0530
-Message-Id: <20200723085116.4731-6-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
-References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230061
+        Thu, 23 Jul 2020 04:47:32 -0400
+Received: from crapouillou.net ([89.234.176.41]:49292 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgGWIrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:47:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595494049; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BJyfUllChIJgl3yWHH+VMxuxZEFa7sPXy1SOnwf3Pt4=;
+        b=Ros5dEWjjJCrQhTRWWVuUyzRz3LlpkLkaixY68lKRGVFZWFYvozbVecWEyiF9JYTzGmZKz
+        PacFl0//rw26fdYt/0FLkmxl/WBbJbnQmr+71uYxBq7uY35tCl1iYJg5m0ofToxYCIRudr
+        zAcupG8KxIbbZxoIcav3GKoLb3nza7k=
+Date:   Thu, 23 Jul 2020 10:47:19 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] MIPS: CI20: Update defconfig for EFUSE.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     tsbogend@alpha.franken.de, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, keescook@chromium.org,
+        hns@goldelico.com, ebiederm@xmission.com,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Message-Id: <V2ZWDQ.DNM4EVLAB6YN3@crapouillou.net>
+In-Reply-To: <20200723071950.130007-2-zhouyanjie@wanyeetech.com>
+References: <20200723071950.130007-1-zhouyanjie@wanyeetech.com>
+        <20200723071950.130007-2-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code assumes that cpumask of cpus sharing a l2-cache mask will
-always be a superset of cpu_sibling_mask.
+Hi Zhou,
 
-Lets stop that assumption. cpu_l2_cache_mask is a superset of
-cpu_sibling_mask if and only if shared_caches is set.
+Le jeu. 23 juil. 2020 =C3=A0 15:19, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanji=
+e)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> The commit 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
+> controller use NVMEM to find the default MAC address") add EFUSE
+> node for DM9000 in CI20, however, the EFUSE driver is not selected,
+> which will cause the DM9000 to fail to read the MAC address from
+> EFUSE, causing the following issue:
+>=20
+> [FAILED] Failed to start Raise network interfaces.
+>=20
+> Fix this problem by select CONFIG_JZ4780_EFUSE by default in the
+> ci20_defconfig.
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v1 -> v2:
-	Set cpumask after verifying l2-cache. (Gautham)
+Does it actually fix it on a clean 5.8-rc kernel?
 
- arch/powerpc/kernel/smp.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ From what I know, the efuse driver cannot probe, because the nemc=20
+driver requests the complete memory resource, so the efuse driver's=20
+devm_platform_ioremap_resource() fails.
 
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index da27f6909be1..d997c7411664 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -1194,6 +1194,7 @@ static bool update_mask_by_l2(int cpu, struct cpumask *(*mask_fn)(int))
- 	if (!l2_cache)
- 		return false;
- 
-+	cpumask_set_cpu(cpu, mask_fn(cpu));
- 	for_each_cpu(i, cpu_online_mask) {
- 		/*
- 		 * when updating the marks the current CPU has not been marked
-@@ -1276,29 +1277,30 @@ static void add_cpu_to_masks(int cpu)
- 	 * add it to it's own thread sibling mask.
- 	 */
- 	cpumask_set_cpu(cpu, cpu_sibling_mask(cpu));
-+	cpumask_set_cpu(cpu, cpu_core_mask(cpu));
- 
- 	for (i = first_thread; i < first_thread + threads_per_core; i++)
- 		if (cpu_online(i))
- 			set_cpus_related(i, cpu, cpu_sibling_mask);
- 
- 	add_cpu_to_smallcore_masks(cpu);
--	/*
--	 * Copy the thread sibling mask into the cache sibling mask
--	 * and mark any CPUs that share an L2 with this CPU.
--	 */
--	for_each_cpu(i, cpu_sibling_mask(cpu))
--		set_cpus_related(cpu, i, cpu_l2_cache_mask);
- 	update_mask_by_l2(cpu, cpu_l2_cache_mask);
- 
--	/*
--	 * Copy the cache sibling mask into core sibling mask and mark
--	 * any CPUs on the same chip as this CPU.
--	 */
--	for_each_cpu(i, cpu_l2_cache_mask(cpu))
--		set_cpus_related(cpu, i, cpu_core_mask);
-+	if (pkg_id == -1) {
-+		struct cpumask *(*mask)(int) = cpu_sibling_mask;
-+
-+		/*
-+		 * Copy the sibling mask into core sibling mask and
-+		 * mark any CPUs on the same chip as this CPU.
-+		 */
-+		if (shared_caches)
-+			mask = cpu_l2_cache_mask;
-+
-+		for_each_cpu(i, mask(cpu))
-+			set_cpus_related(cpu, i, cpu_core_mask);
- 
--	if (pkg_id == -1)
- 		return;
-+	}
- 
- 	for_each_cpu(i, cpu_online_mask)
- 		if (get_physical_package_id(i) == pkg_id)
--- 
-2.18.2
+I did send a patch to fix this=20
+(https://lore.kernel.org/lkml/551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582=
+905653.git.hns@goldelico.com/),
+but it's hard to have somebody merge it, because nobody maintains=20
+drivers/memory/.
+
+> Fixes: 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
+> controller use NVMEM to find the default MAC address").
+
+That shouldn't be a fix IMHO - the devicetree was updated in one=20
+commit, the config should be updated in another. The "bug" here is that=20
+it wasn't done right away.
+
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+
+Btw - when you add a Fixes: tag to fix a commit that is not for the=20
+kernel currently in RC phase, you need to Cc linux-stable as well.
+
+Cheers,
+-Paul
+
+> ---
+>  arch/mips/configs/ci20_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/mips/configs/ci20_defconfig=20
+> b/arch/mips/configs/ci20_defconfig
+> index f433fad16073..ba26ba4de09a 100644
+> --- a/arch/mips/configs/ci20_defconfig
+> +++ b/arch/mips/configs/ci20_defconfig
+> @@ -140,6 +140,7 @@ CONFIG_INGENIC_OST=3Dy
+>  CONFIG_MEMORY=3Dy
+>  CONFIG_PWM=3Dy
+>  CONFIG_PWM_JZ4740=3Dm
+> +CONFIG_JZ4780_EFUSE=3Dy
+>  CONFIG_EXT4_FS=3Dy
+>  # CONFIG_DNOTIFY is not set
+>  CONFIG_AUTOFS_FS=3Dy
+> --
+> 2.11.0
+>=20
+
 
