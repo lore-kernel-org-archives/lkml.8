@@ -2,39 +2,40 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22175C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68656C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040CB20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AFD2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 21:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGWVrZ (ORCPT
+        id S1728086AbgGWVri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:47:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:44370 "EHLO mga04.intel.com"
+        Thu, 23 Jul 2020 17:47:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44379 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgGWVrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 17:47:25 -0400
-IronPort-SDR: IHiOQUigsowuovwF9++LoAbHkFLEviz8Ueu8V+fucqfxakLRBFcc4mh+cItJlfNLDfdPwfAvJe
- sTWaVTzFJH6Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148119970"
+        id S1728027AbgGWVrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 17:47:33 -0400
+IronPort-SDR: OjrFRI8yCtlvV7BSCFEYIC8bZy6GiyOpGCemU0RbCjjV4DBPKFOZWY9Y3TSwHWsca7w4NDWdgu
+ RQHn+IyPzfkA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148119987"
 X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="148119970"
+   d="scan'208";a="148119987"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 14:47:25 -0700
-IronPort-SDR: DR3gv6LNQVyX5Ww+GFh6oO5u5AZ/6kZgXFBP/+g4YSvs7wxsWPKWKERIyDixI8ngadk6lYYImp
- JN37i6bEyAvw==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 14:47:32 -0700
+IronPort-SDR: 1dwkdRzY8w5c6dtMzLClP43u/CEnoOunWElU8Ez6fkiir63mDeNeVzprdP6cmaR28fY7TUxd3o
+ hc+T6WxEVXRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="311183940"
+   d="scan'208";a="311183983"
 Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 14:47:22 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2020 14:47:28 -0700
 From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
 Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
@@ -44,69 +45,96 @@ Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
         linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: [PATCH v3 0/5] vfio/pci: add denylist and disable qat
-Date:   Thu, 23 Jul 2020 22:47:00 +0100
-Message-Id: <20200723214705.5399-1-giovanni.cabiddu@intel.com>
+Subject: [PATCH v3 2/5] vfio/pci: Add device denylist
+Date:   Thu, 23 Jul 2020 22:47:02 +0100
+Message-Id: <20200723214705.5399-3-giovanni.cabiddu@intel.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200723214705.5399-1-giovanni.cabiddu@intel.com>
+References: <20200723214705.5399-1-giovanni.cabiddu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset defines a denylist of devices in the vfio-pci module and adds
-the current generation of Intel(R) QuickAssist devices to it as they are
-not designed to run in an untrusted environment.
+Add denylist of devices that by default are not probed by vfio-pci.
+Devices in this list may be susceptible to untrusted application, even
+if the IOMMU is enabled. To be accessed via vfio-pci, the user has to
+explicitly disable the denylist.
 
-By default, if a device is in the denylist, the probe of vfio-pci fails.
-If a user wants to use a device in the denylist, he needs to disable the
-full denylist providing the option disable_denylist=1 at the load of
-vfio-pci or specifying that parameter in a config file in /etc/modprobe.d.
+The denylist can be disabled via the module parameter disable_denylist.
 
-This series also moves the device ids definitions present in the qat driver
-to linux/pci_ids.h since they will be shared between the vfio-pci and the qat
-drivers and replaces the custom ADF_SYSTEM_DEVICE macro with PCI_VDEVICE.
+Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+---
+ drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-The series is applicable to Herbert's tree. Patches 1 to 3 apply also to
-Alex's tree (next). Patches 4 and 5 are optional and can be applied at a later
-stage.
-
-Changes from v2:
- - Renamed blocklist in denylist
- - Patch #2: reworded module parameter description to clarify why a device is
-   in the denylist
- - Patch #2: reworded warning that occurs when denylist is enabled and device
-   is present in that list
-
-Changes from v1:
- - Reworked commit messages:
-   Patches #1, #2 and #3: capitalized first character after column to comply to
-   subject line convention
-   Patch #3: Capitalized QAT acronym and added link and doc number for document
-   "Intel® QuickAssist Technology (Intel® QAT) Software for Linux"
-
-Giovanni Cabiddu (5):
-  PCI: Add Intel QuickAssist device IDs
-  vfio/pci: Add device denylist
-  vfio/pci: Add QAT devices to denylist
-  crypto: qat - replace device ids defines
-  crypto: qat - use PCI_VDEVICE
-
- drivers/crypto/qat/qat_c3xxx/adf_drv.c        | 11 ++---
- drivers/crypto/qat/qat_c3xxxvf/adf_drv.c      | 11 ++---
- drivers/crypto/qat/qat_c62x/adf_drv.c         | 11 ++---
- drivers/crypto/qat/qat_c62xvf/adf_drv.c       | 11 ++---
- .../crypto/qat/qat_common/adf_accel_devices.h |  6 ---
- drivers/crypto/qat/qat_common/qat_hal.c       |  7 +--
- drivers/crypto/qat/qat_common/qat_uclo.c      |  9 ++--
- drivers/crypto/qat/qat_dh895xcc/adf_drv.c     | 11 ++---
- drivers/crypto/qat/qat_dh895xccvf/adf_drv.c   | 11 ++---
- drivers/vfio/pci/vfio_pci.c                   | 48 +++++++++++++++++++
- include/linux/pci_ids.h                       |  6 +++
- 11 files changed, 87 insertions(+), 55 deletions(-)
-
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 7c0779018b1b..673f53c4798e 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -60,6 +60,10 @@ module_param(enable_sriov, bool, 0644);
+ MODULE_PARM_DESC(enable_sriov, "Enable support for SR-IOV configuration.  Enabling SR-IOV on a PF typically requires support of the userspace PF driver, enabling VFs without such support may result in non-functional VFs or PF.");
+ #endif
+ 
++static bool disable_denylist;
++module_param(disable_denylist, bool, 0444);
++MODULE_PARM_DESC(disable_denylist, "Disable use of device denylist. Disabling the denylist prevents binding to devices with known errata that may lead to exploitable stability or security issues when accessed by untrusted users.");
++
+ static inline bool vfio_vga_disabled(void)
+ {
+ #ifdef CONFIG_VFIO_PCI_VGA
+@@ -69,6 +73,29 @@ static inline bool vfio_vga_disabled(void)
+ #endif
+ }
+ 
++static bool vfio_pci_dev_in_denylist(struct pci_dev *pdev)
++{
++	return false;
++}
++
++static bool vfio_pci_is_denylisted(struct pci_dev *pdev)
++{
++	if (!vfio_pci_dev_in_denylist(pdev))
++		return false;
++
++	if (disable_denylist) {
++		pci_warn(pdev,
++			 "device denylist disabled - allowing device %04x:%04x.\n",
++			 pdev->vendor, pdev->device);
++		return false;
++	}
++
++	pci_warn(pdev, "%04x:%04x exists in vfio-pci device denylist, driver probing disallowed.\n",
++		 pdev->vendor, pdev->device);
++
++	return true;
++}
++
+ /*
+  * Our VGA arbiter participation is limited since we don't know anything
+  * about the device itself.  However, if the device is the only VGA device
+@@ -1847,6 +1874,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct iommu_group *group;
+ 	int ret;
+ 
++	if (vfio_pci_is_denylisted(pdev))
++		return -EINVAL;
++
+ 	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
+ 		return -EINVAL;
+ 
+@@ -2336,6 +2366,9 @@ static int __init vfio_pci_init(void)
+ 
+ 	vfio_pci_fill_ids();
+ 
++	if (disable_denylist)
++		pr_warn("device denylist disabled.\n");
++
+ 	return 0;
+ 
+ out_driver:
 -- 
 2.26.2
 
