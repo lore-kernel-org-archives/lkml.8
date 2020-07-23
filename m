@@ -2,129 +2,111 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9936C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06838C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B97207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8307207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 14:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izVPHRvy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MiHCcM4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgGWOBr (ORCPT
+        id S1729379AbgGWOB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgGWOBr (ORCPT
+        Thu, 23 Jul 2020 10:01:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30912 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727111AbgGWOB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:01:47 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17D7C0619DC;
-        Thu, 23 Jul 2020 07:01:46 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id d17so6465171ljl.3;
-        Thu, 23 Jul 2020 07:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B+FgVV5YR7/MuNTExC4S1CyxjBezDRUZkCZGg28GSIk=;
-        b=izVPHRvy9U4OahD09Cp+/GQN7sQMHeSfMtfa16KLHv0SoR9VfBG3NZBcDJVC4cnVww
-         P5Np7KLWIhGaPH8+oVsPqL5ArYuIqPfaHVX1M4wfuHVJXHHx1e1b12WR0o/UGI81nFrW
-         aH4DPBYFThDMLpq7wGU8p7+qE0JFyebMAY5vLQeXB1Mxzd5Y6r2SIbijALqfqWRBEfK9
-         F5v3eFNyVaYrKfU29EimULUv7Ik7KgwywOwmuIgL6sKIQlcJYBlXNa7yOpu/ftnY/z7Y
-         m0F6D+2uDRTpAvMNWHA0pxyNODs1wtmxbwg9BXEAr0sW6kgiPYCYf62XRe7BK21dj2gg
-         s/+g==
+        Thu, 23 Jul 2020 10:01:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595512916;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=FNrI3J22ipRhrW25TFVKILW4WyC6tvsphPA0SNAITiY=;
+        b=MiHCcM4ZVvUk+UUjUHNSuD4P+u7JvEATKnvVF0Uku7YNrxuTv3tQCObvnQ+aZeRtsY9jGR
+        87/i6cdM/evo3z6Qs4gPTv+NKOmIRNzFZF7pbDCg6bDliPW1xyMUY09EqS4JDOXMVLkxfQ
+        UzXTU8JxclhEIrnecp6B306zZ2bYhDQ=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-393-1VNfiPdAMV-o6p2huMOdxQ-1; Thu, 23 Jul 2020 10:01:55 -0400
+X-MC-Unique: 1VNfiPdAMV-o6p2huMOdxQ-1
+Received: by mail-qv1-f72.google.com with SMTP id w18so3607087qvd.16
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 07:01:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=B+FgVV5YR7/MuNTExC4S1CyxjBezDRUZkCZGg28GSIk=;
-        b=s8f1TgxEDCymOqH1x9F6p11qwMO6BtP77FhgrqnLizQBFWMJUuXH7W0sCakCwJVu9W
-         oKaNQzoCpitPoPyMR5vfMGYv6m4q/+t9FdYDk6oGjrREUF3RFKvSp49Vvvhv6Rj4qFpd
-         dcw8O7S7jscSITmz01Y23lic1Bg+8NgZjaikPumOWNWlKpdSghjqRG23pnBrh8vDuGdI
-         Ju5YBi6Fn3HCaL6CMM6kkZpaNhM6muYdoEC9WljCZYUTnvO+NLLj4nbkn61BV9CNnSEX
-         rAhygmk5XRHZLKVucLcQ27hy+BoSvmBb106SF9+pc8x/qDK+pLBMrVon8qQ+QLl7UGl2
-         Xsxw==
-X-Gm-Message-State: AOAM530fNWN9CHug1rIQvB+CPUZF329j7nZw2Ax/dHG6CGWF/05hrpBl
-        MQo/yq3uyJY584Zu50FwN9w=
-X-Google-Smtp-Source: ABdhPJx4NrXo8VV/65GyJsOu4Et0o2kWiyKcdzQDLsb8EKnpILRDPC5R3G9OV9Cpsl0fljq9DS6rrw==
-X-Received: by 2002:a2e:8855:: with SMTP id z21mr2192826ljj.325.1595512905379;
-        Thu, 23 Jul 2020 07:01:45 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id z186sm2970938lfa.6.2020.07.23.07.01.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 07:01:44 -0700 (PDT)
-Subject: Re: [PATCH 5/7] i2c: tegra: enable second level clock gating
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        linux-i2c@vger.kernel.org, thierry.reding@gmail.com
-Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldewangan@nvidia.com,
-        smohammed@nvidia.com, rgumasta@nvidia.com
-References: <1595506733-10307-1-git-send-email-kyarlagadda@nvidia.com>
- <1595506733-10307-5-git-send-email-kyarlagadda@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1f51823f-09ea-80d5-69dd-7772474a3fb1@gmail.com>
-Date:   Thu, 23 Jul 2020 17:01:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=FNrI3J22ipRhrW25TFVKILW4WyC6tvsphPA0SNAITiY=;
+        b=tJIb2Fq4kGb/4OYXO5CxjhKNnjIKM4GrtfpoIbQbD3FPI5VHWuGop/r+08epkkoooL
+         QrDOyMH7XP78ru9QLXcx/do9LXMzzT2rnhVPmTIygqh2HU/ykNNxrh5o6zo0RYAwdQBW
+         nx4j7BW0MfuEVIBPMKTHi09XlKtLvDomoAjGoxQWyp7Gy9NsqKtc2yIJmeBVBD9g6rqC
+         zyPE9IK546H5Nv1EgN8ZARuYCLCK8yomqPi6GovmE2SQxP3ozVydluBqx9Ed9LWJVj6w
+         1AXmpTffvkUsIaJOZrTiVkNmd/w6qA0VBI/px8gcOrYLCePXVvuhgoBUHRf8FQyA7+7i
+         Ydhw==
+X-Gm-Message-State: AOAM530bnhUnxgGu5EKDqtWgR1CrwKP9GPdwlHNDkbHP6lU9JcFIXm4X
+        fGe1BLpo36gDS8nroExy2XIcz5KPlbT9fll4PYIhPltFaE0o1VhY+ov1c+juOhGsH75RTp8+gTd
+        Y6itcvYiT/FsBS3IVaajhuyZi
+X-Received: by 2002:a0c:8583:: with SMTP id o3mr5013027qva.108.1595512914217;
+        Thu, 23 Jul 2020 07:01:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy4KIDq8nFjc8M+Ayc6oKKZhshXVGfh68xoXhfmaMHK6Mfi6bMcdpiPnoy+C+NIwEpmBPfoig==
+X-Received: by 2002:a0c:8583:: with SMTP id o3mr5013000qva.108.1595512913943;
+        Thu, 23 Jul 2020 07:01:53 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id z60sm2534085qtc.30.2020.07.23.07.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 07:01:53 -0700 (PDT)
+From:   trix@redhat.com
+To:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] scsi: lpfc: add depends CPU_FREQ to SCSI_LPFC configury
+Date:   Thu, 23 Jul 2020 07:01:36 -0700
+Message-Id: <20200723140136.18367-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 MIME-Version: 1.0
-In-Reply-To: <1595506733-10307-5-git-send-email-kyarlagadda@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.07.2020 15:18, Krishna Yarlagadda пишет:
-> Enable Second Level Clock Gating feature for supported chips.
-> With SLCG enabled, software need not control clocks anymore
-> and leave clocks enabled always on.
+From: Tom Rix <trix@redhat.com>
 
-What problem is solved by this patch? If there is no real problem, then
-I'm not sure that this is a worthwhile patch. Please explain.
+A compile error
 
-...
-> @@ -1932,7 +1946,8 @@ static int __maybe_unused tegra_i2c_suspend(struct device *dev)
->  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->  	int err = 0;
->  
-> -	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+drivers/scsi/lpfc/lpfc_sli.c:7329:26: error: implicit
+  declaration of function ‘get_cpu_idle_time’; did you
+  mean ‘set_cpu_active’? [-Werror=implicit-function-declaration]
+   idle_stat->prev_idle = get_cpu_idle_time(i, &wall, 1);
 
-Why i2c_mark_adapter_suspended() is removed?
+lpfc_init_idle_stat_hb depends on CPU_FREQ
 
-> +	if (i2c_dev->is_clkon_always)
-> +		clk_disable(i2c_dev->div_clk);
+So add depends CPU_FREQ to the configury.
 
-Why clk needs to be disabled on suspend?
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/scsi/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->  	if (!pm_runtime_status_suspended(dev))
->  		err = tegra_i2c_runtime_suspend(dev);
-> @@ -1968,6 +1983,15 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
->  			return err;
->  	}
->  
-> +	if (i2c_dev->is_clkon_always) {
-> +		err = clk_enable(i2c_dev->div_clk);
-> +		if (err < 0) {
-> +			dev_err(i2c_dev->dev, "clock enable failed %d\n",
-> +				err);
-> +			return err;
-> +		}
-> +	}
-
-Would be nice if it all could be wrapped into
-tegra_i2c_div_clk_enable/disable() helpers.
-
->  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->  
->  	return 0;
-> 
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 571473a58f98..004dcda07d49 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -1157,6 +1157,7 @@ config SCSI_LPFC
+ 	depends on SCSI_FC_ATTRS
+ 	depends on NVME_TARGET_FC || NVME_TARGET_FC=n
+ 	depends on NVME_FC || NVME_FC=n
++	depends on CPU_FREQ
+ 	select CRC_T10DIF
+ 	help
+           This lpfc driver supports the Emulex LightPulse
+-- 
+2.18.1
 
