@@ -2,185 +2,247 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A79C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461B4206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0890D206E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FV4EvxfY"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="EPW0FMSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgGWLuh (ORCPT
+        id S1728636AbgGWLvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgGWLug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:50:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0842C0619E3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:50:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a21so6044491ejj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 04:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2JtEGBDm+iKw++wU28XBfceBTCHSqTBOynCQW7Tda3A=;
-        b=FV4EvxfYcWtp+vU59BwX1HkdZc39jmNWz1a+yEQwgVnK5Jm0iRHPbu/f+/Ky73SIF7
-         Nljrl4b5Z6mSr2b1fpooYEfLGTFyNkkbLvkB1sHLTVXwwmlEck8Lqn5BKEbEvObqHetd
-         Gv+n3R4brWKwiOu+BbQ10AWFwJ6jSkLUVB0Q8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2JtEGBDm+iKw++wU28XBfceBTCHSqTBOynCQW7Tda3A=;
-        b=tmOVsNRAXhPlulwiZXSErQ8pyU1dzLbgtpxHMfatKRxANpfdgh8Qhl5N6PU5KtN4DK
-         4+cVDkSKKDork+lyzyC/8Rs3DfFZZNS/PcRTe1EHU9AaMrBmeXNxkvGteEFqCqC9uitl
-         T1OUOeNNIsCb1S4eyZgnR4OYNj2HJZ+mGtHOnIJZIN8pZc9OjggxZFaVROvHLLMe2DqU
-         x4x6cBEIackub5M/TA/KM+bfxx23vJb2PKw5r8xpZqkXkYuFfWvaXJaJ2m+289+QAK/h
-         1V/54tI5YeWbJZ1LyIrNjAL3H9Xz5XWXrVlUeKq2uKWnkho45ugGzt0UAezJbcPHEDYU
-         bhaA==
-X-Gm-Message-State: AOAM532DWlA8hHSGdOBq6VqUXbOrkCcN5x/mfO8k/I5xWcf87iWzPpar
-        gqMMgdLzSKSKky+dIEx1hn6kNXKgQQLx0w==
-X-Google-Smtp-Source: ABdhPJwwSaZxNBzVE2odHsUjDpO2ElBxPO2JxeQeoqmLiWKhalBb2sWJZVthwSPMNUpeE1BJwjX8Aw==
-X-Received: by 2002:a17:906:1d1b:: with SMTP id n27mr4167437ejh.272.1595505034958;
-        Thu, 23 Jul 2020 04:50:34 -0700 (PDT)
-Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id h27sm579302eje.23.2020.07.23.04.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 04:50:34 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next v6 0/7] Generalizing bpf_local_storage
-Date:   Thu, 23 Jul 2020 13:50:25 +0200
-Message-Id: <20200723115032.460770-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
+        Thu, 23 Jul 2020 07:51:53 -0400
+Received: from mail-eopbgr60108.outbound.protection.outlook.com ([40.107.6.108]:20747
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728134AbgGWLvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:51:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SWlT8ZIWnW3heWrVOnF+cjkumPjoXJGGBXHBzf3yF3WuYjcGDrBMV3ZbwgYjWhv7nDmrqWOXbVmemtKZZPsuKojEju7ycqA9V9j7NZIUKMgquv6GibEqI9yStzqRZOQ5feFo1siq0PAkwZf5eBpmGIvXbGIP6ndiAXrYkyyNSHDJNNhNKEfREul0dIT/zhwMoa7LOIjJUT/8oVU3HgTzmHNdw4yflA/v1PW7V2nEUs3mkyQekjJW2AwOWuD/c0Z8ck2/Bc9wFFi9bMt/x9bgwyr8xm5RJElwS94LTPt5PRxxIAGp0GQVcTfygnWmEku05E8hboKZ0ETV3ntDKDTHlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7urlA14sQb3Vu+OSioXCRIRDU67/cHStLBtzvXygwT8=;
+ b=md1ie3RW3gF5mnAal4+gY4mTidlZaxPz8PZfIuTY8rH31dDuGAXd/Iy3f9A5f7JrXAAS/PD1j6rxcMFcJLujdJAsr7+alk968fmc2S1TUnxvxvkIgzmy+bwS+WUbGY0PAU0//bsPFDFy/eHzeLE0JPkb6PZWlHby7MOJhf9nbD4CdUHtdcqsMFUp1Px70uHvr0REMJJk6gxw7ZCI+Qd3DJ1NHLYONW3RekD0vhHDYyRL1ciAL+xkuAxhDyFpVuonoahpQGN4/nLJENAualFT6ndXoHEdIB5cmgYRoWITCVaA261Ij9mmIsx+NUF7T7Bi79pVO51waTlYDGNxbedNJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7urlA14sQb3Vu+OSioXCRIRDU67/cHStLBtzvXygwT8=;
+ b=EPW0FMSZvJTCbMD4q6pZu70NIL6I8zhOQZlvU3qOK2uKX2ow1BCZkvlUBmFU6tJAOwN5U6p0IHAhR9cAJr/pmG6pcBzeJDWI5lt5OVK5TCU6kD5vERFxk3A7t9AAr6VzAq0fbzHhDQ0aetFvH5O8hxaH4oeijWLlNCCayL9fUYs=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:50::12)
+ by DB8PR10MB3863.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:168::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
+ 2020 11:51:47 +0000
+Received: from DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3]) by DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ac04:ef33:baf3:36f3%4]) with mapi id 15.20.3195.025; Thu, 23 Jul 2020
+ 11:51:47 +0000
+Subject: Re: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
+ <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
+ <1b04e4e6-ca26-3f45-e353-af81e03f85a7@kontron.de>
+ <VE1PR04MB66385FC4FE591EAFA8CB7D8289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+From:   Frieder Schrempf <frieder.schrempf@kontron.de>
+Message-ID: <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
+Date:   Thu, 23 Jul 2020 13:51:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM5PR0202CA0008.eurprd02.prod.outlook.com
+ (2603:10a6:203:69::18) To DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:50::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.10.17] (46.142.152.98) by AM5PR0202CA0008.eurprd02.prod.outlook.com (2603:10a6:203:69::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Thu, 23 Jul 2020 11:51:45 +0000
+X-Originating-IP: [46.142.152.98]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b9e0efc1-ee5a-4f9e-69cf-08d82efec6ec
+X-MS-TrafficTypeDiagnostic: DB8PR10MB3863:
+X-Microsoft-Antispam-PRVS: <DB8PR10MB3863004B58D49300C2B65452E9760@DB8PR10MB3863.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BTpve2sTLNx7sdvyDJ/IegZlcuXtXrH8sDONPYcZPi1DzjKN5HW9GidfGiMWnU9tYAucteBVW4X9O6/KjeWKXvUyiCTex6Q2OyopKRvhVpAaMeWO7Yg0YEJgghPQxgI3U6P+CHz1Hdyrb+DygL6VHcfIW49kxqgIfi8w+9TeH6s8pLf3TDfDQ/qbAQB/m8acFMcre1liVlCd4UiEr9lcD/JBDNTKiKREvD7jrQY/e9h+BLfBd4aMu0sgjAWsw8ZDk8ouTT6jQFWwPPadMcMHV5yucwFSSeDL6Mii4YU6QX5YEbJAdlnyj3aINksdJCSwN+S8Bf1ETk4uxurT6cbXnLvW9fQ5zPNX1gemAxEZA88Tj92Yz7vPM+IGn6VSHbjOqWwMUpDajuA1YXH41wZuD9UdWlJTeKQrk2bixBVvgzYMe5Wge398Vg5DwIvhUvq0kavd5vXEf37jQ91vTWarTOA8j77tGU/QMBI7wY5ue1I=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(7416002)(2906002)(5660300002)(110136005)(4326008)(8676002)(54906003)(186003)(316002)(478600001)(45080400002)(16576012)(36756003)(8936002)(53546011)(52116002)(16526019)(6486002)(44832011)(86362001)(26005)(966005)(31696002)(83380400001)(31686004)(66946007)(2616005)(66556008)(66476007)(956004)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: kJTFheUPCkAiaiELRUjs+YPYC4HcUcnKCnAVyeJVvu2j/2qmBMWQcilYw1kjenQQa5Upuugs9/BXJdX5wOdyOtR0pglYJkC7BwVo9AF2hUTcNUvkSKNLKjnIiI+xvFozGAg762L678gs/1FBHoJTt23QBvYw5PKrp1eMzxoeHFoZvtqHqfaqJMUWJPJILhC8XlAub27kZX5zMWKoVExKWDx1ksRYoLWKioCxzBitHzLXo5VhCWrHeF1AS4QMBjO6BDfWVPje4Z0EOXwM2JTTEOOc2fIYdIgtTozKnFRL5mC7GTvDoe8oUzmYbWORJopyEkPHX1YBBm/rr8ZjKFJ8pqm5TlrGc1yv290SlPgjVUhYykmQpXSrFFGgnshSQWKlecaKPuDs4fuboYI5z/oOw5YZU4sQ8k4kkzK2Km7Nv3tfTrEWTqc+5rELlm5SmLbuErCgR7MCqLsm98a9zNDfIQf0hXzASDYd9U+c0O7z55k=
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9e0efc1-ee5a-4f9e-69cf-08d82efec6ec
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2490.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 11:51:46.9446
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gs4soVbMsA8GIIJ+35O5cuKLIKNcPTMYfZyU4mloNvEAbaQFy5Zpd46TDUwmUtYD+yqh9Hw4wA3PMMnm4bPZtUkyox4YRwGclazR+Msm27Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3863
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On 23.07.20 13:12, Robin Gong wrote:
+>> On 2020/07/23 17:04 Frieder Schrempf <frieder.schrempf@kontron.de>
+>> wrote:
+>>> Hi Robin,
+>>>
+>>> On 30.06.20 15:31, Robin Gong wrote:
+>>>> Add 'fw_loaded' and 'is_ram_script' to check if the script used by
+>>>> channel is ram script and it's loaded or not, so that could prevent
+>>>> meaningless following malloc dma descriptor and bd allocate in
+>>>> sdma_transfer_init(), otherwise memory may be consumed out
+>>>> potentially without free in case that spi fallback into pio while
+>>>> dma transfer failed by sdma firmware not ready(next ERR009165 patch
+>>>> depends on sdma
+>>> RAM scripts/firmware).
+>>>>
+>>>> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+>>>> Acked-By: Vinod Koul <vkoul@kernel.org>
+>>>> ---
+>>>>    drivers/dma/imx-sdma.c | 13 +++++++++++++
+>>>>    1 file changed, 13 insertions(+)
+>>>>
+>>>> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+>>>> 5411e01e..ce1c83e 100644
+>>>> --- a/drivers/dma/imx-sdma.c
+>>>> +++ b/drivers/dma/imx-sdma.c
+>>>> @@ -379,6 +379,7 @@ struct sdma_channel {
+>>>>    	enum dma_status			status;
+>>>>    	struct imx_dma_data		data;
+>>>>    	struct work_struct		terminate_worker;
+>>>> +	bool				is_ram_script;
+>>>>    };
+>>>>
+>>>>    #define IMX_DMA_SG_LOOP		BIT(0)
+>>>> @@ -443,6 +444,7 @@ struct sdma_engine {
+>>>>    	struct sdma_buffer_descriptor	*bd0;
+>>>>    	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
+>>>>    	bool				clk_ratio;
+>>>> +	bool                            fw_loaded;
+>>>>    };
+>>>>
+>>>>    static int sdma_config_write(struct dma_chan *chan, @@ -929,6
+>>>> +931,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>>>>    	case IMX_DMATYPE_SSI_DUAL:
+>>>>    		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
+>>>>    		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
+>>>> +		sdmac->is_ram_script = true;
+>>>>    		break;
+>>>>    	case IMX_DMATYPE_SSI_SP:
+>>>>    	case IMX_DMATYPE_MMC:
+>>>> @@ -943,6 +946,7 @@ static void sdma_get_pc(struct sdma_channel
+>>> *sdmac,
+>>>>    		per_2_emi = sdma->script_addrs->asrc_2_mcu_addr;
+>>>>    		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
+>>>>    		per_2_per = sdma->script_addrs->per_2_per_addr;
+>>>> +		sdmac->is_ram_script = true;
+>>>>    		break;
+>>>>    	case IMX_DMATYPE_ASRC_SP:
+>>>>    		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
+>>>> @@ -1339,6 +1343,11 @@ static struct sdma_desc
+>>> *sdma_transfer_init(struct sdma_channel *sdmac,
+>>>>    {
+>>>>    	struct sdma_desc *desc;
+>>>>
+>>>> +	if (!sdmac->sdma->fw_loaded && sdmac->is_ram_script) {
+>>>> +		dev_err(sdmac->sdma->dev, "sdma firmware not ready!\n");
+>>>> +		goto err_out;
+>>>> +	}
+>>>
+>>> I tried your v10 patches on next-20200722 with i.MX8MM and it mostly
+>>> seems to work fine.
+>>>
+>>> When I tried first, I had the imx-sdma driver compiled into the
+>>> kernel, so it didn't load the firmware and fell back to the ROM scripts.
+>>> With this, SPI transactions work just fine, but I got the above error
+>>> message printed continuously when sending data in SPI3 via spidev.
+>> That's caused by you didn't load ram firmware as this patch set described.
+>> Please follow below steps to load firmware manually if you don't want to use
+>> NXP official Yocto release package:
+>>
+>> 1. Get sdma firmware from below linux-firmware and copy it to your local
+>> rootfs /lib/firmware/imx/sdma.
+>> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-firmware.git%2Ft&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7C08276b76f9a14dae1f8408d82ef94da1%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637310995564511410&amp;sdata=YA1455ILoNgRDHAOy1H2051J9cu5VsHk39xtQive8mo%3D&amp;reserved=0
+>> ree/imx/sdma
+>> 2. Load firmware manually:
+>>          echo 1 > /sys/$DEVPATH/loading
+>>          cat $MY_FW_DIR/$FIRMWARE > /sys/$DEVPATH/data
+>>          echo 0 > /sys/$DEVPATH/loading
+>> Please refer to Documentation/driver-api/firmware/fallback-mechanisms.rst
+>> and load the firmware in 60s (firmware fallback loading timeout) from kernel
+>> boot up.
+>>
+>>>
+>>> When I build imx-sdma as a module, the firmware is loaded correctly
+>>> and everything works as expected.
+>> I guess that's not related with sdma building as module. If sdma build as
+>> module, spi will fall to pio mode at spi-imx driver probe phase so that the
+>> above warning log never to be walked. Would you please add some debug
+>> info to double confirm?
+> Hi Frider,
+> 	Please ignore this comment, since there is -EPROBE_DEFER checking
+> , so you load sdma firmware by building sdma driver as module instead of
+> the above comment I mentioned?
 
-# v5 -> v6
+Yes, correct.
 
-- Fixed a build warning.
-- Rebase.
+> The warning log comes out during spi
+> transfer start and sdma firmware loading done, but if sdma driver building as
+> module could ensure firmware loading done in sdma_driver_probe_phase->
+> spi_imx_probe_phase, which means sdma firmware loading has been ready
+> before spi transfer start, hence no such warning message.
+> 
+> But I am not sure if all client drivers except spi are in good shape to support
+> ' CONFIG_IMX_SDMA=m '.
 
-# v4 -> v5
+I'm pretty sure that CONFIG_IMX_SDMA=m is supported and common. 
+Otherwise it wouldn't be an option in Kconfig.
 
-- Split non-functional changes into separate commits.
-- Updated the cache macros to be simpler.
-- Fixed some bugs noticed by Martin.
-- Updated the userspace map functions to use an fd for lookups, updates
-  and deletes.
-- Rebase.
+> Besides, do you think 'dev_err_once ' instead of 'dev_err' is okay for you?
 
-# v3 -> v4
-
-- Fixed a missing include to bpf_sk_storage.h in bpf_sk_storage.c
-- Fixed some functions that were not marked as static which led to
-  W=1 compilation warnings.
-
-# v2 -> v3
-
-* Restructured the code as per Martin's suggestions:
-  - Common functionality in bpf_local_storage.c
-  - bpf_sk_storage functionality remains in net/bpf_sk_storage.
-  - bpf_inode_storage is kept separate as it is enabled only with
-    CONFIG_BPF_LSM.
-* A separate cache for inode and sk storage with macros to define it.
-* Use the ops style approach as suggested by Martin instead of the
-  enum + switch style.
-* Added the inode map to bpftool bash completion and docs.
-* Rebase and indentation fixes.
-
-# v1 -> v2
-
-* Use the security blob pointer instead of dedicated member in
-  struct inode.
-* Better code re-use as suggested by Alexei.
-* Dropped the inode count arithmetic as pointed out by Alexei.
-* Minor bug fixes and rebase.
-
-bpf_sk_storage can already be used by some BPF program types to annotate
-socket objects. These annotations are managed with the life-cycle of the
-object (i.e. freed when the object is freed) which makes BPF programs
-much simpler and less prone to errors and leaks.
-
-This patch series:
-
-* Generalizes the bpf_sk_storage infrastructure to allow easy
-  implementation of local storage for other objects
-* Implements local storage for inodes
-* Makes both bpf_{sk, inode}_storage available to LSM programs.
-
-Local storage is safe to use in LSM programs as the attachment sites are
-limited and the owning object won't be freed, however, this is not the
-case for tracing. Usage in tracing is expected to follow a white-list
-based approach similar to the d_path helper
-(https://lore.kernel.org/bpf/20200506132946.2164578-1-jolsa@kernel.org).
-
-Access to local storage would allow LSM programs to implement stateful
-detections like detecting the unlink of a running executable from the
-examples shared as a part of the KRSI series
-https://lore.kernel.org/bpf/20200329004356.27286-1-kpsingh@chromium.org/
-and
-https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
-
-KP Singh (7):
-  bpf: Renames to prepare for generalizing sk_storage.
-  bpf: Generalize caching for sk_storage.
-  bpf: Generalize bpf_sk_storage
-  bpf: Split bpf_local_storage to bpf_sk_storage
-  bpf: Implement bpf_local_storage for inodes
-  bpf: Allow local storage to be used from LSM programs
-  bpf: Add selftests for local_storage
-
- include/linux/bpf.h                           |  13 +
- include/linux/bpf_local_storage.h             | 175 ++++
- include/linux/bpf_lsm.h                       |  21 +
- include/linux/bpf_types.h                     |   3 +
- include/net/bpf_sk_storage.h                  |  12 +
- include/net/sock.h                            |   4 +-
- include/uapi/linux/bpf.h                      |  54 +-
- kernel/bpf/Makefile                           |   2 +
- kernel/bpf/bpf_inode_storage.c                | 353 ++++++++
- kernel/bpf/bpf_local_storage.c                | 519 ++++++++++++
- kernel/bpf/bpf_lsm.c                          |  21 +-
- kernel/bpf/syscall.c                          |   3 +-
- kernel/bpf/verifier.c                         |  10 +
- net/core/bpf_sk_storage.c                     | 759 ++++--------------
- security/bpf/hooks.c                          |   7 +
- .../bpf/bpftool/Documentation/bpftool-map.rst |   2 +-
- tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
- tools/bpf/bpftool/map.c                       |   3 +-
- tools/include/uapi/linux/bpf.h                |  54 +-
- tools/lib/bpf/libbpf_probes.c                 |   5 +-
- .../bpf/prog_tests/test_local_storage.c       |  60 ++
- .../selftests/bpf/progs/local_storage.c       | 136 ++++
- 22 files changed, 1593 insertions(+), 626 deletions(-)
- create mode 100644 include/linux/bpf_local_storage.h
- create mode 100644 kernel/bpf/bpf_inode_storage.c
- create mode 100644 kernel/bpf/bpf_local_storage.c
- create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
- create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
-
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
-
+I can't really judge if this is a proper fix as I haven't looked at the 
+code in detail, but if you want to use dev_err_once(), that would be ok 
+for me, maybe even better dev_warn_once().
+As chances are that even without firmware transfers will work a warning 
+instead of an error makes more sense to me.
