@@ -2,169 +2,137 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24DAC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7629AC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E832068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4A62068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 22:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595543325;
+	bh=vEQT3A/LyWK0mCM6I3RuObtccYEPnb7mjm5wXCVWyp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tpGN5Z/A9UFbffBm84aZPKQufp66hxBpr/czanwDbNeNdDF0k81Q2w6DCKzFfZtld
+	 T577Upr6hDdMZLe5fTSb6d8Pie0xt62MHzDP8Ar01yOEOS4B3EXQXWBr5sFmqQ4hCz
+	 bSEFOXX3ZrX9paWG1aml3QN1U2ui3fXvM2st32S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgGWW3H (ORCPT
+        id S1727773AbgGWW2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:29:07 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:36640 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbgGWW3F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:29:05 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 23 Jul 2020 18:28:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgGWW2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:28:40 -0400
+Received: from embeddedor (unknown [201.162.245.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14EAF634C87;
-        Fri, 24 Jul 2020 01:28:35 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jyjha-0000Tg-Pi; Fri, 24 Jul 2020 01:28:34 +0300
-Date:   Fri, 24 Jul 2020 01:28:34 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200723222834.GC829@valkosipuli.retiisi.org.uk>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
- <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 34FD02068F;
+        Thu, 23 Jul 2020 22:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595543320;
+        bh=vEQT3A/LyWK0mCM6I3RuObtccYEPnb7mjm5wXCVWyp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZCpMfClVTRYfL4rYzlR7/UKOw5LPuNSG6D2ABHedyHp54ei5DwGHtS9gmNLYYxT39
+         iLBFiufoZW9+Iq5AxowU7pNYr8EXAD/IpWZ/WJH/Fu0yJOReeptngQaPzgxosI2Lsb
+         X73HP9g+erLqHgpsYtQi4g+hWCOfpQ7+LjidEkK8=
+Date:   Thu, 23 Jul 2020 17:34:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH 3/3] tty: Use the preferred form for passing the size of a
+ structure type
+Message-ID: <b04dd8cdd67bd6ffde3fd12940aeef35fdb824a6.1595543280.git.gustavoars@kernel.org>
+References: <cover.1595543280.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1595543280.git.gustavoars@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+Use the preferred form for passing the size of a structure type. The
+alternative form where the structure type is spelled out hurts
+readability and introduces an opportunity for a bug when the object
+type is changed but the corresponding object identifier to which the
+sizeof operator is applied is not.
 
-On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
-> Hi Sakari,
-> 
-> This is the output of checkpatch --strict on this driver. Sorry for not
-> detailing this in the commit or cover letter.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/tty/tty_io.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-No worries.
-
-> 
-> > ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
-> > --------------------------------------------------------------
-> > ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
-> > --------------------------------------------------------------
-> > CHECK: Prefer using the BIT macro
-> > #246: FILE: drivers/media/i2c/max9286.c:40:
-> > +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #251: FILE: drivers/media/i2c/max9286.c:45:
-> > +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #262: FILE: drivers/media/i2c/max9286.c:56:
-> > +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #268: FILE: drivers/media/i2c/max9286.c:62:
-> > +#define MAX9286_HVSRC_D14		(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #286: FILE: drivers/media/i2c/max9286.c:80:
-> > +#define MAX9286_DATATYPE_RGB565		(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #304: FILE: drivers/media/i2c/max9286.c:98:
-> > +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #312: FILE: drivers/media/i2c/max9286.c:106:
-> > +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #316: FILE: drivers/media/i2c/max9286.c:110:
-> > +#define MAX9286_I2CSLVTO_256US		(1 << 0)
-> 
-> None of those are appropriate to use the BIT() macro, as they are all
-> entries of a specific field with a shift, such as:
-> 
-> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
-> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
-> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
-> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
-> 
-> Checkpatch is only picking up on the "1 << x" variant of each entry.
-
-Ideally you should use "1U << x" everywhere. If you happen to have a
-register with 31st bit signifying something, mayhem would follow. So the
-practice is to make all such definitions unsigned.
-
-> 
-> 
-> > CHECK: Macro argument reuse 'source' - possible side-effects?
-> > #399: FILE: drivers/media/i2c/max9286.c:193:
-> > +#define for_each_source(priv, source) \
-> > +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
-> 
-> This warns against possible side effects, but the 're-use' effects are
-> desired ;-)
-> 
-> If you'd prefer this macro to be re-written please let me know.
-
-Works for me. Some warnigns are just not useful. I bet quite a few macros
-elsewhere in the kernel would trigger this.
-
-> 
-> 
-> > CHECK: Lines should not end with a '('
-> > #1372: FILE: drivers/media/i2c/max9286.c:1166:
-> > +			ret = v4l2_fwnode_endpoint_parse(
-> 
-> Full code block:
-> 
-> >                         ret = v4l2_fwnode_endpoint_parse(
-> >                                         of_fwnode_handle(node), &vep);
-> >                         if (ret) {
-> >                                 of_node_put(node);
-> >                                 return ret;
-> >                         }
-> 
-> That one is awkward, and I chose to keep it as a lesser evil.
-> Of course now that we can officially go up to 120 chars, I could move
-> this line up.
-> 
-> If you'd like this to be moved to a single line now we can go over 80
-> chars, please confirm.
-
-I don't mind that. Mauro, any thoughts on this?
-
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 629fbafc9b7e..ceed72c9a88f 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1405,7 +1405,7 @@ void tty_save_termios(struct tty_struct *tty)
+ 	/* Stash the termios data */
+ 	tp = tty->driver->termios[idx];
+ 	if (tp == NULL) {
+-		tp = kmalloc(sizeof(struct ktermios), GFP_KERNEL);
++		tp = kmalloc(sizeof(*tp), GFP_KERNEL);
+ 		if (tp == NULL)
+ 			return;
+ 		tty->driver->termios[idx] = tp;
+@@ -2489,7 +2489,7 @@ static int tty_tiocsserial(struct tty_struct *tty, struct serial_struct __user *
+ 	struct serial_struct v;
+ 	int flags;
+ 
+-	if (copy_from_user(&v, ss, sizeof(struct serial_struct)))
++	if (copy_from_user(&v, ss, sizeof(*ss)))
+ 		return -EFAULT;
+ 
+ 	flags = v.flags & ASYNC_DEPRECATED;
+@@ -2507,11 +2507,11 @@ static int tty_tiocgserial(struct tty_struct *tty, struct serial_struct __user *
+ 	struct serial_struct v;
+ 	int err;
+ 
+-	memset(&v, 0, sizeof(struct serial_struct));
++	memset(&v, 0, sizeof(v));
+ 	if (!tty->ops->get_serial)
+ 		return -ENOTTY;
+ 	err = tty->ops->get_serial(tty, &v);
+-	if (!err && copy_to_user(ss, &v, sizeof(struct serial_struct)))
++	if (!err && copy_to_user(ss, &v, sizeof(v)))
+ 		err = -EFAULT;
+ 	return err;
+ }
+@@ -2705,7 +2705,7 @@ static int compat_tty_tiocsserial(struct tty_struct *tty,
+ 	struct serial_struct v;
+ 	int flags;
+ 
+-	if (copy_from_user(&v32, ss, sizeof(struct serial_struct32)))
++	if (copy_from_user(&v32, ss, sizeof(*ss)))
+ 		return -EFAULT;
+ 
+ 	memcpy(&v, &v32, offsetof(struct serial_struct32, iomem_base));
+@@ -2743,7 +2743,7 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
+ 			0xfffffff : ptr_to_compat(v.iomem_base);
+ 		v32.iomem_reg_shift = v.iomem_reg_shift;
+ 		v32.port_high = v.port_high;
+-		if (copy_to_user(ss, &v32, sizeof(struct serial_struct32)))
++		if (copy_to_user(ss, &v32, sizeof(v32)))
+ 			err = -EFAULT;
+ 	}
+ 	return err;
+@@ -3215,7 +3215,7 @@ struct tty_driver *__tty_alloc_driver(unsigned int lines, struct module *owner,
+ 	if (!lines || (flags & TTY_DRIVER_UNNUMBERED_NODE && lines > 1))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	driver = kzalloc(sizeof(struct tty_driver), GFP_KERNEL);
++	driver = kzalloc(sizeof(*driver), GFP_KERNEL);
+ 	if (!driver)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
-Kind regards,
+2.27.0
 
-Sakari Ailus
