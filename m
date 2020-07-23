@@ -2,244 +2,122 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C245C20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:44:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="gDFJwr1b"
+	by mail.kernel.org (Postfix) with ESMTP id D94D020825
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgGWJos (ORCPT
+        id S1728123AbgGWJsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:44:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:22001 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgGWJor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:44:47 -0400
-IronPort-SDR: c0WZIaXR6j9m5HrBspB1Pbc3GldwPzYMcsgsQxSpsLrdwQfD1E21Bt0kOhOZQG92J3iBTWJltY
- twyvV/vEub5A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="151799445"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="151799445"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 02:44:47 -0700
-IronPort-SDR: xV1jEcse1OR8GLk5F0n+7Xc2x5puXF96QR99cJ+FSsyrwoTM6DPEP/HwOrQ0XDlCGAn6CZDPN2
- GDGpSXasJ0Aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="362993483"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga001.jf.intel.com with ESMTP; 23 Jul 2020 02:44:47 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 23 Jul 2020 02:44:46 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX116.amr.corp.intel.com (10.22.240.14) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 23 Jul 2020 02:44:46 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 23 Jul 2020 02:44:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ez4qJ/HRObExl8rSyK2+fTeqpvrvRWZJJkWNJsC5qJUmS6w0EHj1DQpo7KzdebjUsVY+oZGsuL6LsgMsqecT4hYrt4mWipJM+avrzrSjX7wzcfPUVPE5jS4TxoxIjzs+moISSPrlMYTGzcYwyyA9vtS6Gkc98uhJsARgUcTw5/iOLw1egusjwBm6w6+pgAdadD6aW3R1Vj6EN85hAHTpFmFk31c4t4mrnzoCDYW7zbe2mJaJgUXqNk996OLtCiq7u8FqW5iKfEQAS1a1+nl9xx+KkytipwVI0aTZZKHxgK/7vmn3b7h2mGdgFbFYFKeGwFqGVfFiJcYLu+T8aXjnJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sdrmg1KbihSqrsxQ5R3/CRwEznP/dKdohlS7gDwPs34=;
- b=oR4pVYaYBVz8fErFn0DpG+YOWLez+5/WgH9/O7/bfDFZxJz9gfrfUy0U/Oo2lB1aIaHE3KXxrdkuRGVOFzu0xOaDicj77c7IPcUFnea+lV5k/Yi/0XWsJOHq+ZwyrhGpVAObJ2oI69TQplQP/wFV3GJgWOtWf0sxdZ1q+EVnW809aFYplErDOLOqiAa+WFdWpE5E+XtYZTND+4bfmUtHgexTm/b4gHtbhmIkmxHyCDa1i4I4e5soxEO7oNOtp0zTn0sjIFE46OVFLGQThD3VfrRgSbTHq+tdsI+qz9D7+3NbKJNAsTU23XvptN8RJ9wvHIx5cDM4jnJEclAV9Sh75g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sdrmg1KbihSqrsxQ5R3/CRwEznP/dKdohlS7gDwPs34=;
- b=gDFJwr1bAzpDvRW4HDnD5RzxJwaCqEDBIRnufXlXNKh++KdatRKUQm5HflPsWZpnsWYJ69Z9W2v2Wn41AKMiFq5rk+rrtIMPqwLU5IRLd1Ey3+0ytW/06o+OxCl78R06xhmBQ6aijrdCoQMrRVPiAgztwKGD0ilIBHi0B/sj8IU=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM5PR11MB1578.namprd11.prod.outlook.com (2603:10b6:4:e::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.23; Thu, 23 Jul 2020 09:44:44 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::9002:97a2:d8c0:8364%10]) with mapi id 15.20.3216.020; Thu, 23 Jul
- 2020 09:44:44 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Auger Eric <eric.auger@redhat.com>
-CC:     Will Deacon <will@kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "stefanha@gmail.com" <stefanha@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: RE: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
-Thread-Topic: [PATCH v5 03/15] iommu/smmu: Report empty domain nesting info
-Thread-Index: AQHWWD2lVc+q/avNRU2WMQZyTvsTFakFfrYAgAFdguCAA4IGgIAAU1iAgADRvwCACXbYwA==
-Date:   Thu, 23 Jul 2020 09:44:44 +0000
-Message-ID: <DM5PR11MB143539FB262524EE1A292063C3760@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1594552870-55687-1-git-send-email-yi.l.liu@intel.com>
- <1594552870-55687-4-git-send-email-yi.l.liu@intel.com>
- <20200713131454.GA2739@willie-the-truck>
- <CY4PR11MB1432226D0A52D099249E95A0C3610@CY4PR11MB1432.namprd11.prod.outlook.com>
- <20200716153959.GA447208@myrica>
- <f3779a69-0295-d668-5f2f-746b6ff2bdce@redhat.com>
- <20200717090900.GC4850@myrica>
-In-Reply-To: <20200717090900.GC4850@myrica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b715095-c2d2-4946-52bb-08d82eed07bc
-x-ms-traffictypediagnostic: DM5PR11MB1578:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB15784B9B2EA1802E97A90054C3760@DM5PR11MB1578.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LcE357Zq7dwnW5Ik8x0a9o1N1pj7wVcI1/7z2ajlamxn3ifw7+kcPRS+VewWpVb8i3qNjLqCkiyTdEf2h0X/LZykNFwHXxWp4OihfBvNdWhr1oTG3WgeHYYziYDStl8oLKcEIDdVhlxOuT3q/nfGUztTq6D7JAmHMLy6A/nDEfieScCqnlqRlj5k2kqi07AZicx2H6128RTyhh4hYw1C69N/nK+8My67ydi+cdjuHeY0LXEh/iTXbP1lYxyL7Nq6BCvbVFcOY9p6dWt7wiaT+/ul3IOAphEjYaPop2seDA6xzQKnu8Al7NalGiGt/w3Xr0AQL6Z3FoV8j8EKdIKUh74bY1sKLh5bZmzDuFAAlQw3XyKCA9QHZU5cpm4NFwf05Lfix3QITU1vmJ2WXBhmiA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(7696005)(26005)(53546011)(478600001)(6506007)(110136005)(186003)(71200400001)(83380400001)(66476007)(66446008)(64756008)(66556008)(966005)(5660300002)(33656002)(76116006)(55016002)(8936002)(8676002)(4326008)(316002)(54906003)(86362001)(7416002)(9686003)(66946007)(2906002)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: w0HLFAhGRHMCaEwBR6fdJ6+wlHnN82XgZRknEvCVaa9zl/dq7djvMWA2SIz0mteIErUSYY2p7B3oU3ttSkz7qjL0jJHBG4AUrnxvwoXQnr3RfEJhEnNOowJ0HL8NVbjCtixg4ZB18yRNDPXjCSJ0KBXpzYkDKnA7k2BYbUKvRhjXXlU3yx7Ou93o+9QQVnQrwAn7Pn+sH5wtxI+KGQcBUxX/0bpbfL6VGPGp5iXk0UGBlRfd0+2EtUR5kGPHLW/FngrjDsdtPjlGXPiJBgrFcLLySo9kocw5xQjRmNWeqOY1Do/KQLs84pp1EZTPj1Z/iiGUQ4dWe5J1H7ZBCqp/HnhYye9yNozGhR8RcSMy+yK/iTx0cAsF978aZoMpQ+H23qRGebcBRVoSQhC9OHsNKxF10IqYNa4bmPOVoPzBHYhzgxfZx7OfDD9QTemyEk753oRsfeZb6i7dExTpinxvpGv+UaSHmsMmNR8H7tsk1/wjvQhYqcN+j6fzoRjHGa8B
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jul 2020 05:48:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11995 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbgGWJsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 05:48:11 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N9XWE8045943;
+        Thu, 23 Jul 2020 05:47:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yc0v15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 05:47:55 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N9XwQK047495;
+        Thu, 23 Jul 2020 05:47:55 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32e1yc0v0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 05:47:55 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N9fL8G013581;
+        Thu, 23 Jul 2020 09:47:52 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06fra.de.ibm.com with ESMTP id 32brbgu5q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 09:47:52 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N9loTk29360560
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 09:47:50 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E8FF52052;
+        Thu, 23 Jul 2020 09:47:50 +0000 (GMT)
+Received: from [9.145.184.33] (unknown [9.145.184.33])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A543052057;
+        Thu, 23 Jul 2020 09:47:49 +0000 (GMT)
+Subject: Re: [PATCH V6] GCOV: Add config to check the preqequisites situation
+To:     Cixi Geng <gengcixi@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
+        linux-serial@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Cixi Geng1 <cixi.geng1@unisoc.com>,
+        Orson Zhai <orsonzhai@gmail.com>, zhang.lyra@gmail.com
+References: <20200618100852.13715-1-gengcixi@gmail.com>
+ <2fae67c7637f4e978cb54c3b96090788@BJMBX01.spreadtrum.com>
+ <CAF12kFseC4MMbEUk6CgW=Hpz_Hg-+fjwbLZKFdPu0K_EGtcPDw@mail.gmail.com>
+From:   Peter Oberparleiter <oberpar@linux.ibm.com>
+Message-ID: <a5c4018c-a0fd-7855-1ee9-dc0c4e7251e7@linux.ibm.com>
+Date:   Thu, 23 Jul 2020 11:47:51 +0200
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b715095-c2d2-4946-52bb-08d82eed07bc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 09:44:44.3125
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: m5ii6FyuP53NhJSS30Uxbr6qyDXUboCLw/W63h2QLHtz9viSo3aMirdQW+R5LVwgVdfszo5Wa5Lc52epbNBreA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1578
-X-OriginatorOrg: intel.com
+In-Reply-To: <CAF12kFseC4MMbEUk6CgW=Hpz_Hg-+fjwbLZKFdPu0K_EGtcPDw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_03:2020-07-22,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=1 bulkscore=0 adultscore=0 clxscore=1011
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+On 16.07.2020 14:38, Cixi Geng wrote:
+> Hi All:
+> Does this patch need more modification?
 
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Sent: Friday, July 17, 2020 5:09 PM
->=20
-> On Thu, Jul 16, 2020 at 10:38:17PM +0200, Auger Eric wrote:
-> > Hi Jean,
-> >
-> > On 7/16/20 5:39 PM, Jean-Philippe Brucker wrote:
-> > > On Tue, Jul 14, 2020 at 10:12:49AM +0000, Liu, Yi L wrote:
-> > >>> Have you verified that this doesn't break the existing usage of
-> > >>> DOMAIN_ATTR_NESTING in drivers/vfio/vfio_iommu_type1.c?
-> > >>
-> > >> I didn't have ARM machine on my hand. But I contacted with Jean
-> > >> Philippe, he confirmed no compiling issue. I didn't see any code
-> > >> getting DOMAIN_ATTR_NESTING attr in current
-> drivers/vfio/vfio_iommu_type1.c.
-> > >> What I'm adding is to call iommu_domai_get_attr(, DOMAIN_ATTR_NESTIN=
-)
-> > >> and won't fail if the iommu_domai_get_attr() returns 0. This patch
-> > >> returns an empty nesting info for DOMAIN_ATTR_NESTIN and return
-> > >> value is 0 if no error. So I guess it won't fail nesting for ARM.
-> > >
-> > > I confirm that this series doesn't break the current support for
-> > > VFIO_IOMMU_TYPE1_NESTING with an SMMUv3. That said...
-> > >
-> > > If the SMMU does not support stage-2 then there is a change in behavi=
-or
-> > > (untested): after the domain is silently switched to stage-1 by the S=
-MMU
-> > > driver, VFIO will now query nesting info and obtain -ENODEV. Instead =
-of
-> > > succeding as before, the VFIO ioctl will now fail. I believe that's a=
- fix
-> > > rather than a regression, it should have been like this since the
-> > > beginning. No known userspace has been using VFIO_IOMMU_TYPE1_NESTING
-> so
-> > > far, so I don't think it should be a concern.
-> > But as Yi mentioned ealier, in the current vfio code there is no
-> > DOMAIN_ATTR_NESTING query yet.
->=20
-> That's why something that would have succeeded before will now fail:
-> Before this series, if user asked for a VFIO_IOMMU_TYPE1_NESTING, it woul=
-d
-> have succeeded even if the SMMU didn't support stage-2, as the driver
-> would have silently fallen back on stage-1 mappings (which work exactly
-> the same as stage-2-only since there was no nesting supported). After the
-> series, we do check for DOMAIN_ATTR_NESTING so if user asks for
-> VFIO_IOMMU_TYPE1_NESTING and the SMMU doesn't support stage-2, the ioctl
-> fails.
+Yes. As it is now there's still a prompt for the prereq symbol. There
+should be no prompt for this symbol in the config dialog.
 
-I think this depends on iommu driver. I noticed current SMMU driver
-doesn't check physical IOMMU about nesting capability. So I guess
-the SET_IOMMU would still work for SMMU. but it will fail as you
-mentioned in prior email, userspace will check the nesting info and
-would fail as it gets an empty struct from host.
+[...]
 
-https://lore.kernel.org/kvm/20200716153959.GA447208@myrica/
 
->=20
-> I believe it's a good fix and completely harmless, but wanted to make sur=
-e
-> no one objects because it's an ABI change.
+>> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+>> index 3941a9c48f83..f415c4aaf0ab 100644
+>> --- a/kernel/gcov/Kconfig
+>> +++ b/kernel/gcov/Kconfig
+>> @@ -51,6 +51,16 @@ config GCOV_PROFILE_ALL
+>>         larger and run slower. Also be sure to exclude files from profiling
+>>         which are not linked to the kernel image to prevent linker errors.
+>>
+>> +config GCOV_PROFILE_PREREQS
+>> +       bool "Profile Kernel for prereqs"
+>> +       default y if GCOV_KERNEL && !COMPILE_TEST
+>> +       help
+>> +         This options activates profiling for the specified kernel modules.
+>> +
+>> +         When some modules need Gcov data, enable this config, then configure
+>> +         with gcov on the corresponding modules,The directories or files of
+>> +         these modules will be added profiling flags after kernel compile.
+>> +
 
-yes.
+Replace the portion above with these lines:
 
-Regards,
-Yi Liu
+config GCOV_PROFILE_PREREQS
+        def_bool y if GCOV_KERNEL && !COMPILE_TEST
 
-> Thanks,
-> Jean
->=20
-> > In my SMMUV3 nested stage series, I added
-> > such a query in vfio-pci.c to detect if I need to expose a fault region
-> > but I already test both the returned value and the output arg. So to me
-> > there is no issue with that change.
-> > >
-> > > And if userspace queries the nesting properties using the new ABI
-> > > introduced in this patchset, it will obtain an empty struct. I think
-> > > that's acceptable, but it may be better to avoid adding the nesting c=
-ap if
-> > > @format is 0?
-> > agreed
-> >
-> > Thanks
-> >
-> > Eric
-> > >
-> > > Thanks,
-> > > Jean
-> > >
-> > >>
-> > >> @Eric, how about your opinion? your dual-stage vSMMU support may
-> > >> also share the vfio_iommu_type1.c code.
-> > >>
-> > >> Regards,
-> > >> Yi Liu
-> > >>
-> > >>> Will
-> > >
-> >
+
+
+-- 
+Peter Oberparleiter
+Linux on Z Development - IBM Germany
