@@ -2,104 +2,161 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E79EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEEFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDCD022CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189D520709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 18:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gZHQd8X1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RMRI2hMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgGWSco (ORCPT
+        id S1727884AbgGWSe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:32:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51243 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727843AbgGWSco (ORCPT
+        Thu, 23 Jul 2020 14:34:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58578 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726761AbgGWSez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 14:32:44 -0400
+        Thu, 23 Jul 2020 14:34:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595529162;
+        s=mimecast20190719; t=1595529294;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sKozQ0KnMZ6/jFMcku3oZ38jLyvLbmaFhh4u3SNBWFc=;
-        b=gZHQd8X1mQag8LfClpQ5wYmJ3wkB5LmbOpA4wcdC/tj+Qw2O9Wkpj1sAuUIXXuyGoAQIiF
-        DPbyU9a2H6J3zoaMwpgSWbtGH4HUI6XruGUHEv02q2lObPiVSE4KGyLjY7SUdJYqcaults
-        qBKc59ai/lUDhBtgyOEeaBIz2juw6+M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-147-a7YRzGORP6i5sZOBhCiJ6Q-1; Thu, 23 Jul 2020 14:32:40 -0400
-X-MC-Unique: a7YRzGORP6i5sZOBhCiJ6Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8A501005510;
-        Thu, 23 Jul 2020 18:32:38 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-119-128.rdu2.redhat.com [10.10.119.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 209FA19D7E;
-        Thu, 23 Jul 2020 18:32:37 +0000 (UTC)
-Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
- SPLPAR
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20200706043540.1563616-1-npiggin@gmail.com>
- <20200706043540.1563616-6-npiggin@gmail.com>
- <874kqhvu1v.fsf@mpe.ellerman.id.au>
- <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
- <20200723140011.GR5523@worktop.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <845de183-56f5-2958-3159-faa131d46401@redhat.com>
-Date:   Thu, 23 Jul 2020 14:32:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=olbIwyK8DRt1gFVVe5q9trGHC9PIx/LTdvtHrFCIQy0=;
+        b=RMRI2hMogpBWCqtgnrMfBZMIoYhRoiz4DwvAkt6wse1FkxET2mzAhAHez417EgF6zISVQB
+        tO7mIr6aTSLpCgDCh23N2Qz1JIQ1qs9/aIY/dmzxU+FstFBd346iFW5y8ZPbPDA4drf3Bj
+        aEtp3PBZgrpTveu/KpAtfqm2a4uX/q0=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-m1toUeaUNca242OZQFiupQ-1; Thu, 23 Jul 2020 14:34:51 -0400
+X-MC-Unique: m1toUeaUNca242OZQFiupQ-1
+Received: by mail-il1-f199.google.com with SMTP id c1so4035644ilk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 11:34:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=olbIwyK8DRt1gFVVe5q9trGHC9PIx/LTdvtHrFCIQy0=;
+        b=YMJyJJ84uhVcSH9r95hUeOCiYtt6W36gsyI0LUjWD3ClB2cGMS2gDzUxIbWiLOtLo+
+         MgOU6I3mzDQcaQNEQH859LCYw9ruYIc2Qvc5qD8eRO6kPBd60Zlq7Jc7Ws+a99ixnl9o
+         vXk4hiXTg/zVCvdhuvs1RzmVxGZmT19RakBTbYWZ9SqQTZGMEe2f4I3duBnJhcizuDzy
+         uO/+XF+8VXd3b/fOhZzqdFD3D0fB+5gQ2s63gGvvZC6jMwNl4W3SWaF4OrycRySb/Q76
+         lhrKTwOQio5N+rsB4c2npMeIETC0feBoiQoaqajUsTCeq1tY605Ozxqm2tc4zEgtf2tA
+         BtSw==
+X-Gm-Message-State: AOAM532hFwBY3dr8HcNqjMumLH2VVnyNI3GVBPLYtI+CS0FyvhO9tTTu
+        PbD5iArukYoIOniIN4zWX+dRsEhzrmOfAkfu9bkXFEytxWgf7RJxDKYPOnZdX+70kxMiwwyVK2L
+        h60w/73Yeux0/LErrgyjuVVFZylIoXS9Ly2tw3UcO
+X-Received: by 2002:a6b:bc41:: with SMTP id m62mr6012380iof.95.1595529290805;
+        Thu, 23 Jul 2020 11:34:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxdMTY617GsTq+0lxD6oRmrpHOfTbKSGk06sg0cdo+bSbyjp/MbnZQe9aM6Zhenuq8vZ9tx5TSoByCMImxrw60=
+X-Received: by 2002:a6b:bc41:: with SMTP id m62mr6012345iof.95.1595529290486;
+ Thu, 23 Jul 2020 11:34:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200723140011.GR5523@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200722215048.GL220876@anatevka.americas.hpqcorp.net> <20200723000012.GA1325359@bjorn-Precision-5520>
+In-Reply-To: <20200723000012.GA1325359@bjorn-Precision-5520>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 24 Jul 2020 02:34:39 +0800
+Message-ID: <CACPcB9f_cD4RFA_H002LPVaAqrDh_81fjEkM2HGekdWVa+V_BQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jerry Hoemann <jerry.hoemann@hpe.com>, Baoquan He <bhe@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>, jroedel@suse.de,
+        Myron Stowe <myron.stowe@redhat.com>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
+        Khalid Aziz <khalid@gonehiking.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 10:00 AM, Peter Zijlstra wrote:
-> On Thu, Jul 09, 2020 at 12:06:13PM -0400, Waiman Long wrote:
->> We don't really need to do a pv_spinlocks_init() if pv_kick() isn't
->> supported.
-> Waiman, if you cannot explain how not having kick is a sane thing, what
-> are you saying here?
+On Thu, Jul 23, 2020 at 8:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-The current PPC paravirt spinlock code doesn't do any cpu kick. It does 
-an equivalence of pv_wait by yielding the cpu to the lock holder only. 
-The pv_spinlocks_init() is for setting up the hash table for doing 
-pv_kick. If we don't need to do pv_kick, we don't need the hash table.
+> On Wed, Jul 22, 2020 at 03:50:48PM -0600, Jerry Hoemann wrote:
+> > On Wed, Jul 22, 2020 at 10:21:23AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
+>
+> > > > I think I didn't make one thing clear, The PCI UR error never arrives
+> > > > in kernel, it's the iLo BMC on that HPE machine caught the error, and
+> > > > send kernel an NMI. kernel is panicked by NMI, I'm still trying to
+> > > > figure out why the NMI hanged kernel, even with panic=-1,
+> > > > panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
+> > > > NMI by shutdown the devices in right order, that's also a solution.
+>
+> ACPI v6.3, chapter 18, does mention NMIs several times, e.g., Table
+> 18-394 and sec 18.4.  I'm not familiar enough with APEI to know
+> whether Linux correctly supports all those cases.  Maybe this is a
+> symptom that we don't?
+>
+> > > I'm not sure how much sympathy to have for this situation.  A PCIe UR
+> > > is fatal for the transaction and maybe even the device, but from the
+> > > overall system point of view, it *should* be a recoverable error and
+> > > we shouldn't panic.
+> > >
+> > > Errors like that should be reported via the normal AER or ACPI/APEI
+> > > mechanisms.  It sounds like in this case, the platform has decided
+> > > these aren't enough and it is trying to force a reboot?  If this is
+> > > "special" platform behavior, I'm not sure how much we need to cater
+> > > for it.
+> >
+> > Are these AER errors the type processed by the GHES code?
+>
+> My understanding from ACPI v6.3, sec 18.3.2, is that the Hardware
+> Error Source Table may contain Error Source Descriptors of types like:
+>
+>   IA-32 Machine Check Exception
+>   IA-32 Corrected Machine Check
+>   IA-32 Non-Maskable Interrupt
+>   PCIe Root Port AER
+>   PCIe Device AER
+>   Generic Hardware Error Source (GHES)
+>   Hardware Error Notification
+>   IA-32 Deferred Machine Check
+>
+> I would naively expect PCIe UR errors to be reported via one of the
+> PCIe Error Sources, not GHES, but maybe there's some reason to use
+> GHES.
+>
+> The kernel should already know how to deal with the PCIe AER errors,
+> but we'd have to add new device-specific code to handle things
+> reported via GHES, along the lines of what Shiju is doing here:
+>
+>   https://lore.kernel.org/r/20200722104245.1060-1-shiju.jose@huawei.com
+>
+> > I'll note that RedHat runs their crash kernel with:  hest_disable.
+> > So, the ghes code is disabled in the crash kernel.
+>
+> That would disable all the HEST error sources, including the PCIe AER
+> ones as well as GHES ones.  If we turn off some of the normal error
+> handling mechanisms, I guess we have to expect that some errors won't
+> be handled correctly.
 
-I am not saying that pv_kick is not needed for the PPC environment. I 
-was just trying to adapt the pvqspinlock code to such an environment 
-first. Further investigation on how to implement some kind of pv_kick 
-will be something that we may want to do as a follow on.
 
-BTW, do you have any comment on my v2 lock holder cpu info qspinlock 
-patch? I will have to update the patch to fix the reported 0-day test 
-problem, but I want to collect other feedback before sending out v3.
+Hi, that's true, hest_disable is added by default to reduce memory
+usage in special cases.
+But even if I remove hest_disable and have GHES enabled, but the
+hanging issue still exists, from the iLO console log, it's still
+sending an NMI to kernel, and kernel hanged.
 
-Cheers,
-Longman
+The NMI won't hang the kernel for 100 percent, sometime it will just
+panic and reboot and sometimes it hangs. This behavior didn't change
+after/before enabled the GHES.
+
+Maybe this is a "special platform behavior". I'm also not 100 percent
+sure if/how we can cover this in a good way for now.
+I'll try to figure how the NMI actually hanged the kernel and see if
+it could be fixed in other ways.
+
+-- 
+Best Regards,
+Kairui Song
 
