@@ -2,78 +2,180 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E3EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F7DC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591D12086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F04820771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jRITkwnm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IKL4Uzwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729520AbgGWPVE (ORCPT
+        id S1729477AbgGWPVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgGWPVE (ORCPT
+        Thu, 23 Jul 2020 11:21:01 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:40871 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725843AbgGWPVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:21:04 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7367C0619DC;
-        Thu, 23 Jul 2020 08:21:03 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyd1p-00109E-2G; Thu, 23 Jul 2020 15:21:01 +0000
-Date:   Thu, 23 Jul 2020 16:21:01 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
- of 0 as initial sum
-Message-ID: <20200723152101.GI2786714@ZenIV.linux.org.uk>
-References: <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
- <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
- <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
- <20200722144213.GE2786714@ZenIV.linux.org.uk>
- <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
- <20200722155452.GF2786714@ZenIV.linux.org.uk>
- <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
- <20200722173903.GG2786714@ZenIV.linux.org.uk>
- <02938acd78fd40beb02ffc5a1b803d85@AcuMS.aculab.com>
- <20200723145342.GH2786714@ZenIV.linux.org.uk>
+        Thu, 23 Jul 2020 11:21:00 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id F13195809AD;
+        Thu, 23 Jul 2020 11:20:58 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 23 Jul 2020 11:20:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=u
+        vamDLmFMG67kHSwtBzzrekOA3Min6/oHJ8rJdAHzuI=; b=jRITkwnmyBayVcHM3
+        JGfBP+XmHcCj6q7MUNHeqxd8aE6zdtnPefyWU4M0KAX07OZlOmtmv4lfIRi3+6oK
+        kUtMOiC1wy+EOMcP5OVgFuoqv+7uu9L6iAE88OFzRsT+IIo7G7qpwPR33zUKil8y
+        SDsGZXsQlcYTyODrLYhobYOZxppi9H0esDahJBESxiG4PKEjteC49FTB0Ri3bzJT
+        VtJAaSRU1Mo4LE7YTpRwKy97iFeUlEG24jneh58mal6b40xtnVemVdd84BBxeub6
+        BewVDHT05d7p7ElEdfP9/Ot15NwhSxIqiIeOpFfxrZAobaKGHB0x7Ws+nA7hJ7B4
+        rmwkw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=uvamDLmFMG67kHSwtBzzrekOA3Min6/oHJ8rJdAHz
+        uI=; b=IKL4UzwdZXrOkQmcA3d+TejurpkjNZYXHQXpe3CvmMq5WmIpj6S/ABIQ/
+        pGUc6SGWmRT7/yqN177HYN+wnqaAeGPmUpTG8Mt4f6jyle/0H0HvJtMAv9+lakSp
+        AAUKOrQWFQZrkmZ5ADIMlSYlEr0fK0aJRli/NoXg1OxP09ZYthWwHzlUHg+teURt
+        PIFG4M5ZX2HPfKUL2EVFsoLjxPkLOeJffD91adXgRAYa2Fxa/IUhpseuyooLokzq
+        j8XCcfm3gZoSF27qyUFvXqBpnAkl1p3KYTtSzOKRYm6ZDWhwHHLXTqJJagEk+WnI
+        Sg1DquwvWiLJTIE8BEfVwJEX370+A==
+X-ME-Sender: <xms:2aoZX3n4RN5-xkPXPgFbqZ6fKPg25F9Up298zDEICw4JHcIuhlg2MQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedugdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttdejnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejjeekjedttdethedtfeelteefffduvdevvdfhtdeiudetleejgeelfeef
+    uedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:2aoZX62dHOA8uaufwwTV5WcEcfC4a_A43mt8JIw38YjjY4Wty7sk0w>
+    <xmx:2aoZX9rotHqnEfQRPY14bCwgu6dbn_GlnJIqxNaj7kcLcRZvK0f-Pw>
+    <xmx:2aoZX_lsFsI_Xp_vZheN1vfbfi8Mi443YYgZTq2g83HnZV6Uz8y8-g>
+    <xmx:2qoZXyntTGWJVGGT0QGvZsR3T3P9bEYf00ctmCS_xhonZxc98OyEsA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D43CB3280067;
+        Thu, 23 Jul 2020 11:20:56 -0400 (EDT)
+Date:   Thu, 23 Jul 2020 17:20:54 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-sunxi@googlegroups.com,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:ALLWINNER THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: sun8i: Be loud when probe fails
+Message-ID: <20200723152054.hrtahg77ycg5ovud@gilmour.lan>
+References: <20200708105527.868987-1-megous@megous.com>
+ <20200708122542.73o3lbhgvbdw5c4z@gilmour.lan>
+ <20200708132924.r6f5id2evprhybec@core.my.home>
+ <20200708133654.fp7k4whl2qmn5ygy@gilmour.lan>
+ <20200708134441.4lfuh7nwtqnkkg2a@core.my.home>
+ <20200708135748.l4zncodhhggurp6s@gilmour.lan>
+ <20200712232942.eecoekr25i3wu2iq@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200723145342.GH2786714@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200712232942.eecoekr25i3wu2iq@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 03:53:42PM +0100, Al Viro wrote:
+On Mon, Jul 13, 2020 at 01:29:42AM +0200, Ond=C5=99ej Jirman wrote:
+> Hi Maxime,
+>=20
+> On Wed, Jul 08, 2020 at 03:57:48PM +0200, Maxime Ripard wrote:
+> > On Wed, Jul 08, 2020 at 03:44:41PM +0200, Ond=C5=99ej Jirman wrote:
+> > > >
+>=20
+> [...]
+>=20
+> > > > Yeah, but on the other hand, we regularly have people that come up =
+and
+> > > > ask if a "legitimate" EPROBE_DEFER error message (as in: the driver
+> > > > wasn't there on the first attempt but was there on the second) is a
+> > > > cause of concern or not.
+> > >=20
+> > > That's why I also added a success message, to distinguish this case.=
+=20
+> >=20
+> > That doesn't really help though. We have plenty of drivers that have
+> > some sort of success message and people will still ask about that error
+> > message earlier.
+> >=20
+> > > > > And people run several distros for 3-4 months without anyone noti=
+cing any
+> > > > > issues and that thermal regulation doesn't work. So it seems that=
+ lack of a
+> > > > > success message is not enough.
+> > > >=20
+> > > > I understand what the issue is, but do you really expect phone user=
+s to
+> > > > monitor the kernel logs every time they boot their phone to see if =
+the
+> > > > thermal throttling is enabled?
+> > >=20
+> > > Not phone users, but people making their own kernels/distributions. T=
+hose people
+> > > monitor dmesg, and out of 4 distros or more nobody noticed there was =
+an issue
+> > > (despite the complaints of overheating by their users).
+> > >=20
+> > > So I thought some warning may be in order, so that distro people more=
+ easily
+> > > notice they have misconfigured the kernel or sometging.
+> >=20
+> > I mean, then there's nothing we can do to properly address that then.
+> >=20
+> > The configuration system is a gun, we can point at the target, but
+> > anyone is definitely free to shot themself in the foot.
+> >=20
+> > You would have exactly the same result if you left the thermal driver
+> > disabled, or if you didn't have cpufreq support.
+>=20
+> Right. Though I hope there's some middle ground. I mean all of those dev_=
+err
+> in error paths of many drivers are there mostly to help debugging stuff.
 
-> Said that, what you've printed for 1-byte segments (and that's going to be
-> seriously affected by the setup costs in csum-copy.S, sensitive to calling
-> convention changes) is time to run the 16-iteration loop divided by 1 * 16 / 8;
-> IOW, your difference for 16 iterations here is 37*2 = 74 cycles.  With
-> per-iteration diff being a bit under 5 cycles.  Which is not implausible,
-> but
-> 	1) extrapolating to other compiler versions, flags, etc. is not obvious
-> 	2) the effects of calling convention changes need to be taken into account
-> 	3) for copying to/from userland the effects of calling convention changes
-> are be even larger, and kernel is certainly not going to issue kvec iters of _that_
-> sort, TYVM.
+Adding all the error messages you have in that patch seems like a good
+middle ground to me, and we could definitely use more of them in some
+other drivers (like the USB PHY)
 
-To clarify it a bit: the effects of calling conventions change are mostly due
-to not passing (and saving) those error pointers, and that could be had with
-"pass the initial sum in" - just start these iov_iter.c loops with sum = ~0U
-and we get the same warranties re not getting 0 in absence of faults.
+> And even though I was part of this driver's development, it took me quite
+> some time to figure out it was the missing sunxi-sid driver causing the i=
+ssue,
+> with complete silence from the driver.
+>=20
+> Maybe this can/will be solved at another level entirely, like having a de=
+vice
+> core report devices probes that failed with EPROBE_DEFER some time after
+> the boot finished and modules had a chance to load, instead of immediately
+> for each probe retry.
 
-The point is, your "~4.5 cycles per vector" is pretty much noise and the
-difference between the 3-argument and 4-argument variants could easily be
-in the same range.  It might be a valid microoptimization, it might be not.
-3-argument variant is simpler and IMO in absence of strong data we ought
-to go with that.
+The thing is that there's never a point in time where "all the modules
+had a chance to load". If you're loading the modules on demand and have
+an hotpluggable bus, that might happen after a second or after a year,
+you can't say.
+
+The actual fix for this would be to use the on demand probing that seems
+to be in the works and avoid EPROBE_DEFER entirely, but that probably
+won't happen in a near future.
+
+Maxime
