@@ -2,169 +2,145 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF69BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ED6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE8DC22CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595535509;
-	bh=OKaS1P28nJxxtCAWZB+HdxF8uwxJI3GOsJdAJpz1Wb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pzAEEizUGuQSDAiHHDKQL4rH0dwllI0h8U4lHVBbXNCqQ1UpBU3C50vKROqErCLqo
-	 JA5V0b7ydn7WLGx4Zr1Z2wb1M2g3e2EuEDJXGn+7k46cnMGJmuOU1D1P2uMXI+9Iuq
-	 E7vUzV6tfFIPSg+R3Ix3tHwwaaQYE5bzC2lrPx88=
+	by mail.kernel.org (Postfix) with ESMTP id 9B08020792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRFGlag/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgGWUS1 (ORCPT
+        id S1726978AbgGWUTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:18:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41173 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWUS0 (ORCPT
+        Thu, 23 Jul 2020 16:19:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWUTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:18:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id p205so7617289iod.8;
-        Thu, 23 Jul 2020 13:18:26 -0700 (PDT)
+        Thu, 23 Jul 2020 16:19:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B035CC0619DC;
+        Thu, 23 Jul 2020 13:19:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 184so6349034wmb.0;
+        Thu, 23 Jul 2020 13:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Jz1lbK5bI0Ctyh4QZXH3ZtjdTMxnzW49HE2H6bVsMxw=;
+        b=oRFGlag/zGU4CXXJ7XIQD7fPt8RRB94r0orMm2ytu8XHkavznqsppVIxVYbFUJ4DB0
+         IfMmUYmi7xuRXPTKzbqCXimVAZUaIddCNZMWWNCXg0YVl08GSZU1uLAxxZZnMGYNMemJ
+         lMi8RLkggLbM+U/a/ETnsoVAz2UHCnbVKiScXHLbI6T3FvividfJGqKaXYAvUQq33u5Y
+         uCyAuMZ6u0kE2Rjxv8KhezALPo9NmunRoMPN3gT77vNWNgozYC5Utxu9VNy+T1+IXJ5f
+         1gLPmCqmmnYIgn4b1fTLaMkHzVMRVHq4lhXBUoUPec+Ead0WNuo8hS1Tab/pEarMxiuP
+         aIeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A+bs3OlS8UQmhllIUhonZMM/+IfllG/gM+l8StXXg04=;
-        b=Cj0Nypo93IqGg+qJzGKISCP+PVGF5qtw5DbS+WFFuKUZKGG6AzVASrBnW8TclQahBI
-         9QSrpf8os1c8jLb+olVzwZMwMx1tyq8F+zKP0X2qR7b92qlb7Ld9/MvIDO5jIXktP+qG
-         oP1fqPFtDuhgRMUn6tTFnW8zYRHuacGAwh4clbwbhk5bYYuQSKQXlCyu7geXg+G2vlDs
-         aChkH35dH6vtErDREsEf0JoPVaP4i1wT5+0STq+4Jp6PLLcwzxiN5Yrbas2gPFMxwjP8
-         1O8s4tshvMSeRy99EGYnmGXRuTDgXHPxskr4Iy9CAe++JJ1fwCzqZiV5DJDGF7WhkEa5
-         oLRA==
-X-Gm-Message-State: AOAM533mtR6wGYBVOozv21kfNvwuu7ElBO1BdG/aIg5RzpUTA0w7XYOf
-        CmT6JjKWlXN5OsJT3n6rc5g+OHWSXA==
-X-Google-Smtp-Source: ABdhPJx40znh6EFlcwp+i/5XHaqEwUcM8wAzVExw4KY1VjVYL+2q03d6mC37eNjFzhZiBelEbH+gdA==
-X-Received: by 2002:a02:7786:: with SMTP id g128mr4182617jac.45.1595535502832;
-        Thu, 23 Jul 2020 13:18:22 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u65sm2019040iod.45.2020.07.23.13.18.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:18:21 -0700 (PDT)
-Received: (nullmailer pid 793895 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:18:19 -0000
-Date:   Thu, 23 Jul 2020 14:18:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: tas2562: Convert the tas2562 binding
- to yaml
-Message-ID: <20200723201819.GA783613@bogus>
-References: <20200722154706.9657-1-dmurphy@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Jz1lbK5bI0Ctyh4QZXH3ZtjdTMxnzW49HE2H6bVsMxw=;
+        b=kA9gzklvJSWsmtFbkx0P2Vplz9vyTYaF/BCskyQbiwJQ5Gh18SoZZ2c7COgqcRirdS
+         IL87bqrRJGthg/+nw8YBIqEXqAk254nQimy2eDxiYcI0e10L1HAPwCObgXsW/ZucYjYu
+         3/kO9vHiQxV5Ic1pV7brQWkrinD332S+3tF0MiFXWJichVdz08KVcZ1sAiiRTNQ9sIyv
+         +0f9C4XX0UfiX+H+ZUgo/tjbK7GIDZ+LCia1QWV2MzYd+Hya9IBvgsAjNDVEWrn/k4UY
+         2+5ohG0jI5GYcmwUJTPBCnJy5LK3Ypeg0hOdSMC6ucaftf4Mr79siV6MRPBGzsi7Ap8i
+         /FJQ==
+X-Gm-Message-State: AOAM530oN6GHEuaLQCiGUfTRJ39gCB9dvu5is8tmbLnGccPR1N9LKGcv
+        KHaIUpDJ8fRHMpVGJABcJfJ1rOfjilw2szxNG0V2FA==
+X-Google-Smtp-Source: ABdhPJwZ5ghVcpzgVD08jYmYRCKFxzaZXDMoXDwAnKc3VkUnx6aeY1yMm+lsM5vVRo5/EFxZ4Bj5gue9yJUmkyUiL10=
+X-Received: by 2002:a1c:2:: with SMTP id 2mr5654439wma.79.1595535543473; Thu,
+ 23 Jul 2020 13:19:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722154706.9657-1-dmurphy@ti.com>
+References: <20200723195742.GA1447143@bjorn-Precision-5520> <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
+In-Reply-To: <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 23 Jul 2020 16:18:52 -0400
+Message-ID: <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:47:05AM -0500, Dan Murphy wrote:
-> Convert the TAS2562 text file to yaml format.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - Updated the shutdown-gpio to shutdown-gpios and fixed licensing to be
-> GPL-2.0-only.
-> 
->  .../devicetree/bindings/sound/tas2562.yaml    | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
-> new file mode 100644
-> index 000000000000..8d75a798740b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2019 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments TAS2562 Smart PA
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-> +  efficiently driving high peak power into small loudspeakers.
-> +  Integrated speaker voltage and current sense provides for
-> +  real time monitoring of loudspeaker behavior.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tas2562
-> +      - ti,tas2563
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
-> +
-> +  shut-down-gpios:
-> +    description: GPIO used to control the state of the device.
-> +    deprecated: true
+On Thu, Jul 23, 2020 at 4:11 PM Logan Gunthorpe <logang@deltatee.com> wrote=
+:
+>
+>
+>
+> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+> > [+cc Andrew, Armen, hpa]
+> >
+> > On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+> >> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> =
+wrote:
+> >>>
+> >>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+> >>> transactions between root ports and found to work. Therefore add it
+> >>> to the list.
+> >>>
+> >>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> >>> Cc: Huang Rui <ray.huang@amd.com>
+> >>> Cc: Alex Deucher <alexdeucher@gmail.com>
+> >>
+> >> Starting with Zen, all AMD platforms support P2P for reads and writes.
+> >
+> > What's the plan for getting out of the cycle of "update this list for
+> > every new chip"?  Any new _DSMs planned, for instance?
+>
+> Well there was an effort to add capabilities in the PCI spec to describe
+> this but, as far as I know, they never got anywhere, and hardware still
+> doesn't self describe with this.
+>
+> > A continuous trickle of updates like this is not really appealing.  So
+> > far we have:
+> >
+> >   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to=
+ whitelist")
+> >   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to=
+ the whitelist")
+> >   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+> >   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+> >   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AM=
+D ZEN Root Complex")
+> >
+> > And that's just from the last year, not including this patch.
+>
+> Yes, it's not ideal. But most of these are adding old devices as people
+> test and care about running on those platforms -- a lot of this is
+> bootstrapping the list. I'd expect this to slow down a bit as by now we
+> have hopefully got a lot of the existing platforms people care about.
+> But we'd still probably expect to be adding a new Intel and AMD devices
+> about once a year as they produce new hardware designs.
+>
+> Unless, the Intel and AMD folks know of a way to detect this, or even to
+> query if a root complex is newer than a certain generation, I'm not sure
+> what else we can do here.
 
-I think you should just remove this given it never worked with any 
-released kernel. Otherwise,
+I started a thread internally to see if I can find a way.  FWIW,
+pre-ZEN parts also support p2p DMA, but only for writes.  If I can get
+a definitive list, maybe we could switch to a blacklist for the old
+ones?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Alex
 
-> +
-> +  shutdown-gpios:
-> +    description: GPIO used to control the state of the device.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ti,imon-slot-no:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TDM TX current sense time slot.
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
-> +   i2c0 {
-> +     #address-cells = <1>;
-> +     #size-cells = <0>;
-> +     codec: codec@4c {
-> +       compatible = "ti,tas2562";
-> +       reg = <0x4c>;
-> +       #sound-dai-cells = <1>;
-> +       interrupt-parent = <&gpio1>;
-> +       interrupts = <14>;
-> +       shutdown-gpios = <&gpio1 15 0>;
-> +       ti,imon-slot-no = <0>;
-> +     };
-> +   };
-> +
-> -- 
-> 2.27.0
-> 
+>
+> Logan
