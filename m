@@ -2,112 +2,156 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082CCC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA79B207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 05:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77F2207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BOBQS8sA"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bs2D4dmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgGWF5m (ORCPT
+        id S1726025AbgGWGCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:57:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30886 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725773AbgGWF5m (ORCPT
+        Thu, 23 Jul 2020 02:02:37 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:51483 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725536AbgGWGCg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 01:57:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595483860;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fAqp5ib2PZP/lFXYC06EwZltjuh1DbpFYhRZzc7f8qI=;
-        b=BOBQS8sAUq3D39pl5Rzh+Ew3AgpwRO/2199eXz+8z9ihiRbvTRnQn9yKtE3qm4EBCEubyR
-        DVIT5AHbV0Ve0YSTPH6KQJT+MADoZTVkNxkEjCwgJAUOzsmyjYBwlcppZUOvykaglPIAtM
-        tXUsl+g6sKTr2LgnHeHCPyP9M/0CoEw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-y1KKTRwlPpWc1T8yLVzkQQ-1; Thu, 23 Jul 2020 01:57:39 -0400
-X-MC-Unique: y1KKTRwlPpWc1T8yLVzkQQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A00D1800C64;
-        Thu, 23 Jul 2020 05:57:37 +0000 (UTC)
-Received: from localhost (ovpn-13-53.pek2.redhat.com [10.72.13.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52D7A60C05;
-        Thu, 23 Jul 2020 05:57:33 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 13:57:31 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mike.kravetz@oracle.com, david@redhat.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v2 3/4] doc/vm: fix typo in the hugetlb admin
- documentation
-Message-ID: <20200723055731.GP32539@MiWiFi-R3L-srv>
-References: <20200723032248.24772-1-bhe@redhat.com>
- <20200723032248.24772-4-bhe@redhat.com>
- <da5d1d65-32ff-dd27-af4b-159e48eaa763@arm.com>
+        Thu, 23 Jul 2020 02:02:36 -0400
+X-UUID: f99125af2e1144a3bc6d489264c94766-20200723
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=mgaMGq9tk6Tv5Z69M3C5PTIdY+n3OKq4qxR0JvMcFnU=;
+        b=bs2D4dmM3CYkKKUxLHqujGFPTITeZEPxjLJQTKRW4tUsrLmbevZd9J44r69Ch7ZPGKIDYk7Iq4g8RZeOswHhYzzSzruTbSV2HA7sZTE27cfdE7TObW3U8C8qYsaS7eJSRE98HJ5ehH+uh+mwHHl7i6nMAbTFSt+ysnuMwBLrkog=;
+X-UUID: f99125af2e1144a3bc6d489264c94766-20200723
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2087411; Thu, 23 Jul 2020 14:02:21 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul
+ 2020 14:02:19 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Jul 2020 14:02:20 +0800
+Message-ID: <1595484072.16079.26.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/4] i2c: mediatek: Add apdma sync in i2c driver
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
+CC:     <wsa@the-dreams.de>, <qiangming.xia@mediatek.com>,
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <leilk.liu@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 23 Jul 2020 14:01:12 +0800
+In-Reply-To: <1595467756.7332.7.camel@mtksdaap41>
+References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
+         <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
+         <1595467756.7332.7.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da5d1d65-32ff-dd27-af4b-159e48eaa763@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-TM-SNTS-SMTP: 8508DC830B35E190FB92C244D835A81295A9C104BA53F0B154DA55D8789307C62000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/23/20 at 10:47am, Anshuman Khandual wrote:
-> 
-> 
-> On 07/23/2020 08:52 AM, Baoquan He wrote:
-> > Change 'pecify' to 'Specify'.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-> > Reviewed-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  Documentation/admin-guide/mm/hugetlbpage.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
-> > index 015a5f7d7854..f7b1c7462991 100644
-> > --- a/Documentation/admin-guide/mm/hugetlbpage.rst
-> > +++ b/Documentation/admin-guide/mm/hugetlbpage.rst
-> > @@ -131,7 +131,7 @@ hugepages
-> >  	parameter is preceded by an invalid hugepagesz parameter, it will
-> >  	be ignored.
-> >  default_hugepagesz
-> > -	pecify the default huge page size.  This parameter can
-> > +	Specify the default huge page size.  This parameter can
-> >  	only be specified once on the command line.  default_hugepagesz can
-> >  	optionally be followed by the hugepages parameter to preallocate a
-> >  	specific number of huge pages of default size.  The number of default
-> > 
-> 
-> This does not apply on 5.8-rc6 and the original typo seems to be missing
-> there as well. This section was introduced recently with following commit.
-> 
->  282f4214384e ("hugetlbfs: clean up command line processing")
-
-Thanks a lot for reviewing. This patchset is based on the latest
-next/master branch, seems below commit introduced the typo which is
-later than commit 282f4214384e, it haven't been merged into mainline
-tree.
-
-commit 72a3e3e25a5142284c6bc76ecf170c2a18dcdf6e
-Author: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date:   Tue Jun 23 09:09:06 2020 +0200
-
-    docs: hugetlbpage.rst: fix some warnings
+T24gVGh1LCAyMDIwLTA3LTIzIGF0IDA5OjI5ICswODAwLCBZaW5nam9lIENoZW4gd3JvdGU6DQo+
+IE9uIFdlZCwgMjAyMC0wNy0yMiBhdCAyMDozMSArMDgwMCwgUWlpIFdhbmcgd3JvdGU6DQo+ID4g
+V2l0aCB0aGUgYXBkbWEgcmVtb3ZlIGhhbmQtc2hha2Ugc2lnbmFsLCBpdCBuZWVkIHRvIGtlZXAg
+aTJjIGFuZA0KPiA+IGFwZG1hIGluIHN5bmMgbWFudWFsbHkuDQo+ID4gDQo+IA0KPiBMb29rcyBn
+b29kIHRvIG1lLA0KPiANCj4gUmV2aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVu
+QG1lZGlhdGVrLmNvbT4NCj4gDQo+IA0KPiBKdXN0IGEgcmVtaW5kZXIsIHdlIGhhdmUgYW5vdGhl
+ciBwYXRjaCAnaTJjOiBtZWRpYXRlazogQWRkIHRvIHN1cHBvcnQNCj4gY29udGludW91cyBtb2Rl
+JyB1bmRlciByZXZpZXcgbm93LiBQbGVhc2UgcmVtZW1iZXIgdG8gdXBkYXRlIE9GRlNFVF9DT04N
+Cj4gYWNjZXNzIGNvZGUgaW4gdGhhdCBwYXRjaC4NCj4gDQo+IEpvZS5DDQo+IA0KPiANCg0KSSBh
+bmQgUWlhbmdtaW5nIGFyZSBsb29raW5nIGF0IHdoZXRoZXIgdGhlIG9yaWdpbmFsIG11bHRpLXdy
+aXRlIGNvZGUgY2FuDQpjb3ZlciBpdCwgQWZ0ZXIgY29uZmlybWluZyBhZ2FpbiwgdGhlbiB3ZSB3
+aWxsIGRlY2lkZSB3aGV0aGVyIGl0IG5lZWQgdG8NCnNlbmQgdGhhdCBwYXRjaC4gVGhhbmtzIGZv
+ciB5b3VyIGNvbW1lbnRzLg0KDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFFpaSBXYW5nIDxxaWku
+d2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMt
+bXQ2NXh4LmMgfCAyMyArKysrKysrKysrKysrKysrKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMjAgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9p
+MmMtbXQ2NXh4LmMNCj4gPiBpbmRleCBkZWVmNjllLi5lNmI5ODRhIDEwMDY0NA0KPiA+IC0tLSBh
+L2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gPiArKysgYi9kcml2ZXJzL2kyYy9i
+dXNzZXMvaTJjLW10NjV4eC5jDQo+ID4gQEAgLTQ4LDYgKzQ4LDkgQEANCj4gPiAgDQo+ID4gICNk
+ZWZpbmUgSTJDX0RNQV9DT05fVFgJCQkweDAwMDANCj4gPiAgI2RlZmluZSBJMkNfRE1BX0NPTl9S
+WAkJCTB4MDAwMQ0KPiA+ICsjZGVmaW5lIEkyQ19ETUFfQVNZTkNfTU9ERQkJMHgwMDA0DQo+ID4g
+KyNkZWZpbmUgSTJDX0RNQV9TS0lQX0NPTkZJRwkJMHgwMDEwDQo+ID4gKyNkZWZpbmUgSTJDX0RN
+QV9ESVJfQ0hBTkdFCQkweDAyMDANCj4gPiAgI2RlZmluZSBJMkNfRE1BX1NUQVJUX0VOCQkweDAw
+MDENCj4gPiAgI2RlZmluZSBJMkNfRE1BX0lOVF9GTEFHX05PTkUJCTB4MDAwMA0KPiA+ICAjZGVm
+aW5lIEkyQ19ETUFfQ0xSX0ZMQUcJCTB4MDAwMA0KPiA+IEBAIC0yMDUsNiArMjA4LDcgQEAgc3Ry
+dWN0IG10a19pMmNfY29tcGF0aWJsZSB7DQo+ID4gIAl1bnNpZ25lZCBjaGFyIHRpbWluZ19hZGp1
+c3Q6IDE7DQo+ID4gIAl1bnNpZ25lZCBjaGFyIGRtYV9zeW5jOiAxOw0KPiA+ICAJdW5zaWduZWQg
+Y2hhciBsdGltaW5nX2FkanVzdDogMTsNCj4gPiArCXVuc2lnbmVkIGNoYXIgYXBkbWFfc3luYzog
+MTsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gIHN0cnVjdCBtdGtfaTJjX2FjX3RpbWluZyB7DQo+ID4g
+QEAgLTMxMSw2ICszMTUsNyBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCj4gPiAgCS50aW1p
+bmdfYWRqdXN0ID0gMSwNCj4gPiAgCS5kbWFfc3luYyA9IDAsDQo+ID4gIAkubHRpbWluZ19hZGp1
+c3QgPSAwLA0KPiA+ICsJLmFwZG1hX3N5bmMgPSAwLA0KPiA+ICB9Ow0KPiA+ICANCj4gPiAgc3Rh
+dGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ2NTc3X2NvbXBhdCA9IHsNCj4g
+PiBAQCAtMzI0LDYgKzMyOSw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KPiA+ICAJLnRp
+bWluZ19hZGp1c3QgPSAwLA0KPiA+ICAJLmRtYV9zeW5jID0gMCwNCj4gPiAgCS5sdGltaW5nX2Fk
+anVzdCA9IDAsDQo+ID4gKwkuYXBkbWFfc3luYyA9IDAsDQo+ID4gIH07DQo+ID4gIA0KPiA+ICBz
+dGF0aWMgY29uc3Qgc3RydWN0IG10a19pMmNfY29tcGF0aWJsZSBtdDY1ODlfY29tcGF0ID0gew0K
+PiA+IEBAIC0zMzcsNiArMzQzLDcgQEAgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7DQo+ID4gIAku
+dGltaW5nX2FkanVzdCA9IDAsDQo+ID4gIAkuZG1hX3N5bmMgPSAwLA0KPiA+ICAJLmx0aW1pbmdf
+YWRqdXN0ID0gMCwNCj4gPiArCS5hcGRtYV9zeW5jID0gMCwNCj4gPiAgfTsNCj4gPiAgDQo+ID4g
+IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10NzYyMl9jb21wYXQgPSB7
+DQo+ID4gQEAgLTM1MCw2ICszNTcsNyBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCj4gPiAg
+CS50aW1pbmdfYWRqdXN0ID0gMCwNCj4gPiAgCS5kbWFfc3luYyA9IDAsDQo+ID4gIAkubHRpbWlu
+Z19hZGp1c3QgPSAwLA0KPiA+ICsJLmFwZG1hX3N5bmMgPSAwLA0KPiA+ICB9Ow0KPiA+ICANCj4g
+PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ4MTczX2NvbXBhdCA9
+IHsNCj4gPiBAQCAtMzYyLDYgKzM3MCw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KPiA+
+ICAJLnRpbWluZ19hZGp1c3QgPSAwLA0KPiA+ICAJLmRtYV9zeW5jID0gMCwNCj4gPiAgCS5sdGlt
+aW5nX2FkanVzdCA9IDAsDQo+ID4gKwkuYXBkbWFfc3luYyA9IDAsDQo+ID4gIH07DQo+ID4gIA0K
+PiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pMmNfY29tcGF0aWJsZSBtdDgxODNfY29tcGF0
+ID0gew0KPiA+IEBAIC0zNzUsNiArMzg0LDcgQEAgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7DQo+
+ID4gIAkudGltaW5nX2FkanVzdCA9IDEsDQo+ID4gIAkuZG1hX3N5bmMgPSAxLA0KPiA+ICAJLmx0
+aW1pbmdfYWRqdXN0ID0gMSwNCj4gPiArCS5hcGRtYV9zeW5jID0gMCwNCj4gPiAgfTsNCj4gPiAg
+DQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19pMmNfb2ZfbWF0Y2hb
+XSA9IHsNCj4gPiBAQCAtNzk4LDYgKzgwOCw3IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFu
+c2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gPiAgCXUx
+NiBzdGFydF9yZWc7DQo+ID4gIAl1MTYgY29udHJvbF9yZWc7DQo+ID4gIAl1MTYgcmVzdGFydF9m
+bGFnID0gMDsNCj4gPiArCXUxNiBkbWFfc3luYyA9IDA7DQo+ID4gIAl1MzIgcmVnXzRnX21vZGU7
+DQo+ID4gIAl1OCAqZG1hX3JkX2J1ZiA9IE5VTEw7DQo+ID4gIAl1OCAqZG1hX3dyX2J1ZiA9IE5V
+TEw7DQo+ID4gQEAgLTg1MSwxMCArODYyLDE2IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFu
+c2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gPiAgCQlt
+dGtfaTJjX3dyaXRldyhpMmMsIG51bSwgT0ZGU0VUX1RSQU5TQUNfTEVOKTsNCj4gPiAgCX0NCj4g
+PiAgDQo+ID4gKwlpZiAoaTJjLT5kZXZfY29tcC0+YXBkbWFfc3luYykgew0KPiA+ICsJCWRtYV9z
+eW5jID0gSTJDX0RNQV9TS0lQX0NPTkZJRyB8IEkyQ19ETUFfQVNZTkNfTU9ERTsNCj4gPiArCQlp
+ZiAoaTJjLT5vcCA9PSBJMkNfTUFTVEVSX1dSUkQpDQo+ID4gKwkJCWRtYV9zeW5jIHw9IEkyQ19E
+TUFfRElSX0NIQU5HRTsNCj4gPiArCX0NCj4gPiArDQo+ID4gIAkvKiBQcmVwYXJlIGJ1ZmZlciBk
+YXRhIHRvIHN0YXJ0IHRyYW5zZmVyICovDQo+ID4gIAlpZiAoaTJjLT5vcCA9PSBJMkNfTUFTVEVS
+X1JEKSB7DQo+ID4gIAkJd3JpdGVsKEkyQ19ETUFfSU5UX0ZMQUdfTk9ORSwgaTJjLT5wZG1hYmFz
+ZSArIE9GRlNFVF9JTlRfRkxBRyk7DQo+ID4gLQkJd3JpdGVsKEkyQ19ETUFfQ09OX1JYLCBpMmMt
+PnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQo+ID4gKwkJd3JpdGVsKEkyQ19ETUFfQ09OX1JYIHwg
+ZG1hX3N5bmMsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsNCj4gPiAgDQo+ID4gIAkJZG1h
+X3JkX2J1ZiA9IGkyY19nZXRfZG1hX3NhZmVfbXNnX2J1Zihtc2dzLCAxKTsNCj4gPiAgCQlpZiAo
+IWRtYV9yZF9idWYpDQo+ID4gQEAgLTg3Nyw3ICs4OTQsNyBAQCBzdGF0aWMgaW50IG10a19pMmNf
+ZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1zZ3MsDQo+
+ID4gIAkJd3JpdGVsKG1zZ3MtPmxlbiwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9SWF9MRU4pOw0K
+PiA+ICAJfSBlbHNlIGlmIChpMmMtPm9wID09IEkyQ19NQVNURVJfV1IpIHsNCj4gPiAgCQl3cml0
+ZWwoSTJDX0RNQV9JTlRfRkxBR19OT05FLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0lOVF9GTEFH
+KTsNCj4gPiAtCQl3cml0ZWwoSTJDX0RNQV9DT05fVFgsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRf
+Q09OKTsNCj4gPiArCQl3cml0ZWwoSTJDX0RNQV9DT05fVFggfCBkbWFfc3luYywgaTJjLT5wZG1h
+YmFzZSArIE9GRlNFVF9DT04pOw0KPiA+ICANCj4gPiAgCQlkbWFfd3JfYnVmID0gaTJjX2dldF9k
+bWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0KPiA+ICAJCWlmICghZG1hX3dyX2J1ZikNCj4gPiBA
+QCAtOTAwLDcgKzkxNyw3IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFuc2ZlcihzdHJ1Y3Qg
+bXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gPiAgCQl3cml0ZWwobXNncy0+
+bGVuLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX1RYX0xFTik7DQo+ID4gIAl9IGVsc2Ugew0KPiA+
+ICAJCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0lOVF9G
+TEFHKTsNCj4gPiAtCQl3cml0ZWwoSTJDX0RNQV9DTFJfRkxBRywgaTJjLT5wZG1hYmFzZSArIE9G
+RlNFVF9DT04pOw0KPiA+ICsJCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHIHwgZG1hX3N5bmMsIGky
+Yy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsNCj4gPiAgDQo+ID4gIAkJZG1hX3dyX2J1ZiA9IGky
+Y19nZXRfZG1hX3NhZmVfbXNnX2J1Zihtc2dzLCAxKTsNCj4gPiAgCQlpZiAoIWRtYV93cl9idWYp
+DQo+IA0KPiANCg0K
 
