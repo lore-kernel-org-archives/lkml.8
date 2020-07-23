@@ -2,107 +2,122 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFCFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5C6C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDDA20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="arU8Ru/y"
+	by mail.kernel.org (Postfix) with ESMTP id E97A22084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 02:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733309AbgGWCeP (ORCPT
+        id S2387442AbgGWCeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jul 2020 22:34:15 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24787 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728914AbgGWCeO (ORCPT
+        Wed, 22 Jul 2020 22:34:19 -0400
+Received: from labrats.qualcomm.com ([199.106.110.90]:30244 "EHLO
+        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbgGWCeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jul 2020 22:34:14 -0400
-X-UUID: c259162778874c56bb613c025876b752-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9hTIinPJ/86OaOzsDAjqdA+TQ7VtOw4pAcixEozya7A=;
-        b=arU8Ru/yuG0TpypuMhw6gbzfQiwEpS2Xq1YELHCSXKxHg//a1tsTOMYL9l1knqpJgtOP+vfOvScdQ8CaypLJmo7poMls//PwavUwLbCNVRIQoI0L6Q+8BFccV9/AAdCf6NBCfVnauxXoCTReJmAGdWnPxEL3D93nZblyBPsklwE=;
-X-UUID: c259162778874c56bb613c025876b752-20200723
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1258688521; Thu, 23 Jul 2020 10:34:11 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 10:34:10 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 10:34:07 +0800
-Message-ID: <1595471650.22392.12.camel@mtkswgap22>
-Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant
- queue structure
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
-Date:   Thu, 23 Jul 2020 10:34:10 +0800
-In-Reply-To: <20200715061957.GA34333@vkoul-mobl>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
-         <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
-         <20200715061957.GA34333@vkoul-mobl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 22 Jul 2020 22:34:18 -0400
+IronPort-SDR: qqjSYGIrY03x/nQGQRrWNlzYExV6CSP62+sFb33/m42pf09y+IaRBD/s7CK4ZtTg6kTADtRmGF
+ D05meV1T/2X/vM8xJoP8gDs0ZMgCL6TYo91ChAUcSDj2OarDFKvhZ32BhZjLUUDW129nbUNOCD
+ C5WWZQwcZbwiedctnQgW8UqeUWcjLh2HJHmLXSoTP97t62ie4RcOeA5S2kdyYY1GmlEY/Y54iy
+ /+Exu+p6iJ7jq7Ldu6pRsR3QSPG4HJpM4efsVJMfdOgVmT0phcP9bkGWW5DCgNWjEjpKAk6D7E
+ mZ4=
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="47229202"
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by labrats.qualcomm.com with ESMTP; 22 Jul 2020 19:34:17 -0700
+Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 22 Jul 2020 19:34:16 -0700
+Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
+        id 7326B22A4D; Wed, 22 Jul 2020 19:34:16 -0700 (PDT)
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        sh425.lee@samsung.com, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/9] scsi: ufs: Add checks before setting clk-gating states
+Date:   Wed, 22 Jul 2020 19:34:00 -0700
+Message-Id: <1595471649-25675-2-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
+References: <1595471649-25675-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA3LTE1IGF0IDExOjQ5ICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBP
-biAwMi0wNy0yMCwgMTU6MDYsIEVhc3RMIExlZSB3cm90ZToNCj4gDQo+ID4gIHN0YXRpYyBlbnVt
-IGRtYV9zdGF0dXMgbXRrX2NxZG1hX3R4X3N0YXR1cyhzdHJ1Y3QgZG1hX2NoYW4gKmMsDQo+ID4g
-IAkJCQkJICAgZG1hX2Nvb2tpZV90IGNvb2tpZSwNCj4gPiAgCQkJCQkgICBzdHJ1Y3QgZG1hX3R4
-X3N0YXRlICp0eHN0YXRlKQ0KPiA+ICB7DQo+ID4gLQlzdHJ1Y3QgbXRrX2NxZG1hX3ZjaGFuICpj
-dmMgPSB0b19jcWRtYV92Y2hhbihjKTsNCj4gPiAtCXN0cnVjdCBtdGtfY3FkbWFfdmRlc2MgKmN2
-ZDsNCj4gPiAtCXN0cnVjdCB2aXJ0X2RtYV9kZXNjICp2ZDsNCj4gPiAtCWVudW0gZG1hX3N0YXR1
-cyByZXQ7DQo+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+IC0Jc2l6ZV90IGJ5dGVzID0g
-MDsNCj4gPiAtDQo+ID4gLQlyZXQgPSBkbWFfY29va2llX3N0YXR1cyhjLCBjb29raWUsIHR4c3Rh
-dGUpOw0KPiA+IC0JaWYgKHJldCA9PSBETUFfQ09NUExFVEUgfHwgIXR4c3RhdGUpDQo+ID4gLQkJ
-cmV0dXJuIHJldDsNCj4gPiAtDQo+ID4gLQlzcGluX2xvY2tfaXJxc2F2ZSgmY3ZjLT52Yy5sb2Nr
-LCBmbGFncyk7DQo+ID4gLQl2ZCA9IG10a19jcWRtYV9maW5kX2FjdGl2ZV9kZXNjKGMsIGNvb2tp
-ZSk7DQo+ID4gLQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZjdmMtPnZjLmxvY2ssIGZsYWdzKTsN
-Cj4gPiAtDQo+ID4gLQlpZiAodmQpIHsNCj4gPiAtCQljdmQgPSB0b19jcWRtYV92ZGVzYyh2ZCk7
-DQo+ID4gLQkJYnl0ZXMgPSBjdmQtPnJlc2lkdWU7DQo+ID4gLQl9DQo+ID4gLQ0KPiA+IC0JZG1h
-X3NldF9yZXNpZHVlKHR4c3RhdGUsIGJ5dGVzKTsNCj4gDQo+IGFueSByZWFzb24gd2h5IHlvdSB3
-YW50IHRvIHJlbW92ZSBzZXR0aW5nIHJlc2lkdWU/DQpCZWNhdXNlIE1lZGlhdGVrIENRRE1BIEhX
-IGNhbid0IHN1cHBvcnQgcmVzaWR1ZS4NCj4gDQo+ID4gLXN0YXRpYyB2b2lkIG10a19jcWRtYV9m
-cmVlX2FjdGl2ZV9kZXNjKHN0cnVjdCBkbWFfY2hhbiAqYykNCj4gPiArc3RhdGljIGludCBtdGtf
-Y3FkbWFfdGVybWluYXRlX2FsbChzdHJ1Y3QgZG1hX2NoYW4gKmMpDQo+ID4gIHsNCj4gPiAgCXN0
-cnVjdCBtdGtfY3FkbWFfdmNoYW4gKmN2YyA9IHRvX2NxZG1hX3ZjaGFuKGMpOw0KPiA+IC0JYm9v
-bCBzeW5jX25lZWRlZCA9IGZhbHNlOw0KPiA+ICsJc3RydWN0IHZpcnRfZG1hX2NoYW4gKnZjID0g
-dG9fdmlydF9jaGFuKGMpOw0KPiA+ICAJdW5zaWduZWQgbG9uZyBwY19mbGFnczsNCj4gPiAgCXVu
-c2lnbmVkIGxvbmcgdmNfZmxhZ3M7DQo+ID4gKwlMSVNUX0hFQUQoaGVhZCk7DQo+ID4gKw0KPiA+
-ICsJLyogd2FpdCBmb3IgdGhlIFZDIHRvIGJlIGluYWN0aXZlICAqLw0KPiA+ICsJaWYgKCF3YWl0
-X2Zvcl9jb21wbGV0aW9uX3RpbWVvdXQoJmN2Yy0+Y21wLCBtc2Vjc190b19qaWZmaWVzKDMwMDAp
-KSkNCj4gPiArCQlyZXR1cm4gLUVBR0FJTjsNCj4gPiAgDQo+ID4gIAkvKiBhY3F1aXJlIFBDJ3Mg
-bG9jayBmaXJzdCBkdWUgdG8gbG9jayBkZXBlbmRlbmN5IGluIGRtYSBJU1IgKi8NCj4gPiAgCXNw
-aW5fbG9ja19pcnFzYXZlKCZjdmMtPnBjLT5sb2NrLCBwY19mbGFncyk7DQo+ID4gIAlzcGluX2xv
-Y2tfaXJxc2F2ZSgmY3ZjLT52Yy5sb2NrLCB2Y19mbGFncyk7DQo+ID4gIA0KPiA+IC0JLyogc3lu
-Y2hyb25pemF0aW9uIGlzIHJlcXVpcmVkIGlmIHRoaXMgVkMgaXMgYWN0aXZlICovDQo+ID4gLQlp
-ZiAobXRrX2NxZG1hX2lzX3ZjaGFuX2FjdGl2ZShjdmMpKSB7DQo+ID4gLQkJY3ZjLT5pc3N1ZV9z
-eW5jaHJvbml6ZSA9IHRydWU7DQo+ID4gLQkJc3luY19uZWVkZWQgPSB0cnVlOw0KPiA+IC0JfQ0K
-PiA+ICsJLyogZ2V0IFZEcyBmcm9tIGxpc3RzICovDQo+ID4gKwl2Y2hhbl9nZXRfYWxsX2Rlc2Ny
-aXB0b3JzKHZjLCAmaGVhZCk7DQo+ID4gKw0KPiA+ICsJLyogZnJlZSBhbGwgdGhlIFZEcyAqLw0K
-PiA+ICsJdmNoYW5fZG1hX2Rlc2NfZnJlZV9saXN0KHZjLCAmaGVhZCk7DQo+ID4gIA0KPiA+ICAJ
-c3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmY3ZjLT52Yy5sb2NrLCB2Y19mbGFncyk7DQo+ID4gIAlz
-cGluX3VubG9ja19pcnFyZXN0b3JlKCZjdmMtPnBjLT5sb2NrLCBwY19mbGFncyk7DQo+IA0KPiBH
-b29kIGNsZWFudXAsIGRvIHlvdSBuZWVkIGJvdGggdGhlc2UgbG9ja3M/DQpZZXMsIGJlY2F1c2Ug
-d2Ugd2lsbCBoYXZlIG11bHRpcGxlIHZjIHRvIHBjLCBpdCB3aWxsIG5lZWQgYm90aCBsb2NrLg0K
-DQo=
+Clock gating features can be turned on/off selectively which means its
+state information is only important if it is enabled. This change makes
+sure that we only look at state of clk-gating if it is enabled.
+
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+---
+ drivers/scsi/ufs/ufshcd.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index cdff7e5..99bd3e4 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1839,6 +1839,8 @@ static void ufshcd_init_clk_gating(struct ufs_hba *hba)
+ 	if (!ufshcd_is_clkgating_allowed(hba))
+ 		return;
+ 
++	hba->clk_gating.state = CLKS_ON;
++
+ 	hba->clk_gating.delay_ms = 150;
+ 	INIT_DELAYED_WORK(&hba->clk_gating.gate_work, ufshcd_gate_work);
+ 	INIT_WORK(&hba->clk_gating.ungate_work, ufshcd_ungate_work);
+@@ -2541,7 +2543,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+ 		err = SCSI_MLQUEUE_HOST_BUSY;
+ 		goto out;
+ 	}
+-	WARN_ON(hba->clk_gating.state != CLKS_ON);
++	WARN_ON(ufshcd_is_clkgating_allowed(hba) &&
++		(hba->clk_gating.state != CLKS_ON));
+ 
+ 	lrbp = &hba->lrb[tag];
+ 
+@@ -8315,8 +8318,11 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 		/* If link is active, device ref_clk can't be switched off */
+ 		__ufshcd_setup_clocks(hba, false, true);
+ 
+-	hba->clk_gating.state = CLKS_OFF;
+-	trace_ufshcd_clk_gating(dev_name(hba->dev), hba->clk_gating.state);
++	if (ufshcd_is_clkgating_allowed(hba)) {
++		hba->clk_gating.state = CLKS_OFF;
++		trace_ufshcd_clk_gating(dev_name(hba->dev),
++					hba->clk_gating.state);
++	}
+ 
+ 	/* Put the host controller in low power mode if possible */
+ 	ufshcd_hba_vreg_set_lpm(hba);
+@@ -8456,6 +8462,11 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	if (hba->clk_scaling.is_allowed)
+ 		ufshcd_suspend_clkscaling(hba);
+ 	ufshcd_setup_clocks(hba, false);
++	if (ufshcd_is_clkgating_allowed(hba)) {
++		hba->clk_gating.state = CLKS_OFF;
++		trace_ufshcd_clk_gating(dev_name(hba->dev),
++					hba->clk_gating.state);
++	}
+ out:
+ 	hba->pm_op_in_progress = 0;
+ 	if (ret)
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
