@@ -2,161 +2,254 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0ADC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A10207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4D7207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgGWNxD (ORCPT
+        id S1729021AbgGWNyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:53:03 -0400
-Received: from smtp.asem.it ([151.1.184.197]:61446 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728862AbgGWNxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:53:01 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000400764.MSG 
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 15:52:56 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Jul 2020 15:52:55 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Thu, 23 Jul 2020 15:52:55 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH v2 7/9] intersil: fix wiki website url
-Date:   Thu, 23 Jul 2020 15:52:54 +0200
-Message-ID: <20200723135254.594984-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.25.1
+        Thu, 23 Jul 2020 09:54:54 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23286 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgGWNyx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:54:53 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-262--FYZ92gXNkydJSlG8cqdAQ-1; Thu, 23 Jul 2020 14:54:48 +0100
+X-MC-Unique: -FYZ92gXNkydJSlG8cqdAQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 23 Jul 2020 14:54:47 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 Jul 2020 14:54:47 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+Thread-Topic: [PATCH 04/18] csum_and_copy_..._user(): pass 0xffffffff instead
+ of 0 as initial sum
+Thread-Index: AQHWX51MlcPCEWebQUuN/OB/armWnKkTU0FggABJU4CAABlpkP//+uQAgAAU8xCAAAgogIABYH9g
+Date:   Thu, 23 Jul 2020 13:54:47 +0000
+Message-ID: <02938acd78fd40beb02ffc5a1b803d85@AcuMS.aculab.com>
+References: <20200721202425.GA2786714@ZenIV.linux.org.uk>
+ <20200721202549.4150745-1-viro@ZenIV.linux.org.uk>
+ <20200721202549.4150745-4-viro@ZenIV.linux.org.uk>
+ <2d85ebb8ea2248c8a14f038a0c60297e@AcuMS.aculab.com>
+ <20200722144213.GE2786714@ZenIV.linux.org.uk>
+ <4e03cce8ed184d40bb0ea40fd3d51000@AcuMS.aculab.com>
+ <20200722155452.GF2786714@ZenIV.linux.org.uk>
+ <a55679c8d4dc4fb08d1e1782b5fc572c@AcuMS.aculab.com>
+ <20200722173903.GG2786714@ZenIV.linux.org.uk>
+In-Reply-To: <20200722173903.GG2786714@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090210.5F199638.0028,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: multipart/mixed;
+        boundary="_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some Intersil files, the wiki url is still the old
-"wireless.kernel.org" instead of the new
-"wireless.wiki.kernel.org"
+--_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
+From: Al Viro
+> Sent: 22 July 2020 18:39
+> I would love to see your patch, anyway, along with the testcases and perf=
+ormance
+> comparison.
 
-v2: the previous version failed to apply:
-    "fatal: corrupt patch at line 97
-     error: could not build fake ancestor"
+See attached program.
+Compile and run (as root): csum_iov 1
 
- drivers/net/wireless/intersil/Kconfig                  | 2 +-
- drivers/net/wireless/intersil/p54/Kconfig              | 6 +++---
- drivers/net/wireless/intersil/p54/fwio.c               | 2 +-
- drivers/net/wireless/intersil/p54/p54usb.c             | 2 +-
- drivers/net/wireless/intersil/prism54/islpci_hotplug.c | 3 ++-
- 5 files changed, 8 insertions(+), 7 deletions(-)
+Unpatched (as shipped) 16 vectors of 1 byte take ~430 clocks on my haswell =
+cpu.
+With dsl_patch defined they take ~393.
 
-diff --git a/drivers/net/wireless/intersil/Kconfig b/drivers/net/wireless/intersil/Kconfig
-index 6a6ce9d4aeee..c52d9b535623 100644
---- a/drivers/net/wireless/intersil/Kconfig
-+++ b/drivers/net/wireless/intersil/Kconfig
-@@ -30,7 +30,7 @@ config PRISM54
- 
- 	  For more information refer to the p54 wiki:
- 
--	  http://wireless.kernel.org/en/users/Drivers/p54
-+	  http://wireless.wiki.kernel.org/en/users/Drivers/p54
- 
- 	  Note: You need a motherboard with DMA support to use any of these cards
- 
-diff --git a/drivers/net/wireless/intersil/p54/Kconfig b/drivers/net/wireless/intersil/p54/Kconfig
-index 024be5507daf..003c378ed131 100644
---- a/drivers/net/wireless/intersil/p54/Kconfig
-+++ b/drivers/net/wireless/intersil/p54/Kconfig
-@@ -10,7 +10,7 @@ config P54_COMMON
- 	  also need to be enabled in order to support any devices.
- 
- 	  These devices require softmac firmware which can be found at
--	  <http://wireless.kernel.org/en/users/Drivers/p54>
-+	  <http://wireless.wiki.kernel.org/en/users/Drivers/p54>
- 
- 	  If you choose to build a module, it'll be called p54common.
- 
-@@ -22,7 +22,7 @@ config P54_USB
- 	  This driver is for USB isl38xx based wireless cards.
- 
- 	  These devices require softmac firmware which can be found at
--	  <http://wireless.kernel.org/en/users/Drivers/p54>
-+	  <http://wireless.wiki.kernel.org/en/users/Drivers/p54>
- 
- 	  If you choose to build a module, it'll be called p54usb.
- 
-@@ -36,7 +36,7 @@ config P54_PCI
- 	  supported by the fullmac driver/firmware.
- 
- 	  This driver requires softmac firmware which can be found at
--	  <http://wireless.kernel.org/en/users/Drivers/p54>
-+	  <http://wireless.wiki.kernel.org/en/users/Drivers/p54>
- 
- 	  If you choose to build a module, it'll be called p54pci.
- 
-diff --git a/drivers/net/wireless/intersil/p54/fwio.c b/drivers/net/wireless/intersil/p54/fwio.c
-index a5afcc865196..bece14e4ff0d 100644
---- a/drivers/net/wireless/intersil/p54/fwio.c
-+++ b/drivers/net/wireless/intersil/p54/fwio.c
-@@ -132,7 +132,7 @@ int p54_parse_firmware(struct ieee80211_hw *dev, const struct firmware *fw)
- 	if (priv->fw_var < 0x500)
- 		wiphy_info(priv->hw->wiphy,
- 			   "you are using an obsolete firmware. "
--			   "visit http://wireless.kernel.org/en/users/Drivers/p54 "
-+			   "visit http://wireless.wiki.kernel.org/en/users/Drivers/p54 "
- 			   "and grab one for \"kernel >= 2.6.28\"!\n");
- 
- 	if (priv->fw_var >= 0x300) {
-diff --git a/drivers/net/wireless/intersil/p54/p54usb.c b/drivers/net/wireless/intersil/p54/p54usb.c
-index ff0e30c0c14c..cae47663b17b 100644
---- a/drivers/net/wireless/intersil/p54/p54usb.c
-+++ b/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -36,7 +36,7 @@ static struct usb_driver p54u_driver;
-  * Note:
-  *
-  * Always update our wiki's device list (located at:
-- * http://wireless.kernel.org/en/users/Drivers/p54/devices ),
-+ * http://wireless.wiki.kernel.org/en/users/Drivers/p54/devices ),
-  * whenever you add a new device.
-  */
- 
-diff --git a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-index 20291c0d962d..34912267ff63 100644
---- a/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-+++ b/drivers/net/wireless/intersil/prism54/islpci_hotplug.c
-@@ -26,7 +26,8 @@ module_param(init_pcitm, int, 0);
- /* In this order: vendor, device, subvendor, subdevice, class, class_mask,
-  * driver_data
-  * If you have an update for this please contact prism54-devel@prism54.org
-- * The latest list can be found at http://wireless.kernel.org/en/users/Drivers/p54 */
-+ * The latest list can be found at http://wireless.wiki.kernel.org/en/users/Drivers/p54
-+ */
- static const struct pci_device_id prism54_id_tbl[] = {
- 	/* Intersil PRISM Duette/Prism GT Wireless LAN adapter */
- 	{
--- 
-2.25.1
+The maximum throughput is ~1.16 clocks/word for 16 vectors of 1k.
+For longer vectors the data gets lost from the cache between the iterations=
+.
+
+On an older Ivy Bridge cpu it never goes faster than 2 clocks/word.
+(Due to the implementation of ADC.)
+
+The absolute limit is 1 clock/word - limited by the memory write.
+I suspect that is achievable on Haswell with much less loop unrolling.
+
+I had to replace the ror32() with __builtin_bswap32().
+The kernel object do contain the 'ror' instruction - even though I
+didn't find the asm for it.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
+--_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_
+Content-Type: text/plain; name=csum_iov.c; charset=WINDOWS-1252
+Content-Description: csum_iov.c
+Content-Disposition: attachment; filename="csum_iov.c"; size=7804;
+	creation-date="Thu, 23 Jul 2020 13:40:14 GMT";
+	modification-date="Thu, 23 Jul 2020 13:40:14 GMT"
+Content-Transfer-Encoding: base64
+
+LyogVGVzdCBwcm9ncmFtIGZvciBjaGVja3N1bStjb3B5CiAqCiAqIEV4ZWN1dGVzIGNzdW1fYW5k
+X2NvcHlfZnJvbV9pdGVyKCkgaW4gdXNlcnNwYWNlLgogKiBVc2VzIFBFUkZfQ09VTlRfSFdfQ1BV
+X0NZQ0xFUyB0byBzZWUgaG93IGZhc3QgaXQgcnVucy4KICogQWx3YXlzIGNvcGllcyBpNiBjb3Bp
+ZXMgb2YgdGhlIHNhbWUgYnVmZmVyIHRvIHRoZSB0YXJnZXQuCiAqIExlbmd0aCBvZiBlYWNoIGZy
+YWdtZW50IHRha2VuIGZyb20gYXJndlswXS4KICoKICogSXQgbmVlZHMgbGlua2luZyB3aXRoIGEg
+Y29weSBvZiBjc3VtLWNvcHlfNjQubyAoZWcgZnJvbSBhIGtlcm5lbCBidWlsZCkuCiAqCiAqIEZv
+ciBsYXJnZSBidWZmZXJzIHRoZSAnYWRjJyBsb29wIGRvbWluYXRlcy4KICogT24gYW55dGhpbmcg
+cHJpb3IgdG8gSGFzd2VsbCB0aGlzIGlzIDIgY2xvY2tzIHBlciBhZGMuCiAqIE9uIEhhc3dlbGwg
+YWRjIGlzIGZhc3RlciBhbmQgaXQgc2VlbXMgdG8gYXBwcm9hY2ggMS4xNiBjbG9ja3Mvd29yZC4K
+ICogSXQgb3VnaHQgdG8gYmUgcG9zc2libHkgdG8gZ2V0IHRvIDEgY2xvY2svd29yZCBvbiBJdnkg
+YnJpZGdlIChTYW5keT8pCiAqIG9yIGxhdGVyLgogKi8KLy8gZGVmaW5lIGZvciBteSB2ZXJzaW9u
+Ci8vICNkZWZpbmUgZHNsX3BhdGNoCgojaW5jbHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGlu
+dC5oPgojaW5jbHVkZSA8c3RkbGliLmg+CiNpbmNsdWRlIDxlcnJuby5oPgojaW5jbHVkZSA8dW5p
+c3RkLmg+CgojaW5jbHVkZSA8bGludXgvcGVyZl9ldmVudC5oPgojaW5jbHVkZSA8c3lzL21tYW4u
+aD4KI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CgojZGVmaW5lIGxpa2VseSh4KSAoeCkKI2RlZmlu
+ZSB1bmxpa2VseSh4KSAoeCkKCnR5cGVkZWYgdWludDMyX3QgX193c3VtOwoKc3RydWN0IGt2ZWMg
+ewoJc2l6ZV90IGlvdl9sZW47Cgl2b2lkICAgKmlvdl9iYXNlOwp9OwoKc3RydWN0IGlvdl9pdGVy
+IHsKCXVuc2lnbmVkIGludCBjb3VudDsKCXVuc2lnbmVkIGludCBucl9zZWdzOwoJY29uc3Qgc3Ry
+dWN0IGt2ZWMgKmt2ZWM7CglzaXplX3QgICAgICAgaW92X29mZnNldDsKfTsKCiNkZWZpbmUgbWlu
+KGEsYikgKChhKSA8IChiKSA/IChhKSA6IChiKSkKCnN0YXRpYyB1bnNpZ25lZCBzaG9ydCBmb2xk
+KHVuc2lnbmVkIGludCBjc3VtKQp7Cgljc3VtID0gKGNzdW0gJiAweGZmZmYpICsgKGNzdW0gPj4g
+MTYpOwoJcmV0dXJuIGNzdW0gKyAoY3N1bSA+PiAxNik7Cn0KCmV4dGVybiBfX3dzdW0gY3N1bV9w
+YXJ0aWFsX2NvcHlfZ2VuZXJpYyhjb25zdCB2b2lkICosIHZvaWQgKiwgc2l6ZV90LCBfX3dzdW0s
+IHZvaWQgKiwgdm9pZCAqKTsKCgpfX3dzdW0KY3N1bV9wYXJ0aWFsX2NvcHlfbm9jaGVjayhjb25z
+dCB2b2lkICpzcmMsIHZvaWQgKmRzdCwgaW50IGxlbiwgX193c3VtIHN1bSkKewogICAgICAgIHJl
+dHVybiBjc3VtX3BhcnRpYWxfY29weV9nZW5lcmljKHNyYywgZHN0LCBsZW4sIHN1bSwgTlVMTCwg
+TlVMTCk7Cn0KCnN0YXRpYyBpbmxpbmUgdW5zaWduZWQgYWRkMzJfd2l0aF9jYXJyeSh1bnNpZ25l
+ZCBhLCB1bnNpZ25lZCBiKQp7Cglhc20oImFkZGwgJTIsJTBcblx0IgoJICAgICJhZGNsICQwLCUw
+IgoJICAgIDogIj1yIiAoYSkKCSAgICA6ICIwIiAoYSksICJybSIgKGIpKTsKCXJldHVybiBhOwp9
+CgoKc3RhdGljIGlubGluZSBfX3dzdW0gY3N1bV9hZGQoX193c3VtIGNzdW0sIF9fd3N1bSBhZGRl
+bmQpCnsKCXJldHVybiBhZGQzMl93aXRoX2NhcnJ5KGNzdW0sIGFkZGVuZCk7Cn0KCnN0YXRpYyBp
+bmxpbmUgX193c3VtCmNzdW1fYmxvY2tfYWRkKF9fd3N1bSBjc3VtLCBfX3dzdW0gc3VtLCBpbnQg
+b2Zmc2V0KQp7CiAgICAgICAgLyogcm90YXRlIHN1bSB0byBhbGlnbiBpdCB3aXRoIGEgMTZiIGJv
+dW5kYXJ5ICovCiAgICAgICAgaWYgKG9mZnNldCAmIDEpCiAgICAgICAgICAgICAgICBzdW0gPSBf
+X2J1aWx0aW5fYnN3YXAzMihzdW0pOwoKICAgICAgICByZXR1cm4gY3N1bV9hZGQoY3N1bSwgc3Vt
+KTsKfQovLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
+Ly8vLy8vLy8vLy8vLy8vLy8vCgovKiBOZWNlc3NhcnkgYml0cyBmcm9tIGlvdl9pdGVyLmMgKi8K
+CiNkZWZpbmUgaXRlcmF0ZV9rdmVjKGksIG4sIF9fdiwgX19wLCBza2lwLCBTVEVQKSB7CVwKCXNp
+emVfdCB3YW50ZWQgPSBuOwkJCQlcCglfX3AgPSBpLT5rdmVjOwkJCQkJXAoJX192Lmlvdl9sZW4g
+PSBtaW4obiwgX19wLT5pb3ZfbGVuIC0gc2tpcCk7CVwKCWlmIChsaWtlbHkoX192Lmlvdl9sZW4p
+KSB7CQkJXAoJCV9fdi5pb3ZfYmFzZSA9IF9fcC0+aW92X2Jhc2UgKyBza2lwOwlcCgkJKHZvaWQp
+KFNURVApOwkJCQlcCgkJc2tpcCArPSBfX3YuaW92X2xlbjsJCQlcCgkJbiAtPSBfX3YuaW92X2xl
+bjsJCQlcCgl9CQkJCQkJXAoJd2hpbGUgKHVubGlrZWx5KG4pKSB7CQkJCVwKCQlfX3ArKzsJCQkJ
+CVwKCQlfX3YuaW92X2xlbiA9IG1pbihuLCBfX3AtPmlvdl9sZW4pOwlcCgkJaWYgKHVubGlrZWx5
+KCFfX3YuaW92X2xlbikpCQlcCgkJCWNvbnRpbnVlOwkJCVwKCQlfX3YuaW92X2Jhc2UgPSBfX3At
+Pmlvdl9iYXNlOwkJXAoJCSh2b2lkKShTVEVQKTsJCQkJXAoJCXNraXAgPSBfX3YuaW92X2xlbjsJ
+CQlcCgkJbiAtPSBfX3YuaW92X2xlbjsJCQlcCgl9CQkJCQkJXAoJbiA9IHdhbnRlZDsJCQkJCVwK
+fQoKCgojZGVmaW5lIGl0ZXJhdGVfYW5kX2FkdmFuY2UoaSwgbiwgdiwgSSwgQiwgSykgewkJCVwK
+CWlmICh1bmxpa2VseShpLT5jb3VudCA8IG4pKQkJCQlcCgkJbiA9IGktPmNvdW50OwkJCQkJXAoJ
+aWYgKGktPmNvdW50KSB7CQkJCQkJXAoJCXNpemVfdCBza2lwID0gaS0+aW92X29mZnNldDsJCQlc
+CgkJCWNvbnN0IHN0cnVjdCBrdmVjICprdmVjOwkJXAoJCQlzdHJ1Y3Qga3ZlYyB2OwkJCQlcCgkJ
+CWl0ZXJhdGVfa3ZlYyhpLCBuLCB2LCBrdmVjLCBza2lwLCAoSykpCVwKCQkJaWYgKHNraXAgPT0g
+a3ZlYy0+aW92X2xlbikgewkJXAoJCQkJa3ZlYysrOwkJCQlcCgkJCQlza2lwID0gMDsJCQlcCgkJ
+CX0JCQkJCVwKCQkJaS0+bnJfc2VncyAtPSBrdmVjIC0gaS0+a3ZlYzsJCVwKCQkJaS0+a3ZlYyA9
+IGt2ZWM7CQkJCVwKCQlpLT5jb3VudCAtPSBuOwkJCQkJXAoJCWktPmlvdl9vZmZzZXQgPSBza2lw
+OwkJCQlcCgl9CQkJCQkJCVwKfQoKCnN0YXRpYyBfX3dzdW0gY3N1bV9hbmRfbWVtY3B5KHZvaWQg
+KnRvLCBjb25zdCB2b2lkICpmcm9tLCBzaXplX3QgbGVuLAoJCQkgICAgICBfX3dzdW0gc3VtLCBz
+aXplX3Qgb2ZmKQp7CiNpZmRlZiBkc2xfcGF0Y2gKCXJldHVybiBjc3VtX3BhcnRpYWxfY29weV9u
+b2NoZWNrKGZyb20sIHRvLCBsZW4sIHN1bSk7CiNlbHNlCglfX3dzdW0gbmV4dCA9IGNzdW1fcGFy
+dGlhbF9jb3B5X25vY2hlY2soZnJvbSwgdG8sIGxlbiwgMCk7CglyZXR1cm4gY3N1bV9ibG9ja19h
+ZGQoc3VtLCBuZXh0LCBvZmYpOwojZW5kaWYKfQoKCgpzaXplX3QgY3N1bV9hbmRfY29weV9mcm9t
+X2l0ZXIodm9pZCAqYWRkciwgc2l6ZV90IGJ5dGVzLCBfX3dzdW0gKmNzdW0sCgkJCSAgICAgICBz
+dHJ1Y3QgaW92X2l0ZXIgKmkpCnsKCWNoYXIgKnRvID0gYWRkcjsKCV9fd3N1bSBzdW0sIG5leHQ7
+CglzaXplX3Qgb2ZmID0gMDsKCXN1bSA9ICpjc3VtOwoJaXRlcmF0ZV9hbmRfYWR2YW5jZShpLCBi
+eXRlcywgdiwgLCAsKHsKCQlzdW0gPSBjc3VtX2FuZF9tZW1jcHkoKHRvICs9IHYuaW92X2xlbikg
+LSB2Lmlvdl9sZW4sCgkJCQkgICAgICB2Lmlvdl9iYXNlLCB2Lmlvdl9sZW4sCgkJCQkgICAgICBz
+dW0sIG9mZik7CgkJb2ZmICs9IHYuaW92X2xlbjsKI2lmZGVmIGRzbF9wYXRjaAoJCWlmICh2Lmlv
+dl9sZW4gJiAxKQoJCQlzdW0gPSBfX2J1aWx0aW5fYnN3YXAzMihzdW0pOwojZW5kaWYKCQkJCgl9
+KQoJKQojaWZkZWYgZHNsX3BhdGNoCglpZiAob2ZmICYgMSkKCQlzdW0gPSBfX2J1aWx0aW5fYnN3
+YXAzMihzdW0pOwojZW5kaWYKCSpjc3VtID0gc3VtOwoJcmV0dXJuIGJ5dGVzOwp9CgovLy8vLy8v
+Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
+Ly8vLy8vCgp2b2lkIGV4X2hhbmRsZXJfdWFjY2Vzcyh2b2lkKSB7IH0Kdm9pZCBleF9oYW5kbGVy
+X2RlZmF1bHQodm9pZCkgeyB9CgpzdGF0aWMgY2hhciBkYXRhWzY1NTM2XSA9IHsKCjB4NDYsMHg1
+NiwweDIwLDB4MDQsMHgwMCwweDAyLDB4MDAsMHgwMCwweDcyLDB4NGQsMHhjNiwweDNkLDB4MzEs
+MHg4NSwweDJkLDB4YmQsCjB4ZTIsMHhlMCwweDlkLDB4M2UsMHgzYiwweDdhLDB4NzAsMHgzZCww
+eGQyLDB4ZmIsMHg4YywweGJmLDB4OTUsMHgxMCwweGE5LDB4YmUsCjB4ZWIsMHhmZCwweDI5LDB4
+NDAsMHhkNSwweDdhLDB4NjEsMHg0MCwweGRlLDB4Y2QsMHgxNCwweGJmLDB4ODEsMHgxYiwweGY2
+LDB4M2YsCjB4YmMsMHhmZiwweDE3LDB4M2YsMHg2NywweDFjLDB4NmUsMHhiZSwweGY0LDB4YzIs
+MHgwNSwweDQwLDB4MGIsMHgxMywweDc4LDB4M2YsCjB4ZmUsMHg0NywweGE3LDB4YmQsMHg1OSww
+eGMyLDB4MTUsMHgzZiwweDA3LDB4ZDAsMHhlYSwweGJmLDB4OTcsMHhmMSwweDNjLDB4M2YsCjB4
+Y2MsMHhmYSwweDZiLDB4NDAsMHg3MiwweDZhLDB4NGYsMHhiZSwweDBiLDB4ZTMsMHg3NSwweDNl
+LDB4M2MsMHg5YiwweDBlLDB4YmYsCjB4YTksMHhlYiwweGI3LDB4M2YsMHhlYiwweDRhLDB4ZWMs
+MHgzZSwweDMzLDB4OGMsMHgwYywweDNmLDB4NmEsMHhmMiwweGYzLDB4M2UsCjB4MmIsMHg0NSww
+eDg2LDB4M2YsMHg4MywweGNlLDB4OGEsMHgzZiwweGY2LDB4MDEsMHgxNiwweDQwLDB4OWMsMHgx
+NywweDQ3LDB4M2UsCjB4NDQsMHg4MywweDYxLDB4NDAsMHg3NCwweGM3LDB4NWMsMHgzZiwweGVj
+LDB4ZTcsMHg5NSwweDNmLDB4ZWUsMHgxOSwweGI1LDB4YmYsCjB4YjUsMHhmMCwweDAzLDB4YmYs
+MHhkMSwweDAyLDB4MWMsMHgzZSwweGEzLDB4NTUsMHg5MCwweGJlLDB4MWUsMHgwYiwweGExLDB4
+YmYsCjB4YTQsMHhhOCwweGI0LDB4M2YsMHhjNiwweDY4LDB4OTEsMHgzZiwweGQxLDB4YzUsMHhh
+YiwweDNmLDB4YjksMHgxNCwweDYyLDB4M2YsCjB4N2MsMHhlMCwweGI5LDB4YmYsMHhjMCwweGE0
+LDB4YjUsMHgzZCwweDZmLDB4ZDksMHhhNywweDNmLDB4OGYsMHhjNCwweGIwLDB4M2QsCjB4NDgs
+MHgyYywweDdhLDB4M2UsMHg4MywweGIyLDB4M2MsMHg0MCwweDM2LDB4ZDMsMHgxOCwweDQwLDB4
+YjcsMHhhOSwweDU3LDB4NDAsCjB4ZGEsMHhkMywweDk1LDB4M2YsMHg3NCwweDk1LDB4YzAsMHhi
+ZSwweGJiLDB4Y2UsMHg3MSwweDNlLDB4OTUsMHhlYywweDE4LDB4YmYsCjB4OTQsMHgxNywweGRk
+LDB4M2YsMHg5OCwweGE1LDB4MDIsMHgzZiwweGJiLDB4ZmIsMHhiYiwweDNlLDB4ZDAsMHg1YSww
+eDljLDB4M2YsCjB4ZDQsMHgwMCwweDliLDB4YmYsMHgzYiwweDlmLDB4MjAsMHhjMCwweDg0LDB4
+NWIsMHgwZiwweDQwLDB4NWUsMHg0OCwweDJjLDB4YmYsCgp9OwoKI2lmIDAKc3RydWN0IGt2ZWMg
+ewoJc2l6ZV90IGlvdl9sZW47Cgl2b2lkICAgKmlvdl9iYXNlOwp9OwoKc3RydWN0IGlvdl9pdGVy
+IHsKCXVuc2lnbmVkIGludCBjb3VudDsKCXVuc2lnbmVkIGludCBucl9zZWdzOwoJY29uc3Qgc3Ry
+dWN0IGt2ZWMgKmt2ZWM7CglzaXplX3QgICAgICAgaW92X29mZnNldDsKfTsKI2VuZGlmCgpzdGF0
+aWMgaW5saW5lIHVuc2lnbmVkIGludCByZHBtYyh1bnNpZ25lZCBpbnQgY291bnRlcikKewoJdW5z
+aWduZWQgaW50IGxvdywgaGlnaDsKCglhc20gdm9sYXRpbGUoInJkcG1jIiA6ICI9YSIgKGxvdyks
+ICI9ZCIgKGhpZ2gpIDogImMiIChjb3VudGVyKSk7CgoJLy8gcmV0dXJuIGxvdyBiaXRzLCBjb3Vu
+dGVyIG1pZ2h0IHRvIDMyIG9yIDQwIGJpdHMgd2lkZS4KCXJldHVybiBsb3c7Cn0KCnVuc2lnbmVk
+IGludCByZWFkX2NwdV9jeWNsZXModm9pZCkKewoJc3RhdGljIHN0cnVjdCBwZXJmX2V2ZW50X2F0
+dHIgcGVyZl9hdHRyID0gewoJCS50eXBlID0gUEVSRl9UWVBFX0hBUkRXQVJFLAoJCS5jb25maWcg
+PSBQRVJGX0NPVU5UX0hXX0NQVV9DWUNMRVMsCgkJLy8gLmNvbmZpZyA9IFBFUkZfQ09VTlRfSFdf
+SU5TVFJVQ1RJT05TLAoJCS5waW5uZWQgPSAxLAoJfTsKCXN0YXRpYyBzdHJ1Y3QgcGVyZl9ldmVu
+dF9tbWFwX3BhZ2UgKnBjOwoJdW5zaWduZWQgaW50IHNlcSwgaWR4LCBjb3VudDsKCglpZiAoIXBj
+KSB7CgkJaW50IHBlcmZfZmQ7CgkJcGVyZl9mZCA9IHN5c2NhbGwoX19OUl9wZXJmX2V2ZW50X29w
+ZW4sICZwZXJmX2F0dHIsIDAsIC0xLCAtMSwgMCk7CgkJaWYgKHBlcmZfZmQgPCAwKSB7CgkJCWZw
+cmludGYoc3RkZXJyLCAicGVyZl9ldmVudF9vcGVuIGZhaWxlZDogZXJybm8gJWRcbiIsIGVycm5v
+KTsKCQkJZXhpdCgxKTsKCQl9CgkJcGMgPSBtbWFwKE5VTEwsIDQwOTYsIFBST1RfUkVBRCwgTUFQ
+X1NIQVJFRCwgcGVyZl9mZCwgMCk7CgkJaWYgKHBjID09IE1BUF9GQUlMRUQpIHsKCQkJZnByaW50
+ZihzdGRlcnIsICJwZXJmX2V2ZW50IG1tYXAoKSBmYWlsZWQ6IGVycm5vICVkXG4iLCBlcnJubyk7
+CgkJCWV4aXQoMSk7CgkJfQoJfQoKCWRvIHsKCQlzZXEgPSBwYy0+bG9jazsKCQlhc20gdm9sYXRp
+bGUoIiI6OjoibWVtb3J5Iik7CgkJaWR4ID0gcGMtPmluZGV4OwoJCWlmICghaWR4KSAvLyAgfHwg
+IXBjLT5jYXBfdXNlcl9yZHBtYykKCQkJcmV0dXJuIDA7CgkJY291bnQgPSBwYy0+b2Zmc2V0ICsg
+cmRwbWMoaWR4IC0gMSk7CgkJYXNtIHZvbGF0aWxlKCIiOjo6Im1lbW9yeSIpOwoJfSB3aGlsZSAo
+cGMtPmxvY2sgIT0gc2VxKTsKCglyZXR1cm4gY291bnQ7Cn0KCgpzdGF0aWMgaW50IHRhcmdldFsx
+NiAqIHNpemVvZiBkYXRhIC8gNF07CgojZGVmaW5lIFBBU1NFUyAxNgppbnQgbWFpbihpbnQgYXJn
+YywgY2hhciAqKmFyZ3YpCnsKCXN0cnVjdCBrdmVjIGt2ZWNbMTZdOwoJc3RydWN0IGlvdl9pdGVy
+IGk7CglpbnQgbGVuOwoJdW5zaWduZWQgaW50IGNsb2Nrc1tQQVNTRVNdOwoJX193c3VtIGNzdW1b
+UEFTU0VTXSA9IHt9OwoJdW5zaWduZWQgaW50IHBhc3M7Cgl1bnNpZ25lZCBpbnQgZnJhZ19sZW47
+CgoJcmVhZF9jcHVfY3ljbGVzKCk7CgljbG9ja3NbMF0gPSByZWFkX2NwdV9jeWNsZXMoKTsKCglm
+cmFnX2xlbiA9IGFyZ3ZbMV0gPyBhdG9pKGFyZ3ZbMV0pIDogMDsKCWlmICghZnJhZ19sZW4gfHwg
+ZnJhZ19sZW4gPiBzaXplb2YgZGF0YSkKCQlmcmFnX2xlbiA9IHNpemVvZiBkYXRhOwoKCWZvciAo
+cGFzcyA9IDE7IHBhc3MgPCBQQVNTRVM7IHBhc3MrKykgewoJCS8qIFN1bSB0aGUgc2FtZSBkYXRh
+IDE2IHRpbWVzICovCgkJaS5jb3VudCA9IGZyYWdfbGVuICogMTY7CgkJaS5ucl9zZWdzID0gMTY7
+CgkJaS5rdmVjID0ga3ZlYzsKCQlpLmlvdl9vZmZzZXQgPSAwOwoKCQlmb3IgKGxlbiA9IDA7IGxl
+biA8IDE2OyBsZW4rKykgewoJCQlrdmVjW2xlbl0uaW92X2xlbiA9IGZyYWdfbGVuOwoJCQlrdmVj
+W2xlbl0uaW92X2Jhc2UgPSBkYXRhOwoJCX0KCQljc3VtX2FuZF9jb3B5X2Zyb21faXRlcih0YXJn
+ZXQsIGkuY291bnQsIGNzdW0gKyBwYXNzLCAmaSk7CgkJY2xvY2tzW3Bhc3NdID0gcmVhZF9jcHVf
+Y3ljbGVzKCk7Cgl9Cglmb3IgKHBhc3MgPSAxOyBwYXNzIDwgUEFTU0VTOyBwYXNzKyspIHsKCQl1
+bnNpZ25lZCBpbnQgZGVsdGEgPSBjbG9ja3NbcGFzc10gLSBjbG9ja3NbcGFzcyAtIDFdOwoJCXBy
+aW50ZigicGFzcyAlZDogbGVuZ3RoICVkLCBjc3VtICV4LCBjbG9ja3MgJWQsIGNsb2Nrcy93b3Jk
+ICU1ZlxuIiwKCQkJcGFzcywgZnJhZ19sZW4gKiAxNiwgZm9sZChjc3VtW3Bhc3NdKSwgZGVsdGEs
+IGRlbHRhIC8gKGZyYWdfbGVuICogMTYvOCArIDAuMCkpOwoJfQoKCXJldHVybiAwOwp9Cg==
+--_002_02938acd78fd40beb02ffc5a1b803d85AcuMSaculabcom_--
 
