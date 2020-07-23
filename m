@@ -2,94 +2,84 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CD6C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62D5C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1E0208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9396F22B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595492904;
+	bh=u/5FCrRTDKTtlbizSg/fIdLBcnQ5OWN7nudO9AHOx60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QA4nolPPKJINYmcueSSipgclD6h34047JekhAXZ6M+68bOSS51sW0TcpwaIIW6+Hm
+	 Y6BrElLxK8YWAv13SzrioPPRyuljHeWPEy+u10cLKscjhlY6stD9JxUukrvuvQc/EZ
+	 WXA2rTi58eoc2SvLl1QS46ZmzSJnNOFInVfH1wDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgGWI1W (ORCPT
+        id S1727075AbgGWI2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:27:22 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:52126 "EHLO gloria.sntech.de"
+        Thu, 23 Jul 2020 04:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbgGWI1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:27:21 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jyWZP-0000Xo-ET; Thu, 23 Jul 2020 10:27:15 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: arm: rockchip: Add ROCKPi 4B binding
-Date:   Thu, 23 Jul 2020 10:27:14 +0200
-Message-ID: <6968987.cG2su2sgyb@diego>
-In-Reply-To: <CAMty3ZDk28-wg_=wdf_Ps-5RaHK1T-+h0Jn43aK5ReWAz+GTGw@mail.gmail.com>
-References: <20200722190949.215656-1-jagan@amarulasolutions.com> <3893924.cuH9TW0V3R@phil> <CAMty3ZDk28-wg_=wdf_Ps-5RaHK1T-+h0Jn43aK5ReWAz+GTGw@mail.gmail.com>
+        id S1726975AbgGWI2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 04:28:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B9AC20888;
+        Thu, 23 Jul 2020 08:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595492902;
+        bh=u/5FCrRTDKTtlbizSg/fIdLBcnQ5OWN7nudO9AHOx60=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wnE/+C+ziXsxwj9qX0nKny24nw6Fg35PyNT4yNrm9yuODoR50mHDyTNVza46fTKHM
+         JyLIn1i3ubTCzlT2wl9djNCuk749KV9L9zCe7bBNrjTAxgXoRCdPXVNldy+YfK34T3
+         t6DnbJuutVjlGnpdhJV5gcFF6yqpCwtA8hD4oUNk=
+Date:   Thu, 23 Jul 2020 10:28:25 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rui Feng <rui_feng@realsil.com.cn>, Klaus Doth <kdlnx@doth.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/5] minor rtsx cleanups
+Message-ID: <20200723082825.GA1517138@kroah.com>
+References: <20200721212336.1159079-1-helgaas@kernel.org>
+ <CAK8P3a0aqus-7Z-qSc9J+gOsSCX5Ad570F-3a_HB1MHfJor7Bg@mail.gmail.com>
+ <9f42cc48087a447a8ff295a86d439039@realtek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f42cc48087a447a8ff295a86d439039@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 23. Juli 2020, 08:34:12 CEST schrieb Jagan Teki:
-> Hi Heiko,
+On Thu, Jul 23, 2020 at 08:16:10AM +0000, 吳昊澄 Ricky wrote:
+> Hi Arnd, Bjorn,
 > 
-> On Thu, Jul 23, 2020 at 4:43 AM Heiko Stuebner <heiko@sntech.de> wrote:
-> >
-> > Hi Jagan,
-> >
-> > Am Mittwoch, 22. Juli 2020, 21:09:46 CEST schrieb Jagan Teki:
-> > > Add dt-bindings for ROCKPi 4B which is similar to 4A with
-> > > additional AP6256 Wifi/BT, PoE.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Changes for v2:
-> > > - new patch
-> > >
-> > >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > index 36057c9e4b83..7250adb43d24 100644
-> > > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > > @@ -448,6 +448,12 @@ properties:
-> > >            - const: radxa,rockpi4a
-> > >            - const: rockchip,rk3399
-> > >
-> > > +      - description: Radxa ROCK Pi 4B
-> > > +        items:
-> > > +          - const: radxa,rockpi4
-> > > +          - const: radxa,rockpi4b
-> > > +          - const: rockchip,rk3399
-> > > +
-> >
-> > Please do all RockPi4 variants into one entry, so we want something like:
-> >
-> >       - description: Radxa ROCK Pi 4
-> 
-> What if the description has something like below.
-> 
->           - description: Radxa ROCK Pi 4A/B/C
+> So How can I do for now?
+> I need to wait Bjorn's patch applied and resubmit patch for our new
+> chip RTS5228 base on Bjorn's patch or ?
 
-That's also ok :-)
+These are all now in my tree, so please feel free to resend any
+outstanding patches against it.
 
+But I think I have already applied your patch, right?
 
+If not, please resend as I do not have anything outstanding that I can
+see...
+
+thanks,
+
+greg k-h
