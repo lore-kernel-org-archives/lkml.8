@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA60C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506EFC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB8422BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385FF22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 09:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgGWJMq (ORCPT
+        id S1728287AbgGWJMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:12:46 -0400
-Received: from elvis.franken.de ([193.175.24.41]:46184 "EHLO elvis.franken.de"
+        Thu, 23 Jul 2020 05:12:47 -0400
+Received: from elvis.franken.de ([193.175.24.41]:46183 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbgGWJMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726558AbgGWJMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 05:12:45 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jyXHN-0001Ij-00; Thu, 23 Jul 2020 11:12:41 +0200
+        id 1jyXHM-0001Ij-00; Thu, 23 Jul 2020 11:12:40 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 2BD9DC092F; Thu, 23 Jul 2020 11:10:44 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 11:10:44 +0200
+        id 4FEDBC08DD; Thu, 23 Jul 2020 11:10:08 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 11:10:08 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
 Cc:     hauke@hauke-m.de, zajec5@gmail.com, robh+dt@kernel.org,
@@ -33,34 +33,34 @@ Cc:     hauke@hauke-m.de, zajec5@gmail.com, robh+dt@kernel.org,
         bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 9/9] mips: bmips: dts: add BCM63268 power domain
- support
-Message-ID: <20200723091044.GC2749@alpha.franken.de>
+Subject: Re: [PATCH v4 7/9] mips: bmips: dts: add BCM6328 power domain support
+Message-ID: <20200723091008.GA2749@alpha.franken.de>
 References: <20200610171630.465579-1-noltari@gmail.com>
  <20200613082140.2009461-1-noltari@gmail.com>
- <20200613082140.2009461-10-noltari@gmail.com>
+ <20200613082140.2009461-8-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200613082140.2009461-10-noltari@gmail.com>
+In-Reply-To: <20200613082140.2009461-8-noltari@gmail.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 10:21:40AM +0200, Álvaro Fernández Rojas wrote:
-> BCM63268 SoCs have a power domain controller to enable/disable certain
+On Sat, Jun 13, 2020 at 10:21:38AM +0200, Álvaro Fernández Rojas wrote:
+> BCM6328 SoCs have a power domain controller to enable/disable certain
 > components in order to save power.
 > 
 > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
 >  v4: no changes.
 >  v3: Separate dt-bindings definitions from power domain .dtsi support.
 >  v2: Add dt-bindings header files.
 > 
->  arch/mips/boot/dts/brcm/bcm63268.dtsi | 6 ++++++
+>  arch/mips/boot/dts/brcm/bcm6328.dtsi | 6 ++++++
 >  1 file changed, 6 insertions(+)
 
 Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
