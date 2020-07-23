@@ -2,26 +2,27 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31800C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D04FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F1120684
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 11:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1A120768
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgGWLza (ORCPT
+        id S1727123AbgGWMAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:55:30 -0400
-Received: from verein.lst.de ([213.95.11.211]:59866 "EHLO verein.lst.de"
+        Thu, 23 Jul 2020 08:00:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:59896 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgGWLza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:55:30 -0400
+        id S1726521AbgGWMAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 08:00:55 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6004C68AFE; Thu, 23 Jul 2020 13:55:27 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 13:55:27 +0200
+        id DE83868AFE; Thu, 23 Jul 2020 14:00:51 +0200 (CEST)
+Date:   Thu, 23 Jul 2020 14:00:51 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
@@ -44,37 +45,97 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         huangdaode <huangdaode@huawei.com>
 Subject: Re: [PATCH v3 1/2] dma-direct: provide the ability to reserve
  per-numa CMA
-Message-ID: <20200723115527.GA31598@lst.de>
-References: <20200628111251.19108-1-song.bao.hua@hisilicon.com> <20200628111251.19108-2-song.bao.hua@hisilicon.com> <20200722141658.GA17658@lst.de> <B926444035E5E2439431908E3842AFD25A15A3@DGGEMI525-MBS.china.huawei.com>
+Message-ID: <20200723120051.GB31598@lst.de>
+References: <20200628111251.19108-1-song.bao.hua@hisilicon.com> <20200628111251.19108-2-song.bao.hua@hisilicon.com> <20200722142943.GB17658@lst.de> <B926444035E5E2439431908E3842AFD25A1606@DGGEMI525-MBS.china.huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <B926444035E5E2439431908E3842AFD25A15A3@DGGEMI525-MBS.china.huawei.com>
+In-Reply-To: <B926444035E5E2439431908E3842AFD25A1606@DGGEMI525-MBS.china.huawei.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 09:26:03PM +0000, Song Bao Hua (Barry Song) wrote:
-> I understand your concern. Anyway, The primary purpose of this patchset is providing
-> a general way for users like IOMMU to get local coherent dma buffers to put their
-> command queue and page tables in. The first user case is what really made me
-> begin to prepare this patchset.
-> 
-> For the second case, it is probably a positive side effect of this patchset for those users
-> who have more concern on performance than dma security, then they maybe skip
-> IOMMU by
-> 	iommu.passthrough=
-> 			[ARM64, X86] Configure DMA to bypass the IOMMU by default.
-> 			Format: { "0" | "1" }
-> 			0 - Use IOMMU translation for DMA.
-> 			1 - Bypass the IOMMU for DMA.
-> 			unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
-> In this case, they can get local memory and get better performance.
-> However, it is not the primary purpose of this patchset.
+On Wed, Jul 22, 2020 at 09:41:50PM +0000, Song Bao Hua (Barry Song) wrote:
+> I got a kernel robot warning which said dev should be checked before being accessed
+> when I did a similar change in v1. Probably it was an invalid warning if dev should
+> never be null.
 
-That's not what I mean.  Hardcoding the CMA regions in the kernel
-config is just a bad idea, and we should not add more hard coded values.
-You can always use CONFIG_CMDLINE to force a specific kernel command
-line including your options.
+That usually shows up if a function is inconsistent about sometimes
+checking it and sometimes now.
+
+> Yes, it looks much better.
+
+Below is a prep patch to rebase on top of:
+
+---
+From b81a5e1da65fce9750f0a8b66dbb6f842cbfdd4d Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Wed, 22 Jul 2020 16:33:43 +0200
+Subject: dma-contiguous: cleanup dma_alloc_contiguous
+
+Split out a cma_alloc_aligned helper to deal with the "interesting"
+calling conventions for cma_alloc, which then allows to the main
+function to be written straight forward.  This also takes advantage
+of the fact that NULL dev arguments have been gone from the DMA API
+for a while.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ kernel/dma/contiguous.c | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index 15bc5026c485f2..cff7e60968b9e1 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -215,6 +215,13 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+ 	return cma_release(dev_get_cma_area(dev), pages, count);
+ }
+ 
++static struct page *cma_alloc_aligned(struct cma *cma, size_t size, gfp_t gfp)
++{
++	unsigned int align = min(get_order(size), CONFIG_CMA_ALIGNMENT);
++
++	return cma_alloc(cma, size >> PAGE_SHIFT, align, gfp & __GFP_NOWARN);
++}
++
+ /**
+  * dma_alloc_contiguous() - allocate contiguous pages
+  * @dev:   Pointer to device for which the allocation is performed.
+@@ -231,24 +238,14 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+  */
+ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ {
+-	size_t count = size >> PAGE_SHIFT;
+-	struct page *page = NULL;
+-	struct cma *cma = NULL;
+-
+-	if (dev && dev->cma_area)
+-		cma = dev->cma_area;
+-	else if (count > 1)
+-		cma = dma_contiguous_default_area;
+-
+ 	/* CMA can be used only in the context which permits sleeping */
+-	if (cma && gfpflags_allow_blocking(gfp)) {
+-		size_t align = get_order(size);
+-		size_t cma_align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+-
+-		page = cma_alloc(cma, count, cma_align, gfp & __GFP_NOWARN);
+-	}
+-
+-	return page;
++	if (!gfpflags_allow_blocking(gfp))
++		return NULL;
++	if (dev->cma_area)
++		return cma_alloc_aligned(dev->cma_area, size, gfp);
++	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
++		return NULL;
++	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
+ }
+ 
+ /**
+-- 
+2.27.0
+
