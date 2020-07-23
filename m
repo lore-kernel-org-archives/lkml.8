@@ -2,99 +2,136 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50525C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE82C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3181A206C1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uimxD5pa"
+	by mail.kernel.org (Postfix) with ESMTP id 24E37206C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgGWKU0 (ORCPT
+        id S1728353AbgGWKWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:20:26 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:6259 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGWKU0 (ORCPT
+        Thu, 23 Jul 2020 06:22:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27660 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726786AbgGWKWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:20:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595499626; x=1627035626;
-  h=to:cc:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=mwexbzXzuovcPcGVvxhGS581gfOX8CqXGt9l1T0VkAc=;
-  b=uimxD5paLBL6V/FqOH5ukZVFOGEjZguYT1Kn8vatxHn1YSefPGvu2wsb
-   FmvzjFxIT16DkGHf/zGPOI7actibU+HVspycYM4w9ibjtg2DdFWD4ds2U
-   FmE6fAQYp1RtqCWNilzOtL9B0b4Z5nWzlJeg8zO0dExeAo/TT5VaKPtR6
-   4=;
-IronPort-SDR: YXa7yDZ3nciGHTT09FjqW4zlVhek9a2bmD5EzwTDQY3bV9xe7HuJn30mta4csmcXiBRHQmyu2f
- wSkrlpbxaJcQ==
-X-IronPort-AV: E=Sophos;i="5.75,386,1589241600"; 
-   d="scan'208";a="60985712"
-Subject: Re: [PATCH v5 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Jul 2020 10:20:11 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 23FD9A24B9;
-        Thu, 23 Jul 2020 10:20:07 +0000 (UTC)
-Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Jul 2020 10:20:06 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Jul 2020 10:20:06 +0000
-Received: from [192.168.8.102] (10.1.213.33) by mail-relay.amazon.com
- (10.43.61.243) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 10:20:03 +0000
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Antoine Tenart <antoine.tenart@bootlin.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        arm-soc <arm@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        <benh@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <hanochu@amazon.com>, David Woodhouse <dwmw@amazon.co.uk>,
-        <jonnyc@amazon.com>, <ronenk@amazon.com>,
-        Talel Shenhar <talel@amazon.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20200324104918.29578-1-hhhawa@amazon.com>
- <158946977180.3480.12435085393834819053@kwain>
- <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <b86d9dbf-f7b0-e741-4dfa-2d76972d38f1@amazon.com>
-Date:   Thu, 23 Jul 2020 13:20:02 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 23 Jul 2020 06:22:33 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NA4QJx176342;
+        Thu, 23 Jul 2020 06:22:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vstqg1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 06:22:09 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06NA6li0187675;
+        Thu, 23 Jul 2020 06:22:08 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32e1vstqfc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 06:22:08 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NAGqFh022080;
+        Thu, 23 Jul 2020 10:22:06 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 32brq83924-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 10:22:06 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NAM2Au29622582
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 10:22:02 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0965EA405B;
+        Thu, 23 Jul 2020 10:22:02 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBE42A405F;
+        Thu, 23 Jul 2020 10:21:58 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.40.160])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Jul 2020 10:21:58 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, paulus@samba.org
+Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, npiggin@gmail.com,
+        pbonzini@redhat.com, christophe.leroy@c-s.fr, jniethe5@gmail.com,
+        pedromfc@br.ibm.com, rogealve@br.ibm.com, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/7] powerpc/watchpoint: 2nd DAWR kvm enablement + selftests
+Date:   Thu, 23 Jul 2020 15:50:51 +0530
+Message-Id: <20200723102058.312282-1-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_03:2020-07-22,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Patch #1, #2 and #3 enables p10 2nd DAWR feature for Book3S kvm guest. DAWR
+is a hypervisor resource and thus H_SET_MODE hcall is used to set/unset it.
+A new case H_SET_MODE_RESOURCE_SET_DAWR1 is introduced in H_SET_MODE hcall
+for setting/unsetting 2nd DAWR. Also, new capability KVM_CAP_PPC_DAWR1 has
+been added to query 2nd DAWR support via kvm ioctl.
 
+This feature also needs to be enabled in Qemu to really use it. I'll reply
+link to qemu patches once I post them in qemu-devel mailing list.
 
-On 7/23/2020 1:10 PM, Arnd Bergmann wrote:
-> Hi Hanna and Antoine,
-> 
-> I just came across this old series and noticed we had never merged it.
-> 
-> I don't know if the patches all still apply. Could you check and perhaps
-> resend tosoc@kernel.org  if they are still good to go into the coming
-> merge window?
+Patch #4, #5, #6 and #7 adds selftests to test 2nd DAWR.
 
-Hi Arnd,
+Dependency:
+  1: p10 kvm base enablement
+     https://lore.kernel.org/linuxppc-dev/20200602055325.6102-1-alistair@popple.id.au
 
-Sure, will rebase the patches and send ASAP.
+  2: 2nd DAWR powervm/baremetal enablement
+     https://lore.kernel.org/linuxppc-dev/20200723090813.303838-1-ravi.bangoria@linux.ibm.com
 
-Thanks,
-Hanna
+  3: ptrace PPC_DEBUG_FEATURE_DATA_BP_DAWR_ARCH_31 flag
+     https://lore.kernel.org/linuxppc-dev/20200723093330.306341-1-ravi.bangoria@linux.ibm.com
+
+Patches in this series applies fine on top of powerpc/next (9a77c4a0a125)
+plus above dependency patches.
+
+Ravi Bangoria (7):
+  powerpc/watchpoint/kvm: Rename current DAWR macros and variables
+  powerpc/watchpoint/kvm: Add infrastructure to support 2nd DAWR
+  powerpc/watchpoint/kvm: Introduce new capability for 2nd DAWR
+  powerpc/selftests/ptrace-hwbreak: Add testcases for 2nd DAWR
+  powerpc/selftests/perf-hwbreak: Coalesce event creation code
+  powerpc/selftests/perf-hwbreak: Add testcases for 2nd DAWR
+  powerpc/selftests: Add selftest to test concurrent perf/ptrace events
+
+ Documentation/virt/kvm/api.rst                |   6 +-
+ arch/powerpc/include/asm/hvcall.h             |   2 +
+ arch/powerpc/include/asm/kvm_host.h           |   6 +-
+ arch/powerpc/include/uapi/asm/kvm.h           |   8 +-
+ arch/powerpc/kernel/asm-offsets.c             |   6 +-
+ arch/powerpc/kvm/book3s_hv.c                  |  73 +-
+ arch/powerpc/kvm/book3s_hv_nested.c           |  15 +-
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S       |  43 +-
+ arch/powerpc/kvm/powerpc.c                    |   3 +
+ include/uapi/linux/kvm.h                      |   1 +
+ tools/arch/powerpc/include/uapi/asm/kvm.h     |   8 +-
+ .../selftests/powerpc/ptrace/.gitignore       |   1 +
+ .../testing/selftests/powerpc/ptrace/Makefile |   2 +-
+ .../selftests/powerpc/ptrace/perf-hwbreak.c   | 646 +++++++++++++++--
+ .../selftests/powerpc/ptrace/ptrace-hwbreak.c |  79 +++
+ .../powerpc/ptrace/ptrace-perf-hwbreak.c      | 659 ++++++++++++++++++
+ 16 files changed, 1476 insertions(+), 82 deletions(-)
+ create mode 100644 tools/testing/selftests/powerpc/ptrace/ptrace-perf-hwbreak.c
+
+-- 
+2.26.2
+
