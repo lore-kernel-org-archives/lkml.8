@@ -2,151 +2,177 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA21C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172D9C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5514E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41C9206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:07:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5qWfop9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uJ/LXXd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgGWTAp (ORCPT
+        id S1728145AbgGWTHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34946 "EHLO
+        Thu, 23 Jul 2020 15:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGWTAp (ORCPT
+        with ESMTP id S1726918AbgGWTHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:00:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0593C0619DC;
-        Thu, 23 Jul 2020 12:00:44 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so6164978wml.3;
-        Thu, 23 Jul 2020 12:00:44 -0700 (PDT)
+        Thu, 23 Jul 2020 15:07:33 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6724C0619E2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:07:32 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id p1so2999465pls.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 12:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bxQ7tQ6z3mNBLFtLdG+90Disq7Kpghx+V15fQV2DmfA=;
-        b=q5qWfop9m0Dp+hPZHJyboAnzMRih4b6oSpBDFQwj9KXL6kPsVdIr+SRmf680r2xkYn
-         yqrYIWBwovxJvIwWgA1JmkaxdiMbYezUS9sPncsmVqkYqPnAmg+0LzqPuENzT1CSEFRA
-         CM7cYGYMachdMCi2uCmKCYQ5LhfH3+4j99pgbBJ4eTNUer5hGinLpyhlMukCP+ZIpBDD
-         7Jj4UyCPSY3h6X8zu+xywDkw+qUnQWh0qF0vYd3ptbSrM7ZxAYRoT40lahoN6uyXYx7z
-         4YQXzH/rgEdpZUB9ThznN6e+xVZuQa2ptvLaQGttwMaC3jL90Mkgv8OY9yeo1kdJDXBR
-         imaQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fmy4tO1tW/yB2p+/DBGuPfpuvcNIPQV/6jKnfwUymaM=;
+        b=uJ/LXXd4WW3t/V9uP1pvh2+w7xCfmHmmU2q2MX994uvmdMhyUpnBd6wtTkFWVeSiVn
+         fni2Skynmv78aJ9rstIyOgTssb4uBzBQL6YPmxb5SzQaGZtm2sB0Ln7Qk9r6vt5a/SEE
+         gYzQRW0K8FC5lX9W9+bz+gbIOgybElEHRuMxxBvv7T+TJKJnGfXHkIe/b2UFhfrjNnt8
+         hmvs/pCT8mt2wp6eGsvntxKg2m7zjG9IalAT3RXT7FCW3qu0zRZl84tHISI7JSF/JPwL
+         M06pYkfoNbZamtdmUh5GU20hgxfU9YBtWQ50on6QDjz/h882N3ikL5uKYSp6UNdyl0GU
+         5IDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bxQ7tQ6z3mNBLFtLdG+90Disq7Kpghx+V15fQV2DmfA=;
-        b=h2x8hC9ojn0CUU/qTvpTek7dHVxGlHgv5GsCpL8Dp3BCRMqwSrDdR/u+TsXnow0V9D
-         4S+Ubwu6c8bNXfVy2u6g24geOyCHirBSqXLX/5zYAfJPoW0NJ5TtMC3P2uQ6kbR2gS4S
-         RNuq/3CBOampYvkG6v33mAjjrf+tYOV2m/UA0mqj8N3IiVYs+3MFvF9jwDFvN3Nqsm5u
-         PnxPP09LEaTbTGEk17Vuhr2PZF2YQ+mYAqQSjVZ+rS3HF61RvOyTEXv5jzMI7kVv/+JH
-         RSBqifLmQpOCsl64+/SdmDB56oEsw8IXeCjyM22XpJ+8ATw7EpY2GrQPlAiqmiWIboq6
-         EEmA==
-X-Gm-Message-State: AOAM532hyyM9g8Tkbf2TAGaUQkyjb7GphX7MOUbUdVNSjz67Szio1Fh2
-        0hTHw6lthKyy9plIKJheuPo=
-X-Google-Smtp-Source: ABdhPJx8SA+dtDuyc7twAoVNbX5P1ISVas28ZQBVtqeHkRcHusG6+3ivkvCN8HKmZGFTQcG+ydAMyQ==
-X-Received: by 2002:a1c:2547:: with SMTP id l68mr2316128wml.181.1595530843568;
-        Thu, 23 Jul 2020 12:00:43 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id h11sm5314294wrb.68.2020.07.23.12.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 12:00:42 -0700 (PDT)
-Subject: Re: [PATCH net-next v2 7/7] ARM: dts: at91: sam9x60: add an mdio
- sub-node to macb
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     nicolas.ferre@microchip.com, claudiu.beznea@microchip.com,
-        davem@davemloft.net, kuba@kernel.org, andrew@lunn.ch,
-        robh+dt@kernel.org, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com
-References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
- <20200721171316.1427582-8-codrin.ciubotariu@microchip.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <75cc15cd-3857-5af6-7987-487182486122@gmail.com>
-Date:   Thu, 23 Jul 2020 12:00:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fmy4tO1tW/yB2p+/DBGuPfpuvcNIPQV/6jKnfwUymaM=;
+        b=MMAUDOJUPXdExt1HMQkWtJ40wDFTSt5VXJVz/+9tmdfFpTvCMOU9GVBS6u7TnEnX9t
+         YYhzmVMu9vh0FscgeqZt/AY7O/6W5Z3yUSXRe/Q7QEdOZCvXaEOQXCXVwXTvULSbNLTA
+         HUMk/0vG641yIkcWiVBoh98ddI37qrgNCTo3Zx9fTMAWxAy16NzTYIuRUZdax/xhjqeK
+         YoTdNYJ4WbR2VyaT9+sP41trCj6gvcM0STG1d6BT3sNmBlEAekXz+j9Tnrdudtv85yUI
+         674NAqdzgDHgo2vBHnyIEKpwEU6SIXLeBM0/5KQ31yg8NUbYZMuCaO/v5DPFUcNUzX06
+         aOiQ==
+X-Gm-Message-State: AOAM530x4Ozd5RAUDI5IZmCs1YEMln17y8yD8R2jC02wFVEtU5vwsstH
+        cGiQrVpyvwPbSOh1+GOBeYtLqA==
+X-Google-Smtp-Source: ABdhPJyFY8SK2yrpGMIJYPZOm/XbUPFW09vVIwr7j2Oue2l2cEXybEXOCRDyJvKCGSvI32jjRGApEQ==
+X-Received: by 2002:a17:902:22:: with SMTP id 31mr4590106pla.120.1595531251889;
+        Thu, 23 Jul 2020 12:07:31 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id h6sm3716298pfo.123.2020.07.23.12.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 12:07:31 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 12:07:24 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Subject: Re: [PATCH v2] cpuidle: change enter_s2idle() prototype
+Message-ID: <20200723190724.GA1339461@google.com>
+References: <1594005196-16327-1-git-send-email-neal.liu@mediatek.com>
+ <1594005196-16327-2-git-send-email-neal.liu@mediatek.com>
+ <CAJZ5v0ihB5AJwSRpjaOnXAmciregzxARL5xfudu1h+=_LXaE_w@mail.gmail.com>
+ <1594350535.4670.13.camel@mtkswgap22>
+ <1595233294.8055.0.camel@mtkswgap22>
 MIME-Version: 1.0
-In-Reply-To: <20200721171316.1427582-8-codrin.ciubotariu@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595233294.8055.0.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/21/20 10:13 AM, Codrin Ciubotariu wrote:
-> Use the new macb bindings and add an mdio sub-node to contain all the
-> phy nodes.
+On Mon, Jul 20, 2020 at 04:21:34PM +0800, Neal Liu wrote:
+> Gentle ping on this patch.
 > 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> 
+> On Fri, 2020-07-10 at 11:08 +0800, Neal Liu wrote:
+> > On Thu, 2020-07-09 at 14:18 +0200, Rafael J. Wysocki wrote:
+> > > On Mon, Jul 6, 2020 at 5:13 AM Neal Liu <neal.liu@mediatek.com> wrote:
+> > > >
+> > > > Control Flow Integrity(CFI) is a security mechanism that disallows
+> > > > changes to the original control flow graph of a compiled binary,
+> > > > making it significantly harder to perform such attacks.
+> > > >
+> > > > init_state_node() assign same function callback to different
+> > > > function pointer declarations.
+> > > >
+> > > > static int init_state_node(struct cpuidle_state *idle_state,
+> > > >                            const struct of_device_id *matches,
+> > > >                            struct device_node *state_node) { ...
+> > > >         idle_state->enter = match_id->data; ...
+> > > >         idle_state->enter_s2idle = match_id->data; }
+> > > >
+> > > > Function declarations:
+> > > >
+> > > > struct cpuidle_state { ...
+> > > >         int (*enter) (struct cpuidle_device *dev,
+> > > >                       struct cpuidle_driver *drv,
+> > > >                       int index);
+> > > >
+> > > >         void (*enter_s2idle) (struct cpuidle_device *dev,
+> > > >                               struct cpuidle_driver *drv,
+> > > >                               int index); };
+> > > >
+> > > > In this case, either enter() or enter_s2idle() would cause CFI check
+> > > > failed since they use same callee.
+> > > 
+> > > Can you please explain this in a bit more detail?
+> > > 
+> > > As it stands, I don't understand the problem statement enough to apply
+> > > the patch.
+> > > 
+> > 
+> > Okay, Let's me try to explain more details.
+> > Control Flow Integrity(CFI) is a security mechanism that disallows
+> > changes to the original control flow graph of a compiled binary, making
+> > it significantly harder to perform such attacks.
+> > 
+> > There are multiple control flow instructions that could be manipulated
+> > by the attacker and subvert control flow. The target instructions that
+> > use data to determine the actual destination.
+> > - indirect jump
+> > - indirect call
+> > - return
+> > 
+> > In this case, function prototype between caller and callee are mismatch.
+> > Caller: (type A)funcA
+> > Callee: (type A)funcB
+> > Callee: (type C)funcC
+> > 
+> > funcA calls funcB -> no problem
+> > funcA calls funcC -> CFI check failed
+> > 
+> > That's why we try to align function prototype.
+> > Please feel free to feedback if you have any questions.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I think you should include a better explanation in the commit message.
+Perhaps something like this?
+
+  init_state_node assigns the same callback function to both enter and
+  enter_s2idle despite mismatching function types, which trips indirect
+  call checking with Control-Flow Integrity (CFI).
+
+> > > > Align function prototype of enter() since it needs return value for
+> > > > some use cases. The return value of enter_s2idle() is no
+> > > > need currently.
+> > > 
+> > > So last time I requested you to document why ->enter_s2idle needs to
+> > > return an int in the code, which has not been done.  Please do that.
+
+Rafael, are you happy with the commit message documenting the reason,
+or would you prefer to also add a comment before enter_s2idle?
+
+Sami
