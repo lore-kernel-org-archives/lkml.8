@@ -3,114 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2803C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF86DC433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBFB20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F311207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595522084;
-	bh=xF4unkesCu9oGDaFSknnaiFq2RjzrgS7pz9gazv5NJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JuO7KNV0ywODmoDLXPUXWJxxyMzQl78cuunc3ZYZdF1RmoPUovPLpwYrH3YOdfuTy
-	 ryDdHdHjxquG/RBeLJIQzo+enbYUXYCrVnOkayQyWf5633jVZjZWZzfHFn2sgSevjd
-	 URszUt++7d8c7XXns7ppAEqG3cteTjvQZMQobOVY=
+	s=default; t=1595522097;
+	bh=MP/p5I5PmDdq9WQ/ZX6AaTgVnkcn2iem13nFwnvaoJU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Ynfk8GnRVdVhnH3sgwBbIHyUIXkhpqhNs8BF7AZrLadqNaCsX40sKq5IfqeJDZvc/
+	 RawIPuixsqaKbCYSeyrqtbQNj0wUpJw4i+n8QEQyCemjSQyoT8Cbloy73N6wIPIgyf
+	 2dUyw33PD3Eh+72BkXcKh2ydAlmie+xxcnTj+xLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgGWQeo (ORCPT
+        id S1729905AbgGWQe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:34:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37984 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgGWQen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:34:43 -0400
-Received: by mail-io1-f66.google.com with SMTP id l1so6872464ioh.5;
-        Thu, 23 Jul 2020 09:34:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=stpb1fSJwGt8vShAdT7DxsGVBCe34IXza9CEfFYmfoY=;
-        b=PnhCBfLFMIHOrWdakSTbRmVuiaVeL813Yo37edYQDRkvK2HX969Bke0To7DwABAwVU
-         kANHjGS3Ljxxq2DHute8EJQUPefgiVRmScDFdDgZas/882HekLxjrqkEeGQJAKtv7S4P
-         IO5D/k/eMcoQwFJkAqWdUTg/N6l4uGZXhS/s1CAoqskVSXJ5mfVeTCyUqpcrvbciUyM/
-         /muvPrF/iTnxXDSi8ocpm/8rqILUjoL2CaCtZapxldYHElzZFUn2JuffQAw5urKPxcRp
-         wjdzBXRlOtw02UA5QrwIlFUbvRTtcKk35b9WoxDxDO13fs36GOdJGo5OR5Dzs0vHFBHJ
-         MI8A==
-X-Gm-Message-State: AOAM530iFkVPAz6xO7JettH/dIW8pZ89FmQ51Qbu1LpBL9tWrLslyzek
-        6i1ABDUxg8DvmpusfY4J0A==
-X-Google-Smtp-Source: ABdhPJylynKK+P2vHGCl3vu0jg/pAYFuvr7Pp1TO6idqHUxs9Ss5Reg+TCVFos/IOyis72LiIiSyjw==
-X-Received: by 2002:a05:6602:2c4d:: with SMTP id x13mr5775659iov.117.1595522082470;
-        Thu, 23 Jul 2020 09:34:42 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u9sm1724668iom.14.2020.07.23.09.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 09:34:41 -0700 (PDT)
-Received: (nullmailer pid 497723 invoked by uid 1000);
-        Thu, 23 Jul 2020 16:34:39 -0000
-Date:   Thu, 23 Jul 2020 10:34:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tony@atomide.com
-Subject: Re: [PATCH] mfd: Replace HTTP links with HTTPS ones
-Message-ID: <20200723163439.GA497543@bogus>
-References: <20200722184711.GI3533@dell>
- <20200722192454.69591-1-grandmaster@al2klimov.de>
+        Thu, 23 Jul 2020 12:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729778AbgGWQez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:34:55 -0400
+Received: from localhost.localdomain (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E718206F4;
+        Thu, 23 Jul 2020 16:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595522094;
+        bh=MP/p5I5PmDdq9WQ/ZX6AaTgVnkcn2iem13nFwnvaoJU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RQqey9r/4/ERgiO+HerjYshII4jgiJgjp7KH7vNxS8Pd9rAjBGgDsfgljy2U9WnY7
+         CYNdvo10MPtN2bLSpYW7meQfgzHTVSiNnzFkbavIrqCZEwTk0sAZ94sPkk5SAJ1yAw
+         UrfsSziC1GUkRZIBFmVJes+rAmP/YS/GBtv0lNRg=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.l.velikov@gmail.com>
+Subject: [PATCH v6 0/3] Add LT9611 DSI to HDMI bridge
+Date:   Thu, 23 Jul 2020 22:04:39 +0530
+Message-Id: <20200723163442.1280414-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722192454.69591-1-grandmaster@al2klimov.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 21:24:54 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
->  drivers/mfd/hi6421-pmic-core.c                       | 2 +-
->  drivers/mfd/lp873x.c                                 | 2 +-
->  drivers/mfd/lp87565.c                                | 2 +-
->  drivers/mfd/omap-usb-host.c                          | 2 +-
->  drivers/mfd/omap-usb-tll.c                           | 2 +-
->  drivers/mfd/smsc-ece1099.c                           | 2 +-
->  drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
->  drivers/mfd/tps65086.c                               | 2 +-
->  drivers/mfd/tps65217.c                               | 2 +-
->  drivers/mfd/tps65218.c                               | 2 +-
->  drivers/mfd/tps65912-core.c                          | 2 +-
->  drivers/mfd/tps65912-i2c.c                           | 2 +-
->  drivers/mfd/tps65912-spi.c                           | 2 +-
->  include/linux/mfd/hi6421-pmic.h                      | 2 +-
->  include/linux/mfd/lp873x.h                           | 2 +-
->  include/linux/mfd/lp87565.h                          | 2 +-
->  include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
->  include/linux/mfd/tps65086.h                         | 2 +-
->  include/linux/mfd/tps65217.h                         | 2 +-
->  include/linux/mfd/tps65218.h                         | 2 +-
->  include/linux/mfd/tps65912.h                         | 2 +-
->  22 files changed, 22 insertions(+), 22 deletions(-)
-> 
+Hi,
 
-Acked-by: Rob Herring <robh@kernel.org>
+This series adds driver and bindings for Lontium LT9611 bridge chip which
+takes MIPI DSI as input and HDMI as output.
+
+This chip can be found in 96boards RB3 platform [1] commonly called DB845c.
+
+[1]: https://www.96boards.org/product/rb3-platform/
+
+Changes in v6:
+ - Drop msm/dsi patch as we need to get more bridges fixed before we add that
+ - Bring back support for DRM_BRIDGE_ATTACH_NO_CONNECTOR not set, now driver
+	supports both
+ - Fix nits found by Sam
+
+Changes in v5:
+ - make symbol static, reported by kbuild-bot
+
+Changes in v4:
+ - Add msm/dsi patch to create connector and support DRM_BRIDGE_ATTACH_NO_CONNECTOR
+ - Fix comments provided by Sam
+
+Changes in v3:
+ - fix kbuild reported error
+ - rebase on v5.8-rc1
+
+Changes in v2:
+ - Add acks by Rob
+ - Fix comments reported by Emil and rename the file to lontium-lt9611.c
+ - Fix comments reported by Laurent on binding and driver
+ - Add HDMI audio support
+
+Vinod Koul (3):
+  dt-bindings: vendor-prefixes: Add Lontium vendor prefix
+  dt-bindings: display: bridge: Add documentation for LT9611
+  drm/bridge: Introduce LT9611 DSI to HDMI bridge
+
+ .../display/bridge/lontium,lt9611.yaml        |  176 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/gpu/drm/bridge/Kconfig                |   13 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/lontium-lt9611.c       | 1229 +++++++++++++++++
+ 5 files changed, 1421 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+ create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
+
+-- 
+2.26.2
+
