@@ -2,98 +2,153 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADD5C433EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC57C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C37220888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="NB+kAbK8"
+	by mail.kernel.org (Postfix) with ESMTP id 3872D2071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgGWIwD (ORCPT
+        id S1728061AbgGWIwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbgGWIv7 (ORCPT
+        Thu, 23 Jul 2020 04:52:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727932AbgGWIwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:51:59 -0400
-X-Greylist: delayed 60 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Jul 2020 01:51:59 PDT
-Received: from forward500p.mail.yandex.net (forward500p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64DE7C0619DC;
-        Thu, 23 Jul 2020 01:51:59 -0700 (PDT)
-Received: from mxback19g.mail.yandex.net (mxback19g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:319])
-        by forward500p.mail.yandex.net (Yandex) with ESMTP id 4A68D94066C;
-        Thu, 23 Jul 2020 11:50:54 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback19g.mail.yandex.net (mxback/Yandex) with ESMTP id IXTuY98NkU-orkGSgG9;
-        Thu, 23 Jul 2020 11:50:53 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1595494253;
-        bh=A7Ht5k3cZ3wxccJoqj/PU6v+iHZnZU4ly3x7oHqkv+M=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=NB+kAbK8jL51yG7iUfuCj2Km7Zr9+LcusXRNK1dx6omRfimbwO8NdQl1IptD3dwCC
-         HiUOnyZVRpobUx/AtjcxiI86QvD276nv8UCtjC4xgy99lLvrNjdG0f6ZUqwZippBOZ
-         3z/91RLD368Aw6Quastv1Wdkwy++U7jLCSe+sSLI=
-Authentication-Results: mxback19g.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt6-7b46a58f2373.qloud-c.yandex.net with HTTP;
-        Thu, 23 Jul 2020 11:50:52 +0300
-From:   Evgeny Novikov <novikov@ispras.ru>
-Envelope-From: eugenenovikov@yandex.ru
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ldv-project@linuxtesting.org" <ldv-project@linuxtesting.org>
-In-Reply-To: <20200723010055.GA1333715@rowland.harvard.edu>
-References: <20200721201558.20069-1-novikov@ispras.ru>
-         <20200722141741.GA1310843@rowland.harvard.edu>
-         <2097231595446720@mail.yandex.ru> <20200723010055.GA1333715@rowland.harvard.edu>
-Subject: Re: [PATCH] usb: gadget: net2280: fix memory leak on probe error handling paths
-MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Thu, 23 Jul 2020 11:50:52 +0300
-Message-Id: <1903061595494082@mail.yandex.ru>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Jul 2020 04:52:03 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N8WG2b141081;
+        Thu, 23 Jul 2020 04:51:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ecpbd7b7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 04:51:51 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06N8hFU7020154;
+        Thu, 23 Jul 2020 04:51:51 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ecpbd79d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 04:51:51 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06N8odGG022143;
+        Thu, 23 Jul 2020 08:51:48 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 32dbmn1uq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 08:51:48 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06N8pjZf15008004
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 08:51:45 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B62F4AE059;
+        Thu, 23 Jul 2020 08:51:45 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA1C2AE056;
+        Thu, 23 Jul 2020 08:51:42 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.199.56.65])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Jul 2020 08:51:42 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: [PATCH v3 04/10] powerpc/smp: Move topology fixups into  a new function
+Date:   Thu, 23 Jul 2020 14:21:10 +0530
+Message-Id: <20200723085116.4731-5-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
+References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ impostorscore=0 clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.07.2020, 04:00, "Alan Stern" <stern@rowland.harvard.edu>:
-> On Wed, Jul 22, 2020 at 10:56:09PM +0300, Evgeny Novikov wrote:
->>  Hi Alan,
->>
->>  I have neither an appropriate hardware nor an experience to deal with
->>  issues that you mentioned. Our framework does not allow to detect them
->>  as well at the moment. At last, it seems that rather many drivers can
->>  suffer from these issues. So, it would be much better if somebody else
->>  will suggest necessary fixes and test them carefully.
->
-> Heh... Working from home, I no longer have access to the appropriate
-> hardware either. But at least I do have the necessary experience. :-)
->
->>  BTW, you have already discussed the race within net2280_remove() with
->>  my colleague about 3 years ago. But you did not achieve a consensus at
->>  that time and no fixes were made after all.
->
-> I don't recall that. Do you have a pointer to the email thread in the
-> archives?
-https://lkml.org/lkml/2017/8/16/345 - this is the top message of that thread.
+Move topology fixup based on the platform attributes into its own
+function which is called just before set_sched_topology.
 
-Evgeny
->>  Anyway, one can consider both issues independently on the one fixed by
->>  the patch.
->
-> Yes. I'll write and submit a series of patches.
->
-> Alan Stern
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+Changelog v2 -> v3:
+	Rewrote changelog (Gautham)
+	Renamed to powerpc/smp: Move topology fixups into  a new function
+
+ arch/powerpc/kernel/smp.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index a685915e5941..da27f6909be1 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1368,6 +1368,16 @@ int setup_profiling_timer(unsigned int multiplier)
+ 	return 0;
+ }
+ 
++static void fixup_topology(void)
++{
++#ifdef CONFIG_SCHED_SMT
++	if (has_big_cores) {
++		pr_info("Big cores detected but using small core scheduling\n");
++		powerpc_topology[0].mask = smallcore_smt_mask;
++	}
++#endif
++}
++
+ void __init smp_cpus_done(unsigned int max_cpus)
+ {
+ 	/*
+@@ -1381,12 +1391,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
+ 
+ 	dump_numa_cpu_topology();
+ 
+-#ifdef CONFIG_SCHED_SMT
+-	if (has_big_cores) {
+-		pr_info("Big cores detected but using small core scheduling\n");
+-		powerpc_topology[0].mask = smallcore_smt_mask;
+-	}
+-#endif
++	fixup_topology();
+ 	set_sched_topology(powerpc_topology);
+ }
+ 
+-- 
+2.18.2
+
