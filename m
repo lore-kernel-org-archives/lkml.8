@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24DCC433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C5C433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7642080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D03D208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:25:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Phg9qHMV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U90SFM2X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgGWMZn (ORCPT
+        id S1729158AbgGWMZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58322 "EHLO
+        Thu, 23 Jul 2020 08:25:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbgGWMZi (ORCPT
+        with ESMTP id S1729141AbgGWMZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:25:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDE0C0619E3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:38 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r4so2012111wrx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:38 -0700 (PDT)
+        Thu, 23 Jul 2020 08:25:41 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D00DC0619DC
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:41 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f1so4427909wro.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Zt4gQ5fBquDOsunevc+xn2q97qXGNvH/uHrfGiyo69A=;
-        b=Phg9qHMV73qlHdXhbakwTt6Vb+7ozqNYazBc72hJL/WdpwWv+ovB7Llu1p8IIVxpt3
-         qSeAXsvji3rtYgDMJT+kESSiOxr/HYE8PLq4UpveLCEf2NBvWTmCHkuSWVgH34e5NXpn
-         nxhFDKkQptRrXCFT7j1+Fpcf3CG6/cQAi9S5fJJlhJW1GbU37o5rT6rGyx44X4pnH1iE
-         kYn2fVn0+Jfa74Qvn/Cl+jYSqWly6gPiel27OMYykJ1EkP7rciIe0IOOBaMHYoJxyF+b
-         ShVbMaJVKAJNpjzXMgMZtwTzmdYTKYk+rqBSpG+EDKiIm3IIVmoA0/ONF2nflNJIHgjs
-         5K0Q==
+        bh=e/a+n7xeT+4IypaMdZEOHPtxjDCXYhdWbia6WF8lJXM=;
+        b=U90SFM2XfntMbbnKnpL8NIcPeMt35ipcq6Dn11/o5syJemNsgkTGwnAef33kj+uNTc
+         DriqRPXhk78sPhGfpXjcZZS0kOou3ET6f+Fg46iKHmQFE6TldgHGr3BZLU39n7/6axET
+         occ6OmfpC459wp/wuL3KZveW9siDSXs9DeDZDtxDAHdaPC+LA5Rk10BtDHusbCXXJD9N
+         5wyAabHHnCEHOtiq7veQY85rYVYHMf6M384luLNiB4AwwZVbh7zSDXTXY0KmshygRX4v
+         b7QeGD4rVWoFSZZ/zITPdb8scodvtQdKCCVCQxmRvSru02xmEIUJRWhbH7lMrRH800as
+         zh2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Zt4gQ5fBquDOsunevc+xn2q97qXGNvH/uHrfGiyo69A=;
-        b=ecOUp5b/66HxO9JXk3CzouXNhQLahDHBWp3xPvSJYU701KUtaNkzUd/S5n2N546Blw
-         FL5ChjXa4ItbloeQaRAq2HOYcz+4l4COxwd77lLQMg6BHhGAiIwVcP0rx6is+m1LTtS2
-         EVn+QSwTGuo2s7TXXlC2xNDBk4xrnOEfgeUpXRSUrcvt+pQr+mjJPPYpb/M5ZsxM/w8+
-         EM4CoV+OiYHThD3Fy+jt3FFKMN1DofTaO9mOuZCdRsG/KytOoj/MQ8stxmKkDXYWIiyv
-         7D2NgyfYpsf5y7fFi1W8cQmVNuZE2FEHfb5B+OeObsQdkcj/MYcRaketEyUiV2eS2/IK
-         CoYw==
-X-Gm-Message-State: AOAM531BWIR1bcG7eLWd/bNUpQww1GW/oMf0c5m6P92Y6XzOcz8dgf5X
-        zRWbrxFfpJ3BjvwWOpOjXzy+yaZKLkc=
-X-Google-Smtp-Source: ABdhPJyfTicJl5ewFF503iUoLLoflgMDe4eIajSk2w6TXoQayLk/F7If1jxpAb/Ef4jZheNv4PAA4Q==
-X-Received: by 2002:adf:fd41:: with SMTP id h1mr4146529wrs.124.1595507137010;
-        Thu, 23 Jul 2020 05:25:37 -0700 (PDT)
+        bh=e/a+n7xeT+4IypaMdZEOHPtxjDCXYhdWbia6WF8lJXM=;
+        b=WT1kiyF5kRAULxdH2bwN8h1O7TumttMevo8Ufomy7pPFIZVuVix+SAcOF7yWwDx5+p
+         G9omUQvH1XHLCBNNq/xZ7NCuUaUNsZCqxLcI0AZzBIv0Bf41kRq5c8slyAM5BDmtv9fu
+         k0k7iqi1/FRVk1yVof0oL0SsuQUqNhvLYpAqrjxNQZf2qWqsuZLggNjEBqBQhJIVhYDO
+         I90gyoK+yF5lLIxhA6PpkVz516LdTPFxJxm6xMtILkiW9uaA/DPbR2x0l9Pzk4+2emgT
+         lCFPQWcfG12ySHU6LMlQi+rkbgJYnjSlm12Po+PM4ruqDS36BK/s2FBW7WrPwXtl9+aT
+         EoPg==
+X-Gm-Message-State: AOAM532XA9lBWfJqAmWgXKkoTTV5RxEam3MYbECQW3V4XQOwk3tY1Jf9
+        aAA8H7FlcqGjAeQWTyM5pFQmfg==
+X-Google-Smtp-Source: ABdhPJy4d9ZY4EAHaWXH/a0t/Z9kXHv2xcUkY8FSTT7ZehgX4cv+QGUBUbgxKGPINTm00P6AAbNzyA==
+X-Received: by 2002:adf:e704:: with SMTP id c4mr4196356wrm.81.1595507139735;
+        Thu, 23 Jul 2020 05:25:39 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.35
+        by smtp.gmail.com with ESMTPSA id j5sm3510651wma.45.2020.07.23.05.25.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:25:36 -0700 (PDT)
+        Thu, 23 Jul 2020 05:25:39 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     jejb@linux.ibm.com, martin.petersen@oracle.com
 Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
-Subject: [PATCH 38/40] scsi: bfa: bfa_ioc: Ensure a blank line precedes next function/header
-Date:   Thu, 23 Jul 2020 13:24:44 +0100
-Message-Id: <20200723122446.1329773-39-lee.jones@linaro.org>
+        Bradley Grove <linuxdrivers@attotech.com>
+Subject: [PATCH 40/40] scsi: esas2r: esas2r_log: Demote a few non-conformant kerneldoc headers
+Date:   Thu, 23 Jul 2020 13:24:46 +0100
+Message-Id: <20200723122446.1329773-41-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723122446.1329773-1-lee.jones@linaro.org>
 References: <20200723122446.1329773-1-lee.jones@linaro.org>
@@ -78,32 +77,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following checkpatch warning:
+Fixes the following W=1 kernel build warning(s):
 
- CHECK: Please use a blank line after function/struct/union/enum declarations
- #129: FILE: drivers/scsi/bfa/bfa_ioc.c:6913:
-  }
- +/*
+ drivers/scsi/esas2r/esas2r_log.c:86: warning: Function parameter or member 'level' not described in 'translate_esas2r_event_level_to_kernel'
+ drivers/scsi/esas2r/esas2r_log.c:120: warning: Function parameter or member 'level' not described in 'esas2r_log_master'
+ drivers/scsi/esas2r/esas2r_log.c:120: warning: Function parameter or member 'dev' not described in 'esas2r_log_master'
+ drivers/scsi/esas2r/esas2r_log.c:120: warning: Function parameter or member 'format' not described in 'esas2r_log_master'
+ drivers/scsi/esas2r/esas2r_log.c:120: warning: Function parameter or member 'args' not described in 'esas2r_log_master'
+ drivers/scsi/esas2r/esas2r_log.c:183: warning: Function parameter or member 'level' not described in 'esas2r_log'
+ drivers/scsi/esas2r/esas2r_log.c:183: warning: Function parameter or member 'format' not described in 'esas2r_log'
+ drivers/scsi/esas2r/esas2r_log.c:211: warning: Function parameter or member 'level' not described in 'esas2r_log_dev'
+ drivers/scsi/esas2r/esas2r_log.c:211: warning: Function parameter or member 'dev' not described in 'esas2r_log_dev'
+ drivers/scsi/esas2r/esas2r_log.c:211: warning: Function parameter or member 'format' not described in 'esas2r_log_dev'
+ drivers/scsi/esas2r/esas2r_log.c:237: warning: Function parameter or member 'level' not described in 'esas2r_log_hexdump'
+ drivers/scsi/esas2r/esas2r_log.c:237: warning: Function parameter or member 'buf' not described in 'esas2r_log_hexdump'
+ drivers/scsi/esas2r/esas2r_log.c:237: warning: Function parameter or member 'len' not described in 'esas2r_log_hexdump'
 
-Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
-Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Cc: Bradley Grove <linuxdrivers@attotech.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/scsi/bfa/bfa_ioc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/esas2r/esas2r_log.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
-index be48a7e31e803..dd5821dfcac2d 100644
---- a/drivers/scsi/bfa/bfa_ioc.c
-+++ b/drivers/scsi/bfa/bfa_ioc.c
-@@ -6910,6 +6910,7 @@ bfa_flash_read_check(void __iomem *pci_bar)
+diff --git a/drivers/scsi/esas2r/esas2r_log.c b/drivers/scsi/esas2r/esas2r_log.c
+index 65fdf22b0ba9a..b545798e400c4 100644
+--- a/drivers/scsi/esas2r/esas2r_log.c
++++ b/drivers/scsi/esas2r/esas2r_log.c
+@@ -75,7 +75,7 @@ static char event_buffer[EVENT_LOG_BUFF_SIZE];
+ /* A lock to protect the shared buffer used for formatting messages. */
+ static DEFINE_SPINLOCK(event_buffer_lock);
  
+-/**
++/*
+  * translates an esas2r-defined logging event level to a kernel logging level.
+  *
+  * @param [in] level the esas2r-defined logging event level to translate
+@@ -101,7 +101,7 @@ static const char *translate_esas2r_event_level_to_kernel(const long level)
+ 	}
+ }
+ 
+-/**
++/*
+  * the master logging function.  this function will format the message as
+  * outlined by the formatting string, the input device information and the
+  * substitution arguments and output the resulting string to the system log.
+@@ -170,7 +170,7 @@ static int esas2r_log_master(const long level,
  	return 0;
  }
-+
- /*
-  * @brief
-  * End flash read operation.
+ 
+-/**
++/*
+  * formats and logs a message to the system log.
+  *
+  * @param [in] level  the event level of the message
+@@ -193,7 +193,7 @@ int esas2r_log(const long level, const char *format, ...)
+ 	return retval;
+ }
+ 
+-/**
++/*
+  * formats and logs a message to the system log.  this message will include
+  * device information.
+  *
+@@ -221,7 +221,7 @@ int esas2r_log_dev(const long level,
+ 	return retval;
+ }
+ 
+-/**
++/*
+  * formats and logs a message to the system log.  this message will include
+  * device information.
+  *
 -- 
 2.25.1
 
