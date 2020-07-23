@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB2CC43465
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F352C4346A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B500D20792
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3541120792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I1Togn/1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fl8tqvly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgGWXtQ (ORCPT
+        id S1728601AbgGWXtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:49:16 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17654 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbgGWXsV (ORCPT
+        Thu, 23 Jul 2020 19:49:25 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17987 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728196AbgGWXsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:48:21 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1a214a0000>; Thu, 23 Jul 2020 16:46:18 -0700
+        Thu, 23 Jul 2020 19:48:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1a21820001>; Thu, 23 Jul 2020 16:47:14 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 23 Jul 2020 16:48:20 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Jul 2020 16:48:17 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 23 Jul 2020 16:48:20 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 16:48:17 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
- 2020 23:48:20 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 23 Jul 2020 23:48:20 +0000
+ 2020 23:48:17 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 23 Jul 2020 23:48:17 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1a21c30002>; Thu, 23 Jul 2020 16:48:20 -0700
+        id <B5f1a21c00002>; Thu, 23 Jul 2020 16:48:17 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -48,9 +48,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v4 06/14] media: tegra-video: Fix channel format alignment
-Date:   Thu, 23 Jul 2020 16:51:04 -0700
-Message-ID: <1595548272-9809-7-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v4 01/14] i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+Date:   Thu, 23 Jul 2020 16:50:59 -0700
+Message-ID: <1595548272-9809-2-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
 References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
@@ -58,67 +58,59 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595547978; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
+        t=1595548034; bh=zxB65TqmmcKmPfWkLJU50AtZToCBrCGEYlb/JsyjY+U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=I1Togn/1+hQHpUowTkWtC76GKzlKM4rbMYAjd9SBrfknD3w4xue2ptmitNKwQFPmt
-         DEB7jl2eTArWMU4ph15iZleVqC9rGaFIEIjya2ZYUKL4zhgv0ghxFz3VC9x2w6bFVL
-         4H1AQF0JF/iSySsDfvrObAbkn+TQfMr6yRntCTIb0q4i8YGW9SZI7q62FmIWyI3McK
-         cZCWvXRJZSUGpma8iEP/o8uLR6x5V5jjTeo/OByqMYHDBoE9aU+xHIt/s+kEw+LVzH
-         mK7rphMRUWEaZXQWpgTz1SqwIOMI0K6pFFg4DcTPRk/nyuxsVmsRLvyTt5bhHioeKt
-         kbXgEVtb8AooQ==
+        b=Fl8tqvlySxeFQDQY+54PsTN9/Ap3KRcNINo11fVdby3IDSAfwpkG/gnQHKKq0aUdJ
+         z6/23I17/nIZNyD47iGPQM2JX2PaOUtGzNfJwDdHn1+QuQhAfthEeKt2cMqbzZnbQy
+         yAp4FZCOpjj8XQiNb4AJOWXCUefYA2o0KVdgK1X3CkSQVO8lV8HO/0ynCtMV11Rjvg
+         v5ad1aLajISWQCt8Hm8tLz5bgc4tuNSCIGbU4y5bcxtjcQPh4NCrq6MPDjC9tO4lVD
+         7Md3yFMMszQxoqAUB6JLrzGdUY4qKl8GRTvTwEZ2xSQC3GynxDEDAhn5r/03udxjTW
+         vrvkdslNLO0Ag==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pixel format width is mistakenly aligned to surface align bytes
-and altering width to aligned value may force sensor mode change
-other than the requested one and also cause mismatch in width
-programmed between sensor and vi which can lead to capture errors.
+Tegra VI I2C is part of VE power domain and typically used for
+camera usecases.
 
-This patch removes width alignment and clamps width as per Tegra
-minimum and maximum limits.
+VE power domain is not always on and is non-IRQ safe. So, IRQ safe
+device cannot be attached to a non-IRQ safe domain as it prevents
+powering off the PM domain and generic power domain driver will warn.
+
+Current driver marks all I2C devices as IRQ safe and VI I2C device
+does not require IRQ safe as it will not be used for atomic transfers.
+
+This patch has fix to make VI I2C as non-IRQ safe.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/vi.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 1b5e660..d621ebc 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
- 				    struct v4l2_pix_format *pix,
- 				    unsigned int bpp)
- {
--	unsigned int align;
--	unsigned int min_width;
--	unsigned int max_width;
--	unsigned int width;
- 	unsigned int min_bpl;
- 	unsigned int max_bpl;
- 	unsigned int bpl;
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 1577296..3be1018 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1750,7 +1750,15 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 		goto unprepare_slow_clk;
+ 	}
  
- 	/*
--	 * The transfer alignment requirements are expressed in bytes. Compute
--	 * minimum and maximum values, clamp the requested width and convert
--	 * it back to pixels. Use bytesperline to adjust the width.
-+	 * The transfer alignment requirements are expressed in bytes.
-+	 * Clamp the requested width and height to the limits.
- 	 */
--	align = lcm(SURFACE_ALIGN_BYTES, bpp);
--	min_width = roundup(TEGRA_MIN_WIDTH, align);
--	max_width = rounddown(TEGRA_MAX_WIDTH, align);
--	width = roundup(pix->width * bpp, align);
--
--	pix->width = clamp(width, min_width, max_width) / bpp;
-+	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
- 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
- 
- 	/* Clamp the requested bytes per line value. If the maximum bytes per
+-	pm_runtime_irq_safe(&pdev->dev);
++	/*
++	 * VI I2C is in VE power domain which is not always on and not
++	 * an IRQ safe. So, IRQ safe device can't be attached to a non-IRQ
++	 * safe domain as it prevents powering off the PM domain.
++	 * Also, VI I2C device don't need to use runtime IRQ safe as it will
++	 * not be used for atomic transfers.
++	 */
++	if (!i2c_dev->is_vi)
++		pm_runtime_irq_safe(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	if (!pm_runtime_enabled(&pdev->dev)) {
+ 		ret = tegra_i2c_runtime_resume(&pdev->dev);
 -- 
 2.7.4
 
