@@ -2,183 +2,125 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E34206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF5120768
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 12:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595507854;
+	bh=74nsSEGTQlxHCQroHp1QhmDj8lEC7XVNAOzfwUfuaxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h05R0hjtHVn6sYpbNV6VAkkIMVUY1EAC2RIect0vDDf4Liz93gIdQFd7Dr+lxmK6x
+	 r4lXG5SnKYC9Cai8xkWaaSufETmNYR9i4PYVmLzZ4hDUtBr2JnTQ5BHDUcEQ8ftkbW
+	 o+Puu1N0ElH6qsy5pvkKd0JTuEcOx5kpcKMd89NI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgGWMe4 (ORCPT
+        id S1728579AbgGWMhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:34:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29342 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbgGWMe4 (ORCPT
+        Thu, 23 Jul 2020 08:37:33 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40289 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgGWMhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:34:56 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NCYLCb094941;
-        Thu, 23 Jul 2020 08:34:38 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32faj385kx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 08:34:34 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NCEpAO025465;
-        Thu, 23 Jul 2020 12:32:34 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 32brq865xn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 12:32:34 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NCWVwN59703482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jul 2020 12:32:31 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 600E111C064;
-        Thu, 23 Jul 2020 12:32:31 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CCB0211C054;
-        Thu, 23 Jul 2020 12:32:30 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.31.161])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jul 2020 12:32:30 +0000 (GMT)
-Subject: Re: [PATCH v2 2/2] KVM: PPC: Book3S HV: rework secure mem slot
- dropping
-To:     bharata@linux.ibm.com, linuxram@us.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, mpe@ellerman.id.au, paulus@samba.org,
-        sukadev@linux.ibm.com, bauerman@linux.ibm.com,
-        Paul Mackerras <paulus@ozlabs.org>
-References: <20200721104202.15727-1-ldufour@linux.ibm.com>
- <20200721104202.15727-3-ldufour@linux.ibm.com>
- <20200723033600.GS7902@in.ibm.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <4a3caeaf-cd0c-fcd7-0a97-f367a5f78dac@linux.ibm.com>
-Date:   Thu, 23 Jul 2020 14:32:30 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Thu, 23 Jul 2020 08:37:33 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j11so6149633ljo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 05:37:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TbdqUjGoPs4mHIRTk4dFCt8/crXquSHYgZzaX/f+u2c=;
+        b=m5qUryj9CuBt1afOA6sS18Km83K+5zgJKtOKdWErq1zAUSKAqfLgYCjQ4bJyqQqx7u
+         kcjugS+1d3+E6xOcrCAt8UZ0t88wi7q3n/A5lieRYz+bgIinMaEMIFUXz09YTTLQ8DPo
+         vq4T5M0sF5XAlw4GozwENHNH9T2IH67Nss+wz2xZot3VdBw9VBo8oLY60gT7m5+dF4h/
+         yqlmBOUlRLV/i6IUrqXhML9KH4ttELyincLHv+WPp+Aj8E/FE1itIXYyyT7F7TINirzL
+         C1l1TDwGzidCNd9j3f6kh63/ILy/qH767jGAnDndUJeMjopbnQLhCBWzlzNvJMJCA6yq
+         YXRg==
+X-Gm-Message-State: AOAM532vWZnbk2zyUrMe/Rqze67L4c3TltJzx68aw60UyLPVhY2V6xqZ
+        2mFkKPX0acT4m+BPhQOFUwU=
+X-Google-Smtp-Source: ABdhPJyNDFL7vCZUil6J39elv3735RWn6rd4BszPfg5NmqP4oM4ed3sOJ0cRTN4fXG5Q0KIG7iS8ww==
+X-Received: by 2002:a2e:9810:: with SMTP id a16mr1755491ljj.157.1595507850412;
+        Thu, 23 Jul 2020 05:37:30 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id v5sm2633942lji.75.2020.07.23.05.37.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 05:37:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jyaTU-0001pi-29; Thu, 23 Jul 2020 14:37:24 +0200
+Date:   Thu, 23 Jul 2020 14:37:24 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>, kernel test robot <lkp@intel.com>,
+        kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>
+Subject: Re: drivers/tty/serial/pmac_zilog.c:255:36: sparse: sparse: context
+ imbalance in 'pmz_receive_chars' - unexpected unlock
+Message-ID: <20200723123724.GN3634@localhost>
+References: <202007231701.CV9tyb31%lkp@intel.com>
+ <20200723121617.GM3634@localhost>
+ <CAHp75VeXh0vsydRay1a3uBP2kSsr6bNV7bT=vgCS7CSSRYT1mw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723033600.GS7902@in.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_05:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=2
- phishscore=0 mlxlogscore=964 lowpriorityscore=0 mlxscore=0 clxscore=1015
- spamscore=0 adultscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeXh0vsydRay1a3uBP2kSsr6bNV7bT=vgCS7CSSRYT1mw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 23/07/2020 à 05:36, Bharata B Rao a écrit :
-> On Tue, Jul 21, 2020 at 12:42:02PM +0200, Laurent Dufour wrote:
->> When a secure memslot is dropped, all the pages backed in the secure device
->> (aka really backed by secure memory by the Ultravisor) should be paged out
->> to a normal page. Previously, this was achieved by triggering the page
->> fault mechanism which is calling kvmppc_svm_page_out() on each pages.
->>
->> This can't work when hot unplugging a memory slot because the memory slot
->> is flagged as invalid and gfn_to_pfn() is then not trying to access the
->> page, so the page fault mechanism is not triggered.
->>
->> Since the final goal is to make a call to kvmppc_svm_page_out() it seems
->> simpler to directly calling it instead of triggering such a mechanism. This
->> way kvmppc_uvmem_drop_pages() can be called even when hot unplugging a
->> memslot.
->>
->> Since kvmppc_uvmem_drop_pages() is already holding kvm->arch.uvmem_lock,
->> the call to __kvmppc_svm_page_out() is made.
->> As __kvmppc_svm_page_out needs the vma pointer to migrate the pages, the
->> VMA is fetched in a lazy way, to not trigger find_vma() all the time. In
->> addition, the mmap_sem is help in read mode during that time, not in write
->> mode since the virual memory layout is not impacted, and
->> kvm->arch.uvmem_lock prevents concurrent operation on the secure device.
->>
->> Cc: Ram Pai <linuxram@us.ibm.com>
->> Cc: Bharata B Rao <bharata@linux.ibm.com>
->> Cc: Paul Mackerras <paulus@ozlabs.org>
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->> ---
->>   arch/powerpc/kvm/book3s_hv_uvmem.c | 54 ++++++++++++++++++++----------
->>   1 file changed, 37 insertions(+), 17 deletions(-)
->>
->> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> index 5a4b02d3f651..ba5c7c77cc3a 100644
->> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
->> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
->> @@ -624,35 +624,55 @@ static inline int kvmppc_svm_page_out(struct vm_area_struct *vma,
->>    * fault on them, do fault time migration to replace the device PTEs in
->>    * QEMU page table with normal PTEs from newly allocated pages.
->>    */
->> -void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *free,
->> +void kvmppc_uvmem_drop_pages(const struct kvm_memory_slot *slot,
->>   			     struct kvm *kvm, bool skip_page_out)
->>   {
->>   	int i;
->>   	struct kvmppc_uvmem_page_pvt *pvt;
->> -	unsigned long pfn, uvmem_pfn;
->> -	unsigned long gfn = free->base_gfn;
->> +	struct page *uvmem_page;
->> +	struct vm_area_struct *vma = NULL;
->> +	unsigned long uvmem_pfn, gfn;
->> +	unsigned long addr, end;
->> +
->> +	mmap_read_lock(kvm->mm);
->> +
->> +	addr = slot->userspace_addr;
+On Thu, Jul 23, 2020 at 03:26:54PM +0300, Andy Shevchenko wrote:
+> On Thu, Jul 23, 2020 at 3:19 PM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Thu, Jul 23, 2020 at 05:29:14PM +0800, kernel test robot wrote:
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > > head:   d15be546031cf65a0fc34879beca02fd90fe7ac7
+> > > commit: 08d5470308ac3598e7709d08b8979ce6e9de8da2 serial: core: fix sysrq overhead regression
+> > > date:   4 weeks ago
+> > > config: m68k-randconfig-s032-20200723 (attached as .config)
+> > > compiler: m68k-linux-gcc (GCC) 9.3.0
+> > > reproduce:
+> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > >         chmod +x ~/bin/make.cross
+> > >         # apt-get install sparse
+> > >         # sparse version: v0.6.2-93-g4c6cbe55-dirty
+> > >         git checkout 08d5470308ac3598e7709d08b8979ce6e9de8da2
+> > >         # save the attached .config to linux build tree
+> > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=m68k
+> > >
+> > > If you fix the issue, kindly add following tag as appropriate
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > >
+> > >
+> > > sparse warnings: (new ones prefixed by >>)
+> > >
+> > > >> drivers/tty/serial/pmac_zilog.c:255:36: sparse: sparse: context imbalance in 'pmz_receive_chars' - unexpected unlock
+> >
+> > This warning is far from new,
 > 
-> We typically use gfn_to_hva() for that, but that won't work for a
-> memslot that is already marked INVALID which is the case here.
-> I think it is ok to access slot->userspace_addr here of an INVALID
-> memslot, but just thought of explictly bringing this up.
+> I suspect it's a new sparse and kbuildbot that decided to unveil old sins.
 
-Which explicitly mentioned above in the patch's description:
+Possibly.
 
-This can't work when hot unplugging a memory slot because the memory slot
-is flagged as invalid and gfn_to_pfn() is then not trying to access the
-page, so the page fault mechanism is not triggered.
-
+> > but let's add the missing annotation
+> > nonetheless:
+> >
+> >         https://lore.kernel.org/r/20200723121423.24217-1-johan@kernel.org
 > 
->> +	end = addr + (slot->npages * PAGE_SIZE);
->>   
->> -	for (i = free->npages; i; --i, ++gfn) {
->> -		struct page *uvmem_page;
->> +	gfn = slot->base_gfn;
->> +	for (i = slot->npages; i; --i, ++gfn, addr += PAGE_SIZE) {
->> +
->> +		/* Fetch the VMA if addr is not in the latest fetched one */
->> +		if (!vma || (addr < vma->vm_start || addr >= vma->vm_end)) {
->> +			vma = find_vma_intersection(kvm->mm, addr, end);
->> +			if (!vma ||
->> +			    vma->vm_start > addr || vma->vm_end < end) {
->> +				pr_err("Can't find VMA for gfn:0x%lx\n", gfn);
->> +				break;
->> +			}
->> +		}
-> 
-> In Ram's series, kvmppc_memslot_page_merge() also walks the VMAs spanning
-> the memslot, but it uses a different logic for the same. Why can't these
-> two cases use the same method to walk the VMAs? Is there anything subtly
-> different between the two cases?
+> Feel free to add Reviewed-by: Andy Shevchenko
+> <andy.shevchenko@gmail.com> to them.
 
-This is probably doable. At the time I wrote that patch, the 
-kvmppc_memslot_page_merge() was not yet introduced AFAIR.
+Thanks, and sorry I missed this before sending a v2 with the missing
+ampersands added. It's better if you reply to the cover letter so Greg's
+tooling will pick it up:
 
-This being said, I'd help a lot to factorize that code... I let Ram dealing with 
-that ;)
+	https://lore.kernel.org/r/20200723123327.5843-1-johan@kernel.org
 
-Cheers,
-Laurent.
-
-
+Johan
