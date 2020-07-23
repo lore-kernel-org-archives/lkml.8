@@ -2,98 +2,132 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD65C433EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7881EC433ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A97D20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556D520792
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 23:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="xcEWeqzC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="oud/p3Pa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgGWXVa (ORCPT
+        id S1728234AbgGWXWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:21:30 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46206 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgGWXV2 (ORCPT
+        Thu, 23 Jul 2020 19:22:20 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:53896 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgGWXWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 19:21:28 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 37C97891B2;
-        Fri, 24 Jul 2020 11:21:24 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1595546484;
-        bh=gMxO8i9clW2OX4l94MGgERIuhi2kgyZuM5WdocG61W8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=xcEWeqzCPiZuZY6t1JYpYgT6lHKDkwVJXRE7idSVm0XXwjwWMm/TGOZmmyDA6hNVd
-         cb6NkNYn1rcdmFbkN1eP7A7B5TEDV47Qea2I0uiYZ6/naJ5fhQ+jm/KHgvmVgIgbtJ
-         S8U6IIwO5lE/TICz0l3Dc2iRYZA4d2HMHa+bYjAoqDEUj6IlKZfXh+AnfVeq7lbEEe
-         fT6l0OX+7aQzZpqfZeXomKGrHroVrNKdOwdOZh3nIGJ/q5zaRA7BLnKvvqtHnIME4h
-         KyL0AeUOWXVQL8S7KXITV6vndrBgPt9wytNI820/ItrmsmhwQSKO1A+2IX8vwu7Ejw
-         G0Odv4J6uWAkw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f1a1b720002>; Fri, 24 Jul 2020 11:21:22 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id E782B13EEB7;
-        Fri, 24 Jul 2020 11:21:23 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 1D87A280079; Fri, 24 Jul 2020 11:21:24 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 1/3] net: dsa: mv88e6xxx: MV88E6097 does not support jumbo configuration
-Date:   Fri, 24 Jul 2020 11:21:20 +1200
-Message-Id: <20200723232122.5384-2-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723232122.5384-1-chris.packham@alliedtelesis.co.nz>
-References: <20200723232122.5384-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 23 Jul 2020 19:22:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1595546539; x=1627082539;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/iyoglcxkS318Sg6qJHiPt3/SwDfA+JjozFFVeV5pMY=;
+  b=oud/p3PaQA2IdECPHtFnsW/vYe9neqgVM0hNfVbUTDAGNNyXIvlL6h44
+   XL5hQaOolJNAFw/Wvx6ys11fJa6frBG1q8kADPZVeWLPtkSZxf85ZOwuz
+   jwfVzVX8522wBpaL/TwuRxGhmvoU3qT5tseW8yZ3zS2zEdZXgbEEUdenK
+   VpWONNnA4qnoRsradMe5p9/tmHz3kJ8h8g2U3E36lP2NMa0hPnqBAewoo
+   gLSBx/sMIgF5WQNa+V+LulvRzcOS1ojsvAfUzC8bKqjoNVgXZrsRuK34j
+   6kogCB15refiqLv9fOhJuiUI/DUB2MINi98HVbyFlACgqgf6GRGJuNk4i
+   Q==;
+IronPort-SDR: E6xkxJhAvk9IlxlmmSNdZvH60YJz0d86nUEb+WOlVOVOWlmPoC1UU1Z7TvxOeXJ7whK45egdpJ
+ mZfBUXqp2OA3qVlY+oVog6Ouusc80hYpMzTCg+q1x7LPlnO7rKVD9lkmQUrOfmX2Ve8NxS5kWm
+ 3+O1Weph0AMGPrwFAZo1JxFn7vopuVLZjr3kn9CxlpPrVxqalFOGB4I1BFyvJ0rij95RRKknlc
+ 4tnj3cgA2cF08C2Jrhor8mVUMydx3dTDcblT76YB9dY4OKsVo5TQNMJ/iuC7HbUAGM+szMz2Cx
+ SR4=
+X-IronPort-AV: E=Sophos;i="5.75,388,1589212800"; 
+   d="scan'208";a="252546067"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Jul 2020 07:22:19 +0800
+IronPort-SDR: IdIlcPUalfm/E3xDxAJnovdA1QJlRREpBk3ZaOD4vPpIxTIfYPQ/TrBqH5v1IZyPLH7Ot5Hsgj
+ MSVAd6M7mz/vKe12i5bB53cZ9xXT/Rk8E=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:10:33 -0700
+IronPort-SDR: jN5CtwZpnd+5N/goMHUWZJYQbmHItg8c2A91kwQxZACRbomktFOQsOgxQ5XD6qEzTP31o6d/nC
+ A3tRmg5flFsg==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 16:22:18 -0700
+Date:   Fri, 24 Jul 2020 00:22:15 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     linux-riscv@lists.infradead.org
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr' access
+In-Reply-To: <alpine.LFD.2.21.2007232038170.24175@redsun52.ssa.fujisawa.hgst.com>
+Message-ID: <alpine.DEB.2.20.2007232213510.4462@tpp.orcam.me.uk>
+References: <alpine.LFD.2.21.2007232038170.24175@redsun52.ssa.fujisawa.hgst.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MV88E6097 chip does not support configuring jumbo frames. Prior to
-commit 5f4366660d65 only the 6352, 6351, 6165 and 6320 chips configured
-jumbo mode. The refactor accidentally added the function for the 6097.
-Remove the erroneous function pointer assignment.
+Adjust the calls to `user_regset_copyout' and `user_regset_copyin' in 
+`riscv_fpr_get' and `riscv_fpr_set' respectively so as to use @start_pos 
+and @end_pos according to API documentation in <linux/regset.h>, that is 
+to point at the beginning and the end respectively of the data chunk to 
+be copied.  Update @data accordingly, also for the first call, to make 
+it clear which structure member is accessed.
 
-Fixes: 5f4366660d65 ("net: dsa: mv88e6xxx: Refactor setting of jumbo fram=
-es")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+We currently have @start_pos fixed at 0 across all calls, which works as 
+a result of the implementation, in particular because we have no padding 
+between the FP general registers and the FP control and status register, 
+but appears not to have been the intent of the API and is not what other 
+ports do, requiring one to study the copy handlers to understand what is 
+going on here.
+
+Signed-off-by: Maciej W. Rozycki <macro@wdc.com>
+Fixes: b8c8a9590e4f ("RISC-V: Add FP register ptrace support for gdb.")
+Cc: stable@vger.kernel.org # 4.20+
 ---
-Changes in v2:
-- Add review from Andrew
+ arch/riscv/kernel/ptrace.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
- drivers/net/dsa/mv88e6xxx/chip.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx=
-/chip.c
-index 6f019955ae42..4ddb6f3035c9 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -3494,7 +3494,6 @@ static const struct mv88e6xxx_ops mv88e6097_ops =3D=
- {
- 	.port_set_frame_mode =3D mv88e6351_port_set_frame_mode,
- 	.port_set_egress_floods =3D mv88e6352_port_set_egress_floods,
- 	.port_set_ether_type =3D mv88e6351_port_set_ether_type,
--	.port_set_jumbo_size =3D mv88e6165_port_set_jumbo_size,
- 	.port_egress_rate_limiting =3D mv88e6095_port_egress_rate_limiting,
- 	.port_pause_limit =3D mv88e6097_port_pause_limit,
- 	.port_disable_learn_limit =3D mv88e6xxx_port_disable_learn_limit,
---=20
-2.27.0
-
+linux-riscv-ptrace-fcsr.diff
+Index: linux-hv/arch/riscv/kernel/ptrace.c
+===================================================================
+--- linux-hv.orig/arch/riscv/kernel/ptrace.c
++++ linux-hv/arch/riscv/kernel/ptrace.c
+@@ -61,10 +61,13 @@ static int riscv_fpr_get(struct task_str
+ 	int ret;
+ 	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, fstate, 0,
++	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &fstate->f, 0,
+ 				  offsetof(struct __riscv_d_ext_state, fcsr));
+ 	if (!ret) {
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, fstate, 0,
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++					  &fstate->fcsr,
++					  offsetof(struct __riscv_d_ext_state,
++						   fcsr),
+ 					  offsetof(struct __riscv_d_ext_state, fcsr) +
+ 					  sizeof(fstate->fcsr));
+ 	}
+@@ -80,10 +83,13 @@ static int riscv_fpr_set(struct task_str
+ 	int ret;
+ 	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
+ 
+-	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, fstate, 0,
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &fstate->f, 0,
+ 				 offsetof(struct __riscv_d_ext_state, fcsr));
+ 	if (!ret) {
+-		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, fstate, 0,
++		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++					 &fstate->fcsr,
++					 offsetof(struct __riscv_d_ext_state,
++						  fcsr),
+ 					 offsetof(struct __riscv_d_ext_state, fcsr) +
+ 					 sizeof(fstate->fcsr));
+ 	}
