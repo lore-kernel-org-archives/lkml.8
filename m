@@ -2,117 +2,100 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604DAC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31831C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAC5206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:31:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aYaMfDhP"
+	by mail.kernel.org (Postfix) with ESMTP id 06B292065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 20:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgGWUbQ (ORCPT
+        id S1727985AbgGWUbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:31:16 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24735 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726135AbgGWUbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:31:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595536274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=40t+4qcg6UR1VcXiSRsIIDp9z0DXZ4q6WAM4TN0/6lk=;
-        b=aYaMfDhP4PCilBwMubvz0FD+P4GpQRfw20FIQTQ+PpuqIgiNSAXkd1QQmVNveyPznj11Q6
-        lXB3dCH9k6o2kW/y6cMQy9vGH3t36diNlVEBKbenyl05sdIa/5Zzl80XgKhN3zCXfhltQv
-        g/PDaEStFfkM1lFZMXQyYLPYdV0UdVw=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-POOgeOrbPEGiiscNvv_afw-1; Thu, 23 Jul 2020 16:31:10 -0400
-X-MC-Unique: POOgeOrbPEGiiscNvv_afw-1
-Received: by mail-qv1-f69.google.com with SMTP id g17so4398015qvw.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 13:31:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=40t+4qcg6UR1VcXiSRsIIDp9z0DXZ4q6WAM4TN0/6lk=;
-        b=MRGNuXETL5WN+jF2OaHAw0Pxxyl0YEtLsYMRne7c8YKpEYXST8cCzPv+GWOGltZQA4
-         TTinoC1WBEYG4pDA6gBGbyj9hGskR44WIjT55uIx6PZNH26/7Uvt8IwDiA3vWXI39rzZ
-         J6wu7OscsxJfJvcfp5K+IxlAe7XNIkDp/hNGfR7fUjRqn7O0rNPfP/4vKRRNUS8/syis
-         GN0Fu3qH3GHLtYi4sBWQP4USBye+Z5Lw+lvGYx5Pvngy5aZgfyd8XJptisP4MKflI5Td
-         jql0DDAtM9Mi2qRaURNk+Bv8MUlK40/4zdUFuQPvaGJVExLa0ZawdB2TIdqjj1J2DwIb
-         tnJQ==
-X-Gm-Message-State: AOAM531xwODKIVGt5wm3ZEudLCxiG7KAxQ+EcyIkr7WcjJBJP1Rx8LB3
-        9c9Zh4gfjE1tsV6cfU94COnpgFfelYeOXtudRCNAIa5XKbjc+mf3Nb0RRO7WnqAwZl1nSvI3VAF
-        YHJLBJriVGuUF1/MAookLbu9UQmw/J1h9TyOFxYmy
-X-Received: by 2002:a37:5c04:: with SMTP id q4mr7263413qkb.192.1595536270039;
-        Thu, 23 Jul 2020 13:31:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxaz+FKwj1+Qpe9+JR57Hg1bCOgF5rhbZUwIe/feWxQzxhiCYW2p0q4YNTbBH3ZcWu7BRmV4VUvG7uvN9PukuM=
-X-Received: by 2002:a37:5c04:: with SMTP id q4mr7263386qkb.192.1595536269773;
- Thu, 23 Jul 2020 13:31:09 -0700 (PDT)
+        Thu, 23 Jul 2020 16:31:44 -0400
+Received: from mga18.intel.com ([134.134.136.126]:1976 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbgGWUbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:31:44 -0400
+IronPort-SDR: fkynWmZNEp//7MwVBzyV7aTOmdOT779T3Mby2PPTR49S7YSHuoeFpOta0d/vD0PNXsYpjRwnrR
+ hfJW7TVfjWtQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138113972"
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="138113972"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 13:31:43 -0700
+IronPort-SDR: ubEHyUCahsy4WPPvEKm68KCeoCOAlhFA7Qc/wHtG7NpIqOSqkdUgTCeBaNWzL1NGTPAuUtzZEY
+ rAYSbrUtAB1Q==
+X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
+   d="scan'208";a="488958662"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.212.117.226]) ([10.212.117.226])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 13:31:42 -0700
+Subject: Re: [PATCH v5 00/10] x86/resctrl: Misc cleanup
+To:     James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Babu Moger <Babu.Moger@amd.com>
+References: <20200708163929.2783-1-james.morse@arm.com>
+ <1887b64a-dd18-25ff-a9f4-885c231c60b2@arm.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <dbe46982-29b6-cea8-af22-8c808ac4a8cb@intel.com>
+Date:   Thu, 23 Jul 2020 13:31:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
- <20200716235440.GA675421@bjorn-Precision-5520> <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
- <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
- <20200721122247.GI5180@lahna.fi.intel.com> <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
- <20200721152737.GS5180@lahna.fi.intel.com> <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
- <20200722092507.GC5180@lahna.fi.intel.com>
-In-Reply-To: <20200722092507.GC5180@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 23 Jul 2020 22:30:58 +0200
-Message-ID: <CACO55tsv63VP93F7xJ3nfZ7SkOk0c6WkgvuP+8fY14gypmn4Fg@mail.gmail.com>
-Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
- without DLL Link Active train links in 100 ms"
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Patrick Volkerding <volkerdi@gmail.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1887b64a-dd18-25ff-a9f4-885c231c60b2@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:25 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Tue, Jul 21, 2020 at 01:37:12PM -0500, Patrick Volkerding wrote:
-> > On 7/21/20 10:27 AM, Mika Westerberg wrote:
-> > > On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
-> > >> Sure thing. Also, feel free to let me know if you'd like access to one of the
-> > >> systems we saw breaking with this patch - I'm fairly sure I've got one of them
-> > >> locally at my apartment and don't mind setting up AMT/KVM/SSH
-> > > Probably no need for remote access (thanks for the offer, though). I
-> > > attached a test patch to the bug report:
-> > >
-> > >   https://bugzilla.kernel.org/show_bug.cgi?id=208597
-> > >
-> > > that tries to work it around (based on the ->pm_cap == 0). I wonder if
-> > > anyone would have time to try it out.
-> >
-> >
-> > Hi Mika,
-> >
-> > I can confirm that this patch applied to 5.4.52 fixes the issue with
-> > hybrid graphics on the Thinkpad X1 Extreme gen2.
->
-> Great, thanks for testing!
->
+Hi James, Borislav, and Thomas,
 
-yeah, works on the P1G2 as well.
+On 7/23/2020 11:31 AM, James Morse wrote:
+> Hi Reinette,
+> 
+> On 08/07/2020 17:39, James Morse wrote:
+>> These are the miscellaneous cleanup patches that floated to the top of
+>> the MPAM tree.
+> 
+> Is there anything else I should do with this series?
+> (Does patch 10 need an ACK from anyone else?)
 
+James: From my perspective the series is ready for consideration by the
+x86 maintainers and you already included the appropriate mailing list
+and cc for this series to be queued for their consideration. My
+"Reviewed-by" for patch 10 should have included a "#for resctrl". It
+indeed needs more reviews for the cacheinfo.h changes but I expect that
+to happen during review by x86 maintainers.
+
+> 
+> Would a branch or pull request make anyone's life easier?
+
+Borislav and Thomas: Would this perhaps help you?
+
+>> The only interesting thing are the patches to make the AMD/Intel
+>> differences something resctrl understands, instead of just 'happening'
+>> because of the different function pointers.
+>> This will become more important once MPAM support is added. parse_bw()
+>> and friends are what enforces resctrl's ABI. Allowing an
+>> architecture/platform to provide a subtly different function here would
+>> be bad for user-space.
+>>
+>> MPAM would set arch_has_sparse_bitmaps and arch_has_empty_bitmap, but
+>> not arch_needs_linear.
+> 
+>> Nothing in this series should change any behaviour.
+
+Thank you very much
+
+Reinette
