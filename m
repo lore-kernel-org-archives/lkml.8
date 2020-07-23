@@ -2,96 +2,164 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE01C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF4D42071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 15:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BF320771
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgGWP5N (ORCPT
+        id S1728827AbgGWQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:57:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:39414 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgGWP5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 11:57:12 -0400
-IronPort-SDR: vu8i4Sl4xOoFB/JWK/82MKB0X5AIK/uQmZRTX1tZGfAPna13DbbZNd0vvkTf0hhIGRQYlGMSEh
- /AEO2r1QC2xA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138055932"
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="138055932"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 08:57:11 -0700
-IronPort-SDR: WgfvmvBADdiXis6e61jhSmVSItsancSBTqRCpczfMDMPmJuPRyP8VbEg/ovxlWgGzMzfGmlFsp
- bAA104OlEruw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="319031598"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 23 Jul 2020 08:57:11 -0700
-Date:   Thu, 23 Jul 2020 08:57:11 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Xiong Zhang <xiong.y.zhang@intel.com>,
-        Wayne Boyer <wayne.boyer@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Add capability to zap only sptes for the
- affected memslot
-Message-ID: <20200723155711.GD21891@linux.intel.com>
-References: <20200703025047.13987-1-sean.j.christopherson@intel.com>
- <51637a13-f23b-8b76-c93a-76346b4cc982@redhat.com>
- <20200709211253.GW24919@linux.intel.com>
- <49c7907a-3ab4-b5db-ccb4-190b990c8be3@redhat.com>
- <20200710042922.GA24919@linux.intel.com>
- <20200713122226.28188f93@x1.home>
- <20200713190649.GE29725@linux.intel.com>
- <20200721030319.GD20375@linux.intel.com>
- <20200721100036.464d4440@w520.home>
+        Thu, 23 Jul 2020 12:00:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44162 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728134AbgGWQA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:00:27 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06NFWKh9038374;
+        Thu, 23 Jul 2020 12:00:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32fb9b5ps2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 12:00:05 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06NFX31D041579;
+        Thu, 23 Jul 2020 12:00:05 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32fb9b5prj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 12:00:05 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06NFt9JZ018599;
+        Thu, 23 Jul 2020 16:00:04 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma03wdc.us.ibm.com with ESMTP id 32brq9nk9t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 16:00:04 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06NG005H50069810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Jul 2020 16:00:00 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 10A2D6E060;
+        Thu, 23 Jul 2020 16:00:03 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A5BD6E054;
+        Thu, 23 Jul 2020 16:00:01 +0000 (GMT)
+Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.65.235.84])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 23 Jul 2020 16:00:00 +0000 (GMT)
+Date:   Thu, 23 Jul 2020 10:59:58 -0500
+From:   "Paul A. Clarke" <pc@us.ibm.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Message-ID: <20200723155958.GA7141@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <20200721143702.GA15990@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+ <20200722181158.GF981884@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721100036.464d4440@w520.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200722181158.GF981884@krava>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+Subject: RE: [PATCHv3 00/19] perf metric: Add support to reuse metric
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_08:2020-07-23,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:00:36AM -0600, Alex Williamson wrote:
-> On Mon, 20 Jul 2020 20:03:19 -0700
-> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> 
-> > +Weijiang
-> > 
-> > On Mon, Jul 13, 2020 at 12:06:50PM -0700, Sean Christopherson wrote:
-> > > The only ideas I have going forward are to:
+On Wed, Jul 22, 2020 at 08:11:58PM +0200, Jiri Olsa wrote:
+> On Tue, Jul 21, 2020 at 09:48:48AM -0500, Paul A. Clarke wrote:
+> > On Sun, Jul 19, 2020 at 08:13:01PM +0200, Jiri Olsa wrote:
+> > > hi,
+> > > this patchset is adding the support to reused metric in
+> > > another metric.
 > > > 
-> > >   a) Reproduce the bug outside of your environment and find a resource that
-> > >      can go through the painful bisection.  
+> > > For example, to define IPC by using CPI with change like:
+> > > 
+> > >      {
+> > >          "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+> > > -        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+> > > +        "MetricExpr": "1/CPI",
+> > >          "MetricGroup": "TopDownL1",
+> > >          "MetricName": "IPC"
+> > >      },
+> > > 
+> > > I won't be able to find all the possible places we could
+> > > use this at, so I wonder you guys (who was asking for this)
+> > > would try it and come up with comments if there's something
+> > > missing or we could already use it at some places.
+> > > 
+> > > It's based on Arnaldo's tmp.perf/core.
+> > > 
+> > > v3 changes:
+> > >   - added some acks
+> > >   - some patches got merged
+> > >   - added missing zalloc include [John Garry]
+> > >   - added ids array outside the egroup object [Ian]
+> > >   - removed wrong m->has_constraint assignment [Ian]
+> > >   - renamed 'list' to 'metric_list' [Ian]
+> > >   - fixed group metric and added test for it [Paul A. Clarke]
+> > >   - fixed memory leak [Arnaldo]
+> > >   - using lowercase keys for metrics in hashmap, because jevents
+> > >     converts metric_expr to lowercase
+> > > 
+> > > Also available in here:
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> > >   perf/metric
 > > 
-> > We're trying to reproduce the original issue in the hopes of biesecting, but
-> > have not yet discovered the secret sauce.  A few questions:
+> > These changes seem to be mostly working for me.
 > > 
-> >   - Are there any known hardware requirements, e.g. specific flavor of GPU?
+> > I attempted to exploit the new capability in the metrics definitions in
+> > tools/perf/pmu-events/arch/powerpc/power9/metrics.json.  Those changes
+> > are included below.
+> > 
+> > The one problem I found is with the "cpi_breakdown" metric group, as it
+> > no longer works:
+> > ```
+> > # perf stat --metrics cpi_breakdown ./command
+> > Cannot find metric or group `cpi_breakdown'
+> > ```
+> > 
+> > "cpi_breakdown" does show up in `perf list --metricgroup`, and all of the
+> > (95!) metrics listed in that group are usable, so it's not obvious whether
+> > my changes have a problem, or merely provoke one.
 > 
-> I'm using an old GeForce GT635, I don't think there's anything special
-> about this card.
+> I underestimated the recursion depth setup for groups,
+> your change is working for me with following change:
+> 
+> -#define RECURSION_ID_MAX 100
+> +#define RECURSION_ID_MAX 1000
 
-Would you be able to provide your QEMU command line?  Or at least any
-potentially relevant bits?  Still no luck reproducing this on our end.
+That indeed addressed the issue.
 
-Thanks again!
+Is there a point where that limit was being hit and the code silently fails?
+If so, should that failure be less silent?
+
+PC
