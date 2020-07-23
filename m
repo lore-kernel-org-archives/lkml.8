@@ -2,92 +2,100 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D0C433EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBC2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158D920737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406E6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 13:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgGWNR1 (ORCPT
+        id S1729345AbgGWNRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:17:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:36647 "EHLO mga14.intel.com"
+        Thu, 23 Jul 2020 09:17:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51088 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgGWNR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 09:17:26 -0400
-IronPort-SDR: kD4X+p4srIKIw5IvCo7bVA9c3htJlxS+EIHYEvU/MJGd69WwXTkImapx1YwiKCzSYr7h2QZEYh
- EPJr6HRVd1EQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="149693503"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="149693503"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 06:17:25 -0700
-IronPort-SDR: zbgCTcp4IHYwpFjzqAPenzobnSdjqR7FCNur+48Vt9nKvjlryi0J9tzZbQcNUZim/zBCp4RJGk
- PdPB2hRN0uxQ==
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="284574257"
-Received: from sxholi-mobl1.amr.corp.intel.com (HELO [10.254.76.108]) ([10.254.76.108])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 06:17:24 -0700
-Subject: Re: [RFC PATCH v2 2/6] ALSA: compress: add new ioctl for setting
- codec parameters
+        id S1728426AbgGWNRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 09:17:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 07FB5AB55;
+        Thu, 23 Jul 2020 13:17:37 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 15:17:28 +0200
+Message-ID: <s5hlfjaqsk7.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        ckeepax@opensource.cirrus.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, ckeepax@opensource.cirrus.com
+Subject: Re: [RFC PATCH v2 0/6] ALSA: compress: add support to change codec profile in gapless playback
+In-Reply-To: <20200723130522.GB12965@vkoul-mobl>
 References: <20200721170007.4554-1-srinivas.kandagatla@linaro.org>
- <20200721170007.4554-3-srinivas.kandagatla@linaro.org>
- <ee2dc239-c1a7-f48f-c6f0-ec6e61ccdda6@linux.intel.com>
- <9bbfebf9-9a70-46e3-1808-413d04aa6b2c@linaro.org>
- <19cfe3fe-4b99-0976-679d-28523d7b9990@linux.intel.com>
- <20200723044734.GU12965@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <8afd732a-750f-08d6-87a0-3088b4957f82@linux.intel.com>
-Date:   Thu, 23 Jul 2020 08:17:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200723044734.GU12965@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        <s5hpn8mqudq.wl-tiwai@suse.de>
+        <20200723130522.GB12965@vkoul-mobl>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/22/20 11:47 PM, Vinod Koul wrote:
-> On 22-07-20, 10:36, Pierre-Louis Bossart wrote:
->>
->>>>>     * and the stream properties
->>>>> + * @set_codec_params: Sets the compressed stream codec
->>>>> parameters, Optional
->>>>> + * This can be called in during gapless next track codec change
->>>>> only to set
->>>>> + * codec params
->>>>
->>>> Would it be clearer if this was called set_next_codec_params()? or
->>>> set_next_track_codec_params()?
->>>>
->>>> Having set_params() and set_codec_params() is a bit confusing since
->>>> the semantic difference is not captured in the callback name.
->>>
->>> set_next_track_codec_params seems more sensible as its next track params.
->>> Will change this in next version!
->>
->> maybe set_params() and set_next_track_params() are enough, not sure if the
->> codec reference helps?
+On Thu, 23 Jul 2020 15:05:22 +0200,
+Vinod Koul wrote:
 > 
-> params typically refers to whole set of compress parameters which
-> includes buffer information and codec parameters, so codec reference
-> would help.
+> On 23-07-20, 14:38, Takashi Iwai wrote:
+> > On Tue, 21 Jul 2020 19:00:01 +0200,
+> > Srinivas Kandagatla wrote:
+> > > 
+> > > For gapless playback it is possible that each track can have different
+> > > codec profile with same decoder, for example we have WMA album,
+> > > we may have different tracks as WMA v9, WMA v10 and so on
+> > > Or if DSP's like QDSP have abililty to switch decoders on single stream
+> > > for each track, then this call could be used to set new codec parameters.
+> > > 
+> > > Existing code does not allow to change this profile while doing gapless
+> > > playback.
+> > > 
+> > > This patchset adds new SNDRV_COMPRESS_SET_CODEC_PARAMS IOCTL along with
+> > > flags in capablity structure to allow userspace to set this new
+> > > parameters required which switching codec profile, either for gapless
+> > > or cross fade usecase.
+> > 
+> > One idea that came up at the previous audio conference regarding this
+> > implementation was to just allow SET_PARAMS during the stream is
+> > running (only if the driver sets the capability) instead of
+> > introducing yet a new ioctl and an ops.
+> > Would it make sense?
+> 
+> That does sound good but only issue would be that we need to somehow
+> mark/document that buffer info is useless and would be discarded, how do
+> we do that?
 
-then add the codec reference to both...
+Yes, the buffer and no_wake_mode can be ignored in the gapless
+re-setup.  Is your concern only about the documentation?  Or something
+else needs to be changed significantly?  It's a new scheme in anyway,
+so the documentation update is required...
+
+
+thanks,
+
+Takashi
+
+> 
+> > I have no big objection to add a new ioctl if other people agree,
+> > though.
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> 
+> -- 
+> ~Vinod
+> 
