@@ -2,168 +2,198 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F10C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C45C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6BD20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595500750;
-	bh=apvuZXcE3NwSq8Rub1Rf3Pf5mgh3zdcbbQk5pgSXCaw=;
-	h=Reply-To:Subject:To:References:From:Date:In-Reply-To:List-ID:
-	 From;
-	b=pPE20oD5+4noqp3ark5kO8yO8cdV6nHMkpcLFXYIWnJUmHvaMioNfKnMme0zaJ9LL
-	 KE5R27OzOfLacSaFC5cllPURFKIX4kFkNTHB/gBK8de9w4wpyhJHYvYnAqX2eWaLTV
-	 ZnplBmHe8n+xgade9jTC82PCJ9bY+5hNI44V/Amc=
+	by mail.kernel.org (Postfix) with ESMTP id 972392086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 10:40:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBsh7ZQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgGWKjJ (ORCPT
+        id S1728396AbgGWKkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:39:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgGWKjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 06:39:08 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 23 Jul 2020 06:40:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58563 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbgGWKj7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:39:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595500797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OroazbspJMAWk8IItdGjVpPCZoCWX8pkuMgG1WcYA/I=;
+        b=GBsh7ZQzAKrLQ4sCKj+veiL6VM6YI7yU9KTD16Sn95V/7zYbbhZuc6FB+nut1aBW0S6dmS
+        7qb0dUHc87Wve4LhskE5AaNDm65gwbht/YxM+YpSy4740GLZTkMKHOnxurtE6ZPXAX47Qk
+        7mIF5FuZKG6Qn8mE3+AAxwq9994+EU0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-QIUSu_4VN7e_6n4PXA-BIg-1; Thu, 23 Jul 2020 06:39:54 -0400
+X-MC-Unique: QIUSu_4VN7e_6n4PXA-BIg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F7620737;
-        Thu, 23 Jul 2020 10:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595500747;
-        bh=apvuZXcE3NwSq8Rub1Rf3Pf5mgh3zdcbbQk5pgSXCaw=;
-        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
-        b=N0iuaU+lyfIjjT31c9L8+skrMoJzTO/uESoDm2zeYCONnGxJXS7h6ETI5ZlMTtTZC
-         0PLJ+Na7DWHdRB4OXtLgVWQKMMHVq218SkhHgV5n/giKOXfDb2+m3mZZBKGLxsTHfF
-         LyvF2cxcLBrp1AHR0EukcQS9Z1X1JEGiADe+d1qM=
-Reply-To: kbingham@kernel.org
-Subject: Re: [PATCH] scripts/gdb: fix lx-symbols 'gdb.error' while loading
- modules
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200722102239.313231-1-sgarzare@redhat.com>
- <418f0953-1815-1844-e3f5-a11f2a5eaf33@siemens.com>
-From:   Kieran Bingham <kbingham@kernel.org>
-Autocrypt: addr=kbingham@kernel.org; keydata=
- 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
-Message-ID: <e04efb70-d29d-677b-4359-49b638eef3d0@kernel.org>
-Date:   Thu, 23 Jul 2020 11:39:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2D92193F560;
+        Thu, 23 Jul 2020 10:39:51 +0000 (UTC)
+Received: from localhost (ovpn-114-204.ams2.redhat.com [10.36.114.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9065478538;
+        Thu, 23 Jul 2020 10:39:50 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 11:39:49 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Kees Cook <keescook@chromium.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        strace-devel@lists.strace.io, io-uring@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Subject: Re: strace of io_uring events?
+Message-ID: <20200723103949.GE186372@stefanha-x1.localdomain>
+References: <20200715171130.GG12769@casper.infradead.org>
+ <7c09f6af-653f-db3f-2378-02dca2bc07f7@gmail.com>
+ <CAJfpegt9=p4uo5U2GXqc-rwqOESzZCWAkGMRTY1r8H6fuXx96g@mail.gmail.com>
+ <48cc7eea-5b28-a584-a66c-4eed3fac5e76@gmail.com>
+ <202007151511.2AA7718@keescook>
+ <20200716131404.bnzsaarooumrp3kx@steredhat>
+ <202007160751.ED56C55@keescook>
+ <20200717080157.ezxapv7pscbqykhl@steredhat.lan>
+ <CALCETrXSPdiVCgh3h=q7w9RyiKnp-=8jOHoFHX=an0cWqK7bzQ@mail.gmail.com>
+ <20200721155848.32xtze5ntvcmjv63@steredhat>
 MIME-Version: 1.0
-In-Reply-To: <418f0953-1815-1844-e3f5-a11f2a5eaf33@siemens.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200721155848.32xtze5ntvcmjv63@steredhat>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=stefanha@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cYtjc4pxslFTELvY"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+--cYtjc4pxslFTELvY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 23/07/2020 11:25, Jan Kiszka wrote:
-> On 22.07.20 12:22, Stefano Garzarella wrote:
->> Commit ed66f991bb19 ("module: Refactor section attr into bin
->> attribute") removed the 'name' field from 'struct module_sect_attr'
->> triggering the following error when invoking lx-symbols:
->>
->>    (gdb) lx-symbols
->>    loading vmlinux
->>    scanning for modules in linux/build
->>    loading @0xffffffffc014f000: linux/build/drivers/net/tun.ko
->>    Python Exception <class 'gdb.error'> There is no member named name.:
->>    Error occurred in Python: There is no member named name.
->>
->> This patch fixes the issue taking the module name from the 'struct
->> attribute'.
->>
+On Tue, Jul 21, 2020 at 05:58:48PM +0200, Stefano Garzarella wrote:
+> On Tue, Jul 21, 2020 at 08:27:34AM -0700, Andy Lutomirski wrote:
+> > On Fri, Jul 17, 2020 at 1:02 AM Stefano Garzarella <sgarzare@redhat.com=
+> wrote:
+> > >
+> > > On Thu, Jul 16, 2020 at 08:12:35AM -0700, Kees Cook wrote:
+> > > > On Thu, Jul 16, 2020 at 03:14:04PM +0200, Stefano Garzarella wrote:
+> >=20
+> > > > access (IIUC) is possible without actually calling any of the io_ur=
+ing
+> > > > syscalls. Is that correct? A process would receive an fd (via SCM_R=
+IGHTS,
+> > > > pidfd_getfd, or soon seccomp addfd), and then call mmap() on it to =
+gain
+> > > > access to the SQ and CQ, and off it goes? (The only glitch I see is
+> > > > waking up the worker thread?)
+> > >
+> > > It is true only if the io_uring istance is created with SQPOLL flag (=
+not the
+> > > default behaviour and it requires CAP_SYS_ADMIN). In this case the
+> > > kthread is created and you can also set an higher idle time for it, s=
+o
+> > > also the waking up syscall can be avoided.
+> >=20
+> > I stared at the io_uring code for a while, and I'm wondering if we're
+> > approaching this the wrong way. It seems to me that most of the
+> > complications here come from the fact that io_uring SQEs don't clearly
+> > belong to any particular security principle.  (We have struct creds,
+> > but we don't really have a task or mm.)  But I'm also not convinced
+> > that io_uring actually supports cross-mm submission except by accident
+> > -- as it stands, unless a user is very careful to only submit SQEs
+> > that don't use user pointers, the results will be unpredictable.
+> > Perhaps we can get away with this:
+> >=20
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 74bc4a04befa..92266f869174 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -7660,6 +7660,20 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int,
+> > fd, u32, to_submit,
+> >      if (!percpu_ref_tryget(&ctx->refs))
+> >          goto out_fput;
+> >=20
+> > +    if (unlikely(current->mm !=3D ctx->sqo_mm)) {
+> > +        /*
+> > +         * The mm used to process SQEs will be current->mm or
+> > +         * ctx->sqo_mm depending on which submission path is used.
+> > +         * It's also unclear who is responsible for an SQE submitted
+> > +         * out-of-process from a security and auditing perspective.
+> > +         *
+> > +         * Until a real usecase emerges and there are clear semantics
+> > +         * for out-of-process submission, disallow it.
+> > +         */
+> > +        ret =3D -EACCES;
+> > +        goto out;
+> > +    }
+> > +
+> >      /*
+> >       * For SQ polling, the thread will do all submissions and completi=
+ons.
+> >       * Just return the requested submit count, and wake the thread if
+> >=20
+> > If we can do that, then we could bind seccomp-like io_uring filters to
+> > an mm, and we get obvious semantics that ought to cover most of the
+> > bases.
+> >=20
+> > Jens, Christoph?
+> >=20
+> > Stefano, what's your intended usecase for your restriction patchset?
+> >=20
+>=20
+> Hi Andy,
+> my use case concerns virtualization. The idea, that I described in the
+> proposal of io-uring restrictions [1], is to share io_uring CQ and SQ que=
+ues
+> with a guest VM for block operations.
+>=20
+> In the PoC that I realized, there is a block device driver in the guest t=
+hat
+> uses io_uring queues coming from the host to submit block requests.
+>=20
+> Since the guest is not trusted, we need restrictions to allow only
+> a subset of syscalls on a subset of file descriptors and memory.
 
-It might not be needed if this gets in to v5.8 in time, but perhaps:
+BTW there's only a single mm in the kvm.ko use case.
 
-Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
+Stefan
 
->> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+--cYtjc4pxslFTELvY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Otherwise, also looks fine to me.
+-----BEGIN PGP SIGNATURE-----
 
-Reviewed-by: Kieran Bingham <kbingham@kernel.org>
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl8ZaPUACgkQnKSrs4Gr
+c8g3gQgAyCD8y5GHtXlxs23BbgNqd/8tiO02REWzw2jBut5VyHXhfX7MqZ3L/jFc
+vxPAlkPQwzKgyoIdhUXukXhFWhR5Zu2DuKtceGkdk6Y6MNfqaSBL2MX0oxPqondI
+nH3tizipLCJWb31XRrntm7EONxiSA7A4CC/ZDGKUu1rVAfIRJd1AK/5+Ymg/5lqz
+9RhG60zrTMG/CrSM1ZLaX2ko6QHHqJJji0uMLJyDsUxY2SRVljAS54kt0pX11Uxl
+YkONk+ZDISAWYEofcawpoT3yLkfpTCQ4CS1gyVzxb8lFljBSxBJfk6pfzReYECy3
+IFGMwOrd2ux1ti3osGizht2otYVbbw==
+=juCa
+-----END PGP SIGNATURE-----
 
->> ---
->>   scripts/gdb/linux/symbols.py | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
->> index be984aa29b75..1be9763cf8bb 100644
->> --- a/scripts/gdb/linux/symbols.py
->> +++ b/scripts/gdb/linux/symbols.py
->> @@ -96,7 +96,7 @@ lx-symbols command."""
->>               return ""
->>           attrs = sect_attrs['attrs']
->>           section_name_to_address = {
->> -            attrs[n]['name'].string(): attrs[n]['address']
->> +            attrs[n]['battr']['attr']['name'].string():
->> attrs[n]['address']
->>               for n in range(int(sect_attrs['nsections']))}
->>           args = []
->>           for section_name in [".data", ".data..read_mostly",
->> ".rodata", ".bss",
->>
-> 
-> Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> Thanks,
-> Jan
-> 
+--cYtjc4pxslFTELvY--
 
-
--- 
---
-Kieran
