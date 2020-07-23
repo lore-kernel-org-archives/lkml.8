@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587DDC433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5A3C433F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3112420825
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553E72084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 06:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZjRkbKsN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CNu8wX7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGWGJf (ORCPT
+        id S1726904AbgGWGJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56436 "EHLO
+        Thu, 23 Jul 2020 02:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgGWGJb (ORCPT
+        with ESMTP id S1725773AbgGWGJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 02:09:31 -0400
+        Thu, 23 Jul 2020 02:09:36 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF00C0619E2;
-        Wed, 22 Jul 2020 23:09:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26629C0619DC;
+        Wed, 22 Jul 2020 23:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=tMSRX19x4iZFav/RhfRomxQNPhw3MkRzM2UG4zJNYUs=; b=ZjRkbKsN32Y9td9wz3fQ2PPjcg
-        tNWB2b1T7UhAxfZr9U5bMy8pRw41tA+BEuacHybHFtOtya84/t+vp9s4fVF0g64fIHo2cAfUni18L
-        STKIAbJ+vR2wfiAkEB3Bx9u1lh4K1aKD28lXbDznVgv0IbGEm9oeUwmwmwB90s+bH3+0vjtCEYzIs
-        L9uZxeSzuaPHmKq5fGMICl8C3Ivesl8yoyuBUgcrzCB1w5Xlr7UJwTmGQINzFPF2GhqbHAE6NOOqe
-        jRg/utPjWC/MgowE0Ga66W6lNrRV1vFCriVpF7Tel/0HVKMC6xDMjjfnpYf/p9nuQBvUjarss4Xf6
-        wrY8TEmQ==;
+        bh=AjKHhDGZLqL4OuQUXI3ghPRn4d0K9eK+41+WmsKDw4s=; b=CNu8wX7/4AaScPiP+yKasX/Nuq
+        00LHKTXAD3IquBRcEMSnRF8bNgMD1cvHh+U+oC9aYlopzyBcHDT20XOh1UxeZFqfjZgeBbGvE1wB6
+        /V6nQUH0PdaU2g+5JOnd1u9l8C/s6uwbv4KhpIhdxBK8oLO0ZwY+sqyTh4ne0vagAIgh4N5VQBGx0
+        JHE6q8bbDMTkx2eOaxshkvfo9rjtP0ncEN/z4VwN6Hb6/0xYri2cf1nNOzgptOsfvtMuA7wmNkOac
+        QLJGCjm4BB8DbTIK1mpqQYiSCZNmMlsC+Vd1KrBSfphtSKPM32mRgHArgFrIC0MlfCF8txHO3F2DP
+        u7/I0W5g==;
 Received: from [2001:4bb8:18c:2acc:91df:aae8:fa3b:de9c] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyUPt-0003ka-LB; Thu, 23 Jul 2020 06:09:18 +0000
+        id 1jyUPz-0003lF-6z; Thu, 23 Jul 2020 06:09:23 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -58,9 +58,9 @@ Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         mptcp@lists.01.org, lvs-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
         tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: [PATCH 06/26] net: switch sock_setbindtodevice to sockptr_t
-Date:   Thu, 23 Jul 2020 08:08:48 +0200
-Message-Id: <20200723060908.50081-7-hch@lst.de>
+Subject: [PATCH 10/26] netfilter: remove the unused user argument to do_update_counters
+Date:   Thu, 23 Jul 2020 08:08:52 +0200
+Message-Id: <20200723060908.50081-11-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200723060908.50081-1-hch@lst.de>
 References: <20200723060908.50081-1-hch@lst.de>
@@ -72,46 +72,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-pointer from bpf-cgroup.
-
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- net/core/sock.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ net/bridge/netfilter/ebtables.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 71fc7e4ddd0648..5b55bc9397f282 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -609,8 +609,7 @@ int sock_bindtoindex(struct sock *sk, int ifindex, bool lock_sk)
- }
- EXPORT_SYMBOL(sock_bindtoindex);
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index fe13108af1f542..12f8929667bf43 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1242,9 +1242,8 @@ void ebt_unregister_table(struct net *net, struct ebt_table *table,
  
--static int sock_setbindtodevice(struct sock *sk, char __user *optval,
--				int optlen)
-+static int sock_setbindtodevice(struct sock *sk, sockptr_t optval, int optlen)
+ /* userspace just supplied us with counters */
+ static int do_update_counters(struct net *net, const char *name,
+-				struct ebt_counter __user *counters,
+-				unsigned int num_counters,
+-				const void __user *user, unsigned int len)
++			      struct ebt_counter __user *counters,
++			      unsigned int num_counters, unsigned int len)
  {
- 	int ret = -ENOPROTOOPT;
- #ifdef CONFIG_NETDEVICES
-@@ -632,7 +631,7 @@ static int sock_setbindtodevice(struct sock *sk, char __user *optval,
- 	memset(devname, 0, sizeof(devname));
- 
- 	ret = -EFAULT;
--	if (copy_from_user(devname, optval, optlen))
-+	if (copy_from_sockptr(devname, optval, optlen))
- 		goto out;
- 
- 	index = 0;
-@@ -840,7 +839,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
- 	 */
- 
- 	if (optname == SO_BINDTODEVICE)
--		return sock_setbindtodevice(sk, optval, optlen);
-+		return sock_setbindtodevice(sk, USER_SOCKPTR(optval), optlen);
- 
- 	if (optlen < sizeof(int))
+ 	int i, ret;
+ 	struct ebt_counter *tmp;
+@@ -1299,7 +1298,7 @@ static int update_counters(struct net *net, const void __user *user,
  		return -EINVAL;
+ 
+ 	return do_update_counters(net, hlp.name, hlp.counters,
+-				hlp.num_counters, user, len);
++				  hlp.num_counters, len);
+ }
+ 
+ static inline int ebt_obj_to_user(char __user *um, const char *_name,
+@@ -2231,7 +2230,7 @@ static int compat_update_counters(struct net *net, void __user *user,
+ 		return update_counters(net, user, len);
+ 
+ 	return do_update_counters(net, hlp.name, compat_ptr(hlp.counters),
+-					hlp.num_counters, user, len);
++				  hlp.num_counters, len);
+ }
+ 
+ static int compat_do_ebt_get_ctl(struct sock *sk, int cmd,
 -- 
 2.27.0
 
