@@ -2,104 +2,104 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF453C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D774C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFEF420714
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="L1DK8nWK"
+	by mail.kernel.org (Postfix) with ESMTP id 37094206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 16:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgGWQZR (ORCPT
+        id S1729823AbgGWQZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:25:17 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:50440 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgGWQZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595521516; x=1627057516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=No7CI6pZaYc/VN/VbA4B7W3JcVHomQRk3i46YyNuSLI=;
-  b=L1DK8nWKWnekSEGNxTdpmXij2zGFqujtDNs89swSupfRuPAhgm3RHiqj
-   SFaxlwysIB8hN77fH0hh11kgBXEKo2UkkbSGpbv/qPaB7EZc5Ja+Z+Eu0
-   /z6XN2pTOzlcQg0Wi2SFZCE5aOhot7As+DPet6F2954LdwY6zZxQhVbmm
-   7KFq13FAUIr1OoPDUVi4nAOZtD94SJUv3/NxyJS3tGKlhPXa6StUBdufs
-   b2altK7iDA3Y2LTPrO5PAR8bJOaFzzvs/O708DY1gdJp6EPxafadJLNOt
-   KX8BVxceYqN677S+n6REZKNcv1WDtSyZY8FcHWq6W78xcZtfWgDbOYVkO
-   Q==;
-IronPort-SDR: Jmxlj7H6QquT5HS+ujnJk6HRY79Z/+f2seawOShA4oc3nsFZByH55fxbaZky3F2dm2BzGiK04k
- nOR5QeU2X2P53H/Hsbx9dDTRyxbBNtdbGG/Dun6DcVvSiJuwX1R/qg/dRcftVcviFsNGAWbW0S
- NQssW5P57/jZ9azPGLiFcMV2RqyDK85FEx/iDsvLn9xRj7a/jQy9QTB2N9UIk2TW7vBMxAhYGY
- 9gUx/8qKXZKVSfedPtjLLKfRt6JcgTkKd+Yo49zkCsN1kUcZmdfyONGhXxzAZ+G6h/XOoYaeDB
- iC4=
+        Thu, 23 Jul 2020 12:25:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:65237 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbgGWQZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:25:37 -0400
+IronPort-SDR: 2AZZtCpMRl6rdpflwQT/go8rG8nf0ll4r3ufYmO3Wvfdw+L1LDo1pNskbbwXkv9BwgZGA6L3We
+ SY7rTGw1WBvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235441446"
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="83016658"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 09:25:15 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 23 Jul 2020 09:25:16 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 23 Jul 2020 09:25:12 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <alexandre.belloni@bootlin.com>, <cristian.birsan@microchip.com>,
-        <nicolas.ferre@microchip.com>, <arnd@arndb.de>,
-        <ludovic.desroches@microchip.com>,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/3] ARM: configs: at91: sama5: enable bridge and VLAN filtering
-Date:   Thu, 23 Jul 2020 19:24:33 +0300
-Message-ID: <20200723162434.1983643-2-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200723162434.1983643-1-codrin.ciubotariu@microchip.com>
-References: <20200723162434.1983643-1-codrin.ciubotariu@microchip.com>
+   d="scan'208";a="235441446"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 09:25:36 -0700
+IronPort-SDR: 7SNQbhgfLF8y+Ls0u3O0LezOL/4DKnkZUziPl6WdpxFftOFptAKIedxZcyo2AanJGfyBajYaF7
+ F/KSAtvgmIzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
+   d="scan'208";a="488426080"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2020 09:25:31 -0700
+Date:   Thu, 23 Jul 2020 09:25:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v10 00/26] Control-flow Enforcement: Shadow Stack
+Message-ID: <20200723162531.GF21891@linux.intel.com>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+On Wed, Apr 29, 2020 at 03:07:06PM -0700, Yu-cheng Yu wrote:
+> Control-flow Enforcement (CET) is a new Intel processor feature that blocks
+> return/jump-oriented programming attacks.  Details can be found in "Intel
+> 64 and IA-32 Architectures Software Developer's Manual" [1].
+> 
+> This series depends on the XSAVES supervisor state series that was split
+> out and submitted earlier [2].
 
-These modules are needed to configure bridges in Linux, to take full
-advantage of the KSZ switch capabilities.
+...
 
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- arch/arm/configs/sama5_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+> Yu-cheng Yu (25):
+>   x86/cpufeatures: Add CET CPU feature flags for Control-flow
+>     Enforcement Technology (CET)
+>   x86/fpu/xstate: Introduce CET MSR XSAVES supervisor states
 
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index 123b95c1447a..f4d71ffcb6e9 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -49,7 +49,10 @@ CONFIG_IP_PNP_RARP=y
- # CONFIG_INET6_XFRM_MODE_TUNNEL is not set
- # CONFIG_INET6_XFRM_MODE_BEET is not set
- CONFIG_IPV6_SIT_6RD=y
-+CONFIG_BRIDGE=m
-+CONFIG_BRIDGE_VLAN_FILTERING=y
- CONFIG_NET_DSA=m
-+CONFIG_VLAN_8021Q=m
- CONFIG_CAN=y
- CONFIG_CAN_AT91=y
- CONFIG_CAN_M_CAN=y
--- 
-2.25.1
+How would people feel about taking the above two patches (02 and 03 in the
+series) through the KVM tree to enable KVM virtualization of CET before the
+kernel itself gains CET support?  I.e. add the MSR and feature bits, along
+with the XSAVES context switching.  The feature definitons could use "" to
+suppress displaying them in /proc/cpuinfo to avoid falsely advertising CET
+to userspace.
 
+AIUI, there are ABI issues that need to be sorted out, and that is likely
+going to drag on for some time. 
+
+Is this a "hell no" sort of idea, or something that would be feasible if we
+can show that there are no negative impacts to the kernel?
