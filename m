@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCE1C433FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B280C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540F022CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF8B22D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 17:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgGWRLn (ORCPT
+        id S1730090AbgGWRLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:11:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6574 "EHLO mga05.intel.com"
+        Thu, 23 Jul 2020 13:11:53 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6599 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730035AbgGWRLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 13:11:42 -0400
-IronPort-SDR: EMjnzsXmWfnN3naYcEFsUxeV74Yh5Gk+jAslhuPpvDQVACUCfrIIycBZUYwAxrYBmZuc5nWgLc
- CkAu8rfTM5Jw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235456682"
+        id S1730057AbgGWRLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 13:11:46 -0400
+IronPort-SDR: f7jsEArrrDrRCJJycYjX/wCQLxrkPqKOv+0wMHOxfipTHyi5rdIGdSOg4B3NHU00Lub8bkhs3j
+ 0+tEEwfQdIZw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="235456754"
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="235456682"
+   d="scan'208";a="235456754"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:11:41 -0700
-IronPort-SDR: m7jxQrHW3vI2vckkzyo4Q+tVf4h5Gl2uodbMnhG29Pvll9O7TeS0K+ktfGlJ3wyjaOLmh6tXnY
- bQpZgN3q+n5A==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 10:11:45 -0700
+IronPort-SDR: SjmMeKoVuiRdJtnv7FKtDH3R0eCiInT47v96kCXic08kQ7UWZliX7OLkeIsW6uaRX/9DRD8m5S
+ GDaWIQWtLNVQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="488904241"
+   d="scan'208";a="488904271"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2020 10:11:41 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 23 Jul 2020 10:11:45 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         like.xu@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V7 02/14] perf/x86/intel: Name the global status bit in NMI handler
-Date:   Thu, 23 Jul 2020 10:11:05 -0700
-Message-Id: <20200723171117.9918-3-kan.liang@linux.intel.com>
+Subject: [PATCH V7 06/14] perf/x86/intel: Use switch in intel_pmu_disable/enable_event
+Date:   Thu, 23 Jul 2020 10:11:09 -0700
+Message-Id: <20200723171117.9918-7-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200723171117.9918-1-kan.liang@linux.intel.com>
 References: <20200723171117.9918-1-kan.liang@linux.intel.com>
@@ -55,75 +55,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Magic numbers are used in the current NMI handler for the global status
-bit. Use a meaningful name to replace the magic numbers to improve the
-readability of the code.
+Currently, the if-else is used in the intel_pmu_disable/enable_event to
+check the type of an event. It works well, but with more and more types
+added later, e.g., perf metrics, compared to the switch statement, the
+if-else may impair the readability of the code.
 
-Remove a Tab for all GLOBAL_STATUS_* and INTEL_PMC_IDX_FIXED_BTS macros
-to reduce the length of the line.
+There is no harm to use the switch statement to replace the if-else
+here. Also, some optimizing compilers may compile a switch statement
+into a jump-table which is more efficient than if-else for a large
+number of cases. The performance gain may not be observed for now,
+because the number of cases is only 5, but the benefits may be observed
+with more and more types added in the future.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Use switch to replace the if-else in the intel_pmu_disable/enable_event.
+
+If the idx is invalid, print a warning.
+
+For the case INTEL_PMC_IDX_FIXED_BTS in intel_pmu_disable_event, don't
+need to check the event->attr.precise_ip. Use return for the case.
+
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/core.c      |  4 ++--
- arch/x86/include/asm/perf_event.h | 22 ++++++++++++----------
- 2 files changed, 14 insertions(+), 12 deletions(-)
+ arch/x86/events/intel/core.c | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 50963472ee85..ac1408fe1aee 100644
+index ac1408fe1aee..76eab8178047 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2389,7 +2389,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	/*
- 	 * PEBS overflow sets bit 62 in the global status register
- 	 */
--	if (__test_and_clear_bit(62, (unsigned long *)&status)) {
-+	if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long *)&status)) {
- 		u64 pebs_enabled = cpuc->pebs_enabled;
+@@ -2180,17 +2180,28 @@ static void intel_pmu_disable_event(struct perf_event *event)
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	int idx = hwc->idx;
  
- 		handled++;
-@@ -2410,7 +2410,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	/*
- 	 * Intel PT
- 	 */
--	if (__test_and_clear_bit(55, (unsigned long *)&status)) {
-+	if (__test_and_clear_bit(GLOBAL_STATUS_TRACE_TOPAPMI_BIT, (unsigned long *)&status)) {
- 		handled++;
- 		if (unlikely(perf_guest_cbs && perf_guest_cbs->is_in_guest() &&
- 			perf_guest_cbs->handle_intel_pt_intr))
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 0c1b13720525..fd3eba65337f 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -225,16 +225,18 @@ struct x86_pmu_capability {
-  * values are used by actual fixed events and higher values are used
-  * to indicate other overflow conditions in the PERF_GLOBAL_STATUS msr.
-  */
--#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 16)
--
--#define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
--#define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
--#define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
--#define GLOBAL_STATUS_ASIF				BIT_ULL(60)
--#define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
--#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
--#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
--#define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
-+#define INTEL_PMC_IDX_FIXED_BTS			(INTEL_PMC_IDX_FIXED + 16)
-+
-+#define GLOBAL_STATUS_COND_CHG			BIT_ULL(63)
-+#define GLOBAL_STATUS_BUFFER_OVF_BIT		62
-+#define GLOBAL_STATUS_BUFFER_OVF		BIT_ULL(GLOBAL_STATUS_BUFFER_OVF_BIT)
-+#define GLOBAL_STATUS_UNC_OVF			BIT_ULL(61)
-+#define GLOBAL_STATUS_ASIF			BIT_ULL(60)
-+#define GLOBAL_STATUS_COUNTERS_FROZEN		BIT_ULL(59)
-+#define GLOBAL_STATUS_LBRS_FROZEN_BIT		58
-+#define GLOBAL_STATUS_LBRS_FROZEN		BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
-+#define GLOBAL_STATUS_TRACE_TOPAPMI_BIT		55
-+#define GLOBAL_STATUS_TRACE_TOPAPMI		BIT_ULL(GLOBAL_STATUS_TRACE_TOPAPMI_BIT)
+-	if (idx < INTEL_PMC_IDX_FIXED) {
++	switch (idx) {
++	case 0 ... INTEL_PMC_IDX_FIXED - 1:
+ 		intel_clear_masks(event, idx);
+ 		x86_pmu_disable_event(event);
+-	} else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
+ 		intel_clear_masks(event, idx);
+ 		intel_pmu_disable_fixed(event);
+-	} else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED_BTS:
+ 		intel_pmu_disable_bts();
+ 		intel_pmu_drain_bts_buffer();
+-	} else if (idx == INTEL_PMC_IDX_FIXED_VLBR)
++		return;
++	case INTEL_PMC_IDX_FIXED_VLBR:
+ 		intel_clear_masks(event, idx);
++		break;
++	default:
++		intel_clear_masks(event, idx);
++		pr_warn("Failed to disable the event with invalid index %d\n",
++			idx);
++		return;
++	}
  
- /*
-  * We model guest LBR event tracing as another fixed-mode PMC like BTS.
+ 	/*
+ 	 * Needs to be called after x86_pmu_disable_event,
+@@ -2262,18 +2273,27 @@ static void intel_pmu_enable_event(struct perf_event *event)
+ 	if (unlikely(event->attr.precise_ip))
+ 		intel_pmu_pebs_enable(event);
+ 
+-	if (idx < INTEL_PMC_IDX_FIXED) {
++	switch (idx) {
++	case 0 ... INTEL_PMC_IDX_FIXED - 1:
+ 		intel_set_masks(event, idx);
+ 		__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
+-	} else if (idx < INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
+ 		intel_set_masks(event, idx);
+ 		intel_pmu_enable_fixed(event);
+-	} else if (idx == INTEL_PMC_IDX_FIXED_BTS) {
++		break;
++	case INTEL_PMC_IDX_FIXED_BTS:
+ 		if (!__this_cpu_read(cpu_hw_events.enabled))
+ 			return;
+ 		intel_pmu_enable_bts(hwc->config);
+-	} else if (idx == INTEL_PMC_IDX_FIXED_VLBR)
++		break;
++	case INTEL_PMC_IDX_FIXED_VLBR:
+ 		intel_set_masks(event, idx);
++		break;
++	default:
++		pr_warn("Failed to enable the event with invalid index %d\n",
++			idx);
++	}
+ }
+ 
+ static void intel_pmu_add_event(struct perf_event *event)
 -- 
 2.17.1
 
