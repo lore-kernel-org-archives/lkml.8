@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770DFC433ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FB7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E3C20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0090620709
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 19:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YqPlk3KX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KL2Bg4tg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vr6f3/bX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pLhjXMU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgGWTKH (ORCPT
+        id S1728308AbgGWTJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 15:10:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60516 "EHLO
+        Thu, 23 Jul 2020 15:09:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60504 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgGWTJq (ORCPT
+        with ESMTP id S1728262AbgGWTJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 15:09:46 -0400
-Date:   Thu, 23 Jul 2020 19:09:43 -0000
+        Thu, 23 Jul 2020 15:09:42 -0400
+Date:   Thu, 23 Jul 2020 19:09:39 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595531384;
+        s=2020; t=1595531380;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ty/3qycxAkk21iKIw1gGS2adNh0M4jh9Aw06Dx04iOE=;
-        b=YqPlk3KXfyt4e1shwpebWqL7NyGrUP1Zr7VkC1vdYfTeGeZtrwUmYnU8+Comhwcjr0+zxp
-        SaoXIuqTdEq+uGRjT0iTjmjj7l8ghhMvHlAV+a431wULSFm2OGSGxBJsnwbWEMuMZMLwrx
-        S0EWCpSQLUPc6Ox0A+QJWfocOXzrm8J15sRfgrFuADGPMqRu3jLF2VE7ra5WrUNgn0wYLy
-        3qtkupbm+RvLc3ooRZk2Myu80OPtvfBwXGQzb4QbWU7vVCRD32zR++GEMBoU3oxQ15sUOd
-        EvczN3KqwE2/PinLOACAgtf2pWizy9dafe6xSfS6WcEEBF5bSV3yn11JCYNM1Q==
+        bh=lOpsCe+bi6vV8+jAPqDgk29th7WfmTe9j2iURiMnsKs=;
+        b=vr6f3/bX00TxU3NhXEZighrlCfFJklvgdlFqUGrDeWzdSF6y5OBnm7UnqGIYrSHhJTlrMq
+        IaU6sDZt9gHvb5PgRXXrDR0QHLyqJqjZJvK0T4m1O147vtZynjmBbKDayzGE/jLDtA9mZQ
+        9j1AUZ1DbONBIIipN/ClbgUJYXZUmOn/cUbpl6a9Ml55ul493y+eaqYy6TNms2obt5IWQv
+        XVuwC/4SRjWu3ubzUm96xO6+baDwXW0PRdM6Lydwxq+VAGUgbc1L5/Sce4THhNFNd1Dj7w
+        fPLeDy6WMbFuHIb4FpEv6tK6mqbYlFWzf5Ik4T76IT3xziYZlvxd/wCBgulcHw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595531384;
+        s=2020e; t=1595531380;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ty/3qycxAkk21iKIw1gGS2adNh0M4jh9Aw06Dx04iOE=;
-        b=KL2Bg4tgm00Y6jYznythnxkxKFdFV866yOG37YWg0ZroaU7qTkRYT++QJiGYOfj2O9CKDS
-        yQgi+vArS/zp9MCw==
-From:   "tip-bot2 for Alexandre Belloni" <tip-bot2@linutronix.de>
+        bh=lOpsCe+bi6vV8+jAPqDgk29th7WfmTe9j2iURiMnsKs=;
+        b=pLhjXMU0MeJ0rn3J+SPi1badOBOM6TPnqomMfdko7JXwp0q1YkzTo9GyW/kit1Ix0SZq5e
+        IQRzV/H0NbdECMAw==
+From:   "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-atmel-tcb: Fill tcb_config
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Subject: [tip: timers/core] clocksource/drivers/sh_cmt: Use "kHz" for kilohertz
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200710230813.1005150-7-alexandre.belloni@bootlin.com>
-References: <20200710230813.1005150-7-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200618080212.16560-1-geert+renesas@glider.be>
+References: <20200618080212.16560-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Message-ID: <159553138386.4006.12033281869452578323.tip-bot2@tip-bot2>
+Message-ID: <159553137978.4006.7240080497666806907.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,60 +70,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     d2c60dcf86fabb542b96b4444ca81be0b1b30099
-Gitweb:        https://git.kernel.org/tip/d2c60dcf86fabb542b96b4444ca81be0b1b30099
-Author:        Alexandre Belloni <alexandre.belloni@bootlin.com>
-AuthorDate:    Sat, 11 Jul 2020 01:08:10 +02:00
+Commit-ID:     ad7794d4dd0c3f03a81a0dbec3e9e3906edb9893
+Gitweb:        https://git.kernel.org/tip/ad7794d4dd0c3f03a81a0dbec3e9e3906edb9893
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Thu, 18 Jun 2020 10:02:12 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Sat, 11 Jul 2020 18:58:04 +02:00
+CommitterDate: Thu, 23 Jul 2020 16:57:43 +02:00
 
-clocksource/drivers/timer-atmel-tcb: Fill tcb_config
+clocksource/drivers/sh_cmt: Use "kHz" for kilohertz
 
-Use the tcb_config and struct atmel_tcb_config to get the timer counter
-width. This is necessary because atmel_tcb_config will be extended later
-on.
+"K" stands for "kelvin".
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200710230813.1005150-7-alexandre.belloni@bootlin.com
+Link: https://lore.kernel.org/r/20200618080212.16560-1-geert+renesas@glider.be
 ---
- drivers/clocksource/timer-atmel-tcb.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/clocksource/sh_cmt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index b255a4a..423af2f 100644
---- a/drivers/clocksource/timer-atmel-tcb.c
-+++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -348,9 +348,17 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index 12ac75f..7607774 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -349,7 +349,7 @@ static int sh_cmt_enable(struct sh_cmt_channel *ch)
  
- static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
- 
-+static struct atmel_tcb_config tcb_rm9200_config = {
-+	.counter_width = 16,
-+};
-+
-+static struct atmel_tcb_config tcb_sam9x5_config = {
-+	.counter_width = 32,
-+};
-+
- static const struct of_device_id atmel_tcb_of_match[] = {
--	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
--	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
-+	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
-+	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
- 	{ /* sentinel */ }
- };
- 
-@@ -398,7 +406,11 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 	}
- 
- 	match = of_match_node(atmel_tcb_of_match, node->parent);
--	bits = (uintptr_t)match->data;
-+	if (!match)
-+		return -ENODEV;
-+
-+	tc.tcb_config = match->data;
-+	bits = tc.tcb_config->counter_width;
- 
- 	for (i = 0; i < ARRAY_SIZE(tc.irq); i++)
- 		writel(ATMEL_TC_ALL_IRQ, tc.regs + ATMEL_TC_REG(i, IDR));
+ 	/*
+ 	 * According to the sh73a0 user's manual, as CMCNT can be operated
+-	 * only by the RCLK (Pseudo 32 KHz), there's one restriction on
++	 * only by the RCLK (Pseudo 32 kHz), there's one restriction on
+ 	 * modifying CMCNT register; two RCLK cycles are necessary before
+ 	 * this register is either read or any modification of the value
+ 	 * it holds is reflected in the LSI's actual operation.
