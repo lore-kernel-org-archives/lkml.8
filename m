@@ -2,77 +2,104 @@ Return-Path: <SRS0=Rqeb=BC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B94F2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:32:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WaaUETI7"
+	by mail.kernel.org (Postfix) with ESMTP id 71FE12080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Jul 2020 08:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgGWIco (ORCPT
+        id S1726945AbgGWIga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 04:32:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2499 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725846AbgGWIcn (ORCPT
+        Thu, 23 Jul 2020 04:36:30 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:9145 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725858AbgGWIga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 04:32:43 -0400
-X-UUID: 731fe79281064ae58e68f0ffbd6a330b-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=FvbPiqMUKPIekt5igyb/5p25Qo6j9u44sXtE5an3ghM=;
-        b=WaaUETI7QDYF4sk8AOHMwoOhqN6ZCckoe+O4KCftjkVJOlobOVTkQzrEKphTGrnNuXYnert/Cldqne6lwjPRROi2/KPFmFKqmD1THtiO+bieU8kXUALWpiruz8cUgh72n0CCviwlmOXgY2SJ03mrUgO/xHEJsVMSm47uKjjPbg8=;
-X-UUID: 731fe79281064ae58e68f0ffbd6a330b-20200723
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <wendell.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1225544950; Thu, 23 Jul 2020 16:32:39 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 16:32:37 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 16:32:37 +0800
-From:   Wendell Lin <wendell.lin@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Wendell Lin <wendell.lin@mediatek.com>
-Subject: [PATCH 1/1] clk: Export clk_register_composite
-Date:   Thu, 23 Jul 2020 16:32:06 +0800
-Message-ID: <1595493126-21611-1-git-send-email-wendell.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Thu, 23 Jul 2020 04:36:30 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Thu, 23 Jul
+ 2020 16:36:26 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Thu, 23 Jul
+ 2020 16:36:25 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416]) by
+ zxbjmbx1.zhaoxin.com ([fe80::290a:f538:51e7:1416%16]) with mapi id
+ 15.01.1979.003; Thu, 23 Jul 2020 16:36:25 +0800
+From:   WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
+        "efremov@linux.com" <efremov@linux.com>,
+        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
+        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
+        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
+        "wwt8723@163.com" <wwt8723@163.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIFVTQjpGaXgga2VybmVsIE5VTEwgcG9pbnRlciB3?=
+ =?utf-8?Q?hen_unbind_UHCI_form_vfio-pci?=
+Thread-Topic: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
+ vfio-pci
+Thread-Index: AQHWYB9U257QN8g5QkeL/njIDTUWtqkUAziAgABPH2A=
+Date:   Thu, 23 Jul 2020 08:36:25 +0000
+Message-ID: <371b3697614e4034aed8e9f340a7dbf1@zhaoxin.com>
+References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
+ <20200722215313.5a842b93@x1.home>
+In-Reply-To: <20200722215313.5a842b93@x1.home>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.29.8.32]
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Y2xrX3JlZ2lzdGVyX2NvbXBvc2l0ZSgpIHdpbGwgYmUgdXNlZCBpbiBtZWRpYXRlaydzDQpjbG9j
-ayBrZXJuZWwgbW9kdWxlLCBzbyBleHBvcnQgaXQgdG8gR1BMIG1vZHVsZXMuDQoNClNpZ25lZC1v
-ZmYtYnk6IFdlbmRlbGwgTGluIDx3ZW5kZWxsLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2
-ZXJzL2Nsay9jbGstY29tcG9zaXRlLmMgfCAgICAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
-cnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Nsay1jb21wb3NpdGUuYyBiL2Ry
-aXZlcnMvY2xrL2Nsay1jb21wb3NpdGUuYw0KaW5kZXggNzM3NmY1Ny4uN2M2MDljMiAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvY2xrL2Nsay1jb21wb3NpdGUuYw0KKysrIGIvZHJpdmVycy9jbGsvY2xr
-LWNvbXBvc2l0ZS5jDQpAQCAtMzYwLDYgKzM2MCw3IEBAIHN0cnVjdCBjbGsgKmNsa19yZWdpc3Rl
-cl9jb21wb3NpdGUoc3RydWN0IGRldmljZSAqZGV2LCBjb25zdCBjaGFyICpuYW1lLA0KIAkJcmV0
-dXJuIEVSUl9DQVNUKGh3KTsNCiAJcmV0dXJuIGh3LT5jbGs7DQogfQ0KK0VYUE9SVF9TWU1CT0xf
-R1BMKGNsa19yZWdpc3Rlcl9jb21wb3NpdGUpOw0KIA0KIHN0cnVjdCBjbGsgKmNsa19yZWdpc3Rl
-cl9jb21wb3NpdGVfcGRhdGEoc3RydWN0IGRldmljZSAqZGV2LCBjb25zdCBjaGFyICpuYW1lLA0K
-IAkJCWNvbnN0IHN0cnVjdCBjbGtfcGFyZW50X2RhdGEgKnBhcmVudF9kYXRhLA0KLS0gDQoxLjcu
-OS41DQo=
-
+DQpPbiBUaHUsMjMgSnVseSAyMDIwIDA0OjE4OjAwICswMDAwIEFsZXggd3JvdGU6DQo+IE9uIFdl
+ZCwgMjIgSnVsIDIwMjAgMTk6NTc6NDggKzA4MDANCj4gV2VpdGFvV2FuZ29jIDxXZWl0YW9XYW5n
+LW9jQHpoYW94aW4uY29tPiB3cm90ZToNCj4gDQo+ID4gIGRyaXZlcnMvdXNiL2NvcmUvaGNkLXBj
+aS5jIHwgNSArKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQo+ID4N
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvY29yZS9oY2QtcGNpLmMgYi9kcml2ZXJzL3Vz
+Yi9jb3JlL2hjZC1wY2kuYw0KPiA+IGluZGV4IDE1NDdhYTYuLjQ4NGYyYTAgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy91c2IvY29yZS9oY2QtcGNpLmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi9j
+b3JlL2hjZC1wY2kuYw0KPiA+IEBAIC0zNCw2ICszNCw3IEBAIHN0YXRpYyBERUNMQVJFX1JXU0VN
+KGNvbXBhbmlvbnNfcndzZW0pOw0KPiA+ICAjZGVmaW5lIENMX09IQ0kgICAgICAgICAgICAgICAg
+UENJX0NMQVNTX1NFUklBTF9VU0JfT0hDSQ0KPiA+ICAjZGVmaW5lIENMX0VIQ0kgICAgICAgICAg
+ICAgICAgUENJX0NMQVNTX1NFUklBTF9VU0JfRUhDSQ0KPiA+DQo+ID4gKyNkZWZpbmUgUENJX0RF
+Vl9EUlZfRkxBRyAgICAgICAyDQo+ID4gIHN0YXRpYyBpbmxpbmUgaW50IGlzX29oY2lfb3JfdWhj
+aShzdHJ1Y3QgcGNpX2RldiAqcGRldikgIHsNCj4gPiAgICAgICAgIHJldHVybiBwZGV2LT5jbGFz
+cyA9PSBDTF9PSENJIHx8IHBkZXYtPmNsYXNzID09IENMX1VIQ0k7IEBADQo+ID4gLTY4LDYgKzY5
+LDggQEAgc3RhdGljIHZvaWQgZm9yX2VhY2hfY29tcGFuaW9uKHN0cnVjdCBwY2lfZGV2ICpwZGV2
+LCBzdHJ1Y3QNCj4gdXNiX2hjZCAqaGNkLA0KPiA+ICAgICAgICAgICAgICAgICBpZiAoY29tcGFu
+aW9uLT5jbGFzcyAhPSBDTF9VSENJICYmIGNvbXBhbmlvbi0+Y2xhc3MgIT0NCj4gQ0xfT0hDSSAm
+Jg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGFuaW9uLT5jbGFzcyAh
+PSBDTF9FSENJKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ICsg
+ICAgICAgICAgICAgICBpZiAoIShjb21wYW5pb24tPnByaXZfZmxhZ3MgJiBQQ0lfREVWX0RSVl9G
+TEFHKSkNCj4gDQo+IEJ1dCBwY2lfZGV2LnByaXZfZmxhZ3MgaXMgcHJpdmF0ZSBkYXRhIGZvciB0
+aGUgZHJpdmVyIHRoYXQgY3VycmVudGx5DQo+IG93bnMgdGhlIGRldmljZSwgd2hpY2ggY291bGQg
+YmUgdmZpby1wY2kuICBUaGlzIGlzIHJlYWxseSBubyBkaWZmZXJlbnQNCj4gdGhhbiBhc3N1bWlu
+ZyB0aGUgc3RydWN0dXJlIGF0IGRldmljZS5kcml2ZXJfZGF0YS4gIElmIHZmaW8tcGNpIHdlcmUg
+dG8NCj4gbWFrZSBsZWdpdGltYXRlIHVzZSBvZiBwY2lfZGV2LnByaXZfZmxhZ3MsIHRoaXMgY291
+bGQgc2ltcGx5IGJsb3cgdXANCj4gYWdhaW4uICBTaG91bGQgdGhlcmUgaW5zdGVhZCBiZSBzb21l
+IHNvcnQgb2YgcmVnaXN0cmF0aW9uIGludGVyZmFjZQ0KPiB3aGVyZSBoY2QgY29tcGxhaW50IGRy
+aXZlcnMgcmVnaXN0ZXIgdGhlaXIgZGV2aWNlcyBhbmQgb25seSB0aG9zZQ0KPiByZWdpc3RlcmVk
+IGRldmljZXMgY2FuIGhhdmUgdGhlaXIgZHJpdmVyIHByaXZhdGUgZGF0YSBhcmJpdHJhcmlseSBw
+b2tlZA0KPiBieSBhbm90aGVyIGRyaXZlcj8gIFRoYW5rcywNCg0KVGhhbmtzIGZvciB5b3VyIGV4
+cGxhbmF0aW9uLiBTZXQgcGNpX2Rldi5wcml2X2ZsYWdzIGlzIHJlYWxseSBub3QgYSANCnJlYXNv
+bmFibGUgYXBwcm9hY2guIEFyZSB0aGVyZSBhbnkgbW9yZSBkZXRhaWxlZCBzdWdnZXN0aW9ucyAN
+CnRvIHBhdGNoIHRoaXMgaXNzdWU/DQoNClRoYW5rcw0KV2VpdGFvd2FuZw0K
