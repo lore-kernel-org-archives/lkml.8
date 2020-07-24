@@ -2,127 +2,242 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A39C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09263C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3441A206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC7320748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eWpURAT1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dro2IQ3g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgGXFjX (ORCPT
+        id S1726617AbgGXFmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 01:39:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13199 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726277AbgGXFjW (ORCPT
+        Fri, 24 Jul 2020 01:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgGXFmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 01:39:22 -0400
-X-UUID: 66bd73bc038147919ce272d953c64023-20200724
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wBDacOncVh0PojdDGdKS/zftjuMPjd4CIaDYeFLXde0=;
-        b=eWpURAT14eo6meR9czwptJ9cwLjrlF/Gx+AbjSeoyNor7s/UCPAt+1AL941wbTKhathGzX+L/LSf3IE8KYiKJOsE0q1Pw+T+fuZZYID6ftCUkcLePuFHqwvqDFaSRUiVEZhSCIW1MYjBhCxjv67W6ZaD+qkp00wIu1gXsTpNQiI=;
-X-UUID: 66bd73bc038147919ce272d953c64023-20200724
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 609872489; Fri, 24 Jul 2020 13:39:18 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 24 Jul 2020 13:39:16 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 24 Jul 2020 13:39:17 +0800
-Message-ID: <1595569156.29906.6.camel@mtkswgap22>
-Subject: Re: [PATCH v9 2/7] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Stephen Boyd <sboyd@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Loda Chou <loda.chou@mediatek.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        "Sean Wang" <sean.wang@kernel.org>, <wsd_upstream@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <devicetree@vger.kernel.org>, mtk01761 <wendell.lin@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Date:   Fri, 24 Jul 2020 13:39:16 +0800
-In-Reply-To: <20200723155159.GB436360@bogus>
-References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
-         <1595503197-15246-3-git-send-email-hanks.chen@mediatek.com>
-         <20200723155159.GB436360@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 24 Jul 2020 01:42:15 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE85C0619E4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:42:15 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id w126so4315327pfw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/7h13uK3yaCmC6CvwntDrcPq/x8aDHrW9fKg5HxHfJ8=;
+        b=dro2IQ3giApo6ftru/j+SRlfgGyyq/joz+CqXpj+SkXiFG3KqSiPG5xEf84M0adWtQ
+         DQFwEcqs5o/AojmOxk2loupywrh4gZ7jVgS7M8uXJTixBZpsr0TPa3lSFDRV9eQbfk85
+         3NJf37XuXYMHx6zLiRbFwRZbnFIzVAxyKQdkwFcVS+vcuDR/8zNMWwaEo9Zx3R7MfBsx
+         llbxS8G1Hipp9VKkcmrw2eWaqp9ZXY8TuDjW+4EsWt+lf+91noSc35V+3MmeIHWRLC9b
+         ew0tpQExMvxfRadSlQG5p/Pk2uvg1M9BUS6QcPNmZpNPNYi2sIkn+MlI9Sn5uKb7ZXhV
+         k/Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/7h13uK3yaCmC6CvwntDrcPq/x8aDHrW9fKg5HxHfJ8=;
+        b=NyX4B2fVYcNrgZUufqii9hUK1b6FSiRw8t0dXJP+62T/D1udXQXmku5gYromhj/ay9
+         TiHJH8tpBvCx3G8vuUCOqPOzOgiK/dU4lZE6/TVh0fsM0xO11Bndtd8D5FqqN1WrF7SK
+         OnKjF3WNUME9UeBK70o4+piXOg6EGP2w1ggNk97Narn1caSsJ9FkLCJI0QrM6x4GrWD9
+         3oe1tb90vonmOsdKLy31ZCiwU/KbJmNfKN58ylF1uAJ9zQLNcIR+jOfzI8EXrVc5e0aE
+         A3ub1dk1Yo/GNEVwAtpQSS+XLYqwZSq+1MeagAn5X0Rr3qOUiVHi0cCOfcJA+K4KDiEk
+         Ye9Q==
+X-Gm-Message-State: AOAM531DqmMpeNWRmfbWlY49wAQV9j051mih8eQuADoiUq6HWNUr9JoC
+        g3UAu5bSu5wXa9VrlUrClLdf
+X-Google-Smtp-Source: ABdhPJxlVphFfTC0uNq8+LW41fK8sJCI/GPQ8wSRCRSNL4eEQMMHcVxK25DtuSSiYx9Yw9Eesr2yUA==
+X-Received: by 2002:a63:8c5c:: with SMTP id q28mr7157006pgn.111.1595569334629;
+        Thu, 23 Jul 2020 22:42:14 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6c9b:7816:d54:f58c:a790:e57b])
+        by smtp.gmail.com with ESMTPSA id ml8sm4462138pjb.47.2020.07.23.22.42.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 22:42:14 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 11:12:06 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 10/10] bus: mhi: core: Introduce sysfs entries for MHI
+Message-ID: <20200724054206.GC17957@Mani-XPS-13-9360>
+References: <1595543802-17859-1-git-send-email-bbhatt@codeaurora.org>
+ <1595543802-17859-11-git-send-email-bbhatt@codeaurora.org>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595543802-17859-11-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTIzIGF0IDA5OjUxIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCAyMyBKdWwgMjAyMCAxOToxOTo1MiArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
-PiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gQWRk
-IGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIE1UNjc3OSBwaW5jdHJsIGRyaXZlci4N
-Cj4gPiANCj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQo+ID4g
-LS0tDQo+ID4gIC4uLi9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwgICAgICB8
-IDE5NyArKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5NyBpbnNlcnRp
-b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ID4gDQo+IA0K
-PiANCj4gTXkgYm90IGZvdW5kIGVycm9ycyBydW5uaW5nICdtYWtlIGR0X2JpbmRpbmdfY2hlY2sn
-IG9uIHlvdXIgcGF0Y2g6DQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3
-OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJl
-ZzowOiBbMCwgMjY4NDU1OTM2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhl
-cnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-aW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0w
-OiBwaW5jdHJsQDEwMDA1MDAwOnJlZzoxOiBbMCwgMjk3OTI2NjU2LCAwLCA0MDk2XSBpcyB0b28g
-bG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1w
-bGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzoyOiBbMCwgMjk4OTA5
-Njk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQt
-cmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVr
-LG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1
-MDAwOnJlZzozOiBbMCwgMzAwMDIzODA4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRz
-L3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhh
-bXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo0OiBbMCwgMzAwMzUxNDg4LCAwLCA0MDk2XSBp
-cyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJs
-LmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo1OiBbMCwg
-MzAwNTQ4MDk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGlu
-dXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21l
-ZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJs
-QDEwMDA1MDAwOnJlZzo2OiBbMCwgMzAxMDcyMzg0LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAv
-YnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFt
-bDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo3OiBbMCwgMzAxMTM3OTIwLCAwLCA0
-MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
-aW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo4
-OiBbMCwgMjY4NDgwNTEyLCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiANCj4gDQo+IFNlZSBodHRw
-czovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRj
-aC8xMzM0NzQzX187ISFDVFJOS0E5d01nMEFSYncheFZxMjFzLVZhdzNJZjEtUThFV0pFREJCSVVw
-MGozMFBJYUdRV0R5aENmdGJjT2dGcmpScVpNTkhvSGdPWGtzRDNnJCANCj4gDQo+IElmIHlvdSBh
-bHJlYWR5IHJhbiAnbWFrZSBkdF9iaW5kaW5nX2NoZWNrJyBhbmQgZGlkbid0IHNlZSB0aGUgYWJv
-dmUNCj4gZXJyb3IocyksIHRoZW4gbWFrZSBzdXJlIGR0LXNjaGVtYSBpcyB1cCB0byBkYXRlOg0K
-PiANCj4gcGlwMyBpbnN0YWxsIGdpdCtodHRwczovL2dpdGh1Yi5jb20vZGV2aWNldHJlZS1vcmcv
-ZHQtc2NoZW1hLmdpdEBtYXN0ZXIgLS11cGdyYWRlDQo+IA0KPiBQbGVhc2UgY2hlY2sgYW5kIHJl
-LXN1Ym1pdC4NCj4gDQpIaSBSb2IsDQoNCkl0J3MgbXkgZmF1bHQNCkkgY291bGQgcmVwcm9kdWNl
-IHRoZSBlcnJvciBsb2cgYWZ0ZXIgZHQtc2NoZW1hIHVwZGF0ZXMgdG8gdGhlIGxhdGVzdA0KdmVy
-c2lvbi4NCkknbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzIQ0KDQpIYW5rcyBD
-aGVuDQoNCg==
+On Thu, Jul 23, 2020 at 03:36:42PM -0700, Bhaumik Bhatt wrote:
+> Introduce sysfs entries to enable userspace clients the ability to read
+> the serial number and the OEM PK Hash values obtained from BHI. OEMs
+> need to read these device-specific hardware information values through
+> userspace for factory testing purposes and cannot be exposed via degbufs
+> as it may remain disabled for performance reasons. Also, update the
+> documentation for ABI to include these entries.
+> 
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> ---
+>  Documentation/ABI/stable/sysfs-bus-mhi | 25 ++++++++++++++++
+>  MAINTAINERS                            |  1 +
+>  drivers/bus/mhi/core/init.c            | 53 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 79 insertions(+)
+>  create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
+> 
+> diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
+> new file mode 100644
+> index 0000000..a4e4bd2
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-bus-mhi
+> @@ -0,0 +1,25 @@
+> +What:		/sys/bus/mhi/devices/.../serialnumber
+> +Date:		July 2020
+> +KernelVersion:  5.8
+> +Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
+> +Description:
+> +		The file holds the serial number of the client device obtained
+> +		using a BHI (Boot Host Interface) register read after at least
+> +		one attempt to power up the device has been done. If read
+> +		without having the device power on at least once, the file will
+> +		read all 0's.
+> +Users:		Any userspace application or clients interested in the device
+> +		hardware information.
 
+Please align all the fields onto a single starting point. Have a look at other
+ABI documentation like, Documentation/ABI/stable/sysfs-bus-vmbus.
+
+> +
+> +What:		/sys/bus/mhi/devices/.../oem_pk_hash
+> +Date:		July 2020
+> +KernelVersion:  5.8
+> +Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
+> +Description:
+> +		The file holds the OEM PK Hash value of the endpoint device
+> +		obtained using a BHI (Boot Host Interface) register read after
+> +		at least one attempt to power up the device has been done. If
+> +		read without having the device power on at least once, the file
+> +		will read all 0's.
+> +Users:		Any userspace application or clients interested in the device
+> +		hardware information.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64e5db..5e49316 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11018,6 +11018,7 @@ M:	Hemant Kumar <hemantk@codeaurora.org>
+>  L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
+> +F:	Documentation/ABI/stable/sysfs-bus-mhi
+>  F:	Documentation/mhi/
+>  F:	drivers/bus/mhi/
+>  F:	include/linux/mhi.h
+> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> index d2c0f6e..a7b0d76 100644
+> --- a/drivers/bus/mhi/core/init.c
+> +++ b/drivers/bus/mhi/core/init.c
+> @@ -76,6 +76,56 @@ const char *to_mhi_pm_state_str(enum mhi_pm_state state)
+>  	return mhi_pm_state_str[index];
+>  }
+>  
+> +static ssize_t serial_number_show(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  char *buf)
+
+We haven't followed this before but it is good to align the function parameters
+with respect to '('.
+
+> +{
+> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> +
+> +	return snprintf(buf, PAGE_SIZE, "Serial Number: %u\n",
+> +			mhi_cntrl->serial_number);
+
+We need to think about what happens if the mhi_cntrl structure is not zero
+initialized by the controller driver. All throughout the stack we assume that
+the mhi_cntrl struct is zero initialized but things can go awry if it was not
+the case!
+
+There was one API in the downstream (mhi_alloc_controller()) for this purpose
+but I removed it since we ended up with just a kzalloc(). Does it make sense to
+introduce it now?
+
+Thanks,
+Mani
+
+> +}
+> +static DEVICE_ATTR_RO(serial_number);
+> +
+> +static ssize_t oem_pk_hash_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> +	int i, cnt = 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++)
+> +		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
+> +				"OEMPKHASH[%d]: 0x%x\n", i,
+> +				mhi_cntrl->oem_pk_hash[i]);
+> +
+> +	return cnt;
+> +}
+> +static DEVICE_ATTR_RO(oem_pk_hash);
+> +
+> +static struct attribute *mhi_sysfs_attrs[] = {
+> +	&dev_attr_serial_number.attr,
+> +	&dev_attr_oem_pk_hash.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group mhi_sysfs_group = {
+> +	.attrs = mhi_sysfs_attrs,
+> +};
+> +
+> +static int mhi_create_sysfs(struct mhi_controller *mhi_cntrl)
+> +{
+> +	return sysfs_create_group(&mhi_cntrl->mhi_dev->dev.kobj,
+> +				  &mhi_sysfs_group);
+> +}
+> +
+> +static void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
+> +{
+> +	sysfs_remove_group(&mhi_cntrl->mhi_dev->dev.kobj, &mhi_sysfs_group);
+> +}
+> +
+>  /* MHI protocol requires the transfer ring to be aligned with ring length */
+>  static int mhi_alloc_aligned_ring(struct mhi_controller *mhi_cntrl,
+>  				  struct mhi_ring *ring,
+> @@ -917,6 +967,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+>  	mhi_cntrl->mhi_dev = mhi_dev;
+>  
+>  	mhi_create_debugfs(mhi_cntrl);
+> +	if (mhi_create_sysfs(mhi_cntrl))
+> +		dev_err(mhi_cntrl->cntrl_dev, "Failed to create sysfs entries\n");
+>  
+>  	return 0;
+>  
+> @@ -940,6 +992,7 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
+>  	struct mhi_chan *mhi_chan = mhi_cntrl->mhi_chan;
+>  	unsigned int i;
+>  
+> +	mhi_destroy_sysfs(mhi_cntrl);
+>  	mhi_destroy_debugfs(mhi_cntrl);
+>  
+>  	kfree(mhi_cntrl->mhi_cmd);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
