@@ -2,109 +2,105 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E57C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59FCC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA0D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8A420748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595580982;
+	bh=q5Y5JzRZKOaWS852eosBJ8/rxA9bzs1JuRaWbHGtJwc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=xJOc/Dc7yLlPH2cI3uC4M1j52DLea5XJhMSpG3FxDQjKeNOaH58eqmgaou6tdoDKv
+	 czwgMz+mYhuA0JZUMRcBnIxSzFHxbK0tMXfUrjQ+Gn4D5UrvE7KOaEyHEEpLrctfNw
+	 cDu02JFRM1A5i+xwkVEhLIaX2DRbLPCnUvY57dmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgGXIzt (ORCPT
+        id S1727921AbgGXI4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:55:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55940 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727112AbgGXIzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:55:49 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DDC697F4DEC214F115C6;
-        Fri, 24 Jul 2020 16:55:38 +0800 (CST)
-Received: from huawei.com (10.174.187.31) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Jul 2020
- 16:55:28 +0800
-From:   Yifei Jiang <jiangyifei@huawei.com>
-To:     <pbonzini@redhat.com>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>
-CC:     <anup.patel@wdc.com>, <atish.patra@wdc.com>, <kvm@vger.kernel.org>,
-        <kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <victor.zhangxiaofeng@huawei.com>,
-        <wu.wubin@huawei.com>, <zhang.zhanghailiang@huawei.com>,
-        <dengkai1@huawei.com>, <limingwang@huawei.com>,
-        Yifei Jiang <jiangyifei@huawei.com>
-Subject: [RFC 1/2] RISC-V: KVM: enable ioeventfd capability and compile for risc-v
-Date:   Fri, 24 Jul 2020 16:54:40 +0800
-Message-ID: <20200724085441.1514-2-jiangyifei@huawei.com>
-X-Mailer: git-send-email 2.26.2.windows.1
-In-Reply-To: <20200724085441.1514-1-jiangyifei@huawei.com>
-References: <20200724085441.1514-1-jiangyifei@huawei.com>
+        Fri, 24 Jul 2020 04:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726945AbgGXI4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:56:20 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 887E4206D8;
+        Fri, 24 Jul 2020 08:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595580980;
+        bh=q5Y5JzRZKOaWS852eosBJ8/rxA9bzs1JuRaWbHGtJwc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=vyGspKAkyhpkj8Js5hqkFnzcw/q5HDDlDkninmBbc6o+XVxgBL7sGwQUKXAuIIC9A
+         8nNFRSt3IBBsaA5mjzSNMu6NJie3hsGfRfEKxVt0gN73oAwGy+/3heqaMdxsr5Pef8
+         r3JAEVZn1ZgZ9CwEZvFrQdZPEwQ63x4JWY7uAYnA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.174.187.31]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <26624b65d0e6b958c4765a406b9929d1a9ce1c2c.1594880946.git.rahul.tanwar@linux.intel.com>
+References: <7ef7009b4e9f986fd6dfbf487c0e85de68a4ba9b.1594880946.git.rahul.tanwar@linux.intel.com> <26624b65d0e6b958c4765a406b9929d1a9ce1c2c.1594880946.git.rahul.tanwar@linux.intel.com>
+Subject: Re: [PATCH v2 3/3] clk: intel: Avoid unnecessary memset by improving code
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        linux-clk@vger.kernel.org, mturquette@baylibre.com
+Date:   Fri, 24 Jul 2020 01:56:19 -0700
+Message-ID: <159558097978.3847286.7904651694237654748@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Yifei Jiang <jiangyifei@huawei.com>
-Signed-off-by: Mingwang Li <limingwang@huawei.com>
----
- arch/riscv/kvm/Kconfig  | 2 ++
- arch/riscv/kvm/Makefile | 2 +-
- arch/riscv/kvm/vm.c     | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
+Quoting Rahul Tanwar (2020-07-15 23:30:32)
+> memset can be avoided in a loop if the variables used are declared
+> inside the loop. Move such variables declaration inside the loop
+> to avoid memset.
+>=20
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  drivers/clk/x86/clk-cgu.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/clk/x86/clk-cgu.c b/drivers/clk/x86/clk-cgu.c
+> index c379fedfb9f2..9a1be7035fd0 100644
+> --- a/drivers/clk/x86/clk-cgu.c
+> +++ b/drivers/clk/x86/clk-cgu.c
+> @@ -581,19 +581,18 @@ int lgm_clk_register_ddiv(struct lgm_clk_provider *=
+ctx,
+>                           unsigned int nr_clk)
+>  {
+>         struct device *dev =3D ctx->dev;
+> -       struct clk_init_data init =3D {};
+> -       struct lgm_clk_ddiv *ddiv;
+>         struct clk_hw *hw;
+>         unsigned int idx;
+>         int ret;
+> =20
+>         for (idx =3D 0; idx < nr_clk; idx++, list++) {
+> -               ddiv =3D NULL;
+> +               struct clk_init_data init =3D {};
+> +               struct lgm_clk_ddiv *ddiv =3D NULL;
 
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index 2356dc52ebb3..95d85d893ab6 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -4,6 +4,7 @@
- #
- 
- source "virt/kvm/Kconfig"
-+source "drivers/vhost/Kconfig"
- 
- menuconfig VIRTUALIZATION
- 	bool "Virtualization"
-@@ -26,6 +27,7 @@ config KVM
- 	select KVM_MMIO
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select SRCU
-+	select HAVE_KVM_EVENTFD
- 	help
- 	  Support hosting virtualized guest machines.
- 
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index b56dc1650d2c..3ad46fe44900 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for RISC-V KVM support
- #
- 
--common-objs-y = $(addprefix ../../../virt/kvm/, kvm_main.o coalesced_mmio.o)
-+common-objs-y = $(addprefix ../../../virt/kvm/, kvm_main.o coalesced_mmio.o eventfd.o)
- 
- ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
- 
-diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-index 4f2498198cb5..473299e71f68 100644
---- a/arch/riscv/kvm/vm.c
-+++ b/arch/riscv/kvm/vm.c
-@@ -52,6 +52,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	int r;
- 
- 	switch (ext) {
-+	case KVM_CAP_IOEVENTFD:
- 	case KVM_CAP_DEVICE_CTRL:
- 	case KVM_CAP_USER_MEMORY:
- 	case KVM_CAP_SYNC_MMU:
--- 
-2.19.1
+Assigning to NULL isn't necessary...
 
+> +
+>                 ddiv =3D devm_kzalloc(dev, sizeof(*ddiv), GFP_KERNEL);
 
+because it's assigned right here. I'll just fix it.
+
+>                 if (!ddiv)
+>                         return -ENOMEM;
+> =20
+> -               memset(&init, 0, sizeof(init));
+>                 init.name =3D list->name;
+>                 init.ops =3D &lgm_clk_ddiv_ops;
+>                 init.flags =3D list->flags;
