@@ -2,355 +2,174 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3602C433F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A552D2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5317C20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EFXRzzYd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i1z5PlgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgGXK43 (ORCPT
+        id S1726674AbgGXK7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:56:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6930 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbgGXK4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:56:24 -0400
-IronPort-SDR: LN9muj36FJqHKY0MKZx5rAtYu5ShSN3PFlUlMd/0OHN++4aAAo9Y7nVDBqj/v/nCHKUfhsB0ho
- 86QGBinHkaqw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150675033"
-X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="150675033"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 03:56:23 -0700
-IronPort-SDR: iPhDh8g6Ety+rQHmUvHIjnZ+scs+N4RPsCZioCWmouTSe07B534vL6lU4OHw9sJTk179ZVOLoZ
- PLb1AKs6/HPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="284901567"
-Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 03:56:20 -0700
-From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
-Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
-        bhelgaas@google.com, mark.a.chambers@intel.com,
-        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
-        fiona.trahe@intel.com, qat-linux@intel.com, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: [PATCH v5 4/5] crypto: qat - replace device ids defines
-Date:   Fri, 24 Jul 2020 11:55:59 +0100
-Message-Id: <20200724105600.10814-5-giovanni.cabiddu@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
-References: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
+        Fri, 24 Jul 2020 06:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgGXK7n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:59:43 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B28C0619D3;
+        Fri, 24 Jul 2020 03:59:42 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 10:59:38 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595588380;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+o1o9WpW2esxHjKTdhQnvedFWXTWqLYXBNVNq7q3OiE=;
+        b=EFXRzzYdshIvNvumE97pRVt9mbCcZ0CU3CByu7zxDamfFnccyCo6ao4lIAr2755BwfpfGr
+        kst1XE9iujS1j8x/1IXlSxzPWA4ou7aKc+/ySuhhDEBWjrar3OTSFOONhzrzaHiWciEauE
+        98+a/5IqF7fWlr7qG6iqwAwKdWLzxI9sWjO8CL1Ls7CNnR1nGRM2uy/nXUVzOxlbIdxgdX
+        JDJFxKWi2/ckPT2lYaiBt6mrnhTXVV7FFi1EitIQ/cM6vgTupbodCvJCg0Foi1VbT/nzPh
+        UbLvVU0IkqILHIH6SFOmWhEgy4kh2fFexWi6XiZ7tAUliRJjs+5KT73LG9cAqQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595588380;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+o1o9WpW2esxHjKTdhQnvedFWXTWqLYXBNVNq7q3OiE=;
+        b=i1z5PlgRIs7GoANShAW12xHuIndfjF7sgbzrbb5FS/+5iecjk48yPmqYdyMw5/vHGe0qYY
+        sd/38hlNR7giV1Bw==
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] timers: Recalculate next timer interrupt only when
+ necessary
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200723151641.12236-1-frederic@kernel.org>
+References: <20200723151641.12236-1-frederic@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159558837898.4006.13597592790372222044.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace device ids defined in the QAT drivers with the ones in
-include/linux/pci_ids.h.
+The following commit has been merged into the timers/core branch of tip:
 
-Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Reviewed-by: Fiona Trahe <fiona.trahe@intel.com>
+Commit-ID:     31cd0e119d50cf27ebe214d1a8f7ca36692f13a5
+Gitweb:        https://git.kernel.org/tip/31cd0e119d50cf27ebe214d1a8f7ca36692f13a5
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Thu, 23 Jul 2020 17:16:41 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 24 Jul 2020 12:49:40 +02:00
+
+timers: Recalculate next timer interrupt only when necessary
+
+The nohz tick code recalculates the timer wheel's next expiry on each idle
+loop iteration.
+
+On the other hand, the base next expiry is now always cached and updated
+upon timer enqueue and execution. Only timer dequeue may leave
+base->next_expiry out of date (but then its stale value won't ever go past
+the actual next expiry to be recalculated).
+
+Since recalculating the next_expiry isn't a free operation, especially when
+the last wheel level is reached to find out that no timer has been enqueued
+at all, reuse the next expiry cache when it is known to be reliable, which
+it is most of the time.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200723151641.12236-1-frederic@kernel.org
+
 ---
- drivers/crypto/qat/qat_c3xxx/adf_drv.c            | 6 +++---
- drivers/crypto/qat/qat_c3xxxvf/adf_drv.c          | 6 +++---
- drivers/crypto/qat/qat_c62x/adf_drv.c             | 6 +++---
- drivers/crypto/qat/qat_c62xvf/adf_drv.c           | 6 +++---
- drivers/crypto/qat/qat_common/adf_accel_devices.h | 6 ------
- drivers/crypto/qat/qat_common/qat_hal.c           | 7 ++++---
- drivers/crypto/qat/qat_common/qat_uclo.c          | 9 +++++----
- drivers/crypto/qat/qat_dh895xcc/adf_drv.c         | 6 +++---
- drivers/crypto/qat/qat_dh895xccvf/adf_drv.c       | 6 +++---
- 9 files changed, 27 insertions(+), 31 deletions(-)
+ kernel/time/timer.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/qat/qat_c3xxx/adf_drv.c b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-index 020d099409e5..bba0f142f7f6 100644
---- a/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
-@@ -22,7 +22,7 @@
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
- 
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(ADF_C3XXX_PCI_DEVICE_ID),
-+	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX),
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
-@@ -58,7 +58,7 @@ static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
- 
- 	if (accel_dev->hw_device) {
- 		switch (accel_pci_dev->pci_dev->device) {
--		case ADF_C3XXX_PCI_DEVICE_ID:
-+		case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
- 			adf_clean_hw_data_c3xxx(accel_dev->hw_device);
- 			break;
- 		default:
-@@ -83,7 +83,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int ret;
- 
- 	switch (ent->device) {
--	case ADF_C3XXX_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device 0x%x.\n", ent->device);
-diff --git a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-index 11039fe55f61..b77a58886599 100644
---- a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
-@@ -22,7 +22,7 @@
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
- 
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(ADF_C3XXXIOV_PCI_DEVICE_ID),
-+	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF),
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
-@@ -58,7 +58,7 @@ static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
- 
- 	if (accel_dev->hw_device) {
- 		switch (accel_pci_dev->pci_dev->device) {
--		case ADF_C3XXXIOV_PCI_DEVICE_ID:
-+		case PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF:
- 			adf_clean_hw_data_c3xxxiov(accel_dev->hw_device);
- 			break;
- 		default:
-@@ -85,7 +85,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int ret;
- 
- 	switch (ent->device) {
--	case ADF_C3XXXIOV_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF:
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device 0x%x.\n", ent->device);
-diff --git a/drivers/crypto/qat/qat_c62x/adf_drv.c b/drivers/crypto/qat/qat_c62x/adf_drv.c
-index 4ba9c14383af..722838ff03be 100644
---- a/drivers/crypto/qat/qat_c62x/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c62x/adf_drv.c
-@@ -22,7 +22,7 @@
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
- 
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(ADF_C62X_PCI_DEVICE_ID),
-+	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X),
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
-@@ -58,7 +58,7 @@ static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
- 
- 	if (accel_dev->hw_device) {
- 		switch (accel_pci_dev->pci_dev->device) {
--		case ADF_C62X_PCI_DEVICE_ID:
-+		case PCI_DEVICE_ID_INTEL_QAT_C62X:
- 			adf_clean_hw_data_c62x(accel_dev->hw_device);
- 			break;
- 		default:
-@@ -83,7 +83,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int ret;
- 
- 	switch (ent->device) {
--	case ADF_C62X_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_C62X:
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device 0x%x.\n", ent->device);
-diff --git a/drivers/crypto/qat/qat_c62xvf/adf_drv.c b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-index b8b021d54bb5..a766cc18aae9 100644
---- a/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
-@@ -22,7 +22,7 @@
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
- 
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(ADF_C62XIOV_PCI_DEVICE_ID),
-+	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X_VF),
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
-@@ -58,7 +58,7 @@ static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
- 
- 	if (accel_dev->hw_device) {
- 		switch (accel_pci_dev->pci_dev->device) {
--		case ADF_C62XIOV_PCI_DEVICE_ID:
-+		case PCI_DEVICE_ID_INTEL_QAT_C62X_VF:
- 			adf_clean_hw_data_c62xiov(accel_dev->hw_device);
- 			break;
- 		default:
-@@ -85,7 +85,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int ret;
- 
- 	switch (ent->device) {
--	case ADF_C62XIOV_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_C62X_VF:
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device 0x%x.\n", ent->device);
-diff --git a/drivers/crypto/qat/qat_common/adf_accel_devices.h b/drivers/crypto/qat/qat_common/adf_accel_devices.h
-index c1db8c26afb6..06952ece53d9 100644
---- a/drivers/crypto/qat/qat_common/adf_accel_devices.h
-+++ b/drivers/crypto/qat/qat_common/adf_accel_devices.h
-@@ -15,12 +15,6 @@
- #define ADF_C62XVF_DEVICE_NAME "c6xxvf"
- #define ADF_C3XXX_DEVICE_NAME "c3xxx"
- #define ADF_C3XXXVF_DEVICE_NAME "c3xxxvf"
--#define ADF_DH895XCC_PCI_DEVICE_ID 0x435
--#define ADF_DH895XCCIOV_PCI_DEVICE_ID 0x443
--#define ADF_C62X_PCI_DEVICE_ID 0x37c8
--#define ADF_C62XIOV_PCI_DEVICE_ID 0x37c9
--#define ADF_C3XXX_PCI_DEVICE_ID 0x19e2
--#define ADF_C3XXXIOV_PCI_DEVICE_ID 0x19e3
- #define ADF_ERRSOU3 (0x3A000 + 0x0C)
- #define ADF_ERRSOU5 (0x3A000 + 0xD8)
- #define ADF_DEVICE_FUSECTL_OFFSET 0x40
-diff --git a/drivers/crypto/qat/qat_common/qat_hal.c b/drivers/crypto/qat/qat_common/qat_hal.c
-index fa467e0f8285..6b9d47682d04 100644
---- a/drivers/crypto/qat/qat_common/qat_hal.c
-+++ b/drivers/crypto/qat/qat_common/qat_hal.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2014 - 2020 Intel Corporation */
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/pci_ids.h>
- 
- #include "adf_accel_devices.h"
- #include "adf_common_drv.h"
-@@ -412,7 +413,7 @@ static int qat_hal_init_esram(struct icp_qat_fw_loader_handle *handle)
- 	unsigned int csr_val;
- 	int times = 30;
- 
--	if (handle->pci_dev->device != ADF_DH895XCC_PCI_DEVICE_ID)
-+	if (handle->pci_dev->device != PCI_DEVICE_ID_INTEL_QAT_DH895XCC)
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 77e21e9..96d802e 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -204,6 +204,7 @@ struct timer_base {
+ 	unsigned long		clk;
+ 	unsigned long		next_expiry;
+ 	unsigned int		cpu;
++	bool			next_expiry_recalc;
+ 	bool			is_idle;
+ 	DECLARE_BITMAP(pending_map, WHEEL_SIZE);
+ 	struct hlist_head	vectors[WHEEL_SIZE];
+@@ -593,6 +594,7 @@ static void enqueue_timer(struct timer_base *base, struct timer_list *timer,
+ 		 * can reevaluate the wheel:
+ 		 */
+ 		base->next_expiry = bucket_expiry;
++		base->next_expiry_recalc = false;
+ 		trigger_dyntick_cpu(base, timer);
+ 	}
+ }
+@@ -836,8 +838,10 @@ static int detach_if_pending(struct timer_list *timer, struct timer_base *base,
+ 	if (!timer_pending(timer))
  		return 0;
  
- 	csr_val = ADF_CSR_RD(csr_addr, 0);
-@@ -672,13 +673,13 @@ int qat_hal_init(struct adf_accel_dev *accel_dev)
- 		(void __iomem *)((uintptr_t)handle->hal_cap_ae_xfer_csr_addr_v +
- 				 LOCAL_TO_XFER_REG_OFFSET);
- 	handle->pci_dev = pci_info->pci_dev;
--	if (handle->pci_dev->device == ADF_DH895XCC_PCI_DEVICE_ID) {
-+	if (handle->pci_dev->device == PCI_DEVICE_ID_INTEL_QAT_DH895XCC) {
- 		sram_bar =
- 			&pci_info->pci_bars[hw_data->get_sram_bar_id(hw_data)];
- 		handle->hal_sram_addr_v = sram_bar->virt_addr;
+-	if (hlist_is_singular_node(&timer->entry, base->vectors + idx))
++	if (hlist_is_singular_node(&timer->entry, base->vectors + idx)) {
+ 		__clear_bit(idx, base->pending_map);
++		base->next_expiry_recalc = true;
++	}
+ 
+ 	detach_timer(timer, clear_pending);
+ 	return 1;
+@@ -1571,6 +1575,9 @@ static unsigned long __next_timer_interrupt(struct timer_base *base)
+ 		clk >>= LVL_CLK_SHIFT;
+ 		clk += adj;
  	}
- 	handle->fw_auth = (handle->pci_dev->device ==
--			   ADF_DH895XCC_PCI_DEVICE_ID) ? false : true;
-+			   PCI_DEVICE_ID_INTEL_QAT_DH895XCC) ? false : true;
- 	handle->hal_handle = kzalloc(sizeof(*handle->hal_handle), GFP_KERNEL);
- 	if (!handle->hal_handle)
- 		goto out_hal_handle;
-diff --git a/drivers/crypto/qat/qat_common/qat_uclo.c b/drivers/crypto/qat/qat_common/qat_uclo.c
-index bff759e2f811..978d1fce0e74 100644
---- a/drivers/crypto/qat/qat_common/qat_uclo.c
-+++ b/drivers/crypto/qat/qat_common/qat_uclo.c
-@@ -4,6 +4,7 @@
- #include <linux/ctype.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
-+#include <linux/pci_ids.h>
- #include "adf_accel_devices.h"
- #include "adf_common_drv.h"
- #include "icp_qat_uclo.h"
-@@ -711,11 +712,11 @@ static unsigned int
- qat_uclo_get_dev_type(struct icp_qat_fw_loader_handle *handle)
- {
- 	switch (handle->pci_dev->device) {
--	case ADF_DH895XCC_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
- 		return ICP_QAT_AC_895XCC_DEV_TYPE;
--	case ADF_C62X_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_C62X:
- 		return ICP_QAT_AC_C62X_DEV_TYPE;
--	case ADF_C3XXX_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
- 		return ICP_QAT_AC_C3XXX_DEV_TYPE;
- 	default:
- 		pr_err("QAT: unsupported device 0x%x\n",
-@@ -1391,7 +1392,7 @@ int qat_uclo_wr_mimage(struct icp_qat_fw_loader_handle *handle,
- 			status = qat_uclo_auth_fw(handle, desc);
- 		qat_uclo_ummap_auth_fw(handle, &desc);
- 	} else {
--		if (handle->pci_dev->device == ADF_C3XXX_PCI_DEVICE_ID) {
-+		if (handle->pci_dev->device == PCI_DEVICE_ID_INTEL_QAT_C3XXX) {
- 			pr_err("QAT: C3XXX doesn't support unsigned MMP\n");
- 			return -EINVAL;
- 		}
-diff --git a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-index 4e877b75822b..4c3aea07f444 100644
---- a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-+++ b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
-@@ -22,7 +22,7 @@
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
++
++	base->next_expiry_recalc = false;
++
+ 	return next;
+ }
  
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(ADF_DH895XCC_PCI_DEVICE_ID),
-+	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC),
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
-@@ -58,7 +58,7 @@ static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
+@@ -1631,9 +1638,11 @@ u64 get_next_timer_interrupt(unsigned long basej, u64 basem)
+ 		return expires;
  
- 	if (accel_dev->hw_device) {
- 		switch (accel_pci_dev->pci_dev->device) {
--		case ADF_DH895XCC_PCI_DEVICE_ID:
-+		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
- 			adf_clean_hw_data_dh895xcc(accel_dev->hw_device);
- 			break;
- 		default:
-@@ -83,7 +83,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int ret;
+ 	raw_spin_lock(&base->lock);
+-	nextevt = __next_timer_interrupt(base);
++	if (base->next_expiry_recalc)
++		base->next_expiry = __next_timer_interrupt(base);
++	nextevt = base->next_expiry;
+ 	is_max_delta = (nextevt == base->clk + NEXT_TIMER_MAX_DELTA);
+-	base->next_expiry = nextevt;
++
+ 	/*
+ 	 * We have a fresh next event. Check whether we can forward the
+ 	 * base. We can only do that when @basej is past base->clk
+@@ -1725,6 +1734,12 @@ static inline void __run_timers(struct timer_base *base)
+ 	while (time_after_eq(jiffies, base->clk) &&
+ 	       time_after_eq(jiffies, base->next_expiry)) {
+ 		levels = collect_expired_timers(base, heads);
++		/*
++		 * The only possible reason for not finding any expired
++		 * timer at this clk is that all matching timers have been
++		 * dequeued.
++		 */
++		WARN_ON_ONCE(!levels && !base->next_expiry_recalc);
+ 		base->clk++;
+ 		base->next_expiry = __next_timer_interrupt(base);
  
- 	switch (ent->device) {
--	case ADF_DH895XCC_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device 0x%x.\n", ent->device);
-diff --git a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-index 7d6e1db272c2..673348ca5dea 100644
---- a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-+++ b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
-@@ -22,7 +22,7 @@
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
- 
- static const struct pci_device_id adf_pci_tbl[] = {
--	ADF_SYSTEM_DEVICE(ADF_DH895XCCIOV_PCI_DEVICE_ID),
-+	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF),
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
-@@ -58,7 +58,7 @@ static void adf_cleanup_accel(struct adf_accel_dev *accel_dev)
- 
- 	if (accel_dev->hw_device) {
- 		switch (accel_pci_dev->pci_dev->device) {
--		case ADF_DH895XCCIOV_PCI_DEVICE_ID:
-+		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF:
- 			adf_clean_hw_data_dh895xcciov(accel_dev->hw_device);
- 			break;
- 		default:
-@@ -85,7 +85,7 @@ static int adf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int ret;
- 
- 	switch (ent->device) {
--	case ADF_DH895XCCIOV_PCI_DEVICE_ID:
-+	case PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF:
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Invalid device 0x%x.\n", ent->device);
--- 
-2.26.2
-
