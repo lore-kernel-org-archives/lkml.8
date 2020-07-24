@@ -2,252 +2,171 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1FBC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14453C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB402073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TfSU45ZH"
+	by mail.kernel.org (Postfix) with ESMTP id EE943206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgGXTG5 (ORCPT
+        id S1726728AbgGXTIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXTGz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:06:55 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE639C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:06:55 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f7so127976pln.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=K8G3uUfjFyIFqzumteD+M4ru95c1HdblPJFim2YrrQc=;
-        b=TfSU45ZHogt7OfiCyfzi5HJwQpXCaBErFgsxF/klcZOJNMbPluYAeuTkmfRF6PRP+0
-         qPofpQo09XDEFAIwNso+qC8OWaCL1kuBdc7+u0M1UyUwDQ5AJ/kU0XQOgHjox31zMmoT
-         9ZxZB7qMyGdjF6eSprG4nA/KMSTr4DssTwLWY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=K8G3uUfjFyIFqzumteD+M4ru95c1HdblPJFim2YrrQc=;
-        b=rbAf1W9WrqW94RAkFXHEHQeOZx6TNLWWUCo6Kru28TVhgo3SorBQsCIW4tsRg/zcTo
-         WQIyTWC+J0SavMx3vWpZtk5TuYn/t9LW/30HrvM9LrPwdUmaUwe3oVzUd8TbCPbHa2IZ
-         dwLnUs8JsKdij53LRwGE+PwyaTXiFqzmAo/7tdqLchv/nIcSRrRRRvPgkhGISvCYLeH1
-         WA2y/PFregURdTRppq5m8ezt6xKsNcN4+SzMBsbQc/k2kpmud5soo8inblgTJG1FjXRb
-         uKuxCOhCbMCaJol/5hy88XWh3+0uzZpsxUe9USGun0VGbpWrdkl5s2z8tuT3/AIZp2lv
-         15Dw==
-X-Gm-Message-State: AOAM533kl6wzRz2wrWXOzK3qMYZ++45h28vjrlLx+ifOonJwIckxeifW
-        JLkXc2jN9yLJuerZIm1XBA/46A==
-X-Google-Smtp-Source: ABdhPJxWLS6tUsSp9/04gZtLp8coD/ZXXJGK3pPOo1Byk/QIqCexX4j1ko4JP8edtB5bCGcIbL9c1A==
-X-Received: by 2002:a17:90a:158f:: with SMTP id m15mr6686628pja.93.1595617615136;
-        Fri, 24 Jul 2020 12:06:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y6sm7396906pfp.7.2020.07.24.12.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 12:06:54 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 12:06:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
-Message-ID: <202007241205.751EBE7@keescook>
-References: <20200723171227.446711-1-mic@digikod.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200723171227.446711-1-mic@digikod.net>
+        Fri, 24 Jul 2020 15:08:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45715 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgGXTIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 15:08:02 -0400
+IronPort-SDR: GBR8bqbgV9z/+bVnCf3ee0KKf3btc5wPpUf0bCsAOQukn3YOlQVmOfuSIQDLj28blvY4ZJZ8FV
+ pMH3jsWiZPyA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130328294"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="130328294"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 12:08:01 -0700
+IronPort-SDR: Owy6CufN3MA4RtuWmHr1DJ/EIMsQB/j95gTNub98sZpRdKxfWYj17mSesXnaoj8biylRxpgJ+o
+ xE8l2Qu/S5yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="272659690"
+Received: from pittner-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.77.166])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Jul 2020 12:08:00 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery() call
+Date:   Fri, 24 Jul 2020 12:07:55 -0700
+Message-Id: <cbba08a5e9ca62778c8937f44eda2192a2045da7.1595617529.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: 20200714230803.GA92891@bjorn-Precision-5520
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think this looks good now.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Andrew, since you're already carrying my exec clean-ups (repeated here
-in patch 1-3), can you pick the rest of this series too?
+Current pcie_do_recovery() implementation has following two issues:
 
-Thanks!
+1. Fatal (DPC) error recovery is currently broken for non-hotplug
+capable devices. Current fatal error recovery implementation relies
+on PCIe hotplug (pciehp) handler for detaching and re-enumerating
+the affected devices/drivers. pciehp handler listens for DLLSC state
+changes and handles device/driver detachment on DLLSC_LINK_DOWN event
+and re-enumeration on DLLSC_LINK_UP event. So when dealing with
+non-hotplug capable devices, recovery code does not restore the state
+of the affected devices correctly. Correct implementation should
+restore the device state and call report_slot_reset() function after
+resetting the link to restore the state of the device/driver.
 
--Kees
+You can find fatal non-hotplug related issues reported in following links:
 
-On Thu, Jul 23, 2020 at 07:12:20PM +0200, Mickaël Salaün wrote:
-> Hi,
-> 
-> This seventh patch series do not set __FMODE_EXEC for the sake of
-> simplicity.  A notification feature could be added later if needed.  The
-> handling of all file types is now well defined and tested: by default,
-> when opening a path, access to a directory is denied (with EISDIR),
-> access to a regular file depends on the sysctl policy, and access to
-> other file types (i.e. fifo, device, socket) is denied if there is any
-> enforced policy.  There is new tests covering all these cases (cf.
-> test_file_types() ).
-> 
-> As requested by Mimi Zohar, I completed the series with one of her
-> patches for IMA.  I also picked Kees Cook's patches to consolidate exec
-> permission checking into do_filp_open()'s flow.
-> 
-> 
-> # Goal of O_MAYEXEC
-> 
-> The goal of this patch series is to enable to control script execution
-> with interpreters help.  A new O_MAYEXEC flag, usable through
-> openat2(2), is added to enable userspace script interpreters to delegate
-> to the kernel (and thus the system security policy) the permission to
-> interpret/execute scripts or other files containing what can be seen as
-> commands.
-> 
-> A simple system-wide security policy can be enforced by the system
-> administrator through a sysctl configuration consistent with the mount
-> points or the file access rights.  The documentation patch explains the
-> prerequisites.
-> 
-> Furthermore, the security policy can also be delegated to an LSM, either
-> a MAC system or an integrity system.  For instance, the new kernel
-> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
-> integrity gap by bringing the ability to check the use of scripts [1].
-> Other uses are expected, such as for magic-links [2], SGX integration
-> [3], bpffs [4] or IPE [5].
-> 
-> 
-> # Prerequisite of its use
-> 
-> Userspace needs to adapt to take advantage of this new feature.  For
-> example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
-> extended with policy enforcement points related to code interpretation,
-> which can be used to align with the PowerShell audit features.
-> Additional Python security improvements (e.g. a limited interpreter
-> withou -c, stdin piping of code) are on their way [7].
-> 
-> 
-> # Examples
-> 
-> The initial idea comes from CLIP OS 4 and the original implementation
-> has been used for more than 12 years:
-> https://github.com/clipos-archive/clipos4_doc
-> Chrome OS has a similar approach:
-> https://chromium.googlesource.com/chromiumos/docs/+/master/security/noexec_shell_scripts.md
-> 
-> Userland patches can be found here:
-> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
-> Actually, there is more than the O_MAYEXEC changes (which matches this search)
-> e.g., to prevent Python interactive execution. There are patches for
-> Bash, Wine, Java (Icedtea), Busybox's ash, Perl and Python. There are
-> also some related patches which do not directly rely on O_MAYEXEC but
-> which restrict the use of browser plugins and extensions, which may be
-> seen as scripts too:
-> https://github.com/clipos-archive/clipos4_portage-overlay/tree/master/www-client
-> 
-> An introduction to O_MAYEXEC was given at the Linux Security Summit
-> Europe 2018 - Linux Kernel Security Contributions by ANSSI:
-> https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
-> The "write xor execute" principle was explained at Kernel Recipes 2018 -
-> CLIP OS: a defense-in-depth OS:
-> https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
-> See also an overview article: https://lwn.net/Articles/820000/
-> 
-> 
-> This patch series can be applied on top of v5.8-rc5 .  This can be tested
-> with CONFIG_SYSCTL.  I would really appreciate constructive comments on
-> this patch series.
-> 
-> Previous version:
-> https://lore.kernel.org/lkml/20200505153156.925111-1-mic@digikod.net/
-> 
-> 
-> [1] https://lore.kernel.org/lkml/1544647356.4028.105.camel@linux.ibm.com/
-> [2] https://lore.kernel.org/lkml/20190904201933.10736-6-cyphar@cyphar.com/
-> [3] https://lore.kernel.org/lkml/CALCETrVovr8XNZSroey7pHF46O=kj_c5D9K8h=z2T_cNrpvMig@mail.gmail.com/
-> [4] https://lore.kernel.org/lkml/CALCETrVeZ0eufFXwfhtaG_j+AdvbzEWE0M3wjXMWVEO7pj+xkw@mail.gmail.com/
-> [5] https://lore.kernel.org/lkml/20200406221439.1469862-12-deven.desai@linux.microsoft.com/
-> [6] https://www.python.org/dev/peps/pep-0578/
-> [7] https://lore.kernel.org/lkml/0c70debd-e79e-d514-06c6-4cd1e021fa8b@python.org/
-> 
-> Regards,
-> 
-> Kees Cook (3):
->   exec: Change uselib(2) IS_SREG() failure to EACCES
->   exec: Move S_ISREG() check earlier
->   exec: Move path_noexec() check earlier
-> 
-> Mickaël Salaün (3):
->   fs: Introduce O_MAYEXEC flag for openat2(2)
->   fs,doc: Enable to enforce noexec mounts or file exec through O_MAYEXEC
->   selftest/openat2: Add tests for O_MAYEXEC enforcing
-> 
-> Mimi Zohar (1):
->   ima: add policy support for the new file open MAY_OPENEXEC flag
-> 
->  Documentation/ABI/testing/ima_policy          |   2 +-
->  Documentation/admin-guide/sysctl/fs.rst       |  49 +++
->  fs/exec.c                                     |  23 +-
->  fs/fcntl.c                                    |   2 +-
->  fs/namei.c                                    |  36 +-
->  fs/open.c                                     |  12 +-
->  include/linux/fcntl.h                         |   2 +-
->  include/linux/fs.h                            |   3 +
->  include/uapi/asm-generic/fcntl.h              |   7 +
->  kernel/sysctl.c                               |  12 +-
->  security/integrity/ima/ima_main.c             |   3 +-
->  security/integrity/ima/ima_policy.c           |  15 +-
->  tools/testing/selftests/kselftest_harness.h   |   3 +
->  tools/testing/selftests/openat2/Makefile      |   3 +-
->  tools/testing/selftests/openat2/config        |   1 +
->  tools/testing/selftests/openat2/helpers.h     |   1 +
->  .../testing/selftests/openat2/omayexec_test.c | 325 ++++++++++++++++++
->  17 files changed, 470 insertions(+), 29 deletions(-)
->  create mode 100644 tools/testing/selftests/openat2/config
->  create mode 100644 tools/testing/selftests/openat2/omayexec_test.c
-> 
-> -- 
-> 2.27.0
-> 
+https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
+https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
 
+2. For non-fatal errors if report_error_detected() or
+report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
+current pcie_do_recovery() implementation does not do the requested
+explicit device reset, instead just calls the report_slot_reset() on all
+affected devices. Notifying about the reset via report_slot_reset()
+without doing the actual device reset is incorrect.
+
+To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
+successful reset_link() operation. This will ensure ->slot_reset() be
+called after reset_link() operation for fatal errors. Also call
+pci_bus_reset() to do slot/bus reset() before triggering device specific
+->slot_reset() callback. Also, using pci_bus_reset() will restore the state
+of the devices after performing the reset operation.
+
+Even though using pci_bus_reset() will do redundant reset operation after
+->reset_link() for fatal errors, it should should affect the functional
+behavior.
+
+[original patch is from jay.vosburgh@canonical.com]
+[original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+
+Changes since v2:
+ * Changed the subject of patch to "PCI/ERR: Fix reset logic in
+   pcie_do_recovery() call". v2 patch link is,
+   https://lore.kernel.org/linux-pci/ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+ * Squashed "PCI/ERR: Add reset support for non fatal errors" patch.
+
+ drivers/pci/pcie/err.c | 41 +++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 37 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 14bb8f54723e..b5eb6ba65be1 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -165,8 +165,29 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(dev, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bus(bus, report_frozen_detected, &status);
++		/*
++		 * After resetting the link using reset_link() call, the
++		 * possible value of error status is either
++		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
++		 * PCI_ERS_RESULT_NEED_RESET (success case).
++		 * So ignore the return value of report_error_detected()
++		 * call for fatal errors.
++		 *
++		 * In EDR mode, since AER and DPC Capabilities are owned by
++		 * firmware, reported_error_detected() will return error
++		 * status PCI_ERS_RESULT_NO_AER_DRIVER. Continuing
++		 * pcie_do_recovery() with error status as
++		 * PCI_ERS_RESULT_NO_AER_DRIVER will report recovery failure
++		 * irrespective of recovery status. But successful reset_link()
++		 * call usually recovers all fatal errors. So ignoring the
++		 * status result of report_error_detected() also helps EDR based
++		 * error recovery.
++		 */
+ 		status = reset_link(dev);
+-		if (status != PCI_ERS_RESULT_RECOVERED) {
++		if (status == PCI_ERS_RESULT_RECOVERED) {
++			status = PCI_ERS_RESULT_NEED_RESET;
++		} else {
++			status = PCI_ERS_RESULT_DISCONNECT;
+ 			pci_warn(dev, "link reset failed\n");
+ 			goto failed;
+ 		}
+@@ -182,10 +203,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 
+ 	if (status == PCI_ERS_RESULT_NEED_RESET) {
+ 		/*
+-		 * TODO: Should call platform-specific
+-		 * functions to reset slot before calling
+-		 * drivers' slot_reset callbacks?
++		 * TODO: Optimize the call to pci_reset_bus()
++		 *
++		 * There are two components to pci_reset_bus().
++		 *
++		 * 1. Do platform specific slot/bus reset.
++		 * 2. Save/Restore all devices in the bus.
++		 *
++		 * For hotplug capable devices and fatal errors,
++		 * device is already in reset state due to link
++		 * reset. So repeating platform specific slot/bus
++		 * reset via pci_reset_bus() call is redundant. So
++		 * can optimize this logic and conditionally call
++		 * pci_reset_bus().
+ 		 */
++		pci_reset_bus(dev);
++
+ 		status = PCI_ERS_RESULT_RECOVERED;
+ 		pci_dbg(dev, "broadcast slot_reset message\n");
+ 		pci_walk_bus(bus, report_slot_reset, &status);
 -- 
-Kees Cook
+2.17.1
+
