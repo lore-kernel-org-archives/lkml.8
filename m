@@ -2,143 +2,206 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF009C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79753C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E8020714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE5B20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Uxi47DSO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y/l3vTZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgGXGFR (ORCPT
+        id S1726559AbgGXGJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 02:05:17 -0400
-Received: from mout.web.de ([212.227.15.14]:44053 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgGXGFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 02:05:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595570685;
-        bh=IZqya46lb9WZbs07Xpn4biD4AoQ4Sq63+0pbH+Tqyuk=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Uxi47DSO2n8rhSUqGdX1MaPAryFyj/aN2xSOqPHLCRxio92uSIbQAEysVGydF1TTz
-         u5NWnu5NsXhdbAMpHjkNhaWv3cYv8TRYhLJXg/XR2Jf3+S9NZjaQJONPSXJe9wYyxQ
-         wlvU5qBfskrL1qBk6eteUapnJLN5Kxi36rlkX90Y=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.46.40]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MVLsk-1kJ4ok3OgA-00YfDv; Fri, 24
- Jul 2020 08:04:44 +0200
-To:     Li Guifu <bluce.liguifu@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix use-after-free issue in
- f2fs_put_super()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <9236e712-cd98-1f6c-4bcd-4dcabbae6461@web.de>
-Date:   Fri, 24 Jul 2020 08:04:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 02:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgGXGJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 02:09:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD37C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 23:09:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m22so4668815pgv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 23:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YbnhJr1ZXdw8/+/u0z/NWro24EdpEQ/HOYR3m6I8Pk0=;
+        b=y/l3vTZDzZukD1ehUz4TjuhxmUc9Hz1xaT88SnLff7OVfdshpW33uM6165izR/pI7O
+         4wgVEMDPFInxCHo93sD+vXjQX1cOtIdKy2GxvQSUU5hPXD2l0tlYjXxVVxg3keaDNGIp
+         KkeoFH1HQ2ulEwqUWeMJ1LroSVPv0VcVZlUj8qRF9hL6Cu+0bISDFVAv563yXWXCmOmU
+         oDXpRhDOxfpc/YP0pgMDfRNY7zO+K99gES5oHyTYB+CGPfEBAN4w9GX0Hw32jJaYh/Bq
+         B9AneMyfQqeepYS+OgF8fAVz1/V+hd+RKF+cohd9gnS6FMSiZwlLsScVaGKJNWuVLjMa
+         K5sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YbnhJr1ZXdw8/+/u0z/NWro24EdpEQ/HOYR3m6I8Pk0=;
+        b=alionanha4xn6eP8siBPrPKj2Ml//pfT8KCncg4zbJUrd8djZwTTq45uGtCmKmz4HU
+         doss/K7IeWFDH4QXrhnDxfZ/gD3OXU7vCpI0kuRHDnLZlacuIcn99Rt3jYeyE0ykPV/M
+         QctmSkCQIybaBz8+4MOR/Zb/efD5lS34um23HWMEJfrRWAcMKobvvYlXamnzwSbkm0pa
+         L+ubKtoSa7HnDmOuGsrNAD9ZUBvKccvPocPJD6/WnNrEFEqXuFOz29EdFKoV6dpjSt3n
+         ypRLw7NR0/PWL/UK90VONpsscjGgcaPxHLggIk54v25wUftem0JpzMEHS9UDst6/FNLM
+         grEg==
+X-Gm-Message-State: AOAM533fXNmv76gAJHv0+ftMcoUlzn5rcO0GpHIDKb9uMnuDDUkaRYtD
+        pZfQmXRJTgkD7DCSXKv5U0pR
+X-Google-Smtp-Source: ABdhPJxlxqkdicSDnkAX0JwOU75SaAaUtqueokYIaoCa2mKzoSGF7NCeCM48mNfgTu3HxwhLOP0p/A==
+X-Received: by 2002:aa7:8d02:: with SMTP id j2mr7619687pfe.90.1595570969813;
+        Thu, 23 Jul 2020 23:09:29 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6c9b:7816:d54:f58c:a790:e57b])
+        by smtp.gmail.com with ESMTPSA id h131sm5074747pfe.138.2020.07.23.23.09.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Jul 2020 23:09:29 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 11:39:22 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/10] bus: mhi: core: Use helper API to trigger a
+ non-blocking host resume
+Message-ID: <20200724060922.GA19688@Mani-XPS-13-9360>
+References: <1595543802-17859-1-git-send-email-bbhatt@codeaurora.org>
+ <1595543802-17859-4-git-send-email-bbhatt@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fuzp87DJDEQCI6qvpTtr9jdI+2HbuahdBu9BeD36lTkaR5Ahprk
- XZweJZFWJA4q4bCCZGrgMvg1vSbyk/osrT/RKh+yyxsMZDqNqgrqNCpO+rBff3gfCireqor
- I0IoT4w2gylJOOUR4JTetXStW47DbKE4V+5JwYsqkpx1oy8BbFawxK5zoKor5WJ7ZiGp79E
- 54cJgYD3IJwkVdh3TX42Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/7M/G5g1ptM=:R4yt1ZNic3t7hRP5xF48Bu
- zhnFdY1w+XdFCZsA3ZSNO9zK003NXMEjHM1Y2rgVpln0NjQ6LAMn/IUE9XC1/DKEwggGSyJPb
- EJ67m5KCYWviqw0lU2AJGyiDhkR78weGWhMzYDvyVlysIHuk6Dd8ZK6NOGrMuzxBOyQSVNxkS
- Runiaf6XRArXGFh6IEtzpm14WL068MoSWtWDA2ewvan3gGDl+sOFZvld3H1QgNNbTBaXWr1NL
- StzZ7IBWv+BqVZ6znMRkW5NXc2ixaAM+44jysAMEojJkvs1i6N0TkAZIx+y+CU92l7jhxgDIS
- Btvt6jVpo2hkrVPsdJSvj2dtB2Ywg1mrd6RUloxWEG8HlhpUZL4ANIkoO4mwqB5f0Ikukeki2
- esoGtaTaN9jB5tELehpy06g3qpycbL8F3NXB2nWDpRzE7Ym/AYqSgicZEX9nBI3ZuunzQ6p2j
- /JxtdRWu/2z/zuHuld98qD3fyljTG3su3n0tfPp8UCO3mee2mugZhl4XasgdIaJRmACn/Pt/I
- zLqhvlc5h2mTGaW5Lgn70vWsAxy5MV4lKhtEHWB2AivH1df1Q7W/PGrA97mNhpYyixiRXVJhP
- AkIAmTkX4isz2ElPHcoYG9Q/+4DO7Qg44fWoVxqUGRaebANu+Xf/akQWkoEJ5L+zLmfOve5ZS
- vubJWO/u5J3rVtMCOsO7BljUp3zNz2waIlTb5Sjs+ompzKMvVddpSS4aOfEGeJ1hT3z7ouNBW
- G1W3pDCXjlYrkS/Qf5QciLOpIL6dJ4R76Xpa2zEgBGYOnxJkDLxk9fTy5rPkORXfK0/IM6cSQ
- hpPI9dvNKR9NwquMWSwRV3keJvJ/WTcGXQpcusRgJRKRHx+KCk+is8lO6S0hezXQ7B9o3m+1h
- Bm6aBWf5Ao6Ahi3vGblrto5R2fPP9LmFPHkdtbcf3lpU3LxRqNk86SXcFtiZdBsQLXLjwh3rj
- xLBiOwk2eoDM6VV4R/qjq9LD7Fdwsz/vcr5Am6OTDntJ1reM/u3LqBcdyv909fqwlRDUjTNkl
- v1XXLZAJUyiUaERdR6rQ+fE8Gv0QWh03hpzXlGPpAiiQxajcIwOdiGm77GHPZGXnrQ7r4dq0m
- 3GOe3Y6Zgu72hA9jnxOtKKy8FtUfzQyChFUyj1a1bm5TLOu6h8pAJfCvb5Uej3L3JO1MOmjcK
- 3JBv9KgBQiNIgbNwko0I8KiS3lZH7QFG6xjhsr+iunaF44jok43WOgg8hXHriSrZQonWX6F6k
- 4BuHB9v9b7x+SZKPW9+DPg9B6CHM6dZUN7zxwQA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595543802-17859-4-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> During umount, =E2=80=A6
+On Thu, Jul 23, 2020 at 03:36:35PM -0700, Bhaumik Bhatt wrote:
+> Autonomous low power mode support requires the MHI host to resume from
+> multiple places and post a wakeup source to exit system suspend. This
+> needs to be done in a non-blocking manner. Introduce a helper API to
+> trigger the host resume for data transfers and other non-blocking use
+> cases while supporting implementation of autonomous low power modes.
+> 
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 
-Do you refer to the action =E2=80=9Cunmount=E2=80=9D here?
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+Thanks,
+Mani
 
-> f2fs_destroy_segment_manager(), it may cause =E2=80=A6
-
-Wording adjustments:
-f2fs_destroy_segment_manager(). It might cause =E2=80=A6
-
-
-> =E2=80=A6 with procfs accessing, =E2=80=A6
-
-Avoid another typo?:
-=E2=80=A6 with procfs accesses, =E2=80=A6
-
-
-> =E2=80=A6, fix it by =E2=80=A6
-
-Please replace this wording by the tag =E2=80=9CFixes=E2=80=9D.
-
-Regards,
-Markus
+> ---
+>  drivers/bus/mhi/core/internal.h |  7 +++++++
+>  drivers/bus/mhi/core/main.c     | 21 +++++++--------------
+>  drivers/bus/mhi/core/pm.c       | 13 ++++---------
+>  3 files changed, 18 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+> index bcfa7b6..1bbd6e9 100644
+> --- a/drivers/bus/mhi/core/internal.h
+> +++ b/drivers/bus/mhi/core/internal.h
+> @@ -599,6 +599,13 @@ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl);
+>  int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>  		 enum mhi_cmd_type cmd);
+>  
+> +static inline void mhi_trigger_resume(struct mhi_controller *mhi_cntrl)
+> +{
+> +	pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
+> +	mhi_cntrl->runtime_get(mhi_cntrl);
+> +	mhi_cntrl->runtime_put(mhi_cntrl);
+> +}
+> +
+>  /* Register access methods */
+>  void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
+>  		     void __iomem *db_addr, dma_addr_t db_val);
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index 1f622ce..79be18e 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
+>  		 * process it since we are probably in a suspended state,
+>  		 * so trigger a resume.
+>  		 */
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> +		mhi_trigger_resume(mhi_cntrl);
+>  
+>  		return;
+>  	}
+> @@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	}
+>  
+>  	/* we're in M3 or transitioning to M3 */
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl);
+>  
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+> @@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	}
+>  
+>  	/* we're in M3 or transitioning to M3 */
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl);
+>  
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+> @@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
+>  
+>  	/* we're in M3 or transitioning to M3 */
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl);
+>  
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index 661d704..b227d41 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -824,11 +824,8 @@ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl)
+>  	/* Wake up the device */
+>  	read_lock_bh(&mhi_cntrl->pm_lock);
+>  	mhi_cntrl->wake_get(mhi_cntrl, true);
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		pm_wakeup_event(&mhi_cntrl->mhi_dev->dev, 0);
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl);
+>  	read_unlock_bh(&mhi_cntrl->pm_lock);
+>  
+>  	ret = wait_event_timeout(mhi_cntrl->state_event,
+> @@ -1139,10 +1136,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
+>  
+>  	mhi_dev->dev_wake--;
+>  	read_lock_bh(&mhi_cntrl->pm_lock);
+> -	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
+> -		mhi_cntrl->runtime_get(mhi_cntrl);
+> -		mhi_cntrl->runtime_put(mhi_cntrl);
+> -	}
+> +	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
+> +		mhi_trigger_resume(mhi_cntrl);
+>  
+>  	mhi_cntrl->wake_put(mhi_cntrl, false);
+>  	read_unlock_bh(&mhi_cntrl->pm_lock);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
