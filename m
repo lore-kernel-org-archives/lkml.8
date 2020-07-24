@@ -2,85 +2,111 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F57C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9CF20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BE220737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595559033;
+	bh=UlRguDF9F93X6TAdHSl8oLCte1cdlF12zQGSwWi7QTE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GYsgzeOc/53COIiXEAE2Sb2F7bHAkewf9rZ58cJ1602aWk77XiVU0r4v1muh7OCTJ
+	 RvcYR9/384tmfIEtjHeEuMJPoZIHD9+kYKRy3w2H6Mm0lSZEQZB0t7S93JN1Xg/vlq
+	 slJFFqfE9iMcsHRoGd1LVa6FarGsycnYamsdBmbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgGXCpG (ORCPT
+        id S1726719AbgGXCuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 22:45:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:38883 "EHLO mga06.intel.com"
+        Thu, 23 Jul 2020 22:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbgGXCpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 22:45:06 -0400
-IronPort-SDR: Guh+m5ut9YPsv6xJ9kqYjhFCHkibjsJrcI37GQc54pzwwhPuhcdOQ9NMm7cR2OfcU7bLRpqh8R
- axFWHbK4Eraw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="212186158"
-X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="scan'208";a="212186158"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 19:45:05 -0700
-IronPort-SDR: iBx90Pr7CFLoBrXMYma7ZeELqZZhGNtzLh3cmTkYLqziolVzBvsjenanNTiDKag9mwB731SVIm
- cb/2DPDyllxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="scan'208";a="319181835"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga008.jf.intel.com with ESMTP; 23 Jul 2020 19:45:03 -0700
-Subject: Re: [fsnotify] c738fbabb0: will-it-scale.per_process_ops -9.5%
- regression
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
-        lkp@lists.01.org
-References: <20200721001505.GD19262@shao2-debian>
- <CAOQ4uxgq39EDS_k3eDTngEAm8cxHPa7qrkUSW8Rk6qS9cxC18w@mail.gmail.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <9a2a4086-fbad-b4f8-9c00-2b7606441022@intel.com>
-Date:   Fri, 24 Jul 2020 10:44:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxgq39EDS_k3eDTngEAm8cxHPa7qrkUSW8Rk6qS9cxC18w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1726178AbgGXCub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 22:50:31 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01BE206C1;
+        Fri, 24 Jul 2020 02:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595559031;
+        bh=UlRguDF9F93X6TAdHSl8oLCte1cdlF12zQGSwWi7QTE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J9LYxuQT2CyH+cQDZMp7VSIuYSbIuNmXZXem2iy9NXOlF3SZeFnv0iK9MjvrvjFa9
+         dpvYZLBP3S+QCotHljNSEMQVMPsQxFYdbHbMEoaSWiYt2grGnK2pbUyJ39HHWErOC0
+         Hm8kpcuBAOAO3z6jXWS94KXfSXwp/B1KFsJAL3hA=
+Date:   Thu, 23 Jul 2020 19:50:29 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        luto@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        x86@kernel.org, sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+        lpf.vector@gmail.com, Uladzislau Rezki <urezki@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pengfei Li <lpf.vector@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Roman Gushchin <guro@fb.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
+Message-Id: <20200723195029.60933e30f5d3dd64d6a861b3@linux-foundation.org>
+In-Reply-To: <20200722144650.GA19628@pc636>
+References: <000000000000588c2c05aa156b2b@google.com>
+        <0000000000003cdc6c05aae24652@google.com>
+        <20200720200618.GA9501@pc636>
+        <20200722142759.GB4041@lca.pw>
+        <20200722144650.GA19628@pc636>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 22 Jul 2020 16:46:50 +0200 Uladzislau Rezki <urezki@gmail.com> wrote:
+
+> > > I can check further, but it can be it was not correctly reverted,
+> > > because everything should work just fine even with the revert,
+> > > though i i do not understand a reason of reverting.
+> > 
+> > Vlad, how sure are you about this? We also start to trigger this now on
+> > linux-next, but the reverting patch surely looks like doggy without any useful
+> > information in the commit description.
+> >
+> Hello, Andrew, Qian.
+> 
+> I am not aware of reason of the revert, though i tried to get through Ingo.
+> I can send out a patch that fixes the revert. Another option to drop the
+> revert, but it is up to Andrew and Ingo.
+> 
+> Andrew, could you please comment on?
+
+All a bit mysterious.  I think it's best that we revert this from
+linux-next until we hear from Ingo.  I queued a patch - I expect
+Stephen will see and grab it, thanks.
 
 
-On 7/21/20 11:59 PM, Amir Goldstein wrote:
-> On Tue, Jul 21, 2020 at 3:15 AM kernel test robot <rong.a.chen@intel.com> wrote:
->> Greeting,
->>
->> FYI, we noticed a -9.5% regression of will-it-scale.per_process_ops due to commit:
->>
->>
->> commit: c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a ("fsnotify: fold fsnotify() call into fsnotify_parent()")
-> Strange, that's a pretty dumb patch moving some inlined code from one
-> function to
-> another (assuming there are no fsnotify marks in this test).
->
-> Unless I am missing something the only thing that changes slightly is
-> an extra d_inode(file->f_path.dentry) deference.
-> I can get rid of it.
->
-> Is it possible to ask for a re-test with fix patch (attached)?
-
-Hi Amir,
-
-We failed to apply this patch, could you tell us the base commit or the 
-base branch?
-
-Best Regards,
-Rong Chen
