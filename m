@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F09DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA269C433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBC22065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C28A2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MVFQKw/0"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DD6lyqkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgGXN2R (ORCPT
+        id S1727116AbgGXN23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:28:17 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:40285 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgGXN2Q (ORCPT
+        Fri, 24 Jul 2020 09:28:29 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:43005 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgGXN23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:28:16 -0400
+        Fri, 24 Jul 2020 09:28:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595597296; x=1627133296;
+  t=1595597308; x=1627133308;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=ms8p39JBXOq6mRmiwkd4Xc5rcVrEYJFbOJoI9iWOR6k=;
-  b=MVFQKw/0PpKjHZus5fXm36nNwSv+ja4v/A0RSXHKqIKTuopqVVGUxpwo
-   ofBdcrdOrC1wYvbctgAckCC2lG3eJJYoY1th/UDLnXRVP/RppcOQ9GMCU
-   mzAX41BP9/VDWi2kEL6Z9ZeeO6JiB5PrsZv8l8JVEpI4Dn7LOGpjth4n1
-   s=;
-IronPort-SDR: UbpMe/cmMJix2OuRZ7DMQ8k52mMqUDgP6N2QlOdXZjw5KV+8RMYV3yh/B4BVVvSO4G67jtWfZ0
- SA1C4KeL6MiQ==
+  bh=SuzXpx5L0/VcCKBcXXekJpBXKEIzagXsxj/sXeTHMTM=;
+  b=DD6lyqknu3vFIFOQT++0cWGDeki1AQRolT3XFDrcmnV/STDkWDQS/+QP
+   42Tt2Z9LbfLFUlu1ZknKHEDO9AqWtUG7BLqdfpYWyOXxKcE+ONSYFXxfV
+   nfmWJ7VR+LCzncihegIlKEX0bAoiIa6SKU2HVOVj1M+s+0wTPqhxf5e1g
+   Q=;
+IronPort-SDR: WCmSG4hM3zrfvBXciirxMKnP/wlSRXjdk+q4gLtniDOXgH9P1+MKWTsmnSCFUVi+qvFpKI/4j7
+ 6WUV7wTwd7rg==
 X-IronPort-AV: E=Sophos;i="5.75,390,1589241600"; 
-   d="scan'208";a="62556593"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-60ce1996.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 24 Jul 2020 13:28:12 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-60ce1996.us-west-2.amazon.com (Postfix) with ESMTPS id 677ACA1941;
-        Fri, 24 Jul 2020 13:28:11 +0000 (UTC)
+   d="scan'208";a="43769474"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 24 Jul 2020 13:28:20 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 492D9C08B7;
+        Fri, 24 Jul 2020 13:28:19 +0000 (UTC)
 Received: from EX13D19EUB001.ant.amazon.com (10.43.166.229) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Jul 2020 13:28:10 +0000
+ id 15.0.1497.2; Fri, 24 Jul 2020 13:28:18 +0000
 Received: from u8a88181e7b2355.ant.amazon.com (10.43.160.65) by
  EX13D19EUB001.ant.amazon.com (10.43.166.229) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Jul 2020 13:28:02 +0000
+ id 15.0.1497.2; Fri, 24 Jul 2020 13:28:10 +0000
 From:   Hanna Hawa <hhhawa@amazon.com>
 To:     <arnd@arndb.de>, <robh+dt@kernel.org>, <tsahee@annapurnalabs.com>,
         <antoine.tenart@bootlin.com>, <mchehab+huawei@kernel.org>,
@@ -58,9 +58,9 @@ CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <soc@kernel.org>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
         <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
         <hanochu@amazon.com>, <eitan@amazon.com>, <hhhawa@amazon.com>
-Subject: [PATCH v6 4/6] dt-bindings: arm: amazon: add missing alpine-v2 DT binding
-Date:   Fri, 24 Jul 2020 16:26:52 +0300
-Message-ID: <20200724132654.16549-5-hhhawa@amazon.com>
+Subject: [PATCH v6 5/6] dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
+Date:   Fri, 24 Jul 2020 16:26:53 +0300
+Message-ID: <20200724132654.16549-6-hhhawa@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724132654.16549-1-hhhawa@amazon.com>
 References: <20200724132654.16549-1-hhhawa@amazon.com>
@@ -74,41 +74,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amazon Annapurna Labs Alpine family includes: Alpine-v1, Alpine-v2.
-
-This patch adds the missing DT binding of Alpine-v2 in amazon,al.yaml.
+This patch adds DT bindings info for Amazon Annapurna Labs Alpine V3.
 
 Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- .../devicetree/bindings/arm/amazon,al.yaml        | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/arm/amazon,al.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/amazon,al.yaml b/Documentation/devicetree/bindings/arm/amazon,al.yaml
-index 19ee489396f9..7de3a8c6e740 100644
+index 7de3a8c6e740..a3a4d710bd02 100644
 --- a/Documentation/devicetree/bindings/arm/amazon,al.yaml
 +++ b/Documentation/devicetree/bindings/arm/amazon,al.yaml
-@@ -13,10 +13,15 @@ maintainers:
+@@ -24,4 +24,10 @@ properties:
+               - al,alpine-v2-evp
+           - const: al,alpine-v2
  
- properties:
-   compatible:
--    items:
--      - const: al,alpine
--  model:
--    items:
--      - const: "Annapurna Labs Alpine Dev Board"
-+    oneOf:
-+      - description: Boards with Alpine V1 SoC
-+        items:
-+          - const: al,alpine
-+
-+      - description: Boards with Alpine V2 SoC
++      - description: Boards with Alpine V3 SoC
 +        items:
 +          - enum:
-+              - al,alpine-v2-evp
-+          - const: al,alpine-v2
- 
++              - amazon,al-alpine-v3-evp
++          - const: amazon,al-alpine-v3
++
  ...
 -- 
 2.17.1
