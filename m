@@ -2,82 +2,117 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA247C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DDFC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F082065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2762064B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NDuePlci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGXOpE (ORCPT
+        id S1726676AbgGXOpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:45:04 -0400
-Received: from mga06.intel.com ([134.134.136.31]:37044 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgGXOpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:45:03 -0400
-IronPort-SDR: 2eV/3JIdk4JRqiUVtPIylTC+qN6yb9u9NVc/MWImnbFSX9XyhCgdDQFY0Bp/ce/ByS7VElN27c
- KH/SuxGQ6YfQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="212259178"
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="212259178"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 07:45:03 -0700
-IronPort-SDR: 6Ck2M2xBKPYBeWY4Di7+IhB7A6KYcAiZ8Lol/Kpwit0nDqg7wfTGRZ5/kpPaL8Ddn/6XnYHM2n
- grfjSpDl/8sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="289010294"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 07:45:03 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 3229A301BF9; Fri, 24 Jul 2020 07:45:03 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 07:45:03 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf bench: Add benchmark of find_next_bit
-Message-ID: <20200724144503.GD1180481@tassilo.jf.intel.com>
-References: <20200724071959.3110510-1-irogers@google.com>
+        Fri, 24 Jul 2020 10:45:36 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33222 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726170AbgGXOpf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:45:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595601934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bG1yDLGWaSETMRzgJW6YtgsTeF47PRE999wzG6k/f94=;
+        b=NDuePlcin5he6w9SHzhaA+q9+VPnapy1+uQH4ZZbgC7vOLANauJOHGLYEzgymgdFkNr+Oz
+        89ngWXdhR3b5ofnOBoASKLeN0V1mlqdIq28qr3QmmsJhBeSqmQOLjMM8dcrOO5T/hV8IgQ
+        rY3xPLXskYm+3RJ26aIhN2OF3oACkt4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-wyDAzewePwaS7ZvCwK9RoQ-1; Fri, 24 Jul 2020 10:45:30 -0400
+X-MC-Unique: wyDAzewePwaS7ZvCwK9RoQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE98080183C;
+        Fri, 24 Jul 2020 14:45:28 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.121])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E524370C5F;
+        Fri, 24 Jul 2020 14:45:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 24 Jul 2020 16:45:28 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 16:45:25 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+Message-ID: <20200724144525.GB17209@redhat.com>
+References: <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
+ <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com>
+ <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
+ <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
+ <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
+ <20200723124749.GA7428@redhat.com>
+ <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
+ <20200723180100.GA21755@redhat.com>
+ <CAHk-=wj9KWfs799xU5eW0J_hkee52C5kvFFmBV-A+vN7qNWnjA@mail.gmail.com>
+ <CAHk-=wg=zqJ69JH3S9Ux0XKwZzjKqBP+ruLrmjW6NbNrpMuBNw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724071959.3110510-1-irogers@google.com>
+In-Reply-To: <CAHk-=wg=zqJ69JH3S9Ux0XKwZzjKqBP+ruLrmjW6NbNrpMuBNw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 12:19:59AM -0700, Ian Rogers wrote:
-> for_each_set_bit, or similar functions like for_each_cpu, may be hot
-> within the kernel. If many bits were set then one could imagine on
-> Intel a "bt" instruction with every bit may be faster than the function
-> call and word length find_next_bit logic. Add a benchmark to measure
-> this.
- 
-> This benchmark on AMD rome and Intel skylakex shows "bt" is not a good
-> option except for very small bitmaps.
+On 07/23, Linus Torvalds wrote:
+>
+> IOW, I think we should do something like this (this is on top of my
+> patch, since it has that wake_page_function() change in it, but notice
+> how we have the exact same issue in our traditional
+> autoremove_wake_function() usage).
 
-Small bitmaps is a common case in the kernel (e.g. cpu bitmaps) 
+...
 
-But the current code isn't that great for small bitmaps. It always looks horrific
-when I look at PT traces or brstackinsn, especially since it was optimized
-purely for code size at some point.
+> +static inline void list_del_init_careful(struct list_head *entry)
+> +{
+> +	__list_del_entry(entry);
+> +	entry->prev = entry;
+> +	smp_store_release(&entry->next, entry);
+> +}
+> +
+...
+>  static inline int list_empty_careful(const struct list_head *head)
+>  {
+> -	struct list_head *next = head->next;
+> +	struct list_head *next = smp_load_acquire(&head->next);
+>  	return (next == head) && (next == head->prev);
+>  }
 
-Probably would be better to have different implementations for
-different sizes.
+This (and your previous email) answers my concerns about memory barriers.
 
--Andi
+IIUC, finish_wait() could even use this version of list_empty_careful(),
+
+	struct list_head *next = smp_load_acquire(&head->next);
+	return (next == head) && !WARN_ON(next != head->prev);
+
+iow, it doesn't really need to check next == head->prev as long as only
+list_del_init_careful() can remove it from list.
+
+Thanks!
+
+Oleg.
+
