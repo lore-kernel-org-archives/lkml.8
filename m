@@ -4,56 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC531C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4A5C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABEFA2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B0D2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EEdb+Dek";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VD56yrh6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S1TI3qqF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oYn3jmdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgGXId5 (ORCPT
+        id S1727051AbgGXIds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:33:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36452 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgGXIdw (ORCPT
+        Fri, 24 Jul 2020 04:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgGXIdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:33:52 -0400
-Date:   Fri, 24 Jul 2020 08:33:50 -0000
+        Fri, 24 Jul 2020 04:33:44 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBCFC0619D3;
+        Fri, 24 Jul 2020 01:33:44 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 08:33:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595579630;
+        s=2020; t=1595579622;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=L9rfzZP7Vmr2GKgSrOY25cJ0+nHANdIrv+zPuhvVwF0=;
-        b=EEdb+Dek57WLqEAQ5nld/zdwKmjDuu+NUW1FXk6bLUXYNA/Axfgy0uv3rTU2AFjZ9JePrc
-        sX2NG1Gf+ug4S7Da59fXRlde0fXvJeT1zIUzkDTXZfVBuyG4HlYnONmnW7MqvBZxJ+cGz8
-        coqwZXy3A+HV8wiTkOOLtJeluhMwruFU2qcvERNTNMfX0B4Yp2o881lnSNoSaUAKrwqqh5
-        2MXML8b55EHeOnk5/MRGJE0D5QKytF8P1ggEbibe4ZeaPXLWM3K2m4WuK1DyDxos2GyFBF
-        o5OhRMm6UMfMRt8l3KQ6hwsE8UMxcpKbXX4bLxZMvHW90Yv6w+k+xBP3Cr4kAw==
+        bh=I+zOp4ND2YLRFWIvUS7WZ18CUWb+0kpdo++bZaFcPaI=;
+        b=S1TI3qqFBrJF0TuXCDs4/W4sEvyThzBRN26pn+jsOscNYTvU/zq7tQqjBi1Seri2vMfBLB
+        d2zMdVm4EE+Va/217U6aTEwbitFqxctmrX/BDnj4oZRQwnprOF7AMys94xfjxPf663MZX5
+        4mnvepLG1MMc+zPeLfclKUg3fJo/dR6QUyRpBPugeIuSBnLCVcCxB1LfACiyKoPKHAGivX
+        1EnQuXCNBRGOG+e+zQZPGizbDLvLdENwxlUo6mbtJgu4H2fN2hQ1eXrjjuUzrcutVuphWe
+        d5dsj9hrk9GJVDBpa93Efg7NqZp5IV60xCKpmPE/P/GAREgPPsHe9JDSIVBSQw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595579630;
+        s=2020e; t=1595579622;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=L9rfzZP7Vmr2GKgSrOY25cJ0+nHANdIrv+zPuhvVwF0=;
-        b=VD56yrh6MBI46roMG/D90ryUVHfpezw6N6ZGRFD1bl3DD66HhYFG5bw/eYz7Fm0iBbrmQ2
-        xotaqwcgz2Uq7LAQ==
+        bh=I+zOp4ND2YLRFWIvUS7WZ18CUWb+0kpdo++bZaFcPaI=;
+        b=oYn3jmdByc+zFRD5ePEUNUY2kD3C0Q1Z8RmqL55z6MnNJy3O5YPt27gIm/BFsEZWZeeIlZ
+        VDeCXpaoqt5mFUDg==
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/fifo] sched,acpi_pad: Convert to sched_set_fifo*()
-Cc:     rafael.j.wysocki@intel.com,
+Subject: [tip: sched/fifo] sched,irq: Convert to sched_set_fifo()
+Cc:     tglx@linutronix.de,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159557963028.4006.12754769388857924864.tip-bot2@tip-bot2>
+Message-ID: <159557962195.4006.17896492793064474322.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -65,47 +68,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/fifo branch of tip:
 
-Commit-ID:     4ca6c1a060943161c6c2ce09e02ed58a69669cfe
-Gitweb:        https://git.kernel.org/tip/4ca6c1a060943161c6c2ce09e02ed58a69669cfe
+Commit-ID:     7a40798c714ff462863352d490b382515daba49e
+Gitweb:        https://git.kernel.org/tip/7a40798c714ff462863352d490b382515daba49e
 Author:        Peter Zijlstra <peterz@infradead.org>
 AuthorDate:    Tue, 21 Apr 2020 12:09:13 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:20 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:24 +02:00
 
-sched,acpi_pad: Convert to sched_set_fifo*()
+sched,irq: Convert to sched_set_fifo()
 
 Because SCHED_FIFO is a broken scheduler model (see previous patches)
 take away the priority field, the kernel can't possibly make an
 informed decision.
 
-In this case, use fifo_low, because it only cares about being above
-SCHED_NORMAL. Effectively no change in behaviour.
+Effectively no change.
 
-XXX: this driver is still complete crap; why isn't it using proper
-idle injection or at the very least play_idle() ?
-
-Cc: rafael.j.wysocki@intel.com
+Cc: tglx@linutronix.de
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/acpi/acpi_pad.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/irq/manage.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
-index e7dc013..0ad9f20 100644
---- a/drivers/acpi/acpi_pad.c
-+++ b/drivers/acpi/acpi_pad.c
-@@ -136,12 +136,11 @@ static unsigned int idle_pct = 5; /* percentage */
- static unsigned int round_robin_time = 1; /* second */
- static int power_saving_thread(void *data)
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 7619111..06b6274 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -1271,9 +1271,6 @@ static int
+ setup_irq_thread(struct irqaction *new, unsigned int irq, bool secondary)
  {
--	struct sched_param param = {.sched_priority = 1};
- 	int do_sleep;
- 	unsigned int tsk_index = (unsigned long)data;
- 	u64 last_jiffies = 0;
+ 	struct task_struct *t;
+-	struct sched_param param = {
+-		.sched_priority = MAX_USER_RT_PRIO/2,
+-	};
  
--	sched_setscheduler(current, SCHED_RR, &param);
-+	sched_set_fifo_low(current);
+ 	if (!secondary) {
+ 		t = kthread_create(irq_thread, new, "irq/%d-%s", irq,
+@@ -1281,13 +1278,12 @@ setup_irq_thread(struct irqaction *new, unsigned int irq, bool secondary)
+ 	} else {
+ 		t = kthread_create(irq_thread, new, "irq/%d-s-%s", irq,
+ 				   new->name);
+-		param.sched_priority -= 1;
+ 	}
  
- 	while (!kthread_should_stop()) {
- 		unsigned long expire_time;
+ 	if (IS_ERR(t))
+ 		return PTR_ERR(t);
+ 
+-	sched_setscheduler_nocheck(t, SCHED_FIFO, &param);
++	sched_set_fifo(t);
+ 
+ 	/*
+ 	 * We keep the reference to the task struct even if
