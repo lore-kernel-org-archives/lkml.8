@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B483C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4E820709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A836C20709
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgGXEJb (ORCPT
+        id S1725942AbgGXEFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 00:09:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21241 "EHLO mga17.intel.com"
+        Fri, 24 Jul 2020 00:05:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45267 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgGXEJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 00:09:31 -0400
-IronPort-SDR: 1JJDHR02+PGKwghZOp38lpWSRWxocXUUyWdr0SrtVaMZgADNpA9NHMs/D/yxhtlIc06nXSEuMV
- s+A9h9PYCoIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130730491"
+        id S1725813AbgGXEFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 00:05:49 -0400
+IronPort-SDR: TyBxvwmy2m/QHQpVKaFafeN6+GPbcJp1eayS4GNQffmJay+0nhA4wHHAvA8e1kynQaJv00XFEd
+ DU5GbL0noNHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="212191447"
 X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="gz'50?scan'50,208,50";a="130730491"
+   d="gz'50?scan'50,208,50";a="212191447"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 20:50:29 -0700
-IronPort-SDR: Tqmaf3ozZA61mdoVfNLfhlplusVl7HG/XqbXRKEIDRDey43OrodYm4AkSqgNeviIOQrlxHqjj/
- eKe3MLHBJUvQ==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 21:00:34 -0700
+IronPort-SDR: EM2CylgdLAtvToM9fCIfb8Sh4uVEt20RFv2lQr65+XOF6zHmn3F59Pb5a8Tx2zyW/zC44GrtPh
+ 9dnwxpJf2nAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="gz'50?scan'50,208,50";a="463089991"
+   d="gz'50?scan'50,208,50";a="272478416"
 Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jul 2020 20:50:27 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jul 2020 21:00:32 -0700
 Received: from kbuild by df0563f96c37 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jyoj4-00002R-HP; Fri, 24 Jul 2020 03:50:26 +0000
-Date:   Fri, 24 Jul 2020 11:50:18 +0800
+        id 1jyosp-00002j-Bu; Fri, 24 Jul 2020 04:00:31 +0000
+Date:   Fri, 24 Jul 2020 12:00:18 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: cc1: error: '-mloongson-mmi' must be used with '-mhard-float'
-Message-ID: <202007241114.VWtJgwjk%lkp@intel.com>
+Subject: drivers/watchdog/ar7_wdt.c:193:29: sparse: sparse: incorrect type in
+ initializer (different address spaces)
+Message-ID: <202007241211.yQLaEaXs%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="nFreZHaLTZJo0R7j"
+Content-Type: multipart/mixed; boundary="jRHKVT23PllUwdXP"
 Content-Disposition: inline
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,539 +57,1278 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---nFreZHaLTZJo0R7j
+--jRHKVT23PllUwdXP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Thomas,
-
-FYI, the error/warning still remains.
-
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 head:   d15be546031cf65a0fc34879beca02fd90fe7ac7
-commit: 26bff9eb49201aeb4e1b32d698c191831a39f5d4 MIPS: Only include the platform file needed
-date:   2 months ago
-config: mips-randconfig-c003-20200723 (attached as .config)
-compiler: mips64el-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
+commit: 670d0a4b10704667765f7d18f7592993d02783aa sparse: use identifiers to define address spaces
+date:   5 weeks ago
+config: mips-randconfig-s032-20200723 (attached as .config)
+compiler: mipsel-linux-gcc (GCC) 9.3.0
+reproduce:
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        git checkout 26bff9eb49201aeb4e1b32d698c191831a39f5d4
+        # apt-get install sparse
+        # sparse version: v0.6.2-93-g4c6cbe55-dirty
+        git checkout 670d0a4b10704667765f7d18f7592993d02783aa
         # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=mips 
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=mips 
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All errors (new ones prefixed by >>):
 
->> cc1: error: '-mloongson-mmi' must be used with '-mhard-float'
->> cc1: error: '-mloongson-mmi' must be used with '-mhard-float'
-   make[2]: *** [scripts/Makefile.build:100: kernel/bounds.s] Error 1
-   make[2]: Target 'missing-syscalls' not remade because of errors.
-   make[1]: *** [arch/mips/Makefile:394: archprepare] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:180: sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/watchdog/ar7_wdt.c:193:29: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected char const [noderef] __user *__gu_ptr @@     got char const * @@
+>> drivers/watchdog/ar7_wdt.c:193:29: sparse:     expected char const [noderef] __user *__gu_ptr
+   drivers/watchdog/ar7_wdt.c:193:29: sparse:     got char const *
+>> drivers/watchdog/ar7_wdt.c:216:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got struct watchdog_info * @@
+>> drivers/watchdog/ar7_wdt.c:216:35: sparse:     expected void [noderef] __user *to
+   drivers/watchdog/ar7_wdt.c:216:35: sparse:     got struct watchdog_info *
+>> drivers/watchdog/ar7_wdt.c:222:21: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected int [noderef] __user *__pu_addr @@     got int * @@
+>> drivers/watchdog/ar7_wdt.c:222:21: sparse:     expected int [noderef] __user *__pu_addr
+   drivers/watchdog/ar7_wdt.c:222:21: sparse:     got int *
+>> drivers/watchdog/ar7_wdt.c:229:21: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected int const [noderef] __user *__gu_ptr @@     got int * @@
+>> drivers/watchdog/ar7_wdt.c:229:21: sparse:     expected int const [noderef] __user *__gu_ptr
+   drivers/watchdog/ar7_wdt.c:229:21: sparse:     got int *
+   drivers/watchdog/ar7_wdt.c:241:21: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected int [noderef] __user *__pu_addr @@     got int * @@
+   drivers/watchdog/ar7_wdt.c:241:21: sparse:     expected int [noderef] __user *__pu_addr
+   drivers/watchdog/ar7_wdt.c:241:21: sparse:     got int *
+   drivers/watchdog/ar7_wdt.c:251:27: sparse: sparse: incorrect type in initializer (incompatible argument 2 (different address spaces)) @@     expected int ( *write )( ... ) @@     got int ( * )( ... ) @@
+   drivers/watchdog/ar7_wdt.c:251:27: sparse:     expected int ( *write )( ... )
+   drivers/watchdog/ar7_wdt.c:251:27: sparse:     got int ( * )( ... )
+>> drivers/watchdog/ar7_wdt.c:271:17: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct ar7_wdt *static [toplevel] ar7_wdt @@     got void [noderef] __iomem * @@
+   drivers/watchdog/ar7_wdt.c:271:17: sparse:     expected struct ar7_wdt *static [toplevel] ar7_wdt
+>> drivers/watchdog/ar7_wdt.c:271:17: sparse:     got void [noderef] __iomem *
+   drivers/watchdog/ar7_wdt.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/seqlock.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+--
+>> drivers/vlynq/vlynq.c:101:31: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+>> drivers/vlynq/vlynq.c:101:31: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:101:31: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:111:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:111:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:111:26: sparse:     got unsigned int *
+>> drivers/vlynq/vlynq.c:112:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+>> drivers/vlynq/vlynq.c:112:29: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:112:29: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:118:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:118:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:118:26: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:119:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:119:29: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:119:29: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:133:45: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:133:45: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:133:45: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:135:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:135:45: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:135:45: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:146:45: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:146:45: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:146:45: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:148:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:148:45: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:148:45: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:159:45: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:159:45: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:159:45: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:178:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:178:45: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:178:45: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:185:32: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:185:32: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:185:32: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:189:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:189:28: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:189:28: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:195:32: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:195:32: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:195:32: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:199:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:199:28: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:199:28: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:208:28: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:208:28: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:208:28: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:209:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:209:28: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:209:28: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:258:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:258:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:258:26: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:258:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:258:48: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:258:48: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:259:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:259:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:259:26: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:259:49: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:259:49: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:259:49: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:265:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:265:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:265:26: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:266:38: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:266:38: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:266:38: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:267:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:267:25: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:267:25: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:271:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:271:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:271:26: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:272:38: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:272:38: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:272:38: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:273:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:273:25: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:273:25: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:274:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:274:25: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:274:25: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:290:59: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:290:59: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:290:59: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:389:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:389:35: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:389:35: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:393:37: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:393:37: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:393:37: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:394:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:394:35: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:394:35: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:398:37: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:398:37: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:398:37: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:431:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:431:35: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:431:35: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:435:37: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:435:37: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:435:37: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:463:27: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:463:27: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:463:27: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:465:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:465:29: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:465:29: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:467:27: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:467:27: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:467:27: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:469:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:469:29: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:469:29: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:497:52: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:497:52: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:497:52: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:520:43: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:520:43: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:520:43: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:521:31: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:521:31: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:521:31: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:538:31: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:538:31: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:538:31: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:541:43: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:541:43: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:541:43: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:593:31: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:593:31: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:593:31: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:595:66: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:595:66: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:595:66: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:596:64: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:596:64: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:596:64: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:610:31: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:610:31: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:610:31: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:612:67: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:612:67: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:612:67: sparse:     got unsigned int *
+   drivers/vlynq/vlynq.c:613:65: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:613:65: sparse:     expected void volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:613:65: sparse:     got unsigned int *
+>> drivers/vlynq/vlynq.c:700:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct vlynq_regs *local @@     got void [noderef] __iomem * @@
+   drivers/vlynq/vlynq.c:700:20: sparse:     expected struct vlynq_regs *local
+>> drivers/vlynq/vlynq.c:700:20: sparse:     got void [noderef] __iomem *
+   drivers/vlynq/vlynq.c:729:41: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   drivers/vlynq/vlynq.c:729:41: sparse:     expected void const volatile [noderef] __iomem *mem
+   drivers/vlynq/vlynq.c:729:41: sparse:     got unsigned int *
+>> drivers/vlynq/vlynq.c:738:20: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct vlynq_regs *local @@
+>> drivers/vlynq/vlynq.c:738:20: sparse:     expected void const volatile [noderef] __iomem *addr
+   drivers/vlynq/vlynq.c:738:20: sparse:     got struct vlynq_regs *local
+   drivers/vlynq/vlynq.c:751:20: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct vlynq_regs *local @@
+   drivers/vlynq/vlynq.c:751:20: sparse:     expected void const volatile [noderef] __iomem *addr
+   drivers/vlynq/vlynq.c:751:20: sparse:     got struct vlynq_regs *local
+   drivers/vlynq/vlynq.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: too many warnings
+--
+>> arch/mips/ar7/prom.c:151:31: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const volatile [noderef] __iomem *src @@     got void *psp_env_base @@
+>> arch/mips/ar7/prom.c:151:31: sparse:     expected void const volatile [noderef] __iomem *src
+   arch/mips/ar7/prom.c:151:31: sparse:     got void *psp_env_base
+>> arch/mips/ar7/prom.c:243:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/ar7/prom.c:243:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/prom.c:243:23: sparse:     got void *
+   arch/mips/ar7/prom.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+>> arch/mips/ar7/prom.c:248:24: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/ar7/prom.c:248:24: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/prom.c:248:24: sparse:     got void *
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+--
+>> arch/mips/ar7/setup.c:17:28: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned int [usertype] *softres_reg @@     got void [noderef] __iomem * @@
+   arch/mips/ar7/setup.c:17:28: sparse:     expected unsigned int [usertype] *softres_reg
+>> arch/mips/ar7/setup.c:17:28: sparse:     got void [noderef] __iomem *
+>> arch/mips/ar7/setup.c:19:19: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] *softres_reg @@
+>> arch/mips/ar7/setup.c:19:19: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/setup.c:19:19: sparse:     got unsigned int [usertype] *softres_reg
+>> arch/mips/ar7/setup.c:30:27: sparse: sparse: cast removes address space '__iomem' of expression
+>> arch/mips/ar7/setup.c:31:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int [usertype] *power_reg @@
+>> arch/mips/ar7/setup.c:31:33: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/setup.c:31:33: sparse:     got unsigned int [usertype] *power_reg
+>> arch/mips/ar7/setup.c:33:29: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] *power_reg @@
+   arch/mips/ar7/setup.c:33:29: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/setup.c:33:29: sparse:     got unsigned int [usertype] *power_reg
+   arch/mips/ar7/setup.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/seqlock.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/setup.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/setup.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/seqlock.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/setup.c: note: in included file:
+   arch/mips/include/asm/mach-ar7/ar7.h:123:35: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:123:35: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:123:35: sparse:     got void *
+   arch/mips/ar7/setup.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/seqlock.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/setup.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/setup.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/seqlock.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/setup.c: note: in included file:
+   arch/mips/include/asm/mach-ar7/ar7.h:130:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:130:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:130:24: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/setup.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/seqlock.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+--
+>> arch/mips/ar7/memory.c:40:31: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] ** @@
+>> arch/mips/ar7/memory.c:40:31: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/memory.c:40:31: sparse:     got unsigned int [usertype] **
+   arch/mips/ar7/memory.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/mmzone.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+--
+>> arch/mips/ar7/irq.c:42:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+>> arch/mips/ar7/irq.c:42:16: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:42:16: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:48:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:48:16: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:48:16: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:54:16: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:54:16: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:54:16: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:59:51: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:59:51: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:59:51: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:64:51: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:64:51: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:64:51: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:69:51: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:69:51: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:69:51: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:92:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:92:28: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:92:28: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:93:22: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:93:22: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:93:22: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:94:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:94:28: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:94:28: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:95:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:95:28: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:95:28: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:96:22: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:96:22: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:96:22: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:97:28: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:97:28: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:97:28: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:102:27: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:102:27: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:102:27: sparse:     got unsigned int [usertype] *
+>> arch/mips/ar7/irq.c:136:21: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+>> arch/mips/ar7/irq.c:136:21: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:136:21: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:143:19: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:143:19: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:143:19: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c:144:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int [usertype] * @@
+   arch/mips/ar7/irq.c:144:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/irq.c:144:24: sparse:     got unsigned int [usertype] *
+   arch/mips/ar7/irq.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/irq.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+--
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     got void *reset_reg
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     got void *reset_reg
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+   arch/mips/include/asm/mach-ar7/ar7.h:158:22: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:158:22: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:158:22: sparse:     got void *reset_reg
+   arch/mips/include/asm/mach-ar7/ar7.h:158:47: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:158:47: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:158:47: sparse:     got void *reset_reg
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     got void *reset_reg
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     got void *reset_reg
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     got void *reset_reg
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     got void *reset_reg
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     got void *reset_reg
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     got void *reset_reg
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:22: sparse:     got void *reset_reg
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got void *reset_reg @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:166:48: sparse:     got void *reset_reg
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/platform.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/platform.c: note: in included file (through arch/mips/include/asm/mmiowb.h, include/linux/spinlock.h, include/linux/wait.h, ...):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+--
+>> arch/mips/ar7/clock.c:147:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/ar7/clock.c:147:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:147:24: sparse:     got void *
+   arch/mips/ar7/clock.c:148:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/ar7/clock.c:148:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:148:24: sparse:     got void *
+>> arch/mips/ar7/clock.c:164:27: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:164:27: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:164:27: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:165:26: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:165:26: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:165:26: sparse:     got unsigned int *
+>> arch/mips/ar7/clock.c:228:65: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+>> arch/mips/ar7/clock.c:228:65: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:228:65: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:230:20: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:230:20: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:230:20: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:231:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:231:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:231:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:233:64: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:233:64: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:233:64: sparse:     got unsigned int *
+>> arch/mips/ar7/clock.c:239:24: sparse: sparse: cast removes address space '__iomem' of expression
+>> arch/mips/ar7/clock.c:241:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct tnetd7300_clocks *clocks @@     got void [noderef] __iomem * @@
+   arch/mips/ar7/clock.c:241:41: sparse:     expected struct tnetd7300_clocks *clocks
+>> arch/mips/ar7/clock.c:241:41: sparse:     got void [noderef] __iomem *
+>> arch/mips/ar7/clock.c:257:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct tnetd7300_clocks *clocks @@
+>> arch/mips/ar7/clock.c:257:17: sparse:     expected void const volatile [noderef] __iomem *addr
+   arch/mips/ar7/clock.c:257:17: sparse:     got struct tnetd7300_clocks *clocks
+>> arch/mips/ar7/clock.c:258:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got unsigned int [usertype] *bootcr @@
+   arch/mips/ar7/clock.c:258:17: sparse:     expected void const volatile [noderef] __iomem *addr
+   arch/mips/ar7/clock.c:258:17: sparse:     got unsigned int [usertype] *bootcr
+   arch/mips/ar7/clock.c:269:20: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:269:20: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:269:20: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:270:62: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:270:62: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:270:62: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:271:34: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:271:34: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:271:34: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:273:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:273:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:273:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:276:63: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:276:63: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:276:63: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:278:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:278:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:278:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:278:43: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:278:43: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:278:43: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:279:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:279:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:279:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:279:41: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:279:41: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:279:41: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:281:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:281:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:281:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:284:64: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:284:64: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:284:64: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:286:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:286:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:286:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:286:43: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:286:43: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:286:43: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:287:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:287:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:287:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:287:41: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:287:41: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:287:41: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:289:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:289:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:289:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:292:23: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:292:23: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:292:23: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:292:42: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *mem @@     got unsigned int * @@
+   arch/mips/ar7/clock.c:292:42: sparse:     expected void volatile [noderef] __iomem *mem
+   arch/mips/ar7/clock.c:292:42: sparse:     got unsigned int *
+   arch/mips/ar7/clock.c:323:24: sparse: sparse: cast removes address space '__iomem' of expression
+>> arch/mips/ar7/clock.c:325:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct tnetd7200_clocks *clocks @@     got void [noderef] __iomem * @@
+   arch/mips/ar7/clock.c:325:41: sparse:     expected struct tnetd7200_clocks *clocks
+   arch/mips/ar7/clock.c:325:41: sparse:     got void [noderef] __iomem *
+>> arch/mips/ar7/clock.c:400:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct tnetd7200_clocks *clocks @@
+   arch/mips/ar7/clock.c:400:17: sparse:     expected void const volatile [noderef] __iomem *addr
+   arch/mips/ar7/clock.c:400:17: sparse:     got struct tnetd7200_clocks *clocks
+   arch/mips/ar7/clock.c:401:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got unsigned int [usertype] *bootcr @@
+   arch/mips/ar7/clock.c:401:17: sparse:     expected void const volatile [noderef] __iomem *addr
+   arch/mips/ar7/clock.c:401:17: sparse:     got unsigned int [usertype] *bootcr
+   arch/mips/ar7/clock.c: note: in included file:
+   arch/mips/include/asm/mach-ar7/ar7.h:130:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:130:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:130:24: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/clock.c: note: in included file (through include/linux/io.h):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/ar7/clock.c: note: in included file:
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+>> arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:117:58: sparse:     got void *
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *mem @@     got void * @@
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     expected void const volatile [noderef] __iomem *mem
+   arch/mips/include/asm/mach-ar7/ar7.h:111:24: sparse:     got void *
+   arch/mips/ar7/clock.c: note: in included file (through include/linux/io.h):
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+   arch/mips/include/asm/io.h:354:1: sparse: sparse: cast to restricted __le32
+
+vim +193 drivers/watchdog/ar7_wdt.c
+
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  178  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  179  static ssize_t ar7_wdt_write(struct file *file, const char *data,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  180  			     size_t len, loff_t *ppos)
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  181  {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  182  	/* check for a magic close character */
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  183  	if (len) {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  184  		size_t i;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  185  
+670d59c0ae31a87 Alan Cox            2008-08-04  186  		spin_lock(&wdt_lock);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  187  		ar7_wdt_kick(1);
+670d59c0ae31a87 Alan Cox            2008-08-04  188  		spin_unlock(&wdt_lock);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  189  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  190  		expect_close = 0;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  191  		for (i = 0; i < len; ++i) {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  192  			char c;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20 @193  			if (get_user(c, data + i))
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  194  				return -EFAULT;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  195  			if (c == 'V')
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  196  				expect_close = 1;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  197  		}
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  198  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  199  	}
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  200  	return len;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  201  }
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  202  
+670d59c0ae31a87 Alan Cox            2008-08-04  203  static long ar7_wdt_ioctl(struct file *file,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  204  					unsigned int cmd, unsigned long arg)
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  205  {
+42747d712de56cf Wim Van Sebroeck    2009-12-26  206  	static const struct watchdog_info ident = {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  207  		.identity = LONGNAME,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  208  		.firmware_version = 1,
+e73a780272a46e8 Wim Van Sebroeck    2009-05-11  209  		.options = (WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+e73a780272a46e8 Wim Van Sebroeck    2009-05-11  210  						WDIOF_MAGICCLOSE),
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  211  	};
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  212  	int new_margin;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  213  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  214  	switch (cmd) {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  215  	case WDIOC_GETSUPPORT:
+c283cf2c09ca1b7 Matteo Croce        2007-09-20 @216  		if (copy_to_user((struct watchdog_info *)arg, &ident,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  217  				sizeof(ident)))
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  218  			return -EFAULT;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  219  		return 0;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  220  	case WDIOC_GETSTATUS:
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  221  	case WDIOC_GETBOOTSTATUS:
+c283cf2c09ca1b7 Matteo Croce        2007-09-20 @222  		if (put_user(0, (int *)arg))
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  223  			return -EFAULT;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  224  		return 0;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  225  	case WDIOC_KEEPALIVE:
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  226  		ar7_wdt_kick(1);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  227  		return 0;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  228  	case WDIOC_SETTIMEOUT:
+c283cf2c09ca1b7 Matteo Croce        2007-09-20 @229  		if (get_user(new_margin, (int *)arg))
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  230  			return -EFAULT;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  231  		if (new_margin < 1)
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  232  			return -EINVAL;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  233  
+670d59c0ae31a87 Alan Cox            2008-08-04  234  		spin_lock(&wdt_lock);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  235  		ar7_wdt_update_margin(new_margin);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  236  		ar7_wdt_kick(1);
+670d59c0ae31a87 Alan Cox            2008-08-04  237  		spin_unlock(&wdt_lock);
+d259f94f7265065 Gustavo A. R. Silva 2019-07-29  238  		/* Fall through */
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  239  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  240  	case WDIOC_GETTIMEOUT:
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  241  		if (put_user(margin, (int *)arg))
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  242  			return -EFAULT;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  243  		return 0;
+0c06090c9472db0 Wim Van Sebroeck    2008-07-18  244  	default:
+0c06090c9472db0 Wim Van Sebroeck    2008-07-18  245  		return -ENOTTY;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  246  	}
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  247  }
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  248  
+b47a166ed0baaaa Jan Engelhardt      2008-01-22  249  static const struct file_operations ar7_wdt_fops = {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  250  	.owner		= THIS_MODULE,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  251  	.write		= ar7_wdt_write,
+670d59c0ae31a87 Alan Cox            2008-08-04  252  	.unlocked_ioctl	= ar7_wdt_ioctl,
+b6dfb2477fb0bf4 Arnd Bergmann       2019-06-03  253  	.compat_ioctl	= compat_ptr_ioctl,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  254  	.open		= ar7_wdt_open,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  255  	.release	= ar7_wdt_release,
+6038f373a3dc1f1 Arnd Bergmann       2010-08-15  256  	.llseek		= no_llseek,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  257  };
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  258  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  259  static struct miscdevice ar7_wdt_miscdev = {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  260  	.minor		= WATCHDOG_MINOR,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  261  	.name		= "watchdog",
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  262  	.fops		= &ar7_wdt_fops,
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  263  };
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  264  
+2d991a164a61858 Bill Pemberton      2012-11-19  265  static int ar7_wdt_probe(struct platform_device *pdev)
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  266  {
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  267  	int rc;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  268  
+64d4062a3813e48 Florian Fainelli    2009-07-21  269  	ar7_regs_wdt =
+64d4062a3813e48 Florian Fainelli    2009-07-21  270  		platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+4c271bb67c04253 Thierry Reding      2013-01-21 @271  	ar7_wdt = devm_ioremap_resource(&pdev->dev, ar7_regs_wdt);
+4c271bb67c04253 Thierry Reding      2013-01-21  272  	if (IS_ERR(ar7_wdt))
+4c271bb67c04253 Thierry Reding      2013-01-21  273  		return PTR_ERR(ar7_wdt);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  274  
+780019ddf02f214 Florian Fainelli    2010-01-27  275  	vbus_clk = clk_get(NULL, "vbus");
+780019ddf02f214 Florian Fainelli    2010-01-27  276  	if (IS_ERR(vbus_clk)) {
+27c766aaacb265d Joe Perches         2012-02-15  277  		pr_err("could not get vbus clock\n");
+ae21cc20a604b45 Julia Lawall        2012-04-15  278  		return PTR_ERR(vbus_clk);
+780019ddf02f214 Florian Fainelli    2010-01-27  279  	}
+780019ddf02f214 Florian Fainelli    2010-01-27  280  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  281  	ar7_wdt_disable_wdt();
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  282  	ar7_wdt_prescale(prescale_value);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  283  	ar7_wdt_update_margin(margin);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  284  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  285  	rc = misc_register(&ar7_wdt_miscdev);
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  286  	if (rc) {
+27c766aaacb265d Joe Perches         2012-02-15  287  		pr_err("unable to register misc device\n");
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  288  		goto out;
+ae21cc20a604b45 Julia Lawall        2012-04-15  289  	}
+ae21cc20a604b45 Julia Lawall        2012-04-15  290  	return 0;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  291  
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  292  out:
+ae21cc20a604b45 Julia Lawall        2012-04-15  293  	clk_put(vbus_clk);
+ae21cc20a604b45 Julia Lawall        2012-04-15  294  	vbus_clk = NULL;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  295  	return rc;
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  296  }
+c283cf2c09ca1b7 Matteo Croce        2007-09-20  297  
+
+:::::: The code at line 193 was first introduced by commit
+:::::: c283cf2c09ca1b7f1e7677bde384a8f92b1b7584 [WATCHDOG] AR7: watchdog timer
+
+:::::: TO: Matteo Croce <technoboy85@gmail.com>
+:::::: CC: Wim Van Sebroeck <wim@iguana.be>
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---nFreZHaLTZJo0R7j
+--jRHKVT23PllUwdXP
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-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
-4lRESkUR/bq649GN81526NuB/wGh1hbqM5cBAA==
+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
+r3BI+R9J4qdL9IMBAA==
 
---nFreZHaLTZJo0R7j--
+--jRHKVT23PllUwdXP--
