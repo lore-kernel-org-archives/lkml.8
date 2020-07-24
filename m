@@ -2,110 +2,85 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF709C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7FBC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABEE0206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VYUy4oUw"
+	by mail.kernel.org (Postfix) with ESMTP id 81703206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595609084;
+	bh=tOZnq81bwOIIjKc5KjWMgaWw7FrtXyqkuw+2Unf+gww=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=phS5WP6EJIwNAd95SPeayohjqmeNrtSQJZJRJET2N1urQg+RFIQ2YEeC8R8ILbXzO
+	 jbEZip2qn4D52j60/xNAsAjJTCB5KmsDjsIrUJ6SUqephUrzDY//O/06uKzZ+3KdoH
+	 y+q25vFwb8S5RRgIo2lzITS5DD2TpJl+upqGW37A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgGXQoF (ORCPT
+        id S1726731AbgGXQon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXQoE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:44:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7A9C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PjcxzhlVOVKgouwOgGeW8VbRm5cEnHWAj2nzc1FyWx4=; b=VYUy4oUwD+OJVaQZ3u6zDecK32
-        eu3c34lP4xrakg8ntLpFNKUPxXECA8q0YH3cUxWJuCz/nPMPvswXUvRvCy/UKv0lYEDl7SDg8xWqt
-        h8DF1s66qqkfBaGuHXSkxHkKTTbEYxR6GYHZaufxO5IzcqFBnh5OIiajxLxcqVLFwjT8J4GATaaTt
-        GJISDILCsm3NDw5KyUC1oE4yVxvXn3V0onO9UEIMd29iE+Wbvbt1q+Ty6BvFdS0APvtE/rZtvoSqz
-        vnoIhcWFnctFq/Ynt3SLzGfLpK4f1FOM2pYr74+Z7/rg5usNAsfzcJt2A2/K7jSb3m97t0SlhdkoG
-        /bFVi48g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jz0nd-0003Lw-Em; Fri, 24 Jul 2020 16:43:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 24 Jul 2020 12:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbgGXQon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:44:43 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E6A6300446;
-        Fri, 24 Jul 2020 18:43:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0AE2C23645598; Fri, 24 Jul 2020 18:43:56 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 18:43:56 +0200
-From:   peterz@infradead.org
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>, acme@redhat.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com,
-        like.xu@linux.intel.com
-Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
- capability
-Message-ID: <20200724164356.GL43129@hirez.programming.kicks-ass.net>
-References: <20200723171117.9918-1-kan.liang@linux.intel.com>
- <20200723171117.9918-8-kan.liang@linux.intel.com>
- <20200724105543.GV119549@hirez.programming.kicks-ass.net>
- <20200724114628.GJ43129@hirez.programming.kicks-ass.net>
- <0d33a25c-cfe4-af7f-c915-a98dba17b53b@linux.intel.com>
- <20200724135412.GA10769@hirez.programming.kicks-ass.net>
- <e04f1708-e8c0-3787-1572-443f03ab73ca@linux.intel.com>
- <20200724143258.GB10769@hirez.programming.kicks-ass.net>
- <20200724144632.GE1180481@tassilo.jf.intel.com>
- <20200724145934.GD10769@hirez.programming.kicks-ass.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0976B206F0;
+        Fri, 24 Jul 2020 16:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595609082;
+        bh=tOZnq81bwOIIjKc5KjWMgaWw7FrtXyqkuw+2Unf+gww=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KOyr6BxpkkErwrcJG5iwN6kOyAjSdFTjEV/Rvz4dlwvQe/HuydXNKr4Qs6UWpztvi
+         9FqME9MCFZpBbidDHuydwX7en4B6M0PBSWC40joJf1VizHZ+6V8PhsZAYEgxeqq+ke
+         5JsSsaxFBNEJQPeJQrO9ZYCQj/Yz35g4DWZYWzTc=
+Date:   Fri, 24 Jul 2020 11:50:27 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] crypto: sa2ul - Fix inconsistent IS_ERR and PTR_ERR
+Message-ID: <20200724165027.GA18496@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724145934.GD10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 04:59:34PM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 24, 2020 at 07:46:32AM -0700, Andi Kleen wrote:
-> > > Something that seems to 'work' is:
-> > > '{cycles,cpu/instructions,period=50000/}', so maybe you can make the
-> > > group modifier :S use any sampling event if there is one, and otherwise
-> > > designate the leader.
-> > > 
-> > > Then you can write things like:
-> > > 
-> > >   '{slots, metric1, metric2, cpu/cycles,freq=50000/}:S'
-> > > 
-> > > and then since cycles is specified as a sampling event, it will use
-> > > that.
-> > 
-> > Okay possible, but it makes things more complicated
-> > for the user to understand and requires special documentation.
-> > Hopefully it's worth it the internal simplification.
-> 
-> You already require special documentation for this metrics stuff. We
-> already need to state that SLOTS cannot be a sampling event, so you
-> already need to pay attention to this anyway.
-> 
-> A shortcut could be a :s event modifier, then you can write:
-> 
->  '{slots, metric1, metric2, cycles:s}:S'
-> 
-> and have the tool select the :s tagged one.
+Fix inconsistent IS_ERR and PTR_ERR in sa_dma_init(). The proper pointer
+to be passed as argument to PTR_ERR() is dd->dma_tx.
 
-Having slots as leader also would allow doing something like
-FORMAT_METRIC, where we return sibling/leader in some fashion.
+This bug was detected with the help of Coccinelle.
 
-That also makes sense for instructions, because, IIRC,
-instructions/slots is the better IPC.
+Fixes: 7694b6ca649f ("crypto: sa2ul - Add crypto driver")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/crypto/sa2ul.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And we should probably consider FORMAT_RESET.
+diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
+index ebcdffcdb686..5bc099052bd2 100644
+--- a/drivers/crypto/sa2ul.c
++++ b/drivers/crypto/sa2ul.c
+@@ -2259,7 +2259,7 @@ static int sa_dma_init(struct sa_crypto_data *dd)
+ 
+ 	dd->dma_tx = dma_request_chan(dd->dev, "tx");
+ 	if (IS_ERR(dd->dma_tx)) {
+-		if (PTR_ERR(dd->dma_rx1) != -EPROBE_DEFER)
++		if (PTR_ERR(dd->dma_tx) != -EPROBE_DEFER)
+ 			dev_err(dd->dev, "Unable to request tx DMA channel\n");
+ 		ret = PTR_ERR(dd->dma_tx);
+ 		goto err_dma_tx;
+-- 
+2.27.0
+
