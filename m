@@ -2,85 +2,102 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7FBC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C30C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81703206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595609084;
-	bh=tOZnq81bwOIIjKc5KjWMgaWw7FrtXyqkuw+2Unf+gww=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=phS5WP6EJIwNAd95SPeayohjqmeNrtSQJZJRJET2N1urQg+RFIQ2YEeC8R8ILbXzO
-	 jbEZip2qn4D52j60/xNAsAjJTCB5KmsDjsIrUJ6SUqephUrzDY//O/06uKzZ+3KdoH
-	 y+q25vFwb8S5RRgIo2lzITS5DD2TpJl+upqGW37A=
+	by mail.kernel.org (Postfix) with ESMTP id 25FD4206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:46:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="ODIqmaFr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgGXQon (ORCPT
+        id S1726861AbgGXQqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgGXQon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:44:43 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0976B206F0;
-        Fri, 24 Jul 2020 16:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595609082;
-        bh=tOZnq81bwOIIjKc5KjWMgaWw7FrtXyqkuw+2Unf+gww=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KOyr6BxpkkErwrcJG5iwN6kOyAjSdFTjEV/Rvz4dlwvQe/HuydXNKr4Qs6UWpztvi
-         9FqME9MCFZpBbidDHuydwX7en4B6M0PBSWC40joJf1VizHZ+6V8PhsZAYEgxeqq+ke
-         5JsSsaxFBNEJQPeJQrO9ZYCQj/Yz35g4DWZYWzTc=
-Date:   Fri, 24 Jul 2020 11:50:27 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] crypto: sa2ul - Fix inconsistent IS_ERR and PTR_ERR
-Message-ID: <20200724165027.GA18496@embeddedor>
+        Fri, 24 Jul 2020 12:46:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726639AbgGXQqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:46:06 -0400
+Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8E4C0619E4;
+        Fri, 24 Jul 2020 09:46:06 -0700 (PDT)
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTP id 0E8FB140801;
+        Fri, 24 Jul 2020 18:46:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1595609164; bh=uVEK4+lNEwNHSkbt4FwgcwamVpjAjW9xrSCBYvsp+fU=;
+        h=From:To:Date;
+        b=ODIqmaFrBnepS5Ewc5sPX8LbJbZF9jV0HzWrF6sj74qVeThg0sfnxINPFQX4IcoMd
+         wA9vybKY8uvLq/lfdMVaoyPsEPXTebXNnnLF0DfFdihRSnNDfN0rsizFHzPJ9L4LZi
+         7g8MmCnLPQ5I/KzGmdUT8IUmHnN9cZ/IFl8PySnk=
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To:     netdev@vger.kernel.org
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH RFC leds + net-next v3 0/2] Add support for LEDs on Marvell PHYs
+Date:   Fri, 24 Jul 2020 18:46:01 +0200
+Message-Id: <20200724164603.29148-1-marek.behun@nic.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: /
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix inconsistent IS_ERR and PTR_ERR in sa_dma_init(). The proper pointer
-to be passed as argument to PTR_ERR() is dd->dma_tx.
+Hi,
 
-This bug was detected with the help of Coccinelle.
+this is v3 of my RFC adding support for LEDs connected to Marvell PHYs.
 
-Fixes: 7694b6ca649f ("crypto: sa2ul - Add crypto driver")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/crypto/sa2ul.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please note that if you want to test this, you still need to first apply
+the patch adding the LED private triggers support from Pavel's tree.
+https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/commit/?h=for-next&id=93690cdf3060c61dfce813121d0bfc055e7fa30d
 
-diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index ebcdffcdb686..5bc099052bd2 100644
---- a/drivers/crypto/sa2ul.c
-+++ b/drivers/crypto/sa2ul.c
-@@ -2259,7 +2259,7 @@ static int sa_dma_init(struct sa_crypto_data *dd)
- 
- 	dd->dma_tx = dma_request_chan(dd->dev, "tx");
- 	if (IS_ERR(dd->dma_tx)) {
--		if (PTR_ERR(dd->dma_rx1) != -EPROBE_DEFER)
-+		if (PTR_ERR(dd->dma_tx) != -EPROBE_DEFER)
- 			dev_err(dd->dev, "Unable to request tx DMA channel\n");
- 		ret = PTR_ERR(dd->dma_tx);
- 		goto err_dma_tx;
+Changes since v2:
+- to share code with other drivers which may want to also offer PHY HW
+  control of LEDs some of the code was refactored and now resides in
+  phy_hw_led_mode.c. This code is compiled in when config option
+  LED_TRIGGER_PHY_HW is enabled. Drivers wanting to offer PHY HW control
+  of LEDs should depend on this option.
+- the "hw-control" trigger is renamed to "phydev-hw-mode" and is
+  registered by the code in phy_hw_led_mode.c
+- the "hw_control" sysfs file is renamed to "hw_mode"
+- struct phy_driver is extended by three methods to support PHY HW LED
+  control
+- I renamed the various HW control modes offeret by Marvell PHYs to
+  conform to other Linux mode names, for example the "1000/100/10/else"
+  mode was renamed to "1Gbps/100Mbps/10Mbps", or "recv/else" was renamed
+  to "rx" (this is the name of the mode in netdev trigger).
+
+Marek
+
+Marek Behún (2):
+  net: phy: add API for LEDs controlled by PHY HW
+  net: phy: marvell: add support for PHY LEDs via LED class
+
+ drivers/net/phy/Kconfig           |  10 +
+ drivers/net/phy/Makefile          |   1 +
+ drivers/net/phy/marvell.c         | 364 ++++++++++++++++++++++++++++++
+ drivers/net/phy/phy_hw_led_mode.c |  96 ++++++++
+ include/linux/phy.h               |  15 ++
+ 5 files changed, 486 insertions(+)
+ create mode 100644 drivers/net/phy/phy_hw_led_mode.c
+
 -- 
-2.27.0
+2.26.2
 
