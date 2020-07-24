@@ -2,151 +2,166 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB43C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6024BC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9A92065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9E820674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyzeWhfz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="No2NkwNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGXOlZ (ORCPT
+        id S1726674AbgGXOmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:41:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
+        Fri, 24 Jul 2020 10:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgGXOlY (ORCPT
+        with ESMTP id S1726170AbgGXOmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:41:24 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9833C0619E5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:41:24 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d18so10042057ion.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:41:24 -0700 (PDT)
+        Fri, 24 Jul 2020 10:42:37 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC78C0619D3;
+        Fri, 24 Jul 2020 07:42:37 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p3so5323765pgh.3;
+        Fri, 24 Jul 2020 07:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9E66nUvcODIIIOq5t+2qbeVH/MSVvQN11l9oNW6GhyI=;
-        b=vyzeWhfzUBv+3aCDt4bAbkZMDVC7ooJXOhKnolfXtu9A3d40lBkGooDb91bIunTCM4
-         JhOzmmvBtL2Xz7JyAwEraF9uTjtY3wRYHxwIqE4gz8WQPxsaMaCXm12OwNRghR7xDBho
-         vaHCMyrYn81hU9KBurVxoZOQgu1Kj2LXvbkrAUPo+aaliJPrSCFcESce3TkrEU0tyzV4
-         9qIlhXFbZkyNo7yUsDaqowQQrrDfOwNx3smuImtKSzHEFHB1VgLf3BvyFmDQCioY+YKZ
-         9rNBWCGP3SdRjIaEZGWo+VO6ljJKWzf0P4/9cqtBKzW2bJzvJBM26RwR6PjiwvuKQerz
-         eKnA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:references:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NlxDXhQzJBIRfymTZZz6Myn8/bnQvkKsV8BVRC4R7+w=;
+        b=No2NkwNPJUYbjgYSWPLGebNThwVWdnPNrp9MkUj1yrGku/ItJSQAgxze+H0ZDc2WbH
+         lPjtJPGQ9brAmfdnu6JrwYTIwG7//0hohxOxkr8AiQhrYKOcCXPuhpc+s0/1A7cFego+
+         bYXpijpXSf/r2F16OM/cC2n6JyvDAX9U+uq/hHIw3oT+ZnRrf//ekVeR8qm7VJt+PQjC
+         oRU8DsqYqjaRvgrq/PhFZEW6g9M1hn54hrdOnyUWOYifcplK9f/RgVlFRKMFIibQttKI
+         iV5zzI/OZwElCXXV+TzblnCK4LI3exy25ksRIxqpbR49gExmpwL6R0rbXN5XH3L2ThPr
+         3jrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9E66nUvcODIIIOq5t+2qbeVH/MSVvQN11l9oNW6GhyI=;
-        b=Q6712naKXqDD5wlsoz9ntnuJavj6wkIskOhjwIjydU5MBz5oz64/OKfrtWYkLQ00hV
-         kcsJTYuPmJcZSNVRbuvS/U8BWAad2VkgGzujaPIIFn9qfJi/Rok92ApBJFh2PM5KwFcm
-         4x9GMTmg5pOK4qg/sF9gj2+QKq1VqvOBVN608/Stsp40Rn84TYHIXPMjqoxMTM6BGqz7
-         pycseJohK8AZ/GYWf2SfmzIT2orMSHZpl9xxjQdTHedARRgyW8z3sjTjbyPgGDfQSclb
-         4IzJ+7jTxJ+lginxDrPGa0aJuYMDCEq0NhJshFmdirBWiWvKjw4J721cJ/jrs+fZFE0H
-         lfVg==
-X-Gm-Message-State: AOAM531xuZdSJXsreXE5qV61s6bdAi/T0kH+DLM+Kmkq8YbeFDtSAcBl
-        O+/zrmEfmpOF/pnU5XU4dmmq/uUH/0A5TiVdgy3G4Q==
-X-Google-Smtp-Source: ABdhPJwAGCFsZ6cfW/RCed2pPReLn9Q4orINjlDAatEH6Czg9iP1uAc2Sj/EmE/i1I7eUakHAEQGgWrRJkRjKipv+Lg=
-X-Received: by 2002:a5d:97d1:: with SMTP id k17mr10702728ios.100.1595601683730;
- Fri, 24 Jul 2020 07:41:23 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:from:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NlxDXhQzJBIRfymTZZz6Myn8/bnQvkKsV8BVRC4R7+w=;
+        b=PcUfE7vFlY9EQqfldHfVDQU8YxB07IG0fCfwVov0sLXaP1jEwULAoD0OikvMRei6nD
+         d3m2bwfB+hdbMCUb9GxenlnPy8qwYy3h+K86owfRgFWYb9VAmP3ELhRwIAx/r7YY24Pm
+         iGkN1eZbm38CGgKHaJn9cp9t5PmxzICkR6U2X+mf2AqNFUejUJuQ6RkyeSrtbgMMfZqO
+         4yPWxFIfmbYP9kAxmKDHGYTs17VhhUM6CzkydniHVLXzfgK0JjhqIw0wu9CppyRhzzw7
+         zDVVD63U8gXtNtnEdt+3gi7zINr1dsUBxZb2zeAylN5RMJZnEeiQmr5u9qiLlGVc+LKU
+         ZJ9g==
+X-Gm-Message-State: AOAM5318MRrS+7YeFvRjfs8Ydgct4OMnDdI6DyySP9ZQhta32SUfBfBY
+        tmYJ3xa4M3gHi31X1NlI/vf9dB/J
+X-Google-Smtp-Source: ABdhPJx4/2toNjLiOKUhe1ormSBYF6a2FqneYTqDjpfsXF502RIwK0Jdx9oWTQN2ca5tfxWndSqFJQ==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr9252746pfc.82.1595601756499;
+        Fri, 24 Jul 2020 07:42:36 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c132sm6361779pfb.112.2020.07.24.07.42.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 07:42:35 -0700 (PDT)
+Subject: Re: [PATCH -next] hwmon (pmbus/max20730): Whitespace cleanups in
+ max20730.c
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
+Cc:     cj.chengjian@huawei.com, huawei.libin@huawei.com,
+        jdelvare@suse.com, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+References: <20200724101159.48622-1-bobo.shaobowang@huawei.com>
+ <94e99e28-0809-8ee8-5e30-2d322183fd0f@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <0db689ad-6d6f-ac38-fce0-7908e658fd1e@roeck-us.net>
+Date:   Fri, 24 Jul 2020 07:42:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200423002632.224776-1-dancol@google.com> <20200724094505-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200724094505-mutt-send-email-mst@kernel.org>
-From:   Lokesh Gidra <lokeshgidra@google.com>
-Date:   Fri, 24 Jul 2020 07:41:12 -0700
-Message-ID: <CA+EESO40x0+FW2ek5E=EYoHXt_AX2hvJ6QjbS=GSh9CpJQQRAA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Control over userfaultfd kernel-fault handling
-To:     "Michael S. Tsirkin" <mst@redhat.com>, kernel@android.com
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Minchan Kim <minchan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Daniel Colascione <dancol@dancol.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <94e99e28-0809-8ee8-5e30-2d322183fd0f@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 7:01 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Wed, Apr 22, 2020 at 05:26:30PM -0700, Daniel Colascione wrote:
-> > This small patch series adds a new flag to userfaultfd(2) that allows
-> > callers to give up the ability to handle user-mode faults with the
-> > resulting UFFD file object. In then add a new sysctl to require
-> > unprivileged callers to use this new flag.
-> >
-> > The purpose of this new interface is to decrease the change of an
-> > unprivileged userfaultfd user taking advantage of userfaultfd to
-> > enhance security vulnerabilities by lengthening the race window in
-> > kernel code.
->
-> There are other ways to lengthen the race window, such as madvise
-> MADV_DONTNEED, mmap of fuse files ...
-> Could the patchset commit log include some discussion about
-> why these are not the concern please?
->
-> Multiple subsystems including vhost have come to rely on
-> copy from/to user behaving identically to userspace access.
->
-> Could the patchset please include discussion on what effect blocking
-> these will have? E.g. I guess Android doesn't use vhost right now.
-> Will it want to do it to run VMs in 2021?
->
-> Thanks!
->
-> > This patch series is split from [1].
-> >
-> > [1] https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
->
-> So in that series, Kees said:
-> https://lore.kernel.org/lkml/202002112332.BE71455@keescook/#t
->
-> What is the threat being solved? (I understand the threat, but detailing
->   it in the commit log is important for people who don't know it.)
->
+On 7/24/20 7:39 AM, Guenter Roeck wrote:
+> On 7/24/20 3:11 AM, Wang ShaoBo wrote:
+>> Drop trailing whitespace.
+>>
+>> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+>> ---
+>>  drivers/hwmon/pmbus/max20730.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/pmbus/max20730.c b/drivers/hwmon/pmbus/max20730.c
+>> index 3ddc19b81b90..87d936d45d65 100644
+>> --- a/drivers/hwmon/pmbus/max20730.c
+>> +++ b/drivers/hwmon/pmbus/max20730.c
+>> @@ -309,7 +309,7 @@ static int max20730_probe(struct i2c_client *client,
+>>  				     I2C_FUNC_SMBUS_READ_WORD_DATA |
+>>  				     I2C_FUNC_SMBUS_BLOCK_DATA))
+>>  		return -ENODEV;
+>> -	
+>> +
+>>  	ret = i2c_smbus_read_block_data(client, PMBUS_MFR_ID, buf);
+>>  	if (ret < 0) {
+>>  		dev_err(&client->dev, "Failed to read Manufacturer ID\n");
+>> @@ -373,7 +373,7 @@ static int max20730_probe(struct i2c_client *client,
+>>  	ret = pmbus_do_probe(client, id, &data->info);
+>>  	if (ret < 0)
+>>  		return ret;
+>> -	
+>> +
+>>  	return 0;
+> 
+> The code you are fixing is not in the mainline kernel, and your patch
+> does not apply.
+> 
 
-Adding Android security folks, Nick and Jeff, to answer.
+Wait, this code is in -next. I really didn't pay attention, sorry. I'll update
+the offending patch there. Thanks for bringing this to my attention.
 
-> Could you pls do that?
->
-> > Daniel Colascione (2):
-> >   Add UFFD_USER_MODE_ONLY
-> >   Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
-> >
-> >  Documentation/admin-guide/sysctl/vm.rst | 13 +++++++++++++
-> >  fs/userfaultfd.c                        | 18 ++++++++++++++++--
-> >  include/linux/userfaultfd_k.h           |  1 +
-> >  include/uapi/linux/userfaultfd.h        |  9 +++++++++
-> >  kernel/sysctl.c                         |  9 +++++++++
-> >  5 files changed, 48 insertions(+), 2 deletions(-)
-> >
-> > --
-> > 2.26.2.303.gf8c07b1a785-goog
-> >
->
+Guenter
