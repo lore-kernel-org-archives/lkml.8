@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0413AC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D95C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD5C20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3B1206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R9EEgjxJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mLAtcyR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgGXVdf (ORCPT
+        id S1726852AbgGXVdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:33:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
+        Fri, 24 Jul 2020 17:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgGXVdd (ORCPT
+        with ESMTP id S1726820AbgGXVdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:33:33 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC5BC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:33:33 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id p1so5296555pls.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:33:33 -0700 (PDT)
+        Fri, 24 Jul 2020 17:33:36 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40F2C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:33:35 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so114745pju.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EQu0tFDBs7nTU9QjLdEGcqiYQ7Nm3KNjVk5VDWWffio=;
-        b=R9EEgjxJkvQAvTFL/5/62WC78D5X3A48nYJuzZfaIMBVaXj4VDTNJds252rbo64URO
-         IMuDmkbiwwEOv8zduzP/ZCHSxL6/34C7OfAHaNig9uV9mULzn8AHqL5i+Pl7fO+TqrQV
-         wdy7ry/PclzuMQHtuKAzlb9EeYBDCQDNifTGo=
+        bh=t+wfLK+jRzoEaeSZTF77nah9ZjAJpOiCxA+PzRL9qxM=;
+        b=mLAtcyR784TRkCRrR4IRTfb9vao7peH9X39dm44ROVmmofcdArlmKq+mEqSE9Toqlu
+         rFH5miGAzdjGBa6uyLOedKw0s2DtQUHv5JkAiJd4nRonuVF23gIs1TWlF8f/N2e9DJVb
+         wX8lR7GF8D3mrPp09mzRussGWnCrLxEj2wZJ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EQu0tFDBs7nTU9QjLdEGcqiYQ7Nm3KNjVk5VDWWffio=;
-        b=UC08YkkXwtGiUCA0TCXsy7yYN3cYyWQdMF0ahDBhgDacyiX3nyIC+8pQOXzoUIcM+e
-         aYOlxOspv2FRflpGeeVmPUFv9zwLRnFHGyvkgXAhgxhhH4me3cPijx+Fv/4KUuTf2knO
-         I2bPlS2/QeQiANRX5Aknx1pH5egiiTBLkFn3Yl4kb6+Oakw2mTS5W9aHl1gECibAQXHz
-         wo1hPJVgCg+b515w49fGcpHtYo5qA0eLapBu0r3QA1jJ7oqs0Vk16SFBdTVYfLBCUQju
-         y0A9R8OUe/7TId+o23+l6EXlY1KMJXrGHxgpaKAwvY7jIb5q7psfXO5sAW8WL46BrWx1
-         q55Q==
-X-Gm-Message-State: AOAM531Nu/m/AtB01cqOQFhDZBV46DZBDpio15KFlQ/MrtI2/U1KTt8D
-        7GYZE4mKUwHt56ZJnSBYBtdpA3kTjL4=
-X-Google-Smtp-Source: ABdhPJz4N+iywNFXMFem3YoR0WagfRPgtF5OXhDcB+SHTCmfzr4ZNEB2Zs9RrcFUAi+LNawn/+9Cbg==
-X-Received: by 2002:a17:90a:14a5:: with SMTP id k34mr7624743pja.37.1595626412535;
-        Fri, 24 Jul 2020 14:33:32 -0700 (PDT)
+        bh=t+wfLK+jRzoEaeSZTF77nah9ZjAJpOiCxA+PzRL9qxM=;
+        b=D3L3LwcY9GV1jh8N5Ml5NZ350sy8Rpm7JqHw+Tqa35JnbRxW9yVQuIHkafQiqU/ZwR
+         upuuntqyjjqriFudy++KdUO6wxl9r4q3trkyMWR53nxRItABvJ14/Rvj7hGMkw/S8RS1
+         xrhoDzKLEwUewz0xKDtHHtQ+aCln2wKz0BVGmWxQLs1wJYs00dx8UX2h9JASQDXWyO+P
+         63l8IM2LhYbQkoSwgto+Vtiic9RMHbbG9fD1+V/XjLS9aHi6vuVqgdeIP/s5WMXSaJV8
+         CVL/wMUqYA+DT7izYfvXAILCpQPjXszijM/H3xkB+3iuQwiKTS0RfMWjmKZEmoIkgLFa
+         AMVg==
+X-Gm-Message-State: AOAM532OcyUzAlW4mjU1Ry4ZTkEIIO9c35AuOyOmvyZfg0zj2rjU4hfy
+        5P+o2qQ8TMZYF5G1dsvfPXlmgg==
+X-Google-Smtp-Source: ABdhPJy2o1jAadrqyaeCklg07hrfg6+Ljmtjv6KrP4itXpLPvSILQJifpHbNx3f1AdtA4pBtOSdvew==
+X-Received: by 2002:a17:90b:289:: with SMTP id az9mr7771380pjb.122.1595626415525;
+        Fri, 24 Jul 2020 14:33:35 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id z6sm7312919pfn.173.2020.07.24.14.33.31
+        by smtp.gmail.com with ESMTPSA id z6sm7312919pfn.173.2020.07.24.14.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 14:33:31 -0700 (PDT)
+        Fri, 24 Jul 2020 14:33:35 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Daniel Campello <campello@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Daniel Campello <campello@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
         Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2 1/5] dt-bindings: iio: Add bindings for sx9310 sensor
-Date:   Fri, 24 Jul 2020 14:33:25 -0700
-Message-Id: <20200724213329.899216-2-swboyd@chromium.org>
+Subject: [PATCH v2 4/5] iio: sx9310: Drop channel_users[]
+Date:   Fri, 24 Jul 2020 14:33:28 -0700
+Message-Id: <20200724213329.899216-5-swboyd@chromium.org>
 X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 In-Reply-To: <20200724213329.899216-1-swboyd@chromium.org>
 References: <20200724213329.899216-1-swboyd@chromium.org>
@@ -78,89 +78,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Campello <campello@chromium.org>
+This struct member isn't used. Drop it.
 
-Adds device tree bandings for sx9310 sensor.
-
-Signed-off-by: Daniel Campello <campello@chromium.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>
+Cc: Daniel Campello <campello@chromium.org>
 Cc: Hartmut Knaack <knaack.h@gmx.de>
 Cc: Lars-Peter Clausen <lars@metafoo.de>
 Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-[swboyd@chromium.org: Add both regulators and make them optional]
+Cc: Douglas Anderson <dianders@chromium.org>
+Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- .../iio/proximity/semtech,sx9310.yaml         | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+ drivers/iio/proximity/sx9310.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-new file mode 100644
-index 000000000000..ba734ee868c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Semtech's SX9310 capacitive proximity sensor
-+
-+maintainers:
-+  - Daniel Campello <campello@chromium.org>
-+
-+description: |
-+  Semtech's SX9310/SX9311 capacitive proximity/button solution.
-+
-+  Specifications about the devices can be found at:
-+  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
-+
-+properties:
-+  compatible:
-+    enum:
-+      - semtech,sx9310
-+      - semtech,sx9311
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The sole interrupt generated by the device used to announce the
-+      preceding reading request has finished and that data is
-+      available or that a close/far proximity event has happened.
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Main power supply
-+
-+  svdd-supply:
-+    description: Host interface power supply
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      proximity@28 {
-+        compatible = "semtech,sx9310";
-+        reg = <0x28>;
-+        interrupt-parent = <&pio>;
-+        interrupts = <5 IRQ_TYPE_LEVEL_LOW 5>;
-+        vdd-supply = <&pp3300_a>;
-+        svdd-supply = <&pp1800_prox>;
-+      };
-+    };
+diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+index fca871ad82ba..1e1f6bba50f6 100644
+--- a/drivers/iio/proximity/sx9310.c
++++ b/drivers/iio/proximity/sx9310.c
+@@ -142,8 +142,8 @@ struct sx9310_data {
+ 	/* Remember enabled channels and sample rate during suspend. */
+ 	unsigned int suspend_ctrl0;
+ 	struct completion completion;
+-	unsigned int chan_read, chan_event;
+-	int channel_users[SX9310_NUM_CHANNELS];
++	unsigned int chan_read;
++	unsigned int chan_event;
+ 	unsigned int whoami;
+ };
+ 
 -- 
 Sent by a computer, using git, on the internet
 
