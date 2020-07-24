@@ -2,125 +2,81 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9920EC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBE9206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:58:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sVuj4ZUs"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC28206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595602742;
+	bh=u80k3o+yMsUhRhDlI5TDV+bP/sT0UHxg6hWT8vGxnUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FfMbiftLTonxZ+OzdIRokoctxljCDr/5AR/WlAY8YLp5DGHcepSkW1nhwqmpJ+gQE
+	 K+IsqrkAWs5kuQr9NUmYxveB78zOZSfcq94ehtmh31WBL+c7aQZX8S3OUdSciyij1i
+	 1Kez1RnQzxmXQelS8Q2yfSVbRgb48UxdUA5kWHG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgGXO6o (ORCPT
+        id S1726992AbgGXO7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgGXO6n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:58:43 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB36C0619D3;
-        Fri, 24 Jul 2020 07:58:43 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a14so5266741pfi.2;
-        Fri, 24 Jul 2020 07:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QkqqWSeWUuD3HygOIUorTjyLc3b0L3sITA+lUb4cF40=;
-        b=sVuj4ZUs9ormiALXE8mSBXmPwBAZjN1g/gp/PGZJo+xnCtLCXc+ib65AVMQsm2b2f+
-         X69daFQHIUotiKVt9msWSze3AjHsDu3r9q7xLGsJi93ZX8hRd6/np10qymypSAPx63eh
-         +7qVhcaJFsVVlSQnMGCmXYKOKI8QxRFYXjyeJ6JIVEevtRTmfJEjUKuY6ro6L/yjgzu4
-         Q8wB1CzaU7y86U3LIlqQ+ErVW/1OfumnjceWFoc03YQAwiluXPEecSTNSvUpLR96mUIB
-         Y65HDvIJeaKs/geZBTMDMmEZvvWiA9M6VeFNwPrFoDwBjSkNgl3/TmlJz2C2N07YAemh
-         OEXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QkqqWSeWUuD3HygOIUorTjyLc3b0L3sITA+lUb4cF40=;
-        b=AmlVDCSIGeKxK2XmOSGJkWW699n10twcF1BZ266Hf/40RTeZst9W928+yqOnqgERD7
-         ob5CRZt74I2fiMCuKW2j2Z9J4ollzU5r8fWbs10aYPdTSh1FVoS73SlBK3jAmr8UrTZx
-         gyVRB4QM1cxPvEJ68dRtFJBCZa45POEJiwIDTFp6kz3hlv5ALmIe4aVt6sFHx4t8q9im
-         /Wq1MN0jsOn4m+ZkcxsbfOhG40IJEpf/0i9ZMOsDXWgrLiGYSgQ8KdJjS/7njNrF5/Po
-         7X/4cktb7BFuGhprFRDv80Wjx8Qv/JIEhR+U9U/qMH9grCdc9voF5Zx+f2R8tDjMIVy5
-         EGWg==
-X-Gm-Message-State: AOAM533128Ra/b/geTuZdq/wCdvQQ42wRGSooWFbjB//EaNPsdlnNwtN
-        W/tspGtXEOsSl/ja3F/j1A==
-X-Google-Smtp-Source: ABdhPJwyRpFJ4lQro4xWnibbtnjkVlbhkniCoPRqc53gNDf50tJkPSvISJXW2o44oSxG+s+ujaQLLg==
-X-Received: by 2002:a63:c404:: with SMTP id h4mr8756035pgd.336.1595602722446;
-        Fri, 24 Jul 2020 07:58:42 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:d0b:42f6:80c3:156e:164d:54c2])
-        by smtp.gmail.com with ESMTPSA id a13sm6828930pfn.171.2020.07.24.07.58.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 07:58:41 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 24 Jul 2020 20:28:35 +0530
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        David Miller <davem@davemloft.net>, isdn@linux-pingi.de,
-        arnd@arndb.de, edumazet@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org
-Subject: Re: [PATCH] drivers: isdn: capi: Fix data-race bug
-Message-ID: <20200724145835.GA30994@madhuparna-HP-Notebook>
-References: <20200722172329.16727-1-madhuparnabhowmik10@gmail.com>
- <20200723.151158.2190104866687627036.davem@davemloft.net>
- <20200724044807.GA474@madhuparna-HP-Notebook>
- <20200724065747.GF3880088@kroah.com>
+        Fri, 24 Jul 2020 10:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbgGXO7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:59:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F52206D8;
+        Fri, 24 Jul 2020 14:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595602740;
+        bh=u80k3o+yMsUhRhDlI5TDV+bP/sT0UHxg6hWT8vGxnUE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=byM5bE+qq0+e4DX1qLnAPg5gQqxDsg//AT4pubsYTtBg1PF7LZpTTu1rOQK66ZtWS
+         uFwPKjaNvGO8QKNCn/TEJE3EW5XRh1xeFTewkzqPSCQYsUKM7WMLkRDp1UUd+m98AZ
+         3PsLL2mhcCf6wOGL1yj6dUvFoZns1ek5VkrOi+8I=
+Date:   Fri, 24 Jul 2020 16:59:00 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v5 00/18] dynamic_debug fixes, cleanups, features, export
+Message-ID: <20200724145900.GA330332@kroah.com>
+References: <20200719231058.1586423-1-jim.cromie@gmail.com>
+ <4d7244b1-fa4d-f1bd-42e4-7123116e708f@akamai.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724065747.GF3880088@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4d7244b1-fa4d-f1bd-42e4-7123116e708f@akamai.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 08:57:47AM +0200, Greg KH wrote:
-> On Fri, Jul 24, 2020 at 10:18:07AM +0530, Madhuparna Bhowmik wrote:
-> > On Thu, Jul 23, 2020 at 03:11:58PM -0700, David Miller wrote:
-> > > From: madhuparnabhowmik10@gmail.com
-> > > Date: Wed, 22 Jul 2020 22:53:29 +0530
-> > > 
-> > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > > 
-> > > > In capi_init(), after register_chrdev() the file operation callbacks
-> > > > can be called. However capinc_tty_init() is called later.
-> > > > Since capiminors and capinc_tty_driver are initialized in
-> > > > capinc_tty_init(), their initialization can race with their usage
-> > > > in various callbacks like in capi_release().
-> > > > 
-> > > > Therefore, call capinc_tty_init() before register_chrdev to avoid
-> > > > such race conditions.
-> > > > 
-> > > > Found by Linux Driver Verification project (linuxtesting.org).
-> > > > 
-> > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > 
-> > > I agree with Arnd that this just exchanges one set of problems for
-> > > another.
-> > 
-> > Thanks Arnd and David, for reviewing the patch.
-> > Do you have any suggestions on how to fix this correctly?
+On Fri, Jul 24, 2020 at 09:48:54AM -0400, Jason Baron wrote:
 > 
-> Based on the installed base of ISDN systems, and the fact that no one
-> has ever actually hit this race and reported it ever, I wouldn't worry
-> about it :)
->
-Fair enough! Thanks for having a look.
-
-Regards,
-Madhuparna
-
-> thanks,
 > 
-> greg k-h
+> On 7/19/20 7:10 PM, Jim Cromie wrote:
+> > this is v5, changes from previous:
+> >  - moved a chunk from patch 13 to 12, per Jason
+> >  - shorten logging prefix to "dyndbg", drop __func__
+> >  - now with more commit-log advocacy
+> >  - shuffle EXPORT_GPL(ddebug_exec_queries) last.
+> >  - v4+ series Acked-by: jbaron@akamai.com
+> 
+> Yes, series looks good to me:
+> Acked-by: <jbaron@akamai.com>
+> 
+> Greg, what do you think about pulling in this series?
+
+Me?  Am I the one who takes these patches?
+
+Ok, will do, give me a few hours...
+
+thanks,
+
+greg k-h
