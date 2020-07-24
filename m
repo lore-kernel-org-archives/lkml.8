@@ -2,100 +2,126 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A1CC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C90C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA4F20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1EcZzV0"
+	by mail.kernel.org (Postfix) with ESMTP id 3138D2065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595593044;
+	bh=jjBkLz5AMF0gUZeJIT0pnHFFCshEnaPhu7nEYdmm+U8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zac53CxxlnN0Mbxn9GKExVQJvcRV8zShZfecaWj44XW4TSKdb5TPKBEIiFnDQbtY7
+	 Ffc439Mr5ISa1jK4T5Rpx3P/ebYnT6V7ihL4UZO68xohqlLGU+WbMWvUC1rul8rd4x
+	 5111RPmWFVEy18IDR4wivaRdy1ATea7EszZYwudE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgGXMWB (ORCPT
+        id S1726863AbgGXMRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
+        Fri, 24 Jul 2020 08:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGXMWB (ORCPT
+        with ESMTP id S1726326AbgGXMRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:22:01 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41848C0619D3;
-        Fri, 24 Jul 2020 05:22:01 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b9so4342191plx.6;
-        Fri, 24 Jul 2020 05:22:01 -0700 (PDT)
+        Fri, 24 Jul 2020 08:17:20 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55473C0619D3;
+        Fri, 24 Jul 2020 05:17:20 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o18so9739725eje.7;
+        Fri, 24 Jul 2020 05:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KA0BJosXtAeexsqs49sZ0prG2OIgAF6XF0D2f4gkqFU=;
-        b=J1EcZzV0C+msUn7U8aZ/vDkyHLQ/z2gd7IsBhlVoZd/lt9zm5huOKz5zXNGr/vKzR/
-         55UNPVp6tCX82rPnG99I2omBXcG9bzDIoGS5JtznaDfQJjsLGVa1ga5CFlzVLlHnbiQL
-         BhRFUpi1V4Zht3/TrZgo42F/DJYMfaJpOkwD86ASZAxjAtoxjmXraJQnrGFlWcS1uZnL
-         yQoBxHQXQ6DyuEpTioOClFDIOec+F3SNesA5ovmZ5DENmD3e1OYuNx/s+PjtVewLTUGB
-         MR+dy+KeDsP6NR7dwyn3wh3URXnDvwZva3p1nc0xAnuC5GcIzYAmgHSxOjxUCMdZZgwo
-         zYHA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oefsCcIVVC08IrofmdPx+ClRioaDoUfxCbQJCnq9X00=;
+        b=NKeRgkjzwebhEdvaagnz02z9Gbq4+7iop3cEpMwqHtM/LhCwRhRIqvho9HrG24s31c
+         R+JPr2ZDOPzo1yoeDjdsUCixB+H+tFfza1Smtvm9rk0gQvNDmjuNoCJFriOuZgmJRapK
+         YrcfsPnQ8r13I1TbTjX4d33mCzMHRC0hvndXlN9QhxX/wxVZmoIxrdiaxAF465yuJkAR
+         dXdMJ7YHjosB4hY3Py4Tn0EutvRu2IdHQfbpURnC0Z7GYeCcfGbPa7ZzqjpGQ32UCRYn
+         01PRaADlKEtCbFCo6EyDlaiJZwWS6L3lM+J7lLZNZCqQT//eUBoMJp0lXXnsB2+ZkXqB
+         pboA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KA0BJosXtAeexsqs49sZ0prG2OIgAF6XF0D2f4gkqFU=;
-        b=cU0dz+ooyrjZRCQOL6chn4z6Hk58w1t2TsKDpjwT2Y7A+jczPkI6WwWwfqm7keKcj3
-         mk7PP5obApcjnbFB7aAXzGZokrvxuECcXLSaBjFoismZA6AjJY/MwnrekpFnNWpgJdPB
-         8LH87E+0E4jWFD60bOnbTZg3wTk7yiTQPxlCbCBQj+VrzbKsi3LT8HAZ+SDJuDd61OfP
-         fOuK4ElfpfFOrLbKsDxIWwnLo9NbfcDP8exczjy68Pq2W8rILKA8IIKW9H2Y4lOqkhpJ
-         FAgxvL5uIL2mgfMXrDhFs3gT/syRTmc/IDB7+jiVwXic5tyDuxjdt75hfys6xaOGAKoR
-         +Hsw==
-X-Gm-Message-State: AOAM530HOrNFnvo8dHbvTkA09Vl/k08Bltndb5XqPcslsXc+o/Oz9sQU
-        DssxBgYGy/U++tUKZyycG+Rp/3VV
-X-Google-Smtp-Source: ABdhPJxUQ45LCtJslTm+NOisZz+gCAiln04+CMq+Obeg3jVJ1DXTS/GQ9HfUdWP3xnIAm26yKGmnpw==
-X-Received: by 2002:a17:90a:eac7:: with SMTP id ev7mr4782829pjb.21.1595593320770;
-        Fri, 24 Jul 2020 05:22:00 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r185sm5766819pfr.8.2020.07.24.05.21.57
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=oefsCcIVVC08IrofmdPx+ClRioaDoUfxCbQJCnq9X00=;
+        b=Gea54zsxTtA6n5amJy9Qwuz6162T6Gzfp2eLPnaXOoMGTmDjegcVkEJc8Cfw1r0fQs
+         Qo8v3sIngNJ23vOybI+LH8ffs28wbyal+BAO4WIxz5Y4Ve4YuTUbMOCwSg2JjjwVnaPn
+         gVVfo8kDHJfKd59KY5GyMeJbIJA+xC4lQI9S+TmG37CcFf+PBAk6RpvQX3pRJ6/HHMwH
+         CiL2VA326JUAfdfmKbfQH3gIrTqr2TMxQUSIygKoqUAclDwr4uAEDod5CwHb1k5uA+Fe
+         oIg0rvd9nmBs+JnnpwHTbQSxIqgwzUi9hWYKkb9J0R60tZcVaIFREPTNC8nUiEw8HEUt
+         ev1g==
+X-Gm-Message-State: AOAM530tQvq63fUI+hwsMtY5r8O5DrR76UUGvDmASUFmfAcAaQ5XzjOV
+        bDd/W/+k8wSIuZMztsyTsww=
+X-Google-Smtp-Source: ABdhPJwp7IkMvGoHQoVYEg7dT3QpDnvecUh+FJ/wqOUSWekmU6eqd6UysOwYDO1LD+uAwfacpE79bg==
+X-Received: by 2002:a17:907:aad:: with SMTP id bz13mr9307767ejc.276.1595593039130;
+        Fri, 24 Jul 2020 05:17:19 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i7sm599533eds.91.2020.07.24.05.17.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 05:21:59 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chen Yongzhi <yongzhi.chen@unisoc.com>
-Subject: [PATCH v2 0/2] fix an overflow error on sc27xx power supply
-Date:   Fri, 24 Jul 2020 20:21:46 +0800
-Message-Id: <20200724122148.26541-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 24 Jul 2020 05:17:18 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 14:17:16 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <terrelln@fb.com>
+Subject: Re: [PATCH v8 3/7] init: add support for zstd compressed kernel
+Message-ID: <20200724121716.GB632343@gmail.com>
+References: <20200723192801.351114-1-nickrterrell@gmail.com>
+ <20200723192801.351114-4-nickrterrell@gmail.com>
+ <9ff49261-f5fd-b8dd-949a-0b8eab75369b@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ff49261-f5fd-b8dd-949a-0b8eab75369b@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-The patch 2/2 fixes an overflow error by changing to 64-bit divide operations.
-In order to avoid compile error on 32-bit architectures, this patchset
-also introduced a new 64-bit helper in patch 1/2.
+* Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Changes since v1: (https://lkml.org/lkml/2020/7/17/63)
-- Added new help macro DIV_S64_ROUND_CLOSEST;
-- Fixed an error reported by kernel test robot <lkp@intel.com>.
+> On 7/23/20 12:27 PM, Nick Terrell wrote:
+> > +config KERNEL_ZSTD
+> > +	bool "ZSTD"
+> > +	depends on HAVE_KERNEL_ZSTD
+> > +	help
+> > +	  ZSTD is a compression algorithm targeting intermediate compression
+> > +	  with fast decompression speed. It will compress better than GZIP and
+> > +	  decompress around the same speed as LZO, but slower than LZ4. You
+> > +	  will need at least 192 KB RAM or more for booting. The zstd command
+> > +	  line tools is required for compression.
+> 
+> 	       tools are required
 
-Chunyan Zhang (2):
-  math64: New DIV_S64_ROUND_CLOSEST helper
-  power: supply: sc27xx: prevent adc * 1000 from overflow
+Since 'zstd' is the singular tool required for compression AFAICS:
 
- drivers/power/supply/sc27xx_fuel_gauge.c |  9 +++++----
- include/linux/math64.h                   | 19 +++++++++++++++++++
- 2 files changed, 24 insertions(+), 4 deletions(-)
+   LZ4            = lz4c
+   XZ             = xz
+  +ZSTD           = zstd
 
--- 
-2.20.1
+"The zstd command line tool is required for compression" is the 
+intended wording I'd say?
 
+Thanks,
+
+	Ingo
