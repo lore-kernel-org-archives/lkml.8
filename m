@@ -6,61 +6,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561A9C4345E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D23C43462
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA7E206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B672070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595626829;
-	bh=QqhCP1nRQIyKkXneM8FbaNyq/f4aKjtxooqH8/BVewE=;
+	s=default; t=1595626834;
+	bh=K1z+HZg/XZvGVqNYfPR7utgZFfiAHX7DRG2c1sG9geM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wkIsu9InRHn1s1E/klBV34FCASq0TgKBcLjqJIr+HoifgixlyUqgLkMqXg1/J5bgY
-	 kvuCu9kB36D0xl8wJymoSxkDSw+6QodaXt46GjF0JizIFgEBC701uuPjBjedVDmTau
-	 7fAPuZYVVEfpag/K0PZuqTFvXM3XPccgvxQomtrQ=
+	b=KmGrfTdJ9dSvT2GHAjT8+28xX2Q1vtZXPhTCGC/Xwkbaq+blWBN0mNtg4OCbWGjCq
+	 5NtQZE8wmIOzVOSmr9LoXoky78x++uR2m/acChsxYHz6A0UZ+2DdxkbgZ3Za9xzRUF
+	 Uf0WJWShQ2SFNflTKzJpe5BXjHjFhxK3sGQwN4JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGXVk2 (ORCPT
+        id S1727932AbgGXVkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 17:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbgGXVkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:40:06 -0400
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+        id S1726780AbgGXVkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 17:40:03 -0400
+Subject: Re: [GIT PULL] MMC fixes for v5.8-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595626806;
-        bh=QqhCP1nRQIyKkXneM8FbaNyq/f4aKjtxooqH8/BVewE=;
+        s=default; t=1595626803;
+        bh=K1z+HZg/XZvGVqNYfPR7utgZFfiAHX7DRG2c1sG9geM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WvCmQI+aTVTUef3lNiKq+yMWxec1gwT0tMoLaZ12GjeWqlhGubawK5lPm+kpb1Nni
-         +MCYBXxzLiBvDEAj1pCjefTH17RH98wZzhOrvM+gkMMNM9i1wQCp8Q2tdNy7SrEFbS
-         h8SkE39/6R0/MqVkD84ezK391gRFzfgHls1/BqUo=
+        b=lvcHKnzGaiACKDlv/6pAyOCWYrBLyZs/j2tKrYvJs5uQO4JHFJtTMejjzuN2aZs3C
+         5kl9vaR8mJ8mdtX7QfpNFXs1i5ZDYJ+sJELBB9R1Zdp0nLhCjc2DNKxuWUsCGtnoix
+         9zVepfpEg/4reJQVxdd/32osG6HbHYQvDB/NRZlI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200724174739.GA3635934@nvidia.com>
-References: <20200724174739.GA3635934@nvidia.com>
+In-Reply-To: <20200724110939.8934-1-ulf.hansson@linaro.org>
+References: <20200724110939.8934-1-ulf.hansson@linaro.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200724174739.GA3635934@nvidia.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: a862192e9227ad46e0447fd0a03869ba1b30d16f
+X-PR-Tracked-Message-Id: <20200724110939.8934-1-ulf.hansson@linaro.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.8-rc5
+X-PR-Tracked-Commit-Id: ebd4050c6144b38098d8eed34df461e5e3fa82a9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fcef1046eb1b78c98105e9b68e48df6022c23a06
-Message-Id: <159562680653.3064.12242876121090229215.pr-tracker-bot@kernel.org>
-Date:   Fri, 24 Jul 2020 21:40:06 +0000
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: b85bcb784fd84ef854f6a6d03a0c48c207d0b0ec
+Message-Id: <159562680364.3064.6202479855336429042.pr-tracker-bot@kernel.org>
+Date:   Fri, 24 Jul 2020 21:40:03 +0000
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Jul 2020 14:47:39 -0300:
+The pull request you sent on Fri, 24 Jul 2020 13:09:39 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.8-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fcef1046eb1b78c98105e9b68e48df6022c23a06
+https://git.kernel.org/torvalds/c/b85bcb784fd84ef854f6a6d03a0c48c207d0b0ec
 
 Thank you!
 
