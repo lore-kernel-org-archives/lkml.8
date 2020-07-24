@@ -7,28 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A173C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423FDC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB1D206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2951E20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgGXQGr (ORCPT
+        id S1728045AbgGXQEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgGXQEh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:37 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB457C0619E5;
-        Fri, 24 Jul 2020 09:04:36 -0700 (PDT)
+        Fri, 24 Jul 2020 12:04:36 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727892AbgGXQE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:27 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 2EE08FCC;
-        Fri, 24 Jul 2020 18:04:28 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id EA64EFBF;
+        Fri, 24 Jul 2020 18:04:16 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 52/75] x86/sev-es: Handle MMIO String Instructions
-Date:   Fri, 24 Jul 2020 18:03:13 +0200
-Message-Id: <20200724160336.5435-53-joro@8bytes.org>
+Subject: [PATCH v5 36/75] x86/head/64: Move early exception dispatch to C code
+Date:   Fri, 24 Jul 2020 18:02:57 +0200
+Message-Id: <20200724160336.5435-37-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -64,109 +60,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add handling for emulation the MOVS instruction on MMIO regions, as done
-by the memcpy_toio() and memcpy_fromio() functions.
+Move the assembly coded dispatch between page-faults and all other
+exceptions to C code to make it easier to maintain and extend.
+
+Also change the return-type of early_make_pgtable() to bool and make it
+static.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 77 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+ arch/x86/include/asm/pgtable.h |  2 +-
+ arch/x86/include/asm/setup.h   |  1 -
+ arch/x86/kernel/head64.c       | 19 +++++++++++++++----
+ arch/x86/kernel/head_64.S      | 11 +----------
+ 4 files changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index fa1fa55fd8e3..7bfd402c74e3 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -595,6 +595,73 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
- 	return ret;
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index b836138ce852..7b8f2127de37 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -28,7 +28,7 @@
+ #include <asm-generic/pgtable_uffd.h>
+ 
+ extern pgd_t early_top_pgt[PTRS_PER_PGD];
+-int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
++bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+ 
+ void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
+ void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 5c09f50ecf1c..78bdc0f686fb 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -49,7 +49,6 @@ extern void i386_reserve_resources(void);
+ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
+ extern unsigned long __startup_secondary_64(void);
+ extern void startup_64_setup_env(unsigned long physbase);
+-extern int early_make_pgtable(unsigned long address);
+ extern void early_idt_setup_early_handler(unsigned long physaddr);
+ extern void early_load_idt(void);
+ 
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 096b09d06d1c..41514ec1e6f0 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -37,6 +37,8 @@
+ #include <asm/kasan.h>
+ #include <asm/fixmap.h>
+ #include <asm/realmode.h>
++#include <asm/extable.h>
++#include <asm/trapnr.h>
+ 
+ /*
+  * Manage page tables very early on.
+@@ -314,7 +316,7 @@ static void __init reset_early_page_tables(void)
  }
  
-+/*
-+ * The MOVS instruction has two memory operands, which raises the
-+ * problem that it is not known whether the access to the source or the
-+ * destination caused the #VC exception (and hence whether an MMIO read
-+ * or write operation needs to be emulated).
-+ *
-+ * Instead of playing games with walking page-tables and trying to guess
-+ * whether the source or destination is an MMIO range, split the move
-+ * into two operations, a read and a write with only one memory operand.
-+ * This will cause a nested #VC exception on the MMIO address which can
-+ * then be handled.
-+ *
-+ * This implementation has the benefit that it also supports MOVS where
-+ * source _and_ destination are MMIO regions.
-+ *
-+ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
-+ * rare operation. If it turns out to be a performance problem the split
-+ * operations can be moved to memcpy_fromio() and memcpy_toio().
-+ */
-+static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
-+					  unsigned int bytes)
+ /* Create a new PMD entry */
+-int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
++bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+ {
+ 	unsigned long physaddr = address - __PAGE_OFFSET;
+ 	pgdval_t pgd, *pgd_p;
+@@ -324,7 +326,7 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+ 
+ 	/* Invalid address or early pgt is done ?  */
+ 	if (physaddr >= MAXMEM || read_cr3_pa() != __pa_nodebug(early_top_pgt))
+-		return -1;
++		return false;
+ 
+ again:
+ 	pgd_p = &early_top_pgt[pgd_index(address)].pgd;
+@@ -381,10 +383,10 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+ 	}
+ 	pmd_p[pmd_index(address)] = pmd;
+ 
+-	return 0;
++	return true;
+ }
+ 
+-int __init early_make_pgtable(unsigned long address)
++static bool __init early_make_pgtable(unsigned long address)
+ {
+ 	unsigned long physaddr = address - __PAGE_OFFSET;
+ 	pmdval_t pmd;
+@@ -394,6 +396,15 @@ int __init early_make_pgtable(unsigned long address)
+ 	return __early_make_pgtable(address, pmd);
+ }
+ 
++void __init do_early_exception(struct pt_regs *regs, int trapnr)
 +{
-+	unsigned long ds_base, es_base;
-+	unsigned char *src, *dst;
-+	unsigned char buffer[8];
-+	enum es_result ret;
-+	bool rep;
-+	int off;
++	if (trapnr == X86_TRAP_PF &&
++	    early_make_pgtable(native_read_cr2()))
++		return;
 +
-+	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
-+	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
-+
-+	if (ds_base == -1L || es_base == -1L) {
-+		ctxt->fi.vector = X86_TRAP_GP;
-+		ctxt->fi.error_code = 0;
-+		return ES_EXCEPTION;
-+	}
-+
-+	src = ds_base + (unsigned char *)ctxt->regs->si;
-+	dst = es_base + (unsigned char *)ctxt->regs->di;
-+
-+	ret = vc_read_mem(ctxt, src, buffer, bytes);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	ret = vc_write_mem(ctxt, dst, buffer, bytes);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (ctxt->regs->flags & X86_EFLAGS_DF)
-+		off = -bytes;
-+	else
-+		off =  bytes;
-+
-+	ctxt->regs->si += off;
-+	ctxt->regs->di += off;
-+
-+	rep = insn_has_rep_prefix(&ctxt->insn);
-+	if (rep)
-+		ctxt->regs->cx -= 1;
-+
-+	if (!rep || ctxt->regs->cx == 0)
-+		return ES_OK;
-+	else
-+		return ES_RETRY;
++	early_fixup_exception(regs, trapnr);
 +}
 +
- static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 				     struct es_em_ctxt *ctxt)
- {
-@@ -655,6 +722,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 		memcpy(reg_data, ghcb->shared_buffer, bytes);
- 		break;
+ /* Don't add a printk in there. printk relies on the PDA which is not initialized 
+    yet. */
+ static void __init clear_bss(void)
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 28de83fecda3..08412f308de3 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -349,18 +349,9 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	pushq %r15				/* pt_regs->r15 */
+ 	UNWIND_HINT_REGS
  
-+		/* MOVS instruction */
-+	case 0xa4:
-+		bytes = 1;
-+		fallthrough;
-+	case 0xa5:
-+		if (!bytes)
-+			bytes = insn->opnd_bytes;
-+
-+		ret = vc_handle_mmio_movs(ctxt, bytes);
-+		break;
- 		/* Two-Byte Opcodes */
- 	case 0x0f:
- 		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
+-	cmpq $14,%rsi		/* Page fault? */
+-	jnz 10f
+-	GET_CR2_INTO(%rdi)	/* can clobber %rax if pv */
+-	call early_make_pgtable
+-	andl %eax,%eax
+-	jz 20f			/* All good */
+-
+-10:
+ 	movq %rsp,%rdi		/* RDI = pt_regs; RSI is already trapnr */
+-	call early_fixup_exception
++	call do_early_exception
+ 
+-20:
+ 	decl early_recursion_flag(%rip)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
 -- 
 2.27.0
 
