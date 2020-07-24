@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8726C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D98D2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8C520674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595600136;
-	bh=FaWNQZH393if8snfYEH/3YSF3ux/F6OPiQyDwup1mNY=;
+	s=default; t=1595600168;
+	bh=onJE2kg1lOrWB4sO35BBm9Eo7GH4oyn8dKPYU7FH3Ko=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vb4tYx/49x/qMmYSQUlbN8mPrfpk4XBU2HyGbpmn67IJs5u7jiUUhmW0KLUYxPSh4
-	 TJeT+okBts+EVF1CSOqHKQL6DqnC6TrrOE1wMkpFKhP4MdftbK9pjcGVN0uj7qprT2
-	 wOG0hT02bU1y5D7CT1Zg+FU9UD4nJ15Mza3WgtmY=
+	b=S/QOq27pqjj1tCPsYgCn3rhGuOYLeDJrR5L56aPw7cF1pwCxE4aJrFBaScJvtGf/3
+	 t2/AT2kO2TeidIeLlygo7wLchQZiQg8mBathdL/6MUXT9LAJsa6ROkidFRcH9eMRYE
+	 wC/o21nuqiPLi2vnIkqeAhlGBRKf5kJJ7ADw08dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgGXOPf (ORCPT
+        id S1726845AbgGXOQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:15:35 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42408 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgGXOPf (ORCPT
+        Fri, 24 Jul 2020 10:16:07 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:47058 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgGXOQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:15:35 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z17so7137478edr.9;
-        Fri, 24 Jul 2020 07:15:33 -0700 (PDT)
+        Fri, 24 Jul 2020 10:16:07 -0400
+Received: by mail-ed1-f66.google.com with SMTP id q4so3918636edv.13;
+        Fri, 24 Jul 2020 07:16:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nOZ2EhtWCBrjRorAHCZte7RSZh4Nr/XFu5pAPPeshAs=;
-        b=rjJG9Ek4Uk7ha5ZyfQNQwdSRji05mnuXmVlMqRB/FQ9WuylFIrcTNHGLR6Hjypbbwo
-         5LvAy7GppAGgrtpCY1wgj6TtJNj59AiVzREJo/7JgIWx2DL2QlzXsTwBaM0wMNe5Yhuh
-         4+7KutQA1fPwIX+e4xuF4FvqS0GhjJWS5Ifj1ms4Psab6EX8hB1tIQ47sYjnfse8G3JI
-         ZLVvNsJ0EzKPsMcDJV2BLfGBQ+0dHVhk/IH7XDBDPiIV5CVRKZR/L71Q3h+fFKICzHgE
-         TIQOOK8mzYOYJZVHHAK2dnclJERSe2vTf7H7la8Nl7Ge+XrA2a8lWWl4EiaDmGn8Q0y6
-         cl4g==
-X-Gm-Message-State: AOAM5332M3fkMaQkdB/cyG0nkpOxsNmEzDPLKCK9J0paJEEXUd2XIefT
-        87DLT1HmE2JN/FUXGT+tlGU=
-X-Google-Smtp-Source: ABdhPJwCnDwptUWPu+G+TpiJFfaUazAFE2hqpzKtAB4ZIpyBPFN1p7VAzZ9uPmDfPJ7y8jaLzjbtqQ==
-X-Received: by 2002:a50:852a:: with SMTP id 39mr8845473edr.107.1595600132842;
-        Fri, 24 Jul 2020 07:15:32 -0700 (PDT)
+        bh=tY5Z6idGhGaqy3j7rWihq62kp3XpN6wVWhfnttBTXk8=;
+        b=h8MXWKG9WHaJ1tVmsXRheG9WQ7W50vXWtrWDseBZPYUPQVZzT46PtzN+OV+aqY0HuU
+         jdfV4wKLutrl/yB1ityAAIsqPaHArfSt/aDf+VD740HoA0Vea2wMxX/8z2WPsf/syzLh
+         nyhrbzbWndrajaaKvgiwJOz2y8QYizRlO6xiBhdKigAoN7wPSHEVN4w+ZBUHxkveLbIL
+         mfoF7WT40vW859Lgmavli21kQRgaBjMiGH8Vr1mXEIkHKQRKDUbNRCRWKFk2+m8+QmHX
+         zTTv19IZTbLOwAk8n4zzYOfkFabU1JysRc/1WHTcU9IJ0WHJAeuG3vcfNWqvBEzqI7us
+         ip7A==
+X-Gm-Message-State: AOAM533OM7PF5oqawpCQWvXdGd4efln6p8TAG6ZV/PUshoplb3ES1cV3
+        riGOS16OARKTVht1JPbHgjA6NVFD2zc=
+X-Google-Smtp-Source: ABdhPJxbtj3fM+AjJ6hvcrUuIeJieCO2lk2efSggfaPTyqvT5VX+nS/1FqCch3ryhjUR2m21oTec/g==
+X-Received: by 2002:a05:6402:1b1c:: with SMTP id by28mr9171688edb.270.1595600164984;
+        Fri, 24 Jul 2020 07:16:04 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id v19sm821828eda.70.2020.07.24.07.15.30
+        by smtp.googlemail.com with ESMTPSA id fi29sm758336ejb.83.2020.07.24.07.16.02
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 07:15:32 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 16:15:28 +0200
+        Fri, 24 Jul 2020 07:16:04 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:16:01 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -69,36 +69,27 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 27/29] memory: da8xx-ddrctl: Remove unused 'node'
- variable
-Message-ID: <20200724141528.GA10663@kozik-lap>
+Subject: Re: [PATCH v2 23/29] memory: pl172: Add GPLv2 SPDX license header
+Message-ID: <20200724141601.GC10663@kozik-lap>
 References: <20200724074038.5597-1-krzk@kernel.org>
- <20200724074038.5597-28-krzk@kernel.org>
+ <20200724074038.5597-24-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200724074038.5597-28-krzk@kernel.org>
+In-Reply-To: <20200724074038.5597-24-krzk@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:40:36AM +0200, Krzysztof Kozlowski wrote:
-> The variable 'node' is not used.  Remove it to silence compile warning:
-> 
->     drivers/memory/da8xx-ddrctl.c: In function 'da8xx_ddrctl_probe':
->     drivers/memory/da8xx-ddrctl.c:105:22: warning: variable 'node' set but not used [-Wunused-but-set-variable]
+On Fri, Jul 24, 2020 at 09:40:32AM +0200, Krzysztof Kozlowski wrote:
+> Add GPLv2 license header and remove GPL boiler plate text.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
 > ---
-> 
-> Changes since v1:
-> 1. New patch
-> ---
->  drivers/memory/da8xx-ddrctl.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/memory/pl172.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 
 Applied (and part of pull request to arm-soc).
 
