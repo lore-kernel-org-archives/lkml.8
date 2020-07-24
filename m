@@ -2,97 +2,106 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6342FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57872C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413FA206E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 362C820714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595552900;
+	bh=6h79p/EBOO3Jy0O+wNOK5EBNEFcadFue56VbMpxqAfc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QdvjdOO4C+CnArb3Bxz5IWZV+ydDRLpLEoLKesba8Eofnn1OW/3DfQDccYmHvSnma
+	 DveDY2XUwnZfCDw6F8iWbI+mDOuBHSq7hXA0eP/7ps++NjATOhCXbKBuCqz+imw6ny
+	 UEk7BdtnMNpWsXVAg5AmIaKOGdCtNQnJFZddBNAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgGXBGu (ORCPT
+        id S1726454AbgGXBIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 21:06:50 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24762 "EHLO mga18.intel.com"
+        Thu, 23 Jul 2020 21:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbgGXBGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 21:06:50 -0400
-IronPort-SDR: bJFi10tTnHFOCu0w0BlbIAH/eoqdBah8UZ5vcMAKLirlrFXkungTFPEb6B7RvWdCn8aEHq3qyo
- MATYeWky1rGA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138142282"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="138142282"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 18:06:49 -0700
-IronPort-SDR: bMs8aUGR39PW22vlKUmh73TYXuFQXfvozPE0Xtpp30nbttMg+9c6y9UWHmmYq/C3LjimvK86Rk
- OBBDfyzqeH0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="463054103"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jul 2020 18:06:46 -0700
-Date:   Fri, 24 Jul 2020 09:06:45 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        andi.kleen@intel.com, ying.huang@intel.com,
-        andriy.shevchenko@intel.com, philip.li@intel.com,
-        rong.a.chen@intel.com
-Subject: Re: [RFC PATCH] makefile: add debug option to enable function
- aligned on 32 bytes
-Message-ID: <20200724010645.GB65362@shbuild999.sh.intel.com>
-References: <1595475001-90945-1-git-send-email-feng.tang@intel.com>
- <20200722203919.8b7c9b35ff51d66550c3846c@linux-foundation.org>
- <20200723062933.GA65362@shbuild999.sh.intel.com>
- <20200723175704.44c4b890e76dc6dc68bf3674@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723175704.44c4b890e76dc6dc68bf3674@linux-foundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726010AbgGXBIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 21:08:16 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32D75206E3;
+        Fri, 24 Jul 2020 01:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595552895;
+        bh=6h79p/EBOO3Jy0O+wNOK5EBNEFcadFue56VbMpxqAfc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=U6qUgPZWAddKYwPy75j0iJwMI0u7S1FZpM6Htu3VLY43Bakop2yGaOQ9zNk4AziSP
+         53D1qwpryq4oHD4AiwkI+gotw+lxwjvctrEhhPyUC0n+Mq/lNkChZh851He3nbqrnb
+         kyBgjWWAPAHtSzqP28cKb+eLLNplXpnk9987gJsU=
+Date:   Thu, 23 Jul 2020 18:08:14 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     js1304@gmail.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/page_alloc: fix memalloc_nocma_{save/restore}
+ APIs
+Message-Id: <20200723180814.acde28b92ce6adc785a79120@linux-foundation.org>
+In-Reply-To: <1595468942-29687-1-git-send-email-iamjoonsoo.kim@lge.com>
+References: <1595468942-29687-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 05:57:04PM -0700, Andrew Morton wrote:
-> On Thu, 23 Jul 2020 14:29:33 +0800 Feng Tang <feng.tang@intel.com> wrote:
+On Thu, 23 Jul 2020 10:49:02 +0900 js1304@gmail.com wrote:
+
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > 
-> > > > gcc has an option '-falign-functions=n' to force text aligned, and with
-> > > > that option enabled, some of those performance changes will be gone,
-> > > > like [1][2][3].
-> > > > 
-> > > > Add this option so that developers and 0day can easily find performance
-> > > > bump caused by text alignment change,
-> > > 
-> > > Would they use it this way, or would they simply always enable the
-> > > option to reduce the variability?
-> > 
-> > I may mis-understood it in my last reply. If you are asking about how
-> > will developers and 0day use this option, for 0day, I've talked with
-> > 0day folks, they may just enable it by default, as 0day cares more about
-> > the performance delta caused by a commit (Adding Philip and Rong from
-> > 0day).
+> Currently, memalloc_nocma_{save/restore} API that prevents CMA area
+> in page allocation is implemented by using current_gfp_context(). However,
+> there are two problems of this implementation.
 > 
-> OK, thanks, I suspected as much.
+> First, this doesn't work for allocation fastpath. In the fastpath,
+> original gfp_mask is used since current_gfp_context() is introduced in
+> order to control reclaim and it is on slowpath. So, CMA area can be
+> allocated through the allocation fastpath even if
+> memalloc_nocma_{save/restore} APIs are used.
+
+Whoops.
+
+> Currently, there is just
+> one user for these APIs and it has a fallback method to prevent actual
+> problem.
+
+Shouldn't the patch remove the fallback method?
+
+> Second, clearing __GFP_MOVABLE in current_gfp_context() has a side effect
+> to exclude the memory on the ZONE_MOVABLE for allocation target.
+
+More whoops.
+
+Could we please have a description of the end-user-visible effects of
+this change?  Very much needed when proposing a -stable backport, I think.
+
+d7fefcc8de9147c is over a year old.  Why did we only just discover
+this?  This makes one wonder how serious those end-user-visible effects
+are?
+
+> To fix these problems, this patch changes the implementation to exclude
+> CMA area in page allocation. Main point of this change is using the
+> alloc_flags. alloc_flags is mainly used to control allocation so it fits
+> for excluding CMA area in allocation.
 > 
-> The patch is so simple and probably-will-work, I guess we toss it in
-> there and see.
 
-Thanks!
-
-> However it would be good if the 0day people could use it for a while
-> and then provide some feedback on whether it is actually proving
-> useful.  If not, we get to remove some stuff.
-
-Yes, 0day is a good user to try this.
-
-Thanks,
-Feng
