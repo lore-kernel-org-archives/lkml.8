@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DC6C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B50BC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009A72063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A6F20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595582482;
-	bh=LzPTb4x+FLSUPH+NHmD1bJ4ERu+GlQhIbBmboWegqvk=;
+	s=default; t=1595582487;
+	bh=NoiQQKq2UrJBOToHS3LbdiX2Te3HUXoc6HhIkqU9bYw=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=UE8T1VZrfbeeDz7XumXWvq4uzTQLRVNIIYstpCIbReFsaCQAefZzGu7HY9lb7QPVn
-	 BDVU6wHl0b7BAUuk26F4wmtTHeA8PlFpPjXVQknurZ28cVCe8hSeK/B1nogxq9ONU0
-	 eaHdXRhBpGlfli7Zj/PhNTURwoBI7l0skvi1XK3A=
+	b=XC9TMb3H7yVmfIUXceenrltzamjnnokbZFQ9ImfSN4DdffP4BRg7HEQ9e40hFWgWU
+	 Sf93zTZtbM3LjasV7WenFS6KcL3InvSKDuL10GgAW4CrMsEWrkCt2JUzUjSFn9yRCs
+	 V0TBXhSk2piTR+q/hcgrbR8x32v9e6op0XqqrNK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgGXJVU (ORCPT
+        id S1728260AbgGXJVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 05:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGXJVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:21:20 -0400
+        id S1726591AbgGXJVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:21:25 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3B052063A;
-        Fri, 24 Jul 2020 09:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3ECC2063A;
+        Fri, 24 Jul 2020 09:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595582479;
-        bh=LzPTb4x+FLSUPH+NHmD1bJ4ERu+GlQhIbBmboWegqvk=;
+        s=default; t=1595582484;
+        bh=NoiQQKq2UrJBOToHS3LbdiX2Te3HUXoc6HhIkqU9bYw=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=paDbyVWpT5WbiXRG9xDz0koaZtLK5CODW0/I/hFh1Xg89JmBF85teM2hAaCegeyqY
-         V6hdcgo82RrLCAeMmgWUOLiA8XZANeMryMWvJDRqJQXA3ryDXrJ3f9s3Bd07NCRFeJ
-         phay31DuYPvQTg6gUh5NngGI68gtI1rykgZDK0MQ=
+        b=KwIzMMErUw7dVCzthD4oE2dloBB+56NoaOzKAonB/3yD0493iGtwxZo0Eg8yNZi0X
+         bkqTsFR+Yadh331Wh4dzdP1d2k9+OA8Ub+H4xdHOrOroyui3TZR4ZUdoZylWRHk8DS
+         cjy+xD7IoMp+4eFQFIzk9wLmffo6armjbI5JT1FU=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1595403506-8209-8-git-send-email-claudiu.beznea@microchip.com>
-References: <1595403506-8209-1-git-send-email-claudiu.beznea@microchip.com> <1595403506-8209-8-git-send-email-claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 07/18] clk: at91: sam9x60: fix main rc oscillator frequency
+In-Reply-To: <1595403506-8209-9-git-send-email-claudiu.beznea@microchip.com>
+References: <1595403506-8209-1-git-send-email-claudiu.beznea@microchip.com> <1595403506-8209-9-git-send-email-claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2 08/18] clk: at91: sckc: register slow_rc with accuracy option
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -52,21 +52,24 @@ Cc:     bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
 To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
         alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
         mturquette@baylibre.com, nicolas.ferre@microchip.com
-Date:   Fri, 24 Jul 2020 02:21:19 -0700
-Message-ID: <159558247921.3847286.12219188368386875463@swboyd.mtv.corp.google.com>
+Date:   Fri, 24 Jul 2020 02:21:24 -0700
+Message-ID: <159558248412.3847286.6927039947131599378@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Claudiu Beznea (2020-07-22 00:38:15)
-> Main RC oscillator frequency is 12MHz according to datasheet
-> (chapter 27.2).
+Quoting Claudiu Beznea (2020-07-22 00:38:16)
+> Chapter 57.7.5 of SAM9X60 datasheet specifies that the maximum drift of
+> this oscillator is +- 3KHz. Use that value and the formula at [1]
+> or the calculator at [2] to compute the PPB value.
 >=20
-> Fixes: 01e2113de9a52 ("clk: at91: add sam9x60 pmc driver")
+> [1] https://www.everythingrf.com/rf-calculators/ppm-to-hz-calculator
+> [2] https://www.changpuak.ch/electronics/ppm_to_Hz_converter.php
+>=20
+> Fixes: 04bcc4275e601 ("clk: at91: sckc: add support for SAM9X60")
 > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com
 > ---
 
 Applied to clk-next
