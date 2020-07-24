@@ -2,103 +2,83 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4055CC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 205362067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:40:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UFmzpMf7"
+	by mail.kernel.org (Postfix) with ESMTP id 135BC2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgGXRkb (ORCPT
+        id S1726858AbgGXRkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXRka (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:40:30 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06122C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:40:30 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id f16so5711045pjt.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QMsfHaQGQ+0SRHcIqI75rby1zzIeBrnwc+TycCSBhRM=;
-        b=UFmzpMf7uzK2lx30P3rhoBpvw5w85/VUsDXt/5ykAeCH/VFrEJEwB9RmNcdbY2LhWz
-         FiNtcwq6cYSJDFEy9jc1V2I68Ud1ixnRqGj5AYeAVOuh08EcTn9UXClFjujGlNhJqqyt
-         /o0xfCbeW0wGt1skpJ0dBBA+3UPdspZahcnFQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QMsfHaQGQ+0SRHcIqI75rby1zzIeBrnwc+TycCSBhRM=;
-        b=fcbEXgAk4E6jPo2EGEKU2oX4yrwB7MLwDu8A2O2oWCK44o9p/wZNSoOMYJCx3LKjHi
-         UuAjW33jUxDyNxxZ8XwPBAet24PHUjysDG64v4hqb7dXb62khnTddAXTeX7vSWlDsuWF
-         Jv3MjVbO5xH9OzfWfsCEP01GVEQ3wc5BtYLpj5AjrpltB8jX0CcWzYClHI2Yt3oabAdJ
-         IIt/jR1MdWwqmHl8GW2+huSjBkac7gB1Ic20bdEN0azC/1SHRf/WmKp+ZY3owf1UcVzT
-         oFVuI7y6L3IL+vKGRz/7/1Vg+v2GJXahM2BRks56NNIxd8OdFlsjr8HVSDitVr1mms0p
-         sJXQ==
-X-Gm-Message-State: AOAM532RcIKRyqF0vqCUD1uwcBf6SpJiDHjPFBbhn51aSJQdnWrT0Q7l
-        I7tBunXWF7Im0/IbydRhZ05Tog==
-X-Google-Smtp-Source: ABdhPJyekeM+nvr+iN70DB8t8eLU5BEdU2IBMUBrLQ9bGL/yN7X161hHc1aZr2MM8o1xGhcfY2+Q3A==
-X-Received: by 2002:a17:902:9a0a:: with SMTP id v10mr9082983plp.134.1595612429062;
-        Fri, 24 Jul 2020 10:40:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q24sm7188513pfg.34.2020.07.24.10.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 10:40:28 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 10:40:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 31/75] x86/head/64: Load GDT after switch to virtual
- addresses
-Message-ID: <202007241040.4A0CF961@keescook>
-References: <20200724160336.5435-1-joro@8bytes.org>
- <20200724160336.5435-32-joro@8bytes.org>
+        Fri, 24 Jul 2020 13:40:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgGXRkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:40:22 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A18702065F;
+        Fri, 24 Jul 2020 17:40:21 +0000 (UTC)
+Date:   Fri, 24 Jul 2020 13:40:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
+Message-ID: <20200724134020.3160dc7c@oasis.local.home>
+In-Reply-To: <20200724133656.76c75629@oasis.local.home>
+References: <20200719155033.24201-1-oscar.carter@gmx.com>
+        <20200719155033.24201-3-oscar.carter@gmx.com>
+        <20200721140545.445f0258@oasis.local.home>
+        <20200724161921.GA3123@ubuntu>
+        <20200724123528.36ea9c9e@oasis.local.home>
+        <20200724171418.GB3123@ubuntu>
+        <20200724133656.76c75629@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724160336.5435-32-joro@8bytes.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 06:02:52PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Load the GDT right after switching to virtual addresses to make sure
-> there is a defined GDT for exception handling.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+On Fri, 24 Jul 2020 13:36:56 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> Which BTW, is supported by the following architectures:
+> 
+>   arm
+>   arm64
+>   csky
+>   parisc
+>   powerpc
+>   riscv
+>   s390
+>   x86
 
--- 
-Kees Cook
+And here's a list of architectures that have function tracing but need
+to be updated:
+
+  ia64
+  microblaze
+  mips
+  nds32
+  sh
+  sparc
+  xtensa
+
+> 
+> All of the above architectures should not even be hitting the code
+> that does the function cast. What architecture are you doing all this
+> for?
+
+Which one of the above is this patch set for?
+
+-- Steve
