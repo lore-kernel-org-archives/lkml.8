@@ -2,132 +2,269 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F554C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBF2C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D678206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PwH8YjZt"
+	by mail.kernel.org (Postfix) with ESMTP id 5EC0820674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595611495;
+	bh=7UDxAq6Pm0yB8pbnrhkoRNKTklADUBaS1F8Muj/F9qY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TbEScCV6GYiC4SBcRdrfphOq9wINgIhZNSaFg9iuIV6pHJJpwH0k2TXO/28BsujvH
+	 zQV57iDLfOj6QFuXHKzHaHh/z7LLjAjTTmv9T2KcdJsWRKZ8EAuhCHFCWdQnxfdRJT
+	 eVF/vj8DQKA0koPZsdVicFidmKRtp5nKp1FBk0RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgGXRYt (ORCPT
+        id S1727834AbgGXRYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:24:49 -0400
-Received: from mout.gmx.net ([212.227.15.18]:52945 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726625AbgGXRYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:24:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1595611445;
-        bh=CKyR8EMqxeOXVY/iOMNddyLu0IDddolO4j2t8BjxTkY=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=PwH8YjZtZl0FG2VXzt0NRxkf+yHG8ZnJjsMFJCDcy5drJtOK7YzmvviUy9Xn4/Pcm
-         8ggOSOCFIGbBxdeO1yAbqZn5gaO2/LSnjWgtkFsoFqpL0jF8UXpE/lssCVtoRQZKxK
-         yB0agzD+BrpSYEokV1+zZnRwQ1iG48XY0JeQicAI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MmlXA-1khkQd24RS-00jpgg; Fri, 24
- Jul 2020 19:24:05 +0200
-Date:   Fri, 24 Jul 2020 19:24:03 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
-Message-ID: <20200724172403.GC3123@ubuntu>
-References: <20200719155033.24201-1-oscar.carter@gmx.com>
- <20200719155033.24201-3-oscar.carter@gmx.com>
- <20200721140545.445f0258@oasis.local.home>
- <20200724161921.GA3123@ubuntu>
- <20200724123528.36ea9c9e@oasis.local.home>
- <20200724171418.GB3123@ubuntu>
+        Fri, 24 Jul 2020 13:24:54 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:29184 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726625AbgGXRYx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:24:53 -0400
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 06OHOW59016668;
+        Sat, 25 Jul 2020 02:24:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06OHOW59016668
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595611473;
+        bh=bIixnEMAR0jpu0bkdEKJIWnyzdVnCrMQLsfoauhy0fQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W2EWm1cc14fkW4PNArDHqu1LBD4fe2IusZG6QPFRbSfzz7M0LtWyFqUKPCXA341TG
+         il+FgP81GniPKySpqsmlALQ7tF3ymvtkKp+irMGUwWBDFz8uBtu1c2lYf8L5yiXEen
+         djEjwIfRNocZm8GrbY6Nj6FL0WOtqvtBkfPGnH0tgw3AjXU71wlpkW04v38l1h1f/a
+         4+k+uf95HOXf82wFxseyb+v6qUqX1saNnGkDK5p9/XrNdjYF9BZsezQoY9n1bSXBOX
+         n5qUk2ZCeIkSzfkVA/060ujOfd1xyDDx/XPTxrNA1OVcrQ/UMYMnCtjCg/Z8GSoYBY
+         5w5N0qbxCu2TQ==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id t187so2380024vke.5;
+        Fri, 24 Jul 2020 10:24:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533yb3THXWA3i5czVZBw1Z7zqc9nwzEAps1a27/SGJJZ+10+KPpX
+        /CqKpNb49QDlPKzYA8fcYyb1+LAdDA3QVAEpN1M=
+X-Google-Smtp-Source: ABdhPJzGY41nFJFYVQa7SB+bfB7R68BKKKKuv/lpK6zpHu7T7ky83qZV94n9m68mlcZz5TCDSXepblY5pu3C5TEWURw=
+X-Received: by 2002:ac5:c74b:: with SMTP id b11mr8651746vkn.73.1595611471380;
+ Fri, 24 Jul 2020 10:24:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724171418.GB3123@ubuntu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:f286teVwMCObcAo1c+vNRctWHP3RuMXVbuBShTSuZg/kMkr9sgf
- g/pnMennfIcHSP/WROtDP9H8l+xTgIFdWyxKHjkmZZvCOxWoi6ZimtXAhPf/zD6IF/oAO3L
- fyBvqTR0VXVtNDH6ZXvqbq052+qrDnmzEnTryU6nEuQV21jpn8uRB9RYUb2/DAQ/z2gleAu
- fMG0/Ba93qgZ4tYsit/zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3l9mO4VbPNw=:K+2uWVyPPAP91pFroHuFd8
- yjNMolsXRIXRWhIXSkKHuSVAwI7pZ7ZUHJMuslnlJCluECZWYeCjujLJsWOgjIMuRVdxQ2o+0
- Qhk0yDqDbLK4dvciHEDYJ13up+TJbl9iW30utK4lrlMIYQr+TLpWTWssL/pYR4t/xApbazcjl
- rxtJU/N2Yjs12g8Oo9TDqKAvuvRRD3LW/qQ72LDS8Eeh60locDghuSArF2yRBjqh9UD+XpQ8i
- UbFzyS8DU1VS1NEg70zGblCCyaaNEafaiudfHdLQq4HD0ollm0G3ICQEXuEPslVofKJtUq4DJ
- i3BdRv7UiXN53kG4keuuV2cdOmtyozJf+ogz4qGJVm8iuhuWB48vdkf1MfnyEisEd77vWOpXK
- tojR6Upc/VG1sABsZf7TAWP35d84cKh690MvMnVL2IGN6m2PJ83WlTAJoXIWFJtT0ACsVSnfy
- J6u7pFV4O9xF4Lmdc6v6F31fC0GUohn9U2v6zTqqCIbyreSFvYCo4S9gP5biUg1zBZVx44qrl
- bY20xnZHE0vLSgAKvSVaLSoYtLXdaf1WHeQCaVYgeLPOYX2DbQS45CMIOW8QsdLsr9by+bAyS
- gLKMADoWB5M7dnK+M8voh587j7GSX19HM3MqiwiizPA1hsD+/+SPjvJ2de3FcL1E9KHbx+agT
- +purwlTS75/uVsi/rtNvdYlCzFpHSSabQcV0K9mhox62Tkz2VVJR8c63a1kXclRfg82TB1bxq
- q8H4+BP9+d+67mw2Zn2IncefoLerrLAWplvVxGgCKzl7221lnSnh7nh4wX/GjCkCpyxx0NlKA
- sMbiNhstB+xPHtDqRMhTF6XNRtixWKdd9vh7BJ0TDn/JmokXyAxLl1uueZYPhnn6mS02tpjmi
- w359qiq/JWW4Fofm7zmxXTyVo8Dppu0gRD21TUzGNgNgLx1yM/Z86z4mHSV1gLy4JGqwSrQ2c
- CG5A++yerWl+vl2vxWk8U/0UoDaZjUWi9zQIv3bmu7d0vMCogkkWT8wSUyWfo0grqZa6TTVTT
- qZlYs8QqxVw3Z4Vfpq7pPIw1NUuLr8kbFborNejS+6AHH7JUbFqXVz1hT9rrd2MlhGei9Fp0m
- HbZd9ZMpkaRMEr/JjGfvQXqI0ofdh9ajeZu+PnQSQUNKDaBQj8JwfLsJPmR3oFw6mLQxXm1Lz
- UI9p4IZj08M//DGhAqGJ7hQkRD1Zrsj5gC/xucK/ngLxuchrcupiZFXopHRChC81ZLj/hQuLR
- zcseIaZkrvYdIp5S/IlfJao+McrfL7NqcKW7Tnw==
-Content-Transfer-Encoding: quoted-printable
+References: <20200718063847.919599-1-masahiroy@kernel.org>
+In-Reply-To: <20200718063847.919599-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 25 Jul 2020 02:23:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASqquXzfcd8KWE7HDZepLu9Y8t0G77OgZTEVM4DL=JuNw@mail.gmail.com>
+Message-ID: <CAK7LNASqquXzfcd8KWE7HDZepLu9Y8t0G77OgZTEVM4DL=JuNw@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: constify XPM data
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
-
-On Fri, Jul 24, 2020 at 07:14:18PM +0200, Oscar Carter wrote:
-> On Fri, Jul 24, 2020 at 12:35:28PM -0400, Steven Rostedt wrote:
-> > On Fri, 24 Jul 2020 18:19:21 +0200
-> > Oscar Carter <oscar.carter@gmx.com> wrote:
-> >
-> > > > The linker trick is far less intrusive, and I believe less error p=
-rone.
-> > >
-> > > If we use the linker trick, the warning -Wcast-function-type dissape=
-ars,
-> > > but in a way that makes impossible to the compiler to get the necess=
-ary
-> > > info about function prototypes to insert the commented check. As far=
- I
-> > > know, this linker trick (redirection of a function) is hidden for th=
-e
-> > > CFI build.
-> > >
-> > > So, in my opinion, the linker trick is not suitable if we want to pr=
-otect
-> > > the function pointers of the ftrace subsystem against an attack that
-> > > modifiy the normal flow of the kernel.
-> >
-> > The linker trick should only affect architectures that don't implement
-> > the needed features. I can make it so the linker trick is only applied
-> > to those archs, and other archs that want more protection only need to
-> > add these features to their architectures.
-> >
-> > It's much less intrusive than this patch.
+On Sat, Jul 18, 2020 at 3:39 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> Sorry, but I don't understand your proposal. What features an arch need =
-to
-> add if want the CFI protection?
-
-Typo correction.
-
-Sorry, but I don't understand your proposal. What features does an arch ne=
-ed
-to add if want the CFI protection?
-
+> Constify arrays as well as strings.
 >
-> >
-> > -- Steve
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+
+Applied to linux-kbuild.
+
+
+>  scripts/kconfig/images.c | 30 +++++++++++++++---------------
+>  scripts/kconfig/images.h | 30 +++++++++++++++---------------
+>  2 files changed, 30 insertions(+), 30 deletions(-)
 >
-Thanks,
-Oscar Carter
+> diff --git a/scripts/kconfig/images.c b/scripts/kconfig/images.c
+> index b4fa0e4a63a5..2f9afffa5d79 100644
+> --- a/scripts/kconfig/images.c
+> +++ b/scripts/kconfig/images.c
+> @@ -5,7 +5,7 @@
+>
+>  #include "images.h"
+>
+> -const char *xpm_load[] = {
+> +const char * const xpm_load[] = {
+>  "22 22 5 1",
+>  ". c None",
+>  "# c #000000",
+> @@ -35,7 +35,7 @@ const char *xpm_load[] = {
+>  "###############.......",
+>  "......................"};
+>
+> -const char *xpm_save[] = {
+> +const char * const xpm_save[] = {
+>  "22 22 5 1",
+>  ". c None",
+>  "# c #000000",
+> @@ -65,7 +65,7 @@ const char *xpm_save[] = {
+>  "..##################..",
+>  "......................"};
+>
+> -const char *xpm_back[] = {
+> +const char * const xpm_back[] = {
+>  "22 22 3 1",
+>  ". c None",
+>  "# c #000083",
+> @@ -93,7 +93,7 @@ const char *xpm_back[] = {
+>  "......................",
+>  "......................"};
+>
+> -const char *xpm_tree_view[] = {
+> +const char * const xpm_tree_view[] = {
+>  "22 22 2 1",
+>  ". c None",
+>  "# c #000000",
+> @@ -120,7 +120,7 @@ const char *xpm_tree_view[] = {
+>  "......................",
+>  "......................"};
+>
+> -const char *xpm_single_view[] = {
+> +const char * const xpm_single_view[] = {
+>  "22 22 2 1",
+>  ". c None",
+>  "# c #000000",
+> @@ -147,7 +147,7 @@ const char *xpm_single_view[] = {
+>  "......................",
+>  "......................"};
+>
+> -const char *xpm_split_view[] = {
+> +const char * const xpm_split_view[] = {
+>  "22 22 2 1",
+>  ". c None",
+>  "# c #000000",
+> @@ -174,7 +174,7 @@ const char *xpm_split_view[] = {
+>  "......................",
+>  "......................"};
+>
+> -const char *xpm_symbol_no[] = {
+> +const char * const xpm_symbol_no[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -191,7 +191,7 @@ const char *xpm_symbol_no[] = {
+>  " .......... ",
+>  "            "};
+>
+> -const char *xpm_symbol_mod[] = {
+> +const char * const xpm_symbol_mod[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -208,7 +208,7 @@ const char *xpm_symbol_mod[] = {
+>  " .......... ",
+>  "            "};
+>
+> -const char *xpm_symbol_yes[] = {
+> +const char * const xpm_symbol_yes[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -225,7 +225,7 @@ const char *xpm_symbol_yes[] = {
+>  " .......... ",
+>  "            "};
+>
+> -const char *xpm_choice_no[] = {
+> +const char * const xpm_choice_no[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -242,7 +242,7 @@ const char *xpm_choice_no[] = {
+>  "    ....    ",
+>  "            "};
+>
+> -const char *xpm_choice_yes[] = {
+> +const char * const xpm_choice_yes[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -259,7 +259,7 @@ const char *xpm_choice_yes[] = {
+>  "    ....    ",
+>  "            "};
+>
+> -const char *xpm_menu[] = {
+> +const char * const xpm_menu[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -276,7 +276,7 @@ const char *xpm_menu[] = {
+>  " .......... ",
+>  "            "};
+>
+> -const char *xpm_menu_inv[] = {
+> +const char * const xpm_menu_inv[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -293,7 +293,7 @@ const char *xpm_menu_inv[] = {
+>  " .......... ",
+>  "            "};
+>
+> -const char *xpm_menuback[] = {
+> +const char * const xpm_menuback[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> @@ -310,7 +310,7 @@ const char *xpm_menuback[] = {
+>  " .......... ",
+>  "            "};
+>
+> -const char *xpm_void[] = {
+> +const char * const xpm_void[] = {
+>  "12 12 2 1",
+>  "  c white",
+>  ". c black",
+> diff --git a/scripts/kconfig/images.h b/scripts/kconfig/images.h
+> index d8ff614bd087..7212dec2006c 100644
+> --- a/scripts/kconfig/images.h
+> +++ b/scripts/kconfig/images.h
+> @@ -10,21 +10,21 @@
+>  extern "C" {
+>  #endif
+>
+> -extern const char *xpm_load[];
+> -extern const char *xpm_save[];
+> -extern const char *xpm_back[];
+> -extern const char *xpm_tree_view[];
+> -extern const char *xpm_single_view[];
+> -extern const char *xpm_split_view[];
+> -extern const char *xpm_symbol_no[];
+> -extern const char *xpm_symbol_mod[];
+> -extern const char *xpm_symbol_yes[];
+> -extern const char *xpm_choice_no[];
+> -extern const char *xpm_choice_yes[];
+> -extern const char *xpm_menu[];
+> -extern const char *xpm_menu_inv[];
+> -extern const char *xpm_menuback[];
+> -extern const char *xpm_void[];
+> +extern const char * const xpm_load[];
+> +extern const char * const xpm_save[];
+> +extern const char * const xpm_back[];
+> +extern const char * const xpm_tree_view[];
+> +extern const char * const xpm_single_view[];
+> +extern const char * const xpm_split_view[];
+> +extern const char * const xpm_symbol_no[];
+> +extern const char * const xpm_symbol_mod[];
+> +extern const char * const xpm_symbol_yes[];
+> +extern const char * const xpm_choice_no[];
+> +extern const char * const xpm_choice_yes[];
+> +extern const char * const xpm_menu[];
+> +extern const char * const xpm_menu_inv[];
+> +extern const char * const xpm_menuback[];
+> +extern const char * const xpm_void[];
+>
+>  #ifdef __cplusplus
+>  }
+> --
+> 2.25.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
