@@ -2,193 +2,213 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9E1C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B2C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B4D20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF4420674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgGXQHp (ORCPT
+        id S1728481AbgGXQHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:07:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:29460 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbgGXQHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:07:44 -0400
-IronPort-SDR: 2LZSb+pHBH4e0hsToUChW+STfm3t2sa+P/MU+3fuDxxvBkLgKOmzCKYNwOIgI5U5hvsnHyqudL
- qV4fMIqfgw6g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148647110"
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="148647110"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 09:07:42 -0700
-IronPort-SDR: F8rEoAEGq1fN4gk0Q14cjgMCsVHsaBylkk6sPID/0kXCPqyCJsarDM/BvHHzboPXcM87GFtgrB
- u4IioW+MOr2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="433124626"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2020 09:07:42 -0700
-Received: from [10.252.140.222] (kliang2-mobl.ccr.corp.intel.com [10.252.140.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 24 Jul 2020 12:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbgGXQEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:33 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8C5C0619E4;
+        Fri, 24 Jul 2020 09:04:33 -0700 (PDT)
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id AC3F2580638;
-        Fri, 24 Jul 2020 09:07:41 -0700 (PDT)
-Subject: Re: [PATCH V7 08/14] perf/x86/intel: Generic support for hardware
- TopDown metrics
-To:     peterz@infradead.org
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        like.xu@linux.intel.com
-References: <20200723171117.9918-1-kan.liang@linux.intel.com>
- <20200723171117.9918-9-kan.liang@linux.intel.com>
- <20200724131906.GW119549@hirez.programming.kicks-ass.net>
- <20200724152755.GK43129@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <d7ae2272-52ea-c5a9-2937-9a51c544ade8@linux.intel.com>
-Date:   Fri, 24 Jul 2020 12:07:40 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by theia.8bytes.org (Postfix) with ESMTPSA id 08C20FC7;
+        Fri, 24 Jul 2020 18:04:25 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v5 46/75] x86/dumpstack/64: Add noinstr version of get_stack_info()
+Date:   Fri, 24 Jul 2020 18:03:07 +0200
+Message-Id: <20200724160336.5435-47-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
+References: <20200724160336.5435-1-joro@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200724152755.GK43129@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joerg Roedel <jroedel@suse.de>
 
+The get_stack_info functionality is needed in the entry code for the #VC
+exception handler. Provide a version of it in the .text.noinstr
+section which can be called safely from there.
 
-On 7/24/2020 11:27 AM, peterz@infradead.org wrote:
-> On Fri, Jul 24, 2020 at 03:19:06PM +0200, peterz@infradead.org wrote:
->> On Thu, Jul 23, 2020 at 10:11:11AM -0700, kan.liang@linux.intel.com wrote:
->>> @@ -3375,6 +3428,72 @@ static int intel_pmu_hw_config(struct perf_event *event)
->>>   	if (event->attr.type != PERF_TYPE_RAW)
->>>   		return 0;
->>>   
->>> +	/*
->>> +	 * Config Topdown slots and metric events
->>> +	 *
->>> +	 * The slots event on Fixed Counter 3 can support sampling,
->>> +	 * which will be handled normally in x86_perf_event_update().
->>> +	 *
->>> +	 * The metric events don't support sampling.
->>> +	 *
->>> +	 * For counting, topdown slots and metric events will be
->>> +	 * handled specially for event update.
->>> +	 * A flag PERF_X86_EVENT_TOPDOWN is applied for the case.
->>> +	 */
->>> +	if (x86_pmu.intel_cap.perf_metrics && is_topdown_event(event)) {
->>> +		if (is_metric_event(event)) {
->>> +			struct perf_event *leader = event->group_leader;
->>> +			struct perf_event *sibling;
->>> +
->>> +			/* The metric events don't support sampling. */
->>> +			if (is_sampling_event(event))
->>> +				return -EINVAL;
->>> +
->>> +			/* The metric events cannot be a group leader. */
->>> +			if (leader == event)
->>> +				return -EINVAL;
->>> +
->>> +			/*
->>> +			 * The slots event cannot be the leader of a topdown
->>> +			 * sample-read group, e.g., {slots, topdown-retiring}:S
->>> +			 */
->>> +			if (is_slots_event(leader) && is_sampling_event(leader))
->>> +				return -EINVAL;
->>
->> This has nothing to do with sample-read; SLOTS cannot be sampling when
->> coupled with the METRIC stuff because hardware is daft.
->>
->> And you can have SAMPLE_READ on non-leader events just fine.
->>
->>> +
->>> +			/*
->>> +			 * The slots event must be before the metric events,
->>> +			 * because we only update the values of a topdown
->>> +			 * group once with the slots event.
->>> +			 */
->>> +			if (!is_slots_event(leader)) {
->>> +				for_each_sibling_event(sibling, leader) {
->>> +					if (is_slots_event(sibling))
->>> +						break;
->>> +					if (is_metric_event(sibling))
->>> +						return -EINVAL;
->>> +				}
->>> +			}
->>
->> Per the SIBLING patch this then wants to be:
->>
->> 			if (!is_slots_event(leader))
->> 				return -EINVAL;
->>
->> 			event->event_caps |= PERF_EV_CAP_SIBLING.
->> 			/*
->> 			 * Only once we have a METRICs sibling to we
->> 			 * need TopDown magic.
->> 			 */
->> 			leader->hw.flags |= PERF_X86_EVENT_TOPDOWN;
->>> +		}
->>> +
->>> +		if (!is_sampling_event(event)) {
->>> +			if (event->attr.config1 != 0)
->>> +				return -EINVAL;
->>
->> How does this depend on sampling?
->>
->>> +			/*
->>> +			 * The TopDown metrics events and slots event don't
->>> +			 * support any filters.
->>> +			 */
->>> +			if (event->attr.config & X86_ALL_EVENT_FLAGS)
->>> +				return -EINVAL;
->>
->> That seems independent of sampling too. Even a sampling SLOTS shouldn't
->> be having any of those afaict.
->>
->>> +
->>> +			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
->>
->> This is confusing too, a !sampling SLOTS event without METRIC siblings
->> shouldn't have this set, right? So arguably, this should be like above.
->>
->>> +
->>> +			event->event_caps |= PERF_EV_CAP_COEXIST;
->>> +
->>> +			if (is_metric_event(event))
->>> +				event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
->>
->> This too seems like something that should be in the is_metric_event()
->> branch above.
->>
->>> +		}
->>> +	}
->>> +
->>>   	if (!(event->attr.config & ARCH_PERFMON_EVENTSEL_ANY))
->>>   		return 0;
->>>   
-> 
-> FWIW, I pushed out a branch with all these changes in:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/metric
-> 
-> Just to get it some build love, if you want it differently, I'm happy to
-> throw it all out again.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/stacktrace.h |  2 ++
+ arch/x86/kernel/dumpstack.c       |  7 +++---
+ arch/x86/kernel/dumpstack_64.c    | 39 ++++++++++++++++++-------------
+ arch/x86/mm/cpu_entry_area.c      |  3 ++-
+ 4 files changed, 31 insertions(+), 20 deletions(-)
 
-Thanks Peter.
+diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
+index 5ae5a68e469d..49600643faba 100644
+--- a/arch/x86/include/asm/stacktrace.h
++++ b/arch/x86/include/asm/stacktrace.h
+@@ -35,6 +35,8 @@ bool in_entry_stack(unsigned long *stack, struct stack_info *info);
+ 
+ int get_stack_info(unsigned long *stack, struct task_struct *task,
+ 		   struct stack_info *info, unsigned long *visit_mask);
++bool get_stack_info_noinstr(unsigned long *stack, struct task_struct *task,
++			    struct stack_info *info);
+ 
+ const char *stack_type_name(enum stack_type type);
+ 
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 48ce44576947..74147f7b3d82 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -29,8 +29,8 @@ static int die_counter;
+ 
+ static struct pt_regs exec_summary_regs;
+ 
+-bool in_task_stack(unsigned long *stack, struct task_struct *task,
+-		   struct stack_info *info)
++bool noinstr in_task_stack(unsigned long *stack, struct task_struct *task,
++			   struct stack_info *info)
+ {
+ 	unsigned long *begin = task_stack_page(task);
+ 	unsigned long *end   = task_stack_page(task) + THREAD_SIZE;
+@@ -46,7 +46,8 @@ bool in_task_stack(unsigned long *stack, struct task_struct *task,
+ 	return true;
+ }
+ 
+-bool in_entry_stack(unsigned long *stack, struct stack_info *info)
++/* Called from get_stack_info_noinstr - so must be noinstr too */
++bool noinstr in_entry_stack(unsigned long *stack, struct stack_info *info)
+ {
+ 	struct entry_stack *ss = cpu_entry_stack(smp_processor_id());
+ 
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index c49cf594714b..5a85730eb0ca 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -85,7 +85,7 @@ struct estack_pages estack_pages[CEA_ESTACK_PAGES] ____cacheline_aligned = {
+ 	EPAGERANGE(VC2),
+ };
+ 
+-static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
++static bool __always_inline in_exception_stack(unsigned long *stack, struct stack_info *info)
+ {
+ 	unsigned long begin, end, stk = (unsigned long)stack;
+ 	const struct estack_pages *ep;
+@@ -126,7 +126,7 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ 	return true;
+ }
+ 
+-static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
++static bool __always_inline in_irq_stack(unsigned long *stack, struct stack_info *info)
+ {
+ 	unsigned long *end   = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
+ 	unsigned long *begin = end - (IRQ_STACK_SIZE / sizeof(long));
+@@ -151,32 +151,38 @@ static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
+ 	return true;
+ }
+ 
+-int get_stack_info(unsigned long *stack, struct task_struct *task,
+-		   struct stack_info *info, unsigned long *visit_mask)
++bool noinstr get_stack_info_noinstr(unsigned long *stack, struct task_struct *task,
++				    struct stack_info *info)
+ {
+-	if (!stack)
+-		goto unknown;
+-
+-	task = task ? : current;
+-
+ 	if (in_task_stack(stack, task, info))
+-		goto recursion_check;
++		return true;
+ 
+ 	if (task != current)
+-		goto unknown;
++		return false;
+ 
+ 	if (in_exception_stack(stack, info))
+-		goto recursion_check;
++		return true;
+ 
+ 	if (in_irq_stack(stack, info))
+-		goto recursion_check;
++		return true;
+ 
+ 	if (in_entry_stack(stack, info))
+-		goto recursion_check;
++		return true;
+ 
+-	goto unknown;
++	return false;
++}
++
++int get_stack_info(unsigned long *stack, struct task_struct *task,
++		   struct stack_info *info, unsigned long *visit_mask)
++{
++	task = task ? : current;
++
++	if (!stack)
++		goto unknown;
++
++	if (!get_stack_info_noinstr(stack, task, info))
++		goto unknown;
+ 
+-recursion_check:
+ 	/*
+ 	 * Make sure we don't iterate through any given stack more than once.
+ 	 * If it comes up a second time then there's something wrong going on:
+@@ -196,4 +202,5 @@ int get_stack_info(unsigned long *stack, struct task_struct *task,
+ unknown:
+ 	info->type = STACK_TYPE_UNKNOWN;
+ 	return -EINVAL;
++
+ }
+diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
+index 770b613790b3..f5e1e60c9095 100644
+--- a/arch/x86/mm/cpu_entry_area.c
++++ b/arch/x86/mm/cpu_entry_area.c
+@@ -21,7 +21,8 @@ DEFINE_PER_CPU(struct cea_exception_stacks*, cea_exception_stacks);
+ DECLARE_PER_CPU_PAGE_ALIGNED(struct doublefault_stack, doublefault_stack);
+ #endif
+ 
+-struct cpu_entry_area *get_cpu_entry_area(int cpu)
++/* Is called from entry code, so must be noinstr */
++noinstr struct cpu_entry_area *get_cpu_entry_area(int cpu)
+ {
+ 	unsigned long va = CPU_ENTRY_AREA_PER_CPU + cpu * CPU_ENTRY_AREA_SIZE;
+ 	BUILD_BUG_ON(sizeof(struct cpu_entry_area) % PAGE_SIZE != 0);
+-- 
+2.27.0
 
-I will pull the branch and do more tests.
-
-Thanks,
-Kan
