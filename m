@@ -2,108 +2,144 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB16C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575A1C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55EFC20888
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BFA22BF5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:36:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EbjD2pbE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AXxWb6SE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgGXAdn (ORCPT
+        id S1728319AbgGXAga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:33:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27868 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726723AbgGXAdm (ORCPT
+        Thu, 23 Jul 2020 20:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgGXAga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:33:42 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O0WT97009903;
-        Thu, 23 Jul 2020 20:33:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32fb9bhhnx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 20:33:34 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O0XXnW012212;
-        Thu, 23 Jul 2020 20:33:33 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32fb9bhhnr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 20:33:33 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O0L1HY023952;
-        Fri, 24 Jul 2020 00:33:32 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01dal.us.ibm.com with ESMTP id 32brq9cmuw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 00:33:32 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O0XVWu65012188
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 00:33:31 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 267287805C;
-        Fri, 24 Jul 2020 00:33:31 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2E1378066;
-        Fri, 24 Jul 2020 00:33:27 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.53.35])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 24 Jul 2020 00:33:27 +0000 (GMT)
-References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com> <159524966309.20855.15216784717419378243.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 10/12] ppc64/kexec_file: prepare elfcore header for crashing kernel
-In-reply-to: <159524966309.20855.15216784717419378243.stgit@hbathini.in.ibm.com>
-Date:   Thu, 23 Jul 2020 21:33:23 -0300
-Message-ID: <87365h69bg.fsf@morokweng.localdomain>
+        Thu, 23 Jul 2020 20:36:30 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B63CC0619D3;
+        Thu, 23 Jul 2020 17:36:30 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595550988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/sRzv0b/bz/POqyqjoZfEPy4Nx5XjZu9PPTUOfSVGkE=;
+        b=EbjD2pbE9xi9X6EuT6/rBzkOU6K3d+v/6/JJb8wA5gqm5/NAbvriX9OxDb4zpEMrgT3P1V
+        8Qe43EfciXdkNx332TkQ91suJSH3eEOwHQWMu/kmgnAD/haYxa60VS00D+lYgh4/LnHCh5
+        Pdp+nBV5MrcyMlYKlw5U/71XhWmdCKmP/IeBlG5roj0NsKlY71fX5VB/DO8nREQfs3QSFO
+        upMIW0mFVX6JGEZITdAqxGSQWuwOn/g3zp6CNHoXEOC5i9hZC6xMdA7/xmrmEKMzFeAFYR
+        ilvTG4hHwzetSB2KYExZbiXuPHjKlavYT1DS6c4tB1x3tXXyCe5/elx1N8Q0/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595550988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/sRzv0b/bz/POqyqjoZfEPy4Nx5XjZu9PPTUOfSVGkE=;
+        b=AXxWb6SEOMOM8pVovKOD5jMvjWwY8VB+Vyq6cRSWK7OH06fR2JFMaPSsDA9qW3J6czD05O
+        sxw3A3fEfTlP+dCg==
+To:     Jason Gunthorpe <jgg@mellanox.com>, Marc Zyngier <maz@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <20200724001606.GR2021248@mellanox.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <cfb8191e364e77f352b1483c415a83a5@kernel.org> <20200724001606.GR2021248@mellanox.com>
+Date:   Fri, 24 Jul 2020 02:36:27 +0200
+Message-ID: <87h7txvjec.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- mlxlogscore=930 lowpriorityscore=0 clxscore=1015 spamscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007230169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hari Bathini <hbathini@linux.ibm.com> writes:
-
-> Prepare elf headers for the crashing kernel's core file using
-> crash_prepare_elf64_headers() and pass on this info to kdump
-> kernel by updating its command line with elfcorehdr parameter.
-> Also, add elfcorehdr location to reserve map to avoid it from
-> being stomped on while booting.
+Jason Gunthorpe <jgg@mellanox.com> writes:
+> On Thu, Jul 23, 2020 at 09:51:52AM +0100, Marc Zyngier wrote:
+>> > IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
+>> 
+>> Really? So you can't shut a device with a screaming interrupt,
+>> for example, should it become otherwise unresponsive?
 >
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
+> Well, it used to be like that in the APICv1 days. I suppose modern
+> interrupt remapping probably changes things.
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+The MSI side of affairs has nothing to do with Intel and neither with
+ACPIv1. It's a trainwreck on the PCI side.
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+MSI interrupts do not have mandatory masking. For those which do not
+implement it (and that's still the case with devices designed today
+especially CPU internal peripherals) there are only a few options to
+shut them up:
+
+  1) Disable MSI which has the problem that the interrupt gets
+     redirected to legacy PCI #A-#D interrupt unless the hardware
+     supports to disable that redirection, which is another optional
+     thing and hopeless case
+
+  2) Disable it at the IRQ remapping level which fortunately allows by
+     design to do so.
+
+  3) Disable it at the device level which is feasible for a device
+     driver but impossible for the irq side
+
+>> > So the model for MSI is always "mask at source". The closest mapping
+>> > to the Linux IRQ model is to say the end device has a irqchip that
+>> > encapsulates the ability of the device to generate the MSI in the
+>> > first place.
+>> 
+>> This is an x86'ism, I'm afraid. Systems I deal with can mask any
+>> interrupt at the interrupt controller level, MSI or not.
+
+Yes, it's a pain, but reality.
+
+> Sure. However it feels like a bad practice to leave the source
+> unmasked and potentially continuing to generate messages if the
+> intention was to disable the IRQ that was assigned to it - even if the
+> messages do not result in CPU interrupts they will still consume
+> system resources.
+
+See above. You cannot reach out to the device driver to disable the
+underlying interrupt source, which is the ultimate ratio if #1 or #2 are
+not working or not there. That would be squaring the circle and
+violating all rules of layering and locking at once.
+
+The bad news is that we can't change the hardware. We have to deal with
+it. And yes, I told HW people publicly and in private conversations that
+unmaskable interrupts are broken by definition for more than a
+decade. They still get designed that way ...
+
+>> If masking at the source is the only way to shut the device up,
+>> and assuming that the device provides the expected semantics
+>> (a MSI raised by the device while the interrupt is masked
+>> isn't lost and gets sent when unmasked), that's fair enough.
+>> It's just ugly.
+>
+> It makes sense that the masking should follow the same semantics for
+> PCI MSI masking.
+
+Which semantics? The horrors of MSI or the halfways reasonable MSI-X
+variant?
+
+Thanks,
+
+        tglx
