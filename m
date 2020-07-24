@@ -2,148 +2,101 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AF3C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF88C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3116A20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595598837;
-	bh=FG5QxcsNrCHTcEdgSYED6zkI+mT3HGv6lxfjVjJkloo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bTDRY4Ow67yawJ0HiNKv8mu8IGZPhX/EW4bd6pmnT8xiT30F0dn8ok5TL+IBcoMNR
-	 vgwcY611rLHv6G9pyJUZAO6DeTldVLbL/EQ16McoaHzBZcGoGMJ4n7V1MLyefxozVF
-	 0Z7rBZkp2SObFOwguL4E1ikZEUsl+xjmESxZv35M=
+	by mail.kernel.org (Postfix) with ESMTP id 96D8720656
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pav7lQzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGXNx4 (ORCPT
+        id S1726988AbgGXNyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        Fri, 24 Jul 2020 09:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGXNxz (ORCPT
+        with ESMTP id S1726535AbgGXNyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:53:55 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04932C0619D3;
-        Fri, 24 Jul 2020 06:53:54 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id q4so3867032edv.13;
-        Fri, 24 Jul 2020 06:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cTxDphoe+vLxnF+A2C9bqEgwZdV601VaJb/lXVid7sA=;
-        b=mmK0swhDn4cPwzKbdQaVqJyXHitxeFtwO979jh/H41YMrA9DUbreb4Gui0K31xj5NH
-         hOakHWtY582/0yFRmicn4GpVfev8GM5P7xHjoA876BCXf0ljQKgSNOIZ0s2D2qx0e4hW
-         fjZULokGDmO/+0WRz4ZqNe/cPaK7MRon7qirnwg/Rh6kRPHanGMKkv4PSr6khDrpGdLF
-         +Sf7GfqOWyj8eFLg5OgTIVXoDkenlXCklXpzyvCJO8Mr4phhTlXL3QdwZfp4IAT8oupm
-         midhF7Bu0oGeyEA3obkIh4EM8kWM9eVibSE8vSi+pXQZ8Dtdk0Smc+39F60+0lxh9H7I
-         spXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=cTxDphoe+vLxnF+A2C9bqEgwZdV601VaJb/lXVid7sA=;
-        b=YUaXu4J91igndDpan5wYC/Wfx6wenK7VTwnq6zgngOgGITBu7B+SwSc0LW/TANnWYy
-         5D8c7DAWBKJkTTWsdfcbdHUrOoSO+WGkaP73yBbV8wLB5l0OyUH8rykPNeIy9KCefUXw
-         33HIIAI/fPZEryq+brqk2p+x706B7GpJLlz8ZVdU5GbeRAdOU7tn8RDtt822xb6i8I5O
-         k9THmz2NLMLfZ6ml2uMOJHhN3pfByaxD6MzDlBbloT4OnlodWeg0upaZfitw1IeWZF8+
-         26HvhnJXJiv0w8MPx4x8JZVV1RI3pDCAsQqt4qBtJSjtFrC85W+9hY9vDCSooiVIS5yf
-         wm7w==
-X-Gm-Message-State: AOAM531eguwSqnavT4SgCPry0L9TsqlxwbFFTD2w+mW5Hv0rpD3oSdyv
-        9IZbZOnEYH5mgzpy1lPHErg=
-X-Google-Smtp-Source: ABdhPJz7uGKvAKS8JJWSFmBybH4/rkm6kX1pl/E/E9QQ3Z1uGV4NGBdCPC70QUDJySOQDC6oA7ddTQ==
-X-Received: by 2002:a50:fa4c:: with SMTP id c12mr6635866edq.5.1595598832764;
-        Fri, 24 Jul 2020 06:53:52 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i8sm777537edt.19.2020.07.24.06.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 06:53:52 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 15:53:50 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
-Cc:     jpoimboe@redhat.com, bp@alien8.de, hpa@zytor.com,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org,
-        yamada.masahiro@socionext.com
-Subject: Re: [PATCH 2/3] scripts/sorttable: Build orc fast lookup table via
- sorttable tool
-Message-ID: <20200724135350.GA648324@gmail.com>
-References: <20200723034643.33537-1-changhuaixin@linux.alibaba.com>
- <20200723034643.33537-3-changhuaixin@linux.alibaba.com>
+        Fri, 24 Jul 2020 09:54:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9E7C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=B8eRNxs9htmGJHGObFBZh5ZETBX8Pkz8XXY1/7/EoIw=; b=Pav7lQzprIg8yZ9L799/Y4KMa3
+        6iNLrGbH977obkzOva0ADwPFK5cJuComOE/l+sGysGynFSTHhitCXoIuaDya4YNLGQHne/0wK7s3R
+        air6SWLRzIa630nyc5x0thZ80Oe3CK/xNQqwyeqMKdaoNpMEXSbgYX4t8hTl++4eQZAtniSf5ASYw
+        kzcJW3XDkaJLoWRX/eX/4Ut/m2MhYZoVeGZ9EQasijOVEytC6GUJtjM19acclHhJEqlbdXD4xZZSI
+        om/5DITubutoKVYkjDKiHoCKUcSxR7MS1UXdC4ed25cUBiMoDRPaEbrZfm2EkXuDBMvQvm2EummJr
+        CYsryBMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyy9N-0002GD-4w; Fri, 24 Jul 2020 13:54:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 442F33060EF;
+        Fri, 24 Jul 2020 15:54:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2D7A9236F1EA4; Fri, 24 Jul 2020 15:54:12 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 15:54:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        like.xu@linux.intel.com
+Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
+ capability
+Message-ID: <20200724135412.GA10769@hirez.programming.kicks-ass.net>
+References: <20200723171117.9918-1-kan.liang@linux.intel.com>
+ <20200723171117.9918-8-kan.liang@linux.intel.com>
+ <20200724105543.GV119549@hirez.programming.kicks-ass.net>
+ <20200724114628.GJ43129@hirez.programming.kicks-ass.net>
+ <0d33a25c-cfe4-af7f-c915-a98dba17b53b@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200723034643.33537-3-changhuaixin@linux.alibaba.com>
+In-Reply-To: <0d33a25c-cfe4-af7f-c915-a98dba17b53b@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 09:43:44AM -0400, Liang, Kan wrote:
+> 
+> 
+> On 7/24/2020 7:46 AM, peterz@infradead.org wrote:
+> > On Fri, Jul 24, 2020 at 12:55:43PM +0200, peterz@infradead.org wrote:
+> > > > +	event_sched_out(event, cpuctx, ctx);
+> > > > +	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> > > > +}
+> > > 
+> > > Ah, so the problem here is that ERROR is actually recoverable using
+> > > IOC_ENABLE. We don't want that either. Let me try and figure out of EXIT
+> > > would work.
+> > 
+> > EXIT is difficult too.. Also, that COEXIST thing hurt my brian, can't we
+> > do a simpler SIBLING thing that simply requires the event to be a group
+> > sibling?
+> > 
+> > The consequence is that SLOTS must be the leader, is that really a
+> > problem? You keep providing the {cycles, slots, metric-things} example,
+> > but afaict {slots, metric-thing, cycles} should work just fine too.
+> > PERF_SAMPLE_READ with PERF_FORMAT_GROUP doesn't need to the the leader.
+> 
+> I'm not sure I get your point.
+> For the PERF_SAMPLE_READ with PERF_FORMAT_GROUP case, other events can be
+> the leader, e.g., {cycles, slots, metric-things}:S.
+> In this case, the SLOTS event is not a leader. I don't think we can assume
+> that the SLOTS event must be the leader.
 
-* Huaixin Chang <changhuaixin@linux.alibaba.com> wrote:
+You can have a sibling event with SAMPLE_READ and FORMAT_GROUP just
+fine. The sampling event doesn't need to be the leader.
 
-> Since orc tables are already sorted by sorttable tool, let us move
-> building of fast lookup table into sorttable tool too. This saves us
-> 6380us from boot time under Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz
-> with 64 cores.
-
-Neat!
-
-> +struct orc_sort_param {
-> +	size_t		lookup_table_size;
-> +	unsigned int	*orc_lookup_table;
-> +	unsigned long	start_ip;
-> +	size_t		text_size;
-> +	unsigned int	orc_num_entries;
-> +};
-
->  
-> +#define LOOKUP_BLOCK_ORDER	8
-> +#define LOOKUP_BLOCK_SIZE	(1 << LOOKUP_BLOCK_ORDER)
-> +
-> +	for (i = 0; i < lookup_num_blocks-1; i++) {
-> +		orc = __orc_find(g_orc_ip_table, g_orc_table,
-> +				 num_entries,
-> +				 lookup_start_ip + (LOOKUP_BLOCK_SIZE * i));
-> +		if (!orc) {
-> +			snprintf(g_err, ERRSTR_MAXSZ,
-> +					"Corrupt .orc_unwind table\n");
-> +			pthread_exit(g_err);
-> +		}
-> +
-> +		orc_lookup[i] = orc - g_orc_table;
-> +	}
-> +
-> +	/* Initialize the ending block: */
-> +	orc = __orc_find(g_orc_ip_table, g_orc_table, num_entries,
-> +			 lookup_stop_ip);
-> +	if (!orc) {
-> +		snprintf(g_err, ERRSTR_MAXSZ, "Corrupt .orc_unwind table\n");
-> +		pthread_exit(g_err);
-> +	}
-> +	orc_lookup[lookup_num_blocks-1] = orc - g_orc_table;
-
-Yeah, so now this definition of LOOKUP_BLOCK_* basicaly duplicates the 
-arch/x86/include/asm/orc_lookup.h size, with no obvious link between 
-the two. This is asking for trouble.
-
-<asm/orc_lookup.h> looks simple enough - can we include it in 
-scripts/sorttable.h?
-
-Or better yet, please move these two defines into <asm/orc_types.h>, 
-which is already included in sorttable.h.
-
-BTW., please update your patches to spell 'ORC' in a capitalized 
-fashion, like most of the existing code does:
-
->  	/* create thread to sort ORC unwind tables concurrently */
-
-Thanks,
-
-	Ingo
