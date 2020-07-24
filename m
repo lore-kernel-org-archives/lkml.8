@@ -2,103 +2,159 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD61AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54FC20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8958920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:12:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y6jIMlIg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k6srkc7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgGXIH1 (ORCPT
+        id S1726821AbgGXIMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:07:27 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:17430 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726572AbgGXIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:07:26 -0400
-Received: from localhost.localdomain (unknown [210.32.144.186])
-        by mail-app4 (Coremail) with SMTP id cS_KCgAHiPyplhpfXiRFAA--.33653S4;
-        Fri, 24 Jul 2020 16:07:09 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Sunil Goutham <sgoutham@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Geetha sowjanya <gakula@marvell.com>,
-        Jerin Jacob <jerinj@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] octeontx2-af: Fix use of uninitialized pointer bmap
-Date:   Fri, 24 Jul 2020 16:06:57 +0800
-Message-Id: <20200724080657.19182-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgAHiPyplhpfXiRFAA--.33653S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw17Wr47KFyxuw4fCF17KFg_yoW8Xr18pF
-        W29FZ7AFyUXrW3Wa1Dta10qF45tw1a9F98Kayqkw1Sg34Fyrn5Xr4rKFWfXrsFkFWUGa47
-        t3Z0y3y5ur98JrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9v1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
-        wVAFwVW8ZwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-        0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjNJ55UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggHBlZdtPRcawAPs4
+        Fri, 24 Jul 2020 04:12:15 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:41331 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726437AbgGXIMP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:12:15 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8E5175C00C3;
+        Fri, 24 Jul 2020 04:12:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 24 Jul 2020 04:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=l
+        lMA+z5xxbFrYgBvQFXToJikEdxN9Z4xtWWma8Oxs28=; b=Y6jIMlIgg3LoDmF5/
+        NDpZM5XhL+hsGuNNoyGuLd47v+GGgFEtXP4CC2hpMrg/lNXVTJzEMuSEQ522oJvY
+        E5uCdsS3boU9WGM9ZH9s9L42/Vj0Uet4Sql8W/AwTZXfuuvea636ToXdlHXeeu7/
+        9rin4xGPPS04N6Pwv8RhT+hxV8Cn5T2muPW1nUYzcs4fPXNDzw5fQCwaJENjAJrv
+        3FIMi6IuMWGEo7Po3IrQe84HBNdILbgpvftJfvpMTCizS1JL/Hviajo5CZEDrN5j
+        bF5E2fSkkkUsWsVUuw7UBsr2ayq//Tapk8n0TdXQu+606lRBX5pCjxeeEqo4wFEj
+        t6q9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=llMA+z5xxbFrYgBvQFXToJikEdxN9Z4xtWWma8Oxs
+        28=; b=k6srkc7iotFmvhNup6obDys5ISJCFQ7f30//PVyqBEE3oXl5FJuQOeirq
+        U6gS2oD+QcbmNT73cHGTCyiOgIm0yf/7spNuRQ8aTXSmGXlXNPow8WT+dMjj19Jz
+        3BGymHcMJxIn4qlhmeJE1t/ZfzXcXleUPFDeOrTGUpvz2b0uG6stB59oxhiKlUmc
+        5pWhaNOtZpNbTkFeuAlKzvxZEO1sDW0/2Opn+49Yy0jhNuhCXiNa/3nzaKlp8Qs3
+        7DVZVq/FtU8E0mjGJnicHA0jG39qKTnQdze5Eav0Qaxqj3gtc8N0lxbKhxYmXwYb
+        B29zLEg5/DfihvRR5PtodHYkSD4zA==
+X-ME-Sender: <xms:3JcaX0s6jygY4aN5IxbwmL0tGEvXXDG51FYuW1VFylPpAXehU2YXkQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheefgddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
+    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:3JcaXxdQdQJOMtMSKmKcQghMEKC5uE2UOioVw6r3303tQ-GsBR8zGA>
+    <xmx:3JcaX_wbfDBKmnLiar_vYufQ3CnJfNBPeXnsIVnlr14Q2XyHATtEnw>
+    <xmx:3JcaX3O-L7_gadk8L1GCe1uXGH8V-qnikMbJXeDs_AtiK5RTkqZizg>
+    <xmx:3ZcaXzlVoC22eU6YpjmSTfNgeM58Qi4V7rhksOWOtT6Q3h0WZDn6Hw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B7D93328005A;
+        Fri, 24 Jul 2020 04:12:11 -0400 (EDT)
+Date:   Fri, 24 Jul 2020 10:12:09 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v4 14/16] arm64: allwinner: A100: add the basical
+ Allwinner A100 DTSI file
+Message-ID: <20200724081209.d3b6tp2bfkhd63mv@gilmour.lan>
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
+ <20200723165448.crdc4fc5jwqmsret@gilmour.lan>
+ <CAEExFWu0PUOD0R+QvEiOsoZy_7JO_53i6OH3JoavVvGASxEeuA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAEExFWu0PUOD0R+QvEiOsoZy_7JO_53i6OH3JoavVvGASxEeuA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If req->ctype does not match any of NIX_AQ_CTYPE_CQ,
-NIX_AQ_CTYPE_SQ or NIX_AQ_CTYPE_RQ, pointer bmap will remain
-uninitialized and be accessed in test_bit(), which can lead
-to kernal crash.
+On Fri, Jul 24, 2020 at 02:25:33PM +0800, Frank Lee wrote:
+> HI,
+>=20
+> On Fri, Jul 24, 2020 at 12:54 AM Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Jul 14, 2020 at 03:20:29PM +0800, Frank Lee wrote:
+> > > From: Yangtao Li <frank@allwinnertech.com>
+> > >
+> > > Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
+> > > the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
+> > > nmi, and UART support.
+> > >
+> > > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> > > ---
+> > >  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 364 ++++++++++++++++=
+++
+> > >  1 file changed, 364 insertions(+)
+> > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/ar=
+m64/boot/dts/allwinner/sun50i-a100.dtsi
+> > > new file mode 100644
+> > > index 000000000000..3fb2443f2121
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+> > > @@ -0,0 +1,364 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > > +/*
+> > > + * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
+> > > + */
+> > > +
+> > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +#include <dt-bindings/clock/sun50i-a100-ccu.h>
+> > > +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
+> > > +#include <dt-bindings/reset/sun50i-a100-ccu.h>
+> > > +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
+> > > +
+> > > +/ {
+> > > +     interrupt-parent =3D <&gic>;
+> > > +     #address-cells =3D <2>;
+> > > +     #size-cells =3D <2>;
+> > > +
+> > > +     cpus {
+> > > +             #address-cells =3D <1>;
+> > > +             #size-cells =3D <0>;
+> > > +
+> > > +             cpu0: cpu@0 {
+> > > +                     compatible =3D "arm,armv8";
+> >
+> > You should use the arm,cortex-a53 compatible here, arm,armv8 is for
+> > software models.
+> >
+> > > +             sid@3006000 {
+> >
+> > The node name is supposed to be the class of the device, and the DT spec
+> > defines a list of them already. eeprom would be better suited here.
+>=20
+> EFuse is more accurate?
 
-Fix this by returning an error code if this case is triggered.
+I missed that efuse got added. Yeah, it's definitely better
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-index 36953d4f51c7..20a64ed24474 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-@@ -869,19 +869,18 @@ static int nix_lf_hwctx_disable(struct rvu *rvu, struct hwctx_disable_req *req)
- 		aq_req.cq_mask.bp_ena = 1;
- 		q_cnt = pfvf->cq_ctx->qsize;
- 		bmap = pfvf->cq_bmap;
--	}
--	if (req->ctype == NIX_AQ_CTYPE_SQ) {
-+	} else if (req->ctype == NIX_AQ_CTYPE_SQ) {
- 		aq_req.sq.ena = 0;
- 		aq_req.sq_mask.ena = 1;
- 		q_cnt = pfvf->sq_ctx->qsize;
- 		bmap = pfvf->sq_bmap;
--	}
--	if (req->ctype == NIX_AQ_CTYPE_RQ) {
-+	} else if (req->ctype == NIX_AQ_CTYPE_RQ) {
- 		aq_req.rq.ena = 0;
- 		aq_req.rq_mask.ena = 1;
- 		q_cnt = pfvf->rq_ctx->qsize;
- 		bmap = pfvf->rq_bmap;
--	}
-+	} else
-+		return NIX_AF_ERR_AQ_ENQUEUE;
- 
- 	aq_req.ctype = req->ctype;
- 	aq_req.op = NIX_AQ_INSTOP_WRITE;
--- 
-2.17.1
-
+Thanks!
+Maxime
