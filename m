@@ -2,148 +2,113 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F232C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC3620771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E10120737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C6mVErwt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFmS6M5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgGXDqQ (ORCPT
+        id S1726754AbgGXDri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59896 "EHLO
+        Thu, 23 Jul 2020 23:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXDqP (ORCPT
+        with ESMTP id S1726503AbgGXDrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 23:46:15 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55CF2C0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 20:46:15 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c80so6713842wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 20:46:15 -0700 (PDT)
+        Thu, 23 Jul 2020 23:47:37 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7106FC0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 20:47:37 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id c16so8512605ioi.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 20:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M4J07zWXl7gx9PKEYJvn7EJ3LUQ854Vz+YTl+3vbqAY=;
-        b=C6mVErwtomReoITMugJNqU569a7mg+Mi54NW0KTPb/ek0WcdjBImAYVsJZ2NBfpOnm
-         FQ2wlSJFDFOO4d94T1hhmkXW1fbi8S9p483YWzMyqu3r+bGBngERW+C3Qs0na7MrVh8q
-         NEAhrF6u90fodX0dCPFOkyQIsOtoWnTwdUogV0qsCccR3Gks+GEl963pMUuVe9Y7WI5r
-         RTIcvOruSfzxiiVFKse6/NG8dKh73Yo06eev8NgFCbtZBAGSXZBaTMp5YfknP80pISK/
-         LxHrhby0G1lFReM4GpTz0kiL7D7eg08mRnRS8Vw/ShtKLC4Yp/MqsTizbqvq4seR+MZT
-         KaPw==
+        bh=k28nnbIjLpUaw48v3Wg0EF9RoEud+Xa2hvvVzYAxRhM=;
+        b=BFmS6M5HOfplD1ug0NC+yBsGlfECyobwZZSovY9+oxt4Em4q8pOAXos6rDvqJU//R8
+         TZ/HXImqWX1m2309WbS7mO4QxhTxwjxB9Iw2S71Bdgxs/sEVnvthNse4Xpoq4vm6qBGj
+         agFmJgOg55XiTIZs5yUtYMEzoSbwdNiUGa4+syKojyN9palXySyA1MLU7M+To/hI/klI
+         AudE0tjpqn5hbaQbWSs0mEjU5qf9xlcblgYlH72NrN0pJ0BTcZGLBg46g5rLYug9qkJE
+         2RfhFxfIB2I63xPsSXCWuUEIoKt14c9QQAdg6C9rUFtBnRjsJZepnanoT/MArA0aIHKN
+         MEGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M4J07zWXl7gx9PKEYJvn7EJ3LUQ854Vz+YTl+3vbqAY=;
-        b=A6Vgg06nd7fBfNec9QZy87veiR26MBa/JH0ljAUmEgzY53Y17BWyBVlKvV5HCgTJSN
-         HLXT/VAFQJ9zhvqWJEOiI8k4cn38ue9V0eTyX+MBB7KmmKqfksDNvabusZILBVPGJteD
-         myZJ69oledaSxBmm89asmD/vSKOttY1GccdPBK1Af2gWYmWQG5pXXfESYv4IJ+nfBqHQ
-         r5kh/ysnOk+5gZ8i9v1HDI7P9tN9gbC4nR3FKiUH5w+S1ZRMY4VgkPTZhmjPcKitgrlz
-         A82cgtZ6mNXqr+sNRqIm7OW0t5ansNxqyLOZ8AqU/iboEtbKIdpBPMbSYPxUe4CBwOXa
-         MEnQ==
-X-Gm-Message-State: AOAM532CZeG3IaDjUao/2pcyVPZSLvuzMMaYABy+WcJzuMrGP0PBq6RB
-        KkflFbpACSxgeMOamjUkCxG6eqLDx6tGqSE/dC98iNUG
-X-Google-Smtp-Source: ABdhPJz9rZ1cUR8D93W8V+89NR+0UPp92dpRf7lfMX0mGUeNHm3QfgxO0pABEBPSxzCG4U/YTKFZ3eh1g+OkV4dnWYk=
-X-Received: by 2002:a1c:9650:: with SMTP id y77mr6597593wmd.101.1595562373681;
- Thu, 23 Jul 2020 20:46:13 -0700 (PDT)
+        bh=k28nnbIjLpUaw48v3Wg0EF9RoEud+Xa2hvvVzYAxRhM=;
+        b=TUXT2Am4IBz5CvdUpJ5GEMHVLpowKsAfwwXHrirq5VnXUw4m/TGBDfCzCgdGWybAxy
+         PCmnds1Dm28J5ceuCXSnjHjzeJYBA4y4sv07M1QhXJwVodw7w7kw3XHTjKitPBnxGHKr
+         VZr3I4XWJPVEvZTXK7nFy8g5Hz4K5o+OalonpcGmJyShHoGmFwP+zJS6oHHQOOrpsa95
+         Q1cFr7U5qVFEpGdfm7HD8O5COfhTPPWi0KMqg1aZZt1UQTKG8CfTNhINuW8HX60DQILX
+         JrR9enwsDzWFo9fYdsRGZOvo4pWBa7fQT7BRn8UoU+3VFCB7hCdpSLsYe70d8O+PSIKG
+         kheQ==
+X-Gm-Message-State: AOAM530VKFOAVRnnOSLKOdEnn5/Uf5q6rbi9B5HkIKTdNr1pdO8KhqgU
+        M28bfZV8Gvm6tEuSJ5MG8Ogxb/9AtgDSWAxN310=
+X-Google-Smtp-Source: ABdhPJx6AFYMn+jkFZnlsATo/34vmdIRPckl2LUZY0kFAfqsU+3UPuqJ04G7deZ6rOKPmnS6oPqljURVWozO6VTLLLw=
+X-Received: by 2002:a02:a986:: with SMTP id q6mr8079962jam.93.1595562456535;
+ Thu, 23 Jul 2020 20:47:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721063258.17140-1-mhocko@kernel.org> <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
- <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com>
- <alpine.LSU.2.11.2007221359450.1017@eggly.anvils> <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
- <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
- <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
- <alpine.LSU.2.11.2007231549540.1016@eggly.anvils> <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
- <alpine.LSU.2.11.2007231650170.1281@eggly.anvils> <CAHk-=wgptprCsM9Vv7wvBF6q23rR5WA94pBGD5kfS2sPwgNVyA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgptprCsM9Vv7wvBF6q23rR5WA94pBGD5kfS2sPwgNVyA@mail.gmail.com>
-From:   Hugh Dickins <hughd@google.com>
-Date:   Thu, 23 Jul 2020 20:45:34 -0700
-Message-ID: <CANsGZ6YBf+JCPYa_QOhO-uauebK5HVmacaGCQmvNSsws3-ca-g@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
+References: <20200721001505.GD19262@shao2-debian> <CAOQ4uxgq39EDS_k3eDTngEAm8cxHPa7qrkUSW8Rk6qS9cxC18w@mail.gmail.com>
+ <9a2a4086-fbad-b4f8-9c00-2b7606441022@intel.com>
+In-Reply-To: <9a2a4086-fbad-b4f8-9c00-2b7606441022@intel.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 24 Jul 2020 06:47:24 +0300
+Message-ID: <CAOQ4uxgHf_4GQzQGGRTxTECMvEeNjoqhsbGOm5T3GRpV+=0YzA@mail.gmail.com>
+Subject: Re: [fsnotify] c738fbabb0: will-it-scale.per_process_ops -9.5% regression
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
+        lkp@lists.01.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 5:47 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Fri, Jul 24, 2020 at 5:45 AM Rong Chen <rong.a.chen@intel.com> wrote:
 >
-> On Thu, Jul 23, 2020 at 5:07 PM Hugh Dickins <hughd@google.com> wrote:
+>
+>
+> On 7/21/20 11:59 PM, Amir Goldstein wrote:
+> > On Tue, Jul 21, 2020 at 3:15 AM kernel test robot <rong.a.chen@intel.com> wrote:
+> >> Greeting,
+> >>
+> >> FYI, we noticed a -9.5% regression of will-it-scale.per_process_ops due to commit:
+> >>
+> >>
+> >> commit: c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a ("fsnotify: fold fsnotify() call into fsnotify_parent()")
+> > Strange, that's a pretty dumb patch moving some inlined code from one
+> > function to
+> > another (assuming there are no fsnotify marks in this test).
 > >
-> > I say that for full disclosure, so you don't wrack your brains
-> > too much, when it may still turn out to be a screwup on my part.
+> > Unless I am missing something the only thing that changes slightly is
+> > an extra d_inode(file->f_path.dentry) deference.
+> > I can get rid of it.
+> >
+> > Is it possible to ask for a re-test with fix patch (attached)?
 >
-> Sounds unlikely.
+> Hi Amir,
 >
-> If that patch applied even reasonably closely, I don't see how you'd
-> see a list corruption that wasn't due to the patch.
+> We failed to apply this patch, could you tell us the base commit or the
+> base branch?
 >
-> You'd have had to use the wrong spinlock by mistake due to munging it,
-> or something crazy like that.
->
-> The main list-handling change is
->
->  (a) open-coding of that finish_wait()
->
->  (b) slightly different heuristics for removal in the wakeup function
->
-> where (a) was because my original version of finishing the wait needed
-> to do that return code checking.
->
-> So a normal "finish_wait()" just does
->
->         list_del_init(&wait->entry);
->
-> where-as my open-coded one replaced that with
->
->         if (!list_empty(&wait->entry)) {
->                 list_del(&wait->entry);
->                 ret = -EINTR;
->         }
->
-> and apart from that "set return to -EINTR because nobody woke us up",
-> it also uses just a regular "list_del()" rather than a
-> "list_del_init()". That causes the next/prev field to be poisoned
-> rather than re-initialized. But that second change was because the
-> list entry is on the stack, and we're not touching it any more and are
-> about to return, so I removed the "init" part.
->
-> Anyway, (a) really looks harmless. Unless the poisoning now triggers
-> some racy debug test that had been hidden by the "init". Hmm.
->
-> In contrast, (b) means that the likely access patterns of irqs
-> removing the wait entry from the list might be very different from
-> before. The old "autoremove" semantics would only remove the entry
-> from the list when try_to_wake_up() actually woke things up. Now, a
-> successful bit state _always_ removes it, which was kind of the point.
-> But it might cause very different list handling patterns.
->
-> All the actual list handling looks "obviously safe" because it's
-> protected by the spinlock, though...
->
-> If you do get oopses with the new patch too, try to send me a copy,
-> and maybe I'll stare at exactly where it happens register contents and
-> go "aah".
 
-This new version is doing much better: many hours to go, but all
-machines have got beyond the danger point where yesterday's version
-was crashing - phew!
+Hi Rong,
 
-Hugh
+The patch is applied on top of the reported offending commit:
+c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a ("fsnotify: fold fsnotify()
+call into fsnotify_parent()")
+
+I pushed it to my github:
+https://github.com/amir73il/linux/commits/for_lkp
+
+Thanks,
+Amir.
