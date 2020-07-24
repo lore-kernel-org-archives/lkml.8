@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9038DC433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07EBC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79FE82065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B7E2065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgGXQFq (ORCPT
+        id S1728387AbgGXQGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:05:46 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:06:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728160AbgGXQEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:44 -0400
+        id S1728139AbgGXQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:42 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id D0EB9FE8;
-        Fri, 24 Jul 2020 18:04:35 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id C7633FE7;
+        Fri, 24 Jul 2020 18:04:34 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Doug Covelli <dcovelli@vmware.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
@@ -46,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 66/75] x86/vmware: Add VMware specific handling for VMMCALL under SEV-ES
-Date:   Fri, 24 Jul 2020 18:03:27 +0200
-Message-Id: <20200724160336.5435-67-joro@8bytes.org>
+Subject: [PATCH v5 64/75] x86/paravirt: Allow hypervisor specific VMMCALL handling under SEV-ES
+Date:   Fri, 24 Jul 2020 18:03:25 +0200
+Message-Id: <20200724160336.5435-65-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -59,87 +58,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Covelli <dcovelli@vmware.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Add VMware specific handling for #VC faults caused by VMMCALL
-instructions.
+Add two new paravirt callbacks to provide hypervisor specific processor
+state in the GHCB and to copy state from the hypervisor back to the
+processor.
 
-Signed-off-by: Doug Covelli <dcovelli@vmware.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Adapt to different paravirt interface ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/cpu/vmware.c | 50 ++++++++++++++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/x86_init.h | 16 +++++++++++++++-
+ arch/x86/kernel/sev-es.c        | 12 ++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 9b6fafa69be9..d2129d5e8373 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -33,6 +33,7 @@
- #include <asm/timer.h>
- #include <asm/apic.h>
- #include <asm/vmware.h>
-+#include <asm/svm.h>
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 6807153c0410..0304e2931cd3 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -4,8 +4,10 @@
  
- #undef pr_fmt
- #define pr_fmt(fmt)	"vmware: " fmt
-@@ -476,10 +477,49 @@ static bool __init vmware_legacy_x2apic_available(void)
- 	       (eax & (1 << VMWARE_CMD_LEGACY_X2APIC)) != 0;
+ #include <asm/bootparam.h>
+ 
++struct ghcb;
+ struct mpc_bus;
+ struct mpc_cpu;
++struct pt_regs;
+ struct mpc_table;
+ struct cpuinfo_x86;
+ 
+@@ -236,10 +238,22 @@ struct x86_legacy_features {
+ /**
+  * struct x86_hyper_runtime - x86 hypervisor specific runtime callbacks
+  *
+- * @pin_vcpu:		pin current vcpu to specified physical cpu (run rarely)
++ * @pin_vcpu:			pin current vcpu to specified physical
++ *				cpu (run rarely)
++ * @sev_es_hcall_prepare:	Load additional hypervisor-specific
++ *				state into the GHCB when doing a VMMCALL under
++ *				SEV-ES. Called from the #VC exception handler.
++ * @sev_es_hcall_finish:	Copies state from the GHCB back into the
++ *				processor (or pt_regs). Also runs checks on the
++ *				state returned from the hypervisor after a
++ *				VMMCALL under SEV-ES.  Needs to return 'false'
++ *				if the checks fail.  Called from the #VC
++ *				exception handler.
+  */
+ struct x86_hyper_runtime {
+ 	void (*pin_vcpu)(int cpu);
++	void (*sev_es_hcall_prepare)(struct ghcb *ghcb, struct pt_regs *regs);
++	bool (*sev_es_hcall_finish)(struct ghcb *ghcb, struct pt_regs *regs);
+ };
+ 
+ /**
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 8b9e4e852d2c..88636ff1d451 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -897,6 +897,9 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
+ 	ghcb_set_rax(ghcb, ctxt->regs->ax);
+ 	ghcb_set_cpl(ghcb, user_mode(ctxt->regs) ? 3 : 0);
+ 
++	if (x86_platform.hyper.sev_es_hcall_prepare)
++		x86_platform.hyper.sev_es_hcall_prepare(ghcb, ctxt->regs);
++
+ 	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_VMMCALL, 0, 0);
+ 	if (ret != ES_OK)
+ 		return ret;
+@@ -906,6 +909,15 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
+ 
+ 	ctxt->regs->ax = ghcb->save.rax;
+ 
++	/*
++	 * Call sev_es_hcall_finish() after regs->ax is already set.
++	 * This allows the hypervisor handler to overwrite it again if
++	 * necessary.
++	 */
++	if (x86_platform.hyper.sev_es_hcall_finish &&
++	    !x86_platform.hyper.sev_es_hcall_finish(ghcb, ctxt->regs))
++		return ES_VMM_ERROR;
++
+ 	return ES_OK;
  }
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+static void vmware_sev_es_hcall_prepare(struct ghcb *ghcb,
-+					struct pt_regs *regs)
-+{
-+	/* Copy VMWARE specific Hypercall parameters to the GHCB */
-+	ghcb_set_rip(ghcb, regs->ip);
-+	ghcb_set_rbx(ghcb, regs->bx);
-+	ghcb_set_rcx(ghcb, regs->cx);
-+	ghcb_set_rdx(ghcb, regs->dx);
-+	ghcb_set_rsi(ghcb, regs->si);
-+	ghcb_set_rdi(ghcb, regs->di);
-+	ghcb_set_rbp(ghcb, regs->bp);
-+}
-+
-+static bool vmware_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	if (!(ghcb_is_valid_rbx(ghcb) &&
-+	      ghcb_is_valid_rcx(ghcb) &&
-+	      ghcb_is_valid_rdx(ghcb) &&
-+	      ghcb_is_valid_rsi(ghcb) &&
-+	      ghcb_is_valid_rdi(ghcb) &&
-+	      ghcb_is_valid_rbp(ghcb)))
-+		return false;
-+
-+	regs->bx = ghcb->save.rbx;
-+	regs->cx = ghcb->save.rcx;
-+	regs->dx = ghcb->save.rdx;
-+	regs->si = ghcb->save.rsi;
-+	regs->di = ghcb->save.rdi;
-+	regs->bp = ghcb->save.rbp;
-+
-+	return true;
-+}
-+#endif
-+
- const __initconst struct hypervisor_x86 x86_hyper_vmware = {
--	.name			= "VMware",
--	.detect			= vmware_platform,
--	.type			= X86_HYPER_VMWARE,
--	.init.init_platform	= vmware_platform_setup,
--	.init.x2apic_available	= vmware_legacy_x2apic_available,
-+	.name				= "VMware",
-+	.detect				= vmware_platform,
-+	.type				= X86_HYPER_VMWARE,
-+	.init.init_platform		= vmware_platform_setup,
-+	.init.x2apic_available		= vmware_legacy_x2apic_available,
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.runtime.sev_es_hcall_prepare	= vmware_sev_es_hcall_prepare,
-+	.runtime.sev_es_hcall_finish	= vmware_sev_es_hcall_finish,
-+#endif
- };
 -- 
 2.27.0
 
