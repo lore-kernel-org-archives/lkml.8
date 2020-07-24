@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA8EC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46795C433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD4820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC2A2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgGXQEW (ORCPT
+        id S1727968AbgGXQEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:22 -0400
-Received: from 8bytes.org ([81.169.241.247]:59394 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:31 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgGXQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:10 -0400
+        id S1727843AbgGXQEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:23 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 82F65F3C;
-        Fri, 24 Jul 2020 18:04:07 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 1BA70FB9;
+        Fri, 24 Jul 2020 18:04:13 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 21/75] x86/boot/compressed/64: Add set_page_en/decrypted() helpers
-Date:   Fri, 24 Jul 2020 18:02:42 +0200
-Message-Id: <20200724160336.5435-22-joro@8bytes.org>
+Subject: [PATCH v5 31/75] x86/head/64: Load GDT after switch to virtual addresses
+Date:   Fri, 24 Jul 2020 18:02:52 +0200
+Message-Id: <20200724160336.5435-32-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,182 +60,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The functions are needed to map the GHCB for SEV-ES guests. The GHCB is
-used for communication with the hypervisor, so its content must not be
-encrypted. After the GHCB is not needed anymore it must be mapped
-encrypted again so that the running kernel image can safely re-use the
-memory.
+Load the GDT right after switching to virtual addresses to make sure
+there is a defined GDT for exception handling.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 133 ++++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h         |   2 +
- 2 files changed, 135 insertions(+)
+ arch/x86/kernel/head_64.S | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index aa91bebc0fe9..05742f641a06 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -24,6 +24,7 @@
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 800053219054..f958d4e4ee08 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -166,6 +166,14 @@ SYM_CODE_START(secondary_startup_64)
+ 1:
+ 	UNWIND_HINT_EMPTY
  
- /* These actually do the work of building the kernel identity maps. */
- #include <linux/pgtable.h>
-+#include <asm/cmpxchg.h>
- #include <asm/trap_pf.h>
- #include <asm/trapnr.h>
- #include <asm/init.h>
-@@ -165,6 +166,138 @@ void finalize_identity_maps(void)
- 	write_cr3(top_level_pgt);
- }
++	/*
++	 * We must switch to a new descriptor in kernel space for the GDT
++	 * because soon the kernel won't have access anymore to the userspace
++	 * addresses where we're currently running on. We have to do that here
++	 * because in 32bit we couldn't load a 64bit linear address.
++	 */
++	lgdt	early_gdt_descr(%rip)
++
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
+@@ -193,14 +201,6 @@ SYM_CODE_START(secondary_startup_64)
+ 	pushq $0
+ 	popfq
  
-+static pte_t *split_large_pmd(struct x86_mapping_info *info,
-+			      pmd_t *pmdp, unsigned long __address)
-+{
-+	unsigned long page_flags;
-+	unsigned long address;
-+	pte_t *pte;
-+	pmd_t pmd;
-+	int i;
-+
-+	pte = (pte_t *)info->alloc_pgt_page(info->context);
-+	if (!pte)
-+		return NULL;
-+
-+	address     = __address & PMD_MASK;
-+	/* No large page - clear PSE flag */
-+	page_flags  = info->page_flag & ~_PAGE_PSE;
-+
-+	/* Populate the PTEs */
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		set_pte(&pte[i], __pte(address | page_flags));
-+		address += PAGE_SIZE;
-+	}
-+
-+	/*
-+	 * Ideally we need to clear the large PMD first and do a TLB
-+	 * flush before we write the new PMD. But the 2M range of the
-+	 * PMD might contain the code we execute and/or the stack
-+	 * we are on, so we can't do that. But that should be safe here
-+	 * because we are going from large to small mappings and we are
-+	 * also the only user of the page-table, so there is no chance
-+	 * of a TLB multihit.
-+	 */
-+	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	set_pmd(pmdp, pmd);
-+	/* Flush TLB to establish the new PMD */
-+	write_cr3(top_level_pgt);
-+
-+	return pte + pte_index(__address);
-+}
-+
-+static void clflush_page(unsigned long address)
-+{
-+	unsigned int flush_size;
-+	char *cl, *start, *end;
-+
-+	/*
-+	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
-+	 * cause another #VC exception and the GHCB is not ready to use yet.
-+	 */
-+	flush_size = 64;
-+	start      = (char *)(address & PAGE_MASK);
-+	end        = start + PAGE_SIZE;
-+
-+	/*
-+	 * First make sure there are no pending writes on the cache-lines to
-+	 * flush.
-+	 */
-+	asm volatile("mfence" : : : "memory");
-+
-+	for (cl = start; cl != end; cl += flush_size)
-+		clflush(cl);
-+}
-+
-+static int set_clr_page_flags(struct x86_mapping_info *info,
-+			      unsigned long address,
-+			      pteval_t set, pteval_t clr)
-+{
-+	pgd_t *pgdp = (pgd_t *)top_level_pgt;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep, pte;
-+
-+	/*
-+	 * First make sure there is a PMD mapping for 'address'.
-+	 * It should already exist, but keep things generic.
-+	 *
-+	 * To map the page just read from it and fault it in if there is no
-+	 * mapping yet. add_identity_map() can't be called here because that
-+	 * would unconditionally map the address on PMD level, destroying any
-+	 * PTE-level mappings that might already exist. Use assembly here so
-+	 * the access won't be optimized away.
-+	 */
-+	asm volatile("mov %[address], %%r9"
-+		     :: [address] "g" (*(unsigned long *)address)
-+		     : "r9", "memory");
-+
-+	/*
-+	 * The page is mapped at least with PMD size - so skip checks and walk
-+	 * directly to the PMD.
-+	 */
-+	p4dp = p4d_offset(pgdp, address);
-+	pudp = pud_offset(p4dp, address);
-+	pmdp = pmd_offset(pudp, address);
-+
-+	if (pmd_large(*pmdp))
-+		ptep = split_large_pmd(info, pmdp, address);
-+	else
-+		ptep = pte_offset_kernel(pmdp, address);
-+
-+	if (!ptep)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Changing encryption attributes of a page requires to flush it from
-+	 * the caches.
-+	 */
-+	if ((set | clr) & _PAGE_ENC)
-+		clflush_page(address);
-+
-+	/* Update PTE */
-+	pte = *ptep;
-+	pte = pte_set_flags(pte, set);
-+	pte = pte_clear_flags(pte, clr);
-+	set_pte(ptep, pte);
-+
-+	/* Flush TLB after changing encryption attribute */
-+	write_cr3(top_level_pgt);
-+
-+	return 0;
-+}
-+
-+int set_page_decrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_ENC);
-+}
-+
-+int set_page_encrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
-+}
-+
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
- {
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 65da40777bc1..5e569e8a7d75 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,6 +98,8 @@ static inline void choose_random_location(unsigned long input,
- #endif
- 
- #ifdef CONFIG_X86_64
-+extern int set_page_decrypted(unsigned long address);
-+extern int set_page_encrypted(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
+-	/*
+-	 * We must switch to a new descriptor in kernel space for the GDT
+-	 * because soon the kernel won't have access anymore to the userspace
+-	 * addresses where we're currently running on. We have to do that here
+-	 * because in 32bit we couldn't load a 64bit linear address.
+-	 */
+-	lgdt	early_gdt_descr(%rip)
+-
+ 	/* set up data segments */
+ 	xorl %eax,%eax
+ 	movl %eax,%ds
 -- 
 2.27.0
 
