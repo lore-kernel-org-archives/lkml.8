@@ -2,138 +2,76 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63904C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69F4C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A30620714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:56:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TvLAYK/A"
+	by mail.kernel.org (Postfix) with ESMTP id CA79020714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGXD4o (ORCPT
+        id S1726854AbgGXD6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:56:44 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:10368 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726425AbgGXD4n (ORCPT
+        Thu, 23 Jul 2020 23:58:51 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:25514 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgGXD6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 23:56:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595563003; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jKEWa5p6iwN7F8E6ld+cf+QtH5BZYYsHm6Lj0pjjaxU=;
- b=TvLAYK/ATwzosHacEf/civLs0jen2HV+GbvFe37z7mStC+HQfDops9ta4CLJJxb4Gs8nzrQG
- wRYacinEW9EYi1hPiAiW201BOh63VqVtmdjiujy+g2xJJb/GXlla6FZlnA2RZdXCCYvwwJZc
- 2Q6EOV3PvmMMGGd3JLivC92RY7M=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f1a5bed0cb8533c3b758615 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 03:56:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EC532C43395; Fri, 24 Jul 2020 03:56:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4BB7DC433C9;
-        Fri, 24 Jul 2020 03:56:28 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 24 Jul 2020 09:26:28 +0530
-From:   skakit@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        Thu, 23 Jul 2020 23:58:48 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 23 Jul 2020 20:58:47 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jul 2020 20:58:46 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 24 Jul 2020 09:28:21 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id D84F74272; Fri, 24 Jul 2020 09:28:19 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: sc7180: Add wakeup support over UART RX
-In-Reply-To: <20200427165616.GF4525@google.com>
-References: <1587968844-26667-1-git-send-email-skakit@codeaurora.org>
- <20200427165616.GF4525@google.com>
-Message-ID: <a2f118592a9039ee63098651f5e5c6f6@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        satya priya <skakit@codeaurora.org>
+Subject: [PATCH V2 0/3]  Add wakeup support over UART RX
+Date:   Fri, 24 Jul 2020 09:27:59 +0530
+Message-Id: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Changes in V2:
+ - As per Matthias's comment added wakeup support for all the UARTs
+   of SC7180.
+ - Added sleep state in sc7180-idp.dts file.
+ - Modify the if check in set_mctrl API in serial driver to avoid
+   making RFR high during suspend.
 
-On 2020-04-27 22:26, Matthias Kaehlcke wrote:
-> Hi,
-> 
-> On Mon, Apr 27, 2020 at 11:57:24AM +0530, satya priya wrote:
->> Add the necessary pinctrl and interrupts to make UART
->> wakeup capable.
->> 
->> Signed-off-by: satya priya <skakit@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 4216b57..3a49603 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -637,9 +637,12 @@
->>  				reg = <0 0x0088c000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart3_default>;
->> -				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart3_default>;
-> 
-> Why is the 'sleep' configuration needed if it's the same as 'default'?
+Hi Greg,
 
-Sleep configuration is needed to make sure correct pinctrl setting is 
-done for RX.
-When we register wakeup interrupt, function select is changed to 0 or 
-GPIO, and after that when state on is called, down the line it is 
-checking the current state, if it's same as previous state(default), it 
-won't do any thing and returns 0. Thus the pinctrl setting for RX 
-remains with "GPIO" function select causing transfer failures.
-
-int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
-{
-         if (p->state == state)
-                 return 0;
-
-         return pinctrl_commit_state(p, state);
-}
-EXPORT_SYMBOL_GPL(pinctrl_select_state);
-
-However, in V2 we have added sleep state separately to make wakeup 
-feature work properly.
-
-> 
->> +				interrupts-extended =
->> +					<&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
->> +					<&tlmm 41 0>;
->>  				status = "disabled";
->>  			};
-> 
-> This patch only adds wakeup support for uart3, which seems an arbitrary
-> choice at SoC level. Either it should do it for all UARTs of the 
-> SC7180,
-> or in the .dtsi of devices that use UART3 and need it to be wakeup 
-> capable.
-
-Ok. Added wakeup support to all the UARTs of SC7180 in V2.
+These patches are based on qcom tree. Please ack the serial driver
+patch to land via qcom-tree.
 
 Thanks,
 Satya Priya
+
+satya priya (3):
+  arm64: dts: sc7180: Add wakeup support over UART RX
+  arm64: dts: qcom: sc7180: Add sleep pin ctrl for BT uart
+  tty: serial: qcom_geni_serial: Fix the UART wakeup issue
+
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42 ++++++++++++--
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 98 ++++++++++++++++++++++++++++-----
+ drivers/tty/serial/qcom_geni_serial.c   |  2 +-
+ 3 files changed, 121 insertions(+), 21 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
