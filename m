@@ -2,144 +2,125 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA43C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1972070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PpYGQpha"
+	by mail.kernel.org (Postfix) with ESMTP id E84302064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGXIyX (ORCPT
+        id S1727075AbgGXIzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgGXIyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:54:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111BDC0619D3;
-        Fri, 24 Jul 2020 01:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xxbr0HEbzKbRBxE7AWUk2n/xYZxM53ofuy4wot0kyPA=; b=PpYGQphaPlr8B7Udb1YijEPPAb
-        czkZJ3L4+BnwKUMCyluyu0OdhBplQmOVpRCxoz6hbTh3o8MqkfRHy175rM+2CE8KKcy1cur6A0eN/
-        U2R5/PYtYY3j0h4wOdpXjs5N54wzvmCJJ8nXVYlUtFWV47bf8dqMS0wDvjmFmqZ/xYwQ3CyZQ8KdI
-        q0KGDzDFVRKMkiCJH3goRiq6xakaQripa417jLTtJvRDZi7uehT677O9jesB4meZD2uhVyMlQWgE6
-        jSdqLQZeLjJclhVuiOR7MpMu2+nxicBuZv+4Fv639KDlkaPtAwMGBYAcP85kP5xBqrBr+eP1X7dXs
-        FseivnrA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jytSx-0003Wz-NN; Fri, 24 Jul 2020 08:54:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E054C301A7A;
-        Fri, 24 Jul 2020 10:54:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C33B528B7E76A; Fri, 24 Jul 2020 10:54:05 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 10:54:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200724085405.GW10769@hirez.programming.kicks-ass.net>
-References: <20200716110347.19553-1-qais.yousef@arm.com>
- <20200716110347.19553-2-qais.yousef@arm.com>
+        Fri, 24 Jul 2020 04:55:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54784 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726554AbgGXIzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:55:35 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D3DA38FE8846B0F92B8C;
+        Fri, 24 Jul 2020 16:55:33 +0800 (CST)
+Received: from huawei.com (10.174.187.31) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Jul 2020
+ 16:55:27 +0800
+From:   Yifei Jiang <jiangyifei@huawei.com>
+To:     <pbonzini@redhat.com>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>
+CC:     <anup.patel@wdc.com>, <atish.patra@wdc.com>, <kvm@vger.kernel.org>,
+        <kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <victor.zhangxiaofeng@huawei.com>,
+        <wu.wubin@huawei.com>, <zhang.zhanghailiang@huawei.com>,
+        <dengkai1@huawei.com>, <limingwang@huawei.com>,
+        Yifei Jiang <jiangyifei@huawei.com>
+Subject: [RFC 0/2] Add risc-v vhost-net support
+Date:   Fri, 24 Jul 2020 16:54:39 +0800
+Message-ID: <20200724085441.1514-1-jiangyifei@huawei.com>
+X-Mailer: git-send-email 2.26.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716110347.19553-2-qais.yousef@arm.com>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.187.31]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 12:03:45PM +0100, Qais Yousef wrote:
+Hi,
 
-Would you mind terribly if I rename things like so?
+These two patches enable support for vhost-net on RISC-V architecture. They are developed
+based on the Linux source in this repo: https://github.com/avpatel/linux,
+the branch is riscv_kvm_v13. 
 
-I tried and failed to come up with a shorter name in general, these
-functions names are somewhat unwieldy. I considered s/_default//.
+The accompanying QEMU is from the repo: https://github.com/alistair23/qemu, the branch is
+hyp-ext-v0.6.next. In order for the QEMU to work with KVM, the patch found here is necessary:
+https://patchwork.kernel.org/cover/11435965/
 
----
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -914,7 +914,7 @@ unsigned int uclamp_rq_max_value(struct
- 	return uclamp_idle_value(rq, clamp_id, clamp_value);
- }
- 
--static void __uclamp_sync_util_min_rt_default_locked(struct task_struct *p)
-+static void __uclamp_update_util_min_rt_default(struct task_struct *p)
- {
- 	unsigned int default_util_min;
- 	struct uclamp_se *uc_se;
-@@ -931,7 +931,7 @@ static void __uclamp_sync_util_min_rt_de
- 	uclamp_se_set(uc_se, default_util_min, false);
- }
- 
--static void __uclamp_sync_util_min_rt_default(struct task_struct *p)
-+static void uclamp_update_util_min_rt_default(struct task_struct *p)
- {
- 	struct rq_flags rf;
- 	struct rq *rq;
-@@ -941,7 +941,7 @@ static void __uclamp_sync_util_min_rt_de
- 
- 	/* Protect updates to p->uclamp_* */
- 	rq = task_rq_lock(p, &rf);
--	__uclamp_sync_util_min_rt_default_locked(p);
-+	__uclamp_update_util_min_rt_default(p);
- 	task_rq_unlock(rq, p, &rf);
- }
- 
-@@ -968,7 +968,7 @@ static void uclamp_sync_util_min_rt_defa
- 
- 	rcu_read_lock();
- 	for_each_process_thread(g, p)
--		__uclamp_sync_util_min_rt_default(p);
-+		uclamp_update_util_min_rt_default(p);
- 	rcu_read_unlock();
- }
- 
-@@ -1360,7 +1360,7 @@ static void __setscheduler_uclamp(struct
- 		 * at runtime.
- 		 */
- 		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			__uclamp_sync_util_min_rt_default_locked(p);
-+			__uclamp_update_util_min_rt_default(p);
- 		else
- 			uclamp_se_set(uc_se, uclamp_none(clamp_id), false);
- 
-@@ -1404,7 +1404,7 @@ static void uclamp_fork(struct task_stru
- 
- static void uclamp_post_fork(struct task_struct *p)
- {
--	__uclamp_sync_util_min_rt_default(p);
-+	uclamp_update_util_min_rt_default(p);
- }
- 
- static void __init init_uclamp_rq(struct rq *rq)
+Several steps to use this:
+
+1. create virbr0 on riscv64 emulation
+$ brctl addbr virbr0
+$ brctl stp virbr0 on
+$ ifconfig virbr0 up
+$ ifconfig virbr0 <virbr0_ip> netmask <virbr0_netmask>
+
+2. boot riscv64 guestOS on riscv64 emulation
+$ ./qemu-system-riscv64 -M virt,accel=kvm -m 1024M -cpu host -nographic \
+	-name guest=riscv-guest \
+	-smp 2 \
+	-kernel ./Image \
+	-drive file=./guest.img,format=raw,id=hd0 \
+	-device virtio-blk,drive=hd0 \
+	-netdev type=tap,vhost=on,script=./ifup.sh,downscript=./ifdown.sh,id=net0 \
+	-append "root=/dev/vda rw console=ttyS0 earlycon=sbi"
+
+$ cat ifup.sh
+#!/bin/sh
+brctl addif virbr0 $1
+ifconfig $1 up
+
+$ cat ifdown.sh
+#!/bin/sh
+ifconfig $1 down
+brctl delif virbr0 $1
+
+This brenchmark is vhost-net compare with virtio:
+
+$ ./netperf -H <virbr0_ip> -l 100 -t TCP_STREAM
+
+vhost-net:
+Recv   Send    Send                          
+Socket Socket  Message  Elapsed              
+Size   Size    Size     Time     Throughput  
+bytes  bytes   bytes    secs.    10^6bits/sec  
+
+131072  16384  16384    100.07    457.55
+
+virtio:
+Recv   Send    Send                          
+Socket Socket  Message  Elapsed              
+Size   Size    Size     Time     Throughput  
+bytes  bytes   bytes    secs.    10^6bits/sec  
+
+131072  16384  16384    100.07    227.02
+
+
+The next step is to support irqfd on RISC-V architecture.
+
+Yifei Jiang (2):
+  RISC-V: KVM: enable ioeventfd capability and compile for risc-v
+  RISC-V: KVM: read\write kernel mmio device support
+
+ arch/riscv/kvm/Kconfig     |  2 ++
+ arch/riscv/kvm/Makefile    |  2 +-
+ arch/riscv/kvm/vcpu_exit.c | 38 ++++++++++++++++++++++++++++++++------
+ arch/riscv/kvm/vm.c        |  1 +
+ 4 files changed, 36 insertions(+), 7 deletions(-)
+
+-- 
+2.19.1
+
+
