@@ -2,135 +2,533 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1D7C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6853C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C96E2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DD420714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:33:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgGXOdE (ORCPT
+        id S1727043AbgGXOdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:33:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63538 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726643AbgGXOdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:33:04 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OEV87K120301;
-        Fri, 24 Jul 2020 10:33:02 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32fat2xauf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 10:33:01 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06OEVD4K120896;
-        Fri, 24 Jul 2020 10:33:01 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32fat2xaru-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 10:33:01 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06OEUX0I029871;
-        Fri, 24 Jul 2020 14:32:56 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 32brq842uj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 14:32:56 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06OEVR6w34734474
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 14:31:27 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24D80A4053;
-        Fri, 24 Jul 2020 14:32:52 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB2EEA4059;
-        Fri, 24 Jul 2020 14:32:51 +0000 (GMT)
-Received: from osiris (unknown [9.171.73.247])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 24 Jul 2020 14:32:51 +0000 (GMT)
-Date:   Fri, 24 Jul 2020 16:32:50 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 0/9] s390: implement and optimize vmemmap_free()
-Message-ID: <20200724143250.GB4063@osiris>
-References: <20200722094558.9828-1-david@redhat.com>
+        Fri, 24 Jul 2020 10:33:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55156 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726992AbgGXOdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:33:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7B833AF8F;
+        Fri, 24 Jul 2020 14:33:15 +0000 (UTC)
+Subject: Re: [PATCH v2 4/4] xen: add helpers to allocate unpopulated memory
+To:     Roger Pau Monne <roger.pau@citrix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>
+References: <20200724124241.48208-1-roger.pau@citrix.com>
+ <20200724124241.48208-5-roger.pau@citrix.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <ca1d1f22-296f-e985-6b2e-613448de95a2@suse.com>
+Date:   Fri, 24 Jul 2020 16:33:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722094558.9828-1-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_04:2020-07-24,2020-07-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- phishscore=0 adultscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxlogscore=906
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007240108
+In-Reply-To: <20200724124241.48208-5-roger.pau@citrix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:45:49AM +0200, David Hildenbrand wrote:
-> This series is based on the latest s390/features branch [1]. It
-> consolidates vmem_add_range(), vmem_remove_range(), and vmemmap_populate()
-> into a single, recursive page table walker. It then implements
-> vmemmap_free() and optimizes it by
-> - Freeing empty page tables (also done for vmem_remove_range()).
-> - Handling cases where the vmemmap of a section does not fill huge pages
->   completely (e.g., sizeof(struct page) == 56).
+On 24.07.20 14:42, Roger Pau Monne wrote:
+> To be used in order to create foreign mappings. This is based on the
+> ZONE_DEVICE facility which is used by persistent memory devices in
+> order to create struct pages and kernel virtual mappings for the IOMEM
+> areas of such devices. Note that on kernels without support for
+> ZONE_DEVICE Xen will fallback to use ballooned pages in order to
+> create foreign mappings.
 > 
-> vmemmap_free() is currently never used, unless adiing standby memory fails
-> (unlikely). This is relevant for virtio-mem, which adds/removes memory
-> in memory block/section granularity (always removes memory in the same
-> granularity it added it).
+> The newly added helpers use the same parameters as the existing
+> {alloc/free}_xenballooned_pages functions, which allows for in-place
+> replacement of the callers. Once a memory region has been added to be
+> used as scratch mapping space it will no longer be released, and pages
+> returned are kept in a linked list. This allows to have a buffer of
+> pages and prevents resorting to frequent additions and removals of
+> regions.
 > 
-> I gave this a proper test with my virtio-mem prototype (which I will share
-> in the near future), both with 56 byte memmap per page and 64 byte memmap
-> per page, with and without huge page support. In both cases, removing
-> memory (routed through arch_remove_memory()) will result in
-> - all populated vmemmap pages to get removed/freed
-> - all applicable page tables for the vmemmap getting removed/freed
-> - all applicable page tables for the idendity mapping getting removed/freed
-> Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
-> environments.
+> If enabled (because ZONE_DEVICE is supported) the usage of the new
+> functionality untangles Xen balloon and RAM hotplug from the usage of
+> unpopulated physical memory ranges to map foreign pages, which is the
+> correct thing to do in order to avoid mappings of foreign pages depend
+> on memory hotplug.
 > 
-> This is the basis for real memory hotunplug support for s390x and should
-> complete my journey to s390x vmem/vmemmap code for now
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> ---
+> I've not added a new memory_type type and just used
+> MEMORY_DEVICE_DEVDAX which seems to be what we want for such memory
+> regions. I'm unsure whether abusing this type is fine, or if I should
+> instead add a specific type, maybe MEMORY_DEVICE_GENERIC? I don't
+> think we should be using a specific Xen type at all.
+> ---
+> Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Roger Pau Monne <roger.pau@citrix.com>
+> Cc: Wei Liu <wl@xen.org>
+> Cc: Yan Yankovskyi <yyankovskyi@gmail.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: xen-devel@lists.xenproject.org
+> Cc: linux-mm@kvack.org
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> ---
+>   drivers/gpu/drm/xen/xen_drm_front_gem.c |   8 +-
+>   drivers/xen/Makefile                    |   1 +
+>   drivers/xen/balloon.c                   |   4 +-
+>   drivers/xen/grant-table.c               |   4 +-
+>   drivers/xen/privcmd.c                   |   4 +-
+>   drivers/xen/unpopulated-alloc.c         | 222 ++++++++++++++++++++++++
+>   drivers/xen/xenbus/xenbus_client.c      |   6 +-
+>   drivers/xen/xlate_mmu.c                 |   4 +-
+>   include/xen/xen.h                       |   8 +
+>   9 files changed, 246 insertions(+), 15 deletions(-)
+>   create mode 100644 drivers/xen/unpopulated-alloc.c
 > 
-> What needs double-checking is tlb flushing. AFAIKS, as there are no valid
-> accesses, doing a single range flush at the end is sufficient, both when
-> removing vmemmap pages and the idendity mapping.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features
-> 
-> v1 -> v2:
-> - Convert to a single page table walker named "modify_pagetable()", with
->   two helper functions "add_pagetable()" and "remove_pagetable().
-> 
-> David Hildenbrand (9):
->   s390/vmem: rename vmem_add_mem() to vmem_add_range()
->   s390/vmem: consolidate vmem_add_range() and vmem_remove_range()
->   s390/vmemmap: extend modify_pagetable() to handle vmemmap
->   s390/vmemmap: cleanup when vmemmap_populate() fails
->   s390/vmemmap: take the vmem_mutex when populating/freeing
->   s390/vmem: cleanup empty page tables
->   s390/vmemmap: fallback to PTEs if mapping large PMD fails
->   s390/vmemmap: remember unused sub-pmd ranges
->   s390/vmemmap: avoid memset(PAGE_UNUSED) when adding consecutive
->     sections
-> 
->  arch/s390/mm/vmem.c | 637 ++++++++++++++++++++++++++++++--------------
->  1 file changed, 442 insertions(+), 195 deletions(-)
+> diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+> index f0b85e094111..9dd06eae767a 100644
+> --- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
+> +++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+> @@ -99,8 +99,8 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
+>   		 * allocate ballooned pages which will be used to map
+>   		 * grant references provided by the backend
+>   		 */
+> -		ret = alloc_xenballooned_pages(xen_obj->num_pages,
+> -					       xen_obj->pages);
+> +		ret = xen_alloc_unpopulated_pages(xen_obj->num_pages,
+> +					          xen_obj->pages);
+>   		if (ret < 0) {
+>   			DRM_ERROR("Cannot allocate %zu ballooned pages: %d\n",
+>   				  xen_obj->num_pages, ret);
+> @@ -152,8 +152,8 @@ void xen_drm_front_gem_free_object_unlocked(struct drm_gem_object *gem_obj)
+>   	} else {
+>   		if (xen_obj->pages) {
+>   			if (xen_obj->be_alloc) {
+> -				free_xenballooned_pages(xen_obj->num_pages,
+> -							xen_obj->pages);
+> +				xen_free_unpopulated_pages(xen_obj->num_pages,
+> +							   xen_obj->pages);
+>   				gem_free_pages_array(xen_obj);
+>   			} else {
+>   				drm_gem_put_pages(&xen_obj->base,
+> diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
+> index 0d322f3d90cd..788a5d9c8ef0 100644
+> --- a/drivers/xen/Makefile
+> +++ b/drivers/xen/Makefile
+> @@ -42,3 +42,4 @@ xen-gntdev-$(CONFIG_XEN_GNTDEV_DMABUF)	+= gntdev-dmabuf.o
+>   xen-gntalloc-y				:= gntalloc.o
+>   xen-privcmd-y				:= privcmd.o privcmd-buf.o
+>   obj-$(CONFIG_XEN_FRONT_PGDIR_SHBUF)	+= xen-front-pgdir-shbuf.o
+> +obj-$(CONFIG_ZONE_DEVICE)		+= unpopulated-alloc.o
+> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+> index b1d8b028bf80..815ef10eb2ff 100644
+> --- a/drivers/xen/balloon.c
+> +++ b/drivers/xen/balloon.c
+> @@ -654,7 +654,7 @@ void free_xenballooned_pages(int nr_pages, struct page **pages)
+>   }
+>   EXPORT_SYMBOL(free_xenballooned_pages);
+>   
+> -#ifdef CONFIG_XEN_PV
+> +#if defined(CONFIG_XEN_PV) && !defined(CONFIG_ZONE_DEVICE)
+>   static void __init balloon_add_region(unsigned long start_pfn,
+>   				      unsigned long pages)
+>   {
+> @@ -708,7 +708,7 @@ static int __init balloon_init(void)
+>   	register_sysctl_table(xen_root);
+>   #endif
+>   
+> -#ifdef CONFIG_XEN_PV
+> +#if defined(CONFIG_XEN_PV) && !defined(CONFIG_ZONE_DEVICE)
+>   	{
+>   		int i;
+>   
+> diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
+> index 8d06bf1cc347..523dcdf39cc9 100644
+> --- a/drivers/xen/grant-table.c
+> +++ b/drivers/xen/grant-table.c
+> @@ -801,7 +801,7 @@ int gnttab_alloc_pages(int nr_pages, struct page **pages)
+>   {
+>   	int ret;
+>   
+> -	ret = alloc_xenballooned_pages(nr_pages, pages);
+> +	ret = xen_alloc_unpopulated_pages(nr_pages, pages);
+>   	if (ret < 0)
+>   		return ret;
+>   
+> @@ -836,7 +836,7 @@ EXPORT_SYMBOL_GPL(gnttab_pages_clear_private);
+>   void gnttab_free_pages(int nr_pages, struct page **pages)
+>   {
+>   	gnttab_pages_clear_private(nr_pages, pages);
+> -	free_xenballooned_pages(nr_pages, pages);
+> +	xen_free_unpopulated_pages(nr_pages, pages);
+>   }
+>   EXPORT_SYMBOL_GPL(gnttab_free_pages);
+>   
+> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> index a250d118144a..56000ab70974 100644
+> --- a/drivers/xen/privcmd.c
+> +++ b/drivers/xen/privcmd.c
+> @@ -425,7 +425,7 @@ static int alloc_empty_pages(struct vm_area_struct *vma, int numpgs)
+>   	if (pages == NULL)
+>   		return -ENOMEM;
+>   
+> -	rc = alloc_xenballooned_pages(numpgs, pages);
+> +	rc = xen_alloc_unpopulated_pages(numpgs, pages);
+>   	if (rc != 0) {
+>   		pr_warn("%s Could not alloc %d pfns rc:%d\n", __func__,
+>   			numpgs, rc);
+> @@ -900,7 +900,7 @@ static void privcmd_close(struct vm_area_struct *vma)
+>   
+>   	rc = xen_unmap_domain_gfn_range(vma, numgfns, pages);
+>   	if (rc == 0)
+> -		free_xenballooned_pages(numpgs, pages);
+> +		xen_free_unpopulated_pages(numpgs, pages);
+>   	else
+>   		pr_crit("unable to unmap MFN range: leaking %d pages. rc=%d\n",
+>   			numpgs, rc);
+> diff --git a/drivers/xen/unpopulated-alloc.c b/drivers/xen/unpopulated-alloc.c
+> new file mode 100644
+> index 000000000000..aaa91cefbbf9
+> --- /dev/null
+> +++ b/drivers/xen/unpopulated-alloc.c
+> @@ -0,0 +1,222 @@
+> +/*
+> + * Helpers to allocate unpopulated memory for foreign mappings
+> + *
+> + * Copyright (c) 2020, Citrix Systems R&D
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License version 2
+> + * as published by the Free Software Foundation; or, when distributed
+> + * separately from the Linux kernel or incorporated into other
+> + * software packages, subject to the following license:
+> + *
+> + * Permission is hereby granted, free of charge, to any person obtaining a copy
+> + * of this source file (the "Software"), to deal in the Software without
+> + * restriction, including without limitation the rights to use, copy, modify,
+> + * merge, publish, distribute, sublicense, and/or sell copies of the Software,
+> + * and to permit persons to whom the Software is furnished to do so, subject to
+> + * the following conditions:
+> + *
+> + * The above copyright notice and this permission notice shall be included in
+> + * all copies or substantial portions of the Software.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> + * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+> + * IN THE SOFTWARE.
+> + */
 
-Series applied, thank you!
+Please use:
+
+// SPDX-License-Identifier: GPL-2.0-only
+
+instead of the long GPL sermon.
+
+> +
+> +#include <linux/errno.h>
+> +#include <linux/gfp.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mm.h>
+> +#include <linux/memremap.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/page.h>
+> +
+> +#include <xen/page.h>
+> +#include <xen/xen.h>
+> +
+> +static DEFINE_MUTEX(lock);
+> +static LIST_HEAD(list);
+> +static unsigned int count;
+> +
+> +static int fill(unsigned int nr_pages)
+> +{
+> +	struct dev_pagemap *pgmap;
+> +	void *vaddr;
+> +	unsigned int i, alloc_pages = round_up(nr_pages, PAGES_PER_SECTION);
+> +	int nid, ret;
+> +
+> +	pgmap = kzalloc(sizeof(*pgmap), GFP_KERNEL);
+> +	if (!pgmap)
+> +		return -ENOMEM;
+> +
+> +	pgmap->type = MEMORY_DEVICE_DEVDAX;
+> +	pgmap->res.name = "XEN SCRATCH";
+> +	pgmap->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> +
+> +	ret = allocate_resource(&iomem_resource, &pgmap->res,
+> +				alloc_pages * PAGE_SIZE, 0, -1,
+> +				PAGES_PER_SECTION * PAGE_SIZE, NULL, NULL);
+> +	if (ret < 0) {
+> +		pr_err("Cannot allocate new IOMEM resource\n");
+> +		kfree(pgmap);
+> +		return ret;
+> +	}
+> +
+> +	nid = memory_add_physaddr_to_nid(pgmap->res.start);
+> +
+> +#ifdef CONFIG_XEN_HAVE_PVMMU
+> +	/*
+> +	 * We don't support PV MMU when Linux and Xen is using
+> +	 * different page granularity.
+> +	 */
+> +	BUILD_BUG_ON(XEN_PAGE_SIZE != PAGE_SIZE);
+
+Drop that, please. PV MMU is x86 only and we surely don't want to add
+it to another architecture. On x86 this will never trigger.
+
+> +
+> +        /*
+> +         * memremap will build page tables for the new memory so
+> +         * the p2m must contain invalid entries so the correct
+> +         * non-present PTEs will be written.
+> +         *
+> +         * If a failure occurs, the original (identity) p2m entries
+> +         * are not restored since this region is now known not to
+> +         * conflict with any devices.
+> +         */
+> +	if (!xen_feature(XENFEAT_auto_translated_physmap)) {
+> +		xen_pfn_t pfn = PFN_DOWN(pgmap->res.start);
+> +
+> +		for (i = 0; i < alloc_pages; i++) {
+> +			if (!set_phys_to_machine(pfn + i, INVALID_P2M_ENTRY)) {
+> +				pr_warn("set_phys_to_machine() failed, no memory added\n");
+> +				release_resource(&pgmap->res);
+> +				kfree(pgmap);
+> +				return -ENOMEM;
+> +			}
+> +                }
+> +	}
+> +#endif
+> +
+> +	vaddr = memremap_pages(pgmap, nid);
+> +	if (IS_ERR(vaddr)) {
+> +		pr_err("Cannot remap memory range\n");
+> +		release_resource(&pgmap->res);
+> +		kfree(pgmap);
+> +		return PTR_ERR(vaddr);
+> +	}
+> +
+> +	for (i = 0; i < alloc_pages; i++) {
+> +		struct page *pg = virt_to_page(vaddr + PAGE_SIZE * i);
+> +
+> +		BUG_ON(!virt_addr_valid(vaddr + PAGE_SIZE * i));
+> +		list_add(&pg->lru, &list);
+> +		count++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xen_alloc_unpopulated_pages - alloc unpopulated pages
+> + * @nr_pages: Number of pages
+> + * @pages: pages returned
+> + * @return 0 on success, error otherwise
+> + */
+> +int xen_alloc_unpopulated_pages(unsigned int nr_pages, struct page **pages)
+> +{
+> +	unsigned int i;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&lock);
+> +	if (count < nr_pages) {
+> +		ret = fill(nr_pages);
+
+I'd rather use: ret = fill(nr_pages - count);
+
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	for (i = 0; i < nr_pages; i++) {
+> +		struct page *pg = list_first_entry_or_null(&list, struct page,
+> +							   lru);
+> +
+> +		BUG_ON(!pg);
+> +		list_del(&pg->lru);
+> +		count--;
+> +		pages[i] = pg;
+> +
+> +#ifdef CONFIG_XEN_HAVE_PVMMU
+> +		/*
+> +		 * We don't support PV MMU when Linux and Xen is using
+> +		 * different page granularity.
+> +		 */
+> +		BUILD_BUG_ON(XEN_PAGE_SIZE != PAGE_SIZE);
+
+Having two identical BUILD_BUG_ON() in the same source is really not
+wanted.
+
+> +
+> +		if (!xen_feature(XENFEAT_auto_translated_physmap)) {
+> +			ret = xen_alloc_p2m_entry(page_to_pfn(pg));
+> +			if (ret < 0) {
+> +				unsigned int j;
+> +
+> +				for (j = 0; j <= i; j++) {
+> +					list_add(&pages[j]->lru, &list);
+> +					count++;
+> +				}
+> +				goto out;
+> +			}
+> +		}
+> +#endif
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(xen_alloc_unpopulated_pages);
+> +
+> +/**
+> + * xen_free_unpopulated_pages - return unpopulated pages
+> + * @nr_pages: Number of pages
+> + * @pages: pages to return
+> + */
+> +void xen_free_unpopulated_pages(unsigned int nr_pages, struct page **pages)
+> +{
+> +	unsigned int i;
+> +
+> +	mutex_lock(&lock);
+> +	for (i = 0; i < nr_pages; i++) {
+> +		list_add(&pages[i]->lru, &list);
+> +		count++;
+> +	}
+> +	mutex_unlock(&lock);
+> +}
+> +EXPORT_SYMBOL(xen_free_unpopulated_pages);
+> +
+> +#ifdef CONFIG_XEN_PV
+> +static int __init init(void)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!xen_domain())
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * Initialize with pages from the extra memory regions (see
+> +	 * arch/x86/xen/setup.c).
+> +	 */
+> +	for (i = 0; i < XEN_EXTRA_MEM_MAX_REGIONS; i++) {
+> +		unsigned int j;
+> +
+> +		for (j = 0; j < xen_extra_mem[i].n_pfns; j++) {
+> +			struct page *pg =
+> +				pfn_to_page(xen_extra_mem[i].start_pfn + j);
+> +
+> +			list_add(&pg->lru, &list);
+> +			count++;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +subsys_initcall(init);
+> +#endif
+> diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+> index 786fbb7d8be0..70b6c4780fbd 100644
+> --- a/drivers/xen/xenbus/xenbus_client.c
+> +++ b/drivers/xen/xenbus/xenbus_client.c
+> @@ -615,7 +615,7 @@ static int xenbus_map_ring_hvm(struct xenbus_device *dev,
+>   	bool leaked = false;
+>   	unsigned int nr_pages = XENBUS_PAGES(nr_grefs);
+>   
+> -	err = alloc_xenballooned_pages(nr_pages, node->hvm.pages);
+> +	err = xen_alloc_unpopulated_pages(nr_pages, node->hvm.pages);
+>   	if (err)
+>   		goto out_err;
+>   
+> @@ -656,7 +656,7 @@ static int xenbus_map_ring_hvm(struct xenbus_device *dev,
+>   			 addr, nr_pages);
+>    out_free_ballooned_pages:
+>   	if (!leaked)
+> -		free_xenballooned_pages(nr_pages, node->hvm.pages);
+> +		xen_free_unpopulated_pages(nr_pages, node->hvm.pages);
+>    out_err:
+>   	return err;
+>   }
+> @@ -852,7 +852,7 @@ static int xenbus_unmap_ring_hvm(struct xenbus_device *dev, void *vaddr)
+>   			       info.addrs);
+>   	if (!rv) {
+>   		vunmap(vaddr);
+> -		free_xenballooned_pages(nr_pages, node->hvm.pages);
+> +		xen_free_unpopulated_pages(nr_pages, node->hvm.pages);
+>   	}
+>   	else
+>   		WARN(1, "Leaking %p, size %u page(s)\n", vaddr, nr_pages);
+> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
+> index 7b1077f0abcb..34742c6e189e 100644
+> --- a/drivers/xen/xlate_mmu.c
+> +++ b/drivers/xen/xlate_mmu.c
+> @@ -232,7 +232,7 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+>   		kfree(pages);
+>   		return -ENOMEM;
+>   	}
+> -	rc = alloc_xenballooned_pages(nr_pages, pages);
+> +	rc = xen_alloc_unpopulated_pages(nr_pages, pages);
+>   	if (rc) {
+>   		pr_warn("%s Couldn't balloon alloc %ld pages rc:%d\n", __func__,
+>   			nr_pages, rc);
+> @@ -249,7 +249,7 @@ int __init xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
+>   	if (!vaddr) {
+>   		pr_warn("%s Couldn't map %ld pages rc:%d\n", __func__,
+>   			nr_pages, rc);
+> -		free_xenballooned_pages(nr_pages, pages);
+> +		xen_free_unpopulated_pages(nr_pages, pages);
+>   		kfree(pages);
+>   		kfree(pfns);
+>   		return -ENOMEM;
+> diff --git a/include/xen/xen.h b/include/xen/xen.h
+> index 19a72f591e2b..aa33bc0d933c 100644
+> --- a/include/xen/xen.h
+> +++ b/include/xen/xen.h
+> @@ -52,4 +52,12 @@ bool xen_biovec_phys_mergeable(const struct bio_vec *vec1,
+>   extern u64 xen_saved_max_mem_size;
+>   #endif
+>   
+> +#ifdef CONFIG_ZONE_DEVICE
+> +int xen_alloc_unpopulated_pages(unsigned int nr_pages, struct page **pages);
+> +void xen_free_unpopulated_pages(unsigned int nr_pages, struct page **pages);
+> +#else
+> +#define xen_alloc_unpopulated_pages alloc_xenballooned_pages
+> +#define xen_free_unpopulated_pages free_xenballooned_pages
+> +#endif
+> +
+>   #endif	/* _XEN_XEN_H */
+> 
+
+Juergen
