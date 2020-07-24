@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1664EC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37798C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E724E206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E00206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AC2jBv5C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKfhrwLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgGXOvd (ORCPT
+        id S1726884AbgGXOv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50376 "EHLO
+        Fri, 24 Jul 2020 10:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgGXOva (ORCPT
+        with ESMTP id S1726170AbgGXOv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:51:30 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773BAC0619D3;
-        Fri, 24 Jul 2020 07:51:30 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a21so10244899ejj.10;
-        Fri, 24 Jul 2020 07:51:30 -0700 (PDT)
+        Fri, 24 Jul 2020 10:51:27 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573B9C0619D3;
+        Fri, 24 Jul 2020 07:51:27 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id q4so3998641edv.13;
+        Fri, 24 Jul 2020 07:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SoBgP3OEfZo1S+W2OL+antn28vvn8c/8vKe/rfz3jjQ=;
-        b=AC2jBv5CJFC7Q9ATElbSLWXwqiYW3iBMiPBzoTepUfXEzYYG/GVIvKCNoZ5oUk3WyZ
-         pxx3miWVrxAt3L95Dqksz8kXt27nvNNn3ISV6pv3KlEK3wM7c//ms3PSaMsjMB0OoGQZ
-         R/4YZM+lCjWuS+oy3zhgBLGkDtV3H8Ao92ObOqDWqzn+tUBDwGMGVaMqqyIEjvIAjDrr
-         YaMT7IV+tCkDSYb1DgsD8dmcZ5LZy5hCNAz6KMtbh6/eNvdz8nybnqUTqLyDGG7uTvHp
-         cQ+k156Dpm98KybgSbg6muYW+1PqDpw0KNPTZSxq2bQ0VRdmVRxdlDhzNuBQfzLUg0jn
-         VAzg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnSVvBPLgxOr7Okxa4+yFdbMwIKkVndKbRuepRfY/Zs=;
+        b=EKfhrwLSBlpUDSfbwmy+TKVdItuEwUFE+rwpl/BBpHVTunh1HcunYRzV/UAkFOmt4A
+         +ZpYGfCaAYqngbG0R7SiTq9t/pLcYQQ7ySNDaiOGnU8SfNGkuUSVdw2yfjIlpxwg2IBI
+         K62lCA7typmCS7SuWiAcWyH5Vh6Nw6RqBfhW16lMVG53+Bk1hup9RKNNC/y8DBgAOjuZ
+         p4JaoGNkcRqUBKV5iLKpWbHmM8gkgfr0vTVsX9hA1ZyGNmOejtiVzNnhyMX4Gn2QKGyE
+         p/pWRyK9w/GwjpKz2v+oeJOlrCbS/i3Ry4F+lZS+6ibl2wcGkQlh9VSXcvhVA6c2vj5y
+         K9pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SoBgP3OEfZo1S+W2OL+antn28vvn8c/8vKe/rfz3jjQ=;
-        b=FUWJCJ04/wCemJ8j3nnD2JHRQmNzmMYt9xVsThmHJvZBIMzYV1ez7HWLkbfJgr+m0L
-         1OXcIW4IaWpKffLvOq+4Oe/nVO5WGVMD83G+2bribcQaLWuZBXgHgJhI8YW1YVqK5FcB
-         qgbzrtzJTLZIGQrEpyy38SXPg/LcofaepCTj4KcGRxqqopddL6osRG4/a0ndp0OXXjKr
-         O3od2exgDZSdss5gBsn3WM1psT1K8gUSOQNeKC6nZqO0FFHlb7o6ugy2INMnT950nMd1
-         ImoDHt7d1jxmLnbKUKFNYkNQYVKqsb+Ep7KqKy+uzVhAhEUpc41dvtPRb2io1UGw73j/
-         UB9w==
-X-Gm-Message-State: AOAM533ClXZLoj6vulY6uoD1Y/XAfmTLVRsZbQg9+Pa2LHvWKsQK12n+
-        p8Ud4o7RNB8+nW6uLU9DaH0=
-X-Google-Smtp-Source: ABdhPJwigOug5YS2zDWbTF33JR8oprff0trdhlk1ZkvsxHcvm7s/3uhfS83C7ZSn09NpOyyeSA43mA==
-X-Received: by 2002:a17:906:cc4a:: with SMTP id mm10mr7602288ejb.451.1595602289234;
-        Fri, 24 Jul 2020 07:51:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnSVvBPLgxOr7Okxa4+yFdbMwIKkVndKbRuepRfY/Zs=;
+        b=ke0MzOb7b1RfDrsy7GFhD5NE+fXPTciE8dxbsjs4HIcDgUDFMazLZtRyU0ZrldUeh8
+         QR8V543TepHTrkQ742tupY8/L4eCkvYac/PwMVKYH2KxDeaX8hELlH2bXGj5+tU5h0Fh
+         eULo+ow3QTwHzvDf/ZvUh6RbRhbHXGdFjnY+kySasrfDbKAtxsYd23WOlADX8fbhGdN3
+         vATYRMsHXB1spoO9z7G+whrkmq84kPv+GnX7V1lDkuUN0giZznk5FDMfVoXXCMVII49e
+         qeadFztidW637GVhk4yq126TnWGJ+aIGHg02DoUTmZFTFtjsyY4tVY8Vb5Q9cBcYjamS
+         WqlA==
+X-Gm-Message-State: AOAM533yRPhu4pW4sYy57Cnl/5OJND27X1uVgxmAEhLzz5YT3T4oar40
+        ke1rWyiZAwo85kM4bmNPU08=
+X-Google-Smtp-Source: ABdhPJwvLYHGjgAuJ7dGovxJ5+5LP8JUWjKsoUMQ6Gld/w48Bq1GyMyLuJ0WRDDnmf7FBWJO/1wKaQ==
+X-Received: by 2002:a05:6402:1d97:: with SMTP id dk23mr9525309edb.1.1595602286010;
+        Fri, 24 Jul 2020 07:51:26 -0700 (PDT)
 Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
-        by smtp.gmail.com with ESMTPSA id m6sm788309ejq.85.2020.07.24.07.51.27
+        by smtp.gmail.com with ESMTPSA id m6sm788309ejq.85.2020.07.24.07.51.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 07:51:28 -0700 (PDT)
+        Fri, 24 Jul 2020 07:51:25 -0700 (PDT)
 From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
@@ -70,12 +70,10 @@ Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
         allen.chen@ite.com.tw, robh@kernel.org, devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/3] dt-bindings: arm: stm32: document Odyssey compatible
-Date:   Fri, 24 Jul 2020 16:51:06 +0200
-Message-Id: <20200724145107.35772-2-marcin.sloniewski@gmail.com>
+Subject: [PATCH v5 1/3] dt-bindings: vendor-prefixes: add Seeed Studio
+Date:   Fri, 24 Jul 2020 16:51:05 +0200
+Message-Id: <20200724145107.35772-1-marcin.sloniewski@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724145107.35772-1-marcin.sloniewski@gmail.com>
-References: <20200724145107.35772-1-marcin.sloniewski@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,28 +81,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document device tree bindings of Seeed SoM and carrier board.
+Add the "seeed" vendor prefix for Seeed Technology Co., Ltd
+Website: https://www.seeedstudio.com/
 
 Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-index 790e6dd48e34..3b318fe15194 100644
---- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-@@ -50,4 +50,10 @@ properties:
-           - const: st,stm32mp157c-ev1
-           - const: st,stm32mp157c-ed1
-           - const: st,stm32mp157
-+      - description: Odyssey STM32MP1 SoM based Boards
-+        items:
-+              - enum:
-+                  - seeed,stm32mp157c-odyssey
-+              - const: seeed,stm32mp157c-odyssey-som
-+              - const: st,stm32mp157
- ...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be85f..7dd03b3e9d3c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -902,6 +902,8 @@ patternProperties:
+     description: Schindler
+   "^seagate,.*":
+     description: Seagate Technology PLC
++  "^seeed,.*":
++    description: Seeed Technology Co., Ltd
+   "^seirobotics,.*":
+     description: Shenzhen SEI Robotics Co., Ltd
+   "^semtech,.*":
 -- 
 2.27.0
 
