@@ -2,110 +2,99 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4691DC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32A3C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F464206E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2ED8206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IC2noAvE"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Q22v6Maa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgGXEsQ (ORCPT
+        id S1726437AbgGXEuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 00:48:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41166 "EHLO
+        Fri, 24 Jul 2020 00:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGXEsP (ORCPT
+        with ESMTP id S1725886AbgGXEuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 00:48:15 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFB6C0619D3;
-        Thu, 23 Jul 2020 21:48:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 207so4438667pfu.3;
-        Thu, 23 Jul 2020 21:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Smo1dNl05bdB/pApWLRvotLIsWnNVwAGo8qoTT70Ax4=;
-        b=IC2noAvEa7YvGfX+ZVzdVqMj3h10oNZxf6iucJI1nj3FRsErqKmYzdPpAVWaxLq7YB
-         NKjuR8qdIObCuZlkg2oNR1lqDaG2sOr7Ecr6jfFT1/hrj+oyZ4SlWddju46hPJfIsZTJ
-         KQDibht3uAr1SGSF3V2ixE+9AsURRfGfX0T2h2SFLBdHCNJrHS+LUCfGurRPldbPh/oM
-         qRZWEemJwuOqQf1f0y6RvzmT5fAPGJ1czffcvggovA89Zqc7jOKY5dxh4/g0N9CuKUF4
-         FTELkRJLpib3ms1o9gHwQHS2eePOnYjDuwmnmk28hg1MZLGZ1DCc7gHKQ1WyR0aoSqSp
-         pbkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Smo1dNl05bdB/pApWLRvotLIsWnNVwAGo8qoTT70Ax4=;
-        b=AS7Yg8Qb2yVCU3IASRr/+t9h6Tt6Wj+NQzpiKNyFcaiKzd1Cv1nnyw7/qVxW61DA6y
-         nsLHCAp3ZUFafQA4tfVjS40eUd7sGBvHyQQ17UqZkeomg9xOPuTnWBEWvTEgyaprNpm+
-         5YeCf6e4k64DnAOwbsLOM38ZzGTFBBWcL3mYaFg3e/VlxqWA0NYFOxSsh31YnkEQjk1I
-         DfIpVU+TjBWra5fh6ElBHGo7hfUo2jeAn1/PTGiHvcszyrce6tAXA2/c7o9QG0Xfl+w4
-         tTA3tXy1aBrHSAp2ap0dKQz1dBc0YsLogdLd5F44EPxObv6Tyhq1doRudLbX5RzMxRMp
-         H9uA==
-X-Gm-Message-State: AOAM530dS39IKLj48S7hIARSuhrrT06LPFqkPFBCpAQsnMbrarhQRefh
-        sE6h53Rf+J62TEKDmG7pUQ==
-X-Google-Smtp-Source: ABdhPJy1/IvkCaVnZm/0fqm+5jyz8+iO1p3rSkyAhFdKTVC7sz4XwPorkl8mlkGD6Blouj0rjLc0Kw==
-X-Received: by 2002:a63:4d3:: with SMTP id 202mr7178001pge.14.1595566095086;
-        Thu, 23 Jul 2020 21:48:15 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:d0b:42f6:15cb:b8d6:d88c:7a5d])
-        by smtp.gmail.com with ESMTPSA id u13sm4128828pjy.40.2020.07.23.21.48.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jul 2020 21:48:14 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 24 Jul 2020 10:18:07 +0530
-To:     David Miller <davem@davemloft.net>
-Cc:     madhuparnabhowmik10@gmail.com, isdn@linux-pingi.de, arnd@arndb.de,
-        gregkh@linuxfoundation.org, edumazet@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org
-Subject: Re: [PATCH] drivers: isdn: capi: Fix data-race bug
-Message-ID: <20200724044807.GA474@madhuparna-HP-Notebook>
-References: <20200722172329.16727-1-madhuparnabhowmik10@gmail.com>
- <20200723.151158.2190104866687627036.davem@davemloft.net>
+        Fri, 24 Jul 2020 00:50:24 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFB0C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 21:50:23 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5B8C1891AE;
+        Fri, 24 Jul 2020 16:50:20 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595566220;
+        bh=xBR9lydTuvfdjbHLpTaoL2pHDB7y89FzJEoZflkJcnY=;
+        h=From:To:Cc:Subject:Date;
+        b=Q22v6Maa/yVNF2x2ibLesaSfHoFKkt8PHl9rEYmWP1AofOJvqBp8nx0f7q6qXI5h7
+         A7tvbXdapFKL0bM1fwNIj0pYbl+y6sNJQzdlQw9spIV1NazYWX6aDjsu6GrSpv0AJ0
+         yvFb1phwv29T39V5iiRoNwnnYcM9dazJy/jrAtNsl/2VWgDmIilfJS/Jw+AEPQ8wo2
+         AHmYtSvHjsX4nRS9odoglah6ILDv1aKg8htgQy7IUA2sXl7IRDRIzuGFZ8v1tmO/ln
+         Q0Ekhp/oeUkMoDeGj8HSpXwLyWpRpEJk80YHtTZMXzK2tqElgbq0ngn5U9TBJ57T8+
+         viuem0ruSmUPw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f1a68870000>; Fri, 24 Jul 2020 16:50:20 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id CC8E313EF9C;
+        Fri, 24 Jul 2020 16:50:14 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 1C341280079; Fri, 24 Jul 2020 16:50:15 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] rtc: ds1307: provide an indication that the watchdog has fired
+Date:   Fri, 24 Jul 2020 16:50:09 +1200
+Message-Id: <20200724045009.7293-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723.151158.2190104866687627036.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 03:11:58PM -0700, David Miller wrote:
-> From: madhuparnabhowmik10@gmail.com
-> Date: Wed, 22 Jul 2020 22:53:29 +0530
-> 
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > In capi_init(), after register_chrdev() the file operation callbacks
-> > can be called. However capinc_tty_init() is called later.
-> > Since capiminors and capinc_tty_driver are initialized in
-> > capinc_tty_init(), their initialization can race with their usage
-> > in various callbacks like in capi_release().
-> > 
-> > Therefore, call capinc_tty_init() before register_chrdev to avoid
-> > such race conditions.
-> > 
-> > Found by Linux Driver Verification project (linuxtesting.org).
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> I agree with Arnd that this just exchanges one set of problems for
-> another.
+There's not much feedback when the ds1388 watchdog fires. Generally it
+yanks on the reset line and the board reboots. To provide some feedback
+indicate that the watchdog has fired in the past. This should help
+distinguish a watchdog triggered reset from a power interruption.
 
-Thanks Arnd and David, for reviewing the patch.
-Do you have any suggestions on how to fix this correctly?
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/rtc/rtc-ds1307.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Regards,
-Madhuparna
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 49702942bb08..431b1a50c483 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -868,6 +868,14 @@ static int ds1388_wdt_start(struct watchdog_device *=
+wdt_dev)
+ 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
+ 	u8 regs[2];
+ 	int ret;
++	int val;
++
++	ret =3D regmap_read(ds1307->regmap, DS1388_REG_FLAG, &val);
++	if (ret)
++		return ret;
++
++	if (val & DS1388_BIT_WF)
++		dev_notice(ds1307->dev, "detected watchdog alarm flag\n");
+=20
+ 	ret =3D regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
+ 				 DS1388_BIT_WF, 0);
+--=20
+2.27.0
+
