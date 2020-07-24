@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46795C433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8C1C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC2A2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502C922CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgGXQEb (ORCPT
+        id S1728031AbgGXQEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:31 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727843AbgGXQEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:23 -0400
+        Fri, 24 Jul 2020 12:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgGXQEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:24 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7465C0619D3;
+        Fri, 24 Jul 2020 09:04:24 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 1BA70FB9;
-        Fri, 24 Jul 2020 18:04:13 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 830348B2;
+        Fri, 24 Jul 2020 18:04:14 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 31/75] x86/head/64: Load GDT after switch to virtual addresses
-Date:   Fri, 24 Jul 2020 18:02:52 +0200
-Message-Id: <20200724160336.5435-32-joro@8bytes.org>
+Subject: [PATCH v5 33/75] x86/head/64: Switch to initial stack earlier
+Date:   Fri, 24 Jul 2020 18:02:54 +0200
+Message-Id: <20200724160336.5435-34-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,48 +64,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Load the GDT right after switching to virtual addresses to make sure
-there is a defined GDT for exception handling.
+Make sure there is a stack once the kernel runs from virual addresses.
+At this stage any secondary CPU which boots will have lost its stack
+because the kernel switched to a new page-table which does not map the
+real-mode stack anymore.
+
+This is needed for handling early #VC exceptions caused by instructions
+like CPUID.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/kernel/head_64.S | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 800053219054..f958d4e4ee08 100644
+index 057c7bd3eeb6..a5e1939d1dc9 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -166,6 +166,14 @@ SYM_CODE_START(secondary_startup_64)
- 1:
- 	UNWIND_HINT_EMPTY
+@@ -200,6 +200,12 @@ SYM_CODE_START(secondary_startup_64)
+ 	movl	initial_gs+4(%rip),%edx
+ 	wrmsr
  
 +	/*
-+	 * We must switch to a new descriptor in kernel space for the GDT
-+	 * because soon the kernel won't have access anymore to the userspace
-+	 * addresses where we're currently running on. We have to do that here
-+	 * because in 32bit we couldn't load a 64bit linear address.
++	 * Setup a boot time stack - Any secondary CPU will have lost its stack
++	 * by now because the cr3-switch above unmaps the real-mode stack
 +	 */
-+	lgdt	early_gdt_descr(%rip)
++	movq initial_stack(%rip), %rsp
 +
  	/* Check if nx is implemented */
  	movl	$0x80000001, %eax
  	cpuid
-@@ -193,14 +201,6 @@ SYM_CODE_START(secondary_startup_64)
+@@ -220,9 +226,6 @@ SYM_CODE_START(secondary_startup_64)
+ 	/* Make changes effective */
+ 	movq	%rax, %cr0
+ 
+-	/* Setup a boot time stack */
+-	movq initial_stack(%rip), %rsp
+-
+ 	/* zero EFLAGS after setting rsp */
  	pushq $0
  	popfq
- 
--	/*
--	 * We must switch to a new descriptor in kernel space for the GDT
--	 * because soon the kernel won't have access anymore to the userspace
--	 * addresses where we're currently running on. We have to do that here
--	 * because in 32bit we couldn't load a 64bit linear address.
--	 */
--	lgdt	early_gdt_descr(%rip)
--
- 	/* set up data segments */
- 	xorl %eax,%eax
- 	movl %eax,%ds
 -- 
 2.27.0
 
