@@ -2,98 +2,100 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A1CC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E432074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595593311;
-	bh=pKwG7sz23Jh8BAXh9JAwkl7Df1oVbQNtNUXu8orqNB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LfHfcCclfWHRkfpxK6KgswmgNeIezcdZ37qn4EurPjVTN7V2ELwpMtx+B19NhH06t
-	 b/6ebnpC4bVYHYvBM/T3O2s7vXhZOPMZcLbgVcwXchiuRkF6Zr0qlEGg7QOSW1UhR2
-	 VMcKT33zFBYBJkmPOHwtnkdkjuT8ytmk7uchAqEc=
+	by mail.kernel.org (Postfix) with ESMTP id ABA4F20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1EcZzV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgGXMVv (ORCPT
+        id S1726981AbgGXMWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgGXMVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:21:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711D520737;
-        Fri, 24 Jul 2020 12:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595593310;
-        bh=pKwG7sz23Jh8BAXh9JAwkl7Df1oVbQNtNUXu8orqNB0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eGqQpuA/nsqH8Q973vZszR/rnh/Gp5nGlYXQ1nr618nI+UDrFjh+iwCE+FtDhHtRJ
-         H67R5n7U58FQi2AGdugQWmDDzk2TcDK2M2m4cyNXW3rxp+zb/RBBASKxXMfWLB7b+v
-         6SUBkDL9SMis3R1e/0A2t/1yCCJx3dM7P8ExrEcY=
-Date:   Fri, 24 Jul 2020 13:21:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Wen Su <wen.su@mediatek.com>
-Subject: Re: [PATCH 5/8] regulator: mt6359: Add support for MT6359 regulator
-Message-ID: <20200724122134.GD5664@sirena.org.uk>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1595509133-5358-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Fri, 24 Jul 2020 08:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgGXMWB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:22:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41848C0619D3;
+        Fri, 24 Jul 2020 05:22:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id b9so4342191plx.6;
+        Fri, 24 Jul 2020 05:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KA0BJosXtAeexsqs49sZ0prG2OIgAF6XF0D2f4gkqFU=;
+        b=J1EcZzV0C+msUn7U8aZ/vDkyHLQ/z2gd7IsBhlVoZd/lt9zm5huOKz5zXNGr/vKzR/
+         55UNPVp6tCX82rPnG99I2omBXcG9bzDIoGS5JtznaDfQJjsLGVa1ga5CFlzVLlHnbiQL
+         BhRFUpi1V4Zht3/TrZgo42F/DJYMfaJpOkwD86ASZAxjAtoxjmXraJQnrGFlWcS1uZnL
+         yQoBxHQXQ6DyuEpTioOClFDIOec+F3SNesA5ovmZ5DENmD3e1OYuNx/s+PjtVewLTUGB
+         MR+dy+KeDsP6NR7dwyn3wh3URXnDvwZva3p1nc0xAnuC5GcIzYAmgHSxOjxUCMdZZgwo
+         zYHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KA0BJosXtAeexsqs49sZ0prG2OIgAF6XF0D2f4gkqFU=;
+        b=cU0dz+ooyrjZRCQOL6chn4z6Hk58w1t2TsKDpjwT2Y7A+jczPkI6WwWwfqm7keKcj3
+         mk7PP5obApcjnbFB7aAXzGZokrvxuECcXLSaBjFoismZA6AjJY/MwnrekpFnNWpgJdPB
+         8LH87E+0E4jWFD60bOnbTZg3wTk7yiTQPxlCbCBQj+VrzbKsi3LT8HAZ+SDJuDd61OfP
+         fOuK4ElfpfFOrLbKsDxIWwnLo9NbfcDP8exczjy68Pq2W8rILKA8IIKW9H2Y4lOqkhpJ
+         FAgxvL5uIL2mgfMXrDhFs3gT/syRTmc/IDB7+jiVwXic5tyDuxjdt75hfys6xaOGAKoR
+         +Hsw==
+X-Gm-Message-State: AOAM530HOrNFnvo8dHbvTkA09Vl/k08Bltndb5XqPcslsXc+o/Oz9sQU
+        DssxBgYGy/U++tUKZyycG+Rp/3VV
+X-Google-Smtp-Source: ABdhPJxUQ45LCtJslTm+NOisZz+gCAiln04+CMq+Obeg3jVJ1DXTS/GQ9HfUdWP3xnIAm26yKGmnpw==
+X-Received: by 2002:a17:90a:eac7:: with SMTP id ev7mr4782829pjb.21.1595593320770;
+        Fri, 24 Jul 2020 05:22:00 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id r185sm5766819pfr.8.2020.07.24.05.21.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 05:21:59 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chen Yongzhi <yongzhi.chen@unisoc.com>
+Subject: [PATCH v2 0/2] fix an overflow error on sc27xx power supply
+Date:   Fri, 24 Jul 2020 20:21:46 +0800
+Message-Id: <20200724122148.26541-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
-Content-Disposition: inline
-In-Reply-To: <1595509133-5358-6-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Cookie: You will wish you hadn't.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
---xB0nW4MQa6jZONgY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch 2/2 fixes an overflow error by changing to 64-bit divide operations.
+In order to avoid compile error on 32-bit architectures, this patchset
+also introduced a new 64-bit helper in patch 1/2.
 
-On Thu, Jul 23, 2020 at 08:58:50PM +0800, Hsin-Hsiung Wang wrote:
-> From: Wen Su <wen.su@mediatek.com>
->=20
-> The MT6359 is a regulator found on boards based on MediaTek MT6779 and
-> probably other SoCs. It is a so called pmic and connects as a slave to
-> SoC using SPI, wrapped inside the pmic-wrapper.
+Changes since v1: (https://lkml.org/lkml/2020/7/17/63)
+- Added new help macro DIV_S64_ROUND_CLOSEST;
+- Fixed an error reported by kernel test robot <lkp@intel.com>.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Chunyan Zhang (2):
+  math64: New DIV_S64_ROUND_CLOSEST helper
+  power: supply: sc27xx: prevent adc * 1000 from overflow
 
---xB0nW4MQa6jZONgY
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/power/supply/sc27xx_fuel_gauge.c |  9 +++++----
+ include/linux/math64.h                   | 19 +++++++++++++++++++
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.20.1
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8a0k4ACgkQJNaLcl1U
-h9Du2gf/U/MC+yoZc1bEJJ7ZixaCMK6ZSIJlbMh6RlAKO1kQAQhLz9i3yinQPaai
-p8cRi3iERLnXzA3RxbvtG/Tq8JOSXZ6PjCVxjHp8OHmc+WMOb63rivRx4fyEzFj3
-FzQJWg7RxoBiJOQQm0dx0KPd0Di4ITh6UxA7jSGtQVVdkI24V/D+Hb47KeZGlOxt
-6awjyRSsyRgrwh686lJq9hinUieKmcyASf8ZnKuDUzqlI4FMC6xsz86/YGwKB82N
-m38XL/zdOMGDDC8yWdAkyn1PWKqgfYa9B3qkAUheivyiXWy1+6sN4UQ59cHoO2+B
-Z7DhweBclspPwW6xEE8Ts/MNL/TlvQ==
-=pp/5
------END PGP SIGNATURE-----
-
---xB0nW4MQa6jZONgY--
