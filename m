@@ -2,152 +2,103 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28F6C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC092074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82F02074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WQsvr9hJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="deiS7u4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGXMiI (ORCPT
+        id S1726997AbgGXMmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:38:08 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35424 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726258AbgGXMiI (ORCPT
+        Fri, 24 Jul 2020 08:42:54 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:26861 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgGXMmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:38:08 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OCbOKm029988;
-        Fri, 24 Jul 2020 14:37:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=ISBLyDTPf2HfIUmPPuAqhoT7vMfRrg71RmS3R2cEeZk=;
- b=WQsvr9hJhHJMC5YSb0+4SNKoUnpUlDaJoQrpDhnEJFVurwTgF74FEb/hZy23v0AhcnEw
- yVS6dlTN1hcVpTLbAM3vxdKaAP6DC6tVa6Y3cxcMFkT17/UlGu9yXsBIeuS29bjeKNfL
- /cEp+F2KOEiHzcAzO1oIFob55TwH21oVPy60rFskkl6BkguiBkRbMZP/ycIJdsqVToQE
- vZjW+Z+RXVgH3VyHBD/OHAYmpYT5LuLimpDrBqIB9ttuDn3kh5fKs5z9o/wP6YnL6bOn
- OwNafZBdQZDUJQbG+ZVLpxfNIK+veqs1OyUJwRxtqwGdNFUAnkYOmuHXoGNFqFneWXlB aA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsahgcgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 14:37:55 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0B947100034;
-        Fri, 24 Jul 2020 14:37:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA9782AF334;
-        Fri, 24 Jul 2020 14:37:54 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul 2020 14:37:54
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/4] usb: dwc2: drd: fix sleeping while spinlock atomic context
-Date:   Fri, 24 Jul 2020 14:37:47 +0200
-Message-ID: <20200724123748.25369-4-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724123748.25369-1-amelie.delaunay@st.com>
-References: <20200724123748.25369-1-amelie.delaunay@st.com>
+        Fri, 24 Jul 2020 08:42:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1595594572;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aDtTphrzz9VOwTJvjWtl31/5xlDEnj/EJHimWB6gA4o=;
+  b=deiS7u4XhPpWcyrTBguRa/HFybY2oT+527j9v9hDZYTj5QajGP0eDFIf
+   e1sQ+lNHIXbFlx2ROI87387Q4aePbqj0QV1UOdE2rXSEJC29D3E+/qB+1
+   GGH+UiStNhEGpK7mKKCNQCvRSRrUc6kDbgbeYrtTshSp8kPd6IczNqZH0
+   U=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: KJCsrxedNsP6PXR2GRxBdY4JBtMMaZKb/2iWqx70jsyhvQVs2mJ4a6ODJl6e5Ze0n71njR8l7V
+ 9U+neT0HVYP3POae1Ostbc3PyXtJbBN2r4zxUF0cQs6LBnJFr0VNVu/tNCJc9T1E4naoIb331o
+ PnI7RkHi0XdVA2g0geZOyiF6+NKoWClGj8G1fo1E2jxpTrVvVikRzuiGwbtXCIN56qO7yeEIjv
+ kh6FrSOIHklNuDPUeb45cpzlQ/2JrbYLIt+iJwQswgcnxS7Z13OFRECZhFNlp6l07ZlfxwhxDd
+ Xyk=
+X-SBRS: 2.7
+X-MesageID: 23987140
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.75,390,1589256000"; 
+   d="scan'208";a="23987140"
+From:   Roger Pau Monne <roger.pau@citrix.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Roger Pau Monne <roger.pau@citrix.com>, <stable@vger.kernel.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        <xen-devel@lists.xenproject.org>
+Subject: [PATCH v2 1/4] xen/balloon: fix accounting in alloc_xenballooned_pages error path
+Date:   Fri, 24 Jul 2020 14:42:38 +0200
+Message-ID: <20200724124241.48208-2-roger.pau@citrix.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724124241.48208-1-roger.pau@citrix.com>
+References: <20200724124241.48208-1-roger.pau@citrix.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_04:2020-07-24,2020-07-24 signatures=0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If GINTSTS.CURMODE is not yet reflecting the expecting mode after calling
-dwc2_force_mode, we enter in the dwc2_wait_for_mode function while under
-spinlock atomic context.
-To avoid this situation, move the call to dwc2_force_mode after the
-spinlock atomic context.
+target_unpopulated is incremented with nr_pages at the start of the
+function, but the call to free_xenballooned_pages will only subtract
+pgno number of pages, and thus the rest need to be subtracted before
+returning or else accounting will be skewed.
 
-Fixes: bc0f0d4a5853 ("usb: dwc2: override PHY input signals with usb role switch support")
-Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Cc: stable@vger.kernel.org
 ---
- drivers/usb/dwc2/drd.c | 27 +++++++--------------------
- 1 file changed, 7 insertions(+), 20 deletions(-)
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: xen-devel@lists.xenproject.org
+---
+ drivers/xen/balloon.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/usb/dwc2/drd.c b/drivers/usb/dwc2/drd.c
-index 5099841b1417..2d4176f5788e 100644
---- a/drivers/usb/dwc2/drd.c
-+++ b/drivers/usb/dwc2/drd.c
-@@ -70,6 +70,7 @@ static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
- {
- 	struct dwc2_hsotg *hsotg = usb_role_switch_get_drvdata(sw);
- 	unsigned long flags;
-+	int already = 0;
- 
- 	/* Skip session not in line with dr_mode */
- 	if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
-@@ -88,26 +89,9 @@ static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
- 	spin_lock_irqsave(&hsotg->lock, flags);
- 
- 	if (role == USB_ROLE_HOST) {
--		if (dwc2_ovr_avalid(hsotg, true))
--			goto unlock;
--
--		if (hsotg->dr_mode == USB_DR_MODE_OTG)
--			/*
--			 * This will raise a Connector ID Status Change
--			 * Interrupt - connID A
--			 */
--			dwc2_force_mode(hsotg, true);
-+		already = dwc2_ovr_avalid(hsotg, true);
- 	} else if (role == USB_ROLE_DEVICE) {
--		if (dwc2_ovr_bvalid(hsotg, true))
--			goto unlock;
--
--		if (hsotg->dr_mode == USB_DR_MODE_OTG)
--			/*
--			 * This will raise a Connector ID Status Change
--			 * Interrupt - connID B
--			 */
--			dwc2_force_mode(hsotg, false);
--
-+		already = dwc2_ovr_bvalid(hsotg, true);
- 		/* This clear DCTL.SFTDISCON bit */
- 		dwc2_hsotg_core_connect(hsotg);
- 	} else {
-@@ -120,9 +104,12 @@ static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
- 		}
- 	}
- 
--unlock:
- 	spin_unlock_irqrestore(&hsotg->lock, flags);
- 
-+	if (!already && hsotg->dr_mode == USB_DR_MODE_OTG)
-+		/* This will raise a Connector ID Status Change Interrupt */
-+		dwc2_force_mode(hsotg, role == USB_ROLE_HOST);
-+
- 	dev_dbg(hsotg->dev, "%s-session valid\n",
- 		role == USB_ROLE_NONE ? "No" :
- 		role == USB_ROLE_HOST ? "A" : "B");
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 77c57568e5d7..3cb10ed32557 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -630,6 +630,12 @@ int alloc_xenballooned_pages(int nr_pages, struct page **pages)
+  out_undo:
+ 	mutex_unlock(&balloon_mutex);
+ 	free_xenballooned_pages(pgno, pages);
++	/*
++	 * NB: free_xenballooned_pages will only subtract pgno pages, but since
++	 * target_unpopulated is incremented with nr_pages at the start we need
++	 * to remove the remaining ones also, or accounting will be screwed.
++	 */
++	balloon_stats.target_unpopulated -= nr_pages - pgno;
+ 	return ret;
+ }
+ EXPORT_SYMBOL(alloc_xenballooned_pages);
 -- 
-2.17.1
+2.27.0
 
