@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84438C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D9BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65F5820888
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D8E20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgGXQEC (ORCPT
+        id S1727819AbgGXQET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:59226 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:19 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgGXQD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:03:59 -0400
+        id S1726988AbgGXQEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:09 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 246337AA;
-        Fri, 24 Jul 2020 18:03:57 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id EEB786FA;
+        Fri, 24 Jul 2020 18:04:06 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 02/75] KVM: SVM: Add GHCB Accessor functions
-Date:   Fri, 24 Jul 2020 18:02:23 +0200
-Message-Id: <20200724160336.5435-3-joro@8bytes.org>
+Subject: [PATCH v5 20/75] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
+Date:   Fri, 24 Jul 2020 18:02:41 +0200
+Message-Id: <20200724160336.5435-21-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,85 +60,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Building a correct GHCB for the hypervisor requires setting valid bits
-in the GHCB. Simplify that process by providing accessor functions to
-set values and to update the valid bitmap.
+The function can fail to create an identity mapping, check for that
+and bail out if it happens.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/svm.h | 61 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 9a3e0b802716..0420250b008b 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -341,4 +341,65 @@ struct __attribute__ ((__packed__)) vmcb {
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index b4f2a5f503cd..aa91bebc0fe9 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -91,6 +91,8 @@ static struct x86_mapping_info mapping_info;
+  */
+ static void add_identity_map(unsigned long start, unsigned long end)
+ {
++	int ret;
++
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -98,8 +100,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ 		return;
  
- #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+ 	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
++	if (ret)
++		error("Error: kernel_ident_mapping_init() failed\n");
+ }
  
-+/* GHCB Accessor functions */
-+
-+#define DEFINE_GHCB_INDICES(field)					\
-+	u16 idx = offsetof(struct vmcb_save_area, field) / 8;		\
-+	u16 byte_idx  = idx / 8;					\
-+	u16 bit_idx   = idx % 8;					\
-+	BUILD_BUG_ON(byte_idx > ARRAY_SIZE(ghcb->save.valid_bitmap));
-+
-+#define GHCB_SET_VALID(ghcb, field)					\
-+	{								\
-+		DEFINE_GHCB_INDICES(field)				\
-+		(ghcb)->save.valid_bitmap[byte_idx] |= BIT(bit_idx);	\
-+	}
-+
-+#define DEFINE_GHCB_SETTER(field)					\
-+	static inline void						\
-+	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-+	{								\
-+		GHCB_SET_VALID(ghcb, field)				\
-+		(ghcb)->save.field = value;				\
-+	}
-+
-+#define DEFINE_GHCB_ACCESSORS(field)					\
-+	static inline bool ghcb_is_valid_##field(const struct ghcb *ghcb)	\
-+	{								\
-+		DEFINE_GHCB_INDICES(field)				\
-+		return !!((ghcb)->save.valid_bitmap[byte_idx]		\
-+						& BIT(bit_idx));	\
-+	}								\
-+									\
-+	static inline void						\
-+	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-+	{								\
-+		GHCB_SET_VALID(ghcb, field)				\
-+		(ghcb)->save.field = value;				\
-+	}
-+
-+DEFINE_GHCB_ACCESSORS(cpl)
-+DEFINE_GHCB_ACCESSORS(rip)
-+DEFINE_GHCB_ACCESSORS(rsp)
-+DEFINE_GHCB_ACCESSORS(rax)
-+DEFINE_GHCB_ACCESSORS(rcx)
-+DEFINE_GHCB_ACCESSORS(rdx)
-+DEFINE_GHCB_ACCESSORS(rbx)
-+DEFINE_GHCB_ACCESSORS(rbp)
-+DEFINE_GHCB_ACCESSORS(rsi)
-+DEFINE_GHCB_ACCESSORS(rdi)
-+DEFINE_GHCB_ACCESSORS(r8)
-+DEFINE_GHCB_ACCESSORS(r9)
-+DEFINE_GHCB_ACCESSORS(r10)
-+DEFINE_GHCB_ACCESSORS(r11)
-+DEFINE_GHCB_ACCESSORS(r12)
-+DEFINE_GHCB_ACCESSORS(r13)
-+DEFINE_GHCB_ACCESSORS(r14)
-+DEFINE_GHCB_ACCESSORS(r15)
-+DEFINE_GHCB_ACCESSORS(sw_exit_code)
-+DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
-+DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
-+DEFINE_GHCB_ACCESSORS(sw_scratch)
-+DEFINE_GHCB_ACCESSORS(xcr0)
-+
- #endif
+ /* Locates and clears a region for a new top level page table. */
 -- 
 2.27.0
 
