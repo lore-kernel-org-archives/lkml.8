@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C86BC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71ACE206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB182067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="esEqwYwi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VWFQY0cD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgGXRmz (ORCPT
+        id S1727844AbgGXRnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49224 "EHLO
+        Fri, 24 Jul 2020 13:43:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgGXRmx (ORCPT
+        with ESMTP id S1727050AbgGXRnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:42:53 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40012C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:42:53 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s26so5595368pfm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:42:53 -0700 (PDT)
+        Fri, 24 Jul 2020 13:43:09 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15E4C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:43:09 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p3so5675143pgh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:43:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=U50zr+VshRe9mYuWVqDq7CNgzIqrkIfFylK6XexbWKE=;
-        b=esEqwYwiF2m2i9Gp06Apxexvboy5U9ul9g68MueBSxJcjBjMQGdvHGFDnJJQap3xxR
-         XhM4nWcCt/BWatQmNXYxfbnHeLB+cwvvzLxCD3ArVYYAeiHf4g3zESPK5T2qMVj5A4ft
-         EhlkS/H1Gn677G/SsxoYiePReMo8rMYLkY4yQ=
+        bh=sd5Rp6atrzE1Stcg3iirVnf9ToDQSXxRMnjLTBZ9L1A=;
+        b=VWFQY0cDmbN0RBRUPgEZB4t35+VutKPpoaFz/9Te/2hqGPRJlr4gQQD20xOnEsAalg
+         q4QdepCDOJhFDcxkYOx0eWXU914L7Wlxsg17nmn6JKAJcVOD226V1u+tZy10pc8p4cZH
+         9pTdR/jBEBTnCN1m1IfLHJtg1L0c15Pimq0k8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=U50zr+VshRe9mYuWVqDq7CNgzIqrkIfFylK6XexbWKE=;
-        b=oz8S6Nk3Y0Le4/4aodoF7BvdPaFiql4kT8U2nngllHKSeZPOh/1EaCaYwuGhSHKE48
-         8UzEpzNrumtNb3zlr4wfmDjqeMEykYfb387rdMQMuhtkw4m8F1gu3vx754s/EPOPaNQA
-         X6szfZQdoAGkd9cmZbOjvla7/OWMmJg95+WkMHhIWfkRKbtuHQ4bece4j5aGR9IXjO/0
-         XQFoW2SuEB+KiAxJ94u4vF9Y0F7UCJt6Y21onLgTuzbO+WN1qjjHf1TUtGC93cgFqTHC
-         GZ6aYDiIpxUZ9YI1tzt4JGmWIMEakKgowsrqDRevuI+WTDZYJrL85mw++QNYLHb+mBGG
-         0avw==
-X-Gm-Message-State: AOAM531hkCfcyDV3x/yPe5tS14Ara39Jwzx13ay+7YrcJ2aU4yBmLd98
-        r7mPe69VZgtlfXUUfYNVIYBGcg==
-X-Google-Smtp-Source: ABdhPJxtKpo45I9LuQoJECycYCtMUIABAY1HmaYIM7v7qjODgmc1ompAK4OP3e0iHW9NrkeIeAJbeA==
-X-Received: by 2002:a63:fe0a:: with SMTP id p10mr9318212pgh.255.1595612572909;
-        Fri, 24 Jul 2020 10:42:52 -0700 (PDT)
+        bh=sd5Rp6atrzE1Stcg3iirVnf9ToDQSXxRMnjLTBZ9L1A=;
+        b=hX3vQVGEsQjl7KWlSPGnKimWKvXmfItJH81r8IMvPZsbJn1nTZk706H2ErQvTrZbNR
+         WnGhGQ2qYk9wK+TV3uXUXzORBAz6GxZKOMiuJlnXxHi7RtwPHoL9MuLof+QIdR77tdCE
+         94xyB232feZpHOS/3elm8uriw9FMcDjtMY2S8OEs1sRx4DwV4N2ua93toiR/jCiwhoXL
+         pCoUzyXGrEy/lJKpOP9L9kxnJxBIzg2LIg+5UaiEiqU6br15gl59vmKiFY6yjcoCopBe
+         Pmqb2/PS1fvEaNmtJVgKRB0t44RLIuMerhT8CfoNPXhdd3tIz651rDn6PmfhwiicnjWD
+         Rs3A==
+X-Gm-Message-State: AOAM530kuhc8YUHL7BpxeJRzTIWuNrlpBvDuA6mbrMN5A24Don7UrF0K
+        O+dVY8yTWnxWsl9P6iWPJBvfIA==
+X-Google-Smtp-Source: ABdhPJwJFv2Oz78lM4tZKg9Jhv4RklfsNq7Gh1Z0ycsFgw9wKR0oBpge+dRt0td8MxgcFpPTLwKJLQ==
+X-Received: by 2002:a62:a217:: with SMTP id m23mr9922513pff.291.1595612589235;
+        Fri, 24 Jul 2020 10:43:09 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g28sm6772558pfr.70.2020.07.24.10.42.51
+        by smtp.gmail.com with ESMTPSA id u16sm6647629pfn.52.2020.07.24.10.43.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 10:42:51 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 10:42:51 -0700
+        Fri, 24 Jul 2020 10:43:08 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 10:43:07 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
@@ -76,25 +76,29 @@ Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 32/75] x86/head/64: Load segment registers earlier
-Message-ID: <202007241042.D3E8FC382@keescook>
+Subject: Re: [PATCH v5 33/75] x86/head/64: Switch to initial stack earlier
+Message-ID: <202007241043.96A920ADEC@keescook>
 References: <20200724160336.5435-1-joro@8bytes.org>
- <20200724160336.5435-33-joro@8bytes.org>
+ <20200724160336.5435-34-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724160336.5435-33-joro@8bytes.org>
+In-Reply-To: <20200724160336.5435-34-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 06:02:53PM +0200, Joerg Roedel wrote:
+On Fri, Jul 24, 2020 at 06:02:54PM +0200, Joerg Roedel wrote:
 > From: Joerg Roedel <jroedel@suse.de>
 > 
-> Make sure segments are properly set up before setting up an IDT and
-> doing anything that might cause a #VC exception. This is later needed
-> for early exception handling.
+> Make sure there is a stack once the kernel runs from virual addresses.
+> At this stage any secondary CPU which boots will have lost its stack
+> because the kernel switched to a new page-table which does not map the
+> real-mode stack anymore.
+> 
+> This is needed for handling early #VC exceptions caused by instructions
+> like CPUID.
 > 
 > Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
