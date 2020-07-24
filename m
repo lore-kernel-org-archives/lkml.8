@@ -2,113 +2,129 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9BBC433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9821EC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA2B206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71371206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tTM2agWt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FZbkSRuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgGXRlg (ORCPT
+        id S1727828AbgGXRlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGXRlf (ORCPT
+        Fri, 24 Jul 2020 13:41:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38974 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbgGXRlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:41:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C75C0619D3;
-        Fri, 24 Jul 2020 10:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FqA68UqnOeQNPrtAxIPD6HxDZJOq+LeV5TLg5WJK564=; b=tTM2agWtok77q/6gAZ99y3VZr6
-        bJ0GpUJIBK3iWQ1er3crAkmqP1V/ffr+nLRMlz7aBe+8mO3OYV8Vz8duluPsXkYCCSYSclR1x5ydI
-        6mKtUi6KX6vKb6ir8tBXUqdfdsqYtWJTMBtCVTsVWEtD1OkTuki0BXgg5vgxcbhWL3iqKx3FPZHP0
-        1TY1+2QjUlGuImoOaw/JHxhT5LsSZmIsVuwENnU+Jz1NDhiAVux41JQyXP67q78NjrgKOleVuoSey
-        rEPhOT7zK3iLRsIxwHtZQSgRgLLzMfADFF1gBApJsjKBJjROavdV6S+33kKf+yE4dAXD/mhkw4hQn
-        amToRNUQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jz1hK-0006ef-Qi; Fri, 24 Jul 2020 17:41:30 +0000
-Date:   Fri, 24 Jul 2020 18:41:30 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Minor RST rant
-Message-ID: <20200724174130.GC23808@casper.infradead.org>
-References: <20200724132200.51fd2065@oasis.local.home>
+        Fri, 24 Jul 2020 13:41:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OHRg9d169013;
+        Fri, 24 Jul 2020 17:41:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Fr8EKy7VqOliLP6BaZi+i9GsbdCbaRb1CNW+FV6l/Qw=;
+ b=FZbkSRuMFauOjlwa5atPu5dfKM4qj/c1bf9cRfMxq4lzJJ0jxO42JMeKfEEuYUhJN2FR
+ OvUvkt+2fa+3x180kuZfyBFTsvIzYyFFYb2hItRPohRrQvU7u1aSUCxPaepM9GTvmylO
+ +qThWreG7xVEXQKOfKKjpd+KTsfoq51tIun0f8raXDg7Wb1XCfgAYpPvCDtC2UWRzUEi
+ okdv9kWEitbRiwZQh+VZYiLymribSItP0Q/AnzfR7XPcoInLijdOWe9YUcL3nxATd+7R
+ ppw9lWm6pflionKuq8VVAoZaxwMA83GylAHIlWvX5UiBnqDhzPfTVvzUrDpzOUwCZFEB bQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 32d6kt4mq4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 17:41:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OHOPPg130870;
+        Fri, 24 Jul 2020 17:41:22 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 32ft2vpw9s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 17:41:22 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06OHfFfj017456;
+        Fri, 24 Jul 2020 17:41:16 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jul 2020 17:41:15 +0000
+Subject: Re: [PATCH v2] mm/hugetlb: add mempolicy check in the reservation
+ routine
+To:     Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org,
+        mhocko@kernel.org
+Cc:     rientjes@google.com, mgorman@suse.de, walken@google.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jianchao Guo <guojianchao@bytedance.com>
+References: <20200724100306.33457-1-songmuchun@bytedance.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <609f2de6-b91f-0018-cf98-18524a34b5d2@oracle.com>
+Date:   Fri, 24 Jul 2020 10:41:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724132200.51fd2065@oasis.local.home>
+In-Reply-To: <20200724100306.33457-1-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 spamscore=0 bulkscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ bulkscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:22:00PM -0400, Steven Rostedt wrote:
-> I like how RST can help make for a better grouping of our documents
-> and put it into other formats. But I have to rant a little because I'm
-> currently experiencing some of the frustration that Peter commonly
-> complains about.
-
-Thanks for bringing this up in such a constructive manner.
-I'm sympathetic to these concerns.
-
-> Then I went to Documentation/filesystems/path-lookup.rst, and found
-> myself constantly re-reading the same paragraph over again, and losing
-> track of what I'm reading. I realized it wasn't due to the writing, but
-> due to the constant inserted markup of quotes, that makes it terribly
-> annoying to read, and unfortunately, not enjoyable at all.
+On 7/24/20 3:03 AM, Muchun Song wrote:
+> In the reservation routine, we only check whether the cpuset meets
+> the memory allocation requirements. But we ignore the mempolicy of
+> MPOL_BIND case. If someone mmap hugetlb succeeds, but the subsequent
+> memory allocation may fail due to mempolicy restrictions and receives
+> the SIGBUS signal. This can be reproduced by the follow steps.
 > 
-> For example:
+>  1) Compile the test case.
+>     cd tools/testing/selftests/vm/
+>     gcc map_hugetlb.c -o map_hugetlb
 > 
-> > It is tempting to describe the second kind as starting with a
-> > component, but that isn't always accurate: a pathname can lack both
-> > slashes and components, it can be empty, in other words.  This is
-> > generally forbidden in POSIX, but some of those "xxx``at``" system calls
-> > in Linux permit it when the ``AT_EMPTY_PATH`` flag is given.  For
-> > example, if you have an open file descriptor on an executable file you
-> > can execute it by calling `execveat() <execveat_>`_ passing
-> > the file descriptor, an empty path, and the ``AT_EMPTY_PATH`` flag.
+>  2) Pre-allocate huge pages. Suppose there are 2 numa nodes in the
+>     system. Each node will pre-allocate one huge page.
+>     echo 2 > /proc/sys/vm/nr_hugepages
 > 
-> All those `` are throwing me off to understanding what is being written.
+>  3) Run test case(mmap 4MB). We receive the SIGBUS signal.
+>     numactl --membind=0 ./map_hugetlb 4
 > 
-> I don't even know what those are suppose to represent.
+> With this patch applied, the mmap will fail in the step 3) and throw
+> "mmap: Cannot allocate memory".
+> 
+> Reported-by: Jianchao Guo <guojianchao@bytedance.com>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-Great example.  Some people definitely go too far with rst markup, and
-we generally try to discourage it.  And I'm pretty sure we take patches
-to remove excessive markup where it's gone too far [1].
+Michal has already provides some good suggestions.
 
-You can see how this renders in html at
-https://www.kernel.org/doc/html/latest/filesystems/path-lookup.html or
-run 'make htmldocs' to build it locally.  Personally, I don't think
-the markup style it uses works very well in the html either.
+> @@ -3653,7 +3666,7 @@ static int hugetlb_acct_memory(struct hstate *h, long delta)
+>  		if (gather_surplus_pages(h, delta) < 0)
+>  			goto out;
+>  
+> -		if (delta > cpuset_mems_nr(h->free_huge_pages_node)) {
+> +		if (delta > allowed_mems_nr(h)) {
+>  			return_unused_surplus_pages(h, delta);
+>  			goto out;
+>  		}
 
-I'd like to see this paragraph written as:
-
-> It is tempting to describe the second kind as starting with a
-> component, but that isn't always accurate: a pathname can lack both
-> slashes and components, it can be empty, in other words.  This is
-> generally forbidden in POSIX, but some of the "*at()" system calls
-> in Linux permit it when the ``AT_EMPTY_PATH`` flag is given.  For
-> example, if you have an open file descriptor on an executable file you
-> can execute it by calling execveat() passing the file descriptor, an
-> empty path, and the ``AT_EMPTY_PATH`` flag.
-
-I think we're all pretty comfortable seeing function names adorned with
-a closing pair of parens.  The ``...`` to adorn constants feels OK to me,
-but maybe not to you?  If that feels excessive, can you suggest something
-that would distinguish between POSIX and AT_EMPTY_PATH?
-
-[1] Too far being a subjective measure, of course.  My preferences
-are on display in core-api/xarray.rst
+There is a big comment before this code in hugetlb_acct_memory.  The comment
+only talks about cpusets.  We should probably update that to include mempolicy
+as well.  It could be as simple as s/cpuset/cpuset or mempolicy/.
+-- 
+Mike Kravetz
