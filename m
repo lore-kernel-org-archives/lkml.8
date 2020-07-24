@@ -2,129 +2,139 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66AEB206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AAA206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="NlvfE3oD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENdczydU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGXRK5 (ORCPT
+        id S1726792AbgGXRMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44246 "EHLO
+        Fri, 24 Jul 2020 13:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGXRK4 (ORCPT
+        with ESMTP id S1726488AbgGXRMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:10:56 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8193AC0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:10:56 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id s26so5535077pfm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:10:56 -0700 (PDT)
+        Fri, 24 Jul 2020 13:12:52 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60775C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:12:52 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f2so8955634wrp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GZnPHclC6+qPirs2OzlzBaPpy9luS1xKwM1kwdp3jws=;
-        b=NlvfE3oDgS37ALwOwpurjIKddIbaCMe31kaUitURIUnktln05P90IYxg6oFa/HnZYM
-         hVhO4XTjsUHrBHhJksFsMIDUWAfRpGDVpOcxQk8bMqUdcnHZdy9jzfnavU1xLDZjyWnu
-         P2K4eDkhYB0UkIAu1OX9IO1Z9H/fLxeV/ttrynSYWuP7CK4tyHSJ95fWPl9e8ZNcsG+5
-         ns8BEqSl/tXWcs/dcy1sTisxiOOWNRkz3KoulHOFzMNQeMgkNyf8j7KpuSltrm+DvFzX
-         jYbKrZEmIAplHJLcPvBjMFScYtXQ2ql0lVJRvyKR891ETejQZCzfTcSwfwQuAoSkPjxB
-         cAZg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CsY5cW3WXMhmwG38rsvRK1D4/ep9vkdqpuLxDaLO6ZY=;
+        b=ENdczydUnM51Zqjz14BXRYs6Wtcq/VXoyg3aRYeJpRN1RHpf9Te7iKx/YVTZy5GT3w
+         pMXGEwSqIUIrd3mwKhe62m6VFho5gRHpebxLJ07i0PUmRrTJdf0ezbu1OPTG/1MqiGPG
+         xWikmoKFoqrAWupOrwmn+pETjBpk0avnFrAccqUsQ8xKwL3ESFvFS59PM/RqlP+16ZYs
+         G76I38eJtIh7aIoEHs0C3B8gCt1dcGxQJobELShQMV8NlwU9aqsSoqGh1lG+e0Zz1BbK
+         lf/w2q5W8I+Boy100Pim4QGUUg/OdTl9XyMXvw89WaQbtEertFk6TUSxutBQoiEgbsQ5
+         0kYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GZnPHclC6+qPirs2OzlzBaPpy9luS1xKwM1kwdp3jws=;
-        b=ghhI9hHC2YBwVFLm2pPPKbtIxy90F7B/I3by9rIFVcBFbAyeN9G9t0Upm4LGmtkrxY
-         t1MKkfFflcy8dwM5PNZh1Lye3ddRfKeIy+tg1eHVxnuEhQmOqLc0d3pLwiTcHAA9zzS3
-         h7Ylc9o/9aUDTjCW6SMilC3uPBfvoRi0M9AygglXnSgCIqHrjbzfmj0YfQiYdpPwNQ3T
-         AoPkvzkIJlMLaDlZCJQXr2Ko8QMyq81z1qM/VNMC+tbR7j5oldH/m/U/TOT3ZfM5ocIP
-         +qoQsZkWG5sNb66PbglcZK451GHWGKRRH01L/83ZvumA2hj7GsCJJdoCXI32SrmR4+jR
-         Hlog==
-X-Gm-Message-State: AOAM533F+XakMFl4UwLfhOnU91+jRvjcSdqYbVszTgQAbfqlK3lKscKa
-        6c7iIroz86euKdgfkKP3Cv1QUg==
-X-Google-Smtp-Source: ABdhPJwVjWrYK81nqEulx40FKPXj6fUdIM/j5LImuMSwFYgxXf6iXcgedJRJznZFqwXkpNs8btGSlw==
-X-Received: by 2002:a63:5a17:: with SMTP id o23mr9463311pgb.218.1595610656008;
-        Fri, 24 Jul 2020 10:10:56 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id b13sm6969611pjl.7.2020.07.24.10.10.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 10:10:55 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 10:10:47 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     "Andres Beltran" <lkmlabelt@gmail.com>
-Cc:     "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        <parri.andrea@gmail.com>,
-        "Saruhan Karademir" <skarade@microsoft.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Fix variable assignments in
- hv_ringbuffer_read()
-Message-ID: <20200724101047.34de7e49@hermes.lan>
-In-Reply-To: <20200724164606.43699-1-lkmlabelt@gmail.com>
-References: <20200724164606.43699-1-lkmlabelt@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CsY5cW3WXMhmwG38rsvRK1D4/ep9vkdqpuLxDaLO6ZY=;
+        b=HhP2eL3yF/MdsnADaHkS96qgXykGIoAPKJlsj9KFwkT67/Ea2YEv/AKB9U/LXbhD/H
+         u7mNlN9NTmF3SL/Poaemw/AjO5VBvY1zI7SsUacgkRmiZSlc+yyIOafjvxIWNZEHJSo8
+         KjyPredaM97hDJkMJCGuMBub5EXFoKNp8zWcetffS7i1ryRwa111surueeixrhSuH4Ys
+         KgeyvHEITgO/3UiyUu7o4jFoFDPeVzMI9jL3Vq5q3juH+QBGl5ZRrTrCaNLm/JbTgtzG
+         cgzb+gcYIxbEHNgcpKpUJYu3hKthDZLN359IOXFoXYDA/YdKdYfFtvdiE7KLesLijhaG
+         zXyw==
+X-Gm-Message-State: AOAM530MoxEU/I06HHWAz54vOGbSszUggtGlQ8ZEkEGfWme2qvIFPl7U
+        rw+bprgQgJvE0j59tx7sGj6PbwIfclmIag==
+X-Google-Smtp-Source: ABdhPJzVyryFXYR9Gku2wPrJ/1NZPZOtbGI57W/l86IomYGROONvKgaAAlrND+wJ9s9fVjvYDq3ZvA==
+X-Received: by 2002:adf:f847:: with SMTP id d7mr9052643wrq.328.1595610770634;
+        Fri, 24 Jul 2020 10:12:50 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:819c:7aa9:1038:21b3? ([2a01:e34:ed2f:f020:819c:7aa9:1038:21b3])
+        by smtp.googlemail.com with ESMTPSA id z11sm1834740wrw.93.2020.07.24.10.12.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 10:12:50 -0700 (PDT)
+Subject: Re: [PATCH] thermal: Fix zone lookup by ID
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200724170105.2705467-1-thierry.reding@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <db6efeab-b2bc-bad5-9c75-89e3e306256c@linaro.org>
+Date:   Fri, 24 Jul 2020 19:12:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200724170105.2705467-1-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 09:46:06 -0700
-"Andres Beltran" <lkmlabelt@gmail.com> wrote:
+Hi Thierry,
 
-> Assignments to buffer_actual_len and requestid happen before packetlen
-> is checked to be within buflen. If this condition is true,
-> hv_ringbuffer_read() returns with these variables already set to some
-> value even though no data is actually read. This might create
-> inconsistencies in any routine calling hv_ringbuffer_read(). Assign values
-> to such pointers after the packetlen check.
+Applied, thanks for the fix!
+
+
+On 24/07/2020 19:01, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> When a thermal zone is looked up by an ID and no zone is found matching
+> that ID, the thermal_zone_get_by_id() function will return a pointer to
+> the thermal zone list head which isn't actually a valid thermal zone.
+> 
+> This can lead to a subsequent crash because a valid pointer is returned
+> to the called, but dereferencing that pointer as struct thermal_zone is
+> not safe.
+> 
+> Fixes: 329b064fbd13 ("thermal: core: Get thermal zone by id")
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  drivers/hv/ring_buffer.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/thermal/thermal_core.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 356e22159e83..e277ce7372a4 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -350,12 +350,13 @@ int hv_ringbuffer_read(struct vmbus_channel
-> *channel,
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 007f9618e20a..9748fbb9a3a1 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -751,16 +751,18 @@ int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
 >  
->  	offset = raw ? 0 : (desc->offset8 << 3);
->  	packetlen = (desc->len8 << 3) - offset;
-> -	*buffer_actual_len = packetlen;
-> -	*requestid = desc->trans_id;
+>  struct thermal_zone_device *thermal_zone_get_by_id(int id)
+>  {
+> -	struct thermal_zone_device *tz = NULL;
+> +	struct thermal_zone_device *tz, *match = NULL;
 >  
->  	if (unlikely(packetlen > buflen))
->  		return -ENOBUFS;
+>  	mutex_lock(&thermal_list_lock);
+>  	list_for_each_entry(tz, &thermal_tz_list, node) {
+> -		if (tz->id == id)
+> +		if (tz->id == id) {
+> +			match = tz;
+>  			break;
+> +		}
+>  	}
+>  	mutex_unlock(&thermal_list_lock);
 >  
-> +	*buffer_actual_len = packetlen;
-> +	*requestid = desc->trans_id;
-> +
->  	/* since ring is double mapped, only one copy is necessary */
->  	memcpy(buffer, (const char *)desc + offset, packetlen);
+> -	return tz;
+> +	return match;
+>  }
 >  
+>  void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
+> 
 
-What is the rationale for this change, it may break other code.
 
-A common API model in Windows world where this originated
-is to have a call where caller first
-makes request and then if the requested buffer is not big enough the
-caller look at the actual length and allocate a bigger buffer.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Did you audit all the users of this API to make sure they aren't doing that.
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
