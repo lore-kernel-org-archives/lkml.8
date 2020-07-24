@@ -2,129 +2,75 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7BBC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBE0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3B7206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5222206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="FliyQKKZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XVeYJqvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGXGCM (ORCPT
+        id S1726711AbgGXGCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 02:02:12 -0400
-Received: from mail-eopbgr750119.outbound.protection.outlook.com ([40.107.75.119]:28549
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbgGXGCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 02:02:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e8Sqx5MhmhAZU2VUDc036Wd3A8RalWBrxc/F5aCdkO/fSPyaUm14sCW5v6/PVm1SvroXOoMugdbRc46JJsa4WuWcOlttwllhKuW3173NsnGNVhosTl2uwC0nb1f2yGvWMS4vgLgD/KRhvLL0wUj19B20ntDdyej2Owp/vtm57ARuF1Wy+INSV/Bnr2B0WESSOkYFDg5+f+F0Apxrx92eJFBr6TLEAVGuapmpNns58CJ2lPHyRKhFBMX62og4mkwCRcdHYpb4MO2PnfTzuRR8vNPVaWvmcCU0paMGTkyyyUlLTBDR/adDa/wy5OSptSviW8h+9Ag4btE447CnQNfPtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HQNHTtxIzShBvGtIlMKkz9O/8pQkqF0MvUCX51cxJLI=;
- b=EbrkrNnma8wzTvXPbVM+zf/jOTQDmJLALzwb95gocZ5OJRT4C1JrgUqpaj0gXmqG8RqYq5v/okQx8bdvOY1pDp6SooVxBsv0RtYA4CK5S7lCDJKAl1w4Pvf4mjUWWeQVKJazgSNxQo5MwZk4B+jwsM7nE9ulaps/JUWy0T9A4akgP8SieqhDvu8wnwhctKkUxy0ljswDV4fiArF0N8Dp8VvX8fevgGa4I8ocPfrCjzAIDxa7SVspNr09wWjFfEnbxKN/4F0hL3q/MKrGOhsYq1uoDjtDkJVfI0o3lpkTMPAUb4g5gDypQGv8AqmnCtZLwZyV9gSD1jSkRMfkKIj4IA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
- header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=maximintegrated.onmicrosoft.com;
- s=selector2-maximintegrated-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HQNHTtxIzShBvGtIlMKkz9O/8pQkqF0MvUCX51cxJLI=;
- b=FliyQKKZERRRjtUFJmodByCAl2tEwyYjzss7i4L/hJlBLMa8oVv/e6Ah+t7Tg1xXiHkM848GXH9UQKA3uJiLAmQwEJewHrs3MyNw8A04OugSqoPnifBmDdoiJqTYImkrG8m9QgAvSVFEQrPlaXYgE6Vdddhl0f9iVLb4NKhmca8=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none
- header.from=maximintegrated.com;
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
- by MWHPR11MB1646.namprd11.prod.outlook.com (2603:10b6:301:c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 24 Jul
- 2020 06:02:08 +0000
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::d9e8:a3eb:4f08:e795]) by MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::d9e8:a3eb:4f08:e795%5]) with mapi id 15.20.3216.023; Fri, 24 Jul 2020
- 06:02:08 +0000
-From:   Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, ckeepax@opensource.cirrus.com,
-        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
-        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
-        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
-        nuno.sa@analog.com, steves.lee@maximintegrated.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee.maxim@gmail.com
-Subject: [PATCH 1/2] ASoC: max98390: Fix dac event dapm mixer.
-Date:   Fri, 24 Jul 2020 15:00:58 +0900
-Message-Id: <20200724060058.19201-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SL2PR03CA0002.apcprd03.prod.outlook.com
- (2603:1096:100:55::14) To MWHPR11MB2047.namprd11.prod.outlook.com
- (2603:10b6:300:2a::12)
+        Fri, 24 Jul 2020 02:02:52 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37936 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgGXGCw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 02:02:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595570571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5dJ1ko+Hxt904icfu36t9njfjgY/TQOjFzaPPRekjr8=;
+        b=XVeYJqvJrgYQvAwI+VmUWgVYRhubGPersn3qElOhIxammyT3Hr9UQidUTRHVjqE/Zhk0g9
+        0jOZ4cTLmvW5kvd40+IzPLP4cIQI6FQ1wtDyj9FtmWGLsoWWgHsne0fqT3vWmwPQbBOReq
+        Jx9sgOiF/LFMTLAE6csFbtHu/Cb8BwE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-2niQJxB9NlWBoJhlOzpP2g-1; Fri, 24 Jul 2020 02:02:49 -0400
+X-MC-Unique: 2niQJxB9NlWBoJhlOzpP2g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9928B57;
+        Fri, 24 Jul 2020 06:02:47 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.121])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EAC3A380;
+        Fri, 24 Jul 2020 06:02:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 24 Jul 2020 08:02:47 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 08:02:44 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     syzbot <syzbot+e7a125aff38791d8cb65@syzkaller.appspotmail.com>
+Cc:     christian@brauner.io, davej@codemonkey.org.uk,
+        ebiederm@xmission.com, linux-kernel@vger.kernel.org,
+        liuzhiqiang26@huawei.com, paul.gortmaker@windriver.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in ptrace_stop
+Message-ID: <20200724060243.GA17209@redhat.com>
+References: <00000000000069316005ab2306cc@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (2001:2d8:e716:8b4b:b4b1:36e4:d148:7e35) by SL2PR03CA0002.apcprd03.prod.outlook.com (2603:1096:100:55::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.15 via Frontend Transport; Fri, 24 Jul 2020 06:02:03 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [2001:2d8:e716:8b4b:b4b1:36e4:d148:7e35]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 998eb6eb-b0c9-4720-aa13-08d82f9718c3
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1646:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB16462CC59C853B72D63C32BA92770@MWHPR11MB1646.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:254;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Q2CxY+8ppep7amW2x1tbhg0g8IjipqMa6YzOopk8aKDu/PSrAVh24Y6r1t6oE5R9eBI2+AaZwjXeuhP3rwPThb+tCdgRqJhQHuWTis2wUX1sj/NWKhscNVnz4Apt96cNDYKYKtgukZS1Ph7Gf2PHGeJPAS4EUbkddZ9qM2oi/wfu1HG/R4ERqj2rjgeGN1GdlxkTZ8qBYrxwBBceuHuVP2PHvUglS4AhamD4djNafkPBacNCkuutF4an+gF12F8wg+go2kkr5GK3v2TViUukSb73jOpQZNDqIeLMgLnw56PzPKRQr9wbt0usXqW+niaWRQkYwrIAUxt2LSrPrdgqM8TEqP/C6SUzmYAlU6kpPzqGCz9CQpmfLLUQ/kpklAl5J82iW3d5FYtH36HJMxc8Gg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(7416002)(186003)(2616005)(478600001)(4744005)(52116002)(69590400007)(6512007)(6486002)(6506007)(66476007)(36756003)(66946007)(83380400001)(1076003)(316002)(6666004)(4326008)(86362001)(16526019)(5660300002)(8936002)(66556008)(8676002)(2906002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: yCLNinj1VOxZadxePMSxGwtBlXs1JXrKEmmRkNckMwuLO3lf6XfJR61033FFzoyoU4ydfJHXZHpXysCrDQAZgyQebbX/93DdsIPpM0YwNRQ3sd9Rt+kmE2sQFbD9rOOSNWREkbAIwoplFGydkUK3NEO4S6pfG3xxMv6pOQM9VQrdC23SNaVewix3mXZAA2iIztRE8LjzOAYsowAa4ZuvHvH1Ok5LYyd3/Kxb6ltl7s7Os0ssSFggFcw5EI/weJJAan3e9AxpnFtxiBhKLxV6nofuXhHGkRtd8G5Oov7mTf9bPmtqXwW19JHACCbk4r0ajmF3RUlU6RmseiwmweM9VQiY+khfl5diVKIMoIYtGlE0fhJGD50CRZACtOdXbtCs0+tX8jsLbajJjWdJysmfcAw3y7a4odDyMsrSy1oCmNtvBnMCNTqU6bM5AsU8+GIIfkPgieZxqUln3RL8vHgsw//+SV7YcCPSR12MzIWa0yd7XagvSaEU0oCM6WWUJJ8GZFY8mVf2ctVoGQIEQ1WMG48Jbs3j//lpDfkYiei3J9Q=
-X-OriginatorOrg: maximintegrated.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 998eb6eb-b0c9-4720-aa13-08d82f9718c3
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB2047.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 06:02:07.9776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v4ZxKojnIAPwOteMRsOrujyC6KNyNf/zJT2ZxiH20B+BFd+wnQSYwCdNM4zccUZiR0a1qlZbcXD6cYgYNApi2mRa5nWqklq6ij+3eI4yHcM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1646
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000069316005ab2306cc@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Global EN register guide to off before AMP_EN register
- when amp disable sequence.
-  - remove AMP_EN control before max98390_dac_event call
+On 07/23, syzbot wrote:
+>
+> do not call blocking ops when !TASK_RUNNING; state=8 set at [<00000000076362f5>] ptrace_stop+0x0/0x9e0 kernel/signal.c:2054
+> WARNING: CPU: 1 PID: 17054 at kernel/sched/core.c:6883 __might_sleep+0x135/0x190 kernel/sched/core.c:6883
 
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
- sound/soc/codecs/max98390.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
-index 3e8094241645..44ffebac15ad 100644
---- a/sound/soc/codecs/max98390.c
-+++ b/sound/soc/codecs/max98390.c
-@@ -678,7 +678,7 @@ static const struct snd_kcontrol_new max98390_dai_controls =
- 
- static const struct snd_soc_dapm_widget max98390_dapm_widgets[] = {
- 	SND_SOC_DAPM_DAC_E("Amp Enable", "HiFi Playback",
--		MAX98390_R203A_AMP_EN, 0, 0, max98390_dac_event,
-+		SND_SOC_NOPM, 0, 0, max98390_dac_event,
- 		SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
- 	SND_SOC_DAPM_MUX("DAI Sel Mux", SND_SOC_NOPM, 0, 0,
- 		&max98390_dai_controls),
--- 
-2.17.1
+#syz fix: sched: Fix race against ptrace_freeze_trace()
 
