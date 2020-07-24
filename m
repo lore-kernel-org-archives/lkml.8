@@ -2,106 +2,91 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57147C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F64C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 408152074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9733D2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595574815;
+	bh=fUeIibLbxVfYamditippdQ64erDPYhNSY56DGcKqco8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oAEEJmyVTqYNiIDFPMXZ8zhbT3NQgSyQcGLB4BHCNIUn63GYGxWXjGLzw/XhGsSx5
+	 J0aK9xUSLskQuvdGcd6a5j7chi47Rju94LO0QHDv/Jc30eKMVs13Vq569V6URvIHOD
+	 s3WjwSfPD39n1Lt3XfbNt1HO9TstM7x/pQU9kdyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGXHNX (ORCPT
+        id S1727015AbgGXHNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:13:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53960 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726554AbgGXHNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:13:22 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3E2D676F3B3753092A76;
-        Fri, 24 Jul 2020 15:13:19 +0800 (CST)
-Received: from euler.huawei.com (10.175.124.27) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 24 Jul 2020 15:13:12 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, <guohanjun@huawei.com>
-Subject: [PATCH v2 2/2] perf tools: ARM SPE code cleanup
-Date:   Fri, 24 Jul 2020 15:11:11 +0800
-Message-ID: <20200724071111.35593-3-liwei391@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724071111.35593-1-liwei391@huawei.com>
-References: <20200724071111.35593-1-liwei391@huawei.com>
+        Fri, 24 Jul 2020 03:13:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726543AbgGXHNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:13:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1543720748;
+        Fri, 24 Jul 2020 07:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595574813;
+        bh=fUeIibLbxVfYamditippdQ64erDPYhNSY56DGcKqco8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UJdUpdVHMv4UuMUJUwPQnL5XE/7udNcWNkHE2t4+1hgtIAZR2f9l0p3uu/5az95dw
+         XUkqJM5+fB8xx72eO+o8wVGKEn/oF68u4JgDpiAHIdY0+naVBAiEIjjXdgIYDgDFIz
+         Spo29x7iM0brgeiBL8tjVfD9rNrCrzVXcOG7P8sk=
+Date:   Fri, 24 Jul 2020 09:13:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paras Sharma <parashar@codeaurora.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        akashast@codeaurora.org
+Subject: Re: [PATCH] tty: serial: qcom_geni_serial: To correct logic for QUP
+ HW version
+Message-ID: <20200724071335.GA3948185@kroah.com>
+References: <1595571242-9967-1-git-send-email-parashar@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595571242-9967-1-git-send-email-parashar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Firstly, the function auxtrace_record__init() will be invoked only
-  once, the variable "arm_spe_pmus" will not be used afterwards, thus
-  we don't need to check "arm_spe_pmus" is NULL or not;
-- Another reason is, even though SPE is micro-architecture dependent,
-  but so far it only supports "statistical-profiling-extension-v1" and
-  we have no chance to use multiple SPE's PMU events in Perf command.
+On Fri, Jul 24, 2020 at 11:44:02AM +0530, Paras Sharma wrote:
+> To correct the logic to detect whether the QUP HW version is greater
+>  than 2.5.
 
-So remove the useless check code to make it clear.
+The subject line and here does not make any sense.  Can you reword this
+as what the problem is and why you need to change this?
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
----
- tools/perf/arch/arm/util/auxtrace.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> Signed-off-by: Paras Sharma <parashar@codeaurora.org>
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 1ed3d35..5b0efb49 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -954,7 +954,8 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  	sampling_rate = UART_OVERSAMPLING;
+>  	/* Sampling rate is halved for IP versions >= 2.5 */
+>  	ver = geni_se_get_qup_hw_version(&port->se);
+> -	if (GENI_SE_VERSION_MAJOR(ver) >= 2 && GENI_SE_VERSION_MINOR(ver) >= 5)
+> +	if ((GENI_SE_VERSION_MAJOR(ver) >= 2 && GENI_SE_VERSION_MINOR(ver) >= 5)
+> +		|| GENI_SE_VERSION_MAJOR(ver) >= 3)
 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 28a5d0c18b1d..b187bddbd01a 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -57,17 +57,15 @@ struct auxtrace_record
- 	struct evsel *evsel;
- 	bool found_etm = false;
- 	struct perf_pmu *found_spe = NULL;
--	static struct perf_pmu **arm_spe_pmus = NULL;
--	static int nr_spes = 0;
-+	struct perf_pmu **arm_spe_pmus = NULL;
-+	int nr_spes = 0;
- 	int i = 0;
- 
- 	if (!evlist)
- 		return NULL;
- 
- 	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
--
--	if (!arm_spe_pmus)
--		arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-+	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (cs_etm_pmu &&
-@@ -84,6 +82,7 @@ struct auxtrace_record
- 			}
- 		}
- 	}
-+	free(arm_spe_pmus);
- 
- 	if (found_etm && found_spe) {
- 		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
--- 
-2.17.1
+Odd coding style :(
 
+Please fix all of the above up and resubmit a v2.
+
+thanks,
+
+greg k-h
