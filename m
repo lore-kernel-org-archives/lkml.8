@@ -2,195 +2,130 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C678AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD26DC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBB7206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9158206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="nXoaNHWH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A6lV4ZEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgGXC4N (ORCPT
+        id S1726753AbgGXC4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 22:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52084 "EHLO
+        Thu, 23 Jul 2020 22:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgGXC4M (ORCPT
+        with ESMTP id S1726666AbgGXC4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 22:56:12 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A00BC0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:56:12 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y24so2751337wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CtmtjWywAWpjYkCnJwgMZyShNjYxCaF8KfigHWMZhhU=;
-        b=nXoaNHWHDTCezdp5CpduMelSEcFsS/xXZFFJj7yT6pEpVyCUFKyrt3fvZXfzn5uZ0w
-         YxhvKfAzaEEun8oxMcPODKbWEFiIWpJv5uUZuAEG3yBf0SXH8Dj4NOJRrwrrNdq3h+UM
-         1pU8M69WeKOtqWcfh6H0UlM3+c8AcDiqRPGMcXGiu6JrYVimRr+oO4GfDp8ovLKAtpE1
-         eplbQPmszATGctckqs6k2WKrOK8XU9bUbWbKz1LcU5bhzpBNcrQcm2dweXduv2HTtG99
-         9+30OR+DxqdvdP5t1In8yZQwgzngwx0aYZPzwb3t3OMSdhZO6ELLnbrOQWmRflw3s1jn
-         6Glg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CtmtjWywAWpjYkCnJwgMZyShNjYxCaF8KfigHWMZhhU=;
-        b=VL+hxn9xIepJYYc5Mt/ZQMYgJQzOs8QGJ7P6S6TfP0AO6ZJknr9hvlwHODcwgh9gJS
-         bHCl20uobXUSnekWxF+beDvQ9Shr/HVLT5zBRWfSL0L6M4dB3cvtBkzMQQeGUBoHKTuq
-         F5SCjlFhML4snx1RrJN91BZYPhnOeTxHqdZa5DS209ZnnhOMsOJ8V4IFdoMawsgC/q02
-         X3frG0CzjtdJ7fh6+DScM7sr18f+V0opcc6KlxUCVq2k+bO8nTNm3mjxZk10q9papfJj
-         6DzbfP6Xgk6a2HjNT2Ny8dC55j5Ncwg3PItvWiyFPrpwdRzXGngUWtjOFeLllFsi0vta
-         f6hQ==
-X-Gm-Message-State: AOAM533nzTkeWY9oLa1yG6K6xPDRCaqxZHhOoJ6nqfibtJS0/E3O6T3j
-        r12XsWlPDVVElQlaqK4H1I25cTjg7RtZ06sXjrRD0djJ
-X-Google-Smtp-Source: ABdhPJz7gHCgz3xS846jQtIQ7O74yrODpOHmRg9I3TY6YB258gHiQKrSSldHgTJt52Oo44AJgBXEEL5aWfj/KoNhfJg=
-X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr7119713wml.185.1595559370601;
- Thu, 23 Jul 2020 19:56:10 -0700 (PDT)
+        Thu, 23 Jul 2020 22:56:44 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C4AC0619D3;
+        Thu, 23 Jul 2020 19:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=gIHSieEI/ICBzURiExKROzcBrLGuuEu7fSniuyclIJg=; b=A6lV4ZEVvGkxCKJPOGUxlk9s9B
+        xREQAJqnoX7K22XrxYkYSJWN4M5FBq2cU3xSTBpBh3NzBJ9oz2XQTBgLDjev1S5r1VTjqrGAcMgMl
+        E3XHJDPwh+XxJ1Nvs+ENCenmweZmgg59lHlB3ut+Gqr882Zo4zX7YWHFBjEVF9Iq4fk+uB6BuSqRV
+        oke0s4Z1Gu3y86B1/HzPa1GBaS7qF7pxqWrSPS8CXLTPGllzniQjgIGfv8qi7WVfzuUYEHEDvCCTV
+        PMOY0s//aX/GRAPnDZVcajmv2nBy+jOlRVZuQaDKmkuWI5abCYPskbxc8RsRrjQNGwUnxdoDZEb5d
+        nMhU2w8w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jynt0-00076g-Io; Fri, 24 Jul 2020 02:56:39 +0000
+Subject: Re: [PATCH V17 3/3] Input: new da7280 haptic driver
+To:     Roy Im <roy.im.opensource@diasemi.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+References: <cover.1595516501.git.Roy.Im@diasemi.com>
+ <c13d812871b7f09205c1f04e95f5bdf07f307eaf.1595516501.git.Roy.Im@diasemi.com>
+ <71818ab8-0020-77db-c412-8d35a541ead3@infradead.org>
+ <DB8PR10MB343644A6DADE61D62BEE157C85770@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f549102d-4e69-c903-1672-f50bdb7994a3@infradead.org>
+Date:   Thu, 23 Jul 2020 19:56:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200723142409.47057-1-anup.patel@wdc.com> <20200723142409.47057-5-anup.patel@wdc.com>
- <20200723170806.GA535824@bogus>
-In-Reply-To: <20200723170806.GA535824@bogus>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 24 Jul 2020 08:25:58 +0530
-Message-ID: <CAAhSdy0tvy65zYSqeSAq781gRA4P0v5Suad+PidNFgPYLd+U1w@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Anup Patel <anup.patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Emil Renner Berhing <kernel@esmil.dk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <DB8PR10MB343644A6DADE61D62BEE157C85770@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:38 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Jul 23, 2020 at 07:54:09PM +0530, Anup Patel wrote:
-> > We add DT bindings documentation for CLINT device.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> > Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> > ---
-> >  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
-> >  1 file changed, 58 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> > new file mode 100644
-> > index 000000000000..8ad115611860
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> > @@ -0,0 +1,58 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: SiFive Core Local Interruptor
-> > +
-> > +maintainers:
-> > +  - Palmer Dabbelt <palmer@dabbelt.com>
-> > +  - Anup Patel <anup.patel@wdc.com>
-> > +
-> > +description:
-> > +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
-> > +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
-> > +  interrupts. It directly connects to the timer and inter-processor interrupt
-> > +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
-> > +  interrupt controller is the parent interrupt controller for CLINT device.
-> > +  The clock frequency of CLINT is specified via "timebase-frequency" DT
-> > +  property of "/cpus" DT node. The "timebase-frequency" DT property is
-> > +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: sifive,clint0
-> > +      - const: sifive,fu540-c000-clint
->
-> Wrong order. Most specific goes first.
+On 7/23/20 6:54 PM, Roy Im wrote:
+> On Fri, July 24, 2020 5:51 AM, Randy Dunlap wrote
+>> On 7/23/20 8:01 AM, Roy Im wrote:
+>>> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+>>> index 362e8a0..06dc5a3 100644
+>>> --- a/drivers/input/misc/Kconfig
+>>> +++ b/drivers/input/misc/Kconfig
+>>> @@ -869,4 +869,17 @@ config INPUT_STPMIC1_ONKEY
+>>>  	  To compile this driver as a module, choose M here: the
+>>>  	  module will be called stpmic1_onkey.
+>>>
+>>> +config INPUT_DA7280_HAPTICS
+>>> +	tristate "Dialog Semiconductor DA7280 haptics support"
+>>> +	depends on INPUT && I2C
+>>> +	select INPUT_FF_MEMLESS
+>>> +	select REGMAP_I2C
+>>> +	help
+>>> +	  Say Y to enable support for the Dialog DA7280 haptics driver.
+>>> +	  The haptics can be controlled by I2C communication,
+>>> +	  or by PWM input, or by GPI.
+>>
+>> 	  Is that                GPIO.
+>> ?
+> The Haptics can be working by GPI(if see from the haptic device), but from the Host it is GPO. Do you think the GPIO is correct?
 
-Okay, will update.
+To me it needs to represent what services/interfaces/facilities are used by this driver that are
+provided by the Linux kernel.  If it uses Linux GPIO services, then it should say GPIO --
+although I don't see it using any Linux GPIO services.
 
->
-> > +
-> > +    description:
-> > +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
-> > +      Supported compatible strings are -
-> > +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
-> > +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
-> > +      CLINT v0 IP block with no chip integration tweaks.
-> > +      Please refer to sifive-blocks-ip-versioning.txt for details
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts-extended:
-> > +    minItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts-extended
->
-> Add:
->
-> additionalProperties: false
+>>
+>> Can the haptics be controlled only by PWM or only by GPI(O)?
+>>
+>> Just curious: why is I2C required to build the driver if a user is only controlling the device by PWM or GPI?
+> 
+> I2C is required to control registers and it can be triggered by I2C or PWM or GPI(controlled by host outside this driver), so PWM and GPI are optional.
+> With your comments, I think it's better to remove below lines(//remove) to avoid confusion and add PWM as below if you agree.
+>          // remove
+> 	  The haptics can be controlled by I2C communication,
+> 	  or by PWM input, or by GPI.
+>          // update, adding || PWM
+>          depends on (INPUT && I2C) || PWM
 
-Okay, will add.
+Since <linux/pwm.h> provides stubs for when CONFIG_PWM is not enabled,
+it appears that "depends on  PWM" is not required.
 
->
-> > +
-> > +examples:
-> > +  - |
-> > +    clint@2000000 {
->
-> timer@...
+I'll leave it up to you. I was just trying to understand better.
+It may be that no changes are needed.
 
-Okay, will rename.
 
->
-> > +      compatible = "sifive,clint0", "sifive,fu540-c000-clint";
-> > +      interrupts-extended = <&cpu1intc 3 &cpu1intc 7
-> > +                             &cpu2intc 3 &cpu2intc 7
-> > +                             &cpu3intc 3 &cpu3intc 7
-> > +                             &cpu4intc 3 &cpu4intc 7>;
-> > +       reg = <0x2000000 0x4000000>;
->
-> 64MB of register space? Doesn't matter much for 64-bit, but would waste
-> lots of virtual space (low mem) on 32-bit.
+thanks.
+-- 
+~Randy
 
-This is a typo. The register space size is 64KB not 64MB. I will update.
-
->
-> > +    };
-> > +...
-> > --
-> > 2.25.1
-> >
-
-Regards,
-Anup
