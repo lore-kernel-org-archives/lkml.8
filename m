@@ -2,517 +2,124 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC68C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78942C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D521D2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A99206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595582237;
+	bh=nCFgBu3omwx54faaWMaxjDb9i8wcpM4x0LN4rc5l4LU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v2+A9KbPkVJ7yLesfnDZVBjqVyM5Y4OKtOdZCscBGHwSlGJML2G2RBFsiowXR8SEO
+	 BUZHcPG6ih0gAMWuN9H4QQyZvujVlDzRnXWfa2iYOBsAxNfbZm0DoNY2T8OmaLZntb
+	 sjb3vdKEc3nvXT5h3Qx8yHVfKb88hn/RfE9y2nVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgGXJQx (ORCPT
+        id S1728059AbgGXJRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:16:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
+        Fri, 24 Jul 2020 05:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgGXJQx (ORCPT
+        with ESMTP id S1726863AbgGXJRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:16:53 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83C6C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:16:52 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1jytox-0003WI-Es; Fri, 24 Jul 2020 11:16:51 +0200
-Subject: Re: [PATCH v3 3/3] ARM: dts: stm32: add initial support for
- stm32mp157-odyssey board
-To:     =?UTF-8?Q?Marcin_S=c5=82oniewski?= <marcin.sloniewski@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-References: <20200721185317.208722-1-marcin.sloniewski@gmail.com>
- <20200721185317.208722-3-marcin.sloniewski@gmail.com>
- <1e7dcbbe-638a-9579-e97f-17f986e664f5@pengutronix.de>
- <CALa5TyxAYpWnekx+a2yz9gk1D0X1VM0OAqW=YKPdzKqqwNxiNg@mail.gmail.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <d1ba2e21-d410-5973-b082-e1ef43ca67bd@pengutronix.de>
-Date:   Fri, 24 Jul 2020 11:16:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 24 Jul 2020 05:17:15 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C75FC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:17:15 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f12so9246423eja.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/OC350Q0A9R/G9QPy9dkketdGLXiYUcXoiXvxtiFS3I=;
+        b=chuTST1JaqOVT7yYQunPdIWjX5K7+V3f26TOUaT4KfzOSmf0pRhB9CnodvRIf/ombz
+         Bxw5TQ9jSLFkknPnQYCUXvfuOMFTBb9K65ELT2jsylkPekxy/bOlU0C1c78dhTmMePsA
+         PlNNVcPa31LsjUFOmI79sHMe09phtsApgsxDD2xxYH7Wy2oPpRHhC4PhsZAs0a77TIGb
+         Aa4ApPuru4kGYdqJ2ihY2lhuMLJnyeN1w6qUG62Zp+mCktHh+gVest/yTVxkZGNd61a/
+         6gu0WeAoM1Yb4Zp4dU9+tdw7XHas/8Y3HYvS9hWtWUEiZiOkeDgGVP4fHTEocjq+E1ie
+         bKnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=/OC350Q0A9R/G9QPy9dkketdGLXiYUcXoiXvxtiFS3I=;
+        b=WrmAu7viA/P8cgKfLCo0uPY7m+tXkzgcUjR72a7IzhOb2sYjv0RqF0pf72gEe2HkFi
+         TxEnc5GvcKmOjbcwWY1sXvAYH1BB+vDGbf5p70Hygp20S1Yfy0QYaX3ShNmlStqWQ06+
+         CPVhS8hlrlPcFCzqNjaMbShgGd7xE+vt9Dk53d9ocGqbsuvOqPywcydWUXEBFOPY428A
+         2YP4/5bIkQrHkL/OtIGGas2kgfGnwJfAIPl8zAua5sBbFzOJX9o4X6YfXcThs2/NyvEY
+         /46i6UlJPSYrjqCq+8+9r9cE+oRt0ahcGi4UL+48mEv0pQzkPKT+T/M8jR2AD1e3brqJ
+         SVEw==
+X-Gm-Message-State: AOAM532QrcfP5M6kovwBy4z75VfjDFM41Ssj427Wv8A3MIuNDwrOa7bE
+        3OHq+7VYOqOm7HLVzM9NatU=
+X-Google-Smtp-Source: ABdhPJzwOcbamfMswXat/5I2ZGN5RwAMcwz8bdlQYVANNSSFvVtSOr/BB0E/b8cwXbRRmp3FTOgzLg==
+X-Received: by 2002:a17:906:6499:: with SMTP id e25mr8186466ejm.352.1595582234028;
+        Fri, 24 Jul 2020 02:17:14 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v5sm296033ejj.61.2020.07.24.02.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 02:17:13 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 11:17:11 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v5 1/6] kprobes: Remove dependency to the module_mutex
+Message-ID: <20200724091711.GB517988@gmail.com>
+References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+ <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CALa5TyxAYpWnekx+a2yz9gk1D0X1VM0OAqW=YKPdzKqqwNxiNg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 7/23/20 9:43 PM, Marcin Słoniewski wrote:
-> Hello Ahmad,
-> 
-> First of all thank you very much for your feedback, it was very helpful!
-> 
-> śr., 22 lip 2020 o 08:40 Ahmad Fatoum <a.fatoum@pengutronix.de> napisał(a):
->>
->> On 7/21/20 8:53 PM, Marcin Sloniewski wrote:
->>> Add support for Seeed Studio's stm32mp157c odyssey board.
->>> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
->>> and carrier board with USB and ETH interfaces, SD card connector,
->>> wifi and BT chip AP6236.
->>>
->>> In this patch only basic kernel boot is supported and interfacing
->>> SD card and on-board eMMC.
->>>
->>> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
->>> ---
->>>
->>> Changes in v3:
->>> - fix compilation on tip of stm32-next
->>>   due to change in names for pinctrl
->>> - fix deprecated binding for led node
->>> - fix redundant "okay" statuses
->>> - add phy part number for eth in comment
->>
->> You didn't address all my feedback on v2.
-> I posted today v4 of the patch-set with further changes.
-> Regarding watchdog from pmic: when using this watchdog
-> my board resets even though I feed the watchdog. I'm going to
-> use the internal watchdog for now and keep in mind that this
-> could be improved in future.
+* Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
 
-Who turns on the watchdog? If it's in the bootloader,
-you can't rely on CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED feeding it till
-userspace takes over because the stpmic1_wdt doesn't populate
-WDOG_HW_RUNNING in status.
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
+>  	cpus_read_lock();
+>  	mutex_lock(&text_mutex);
+>  	/* Lock modules while optimizing kprobes */
+> -	mutex_lock(&module_mutex);
+> +	lock_modules();
+>  
+>  	/*
+>  	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
+> @@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
+>  	/* Step 4: Free cleaned kprobes after quiesence period */
+>  	do_free_cleaned_kprobes();
+>  
+> -	mutex_unlock(&module_mutex);
+> +	unlock_modules();
+>  	mutex_unlock(&text_mutex);
+>  	cpus_read_unlock();
 
-> I changed phy address to 7, indeed you were right about it.
-> But unfortunately even though I set the address correctly phy
-> is still missing according to dmesg (I checked datasheet and schematics
-> the address is surely correct now).
-> That's something I would like to postpone a little bit as well for now.
+BTW., it would be nice to expand on the comments above - exactly which 
+parts of the modules code is being serialized against and why?
 
-You sent out v4 with a phy address of 7 though.
-Did you get it working meanwhile?
+We already hold the text_mutex here, which should protect against most 
+kprobes related activities interfering - and it's unclear (to me) 
+which part of the modules code is being serialized with here, and the 
+'lock modules while optimizing kprobes' comments is unhelpful. :-)
 
-> 
->>
->>> Changes in v2:
->>> - add new odyssey dts to Makefile
->>>
->>>  arch/arm/boot/dts/Makefile                    |   3 +-
->>>  .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi | 276 ++++++++++++++++++
->>>  arch/arm/boot/dts/stm32mp157c-odyssey.dts     |  72 +++++
->>>  3 files changed, 350 insertions(+), 1 deletion(-)
->>>  create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
->>>  create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index e6a1cac0bfc7..a3ea2301c82c 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -1047,7 +1047,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
->>>       stm32mp157c-dk2.dtb \
->>>       stm32mp157c-ed1.dtb \
->>>       stm32mp157c-ev1.dtb \
->>> -     stm32mp157c-lxa-mc1.dtb
->>> +     stm32mp157c-lxa-mc1.dtb \
->>> +     stm32mp157c-odyssey.dtb
->>>  dtb-$(CONFIG_MACH_SUN4I) += \
->>>       sun4i-a10-a1000.dtb \
->>>       sun4i-a10-ba10-tvbox.dtb \
->>> diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
->>> new file mode 100644
->>> index 000000000000..935632caddd6
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
->>> @@ -0,0 +1,276 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->>> +/*
->>> + * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
->>> + */
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "stm32mp157.dtsi"
->>> +#include "stm32mp15xc.dtsi"
->>> +#include "stm32mp15-pinctrl.dtsi"
->>> +#include "stm32mp15xxac-pinctrl.dtsi"
->>> +#include <dt-bindings/gpio/gpio.h>
->>> +#include <dt-bindings/leds/common.h>
->>> +#include <dt-bindings/mfd/st,stpmic1.h>
->>> +
->>> +/ {
->>> +     model = "Seeed Studio Odyssey-STM32MP157C SOM";
->>> +     compatible = "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
->>> +
->>> +     memory@c0000000 {
->>> +             device_type = "memory";
->>> +             reg = <0xc0000000 0x20000000>;
->>> +     };
->>> +
->>> +     reserved-memory {
->>> +             #address-cells = <1>;
->>> +             #size-cells = <1>;
->>> +             ranges;
->>> +
->>> +             mcuram2: mcuram2@10000000 {
->>> +                     compatible = "shared-dma-pool";
->>> +                     reg = <0x10000000 0x40000>;
->>> +                     no-map;
->>> +             };
->>> +
->>> +             vdev0vring0: vdev0vring0@10040000 {
->>> +                     compatible = "shared-dma-pool";
->>> +                     reg = <0x10040000 0x1000>;
->>> +                     no-map;
->>> +             };
->>> +
->>> +             vdev0vring1: vdev0vring1@10041000 {
->>> +                     compatible = "shared-dma-pool";
->>> +                     reg = <0x10041000 0x1000>;
->>> +                     no-map;
->>> +             };
->>> +
->>> +             vdev0buffer: vdev0buffer@10042000 {
->>> +                     compatible = "shared-dma-pool";
->>> +                     reg = <0x10042000 0x4000>;
->>> +                     no-map;
->>> +             };
->>> +
->>> +             mcuram: mcuram@30000000 {
->>> +                     compatible = "shared-dma-pool";
->>> +                     reg = <0x30000000 0x40000>;
->>> +                     no-map;
->>> +             };
->>> +
->>> +             retram: retram@38000000 {
->>> +                     compatible = "shared-dma-pool";
->>> +                     reg = <0x38000000 0x10000>;
->>> +                     no-map;
->>> +             };
->>> +
->>> +             gpu_reserved: gpu@d4000000 {
->>> +                     reg = <0xd4000000 0x4000000>;
->>> +                     no-map;
->>> +             };
->>> +     };
->>> +
->>> +     led {
->>> +             compatible = "gpio-leds";
->>> +             led-blue {
->>> +                     color = <LED_COLOR_ID_BLUE>;
->>> +                     function = LED_FUNCTION_HEARTBEAT;
->>> +                     gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
->>> +                     linux,default-trigger = "heartbeat";
->>> +             };
->>> +     };
->>> +};
->>> +
->>> +&gpu {
->>> +     contiguous-area = <&gpu_reserved>;
->>> +     status = "okay";
->>> +};
->>> +
->>> +&i2c2 {
->>> +     pinctrl-names = "default";
->>> +     pinctrl-0 = <&i2c2_pins_a>;
->>> +     i2c-scl-rising-time-ns = <185>;
->>> +     i2c-scl-falling-time-ns = <20>;
->>> +     status = "okay";
->>> +     /* spare dmas for other usage */
->>> +     /delete-property/dmas;
->>> +     /delete-property/dma-names;
->>> +
->>> +     pmic: stpmic@33 {
->>> +             compatible = "st,stpmic1";
->>> +             reg = <0x33>;
->>> +             interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
->>> +             interrupt-controller;
->>> +             #interrupt-cells = <2>;
->>> +
->>> +             regulators {
->>> +                     compatible = "st,stpmic1-regulators";
->>> +                     ldo1-supply = <&v3v3>;
->>> +                     ldo3-supply = <&vdd_ddr>;
->>> +                     ldo6-supply = <&v3v3>;
->>> +                     pwr_sw1-supply = <&bst_out>;
->>> +                     pwr_sw2-supply = <&bst_out>;
->>> +
->>> +                     vddcore: buck1 {
->>> +                             regulator-name = "vddcore";
->>> +                             regulator-min-microvolt = <800000>;
->>> +                             regulator-max-microvolt = <1350000>;
->>> +                             regulator-always-on;
->>> +                             regulator-initial-mode = <0>;
->>> +                             regulator-over-current-protection;
->>> +                     };
->>> +
->>> +                     vdd_ddr: buck2 {
->>> +                             regulator-name = "vdd_ddr";
->>> +                             regulator-min-microvolt = <1350000>;
->>> +                             regulator-max-microvolt = <1350000>;
->>> +                             regulator-always-on;
->>> +                             regulator-initial-mode = <0>;
->>> +                             regulator-over-current-protection;
->>> +                     };
->>> +
->>> +                     vdd: buck3 {
->>> +                             regulator-name = "vdd";
->>> +                             regulator-min-microvolt = <3300000>;
->>> +                             regulator-max-microvolt = <3300000>;
->>> +                             regulator-always-on;
->>> +                             st,mask-reset;
->>> +                             regulator-initial-mode = <0>;
->>> +                             regulator-over-current-protection;
->>> +                     };
->>> +
->>> +                     v3v3: buck4 {
->>> +                             regulator-name = "v3v3";
->>> +                             regulator-min-microvolt = <3300000>;
->>> +                             regulator-max-microvolt = <3300000>;
->>> +                             regulator-always-on;
->>> +                             regulator-over-current-protection;
->>> +                             regulator-initial-mode = <0>;
->>> +                     };
->>> +
->>> +                     v1v8_audio: ldo1 {
->>> +                             regulator-name = "v1v8_audio";
->>> +                             regulator-min-microvolt = <1800000>;
->>> +                             regulator-max-microvolt = <1800000>;
->>> +                             regulator-always-on;
->>> +                             interrupts = <IT_CURLIM_LDO1 0>;
->>> +                     };
->>> +
->>> +                     v3v3_hdmi: ldo2 {
->>> +                             regulator-name = "v3v3_hdmi";
->>> +                             regulator-min-microvolt = <3300000>;
->>> +                             regulator-max-microvolt = <3300000>;
->>> +                             regulator-always-on;
->>> +                             interrupts = <IT_CURLIM_LDO2 0>;
->>> +                     };
->>> +
->>> +                     vtt_ddr: ldo3 {
->>> +                             regulator-name = "vtt_ddr";
->>> +                             regulator-min-microvolt = <500000>;
->>> +                             regulator-max-microvolt = <750000>;
->>> +                             regulator-always-on;
->>> +                             regulator-over-current-protection;
->>> +                     };
->>> +
->>> +                     vdd_usb: ldo4 {
->>> +                             regulator-name = "vdd_usb";
->>> +                             regulator-min-microvolt = <3300000>;
->>> +                             regulator-max-microvolt = <3300000>;
->>> +                             interrupts = <IT_CURLIM_LDO4 0>;
->>> +                     };
->>> +
->>> +                     vdda: ldo5 {
->>> +                             regulator-name = "vdda";
->>> +                             regulator-min-microvolt = <2900000>;
->>> +                             regulator-max-microvolt = <2900000>;
->>> +                             interrupts = <IT_CURLIM_LDO5 0>;
->>> +                             regulator-boot-on;
->>> +                     };
->>> +
->>> +                     v1v2_hdmi: ldo6 {
->>> +                             regulator-name = "v1v2_hdmi";
->>> +                             regulator-min-microvolt = <1200000>;
->>> +                             regulator-max-microvolt = <1200000>;
->>> +                             regulator-always-on;
->>> +                             interrupts = <IT_CURLIM_LDO6 0>;
->>> +                     };
->>> +
->>> +                     vref_ddr: vref_ddr {
->>> +                             regulator-name = "vref_ddr";
->>> +                             regulator-always-on;
->>> +                             regulator-over-current-protection;
->>> +                     };
->>> +
->>> +                      bst_out: boost {
->>> +                             regulator-name = "bst_out";
->>> +                             interrupts = <IT_OCP_BOOST 0>;
->>> +                      };
->>> +
->>> +                     vbus_otg: pwr_sw1 {
->>> +                             regulator-name = "vbus_otg";
->>> +                             interrupts = <IT_OCP_OTG 0>;
->>> +                      };
->>> +
->>> +                      vbus_sw: pwr_sw2 {
->>> +                             regulator-name = "vbus_sw";
->>> +                             interrupts = <IT_OCP_SWOUT 0>;
->>> +                             regulator-active-discharge;
->>> +                      };
->>> +             };
->>> +
->>> +             onkey {
->>> +                     compatible = "st,stpmic1-onkey";
->>> +                     interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
->>> +                     interrupt-names = "onkey-falling", "onkey-rising";
->>> +                     power-off-time-sec = <10>;
->>> +             };
->>> +
->>> +             watchdog {
->>> +                     compatible = "st,stpmic1-wdt";
->>> +                     status = "disabled";
->>> +             };
->>> +     };
->>> +};
->>> +
->>> +&ipcc {
->>> +     status = "okay";
->>> +};
->>> +
->>> +&iwdg2 {
->>> +     timeout-sec = <32>;
->>> +     status = "okay";
->>> +};
->>> +
->>> +&m4_rproc {
->>> +     memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
->>> +                     <&vdev0vring1>, <&vdev0buffer>;
->>> +     mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
->>> +     mbox-names = "vq0", "vq1", "shutdown";
->>> +     interrupt-parent = <&exti>;
->>> +     interrupts = <68 1>;
->>> +     status = "okay";
->>> +};
->>> +
->>> +&rng1 {
->>> +     status = "okay";
->>> +};
->>> +
->>> +&rtc {
->>> +     status = "okay";
->>> +};
->>> +
->>> +&sdmmc2 {
->>> +     pinctrl-names = "default", "opendrain", "sleep";
->>> +     pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_a>;
->>> +     pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_a>;
->>> +     pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_a>;
->>> +     non-removable;
->>> +     no-sd;
->>> +     no-sdio;
->>> +     st,neg-edge;
->>> +     bus-width = <4>;
->>> +     vmmc-supply = <&v3v3>;
->>> +     vqmmc-supply = <&v3v3>;
->>> +     mmc-ddr-3_3v;
->>> +     status = "okay";
->>> +};
->>> +
->>> diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
->>> new file mode 100644
->>> index 000000000000..09edf6afa155
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
->>> @@ -0,0 +1,72 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->>> +/*
->>> + * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
->>> + */
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "stm32mp157c-odyssey-som.dtsi"
->>> +
->>> +/ {
->>> +     model = "Seeed Studio Odyssey-STM32MP157C Board";
->>> +     compatible = "seeed,stm32mp157c-odyssey", "st,stm32mp157";
->>> +
->>> +     aliases {
->>> +             ethernet0 = &ethernet0;
->>> +             serial0 = &uart4;
->>> +     };
->>> +
->>> +     chosen {
->>> +             stdout-path = "serial0:115200n8";
->>> +     };
->>> +};
->>> +
->>> +&ethernet0 {
->>> +     status = "okay";
->>> +     pinctrl-0 = <&ethernet0_rgmii_pins_a>;
->>> +     pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
->>> +     pinctrl-names = "default", "sleep";
->>> +     phy-mode = "rgmii-id";
->>> +     max-speed = <1000>;
->>> +     phy-handle = <&phy0>;
->>> +
->>> +     mdio0 {
->>> +             #address-cells = <1>;
->>> +             #size-cells = <0>;
->>> +             compatible = "snps,dwmac-mdio";
->>> +             phy0: ethernet-phy@0 { /* KSZ9031RN */
->>> +                     reg = <0>;
->>> +             };
->>> +     };
->>> +};
->>> +
->>> +&i2c1 {
->>> +     pinctrl-names = "default", "sleep";
->>> +     pinctrl-0 = <&i2c1_pins_a>;
->>> +     pinctrl-1 = <&i2c1_sleep_pins_a>;
->>> +     i2c-scl-rising-time-ns = <100>;
->>> +     i2c-scl-falling-time-ns = <7>;
->>> +     status = "okay";
->>> +     /delete-property/dmas;
->>> +     /delete-property/dma-names;
->>> +};
->>> +
->>> +&sdmmc1 {
->>> +     pinctrl-names = "default", "opendrain", "sleep";
->>> +     pinctrl-0 = <&sdmmc1_b4_pins_a>;
->>> +     pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
->>> +     pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
->>> +     cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
->>> +     disable-wp;
->>> +     st,neg-edge;
->>> +     bus-width = <4>;
->>> +     vmmc-supply = <&v3v3>;
->>> +     status = "okay";
->>> +};
->>> +
->>> +&uart4 {
->>> +     pinctrl-names = "default";
->>> +     pinctrl-0 = <&uart4_pins_a>;
->>> +     status = "okay";
->>> +};
->>> +
->>>
->>
->> --
->> Pengutronix e.K.                           |                             |
->> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
->> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
->> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+Thanks,
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	Ingo
