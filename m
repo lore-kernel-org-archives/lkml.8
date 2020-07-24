@@ -2,100 +2,136 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB13C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E43BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AACA6206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B90020748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:05:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UiBFZQWf"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="lKqxA8aG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgGXJDG (ORCPT
+        id S1727041AbgGXJFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:03:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32969 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbgGXJDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:03:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595581384; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Xc5yYihoFQKsI3WcXXnhfGRJQ4HmrBmbd0VVip4O/eI=; b=UiBFZQWfHIuJOeE1+qzPWILNGaVHjHe3nDdsVblpYx6llOe0yF4m7X5yD7/ZlWuN6ueEgLiG
- Zk/QJhNtvqHmK2CTP9kCaoJdb7wAAzIgBiYHGyJPwQ8ZoHnnhufefI2uddbqlAlk5JGoXOWr
- Bkf5YmZ+FAG3OI0DgFWMzIbAp+Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
- 5f1aa3c65b75bcda6030642c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 09:03:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 51508C43395; Fri, 24 Jul 2020 09:03:02 +0000 (UTC)
-Received: from [192.168.1.12] (unknown [61.3.19.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B68CBC433C9;
-        Fri, 24 Jul 2020 09:02:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B68CBC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
-Date:   Fri, 24 Jul 2020 14:32:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 05:05:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgGXJFG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:05:06 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30399C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:05:05 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 8so4867304pjj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dJk0fXPunD7T/D5AVyjQEsNkNoXfI8ghmpNswYCIQ+s=;
+        b=lKqxA8aGc7K9NzmQLYiWeEyRjpzKPH0blU5CHfbuSvK+02UDgogw+q1KXJNiqGDUQo
+         rLR1hRiHnu5oFwv10CZ+GVGH2CGgOWkBXWYk//dbBzwHipMuwUA9qEy7y1Jn5gX6Z5K7
+         UJ76IFF+NPl3Kb0cAzY9U5DY0ux9kZes/ohz9ihITTAc0vKCwyPle6Imfk276PSx/YBN
+         ZlRwCib5SWxswWCFeevh5L7A7JTnjnHP2ztQ7PV6oXDXjKkDhNP7obbz9gp747djk18k
+         zQfzH34OefTBx80I36pc1eHwt8VwfPU4gIEa1xvvLDHbGrU+gfDQ9RJZ9Hd5ZrZiKGQ8
+         HNpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dJk0fXPunD7T/D5AVyjQEsNkNoXfI8ghmpNswYCIQ+s=;
+        b=KNO0cSlR2fr/epQtmz1/E33/3jFUoKTpX1UvFCr8DU6bCuMgK16eA3J+PC3+YlRcZn
+         UAEla8hIqiTMUilMmcu/WvFePDcI3f1KPjlUSbleiuUnW2+hL6tCpsWlC4tYgTTfFz9l
+         QeFHb+BVMvom/LoQdIa4a/76Y6moOGQTACu4m5Gtzbj9RypMRRdrvThlYJ1GcEiIzhG+
+         vc4cWXbgtBV69JSLIkMx+oz2ZX4On0IQE1Q3OVm/Eqd/NDHm3zEeCUyUMIPFb5/sQoYp
+         BjjU0gRytq9AbM5AmtByXSUPr/3Jb0BM71q+PoXf0Ny5c1TVWfHexvbRieA2UmUEs3yp
+         C/vw==
+X-Gm-Message-State: AOAM5327dC77rUG/0580kE6musvwO0X8AeuKeNOaDNO1U0YzqFpvoGPk
+        cpiKGJ2pz1GyLnAqk8nDi6gPf8CqtYKkOq9bQGJsqw==
+X-Google-Smtp-Source: ABdhPJxeA0hqXJHpVHzj1cwmFS5tzvEzSY3DMRZ4Hx39L3nWeQW9bZb9LB+BrACsZn0Sb547epBrIqwxWO5voC6C5dU=
+X-Received: by 2002:a17:90a:20e9:: with SMTP id f96mr4513310pjg.13.1595581504357;
+ Fri, 24 Jul 2020 02:05:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200723074417.89467-1-songmuchun@bytedance.com> <20200724073942.GE4061@dhcp22.suse.cz>
+In-Reply-To: <20200724073942.GE4061@dhcp22.suse.cz>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Fri, 24 Jul 2020 17:04:28 +0800
+Message-ID: <CAMZfGtWUkW3AViM+vy6ffb44s_vjm0p0aXi=jdLkqKmN9HWJFA@mail.gmail.com>
+Subject: Re: [Phishing Risk] [External] Re: [PATCH] mm/hugetlb: add mempolicy
+ check in the reservation routine
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     mike.kravetz@oracle.com, Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jianchao Guo <guojianchao@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maulik/Lina,
+On Fri, Jul 24, 2020 at 3:39 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 23-07-20 15:44:17, Muchun Song wrote:
+> > In the reservation routine, we only check whether the cpuset meets
+> > the memory allocation requirements. But we ignore the mempolicy of
+> > MPOL_BIND case. If someone mmap hugetlb succeeds, but the subsequent
+> > memory allocation may fail due to mempolicy restrictions and receives
+> > the SIGBUS signal. This can be reproduced by the follow steps.
+> >
+> >  1) Compile the test case.
+> >     cd tools/testing/selftests/vm/
+> >     gcc map_hugetlb.c -o map_hugetlb
+> >
+> >  2) Pre-allocate huge pages. Suppose there are 2 numa nodes in the
+> >     system. Each node will pre-allocate one huge page.
+> >     echo 2 > /proc/sys/vm/nr_hugepages
+> >
+> >  3) Run test case(mmap 4MB). We receive the SIGBUS signal.
+> >     numactl --membind=0 ./map_hugetlb 4
+>
+> Cpusets and mempolicy interaction has always been a nightmare and
 
-On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
-> Hi Rajendra,
-> 
-> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
-> below messages on db845:
-> 
-> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
-> current OPP for freq 533000097 (-34)
-> 
-> ^^^ This one is new.
-> 
-> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
-> 
-> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+Yeah, I agree with you.
 
-Would you be fine with moving this message to a pr_debug? Its currently
-a pr_info_ratelimited()
+> semantic might get really awkward in some cases. In this case I am not
+> really sure anybody really does soemthing like that but anyway...
 
-thanks,
-Rajendra
+Someone may like to use numactl to bind memory nodes. So I think
+that it is better to add a mempolicy check.
+
+>
+> [...]
+>
+> > -static unsigned int cpuset_mems_nr(unsigned int *array)
+> > +static nodemask_t *mempolicy_current_bind_nodemask(void)
+> > +{
+> > +     struct mempolicy *mpol;
+> > +     nodemask_t *nodemask;
+> > +
+> > +     mpol = get_task_policy(current);
+> > +     if (mpol->mode == MPOL_BIND)
+> > +             nodemask = &mpol->v.nodes;
+> > +     else
+> > +             nodemask = NULL;
+> > +
+> > +     return nodemask;
+> > +}
+>
+> We already have policy_nodemask which tries to do this. Is there any
+> reason to not reuse it?
+
+Yeah, we can reuse it, I didn't know it before. Thanks.
+
+> --
+> Michal Hocko
+> SUSE Labs
+
+
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Yours,
+Muchun
