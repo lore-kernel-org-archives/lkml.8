@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03C3C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD3C433F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F0220674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 330B2206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgGXQJO (ORCPT
+        id S1727808AbgGXQER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:09:14 -0400
-Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:17 -0400
+Received: from 8bytes.org ([81.169.241.247]:59368 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgGXQEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:20 -0400
+        id S1726887AbgGXQEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:07 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id C2DC1F95;
-        Fri, 24 Jul 2020 18:04:11 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 44AC5E6C;
+        Fri, 24 Jul 2020 18:04:04 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 29/75] x86/head/64: Install startup GDT
-Date:   Fri, 24 Jul 2020 18:02:50 +0200
-Message-Id: <20200724160336.5435-30-joro@8bytes.org>
+Subject: [PATCH v5 15/75] x86/boot/compressed/64: Always switch to own page-table
+Date:   Fri, 24 Jul 2020 18:02:36 +0200
+Message-Id: <20200724160336.5435-16-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,101 +60,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handling exceptions during boot requires a working GDT. The kernel GDT
-can't be used on the direct mapping, so load a startup GDT and setup
-segments.
+When booted through startup_64 the kernel keeps running on the EFI
+page-table until the KASLR code sets up its own page-table. Without
+KASLR the pre-decompression boot code never switches off the EFI
+page-table. Change that by unconditionally switching to a kernel
+controlled page-table after relocation.
+
+This makes sure we can make changes to the mapping when necessary, for
+example map pages unencrypted in SEV and SEV-ES guests.
+
+Also remove the debug_putstr() calls in initialize_identity_maps()
+because the function now runs before console_init() is called.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/setup.h |  1 +
- arch/x86/kernel/head64.c     | 33 +++++++++++++++++++++++++++++++++
- arch/x86/kernel/head_64.S    | 14 ++++++++++++++
- 3 files changed, 48 insertions(+)
+ arch/x86/boot/compressed/head_64.S      |  3 +-
+ arch/x86/boot/compressed/ident_map_64.c | 51 +++++++++++++++----------
+ arch/x86/boot/compressed/kaslr.c        |  3 --
+ 3 files changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 84b645cc8bc9..5c2fd05bd52c 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -48,6 +48,7 @@ extern void reserve_standard_io_resources(void);
- extern void i386_reserve_resources(void);
- extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
- extern unsigned long __startup_secondary_64(void);
-+extern void startup_64_setup_env(unsigned long physbase);
- extern int early_make_pgtable(unsigned long address);
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 4174d2f97b29..36f18d5592f4 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -543,10 +543,11 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	rep	stosq
  
- #ifdef CONFIG_X86_INTEL_MID
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index cbb71c1b574f..8c82be44be94 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -61,6 +61,24 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
- EXPORT_SYMBOL(vmemmap_base);
- #endif
+ /*
+- * Load stage2 IDT
++ * Load stage2 IDT and switch to our own page-table
+  */
+ 	pushq	%rsi
+ 	call	load_stage2_idt
++	call	initialize_identity_maps
+ 	popq	%rsi
+ 
+ /*
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index e3d980ae9c2b..ecf9353b064d 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -86,9 +86,31 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+  */
+ static struct x86_mapping_info mapping_info;
  
 +/*
-+ * GDT used on the boot CPU before switching to virtual addresses.
++ * Adds the specified range to what will become the new identity mappings.
++ * Once all ranges have been added, the new mapping is activated by calling
++ * finalize_identity_maps() below.
 + */
-+static struct desc_struct startup_gdt[GDT_ENTRIES] = {
-+	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(0xc09b, 0, 0xfffff),
-+	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
-+	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
-+};
-+
-+/*
-+ * Address needs to be set at runtime because it references the startup_gdt
-+ * while the kernel still uses a direct mapping.
-+ */
-+static struct desc_ptr startup_gdt_descr = {
-+	.size = sizeof(startup_gdt),
-+	.address = 0,
-+};
-+
- #define __head	__section(.head.text)
- 
- static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
-@@ -489,3 +507,18 @@ void __init x86_64_start_reservations(char *real_mode_data)
- 
- 	start_kernel();
- }
-+
-+/*
-+ * Setup boot CPU state needed before kernel switches to virtual addresses.
-+ */
-+void __head startup_64_setup_env(unsigned long physbase)
++void add_identity_map(unsigned long start, unsigned long size)
 +{
-+	/* Load GDT */
-+	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
-+	native_load_gdt(&startup_gdt_descr);
++	unsigned long end = start + size;
 +
-+	/* New GDT is live - reload data segment registers */
-+	asm volatile("movl %%eax, %%ds\n"
-+		     "movl %%eax, %%ss\n"
-+		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
++	/* Align boundary to 2M. */
++	start = round_down(start, PMD_SIZE);
++	end = round_up(end, PMD_SIZE);
++	if (start >= end)
++		return;
++
++	/* Build the mapping. */
++	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
++				  start, end);
 +}
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 16da4ac01597..2b2e91627221 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -73,6 +73,20 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
- 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
++
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
++	unsigned long start, size;
++
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
  
-+	leaq	_text(%rip), %rdi
-+	pushq	%rsi
-+	call	startup_64_setup_env
-+	popq	%rsi
-+
-+	/* Now switch to __KERNEL_CS so IRET works reliably */
-+	pushq	$__KERNEL_CS
-+	leaq	.Lon_kernel_cs(%rip), %rax
-+	pushq	%rax
-+	lretq
-+
-+.Lon_kernel_cs:
-+	UNWIND_HINT_EMPTY
-+
- 	/* Sanitize CPU configuration */
- 	call verify_cpu
+@@ -121,37 +143,24 @@ void initialize_identity_maps(void)
+ 	 */
+ 	top_level_pgt = read_cr3_pa();
+ 	if (p4d_offset((pgd_t *)top_level_pgt, 0) == (p4d_t *)_pgtable) {
+-		debug_putstr("booted via startup_32()\n");
+ 		pgt_data.pgt_buf = _pgtable + BOOT_INIT_PGT_SIZE;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE - BOOT_INIT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 	} else {
+-		debug_putstr("booted via startup_64()\n");
+ 		pgt_data.pgt_buf = _pgtable;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 		top_level_pgt = (unsigned long)alloc_pgt_page(&pgt_data);
+ 	}
+-}
+ 
+-/*
+- * Adds the specified range to what will become the new identity mappings.
+- * Once all ranges have been added, the new mapping is activated by calling
+- * finalize_identity_maps() below.
+- */
+-void add_identity_map(unsigned long start, unsigned long size)
+-{
+-	unsigned long end = start + size;
+-
+-	/* Align boundary to 2M. */
+-	start = round_down(start, PMD_SIZE);
+-	end = round_up(end, PMD_SIZE);
+-	if (start >= end)
+-		return;
+-
+-	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	/*
++	 * New page-table is set up - map the kernel image and load it
++	 * into cr3.
++	 */
++	start = (unsigned long)_head;
++	size  = _end - _head;
++	add_identity_map(start, size);
++	write_cr3(top_level_pgt);
+ }
+ 
+ /*
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 7c61a8c5b9cf..856dc1c9bb0d 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -903,9 +903,6 @@ void choose_random_location(unsigned long input,
+ 
+ 	boot_params->hdr.loadflags |= KASLR_FLAG;
+ 
+-	/* Prepare to add new identity pagetables on demand. */
+-	initialize_identity_maps();
+-
+ 	/* Record the various known unsafe memory ranges. */
+ 	mem_avoid_init(input, input_size, *output);
  
 -- 
 2.27.0
