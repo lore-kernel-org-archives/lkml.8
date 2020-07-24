@@ -2,90 +2,74 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BFBC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295F4C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC082074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0729C20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGXHQm (ORCPT
+        id S1727013AbgGXHQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:16:42 -0400
-Received: from mga17.intel.com ([192.55.52.151]:8331 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgGXHQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:16:39 -0400
-IronPort-SDR: JBw9HJ8w3SQr9VKOkFXMvcTmcq8VvzfJiPxaz9V3mBzXhXPuGO7iSQDeQEdllvlMI/qd+rthLi
- HeEZWFTy6Big==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="130744636"
-X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="scan'208";a="130744636"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 00:16:38 -0700
-IronPort-SDR: j2KK6kP0J+fDiKxJ95jlu/hDyyYP9v6JH6cA4bkpmW8feH7gE8IfsA4vWqkJ+k32bHItnhQeVf
- JDPgRgmGlMEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="scan'208";a="320922247"
-Received: from cbuerkle-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.36.184])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jul 2020 00:16:36 -0700
-Date:   Fri, 24 Jul 2020 10:16:34 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org,
-        Wei Yongjun <weiyongjun1@huawei.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] keys: asymmetric: fix error return code in
- software_key_query()
-Message-ID: <20200724071634.GA1872662@linux.intel.com>
-References: <20200723013223.GA45081@linux.intel.com>
- <159485211858.2340757.9890754969922775496.stgit@warthog.procyon.org.uk>
- <1269137.1595490145@warthog.procyon.org.uk>
+        Fri, 24 Jul 2020 03:16:38 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:33188 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726607AbgGXHQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:16:37 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3374368|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0120182-0.00230646-0.985675;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I6qYcLF_1595574989;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I6qYcLF_1595574989)
+          by smtp.aliyun-inc.com(10.147.42.253);
+          Fri, 24 Jul 2020 15:16:34 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 12/16] dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
+Date:   Fri, 24 Jul 2020 15:15:53 +0800
+Message-Id: <953b76413563551b82dd11cadbc99c695f74f721.1595572867.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
+References: <cover.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1269137.1595490145@warthog.procyon.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 08:42:25AM +0100, David Howells wrote:
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > Why f1774cb8956a lacked any possible testing? It extends ABI anyway.
-> > 
-> > I think it is a kind of change that would require more screening before
-> > getting applied.
-> 
-> Yeah.  It went in via a round-about route.  I left off development of it when
-> the tpm stuff I wrote broke because the tpm2 stuff went in upstream.  I then
-> handed the patches off to Denis who did the tpm support, but I never got my
-> stuff finished enough to work out how to do the testsuite (since it would
-> involve using a tpm).  However, since I did the PKCS#8 testing module as well,
-> I guess I don't need that to at least test the API.  I'll look at using that
-> to add some tests.  Any suggestions as to how to do testing via the tpm?
-> 
-> David
+From: Yangtao Li <frank@allwinnertech.com>
 
-The unfortunate thing is that I was not involved with asym_tpm.c review
-process in any possible way, which means that at the moment I lack both:
+Add a binding for A100's nmi controller.
 
-1. Knowledge of crypto/asymmetric_keys.
-2. How asym_tpm.c is implemented.
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I only became aware of asym_tpm.c's existence last Sep [*].
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+index d8fe2d9a307b..8acca0ae3129 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+@@ -33,6 +33,9 @@ properties:
+       - items:
+           - const: allwinner,sun50i-a64-r-intc
+           - const: allwinner,sun6i-a31-r-intc
++      - items:
++          - const: allwinner,sun50i-a100-nmi
++          - const: allwinner,sun9i-a80-nmi
+       - items:
+           - const: allwinner,sun50i-h6-r-intc
+           - const: allwinner,sun6i-a31-r-intc
+-- 
+2.24.0
 
-I'll put to my backlog to try TPM asymmetric keys (earliest when I'm back
-from vacation 08/10).
-
-[*] https://lore.kernel.org/linux-integrity/20190926171601.30404-1-jarkko.sakkinen@linux.intel.com/
-
-/Jarkko
