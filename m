@@ -2,100 +2,144 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB288C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7971BC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851F3206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F32206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r6whtLyn"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AiM7BvGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgGXQ2n (ORCPT
+        id S1726887AbgGXQ3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:28:43 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12286 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgGXQ2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:28:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595608122; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=2Tluwc+dc7SaCkWp19noOVVMBfhBEvUZgNi3cdWouqw=; b=r6whtLyn/OGRK70cQn2DPcLTPlvrdTeU1cklNmKhXm+VvR7vxrfCu0VTBWqsiiPZtH4UE5db
- luuWB2NGRhTtkqDks2aPD1CkR9SfAmsyGxZUK36j07TA1O4kNQjV05pa99Ah0GjULKyZl14C
- xiM2immWesP7BxSVhyl4Jk4U5+E=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5f1b0c2b7186ea1ee18605a2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:28:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8296C433C6; Fri, 24 Jul 2020 16:28:26 +0000 (UTC)
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3EBE5C433C9;
-        Fri, 24 Jul 2020 16:28:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3EBE5C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Fri, 24 Jul 2020 10:28:25 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-Message-ID: <20200724162825.GH9185@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+        Fri, 24 Jul 2020 12:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbgGXQ3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:29:22 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77FCC0619E5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e8so5510421pgc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H5vpCWHYjYJzXRlUWgDCLhZpTQz6UHH/5YbUsvqWdNg=;
+        b=AiM7BvGhGZq+8CYp8kZrjTGkqBuGSOVx6gcS2ZoV6niiBFHjxOg990QxEbHLjMtigv
+         rkvJauw/Nl3yhgdh3yh3/cQAnPJiwRmEprDaz+FVWchlY0XqPjysldBf7LV7iodBdHsg
+         899CD4i/WKRLcxWHL2qBJPQckfv3u7k8PdGNBc5u9vYaxF2nX4a0GJZ0t2UsIEZTpo6J
+         LSaij/Yuh1Dejhu73ovuUR07/jtKpWqsPIuesjS1PnD7zc9xpDNs1ajo4VYGKaFSYPEp
+         4k9hgoXmZx02QlUnefhSTGyaDFr/jP9Yjztbzg3eY6wwKKTEEk/uuvzIim3EIQCSWKme
+         optQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H5vpCWHYjYJzXRlUWgDCLhZpTQz6UHH/5YbUsvqWdNg=;
+        b=KyyqFejCso5/eWgY3M2fTIpMEG/RitgCXxgmyYz5QKWK0Yiuybc/5YX1SfRuNXBUoh
+         eF3rWxCyh+5Jhp/9bkfTPke/s3XwWonfob8Ndb+CM8ifrFMauew5v+xIo2EsJiurJjVa
+         JvMj7A+WV723YXeeVfdgKd0qiFbqF5SuWOuv1Yv/R7wLAgKT6mfH0uxQcDo+Tmnk5741
+         cZ+cYbvsJfqn0a0+TCYYEkFfNi1546GgO27M2NdB9v+c1pt8MB0a/QFnKfnwUOQV+B7P
+         4YnALQisduw71WgvKmD/zpmmj5wuNWIuEEJKEJWDiXqrJmehhIYBXX0EVIkI3pljQc9C
+         VZCA==
+X-Gm-Message-State: AOAM531BaBhYUOEqTUZmPtZQWDxOh+QeMH4aTsmLJY5jjFqyUGq0Amrd
+        yxhwgkf8dNivblKmE8+IoBMocA==
+X-Google-Smtp-Source: ABdhPJwiUQeYSR905NX4BkAH3K9ZeZTdo2ytHvuhOnPUvAeq9vMBPv48vFJy3B/CVUpeaPlmxlgHwA==
+X-Received: by 2002:a63:338c:: with SMTP id z134mr9031841pgz.245.1595608162016;
+        Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id e15sm6659144pgt.17.2020.07.24.09.29.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 09:29:21 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+To:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org
+Cc:     willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
+ <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
+Date:   Fri, 24 Jul 2020 10:29:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+In-Reply-To: <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
->Hi Maulik/Lina,
->
->On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
->>Hi Rajendra,
->>
->>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
->>below messages on db845:
->>
->>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
->>current OPP for freq 533000097 (-34)
->>
->>^^^ This one is new.
->>
->>qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
->>
->>^^^ and this message is annoying, can we make it pr_debug in rpmh?
->
-How annoyingly often do you see this message?
-Usually, this is an indication of bad system state either on remote
-processors in the SoC or in Linux itself. On a smooth sailing build you
-should not see this 'warning'.
+On 7/24/20 9:49 AM, Kanchan Joshi wrote:
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 7809ab2..6510cf5 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
+>  	cqe = io_get_cqring(ctx);
+>  	if (likely(cqe)) {
+>  		WRITE_ONCE(cqe->user_data, req->user_data);
+> -		WRITE_ONCE(cqe->res, res);
+> -		WRITE_ONCE(cqe->flags, cflags);
+> +		if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
+> +			if (likely(res > 0))
+> +				WRITE_ONCE(cqe->res64, req->rw.append_offset);
+> +			else
+> +				WRITE_ONCE(cqe->res64, res);
+> +		} else {
+> +			WRITE_ONCE(cqe->res, res);
+> +			WRITE_ONCE(cqe->flags, cflags);
+> +		}
 
->Would you be fine with moving this message to a pr_debug? Its currently
->a pr_info_ratelimited()
-I would rather not, moving this out of sight will mask a lot serious
-issues that otherwise bring attention to the developers.
+This would be nice to keep out of the fast path, if possible.
 
---Lina
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index 92c2269..2580d93 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -156,8 +156,13 @@ enum {
+>   */
+>  struct io_uring_cqe {
+>  	__u64	user_data;	/* sqe->data submission passed back */
+> -	__s32	res;		/* result code for this event */
+> -	__u32	flags;
+> +	union {
+> +		struct {
+> +			__s32	res;	/* result code for this event */
+> +			__u32	flags;
+> +		};
+> +		__s64	res64;	/* appending offset for zone append */
+> +	};
+>  };
+
+Is this a compatible change, both for now but also going forward? You
+could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
+Layout would also be different between big and little endian, so not
+even that easy to set aside a flag for this. But even if that was done,
+we'd still have this weird API where liburing or the app would need to
+distinguish this cqe from all others based on... the user_data? Hence
+liburing can't do it, only the app would be able to.
+
+Just seems like a hack to me.
+
+-- 
+Jens Axboe
+
