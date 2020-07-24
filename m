@@ -2,72 +2,63 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E78BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD38C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9AC20714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB535206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXbBdCOw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J4ucai3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgGXIUe (ORCPT
+        id S1726891AbgGXIWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:20:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22498 "EHLO
+        Fri, 24 Jul 2020 04:22:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23635 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726437AbgGXIUe (ORCPT
+        with ESMTP id S1726554AbgGXIWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:20:34 -0400
+        Fri, 24 Jul 2020 04:22:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595578832;
+        s=mimecast20190719; t=1595578971;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=OyYC9tZLltn2ymf26MTZQD1S0k8Nc9T/lMl10VCfjlY=;
-        b=HXbBdCOwa+3ZclaR1jbFWMc3+trwcDY1f7tnaRUMaBoHXuaoHK9u2f3Sq8Nn6St9y4X1Vd
-        nLSvsnNJ4gAcIBI5dcNWrdcgSMx2FhTCZJmNLKKyIUzLUEKZcJttX6b0DVRhW9IADLHdkX
-        D4/i4fCgilQAcND765BFQzc1sCQfimQ=
+        bh=lVgrrB2u3RkVMlRU7KdD6hpnUdQ/Fi3j0u87ZOZXuh4=;
+        b=J4ucai3DQMp0UhNDuvdnTM3ln1PVC7xJsZCUG5hZ662213DFSB51l/on+YARAOEje7LyIa
+        zarV6jiclbecO3FT1lJmNuUaHCO4VId0ow/4aVrciumrY5OyMi6tHegAKjyNX2drk21EV3
+        yISXKMHBJK9+rEKD75Zd9kgDDiqD7Io=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-58dvOyc-MRS6SZHGfgGzgg-1; Fri, 24 Jul 2020 04:20:29 -0400
-X-MC-Unique: 58dvOyc-MRS6SZHGfgGzgg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-334-zmud_EehM5SrJmK4yMbVxA-1; Fri, 24 Jul 2020 04:22:47 -0400
+X-MC-Unique: zmud_EehM5SrJmK4yMbVxA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FC7F10CE782;
-        Fri, 24 Jul 2020 08:20:27 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55D3A57;
+        Fri, 24 Jul 2020 08:22:45 +0000 (UTC)
 Received: from [10.36.113.94] (ovpn-113-94.ams2.redhat.com [10.36.113.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 511126FEFE;
-        Fri, 24 Jul 2020 08:20:24 +0000 (UTC)
-Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200619125923.22602-2-david@redhat.com>
- <20200622082635.GA93552@L-31X9LVDL-1304.local>
- <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
- <20200622092221.GA96699@L-31X9LVDL-1304.local>
- <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
- <20200622131003.GA98415@L-31X9LVDL-1304.local>
- <0f4edc1f-1ce2-95b4-5866-5c4888db7c65@redhat.com>
- <20200622215520.wa6gjr2hplurwy57@master>
- <4b7ee49c-9bee-a905-3497-e3addd8896b8@redhat.com>
- <c0b62330-11d3-e628-a811-b54789d8f182@redhat.com>
- <20200623093018.GA6069@L-31X9LVDL-1304.local>
- <20200723200846.768513d7c122ac11b6e73538@linux-foundation.org>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA54F10013D9;
+        Fri, 24 Jul 2020 08:22:42 +0000 (UTC)
+Subject: Re: [PATCH 2/3] sh/mm: Drop unused MAX_PHYSADDR_BITS
+To:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-sh@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, sparclinux@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200723231544.17274-1-nivedita@alum.mit.edu>
+ <20200723231544.17274-3-nivedita@alum.mit.edu>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -114,81 +105,49 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <d16a2f0f-6150-d41b-f44c-96e8497bee72@redhat.com>
-Date:   Fri, 24 Jul 2020 10:20:23 +0200
+Message-ID: <f65927b5-ded7-fdd2-c7c1-c2419ded6a2c@redhat.com>
+Date:   Fri, 24 Jul 2020 10:22:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200723200846.768513d7c122ac11b6e73538@linux-foundation.org>
+In-Reply-To: <20200723231544.17274-3-nivedita@alum.mit.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.07.20 05:08, Andrew Morton wrote:
-> On Tue, 23 Jun 2020 17:30:18 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
+On 24.07.20 01:15, Arvind Sankar wrote:
+> The macro is not used anywhere, so remove the definition.
 > 
->> On Tue, Jun 23, 2020 at 09:55:43AM +0200, David Hildenbrand wrote:
->>> On 23.06.20 09:39, David Hildenbrand wrote:
->>>>> Hmm.. I thought this is the behavior for early section, while it looks current
->>>>> code doesn't work like this:
->>>>>
->>>>>        if (section_is_early && memmap)
->>>>>                free_map_bootmem(memmap);
->>>>>        else
->>>>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
->>>>>
->>>>> section_is_early is always "true" for early section, while memmap is not-NULL
->>>>> only when sub-section map is empty.
->>>>>
->>>>> If my understanding is correct, when we remove a sub-section in early section,
->>>>> the code would call depopulate_section_memmap(), which in turn free related
->>>>> memmap. By removing the memmap, the return value from pfn_to_online_page() is
->>>>> not a valid one.
->>>>
->>>> I think you're right, and pfn_valid() would also return true, as it is
->>>> an early section. This looks broken.
->>>>
->>>>>
->>>>> Maybe we want to write the code like this:
->>>>>
->>>>>        if (section_is_early)
->>>>>                if (memmap)
->>>>>                        free_map_bootmem(memmap);
->>>>>        else
->>>>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
->>>>>
->>>>
->>>> I guess that should be the way to go
->>>>
->>>> @Dan, I think what Wei proposes here is correct, right? Or how does it
->>>> work in the VMEMMAP case with early sections?
->>>>
->>>
->>> Especially, if you would re-hot-add, section_activate() would assume
->>> there is a memmap, it must not be removed.
->>>
->>
->> You are right here. I didn't notice it.
->>
->>> @Wei, can you send a patch?
->>>
->>
->> Sure, let me prepare for it.
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/sh/include/asm/sparsemem.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Still awaiting this, and the v3 patch was identical to this v2 patch.
+> diff --git a/arch/sh/include/asm/sparsemem.h b/arch/sh/include/asm/sparsemem.h
+> index 4eb899751e45..084706bb8cca 100644
+> --- a/arch/sh/include/asm/sparsemem.h
+> +++ b/arch/sh/include/asm/sparsemem.h
+> @@ -5,11 +5,9 @@
+>  #ifdef __KERNEL__
+>  /*
+>   * SECTION_SIZE_BITS		2^N: how big each section will be
+> - * MAX_PHYSADDR_BITS		2^N: how much physical address space we have
+> - * MAX_PHYSMEM_BITS		2^N: how much memory we can have in that space
+> + * MAX_PHYSMEM_BITS		2^N: how much physical address space we have
+>   */
+>  #define SECTION_SIZE_BITS	26
+> -#define MAX_PHYSADDR_BITS	32
+>  #define MAX_PHYSMEM_BITS	32
+>  
+>  #endif
 > 
-> It's tagged for -stable, so there's some urgency.  Should we just go
-> ahead with the decently-tested v2?
 
-This patch (mm/shuffle: don't move pages between zones and don't read
-garbage memmaps) is good enough for upstream. While the issue reported
-by Wei was valid (and needs to be fixed), the user in this patch is just
-one of many affected users. Nothing special.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
