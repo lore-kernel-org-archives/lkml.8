@@ -2,300 +2,227 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627B0C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CE120737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39AF62074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PBUzQrmX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PSlwBK4W"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="VeE6kkrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgGXMCa (ORCPT
+        id S1727927AbgGXMCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:02:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37720 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGXMC0 (ORCPT
+        Fri, 24 Jul 2020 08:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgGXMCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:02:26 -0400
-Date:   Fri, 24 Jul 2020 12:02:21 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595592142;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xgAikLBvITSzNqzcxXEvFpGwYd2TiQpsNuh8QeV6ruE=;
-        b=PBUzQrmXOoEYZOiAZc+iHJs4aV7YHvEktzeW6eaDx4X+XASJIohe683dQb/kLVj/X2K5kL
-        UxqcQ2lLmtJY9zhYGlnpJudU858cgxDyD/pFYqmOQW5GZ+188+Y1DRotxe8j3qcSJB8NQ3
-        /8jS79Q5+Tw6qFjjrnnsG6aJKwx+JbbkAxWWFdNrYku1udKlZJTlHFMFPMA15rtrT+oeNf
-        fPwcsOR49M7X2eZh8hqqJLZfOGH9Eac7oUhZXurRaCFuS4BGgqgB+0yAXS+6VF6/ry1dtn
-        LJPUAeprndekbsxfzqTbs0ZCIxNFaD9LwlgFiSqdAmmOFOBdc1fU/loyiCEUEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595592142;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xgAikLBvITSzNqzcxXEvFpGwYd2TiQpsNuh8QeV6ruE=;
-        b=PSlwBK4WDogVDCBE8p9b1DhQVq7PUvfYnjAcQOfqK5Ey2Nf8yQmbxFbQ0eHkx6i4tRcX9w
-        PwsPW1NDNzlso8DA==
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/headers] compiler.h: Move instrumentation_begin()/end() to
- new <linux/instrumentation.h> header
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200604071921.GA1361070@gmail.com>
-References: <20200604071921.GA1361070@gmail.com>
+        Fri, 24 Jul 2020 08:02:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A1FBC0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:02:32 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q17so4315751pls.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Cvnh2hEgqr+H3PqRAzGMgrE9Ro4XZW4OvEzfzGD53mo=;
+        b=VeE6kkrhkfhNP5LUcTBQH11gWeFF2+m6gYWJQs7hF4vvMOESDioBiAvItJzO2SMFbK
+         8FCqkBz8VjNAQkhBINnbqgV765p/yY2MKpyR4pbsPScOW6XqETJq3/hC8OqcV1u/nyIE
+         hMUwPK0tvMmRutyClsFgP7hCPQTUJsihOINYnmTVNYLXqJ8rkWEPfnMB81qnj645CWZs
+         dN700jzBqr3D81QOg2wZtaTObxl7GCECZHV90gHavWW8j3JFlJ1C9JeyqdtW6qXJZtSo
+         qIzIT2xN8tCc1kIhTppQog0LsNo2J49gakquKZFtFBoH/c3FduITekszQUZJPtJ2NeuW
+         GzPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Cvnh2hEgqr+H3PqRAzGMgrE9Ro4XZW4OvEzfzGD53mo=;
+        b=R+d6tEvtS25ERMXrlymkZDEFb3wCxgAPV3wFLTsxglFvvih17xBGV0wWVz3jMuHzOM
+         3YmFhN4O5UxzByKUD46D6BBJDw3qjgfFJk8dEM47w4EcICFSUYguml/GPKoSxozAPvre
+         JZduseQ3BorkL8YtRectJfJdO/q38q5GkbZbZXJ/Ic9mHqkcuqEPDCd2e8JqfMFBcDGL
+         md9NZH6FfGRM4coMzQVWuM1FIQoHNXYiALfuIekg09LiMx6B/jQid1TSX9BGeslgt+yL
+         ZWY+sjshlp7Qe3aVhA+R90tPP7hv3qB/9KX2XXQ2ejP3o2rEnUxhPSf5XU7L8CfVDB23
+         kD3g==
+X-Gm-Message-State: AOAM533bVwy5kaybBOZ5cznexglD+BeuN/uduMD7elKSaVGO0HYWiWV5
+        CDyald24I6lNe1fPSmjItLmBZA==
+X-Google-Smtp-Source: ABdhPJx1KpkTSIokD3l7fY0gnmrHS9A2ucrNiBW4LSWWu0NAn1vNg+7QQ5JqFjd577c75UP4IxamzA==
+X-Received: by 2002:a17:90b:4b84:: with SMTP id lr4mr4891056pjb.111.1595592151966;
+        Fri, 24 Jul 2020 05:02:31 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id h15sm6293300pfo.192.2020.07.24.05.02.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 05:02:31 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v2 1/3] media: vimc: Add usage count to subdevices
+Date:   Fri, 24 Jul 2020 17:32:11 +0530
+Message-Id: <20200724120213.17119-2-kgupta@es.iitr.ac.in>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
 MIME-Version: 1.0
-Message-ID: <159559214141.4006.8712776602481546473.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/headers branch of tip:
+Prepare for multiple video streams from the same sensor by adding a use
+counter to each subdevice. The counter is increased for every s_stream(1)
+and decremented for every s_stream(0) call.
 
-Commit-ID:     d19e789f068b3d633cbac430764962f404198022
-Gitweb:        https://git.kernel.org/tip/d19e789f068b3d633cbac430764962f404198022
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 24 Jul 2020 13:50:25 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 24 Jul 2020 13:56:23 +02:00
+The subdevice stream is not started or stopped unless the usage count go
+from 0 to 1 (started) or from 1 to 0 (stopped). This allows for multiple
+s_stream() calls to try to either start or stop the device while only
+the first/last call will actually effect the state of the device.
 
-compiler.h: Move instrumentation_begin()/end() to new <linux/instrumentation.h> header
+[Kaaira: rebased the patch on current HEAD of media-tree
+(8f2a4a9d5ff5202d0b3e3a144ebb9b67aabadd29)]
 
-Linus pointed out that compiler.h - which is a key header that gets included in every
-single one of the 28,000+ kernel files during a kernel build - was bloated in:
-
-  655389666643: ("vmlinux.lds.h: Create section for protection against instrumentation")
-
-Linus noted:
-
- > I have pulled this, but do we really want to add this to a header file
- > that is _so_ core that it gets included for basically every single
- > file built?
- >
- > I don't even see those instrumentation_begin/end() things used
- > anywhere right now.
- >
- > It seems excessive. That 53 lines is maybe not a lot, but it pushed
- > that header file to over 12kB, and while it's mostly comments, it's
- > extra IO and parsing basically for _every_ single file compiled in the
- > kernel.
- >
- > For what appears to be absolutely zero upside right now, and I really
- > don't see why this should be in such a core header file!
-
-Move these primitives into a new header: <linux/instrumentation.h>, and include that
-header in the headers that make use of it.
-
-Unfortunately one of these headers is asm-generic/bug.h, which does get included
-in a lot of places, similarly to compiler.h. So the de-bloating effect isn't as
-good as we'd like it to be - but at least the interfaces are defined separately.
-
-No change to functionality intended.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200604071921.GA1361070@gmail.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
 ---
- arch/x86/include/asm/bug.h       |  1 +-
- include/asm-generic/bug.h        |  1 +-
- include/linux/compiler.h         | 53 +-----------------------------
- include/linux/context_tracking.h |  2 +-
- include/linux/instrumentation.h  | 57 +++++++++++++++++++++++++++++++-
- 5 files changed, 61 insertions(+), 53 deletions(-)
- create mode 100644 include/linux/instrumentation.h
+ drivers/media/test-drivers/vimc/vimc-debayer.c | 8 ++++++++
+ drivers/media/test-drivers/vimc/vimc-scaler.c  | 8 ++++++++
+ drivers/media/test-drivers/vimc/vimc-sensor.c  | 9 ++++++++-
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-index 0281895..297fa12 100644
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -3,6 +3,7 @@
- #define _ASM_X86_BUG_H
+diff --git a/drivers/media/test-drivers/vimc/vimc-debayer.c b/drivers/media/test-drivers/vimc/vimc-debayer.c
+index c3f6fef34f68..93fe19d8d2b4 100644
+--- a/drivers/media/test-drivers/vimc/vimc-debayer.c
++++ b/drivers/media/test-drivers/vimc/vimc-debayer.c
+@@ -29,6 +29,7 @@ struct vimc_deb_pix_map {
+ struct vimc_deb_device {
+ 	struct vimc_ent_device ved;
+ 	struct v4l2_subdev sd;
++	atomic_t use_count;
+ 	/* The active format */
+ 	struct v4l2_mbus_framefmt sink_fmt;
+ 	u32 src_code;
+@@ -343,6 +344,9 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
  
- #include <linux/stringify.h>
-+#include <linux/instrumentation.h>
- 
- /*
-  * Despite that some emulators terminate on UD2, we use it for WARN().
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index c94e33a..18b0f4e 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -3,6 +3,7 @@
- #define _ASM_GENERIC_BUG_H
- 
- #include <linux/compiler.h>
-+#include <linux/instrumentation.h>
- 
- #define CUT_HERE		"------------[ cut here ]------------\n"
- 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 204e768..681894b 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -120,65 +120,12 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- /* Annotate a C jump table to allow objtool to follow the code flow */
- #define __annotate_jump_table __section(.rodata..c_jump_table)
- 
--#ifdef CONFIG_DEBUG_ENTRY
--/* Begin/end of an instrumentation safe region */
--#define instrumentation_begin() ({					\
--	asm volatile("%c0: nop\n\t"						\
--		     ".pushsection .discard.instr_begin\n\t"		\
--		     ".long %c0b - .\n\t"				\
--		     ".popsection\n\t" : : "i" (__COUNTER__));		\
--})
--
--/*
-- * Because instrumentation_{begin,end}() can nest, objtool validation considers
-- * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
-- * When the value is greater than 0, we consider instrumentation allowed.
-- *
-- * There is a problem with code like:
-- *
-- * noinstr void foo()
-- * {
-- *	instrumentation_begin();
-- *	...
-- *	if (cond) {
-- *		instrumentation_begin();
-- *		...
-- *		instrumentation_end();
-- *	}
-- *	bar();
-- *	instrumentation_end();
-- * }
-- *
-- * If instrumentation_end() would be an empty label, like all the other
-- * annotations, the inner _end(), which is at the end of a conditional block,
-- * would land on the instruction after the block.
-- *
-- * If we then consider the sum of the !cond path, we'll see that the call to
-- * bar() is with a 0-value, even though, we meant it to happen with a positive
-- * value.
-- *
-- * To avoid this, have _end() be a NOP instruction, this ensures it will be
-- * part of the condition block and does not escape.
-- */
--#define instrumentation_end() ({					\
--	asm volatile("%c0: nop\n\t"					\
--		     ".pushsection .discard.instr_end\n\t"		\
--		     ".long %c0b - .\n\t"				\
--		     ".popsection\n\t" : : "i" (__COUNTER__));		\
--})
--#endif /* CONFIG_DEBUG_ENTRY */
--
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
- #define __annotate_jump_table
- #endif
- 
--#ifndef instrumentation_begin
--#define instrumentation_begin()		do { } while(0)
--#define instrumentation_end()		do { } while(0)
--#endif
--
- #ifndef ASM_UNREACHABLE
- # define ASM_UNREACHABLE
- #endif
-diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-index 981b880..d53cd33 100644
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -5,6 +5,8 @@
- #include <linux/sched.h>
- #include <linux/vtime.h>
- #include <linux/context_tracking_state.h>
-+#include <linux/instrumentation.h>
++		if (atomic_inc_return(&vdeb->use_count) != 1)
++			return 0;
 +
- #include <asm/ptrace.h>
+ 		if (vdeb->src_frame)
+ 			return 0;
  
+@@ -368,6 +372,9 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+ 			return -ENOMEM;
  
-diff --git a/include/linux/instrumentation.h b/include/linux/instrumentation.h
-new file mode 100644
-index 0000000..93e2ad6
---- /dev/null
-+++ b/include/linux/instrumentation.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_INSTRUMENTATION_H
-+#define __LINUX_INSTRUMENTATION_H
+ 	} else {
++		if (atomic_dec_return(&vdeb->use_count) != 0)
++			return 0;
 +
-+#if defined(CONFIG_DEBUG_ENTRY) && defined(CONFIG_STACK_VALIDATION)
+ 		if (!vdeb->src_frame)
+ 			return 0;
+ 
+@@ -595,6 +602,7 @@ static struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+ 	vdeb->ved.process_frame = vimc_deb_process_frame;
+ 	vdeb->ved.dev = vimc->mdev.dev;
+ 	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
++	atomic_set(&vdeb->use_count, 0);
+ 
+ 	/* Initialize the frame format */
+ 	vdeb->sink_fmt = sink_fmt_default;
+diff --git a/drivers/media/test-drivers/vimc/vimc-scaler.c b/drivers/media/test-drivers/vimc/vimc-scaler.c
+index 121fa7d62a2e..9b8458dbe57c 100644
+--- a/drivers/media/test-drivers/vimc/vimc-scaler.c
++++ b/drivers/media/test-drivers/vimc/vimc-scaler.c
+@@ -25,6 +25,7 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+ struct vimc_sca_device {
+ 	struct vimc_ent_device ved;
+ 	struct v4l2_subdev sd;
++	atomic_t use_count;
+ 	/* NOTE: the source fmt is the same as the sink
+ 	 * with the width and hight multiplied by mult
+ 	 */
+@@ -340,6 +341,9 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
+ 
++		if (atomic_inc_return(&vsca->use_count) != 1)
++			return 0;
 +
-+/* Begin/end of an instrumentation safe region */
-+#define instrumentation_begin() ({					\
-+	asm volatile("%c0: nop\n\t"						\
-+		     ".pushsection .discard.instr_begin\n\t"		\
-+		     ".long %c0b - .\n\t"				\
-+		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-+})
+ 		if (vsca->src_frame)
+ 			return 0;
+ 
+@@ -363,6 +367,9 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+ 			return -ENOMEM;
+ 
+ 	} else {
++		if (atomic_dec_return(&vsca->use_count) != 0)
++			return 0;
 +
-+/*
-+ * Because instrumentation_{begin,end}() can nest, objtool validation considers
-+ * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
-+ * When the value is greater than 0, we consider instrumentation allowed.
-+ *
-+ * There is a problem with code like:
-+ *
-+ * noinstr void foo()
-+ * {
-+ *	instrumentation_begin();
-+ *	...
-+ *	if (cond) {
-+ *		instrumentation_begin();
-+ *		...
-+ *		instrumentation_end();
-+ *	}
-+ *	bar();
-+ *	instrumentation_end();
-+ * }
-+ *
-+ * If instrumentation_end() would be an empty label, like all the other
-+ * annotations, the inner _end(), which is at the end of a conditional block,
-+ * would land on the instruction after the block.
-+ *
-+ * If we then consider the sum of the !cond path, we'll see that the call to
-+ * bar() is with a 0-value, even though, we meant it to happen with a positive
-+ * value.
-+ *
-+ * To avoid this, have _end() be a NOP instruction, this ensures it will be
-+ * part of the condition block and does not escape.
-+ */
-+#define instrumentation_end() ({					\
-+	asm volatile("%c0: nop\n\t"					\
-+		     ".pushsection .discard.instr_end\n\t"		\
-+		     ".long %c0b - .\n\t"				\
-+		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-+})
-+#else
-+# define instrumentation_begin()	do { } while(0)
-+# define instrumentation_end()		do { } while(0)
-+#endif
+ 		if (!vsca->src_frame)
+ 			return 0;
+ 
+@@ -506,6 +513,7 @@ static struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
+ 
+ 	vsca->ved.process_frame = vimc_sca_process_frame;
+ 	vsca->ved.dev = vimc->mdev.dev;
++	atomic_set(&vsca->use_count, 0);
+ 
+ 	/* Initialize the frame format */
+ 	vsca->sink_fmt = sink_fmt_default;
+diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+index ba5db5a150b4..dbe169604e71 100644
+--- a/drivers/media/test-drivers/vimc/vimc-sensor.c
++++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+@@ -24,6 +24,7 @@ struct vimc_sen_device {
+ 	struct vimc_ent_device ved;
+ 	struct v4l2_subdev sd;
+ 	struct tpg_data tpg;
++	atomic_t use_count;
+ 	u8 *frame;
+ 	enum vimc_sen_osd_mode osd_value;
+ 	u64 start_stream_ts;
+@@ -250,8 +251,10 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct vimc_pix_map *vpix;
+ 		unsigned int frame_size;
+ 
+-		vsen->start_stream_ts = ktime_get_ns();
++		if (atomic_inc_return(&vsen->use_count) != 1)
++			return 0;
+ 
++		vsen->start_stream_ts = ktime_get_ns();
+ 		/* Calculate the frame size */
+ 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+ 		frame_size = vsen->mbus_format.width * vpix->bpp *
+@@ -270,6 +273,9 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+ 
+ 	} else {
+ 
++		if (atomic_dec_return(&vsen->use_count) != 0)
++			return 0;
 +
-+#endif /* __LINUX_INSTRUMENTATION_H */
+ 		vfree(vsen->frame);
+ 		vsen->frame = NULL;
+ 	}
+@@ -430,6 +436,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+ 
+ 	vsen->ved.process_frame = vimc_sen_process_frame;
+ 	vsen->ved.dev = vimc->mdev.dev;
++	atomic_set(&vsen->use_count, 0);
+ 
+ 	/* Initialize the frame format */
+ 	vsen->mbus_format = fmt_default;
+-- 
+2.17.1
+
