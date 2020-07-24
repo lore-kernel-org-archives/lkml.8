@@ -2,39 +2,40 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1103EC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78900C433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF2C20768
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A27C20786
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgGXK4L (ORCPT
+        id S1728040AbgGXK4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:56:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6908 "EHLO mga03.intel.com"
+        Fri, 24 Jul 2020 06:56:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6930 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgGXK4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:56:11 -0400
-IronPort-SDR: 9L1TGkqDiJZDjwESrL5beZ8CA2jFxy40TSiiqXXNI6abRbYmgN/nraxvPNslXYsYlvEEw0+ivb
- Kuw34WTHJL2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150675010"
+        id S1727951AbgGXK41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:56:27 -0400
+IronPort-SDR: vLjjukb/WZQX2ZFqIFmUqkrTT7vPahKJ+IzpxV/wCdyP/OwuCvpqyaAMgsVdKIDSbtdPoCHmNE
+ ZYP3wA7NKjxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150675038"
 X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="150675010"
+   d="scan'208";a="150675038"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 03:56:10 -0700
-IronPort-SDR: 2tisJ6WPrHiElX4vifb4Xa+qD7K0tawdKTHfz5RL1+5+CZdqOn4YpC7SW6EmyCm1/+1fJj5g/6
- 5DLjkbgOcpaw==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 03:56:26 -0700
+IronPort-SDR: /TqMvD0Rt+1TKZU3Mx6Fa7HyxgsyQpcQQeyxLuBcabtJhWtP9GD5hDzwaSpP4hSpK76JfwY1U6
+ sMDEQ+MWC4/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="284901497"
+   d="scan'208";a="284901581"
 Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 03:56:07 -0700
+  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 03:56:23 -0700
 From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
 Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
@@ -43,81 +44,150 @@ Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
         fiona.trahe@intel.com, qat-linux@intel.com, kvm@vger.kernel.org,
         linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: [PATCH v5 0/5] vfio/pci: add denylist and disable qat
-Date:   Fri, 24 Jul 2020 11:55:55 +0100
-Message-Id: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 5/5] crypto: qat - use PCI_VDEVICE
+Date:   Fri, 24 Jul 2020 11:56:00 +0100
+Message-Id: <20200724105600.10814-6-giovanni.cabiddu@intel.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
+References: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset defines a denylist of devices in the vfio-pci module and adds
-the current generation of Intel(R) QuickAssist devices to it as they are
-not designed to run in an untrusted environment.
+Build pci_device_id structure using the PCI_VDEVICE macro.
+This removes any references to the ADF_SYSTEM_DEVICE macro.
 
-By default, if a device is in the denylist, the probe of vfio-pci fails.
-If a user wants to use a device in the denylist, he needs to disable the
-full denylist providing the option disable_denylist=1 at the load of
-vfio-pci or specifying that parameter in a config file in /etc/modprobe.d.
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Reviewed-by: Fiona Trahe <fiona.trahe@intel.com>
+---
+ drivers/crypto/qat/qat_c3xxx/adf_drv.c      | 7 ++-----
+ drivers/crypto/qat/qat_c3xxxvf/adf_drv.c    | 7 ++-----
+ drivers/crypto/qat/qat_c62x/adf_drv.c       | 7 ++-----
+ drivers/crypto/qat/qat_c62xvf/adf_drv.c     | 7 ++-----
+ drivers/crypto/qat/qat_dh895xcc/adf_drv.c   | 7 ++-----
+ drivers/crypto/qat/qat_dh895xccvf/adf_drv.c | 7 ++-----
+ 6 files changed, 12 insertions(+), 30 deletions(-)
 
-This series also moves the device ids definitions present in the qat driver
-to linux/pci_ids.h since they will be shared between the vfio-pci and the qat
-drivers and replaces the custom ADF_SYSTEM_DEVICE macro with PCI_VDEVICE.
-
-The series is applicable to Herbert's tree. Patches 1 to 3 apply also to
-Alex's tree (next). Patches 4 and 5 are optional and can be applied at a later
-stage.
-
-Changes from v4:
- - Patch #2: added Reviewed-by tag from Cornelia Huck
- - Patch #5: added Suggested-by tag as this change was suggested internally
-   by Andy Shevchenko
- - Patches 1-5: added Reviewed-by tag from Fiona Trahe
-
-Changes from v3:
- - Patch #1: included Acked-by tag, after ack from Bjorn Helgaas
- - Patch #2: s/prevents/allows/ in module parameter description
-
-Changes from v2:
- - Renamed blocklist in denylist
- - Patch #2: reworded module parameter description to clarify why a device is
-   in the denylist
- - Patch #2: reworded warning that occurs when denylist is enabled and device
-   is present in that list
-
-Changes from v1:
- - Reworked commit messages:
-   Patches #1, #2 and #3: capitalized first character after column to comply to
-   subject line convention
-   Patch #3: Capitalized QAT acronym and added link and doc number for document
-   "Intel® QuickAssist Technology (Intel® QAT) Software for Linux"
-
-
-Giovanni Cabiddu (5):
-  PCI: Add Intel QuickAssist device IDs
-  vfio/pci: Add device denylist
-  vfio/pci: Add QAT devices to denylist
-  crypto: qat - replace device ids defines
-  crypto: qat - use PCI_VDEVICE
-
- drivers/crypto/qat/qat_c3xxx/adf_drv.c        | 11 ++---
- drivers/crypto/qat/qat_c3xxxvf/adf_drv.c      | 11 ++---
- drivers/crypto/qat/qat_c62x/adf_drv.c         | 11 ++---
- drivers/crypto/qat/qat_c62xvf/adf_drv.c       | 11 ++---
- .../crypto/qat/qat_common/adf_accel_devices.h |  6 ---
- drivers/crypto/qat/qat_common/qat_hal.c       |  7 +--
- drivers/crypto/qat/qat_common/qat_uclo.c      |  9 ++--
- drivers/crypto/qat/qat_dh895xcc/adf_drv.c     | 11 ++---
- drivers/crypto/qat/qat_dh895xccvf/adf_drv.c   | 11 ++---
- drivers/vfio/pci/vfio_pci.c                   | 48 +++++++++++++++++++
- include/linux/pci_ids.h                       |  6 +++
- 11 files changed, 87 insertions(+), 55 deletions(-)
-
+diff --git a/drivers/crypto/qat/qat_c3xxx/adf_drv.c b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
+index bba0f142f7f6..43929d70c41d 100644
+--- a/drivers/crypto/qat/qat_c3xxx/adf_drv.c
++++ b/drivers/crypto/qat/qat_c3xxx/adf_drv.c
+@@ -18,12 +18,9 @@
+ #include <adf_cfg.h>
+ #include "adf_c3xxx_hw_data.h"
+ 
+-#define ADF_SYSTEM_DEVICE(device_id) \
+-	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+-
+ static const struct pci_device_id adf_pci_tbl[] = {
+-	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX),
+-	{0,}
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C3XXX), },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 
+diff --git a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
+index b77a58886599..dca52de22e8d 100644
+--- a/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
++++ b/drivers/crypto/qat/qat_c3xxxvf/adf_drv.c
+@@ -18,12 +18,9 @@
+ #include <adf_cfg.h>
+ #include "adf_c3xxxvf_hw_data.h"
+ 
+-#define ADF_SYSTEM_DEVICE(device_id) \
+-	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+-
+ static const struct pci_device_id adf_pci_tbl[] = {
+-	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF),
+-	{0,}
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF), },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 
+diff --git a/drivers/crypto/qat/qat_c62x/adf_drv.c b/drivers/crypto/qat/qat_c62x/adf_drv.c
+index 722838ff03be..f104c9d1195d 100644
+--- a/drivers/crypto/qat/qat_c62x/adf_drv.c
++++ b/drivers/crypto/qat/qat_c62x/adf_drv.c
+@@ -18,12 +18,9 @@
+ #include <adf_cfg.h>
+ #include "adf_c62x_hw_data.h"
+ 
+-#define ADF_SYSTEM_DEVICE(device_id) \
+-	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+-
+ static const struct pci_device_id adf_pci_tbl[] = {
+-	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X),
+-	{0,}
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C62X), },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 
+diff --git a/drivers/crypto/qat/qat_c62xvf/adf_drv.c b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
+index a766cc18aae9..e0b909e70712 100644
+--- a/drivers/crypto/qat/qat_c62xvf/adf_drv.c
++++ b/drivers/crypto/qat/qat_c62xvf/adf_drv.c
+@@ -18,12 +18,9 @@
+ #include <adf_cfg.h>
+ #include "adf_c62xvf_hw_data.h"
+ 
+-#define ADF_SYSTEM_DEVICE(device_id) \
+-	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+-
+ static const struct pci_device_id adf_pci_tbl[] = {
+-	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_C62X_VF),
+-	{0,}
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_C62X_VF), },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 
+diff --git a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
+index 4c3aea07f444..857aa4c8595f 100644
+--- a/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
++++ b/drivers/crypto/qat/qat_dh895xcc/adf_drv.c
+@@ -18,12 +18,9 @@
+ #include <adf_cfg.h>
+ #include "adf_dh895xcc_hw_data.h"
+ 
+-#define ADF_SYSTEM_DEVICE(device_id) \
+-	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+-
+ static const struct pci_device_id adf_pci_tbl[] = {
+-	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC),
+-	{0,}
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_DH895XCC), },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 
+diff --git a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
+index 673348ca5dea..2987855a70dc 100644
+--- a/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
++++ b/drivers/crypto/qat/qat_dh895xccvf/adf_drv.c
+@@ -18,12 +18,9 @@
+ #include <adf_cfg.h>
+ #include "adf_dh895xccvf_hw_data.h"
+ 
+-#define ADF_SYSTEM_DEVICE(device_id) \
+-	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+-
+ static const struct pci_device_id adf_pci_tbl[] = {
+-	ADF_SYSTEM_DEVICE(PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF),
+-	{0,}
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF), },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, adf_pci_tbl);
+ 
 -- 
 2.26.2
 
