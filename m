@@ -2,164 +2,242 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D72C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED99C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB2720674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2835720674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pa3+JDDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgGXQIy (ORCPT
+        id S1728612AbgGXQI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 24 Jul 2020 12:08:59 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:62326 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728571AbgGXQIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jul 2020 12:08:54 -0400
-Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgGXQE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:26 -0400
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595606934; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=ew/1aDgJztRZZkRl53dYc63lZkOEDsOC0G9ZO2AzXIQ=; b=Pa3+JDDZriT7t5y/dALwkZLMldQ1Ym3O4AzlBDI4S03Vni7r29oijQ71kebpuf2ftrKWUjXt
+ ORNSt9mpkUiL2EIEA3rGnI+3Mkl7ZVnBQbfUmzFylBSllrH2pm/VCk4Yp0Jln4FKF9/A+bhQ
+ MW7iSMzhVT+zL89HLVLc2rzpCvM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f1b0792845c4d05a323cff3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:08:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 57233C433B1; Fri, 24 Jul 2020 16:08:50 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 1B486FBC;
-        Fri, 24 Jul 2020 18:04:16 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 35/75] x86/head/64: Load IDT earlier
-Date:   Fri, 24 Jul 2020 18:02:56 +0200
-Message-Id: <20200724160336.5435-36-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6EB79C433B2;
+        Fri, 24 Jul 2020 16:08:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6EB79C433B2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v5 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
+Date:   Fri, 24 Jul 2020 21:37:56 +0530
+Message-Id: <1595606878-2664-3-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
+References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
+properties that are needed in a device tree. Also add clock ids for GCC
+LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
 
-Load the IDT right after switching to virtual addresses in head_64.S
-so that the kernel can handle #VC exceptions.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
- arch/x86/include/asm/setup.h |  3 +++
- arch/x86/kernel/head64.c     |  3 +++
- arch/x86/kernel/head_64.S    |  5 +++++
- arch/x86/kernel/idt.c        | 23 +++++++++++++++++++++++
- 4 files changed, 34 insertions(+)
+ .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 102 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-sc7180.h        |   1 +
+ .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    |  29 ++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+ create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
 
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 8aa6ba0427b0..5c09f50ecf1c 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -50,6 +50,8 @@ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp
- extern unsigned long __startup_secondary_64(void);
- extern void startup_64_setup_env(unsigned long physbase);
- extern int early_make_pgtable(unsigned long address);
-+extern void early_idt_setup_early_handler(unsigned long physaddr);
-+extern void early_load_idt(void);
- 
- #ifdef CONFIG_X86_INTEL_MID
- extern void x86_intel_mid_early_setup(void);
-@@ -66,6 +68,7 @@ static inline void x86_ce4100_early_setup(void) { }
- #ifndef _SETUP
- 
- #include <asm/espfix.h>
-+#include <asm/sections.h>
- #include <linux/kernel.h>
- 
- /*
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 8703292a35e9..096b09d06d1c 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -286,6 +286,9 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 		}
- 	}
- 
-+	/* Setup IDT with early handlers */
-+	early_idt_setup_early_handler(physaddr);
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+new file mode 100644
+index 0000000..a838250
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	/*
- 	 * Return the SME encryption mask (if SME is active) to be used as a
- 	 * modifier for the initial pgdir entry programmed into CR3.
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index a5e1939d1dc9..28de83fecda3 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -206,6 +206,11 @@ SYM_CODE_START(secondary_startup_64)
- 	 */
- 	movq initial_stack(%rip), %rsp
- 
-+	/* Load IDT */
-+	pushq	%rsi
-+	call	early_load_idt
-+	popq	%rsi
++title: Qualcomm LPASS Core Clock Controller Binding for SC7180
 +
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index c19773174221..e2777cc264f5 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -10,6 +10,7 @@
- #include <asm/proto.h>
- #include <asm/desc.h>
- #include <asm/hw_irq.h>
-+#include <asm/setup.h>
- 
- struct idt_data {
- 	unsigned int	vector;
-@@ -385,3 +386,25 @@ void __init alloc_intr_gate(unsigned int n, const void *addr)
- 	if (!WARN_ON(test_and_set_bit(n, system_vectors)))
- 		set_intr_gate(n, addr);
- }
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
 +
-+void __init early_idt_setup_early_handler(unsigned long physaddr)
-+{
-+	gate_desc *idt;
-+	int i;
++description: |
++  Qualcomm LPASS core clock control module which supports the clocks and
++  power domains on SC7180.
 +
-+	idt = fixup_pointer(idt_table, physaddr);
++  See also:
++  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
 +
-+	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
-+		struct idt_data data;
-+		gate_desc desc;
++properties:
++  compatible:
++    enum:
++      - qcom,sc7180-lpasshm
++      - qcom,sc7180-lpasscorecc
 +
-+		init_idt_data(&data, i, early_idt_handler_array[i]);
-+		idt_init_desc(&desc, &data);
-+		native_write_idt_entry(idt, i, &desc);
-+	}
-+}
++  clocks:
++    items:
++      - description: gcc_lpass_sway clock from GCC
 +
-+void early_load_idt(void)
-+{
-+	load_idt(&idt_descr);
-+}
--- 
-2.27.0
++  clock-names:
++    items:
++      - const: iface
++
++  power-domains:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    minItems: 1
++    items:
++      - description: lpass core cc register
++      - description: lpass audio cc register
++
++  reg-names:
++    items:
++      - const: lpass_core_cc
++      - const: lpass_audio_cc
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: qcom,sc7180-lpasshm
++then:
++  properties:
++    reg:
++      maxItems: 1
++
++else:
++  properties:
++    reg:
++      minItems: 2
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#power-domain-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
++    clock-controller@63000000 {
++      compatible = "qcom,sc7180-lpasshm";
++      reg = <0x63000000 0x28>;
++      clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
++      clock-names = "iface";
++      #clock-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++
++  - |
++    clock-controller@62d00000 {
++      compatible = "qcom,sc7180-lpasscorecc";
++      reg = <0x62d00000 0x50000>, <0x62780000 0x30000>;
++      reg-names = "lpass_core_cc", "lpass_audio_cc";
++      clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
++      clock-names = "iface";
++      power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
++      #clock-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+index 992b67b..bdf43adc 100644
+--- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
++++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+@@ -138,6 +138,7 @@
+ #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
+ #define GCC_MSS_SNOC_AXI_CLK					129
+ #define GCC_SEC_CTRL_CLK_SRC					130
++#define GCC_LPASS_CFG_NOC_SWAY_CLK				131
+
+ /* GCC resets */
+ #define GCC_QUSB2PHY_PRIM_BCR					0
+diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+new file mode 100644
+index 0000000..a55d01d
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
++#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
++
++/* LPASS_CORE_CC clocks */
++#define LPASS_LPAAUDIO_DIG_PLL				0
++#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
++#define CORE_CLK_SRC					2
++#define EXT_MCLK0_CLK_SRC				3
++#define LPAIF_PRI_CLK_SRC				4
++#define LPAIF_SEC_CLK_SRC				5
++#define LPASS_AUDIO_CORE_CORE_CLK			6
++#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
++#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
++#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
++#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
++
++/* LPASS Core power domains */
++#define LPASS_CORE_HM_GDSCR				0
++
++/* LPASS Audio power domains */
++#define LPASS_AUDIO_HM_GDSCR				0
++#define LPASS_PDC_HM_GDSCR				1
++
++#endif
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
