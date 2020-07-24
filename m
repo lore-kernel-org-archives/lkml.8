@@ -2,86 +2,135 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CDBC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A271C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F36206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA736206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="M/PUXsLP"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Bm1jrdFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgGXUIH (ORCPT
+        id S1726814AbgGXUIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXUIH (ORCPT
+        Fri, 24 Jul 2020 16:08:12 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46834 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726381AbgGXUIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 16:08:07 -0400
-Received: from forward500o.mail.yandex.net (forward500o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::610])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F568C0619D3;
-        Fri, 24 Jul 2020 13:08:07 -0700 (PDT)
-Received: from mxback5o.mail.yandex.net (mxback5o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::1f])
-        by forward500o.mail.yandex.net (Yandex) with ESMTP id 3A4CD60153;
-        Fri, 24 Jul 2020 23:08:03 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback5o.mail.yandex.net (mxback/Yandex) with ESMTP id 5fFSXZVXpp-82RmFQZQ;
-        Fri, 24 Jul 2020 23:08:02 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1595621282;
-        bh=m2BanQAPl69vRg18tTrq/938FSkS17kTikJwpIpVrUM=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=M/PUXsLP+lUs7DO8C50LfiUKM3ttQZKL0NvefnDa02DzdYpudYOguaf9HpnVDk682
-         cys3JqbfQWB50XohGatwOYcp2diDsfY3u7i19Bvw+nB7lopKC/JnJbdF386PpNzAwJ
-         nV9sQID/QnKZ2jvWAnQPunMeyR7rIOIjq54M5X3Q=
-Authentication-Results: mxback5o.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by sas8-b090c2642e35.qloud-c.yandex.net with HTTP;
-        Fri, 24 Jul 2020 23:08:02 +0300
-From:   Evgeny Novikov <novikov@ispras.ru>
-Envelope-From: eugenenovikov@yandex.ru
-To:     Markus Elfring <markus.elfring@web.de>,
-        "ldv-project@linuxtesting.org" <ldv-project@linuxtesting.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>
-In-Reply-To: <b179ad63-b895-39f7-dc18-23636f77e1e4@web.de>
-References: <b179ad63-b895-39f7-dc18-23636f77e1e4@web.de>
-Subject: Re: [PATCH] media: davinci: vpif_capture: fix potential double free
+        Fri, 24 Jul 2020 16:08:12 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OJmBlO012337
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:08:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=Iuyw+uQSv2oOg1S+YzvxSbjoeQJp7NxGe48GJfiuYmI=;
+ b=Bm1jrdFy85qpCEI6GkTCU1gQ5fmoj62yrN99LiHVthkiH4zEEWiBm3mNsJNPO7hlVQaw
+ 0whxlUFNW2Nliy2zb9qjB6lMKgxA28Jr08eVlVzRbd7lj3u70yNOq18nbyPehNBs4rL+
+ HBsyMDMB8rvjLwyfILpnbvRYVL88OO/CvIA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32et5m3n1q-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:08:11 -0700
+Received: from intmgw005.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 24 Jul 2020 13:08:08 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 6603662E4E74; Fri, 24 Jul 2020 13:05:47 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>,
+        <brouer@redhat.com>, Song Liu <songliubraving@fb.com>,
+        kernel test robot <lkp@intel.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH bpf-next] bpf: fix build on architectures with special bpf_user_pt_regs_t
+Date:   Fri, 24 Jul 2020 13:05:02 -0700
+Message-ID: <20200724200503.3629591-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Fri, 24 Jul 2020 23:08:02 +0300
-Message-Id: <236161595621028@mail.yandex.ru>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_09:2020-07-24,2020-07-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ impostorscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 bulkscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007240140
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+Architectures like s390, powerpc, arm64, riscv have speical definition of
+bpf_user_pt_regs_t. So we need to cast the pointer before passing it to
+bpf_get_stack(). This is similar to bpf_get_stack_tp().
 
-It seems that Lad Prabhakar detected a critical issue introduced by the patch instead of a minor bug fixed by it. So, we should take care of this first, but I will address your notes as well. 
+Fixes: 03d42fd2d83f ("bpf: Separate bpf_get_[stack|stackid] for perf even=
+ts BPF")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ kernel/bpf/stackmap.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
--- 
-Evgeny Novikov
-Linux Verification Center, ISP RAS
-http://linuxtesting.org
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 5beb2f8c23da1..4fd830a62be2d 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -678,6 +678,7 @@ const struct bpf_func_proto bpf_get_task_stack_proto =
+=3D {
+ BPF_CALL_4(bpf_get_stack_pe, struct bpf_perf_event_data_kern *, ctx,
+ 	   void *, buf, u32, size, u64, flags)
+ {
++	struct pt_regs *regs =3D (struct pt_regs *)(ctx->regs);
+ 	struct perf_event *event =3D ctx->event;
+ 	struct perf_callchain_entry *trace;
+ 	bool kernel, user;
+@@ -685,7 +686,7 @@ BPF_CALL_4(bpf_get_stack_pe, struct bpf_perf_event_da=
+ta_kern *, ctx,
+ 	__u64 nr_kernel;
+=20
+ 	if (!(event->attr.sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
+-		return __bpf_get_stack(ctx->regs, NULL, NULL, buf, size, flags);
++		return __bpf_get_stack(regs, NULL, NULL, buf, size, flags);
+=20
+ 	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+ 			       BPF_F_USER_BUILD_ID)))
+@@ -705,8 +706,7 @@ BPF_CALL_4(bpf_get_stack_pe, struct bpf_perf_event_da=
+ta_kern *, ctx,
+ 		__u64 nr =3D trace->nr;
+=20
+ 		trace->nr =3D nr_kernel;
+-		err =3D __bpf_get_stack(ctx->regs, NULL, trace, buf,
+-				      size, flags);
++		err =3D __bpf_get_stack(regs, NULL, trace, buf, size, flags);
+=20
+ 		/* restore nr */
+ 		trace->nr =3D nr;
+@@ -718,8 +718,7 @@ BPF_CALL_4(bpf_get_stack_pe, struct bpf_perf_event_da=
+ta_kern *, ctx,
+ 			goto clear;
+=20
+ 		flags =3D (flags & ~BPF_F_SKIP_FIELD_MASK) | skip;
+-		err =3D __bpf_get_stack(ctx->regs, NULL, trace, buf,
+-				      size, flags);
++		err =3D __bpf_get_stack(regs, NULL, trace, buf, size, flags);
+ 	}
+ 	return err;
+=20
+--=20
+2.24.1
 
-23.07.2020, 23:15, "Markus Elfring" <markus.elfring@web.de>:
->>  In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
->>  and unregisters the V4L2 device. But then this is done again by
->>  vpif_probe() itself. The patch removes the cleaning from
->>  vpif_probe_complete().
->
-> * An imperative wording can be preferred for the change description,
->   can't it?
->
-> * Would you like to add the tag “Fixes” to the commit message?
->
-> Regards,
-> Markus
