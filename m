@@ -2,118 +2,70 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E982DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6166C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9826206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="K7XpyhQv"
+	by mail.kernel.org (Postfix) with ESMTP id 88EF0206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgGXQee (ORCPT
+        id S1726878AbgGXQfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgGXQed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:34:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C164EC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:34:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x72so5458648pfc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KxUVJu2tVsXuL6ozXtsDLOIo+4JxBbyht8pFne+rsMU=;
-        b=K7XpyhQvrenGn2Xu15vi76JcRUT9sC1liRgYcCIGd9iGI1u0NGrLkxgPuwufFBfvx0
-         I/C3wBLb9TCtHH5QjgJVmj4daBGbHavWk+DVx/3IjdtnfdkCBBhocCDJT5Rxnu8BvzeN
-         mCqzqbB59MjQsoiZzBtZ15Q/yIgmPozIOIx1SlN02Pg/DvEWOqWCyl5hsjbzqBE6K5Db
-         Fa6O+23rfJS3D1mMkhzPo+FLntzB0TbISxoiWU2HQcOpkERblpEAgh2EsVdLGDpvvtLV
-         JkZBYmpwFdV+YU9UiXZtLLkqDrlg4J1mnyx8QF6UgHCGszO1D6Kjxn3qln+FBsCEJ+pl
-         LyxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KxUVJu2tVsXuL6ozXtsDLOIo+4JxBbyht8pFne+rsMU=;
-        b=FA5Wrg3wEcMM23wpJAUaY2DW2IRtcPSkuvlJJ0XbbmJzEwIIhsfZZdmAqApfHI2uUh
-         dw8ahFIDADHSv7BVtLTSJguHMmuu4Y9XGAcZpu8bKvxYU0q6gY3Tt1gQmBzYuLc3cLFi
-         obUZH5zGvL2btFX0LHwmu8AqbZ2aZwlf5Zqk8fxQrS4Fj9PsI0fKvWQo4sJKJNsn+HRh
-         +UHTLjpbGNLLbiThirQc8fHZAfAWbxDKLz+/+ULkPnib/3wI6uaNsbziAWGlkJgwOHgK
-         B6NR8ICuse8rptCjEzLwQzVEAaa10M5DUT54Je8/em7HiIleRUeMuwks461v8ps4kxz8
-         jPhg==
-X-Gm-Message-State: AOAM533sUGiL5f9lnTyHFC31eYvQqJJxRcorEol7rTHMtfUZgDy2qngJ
-        1SORPV+kk/NUj3T/uAG+w1Rjhg==
-X-Google-Smtp-Source: ABdhPJy4sWKBDhVsVVTB4Rz+Di1yRjyZBmXNP884n02aTr/meZ8zL6S9UB8hgZlBhiOPmt1234c8iw==
-X-Received: by 2002:aa7:970a:: with SMTP id a10mr10129338pfg.319.1595608473248;
-        Fri, 24 Jul 2020 09:34:33 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id y6sm6486959pji.2.2020.07.24.09.34.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 09:34:32 -0700 (PDT)
-Subject: Re: [PATCH v4 1/6] fs: introduce FMODE_ZONE_APPEND and
- IOCB_ZONE_APPEND
-To:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org
-Cc:     willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155258epcas5p1a75b926950a18cd1e6c8e7a047e6c589@epcas5p1.samsung.com>
- <1595605762-17010-2-git-send-email-joshi.k@samsung.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <733bb8bb-cd4f-bee7-516d-359c565d11d3@kernel.dk>
-Date:   Fri, 24 Jul 2020 10:34:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 12:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbgGXQfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:35:31 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CCFA20674;
+        Fri, 24 Jul 2020 16:35:30 +0000 (UTC)
+Date:   Fri, 24 Jul 2020 12:35:28 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
+Message-ID: <20200724123528.36ea9c9e@oasis.local.home>
+In-Reply-To: <20200724161921.GA3123@ubuntu>
+References: <20200719155033.24201-1-oscar.carter@gmx.com>
+        <20200719155033.24201-3-oscar.carter@gmx.com>
+        <20200721140545.445f0258@oasis.local.home>
+        <20200724161921.GA3123@ubuntu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1595605762-17010-2-git-send-email-joshi.k@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/20 9:49 AM, Kanchan Joshi wrote:
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 6c4ab4d..ef13df4 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -175,6 +175,9 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
->  /* File does not contribute to nr_files count */
->  #define FMODE_NOACCOUNT		((__force fmode_t)0x20000000)
->  
-> +/* File can support zone-append */
-> +#define FMODE_ZONE_APPEND	((__force fmode_t)0x40000000)
+On Fri, 24 Jul 2020 18:19:21 +0200
+Oscar Carter <oscar.carter@gmx.com> wrote:
 
-This conflicts with the async buffered read support in linux-next that
-has been queued up for a long time.
+> > The linker trick is far less intrusive, and I believe less error prone.  
+> 
+> If we use the linker trick, the warning -Wcast-function-type dissapears,
+> but in a way that makes impossible to the compiler to get the necessary
+> info about function prototypes to insert the commented check. As far I
+> know, this linker trick (redirection of a function) is hidden for the
+> CFI build.
+> 
+> So, in my opinion, the linker trick is not suitable if we want to protect
+> the function pointers of the ftrace subsystem against an attack that
+> modifiy the normal flow of the kernel.
 
-> @@ -315,6 +318,7 @@ enum rw_hint {
->  #define IOCB_SYNC		(1 << 5)
->  #define IOCB_WRITE		(1 << 6)
->  #define IOCB_NOWAIT		(1 << 7)
-> +#define IOCB_ZONE_APPEND	(1 << 8)
+The linker trick should only affect architectures that don't implement
+the needed features. I can make it so the linker trick is only applied
+to those archs, and other archs that want more protection only need to
+add these features to their architectures.
 
-Ditto this one, and that also clashes with mainline. The next available
-bit would be 10, IOCB_WAITQ and IOCB_NOIO are 8 and 9.
+It's much less intrusive than this patch.
 
-
--- 
-Jens Axboe
-
+-- Steve
