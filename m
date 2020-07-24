@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2638C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841F4C433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEAEA20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A7D2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595576477;
-	bh=KiDwqvrscO65tnWPq/R2OB/B66P+AwuiFwhSifChdeU=;
+	s=default; t=1595576487;
+	bh=wSYqc6zd8XQuJxIuMyrVpPOP0RSQXvA79nPZgRDW0wY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Iu8+HQTOv6n8WhKGO5YvGWv+sanbuaUXrwyikb3u87y176WuUdisFGge7TbqYoLa
-	 37Vt99mxtHvO+RPNSeDy4neeSI49uLSnBpuw+TOWaqmm5+K2KxR6xxVigs/arLgXq+
-	 G+ceLmLNFHs95Ec7GT/OdFZJl2oEySOxsfl83hpY=
+	b=Obhwk2JWagD8OTsehDWwTB4VpSjfKbmVgiABZk/CVT34O5gQ4jIyaj8P3PAQivzdg
+	 R/zZx3tMr/lbhIBzOI5NwiGe4dKUfB70krZLRFHxe/UMw/CjGc1dp15RXT19BDHp6R
+	 5PUcjSXhOaCLZ6M5M6Y9caIcjRfiwCg9o0AXgrSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgGXHlQ (ORCPT
+        id S1727109AbgGXHl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:41:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34478 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 03:41:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbgGXHlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:41:15 -0400
+        id S1726567AbgGXHlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:41:24 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FE9B2076A;
-        Fri, 24 Jul 2020 07:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E8BD20771;
+        Fri, 24 Jul 2020 07:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595576474;
-        bh=KiDwqvrscO65tnWPq/R2OB/B66P+AwuiFwhSifChdeU=;
+        s=default; t=1595576484;
+        bh=wSYqc6zd8XQuJxIuMyrVpPOP0RSQXvA79nPZgRDW0wY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/rBikX2msY/5l648B45mYjYFJEWzKwO4gggRv1+ATKEAM8Gt4IQ+pRCzXOquN3Qq
-         JrJ1gzK66YYv/Sj/kiGpiO4YPWLK6lgzvnGE/S6bpDYZ0G4/PqbW1stqrhvIMxO8qx
-         CvoTXNWwmtzbE80yzXs6XfUW4aSl4z3rWSt5Vg/c=
+        b=hpUncPWGDzGoTP9/S2oyMfSCw/TYT02lgI76NR/YUshrNZFMTJzujixw8UNVu6xUs
+         2NE+SHzUZrcyiIp8mZ5zjDgiwM0lsQJjOtwg8ldIG17ipxcYGaWmkA9gw0n8C8Ke5M
+         G68wajafmJUgFaD8IvXuzjODVgYyWlNjxYE9wFWo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -58,39 +58,46 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT v2 01/29] memory: omap-gpmc: Remove unneeded asm/mach-types.h inclusion
-Date:   Fri, 24 Jul 2020 09:40:10 +0200
-Message-Id: <20200724074038.5597-2-krzk@kernel.org>
+Subject: [PATCH v2 03/29] memory: omap-gpmc: Include <linux/sizes.h> for SZ_16M
+Date:   Fri, 24 Jul 2020 09:40:12 +0200
+Message-Id: <20200724074038.5597-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724074038.5597-1-krzk@kernel.org>
 References: <20200724074038.5597-1-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver does not use macros from asm/mach-types.h (neither MACH_TYPE
-nor machine_is_xxx()).  Removal of this include allows compile testing
-on non-ARM architectures which lack this header.
+The driver uses SZ_16M which is defined in include/linux/sizes.h.  On
+ARM it was pulled by other headers but its inclusion is necessary for
+compile testing on other architectures.
+
+This fixes build error when compile testing on i386 architecture:
+
+    drivers/memory/omap-gpmc.c: In function ‘gpmc_cs_remap’:
+    drivers/memory/omap-gpmc.c:961:12: error: ‘SZ_16M’ undeclared (first use in this function)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/memory/omap-gpmc.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/memory/omap-gpmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index eff26c1b1394..fc08b5292932 100644
+index 8ec2ef2aebdd..c158b6cae9a9 100644
 --- a/drivers/memory/omap-gpmc.c
 +++ b/drivers/memory/omap-gpmc.c
-@@ -32,8 +32,6 @@
+@@ -29,6 +29,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/omap-gpmc.h>
+ #include <linux/pm_runtime.h>
++#include <linux/sizes.h>
  
  #include <linux/platform_data/mtd-nand-omap2.h>
  
--#include <asm/mach-types.h>
--
- #define	DEVICE_NAME		"omap-gpmc"
- 
- /* GPMC register offsets */
 -- 
 2.17.1
 
