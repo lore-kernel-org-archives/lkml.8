@@ -2,143 +2,108 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E77C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5800A2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5945206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hlvVCqDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgGXKuM (ORCPT
+        id S1727811AbgGXKul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:50:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:60134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbgGXKuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:50:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EA5830E;
-        Fri, 24 Jul 2020 03:50:11 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61A6B3F66E;
-        Fri, 24 Jul 2020 03:50:09 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 11:50:07 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] sched/uclamp: Fix a deadlock when enabling uclamp
- static key
-Message-ID: <20200724105006.g42lu4a4g6pvusl4@e107158-lin.cambridge.arm.com>
-References: <20200716110347.19553-1-qais.yousef@arm.com>
- <20200716110347.19553-4-qais.yousef@arm.com>
- <20200724091244.GX10769@hirez.programming.kicks-ass.net>
- <20200724094650.hgya5j7i7lbhrocy@e107158-lin.cambridge.arm.com>
- <20200724104120.GY10769@hirez.programming.kicks-ass.net>
+        Fri, 24 Jul 2020 06:50:41 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:21255 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgGXKul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:50:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595587840; x=1627123840;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Cjr/7u8Jt+g43O7HIK5/mtqne7V97GTeq84I0iqVAyA=;
+  b=hlvVCqDRzZtiX1z2ku06iJlUf6TYOHpD65Euzp7RXa8D7zEdyE9PKEpT
+   FUC1dBXoXvwLzQCHwBQSi/7mAgWftzCPDjdjGLeO4wqShl8bOAiZz6uNN
+   EnlIzrAoYVgDfZuW4FeYseivcG715u+syOAozDxxwKALBDSgqeWAar32V
+   M9ASAHDk9WK8XZmi+8rpLmCrmaMIkPZPX6aGSPoPT/Jak/fWgU58A8MhR
+   1axXpVRQYD96fbxwGjmmSB6rVrAH4ucD9cg84Qvstva2lDO9EI5Tn3YrD
+   RTWGYRmFLk+mYBiTnICy9HMPBavIQ/UEQuTD/Q4mQJr3zzW3+nSw+0V6t
+   w==;
+IronPort-SDR: Pm4IvCKiSg3ZSJ/8dcjM5M+TLfCkbchDw56GMxBVvpCg5r0rdbPyrRkqOcqQaQcNA3G6eGZQL4
+ 3nVwr8MyspQAgqqWOGs51HChOEqTVdz6XgomyBKhHdreoJkzZEQJOKt4Xr67yEaDQDKYKta8Je
+ QDzC2roOJyM2rClgZpEElxZAysXtk02tnqrh04aXcJ1BXSWqWp+LRYOBG1vV73QsA6f8S/WGzb
+ MYBmosfbRjOKoBCniRYmDySOH1PuUOUQCprmRZIrhz+qq8TFRsmktnTzcFYzVAwF17H1tONTvB
+ 2Qc=
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="85236913"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 03:50:40 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 24 Jul 2020 03:50:40 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 03:49:55 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>,
+        <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
+Subject: [PATCH net-next v3 0/7] Add an MDIO sub-node under MACB
+Date:   Fri, 24 Jul 2020 13:50:26 +0300
+Message-ID: <20200724105033.2124881-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724104120.GY10769@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/24/20 12:41, Peter Zijlstra wrote:
-> On Fri, Jul 24, 2020 at 10:46:50AM +0100, Qais Yousef wrote:
-> > On 07/24/20 11:12, Peter Zijlstra wrote:
-> > > On Thu, Jul 16, 2020 at 12:03:47PM +0100, Qais Yousef wrote:
-> > > 
-> > > I've trimmed the Changelog to read like:
-> > 
-> > +1
-> > 
-> > Should we mention the ordering issue too? Or maybe I misinterpreted the
-> > 'Possible unsafe locking scenario' part?
-> 
-> The lock inversion was, imo, secondary. It only existed because of the
-> impossible lock ordering -- taking a blocking lock inside an atomic
-> lock. Fixing the first, avoids the second etc.. So I left it out.
-> 
-> > This should work, but you'll need to sprinkle ifdef around the key. Or move it
-> > to uclamp_validate()
-> 
-> Indeed, the patch now reads like:
+Changes in v3:
+ - in patch 3/7, moved the checking for mdio node at the beginning of
+   the macb_mdiobus_register(). This allows to probe the MDIO devices
+   even if macb is a fixed-link
+ - added tags received on v2
 
-Maybe s/deadlock/splat/ in the subject now? I clearly focused on the secondary
-thing..
+Changes in v2:
+ - renamed patch 2/7 from "macb: bindings doc: use an MDIO node as a
+   container for PHY nodes" to "dt-bindings: net: macb: use an MDIO
+   node as a container for PHY nodes"
+ - added back a newline removed by mistake in patch 3/7
 
-Sorry you had to modify the patch that much yourself.
+Codrin Ciubotariu (7):
+  net: macb: use device-managed devm_mdiobus_alloc()
+  dt-bindings: net: macb: use an MDIO node as a container for PHY nodes
+  net: macb: parse PHY nodes found under an MDIO node
+  ARM: dts: at91: sama5d2: add an mdio sub-node to macb
+  ARM: dts: at91: sama5d3: add an mdio sub-node to macb
+  ARM: dts: at91: sama5d4: add an mdio sub-node to macb
+  ARM: dts: at91: sam9x60: add an mdio sub-node to macb
 
-Thanks!
+ Documentation/devicetree/bindings/net/macb.txt | 15 ++++++++++++---
+ arch/arm/boot/dts/at91-sam9x60ek.dts           |  8 ++++++--
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi      | 16 ++++++++++------
+ arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi    | 17 ++++++++++-------
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts      | 13 ++++++++-----
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts    | 12 ++++++++----
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts    | 16 ++++++++++++----
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts    | 12 ++++++++----
+ drivers/net/ethernet/cadence/macb_main.c       | 18 ++++++++++++------
+ 9 files changed, 86 insertions(+), 41 deletions(-)
 
---
-Qais Yousef
+-- 
+2.25.1
 
-> 
-> ---
-> Subject: sched/uclamp: Fix a deadlock when enabling uclamp static key
-> From: Qais Yousef <qais.yousef@arm.com>
-> Date: Thu, 16 Jul 2020 12:03:47 +0100
-> 
-> From: Qais Yousef <qais.yousef@arm.com>
-> 
-> The following splat was caught when setting uclamp value of a task:
-> 
->   BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
-> 
->    cpus_read_lock+0x68/0x130
->    static_key_enable+0x1c/0x38
->    __sched_setscheduler+0x900/0xad8
-> 
-> Fix by ensuring we enable the key outside of the critical section in
-> __sched_setscheduler()
-> 
-> Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20200716110347.19553-4-qais.yousef@arm.com
-> ---
->  kernel/sched/core.c |   11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1252,6 +1252,15 @@ static int uclamp_validate(struct task_s
->  	if (upper_bound > SCHED_CAPACITY_SCALE)
->  		return -EINVAL;
->  
-> +	/*
-> +	 * We have valid uclamp attributes; make sure uclamp is enabled.
-> +	 *
-> +	 * We need to do that here, because enabling static branches is a
-> +	 * blocking operation which obviously cannot be done while holding
-> +	 * scheduler locks.
-> +	 */
-> +	static_branch_enable(&sched_uclamp_used);
-> +
->  	return 0;
->  }
->  
-> @@ -1282,8 +1291,6 @@ static void __setscheduler_uclamp(struct
->  	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
->  		return;
->  
-> -	static_branch_enable(&sched_uclamp_used);
-> -
->  	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
->  		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
->  			      attr->sched_util_min, true);
