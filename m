@@ -2,130 +2,162 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F20C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9FD2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A7F2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiEu5S/7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="clbtUx0h";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WajytSjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgGXOst (ORCPT
+        id S1726711AbgGXOtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGXOss (ORCPT
+        Fri, 24 Jul 2020 10:49:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38630 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGXOtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:48:48 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577D9C0619D3;
-        Fri, 24 Jul 2020 07:48:48 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q3so7415430ilt.8;
-        Fri, 24 Jul 2020 07:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=AfTbl+xYnSMnr2dDiDoDcPiQOlraklTTHYcmYhyUnOg=;
-        b=HiEu5S/7+v33uYgp7Yy4N5KJQWU46qvkheSu4OxEeyWGCGYKoVn3tYCw/URpePmCWC
-         P9Sc1Gyf897uYvdoecbrMUInjQs434jXcvWwiePIajv6zsSJS0Gx7Sp/vsZYwwLuvoJH
-         1jhvHxLj/aGt0gkuLefzXVW3as5pCUp8ZNcj9aReIDN5rrLX2k2AkM43pgw1wcqNYZcz
-         7rOzxbYJQJ67iP3ybkxtLhG12iLJfmWhN8AJ6ugufemno1ihbWP6Mlq4lVG+FTwdob6A
-         YjFfkI9ju2+jtYo1fKPz/EPuAodonpTCxmqwJqYtqNAHCiOlHjR7VEHidlMhrEgkFmZK
-         GrgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=AfTbl+xYnSMnr2dDiDoDcPiQOlraklTTHYcmYhyUnOg=;
-        b=YEVvdvfgX+yIZNoenfP/9XkbheoIibMxasJ9toLaFpACfxPSEl/rAXXYNd30EXGyxM
-         WfOUXwUNhXNPOQ3wb72FmgVN8nMQXRXPlpanWFiHQ8cW750hJUJQQJ5Ro2ky8tmiVHh8
-         OwppjQCxR/gszb6ZuW30lAqAeX+e0gbP85D5ddhYdf2E20KHj+qOnltLDSskoLQlQipT
-         vnBnHk/vCuNXGP9odnX8QrRv474dYofuae6wQLRfouK5zKBH7S/GfhggngAXBQ9jUmV3
-         3jHP9N6vBkUFLIVgIa5y+BX6cwmpBwOXNFTr/hXveAg1A96MaDvZzpvA4E2kOHdS2dSO
-         jVpQ==
-X-Gm-Message-State: AOAM530CFYNtL3Wf+Mx6TxHZIhJXpMHpgevg9DtM6Q8feD3/3l0SLXIH
-        6Pt0msP7Yz8F5nE2myibvtkrpET/Tjo90ovs8UY=
-X-Google-Smtp-Source: ABdhPJx82953GvUn4UMlNxBZ/swHYEqZz9F+hAPkCEURlD4RRr7tkUILpIDrIiYQ7XzxxZ6AHYDXKwM/tq9Zc9iXYkc=
-X-Received: by 2002:a92:290a:: with SMTP id l10mr11127609ilg.204.1595602127620;
- Fri, 24 Jul 2020 07:48:47 -0700 (PDT)
+        Fri, 24 Jul 2020 10:49:35 -0400
+Date:   Fri, 24 Jul 2020 14:49:31 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595602172;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ATbl/u2dQd6EcdjMgMGONSkJ4CS692XiOwgztKaON3M=;
+        b=clbtUx0hlCrQdk2PKdbJClsolg1tHf/VXG1GdlIUgSQAx7UdiiFmcnDRklCBd5uTQSJNQn
+        HsiggVHuxqg+nc/iUJDVER5fMS1kJKCJP73rddogUxYZdo+imIRo0ZHaWREGu14/yUfcde
+        qTFlDacWnEQ/rf74NrWF2veBvopWkF9QTIcl+MDOhu01Xk4UcTahVTPCWsUWF0AVcJbMW4
+        Py1zfH7TEZqTvJW9UxS9HozJMozXC6P3naDNIXgpuJcwHiFadlPrUqwo/xU9wJoHJXnMFO
+        WH/+7MEeNwSKukSjBB45y3uGwAptxwwiwydwXXDXFdclPKDpifr9a9LD/Pah/w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595602172;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ATbl/u2dQd6EcdjMgMGONSkJ4CS692XiOwgztKaON3M=;
+        b=WajytSjcaoah4Enu+w4hrunUlJay7XOAHGhMBcn8OR3Ou4sYABUgLYcUUhTPLYOurt0Z3J
+        DAFMaTKxc7IharAg==
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] x86/build: Move max-page-size option to LDFLAGS_vmlinux
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200722184334.3785418-1-nivedita@alum.mit.edu>
+References: <20200722184334.3785418-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-References: <20200723192801.351114-1-nickrterrell@gmail.com>
- <20200723192801.351114-7-nickrterrell@gmail.com> <CA+icZUWV3ANmBj08QZKBtEE38Y-iyCGGxLWtiFkdpKqkGP7ZqQ@mail.gmail.com>
- <20200724143022.GA601509@rani.riverdale.lan>
-In-Reply-To: <20200724143022.GA601509@rani.riverdale.lan>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 24 Jul 2020 16:48:36 +0200
-Message-ID: <CA+icZUWr0FBO1dpu-PPXJDSFzemoD7zniq+eQQrWXA_uGVKVAA@mail.gmail.com>
-Subject: Re: [PATCH v8 6/7] x86: Add support for ZSTD compressed kernel
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Terrell <nickrterrell@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>, Nick Terrell <terrelln@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159560217177.4006.6819251464761042205.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 4:30 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Fri, Jul 24, 2020 at 02:50:34AM +0200, Sedat Dilek wrote:
-> > On Thu, Jul 23, 2020 at 9:30 PM Nick Terrell <nickrterrell@gmail.com> wrote:
-> > >
-> > > From: Nick Terrell <terrelln@fb.com>
-> > >
-> > > * Add support for zstd compressed kernel
-> > > * Define __DISABLE_EXPORTS in misc.c
-> > > * Bump the heap size for zstd.
-> > > * Update the documentation.
-> > >
-> > > Integrates the ZSTD decompression code to the x86 pre-boot code.
-> > >
-> > > Zstandard requires slightly more memory during the kernel decompression
-> > > on x86 (192 KB vs 64 KB), and the memory usage is independent of the
-> > > window size.
-> > >
-> > > __DISABLE_EXPORTS is defined in misc.c instead of the Makefile because
-> > > kaslr.c defines __DISABLE_EXPORTS, and defining it in the Makefile gives
-> > > duplicate definition warnings.
-> > >
-> >
-> > That was reported by Arvind - feel free to add a Reported-by: ...
-> >
-> > - Sedat -
-> >
->
-> It's not necessary to add Reported-by's for problems encountered while
-> developing the series. Especially as it was my drive-by suggestion to
-> use __DISABLE_EXPORTS that introduced the issue in the first place :)
->
+The following commit has been merged into the x86/build branch of tip:
 
-It is up to you with credits.
+Commit-ID:     587af649bcc04eb016822f209a975005c0092151
+Gitweb:        https://git.kernel.org/tip/587af649bcc04eb016822f209a975005c0092151
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Wed, 22 Jul 2020 14:43:34 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 24 Jul 2020 16:39:27 +02:00
 
-> I'd have added it to the Makefile and just dropped the definition in
-> kaslr.c -- should be no reason for anything in here to use EXPORT_SYMBOL.
->
+x86/build: Move max-page-size option to LDFLAGS_vmlinux
 
-I cannot follow - this is no more needed as this was due to some of
-your local changes in kaslr.c?
+This option is only required for vmlinux on 64-bit, to enforce 2MiB
+alignment, so set it in LDFLAGS_vmlinux instead of KBUILD_LDFLAGS. Also
+drop the ld-option check: this option was added in binutils-2.18 and all
+the other places that use it already don't have the check.
 
-- Sedat -
+This reduces the size of the intermediate ELF files
+arch/x86/boot/setup.elf and arch/x86/realmode/rm/realmode.elf by about
+2MiB each. The binary versions are unchanged.
+
+Move the LDFLAGS settings to all be together and just after CFLAGS
+settings are done.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Link: https://lore.kernel.org/r/20200722184334.3785418-1-nivedita@alum.mit.edu
+---
+ arch/x86/Makefile | 32 +++++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 00e378d..1e634d7 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -47,10 +47,6 @@ export REALMODE_CFLAGS
+ # e.g.: obj-y += foo_$(BITS).o
+ export BITS
+ 
+-ifdef CONFIG_X86_NEED_RELOCS
+-        LDFLAGS_vmlinux := --emit-relocs --discard-none
+-endif
+-
+ #
+ # Prevent GCC from generating any FP code by mistake.
+ #
+@@ -177,17 +173,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+ 	KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
+ endif
+ 
+-KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+-
+-#
+-# The 64-bit kernel must be aligned to 2MB.  Pass -z max-page-size=0x200000 to
+-# the linker to force 2MB page size regardless of the default page size used
+-# by the linker.
+-#
+-ifdef CONFIG_X86_64
+-KBUILD_LDFLAGS += $(call ld-option, -z max-page-size=0x200000)
+-endif
+-
+ # Workaround for a gcc prelease that unfortunately was shipped in a suse release
+ KBUILD_CFLAGS += -Wno-sign-compare
+ #
+@@ -207,6 +192,23 @@ ifdef CONFIG_RETPOLINE
+   endif
+ endif
+ 
++KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
++
++ifdef CONFIG_X86_NEED_RELOCS
++LDFLAGS_vmlinux := --emit-relocs --discard-none
++else
++LDFLAGS_vmlinux :=
++endif
++
++#
++# The 64-bit kernel must be aligned to 2MB.  Pass -z max-page-size=0x200000 to
++# the linker to force 2MB page size regardless of the default page size used
++# by the linker.
++#
++ifdef CONFIG_X86_64
++LDFLAGS_vmlinux += -z max-page-size=0x200000
++endif
++
+ archscripts: scripts_basic
+ 	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
+ 
