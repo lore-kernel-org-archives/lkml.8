@@ -2,228 +2,142 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E653CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99182086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4122086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PXXNj3mX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgGXAHJ convert rfc822-to-8bit (ORCPT
+        id S1728295AbgGXAHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:07:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727778AbgGXAHJ (ORCPT
+        Thu, 23 Jul 2020 20:07:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgGXAHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:07:09 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O02cfu031283;
-        Thu, 23 Jul 2020 20:06:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32faj3sn4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 20:06:53 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O03sSB034159;
-        Thu, 23 Jul 2020 20:06:53 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32faj3sn44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Jul 2020 20:06:53 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O05XXm030936;
-        Fri, 24 Jul 2020 00:06:52 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04wdc.us.ibm.com with ESMTP id 32brq9ra27-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 00:06:52 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O06nx647055344
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 00:06:49 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CCF9478063;
-        Fri, 24 Jul 2020 00:06:50 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 560557805C;
-        Fri, 24 Jul 2020 00:06:47 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.53.35])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 24 Jul 2020 00:06:46 +0000 (GMT)
-References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com> <159524954805.20855.1164928096364700614.stgit@hbathini.in.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Hari Bathini <hbathini@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Thu, 23 Jul 2020 20:07:45 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D78FC0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 17:07:45 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id t12so1473536ooc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 17:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=qBujHwaGJCw1P6JdNgGCLPuEf10oBiRobzBG3EaDAig=;
+        b=PXXNj3mXqSvNjasml6R5Hi5qDcF7fW14Ck6nRxwkEqfHid/XLbbxiYx3nnsR0TSmCf
+         38Y9QVxWK7AuUOCYWZBPQL9VwahHXVfU55bea8yUqtxyClD6JlqM4EDQ3Miz444HpFwe
+         ZAR15l3fXJsKaUdfCXB5aJy33D2KgQNzuY7excItMx3FSeDGKOVfgaz846WtFVCQxA7j
+         oQgFEikrqDiXt9pITWrgzDTNxhG5Sjxwl9XSHjXuG89XRtynZJUASmrtA0kZul+71ONd
+         IFuwYXITdNUHfo10M5eCrihO/dZL5Z1Trw4HztTp5TDEa5P3wm/1cKS99gEm8y7PnRkt
+         z2rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=qBujHwaGJCw1P6JdNgGCLPuEf10oBiRobzBG3EaDAig=;
+        b=t1qxNcSqqhUcL9ZhqycMsG2prQhQ+PbjvMkN0434unMpaJDDynr/sEmIBUAwwanHPS
+         DF+JM3Lz0WLQoolWuiIdH4wY20GncTR3//77YvTw77yMC5gEzUv6oK52Cl/ny1BzNaT6
+         Ay7u/VJei4FB+96JfqgGOgtoU1o2AnT4I76cbGiS5on1SRBiqWfvX9CM6TNL2H763sdM
+         ZI2JaGIfHNuuX/tduOdvvDQZIKOnL91SNeDlo6L85aoUr8mxQXShBLzEMUk4Q9JvoKIn
+         YZnIMz49gChjxskriv+dqvlRtKnOTHRY758dkk/NCGu4RL5wPQXsqN33885ZYyJp1Wik
+         c0uA==
+X-Gm-Message-State: AOAM533U6tidMg63b383gXp4Eb826Q1q0xERl3XtOWt2qgIQTiPrvTwb
+        2ro0ku9sf0cmApIF165sAYP/6Q==
+X-Google-Smtp-Source: ABdhPJwNuCjF1TmsR9K7i9Zx7PvgDtCg0uJ3UTCj7iHaOPIGp/Uu52Z+4JIe6oXByHgyrDFVYAH4Cg==
+X-Received: by 2002:a4a:e8da:: with SMTP id h26mr6946228ooe.59.1595549264015;
+        Thu, 23 Jul 2020 17:07:44 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id x138sm1016689oif.5.2020.07.23.17.07.41
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 23 Jul 2020 17:07:42 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 17:07:27 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Hugh Dickins <hughd@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Pingfan Liu <piliu@redhat.com>,
-        Kexec-ml <kexec@lists.infradead.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4 06/12] ppc64/kexec_file: restrict memory usage of kdump kernel
-In-reply-to: <159524954805.20855.1164928096364700614.stgit@hbathini.in.ibm.com>
-Date:   Thu, 23 Jul 2020 21:06:42 -0300
-Message-ID: <875zad6ajx.fsf@morokweng.localdomain>
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+In-Reply-To: <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
+Message-ID: <alpine.LSU.2.11.2007231650170.1281@eggly.anvils>
+References: <20200721063258.17140-1-mhocko@kernel.org> <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com> <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com> <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
+ <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com> <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com> <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
+ <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com> <alpine.LSU.2.11.2007231549540.1016@eggly.anvils> <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=2
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0 clxscore=1015
- spamscore=0 adultscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007230169
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 23 Jul 2020, Linus Torvalds wrote:
+> On Thu, Jul 23, 2020 at 4:11 PM Hugh Dickins <hughd@google.com> wrote:
+> > On Thu, 23 Jul 2020, Linus Torvalds wrote:
+> > >
+> > > I'll send a new version after I actually test it.
+> >
+> > I'll give it a try when you're happy with it.
+> 
+> Ok, what I described is what I've been running for a while now. But I
+> don't put much stress on my system with my normal workload, so..
+> 
+> > I did try yesterday's
+> > with my swapping loads on home machines (3 of 4 survived 16 hours),
+> > and with some google stresstests on work machines (0 of 10 survived).
+> >
+> > I've not spent long analyzing the crashes, all of them in or below
+> > __wake_up_common() called from __wake_up_locked_key_bookmark():
+> > sometimes gets to run the curr->func() and crashes on something
+> > inside there (often list_del's lib/list_debug.c:53!), sometimes
+> > cannot get that far. Looks like the wait queue entries on the list
+> > were not entirely safe with that patch.
+> 
+> Hmm. The bug Oleg pointed out should be pretty theoretical. But I
+> think the new approach with WQ_FLAG_WOKEN was much better anyway,
+> despite me missing that one spot in the first version of the patch.
+> 
+> So here's two patches - the first one does that wake_page_function()
+> conversion, and the second one just does the memory ordering cleanup I
+> mentioned.
+> 
+> I don't think the second one shouldn't matter on x86, but who knows.
+> 
+> I don't enable list debugging, but I find list corruption surprising.
+> All of _that_ should be inside the page waiqueue lock, the only
+> unlocked part was the "list_empty_careful()" part.
+> 
+> But I'll walk over my patch mentally one more time. Here's the current
+> version, anyway.
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
+Thanks, I'll start some tests going shortly.
 
-> Kdump kernel, used for capturing the kernel core image, is supposed
-> to use only specific memory regions to avoid corrupting the image to
-> be captured. The regions are crashkernel range - the memory reserved
-> explicitly for kdump kernel, memory used for the tce-table, the OPAL
-> region and RTAS region as applicable. Restrict kdump kernel memory
-> to use only these regions by setting up usable-memory DT property.
-> Also, tell the kdump kernel to run at the loaded address by setting
-> the magic word at 0x5c.
->
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
-> ---
->
-> v3 -> v4:
-> * Updated get_node_path() to be an iterative function instead of a
->   recursive one.
-> * Added comment explaining why low memory is added to kdump kernel's
->   usable memory ranges though it doesn't fall in crashkernel region.
-> * For correctness, added fdt_add_mem_rsv() for the low memory being
->   added to kdump kernel's usable memory ranges.
+I do have to "port" these patches to a different kernel, and my first
+assumption on seeing crashes was that I'd screwed that up; but that
+seemed much less likely once the home test on top of v5.8-rc5 crashed
+in much the same way.  The latter was not a list_del() crash, but on
+curr->func itself; but I take them all as just indicating that the
+wait queue entry can in rare cases be freed and reused.
 
-Good idea.
+(And the amount of "port"ing was close to nil here: our trees did
+differ on an "unlikely" that one end had added or removed, plus I
+did start off by reverting two of my three patches. But perhaps I'm
+missing a subtle dependence on differences elsewhere in the tree.)
 
-> * Fixed prop pointer update in add_usable_mem_property() and changed
->   duple to tuple as suggested by Thiago.
+I say that for full disclosure, so you don't wrack your brains
+too much, when it may still turn out to be a screwup on my part.
 
-<snip>
-
-> +/**
-> + * get_node_pathlen - Get the full path length of the given node.
-> + * @dn:               Node.
-> + *
-> + * Also, counts '/' at the end of the path.
-> + * For example, /memory@0 will be "/memory@0/\0" => 11 bytes.
-
-Wouldn't this function return 10 in the case of /memory@0?
-Are you saying that it should count the \0 at the end too? it's not
-doing that, AFAICS.
-
-> + *
-> + * Returns the string length of the node's full path.
-> + */
-
-Maybe it's me (by analogy with strlen()), but I would expect "string
-length" to not include the terminating \0. I suggest renaming the
-function to something like get_node_path_size() and do s/length/size/ in
-the comment above if it's supposed to count the terminating \0.
-
-> +static int get_node_pathlen(struct device_node *dn)
-> +{
-> +	int len = 0;
-> +
-> +	if (!dn)
-> +		return 0;
-> +
-> +	while (dn) {
-> +		len += strlen(dn->full_name) + 1;
-> +		dn = dn->parent;
-> +	}
-> +
-> +	return len + 1;
-> +}
-> +
-> +/**
-> + * get_node_path - Get the full path of the given node.
-> + * @node:          Device node.
-> + *
-> + * Allocates buffer for node path. The caller must free the buffer
-> + * after use.
-> + *
-> + * Returns buffer with path on success, NULL otherwise.
-> + */
-> +static char *get_node_path(struct device_node *node)
-> +{
-> +	struct device_node *dn;
-> +	int len, idx, nlen;
-> +	char *path = NULL;
-> +	char end_char;
-> +
-> +	if (!node)
-> +		goto err;
-> +
-> +	/*
-> +	 * Get the path length first and use it to iteratively build the path
-> +	 * from node to root.
-> +	 */
-> +	len = get_node_pathlen(node);
-> +
-> +	/* Allocate memory for node path */
-> +	path = kzalloc(ALIGN(len, 8), GFP_KERNEL);
-> +	if (!path)
-> +		goto err;
-> +
-> +	/*
-> +	 * Iteratively update path from node to root by decrementing
-> +	 * index appropriately.
-> +	 *
-> +	 * Also, add %NUL at the end of node & '/' at the end of all its
-> +	 * parent nodes.
-> +	 */
-> +	dn = node;
-> +	path[0] = '/';
-> +	idx = len - 1;
-
-Here, idx is pointing to the supposed '/' at the end of the node
-path ...
-
-> +	end_char = '\0';
-> +	while (dn->parent) {
-> +		path[--idx] = end_char;
-
-.. and in the first ireation, this is writing '\0' at a place which will be
-overwritten by the memcpy() below with the last character of
-dn->full_name. You need to start idx with len, not len - 1.
-
-> +		end_char = '/';
-> +
-> +		nlen = strlen(dn->full_name);
-> +		idx -= nlen;
-> +		memcpy(path + idx, dn->full_name, nlen);
-> +
-> +		dn = dn->parent;
-> +	}
-> +
-> +	return path;
-> +err:
-> +	kfree(path);
-> +	return NULL;
-> +}
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Hugh
