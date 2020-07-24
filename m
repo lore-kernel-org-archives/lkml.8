@@ -2,242 +2,168 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED99C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02DCC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2835720674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pa3+JDDZ"
+	by mail.kernel.org (Postfix) with ESMTP id 91A2E20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgGXQI7 (ORCPT
+        id S1727869AbgGXQEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:08:59 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:62326 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728571AbgGXQIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:08:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595606934; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=ew/1aDgJztRZZkRl53dYc63lZkOEDsOC0G9ZO2AzXIQ=; b=Pa3+JDDZriT7t5y/dALwkZLMldQ1Ym3O4AzlBDI4S03Vni7r29oijQ71kebpuf2ftrKWUjXt
- ORNSt9mpkUiL2EIEA3rGnI+3Mkl7ZVnBQbfUmzFylBSllrH2pm/VCk4Yp0Jln4FKF9/A+bhQ
- MW7iSMzhVT+zL89HLVLc2rzpCvM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f1b0792845c4d05a323cff3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:08:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 57233C433B1; Fri, 24 Jul 2020 16:08:50 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 24 Jul 2020 12:04:24 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbgGXQEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:12 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6EB79C433B2;
-        Fri, 24 Jul 2020 16:08:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6EB79C433B2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v5 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
-Date:   Fri, 24 Jul 2020 21:37:56 +0530
-Message-Id: <1595606878-2664-3-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
-References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
+        by theia.8bytes.org (Postfix) with ESMTPSA id 9CEB4F8B;
+        Fri, 24 Jul 2020 18:04:08 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v5 23/75] x86/boot/compressed/64: Unmap GHCB page before booting the kernel
+Date:   Fri, 24 Jul 2020 18:02:44 +0200
+Message-Id: <20200724160336.5435-24-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
+References: <20200724160336.5435-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
-properties that are needed in a device tree. Also add clock ids for GCC
-LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
+From: Joerg Roedel <jroedel@suse.de>
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Force a page-fault on any further accesses to the GHCB page when they
+shouldn't happen anymore. This will catch the bugs where a #VC exception
+is raised when no one is expected anymore.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 102 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sc7180.h        |   1 +
- .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    |  29 ++++++
- 3 files changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+ arch/x86/boot/compressed/ident_map_64.c | 17 +++++++++++++++--
+ arch/x86/boot/compressed/misc.h         |  6 ++++++
+ arch/x86/boot/compressed/sev-es.c       | 14 ++++++++++++++
+ 3 files changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-new file mode 100644
-index 0000000..a838250
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index 05742f641a06..063a60edcf99 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -298,6 +298,11 @@ int set_page_encrypted(unsigned long address)
+ 	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
+ }
+ 
++int set_page_non_present(unsigned long address)
++{
++	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_PRESENT);
++}
 +
-+title: Qualcomm LPASS Core Clock Controller Binding for SC7180
+ static void do_pf_error(const char *msg, unsigned long error_code,
+ 			unsigned long address, unsigned long ip)
+ {
+@@ -316,8 +321,14 @@ static void do_pf_error(const char *msg, unsigned long error_code,
+ 
+ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ {
+-	unsigned long address = native_read_cr2() & PMD_MASK;
+-	unsigned long end = address + PMD_SIZE;
++	unsigned long address = native_read_cr2();
++	unsigned long end;
++	bool ghcb_fault;
 +
-+maintainers:
-+  - Taniya Das <tdas@codeaurora.org>
++	ghcb_fault = sev_es_check_ghcb_fault(address);
 +
-+description: |
-+  Qualcomm LPASS core clock control module which supports the clocks and
-+  power domains on SC7180.
++	address   &= PMD_MASK;
++	end        = address + PMD_SIZE;
+ 
+ 	/*
+ 	 * Check for unexpected error codes. Unexpected are:
+@@ -327,6 +338,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ 	 */
+ 	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
+ 		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
++	else if (ghcb_fault)
++		do_pf_error("Page-fault on GHCB page:", error_code, address, regs->ip);
+ 
+ 	/*
+ 	 * Error code is sane - now identity map the 2M region around
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 4d37a28370ed..2e5f82acc122 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -100,6 +100,7 @@ static inline void choose_random_location(unsigned long input,
+ #ifdef CONFIG_X86_64
+ extern int set_page_decrypted(unsigned long address);
+ extern int set_page_encrypted(unsigned long address);
++extern int set_page_non_present(unsigned long address);
+ extern unsigned char _pgtable[];
+ #endif
+ 
+@@ -117,8 +118,13 @@ void set_sev_encryption_mask(void);
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ void sev_es_shutdown_ghcb(void);
++extern bool sev_es_check_ghcb_fault(unsigned long address);
+ #else
+ static inline void sev_es_shutdown_ghcb(void) { }
++static inline bool sev_es_check_ghcb_fault(unsigned long address)
++{
++	return false;
++}
+ #endif
+ 
+ /* acpi.c */
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 7e2cec170026..e3abf8737015 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -121,6 +121,20 @@ void sev_es_shutdown_ghcb(void)
+ 	 */
+ 	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
+ 		error("Can't map GHCB page encrypted");
 +
-+  See also:
-+  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
++	/*
++	 * GHCB page is mapped encrypted again and flushed from the cache.
++	 * Mark it non-present now to catch bugs when #VC exceptions trigger
++	 * after this point.
++	 */
++	if (set_page_non_present((unsigned long)&boot_ghcb_page))
++		error("Can't unmap GHCB page");
++}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,sc7180-lpasshm
-+      - qcom,sc7180-lpasscorecc
-+
-+  clocks:
-+    items:
-+      - description: gcc_lpass_sway clock from GCC
-+
-+  clock-names:
-+    items:
-+      - const: iface
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: lpass core cc register
-+      - description: lpass audio cc register
-+
-+  reg-names:
-+    items:
-+      - const: lpass_core_cc
-+      - const: lpass_audio_cc
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: qcom,sc7180-lpasshm
-+then:
-+  properties:
-+    reg:
-+      maxItems: 1
-+
-+else:
-+  properties:
-+    reg:
-+      minItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#power-domain-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
-+    clock-controller@63000000 {
-+      compatible = "qcom,sc7180-lpasshm";
-+      reg = <0x63000000 0x28>;
-+      clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-+      clock-names = "iface";
-+      #clock-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+
-+  - |
-+    clock-controller@62d00000 {
-+      compatible = "qcom,sc7180-lpasscorecc";
-+      reg = <0x62d00000 0x50000>, <0x62780000 0x30000>;
-+      reg-names = "lpass_core_cc", "lpass_audio_cc";
-+      clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-+      clock-names = "iface";
-+      power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+      #clock-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-index 992b67b..bdf43adc 100644
---- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-+++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-@@ -138,6 +138,7 @@
- #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
- #define GCC_MSS_SNOC_AXI_CLK					129
- #define GCC_SEC_CTRL_CLK_SRC					130
-+#define GCC_LPASS_CFG_NOC_SWAY_CLK				131
-
- /* GCC resets */
- #define GCC_QUSB2PHY_PRIM_BCR					0
-diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-new file mode 100644
-index 0000000..a55d01d
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-+#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-+
-+/* LPASS_CORE_CC clocks */
-+#define LPASS_LPAAUDIO_DIG_PLL				0
-+#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
-+#define CORE_CLK_SRC					2
-+#define EXT_MCLK0_CLK_SRC				3
-+#define LPAIF_PRI_CLK_SRC				4
-+#define LPAIF_SEC_CLK_SRC				5
-+#define LPASS_AUDIO_CORE_CORE_CLK			6
-+#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
-+#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
-+#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
-+#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
-+
-+/* LPASS Core power domains */
-+#define LPASS_CORE_HM_GDSCR				0
-+
-+/* LPASS Audio power domains */
-+#define LPASS_AUDIO_HM_GDSCR				0
-+#define LPASS_PDC_HM_GDSCR				1
-+
-+#endif
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
++bool sev_es_check_ghcb_fault(unsigned long address)
++{
++	/* Check whether the fault was on the GHCB page */
++	return ((address & PAGE_MASK) == (unsigned long)&boot_ghcb_page);
+ }
+ 
+ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+-- 
+2.27.0
 
