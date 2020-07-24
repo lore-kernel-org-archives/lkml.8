@@ -2,91 +2,84 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26B72208A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595552227;
-	bh=r5WxFrMiDdKHTC3n7Eg5/S6BdCaIflcHYZos9cjnVOI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lW7kr2ouPzTzpKuBowBUNjGI/YXmRWJmF9y/jE7EQQRXobXCdTN24q5cyu60+w1G1
-	 8SvlITM2JzNkQVbk5I1Uvozr0/PenJOjLFWnO6ZBXUAwR1yvkYmqAorY9bDxL2sOg2
-	 mTMH5Sm4E5kPSxkVI0h8EZ/h1kVO9ywHq/KQEfzI=
+	by mail.kernel.org (Postfix) with ESMTP id D512C2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgGXA5G (ORCPT
+        id S1728446AbgGXA6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgGXA5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:57:05 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF6B12086A;
-        Fri, 24 Jul 2020 00:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595552225;
-        bh=r5WxFrMiDdKHTC3n7Eg5/S6BdCaIflcHYZos9cjnVOI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A6VgWN4htxp/7jHEyuT/i8Rz/5PrRRJcbIlv5FoYcEQGIwgzxxxNP8mvELD6OpEmo
-         fQFEb2RN093Ag/ZOmX8rPgE4StK8ZyCK18P3YSyEmevfo1QAufGZaeiOiltVe1G5l6
-         /sbTQfMJ7T0UtIEnmBt9bfFSv6bfZqNc0jfKe8AU=
-Date:   Thu, 23 Jul 2020 17:57:04 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        andi.kleen@intel.com, ying.huang@intel.com,
-        andriy.shevchenko@intel.com
-Subject: Re: [RFC PATCH] makefile: add debug option to enable function
- aligned on 32 bytes
-Message-Id: <20200723175704.44c4b890e76dc6dc68bf3674@linux-foundation.org>
-In-Reply-To: <20200723062933.GA65362@shbuild999.sh.intel.com>
-References: <1595475001-90945-1-git-send-email-feng.tang@intel.com>
-        <20200722203919.8b7c9b35ff51d66550c3846c@linux-foundation.org>
-        <20200723062933.GA65362@shbuild999.sh.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 23 Jul 2020 20:58:46 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:52358 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728394AbgGXA6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:58:46 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 027A69CF4C2AC7613C9E;
+        Fri, 24 Jul 2020 08:58:44 +0800 (CST)
+Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Fri, 24 Jul 2020 08:58:43 +0800
+Received: from [10.174.61.242] (10.174.61.242) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 24 Jul 2020 08:58:43 +0800
+Subject: Re: [PATCH net-next v3 1/2] hinic: add support to handle hw abnormal
+ event
+To:     David Miller <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
+References: <20200723144038.10430-1-luobin9@huawei.com>
+ <20200723144038.10430-2-luobin9@huawei.com>
+ <20200723.120852.1882569285026023193.davem@davemloft.net>
+From:   "luobin (L)" <luobin9@huawei.com>
+Message-ID: <7c97e18d-fd4a-280c-343f-6338d069d40b@huawei.com>
+Date:   Fri, 24 Jul 2020 08:58:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20200723.120852.1882569285026023193.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.61.242]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 14:29:33 +0800 Feng Tang <feng.tang@intel.com> wrote:
-
-> > > gcc has an option '-falign-functions=n' to force text aligned, and with
-> > > that option enabled, some of those performance changes will be gone,
-> > > like [1][2][3].
-> > > 
-> > > Add this option so that developers and 0day can easily find performance
-> > > bump caused by text alignment change,
-> > 
-> > Would they use it this way, or would they simply always enable the
-> > option to reduce the variability?
+On 2020/7/24 3:08, David Miller wrote:
+> From: Luo bin <luobin9@huawei.com>
+> Date: Thu, 23 Jul 2020 22:40:37 +0800
 > 
-> I may mis-understood it in my last reply. If you are asking about how
-> will developers and 0day use this option, for 0day, I've talked with
-> 0day folks, they may just enable it by default, as 0day cares more about
-> the performance delta caused by a commit (Adding Philip and Rong from
-> 0day).
-
-OK, thanks, I suspected as much.
-
-The patch is so simple and probably-will-work, I guess we toss it in
-there and see.
-
-However it would be good if the 0day people could use it for a while
-and then provide some feedback on whether it is actually proving
-useful.  If not, we get to remove some stuff.
+>> +static int hinic_fw_reporter_dump(struct devlink_health_reporter *reporter,
+>> +				  struct devlink_fmsg *fmsg, void *priv_ctx,
+>> +				  struct netlink_ext_ack *extack)
+>> +{
+>> +	struct hinic_mgmt_watchdog_info *watchdog_info;
+>> +	int err;
+>> +
+>> +	if (priv_ctx) {
+>> +		watchdog_info = priv_ctx;
+>> +		err = mgmt_watchdog_report_show(fmsg, watchdog_info);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> This 'watchdog_info' variable is completely unnecessary, just pass
+> 'priv_ctx' as-is into mgmt_watchdog_report_show().
+> .
+> 
+Will fix. Thanks for your review.
