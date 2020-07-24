@@ -2,282 +2,114 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5B9C4346F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C13C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C5F2070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEDD206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PTlcaXvG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNs3Guih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGXVh0 (ORCPT
+        id S1727851AbgGXVhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
+        Fri, 24 Jul 2020 17:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbgGXVgy (ORCPT
+        with ESMTP id S1727783AbgGXVhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:36:54 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1691C08C5F5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p3so6140702pgh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
+        Fri, 24 Jul 2020 17:37:31 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C503FC0619D3;
+        Fri, 24 Jul 2020 14:37:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a14so9513350wra.5;
+        Fri, 24 Jul 2020 14:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=85bNNdGOhW+Ma/bZfAvFnKS9zt0a/6SXyJ36wXOo14s=;
-        b=PTlcaXvGhGRizhHNFk0TaJKRG/RHUffNOK2e7kItuXBPH5qX8gvDz4DdekPnD7PpYt
-         fVRfC0aWAKTcNZHwEJw4MvwSvfYTSxShXLYzhwpSTeJ2MEREWvAeJ+dBKR+l47bkFwBn
-         OUbrIiYHcufGoxgWPpwOY//ftIvNlEHXSf5vE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UyLweN+II0ZCIyIgBj5I2+zaWb8dHrtfnlcwzt5oGNM=;
+        b=UNs3GuihAWHCTR9hET3VEcxcq7WMVX+ELHyM4UHV7CETbtCF1m5+/7KO22va1IUkIq
+         +1fkKnqssP31mj0evgJ/Lwak8npUBRJeFIutSGGylvGSFeDF63rQQ74j8M085mtP6IdL
+         yShmUAjK8An6YFzSSwW5w1U9F9mOSINZajKEAnI6IzSs70PQLb+9P5NRjd2r9PV9qBsJ
+         EJ2rMG/KvJVR89ZkHgvCwD8PJbsWXtzjQ0HmW1FWmsa3dpChDcNYGXDYBYa4CizLFDqH
+         GiHBdw8jaoFdAFbMk0OmDQloGdu7JQ17rAd+BLyRfZcbhq54xt2JsahGGFzwma1p3Gk0
+         fG4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=85bNNdGOhW+Ma/bZfAvFnKS9zt0a/6SXyJ36wXOo14s=;
-        b=h02k+TZo9qYDxmR6TeyaQUYl6w/hKgp/lCMPuwcxuABfOIJzRfvk5Q9LiZ/y3AlGph
-         f7TbtHj8Kfb1A8N10nZFJPcnLbiZYEYTyW/boc758Wos3I42pkidwH63k0/d7AmoMqsf
-         0MYs/+oMpKGSzSZnBwsNY6H/1vKgW9wVLiLVe762AdIw28zejc5hq8yGeS2OHsH+oxer
-         NIGQlk5cOAraAWTTY59aNJBFQu8cAu1YLS2XofZfpqJp4c31deBAHXzQKT5t6yXSozXT
-         eryTo0TlEv/0XMSDUujis0KWlivUjt9dIjYZzGLm5YiQr4s30GlHYdEdm0CO7Y1PXuEe
-         X0jw==
-X-Gm-Message-State: AOAM533J08EmJUpjydbrka7YUCpmD9aiCdEfxQvoMAOwGEwE0hMrB5s8
-        MgDR0FARSKuoHwC4WBxjfJWmFw==
-X-Google-Smtp-Source: ABdhPJxJUqAc5FXnhiffj9qkjKqxmSmbFuOwEkujmuT7O4l3ErwBR9U1pC41jpeYuQVufXGz9NfSeA==
-X-Received: by 2002:a62:7a56:: with SMTP id v83mr10555845pfc.114.1595626611378;
-        Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u16sm6975339pfn.52.2020.07.24.14.36.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UyLweN+II0ZCIyIgBj5I2+zaWb8dHrtfnlcwzt5oGNM=;
+        b=JhVsmAS2srevKmz61TKXYIuVBxgFNJSdtFFXU/qmD5G08+IsYfLzFZjv1SooU6O7la
+         wDcdwLpBbsjh/Ht5J/EEYNFkPCKOdKvHNHu05iuuGO+Kcueu7NElBABcY85mFLsa6C/F
+         v18madTkL0zGZ3fTJx44JgPAKcx4zj99jCkBnCeyLlLvAouoquGi6C5JXw0ydjNZ7TJ4
+         OH/+5SkLfZwBJ0YIVdPV9GcgNwMqR1QACWFjFCtO5yxes/nDqv4epxrmd4jSnScST8KI
+         fE+cdjljtEl5rifyA8YC8wOegPglhajBcUJcyGYo75x3sG1Bww0/1L++I9I6t2LeKciQ
+         zFQA==
+X-Gm-Message-State: AOAM5322bxnvQarNm+xNpeg9p760qUw8N2i3s65K9oDz1QUL1Sm7ZNy/
+        lP2/6veTLIOsgh2wiV+LwLo=
+X-Google-Smtp-Source: ABdhPJwLF1RqObtNpTGBQwMpigWEhUqbE+eLdxny/Qtkb5+QTqBldol986Ypp/6PgZjOITEYjaDXNg==
+X-Received: by 2002:adf:ea85:: with SMTP id s5mr3155449wrm.55.1595626649546;
+        Fri, 24 Jul 2020 14:37:29 -0700 (PDT)
+Received: from TimeMachine.localdomain (bband-dyn34.178-41-255.t-com.sk. [178.41.255.34])
+        by smtp.googlemail.com with ESMTPSA id 129sm8853400wmd.48.2020.07.24.14.37.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 14:36:47 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/19] fs/kernel_read_file: Add file_size output argument
-Date:   Fri, 24 Jul 2020 14:36:31 -0700
-Message-Id: <20200724213640.389191-11-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200724213640.389191-1-keescook@chromium.org>
-References: <20200724213640.389191-1-keescook@chromium.org>
+        Fri, 24 Jul 2020 14:37:29 -0700 (PDT)
+From:   Martin Botka <martin.botka1@gmail.com>
+Cc:     Martin Botka <martin.botka1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH RFC 0/6] Add QCOM pwm-lpg and tri-led drivers
+Date:   Fri, 24 Jul 2020 23:36:50 +0200
+Message-Id: <20200724213659.273599-1-martin.botka1@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for adding partial read support, add an optional output
-argument to kernel_read_file*() that reports the file size so callers
-can reason more easily about their reading progress.
+Hello,
+This series brings QCOM pwm-lpg and tri-led drivers from 4.14 that is required to support pmic-connected notification LED.
+This comes straight from downstream and I'm ready for your comments.
 
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/base/firmware_loader/main.c |  1 +
- fs/kernel_read_file.c               | 19 +++++++++++++------
- include/linux/kernel_read_file.h    |  4 ++++
- kernel/kexec_file.c                 |  4 ++--
- kernel/module.c                     |  2 +-
- security/integrity/digsig.c         |  2 +-
- security/integrity/ima/ima_fs.c     |  2 +-
- 7 files changed, 23 insertions(+), 11 deletions(-)
+Fenglin Wu (6):
+  pwm: Add different PWM output types support
+  pwm: core: Add option to config PWM duty/period with u64 data length
+  pwm: pwm-qti-lpg: Add PWM driver for QTI LPG module
+  leds: leds-qti-tri-led: Add LED driver for QTI TRI_LED module
+  Documentation: Add binding for qti-tri-led
+  Documentation: Add binding for pwm-qti-lpg
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index f80c0d102be8..bd199404935f 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -495,6 +495,7 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 
- 		/* load firmware files from the mount namespace of init */
- 		rc = kernel_read_file_from_path_initns(path, &buffer, msize,
-+						       NULL,
- 						       READING_FIRMWARE);
- 		if (rc < 0) {
- 			if (rc != -ENOENT)
-diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
-index e21a76001fff..2e29c38eb4df 100644
---- a/fs/kernel_read_file.c
-+++ b/fs/kernel_read_file.c
-@@ -14,6 +14,8 @@
-  *		@buf_size will be ignored)
-  * @buf_size	size of buf, if already allocated. If @buf not
-  *		allocated, this is the largest size to allocate.
-+ * @file_size	if non-NULL, the full size of @file will be
-+ *		written here.
-  * @id		the kernel_read_file_id identifying the type of
-  *		file contents being read (for LSMs to examine)
-  *
-@@ -22,7 +24,8 @@
-  *
-  */
- int kernel_read_file(struct file *file, void **buf,
--		     size_t buf_size, enum kernel_read_file_id id)
-+		     size_t buf_size, size_t *file_size,
-+		     enum kernel_read_file_id id)
- {
- 	loff_t i_size, pos;
- 	ssize_t bytes = 0;
-@@ -49,6 +52,8 @@ int kernel_read_file(struct file *file, void **buf,
- 		ret = -EFBIG;
- 		goto out;
- 	}
-+	if (file_size)
-+		*file_size = i_size;
- 
- 	if (!*buf)
- 		*buf = allocated = vmalloc(i_size);
-@@ -91,7 +96,8 @@ int kernel_read_file(struct file *file, void **buf,
- EXPORT_SYMBOL_GPL(kernel_read_file);
- 
- int kernel_read_file_from_path(const char *path, void **buf,
--			       size_t buf_size, enum kernel_read_file_id id)
-+			       size_t buf_size, size_t *file_size,
-+			       enum kernel_read_file_id id)
- {
- 	struct file *file;
- 	int ret;
-@@ -103,14 +109,14 @@ int kernel_read_file_from_path(const char *path, void **buf,
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
--	ret = kernel_read_file(file, buf, buf_size, id);
-+	ret = kernel_read_file(file, buf, buf_size, file_size, id);
- 	fput(file);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
- 
- int kernel_read_file_from_path_initns(const char *path, void **buf,
--				      size_t buf_size,
-+				      size_t buf_size, size_t *file_size,
- 				      enum kernel_read_file_id id)
- {
- 	struct file *file;
-@@ -129,13 +135,14 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
--	ret = kernel_read_file(file, buf, buf_size, id);
-+	ret = kernel_read_file(file, buf, buf_size, file_size, id);
- 	fput(file);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
- 
- int kernel_read_file_from_fd(int fd, void **buf, size_t buf_size,
-+			     size_t *file_size,
- 			     enum kernel_read_file_id id)
- {
- 	struct fd f = fdget(fd);
-@@ -144,7 +151,7 @@ int kernel_read_file_from_fd(int fd, void **buf, size_t buf_size,
- 	if (!f.file)
- 		goto out;
- 
--	ret = kernel_read_file(f.file, buf, buf_size, id);
-+	ret = kernel_read_file(f.file, buf, buf_size, file_size, id);
- out:
- 	fdput(f);
- 	return ret;
-diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
-index 910039e7593e..023293eaf948 100644
---- a/include/linux/kernel_read_file.h
-+++ b/include/linux/kernel_read_file.h
-@@ -37,15 +37,19 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
- 
- int kernel_read_file(struct file *file,
- 		     void **buf, size_t buf_size,
-+		     size_t *file_size,
- 		     enum kernel_read_file_id id);
- int kernel_read_file_from_path(const char *path,
- 			       void **buf, size_t buf_size,
-+			       size_t *file_size,
- 			       enum kernel_read_file_id id);
- int kernel_read_file_from_path_initns(const char *path,
- 				      void **buf, size_t buf_size,
-+				      size_t *file_size,
- 				      enum kernel_read_file_id id);
- int kernel_read_file_from_fd(int fd,
- 			     void **buf, size_t buf_size,
-+			     size_t *file_size,
- 			     enum kernel_read_file_id id);
- 
- #endif /* _LINUX_KERNEL_READ_FILE_H */
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index eda19ca256a3..878ca684a3a1 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -222,7 +222,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	void *ldata;
- 
- 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
--				       INT_MAX, READING_KEXEC_IMAGE);
-+				       INT_MAX, NULL, READING_KEXEC_IMAGE);
- 	if (ret < 0)
- 		return ret;
- 	image->kernel_buf_len = ret;
-@@ -242,7 +242,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	/* It is possible that there no initramfs is being loaded */
- 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
- 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
--					       INT_MAX,
-+					       INT_MAX, NULL,
- 					       READING_KEXEC_INITRAMFS);
- 		if (ret < 0)
- 			goto out;
-diff --git a/kernel/module.c b/kernel/module.c
-index b6fd4f51cc30..860d713dd910 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -4001,7 +4001,7 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
- 		      |MODULE_INIT_IGNORE_VERMAGIC))
- 		return -EINVAL;
- 
--	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX,
-+	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX, NULL,
- 				       READING_MODULE);
- 	if (err < 0)
- 		return err;
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index 04f779c4f5ed..8a523dfd7fd7 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -175,7 +175,7 @@ int __init integrity_load_x509(const unsigned int id, const char *path)
- 	int rc;
- 	key_perm_t perm;
- 
--	rc = kernel_read_file_from_path(path, &data, INT_MAX,
-+	rc = kernel_read_file_from_path(path, &data, INT_MAX, NULL,
- 					READING_X509_CERTIFICATE);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 692b83e82edf..5fc56ccb6678 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -284,7 +284,7 @@ static ssize_t ima_read_policy(char *path)
- 	datap = path;
- 	strsep(&datap, "\n");
- 
--	rc = kernel_read_file_from_path(path, &data, INT_MAX, READING_POLICY);
-+	rc = kernel_read_file_from_path(path, &data, INT_MAX, NULL, READING_POLICY);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
- 		return rc;
+ .../bindings/leds/leds-qti-tri-led.txt        |   72 +
+ .../devicetree/bindings/pwm/pwm-qti-lpg.txt   |  163 +++
+ drivers/leds/Kconfig                          |    9 +
+ drivers/leds/Makefile                         |    1 +
+ drivers/leds/leds-qti-tri-led.c               |  640 ++++++++
+ drivers/pwm/Kconfig                           |   10 +
+ drivers/pwm/Makefile                          |    1 +
+ drivers/pwm/core.c                            |   56 +-
+ drivers/pwm/pwm-qti-lpg.c                     | 1284 +++++++++++++++++
+ drivers/pwm/sysfs.c                           |   56 +-
+ include/linux/pwm.h                           |  144 +-
+ 11 files changed, 2418 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-qti-tri-led.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
+ create mode 100644 drivers/leds/leds-qti-tri-led.c
+ create mode 100644 drivers/pwm/pwm-qti-lpg.c
+
 -- 
-2.25.1
+2.27.0
 
