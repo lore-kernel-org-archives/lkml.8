@@ -2,233 +2,157 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF418C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A293C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1402063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:05:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AJwmvG5I"
+	by mail.kernel.org (Postfix) with ESMTP id 0BEBB206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGXRFS (ORCPT
+        id S1726780AbgGXRHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:05:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35479 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726326AbgGXRFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:05:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595610315;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8/rwBFqLdSk19RszDmYOuDL+4udbAMSNAztedf8ABTs=;
-        b=AJwmvG5IhFOYmAv2oTYqeeQKcLzrVFxLf5b7akVgIS6z8w6pJMdp2Ijw2lv167/2dNzt6g
-        g7scb8vRxNdm/VaI5W5+a4dUZCbyelcd/Sx6DTe+WuP+IToq2UOAu2b3/GfYsr+OEB7rmA
-        Zq70Uz8ogVKAluFPzz8q76vUKVrqcrs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-hZsInRsONSO0sEv-UjfjDg-1; Fri, 24 Jul 2020 13:05:11 -0400
-X-MC-Unique: hZsInRsONSO0sEv-UjfjDg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21EBE106B244;
-        Fri, 24 Jul 2020 17:05:10 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-119-175.rdu2.redhat.com [10.10.119.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 035EB5C1BD;
-        Fri, 24 Jul 2020 17:05:08 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, James Jones <jajones@nvidia.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] drm/nouveau/kms/nv50-: Check MST display modes against available PBN
-Date:   Fri, 24 Jul 2020 13:04:57 -0400
-Message-Id: <20200724170457.711072-3-lyude@redhat.com>
-In-Reply-To: <20200724170457.711072-1-lyude@redhat.com>
-References: <20200724170457.711072-1-lyude@redhat.com>
+        Fri, 24 Jul 2020 13:07:45 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:46604 "EHLO gecko.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbgGXRHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:07:45 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 06OH7AVU029510
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 19:07:10 +0200
+Received: from [139.22.112.247] ([139.22.112.247])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 06OH76bs007058;
+        Fri, 24 Jul 2020 19:07:07 +0200
+Subject: Re: [PATCH 4.9 18/22] x86/fpu: Disable bottom halves while loading
+ FPU registers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        kvm ML <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Rik van Riel <riel@surriel.com>, x86-ml <x86@kernel.org>,
+        cip-dev <cip-dev@lists.cip-project.org>
+References: <20181228113126.144310132@linuxfoundation.org>
+ <20181228113127.414176417@linuxfoundation.org>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <01857944-ce1a-c6cd-3666-1e9b6ca8cccc@siemens.com>
+Date:   Fri, 24 Jul 2020 19:07:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20181228113127.414176417@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While we already check whether a given atomic state can fit in the
-available bandwidth for an MST topology, we don't currently bother to
-prune display modes on MST connectors if said modes are impossible to
-fit on the MST link irregardless of the current display state.
+On 28.12.18 12:52, Greg Kroah-Hartman wrote:
+> 4.9-stable review patch.  If anyone has any objections, please let me know.
+> 
+> ------------------
+> 
+> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> 
+> commit 68239654acafe6aad5a3c1dc7237e60accfebc03 upstream.
+> 
+> The sequence
+> 
+>    fpu->initialized = 1;		/* step A */
+>    preempt_disable();		/* step B */
+>    fpu__restore(fpu);
+>    preempt_enable();
+> 
+> in __fpu__restore_sig() is racy in regard to a context switch.
+> 
+> For 32bit frames, __fpu__restore_sig() prepares the FPU state within
+> fpu->state. To ensure that a context switch (switch_fpu_prepare() in
+> particular) does not modify fpu->state it uses fpu__drop() which sets
+> fpu->initialized to 0.
+> 
+> After fpu->initialized is cleared, the CPU's FPU state is not saved
+> to fpu->state during a context switch. The new state is loaded via
+> fpu__restore(). It gets loaded into fpu->state from userland and
+> ensured it is sane. fpu->initialized is then set to 1 in order to avoid
+> fpu__initialize() doing anything (overwrite the new state) which is part
+> of fpu__restore().
+> 
+> A context switch between step A and B above would save CPU's current FPU
+> registers to fpu->state and overwrite the newly prepared state. This
+> looks like a tiny race window but the Kernel Test Robot reported this
+> back in 2016 while we had lazy FPU support. Borislav Petkov made the
+> link between that report and another patch that has been posted. Since
+> the removal of the lazy FPU support, this race goes unnoticed because
+> the warning has been removed.
+> 
+> Disable bottom halves around the restore sequence to avoid the race. BH
+> need to be disabled because BH is allowed to run (even with preemption
+> disabled) and might invoke kernel_fpu_begin() by doing IPsec.
+> 
+>   [ bp: massage commit message a bit. ]
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Acked-by: Ingo Molnar <mingo@kernel.org>
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Cc: kvm ML <kvm@vger.kernel.org>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: stable@vger.kernel.org
+> Cc: x86-ml <x86@kernel.org>
+> Link: http://lkml.kernel.org/r/20181120102635.ddv3fvavxajjlfqk@linutronix.de
+> Link: https://lkml.kernel.org/r/20160226074940.GA28911@pd.tnic
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>   arch/x86/kernel/fpu/signal.c |    4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/x86/kernel/fpu/signal.c
+> +++ b/arch/x86/kernel/fpu/signal.c
+> @@ -342,10 +342,10 @@ static int __fpu__restore_sig(void __use
+>   			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
+>   		}
+>   
+> +		local_bh_disable();
+>   		fpu->fpstate_active = 1;
+> -		preempt_disable();
+>   		fpu__restore(fpu);
+> -		preempt_enable();
+> +		local_bh_enable();
+>   
+>   		return err;
+>   	} else {
+> 
+> 
 
-So, let's avoid reporting impossible-to-set modes to userspace by
-validating the minimum bandwidth requirements of each display mode
-against the maximum bandwidth supported by the MST connector.
+Any reason why the backport stopped back than at 4.9? I just debugged 
+this out of a 4.4 kernel, and it is needed there as well. I'm happy to 
+propose a backport, would just appreciate a hint if the BH protection is 
+needed also there (my case was without BH).
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/nouveau/dispnv50/disp.c     | 41 +++++++++++++++------
- drivers/gpu/drm/nouveau/nouveau_connector.c | 24 ++++++++++--
- drivers/gpu/drm/nouveau/nouveau_connector.h |  4 +-
- 3 files changed, 53 insertions(+), 16 deletions(-)
+Thanks,
+Jan
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 4c2894d8e15b..7b8531edafa5 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1056,24 +1056,38 @@ nv50_mstc_atomic_best_encoder(struct drm_connector *connector,
- 	return &nv50_head(crtc)->msto->encoder;
- }
- 
--static enum drm_mode_status
--nv50_mstc_mode_valid(struct drm_connector *connector,
--		     struct drm_display_mode *mode)
-+static int
-+nv50_mstc_mode_valid_ctx(struct drm_connector *connector,
-+			 struct drm_display_mode *mode,
-+			 struct drm_modeset_acquire_ctx *ctx,
-+			 enum drm_mode_status *status)
- {
- 	struct nv50_mstc *mstc = nv50_mstc(connector);
- 	struct nouveau_encoder *outp = mstc->mstm->outp;
-+	unsigned int clock;
-+	int ret;
- 
--	/* TODO: calculate the PBN from the dotclock and validate against the
--	 * MSTB's max possible PBN
--	 */
-+	*status = nv50_dp_mode_valid(connector, outp, mode, &clock);
-+	if (*status != MODE_OK)
-+		return 0;
- 
--	return nv50_dp_mode_valid(connector, outp, mode, NULL);
-+	ret = drm_modeset_lock(&mstc->mstm->mgr.base.lock, ctx);
-+	if (ret)
-+		return ret;
-+
-+	if (drm_dp_calc_pbn_mode(clock, connector->display_info.bpc,
-+				 false) > mstc->port->full_pbn)
-+		*status = MODE_CLOCK_HIGH;
-+
-+	return 0;
- }
- 
- static int
--nv50_mstc_get_modes(struct drm_connector *connector)
-+nv50_mstc_get_modes_ctx(struct drm_connector *connector,
-+			struct drm_modeset_acquire_ctx *ctx)
- {
- 	struct nv50_mstc *mstc = nv50_mstc(connector);
-+	struct drm_display_mode *mode;
- 	int ret = 0;
- 
- 	mstc->edid = drm_dp_mst_get_edid(&mstc->connector, mstc->port->mgr, mstc->port);
-@@ -1093,9 +1107,14 @@ nv50_mstc_get_modes(struct drm_connector *connector)
- 	else
- 		connector->display_info.bpc = 8;
- 
-+	mode = nouveau_conn_native_mode(&mstc->connector, ctx);
-+	if (IS_ERR(mode))
-+		return PTR_ERR(mode);
-+
- 	if (mstc->native)
- 		drm_mode_destroy(mstc->connector.dev, mstc->native);
--	mstc->native = nouveau_conn_native_mode(&mstc->connector);
-+	mstc->native = mode;
-+
- 	return ret;
- }
- 
-@@ -1156,8 +1175,8 @@ nv50_mstc_detect(struct drm_connector *connector,
- 
- static const struct drm_connector_helper_funcs
- nv50_mstc_help = {
--	.get_modes = nv50_mstc_get_modes,
--	.mode_valid = nv50_mstc_mode_valid,
-+	.get_modes_ctx = nv50_mstc_get_modes_ctx,
-+	.mode_valid_ctx = nv50_mstc_mode_valid_ctx,
- 	.atomic_best_encoder = nv50_mstc_atomic_best_encoder,
- 	.atomic_check = nv50_mstc_atomic_check,
- 	.detect_ctx = nv50_mstc_detect,
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index ab2c2b2cab10..9737c65e5627 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -51,7 +51,8 @@
- #include <nvif/event.h>
- 
- struct drm_display_mode *
--nouveau_conn_native_mode(struct drm_connector *connector)
-+nouveau_conn_native_mode(struct drm_connector *connector,
-+			 struct drm_modeset_acquire_ctx *ctx)
- {
- 	const struct drm_connector_helper_funcs *helper = connector->helper_private;
- 	struct nouveau_drm *drm = nouveau_drm(connector->dev);
-@@ -60,10 +61,24 @@ nouveau_conn_native_mode(struct drm_connector *connector)
- 	int high_w = 0, high_h = 0, high_v = 0;
- 
- 	list_for_each_entry(mode, &connector->probed_modes, head) {
--		if (helper->mode_valid(connector, mode) != MODE_OK ||
--		    (mode->flags & DRM_MODE_FLAG_INTERLACE))
-+		if (mode->flags & DRM_MODE_FLAG_INTERLACE)
- 			continue;
- 
-+		if (helper->mode_valid_ctx) {
-+			enum drm_mode_status status;
-+			int ret;
-+
-+			drm_WARN_ON(dev, !ctx);
-+			ret = helper->mode_valid_ctx(connector, mode, ctx,
-+						     &status);
-+			if (ret < 0)
-+				return ERR_PTR(ret);
-+			if (status != MODE_OK)
-+				continue;
-+		} else if (helper->mode_valid(connector, mode) != MODE_OK) {
-+			continue;
-+		}
-+
- 		/* Use preferred mode if there is one.. */
- 		if (mode->type & DRM_MODE_TYPE_PREFERRED) {
- 			NV_DEBUG(drm, "native mode from preferred\n");
-@@ -959,7 +974,8 @@ nouveau_connector_get_modes(struct drm_connector *connector)
- 	 * the list of modes.
- 	 */
- 	if (!nv_connector->native_mode)
--		nv_connector->native_mode = nouveau_conn_native_mode(connector);
-+		nv_connector->native_mode =
-+			nouveau_conn_native_mode(connector, NULL);
- 	if (ret == 0 && nv_connector->native_mode) {
- 		struct drm_display_mode *mode;
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
-index 9e062c7adec8..e85962d9ae66 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
-@@ -194,7 +194,9 @@ int nouveau_conn_atomic_set_property(struct drm_connector *,
- int nouveau_conn_atomic_get_property(struct drm_connector *,
- 				     const struct drm_connector_state *,
- 				     struct drm_property *, u64 *);
--struct drm_display_mode *nouveau_conn_native_mode(struct drm_connector *);
-+struct drm_display_mode *
-+nouveau_conn_native_mode(struct drm_connector *connector,
-+			 struct drm_modeset_acquire_ctx *ctx);
- enum drm_mode_status
- nouveau_conn_mode_clock_valid(const struct drm_display_mode *,
- 			      const unsigned min_clock,
 -- 
-2.26.2
-
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
