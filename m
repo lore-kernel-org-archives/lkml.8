@@ -2,230 +2,149 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 054482064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE6C206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 04:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gmqfhVFt"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZIWtd48E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGXER2 (ORCPT
+        id S1726277AbgGXEVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 00:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgGXER1 (ORCPT
+        Fri, 24 Jul 2020 00:21:45 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:12829 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgGXEVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 00:17:27 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7025AC0619E3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 21:17:27 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id k4so7013259oik.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 21:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YTT73fROBVT8TZbJViXVHJt1wjzukhaNdjZMHoT4MMM=;
-        b=gmqfhVFtR337ZrjFDzRLwS/pOwrr2MrmvoxgzuqKhyWihrkEJAP0OX2mekTSzg1lTh
-         4OUMLj+g/asCGM5+CFRMwA6QrVEYkt9ZHV2g9Fm9li9W3qYvQhsdGA8VUsGt9XIdkYFq
-         T74by6FB0sFWsSyWM35fUrjhYhFXNwswSuCi4Ikt33R2rcJ+lqyOWu9SRtUzaE2aZ5hN
-         HYOCF1X8xFXcJLig8HTMcWM5ChMEUGsUHPHsPAMPZJieMCK7+Soc88nUX/ZVh39kxb52
-         6IqGWyKyZurId3qZ86v4I5jdSPrXaiJgCm881mzgCp0YsCHbi3Qbay/RKd5XqVmnbqHz
-         z8KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YTT73fROBVT8TZbJViXVHJt1wjzukhaNdjZMHoT4MMM=;
-        b=eIiSVolyFQ8HfErvWgKf+3qXxhm8tQHAbz5nnHGnMDL8Q4qt98MUYmy924lRl+LBkH
-         Ouzoglaew5esWmSCirvU2CfQqX5itO5oXIEjl54pLfBfhUvr4vTb8yG6AHrtfiybIyoN
-         D4VHhIiJZWAGW9E5DfeEFayh5DYUX/2YIkiM0zq2doSJti690ZZ2bwoYKUpd1RZ2JCUA
-         GFJWHEGOThEtpAP9Q3ib+5qA6QxQh3N2asj1k0/C+vmkVB6NHmDef8+myqc4clnkEsU6
-         AU8tu720D9RWGitxBfJZt/qa0G9oKP1BMau6BWrE5p3QRFqeRLNo+FL7IC75HtMwqQQz
-         zYJg==
-X-Gm-Message-State: AOAM531C8kyE9BRk0CwoNHrVmuJ8wprZpFlUFzvOSeR/C881ts3MNWYS
-        dr3I8Bk4jjCBNduJbQ6mgHq01Aq0LYuUz79Tf91IiA==
-X-Google-Smtp-Source: ABdhPJx/agHjYflbwk6fi2xXMZqsnu4VQ0/K/yAmmSRQzS/+TjeabhqhPYBCWVJmqyU41+AcbdUgXQZnaG5C8w8nTZQ=
-X-Received: by 2002:aca:2811:: with SMTP id 17mr6887468oix.166.1595564246768;
- Thu, 23 Jul 2020 21:17:26 -0700 (PDT)
+        Fri, 24 Jul 2020 00:21:45 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200724042142epoutp01be1ce737d68cb43b21b096127dd6a61f~klXYjIkvr1990419904epoutp01F
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 04:21:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200724042142epoutp01be1ce737d68cb43b21b096127dd6a61f~klXYjIkvr1990419904epoutp01F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595564502;
+        bh=cbxuX6MX2c/S0DH0B2gBtVRFPUIMdtrTv1qjVxQcrKw=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=ZIWtd48EYqwuv9PVMQIfCtsUD3LBtixHIoXSxk9YUdYMiY8hOqMsXRsavnlgwuAFK
+         cQp0As4GKve2FjMtFKVgKKvP6PJSmIb4yPW5GonMmqY+a6Gh7OlQKPzrAuM2rxwyho
+         lhZDjY4PyP3Nxwjl3HnizCqxcQiGhOtU2UII0FjA=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200724042141epcas2p3a5ac7d417f876e51315f11a5b504be49~klXXMjYLP1658916589epcas2p3F;
+        Fri, 24 Jul 2020 04:21:41 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.40.191]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BCbcf4DfpzMqYkg; Fri, 24 Jul
+        2020 04:21:38 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.95.27441.1D16A1F5; Fri, 24 Jul 2020 13:21:37 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200724042137epcas2p1e5b57020675f1954d8655925245c1022~klXTXcMgn2952829528epcas2p1_;
+        Fri, 24 Jul 2020 04:21:37 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200724042137epsmtrp27c0c1ec7d71dc1313ab93e323859143d~klXTWnNd51063310633epsmtrp2t;
+        Fri, 24 Jul 2020 04:21:37 +0000 (GMT)
+X-AuditID: b6c32a47-fafff70000006b31-27-5f1a61d11d74
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1A.50.08382.0D16A1F5; Fri, 24 Jul 2020 13:21:36 +0900 (KST)
+Received: from KORCO011456 (unknown [12.36.185.54]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200724042136epsmtip1d10c711190e58ce4e660c16d184f0cab~klXTKoNA-1507015070epsmtip1k;
+        Fri, 24 Jul 2020 04:21:36 +0000 (GMT)
+From:   "Kiwoong Kim" <kwmad.kim@samsung.com>
+To:     "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Stephen Rothwell'" <sfr@canb.auug.org.au>
+Cc:     "'James Bottomley'" <James.Bottomley@HansenPartnership.com>,
+        "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
+        "'Alim Akhtar'" <alim.akhtar@samsung.com>
+In-Reply-To: <yq1mu3qe0wm.fsf@ca-mkp.ca.oracle.com>
+Subject: RE: linux-next: build failure after merge of the scsi-mkp tree
+Date:   Fri, 24 Jul 2020 13:21:36 +0900
+Message-ID: <03d801d66171$ebc763c0$c3562b40$@samsung.com>
 MIME-Version: 1.0
-References: <20200722055816.20768-1-sumit.semwal@linaro.org>
- <20200722055816.20768-2-sumit.semwal@linaro.org> <20200723175552.GA602630@bogus>
-In-Reply-To: <20200723175552.GA602630@bogus>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Fri, 24 Jul 2020 09:47:15 +0530
-Message-ID: <CAO_48GH3btOO9JyxqC2JEcqqxnP_Fxk_u4mvuaEy22TfMZ8pqA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: Add bindings for
- Tianma nt36672a panel
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ks_c_5601-1987"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: ko
+Thread-Index: AQIOyx8zECdk5Fcwy7C/SA+aYBrkmAHF8/LBAiG9q+QCVRSbzahzZ0RQ
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMJsWRmVeSWpSXmKPExsWy7bCmme7FRKl4g029ahYP5m1js9jYz2Fx
+        edccNouDC9sYLZYf/8dksXXvVXYHNo/GGzfYPKZNOsXm8fHpLRaPvi2rGD0+b5ILYI3KsclI
+        TUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wBOkBJoSwxpxQo
+        FJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BoWKBXnJhbXJqXrpecn2tlaGBgZApUmZCTsfDc
+        MsaCNtaKHZNfMjYwTmTpYuTkkBAwkbjQeJ2xi5GLQ0hgB6PE5LXL2SCcT4wSf/88ZIFwvjFK
+        zHm5kg2m5eSdicwQib2MEvsaX4PNEhJ4wSjx77s0iM0moC0x7eFuVhBbRCBNYlbXY7AdzCA1
+        0/obmUESnALGEqcebwBrFhZwl+g7vBEsziKgKnFtRTNYM6+ApcSzTU0sELagxMmZT8BsZgEj
+        iSWr5zNB2PIS29/OYYa4TkHi59NlrBBxEYnZnW1AcQ6gI9wkGraEg9wgIdDLIfGl9wQbSFxC
+        wEViy7UUiFZhiVfHt7BD2FISn9/thXq4XmLf1AZWiN4eRomn+/4xQiSMJWY9a2eEmKMsceQW
+        1Gl8Eh2H/7JDhHklOtqEIKqVJX5NmgzVKSkx8+Yd9gmMSrOQPDYLyWOzkDw2C8kzCxhZVjGK
+        pRYU56anFhsVGCPH9iZGcOrUct/BOOPtB71DjEwcjIcYJTiYlUR4dRjF44V4UxIrq1KL8uOL
+        SnNSiw8xmgLDeiKzlGhyPjB555XEG5oamZkZWJpamJoZWSiJ8xZbXYgTEkhPLEnNTk0tSC2C
+        6WPi4JRqYOpOmcksJ67j+We1qaeMS/yu/7KCwmy8E7/7KKpfTvAyb9/v0fI5fSfXWuO4XW9K
+        p01ycldUuX/e0/mehuYnpsXP/D8+Omn/5+rkzueVc163Nu078dr15fcXktn9B3/P7ertv8w7
+        XSxOyfpm4m1bmVlym3gUpZ+J701STVxr7Sgy//4Mh9qfp6Iv/Pnj2SpSdTqvQjo6+JbpzcVJ
+        9jKSXPdur11kW+GXvsQ9U0tW65vvq4sFT8X8Hq+L3hvfu0x+koXS5aRNqXpHpu68ycY/QWFT
+        S8Icg6XVzVV5VTLTd17ON3nSzmDy0kDjHsPk1HOlOh4/bb9K8P9kuLOIW6E2PKhK//msvJMe
+        d989zbIoUWIpzkg01GIuKk4EAPi2djgmBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSnO6FRKl4g85dNhYP5m1js9jYz2Fx
+        edccNouDC9sYLZYf/8dksXXvVXYHNo/GGzfYPKZNOsXm8fHpLRaPvi2rGD0+b5ILYI3isklJ
+        zcksSy3St0vgylh4bhljQRtrxY7JLxkbGCeydDFyckgImEicvDORuYuRi0NIYDejxOvrZ5gh
+        EpISJ3Y+Z4SwhSXutxxhhSh6xiix58E7sG42AW2JaQ93s4LYIgJpEr8mz2MHKWIWeMEocXDf
+        cjaIjluMEpPO32EDqeIUMJY49XgDWLewgLtE3+GNYOtYBFQlrq1oBpvEK2Ap8WxTEwuELShx
+        cuYTMJsZ6NbGw91QtrzE9rdzoE5VkPj5dBkrRFxEYnZnG1CcA+giN4mGLeETGIVnIZk0C8mk
+        WUgmzULSvYCRZRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnAUaWnuYNy+6oPeIUYm
+        DsZDjBIczEoivDqM4vFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeW8ULowTEkhPLEnNTk0tSC2C
+        yTJxcEo1MHFW/pivvXnjtWcpn/dpFRwrPPRO3nHfvBu62gV7fXUehtz6NctqoVU0J6OgvEvu
+        yQx13p8H6lOqNiwW68t95v72m4nq1uBZ3ZsTGFavm5ww7+2m1ZazPm0/eHOn1BIb7VdLxKek
+        Lvqj3GIoqRbSdkf1+b+C4wEz9k34c30ve+5Bd6eN82sU725sXhgyt2kS16cv53bHuWz4vVMi
+        XS7oT/TpmNaLZ72u3Lyw60vxyxssT65Ur3i/pypn82aH8u/XH5ztORprZf2aKUjaoGXirNmf
+        w/9femewftaT4vUxNy50pccvd2IW8FTi3tmjHfFe93+v9maLLfve3FHkPH2rPYyxIGzy1d36
+        tmtKM+b+6Xn7WImlOCPRUIu5qDgRANAaFnkRAwAA
+X-CMS-MailID: 20200724042137epcas2p1e5b57020675f1954d8655925245c1022
+X-Msg-Generator: CA
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200723150336epcas2p37ebd74d381c5dd3369908b6ffb4d5f7e
+References: <20200721163045.50c205a5@canb.auug.org.au>
+        <20200723155452.6dccd510@canb.auug.org.au>
+        <CGME20200723150336epcas2p37ebd74d381c5dd3369908b6ffb4d5f7e@epcas2p3.samsung.com>
+        <yq1mu3qe0wm.fsf@ca-mkp.ca.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+> >> ERROR: modpost: "exynos_ufs_dump_info" [drivers/scsi/ufs/ufs-exynos.ko]
+> undefined!
+> >> ERROR: modpost: "exynos_ufs_init_dbg" [drivers/scsi/ufs/ufs-exynos.ko]
+> undefined!
+> >> ERROR: modpost: "exynos_ufs_cmd_log_start" [drivers/scsi/ufs/ufs-
+> exynos.ko] undefined!
+> 
+> *sigh* sorry about that. I did verify yesterday's exynos build fix with
+> COMPILE_TEST but it looks like I didn't have the new driver debugging
+> option enabled.
+> 
+> Kiwoong/Alim: Please fix!
+> 
+> --
+> Martin K. Petersen	Oracle Linux Engineering
+Hi, Martin.
 
-Thanks for the review!
+Sorry for responding lately. I'll post a patch to fix soon. 
 
-On Thu, 23 Jul 2020 at 23:25, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jul 22, 2020 at 11:28:15AM +0530, Sumit Semwal wrote:
-> > The nt36672a panel from Tianma is a FHD+ panel with a resolution of 1080x2246
-> > and 6.18 inches size. It is found in some of the Poco F1 phones.
-> >
-> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> > Change-Id: I401dfbfe23ff2d806c956002f45e349cb9688c16
->
-> You know better...
-Yes - Sorry :( - will correct.
->
-> > ---
-> > v2: remove ports node, making port@0 directly under panel@0 node.
-> > ---
-> >  .../display/panel/tianma,nt36672a.yaml        | 104 ++++++++++++++++++
-> >  1 file changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> > new file mode 100644
-> > index 000000000000..cb1799fbbd32
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> > @@ -0,0 +1,104 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Tianma model NT36672A DSI Panel display driver
-> > +
-> > +maintainers:
-> > +  - Sumit Semwal <sumit.semwal@linaro.org>
-> > +
-> > +description: |
-> > +  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
-> > +  of 1080x2246. It is a video mode DSI panel.
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: tianma,nt36672a
-> > +
-> > +  reg:
-> > +    description: DSI virtual channel of the peripheral
-> > +
-> > +  reset-gpios:
-> > +    description: phandle of gpio for reset line - This should be 8mA, gpio
-> > +      can be configured using mux, pinctrl, pinctrl-names (active high)
-> > +
-> > +  vddio-supply:
-> > +    description: phandle of the regulator that provides the supply voltage
-> > +      Power IC supply
-> > +
-> > +  vddpos-supply:
-> > +    description: phandle of the positive boost supply regulator
-> > +
-> > +  vddneg-supply:
-> > +    description: phandle of the negative boost supply regulator
-> > +
-> > +  pinctrl-names:
-> > +    description: Pinctrl for panel active and suspend
-> > +
-> > +  pinctrl-0:
-> > +    description: Active pinctrls
-> > +
-> > +  pinctrl-1:
-> > +    description: Suspend pinctrls
-> > +
-> > +  port@0:
->
-> Just 'port' as there can only be 1 in this case.
->
-> You can do just: 'port: true' as panel-common.yaml already has a
-> definition.
 
-Ok, let me try that and send out v3.
->
-> > +    type: object
-> > +    description: DSI input port driven by master DSI
-> > +    properties:
-> > +      reg:
-> > +        const: 0
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vddi0-supply
-> > +  - vddpos-supply
-> > +  - vddneg-supply
-> > +  - reset-gpios
-> > +  - pinctrl-names
-> > +  - pinctrl-0
-> > +  - pinctrl-1
-> > +  - port@0
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |+
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    dsi0 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      panel@0 {
-> > +        compatible = "tianma,nt36672a";
-> > +        reg = <0>;
-> > +        vddi0-supply = <&vreg_l14a_1p88>;
-> > +        vddpos-supply = <&lab>;
-> > +        vddneg-supply = <&ibb>;
-> > +
-> > +        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
-> > +
-> > +        pinctrl-names = "panel_active", "panel_suspend";
-> > +        pinctrl-0 = <&sde_dsi_active>;
-> > +        pinctrl-1 = <&sde_dsi_suspend>;
-> > +
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        port@0 {
-> > +          reg = <0>;
-> > +          tianma_nt36672a_in_0: endpoint {
-> > +            remote-endpoint = <&dsi0_out>;
-> > +          };
-> > +        };
-> > +      };
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.27.0
-> >
->
+Thanks.
+Kiwoong Kim
 
-Best,
-Sumit.
