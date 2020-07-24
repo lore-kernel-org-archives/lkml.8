@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02DCC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03C3C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A2E20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F0220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgGXQEY (ORCPT
+        id S1728297AbgGXQJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:24 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:09:14 -0400
+Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbgGXQEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:12 -0400
+        id S1727797AbgGXQEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:20 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 9CEB4F8B;
-        Fri, 24 Jul 2020 18:04:08 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id C2DC1F95;
+        Fri, 24 Jul 2020 18:04:11 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 23/75] x86/boot/compressed/64: Unmap GHCB page before booting the kernel
-Date:   Fri, 24 Jul 2020 18:02:44 +0200
-Message-Id: <20200724160336.5435-24-joro@8bytes.org>
+Subject: [PATCH v5 29/75] x86/head/64: Install startup GDT
+Date:   Fri, 24 Jul 2020 18:02:50 +0200
+Message-Id: <20200724160336.5435-30-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,110 +60,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Force a page-fault on any further accesses to the GHCB page when they
-shouldn't happen anymore. This will catch the bugs where a #VC exception
-is raised when no one is expected anymore.
+Handling exceptions during boot requires a working GDT. The kernel GDT
+can't be used on the direct mapping, so load a startup GDT and setup
+segments.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 17 +++++++++++++++--
- arch/x86/boot/compressed/misc.h         |  6 ++++++
- arch/x86/boot/compressed/sev-es.c       | 14 ++++++++++++++
- 3 files changed, 35 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/setup.h |  1 +
+ arch/x86/kernel/head64.c     | 33 +++++++++++++++++++++++++++++++++
+ arch/x86/kernel/head_64.S    | 14 ++++++++++++++
+ 3 files changed, 48 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 05742f641a06..063a60edcf99 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -298,6 +298,11 @@ int set_page_encrypted(unsigned long address)
- 	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
- }
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 84b645cc8bc9..5c2fd05bd52c 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -48,6 +48,7 @@ extern void reserve_standard_io_resources(void);
+ extern void i386_reserve_resources(void);
+ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
+ extern unsigned long __startup_secondary_64(void);
++extern void startup_64_setup_env(unsigned long physbase);
+ extern int early_make_pgtable(unsigned long address);
  
-+int set_page_non_present(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_PRESENT);
-+}
-+
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
- {
-@@ -316,8 +321,14 @@ static void do_pf_error(const char *msg, unsigned long error_code,
- 
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
--	unsigned long address = native_read_cr2() & PMD_MASK;
--	unsigned long end = address + PMD_SIZE;
-+	unsigned long address = native_read_cr2();
-+	unsigned long end;
-+	bool ghcb_fault;
-+
-+	ghcb_fault = sev_es_check_ghcb_fault(address);
-+
-+	address   &= PMD_MASK;
-+	end        = address + PMD_SIZE;
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
-@@ -327,6 +338,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 */
- 	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
- 		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
-+	else if (ghcb_fault)
-+		do_pf_error("Page-fault on GHCB page:", error_code, address, regs->ip);
- 
- 	/*
- 	 * Error code is sane - now identity map the 2M region around
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 4d37a28370ed..2e5f82acc122 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -100,6 +100,7 @@ static inline void choose_random_location(unsigned long input,
- #ifdef CONFIG_X86_64
- extern int set_page_decrypted(unsigned long address);
- extern int set_page_encrypted(unsigned long address);
-+extern int set_page_non_present(unsigned long address);
- extern unsigned char _pgtable[];
+ #ifdef CONFIG_X86_INTEL_MID
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index cbb71c1b574f..8c82be44be94 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -61,6 +61,24 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
+ EXPORT_SYMBOL(vmemmap_base);
  #endif
  
-@@ -117,8 +118,13 @@ void set_sev_encryption_mask(void);
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- void sev_es_shutdown_ghcb(void);
-+extern bool sev_es_check_ghcb_fault(unsigned long address);
- #else
- static inline void sev_es_shutdown_ghcb(void) { }
-+static inline bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	return false;
-+}
- #endif
- 
- /* acpi.c */
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 7e2cec170026..e3abf8737015 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -121,6 +121,20 @@ void sev_es_shutdown_ghcb(void)
- 	 */
- 	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
- 		error("Can't map GHCB page encrypted");
++/*
++ * GDT used on the boot CPU before switching to virtual addresses.
++ */
++static struct desc_struct startup_gdt[GDT_ENTRIES] = {
++	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(0xc09b, 0, 0xfffff),
++	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
++	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
++};
 +
-+	/*
-+	 * GHCB page is mapped encrypted again and flushed from the cache.
-+	 * Mark it non-present now to catch bugs when #VC exceptions trigger
-+	 * after this point.
-+	 */
-+	if (set_page_non_present((unsigned long)&boot_ghcb_page))
-+		error("Can't unmap GHCB page");
-+}
++/*
++ * Address needs to be set at runtime because it references the startup_gdt
++ * while the kernel still uses a direct mapping.
++ */
++static struct desc_ptr startup_gdt_descr = {
++	.size = sizeof(startup_gdt),
++	.address = 0,
++};
 +
-+bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	/* Check whether the fault was on the GHCB page */
-+	return ((address & PAGE_MASK) == (unsigned long)&boot_ghcb_page);
+ #define __head	__section(.head.text)
+ 
+ static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
+@@ -489,3 +507,18 @@ void __init x86_64_start_reservations(char *real_mode_data)
+ 
+ 	start_kernel();
  }
++
++/*
++ * Setup boot CPU state needed before kernel switches to virtual addresses.
++ */
++void __head startup_64_setup_env(unsigned long physbase)
++{
++	/* Load GDT */
++	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
++	native_load_gdt(&startup_gdt_descr);
++
++	/* New GDT is live - reload data segment registers */
++	asm volatile("movl %%eax, %%ds\n"
++		     "movl %%eax, %%ss\n"
++		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
++}
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 16da4ac01597..2b2e91627221 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -73,6 +73,20 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
+ 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
  
- void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
++	leaq	_text(%rip), %rdi
++	pushq	%rsi
++	call	startup_64_setup_env
++	popq	%rsi
++
++	/* Now switch to __KERNEL_CS so IRET works reliably */
++	pushq	$__KERNEL_CS
++	leaq	.Lon_kernel_cs(%rip), %rax
++	pushq	%rax
++	lretq
++
++.Lon_kernel_cs:
++	UNWIND_HINT_EMPTY
++
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
+ 
 -- 
 2.27.0
 
