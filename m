@@ -2,119 +2,101 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044BDC433ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2609C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4AEE206E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:06:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovkwk+3I"
+	by mail.kernel.org (Postfix) with ESMTP id AFD95206E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgGXKGy (ORCPT
+        id S1727948AbgGXKHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:06:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgGXKGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:06:54 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAACBC0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:06:52 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id d198so4622575vsc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nx9Us6fvE/iUsMsXh7T0pNo8U/ECZ5BCyqR2VoGQYII=;
-        b=ovkwk+3I/iXk5jeFsY/WfnMEn0KEmtJFr5cU2ehK7tZhja2S1NphgiLhEvk7cqabv8
-         N/1LOxgGvFFkl5RHpq3VVezuT9G15haWTj1gtmF3+1EdOBR+sjZ9vRynRxsvYGxi7H0b
-         nfWNe4y7aUhgWKpJ8jYDqcRl0RqZSBCdG1xdVuNmHPy8y/Ga3m9NkM4JNtDnpP1Ozxl3
-         X+IIXCu3HpzX8bjyf5z1qVyriIzXccruUVD6bROhwWklNyLoivuFVHmX4AcUb+tQqUiA
-         yoBeN4/sGSiWq6/f3tA+cBJDO+tV0Tuy8UmlH76iiA0d+kwCaS/6NNHIR6P6t3dhKhGx
-         iyjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nx9Us6fvE/iUsMsXh7T0pNo8U/ECZ5BCyqR2VoGQYII=;
-        b=IINNWcC22SkYthOPnZPR9QWJgoP2MXEn7F2ulMNoXw2Kgk96TlqldpAb16lTqRdVXC
-         +E6KsRh2Fq/3NqApyffG5rlC5jhferjLoyvgy2cr2pPE9txjdWxV2cLVZNWDVJBsfmGe
-         i2yDBZukZPYt+qH7cDaIcaiXoy98fmDtnxZrOk8aI3T7cEZD5J6STtuYrdU14YIyLcpe
-         95T+eaKXJxKJL3JuSO6sQWtkzdEXdNOBNs0qtrfriJdPlQHDPrBjTWlM00d74wPO7qA3
-         gMIzKR+HsXGFtcqe6SxRnj8dmIlWpQHjh7X7OQWrDnIaTZMZG1FvzwX7J+6kbL1ivocv
-         WELg==
-X-Gm-Message-State: AOAM533jg+/CD+o+8/VM+QiAK4IUkXImFMas5tm2Mfom+ezhulX50iKr
-        DdC8179JvGwVGbb32fDqCG3mFVXKNJXMNKn4zuYCWw==
-X-Google-Smtp-Source: ABdhPJzjAIzGCHxSmawe/s8/Yy73C5qRzVM8Z655PkkXpf4XprbiEn9AMqVYCsAPbxBykzM4342UssUmkeVanoFaBEc=
-X-Received: by 2002:a05:6102:126a:: with SMTP id q10mr6577066vsg.35.1595585211891;
- Fri, 24 Jul 2020 03:06:51 -0700 (PDT)
+        Fri, 24 Jul 2020 06:07:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8272 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726114AbgGXKHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:07:32 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 32FFDFAD88DD2DE5C59D;
+        Fri, 24 Jul 2020 18:07:30 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Jul 2020
+ 18:07:23 +0800
+From:   Wang ShaoBo <bobo.shaobowang@huawei.com>
+CC:     <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
+        <jolsa@redhat.com>, <acme@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Subject: [PATCH -next] tools build: Check return value of fwrite_unlocked in jvmti_agent.c
+Date:   Fri, 24 Jul 2020 18:07:06 +0800
+Message-ID: <20200724100706.48330-1-bobo.shaobowang@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200716141534.30241-1-ulf.hansson@linaro.org> <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com>
-In-Reply-To: <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 24 Jul 2020 12:06:15 +0200
-Message-ID: <CAPDyKFp3D8xZCSGNMm2ZOpa5f5wMwderCuAA5yLMXdjoKFoxQw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        linux-nvme@lists.infradead.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jul 2020 at 20:23, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Jul 16, 2020 at 4:16 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> > +       /* Continue with the SD express init, if the card supports it. */
-> > +       resp &= 0x3000;
-> > +       if (pcie_bits && resp) {
-> > +               if (resp == 0x3000)
-> > +                       host->ios.timing = MMC_TIMING_SD_EXP_1_2V;
-> > +               else
-> > +                       host->ios.timing = MMC_TIMING_SD_EXP;
-> > +
-> > +               /*
-> > +                * According to the spec the clock shall also be gated, but
-> > +                * let's leave this to the host driver for more flexibility.
-> > +                */
-> > +               return host->ops->init_sd_express(host, &host->ios);
-> > +       }
-> > +
-> >         return 0;
-> >  }
->
-> Does this need an additional handshake or timeout to see if the
-> device was successfully probed by the nvme driver?
->
-> It looks like the card would just disappear here if e.g. the nvme driver
-> is not loaded or runs into a runtime error.
+Function jvmti_write_code called by compiled_method_load_cb may return
+error in using fwrite_unlocked, this failure should be captured and
+warned.
 
-You are correct! In principle, the card would not be detected (it
-doesn't disappear as it never gets registered). Instead, it's left in
-"half-initialized" state, waiting for the nvme driver to take over.
+Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+---
+ tools/perf/jvmti/jvmti_agent.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-I simply didn't want to go that far, to introduce synchronizations
-steps between the nvme driver and mmc driver, but rather started
-simple. Perhaps we can discuss these things as improvements on top
-instead?
+diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+index 88108598d6e9..a1fe6aa16b6d 100644
+--- a/tools/perf/jvmti/jvmti_agent.c
++++ b/tools/perf/jvmti/jvmti_agent.c
+@@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	struct jr_code_load rec;
+ 	size_t sym_len;
+ 	FILE *fp = agent;
+-	int ret = -1;
++	int ret;
+ 
+ 	/* don't care about 0 length function, no samples */
+ 	if (size == 0)
+@@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
+ 	rec.code_index = code_generation++;
+ 
+ 	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+-	fwrite_unlocked(sym, sym_len, 1, fp);
++	if (ret)
++		goto error;
++	ret = fwrite_unlocked(sym, sym_len, 1, fp);
++	if (ret)
++		goto error;
+ 
+-	if (code)
+-		fwrite_unlocked(code, size, 1, fp);
++	if (code) {
++		ret = fwrite_unlocked(code, size, 1, fp);
++		if (ret)
++			goto error;
++	}
+ 
+ 	funlockfile(fp);
+-
+-	ret = 0;
+-
+-	return ret;
++	return 0;
++error:
++	funlockfile(fp);
++	return -1;
+ }
+ 
+ int
+-- 
+2.17.1
 
-What do you think?
-
-Kind regards
-Uffe
