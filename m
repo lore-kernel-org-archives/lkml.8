@@ -7,24 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D9BC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD5C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D8E20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5A620674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgGXQET (ORCPT
+        id S1727118AbgGXQEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:19 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgGXQEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:09 -0400
+        Fri, 24 Jul 2020 12:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgGXQEG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:06 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA797C0619D3;
+        Fri, 24 Jul 2020 09:04:05 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id EEB786FA;
-        Fri, 24 Jul 2020 18:04:06 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 17C58C5E;
+        Fri, 24 Jul 2020 18:04:02 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 20/75] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
-Date:   Fri, 24 Jul 2020 18:02:41 +0200
-Message-Id: <20200724160336.5435-21-joro@8bytes.org>
+Subject: [PATCH v5 11/75] x86/boot/compressed/64: Disable red-zone usage
+Date:   Fri, 24 Jul 2020 18:02:32 +0200
+Message-Id: <20200724160336.5435-12-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,39 +64,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The function can fail to create an identity mapping, check for that
-and bail out if it happens.
+The x86-64 ABI defines a red-zone on the stack:
+
+  The 128-byte area beyond the location pointed to by %rsp is considered
+  to be reserved and shall not be modified by signal or interrupt
+  handlers. Therefore, functions may use this area for temporary data
+  that is not needed across function calls. In particular, leaf
+  functions may use this area for their entire stack frame, rather than
+  adjusting the stack pointer in the prologue and epilogue. This area is
+  known as the red zone.
+
+This is not compatible with exception handling, because the IRET frame
+written by the hardware at the stack pointer and the functions to handle
+the exception will overwrite the temporary variables of the interrupted
+function, causing undefined behavior. So disable red-zones for the
+pre-decompression boot code.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/boot/Makefile            | 2 +-
+ arch/x86/boot/compressed/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index b4f2a5f503cd..aa91bebc0fe9 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -91,6 +91,8 @@ static struct x86_mapping_info mapping_info;
-  */
- static void add_identity_map(unsigned long start, unsigned long end)
- {
-+	int ret;
-+
- 	/* Align boundary to 2M. */
- 	start = round_down(start, PMD_SIZE);
- 	end = round_up(end, PMD_SIZE);
-@@ -98,8 +100,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
- 		return;
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index fe605205b4ce..4d6a16a47e9f 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -66,7 +66,7 @@ targets += cpustr.h
  
- 	/* Build the mapping. */
--	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
--				  start, end);
-+	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
-+	if (ret)
-+		error("Error: kernel_ident_mapping_init() failed\n");
- }
+ # ---------------------------------------------------------------------------
  
- /* Locates and clears a region for a new top level page table. */
+-KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
++KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
+ KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 5a828fde7a42..416f52ab39ec 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -32,7 +32,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
+ KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ cflags-$(CONFIG_X86_32) := -march=i386
+-cflags-$(CONFIG_X86_64) := -mcmodel=small
++cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
+ KBUILD_CFLAGS += $(cflags-y)
+ KBUILD_CFLAGS += -mno-mmx -mno-sse
+ KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
 -- 
 2.27.0
 
