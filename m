@@ -4,153 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B108C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2468AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2377B206E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DF5206E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XYAEOz8B"
+	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="Q/PA8j0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgGXATk (ORCPT
+        id S1728305AbgGXAZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:19:40 -0400
-Received: from mail-eopbgr70077.outbound.protection.outlook.com ([40.107.7.77]:35832
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728187AbgGXATk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:19:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CIxAfDKrmELHkQ37Yx/pxYpFMm7XdktPaJDURJNRIWS588Q0mnNd8qocOGAqpvBarU+LU3Vyb5J065i7rTHhzKXgh7gcS86DZ8kSZYj7qy9l/IO5GWpE7z8/tduG5048973ksFx0Nr6Jt0HcQ8Bc3e8svaArYhI4QNSuY6cueXUFF/PLPv5i1eErvI+BePmFJ8JDzIInTJTdpG1ueN8KlpDnS3zRPiKjlbgZqYtl1Pyz850ezRpUVFluj5NRgD3dwSJlFMuzD/PAA5jmE4N2RZR+Js0j91GR8jK7a4DJuqsZONFG4jtUXVAdT7nOUi3JZ1mfeZKu55wzzfZXFl1ptA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IKgXeUQzsksGmCUNsr44CK5LbZB3qab0NdBc27SSk2A=;
- b=kdpHJo0LC9bhjuY6pQGYgy4hf3N/+HdkpkZi6TO+4SFE/8Zh0ocnEJ2X8NBQLLViKRUhEmHra9Fwg+Sb0WzwXSOkAp3hyjLYRlDriOYVAouoJyLM2tb+ixxQhceMvaCr5u3FG253XQM/fGn1cY1ZNexRZfO3+stbzzfOTtxdcq8EHoNxINFJKufmNo8744k/mD/3asdWJrk3bVrmIDcODilQ2D6COtPp5VD+bJ4P55Ir9saCdCe68B4fRMyTUy6VlET10N5D85HuZWIIcT3VwhYsq+ycCp9OOsIciJGZ1GmR3VR2TOG083iUsjpoCtLAfavpgfB+tTphSCfmgxsYWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IKgXeUQzsksGmCUNsr44CK5LbZB3qab0NdBc27SSk2A=;
- b=XYAEOz8BxMr0eFMYwD5pMjTikc6lzoyRtPTkwXT9lRWX+osryR7ENpaGNIb6brFao1PIb2ZO+kq0CFcTk/nKgbkSY2yOgQd/x63MEc8dX0eO6VWMXszm33AY0c0uH52auTx6eZbslmLVsQkT6RMNuvVv38Rw/zoXSnvLEsCeU2E=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR0502MB3951.eurprd05.prod.outlook.com (2603:10a6:803:17::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 24 Jul
- 2020 00:19:35 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::252e:52c7:170b:35d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::252e:52c7:170b:35d%5]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
- 00:19:35 +0000
-Date:   Thu, 23 Jul 2020 21:19:30 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200724001930.GS2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
-X-ClientProxiedBy: YT1PR01CA0065.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2e::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Thu, 23 Jul 2020 20:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgGXAZR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:25:17 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61F8C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 17:25:16 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id n4so2420518uae.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 17:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=posk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SCYAm0cXhlKGumLX7lGB7J67gQ6nGdBWRNsstnRRJKg=;
+        b=Q/PA8j0irj/Go/IJbrKbECwGxNLKdOb1eB6VUasRjMghpx6SIs+l4WyzA+iAGgBXcJ
+         XLiwMTRQ28QoxhKA8otzwG7Zb/g58C9sMufsWEshd0uyUsuRBZUfGsLEcQWFT7kYayNI
+         uVI3+HuiA40NmhciTRm4JmQyaFHHOLej9HJNSlhZRACXC9C1URvoF8USzoTNgfKUW6d9
+         rV1qka8ORBgSWU/yiT6UrBHnPhJHZjd/WYTezWRAyA1L1jmGq4GGEoCWdqkxXcoQDA9V
+         ViewoS0sIPBTlMPW6R/EPTyc0l6kOTNiHHDoK16t5QMeVmz11bTTfm1Sg7nPG67wm9H1
+         V/NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SCYAm0cXhlKGumLX7lGB7J67gQ6nGdBWRNsstnRRJKg=;
+        b=muHCCQK2PF/hWEEcmOYi+uRUXhJUMHg3GoU2OCubRksGc0du66iYVpWA3jKP6pQYX9
+         62pn5z2k+IJ+gB/G/hzgktQu44iWsYZsVDQciXryT8rXwxxvdyGkaNhuY6wUeU6qoVYE
+         XMB8cGyFl2xKvpfLl2qNRjr1XPR6UnTNk4Rb42i7G0x6fFwdDVCOl/RJ1PqEgEL4Qwtw
+         xJ6QRUF1o3jRktpBjh/qmyQKbWxJUJm53TE0kobowvM2Zp7iklk/wWBJ/7VVYGkT1Np4
+         GTu7pPY/QLYu5HdEbGfoIvw/OGlLo8+BuyzNbM22IxuD2RFfijMrb71RT6wwflLj4cro
+         tpZw==
+X-Gm-Message-State: AOAM531cd60bvR83i60ODH+4LOfvaly1anvwTDLlNJOl8s2tXZYdr1Sa
+        Kj8Nb8108AMWtuT60qQXKimKkJTHOdMQIMpwU5Wt+A==
+X-Google-Smtp-Source: ABdhPJx3yILoCwHS93lBlhghb3NpzBK2ZF3fjV2PcD1VqDyXXZVmycjNeJMcFKPrhtaKknJm6pzeuhNV/ED+BFR2ueM=
+X-Received: by 2002:ab0:3b2:: with SMTP id 47mr6354662uau.139.1595550315810;
+ Thu, 23 Jul 2020 17:25:15 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by YT1PR01CA0065.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Fri, 24 Jul 2020 00:19:34 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jylQw-00Eb6F-EQ; Thu, 23 Jul 2020 21:19:30 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 806467bc-1a4b-4a0a-a658-08d82f673e69
-X-MS-TrafficTypeDiagnostic: VI1PR0502MB3951:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0502MB39518E7774967D684330AC82CF770@VI1PR0502MB3951.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kn+1XU7PKTZVibxyduX59TPZGAoBiXIRju/TovbE96He8qJHDj80MZt1uRIs4e6U595f4h79TZn0qgk4RC3zAeLkpz5hF8SNqQ8iksfagpukJCZXs+P3lwHJVuQUy37PvOQ2uDet8IOuu2jnlqCH2+AetwERtBVaZjuFXL8iRF0ibbCYecgWu5DA8TA2ENMK9dKF0Z1O5sC+22CI/Mk5XvfHNvb9KgnPY1g/dOdDiXd7mpsPPmqXxoWfzd8xhqvVReUUPNI6Y7fPWyfOKsbNpuq0yhmWbFYIoEotvKUBuAQ7tPsvK/Gh0FhEkcAL6j0B9MLFgAB4pyHKVf3H96R3OA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(346002)(136003)(39860400002)(33656002)(26005)(6916009)(5660300002)(4326008)(36756003)(9746002)(9786002)(1076003)(7406005)(66476007)(186003)(7416002)(478600001)(2906002)(2616005)(426003)(86362001)(8676002)(66946007)(54906003)(66556008)(316002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: pqhcNQMSuLcBz0D1S/zT5wggPgEbWSbmN4ICtH/pXZ3e6nw6HDQGe3XNxLiALdRG/d3qQMfzsjGoa/SkjwjHhPjbhlCsQi/qmyWfOg4MRXataK9h76zcdAHdsUTcB3Q2DLQ3BIjoFnGq4Co2P0A4b3CKPga9dig3+ECLE+8f7VMCE+8fgFhK5DnrZKIC9Uq24OCV21P6cFAyEYuhl+SxDlvOQEhFxj6pyNyVi11eLbnqk9gpqHGEnxcSFj3aPPPrpWp+4lN4iUR3w8JizdwDPAMyCxTYQFw7Gm2ZJiZbHJdRg6rTiwmsL/kiZJ9551Cd5rv9ri/k78GvVvUp22Mmk/E2DDAopL6ngESoqHohcklnZ9t+n+ONFFnJgdkY+4EdScCI4pWo3UDB645PnUKrFbOVnOfA41SNs9tkgLeVy/kl6KbjDCjQx2WvusIJSDmavYsRJ9L7uCgWpWkJ+FT22aAwdS87Yp6sj2j0UyEvYX8=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 806467bc-1a4b-4a0a-a658-08d82f673e69
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 00:19:35.1871
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9UHQLJZXe5XZN5s7IhMkNzkltN0nXje4Fgdkes6OT0LvBJQPNOvVoYs7zRc/YhIWh8NZks6c4LU2+eFPmdRvoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3951
+References: <20200722234538.166697-1-posk@posk.io> <20200722234538.166697-2-posk@posk.io>
+ <20200723112757.GN5523@worktop.programming.kicks-ass.net>
+In-Reply-To: <20200723112757.GN5523@worktop.programming.kicks-ass.net>
+From:   Peter Oskolkov <posk@posk.io>
+Date:   Thu, 23 Jul 2020 17:25:05 -0700
+Message-ID: <CAFTs51UJhC9TmXkzz8VbDNmkSEyZE29=dRdUi65TDpSYqoK5vw@mail.gmail.com>
+Subject: Re: [PATCH for 5.9 1/3] futex: introduce FUTEX_SWAP operation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Oskolkov <posk@google.com>,
+        Andrei Vagin <avagin@google.com>, Paul Turner <pjt@google.com>,
+        Ben Segall <bsegall@google.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:54:49PM +0000, Tian, Kevin wrote:
-> In a nutshell, applications don't require raw WQ controllability as guest
-> kernel drivers may expect. Extending DSA user space interface to be another
-> passthrough interface just for virtualization needs is less compelling than
-> leveraging established VFIO/mdev framework (with the major merit that
-> existing user space VMMs just work w/o any change as long as they already
-> support VFIO uAPI).
+On Thu, Jul 23, 2020 at 4:28 AM Peter Zijlstra <peterz@infradead.org> wrote:
 
-Sure, but the above is how the cover letter should have summarized
-that discussion, not as "it is not much code difference"
+Thanks a lot for your comments, Peter! My answers below.
 
-> In last review you said that you didn't hard nak this approach and would
-> like to hear opinion from virtualization guys. In this version we CCed KVM
-> mailing list, Paolo (VFIO/Qemu), Alex (VFIO), Samuel (Rust-VMM/Cloud
-> hypervisor), etc. Let's see how they feel about this approach.
+>
+> On Wed, Jul 22, 2020 at 04:45:36PM -0700, Peter Oskolkov wrote:
+> > This patchset is the first step to open-source this work. As explained
+> > in the linked pdf and video, SwitchTo API has three core operations: wait,
+> > resume, and swap (=switch). So this patchset adds a FUTEX_SWAP operation
+> > that, in addition to FUTEX_WAIT and FUTEX_WAKE, will provide a foundation
+> > on top of which user-space threading libraries can be built.
+>
+> The PDF and video can go pound sand; you get to fully explain things
+> here.
 
-Yes, the VFIO community should decide.
+Will do. Should I expand the cover letter or the commit message? (I'll probably
+split the first patch into two in the latter case).
 
-If we are doing emulation tasks in the kernel now, then I can think of
-several nice semi-emulated mdevs to propose.
+>
+> What worries me is how FUTEX_SWAP would interact with the future
+> FUTEX_LOCK / FUTEX_UNLOCK. When we implement pthread_mutex with those,
+> there's very few WAIT/WAKE left.
 
-This will not be some one off, but the start of a widely copied
-pattern.
+[+cc Waiman Long]
 
-Jason
+I've looked through the latest FUTEX_LOCK patchset I could find (
+https://lore.kernel.org/patchwork/cover/772643/ and related), and it seems
+that FUTEX_SWAP and FUTEX_LOCK/FUTEX_UNLOCK patchsets
+address the same issue (slow wakeups) but for different use cases:
+
+FUTEX_LOCK/FUTEX_UNLOCK uses spinning and lock stealing to
+improve futex wake/wait performance in high contention situations;
+FUTEX_SWAP is designed to be used for fast context switching with
+_no_ contention by design: the waker that is going to sleep, and the wakee
+are using different futexes; the userspace will have a futex per thread/task,
+and when needed the thread/task will either simply sleep on its futex,
+or context switch (=FUTEX_SWAP) into a different thread/task.
+
+I can also imagine that instead of combining WAIT/WAKE for
+fast context switching, a variant of FUTEX_SWAP can use LOCK/UNLOCK
+operations in the future, when these are available; but again, I fully
+expect that
+a single "FUTEX_LOCK the current task on futex A, FUTEX_UNLOCK futex B,
+context switch into the wakee" futex op will be much faster than doing
+the same thing
+in two syscalls, as FUTEX_LOCK/FUTEX_UNLOCK does not seem to be concerned
+with fast waking of a sleeping task, but more with minimizing sleeping
+in the first place.
+
+What will be faster: FUTEX_SWAP that does
+   FUTEX_WAKE (futex A) + FUTEX_WAIT (current, futex B),
+or FUTEX_SWAP that does
+   FUTEX_UNLOCK (futex A) + FUTEX_LOCK (current, futex B)?
+
+As wake+wait will always put the waker to sleep, it means that
+there will be a true context switch on the same CPU on the fast path;
+on the other hand, unlock+lock will potentially evade sleeping,
+so the wakee will often run on a different CPU (with the waker
+spinning instead of sleeping?), thus not benefitting from cache locality
+that fast context switching on the same CPU is meant to use...
+
+I'll add some of the considerations above to the expanded cover letter
+(or a commit message).
+
+>
+> Also, why would we commit to an ABI without ever having seen the rest?
+
+I'm not completely sure what you mean here. We do not envision any
+expansion/changes to the ABI proposed here, only further performance
+improvements. On these, we currently think that marking the wakee
+as the preferred next task to run on the current CPU (by storing
+"struct task_struct *preferred_next_tast" either in a per-CPU pointer,
+or in the current task_struct) and then having schedule() determine
+whether to follow the hint or ignore it would be the simplest way to speed up
+the context switch.
+
+>
+> On another note: wake_up_process_prefer_current_cpu() is a horrific
+> function name :/ That's half to a third of the line limit.
+
+I fully agree. I considered wake_up_on_current_cpu() first, but this name
+does not indicate that the wakeup is a "strong wish", but "current
+cpu" is a weak
+one... Do you have any suggestions? Maybe
+
+wake_up_on_cpu(struct task_struct *next, int cpu_hint)?
+
+But this seems too broad in scope, as we are interested here in only
+migrating the task to the current CPU...
+
+Thanks again for your comments!
