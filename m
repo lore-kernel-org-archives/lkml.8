@@ -6,36 +6,40 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88208C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AABC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB5E2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6D7206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgGXNYs (ORCPT
+        id S1726952AbgGXNYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:24:48 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46505 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726493AbgGXNYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:24:47 -0400
+        Fri, 24 Jul 2020 09:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgGXNYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:24:50 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1259CC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:24:50 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BCqgJ1wMzz9sTR; Fri, 24 Jul 2020 23:24:43 +1000 (AEST)
+        id 4BCqgG5TRBz9sTC; Fri, 24 Jul 2020 23:24:41 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     colin@colino.net, "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        benh@kernel.crashing.org
-In-Reply-To: <20200717182940.75484-1-grandmaster@al2klimov.de>
-References: <20200717182940.75484-1-grandmaster@al2klimov.de>
-Subject: Re: [PATCH] macintosh/therm_adt746x: Replace HTTP links with HTTPS ones
-Message-Id: <159559696822.1657499.18409103323748931249.b4-ty@ellerman.id.au>
-Date:   Fri, 24 Jul 2020 23:24:43 +1000 (AEST)
+To:     benh@kernel.crashing.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200717183522.77605-1-grandmaster@al2klimov.de>
+References: <20200717183522.77605-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH] macintosh/adb: Replace HTTP links with HTTPS ones
+Message-Id: <159559696801.1657499.3725120568145731432.b4-ty@ellerman.id.au>
+Date:   Fri, 24 Jul 2020 23:24:41 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 20:29:40 +0200, Alexander A. Klimov wrote:
+On Fri, 17 Jul 2020 20:35:22 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -53,7 +57,7 @@ On Fri, 17 Jul 2020 20:29:40 +0200, Alexander A. Klimov wrote:
 
 Applied to powerpc/next.
 
-[1/1] macintosh/therm_adt746x: Replace HTTP links with HTTPS ones
-      https://git.kernel.org/powerpc/c/1666e5ea2f838f4266e50e4f3d973c0824256429
+[1/1] macintosh/adb: Replace HTTP links with HTTPS ones
+      https://git.kernel.org/powerpc/c/a7beab413e2e67dd1abe6bdd0001576892a89e81
 
 cheers
